@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: if_de.c,v 1.80 1998/09/25 18:06:53 matt Exp $	*/
+comment|/*	$NetBSD: if_de.c,v 1.82 1999/02/28 17:08:51 explorer Exp $	*/
 end_comment
 
 begin_comment
@@ -16852,6 +16852,16 @@ decl_stmt|;
 comment|/*      * Brilliant.  Simply brilliant.  When switching modes/speeds      * on a 2114*, you need to set the appriopriate MII/PCS/SCL/PS      * bits in CSR6 and then do a software reset to get the 21140      * to properly reset its internal pathways to the right places.      *   Grrrr.      */
 if|if
 condition|(
+operator|(
+name|sc
+operator|->
+name|tulip_flags
+operator|&
+name|TULIP_DEVICEPROBE
+operator|)
+operator|==
+literal|0
+operator|&&
 name|sc
 operator|->
 name|tulip_boardsw
@@ -23188,15 +23198,6 @@ name|u_int32_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|TULIP_CSR_WRITE
-argument_list|(
-name|sc
-argument_list|,
-name|csr_txpoll
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 comment|/*      * This advances the ring for us.      */
 name|ri
 operator|->
@@ -23224,6 +23225,15 @@ operator|&
 name|TULIP_TXPROBE_ACTIVE
 condition|)
 block|{
+name|TULIP_CSR_WRITE
+argument_list|(
+name|sc
+argument_list|,
+name|csr_txpoll
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|tulip_if
@@ -23414,6 +23424,15 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|TULIP_CSR_WRITE
+argument_list|(
+name|sc
+argument_list|,
+name|csr_txpoll
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|TULIP_PERFEND
 argument_list|(
 name|txput
@@ -25937,6 +25956,8 @@ operator|.
 name|dv_xname
 argument_list|,
 name|RND_TYPE_NET
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -28551,9 +28572,6 @@ parameter_list|(
 name|sc
 parameter_list|)
 value|do { \ 	(sc)->tulip_pci_busno = parent; \ 	(sc)->tulip_pci_devno = pa->pa_device; \     } while (0)
-endif|#
-directive|endif
-comment|/* __NetBSD__ */
 if|#
 directive|if
 name|defined
@@ -28567,6 +28585,9 @@ name|TULIP_MEDIA_UNKNOWN
 decl_stmt|;
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* __NetBSD__ */
 name|int
 name|retval
 decl_stmt|,
@@ -29250,6 +29271,12 @@ case|:
 name|media
 operator|=
 name|TULIP_MEDIA_100BASETX_FD
+expr_stmt|;
+break|break;
+default|default:
+name|media
+operator|=
+name|TULIP_MEDIA_UNKNOWN
 expr_stmt|;
 break|break;
 block|}
@@ -30249,11 +30276,25 @@ operator|=
 name|TULIP_RAISESPL
 argument_list|()
 expr_stmt|;
-name|tulip_reset
+if|#
+directive|if
+name|defined
 argument_list|(
-name|sc
+name|__alpha__
 argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+name|sc
+operator|->
+name|tulip_media
+operator|=
+name|media
 expr_stmt|;
+endif|#
+directive|endif
 name|tulip_attach
 argument_list|(
 name|sc
@@ -30272,7 +30313,9 @@ name|__NetBSD__
 argument_list|)
 if|if
 condition|(
-name|media
+name|sc
+operator|->
+name|tulip_media
 operator|!=
 name|TULIP_MEDIA_UNKNOWN
 condition|)
