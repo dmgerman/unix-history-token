@@ -1080,9 +1080,6 @@ name|VBWAIT
 expr_stmt|;
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|vp
 operator|->
@@ -1092,7 +1089,7 @@ name|PRIBIO
 operator|+
 literal|1
 argument_list|,
-literal|"extfsn"
+literal|"e2fsyn"
 argument_list|,
 literal|0
 argument_list|)
