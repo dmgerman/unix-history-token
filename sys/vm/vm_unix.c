@@ -61,12 +61,6 @@ directive|include
 file|<vm/vm_map.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<vm/swap_pager.h>
-end_include
-
 begin_ifndef
 ifndef|#
 directive|ifndef
