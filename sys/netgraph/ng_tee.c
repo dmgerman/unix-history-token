@@ -146,6 +146,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|ng_close_t
+name|ngt_close
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|ng_shutdown_t
 name|ngt_shutdown
 decl_stmt|;
@@ -330,6 +337,11 @@ operator|.
 name|rcvmsg
 operator|=
 name|ngt_rcvmsg
+block|,
+operator|.
+name|close
+operator|=
+name|ngt_close
 block|,
 operator|.
 name|shutdown
@@ -1527,7 +1539,66 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Shutdown processing  *  * This is tricky. If we have both a left and right hook, then we  * probably want to extricate ourselves and leave the two peers  * still linked to each other. Otherwise we should just shut down as  * a normal node would.  *  * To keep the scope of info correct the routine to "extract" a node  * from two links is in ng_base.c.  */
+comment|/*  * We are going to be shut down soon  *  * If we have both a left and right hook, then we probably want to extricate  * ourselves and leave the two peers still linked to each other. Otherwise we  * should just shut down as a normal node would.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|ngt_close
+parameter_list|(
+name|node_p
+name|node
+parameter_list|)
+block|{
+specifier|const
+name|sc_p
+name|privdata
+init|=
+name|NG_NODE_PRIVATE
+argument_list|(
+name|node
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|privdata
+operator|->
+name|left
+operator|.
+name|hook
+operator|&&
+name|privdata
+operator|->
+name|right
+operator|.
+name|hook
+condition|)
+name|ng_bypass
+argument_list|(
+name|privdata
+operator|->
+name|left
+operator|.
+name|hook
+argument_list|,
+name|privdata
+operator|->
+name|right
+operator|.
+name|hook
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Shutdown processing  */
 end_comment
 
 begin_function

@@ -797,19 +797,6 @@ comment|/* imported , these used to be externally visible, some may go back */
 end_comment
 
 begin_function_decl
-name|int
-name|ng_bypass
-parameter_list|(
-name|hook_p
-name|hook1
-parameter_list|,
-name|hook_p
-name|hook2
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|ng_destroy_hook
 parameter_list|(
@@ -2686,6 +2673,31 @@ operator||=
 name|NG_INVALID
 operator||
 name|NG_CLOSING
+expr_stmt|;
+comment|/* If node has its pre-shutdown method, then call it first*/
+if|if
+condition|(
+name|node
+operator|->
+name|nd_type
+operator|&&
+name|node
+operator|->
+name|nd_type
+operator|->
+name|close
+condition|)
+call|(
+modifier|*
+name|node
+operator|->
+name|nd_type
+operator|->
+name|close
+call|)
+argument_list|(
+name|node
+argument_list|)
 expr_stmt|;
 comment|/* Notify all remaining connected nodes to disconnect */
 while|while

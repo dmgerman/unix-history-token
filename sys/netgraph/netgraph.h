@@ -90,7 +90,7 @@ begin_define
 define|#
 directive|define
 name|_NG_ABI_VERSION
-value|7
+value|8
 end_define
 
 begin_ifdef
@@ -200,6 +200,17 @@ begin_typedef
 typedef|typedef
 name|int
 name|ng_constructor_t
+parameter_list|(
+name|node_p
+name|node
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|ng_close_t
 parameter_list|(
 name|node_p
 name|node
@@ -5181,6 +5192,11 @@ modifier|*
 name|rcvmsg
 decl_stmt|;
 comment|/* control messages come here */
+name|ng_close_t
+modifier|*
+name|close
+decl_stmt|;
+comment|/* warn about forthcoming shutdown */
 name|ng_shutdown_t
 modifier|*
 name|shutdown
@@ -5385,6 +5401,19 @@ name|address
 parameter_list|,
 name|ng_ID_t
 name|raddr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ng_bypass
+parameter_list|(
+name|hook_p
+name|hook1
+parameter_list|,
+name|hook_p
+name|hook2
 parameter_list|)
 function_decl|;
 end_function_decl
