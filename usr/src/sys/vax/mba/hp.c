@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hp.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hp.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -742,9 +742,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"hp%d: %s\n"
-argument_list|,
-name|unit
+literal|": %s"
 argument_list|,
 name|hplabel
 index|[
@@ -784,9 +782,7 @@ block|}
 else|else
 name|printf
 argument_list|(
-literal|"hp%d: offline\n"
-argument_list|,
-name|unit
+literal|": offline"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1364,6 +1360,10 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+specifier|extern
+name|int
+name|cold
+decl_stmt|;
 name|unit
 operator|=
 name|hpunit
@@ -1758,6 +1758,16 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|cold
+condition|)
+name|printf
+argument_list|(
+literal|": no disk label"
+argument_list|)
+expr_stmt|;
+else|else
 name|log
 argument_list|(
 name|LOG_ERR
