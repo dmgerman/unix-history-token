@@ -85,6 +85,8 @@ literal|'k'
 block|,
 literal|'u'
 block|,
+literal|'b'
+block|,
 literal|0
 block|}
 decl_stmt|;
@@ -115,6 +117,8 @@ block|,
 name|keyflg
 block|,
 name|setflg
+block|,
+name|batchflg
 block|,
 literal|0
 block|}
@@ -288,6 +292,26 @@ index|]
 decl_stmt|;
 name|argc
 operator|--
+expr_stmt|;
+name|FI
+name|IF
+operator|!
+operator|(
+name|flags
+operator|&
+name|batchflg
+operator|)
+name|ANDF
+argument_list|(
+argument|getuid()!=geteuid() ORF getgid()!=getegid()
+argument_list|)
+name|THEN
+name|failed
+argument_list|(
+literal|"sh"
+argument_list|,
+literal|"Permission denied"
+argument_list|)
 expr_stmt|;
 name|FI
 comment|/* set up $- */
