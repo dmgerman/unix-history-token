@@ -1166,7 +1166,12 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Turn off syscall tracing for set-id programs, except for 		 * root. 		 */
+comment|/* 		 * Turn off syscall tracing for set-id programs, except for 		 * root.  Record any set-id flags first to make sure that 		 * we do not regain any tracing during a possible block. 		 */
+name|setsugid
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -1245,11 +1250,6 @@ operator|=
 name|attr
 operator|.
 name|va_gid
-expr_stmt|;
-name|setsugid
-argument_list|(
-name|p
-argument_list|)
 expr_stmt|;
 name|setugidsafety
 argument_list|(
