@@ -235,6 +235,16 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|zdestroy
+parameter_list|(
+name|vm_zone_t
+name|z
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 modifier|*
 name|zalloc
 parameter_list|(
