@@ -6581,8 +6581,6 @@ operator|&
 name|raidbp
 operator|->
 name|rf_buf
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 break|break;

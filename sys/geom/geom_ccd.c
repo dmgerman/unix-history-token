@@ -3615,8 +3615,6 @@ literal|0
 index|]
 operator|->
 name|cb_buf
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|BIO_STRATEGY
@@ -3628,8 +3626,6 @@ literal|1
 index|]
 operator|->
 name|cb_buf
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3710,8 +3706,6 @@ name|pick
 index|]
 operator|->
 name|cb_buf
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3728,8 +3722,6 @@ literal|0
 index|]
 operator|->
 name|cb_buf
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -4946,8 +4938,6 @@ operator|->
 name|cb_mirror
 operator|->
 name|cb_buf
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|putccdbuf
