@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: login.c,v 1.43 1998/11/21 02:22:14 jdp Exp $"
+literal|"$Id: login.c,v 1.44 1999/01/03 23:39:33 eivind Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -201,6 +201,12 @@ directive|include
 file|<utmp.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_PAM
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -212,6 +218,11 @@ include|#
 directive|include
 file|<security/pam_misc.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -395,6 +406,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_PAM
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -407,6 +424,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1393,6 +1415,9 @@ operator|-
 literal|4
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_PAM
 comment|/* 		 * Try to authenticate using PAM.  If a PAM system error 		 * occurs, perhaps because of a botched configuration, 		 * then fall back to using traditional Unix authentication. 		 */
 if|if
 condition|(
@@ -1406,6 +1431,9 @@ operator|==
 operator|-
 literal|1
 condition|)
+endif|#
+directive|endif
+comment|/* NO_PAM */
 name|rval
 operator|=
 name|auth_traditional
@@ -1423,6 +1451,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_PAM
 comment|/* 		 * PAM authentication may have changed "pwd" to the 		 * entry for the template user.  Check again to see if 		 * this is a root login after all. 		 */
 if|if
 condition|(
@@ -1440,6 +1471,9 @@ name|rootlogin
 operator|=
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* NO_PAM */
 name|ttycheck
 label|:
 comment|/* 		 * If trying to log in as root without Kerberos, 		 * but with insecure terminal, refuse the login attempt. 		 */
@@ -3029,6 +3063,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_PAM
+end_ifndef
+
 begin_comment
 comment|/*  * Attempt to authenticate the user using PAM.  Returns 0 if the user is  * authenticated, or 1 if not authenticated.  If some sort of PAM system  * error occurs (e.g., the "/etc/pam.conf" file is missing) then this  * function returns -1.  This can be used as an indication that we should  * fall back to a different authentication mechanism.  */
 end_comment
@@ -3353,6 +3393,15 @@ name|rval
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NO_PAM */
+end_comment
 
 begin_function
 specifier|static
