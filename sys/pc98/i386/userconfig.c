@@ -1605,7 +1605,7 @@ block|,
 block|{
 literal|"al"
 block|,
-literal|"ADMtek AL981 ethernet adapter"
+literal|"ADMtek AL981/AN985 ethernet adapter"
 block|,
 name|FLG_FIXED
 block|,
