@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|NGM_ETHER_COOKIE
-value|917786905
+value|917786906
 end_define
 
 begin_comment
@@ -99,9 +99,18 @@ comment|/* get the interface global index # */
 name|NGM_ETHER_GET_ENADDR
 block|,
 comment|/* get Ethernet address */
+name|NGM_ETHER_SET_ENADDR
+block|,
+comment|/* set Ethernet address */
+name|NGM_ETHER_GET_PROMISC
+block|,
+comment|/* get node's promiscuous mode bit */
 name|NGM_ETHER_SET_PROMISC
 block|,
 comment|/* enable/disable promiscuous mode */
+name|NGM_ETHER_GET_AUTOSRC
+block|,
+comment|/* get source address override */
 name|NGM_ETHER_SET_AUTOSRC
 block|,
 comment|/* enable/disable src addr override */
