@@ -525,6 +525,13 @@ name|timeout
 operator|=
 literal|5
 expr_stmt|;
+name|request
+operator|->
+name|retries
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|ata_queue_request
 argument_list|(
 name|request
