@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /sys/miscfs/devfs/RCS/devfs_front.c,v 1.3 1995/01/07 04:20:25 root Exp root $  *  */
+comment|/*  * Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_front.c,v 1.2 1995/04/20 07:34:52 julian Exp $  *  */
 end_comment
 
 begin_include
@@ -519,6 +519,8 @@ case|:
 case|case
 name|DEV_DDEV
 case|:
+name|dnp
+operator|=
 name|newfp
 operator|->
 name|dnp
@@ -1854,6 +1856,9 @@ expr_stmt|;
 block|}
 block|}
 return|return
+name|error
+return|;
+block|}
 end_function
 
 end_unit
