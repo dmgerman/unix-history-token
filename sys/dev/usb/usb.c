@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb.c,v 1.53 2001/01/23 17:04:30 augustss Exp $	*/
+comment|/*	$NetBSD: usb.c,v 1.54 2001/11/09 14:59:11 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -3592,6 +3592,19 @@ name|usbd_bus_handle
 name|bus
 parameter_list|)
 block|{
+name|DPRINTFN
+argument_list|(
+literal|10
+argument_list|,
+operator|(
+literal|"usb_schedsoftintr: polling=%d\n"
+operator|,
+name|bus
+operator|->
+name|use_polling
+operator|)
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|USB_USE_SOFTINTR
