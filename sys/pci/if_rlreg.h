@@ -3916,6 +3916,17 @@ value|0xa11e
 end_define
 
 begin_comment
+comment|/*  * Corega CG-LAPCIGT device ID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COREGA_DEVICEID_CGLAPCIGT
+value|0xc107
+end_define
+
+begin_comment
 comment|/*  * Peppercon vendor ID  */
 end_comment
 

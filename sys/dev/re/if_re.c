@@ -315,6 +315,16 @@ literal|"RealTek 8110S Single-chip Gigabit Ethernet"
 block|}
 block|,
 block|{
+name|COREGA_VENDORID
+block|,
+name|COREGA_DEVICEID_CGLAPCIGT
+block|,
+name|RL_HWREV_8169S
+block|,
+literal|"Corega CG-LAPCIGT (RTL8169S) Gigabit Ethernet"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
