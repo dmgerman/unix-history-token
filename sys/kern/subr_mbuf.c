@@ -4396,7 +4396,8 @@ modifier|*
 name|freef
 function_decl|)
 parameter_list|(
-name|caddr_t
+name|void
+modifier|*
 parameter_list|,
 name|void
 modifier|*
