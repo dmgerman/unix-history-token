@@ -5162,6 +5162,7 @@ name|sc_socketreg
 operator|->
 name|socket_state
 expr_stmt|;
+comment|/*  	 * XXX This busy wait is bogus.  We should wait for a power 	 * interrupt and then whine if the status is bad.  If we're 	 * worried about the card not coming up, then we should also 	 * schedule a timeout which we can cacel in the power interrupt. 	 */
 block|{
 name|int
 name|timeout
@@ -5205,6 +5206,7 @@ literal|0
 condition|)
 do|;
 comment|/* reset event status */
+comment|/* XXX should only reset EVENT_POWER */
 name|sc
 operator|->
 name|sc_socketreg
@@ -5230,7 +5232,7 @@ literal|0
 return|;
 block|}
 block|}
-comment|/* XXX 	 * delay 400 ms: thgough the standard defines that the Vcc set-up time 	 * is 20 ms, some PC-Card bridge requires longer duration. 	 */
+comment|/* XXX 	 * delay 400 ms: thgough the standard defines that the Vcc set-up time 	 * is 20 ms, some PC-Card bridge requires longer duration. 	 * XXX Note: We should check the stutus AFTER the delay to give time 	 * for things to stabilize. 	 */
 name|DELAY
 argument_list|(
 literal|400
