@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_tb.c	6.1	83/08/13	*/
+comment|/*	tty_tb.c	6.2	83/09/22	*/
 end_comment
 
 begin_include
@@ -354,6 +354,21 @@ init|=
 name|spl5
 argument_list|()
 decl_stmt|;
+operator|(
+operator|(
+expr|struct
+name|tb
+operator|*
+operator|)
+name|tp
+operator|->
+name|T_LINEP
+operator|)
+operator|->
+name|used
+operator|=
+literal|0
+expr_stmt|;
 name|tp
 operator|->
 name|t_cp
@@ -427,13 +442,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
-specifier|register
-name|s
-expr_stmt|;
 name|struct
 name|tbpos
 modifier|*
