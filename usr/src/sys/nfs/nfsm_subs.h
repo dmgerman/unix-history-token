@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfsm_subs.h	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfsm_subs.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -21,116 +21,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|struct
-name|vnode
-modifier|*
-name|nfs_fhtovp
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * To try and deal with different variants of mbuf.h, I have used the  * following defs. If M_HASCL is not defined in an older the 4.4bsd mbuf.h,  * you will have to use a different ifdef  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|M_HASCL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|NFSMCLGET
-parameter_list|(
-name|m
-parameter_list|,
-name|w
-parameter_list|)
-value|MCLGET(m)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NFSMGETHDR
-parameter_list|(
-name|m
-parameter_list|)
-value|MGET(m, M_WAIT, MT_DATA)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MHLEN
-value|MLEN
-end_define
-
-begin_define
-define|#
-directive|define
-name|NFSMINOFF
-parameter_list|(
-name|m
-parameter_list|)
-define|\
-value|if (M_HASCL(m)) \ 			(m)->m_off = ((int)MTOCL(m))-(int)(m); \ 		else \ 			(m)->m_off = MMINOFF
-end_define
-
-begin_define
-define|#
-directive|define
-name|NFSMADV
-parameter_list|(
-name|m
-parameter_list|,
-name|s
-parameter_list|)
-value|(m)->m_off += (s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NFSMSIZ
-parameter_list|(
-name|m
-parameter_list|)
-value|((M_HASCL(m))?MCLBYTES:MLEN)
-end_define
-
-begin_define
-define|#
-directive|define
-name|m_nextpkt
-value|m_act
-end_define
-
-begin_define
-define|#
-directive|define
-name|NFSMCOPY
-parameter_list|(
-name|m
-parameter_list|,
-name|o
-parameter_list|,
-name|l
-parameter_list|,
-name|w
-parameter_list|)
-value|m_copy((m), (o), (l))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -139,13 +29,6 @@ parameter_list|(
 name|m
 parameter_list|)
 value|((m)->m_flags& M_EXT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NFSMCLGET
-value|MCLGET
 end_define
 
 begin_define
@@ -191,54 +74,6 @@ name|m
 parameter_list|)
 value|((M_HASCL(m))?MCLBYTES: \ 				(((m)->m_flags& M_PKTHDR)?MHLEN:MLEN))
 end_define
-
-begin_define
-define|#
-directive|define
-name|NFSMCOPY
-value|m_copym
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MCLBYTES
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MCLBYTES
-value|CLBYTES
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MT_CONTROL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MT_CONTROL
-value|MT_RIGHTS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Now for the macros that do the simple stuff and call the functions  * for the hard stuff.  * These macros use several vars. declared in nfsm_reqhead and these  * vars. must not be used elsewhere unless you are careful not to corrupt  * them. The vars. starting with pN and tN (N=1,2,3,..) are temporaries  * that may be used so long as the value is not expected to retained  * after a macro.  * I know, this is kind of dorkey, but it makes the actual op functions  * fairly clean and deals with the mess caused by the xdr discriminating  * unions.  */
@@ -468,9 +303,11 @@ parameter_list|(
 name|v
 parameter_list|,
 name|t
+parameter_list|,
+name|p
 parameter_list|)
 define|\
-value|if (error = nfs_request((v), mreq, xid, 5*(t), \ 		   (v)->v_mount,&mrep,&md,&dpos)) \ 			goto nfsmout
+value|if (error = nfs_request((v), mreq, xid, (t), (p), \ 		   (v)->v_mount,&mrep,&md,&dpos)) \ 			goto nfsmout
 end_define
 
 begin_define
@@ -486,14 +323,6 @@ name|m
 parameter_list|)
 define|\
 value|if ((s)> (m)) { \ 			m_freem(mreq); \ 			error = ENAMETOOLONG; \ 			goto nfsmout; \ 		} \ 		t2 = nfsm_rndup(s)+NFSX_UNSIGNED; \ 		if(t2<=(NFSMSIZ(mb)-mb->m_len)){ \ 			nfsm_build(p,u_long *,t2); \ 			*p++ = txdr_unsigned(s); \ 			*(p+((t2>>2)-2)) = 0; \ 			bcopy((caddr_t)(a), (caddr_t)p, (s)); \ 		} else if (error = nfsm_strtmbuf(&mb,&bpos, (a), (s))) { \ 			m_freem(mreq); \ 			goto nfsmout; \ 		}
-end_define
-
-begin_define
-define|#
-directive|define
-name|nfsm_srverr
-define|\
-value|{ \ 			m_freem(mrep); \ 			return(ENOBUFS); \ 		}
 end_define
 
 begin_define
@@ -577,7 +406,7 @@ define|#
 directive|define
 name|nfsm_clget
 define|\
-value|if (bp>= be) { \ 			MGET(mp, M_WAIT, MT_DATA); \ 			NFSMCLGET(mp, M_WAIT); \ 			mp->m_len = NFSMSIZ(mp); \ 			if (mp3 == NULL) \ 				mp3 = mp2 = mp; \ 			else { \ 				mp2->m_next = mp; \ 				mp2 = mp; \ 			} \ 			bp = mtod(mp, caddr_t); \ 			be = bp+mp->m_len; \ 		} \ 		p = (u_long *)bp
+value|if (bp>= be) { \ 			MGET(mp, M_WAIT, MT_DATA); \ 			MCLGET(mp, M_WAIT); \ 			mp->m_len = NFSMSIZ(mp); \ 			if (mp3 == NULL) \ 				mp3 = mp2 = mp; \ 			else { \ 				mp2->m_next = mp; \ 				mp2 = mp; \ 			} \ 			bp = mtod(mp, caddr_t); \ 			be = bp+mp->m_len; \ 		} \ 		p = (u_long *)bp
 end_define
 
 begin_define

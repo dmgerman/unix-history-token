@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs.h	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAX_IOVEC
+name|NFS_MAXIOVEC
 value|10
 end_define
 
@@ -56,6 +56,28 @@ end_define
 
 begin_comment
 comment|/* Max timeout to backoff to */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFS_MINIDEMTIMEO
+value|(2*NFS_HZ)
+end_define
+
+begin_comment
+comment|/* Min timeout for non-idempotent ops*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFS_RELIABLETIMEO
+value|(300*NFS_HZ)
+end_define
+
+begin_comment
+comment|/* Min timeout on reliable sockets */
 end_comment
 
 begin_define
@@ -138,7 +160,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAX_READDIR
+name|NFS_MAXREADDIR
 value|NFS_RSIZE
 end_define
 
@@ -149,12 +171,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAX_ASYNCDAEMON
+name|NFS_MAXASYNCDAEMON
 value|20
 end_define
 
 begin_comment
-comment|/* Max. number async_daemons runnable */
+comment|/* Max. number async_daemons runable */
 end_comment
 
 begin_define
@@ -165,6 +187,34 @@ parameter_list|(
 name|a
 parameter_list|)
 value|((a) % nfs_asyncdaemons)
+end_define
+
+begin_comment
+comment|/*  * The set of signals the interrupt an I/O in progress for NFSMNT_INT mounts.  * What should be in this set is open to debate, but I believe that since  * I/O system calls on ufs are never interrupted by signals the set should  * be minimal. My reasoning is that many current programs that use signals  * such as SIGALRM will not expect file I/O system calls to be interrupted  * by them and break.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSINT_SIGMASK
+value|(sigmask(SIGINT)|sigmask(SIGTERM)|sigmask(SIGKILL)| \ 			 sigmask(SIGHUP)|sigmask(SIGQUIT))
+end_define
+
+begin_comment
+comment|/*  * Socket errors ignored for connectionless sockets??  * For now, ignore them all  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSIGNORE_SOERROR
+parameter_list|(
+name|s
+parameter_list|,
+name|e
+parameter_list|)
+define|\
+value|((e) != EINTR&& (e) != ERESTART&& (e) != EWOULDBLOCK&& \ 		((s)& PR_CONNREQUIRED) == 0)
 end_define
 
 begin_comment
@@ -198,15 +248,12 @@ decl_stmt|;
 name|struct
 name|nfsmount
 modifier|*
-name|r_mntp
+name|r_nmp
 decl_stmt|;
 name|struct
 name|vnode
 modifier|*
 name|r_vp
-decl_stmt|;
-name|int
-name|r_msiz
 decl_stmt|;
 name|u_long
 name|r_xid
@@ -231,6 +278,12 @@ name|short
 name|r_timerinit
 decl_stmt|;
 comment|/* reinit tick counter on reply */
+name|struct
+name|proc
+modifier|*
+name|r_procp
+decl_stmt|;
+comment|/* Proc that did I/O system call */
 block|}
 struct|;
 end_struct
@@ -259,6 +312,61 @@ end_define
 
 begin_comment
 comment|/* request has been sent */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_SOFTTERM
+value|0x04
+end_define
+
+begin_comment
+comment|/* soft mnt, too many retries */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_INTR
+value|0x08
+end_define
+
+begin_comment
+comment|/* intr mnt, signal pending */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_SOCKERR
+value|0x10
+end_define
+
+begin_comment
+comment|/* Fatal error on socket */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_TPRINTFMSG
+value|0x20
+end_define
+
+begin_comment
+comment|/* Did a tprintf msg. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_MUSTRESEND
+value|0x40
+end_define
+
+begin_comment
+comment|/* Must resend request */
 end_comment
 
 begin_ifdef
@@ -359,6 +467,18 @@ name|write_bios
 decl_stmt|;
 name|int
 name|write_physios
+decl_stmt|;
+name|int
+name|biocache_readlinks
+decl_stmt|;
+name|int
+name|readlink_bios
+decl_stmt|;
+name|int
+name|biocache_readdirs
+decl_stmt|;
+name|int
+name|readdir_bios
 decl_stmt|;
 name|int
 name|rpccnt
