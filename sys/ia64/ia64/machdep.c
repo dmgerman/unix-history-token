@@ -1159,12 +1159,6 @@ decl_stmt|;
 name|u_int64_t
 name|features
 decl_stmt|;
-name|char
-name|familyname
-index|[
-literal|20
-index|]
-decl_stmt|;
 comment|/* 	 * Assumes little-endian. 	 */
 operator|*
 operator|(
@@ -1270,7 +1264,7 @@ literal|0x7
 condition|)
 name|strcpy
 argument_list|(
-name|familyname
+name|cpu_model
 argument_list|,
 literal|"Itanium"
 argument_list|)
@@ -1284,7 +1278,7 @@ literal|0x1f
 condition|)
 name|strcpy
 argument_list|(
-name|familyname
+name|cpu_model
 argument_list|,
 literal|"McKinley"
 argument_list|)
@@ -1292,11 +1286,11 @@ expr_stmt|;
 else|else
 name|snprintf
 argument_list|(
-name|familyname
+name|cpu_model
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|familyname
+name|cpu_model
 argument_list|)
 argument_list|,
 literal|"Family=%d"
@@ -1315,7 +1309,7 @@ name|printf
 argument_list|(
 literal|"CPU: %s"
 argument_list|,
-name|familyname
+name|cpu_model
 argument_list|)
 expr_stmt|;
 if|if
@@ -5186,6 +5180,7 @@ operator||
 name|IA64_PSR_CPL_USER
 operator|)
 expr_stmt|;
+comment|/* 	 * Make sure that sp is aligned to a 16 byte boundary and 	 * reserve 16 bytes of scratch space for _start. 	 */
 name|frame
 operator|->
 name|tf_r
@@ -5193,18 +5188,16 @@ index|[
 name|FRAME_SP
 index|]
 operator|=
+operator|(
 name|stack
+operator|&
+operator|~
+literal|15
+operator|)
+operator|-
+literal|16
 expr_stmt|;
-name|frame
-operator|->
-name|tf_r
-index|[
-name|FRAME_R14
-index|]
-operator|=
-name|ps_strings
-expr_stmt|;
-comment|/* 	 * Setup the new backing store and make sure the new image 	 * starts executing with an empty register stack frame. 	 */
+comment|/* 	 * Write values for out0, out1 and out2 to the user's backing 	 * store and arrange for them to be restored into the user's 	 * initial register frame. Assumes that (bspstore& 0x1f8)< 	 * 0x1e0. 	 */
 name|frame
 operator|->
 name|tf_ar_bspstore
@@ -5214,6 +5207,50 @@ operator|->
 name|td_md
 operator|.
 name|md_bspstore
+operator|+
+literal|24
+expr_stmt|;
+name|suword
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|frame
+operator|->
+name|tf_ar_bspstore
+operator|-
+literal|24
+argument_list|,
+name|stack
+argument_list|)
+expr_stmt|;
+name|suword
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|frame
+operator|->
+name|tf_ar_bspstore
+operator|-
+literal|16
+argument_list|,
+name|ps_strings
+argument_list|)
+expr_stmt|;
+name|suword
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|frame
+operator|->
+name|tf_ar_bspstore
+operator|-
+literal|8
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|frame
 operator|->
@@ -5230,8 +5267,10 @@ literal|1L
 operator|<<
 literal|63
 operator|)
+operator||
+literal|3
 expr_stmt|;
-comment|/* ifm=0, v=1 */
+comment|/* sof=3, v=1 */
 name|frame
 operator|->
 name|tf_ar_rsc
