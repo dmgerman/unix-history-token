@@ -184,6 +184,14 @@ end_include
 
 begin_decl_stmt
 name|int
+name|family
+init|=
+name|AF_UNSPEC
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 decl|main
 name|__P
 argument_list|(
@@ -616,7 +624,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"adeginpP:s:tUvV"
+literal|"46adeginpP:s:tUvV"
 argument_list|)
 operator|)
 operator|!=
@@ -629,6 +637,27 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'4'
+case|:
+name|family
+operator|=
+name|AF_INET
+expr_stmt|;
+break|break;
+ifdef|#
+directive|ifdef
+name|INET6
+case|case
+literal|'6'
+case|:
+name|family
+operator|=
+name|AF_INET6
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 case|case
 literal|'a'
 case|:
@@ -820,7 +849,7 @@ name|hints
 operator|.
 name|ai_family
 operator|=
-name|AF_UNSPEC
+name|family
 expr_stmt|;
 name|hints
 operator|.
@@ -2777,7 +2806,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-adeginptUvV] [-P port] [-s src_addr] [host [port]]\n"
+literal|"usage: %s [-46adeginptUvV] [-P port] [-s src_addr] [host [port]]\n"
 literal|"       %s host:path[/]\n"
 literal|"       %s ftp://host[:port]/path[/]\n"
 literal|"       %s http://host[:port]/file\n"

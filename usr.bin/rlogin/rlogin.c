@@ -331,6 +331,14 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|family
+init|=
+name|PF_UNSPEC
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|noescape
 decl_stmt|;
 end_decl_stmt
@@ -885,13 +893,13 @@ name|KERBEROS
 define|#
 directive|define
 name|OPTIONS
-value|"8DEKLde:i:k:l:x"
+value|"468DEKLde:i:k:l:x"
 else|#
 directive|else
 define|#
 directive|define
 name|OPTIONS
-value|"8DEKLde:i:l:"
+value|"468DEKLde:i:l:"
 endif|#
 directive|endif
 while|while
@@ -921,6 +929,22 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'4'
+case|:
+name|family
+operator|=
+name|PF_INET
+expr_stmt|;
+break|break;
+case|case
+literal|'6'
+case|:
+name|family
+operator|=
+name|PF_INET6
+expr_stmt|;
+break|break;
 case|case
 literal|'8'
 case|:
@@ -1678,7 +1702,7 @@ name|term
 argument_list|,
 literal|0
 argument_list|,
-name|PF_UNSPEC
+name|family
 argument_list|)
 expr_stmt|;
 block|}
@@ -1703,7 +1727,7 @@ name|term
 argument_list|,
 literal|0
 argument_list|,
-name|PF_UNSPEC
+name|family
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4353,7 +4377,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rlogin [-%s]%s[-e char] [-i localname] [-l username] host\n"
+literal|"usage: rlogin [-46%s]%s[-e char] [-i localname] [-l username] host\n"
 argument_list|,
 ifdef|#
 directive|ifdef

@@ -264,6 +264,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|family
+init|=
+name|PF_UNSPEC
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|copyargs
@@ -510,13 +518,13 @@ name|CRYPT
 define|#
 directive|define
 name|OPTIONS
-value|"8KLde:k:l:nt:wx"
+value|"468KLde:k:l:nt:wx"
 else|#
 directive|else
 define|#
 directive|define
 name|OPTIONS
-value|"8KLde:k:l:nt:w"
+value|"468KLde:k:l:nt:w"
 endif|#
 directive|endif
 else|#
@@ -524,7 +532,7 @@ directive|else
 define|#
 directive|define
 name|OPTIONS
-value|"8KLde:l:nt:w"
+value|"468KLde:l:nt:w"
 endif|#
 directive|endif
 while|while
@@ -554,6 +562,22 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'4'
+case|:
+name|family
+operator|=
+name|PF_INET
+expr_stmt|;
+break|break;
+case|case
+literal|'6'
+case|:
+name|family
+operator|=
+name|PF_INET6
+expr_stmt|;
+break|break;
 case|case
 literal|'K'
 case|:
@@ -1128,7 +1152,7 @@ argument_list|,
 operator|&
 name|rfd2
 argument_list|,
-name|PF_UNSPEC
+name|family
 argument_list|)
 expr_stmt|;
 block|}
@@ -1156,7 +1180,7 @@ argument_list|,
 operator|&
 name|rfd2
 argument_list|,
-name|PF_UNSPEC
+name|family
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2299,7 +2323,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rsh [-nd%s]%s[-l login] [-t timeout] host [command]\n"
+literal|"usage: rsh [-46] [-nd%s]%s[-l login] [-t timeout] host [command]\n"
 argument_list|,
 ifdef|#
 directive|ifdef
