@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mtio.h	4.9	83/01/13	*/
+comment|/*	mtio.h	4.10	83/01/17	*/
 end_comment
 
 begin_comment
@@ -117,28 +117,6 @@ end_define
 
 begin_comment
 comment|/* no operation, sets status only */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MTTENSE
-value|8
-end_define
-
-begin_comment
-comment|/* streamer - ??? */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MTERASE
-value|9
-end_define
-
-begin_comment
-comment|/* streamer - erase previous record? */
 end_comment
 
 begin_comment
