@@ -2151,6 +2151,10 @@ name|latch
 operator|=
 literal|0
 expr_stmt|;
+name|_pw_stepping_yp
+operator|=
+literal|0
+expr_stmt|;
 name|gr
 operator|=
 name|NULL
