@@ -16,6 +16,16 @@ name|_SYS_MBUF_H_
 end_define
 
 begin_comment
+comment|/*  * XXXMAC: Possibly this recursive include is a bad idea, but a lot  * of code exists that assumes it is sufficient to include just mbuf.h  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
+end_include
+
+begin_comment
 comment|/*  * Mbufs are of a single size, MSIZE (machine/param.h), which  * includes overhead.  An mbuf may add a single "mbuf cluster" of size  * MCLBYTES (also in machine/param.h), which has no additional overhead  * and is used instead of the internal data area; this is done when  * at least MINCLSIZE of data must be stored.  Additionally, it is possible  * to allocate a separate buffer externally and attach it to the mbuf in  * a way similar to that of mbuf clusters.  */
 end_comment
 
@@ -183,6 +193,11 @@ modifier|*
 name|aux
 decl_stmt|;
 comment|/* extra data buffer; ipsec/others */
+name|struct
+name|label
+name|label
+decl_stmt|;
+comment|/* MAC label of data in packet */
 block|}
 struct|;
 end_struct
