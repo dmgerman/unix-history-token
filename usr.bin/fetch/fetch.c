@@ -2365,9 +2365,14 @@ name|tmppath
 argument_list|,
 literal|"%.*s.fetch.XXXXXX.%s"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|slash
 operator|-
 name|path
+argument_list|)
 argument_list|,
 name|path
 argument_list|,
