@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: eval.c,v 1.15 1998/05/18 06:43:34 charnier Exp $"
+literal|"$Id: eval.c,v 1.16 1999/04/01 13:27:35 cracauer Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,6 +52,16 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
+end_include
+
+begin_comment
+comment|/* For WIFSIGNALED(status) */
+end_comment
 
 begin_comment
 comment|/*  * Evaluate a command.  */
@@ -4176,6 +4186,29 @@ argument_list|)
 expr_stmt|;
 name|INTON
 expr_stmt|;
+if|if
+condition|(
+name|iflag
+operator|&&
+name|loopnest
+operator|>
+literal|0
+operator|&&
+name|WIFSIGNALED
+argument_list|(
+name|exitstatus
+argument_list|)
+condition|)
+block|{
+name|evalskip
+operator|=
+name|SKIPBREAK
+expr_stmt|;
+name|skipcount
+operator|=
+name|loopnest
+expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
