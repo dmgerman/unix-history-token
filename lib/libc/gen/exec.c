@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: exec.c,v 1.6 1997/10/14 07:23:16 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1194,10 +1194,7 @@ if|if
 condition|(
 name|stat
 argument_list|(
-name|argv
-index|[
-literal|0
-index|]
+name|bp
 argument_list|,
 operator|&
 name|sb
