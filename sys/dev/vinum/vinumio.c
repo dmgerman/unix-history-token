@@ -1059,6 +1059,12 @@ expr_stmt|;
 comment|/* block number */
 name|bp
 operator|->
+name|b_offset
+operator|=
+name|offset
+expr_stmt|;
+name|bp
+operator|->
 name|b_saveaddr
 operator|=
 name|bp
