@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stat.h	7.17 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stat.h	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -398,17 +398,6 @@ begin_comment
 comment|/* X for other */
 end_comment
 
-begin_comment
-comment|/* 0666 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEFFILEMODE
-value|(S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH)
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -423,7 +412,7 @@ value|0170000
 end_define
 
 begin_comment
-comment|/* type of file */
+comment|/* type of file mask */
 end_comment
 
 begin_define
@@ -514,16 +503,10 @@ begin_comment
 comment|/* save swapped text even after use */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|S_BLKSIZE
-value|512
-end_define
-
-begin_comment
-comment|/* block size used in the stat struct */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -633,6 +616,34 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
+begin_comment
+comment|/* 0666 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFFILEMODE
+value|(S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_BLKSIZE
+value|512
+end_define
+
+begin_comment
+comment|/* block size used in the stat struct */
+end_comment
 
 begin_comment
 comment|/*  * Definitions of flags stored in file flags word.  *  * Low 16-bits: super-user and owner settable.  */
