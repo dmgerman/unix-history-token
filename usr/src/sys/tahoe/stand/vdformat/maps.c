@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)maps.c	1.2 (Berkeley/CCI) %G%"
+literal|"@(#)maps.c	1.3 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -394,20 +394,6 @@ return|return
 name|true
 return|;
 block|}
-else|else
-name|printf
-argument_list|(
-literal|"%d: junk, slot %d/%d\n"
-argument_list|,
-name|trk
-argument_list|,
-name|i
-argument_list|,
-name|bad_map
-operator|->
-name|bs_count
-argument_list|)
-expr_stmt|;
 block|}
 name|blkzero
 argument_list|(
@@ -551,18 +537,8 @@ operator|==
 name|true
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"Reading manufacturer's flaw maps..."
-argument_list|)
-expr_stmt|;
 name|read_flaw_map
 argument_list|()
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -589,18 +565,8 @@ return|;
 block|}
 else|else
 block|{
-name|printf
-argument_list|(
-literal|"Scanning for old relocations..."
-argument_list|)
-expr_stmt|;
 name|get_smde_relocations
 argument_list|()
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
 expr_stmt|;
 return|return
 name|false
@@ -625,18 +591,8 @@ operator|)
 return|;
 else|else
 block|{
-name|printf
-argument_list|(
-literal|"Scanning for old relocations..."
-argument_list|)
-expr_stmt|;
 name|get_relocations_the_hard_way
 argument_list|()
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
