@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)memcpy.c	5.4 (Berkeley) %G%"
+literal|"@(#)memcpy.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,64 +37,66 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
-begin_decl_stmt
-name|char
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stdc.h>
+end_include
+
+begin_undef
+undef|#
+directive|undef
+name|memcpy
+end_undef
+
+begin_comment
+comment|/*  * Copy a block of memory.  */
+end_comment
+
+begin_function
+name|void
 modifier|*
 name|memcpy
+parameter_list|(
+name|dst
+parameter_list|,
+name|src
+parameter_list|,
+name|n
+parameter_list|)
+name|void
+modifier|*
+name|dst
+decl_stmt|;
+specifier|const
+name|void
+modifier|*
+name|src
+decl_stmt|;
+name|size_t
+name|n
+decl_stmt|;
+block|{
+return|return
+operator|(
+name|memmove
 argument_list|(
-name|t
+name|dst
 argument_list|,
-name|f
+name|src
 argument_list|,
 name|n
 argument_list|)
-decl|register
-name|char
-modifier|*
-name|t
-decl_stmt|,
-modifier|*
-name|f
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-specifier|register
-name|n
-expr_stmt|;
-end_expr_stmt
-
-begin_block
-block|{
-specifier|register
-name|char
-modifier|*
-name|p
-init|=
-name|t
-decl_stmt|;
-while|while
-condition|(
-operator|--
-name|n
-operator|>=
-literal|0
-condition|)
-operator|*
-name|t
-operator|++
-operator|=
-operator|*
-name|f
-operator|++
-expr_stmt|;
-return|return
-operator|(
-name|p
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
