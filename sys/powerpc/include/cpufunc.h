@@ -74,8 +74,7 @@ name|__inline
 name|void
 name|mtmsr
 parameter_list|(
-name|unsigned
-name|int
+name|register_t
 name|value
 parameter_list|)
 block|{
@@ -86,15 +85,13 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|unsigned
-name|int
+name|register_t
 name|mfmsr
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|unsigned
-name|int
+name|register_t
 name|value
 decl_stmt|;
 asm|__asm __volatile ("mfmsr %0" : "=r"(value));
@@ -112,8 +109,7 @@ name|__inline
 name|void
 name|mtdec
 parameter_list|(
-name|unsigned
-name|int
+name|register_t
 name|value
 parameter_list|)
 block|{
@@ -124,15 +120,13 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|unsigned
-name|int
+name|register_t
 name|mfdec
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|unsigned
-name|int
+name|register_t
 name|value
 decl_stmt|;
 asm|__asm __volatile ("mfdec %0" : "=r"(value));
@@ -141,6 +135,19 @@ operator|(
 name|value
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|isync
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+asm|__asm __volatile ("isync");
 block|}
 end_function
 
