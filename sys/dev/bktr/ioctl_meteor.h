@@ -753,7 +753,7 @@ begin_define
 define|#
 directive|define
 name|METEOR_INPUT_DEV_RCA
-value|METEOR_GEO_DEV0
+value|METEOR_INPUT_DEV0
 end_define
 
 begin_define
@@ -948,6 +948,46 @@ end_define
 
 begin_comment
 comment|/* YUV 9 format */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|METEOR_FIELD_MODE
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Field cap or Frame cap */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|METEOR_SIG_MODE_MASK
+value|0xffff0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|METEOR_SIG_FRAME
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* signal every frame */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|METEOR_SIG_FIELD
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* signal every field */
 end_comment
 
 begin_comment
