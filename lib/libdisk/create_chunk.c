@@ -78,12 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<grp.h>
 end_include
 
@@ -323,7 +317,7 @@ name|c1
 operator|->
 name|name
 condition|)
-name|err
+name|barfout
 argument_list|(
 literal|1
 argument_list|,
@@ -777,7 +771,7 @@ name|c1
 operator|->
 name|name
 condition|)
-name|err
+name|barfout
 argument_list|(
 literal|1
 argument_list|,
@@ -921,7 +915,7 @@ name|c2
 operator|->
 name|oname
 condition|)
-name|err
+name|barfout
 argument_list|(
 literal|1
 argument_list|,
@@ -1550,7 +1544,7 @@ condition|)
 return|return
 name|c1
 return|;
-name|err
+name|barfout
 argument_list|(
 literal|1
 argument_list|,
