@@ -4304,7 +4304,13 @@ operator|->
 name|cfg1
 operator|==
 name|HPT366
+operator|&&
+name|ATAPI_DEVICE
+argument_list|(
+name|atadev
+argument_list|)
 condition|)
+empty_stmt|;
 name|mode
 operator|=
 name|ata_limit_mode
@@ -4313,14 +4319,7 @@ name|atadev
 argument_list|,
 name|mode
 argument_list|,
-name|ATAPI_DEVICE
-argument_list|(
-name|atadev
-argument_list|)
-condition|?
 name|ATA_PIO_MAX
-else|:
-name|ATA_UDMA4
 argument_list|)
 expr_stmt|;
 name|mode
@@ -7073,7 +7072,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
 name|ATAPI_DEVICE
 argument_list|(
 name|atadev
