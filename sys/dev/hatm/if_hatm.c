@@ -7721,7 +7721,7 @@ name|kenv_getuint
 argument_list|(
 name|sc
 argument_list|,
-literal|"rbps0.size"
+literal|"rbps0_size"
 argument_list|,
 operator|&
 name|sc
@@ -7739,7 +7739,7 @@ name|kenv_getuint
 argument_list|(
 name|sc
 argument_list|,
-literal|"rbps0.thresh"
+literal|"rbps0_thresh"
 argument_list|,
 operator|&
 name|sc
@@ -7766,7 +7766,7 @@ name|kenv_getuint
 argument_list|(
 name|sc
 argument_list|,
-literal|"rbpl0.size"
+literal|"rbpl0_size"
 argument_list|,
 operator|&
 name|sc
@@ -7784,7 +7784,7 @@ name|kenv_getuint
 argument_list|(
 name|sc
 argument_list|,
-literal|"rbpl0.thresh"
+literal|"rbpl0_thresh"
 argument_list|,
 operator|&
 name|sc
@@ -7813,7 +7813,7 @@ name|kenv_getuint
 argument_list|(
 name|sc
 argument_list|,
-literal|"rbrq0.size"
+literal|"rbrq0_size"
 argument_list|,
 operator|&
 name|sc
@@ -7831,7 +7831,7 @@ name|kenv_getuint
 argument_list|(
 name|sc
 argument_list|,
-literal|"rbrq0.thresh"
+literal|"rbrq0_thresh"
 argument_list|,
 operator|&
 name|sc
@@ -7849,7 +7849,7 @@ name|kenv_getuint
 argument_list|(
 name|sc
 argument_list|,
-literal|"rbrq0.tout"
+literal|"rbrq0_tout"
 argument_list|,
 operator|&
 name|sc
@@ -7867,7 +7867,7 @@ name|kenv_getuint
 argument_list|(
 name|sc
 argument_list|,
-literal|"rbrq0.pcnt"
+literal|"rbrq0_pcnt"
 argument_list|,
 operator|&
 name|sc
@@ -7886,7 +7886,7 @@ name|kenv_getuint
 argument_list|(
 name|sc
 argument_list|,
-literal|"rbps1.size"
+literal|"rbps1_size"
 argument_list|,
 operator|&
 name|sc
@@ -7904,7 +7904,7 @@ name|kenv_getuint
 argument_list|(
 name|sc
 argument_list|,
-literal|"rbps1.thresh"
+literal|"rbps1_thresh"
 argument_list|,
 operator|&
 name|sc
@@ -7931,7 +7931,7 @@ name|kenv_getuint
 argument_list|(
 name|sc
 argument_list|,
-literal|"rbrq1.size"
+literal|"rbrq1_size"
 argument_list|,
 operator|&
 name|sc
@@ -7949,7 +7949,7 @@ name|kenv_getuint
 argument_list|(
 name|sc
 argument_list|,
-literal|"rbrq1.thresh"
+literal|"rbrq1_thresh"
 argument_list|,
 operator|&
 name|sc
@@ -7967,7 +7967,7 @@ name|kenv_getuint
 argument_list|(
 name|sc
 argument_list|,
-literal|"rbrq1.tout"
+literal|"rbrq1_tout"
 argument_list|,
 operator|&
 name|sc
@@ -7985,7 +7985,7 @@ name|kenv_getuint
 argument_list|(
 name|sc
 argument_list|,
-literal|"rbrq1.pcnt"
+literal|"rbrq1_pcnt"
 argument_list|,
 operator|&
 name|sc
@@ -8004,7 +8004,7 @@ name|kenv_getuint
 argument_list|(
 name|sc
 argument_list|,
-literal|"irq0.size"
+literal|"irq0_size"
 argument_list|,
 operator|&
 name|sc
@@ -8022,7 +8022,7 @@ name|kenv_getuint
 argument_list|(
 name|sc
 argument_list|,
-literal|"irq0.thresh"
+literal|"irq0_thresh"
 argument_list|,
 operator|&
 name|sc
@@ -8049,7 +8049,7 @@ name|kenv_getuint
 argument_list|(
 name|sc
 argument_list|,
-literal|"tbrq0.size"
+literal|"tbrq0_size"
 argument_list|,
 operator|&
 name|sc
@@ -8067,7 +8067,7 @@ name|kenv_getuint
 argument_list|(
 name|sc
 argument_list|,
-literal|"tbrq0.thresh"
+literal|"tbrq0_thresh"
 argument_list|,
 operator|&
 name|sc
@@ -8086,7 +8086,7 @@ name|kenv_getuint
 argument_list|(
 name|sc
 argument_list|,
-literal|"tpdrq.size"
+literal|"tpdrq_size"
 argument_list|,
 operator|&
 name|sc
