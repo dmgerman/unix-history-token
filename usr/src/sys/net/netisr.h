@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)netisr.h	6.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)netisr.h	6.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -55,23 +55,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NETISR_IMP
+value|3
+end_define
+
+begin_comment
+comment|/* same as AF_IMPLINK */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NETISR_NS
 value|6
 end_define
 
 begin_comment
 comment|/* same as AF_NS */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NETISR_ND
-value|7
-end_define
-
-begin_comment
-comment|/* network disk protocol */
 end_comment
 
 begin_define
