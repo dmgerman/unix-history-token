@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: create.c,v 1.9 1997/10/01 06:30:00 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -175,7 +175,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|u_short
+name|u_int
 name|keys
 decl_stmt|;
 end_decl_stmt

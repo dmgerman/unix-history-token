@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: verify.c,v 1.5 1997/10/01 06:30:02 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -484,6 +484,16 @@ name|F_VISIT
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|ep
+operator|->
+name|flags
+operator|&
+name|F_NOCHANGE
+operator|)
+operator|==
+literal|0
+operator|&&
 name|compare
 argument_list|(
 name|ep
@@ -505,7 +515,11 @@ name|ep
 operator|->
 name|flags
 operator|&
+operator|(
 name|F_IGN
+operator||
+name|F_NOCHANGE
+operator|)
 condition|)
 operator|(
 name|void
@@ -826,7 +840,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" (not created: user not specified)"
+literal|" (directory not created: user not specified)"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -850,7 +864,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" (not created: group not specified)"
+literal|" (directory not created: group not specified)"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -870,7 +884,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" (not created: mode not specified)"
+literal|" (directory not created: mode not specified)"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -888,7 +902,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" (not created: %s)"
+literal|" (directory not created: %s)"
 argument_list|,
 name|strerror
 argument_list|(

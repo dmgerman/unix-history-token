@@ -176,7 +176,13 @@ directive|define
 name|F_MD5
 value|0x8000
 comment|/* MD5 digest */
-name|u_short
+define|#
+directive|define
+name|F_NOCHANGE
+value|0x10000
+comment|/* If owner/mode "wrong", do */
+comment|/* not change */
+name|u_int
 name|flags
 decl_stmt|;
 comment|/* items set */

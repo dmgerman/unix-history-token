@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: misc.c,v 1.4 1997/10/01 06:30:01 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -189,6 +189,14 @@ block|,
 name|F_NLINK
 block|,
 name|NEEDVALUE
+block|}
+block|,
+block|{
+literal|"nochange"
+block|,
+name|F_NOCHANGE
+block|,
+literal|0
 block|}
 block|,
 block|{
