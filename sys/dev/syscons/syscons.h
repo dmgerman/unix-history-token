@@ -737,6 +737,10 @@ name|SC_SAVER_FAILED
 value|(1<< 7)
 define|#
 directive|define
+name|SC_SCRN_VTYLOCK
+value|(1<< 8)
+define|#
+directive|define
 name|SC_INIT_DONE
 value|(1<< 16)
 define|#

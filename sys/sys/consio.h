@@ -1199,6 +1199,17 @@ value|_IOR('v', 8, int)
 end_define
 
 begin_comment
+comment|/* prevent switching vtys */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VT_LOCKSWITCH
+value|_IOW('v', 9, int)
+end_define
+
+begin_comment
 comment|/*  * Video mode switching ioctl.  See sys/fbio.h for mode numbers.  */
 end_comment
 
