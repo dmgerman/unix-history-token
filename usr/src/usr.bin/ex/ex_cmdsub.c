@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_cmdsub.c	7.1	%G%"
+literal|"@(#)ex_cmdsub.c	7.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5351,7 +5351,7 @@ name|char
 modifier|*
 name|oglobp
 decl_stmt|;
-name|char
+name|short
 name|pk
 decl_stmt|;
 name|bool

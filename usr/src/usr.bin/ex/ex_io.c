@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_io.c	7.3	%G%"
+literal|"@(#)ex_io.c	7.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3369,10 +3369,11 @@ decl_stmt|,
 name|oerrno
 decl_stmt|;
 name|char
-name|savepeekc
-decl_stmt|,
 modifier|*
 name|saveglobp
+decl_stmt|;
+name|short
+name|savepeekc
 decl_stmt|;
 name|signal
 argument_list|(

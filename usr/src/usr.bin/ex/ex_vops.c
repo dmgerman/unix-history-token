@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vops.c	7.1	%G%"
+literal|"@(#)ex_vops.c	7.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2625,7 +2625,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|oglobp
-decl_stmt|,
+decl_stmt|;
+name|short
 name|d
 decl_stmt|;
 if|if

@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_voper.c	7.1	%G%"
+literal|"@(#)ex_voper.c	7.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -137,7 +137,7 @@ name|lastFKND
 decl_stmt|,
 name|lastFCHR
 decl_stmt|;
-name|char
+name|short
 name|d
 decl_stmt|;
 name|moveop
