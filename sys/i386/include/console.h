@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: console.h,v 1.38 1998/08/03 11:30:28 yokota Exp $  */
+comment|/*-  * Copyright (c) 1991-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: console.h,v 1.39 1998/09/15 18:16:37 sos Exp $  */
 end_comment
 
 begin_ifndef
@@ -2654,6 +2654,80 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_TEXT_80x25
+value|200
+end_define
+
+begin_comment
+comment|/* generic text modes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_TEXT_80x30
+value|201
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_TEXT_80x43
+value|202
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_TEXT_80x50
+value|203
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_TEXT_80x60
+value|204
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_TEXT_132x25
+value|205
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_TEXT_132x30
+value|206
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_TEXT_132x43
+value|207
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_TEXT_132x50
+value|208
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_TEXT_132x60
+value|209
+end_define
+
+begin_define
+define|#
+directive|define
 name|SW_PC98_80x25
 value|_IO('S', M_PC98_80x25)
 end_define
@@ -2929,6 +3003,76 @@ define|#
 directive|define
 name|SW_VGA_MODEX
 value|_IO('S', M_VGA_MODEX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_TEXT_80x25
+value|_IO('S', M_TEXT_80x25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_TEXT_80x30
+value|_IO('S', M_TEXT_80x30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_TEXT_80x43
+value|_IO('S', M_TEXT_80x43)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_TEXT_80x50
+value|_IO('S', M_TEXT_80x50)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_TEXT_80x60
+value|_IO('S', M_TEXT_80x60)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_TEXT_132x25
+value|_IO('S', M_TEXT_132x25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_TEXT_132x30
+value|_IO('S', M_TEXT_132x30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_TEXT_132x43
+value|_IO('S', M_TEXT_132x43)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_TEXT_132x50
+value|_IO('S', M_TEXT_132x50)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_TEXT_132x60
+value|_IO('S', M_TEXT_132x60)
 end_define
 
 begin_define

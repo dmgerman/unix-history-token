@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Kazutaka YOKOTA (yokota@zodiac.mech.utsunomiya-u.ac.jp)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote   *    products derived from this software without specific prior written   *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id$  */
+comment|/*-  * Copyright (c) 1998 Kazutaka YOKOTA (yokota@zodiac.mech.utsunomiya-u.ac.jp)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote   *    products derived from this software without specific prior written   *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: scvesactl.c,v 1.1 1998/09/15 18:16:37 sos Exp $  */
 end_comment
 
 begin_include
@@ -128,8 +128,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* external functions */
+end_comment
+
 begin_function_decl
-specifier|extern
 name|struct
 name|tty
 modifier|*
@@ -137,6 +140,34 @@ name|scdevtotty
 parameter_list|(
 name|dev_t
 name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* functions in this module */
+end_comment
+
+begin_function_decl
+name|int
+name|vesa_ioctl
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|,
+name|int
+name|cmd
+parameter_list|,
+name|caddr_t
+name|data
+parameter_list|,
+name|int
+name|flag
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -264,6 +295,61 @@ else|else
 goto|goto
 name|vesa_text
 goto|;
+comment|/* generic text modes */
+case|case
+name|SW_TEXT_132x25
+case|:
+case|case
+name|SW_TEXT_132x30
+case|:
+case|case
+name|SW_TEXT_132x43
+case|:
+case|case
+name|SW_TEXT_132x50
+case|:
+case|case
+name|SW_TEXT_132x60
+case|:
+name|adp
+operator|=
+name|get_adapter
+argument_list|(
+name|scp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|adp
+operator|->
+name|va_flags
+operator|&
+name|V_ADP_MODECHANGE
+operator|)
+condition|)
+return|return
+name|ENODEV
+return|;
+return|return
+name|sc_set_text_mode
+argument_list|(
+name|scp
+argument_list|,
+name|tp
+argument_list|,
+name|cmd
+operator|&
+literal|0xff
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+return|;
 comment|/* text modes */
 case|case
 name|SW_VESA_C80x60

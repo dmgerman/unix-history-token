@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Kazutaka YOKOTA (yokota@zodiac.mech.utsunomiya-u.ac.jp)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote   *    products derived from this software without specific prior written   *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id$  */
+comment|/*-  * Copyright (c) 1998 Kazutaka YOKOTA (yokota@zodiac.mech.utsunomiya-u.ac.jp)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote   *    products derived from this software without specific prior written   *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: videoio.c,v 1.1 1998/09/15 18:16:38 sos Exp $  */
 end_comment
 
 begin_include
@@ -1662,6 +1662,23 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
+name|map_gen_mode_num
+parameter_list|(
+name|int
+name|type
+parameter_list|,
+name|int
+name|color
+parameter_list|,
+name|int
+name|mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|map_bios_mode_num
 parameter_list|(
 name|int
@@ -2046,7 +2063,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* the non-standard video mode is based on a standard mode... */
+comment|/* map the non-standard video mode to a known mode number */
 end_comment
 
 begin_function
@@ -2173,6 +2190,207 @@ name|i
 index|]
 operator|.
 name|to
+return|;
+block|}
+return|return
+name|mode
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* map a generic video mode to a known mode number */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|map_gen_mode_num
+parameter_list|(
+name|int
+name|type
+parameter_list|,
+name|int
+name|color
+parameter_list|,
+name|int
+name|mode
+parameter_list|)
+block|{
+specifier|static
+struct|struct
+block|{
+name|int
+name|from
+decl_stmt|;
+name|int
+name|to_color
+decl_stmt|;
+name|int
+name|to_mono
+decl_stmt|;
+block|}
+name|mode_map
+index|[]
+init|=
+block|{
+block|{
+name|M_TEXT_80x30
+block|,
+name|M_VGA_C80x30
+block|,
+name|M_VGA_M80x30
+block|, }
+block|,
+block|{
+name|M_TEXT_80x43
+block|,
+name|M_ENH_C80x43
+block|,
+name|M_ENH_B80x43
+block|, }
+block|,
+block|{
+name|M_TEXT_80x50
+block|,
+name|M_VGA_C80x50
+block|,
+name|M_VGA_M80x50
+block|, }
+block|,
+block|{
+name|M_TEXT_80x60
+block|,
+name|M_VGA_C80x60
+block|,
+name|M_VGA_M80x60
+block|, }
+block|,     }
+struct|;
+name|int
+name|i
+decl_stmt|;
+if|if
+condition|(
+name|mode
+operator|==
+name|M_TEXT_80x25
+condition|)
+block|{
+switch|switch
+condition|(
+name|type
+condition|)
+block|{
+case|case
+name|KD_VGA
+case|:
+if|if
+condition|(
+name|color
+condition|)
+return|return
+name|M_VGA_C80x25
+return|;
+else|else
+return|return
+name|M_VGA_M80x25
+return|;
+break|break;
+case|case
+name|KD_EGA
+case|:
+if|if
+condition|(
+name|color
+condition|)
+return|return
+name|M_ENH_C80x25
+return|;
+else|else
+return|return
+name|M_EGAMONO80x25
+return|;
+break|break;
+case|case
+name|KD_CGA
+case|:
+return|return
+name|M_C80x25
+return|;
+case|case
+name|KD_MONO
+case|:
+case|case
+name|KD_HERCULES
+case|:
+return|return
+name|M_EGAMONO80x25
+return|;
+comment|/* XXX: this name is confusing */
+default|default:
+return|return
+operator|-
+literal|1
+return|;
+block|}
+block|}
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+sizeof|sizeof
+argument_list|(
+name|mode_map
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|mode_map
+index|[
+literal|0
+index|]
+argument_list|)
+condition|;
+operator|++
+name|i
+control|)
+block|{
+if|if
+condition|(
+name|mode_map
+index|[
+name|i
+index|]
+operator|.
+name|from
+operator|==
+name|mode
+condition|)
+return|return
+operator|(
+operator|(
+name|color
+operator|)
+condition|?
+name|mode_map
+index|[
+name|i
+index|]
+operator|.
+name|to_color
+else|:
+name|mode_map
+index|[
+name|i
+index|]
+operator|.
+name|to_mono
+operator|)
 return|;
 block|}
 return|return
@@ -2489,9 +2707,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|mode
+operator|>=
+literal|0
+operator|)
+operator|&&
+operator|(
 name|mode
 operator|<
 name|V_MODE_MAP_SIZE
+operator|)
 condition|)
 return|return
 name|mode_map
@@ -3205,11 +3431,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* exported functions */
+comment|/* entry points */
 end_comment
 
 begin_comment
-comment|/* all adapters */
+comment|/*   * init()  * Return the # of video adapters found; usually 1 or 0.  *  * all adapters  */
 end_comment
 
 begin_function
@@ -4278,7 +4504,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* all adapters */
+comment|/*  * adapter();  * Return a pointer to the video_adapter structure of the requested  * adapter.  *  * all adapters  */
 end_comment
 
 begin_function
@@ -4327,7 +4553,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* all adapters */
+comment|/*  * get_info():  * Return the video_info structure of the requested video mode.  *  * all adapters  */
 end_comment
 
 begin_function
@@ -4374,6 +4600,29 @@ condition|)
 return|return
 literal|1
 return|;
+name|mode
+operator|=
+name|map_gen_mode_num
+argument_list|(
+name|adapter
+index|[
+name|ad
+index|]
+operator|.
+name|va_type
+argument_list|,
+name|adapter
+index|[
+name|ad
+index|]
+operator|.
+name|va_flags
+operator|&
+name|V_ADP_COLOR
+argument_list|,
+name|mode
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|adapter
@@ -4481,7 +4730,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* all adapters */
+comment|/*  * query_mode():  * Find a video mode matching the requested parameters.  * Fields filled with 0 are considered "don't care" fields and  * match any modes.  *  * all adapters  */
 end_comment
 
 begin_function
@@ -4766,7 +5015,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* EGA/VGA */
+comment|/*  * set_mode():  * Change the video mode.  *  * EGA/VGA  */
 end_comment
 
 begin_function
@@ -4794,6 +5043,29 @@ argument_list|,
 name|V_ADP_MODECHANGE
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|mode
+operator|=
+name|map_gen_mode_num
+argument_list|(
+name|adapter
+index|[
+name|ad
+index|]
+operator|.
+name|va_type
+argument_list|,
+name|adapter
+index|[
+name|ad
+index|]
+operator|.
+name|va_flags
+operator|&
+name|V_ADP_COLOR
+argument_list|,
+name|mode
 argument_list|)
 expr_stmt|;
 if|if
@@ -6283,7 +6555,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* EGA/VGA */
+comment|/*  * save_font():  * Read the font data in the requested font page from the video adapter.  *  * EGA/VGA  */
 end_comment
 
 begin_function
@@ -6419,6 +6691,9 @@ name|segment
 operator|-=
 literal|0xe000
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SC_BAD_FLICKER
 if|if
 condition|(
 name|adapter
@@ -6502,6 +6777,8 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|set_font_mode
 argument_list|(
 operator|&
@@ -6599,6 +6876,9 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SC_BAD_FLICKER
 if|if
 condition|(
 name|adapter
@@ -6667,6 +6947,8 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
@@ -6674,7 +6956,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* EGA/VGA */
+comment|/*  * load_font():  * Set the font data in the requested font page.  * NOTE: it appears that some recent video adapters do not support  * the font page other than 0... XXX  *  * EGA/VGA  */
 end_comment
 
 begin_function
@@ -6810,6 +7092,9 @@ name|segment
 operator|-=
 literal|0xe000
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SC_BAD_FLICKER
 if|if
 condition|(
 name|adapter
@@ -6893,6 +7178,8 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|set_font_mode
 argument_list|(
 operator|&
@@ -6990,6 +7277,9 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SC_BAD_FLICKER
 if|if
 condition|(
 name|adapter
@@ -7058,6 +7348,8 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
@@ -7065,7 +7357,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* EGA/VGA */
+comment|/*  * show_font():  * Activate the requested font page.  * NOTE: it appears that some recent video adapters do not support  * the font page other than 0... XXX  *  * EGA/VGA  */
 end_comment
 
 begin_function
@@ -7162,7 +7454,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* VGA */
+comment|/*  * save_palette():  * Read DAC values. The values have expressed in 8 bits.  *  * VGA  */
 end_comment
 
 begin_function
@@ -7245,7 +7537,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* VGA */
+comment|/*  * load_palette():  * Set DAC values.  *  * VGA  */
 end_comment
 
 begin_function
@@ -7343,7 +7635,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* CGA/EGA/VGA */
+comment|/*  * set_border():  * Change the border color.  *  * CGA/EGA/VGA  */
 end_comment
 
 begin_function
@@ -7450,7 +7742,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* VGA */
+comment|/*  * save_state():  * Read video register values.  * NOTE: this function only reads the standard EGA/VGA registers.  * any extra/extended registers of SVGA adapters are not saved.  *  * VGA  */
 end_comment
 
 begin_function
@@ -8008,7 +8300,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* EGA/VGA */
+comment|/*  * load_state():  * Set video registers at once.  * NOTE: this function only updates the standard EGA/VGA registers.  * any extra/extended registers of SVGA adapters are not changed.  *  * EGA/VGA  */
 end_comment
 
 begin_function
@@ -8399,7 +8691,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* all */
+comment|/*  * set_origin():  * Change the origin (window mapping) of the banked frame buffer.  */
 end_comment
 
 begin_function
@@ -8422,7 +8714,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* all */
+comment|/*  * read_hw_cursor():  * Read the position of the hardware text cursor.  *  * all adapters  */
 end_comment
 
 begin_function
@@ -8587,7 +8879,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* all */
+comment|/*  * set_hw_cursor():  * Move the hardware text cursor. If the requested position is (-1, -1),  * the text cursor won't be shown.  *  * all adapters  */
 end_comment
 
 begin_function
@@ -9138,6 +9430,10 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*  * diag():  * Print some information about the video adapter and video modes,  * with requested level of details.  *  * all adapters  */
+end_comment
 
 begin_function
 specifier|static
