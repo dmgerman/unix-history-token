@@ -517,18 +517,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get a byte for the uart and if printing, display it.  *  * Arguments:  *	prn				Are we displaying characters  *  * Returns:  *	c				Character from uart  */
+comment|/*  * Get a byte for the uart and if printing, display it.  *  * Returns:  *	c				Character from uart  */
 end_comment
 
 begin_function
 name|char
 name|getbyte
 parameter_list|(
-name|prn
+name|void
 parameter_list|)
-name|int
-name|prn
-decl_stmt|;
 block|{
 name|int
 name|c
@@ -686,9 +683,7 @@ block|{
 name|c
 operator|=
 name|getbyte
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -780,9 +775,7 @@ operator|&
 name|UART_VALID
 condition|)
 name|getbyte
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -834,9 +827,7 @@ operator|&
 name|UART_VALID
 condition|)
 name|getbyte
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1890,9 +1881,7 @@ operator|(
 name|c
 operator|=
 name|getbyte
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 operator|)
 operator|!=
 name|NAK
@@ -2253,9 +2242,7 @@ comment|/* 			 * Get response from i960 			 */
 name|sendresp
 operator|=
 name|getbyte
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* 			 * If i960 didn't like the sector 			 */
 if|if
@@ -2282,9 +2269,7 @@ condition|)
 if|if
 condition|(
 name|getbyte
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 operator|==
 name|CAN
 condition|)
@@ -2428,9 +2413,7 @@ operator|(
 name|c
 operator|=
 name|getbyte
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 operator|)
 operator|!=
 name|ACK
@@ -2607,16 +2590,11 @@ name|w1
 union|,
 name|w2
 union|;
-endif|#
-directive|endif
 name|int
 name|n
 decl_stmt|;
-name|int
-name|cnt
-init|=
-literal|0
-decl_stmt|;
+endif|#
+directive|endif
 name|u_char
 modifier|*
 name|bufp
@@ -4301,9 +4279,7 @@ argument|; 					    } 					    xmit_byte ( c,
 literal|0
 argument|); 					} 				}
 comment|/* 				 * Check for data from the i960 				 */
-argument|if ( CP_READ(Uart->mon_xmithost)& UART_VALID ) { 					c = getbyte(
-literal|0
-argument|); 					putchar ( c ); 				} 				if ( strcmp ( line,
+argument|if ( CP_READ(Uart->mon_xmithost)& UART_VALID ) { 					c = getbyte(); 					putchar ( c ); 				} 				if ( strcmp ( line,
 literal|"Mon960"
 argument|)  ==
 literal|0
@@ -4402,11 +4378,11 @@ argument_list|,
 argument|hb2
 argument_list|,
 argument|hb3;  				hb3 = CP_READ(Mon->mon_bstat); 				if (hb3 != BOOT_RUNNING) { 					if (verbose) 						printf(
-literal|"bstat %x\n"
+literal|"bstat %lx\n"
 argument|, hb3); 					continue; 				}  				hb1 = CP_READ(aap->aali_heartbeat); 				delay(
 literal|1
 argument|); 				hb2 = CP_READ(aap->aali_heartbeat); 				if (verbose) 					printf(
-literal|"hb %x %x\n"
+literal|"hb %lx %lx\n"
 argument|, hb1, hb2); 				if (hb1< hb2) 					break; 			     } 			}  			close ( fd ); 		} 	}
 comment|/* 	 * Exit 	 */
 argument|exit (
