@@ -1849,14 +1849,22 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KTRACE
-comment|/* 	 * Copy traceflag and tracefile if enabled. 	 * If not inherited, these were zeroed above. 	 */
+comment|/* 	 * Copy traceflag and tracefile if enabled.  If not inherited, 	 * these were zeroed above but we still could have a trace race 	 * so make sure p2's p_tracep is NULL. 	 */
 if|if
 condition|(
+operator|(
 name|p1
 operator|->
 name|p_traceflag
 operator|&
 name|KTRFAC_INHERIT
+operator|)
+operator|&&
+name|p2
+operator|->
+name|p_tracep
+operator|==
+name|NULL
 condition|)
 block|{
 name|p2

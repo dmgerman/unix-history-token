@@ -669,6 +669,16 @@ init|=
 name|curproc
 decl_stmt|;
 comment|/* XXX */
+comment|/* 	 * don't let vp get ripped out from under us 	 */
+if|if
+condition|(
+name|vp
+condition|)
+name|VREF
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_traceflag
@@ -704,6 +714,15 @@ argument_list|,
 name|kth
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vp
+condition|)
+name|vrele
+argument_list|(
+name|vp
 argument_list|)
 expr_stmt|;
 name|FREE
@@ -780,6 +799,16 @@ condition|(
 name|error
 condition|)
 return|return;
+comment|/* 	 * don't let p_tracep get ripped out from under us 	 */
+if|if
+condition|(
+name|vp
+condition|)
+name|VREF
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_traceflag
@@ -844,6 +873,15 @@ argument_list|,
 name|kth
 argument_list|,
 name|uio
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vp
+condition|)
+name|vrele
+argument_list|(
+name|vp
 argument_list|)
 expr_stmt|;
 name|FREE
@@ -913,6 +951,16 @@ init|=
 name|curproc
 decl_stmt|;
 comment|/* XXX */
+comment|/* 	 * don't let vp get ripped out from under us 	 */
+if|if
+condition|(
+name|vp
+condition|)
+name|VREF
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_traceflag
@@ -983,6 +1031,15 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vp
+condition|)
+name|vrele
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|FREE
 argument_list|(
 name|kth
@@ -1038,6 +1095,16 @@ init|=
 name|curproc
 decl_stmt|;
 comment|/* XXX */
+comment|/* 	 * don't let vp get ripped out from under us 	 */
+if|if
+condition|(
+name|vp
+condition|)
+name|VREF
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_traceflag
@@ -1090,6 +1157,15 @@ argument_list|,
 name|kth
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vp
+condition|)
+name|vrele
+argument_list|(
+name|vp
 argument_list|)
 expr_stmt|;
 name|FREE
@@ -1373,7 +1449,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * Clear all uses of the tracefile 	 */
+comment|/* 	 * Clear all uses of the tracefile.  XXX umm, what happens to the 	 * loop if vn_close() blocks? 	 */
 if|if
 condition|(
 name|ops
@@ -1407,6 +1483,12 @@ name|curp
 argument_list|,
 name|p
 argument_list|)
+operator|&&
+name|p
+operator|->
+name|p_tracep
+operator|==
+name|vp
 condition|)
 block|{
 name|p
@@ -1441,10 +1523,12 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|error
 operator|=
 name|EPERM
 expr_stmt|;
+block|}
 block|}
 block|}
 goto|goto
@@ -1708,6 +1792,11 @@ init|=
 name|curproc
 decl_stmt|;
 comment|/* XXX */
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
 specifier|register
 name|caddr_t
 name|cp
@@ -1748,6 +1837,24 @@ operator|->
 name|p_traceflag
 operator||=
 name|KTRFAC_ACTIVE
+expr_stmt|;
+comment|/* 	 * don't let p_tracep get ripped out from under us while we are 	 * writing. 	 */
+if|if
+condition|(
+operator|(
+name|vp
+operator|=
+name|p
+operator|->
+name|p_tracep
+operator|)
+operator|!=
+name|NULL
+condition|)
+name|VREF
+argument_list|(
+name|vp
+argument_list|)
 expr_stmt|;
 name|kth
 operator|=
@@ -1804,9 +1911,7 @@ name|len
 expr_stmt|;
 name|ktrwrite
 argument_list|(
-name|p
-operator|->
-name|p_tracep
+name|vp
 argument_list|,
 name|kth
 argument_list|,
@@ -1814,6 +1919,15 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|vp
+condition|)
+name|vrele
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|FREE
 argument_list|(
 name|kth
@@ -1932,27 +2046,42 @@ operator|!=
 name|vp
 condition|)
 block|{
+name|struct
+name|vnode
+modifier|*
+name|vtmp
+decl_stmt|;
 comment|/* 			 * if trace file already in use, relinquish 			 */
-if|if
-condition|(
-name|p
-operator|->
-name|p_tracep
-operator|!=
-name|NULL
-condition|)
-name|vrele
-argument_list|(
-name|p
-operator|->
-name|p_tracep
-argument_list|)
-expr_stmt|;
 name|VREF
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+operator|(
+name|vtmp
+operator|=
+name|p
+operator|->
+name|p_tracep
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|p
+operator|->
+name|p_tracep
+operator|=
+name|NULL
+expr_stmt|;
+name|vrele
+argument_list|(
+name|vtmp
+argument_list|)
+expr_stmt|;
+block|}
 name|p
 operator|->
 name|p_tracep
@@ -2004,6 +2133,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|struct
+name|vnode
+modifier|*
+name|vtmp
+decl_stmt|;
 comment|/* no more tracing */
 name|p
 operator|->
@@ -2013,25 +2147,27 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|vtmp
+operator|=
 name|p
 operator|->
 name|p_tracep
+operator|)
 operator|!=
 name|NULL
 condition|)
 block|{
-name|vrele
-argument_list|(
-name|p
-operator|->
-name|p_tracep
-argument_list|)
-expr_stmt|;
 name|p
 operator|->
 name|p_tracep
 operator|=
 name|NULL
+expr_stmt|;
+name|vrele
+argument_list|(
+name|vtmp
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -2494,7 +2630,7 @@ operator|!
 name|error
 condition|)
 return|return;
-comment|/* 	 * If error encountered, give up tracing on this vnode. 	 */
+comment|/* 	 * If error encountered, give up tracing on this vnode.  XXX what 	 * happens to the loop if vrele() blocks? 	 */
 name|log
 argument_list|(
 name|LOG_NOTICE
