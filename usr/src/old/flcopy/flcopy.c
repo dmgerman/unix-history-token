@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)flcopy.c	4.5 (Berkeley) %G%"
+literal|"@(#)flcopy.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -471,6 +471,11 @@ operator|+=
 literal|512
 expr_stmt|;
 block|}
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
