@@ -167,6 +167,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|ex_detach
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|driver_intr_t
 name|ex_intr
