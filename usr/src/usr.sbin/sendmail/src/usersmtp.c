@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.16 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.17 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.16 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.17 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1089,6 +1089,10 @@ name|int
 name|r
 decl_stmt|;
 name|char
+modifier|*
+name|bufp
+decl_stmt|;
+name|char
 name|buf
 index|[
 name|MAXNAME
@@ -1213,6 +1217,56 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|buf
+index|[
+literal|0
+index|]
+operator|==
+literal|'<'
+condition|)
+block|{
+comment|/* strip off<angle brackets> (put back on below) */
+name|bufp
+operator|=
+operator|&
+name|buf
+index|[
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
+index|]
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|bufp
+operator|==
+literal|'>'
+condition|)
+operator|*
+name|bufp
+operator|=
+literal|'\0'
+expr_stmt|;
+name|bufp
+operator|=
+operator|&
+name|buf
+index|[
+literal|1
+index|]
+expr_stmt|;
+block|}
+else|else
+name|bufp
+operator|=
+name|buf
+expr_stmt|;
+if|if
+condition|(
 name|e
 operator|->
 name|e_from
@@ -1240,7 +1294,7 @@ name|m
 argument_list|,
 name|mci
 argument_list|,
-name|buf
+name|bufp
 argument_list|,
 name|optbuf
 argument_list|)
@@ -1258,10 +1312,8 @@ name|mci
 argument_list|,
 name|MyHostName
 argument_list|,
-name|buf
-index|[
-literal|0
-index|]
+operator|*
+name|bufp
 operator|==
 literal|'@'
 condition|?
@@ -1269,7 +1321,7 @@ literal|','
 else|:
 literal|':'
 argument_list|,
-name|buf
+name|bufp
 argument_list|,
 name|optbuf
 argument_list|)
