@@ -1289,8 +1289,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|!=
-name|ENOENT
+operator|==
+name|ENXIO
 condition|)
 return|return
 name|error
