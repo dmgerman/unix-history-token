@@ -470,15 +470,6 @@ comment|/* TTY specific data. */
 struct|struct
 block|{
 name|struct
-name|cdev
-modifier|*
-name|si
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* We have 2 device special files. */
-name|struct
 name|tty
 modifier|*
 name|tp
