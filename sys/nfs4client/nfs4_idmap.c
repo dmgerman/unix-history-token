@@ -751,7 +751,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|idmap_hashf
 parameter_list|(
 name|struct
@@ -852,9 +852,6 @@ argument_list|)
 operator|%
 name|IDMAP_HASH_SIZE
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 end_function
 
@@ -882,17 +879,6 @@ decl_stmt|;
 if|if
 condition|(
 name|e
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"idmap_add null"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|e
 operator|->
 name|id_info
 operator|.
@@ -900,11 +886,16 @@ name|id_namelen
 operator|==
 literal|0
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
-literal|"idmap_add name of len 0"
+literal|"idmap_add: name of len 0\n"
 argument_list|)
 expr_stmt|;
+return|return
+name|EINVAL
+return|;
+block|}
 switch|switch
 condition|(
 name|e
@@ -941,8 +932,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-if|if
-condition|(
 name|idmap_hashf
 argument_list|(
 name|e
@@ -953,20 +942,7 @@ argument_list|,
 operator|&
 name|hval_name
 argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|IDMAP_DEBUG
-argument_list|(
-literal|"idmap_hashf fails!\n"
-argument_list|)
 expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
 name|IDMAP_WLOCK
 argument_list|(
 operator|&
@@ -1765,6 +1741,9 @@ argument_list|,
 name|M_IDMAP
 argument_list|)
 expr_stmt|;
+return|return
+name|EFAULT
+return|;
 block|}
 block|}
 operator|*
