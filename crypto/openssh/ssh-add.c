@@ -422,7 +422,7 @@ argument_list|,
 sizeof|sizeof
 name|msg
 argument_list|,
-literal|"Enter passphrase for %.200s "
+literal|"Enter passphrase for %.200s: "
 argument_list|,
 name|comment
 argument_list|)
