@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_malloc.c	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_malloc.c	7.12.1.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -96,6 +96,16 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
+name|memname
+index|[]
+init|=
+name|INITKMEMNAMES
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
 name|kmembase
 decl_stmt|,
 modifier|*
@@ -185,6 +195,8 @@ name|caddr_t
 name|va
 decl_stmt|,
 name|cp
+decl_stmt|,
+name|rp
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -218,8 +230,6 @@ argument_list|(
 literal|"malloc - bogus type"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|indx
 operator|=
 name|BUCKETINDX
@@ -487,6 +497,13 @@ name|kb_elmpercl
 expr_stmt|;
 endif|#
 directive|endif
+name|rp
+operator|=
+name|kbp
+operator|->
+name|kb_next
+expr_stmt|;
+comment|/* returned while blocked in vmemall */
 name|kbp
 operator|->
 name|kb_next
@@ -538,7 +555,7 @@ name|cp
 operator|-
 name|allocsize
 else|:
-name|NULL
+name|rp
 operator|)
 expr_stmt|;
 if|if
@@ -833,6 +850,64 @@ begin_comment
 comment|/* DIAGNOSTIC */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+end_ifdef
+
+begin_decl_stmt
+name|long
+name|addrmask
+index|[]
+init|=
+block|{
+literal|0x00000000
+block|,
+literal|0x00000001
+block|,
+literal|0x00000003
+block|,
+literal|0x00000007
+block|,
+literal|0x0000000f
+block|,
+literal|0x0000001f
+block|,
+literal|0x0000003f
+block|,
+literal|0x0000007f
+block|,
+literal|0x000000ff
+block|,
+literal|0x000001ff
+block|,
+literal|0x000003ff
+block|,
+literal|0x000007ff
+block|,
+literal|0x00000fff
+block|,
+literal|0x00001fff
+block|,
+literal|0x00003fff
+block|,
+literal|0x00007fff
+block|,
+literal|0x0000ffff
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DIAGNOSTIC */
+end_comment
+
 begin_comment
 comment|/*  * Free a block of memory allocated by malloc.  */
 end_comment
@@ -896,6 +971,83 @@ argument_list|(
 name|addr
 argument_list|)
 expr_stmt|;
+name|size
+operator|=
+literal|1
+operator|<<
+name|kup
+operator|->
+name|ku_indx
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
+name|size
+operator|>
+name|NBPG
+operator|*
+name|CLSIZE
+condition|)
+name|alloc
+operator|=
+name|addrmask
+index|[
+name|BUCKETINDX
+argument_list|(
+name|NBPG
+operator|*
+name|CLSIZE
+argument_list|)
+index|]
+expr_stmt|;
+else|else
+name|alloc
+operator|=
+name|addrmask
+index|[
+name|kup
+operator|->
+name|ku_indx
+index|]
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|(
+name|u_long
+operator|)
+name|addr
+operator|&
+name|alloc
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"free: unaligned addr 0x%x, size %d, type %d, mask %d\n"
+argument_list|,
+name|addr
+argument_list|,
+name|size
+argument_list|,
+name|type
+argument_list|,
+name|alloc
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"free: unaligned addr"
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* DIAGNOSTIC */
 name|size
 operator|=
 literal|1
