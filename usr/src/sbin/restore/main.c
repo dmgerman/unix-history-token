@@ -3,17 +3,28 @@ begin_comment
 comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 name|char
 name|version
 index|[]
 init|=
-literal|"@(#)main.c 2.3 %G%"
+literal|"@(#)main.c 2.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*	Modified to include h option (recursively extract all files within  *	a subtree) and m option (recreate the heirarchical structure of  *	that subtree and move extracted files to their proper homes).  *	8/29/80		by Mike Litzkow  *  *	Includes the s (skip files) option for use with multiple dumps on  *	a single tape.  */
+comment|/*	Modified to include h option (recursively extract all files within  *	a subtree) and m option (recreate the heirarchical structure of  *	that subtree and move extracted files to their proper homes).  *	8/29/80		by Mike Litzkow  *  *	Modified to work on the new file system  *	1/19/82		by Kirk McKusick  *  *	Includes the s (skip files) option for use with multiple dumps on  *	a single tape.  */
 end_comment
 
 begin_define
@@ -189,16 +200,6 @@ end_define
 begin_decl_stmt
 name|ino_t
 name|ino
-decl_stmt|,
-name|maxi
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|inode
-modifier|*
-name|cur_ip
 decl_stmt|;
 end_decl_stmt
 
@@ -225,14 +226,6 @@ end_decl_stmt
 begin_decl_stmt
 name|long
 name|fssize
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|dev_t
-name|dev
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -470,12 +463,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|msiz
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|dumpmap
@@ -508,6 +495,14 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
+name|int
+name|seek
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|ino_t
 name|search
 parameter_list|()
@@ -527,8 +522,6 @@ parameter_list|(
 name|argc
 parameter_list|,
 name|argv
-parameter_list|,
-name|arge
 parameter_list|)
 name|int
 name|argc
@@ -537,11 +530,6 @@ name|char
 modifier|*
 name|argv
 index|[]
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|arge
 decl_stmt|;
 block|{
 specifier|register
@@ -893,6 +881,9 @@ name|blkclr
 argument_list|(
 name|clearedbuf
 argument_list|,
+operator|(
+name|long
+operator|)
 name|MAXBSIZE
 argument_list|)
 expr_stmt|;
@@ -2956,7 +2947,7 @@ decl_stmt|;
 name|int
 name|namelen
 decl_stmt|;
-name|long
+name|daddr_t
 name|bpt
 decl_stmt|;
 specifier|register
@@ -3544,7 +3535,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|long
+name|off_t
 name|size
 decl_stmt|;
 end_decl_stmt
@@ -3939,6 +3930,15 @@ end_decl_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|lint
+name|buf
+operator|=
+name|buf
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|lseek
@@ -4003,9 +4003,6 @@ name|edp
 decl_stmt|;
 name|struct
 name|direct
-modifier|*
-name|dp
-decl_stmt|,
 name|cvtbuf
 decl_stmt|;
 name|edp
@@ -4183,6 +4180,19 @@ end_decl_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|lint
+name|buf
+operator|=
+name|buf
+operator|,
+name|size
+operator|=
+name|size
+expr_stmt|;
+endif|#
+directive|endif
 name|fprintf
 argument_list|(
 name|stderr
@@ -4230,7 +4240,7 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|int
+name|long
 name|i
 decl_stmt|;
 name|struct
@@ -4372,6 +4382,33 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|lseek
+argument_list|(
+name|mt
+argument_list|,
+name|i
+argument_list|,
+literal|1
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"continuation failed\n"
+argument_list|)
+expr_stmt|;
+name|done
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -4513,6 +4550,9 @@ index|]
 argument_list|,
 name|b
 argument_list|,
+operator|(
+name|long
+operator|)
 name|TP_BSIZE
 argument_list|)
 expr_stmt|;
@@ -4557,13 +4597,30 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|long
 name|size
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|lint
+name|from
+operator|=
+name|from
+operator|,
+name|to
+operator|=
+name|to
+operator|,
+name|size
+operator|=
+name|size
+expr_stmt|;
+endif|#
+directive|endif
 asm|asm("	movc3	12(ap),*4(ap),*8(ap)");
 block|}
 end_block
@@ -4585,13 +4642,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|long
 name|size
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|lint
+name|buf
+operator|=
+name|buf
+operator|,
+name|size
+operator|=
+name|size
+expr_stmt|;
+endif|#
+directive|endif
 asm|asm("movc5	$0,(r0),$0,8(ap),*4(ap)");
 block|}
 end_block
@@ -5000,7 +5070,6 @@ operator|(
 name|char
 operator|*
 operator|)
-operator|(
 name|calloc
 argument_list|(
 name|i
@@ -5015,7 +5084,6 @@ name|BITS
 operator|)
 operator|)
 argument_list|)
-operator|)
 expr_stmt|;
 name|m
 operator|=
@@ -5513,12 +5581,19 @@ condition|)
 block|{
 name|blkcpy
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|dp
 argument_list|,
 name|dirbuf
 operator|+
 name|dirloc
 argument_list|,
+operator|(
+name|long
+operator|)
 name|dp
 operator|->
 name|d_reclen
@@ -5699,18 +5774,22 @@ end_decl_stmt
 
 begin_block
 block|{
-name|struct
-name|inotab
-modifier|*
-name|itp
-decl_stmt|;
 name|blkclr
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|ndp
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 sizeof|sizeof
 expr|*
 name|ndp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ndp
@@ -5816,6 +5895,10 @@ condition|)
 block|{
 name|free
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|dirp
 argument_list|)
 expr_stmt|;
@@ -5854,7 +5937,7 @@ name|DIR
 modifier|*
 name|dirp
 decl_stmt|;
-name|long
+name|daddr_t
 name|loc
 decl_stmt|,
 name|base
@@ -5889,6 +5972,9 @@ argument_list|,
 name|loc
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|lseek
 argument_list|(
 name|dirp
