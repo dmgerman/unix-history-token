@@ -4052,6 +4052,45 @@ block|}
 block|, 	    }
 block|, 	}
 block|,
+comment|/* Oxford Semiconductor OX12PCI840 PCI Parallel port */
+block|{
+literal|"Qxford Semiconductor OX12PCI840 Parallel port"
+block|,
+name|NULL
+block|,
+block|{
+literal|0x1415
+block|,
+literal|0x8403
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xffff
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|PUC_PORT_TYPE_LPT
+block|,
+literal|0x10
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|, 		}
+block|, 	}
+block|,
 comment|/* NetMos 2S1P PCI 16C650 : 2S, 1P */
 block|{
 literal|"NetMos NM9835 Dual UART and 1284 Printer port"
