@@ -246,17 +246,6 @@ name|TUNNAME
 value|"tun"
 end_define
 
-begin_define
-define|#
-directive|define
-name|TUN_MAXUNIT
-value|0x7fff
-end_define
-
-begin_comment
-comment|/* ifp->if_unit is only 15 bits */
-end_comment
-
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
@@ -602,7 +591,7 @@ name|tununits
 argument_list|,
 literal|0
 argument_list|,
-name|TUN_MAXUNIT
+name|IF_MAXUNIT
 argument_list|,
 literal|1
 argument_list|,
@@ -864,7 +853,7 @@ name|tununits
 argument_list|,
 literal|0
 argument_list|,
-name|TUN_MAXUNIT
+name|IF_MAXUNIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1413,7 +1402,7 @@ if|if
 condition|(
 name|unit
 operator|>
-name|TUN_MAXUNIT
+name|IF_MAXUNIT
 condition|)
 return|return
 operator|(
