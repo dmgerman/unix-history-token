@@ -790,6 +790,17 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_multiaddrs
+argument_list|)
+condition|)
+return|return;
 name|len
 operator|=
 sizeof|sizeof

@@ -438,6 +438,9 @@ decl_stmt|;
 name|uint8_t
 name|cprd_sharedisp
 decl_stmt|;
+name|uint16_t
+name|cprd_flags
+decl_stmt|;
 union|union
 block|{
 struct|struct
