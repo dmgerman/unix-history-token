@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)allo.c	4.7 (Berkeley) %G%"
+literal|"@(#)allo.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1184,7 +1184,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Have to check for ==,<=, etc. because the result is type INT 	 * but need a register pair temp if either side is real. 	 */
+comment|/* 	 * Some special cases that require register pairs... 	 * Have to check for ==,<=, etc. because the result is type int 	 * but need a register pair temp if either side is wide. 	 * For +=, *= etc. where lhs is narrow and rhs is wide, the temp 	 * register must be wide. 	 */
 if|if
 condition|(
 operator|(
@@ -1205,6 +1205,7 @@ argument_list|)
 operator|==
 literal|2
 operator|||
+operator|(
 name|logop
 argument_list|(
 name|p
@@ -1246,9 +1247,50 @@ operator|==
 literal|2
 operator|)
 operator|)
+operator|||
+operator|(
+name|asgop
+argument_list|(
+name|p
+operator|->
+name|in
+operator|.
+name|op
+argument_list|)
+operator|&&
+name|szty
+argument_list|(
+name|p
+operator|->
+name|in
+operator|.
+name|right
+operator|->
+name|in
+operator|.
+name|type
+argument_list|)
+operator|==
+literal|2
+operator|&&
+name|szty
+argument_list|(
+name|p
+operator|->
+name|in
+operator|.
+name|left
+operator|->
+name|in
+operator|.
+name|type
+argument_list|)
+operator|==
+literal|1
+operator|)
+operator|)
 condition|)
 block|{
-comment|/* only do the pairing for real regs */
 ifndef|#
 directive|ifndef
 name|NOEVENODD
