@@ -3369,7 +3369,7 @@ name|WI_RID_TEMP_TYPE
 block|,
 name|WI_WORDS
 block|,
-literal|"Tempterture Range:\t\t\t"
+literal|"Temperature Range:\t\t\t"
 block|}
 block|,
 ifdef|#
