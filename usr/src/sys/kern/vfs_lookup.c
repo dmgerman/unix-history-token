@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_lookup.c	4.20	82/07/30	*/
+comment|/*	vfs_lookup.c	4.21	82/08/03	*/
 end_comment
 
 begin_include
@@ -56,24 +56,6 @@ include|#
 directive|include
 file|"../h/conf.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|EFS
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|efs_major
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|struct
@@ -411,44 +393,6 @@ comment|/* 	 * We come to dirloop to search a new directory. 	 * The directory m
 name|dirloop
 label|:
 comment|/* 	 * Check accessiblity of directory. 	 */
-ifdef|#
-directive|ifdef
-name|EFS
-if|if
-condition|(
-operator|(
-name|dp
-operator|->
-name|i_mode
-operator|&
-name|IFMT
-operator|)
-operator|==
-name|IFCHR
-operator|&&
-name|major
-argument_list|(
-name|dp
-operator|->
-name|i_rdev
-argument_list|)
-operator|==
-name|efs_major
-condition|)
-block|{
-name|brelse
-argument_list|(
-name|nbp
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|dp
-operator|)
-return|;
-block|}
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_descrip.c	5.2	82/07/24	*/
+comment|/*	kern_descrip.c	5.3	82/08/03	*/
 end_comment
 
 begin_include
@@ -2079,38 +2079,6 @@ index|]
 operator|.
 name|d_close
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|EFS
-comment|/* 		 * Every close() must call the driver if the 		 * extended file system is being used -- not 		 * just the last close.  Pass along the file 		 * pointer for reference later. 		 */
-if|if
-condition|(
-name|major
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-name|efs_major
-condition|)
-block|{
-call|(
-modifier|*
-name|cfunc
-call|)
-argument_list|(
-name|dev
-argument_list|,
-name|flag
-argument_list|,
-name|fp
-argument_list|,
-name|nouser
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-endif|#
-directive|endif
 break|break;
 case|case
 name|IFBLK
