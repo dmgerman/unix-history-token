@@ -221,14 +221,14 @@ comment|/* other process holds lock */
 end_comment
 
 begin_comment
-comment|/*  * External lock flags.  *  * The first three flags may be set in lock_init to set their mode permanently,  * or passed in as arguments to the lock manager.  */
+comment|/*  * External lock flags.  *  * These may be set in lock_init to set their mode permanently,  * or passed in as arguments to the lock manager.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|LK_EXTFLG_MASK
-value|0x03010070
+value|0x00000ff0
 end_define
 
 begin_comment
@@ -272,7 +272,7 @@ begin_define
 define|#
 directive|define
 name|LK_NOPAUSE
-value|0x01000000
+value|0x00000080
 end_define
 
 begin_comment
@@ -283,11 +283,37 @@ begin_define
 define|#
 directive|define
 name|LK_TIMELOCK
-value|0x02000000
+value|0x00000100
 end_define
 
 begin_comment
 comment|/* use lk_timo, else no timeout */
+end_comment
+
+begin_comment
+comment|/*  * Nonpersistent external flags.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LK_RETRY
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* vn_lock: retry until locked */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LK_INTERLOCK
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* 				    * unlock passed mutex after getting 				    * lk_interlock 				    */
 end_comment
 
 begin_comment
@@ -298,7 +324,7 @@ begin_define
 define|#
 directive|define
 name|LK_WANT_UPGRADE
-value|0x00000100
+value|0x00010000
 end_define
 
 begin_comment
@@ -309,7 +335,7 @@ begin_define
 define|#
 directive|define
 name|LK_WANT_EXCL
-value|0x00000200
+value|0x00020000
 end_define
 
 begin_comment
@@ -320,7 +346,7 @@ begin_define
 define|#
 directive|define
 name|LK_HAVE_EXCL
-value|0x00000400
+value|0x00040000
 end_define
 
 begin_comment
@@ -331,7 +357,7 @@ begin_define
 define|#
 directive|define
 name|LK_WAITDRAIN
-value|0x00000800
+value|0x00080000
 end_define
 
 begin_comment
@@ -342,44 +368,18 @@ begin_define
 define|#
 directive|define
 name|LK_DRAINING
-value|0x00004000
+value|0x00100000
 end_define
 
 begin_comment
 comment|/* lock is being drained */
 end_comment
 
-begin_comment
-comment|/*  * Control flags  *  * Non-persistent external flags.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LK_INTERLOCK
-value|0x00010000
-end_define
-
-begin_comment
-comment|/* 				    * unlock passed mutex after getting 				    * lk_interlock 				    */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LK_RETRY
-value|0x00020000
-end_define
-
-begin_comment
-comment|/* vn_lock: retry until locked */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|LK_INTERNAL
-value|0x00080000
+value|0x00200000
 end_define
 
 begin_comment
@@ -394,14 +394,14 @@ begin_define
 define|#
 directive|define
 name|LK_SHARE_NONZERO
-value|0x00100000
+value|0x01000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LK_WAIT_NONZERO
-value|0x00200000
+value|0x02000000
 end_define
 
 begin_comment
