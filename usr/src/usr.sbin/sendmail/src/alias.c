@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.25 (Berkeley) %G%"
+literal|"@(#)alias.c	8.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1759,7 +1759,10 @@ name|map
 argument_list|,
 name|af
 argument_list|,
+operator|!
 name|automatic
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1854,7 +1857,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  READALIASES -- read and process the alias file. ** **	This routine implements the part of initaliases that occurs **	when we are not going to use the DBM stuff. ** **	Parameters: **		map -- the alias database descriptor. **		af -- file to read the aliases from. **		automatic -- set if this was an automatic rebuild. ** **	Returns: **		none. ** **	Side Effects: **		Reads aliasfile into the symbol table. **		Optionally, builds the .dir& .pag files. */
+comment|/* **  READALIASES -- read and process the alias file. ** **	This routine implements the part of initaliases that occurs **	when we are not going to use the DBM stuff. ** **	Parameters: **		map -- the alias database descriptor. **		af -- file to read the aliases from. **		announcestats -- anounce statistics regarding number of **			aliases, longest alias, etc. **		logstats -- lot the same info. ** **	Returns: **		none. ** **	Side Effects: **		Reads aliasfile into the symbol table. **		Optionally, builds the .dir& .pag files. */
 end_comment
 
 begin_expr_stmt
@@ -1864,7 +1867,9 @@ name|map
 argument_list|,
 name|af
 argument_list|,
-name|automatic
+name|announcestats
+argument_list|,
+name|logstats
 argument_list|)
 specifier|register
 name|MAP
@@ -1881,8 +1886,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|automatic
+name|bool
+name|announcestats
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|logstats
 decl_stmt|;
 end_decl_stmt
 
@@ -2634,8 +2645,7 @@ if|if
 condition|(
 name|Verbose
 operator|||
-operator|!
-name|automatic
+name|announcestats
 condition|)
 name|message
 argument_list|(
@@ -2660,6 +2670,8 @@ condition|(
 name|LogLevel
 operator|>
 literal|7
+operator|&&
+name|logstats
 condition|)
 name|syslog
 argument_list|(
