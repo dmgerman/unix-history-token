@@ -9774,7 +9774,7 @@ return|;
 block|}
 name|va
 operator|=
-name|kmem_alloc_pageable
+name|kmem_alloc_nofault
 argument_list|(
 name|kernel_map
 argument_list|,
