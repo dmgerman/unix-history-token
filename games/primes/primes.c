@@ -136,6 +136,7 @@ comment|/*  * Eratosthenes sieve table  *  * We only sieve the odd numbers.  The
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|table
 index|[
@@ -186,7 +187,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|size_t
 name|pattern_size
 decl_stmt|;
 end_decl_stmt
@@ -196,12 +197,14 @@ comment|/* length of pattern array */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|hflag
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|primes
 parameter_list|(
@@ -213,6 +216,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|ubig
 name|read_num_buf
 parameter_list|(
@@ -222,6 +226,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -234,18 +239,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|argv
 index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 name|ubig
 name|start
@@ -576,11 +577,11 @@ argument_list|,
 name|stop
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -589,9 +590,12 @@ comment|/*  * read_num_buf --  *	This routine returns a number n, where 0<= n&& 
 end_comment
 
 begin_function
+specifier|static
 name|ubig
 name|read_num_buf
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ubig
 name|val
@@ -751,21 +755,16 @@ comment|/*  * primes - sieve and print primes from start up to and but not inclu
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|primes
 parameter_list|(
+name|ubig
 name|start
 parameter_list|,
+name|ubig
 name|stop
 parameter_list|)
-name|ubig
-name|start
-decl_stmt|;
-comment|/* where to start generating */
-name|ubig
-name|stop
-decl_stmt|;
-comment|/* don't generate at or above this value */
 block|{
 name|char
 modifier|*
@@ -1295,9 +1294,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 operator|(
 name|void
