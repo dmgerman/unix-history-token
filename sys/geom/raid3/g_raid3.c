@@ -6935,6 +6935,8 @@ name|u_int
 name|n
 decl_stmt|,
 name|ndisks
+init|=
+literal|0
 decl_stmt|;
 name|sc
 operator|=
