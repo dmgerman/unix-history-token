@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_var.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_var.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -108,11 +108,11 @@ name|lcd_flags
 decl_stmt|;
 comment|/* copy of sockaddr_x25 op_flags */
 name|struct
-name|x25_packet
+name|mbuf
 modifier|*
 name|lcd_template
 decl_stmt|;
-comment|/* Address of current packet */
+comment|/* Address of response packet */
 name|struct
 name|socket
 modifier|*
@@ -131,6 +131,12 @@ modifier|*
 name|lcd_ceaddr
 decl_stmt|;
 comment|/* Called address pointer */
+name|struct
+name|mbuf
+modifier|*
+name|lcd_facilities
+decl_stmt|;
+comment|/* user supplied facilities for cr */
 name|time_t
 name|lcd_stime
 decl_stmt|;
@@ -162,9 +168,13 @@ comment|/* Network this lcd is attached to */
 name|struct
 name|mbuf
 modifier|*
-name|lcd_ifrag
+name|lcd_cps
 decl_stmt|;
-comment|/* IP, CLNP reassembly */
+comment|/* Complete Packet Sequence reassembly*/
+name|long
+name|lcd_cpsmax
+decl_stmt|;
+comment|/* Max length for CPS */
 name|struct
 name|sockaddr_x25
 name|lcd_faddr
@@ -183,28 +193,6 @@ comment|/* alternate for datagram service */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|X25_DG_CIRCUIT
-value|0x10
-end_define
-
-begin_comment
-comment|/* lcd_flag: used for datagrams */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|X25_DG_ROUTING
-value|0x20
-end_define
-
-begin_comment
-comment|/* lcd_flag: peer addr not yet known */
-end_comment
 
 begin_comment
 comment|/*  * Per network information, allocated dynamically  * when a new network is configured.  */
