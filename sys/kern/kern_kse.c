@@ -4080,6 +4080,19 @@ operator|-
 literal|1
 operator|)
 return|;
+if|if
+condition|(
+operator|(
+name|tmbx
+operator|=
+name|td
+operator|->
+name|td_mailbox
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
 name|tmbx
 operator|=
 operator|(
@@ -4125,6 +4138,7 @@ operator|-
 literal|1
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|user
@@ -5470,7 +5484,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"upcall is NULL\n"
+literal|"upcall is NULL"
 operator|)
 argument_list|)
 expr_stmt|;
