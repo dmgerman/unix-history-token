@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)vars.c	2.2 %G%"
+literal|"@(#)vars.c	2.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -218,6 +218,9 @@ operator|(
 literal|""
 operator|)
 return|;
+if|if
+condition|(
+operator|(
 name|top
 operator|=
 name|calloc
@@ -230,6 +233,14 @@ operator|+
 literal|1
 argument_list|,
 literal|1
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"Out of memory"
 argument_list|)
 expr_stmt|;
 name|cp
