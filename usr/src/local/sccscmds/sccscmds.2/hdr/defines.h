@@ -24,7 +24,7 @@ file|"../hdr/fatal.h"
 end_include
 
 begin_comment
-comment|/*  *	defines.h 2.3 of 5/18/78  *	defines.h 4.3 of %G%  */
+comment|/*  *	defines.h 2.3 of 5/18/78  *	defines.h 4.4 of %G%  */
 end_comment
 
 begin_define
@@ -236,6 +236,23 @@ directive|define
 name|FILESIZE
 value|510
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MAX
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|MAX
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
