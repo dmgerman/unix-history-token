@@ -85,6 +85,11 @@ argument_list|,
 name|__LINE__
 argument_list|)
 expr_stmt|;
+comment|/* Always return an interrupted error: */
+name|errno
+operator|=
+name|EINTR
+expr_stmt|;
 comment|/* Restore the signal mask: */
 name|_thread_run
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 John Birrell<jb@cimlogic.com.au>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: uthread_kern.c,v 1.8 1998/04/11 07:47:22 jb Exp $  *  */
+comment|/*  * Copyright (c) 1995-1998 John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: uthread_kern.c,v 1.9 1998/04/17 09:37:41 jb Exp $  *  */
 end_comment
 
 begin_include
@@ -100,28 +100,6 @@ file|"pthread_private.h"
 end_include
 
 begin_comment
-comment|/* Static variables: */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|sigset_t
-name|sig_to_block
-init|=
-literal|0xffffffff
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|sigset_t
-name|sig_to_unblock
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Static function prototype definitions: */
 end_comment
 
@@ -132,20 +110,6 @@ name|_thread_kern_select
 parameter_list|(
 name|int
 name|wait_reqd
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|_thread_signal
-parameter_list|(
-name|pthread_t
-name|pthread
-parameter_list|,
-name|int
-name|sig
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -221,11 +185,10 @@ name|struct
 name|timeval
 name|tv1
 decl_stmt|;
-comment|/* Block signals: */
-name|_thread_kern_sig_block
-argument_list|(
-name|NULL
-argument_list|)
+comment|/* 	 * Flag the pthread kernel as executing scheduler code 	 * to avoid a scheduler signal from interrupting this 	 * execution and calling the scheduler again. 	 */
+name|_thread_kern_in_sched
+operator|=
+literal|1
 expr_stmt|;
 comment|/* Check if this function was called from the signal handler: */
 if|if
@@ -279,7 +242,7 @@ comment|/* Save the state of the current thread: */
 elseif|else
 if|if
 condition|(
-name|_thread_sys_setjmp
+name|setjmp
 argument_list|(
 name|_thread_run
 operator|->
@@ -289,13 +252,15 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* Unblock signals (just in case): */
-name|_thread_kern_sig_unblock
-argument_list|(
+comment|/* 		 * This point is reached when a longjmp() is called to 		 * restore the state of a thread.  		 * 		 * This is the normal way out of the scheduler. 		 */
+name|_thread_kern_in_sched
+operator|=
 literal|0
-argument_list|)
 expr_stmt|;
-comment|/* 		 * This point is reached when a longjmp() is called to 		 * restore the state of a thread.  		 */
+comment|/* 		 * There might be pending signals for this thread, so 		 * dispatch any that aren't blocked: 		 */
+name|_dispatch_signals
+argument_list|()
+expr_stmt|;
 return|return;
 block|}
 else|else
@@ -351,11 +316,10 @@ operator|=
 name|pthread
 expr_stmt|;
 block|}
-comment|/* 		 * Check if this thread has detached or if it is a signal 		 * handler thread:  		 */
+comment|/* 		 * Check if this thread has detached: 		 */
 elseif|else
 if|if
 condition|(
-operator|(
 operator|(
 name|pthread
 operator|->
@@ -367,13 +331,6 @@ name|PTHREAD_DETACHED
 operator|)
 operator|!=
 literal|0
-operator|)
-operator|||
-name|pthread
-operator|->
-name|parent_thread
-operator|!=
-name|NULL
 condition|)
 block|{
 comment|/* Check if there is no previous dead thread: */
@@ -516,7 +473,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Enter a loop to look for sleeping threads that are ready 		 * or threads with pending signals that are no longer 		 * blocked:  		 */
+comment|/* 		 * Enter a loop to look for sleeping threads that are ready: 		 */
 for|for
 control|(
 name|pthread
@@ -534,84 +491,6 @@ operator|->
 name|nxt
 control|)
 block|{
-comment|/* Enter a loop to process the sending signals: */
-for|for
-control|(
-name|i
-operator|=
-literal|1
-init|;
-name|i
-operator|<
-name|NSIG
-condition|;
-name|i
-operator|++
-control|)
-block|{
-comment|/* 				 * Check if there are no pending signals of 				 * this type:  				 */
-if|if
-condition|(
-name|pthread
-operator|->
-name|sigpend
-index|[
-name|i
-index|]
-operator|==
-literal|0
-condition|)
-block|{ 				}
-comment|/* Check if this signal type is not masked: */
-elseif|else
-if|if
-condition|(
-name|sigismember
-argument_list|(
-operator|&
-name|pthread
-operator|->
-name|sigmask
-argument_list|,
-name|i
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* 					 * Delete the signal from the set of 					 * pending signals for this thread:  					 */
-name|pthread
-operator|->
-name|sigpend
-index|[
-name|i
-index|]
-operator|-=
-literal|1
-expr_stmt|;
-comment|/* 					 * Act on the signal for the current 					 * thread:  					 */
-name|_thread_signal
-argument_list|(
-name|pthread
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 					 * This signal is masked, so make 					 * sure the count does not exceed 1:  					 */
-name|pthread
-operator|->
-name|sigpend
-index|[
-name|i
-index|]
-operator|=
-literal|1
-expr_stmt|;
-block|}
-block|}
 comment|/* Check if this thread is to timeout: */
 if|if
 condition|(
@@ -1007,60 +886,6 @@ operator|->
 name|nxt
 control|)
 block|{
-comment|/* Check if in single-threaded mode: */
-if|if
-condition|(
-name|_thread_single
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* 				 * Check if the current thread is 				 * the thread for which single-threaded 				 * mode is enabled: 				 */
-if|if
-condition|(
-name|pthread
-operator|==
-name|_thread_single
-condition|)
-block|{
-comment|/* 					 * This thread is allowed 					 * to run. 					 */
-block|}
-else|else
-block|{
-comment|/* 					 * Walk up the signal handler                                          * parent thread tree to see 					 * if the current thread is 					 * descended from the thread 					 * for which single-threaded 					 * mode is enabled. 					 */
-name|pthread_nxt
-operator|=
-name|pthread
-expr_stmt|;
-while|while
-condition|(
-name|pthread_nxt
-operator|!=
-name|NULL
-operator|&&
-name|pthread_nxt
-operator|!=
-name|_thread_single
-condition|)
-block|{
-name|pthread_nxt
-operator|=
-name|pthread
-operator|->
-name|parent_thread
-expr_stmt|;
-block|}
-comment|/* 					 * Check if the current 					 * thread is not descended 					 * from the thread for which 					 * single-threaded mode is 					 * enabled. 					 */
-if|if
-condition|(
-name|pthread_nxt
-operator|==
-name|NULL
-condition|)
-comment|/* Ignore this thread. */
-continue|continue;
-block|}
-block|}
 comment|/* Check if the current thread is unable to run: */
 if|if
 condition|(
@@ -1127,60 +952,6 @@ operator|->
 name|nxt
 control|)
 block|{
-comment|/* Check if in single-threaded mode: */
-if|if
-condition|(
-name|_thread_single
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* 				 * Check if the current thread is 				 * the thread for which single-threaded 				 * mode is enabled: 				 */
-if|if
-condition|(
-name|pthread
-operator|==
-name|_thread_single
-condition|)
-block|{
-comment|/* 					 * This thread is allowed 					 * to run. 					 */
-block|}
-else|else
-block|{
-comment|/* 					 * Walk up the signal handler                                          * parent thread tree to see 					 * if the current thread is 					 * descended from the thread 					 * for which single-threaded 					 * mode is enabled. 					 */
-name|pthread_nxt
-operator|=
-name|pthread
-expr_stmt|;
-while|while
-condition|(
-name|pthread_nxt
-operator|!=
-name|NULL
-operator|&&
-name|pthread_nxt
-operator|!=
-name|_thread_single
-condition|)
-block|{
-name|pthread_nxt
-operator|=
-name|pthread
-operator|->
-name|parent_thread
-expr_stmt|;
-block|}
-comment|/* 					 * Check if the current 					 * thread is not descended 					 * from the thread for which 					 * single-threaded mode is 					 * enabled. 					 */
-if|if
-condition|(
-name|pthread_nxt
-operator|==
-name|NULL
-condition|)
-comment|/* Ignore this thread. */
-continue|continue;
-block|}
-block|}
 comment|/* Check if the current thread is unable to run: */
 if|if
 condition|(
@@ -1300,60 +1071,6 @@ operator|->
 name|nxt
 control|)
 block|{
-comment|/* Check if in single-threaded mode: */
-if|if
-condition|(
-name|_thread_single
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* 					 * Check if the current thread is 					 * the thread for which single-threaded 					 * mode is enabled: 					 */
-if|if
-condition|(
-name|pthread
-operator|==
-name|_thread_single
-condition|)
-block|{
-comment|/* 						 * This thread is allowed 						 * to run. 						 */
-block|}
-else|else
-block|{
-comment|/* 						 * Walk up the signal handler 						 * parent thread tree to see 						 * if the current thread is 						 * descended from the thread 						 * for which single-threaded 						 * mode is enabled. 						 */
-name|pthread_nxt
-operator|=
-name|pthread
-expr_stmt|;
-while|while
-condition|(
-name|pthread_nxt
-operator|!=
-name|NULL
-operator|&&
-name|pthread_nxt
-operator|!=
-name|_thread_single
-condition|)
-block|{
-name|pthread_nxt
-operator|=
-name|pthread
-operator|->
-name|parent_thread
-expr_stmt|;
-block|}
-comment|/* 						 * Check if the current 						 * thread is not descended 						 * from the thread for which 						 * single-threaded mode is 						 * enabled. 						 */
-if|if
-condition|(
-name|pthread_nxt
-operator|==
-name|NULL
-condition|)
-comment|/* Ignore this thread. */
-continue|continue;
-block|}
-block|}
 comment|/* 				 * Check if the current thread is unable to 				 * run:  				 */
 if|if
 condition|(
@@ -1878,9 +1595,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 comment|/* 				 * Do a longjmp to restart the thread that 				 * was context switched out (by a longjmp to 				 * a different thread):  				 */
-name|_thread_sys_longjmp
+name|longjmp
 argument_list|(
 name|_thread_run
 operator|->
@@ -1889,7 +1605,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* This point should not be reached. */
 name|PANIC
 argument_list|(
@@ -1904,666 +1619,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|_thread_signal
-parameter_list|(
-name|pthread_t
-name|pthread
-parameter_list|,
-name|int
-name|sig
-parameter_list|)
-block|{
-name|int
-name|done
-decl_stmt|;
-name|long
-name|l
-decl_stmt|;
-name|pthread_t
-name|new_pthread
-decl_stmt|;
-name|struct
-name|sigaction
-name|act
-decl_stmt|;
-name|void
-modifier|*
-name|arg
-decl_stmt|;
-comment|/* 	 * Assume that the signal will not be dealt with according 	 * to the thread state: 	 */
-name|done
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Process according to thread state: */
-switch|switch
-condition|(
-name|pthread
-operator|->
-name|state
-condition|)
-block|{
-comment|/* States which do not change when a signal is trapped: */
-case|case
-name|PS_COND_WAIT
-case|:
-case|case
-name|PS_DEAD
-case|:
-case|case
-name|PS_FDLR_WAIT
-case|:
-case|case
-name|PS_FDLW_WAIT
-case|:
-case|case
-name|PS_FILE_WAIT
-case|:
-case|case
-name|PS_JOIN
-case|:
-case|case
-name|PS_MUTEX_WAIT
-case|:
-case|case
-name|PS_RUNNING
-case|:
-case|case
-name|PS_STATE_MAX
-case|:
-case|case
-name|PS_SIGTHREAD
-case|:
-case|case
-name|PS_SUSPENDED
-case|:
-comment|/* Nothing to do here. */
-break|break;
-comment|/* Wait for child: */
-case|case
-name|PS_WAIT_WAIT
-case|:
-comment|/* Check if the signal is from a child exiting: */
-if|if
-condition|(
-name|sig
-operator|==
-name|SIGCHLD
-condition|)
-block|{
-comment|/* Reset the error: */
-name|_thread_seterrno
-argument_list|(
-name|pthread
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* Change the state of the thread to run: */
-name|PTHREAD_NEW_STATE
-argument_list|(
-name|pthread
-argument_list|,
-name|PS_RUNNING
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* Return the 'interrupted' error: */
-name|_thread_seterrno
-argument_list|(
-name|pthread
-argument_list|,
-name|EINTR
-argument_list|)
-expr_stmt|;
-comment|/* Change the state of the thread to run: */
-name|PTHREAD_NEW_STATE
-argument_list|(
-name|pthread
-argument_list|,
-name|PS_RUNNING
-argument_list|)
-expr_stmt|;
-block|}
-name|pthread
-operator|->
-name|interrupted
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-comment|/* Waiting on I/O for zero or more file descriptors: */
-case|case
-name|PS_SELECT_WAIT
-case|:
-name|pthread
-operator|->
-name|data
-operator|.
-name|select_data
-operator|->
-name|nfds
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-comment|/* Return the 'interrupted' error: */
-name|_thread_seterrno
-argument_list|(
-name|pthread
-argument_list|,
-name|EINTR
-argument_list|)
-expr_stmt|;
-name|pthread
-operator|->
-name|interrupted
-operator|=
-literal|1
-expr_stmt|;
-comment|/* Change the state of the thread to run: */
-name|PTHREAD_NEW_STATE
-argument_list|(
-name|pthread
-argument_list|,
-name|PS_RUNNING
-argument_list|)
-expr_stmt|;
-break|break;
-comment|/* 	 * States that are interrupted by the occurrence of a signal 	 * other than the scheduling alarm:  	 */
-case|case
-name|PS_FDR_WAIT
-case|:
-case|case
-name|PS_FDW_WAIT
-case|:
-case|case
-name|PS_SLEEP_WAIT
-case|:
-case|case
-name|PS_SIGWAIT
-case|:
-comment|/* Return the 'interrupted' error: */
-name|_thread_seterrno
-argument_list|(
-name|pthread
-argument_list|,
-name|EINTR
-argument_list|)
-expr_stmt|;
-name|pthread
-operator|->
-name|interrupted
-operator|=
-literal|1
-expr_stmt|;
-comment|/* Change the state of the thread to run: */
-name|PTHREAD_NEW_STATE
-argument_list|(
-name|pthread
-argument_list|,
-name|PS_RUNNING
-argument_list|)
-expr_stmt|;
-comment|/* Return the signal number: */
-name|pthread
-operator|->
-name|signo
-operator|=
-name|sig
-expr_stmt|;
-break|break;
-block|}
-comment|/* 	 * Check if this signal has been dealt with, or is being 	 * ignored: 	 */
-if|if
-condition|(
-name|done
-operator|||
-name|pthread
-operator|->
-name|act
-index|[
-name|sig
-operator|-
-literal|1
-index|]
-operator|.
-name|sa_handler
-operator|==
-name|SIG_IGN
-condition|)
-block|{
-comment|/* Ignore the signal for this thread. */
-block|}
-comment|/* Check if this signal is to use the default handler: */
-elseif|else
-if|if
-condition|(
-name|pthread
-operator|->
-name|act
-index|[
-name|sig
-operator|-
-literal|1
-index|]
-operator|.
-name|sa_handler
-operator|==
-name|SIG_DFL
-condition|)
-block|{
-comment|/* Process according to signal type: */
-switch|switch
-condition|(
-name|sig
-condition|)
-block|{
-comment|/* Signals which cause core dumps: */
-case|case
-name|SIGQUIT
-case|:
-case|case
-name|SIGILL
-case|:
-case|case
-name|SIGTRAP
-case|:
-case|case
-name|SIGABRT
-case|:
-case|case
-name|SIGEMT
-case|:
-case|case
-name|SIGFPE
-case|:
-case|case
-name|SIGBUS
-case|:
-case|case
-name|SIGSEGV
-case|:
-case|case
-name|SIGSYS
-case|:
-comment|/* Clear the signal action: */
-name|sigfillset
-argument_list|(
-operator|&
-name|act
-operator|.
-name|sa_mask
-argument_list|)
-expr_stmt|;
-name|act
-operator|.
-name|sa_handler
-operator|=
-name|SIG_DFL
-expr_stmt|;
-name|act
-operator|.
-name|sa_flags
-operator|=
-name|SA_RESTART
-expr_stmt|;
-name|_thread_sys_sigaction
-argument_list|(
-name|sig
-argument_list|,
-operator|&
-name|act
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-comment|/* 			 * Do a sigreturn back to where the signal was 			 * detected and a core dump should occur:  			 */
-name|_thread_sys_sigreturn
-argument_list|(
-operator|&
-name|pthread
-operator|->
-name|saved_sigcontext
-argument_list|)
-expr_stmt|;
-break|break;
-comment|/* 		 * The following signals should terminate the 		 * process. Do this by clearing the signal action 		 * and then re-throwing the signal. 		 */
-case|case
-name|SIGHUP
-case|:
-case|case
-name|SIGINT
-case|:
-case|case
-name|SIGPIPE
-case|:
-case|case
-name|SIGALRM
-case|:
-case|case
-name|SIGTERM
-case|:
-case|case
-name|SIGXCPU
-case|:
-case|case
-name|SIGXFSZ
-case|:
-case|case
-name|SIGVTALRM
-case|:
-case|case
-name|SIGUSR1
-case|:
-case|case
-name|SIGUSR2
-case|:
-comment|/* These signals stop the process. Also re-throw them. */
-case|case
-name|SIGTSTP
-case|:
-case|case
-name|SIGTTIN
-case|:
-case|case
-name|SIGTTOU
-case|:
-comment|/* Clear the signal action: */
-name|sigfillset
-argument_list|(
-operator|&
-name|act
-operator|.
-name|sa_mask
-argument_list|)
-expr_stmt|;
-name|act
-operator|.
-name|sa_handler
-operator|=
-name|SIG_DFL
-expr_stmt|;
-name|act
-operator|.
-name|sa_flags
-operator|=
-name|SA_RESTART
-expr_stmt|;
-name|_thread_sys_sigaction
-argument_list|(
-name|sig
-argument_list|,
-operator|&
-name|act
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-comment|/* Re-throw to ourselves. */
-name|kill
-argument_list|(
-name|getpid
-argument_list|()
-argument_list|,
-name|sig
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|SIGCONT
-case|:
-comment|/* 			 * If we get this it means that we were 			 * probably stopped and then continued. 			 * Reset the handler for the SIGTSTP, SIGTTIN 			 * and SIGTTOU signals. 			 */
-name|sigfillset
-argument_list|(
-operator|&
-name|act
-operator|.
-name|sa_mask
-argument_list|)
-expr_stmt|;
-name|act
-operator|.
-name|sa_handler
-operator|=
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
-name|_thread_sig_handler
-expr_stmt|;
-name|act
-operator|.
-name|sa_flags
-operator|=
-name|SA_RESTART
-expr_stmt|;
-comment|/* Initialise the signals for default handling: */
-if|if
-condition|(
-name|_thread_sys_sigaction
-argument_list|(
-name|SIGTSTP
-argument_list|,
-operator|&
-name|act
-argument_list|,
-name|NULL
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|PANIC
-argument_list|(
-literal|"Cannot initialise SIGTSTP signal handler"
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|_thread_sys_sigaction
-argument_list|(
-name|SIGTTIN
-argument_list|,
-operator|&
-name|act
-argument_list|,
-name|NULL
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|PANIC
-argument_list|(
-literal|"Cannot initialise SIGTTIN signal handler"
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|_thread_sys_sigaction
-argument_list|(
-name|SIGTTOU
-argument_list|,
-operator|&
-name|act
-argument_list|,
-name|NULL
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|PANIC
-argument_list|(
-literal|"Cannot initialise SIGTTOU signal handler"
-argument_list|)
-expr_stmt|;
-block|}
-break|break;
-comment|/* Default processing for other signals: */
-default|default:
-comment|/* 			 * ### Default processing is a problem to resolve!      			 * ###  			 */
-break|break;
-block|}
-block|}
-else|else
-block|{
-comment|/* 		 * Cast the signal number as a long and then to a void 		 * pointer. Sigh. This is POSIX.  		 */
-name|l
-operator|=
-operator|(
-name|long
-operator|)
-name|sig
-expr_stmt|;
-name|arg
-operator|=
-operator|(
-name|void
-operator|*
-operator|)
-name|l
-expr_stmt|;
-comment|/* Create a signal handler thread, but don't run it yet: */
-if|if
-condition|(
-name|_thread_create
-argument_list|(
-operator|&
-name|new_pthread
-argument_list|,
-name|NULL
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|pthread
-operator|->
-name|act
-index|[
-name|sig
-operator|-
-literal|1
-index|]
-operator|.
-name|sa_handler
-argument_list|,
-name|arg
-argument_list|,
-name|pthread
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* 			 * Error creating signal handler thread, so abort 			 * this process:  			 */
-name|PANIC
-argument_list|(
-literal|"Cannot create signal handler thread"
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-comment|/* Nothing to return. */
-return|return;
-block|}
-end_function
-
-begin_function
-name|void
-name|_thread_kern_sig_block
-parameter_list|(
-name|int
-modifier|*
-name|status
-parameter_list|)
-block|{
-name|sigset_t
-name|oset
-decl_stmt|;
-comment|/* 	 * Block all signals so that the process will not be interrupted by 	 * signals:  	 */
-name|_thread_sys_sigprocmask
-argument_list|(
-name|SIG_SETMASK
-argument_list|,
-operator|&
-name|sig_to_block
-argument_list|,
-operator|&
-name|oset
-argument_list|)
-expr_stmt|;
-comment|/* Check if the caller wants the current block status returned: */
-if|if
-condition|(
-name|status
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* Return the previous signal block status: */
-operator|*
-name|status
-operator|=
-operator|(
-name|oset
-operator|!=
-literal|0
-operator|)
-expr_stmt|;
-block|}
-return|return;
-block|}
-end_function
-
-begin_function
-name|void
-name|_thread_kern_sig_unblock
-parameter_list|(
-name|int
-name|status
-parameter_list|)
-block|{
-name|sigset_t
-name|oset
-decl_stmt|;
-comment|/* 	 * Check if the caller thinks that signals weren't blocked when it 	 * called _thread_kern_sig_block:  	 */
-if|if
-condition|(
-name|status
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* 		 * Unblock all signals so that the process will be 		 * interrupted when a signal occurs:  		 */
-name|_thread_sys_sigprocmask
-argument_list|(
-name|SIG_SETMASK
-argument_list|,
-operator|&
-name|sig_to_unblock
-argument_list|,
-operator|&
-name|oset
-argument_list|)
-expr_stmt|;
-block|}
-return|return;
 block|}
 end_function
 
@@ -3355,12 +2410,6 @@ name|_thread_kern_in_select
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Unblock all signals: */
-name|_thread_kern_sig_unblock
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Wait for a file descriptor to be ready for read, write, or 		 * an exception, or a timeout to occur:  		 */
 name|count
 operator|=
@@ -3380,12 +2429,6 @@ operator|&
 name|fd_set_except
 argument_list|,
 name|p_tv
-argument_list|)
-expr_stmt|;
-comment|/* Block all signals again: */
-name|_thread_kern_sig_block
-argument_list|(
-name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Reset the kernel in select flag: */
@@ -3462,7 +2505,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* 				 * The buffer read contains one byte per 				 * signal and each byte is the signal number. 				 * This data is not used, but the fact that 				 * the signal handler wrote to the pipe *is* 				 * used to cause the _thread_sys_select call 				 * to complete if the signal occurred between 				 * the time when signals were unblocked and 				 * the _thread_sys_select select call being 				 * made.  				 */
+comment|/* 				 * The buffer read contains one byte per 				 * signal and each byte is the signal number. 				 * This data is not used, but the fact that 				 * the signal handler wrote to the pipe *is* 				 * used to cause the _select call 				 * to complete if the signal occurred between 				 * the time when signals were unblocked and 				 * the _select select call being 				 * made.  				 */
 block|}
 block|}
 block|}
@@ -3475,7 +2518,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* 		 * Point to the time value structure which has been zeroed so 		 * that the call to _thread_sys_select will not wait:  		 */
+comment|/* 		 * Point to the time value structure which has been zeroed so 		 * that the call to _select will not wait:  		 */
 name|p_tv
 operator|=
 operator|&
@@ -3503,43 +2546,15 @@ name|p_tv
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Check if the select call was interrupted, or some other error 	 * occurred:  	 */
+comment|/* 	 * Check if any file descriptors are ready: 	 */
 if|if
 condition|(
 name|count
-operator|<
+operator|>
 literal|0
 condition|)
 block|{
-comment|/* Check if the select call was interrupted: */
-if|if
-condition|(
-name|errno
-operator|==
-name|EINTR
-condition|)
-block|{
-comment|/* 			 * Interrupted calls are expected. The interrupting 			 * signal will be in the sigpend array.  			 */
-block|}
-else|else
-block|{
-comment|/* This should not occur: */
-block|}
-block|}
-comment|/* Check if no file descriptors are ready: */
-elseif|else
-if|if
-condition|(
-name|count
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* Nothing to do here.                                              */
-block|}
-else|else
-block|{
-comment|/* 		 * Enter a loop to look for threads waiting on file 		 * descriptors that are flagged as available by the 		 * _thread_sys_select syscall:  		 */
+comment|/* 		 * Enter a loop to look for threads waiting on file 		 * descriptors that are flagged as available by the 		 * _select syscall:  		 */
 for|for
 control|(
 name|pthread

@@ -46,13 +46,6 @@ decl_stmt|;
 name|pthread_t
 name|next_thread
 decl_stmt|;
-comment|/* Block signals: */
-name|_thread_kern_sig_block
-argument_list|(
-operator|&
-name|status
-argument_list|)
-expr_stmt|;
 comment|/* Check for invalid calling parameters: */
 if|if
 condition|(
@@ -66,13 +59,11 @@ name|magic
 operator|!=
 name|PTHREAD_MAGIC
 condition|)
-block|{
 comment|/* Return an invalid argument error: */
 name|rval
 operator|=
 name|EINVAL
 expr_stmt|;
-block|}
 comment|/* Check if the thread has not been detached: */
 elseif|else
 if|if
@@ -128,18 +119,10 @@ expr_stmt|;
 block|}
 block|}
 else|else
-block|{
 comment|/* Return an error: */
 name|rval
 operator|=
 name|EINVAL
-expr_stmt|;
-block|}
-comment|/* Unblock signals: */
-name|_thread_kern_sig_unblock
-argument_list|(
-name|status
-argument_list|)
 expr_stmt|;
 comment|/* Return the completion status: */
 return|return

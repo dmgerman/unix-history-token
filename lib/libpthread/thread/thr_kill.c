@@ -45,15 +45,7 @@ name|sig
 parameter_list|)
 block|{
 name|int
-name|rval
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|status
-decl_stmt|;
-name|pthread_t
-name|p_pthread
+name|ret
 decl_stmt|;
 comment|/* Check for invalid signal numbers: */
 if|if
@@ -67,81 +59,40 @@ operator|>=
 name|NSIG
 condition|)
 comment|/* Invalid signal: */
-name|rval
+name|ret
 operator|=
 name|EINVAL
 expr_stmt|;
-else|else
-block|{
-comment|/* Assume that the search will succeed: */
-name|rval
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Block signals: */
-name|_thread_kern_sig_block
-argument_list|(
-operator|&
-name|status
-argument_list|)
-expr_stmt|;
-comment|/* Search for the thread: */
-name|p_pthread
-operator|=
-name|_thread_link_list
-expr_stmt|;
-while|while
-condition|(
-name|p_pthread
-operator|!=
-name|NULL
-operator|&&
-name|p_pthread
-operator|!=
-name|pthread
-condition|)
-block|{
-name|p_pthread
-operator|=
-name|p_pthread
-operator|->
-name|nxt
-expr_stmt|;
-block|}
-comment|/* Check if the thread was not found: */
+comment|/* Find the thread in the list of active threads: */
+elseif|else
 if|if
 condition|(
-name|p_pthread
-operator|==
-name|NULL
-condition|)
-comment|/* Can't find the thread: */
-name|rval
+operator|(
+name|ret
 operator|=
-name|ESRCH
-expr_stmt|;
-else|else
+name|_find_thread
+argument_list|(
+name|pthread
+argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
 comment|/* Increment the pending signal count: */
-name|p_pthread
+name|sigaddset
+argument_list|(
+operator|&
+name|pthread
 operator|->
 name|sigpend
-index|[
+argument_list|,
 name|sig
-index|]
-operator|+=
-literal|1
-expr_stmt|;
-comment|/* Unblock signals: */
-name|_thread_kern_sig_unblock
-argument_list|(
-name|status
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Return the completion status: */
 return|return
 operator|(
-name|rval
+name|ret
 operator|)
 return|;
 block|}

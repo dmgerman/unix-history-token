@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 John Birrell<jb@cimlogic.com.au>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * Copyright (c) 1995-1998 John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -309,12 +309,6 @@ decl_stmt|;
 name|pthread_t
 name|pthread
 decl_stmt|;
-comment|/* Block signals: */
-name|_thread_kern_sig_block
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
 comment|/* Save the return value: */
 name|_thread_run
 operator|->
@@ -406,6 +400,10 @@ name|PS_RUNNING
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Lock the thread list: */
+name|_lock_thread_list
+argument_list|()
+expr_stmt|;
 comment|/* Check if the running thread is at the head of the linked list: */
 if|if
 condition|(
@@ -470,108 +468,14 @@ name|nxt
 expr_stmt|;
 block|}
 block|}
-comment|/* Check if this is a signal handler thread: */
-if|if
-condition|(
-name|_thread_run
-operator|->
-name|parent_thread
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* 		 * Enter a loop to search for other threads with the same 		 * parent:  		 */
-for|for
-control|(
-name|pthread
-operator|=
-name|_thread_link_list
-init|;
-name|pthread
-operator|!=
-name|NULL
-condition|;
-name|pthread
-operator|=
-name|pthread
-operator|->
-name|nxt
-control|)
-block|{
-comment|/* Compare the parent thread pointers: */
-if|if
-condition|(
-name|pthread
-operator|->
-name|parent_thread
-operator|==
-name|_thread_run
-operator|->
-name|parent_thread
-condition|)
-block|{
-comment|/* 				 * The parent thread is waiting on at least 				 * one other signal handler. Exit the loop 				 * now that this is known.  				 */
-break|break;
-block|}
-block|}
-comment|/* 		 * Check if the parent is not waiting on any other signal 		 * handler threads and if it hasn't died in the meantime: 		 */
-if|if
-condition|(
-name|pthread
-operator|==
-name|NULL
-operator|&&
-name|_thread_run
-operator|->
-name|parent_thread
-operator|->
-name|state
-operator|!=
-name|PS_DEAD
-condition|)
-block|{
-comment|/* Allow the parent thread to run again: */
-name|PTHREAD_NEW_STATE
-argument_list|(
-name|_thread_run
-operator|->
-name|parent_thread
-argument_list|,
-name|PS_RUNNING
-argument_list|)
+comment|/* Unlock the thread list: */
+name|_unlock_thread_list
+argument_list|()
 expr_stmt|;
-block|}
-comment|/* Get the signal number: */
-name|l
-operator|=
-operator|(
-name|long
-operator|)
-name|_thread_run
-operator|->
-name|arg
+comment|/* Lock the dead thread list: */
+name|_lock_dead_thread_list
+argument_list|()
 expr_stmt|;
-name|sig
-operator|=
-operator|(
-name|int
-operator|)
-name|l
-expr_stmt|;
-comment|/* Unblock the signal from the parent thread: */
-name|sigdelset
-argument_list|(
-operator|&
-name|_thread_run
-operator|->
-name|parent_thread
-operator|->
-name|sigmask
-argument_list|,
-name|sig
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * This thread will never run again. Add it to the list of dead 	 * threads:  	 */
 name|_thread_run
 operator|->
@@ -582,6 +486,10 @@ expr_stmt|;
 name|_thread_dead
 operator|=
 name|_thread_run
+expr_stmt|;
+comment|/* Unlock the dead thread list: */
+name|_unlock_dead_thread_list
+argument_list|()
 expr_stmt|;
 comment|/* 	 * The running thread is no longer in the thread link list so it will 	 * now die:  	 */
 name|_thread_kern_sched_state

@@ -27,6 +27,10 @@ directive|include
 file|"pthread_private.h"
 end_include
 
+begin_comment
+comment|/* Resume a thread: */
+end_comment
+
 begin_function
 name|int
 name|pthread_resume_np
@@ -37,107 +41,41 @@ parameter_list|)
 block|{
 name|int
 name|ret
-init|=
-operator|-
-literal|1
 decl_stmt|;
-name|pthread_t
-name|pthread
-decl_stmt|;
-comment|/* 	 * Search for the thread in the linked list. 	 */
-for|for
-control|(
-name|pthread
-operator|=
-name|_thread_link_list
-init|;
-name|pthread
-operator|!=
-name|NULL
-operator|&&
-name|ret
-operator|==
-operator|-
-literal|1
-condition|;
-name|pthread
-operator|=
-name|pthread
-operator|->
-name|nxt
-control|)
-block|{
-comment|/* Is this the thread? */
+comment|/* Find the thread in the list of active threads: */
 if|if
 condition|(
-name|pthread
-operator|==
+operator|(
+name|ret
+operator|=
+name|_find_thread
+argument_list|(
 name|thread
+argument_list|)
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
-comment|/* Found the thread. Is it suspended? */
+comment|/* The thread exists. Is it suspended? */
 if|if
 condition|(
-name|pthread
+name|thread
 operator|->
 name|state
-operator|==
+operator|!=
 name|PS_SUSPENDED
 condition|)
 block|{
 comment|/* Allow the thread to run. */
 name|PTHREAD_NEW_STATE
 argument_list|(
-name|pthread
+name|thread
 argument_list|,
 name|PS_RUNNING
 argument_list|)
 expr_stmt|;
-name|ret
-operator|=
-literal|0
-expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|pthread
-operator|->
-name|state
-operator|==
-name|PS_RUNNING
-condition|)
-block|{
-comment|/* Thread is already running. */
-name|ret
-operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* Thread is in some other state. */
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
-block|}
-block|}
-block|}
-comment|/* Check if thread was not found. */
-if|if
-condition|(
-name|ret
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-comment|/* No such thread */
-name|errno
-operator|=
-name|ESRCH
-expr_stmt|;
 block|}
 return|return
 operator|(

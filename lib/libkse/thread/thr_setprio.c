@@ -39,15 +39,7 @@ name|prio
 parameter_list|)
 block|{
 name|int
-name|rval
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|status
-decl_stmt|;
-name|pthread_t
-name|pthread_p
+name|ret
 decl_stmt|;
 comment|/* Check if the priority is invalid: */
 if|if
@@ -60,77 +52,26 @@ name|prio
 operator|>
 name|PTHREAD_MAX_PRIORITY
 condition|)
-block|{
 comment|/* Return an invalid argument error: */
-name|errno
+name|ret
 operator|=
 name|EINVAL
 expr_stmt|;
-name|rval
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* Block signals: */
-name|_thread_kern_sig_block
-argument_list|(
-operator|&
-name|status
-argument_list|)
-expr_stmt|;
-comment|/* Point to the first thread in the list: */
-name|pthread_p
-operator|=
-name|_thread_link_list
-expr_stmt|;
-comment|/* Enter a loop to search for the thread: */
-while|while
-condition|(
-name|pthread_p
-operator|!=
-name|NULL
-operator|&&
-name|pthread_p
-operator|!=
-name|pthread
-condition|)
-block|{
-comment|/* Point to the next thread: */
-name|pthread_p
-operator|=
-name|pthread_p
-operator|->
-name|nxt
-expr_stmt|;
-block|}
-comment|/* Check if the thread pointer is NULL: */
+comment|/* Find the thread in the list of active threads: */
+elseif|else
 if|if
 condition|(
+operator|(
+name|ret
+operator|=
+name|_find_thread
+argument_list|(
 name|pthread
+argument_list|)
+operator|)
 operator|==
-name|NULL
-operator|||
-name|pthread_p
-operator|==
-name|NULL
+literal|0
 condition|)
-block|{
-comment|/* Return a 'search' error: */
-name|errno
-operator|=
-name|ESRCH
-expr_stmt|;
-name|rval
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
-else|else
-block|{
 comment|/* Set the thread priority: */
 name|pthread
 operator|->
@@ -138,18 +79,10 @@ name|pthread_priority
 operator|=
 name|prio
 expr_stmt|;
-block|}
-comment|/* Unblock signals: */
-name|_thread_kern_sig_unblock
-argument_list|(
-name|status
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Return the error status: */
 return|return
 operator|(
-name|rval
+name|ret
 operator|)
 return|;
 block|}

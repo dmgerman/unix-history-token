@@ -56,13 +56,6 @@ decl_stmt|;
 name|sigset_t
 name|oset
 decl_stmt|;
-comment|/* Block signals: */
-name|_thread_kern_sig_block
-argument_list|(
-operator|&
-name|status
-argument_list|)
-expr_stmt|;
 comment|/* Save the current sigmal mask: */
 name|oset
 operator|=
@@ -88,12 +81,6 @@ argument_list|,
 name|__LINE__
 argument_list|)
 expr_stmt|;
-comment|/* Block signals again: */
-name|_thread_kern_sig_block
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
 comment|/* Return the signal number to the caller: */
 operator|*
 name|sig
@@ -108,12 +95,6 @@ operator|->
 name|sigmask
 operator|=
 name|oset
-expr_stmt|;
-comment|/* Unblock signals: */
-name|_thread_kern_sig_unblock
-argument_list|(
-name|status
-argument_list|)
 expr_stmt|;
 comment|/* Return the completion status: */
 return|return

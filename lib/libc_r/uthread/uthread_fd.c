@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 John Birrell<jb@cimlogic.com.au>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: uthread_fd.c,v 1.4 1997/04/01 22:49:58 jb Exp $  *  */
+comment|/*  * Copyright (c) 1995-1998 John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: uthread_fd.c,v 1.5 1998/02/13 01:27:32 julian Exp $  *  */
 end_comment
 
 begin_include
@@ -40,6 +40,19 @@ file|"pthread_private.h"
 end_include
 
 begin_comment
+comment|/* Static variables: */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|long
+name|fd_table_lock
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * This function *must* return -1 and set the thread specific errno  * as a system call. This is because the error return from this  * function is propagated directly back from thread-wrapped system  * calls.  */
 end_comment
 
@@ -56,14 +69,11 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|status
-decl_stmt|;
-comment|/* Block signals: */
-name|_thread_kern_sig_block
+comment|/* Lock the file descriptor table: */
+name|_spinlock
 argument_list|(
 operator|&
-name|status
+name|fd_table_lock
 argument_list|)
 expr_stmt|;
 comment|/* Check if the file descriptor is out of range: */
@@ -150,6 +160,15 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Initialise the file locks: */
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|access_lock
+operator|=
+literal|0
+expr_stmt|;
 name|_thread_fd_table
 index|[
 name|fd
@@ -371,10 +390,11 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-comment|/* Unblock signals: */
-name|_thread_kern_sig_unblock
+comment|/* Unlock the file descriptor table: */
+name|_atomic_unlock
 argument_list|(
-name|status
+operator|&
+name|fd_table_lock
 argument_list|)
 expr_stmt|;
 comment|/* Return the completion status: */
@@ -400,16 +420,6 @@ block|{
 name|int
 name|ret
 decl_stmt|;
-name|int
-name|status
-decl_stmt|;
-comment|/* Block signals while the file descriptor lock is tested: */
-name|_thread_kern_sig_block
-argument_list|(
-operator|&
-name|status
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Check that the file descriptor table is initialised for this 	 * entry:  	 */
 if|if
 condition|(
@@ -421,12 +431,22 @@ argument_list|(
 name|fd
 argument_list|)
 operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
-block|{ 	}
-else|else
 block|{
+comment|/* 		 * Lock the file descriptor table entry to prevent 		 * other threads for clashing with the current 		 * thread's accesses: 		 */
+name|_spinlock
+argument_list|(
+operator|&
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|access_lock
+argument_list|)
+expr_stmt|;
 comment|/* Check if the running thread owns the read lock: */
 if|if
 condition|(
@@ -631,14 +651,20 @@ expr_stmt|;
 block|}
 block|}
 block|}
-block|}
-comment|/* Unblock signals again: */
-name|_thread_kern_sig_unblock
+comment|/* Unlock the file descriptor table entry: */
+name|_atomic_unlock
 argument_list|(
-name|status
+operator|&
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|access_lock
 argument_list|)
 expr_stmt|;
-comment|/* Nothing to return.                                                   */
+block|}
+comment|/* Nothing to return. */
 return|return;
 block|}
 end_function
@@ -669,16 +695,6 @@ block|{
 name|int
 name|ret
 decl_stmt|;
-name|int
-name|status
-decl_stmt|;
-comment|/* Block signals while the file descriptor lock is tested: */
-name|_thread_kern_sig_block
-argument_list|(
-operator|&
-name|status
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Check that the file descriptor table is initialised for this 	 * entry:  	 */
 if|if
 condition|(
@@ -690,12 +706,22 @@ argument_list|(
 name|fd
 argument_list|)
 operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
-block|{ 	}
-else|else
 block|{
+comment|/* 		 * Lock the file descriptor table entry to prevent 		 * other threads for clashing with the current 		 * thread's accesses: 		 */
+name|_spinlock
+argument_list|(
+operator|&
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|access_lock
+argument_list|)
+expr_stmt|;
 comment|/* Check the file descriptor and lock types: */
 if|if
 condition|(
@@ -785,6 +811,18 @@ argument_list|(
 name|timeout
 argument_list|)
 expr_stmt|;
+comment|/* 					 * Unlock the file descriptor 					 * table entry: 					 */
+name|_atomic_unlock
+argument_list|(
+operator|&
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|access_lock
+argument_list|)
+expr_stmt|;
 comment|/* 					 * Schedule this thread to wait on 					 * the read lock. It will only be 					 * woken when it becomes the next in 					 * the   queue and is granted access 					 * to the lock by the       thread 					 * that is unlocking the file 					 * descriptor.         					 */
 name|_thread_kern_sched_state
 argument_list|(
@@ -795,10 +833,16 @@ argument_list|,
 name|__LINE__
 argument_list|)
 expr_stmt|;
-comment|/* 					 * Block signals so that the file 					 * descriptor lock can   again be 					 * tested:  					 */
-name|_thread_kern_sig_block
+comment|/* 					 * Lock the file descriptor 					 * table entry again: 					 */
+name|_spinlock
 argument_list|(
-name|NULL
+operator|&
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|access_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -944,6 +988,18 @@ argument_list|(
 name|timeout
 argument_list|)
 expr_stmt|;
+comment|/* 					 * Unlock the file descriptor 					 * table entry: 					 */
+name|_atomic_unlock
+argument_list|(
+operator|&
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|access_lock
+argument_list|)
+expr_stmt|;
 comment|/* 					 * Schedule this thread to wait on 					 * the write lock. It will only be 					 * woken when it becomes the next in 					 * the queue and is granted access to 					 * the lock by the thread that is 					 * unlocking the file descriptor.         					 */
 name|_thread_kern_sched_state
 argument_list|(
@@ -954,10 +1010,16 @@ argument_list|,
 name|__LINE__
 argument_list|)
 expr_stmt|;
-comment|/* 					 * Block signals so that the file 					 * descriptor lock can again be 					 * tested:  					 */
-name|_thread_kern_sig_block
+comment|/* 					 * Lock the file descriptor 					 * table entry again: 					 */
+name|_spinlock
 argument_list|(
-name|NULL
+operator|&
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|access_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -1014,13 +1076,19 @@ name|w_lockcount
 operator|++
 expr_stmt|;
 block|}
-block|}
-comment|/* Unblock signals again: */
-name|_thread_kern_sig_unblock
+comment|/* Unlock the file descriptor table entry: */
+name|_atomic_unlock
 argument_list|(
-name|status
+operator|&
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|access_lock
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Return the completion status: */
 return|return
 operator|(

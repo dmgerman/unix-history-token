@@ -41,15 +41,14 @@ name|thread_return
 parameter_list|)
 block|{
 name|int
-name|rval
+name|ret
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|status
-decl_stmt|;
 name|pthread_t
 name|pthread1
+init|=
+name|NULL
 decl_stmt|;
 comment|/* Check if the caller has specified an invalid thread: */
 if|if
@@ -83,85 +82,39 @@ operator|(
 name|EDEADLK
 operator|)
 return|;
-comment|/* Block signals: */
-name|_thread_kern_sig_block
+comment|/* 	 * Find the thread in the list of active threads or in the 	 * list of dead threads: 	 */
+if|if
+condition|(
+name|_find_thread
 argument_list|(
-operator|&
-name|status
+name|pthread
 argument_list|)
-expr_stmt|;
-comment|/* Point to the first thread in the list: */
-name|pthread1
-operator|=
-name|_thread_link_list
-expr_stmt|;
-comment|/* Search for the thread to join to: */
-while|while
-condition|(
-name|pthread1
-operator|!=
-name|NULL
-operator|&&
-name|pthread1
-operator|!=
+operator|==
+literal|0
+operator|||
+name|_find_dead_thread
+argument_list|(
 name|pthread
+argument_list|)
+operator|==
+literal|0
 condition|)
-block|{
-comment|/* Point to the next thread: */
 name|pthread1
 operator|=
-name|pthread1
-operator|->
-name|nxt
+name|pthread
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|pthread1
 operator|==
 name|NULL
 condition|)
-block|{
-comment|/* Point to the first thread in the dead thread list: */
-name|pthread1
-operator|=
-name|_thread_dead
-expr_stmt|;
-comment|/* Search for the thread to join to: */
-while|while
-condition|(
-name|pthread1
-operator|!=
-name|NULL
-operator|&&
-name|pthread1
-operator|!=
-name|pthread
-condition|)
-block|{
-comment|/* Point to the next thread: */
-name|pthread1
-operator|=
-name|pthread1
-operator|->
-name|nxt
-expr_stmt|;
-block|}
-block|}
-if|if
-condition|(
-name|pthread1
-operator|==
-name|NULL
-condition|)
-block|{
 comment|/* Return an error: */
-name|rval
+name|ret
 operator|=
 name|ESRCH
 expr_stmt|;
 comment|/* Check if this thread has been detached: */
-block|}
 elseif|else
 if|if
 condition|(
@@ -177,13 +130,11 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
 comment|/* Return an error: */
-name|rval
+name|ret
 operator|=
 name|ESRCH
 expr_stmt|;
-block|}
 comment|/* Check if the thread is not dead: */
 elseif|else
 if|if
@@ -218,12 +169,6 @@ argument_list|,
 name|__LINE__
 argument_list|)
 expr_stmt|;
-comment|/* Block signals again: */
-name|_thread_kern_sig_block
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
 comment|/* Check if the thread is not detached: */
 if|if
 condition|(
@@ -239,13 +184,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 comment|/* Check if the return value is required: */
 if|if
 condition|(
 name|thread_return
 condition|)
-block|{
 comment|/* Return the thread's return value: */
 operator|*
 name|thread_return
@@ -254,27 +197,21 @@ name|pthread
 operator|->
 name|ret
 expr_stmt|;
-block|}
-block|}
 else|else
-block|{
 comment|/* Return an error: */
-name|rval
+name|ret
 operator|=
 name|ESRCH
 expr_stmt|;
-block|}
-block|}
-else|else
-block|{
 comment|/* Check if the return value is required: */
+block|}
+elseif|else
 if|if
 condition|(
 name|thread_return
 operator|!=
 name|NULL
 condition|)
-block|{
 comment|/* Return the thread's return value: */
 operator|*
 name|thread_return
@@ -283,18 +220,10 @@ name|pthread
 operator|->
 name|ret
 expr_stmt|;
-block|}
-block|}
-comment|/* Unblock signals: */
-name|_thread_kern_sig_unblock
-argument_list|(
-name|status
-argument_list|)
-expr_stmt|;
 comment|/* Return the completion status: */
 return|return
 operator|(
-name|rval
+name|ret
 operator|)
 return|;
 block|}

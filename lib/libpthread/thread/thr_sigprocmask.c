@@ -55,9 +55,6 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|status
-decl_stmt|;
 comment|/* Check if the existing signal process mask is to be returned: */
 if|if
 condition|(
@@ -83,13 +80,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Block signals while the signal mask is changed: */
-name|_thread_kern_sig_block
-argument_list|(
-operator|&
-name|status
-argument_list|)
-expr_stmt|;
 comment|/* Process according to what to do: */
 switch|switch
 condition|(
@@ -152,11 +142,9 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * Schedule the next thread in case there are signals that 		 * now need to be acted on:  		 */
-name|_thread_kern_sched
-argument_list|(
-name|NULL
-argument_list|)
+comment|/* 		 * Dispatch signals to the running thread that are pending 		 * and now unblocked: 		 */
+name|_dispatch_signals
+argument_list|()
 expr_stmt|;
 block|}
 comment|/* Return the completion status: */

@@ -60,6 +60,15 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|long
+name|key_table_lock
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|pthread_key_create
@@ -79,6 +88,13 @@ modifier|*
 parameter_list|)
 parameter_list|)
 block|{
+comment|/* Lock the key table: */
+name|_spinlock
+argument_list|(
+operator|&
+name|key_table_lock
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 operator|(
@@ -140,6 +156,13 @@ name|destructor
 operator|=
 name|destructor
 expr_stmt|;
+comment|/* Unlock the key table: */
+name|_atomic_unlock
+argument_list|(
+operator|&
+name|key_table_lock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -147,6 +170,13 @@ operator|)
 return|;
 block|}
 block|}
+comment|/* Unlock the key table: */
+name|_atomic_unlock
+argument_list|(
+operator|&
+name|key_table_lock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EAGAIN
@@ -166,14 +196,11 @@ block|{
 name|int
 name|ret
 decl_stmt|;
-name|int
-name|status
-decl_stmt|;
-comment|/* Block signals: */
-name|_thread_kern_sig_block
+comment|/* Lock the key table: */
+name|_spinlock
 argument_list|(
 operator|&
-name|status
+name|key_table_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -230,16 +257,15 @@ expr_stmt|;
 block|}
 block|}
 else|else
-block|{
 name|ret
 operator|=
 name|EINVAL
 expr_stmt|;
-block|}
-comment|/* Unblock signals: */
-name|_thread_kern_sig_unblock
+comment|/* Unlock the key table: */
+name|_atomic_unlock
 argument_list|(
-name|status
+operator|&
+name|key_table_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -267,16 +293,6 @@ decl_stmt|;
 name|int
 name|itr
 decl_stmt|;
-name|int
-name|status
-decl_stmt|;
-comment|/* Block signals: */
-name|_thread_kern_sig_block
-argument_list|(
-operator|&
-name|status
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|itr
@@ -312,6 +328,18 @@ operator|->
 name|specific_data_count
 condition|)
 block|{
+comment|/* Lock the key table entry: */
+name|_spinlock
+argument_list|(
+operator|&
+name|key_table
+index|[
+name|key
+index|]
+operator|.
+name|access_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|_thread_run
@@ -379,6 +407,18 @@ name|count
 operator|--
 expr_stmt|;
 block|}
+comment|/* Unlock the key table entry: */
+name|_atomic_unlock
+argument_list|(
+operator|&
+name|key_table
+index|[
+name|key
+index|]
+operator|.
+name|access_lock
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -387,12 +427,6 @@ argument_list|(
 name|_thread_run
 operator|->
 name|specific_data
-argument_list|)
-expr_stmt|;
-comment|/* Unblock signals: */
-name|_thread_kern_sig_unblock
-argument_list|(
-name|status
 argument_list|)
 expr_stmt|;
 return|return;
@@ -404,12 +438,6 @@ argument_list|(
 name|_thread_run
 operator|->
 name|specific_data
-argument_list|)
-expr_stmt|;
-comment|/* Unblock signals: */
-name|_thread_kern_sig_unblock
-argument_list|(
-name|status
 argument_list|)
 expr_stmt|;
 block|}
@@ -508,39 +536,11 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|status
-decl_stmt|;
-comment|/* Block signals: */
-name|_thread_kern_sig_block
-argument_list|(
-operator|&
-name|status
-argument_list|)
-expr_stmt|;
 comment|/* Point to the running thread: */
 name|pthread
 operator|=
 name|_thread_run
 expr_stmt|;
-comment|/* 	 * Enter a loop for signal handler threads to find the parent thread 	 * which has the specific data associated with it:  	 */
-while|while
-condition|(
-name|pthread
-operator|->
-name|parent_thread
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* Point to the parent thread: */
-name|pthread
-operator|=
-name|pthread
-operator|->
-name|parent_thread
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -572,6 +572,18 @@ name|key_table
 operator|)
 condition|)
 block|{
+comment|/* Lock the key table entry: */
+name|_spinlock
+argument_list|(
+operator|&
+name|key_table
+index|[
+name|key
+index|]
+operator|.
+name|access_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|key_table
@@ -655,33 +667,33 @@ literal|0
 expr_stmt|;
 block|}
 else|else
-block|{
+name|ret
+operator|=
+name|EINVAL
+expr_stmt|;
+comment|/* Unlock the key table entry: */
+name|_atomic_unlock
+argument_list|(
+operator|&
+name|key_table
+index|[
+name|key
+index|]
+operator|.
+name|access_lock
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|ret
 operator|=
 name|EINVAL
 expr_stmt|;
 block|}
-block|}
 else|else
-block|{
-name|ret
-operator|=
-name|EINVAL
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
 name|ret
 operator|=
 name|ENOMEM
-expr_stmt|;
-block|}
-comment|/* Unblock signals: */
-name|_thread_kern_sig_unblock
-argument_list|(
-name|status
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -703,59 +715,16 @@ block|{
 name|pthread_t
 name|pthread
 decl_stmt|;
-name|int
-name|status
-decl_stmt|;
 name|void
 modifier|*
 name|data
 decl_stmt|;
-comment|/* Block signals: */
-name|_thread_kern_sig_block
-argument_list|(
-operator|&
-name|status
-argument_list|)
-expr_stmt|;
 comment|/* Point to the running thread: */
 name|pthread
 operator|=
 name|_thread_run
 expr_stmt|;
-comment|/* 	 * Enter a loop for signal handler threads to find the parent thread 	 * which has the specific data associated with it:  	 */
-while|while
-condition|(
-name|pthread
-operator|->
-name|parent_thread
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* Point to the parent thread: */
-name|pthread
-operator|=
-name|pthread
-operator|->
-name|parent_thread
-expr_stmt|;
-block|}
-comment|/* Check for errors: */
-if|if
-condition|(
-name|pthread
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* Return an invalid argument error: */
-name|data
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 comment|/* Check if there is specific data: */
-elseif|else
 if|if
 condition|(
 name|pthread
@@ -775,6 +744,18 @@ name|key_table
 operator|)
 condition|)
 block|{
+comment|/* Lock the key table entry: */
+name|_spinlock
+argument_list|(
+operator|&
+name|key_table
+index|[
+name|key
+index|]
+operator|.
+name|access_lock
+argument_list|)
+expr_stmt|;
 comment|/* Check if this key has been used before: */
 if|if
 condition|(
@@ -809,20 +790,24 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+comment|/* Unlock the key table entry: */
+name|_atomic_unlock
+argument_list|(
+operator|&
+name|key_table
+index|[
+name|key
+index|]
+operator|.
+name|access_lock
+argument_list|)
+expr_stmt|;
 block|}
 else|else
-block|{
 comment|/* No specific data has been created, so just return NULL: */
 name|data
 operator|=
 name|NULL
-expr_stmt|;
-block|}
-comment|/* Unblock signals: */
-name|_thread_kern_sig_unblock
-argument_list|(
-name|status
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
