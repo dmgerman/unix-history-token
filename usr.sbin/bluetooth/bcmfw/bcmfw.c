@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usbdevs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -107,6 +101,20 @@ define|#
 directive|define
 name|BCMFW_BSIZE
 value|4096
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_VENDOR_BROADCOM
+value|0x0a5c
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_BROADCOM_BCM2033
+value|0x2033
 end_define
 
 begin_function_decl
@@ -473,7 +481,7 @@ operator|.
 name|idProduct
 argument_list|)
 operator|!=
-literal|0x2033
+name|USB_PRODUCT_BROADCOM_BCM2033
 condition|)
 block|{
 name|syslog
