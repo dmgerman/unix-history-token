@@ -463,15 +463,13 @@ begin_comment
 comment|/* List of all sockets */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|LIST_HEAD
 argument_list|(
 argument_list|,
 argument|ngpcb
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|ngsocklist
 expr_stmt|;
 end_expr_stmt
