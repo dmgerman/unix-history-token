@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhci.c,v 1.153 2002/02/11 11:40:33 augustss Exp $	*/
+comment|/*	$NetBSD: uhci.c,v 1.154 2002/02/27 12:12:45 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -9481,7 +9481,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * XXX This way of aborting is neither safe, nor good.  * But it will have to do until I figure out what to do.  * I apologize for the delay().  */
+comment|/*  * Abort a device request.  * If this routine is called at splusb() it guarantees that the request  * will be removed from the hardware scheduling and that the callback  * for it will be called with USBD_CANCELLED status.  * It's impossible to guarantee that the requested transfer will not  * have happened since the hardware runs concurrently.  * If the transaction has already happened we rely on the ordinary  * interrupt processing to process it.  */
 end_comment
 
 begin_function
@@ -9618,11 +9618,6 @@ argument_list|(
 literal|"ohci_abort_xfer: not in process context\n"
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|splusb
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Step 1: Make interrupt routine and hardware ignore xfer. 	 */
 name|s
 operator|=
@@ -9710,7 +9705,7 @@ name|device
 operator|->
 name|bus
 argument_list|,
-literal|20
+literal|2
 argument_list|)
 expr_stmt|;
 comment|/* Hardware finishes in 1ms */
@@ -9731,6 +9726,15 @@ operator|&
 name|sc
 operator|->
 name|sc_bus
+argument_list|)
+expr_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|1
+argument_list|,
+operator|(
+literal|"uhci_abort_xfer: tsleep\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|tsleep
@@ -9758,6 +9762,15 @@ operator|->
 name|hcpriv
 operator|=
 name|ii
+expr_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|1
+argument_list|,
+operator|(
+literal|"uhci_abort_xfer: callback\n"
+operator|)
+argument_list|)
 expr_stmt|;
 name|s
 operator|=
@@ -10535,7 +10548,7 @@ name|pipe
 operator|->
 name|intrxfer
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 name|uhci_abort_xfer
