@@ -451,6 +451,32 @@ begin_comment
 comment|/* FDC_500KBPS */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PC98 */
+end_comment
+
+begin_comment
+comment|/*  * this is the secret PIO data port (offset from base)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDC_YE_DATAPORT
+value|6
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC98
+end_ifndef
+
 begin_define
 define|#
 directive|define
