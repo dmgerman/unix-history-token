@@ -298,7 +298,7 @@ argument_list|)
 name|lc_hash
 expr_stmt|;
 comment|/* Fhandle hash list */
-name|CIRCLEQ_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|nqlease
 argument_list|)
@@ -574,7 +574,7 @@ comment|/*  * List head for timer queue.  */
 end_comment
 
 begin_extern
-extern|extern CIRCLEQ_HEAD(nqtimerhead
+extern|extern TAILQ_HEAD(nqtimerhead
 operator|,
 extern|nqlease
 end_extern

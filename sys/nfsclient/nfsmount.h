@@ -149,8 +149,9 @@ name|int
 name|nm_acregmax
 decl_stmt|;
 comment|/* Reg file attr cache max lifetime */
-name|CIRCLEQ_HEAD
+name|TAILQ_HEAD
 argument_list|(
+argument|timhd
 argument_list|,
 argument|nfsnode
 argument_list|)

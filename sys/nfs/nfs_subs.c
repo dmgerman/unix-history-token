@@ -4750,7 +4750,7 @@ argument_list|(
 name|nqnfsstarttime
 argument_list|)
 expr_stmt|;
-name|CIRCLEQ_INIT
+name|TAILQ_INIT
 argument_list|(
 operator|&
 name|nqtimerhead

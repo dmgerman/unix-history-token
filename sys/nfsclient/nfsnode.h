@@ -122,7 +122,7 @@ argument_list|)
 name|n_hash
 expr_stmt|;
 comment|/* Hash chain */
-name|CIRCLEQ_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|nfsnode
 argument_list|)

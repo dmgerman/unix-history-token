@@ -5112,7 +5112,7 @@ name|nm_deadthresh
 operator|=
 name|NQ_DEADTHRESH
 expr_stmt|;
-name|CIRCLEQ_INIT
+name|TAILQ_INIT
 argument_list|(
 operator|&
 name|nmp
