@@ -8,7 +8,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	Also already incorporated from NetBSD:  *	$NetBSD: uhci.c,v 1.162 2002/07/11 21:14:28 augustss Exp $  *	$NetBSD: uhci.c,v 1.163 2002/09/27 15:37:36 provos Exp $  *	$NetBSD: uhci.c,v 1.164 2002/09/29 21:13:01 augustss Exp $  *	$NetBSD: uhci.c,v 1.165 2002/12/31 02:04:49 dsainty Exp $  *	$NetBSD: uhci.c,v 1.166 2002/12/31 02:21:31 dsainty Exp $  *	$NetBSD: uhci.c,v 1.167 2003/01/01 16:25:59 augustss Exp $  *	$NetBSD: uhci.c,v 1.168 2003/02/08 03:32:51 ichiro Exp $  *	$NetBSD: uhci.c,v 1.169 2003/02/16 23:15:28 augustss Exp $  *	$NetBSD: uhci.c,v 1.170 2003/02/19 01:35:04 augustss Exp $  */
+comment|/*	Also already incorporated from NetBSD:  *	$NetBSD: uhci.c,v 1.162 2002/07/11 21:14:28 augustss Exp $  *	$NetBSD: uhci.c,v 1.163 2002/09/27 15:37:36 provos Exp $  *	$NetBSD: uhci.c,v 1.164 2002/09/29 21:13:01 augustss Exp $  *	$NetBSD: uhci.c,v 1.165 2002/12/31 02:04:49 dsainty Exp $  *	$NetBSD: uhci.c,v 1.166 2002/12/31 02:21:31 dsainty Exp $  *	$NetBSD: uhci.c,v 1.167 2003/01/01 16:25:59 augustss Exp $  *	$NetBSD: uhci.c,v 1.168 2003/02/08 03:32:51 ichiro Exp $  *	$NetBSD: uhci.c,v 1.169 2003/02/16 23:15:28 augustss Exp $  *	$NetBSD: uhci.c,v 1.170 2003/02/19 01:35:04 augustss Exp $  *	$NetBSD: uhci.c,v 1.172 2003/02/23 04:19:26 simonb Exp $  */
 end_comment
 
 begin_comment
@@ -3010,7 +3010,6 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
-break|break;
 case|case
 name|DVACT_DEACTIVATE
 case|:
