@@ -580,6 +580,19 @@ parameter_list|)
 value|(Lst_ForEachFrom((LST), Lst_First(LST), \ 				    (FN), (D)))
 end_define
 
+begin_define
+define|#
+directive|define
+name|LST_FOREACH
+parameter_list|(
+name|PTR
+parameter_list|,
+name|LST
+parameter_list|)
+define|\
+value|for ((PTR) = (LST)->firstPtr; (PTR) != NULL; (PTR) = (PTR)->nextPtr)
+end_define
+
 begin_comment
 comment|/*  * Apply a function to all elements of a lst starting from a certain point.  * If the list is circular, the application will wrap around to the  * beginning of the list again.  */
 end_comment
