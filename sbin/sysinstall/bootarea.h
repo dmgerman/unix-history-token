@@ -109,7 +109,9 @@ begin_function_decl
 name|int
 name|disk_size
 parameter_list|(
-name|int
+name|struct
+name|disklabel
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

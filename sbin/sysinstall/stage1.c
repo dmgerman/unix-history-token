@@ -105,6 +105,12 @@ directive|include
 file|"sysinstall.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"bootarea.h"
+end_include
+
 begin_decl_stmt
 name|struct
 name|disklabel
@@ -239,18 +245,6 @@ modifier|*
 name|part_type
 parameter_list|(
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|disk_size
-parameter_list|(
-name|struct
-name|disklabel
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -243,11 +243,29 @@ literal|1
 operator|)
 return|;
 block|}
-return|return
+name|Debug
+argument_list|(
+literal|"Seeking to block %ld "
+argument_list|,
+name|offset
+argument_list|)
+expr_stmt|;
+name|Debug
+argument_list|(
+literal|"Seeking to byte %ld "
+argument_list|,
 operator|(
-literal|0
+name|offset
+operator|*
+name|avail_disklabels
+index|[
+name|inst_disk
+index|]
+operator|.
+name|d_secsize
 operator|)
-return|;
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|lseek
@@ -319,9 +337,11 @@ name|sprintf
 argument_list|(
 name|errmsg
 argument_list|,
-literal|"Failed to write bootblocks (%p) %d %s\n"
+literal|"Failed to write bootblocks (%p,%d) %d %s\n"
 argument_list|,
 name|bootblocks
+argument_list|,
+name|bbsize
 argument_list|,
 name|errno
 argument_list|,
