@@ -356,6 +356,12 @@ name|d_name
 operator|=
 name|name
 expr_stmt|;
+name|disk
+operator|->
+name|d_ufs
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|sbread
