@@ -2219,9 +2219,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int32_t
-name|command
-decl_stmt|;
 name|struct
 name|pcn_softc
 modifier|*
