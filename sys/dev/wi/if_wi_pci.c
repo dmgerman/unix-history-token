@@ -112,7 +112,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_ieee80211.h>
+file|<net80211/ieee80211_var.h>
 end_include
 
 begin_include

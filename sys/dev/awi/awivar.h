@@ -860,6 +860,63 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SIOCS80211NWKEY
+end_ifndef
+
+begin_comment
+comment|/*  * This structure is part of the NetBSD public ioctl interface but  * used internally by the driver.  Declare it here for non-NetBSD  * systems.  */
+end_comment
+
+begin_comment
+comment|/* the first member must be matched with struct ifreq */
+end_comment
+
+begin_struct
+struct|struct
+name|ieee80211_nwkey
+block|{
+name|char
+name|i_name
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
+comment|/* if_name, e.g. "wi0" */
+name|int
+name|i_wepon
+decl_stmt|;
+comment|/* wep enabled flag */
+name|int
+name|i_defkid
+decl_stmt|;
+comment|/* default encrypt key id */
+struct|struct
+block|{
+name|int
+name|i_keylen
+decl_stmt|;
+name|u_int8_t
+modifier|*
+name|i_keydat
+decl_stmt|;
+block|}
+name|i_key
+index|[
+name|IEEE80211_WEP_NKID
+index|]
+struct|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|int
 name|awi_wep_setnwkey

@@ -214,13 +214,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_ieee80211.h>
+file|<net/if_media.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/if_media.h>
+file|<net80211/ieee80211_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net80211/ieee80211_ioctl.h>
 end_include
 
 begin_ifdef
@@ -4061,6 +4067,8 @@ name|mword
 operator|=
 name|ieee80211_rate2media
 argument_list|(
+name|NULL
+argument_list|,
 name|r
 argument_list|,
 name|IEEE80211_T_DS
@@ -14950,8 +14958,6 @@ name|ifm_cur
 operator|->
 name|ifm_media
 argument_list|)
-argument_list|,
-name|IEEE80211_T_DS
 argument_list|)
 expr_stmt|;
 if|if
@@ -15215,6 +15221,8 @@ name|ifm_active
 operator||=
 name|ieee80211_rate2media
 argument_list|(
+name|NULL
+argument_list|,
 name|status
 operator|.
 name|an_current_tx_rate

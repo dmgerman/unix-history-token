@@ -260,10 +260,6 @@ name|int
 name|wi_io_addr
 decl_stmt|;
 name|struct
-name|ifmedia
-name|sc_media
-decl_stmt|;
-name|struct
 name|bpf_if
 modifier|*
 name|sc_drvbpf
@@ -291,12 +287,6 @@ name|sc_dbm_adjust
 decl_stmt|;
 name|u_int16_t
 name|sc_max_datalen
-decl_stmt|;
-name|u_int16_t
-name|sc_frag_thresh
-decl_stmt|;
-name|u_int16_t
-name|sc_rts_thresh
 decl_stmt|;
 name|u_int16_t
 name|sc_system_scale

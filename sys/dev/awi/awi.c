@@ -176,12 +176,6 @@ directive|include
 file|<net/if_llc.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/if_ieee80211.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -244,6 +238,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<net80211/ieee80211_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net80211/ieee80211_ioctl.h>
+end_include
 
 begin_if
 if|#
@@ -2351,10 +2357,15 @@ name|s
 decl_stmt|,
 name|error
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SIOCS80211NWID
 name|struct
 name|ieee80211_nwid
 name|nwid
 decl_stmt|;
+endif|#
+directive|endif
 name|u_int8_t
 modifier|*
 name|p
@@ -2636,6 +2647,9 @@ operator|->
 name|ifr_mtu
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|SIOCS80211NWID
 case|case
 name|SIOCS80211NWID
 case|:
@@ -2857,6 +2871,11 @@ name|IEEE80211_NWID_LEN
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SIOCS80211NWKEY
 case|case
 name|SIOCS80211NWKEY
 case|:
@@ -2910,6 +2929,8 @@ name|data
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|IFM_IEEE80211
