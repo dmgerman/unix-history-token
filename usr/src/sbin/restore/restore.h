@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)restore.h	5.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)restore.h	5.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -31,18 +31,6 @@ begin_include
 include|#
 directive|include
 file|<ufs/fs.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|_DIRENT_
-end_define
-
-begin_include
-include|#
-directive|include
-file|<ufs/dir.h>
 end_include
 
 begin_comment
@@ -631,37 +619,11 @@ end_comment
 
 begin_typedef
 typedef|typedef
-struct|struct
-name|_dirdesc
-block|{
-name|int
-name|dd_fd
-decl_stmt|;
-name|long
-name|dd_loc
-decl_stmt|;
-name|long
-name|dd_size
-decl_stmt|;
-name|char
-name|dd_buf
-index|[
-name|DIRBLKSIZ
-index|]
-decl_stmt|;
-block|}
+name|struct
+name|dirdesc
 name|DIR
 typedef|;
 end_typedef
-
-begin_function_decl
-specifier|extern
-name|DIR
-modifier|*
-name|opendirfile
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -678,22 +640,6 @@ name|struct
 name|direct
 modifier|*
 name|rst_readdir
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|long
-name|rst_telldir
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|rst_seekdir
 parameter_list|()
 function_decl|;
 end_function_decl
