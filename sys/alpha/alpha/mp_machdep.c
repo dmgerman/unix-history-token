@@ -2013,8 +2013,9 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
+literal|"%s: releasing secondary CPUs\n"
+argument_list|,
 name|__func__
-literal|": releasing secondary CPUs\n"
 argument_list|)
 expr_stmt|;
 name|atomic_store_rel_int

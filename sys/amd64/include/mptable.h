@@ -9935,12 +9935,13 @@ name|u_int
 name|ipi
 parameter_list|)
 block|{
-name|CTR2
+name|CTR3
 argument_list|(
 name|KTR_SMP
 argument_list|,
+literal|"%s: cpus: %x ipi: %x"
+argument_list|,
 name|__func__
-literal|": cpus: %x ipi: %x"
 argument_list|,
 name|cpus
 argument_list|,
@@ -9965,12 +9966,13 @@ name|u_int
 name|ipi
 parameter_list|)
 block|{
-name|CTR1
+name|CTR2
 argument_list|(
 name|KTR_SMP
 argument_list|,
+literal|"%s: ipi: %x"
+argument_list|,
 name|__func__
-literal|": ipi: %x"
 argument_list|,
 name|ipi
 argument_list|)
@@ -9993,12 +9995,13 @@ name|u_int
 name|ipi
 parameter_list|)
 block|{
-name|CTR1
+name|CTR2
 argument_list|(
 name|KTR_SMP
 argument_list|,
+literal|"%s: ipi: %x"
+argument_list|,
 name|__func__
-literal|": ipi: %x"
 argument_list|,
 name|ipi
 argument_list|)
@@ -10021,12 +10024,13 @@ name|u_int
 name|ipi
 parameter_list|)
 block|{
-name|CTR1
+name|CTR2
 argument_list|(
 name|KTR_SMP
 argument_list|,
+literal|"%s: ipi: %x"
+argument_list|,
 name|__func__
-literal|": ipi: %x"
 argument_list|,
 name|ipi
 argument_list|)
