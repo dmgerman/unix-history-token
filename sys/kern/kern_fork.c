@@ -2343,6 +2343,14 @@ name|p_flag
 operator||=
 name|P_PPWAIT
 expr_stmt|;
+name|p2
+operator|->
+name|p_pgrp
+operator|=
+name|p1
+operator|->
+name|p_pgrp
+expr_stmt|;
 name|LIST_INSERT_AFTER
 argument_list|(
 name|p1
