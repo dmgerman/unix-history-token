@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All
 end_comment
 
 begin_comment
-comment|/*	@(#)timed.h	1.2	(Berkeley)	%G%	*/
+comment|/*	@(#)timed.h	1.3	(Berkeley)	%G%	*/
 end_comment
 
 begin_comment
