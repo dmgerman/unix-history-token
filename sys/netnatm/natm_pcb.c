@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socketvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -52,6 +58,13 @@ include|#
 directive|include
 file|<netnatm/natm.h>
 end_include
+
+begin_decl_stmt
+name|struct
+name|npcblist
+name|natm_pcbs
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * npcb_alloc: allocate a npcb [in the free state]  */

@@ -303,6 +303,7 @@ comment|/* global data structures */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|npcblist
 name|natm_pcbs
