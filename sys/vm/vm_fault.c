@@ -2785,11 +2785,9 @@ decl_stmt|,
 name|end
 decl_stmt|;
 block|{
-specifier|register
 name|vm_offset_t
 name|va
 decl_stmt|;
-specifier|register
 name|pmap_t
 name|pmap
 decl_stmt|;
@@ -2904,11 +2902,9 @@ decl_stmt|,
 name|end
 decl_stmt|;
 block|{
-specifier|register
 name|vm_offset_t
 name|va
 decl_stmt|;
-specifier|register
 name|pmap_t
 name|pmap
 decl_stmt|;
@@ -3023,13 +3019,11 @@ decl_stmt|,
 name|end
 decl_stmt|;
 block|{
-specifier|register
 name|vm_offset_t
 name|va
 decl_stmt|,
 name|pa
 decl_stmt|;
-specifier|register
 name|pmap_t
 name|pmap
 decl_stmt|;

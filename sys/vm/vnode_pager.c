@@ -571,7 +571,6 @@ name|vm_object_t
 name|object
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -2056,7 +2055,6 @@ operator|!
 name|error
 condition|)
 block|{
-specifier|register
 name|int
 name|count
 init|=

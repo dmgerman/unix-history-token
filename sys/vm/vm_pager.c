@@ -1021,7 +1021,6 @@ name|pg_list
 parameter_list|,
 name|handle
 parameter_list|)
-specifier|register
 name|struct
 name|pagerlst
 modifier|*
@@ -1032,7 +1031,6 @@ modifier|*
 name|handle
 decl_stmt|;
 block|{
-specifier|register
 name|vm_object_t
 name|object
 decl_stmt|;

@@ -260,7 +260,6 @@ name|seg
 decl_stmt|,
 name|index
 decl_stmt|;
-specifier|register
 name|struct
 name|swdevt
 modifier|*
@@ -695,7 +694,6 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -866,17 +864,14 @@ block|{
 name|int
 name|index
 decl_stmt|;
-specifier|register
 name|struct
 name|swdevt
 modifier|*
 name|sp
 decl_stmt|;
-specifier|register
 name|swblk_t
 name|vsbase
 decl_stmt|;
-specifier|register
 name|long
 name|blk
 decl_stmt|;

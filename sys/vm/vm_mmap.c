@@ -533,14 +533,12 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|struct
 name|mmap_args
 modifier|*
 name|uap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|filedesc
 modifier|*
@@ -550,7 +548,6 @@ name|p
 operator|->
 name|p_fd
 decl_stmt|;
-specifier|register
 name|struct
 name|file
 modifier|*
@@ -1506,7 +1503,6 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|struct
 name|ommap_args
 modifier|*
@@ -2067,13 +2063,11 @@ name|p
 parameter_list|,
 name|uap
 parameter_list|)
-specifier|register
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|struct
 name|munmap_args
 modifier|*
@@ -2342,7 +2336,6 @@ name|size
 decl_stmt|,
 name|pageoff
 decl_stmt|;
-specifier|register
 name|vm_prot_t
 name|prot
 decl_stmt|;
@@ -2549,7 +2542,6 @@ name|size
 decl_stmt|,
 name|pageoff
 decl_stmt|;
-specifier|register
 name|vm_inherit_t
 name|inherit
 decl_stmt|;
@@ -2989,7 +2981,6 @@ name|vecindex
 decl_stmt|,
 name|lastvecindex
 decl_stmt|;
-specifier|register
 name|vm_map_entry_t
 name|current
 decl_stmt|;

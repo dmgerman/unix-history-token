@@ -4214,7 +4214,6 @@ name|swp_pager_async_iodone
 parameter_list|(
 name|bp
 parameter_list|)
-specifier|register
 name|struct
 name|buf
 modifier|*

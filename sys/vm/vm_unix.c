@@ -125,7 +125,6 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|vmspace
 modifier|*

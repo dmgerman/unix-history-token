@@ -622,7 +622,6 @@ name|p2
 parameter_list|,
 name|flags
 parameter_list|)
-specifier|register
 name|struct
 name|proc
 modifier|*
@@ -641,7 +640,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|user
 modifier|*
@@ -952,7 +950,6 @@ modifier|*
 name|udata
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|proc
 modifier|*
@@ -1181,13 +1178,11 @@ modifier|*
 name|dummy
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|int
 name|pri
 decl_stmt|;
@@ -1518,7 +1513,6 @@ name|int
 name|action
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|proc
 modifier|*
@@ -1935,7 +1929,6 @@ name|swapout
 parameter_list|(
 name|p
 parameter_list|)
-specifier|register
 name|struct
 name|proc
 modifier|*

@@ -190,13 +190,11 @@ modifier|*
 name|avg
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
 name|nrun
 decl_stmt|;
-specifier|register
 name|struct
 name|proc
 modifier|*

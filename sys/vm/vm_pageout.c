@@ -918,7 +918,6 @@ name|vm_page_t
 name|m
 decl_stmt|;
 block|{
-specifier|register
 name|vm_object_t
 name|object
 decl_stmt|;
@@ -1367,7 +1366,6 @@ name|int
 name|flags
 decl_stmt|;
 block|{
-specifier|register
 name|vm_object_t
 name|object
 decl_stmt|;
@@ -1654,7 +1652,6 @@ name|int
 name|map_remove_only
 decl_stmt|;
 block|{
-specifier|register
 name|vm_page_t
 name|p
 decl_stmt|,
