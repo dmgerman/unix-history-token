@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	1.5 (Berkeley) %G%"
+literal|"@(#)utilities.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -701,6 +701,11 @@ argument_list|(
 name|NetTrace
 argument_list|,
 literal|"- unknown qualifier %d (0x%x).\n"
+argument_list|,
+name|pointer
+index|[
+literal|1
+index|]
 argument_list|,
 name|pointer
 index|[

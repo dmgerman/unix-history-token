@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)externs.h	1.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)externs.h	1.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -180,6 +180,9 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|void
+name|command
+argument_list|()
+decl_stmt|,
 if|#
 directive|if
 operator|!
@@ -193,10 +196,55 @@ decl_stmt|,
 endif|#
 directive|endif
 comment|/* !defined(NOT43) */
+name|Dump
+argument_list|()
+decl_stmt|,
+name|init_3270
+argument_list|()
+decl_stmt|,
+name|printoption
+argument_list|()
+decl_stmt|,
+name|printsub
+argument_list|()
+decl_stmt|,
 name|setconnmode
 argument_list|()
 decl_stmt|,
 name|setcommandmode
+argument_list|()
+decl_stmt|,
+name|setneturg
+argument_list|()
+decl_stmt|,
+name|sys_telnet_init
+argument_list|()
+decl_stmt|,
+name|telnet
+argument_list|()
+decl_stmt|,
+name|TerminalFlushOutput
+argument_list|()
+decl_stmt|,
+name|TerminalNewMode
+argument_list|()
+decl_stmt|,
+name|TerminalRestoreState
+argument_list|()
+decl_stmt|,
+name|TerminalSaveState
+argument_list|()
+decl_stmt|,
+name|tninit
+argument_list|()
+decl_stmt|,
+name|upcase
+argument_list|()
+decl_stmt|,
+name|willoption
+argument_list|()
+decl_stmt|,
+name|wontoption
 argument_list|()
 decl_stmt|;
 end_decl_stmt

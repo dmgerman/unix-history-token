@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)terminal.c	1.11 (Berkeley) %G%"
+literal|"@(#)terminal.c	1.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,8 +94,17 @@ name|termIntChar
 decl_stmt|,
 name|termKillChar
 decl_stmt|,
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MSDOS
+argument_list|)
 name|termLiteralNextChar
 decl_stmt|,
+endif|#
+directive|endif
+comment|/* defined(MSDOS) */
 name|termQuitChar
 decl_stmt|;
 end_decl_stmt
@@ -111,6 +120,8 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
 name|ring_init
 argument_list|(
 operator|&
@@ -121,7 +132,18 @@ argument_list|,
 sizeof|sizeof
 name|ttyobuf
 argument_list|)
+operator|!=
+literal|1
+condition|)
+block|{
+name|exit
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
 name|ring_init
 argument_list|(
 operator|&
@@ -132,7 +154,16 @@ argument_list|,
 sizeof|sizeof
 name|ttyibuf
 argument_list|)
+operator|!=
+literal|1
+condition|)
+block|{
+name|exit
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
+block|}
 name|autoflush
 operator|=
 name|TerminalAutoFlush

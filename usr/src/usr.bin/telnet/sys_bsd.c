@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sys_bsd.c	1.11 (Berkeley) %G%"
+literal|"@(#)sys_bsd.c	1.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1215,10 +1215,20 @@ name|void
 name|doescape
 parameter_list|()
 function_decl|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTSTP
 argument_list|,
+operator|(
+name|int
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
 name|doescape
 argument_list|)
 expr_stmt|;
@@ -1232,6 +1242,9 @@ name|old
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTSTP
@@ -1311,6 +1324,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TN3270
+argument_list|)
+end_if
 
 begin_function
 name|void
@@ -1393,6 +1415,15 @@ expr_stmt|;
 comment|/* set my pid */
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*defined(TN3270)*/
+end_comment
 
 begin_escape
 end_escape
@@ -1504,24 +1535,54 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* defined(TN3270) */
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
+operator|(
+name|int
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
 name|intr
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGQUIT
 argument_list|,
+operator|(
+name|int
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
 name|intr2
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGPIPE
 argument_list|,
+operator|(
+name|int
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
 name|deadpeer
 argument_list|)
 expr_stmt|;
@@ -1571,6 +1632,8 @@ name|defined
 argument_list|(
 name|SO_OOBINLINE
 argument_list|)
+if|if
+condition|(
 name|SetSockOpt
 argument_list|(
 name|net
@@ -1581,7 +1644,17 @@ name|SO_OOBINLINE
 argument_list|,
 literal|1
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"SetSockOpt"
+argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* defined(SO_OOBINLINE) */

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	5.31 (Berkeley) %G%"
+literal|"@(#)telnet.c	5.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -320,6 +320,12 @@ comment|/* Print out network data flow */
 name|crlf
 decl_stmt|,
 comment|/* Should '\r' be mapped to<CR><LF> (or<CR><NUL>)? */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TN3270
+argument_list|)
 name|noasynch
 init|=
 literal|0
@@ -330,6 +336,9 @@ init|=
 literal|0
 decl_stmt|,
 comment|/* We have talked about suppress go ahead */
+endif|#
+directive|endif
+comment|/* defined(TN3270) */
 name|telnetport
 decl_stmt|,
 name|SYNCHing
@@ -660,6 +669,10 @@ include|#
 directive|include
 file|<varargs.h>
 end_include
+
+begin_comment
+comment|/*VARARGS*/
+end_comment
 
 begin_function
 specifier|static
@@ -2688,10 +2701,6 @@ name|block
 decl_stmt|;
 comment|/* should we block in the select ? */
 block|{
-specifier|register
-name|int
-name|c
-decl_stmt|;
 comment|/* One wants to be a bit careful about setting returnValue 		 * to one, since a one implies we did some useful work, 		 * and therefore probably won't be called to block next 		 * time (TN3270 mode only). 		 */
 name|int
 name|returnValue
@@ -2881,6 +2890,9 @@ condition|(
 name|In3270
 condition|)
 block|{
+name|int
+name|c
+decl_stmt|;
 name|c
 operator|=
 name|DataFromTerminal
@@ -3031,8 +3043,6 @@ block|{
 name|dooption
 argument_list|(
 name|TELOPT_TTYPE
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3253,132 +3263,34 @@ end_function
 begin_escape
 end_escape
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* XXX - this not being in is a bug */
+end_comment
+
 begin_comment
 comment|/*  * nextitem()  *  *	Return the address of the next "item" in the TELNET data  * stream.  This will be the address of the next character if  * the current address is a user data character, or it will  * be the address of the character following the TELNET command  * if the current address is a TELNET IAC ("I Am a Command")  * character.  */
 end_comment
 
-begin_function
-specifier|static
-name|char
-modifier|*
-name|nextitem
-parameter_list|(
-name|current
-parameter_list|)
-name|char
-modifier|*
-name|current
-decl_stmt|;
-block|{
-if|if
-condition|(
-operator|(
-operator|*
-name|current
-operator|&
-literal|0xff
-operator|)
-operator|!=
-name|IAC
-condition|)
-block|{
-return|return
-name|current
-operator|+
-literal|1
-return|;
-block|}
-switch|switch
-condition|(
-operator|*
-operator|(
-name|current
-operator|+
-literal|1
-operator|)
-operator|&
-literal|0xff
-condition|)
-block|{
-case|case
-name|DO
-case|:
-case|case
-name|DONT
-case|:
-case|case
-name|WILL
-case|:
-case|case
-name|WONT
-case|:
-return|return
-name|current
-operator|+
-literal|3
-return|;
-case|case
-name|SB
-case|:
+begin_comment
+unit|static char * nextitem(current) char	*current; {     if ((*current&0xff) != IAC) { 	return current+1;     }     switch (*(current+1)&0xff) {     case DO:     case DONT:     case WILL:     case WONT: 	return current+3;     case SB:
 comment|/* loop forever looking for the SE */
-block|{
-specifier|register
-name|char
-modifier|*
-name|look
-init|=
-name|current
-operator|+
-literal|2
-decl_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-if|if
-condition|(
-operator|(
-operator|*
-name|look
-operator|++
-operator|&
-literal|0xff
-operator|)
-operator|==
-name|IAC
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-operator|*
-name|look
-operator|++
-operator|&
-literal|0xff
-operator|)
-operator|==
-name|SE
-condition|)
-block|{
-return|return
-name|look
-return|;
-block|}
-block|}
-block|}
-block|}
-default|default:
-return|return
-name|current
-operator|+
-literal|2
-return|;
-block|}
-block|}
-end_function
+end_comment
+
+begin_endif
+unit|{ 	    register char *look = current+2;  	    for (;;) { 		if ((*look++&0xff) == IAC) { 		    if ((*look++&0xff) == SE) { 			return look; 		    } 		} 	    } 	}     default: 	return current+2;     } }
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* 0 */
+end_comment
 
 begin_comment
 comment|/*  * netclear()  *  *	We are about to do a TELNET SYNCH operation.  Clear  * the path to the network.  *  *	Things are a bit tricky since we may have sent the first  * byte or so of a previous TELNET command into the network.  * So, we have to scan the network buffer from the beginning  * until we are up to where we want to be.  *  *	A side effect of what we do, just to keep things  * simple, is to clear the urgent data pointer.  The principal  * caller should be setting the urgent data pointer AFTER calling  * us in any case.  */

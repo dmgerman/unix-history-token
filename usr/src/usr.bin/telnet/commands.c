@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)commands.c	1.5 (Berkeley) %G%"
+literal|"@(#)commands.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3532,6 +3532,9 @@ argument_list|(
 literal|"new escape character: "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|gets
 argument_list|(
 name|buf
@@ -3575,6 +3578,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -3616,6 +3622,9 @@ else|:
 literal|"Won't"
 argument_list|)
 block|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -3647,6 +3656,9 @@ name|defined
 argument_list|(
 name|unix
 argument_list|)
+operator|(
+name|void
+operator|)
 name|kill
 argument_list|(
 literal|0
@@ -3710,6 +3722,9 @@ condition|(
 name|connected
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|shutdown
 argument_list|(
 name|net
@@ -3722,6 +3737,9 @@ argument_list|(
 literal|"Connection closed.\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|NetClose
 argument_list|(
 name|net
@@ -3818,7 +3836,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*NOTREACHED*/
 return|return
 literal|1
 return|;
@@ -3828,6 +3845,10 @@ end_block
 
 begin_comment
 comment|/*  * Print status about the connection.  */
+end_comment
+
+begin_comment
+comment|/*ARGSUSED*/
 end_comment
 
 begin_expr_stmt
@@ -3923,6 +3944,9 @@ name|escape
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -3992,6 +4016,9 @@ block|}
 endif|#
 directive|endif
 comment|/* defined(unix) */
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -4058,6 +4085,11 @@ index|[
 literal|32
 index|]
 decl_stmt|;
+name|unsigned
+name|long
+name|inet_addr
+parameter_list|()
+function_decl|;
 if|#
 directive|if
 name|defined
@@ -4109,6 +4141,9 @@ argument_list|(
 literal|"(to) "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|gets
 argument_list|(
 operator|&
@@ -4431,6 +4466,20 @@ block|}
 block|}
 else|else
 block|{
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|htons
+argument_list|)
+name|u_short
+name|htons
+parameter_list|()
+function_decl|;
+endif|#
+directive|endif
+comment|/* !defined(htons) */
 name|sin
 operator|.
 name|sin_port
@@ -4490,8 +4539,6 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"telnet: tcp/telnet: unknown service\n"
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -4617,6 +4664,12 @@ name|oerrno
 init|=
 name|errno
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|inet_ntoa
+parameter_list|()
+function_decl|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -4718,6 +4771,9 @@ operator|==
 literal|0
 condition|)
 do|;
+operator|(
+name|void
+operator|)
 name|call
 argument_list|(
 name|status
@@ -4741,6 +4797,9 @@ condition|)
 name|telnet
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|NetClose
 argument_list|(
 name|net

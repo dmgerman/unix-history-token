@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	1.6 (Berkeley) %G%"
+literal|"@(#)main.c	1.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -108,7 +108,7 @@ comment|/*  * main.  Parse arguments, invoke the protocol or command parser.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -400,14 +400,32 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|tn
 argument_list|(
 name|argc
 argument_list|,
 name|argv
 argument_list|)
-expr_stmt|;
+operator|==
+literal|1
+condition|)
+block|{
+return|return
+literal|0
+return|;
 block|}
+else|else
+block|{
+return|return
+literal|1
+return|;
+block|}
+block|}
+operator|(
+name|void
+operator|)
 name|setjmp
 argument_list|(
 name|toplevel

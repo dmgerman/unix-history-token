@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)network.c	1.11 (Berkeley) %G%"
+literal|"@(#)network.c	1.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -117,6 +117,8 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
 name|ring_init
 argument_list|(
 operator|&
@@ -127,7 +129,18 @@ argument_list|,
 sizeof|sizeof
 name|netobuf
 argument_list|)
+operator|!=
+literal|1
+condition|)
+block|{
+name|exit
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
 name|ring_init
 argument_list|(
 operator|&
@@ -138,7 +151,16 @@ argument_list|,
 sizeof|sizeof
 name|netibuf
 argument_list|)
+operator|!=
+literal|1
+condition|)
+block|{
+name|exit
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
+block|}
 name|NetTrace
 operator|=
 name|stdout
@@ -242,6 +264,9 @@ argument_list|(
 literal|"select"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|quit
 argument_list|()
 expr_stmt|;
