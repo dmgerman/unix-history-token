@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.44 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.45 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3177,6 +3177,20 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Final-MTS-Type: is required -- our type */
+if|if
+condition|(
+name|e
+operator|->
+name|e_parent
+operator|->
+name|e_from
+operator|.
+name|q_mailer
+operator|->
+name|m_mtstype
+operator|==
+name|NULL
+condition|)
 name|putline
 argument_list|(
 literal|"Final-MTS-Type: Internet"
@@ -3184,6 +3198,36 @@ argument_list|,
 name|mci
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"Final-MTS-Type: %s"
+argument_list|,
+name|e
+operator|->
+name|e_parent
+operator|->
+name|e_from
+operator|.
+name|q_mailer
+operator|->
+name|m_mtstype
+argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|buf
+argument_list|,
+name|mci
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Final-MTA: seems silly -- this is in the From: line */
 operator|(
 name|void
@@ -3771,7 +3815,7 @@ name|mci
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Remote-MTS-Type: -- always INET?  XXX */
+comment|/* Remote-MTS-Type: -- depends on mailer */
 if|if
 condition|(
 name|q
