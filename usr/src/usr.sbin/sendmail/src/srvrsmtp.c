@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.31 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.32 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.31 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.32 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1844,7 +1844,7 @@ name|HoldErrs
 condition|)
 name|message
 argument_list|(
-literal|"250 %s OK"
+literal|"250 %s Message accepted for delivery"
 argument_list|,
 name|id
 argument_list|)
