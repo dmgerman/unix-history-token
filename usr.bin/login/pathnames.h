@@ -44,5 +44,12 @@ name|_PATH_LOGINDEVPERM
 value|"/etc/logindevperm"
 end_define
 
+begin_define
+define|#
+directive|define
+name|_PATH_CHPASS
+value|"/usr/bin/passwd"
+end_define
+
 end_unit
 
