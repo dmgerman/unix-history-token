@@ -4444,6 +4444,28 @@ value|0x1803
 end_define
 
 begin_comment
+comment|/*  * Not sure who this vendor should be, so we'll go with HAWKING until  * I can locate the right one.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_VENDORID_HAWKING
+value|0x17b3
+end_define
+
+begin_comment
+comment|/*  * Sure looks like an abocom device ID, but it found on my hawking PN672TX  * card.  Use that for now, and upgrade later.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_DEVICEID_HAWKING_PN672TX
+value|0xab08
+end_define
+
+begin_comment
 comment|/*  * PCI low memory base and low I/O base register, and  * other PCI registers.  */
 end_comment
 

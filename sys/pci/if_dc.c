@@ -477,6 +477,14 @@ literal|"Conexant LANfinity MiniPCI 10/100BaseTX"
 block|}
 block|,
 block|{
+name|DC_VENDORID_HAWKING
+block|,
+name|DC_DEVICEID_HAWKING_PN672TX
+block|,
+literal|"Hawking CB102 CardBus 10/100"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -9403,6 +9411,9 @@ name|DC_DEVICEID_FE2500
 case|:
 case|case
 name|DC_DEVICEID_EN2242
+case|:
+case|case
+name|DC_DEVICEID_HAWKING_PN672TX
 case|:
 name|sc
 operator|->
