@@ -41,6 +41,8 @@ name|PAM_OPT_TRY_FIRST_PASS
 block|,
 name|PAM_OPT_USE_MAPPED_PASS
 block|,
+name|PAM_OPT_TRY_MAPPED_PASS
+block|,
 name|PAM_OPT_EXPOSE_ACCOUNT
 block|,
 name|PAM_OPT_STD_MAX

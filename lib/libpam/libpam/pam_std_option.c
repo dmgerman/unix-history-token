@@ -83,6 +83,12 @@ name|PAM_OPT_USE_MAPPED_PASS
 block|}
 block|,
 block|{
+literal|"try_mapped_pass"
+block|,
+name|PAM_OPT_TRY_MAPPED_PASS
+block|}
+block|,
+block|{
 literal|"expose_account"
 block|,
 name|PAM_OPT_EXPOSE_ACCOUNT
