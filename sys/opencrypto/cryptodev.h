@@ -1098,11 +1098,18 @@ comment|/* asymmetric q blocked */
 define|#
 directive|define
 name|CRYPTOCAP_F_CLEANUP
-value|0x1
+value|0x01
+comment|/* needs resource cleanup */
 define|#
 directive|define
 name|CRYPTOCAP_F_SOFTWARE
 value|0x02
+comment|/* software implementation */
+define|#
+directive|define
+name|CRYPTOCAP_F_SYNC
+value|0x04
+comment|/* operates synchronously */
 name|void
 modifier|*
 name|cc_arg
@@ -1177,6 +1184,40 @@ function_decl|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Session ids are 64 bits.  The lower 32 bits contain a "local id" which  * is a driver-private session identifier.  The upper 32 bits contain a  * "hardware id" used by the core crypto code to identify the driver and  * a copy of the driver's capabilities that can be used by client code to  * optimize operation.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_SESID2HID
+parameter_list|(
+name|_sid
+parameter_list|)
+value|(((_sid)>> 32)& 0xffffff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_SESID2CAPS
+parameter_list|(
+name|_sid
+parameter_list|)
+value|(((_sid)>> 56)& 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_SESID2LID
+parameter_list|(
+name|_sid
+parameter_list|)
+value|(((u_int32_t) (_sid))& 0xffffffff)
+end_define
 
 begin_expr_stmt
 name|MALLOC_DECLARE

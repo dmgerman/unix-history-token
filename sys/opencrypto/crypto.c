@@ -113,16 +113,6 @@ begin_comment
 comment|/* XXX for M_XDATA */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SESID2HID
-parameter_list|(
-name|sid
-parameter_list|)
-value|(((sid)>> 32)& 0xffffffff)
-end_define
-
 begin_comment
 comment|/*  * Crypto drivers register themselves by allocating a slot in the  * crypto_drivers table with crypto_get_driverid() and then registering  * each algorithm they support with crypto_register() and crypto_kregister().  */
 end_comment
@@ -1174,24 +1164,29 @@ name|hid
 operator|++
 control|)
 block|{
-comment|/* 		 * If it's not initialized or has remaining sessions 		 * referencing it, skip. 		 */
-if|if
-condition|(
+name|struct
+name|cryptocap
+modifier|*
+name|cap
+init|=
+operator|&
 name|crypto_drivers
 index|[
 name|hid
 index|]
-operator|.
+decl_stmt|;
+comment|/* 		 * If it's not initialized or has remaining sessions 		 * referencing it, skip. 		 */
+if|if
+condition|(
+name|cap
+operator|->
 name|cc_newsession
 operator|==
 name|NULL
 operator|||
 operator|(
-name|crypto_drivers
-index|[
-name|hid
-index|]
-operator|.
+name|cap
+operator|->
 name|cc_flags
 operator|&
 name|CRYPTOCAP_F_CLEANUP
@@ -1206,11 +1201,8 @@ operator|>
 literal|0
 operator|&&
 operator|(
-name|crypto_drivers
-index|[
-name|hid
-index|]
-operator|.
+name|cap
+operator|->
 name|cc_flags
 operator|&
 name|CRYPTOCAP_F_SOFTWARE
@@ -1225,11 +1217,8 @@ operator|<
 literal|0
 operator|&&
 operator|(
-name|crypto_drivers
-index|[
-name|hid
-index|]
-operator|.
+name|cap
+operator|->
 name|cc_flags
 operator|&
 name|CRYPTOCAP_F_SOFTWARE
@@ -1255,11 +1244,8 @@ name|cri_next
 control|)
 if|if
 condition|(
-name|crypto_drivers
-index|[
-name|hid
-index|]
-operator|.
+name|cap
+operator|->
 name|cc_alg
 index|[
 name|cr
@@ -1287,18 +1273,15 @@ expr_stmt|;
 comment|/* Pass the driver ID. */
 name|err
 operator|=
-name|crypto_drivers
-index|[
-name|hid
-index|]
-operator|.
+call|(
+modifier|*
+name|cap
+operator|->
 name|cc_newsession
+call|)
 argument_list|(
-name|crypto_drivers
-index|[
-name|hid
-index|]
-operator|.
+name|cap
+operator|->
 name|cc_arg
 argument_list|,
 operator|&
@@ -1314,11 +1297,25 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* XXX assert (hid&~ 0xffffff) == 0 */
+comment|/* XXX assert (cap->cc_flags&~ 0xff) == 0 */
 operator|(
 operator|*
 name|sid
 operator|)
 operator|=
+operator|(
+operator|(
+name|cap
+operator|->
+name|cc_flags
+operator|&
+literal|0xff
+operator|)
+operator|<<
+literal|24
+operator|)
+operator||
 name|hid
 expr_stmt|;
 operator|(
@@ -1339,11 +1336,8 @@ operator|&
 literal|0xffffffff
 operator|)
 expr_stmt|;
-name|crypto_drivers
-index|[
-name|hid
-index|]
-operator|.
+name|cap
+operator|->
 name|cc_sessions
 operator|++
 expr_stmt|;
@@ -1401,7 +1395,7 @@ block|}
 comment|/* Determine two IDs. */
 name|hid
 operator|=
-name|SESID2HID
+name|CRYPTO_SESID2HID
 argument_list|(
 name|sid
 argument_list|)
@@ -2558,7 +2552,7 @@ block|{
 name|u_int32_t
 name|hid
 init|=
-name|SESID2HID
+name|CRYPTO_SESID2HID
 argument_list|(
 name|crp
 operator|->
@@ -3333,7 +3327,7 @@ return|;
 block|}
 name|hid
 operator|=
-name|SESID2HID
+name|CRYPTO_SESID2HID
 argument_list|(
 name|crp
 operator|->
@@ -4151,7 +4145,7 @@ block|{
 name|u_int32_t
 name|hid
 init|=
-name|SESID2HID
+name|CRYPTO_SESID2HID
 argument_list|(
 name|crp
 operator|->
@@ -4209,7 +4203,7 @@ block|{
 comment|/* 					 * We stop on finding another op, 					 * regardless whether its for the same 					 * driver or not.  We could keep 					 * searching the queue but it might be 					 * better to just use a per-driver 					 * queue instead. 					 */
 if|if
 condition|(
-name|SESID2HID
+name|CRYPTO_SESID2HID
 argument_list|(
 name|submit
 operator|->
@@ -4284,7 +4278,7 @@ comment|/* 				 * The driver ran out of resources, mark the 				 * driver ``bloc
 comment|/* XXX validate sid again? */
 name|crypto_drivers
 index|[
-name|SESID2HID
+name|CRYPTO_SESID2HID
 argument_list|(
 name|submit
 operator|->

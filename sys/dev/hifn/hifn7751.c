@@ -11708,14 +11708,10 @@ decl_stmt|;
 name|u_int32_t
 name|sid
 init|=
-operator|(
-operator|(
-name|u_int32_t
-operator|)
+name|CRYPTO_SESID2LID
+argument_list|(
 name|tid
-operator|)
-operator|&
-literal|0xffffffff
+argument_list|)
 decl_stmt|;
 name|KASSERT
 argument_list|(

@@ -4048,14 +4048,10 @@ decl_stmt|;
 name|u_int32_t
 name|sid
 init|=
-operator|(
-operator|(
-name|u_int32_t
-operator|)
+name|CRYPTO_SESID2LID
+argument_list|(
 name|tid
-operator|)
-operator|&
-literal|0xffffffff
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -4774,6 +4770,8 @@ operator|=
 name|crypto_get_driverid
 argument_list|(
 name|CRYPTOCAP_F_SOFTWARE
+operator||
+name|CRYPTOCAP_F_SYNC
 argument_list|)
 expr_stmt|;
 if|if
