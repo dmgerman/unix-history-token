@@ -3059,12 +3059,16 @@ index|[
 literal|2
 index|]
 operator|=
+operator|(
 name|sio_getreg
 argument_list|(
 name|com
 argument_list|,
 name|com_mcr
 argument_list|)
+operator|&
+literal|0x7f
+operator|)
 operator|-
 name|mcr_image
 expr_stmt|;
