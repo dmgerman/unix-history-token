@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kvm_getswapinfo.c,v 1.1 1999/01/22 10:36:04 dillon Exp $"
+literal|"$Id: kvm_getswapinfo.c,v 1.2 1999/01/22 10:57:03 dillon Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1432,16 +1432,6 @@ decl_stmt|;
 name|int
 name|next_skip
 decl_stmt|;
-name|radix
-operator|>>=
-name|BLIST_META_RADIX_SHIFT
-expr_stmt|;
-name|next_skip
-operator|=
-name|skip
-operator|>>
-name|BLIST_META_RADIX_SHIFT
-expr_stmt|;
 if|if
 condition|(
 name|flags
@@ -1474,6 +1464,16 @@ name|bm_bighint
 argument_list|)
 expr_stmt|;
 block|}
+name|radix
+operator|>>=
+name|BLIST_META_RADIX_SHIFT
+expr_stmt|;
+name|next_skip
+operator|=
+name|skip
+operator|>>
+name|BLIST_META_RADIX_SHIFT
+expr_stmt|;
 for|for
 control|(
 name|i
