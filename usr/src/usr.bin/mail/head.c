@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)head.c	8.1 (Berkeley) %G%"
+literal|"@(#)head.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -485,6 +485,28 @@ literal|"Aaa Aaa O0 00:00:00 AAA 0000"
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Yuck.  If the mail file is created by Sys V (Solaris),  * there are no seconds in the time...  */
+end_comment
+
+begin_decl_stmt
+name|char
+name|SysV_ctype
+index|[]
+init|=
+literal|"Aaa Aaa O0 00:00 0000"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|SysV_tmztype
+index|[]
+init|=
+literal|"Aaa Aaa O0 00:00 AAA 0000"
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|isdate
@@ -509,6 +531,20 @@ argument_list|(
 name|date
 argument_list|,
 name|tmztype
+argument_list|)
+operator|||
+name|cmatch
+argument_list|(
+name|date
+argument_list|,
+name|SysV_tmztype
+argument_list|)
+operator|||
+name|cmatch
+argument_list|(
+name|date
+argument_list|,
+name|SysV_ctype
 argument_list|)
 return|;
 block|}

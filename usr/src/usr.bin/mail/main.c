@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.1 (Berkeley) %G%"
+literal|"@(#)main.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,6 +140,10 @@ name|void
 name|sigchild
 parameter_list|()
 function_decl|;
+name|char
+modifier|*
+name|rc
+decl_stmt|;
 comment|/* 	 * Set up a reasonable environment. 	 * Figure out whether we are being run interactively, 	 * start the SIGCHLD catcher, and so forth. 	 */
 operator|(
 name|void
@@ -593,11 +597,28 @@ name|_PATH_MASTER_RC
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Expand returns a savestr, but load only uses the file name 	 * for fopen, so it's safe to do this. 	 */
+if|if
+condition|(
+operator|(
+name|rc
+operator|=
+name|getenv
+argument_list|(
+literal|"MAILRC"
+argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+name|rc
+operator|=
+literal|"~/.mailrc"
+expr_stmt|;
 name|load
 argument_list|(
 name|expand
 argument_list|(
-literal|"~/.mailrc"
+name|rc
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -803,12 +824,15 @@ name|setscreensize
 parameter_list|()
 block|{
 name|struct
-name|sgttyb
+name|termios
 name|tbuf
 decl_stmt|;
 name|struct
 name|winsize
 name|ws
+decl_stmt|;
+name|int
+name|ospeed
 decl_stmt|;
 if|if
 condition|(
@@ -844,7 +868,7 @@ name|ioctl
 argument_list|(
 literal|1
 argument_list|,
-name|TIOCGETP
+name|TIOCGETA
 argument_list|,
 operator|&
 name|tbuf
@@ -852,17 +876,22 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|tbuf
-operator|.
-name|sg_ospeed
+name|ospeed
 operator|=
 name|B9600
 expr_stmt|;
+else|else
+name|ospeed
+operator|=
+name|cfgetospeed
+argument_list|(
+operator|&
+name|tbuf
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|tbuf
-operator|.
-name|sg_ospeed
+name|ospeed
 operator|<
 name|B1200
 condition|)
@@ -873,9 +902,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|tbuf
-operator|.
-name|sg_ospeed
+name|ospeed
 operator|==
 name|B1200
 condition|)

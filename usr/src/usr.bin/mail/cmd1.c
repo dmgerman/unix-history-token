@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd1.c	8.1 (Berkeley) %G%"
+literal|"@(#)cmd1.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1901,6 +1901,82 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Update the mail file with any new messages that have  * come in since we started reading mail.  */
+end_comment
+
+begin_macro
+name|inc
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|int
+name|nmsg
+decl_stmt|,
+name|mdot
+decl_stmt|;
+name|nmsg
+operator|=
+name|incfile
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|nmsg
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"No new mail.\n"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|nmsg
+operator|>
+literal|0
+condition|)
+block|{
+name|mdot
+operator|=
+name|newfileinfo
+argument_list|(
+name|msgCount
+operator|-
+name|nmsg
+argument_list|)
+expr_stmt|;
+name|dot
+operator|=
+operator|&
+name|message
+index|[
+name|mdot
+operator|-
+literal|1
+index|]
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"\"inc\" command failed...\n"
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+literal|0
+return|;
+block|}
+end_block
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd3.c	8.1 (Berkeley) %G%"
+literal|"@(#)cmd3.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2547,7 +2547,9 @@ name|NOSTR
 condition|)
 block|{
 name|newfileinfo
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
