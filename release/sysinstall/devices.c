@@ -2793,6 +2793,23 @@ name|Disk
 modifier|*
 name|d
 decl_stmt|;
+comment|/* Skip memory disks */
+if|if
+condition|(
+operator|!
+name|strncmp
+argument_list|(
+name|names
+index|[
+name|i
+index|]
+argument_list|,
+literal|"md"
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+continue|continue;
 name|d
 operator|=
 name|Open_Disk
