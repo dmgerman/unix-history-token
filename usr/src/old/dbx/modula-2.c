@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1982 Regents of the University of California */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
 end_comment
 
 begin_ifndef
@@ -15,17 +15,14 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)modula-2.c	1.2 (Berkeley) %G%"
+literal|"@(#)modula-2.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* from 1.4 84/03/27 10:22:04 linton Exp */
-end_comment
 
 begin_endif
 endif|#
 directive|endif
+endif|not lint
 end_endif
 
 begin_comment
