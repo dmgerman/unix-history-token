@@ -220,12 +220,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_bdg.h"
 end_include
 
@@ -1025,15 +1019,6 @@ name|struct
 name|mbuf
 modifier|*
 name|lmp
-decl_stmt|;
-name|struct
-name|sysctl_ctx_list
-name|sysctl_ctx
-decl_stmt|;
-name|struct
-name|sysctl_oid
-modifier|*
-name|sysctl_tree
 decl_stmt|;
 comment|/* Misc stats maintained by the driver */
 name|unsigned
