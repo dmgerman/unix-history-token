@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: swap.c,v 1.7 1998/10/08 09:56:10 obrien Exp $"
+literal|"$Id: swap.c,v 1.8 1999/01/22 10:53:13 dillon Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -413,6 +413,9 @@ name|row
 decl_stmt|,
 name|i
 decl_stmt|;
+name|fetchswap
+argument_list|()
+expr_stmt|;
 name|row
 operator|=
 literal|0
