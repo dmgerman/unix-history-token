@@ -352,8 +352,6 @@ name|denode
 operator|.
 name|de_dev
 argument_list|)
-operator|&
-literal|0xffff
 expr_stmt|;
 name|fsp
 operator|->

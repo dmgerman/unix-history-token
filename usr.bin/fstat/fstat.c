@@ -2668,8 +2668,6 @@ name|inode
 operator|.
 name|i_dev
 argument_list|)
-operator|&
-literal|0xffff
 expr_stmt|;
 name|fsp
 operator|->
@@ -4101,8 +4099,6 @@ operator|=
 name|statbuf
 operator|.
 name|st_dev
-operator|&
-literal|0xffff
 expr_stmt|;
 name|cur
 operator|->
