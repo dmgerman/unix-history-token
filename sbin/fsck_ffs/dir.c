@@ -112,7 +112,7 @@ begin_decl_stmt
 name|int
 name|lfmode
 init|=
-literal|01777
+literal|0700
 decl_stmt|;
 end_decl_stmt
 
