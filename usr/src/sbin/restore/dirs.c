@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	3.4	(Berkeley)	83/03/06"
+literal|"@(#)dirs.c	3.5	(Berkeley)	83/03/23"
 decl_stmt|;
 end_decl_stmt
 
@@ -628,7 +628,7 @@ decl_stmt|;
 name|char
 name|locname
 index|[
-name|BUFSIZ
+name|MAXPATHLEN
 operator|+
 literal|1
 index|]
@@ -682,7 +682,7 @@ name|locname
 argument_list|,
 name|pname
 argument_list|,
-name|BUFSIZ
+name|MAXPATHLEN
 argument_list|)
 expr_stmt|;
 name|strncat
@@ -691,7 +691,7 @@ name|locname
 argument_list|,
 literal|"/"
 argument_list|,
-name|BUFSIZ
+name|MAXPATHLEN
 argument_list|)
 expr_stmt|;
 name|namelen
@@ -786,7 +786,7 @@ name|dp
 operator|->
 name|d_namlen
 operator|>=
-name|BUFSIZ
+name|MAXPATHLEN
 condition|)
 block|{
 name|fprintf
@@ -801,7 +801,7 @@ name|dp
 operator|->
 name|d_name
 argument_list|,
-name|BUFSIZ
+name|MAXPATHLEN
 argument_list|)
 expr_stmt|;
 block|}
