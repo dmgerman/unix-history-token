@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)csh.c 4.14 %G%"
+literal|"@(#)csh.c 4.15 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2306,7 +2306,7 @@ name|creat
 argument_list|(
 name|buf
 argument_list|,
-literal|0777
+literal|0666
 argument_list|)
 expr_stmt|;
 if|if
