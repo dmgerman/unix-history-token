@@ -1202,6 +1202,11 @@ case|:
 case|case
 name|SIOCDELMULTI
 case|:
+name|error
+operator|=
+literal|0
+expr_stmt|;
+break|break;
 case|case
 name|SIOCSIFPHYS
 case|:
@@ -1975,6 +1980,8 @@ operator||
 name|IFF_POINTOPOINT
 operator||
 name|IFF_NOARP
+operator||
+name|IFF_MULTICAST
 operator|)
 expr_stmt|;
 name|ifp
