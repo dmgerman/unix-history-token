@@ -147,13 +147,19 @@ begin_decl_stmt
 name|int
 name|tickadj
 init|=
-literal|1000000
+literal|240000
 operator|/
+operator|(
+literal|60
+operator|*
 name|HZ
-operator|/
-literal|10
+operator|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* can adjust 240ms in 60s */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -336,7 +342,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * These have to be allocated somewhere; allocating  * them here forces loader errors if this file is omitted.  */
+comment|/*  * These have to be allocated somewhere; allocating  * them here forces loader errors if this file is omitted  * (if they've been externed everywhere else; hah!).  */
 end_comment
 
 begin_decl_stmt
@@ -444,9 +450,9 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|nch
+name|namecache
 modifier|*
-name|nch
+name|namecache
 decl_stmt|;
 end_decl_stmt
 
