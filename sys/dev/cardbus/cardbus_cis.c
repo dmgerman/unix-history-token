@@ -158,31 +158,13 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
+begin_expr_stmt
+name|__FBSDID
 argument_list|(
-name|lint
-argument_list|)
-end_if
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -776,7 +758,9 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_block
@@ -791,7 +775,9 @@ end_macro
 begin_block
 block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_block
@@ -917,7 +903,9 @@ name|ncisread_buf
 operator|++
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_block
@@ -1052,11 +1040,15 @@ name|info
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_block
@@ -1150,7 +1142,9 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_block
@@ -1255,7 +1249,9 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_block
@@ -1306,7 +1302,9 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_block
@@ -1357,7 +1355,9 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_block
@@ -1386,7 +1386,9 @@ name|len
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 else|else
@@ -1494,7 +1496,9 @@ name|bar
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|bar
@@ -1669,7 +1673,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_block
@@ -1695,8 +1701,10 @@ name|len
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 end_block
@@ -1716,7 +1724,9 @@ literal|"CIS reading done\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_block
@@ -1908,7 +1918,9 @@ operator|+
 literal|2
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2033,7 +2045,9 @@ operator|+
 literal|2
 expr_stmt|;
 return|return
+operator|(
 name|ret
+operator|)
 return|;
 block|}
 end_function
@@ -2088,6 +2102,7 @@ literal|0UL
 condition|)
 block|{
 return|return
+operator|(
 name|cardbus_read_tuple_conf
 argument_list|(
 name|cbdev
@@ -2104,11 +2119,13 @@ name|len
 argument_list|,
 name|tupledata
 argument_list|)
+operator|)
 return|;
 block|}
 else|else
 block|{
 return|return
+operator|(
 name|cardbus_read_tuple_mem
 argument_list|(
 name|cbdev
@@ -2125,6 +2142,7 @@ name|len
 argument_list|,
 name|tupledata
 argument_list|)
+operator|)
 return|;
 block|}
 block|}
@@ -2246,12 +2264,8 @@ case|:
 comment|/* CIS in tuple space need no initialization */
 return|return
 operator|(
-expr|struct
-name|resource
-operator|*
+name|NULL
 operator|)
-operator|~
-literal|0UL
 return|;
 case|case
 name|CARDBUS_CIS_ASI_BAR0
@@ -2338,7 +2352,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 comment|/* figure out how much space we need */
@@ -2369,7 +2385,9 @@ literal|"CIS Space is IO, expecting memory.\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|size
@@ -2431,7 +2449,9 @@ literal|"to read CIS.\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|pci_write_config
@@ -2600,7 +2620,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|dataptr
@@ -2684,7 +2706,9 @@ literal|"Not enough images of rom\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|mystart
@@ -2717,7 +2741,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|res
+operator|)
 return|;
 block|}
 end_function
@@ -2794,6 +2820,7 @@ operator|.
 name|id
 condition|)
 return|return
+operator|(
 name|callbacks
 index|[
 name|i
@@ -2821,6 +2848,7 @@ index|[
 name|i
 index|]
 argument_list|)
+operator|)
 return|;
 block|}
 if|if
@@ -2839,10 +2867,13 @@ literal|"CIS parsing terminated\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|callbacks
 index|[
 name|i
@@ -2866,6 +2897,7 @@ name|off
 argument_list|,
 name|NULL
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -2963,7 +2995,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 do|do
 block|{
@@ -3013,7 +3047,9 @@ name|res
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 block|}
 if|if
@@ -3046,7 +3082,9 @@ name|res
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 name|expect_linktarget
@@ -3090,7 +3128,9 @@ name|res
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|expect_linktarget
+operator|)
 return|;
 block|}
 block|}
@@ -3113,7 +3153,9 @@ name|res
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3135,6 +3177,7 @@ name|b
 parameter_list|)
 block|{
 return|return
+operator|(
 operator|(
 operator|*
 operator|(
@@ -3162,6 +3205,7 @@ name|a
 operator|)
 operator|->
 name|count
+operator|)
 return|;
 block|}
 end_function
@@ -3255,7 +3299,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|barlist
 operator|=
@@ -3501,7 +3547,9 @@ literal|"prefetchable memory.\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 block|}
 name|start
@@ -3920,7 +3968,9 @@ literal|"non-prefetchable memory.\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 block|}
 name|start
@@ -4304,7 +4354,9 @@ literal|"Unable to allocate I/O ports\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 block|}
 name|start
@@ -4452,7 +4504,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 block|}
 name|barlist
@@ -4615,7 +4669,9 @@ literal|"Unable to allocate IRQ\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 block|}
 name|resource_list_add
@@ -4683,7 +4739,9 @@ name|res
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -5367,7 +5425,9 @@ operator|=
 name|ncisread_buf
 expr_stmt|;
 return|return
+operator|(
 name|ret
+operator|)
 return|;
 block|}
 end_function
@@ -5747,7 +5807,9 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 name|ret
+operator|)
 return|;
 name|cardbus_pickup_maps
 argument_list|(
@@ -5757,12 +5819,14 @@ name|child
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|cardbus_alloc_resources
 argument_list|(
 name|cbdev
 argument_list|,
 name|child
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
