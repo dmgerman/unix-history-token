@@ -79,6 +79,12 @@ name|NULL
 operator|||
 name|time_to_sleep
 operator|->
+name|tv_sec
+operator|<
+literal|0
+operator|||
+name|time_to_sleep
+operator|->
 name|tv_nsec
 operator|<
 literal|0
@@ -86,7 +92,7 @@ operator|||
 name|time_to_sleep
 operator|->
 name|tv_nsec
-operator|>
+operator|>=
 literal|1000000000
 condition|)
 block|{
