@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cc.c 4.9 %G%"
+literal|"@(#)cc.c 4.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -444,9 +444,6 @@ condition|)
 block|{
 case|case
 literal|'c'
-case|:
-case|case
-literal|'o'
 case|:
 name|error
 argument_list|(
@@ -1233,8 +1230,20 @@ if|if
 condition|(
 name|sflag
 condition|)
-name|assource
+block|{
+if|if
+condition|(
+name|nc
+operator|==
+literal|1
+operator|&&
+name|outfile
+condition|)
+name|tmp3
 operator|=
+name|outfile
+expr_stmt|;
+else|else
 name|tmp3
 operator|=
 name|setsuf
@@ -1247,6 +1256,11 @@ argument_list|,
 literal|'s'
 argument_list|)
 expr_stmt|;
+name|assource
+operator|=
+name|tmp3
+expr_stmt|;
+block|}
 name|av
 index|[
 literal|0
@@ -1452,6 +1466,24 @@ index|]
 operator|=
 literal|"-o"
 expr_stmt|;
+if|if
+condition|(
+name|cflag
+operator|&&
+name|nc
+operator|==
+literal|1
+operator|&&
+name|outfile
+condition|)
+name|av
+index|[
+literal|2
+index|]
+operator|=
+name|outfile
+expr_stmt|;
+else|else
 name|av
 index|[
 literal|2
