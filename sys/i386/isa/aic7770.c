@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  * 	27/284X and aic7770 motherboard SCSI controllers  *  * Copyright (c) 1995 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7770.c,v 1.10 1995/01/16 16:31:34 gibbs Exp $  */
+comment|/*  * Product specific probe and attach routines for:  * 	27/284X and aic7770 motherboard SCSI controllers  *  * Copyright (c) 1995 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7770.c,v 1.11 1995/03/07 08:58:22 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -174,12 +174,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAX_SLOTS
+name|EISA_MAX_SLOTS
 value|16
 end_define
 
 begin_comment
-comment|/* max slots on the EISA bus */
+comment|/* XXX should be defined in a common header */
 end_comment
 
 begin_expr_stmt
@@ -382,14 +382,14 @@ block|,
 literal|0x71
 block|}
 block|,
-comment|/*274x, Card*/
+comment|/*274x*/
 block|{
 name|AHC_274
 block|,
 literal|0x70
 block|}
 block|,
-comment|/*274x, Motherboard*/
+comment|/*aic7770 on Motherboard*/
 block|{
 name|AHC_284
 block|,
@@ -411,8 +411,8 @@ expr_stmt|;
 while|while
 condition|(
 name|ahc_slot
-operator|<=
-name|MAX_SLOTS
+operator|<
+name|EISA_MAX_SLOTS
 condition|)
 block|{
 name|port
