@@ -126,6 +126,39 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__ia64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LABELSECTOR
+value|1
+end_define
+
+begin_comment
+comment|/* sector containing label */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LABELOFFSET
+value|0
+end_define
+
+begin_comment
+comment|/* offset of label in sector */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
