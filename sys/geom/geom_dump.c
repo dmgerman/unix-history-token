@@ -491,6 +491,14 @@ operator|->
 name|sectorsize
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|gp
+operator|->
+name|dumpconf
+operator|!=
+name|NULL
+condition|)
 name|gp
 operator|->
 name|dumpconf
@@ -733,6 +741,8 @@ operator|->
 name|geom
 operator|->
 name|dumpconf
+operator|!=
+name|NULL
 condition|)
 block|{
 name|sbuf_printf
@@ -877,6 +887,8 @@ operator|->
 name|geom
 operator|->
 name|dumpconf
+operator|!=
+name|NULL
 condition|)
 block|{
 name|sbuf_printf
@@ -1006,6 +1018,8 @@ condition|(
 name|gp
 operator|->
 name|dumpconf
+operator|!=
+name|NULL
 condition|)
 block|{
 name|sbuf_printf
