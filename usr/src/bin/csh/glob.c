@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dir.h>
+file|<sys/dir.h>
 end_include
 
 begin_comment
@@ -388,6 +388,7 @@ if|if
 condition|(
 name|noglob
 condition|)
+block|{
 name|Gcat
 argument_list|(
 name|pargv
@@ -398,6 +399,15 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
+name|sortbas
+operator|=
+operator|&
+name|gargv
+index|[
+name|gargc
+index|]
+expr_stmt|;
+block|}
 else|else
 name|acollect
 argument_list|(
@@ -3202,6 +3212,21 @@ operator|->
 name|t_dflg
 operator||=
 name|FPAR
+expr_stmt|;
+name|sigignore
+argument_list|(
+name|SIGTSTP
+argument_list|)
+expr_stmt|;
+name|sigignore
+argument_list|(
+name|SIGTTIN
+argument_list|)
+expr_stmt|;
+name|sigignore
+argument_list|(
+name|SIGTTOU
+argument_list|)
 expr_stmt|;
 name|execute
 argument_list|(
