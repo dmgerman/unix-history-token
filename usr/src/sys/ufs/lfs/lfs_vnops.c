@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lfs_vnops.c	4.42	82/11/13	*/
+comment|/*	lfs_vnops.c	4.43	82/12/09	*/
 end_comment
 
 begin_include
@@ -3653,9 +3653,9 @@ name|fd
 index|]
 operator|&
 operator|(
-name|SHLOCK
+name|UF_SHLOCK
 operator||
-name|EXLOCK
+name|UF_EXLOCK
 operator|)
 expr_stmt|;
 if|if
@@ -3700,9 +3700,9 @@ index|]
 operator|&=
 operator|~
 operator|(
-name|SHLOCK
+name|UF_SHLOCK
 operator||
-name|EXLOCK
+name|UF_EXLOCK
 operator|)
 expr_stmt|;
 return|return;
@@ -3713,7 +3713,7 @@ condition|(
 operator|(
 name|flags
 operator|&
-name|EXLOCK
+name|UF_EXLOCK
 operator|)
 operator|&&
 operator|(
@@ -3725,7 +3725,7 @@ operator|||
 operator|(
 name|flags
 operator|&
-name|SHLOCK
+name|UF_SHLOCK
 operator|)
 operator|&&
 operator|(

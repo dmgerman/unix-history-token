@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.49	82/12/05	*/
+comment|/*	kern_proc.c	4.50	82/12/09	*/
 end_comment
 
 begin_include
@@ -2817,7 +2817,7 @@ index|[
 name|i
 index|]
 operator|&
-name|EXCLOSE
+name|UF_EXCLOSE
 condition|)
 block|{
 name|closef
@@ -5584,7 +5584,7 @@ index|[
 name|n
 index|]
 operator|&
-name|SHLOCK
+name|UF_SHLOCK
 condition|)
 name|fp
 operator|->
@@ -5602,7 +5602,7 @@ index|[
 name|n
 index|]
 operator|&
-name|EXLOCK
+name|UF_EXLOCK
 condition|)
 name|fp
 operator|->

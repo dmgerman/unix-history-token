@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_generic.c	5.24	82/12/05	*/
+comment|/*	sys_generic.c	5.25	82/12/09	*/
 end_comment
 
 begin_include
@@ -2826,7 +2826,7 @@ operator|->
 name|fdes
 index|]
 operator||=
-name|EXCLOSE
+name|UF_EXCLOSE
 expr_stmt|;
 return|return;
 block|}
@@ -2847,7 +2847,7 @@ name|fdes
 index|]
 operator|&=
 operator|~
-name|EXCLOSE
+name|UF_EXCLOSE
 expr_stmt|;
 return|return;
 block|}
