@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)asc.c	8.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)asc.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -603,6 +603,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCRIPT_DONE
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCRIPT_MSG_IN
 value|9
 end_define
@@ -864,9 +871,7 @@ block|,
 operator|&
 name|asc_scripts
 index|[
-name|SCRIPT_GET_STATUS
-operator|+
-literal|1
+name|SCRIPT_DONE
 index|]
 block|}
 block|,
@@ -886,9 +891,7 @@ block|,
 operator|&
 name|asc_scripts
 index|[
-name|SCRIPT_GET_STATUS
-operator|+
-literal|1
+name|SCRIPT_DONE
 index|]
 block|}
 block|,
@@ -4208,19 +4211,6 @@ index|]
 expr_stmt|;
 switch|switch
 condition|(
-name|ASC_SS
-argument_list|(
-name|ss
-argument_list|)
-condition|)
-block|{
-case|case
-literal|0
-case|:
-comment|/* device did not respond */
-comment|/* check for one of the starting scripts */
-switch|switch
-condition|(
 name|asc
 operator|->
 name|script
@@ -4228,6 +4218,59 @@ operator|-
 name|asc_scripts
 condition|)
 block|{
+case|case
+name|SCRIPT_DONE
+case|:
+case|case
+name|SCRIPT_DISCONNECT
+case|:
+comment|/* 			 * Disconnects can happen normally when the 			 * command is complete with the phase being 			 * either ASC_PHASE_DATAO or ASC_PHASE_MSG_IN. 			 * The SCRIPT_MATCH() only checks for one phase 			 * so we can wind up here. 			 * Perform the appropriate operation, then proceed. 			 */
+if|if
+condition|(
+call|(
+modifier|*
+name|scpt
+operator|->
+name|action
+call|)
+argument_list|(
+name|asc
+argument_list|,
+name|status
+argument_list|,
+name|ss
+argument_list|,
+name|ir
+argument_list|)
+condition|)
+block|{
+name|regs
+operator|->
+name|asc_cmd
+operator|=
+name|scpt
+operator|->
+name|command
+expr_stmt|;
+name|readback
+argument_list|(
+name|regs
+operator|->
+name|asc_cmd
+argument_list|)
+expr_stmt|;
+name|asc
+operator|->
+name|script
+operator|=
+name|scpt
+operator|->
+name|next
+expr_stmt|;
+block|}
+goto|goto
+name|done
+goto|;
 case|case
 name|SCRIPT_TRY_SYNC
 case|:
@@ -4240,6 +4283,18 @@ case|:
 case|case
 name|SCRIPT_DATA_OUT
 case|:
+comment|/* one of the starting scripts */
+if|if
+condition|(
+name|ASC_SS
+argument_list|(
+name|ss
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* device did not respond */
 if|if
 condition|(
 name|regs
@@ -4297,6 +4352,16 @@ operator|->
 name|target
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|asc_DumpLog
+argument_list|(
+literal|"asc_disc"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 			 * On rare occasions my RZ24 does a disconnect during 			 * data in phase and the following seems to keep it 			 * happy. 			 * XXX Should a scsi disk ever do this?? 			 */
 name|asc
 operator|->
