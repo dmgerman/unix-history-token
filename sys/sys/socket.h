@@ -1462,21 +1462,7 @@ name|CMSG_DATA
 parameter_list|(
 name|cmsg
 parameter_list|)
-value|((u_char *)((cmsg) + 1))
-end_define
-
-begin_comment
-comment|/*  * Alignment requirement for CMSG struct manipulation.  * This is different from ALIGN() defined in ARCH/include/param.h.  * XXX think again carefully about architecture dependencies.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CMSG_ALIGN
-parameter_list|(
-name|n
-parameter_list|)
-value|(((n) + 3)& ~3)
+value|((u_char *)(cmsg) + \ 				 ALIGN(sizeof(struct cmsghdr)))
 end_define
 
 begin_comment
@@ -1493,7 +1479,7 @@ parameter_list|,
 name|cmsg
 parameter_list|)
 define|\
-value|(((caddr_t)(cmsg) + (cmsg)->cmsg_len + sizeof(struct cmsghdr)> \ 	    (caddr_t)(mhdr)->msg_control + (mhdr)->msg_controllen) ? \ 	    (struct cmsghdr *)NULL : \ 	    (struct cmsghdr *)((caddr_t)(cmsg) + CMSG_ALIGN((cmsg)->cmsg_len)))
+value|(((caddr_t)(cmsg) + ALIGN((cmsg)->cmsg_len) + \ 	  ALIGN(sizeof(struct cmsghdr))> \ 	    (caddr_t)(mhdr)->msg_control + (mhdr)->msg_controllen) ? \ 	    (struct cmsghdr *)NULL : \ 	    (struct cmsghdr *)((caddr_t)(cmsg) + ALIGN((cmsg)->cmsg_len)))
 end_define
 
 begin_define
@@ -1513,7 +1499,7 @@ name|CMSG_SPACE
 parameter_list|(
 name|l
 parameter_list|)
-value|(CMSG_ALIGN(sizeof(struct cmsghdr)) + CMSG_ALIGN(l))
+value|(ALIGN(sizeof(struct cmsghdr)) + ALIGN(l))
 end_define
 
 begin_define
@@ -1523,7 +1509,7 @@ name|CMSG_LEN
 parameter_list|(
 name|l
 parameter_list|)
-value|(CMSG_ALIGN(sizeof(struct cmsghdr)) + (l))
+value|(ALIGN(sizeof(struct cmsghdr)) + (l))
 end_define
 
 begin_comment

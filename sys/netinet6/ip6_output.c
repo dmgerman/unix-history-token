@@ -7875,7 +7875,7 @@ name|control
 operator|->
 name|m_data
 operator|+=
-name|CMSG_ALIGN
+name|ALIGN
 argument_list|(
 name|cm
 operator|->
@@ -7886,7 +7886,7 @@ name|control
 operator|->
 name|m_len
 operator|-=
-name|CMSG_ALIGN
+name|ALIGN
 argument_list|(
 name|cm
 operator|->
