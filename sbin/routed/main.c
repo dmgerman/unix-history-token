@@ -50,55 +50,21 @@ directive|include
 file|<sys/file.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
+begin_expr_stmt
+name|__COPYRIGHT
 argument_list|(
-name|sgi
+literal|"@(#) Copyright (c) 1983, 1988, 1993\n"
+literal|"The Regents of the University of California."
+literal|"  All rights reserved.\n"
 argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
+expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__NetBSD__
-argument_list|)
-end_if
-
-begin_decl_stmt
-name|char
-name|copyright
-index|[]
-init|=
-literal|"@(#) Copyright (c) 1983, 1988, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-name|__attribute__
-argument_list|(
-operator|(
-name|unused
-operator|)
-argument_list|)
-init|=
-literal|"@(#)main.c	8.1 (Berkeley) 6/5/93"
-decl_stmt|;
-end_decl_stmt
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-end_elif
+end_ifdef
 
 begin_expr_stmt
 name|__RCSID
@@ -108,13 +74,45 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|__COPYRIGHT
+begin_include
+include|#
+directive|include
+file|<util.h>
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
 argument_list|(
-literal|"@(#) Copyright (c) 1983, 1988, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+name|__FreeBSD__
+argument_list|)
+end_elif
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$Revision: 2.27 $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_empty
+empty|#ident "$Revision: 2.27 $"
+end_empty
 
 begin_endif
 endif|#
@@ -504,8 +502,6 @@ argument_list|(
 literal|"routed"
 argument_list|,
 name|LOG_PID
-operator||
-name|LOG_ODELAY
 argument_list|,
 name|LOG_DAEMON
 argument_list|)
@@ -934,7 +930,7 @@ operator|++
 expr_stmt|;
 name|msglog
 argument_list|(
-literal|"version 2.22"
+literal|"version 2.25"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1265,6 +1261,19 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"daemon()"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+name|pidfile
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2749,7 +2758,7 @@ comment|/* 1=failure to bind is serious */
 block|{
 name|struct
 name|sockaddr_in
-name|sin
+name|rsin
 decl_stmt|;
 name|unsigned
 name|char
@@ -2785,37 +2794,37 @@ expr_stmt|;
 name|memset
 argument_list|(
 operator|&
-name|sin
+name|rsin
 argument_list|,
 literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|sin
+name|rsin
 argument_list|)
 argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
 name|_HAVE_SIN_LEN
-name|sin
+name|rsin
 operator|.
 name|sin_len
 operator|=
 sizeof|sizeof
 argument_list|(
-name|sin
+name|rsin
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|sin
+name|rsin
 operator|.
 name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
-name|sin
+name|rsin
 operator|.
 name|sin_port
 operator|=
@@ -2824,7 +2833,7 @@ argument_list|(
 name|RIP_PORT
 argument_list|)
 expr_stmt|;
-name|sin
+name|rsin
 operator|.
 name|sin_addr
 operator|.
@@ -2844,11 +2853,11 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|sin
+name|rsin
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|sin
+name|rsin
 argument_list|)
 argument_list|)
 operator|<
@@ -3118,6 +3127,24 @@ argument_list|(
 name|INADDR_RIP_GROUP
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MCAST_IFINDEX
+name|m
+operator|.
+name|imr_interface
+operator|.
+name|s_addr
+operator|=
+name|htonl
+argument_list|(
+name|ifp
+operator|->
+name|int_index
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|m
 operator|.
 name|imr_interface
@@ -3142,6 +3169,8 @@ operator|->
 name|int_addr
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|setsockopt
@@ -3719,6 +3748,11 @@ name|ftrace
 argument_list|)
 expr_stmt|;
 block|}
+name|va_end
+argument_list|(
+name|args
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3966,6 +4000,11 @@ name|ftrace
 argument_list|)
 expr_stmt|;
 block|}
+name|va_end
+argument_list|(
+name|args
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4044,6 +4083,11 @@ operator|)
 name|fflush
 argument_list|(
 name|stderr
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|args
 argument_list|)
 expr_stmt|;
 if|if

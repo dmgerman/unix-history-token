@@ -3,15 +3,6 @@ begin_comment
 comment|/*-  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
-begin_decl_stmt
-name|char
-name|copyright
-index|[]
-init|=
-literal|"@(#) Copyright (c) 1982, 1986, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
-decl_stmt|;
-end_decl_stmt
-
 begin_include
 include|#
 directive|include
@@ -126,63 +117,117 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sgi
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-end_if
+begin_define
+define|#
+directive|define
+name|UNUSED
+value|__attribute__((unused))
+end_define
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-name|__attribute__
-argument_list|(
-operator|(
-name|unused
-operator|)
-argument_list|)
-init|=
-literal|"@(#)query.c	8.1 (Berkeley) 6/5/93"
-decl_stmt|;
-end_decl_stmt
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-end_elif
-
-begin_expr_stmt
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__RCSID
-argument_list|(
-literal|"$NetBSD: rtquery.c,v 1.10 1999/02/23 10:47:41 christos Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__RCSID
+parameter_list|(
+name|_s
+parameter_list|)
+value|static const char rcsid[] UNUSED = _s
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__COPYRIGHT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__COPYRIGHT
+parameter_list|(
+name|_s
+parameter_list|)
+value|static const char copyright[] UNUSED = _s
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_expr_stmt
+name|__COPYRIGHT
+argument_list|(
+literal|"@(#) Copyright (c) 1983, 1988, 1993\n"
+literal|"The Regents of the University of California."
+literal|"  All rights reserved.\n"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$NetBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_elif
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$Revision: 2.26 $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_empty
-empty|#ident "$Revision: 1.12 $"
+empty|#ident "$Revision: 2.26 $"
 end_empty
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -200,6 +245,23 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<md5.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -281,6 +343,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1884,7 +1951,7 @@ name|a_md5
 operator|.
 name|md5_auth_len
 operator|=
-name|RIP_AUTH_MD5_LEN
+name|RIP_AUTH_MD5_KEY_LEN
 expr_stmt|;
 name|NA0
 operator|.
@@ -1972,7 +2039,7 @@ operator|*
 operator|)
 name|passwd
 argument_list|,
-name|RIP_AUTH_MD5_LEN
+name|RIP_AUTH_MD5_HASH_LEN
 argument_list|)
 expr_stmt|;
 name|MD5Final
@@ -2049,7 +2116,6 @@ literal|0
 condition|)
 name|exit
 argument_list|(
-operator|-
 literal|1
 argument_list|)
 expr_stmt|;
@@ -2853,7 +2919,7 @@ decl_stmt|;
 name|u_char
 name|hash
 index|[
-name|RIP_AUTH_MD5_LEN
+name|RIP_AUTH_MD5_KEY_LEN
 index|]
 decl_stmt|;
 name|MD5_CTX
@@ -3747,6 +3813,8 @@ operator|*
 operator|)
 operator|&
 name|IMSG
+operator|+
+name|RIP_AUTH_MD5_HASH_XTRA
 argument_list|)
 expr_stmt|;
 name|MD5Update
@@ -3760,7 +3828,7 @@ operator|*
 operator|)
 name|passwd
 argument_list|,
-name|RIP_AUTH_MD5_LEN
+name|RIP_AUTH_MD5_KEY_LEN
 argument_list|)
 expr_stmt|;
 name|MD5Final
@@ -3821,7 +3889,7 @@ name|n_family
 argument_list|)
 argument_list|,
 call|(
-name|char
+name|u_char
 call|)
 argument_list|(
 name|n
@@ -3832,7 +3900,7 @@ literal|24
 argument_list|)
 argument_list|,
 call|(
-name|char
+name|u_char
 call|)
 argument_list|(
 name|n
@@ -3843,7 +3911,7 @@ literal|16
 argument_list|)
 argument_list|,
 call|(
-name|char
+name|u_char
 call|)
 argument_list|(
 name|n
@@ -3854,7 +3922,7 @@ literal|8
 argument_list|)
 argument_list|,
 operator|(
-name|char
+name|u_char
 operator|)
 name|n
 operator|->

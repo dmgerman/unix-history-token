@@ -27,46 +27,11 @@ directive|include
 file|<netinet/ip_icmp.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sgi
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__NetBSD__
-argument_list|)
-end_if
-
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-name|__attribute__
-argument_list|(
-operator|(
-name|unused
-operator|)
-argument_list|)
-init|=
-literal|"@(#)rdisc.c	8.1 (Berkeley) x/y/95"
-decl_stmt|;
-end_decl_stmt
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-end_elif
+end_ifdef
 
 begin_expr_stmt
 name|__RCSID
@@ -75,6 +40,40 @@ literal|"$NetBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_elif
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$Revision: 2.27 $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_empty
+empty|#ident "$Revision: 2.27 $"
+end_empty
 
 begin_endif
 endif|#
@@ -314,7 +313,7 @@ name|p
 parameter_list|,
 name|ifp
 parameter_list|)
-value|((int)(p)<= (ifp)->int_metric ? ((p) != 0 ? 1 : 0) \ 		      : (p) - ((ifp)->int_metric))
+value|((int)(p)<= ((ifp)->int_metric+(ifp)->int_adj_outmetric)\ 		      ? ((p) != 0 ? 1 : 0)				    \ 		      : (p) - ((ifp)->int_metric+(ifp)->int_adj_outmetric))
 end_define
 
 begin_function_decl
@@ -751,6 +750,24 @@ name|m
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MCAST_IFINDEX
+name|m
+operator|.
+name|imr_interface
+operator|.
+name|s_addr
+operator|=
+name|htonl
+argument_list|(
+name|ifp
+operator|->
+name|int_index
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|m
 operator|.
 name|imr_interface
@@ -775,6 +792,8 @@ operator|->
 name|int_addr
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|supplier
@@ -2773,7 +2792,7 @@ comment|/* 0=unicast, 1=bcast, 2=mcast */
 block|{
 name|struct
 name|sockaddr_in
-name|sin
+name|rsin
 decl_stmt|;
 name|int
 name|flags
@@ -2789,17 +2808,17 @@ decl_stmt|;
 name|memset
 argument_list|(
 operator|&
-name|sin
+name|rsin
 argument_list|,
 literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|sin
+name|rsin
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sin
+name|rsin
 operator|.
 name|sin_addr
 operator|.
@@ -2807,7 +2826,7 @@ name|s_addr
 operator|=
 name|dst
 expr_stmt|;
-name|sin
+name|rsin
 operator|.
 name|sin_family
 operator|=
@@ -2816,13 +2835,13 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|_HAVE_SIN_LEN
-name|sin
+name|rsin
 operator|.
 name|sin_len
 operator|=
 sizeof|sizeof
 argument_list|(
-name|sin
+name|rsin
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2863,7 +2882,7 @@ name|msg
 operator|=
 literal|"Send pt-to-pt"
 expr_stmt|;
-name|sin
+name|rsin
 operator|.
 name|sin_addr
 operator|.
@@ -2880,7 +2899,7 @@ name|msg
 operator|=
 literal|"Send broadcast"
 expr_stmt|;
-name|sin
+name|rsin
 operator|.
 name|sin_addr
 operator|.
@@ -2931,6 +2950,21 @@ block|{
 comment|/* select the right interface. */
 ifdef|#
 directive|ifdef
+name|MCAST_IFINDEX
+comment|/* specify ifindex */
+name|tgt_mcast
+operator|=
+name|htonl
+argument_list|(
+name|ifp
+operator|->
+name|int_index
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+ifdef|#
+directive|ifdef
 name|MCAST_PPP_BUG
 comment|/* Do not specify the primary interface explicitly 			 * if we have the multicast point-to-point kernel 			 * bug, since the kernel will do the wrong thing 			 * if the local address of a point-to-point link 			 * is the same as the address of an ordinary 			 * interface. 			 */
 if|if
@@ -2956,6 +2990,8 @@ name|ifp
 operator|->
 name|int_addr
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 literal|0
@@ -3018,7 +3054,7 @@ name|ifp
 operator|->
 name|int_addr
 argument_list|,
-name|sin
+name|rsin
 operator|.
 name|sin_addr
 operator|.
@@ -3051,11 +3087,11 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|sin
+name|rsin
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|sin
+name|rsin
 argument_list|)
 argument_list|)
 condition|)
@@ -3099,7 +3135,7 @@ literal|""
 argument_list|,
 name|inet_ntoa
 argument_list|(
-name|sin
+name|rsin
 operator|.
 name|sin_addr
 argument_list|)

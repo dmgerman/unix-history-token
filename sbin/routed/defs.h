@@ -237,6 +237,48 @@ directive|include
 file|<protocols/routed.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__RCSID
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__RCSID
+parameter_list|(
+name|_s
+parameter_list|)
+value|static const char rcsid[] UNUSED = _s
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__COPYRIGHT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__COPYRIGHT
+parameter_list|(
+name|_s
+parameter_list|)
+value|static const char copyright[] UNUSED = _s
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Type of an IP address.  *	Some systems do not like to pass structures, so do not use in_addr.  *	Some systems think a long has 64 bits, which would be a gross waste.  * So define it here so it can be changed for the target system.  * It should be defined somewhere netinet/in.h, but it is not.  */
 end_comment
@@ -312,7 +354,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Turn on if IP_DROP_MEMBERSHIP and IP_ADD_MEMBERSHIP do not look at  * the dstaddr of point-to-point interfaces.  */
+comment|/* Turn on if IP_{ADD,DROP}_MEMBERSHIP and IP_MULTICAST_IF considers address  * within 0.0.0.0/8 as interface index.  */
 end_comment
 
 begin_ifdef
@@ -324,8 +366,29 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|MCAST_PPP_BUG
+name|MCAST_IFINDEX
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Turn on if IP_DROP_MEMBERSHIP and IP_ADD_MEMBERSHIP do not look at  * the dstaddr of point-to-point interfaces.  * #define MCAST_PPP_BUG  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MCAST_IFINDEX
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|MCAST_PPP_BUG
+end_undef
 
 begin_endif
 endif|#
@@ -957,10 +1020,18 @@ comment|/* times gone up-down */
 name|char
 name|int_metric
 decl_stmt|;
-name|char
+name|u_char
 name|int_d_metric
 decl_stmt|;
 comment|/* for faked default route */
+name|u_char
+name|int_adj_inmetric
+decl_stmt|;
+comment|/* adjust advertised metrics */
+name|u_char
+name|int_adj_outmetric
+decl_stmt|;
+comment|/*    instead of interface metric */
 struct|struct
 name|int_data
 block|{
@@ -1587,8 +1658,14 @@ decl_stmt|;
 name|naddr
 name|parm_mask
 decl_stmt|;
-name|char
+name|u_char
 name|parm_d_metric
+decl_stmt|;
+name|u_char
+name|parm_adj_inmetric
+decl_stmt|;
+name|char
+name|parm_adj_outmetric
 decl_stmt|;
 name|u_int
 name|parm_int_state
@@ -3844,6 +3921,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<md5.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -3924,6 +4026,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
