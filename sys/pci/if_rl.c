@@ -4418,7 +4418,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * A frame has been uploaded: pass the resulting mbuf chain up to  * the higher level protocols.  *  * You know there's something wrong with a PCI bus-master chip design  * when you have to use m_devget().  *  * The receive operation is badly documented in the datasheet, so I'll  * attempt to document it here. The driver provides a buffer area and  * places its base address in the RX buffer start address register.  * The chip then begins copying frames into the RX buffer. Each frame  * is preceded by a 32-bit RX status word which specifies the length  * of the frame and certain other status bits. Each frame (starting with  * the status word) is also 32-bit aligned. The frame length is in the  * first 16 bits of the status word; the lower 15 bits correspond with  * the 'rx status register' mentioned in the datasheet.  *  * Note: to make the Alpha happy, the frame payload needs to be aligned  * on a 32-bit boundary. To achieve this, we cheat a bit by copying from  * the ring buffer starting at an address two bytes before the actual  * data location. We can then shave off the first two bytes using m_adj().  * The reason we do this is because m_devget() doesn't let us specify an  * offset into the mbuf storage space, so we have to artificially create  * one. The ring is allocated in such a way that there are a few unused  * bytes of space preceecing it so that it will be safe for us to do the  * 2-byte backstep even if reading from the ring at offset 0.  */
+comment|/*  * A frame has been uploaded: pass the resulting mbuf chain up to  * the higher level protocols.  *  * You know there's something wrong with a PCI bus-master chip design  * when you have to use m_devget().  *  * The receive operation is badly documented in the datasheet, so I'll  * attempt to document it here. The driver provides a buffer area and  * places its base address in the RX buffer start address register.  * The chip then begins copying frames into the RX buffer. Each frame  * is preceded by a 32-bit RX status word which specifies the length  * of the frame and certain other status bits. Each frame (starting with  * the status word) is also 32-bit aligned. The frame length is in the  * first 16 bits of the status word; the lower 15 bits correspond with  * the 'rx status register' mentioned in the datasheet.  *  * Note: to make the Alpha happy, the frame payload needs to be aligned  * on a 32-bit boundary. To achieve this, we pass RL_ETHER_ALIGN (2 bytes)  * as the offset argument to m_devget().   */
 end_comment
 
 begin_function
@@ -4699,20 +4699,15 @@ operator|>
 name|wrap
 condition|)
 block|{
-comment|/* 			 * Fool m_devget() into thinking we want to copy 			 * the whole buffer so we don't end up fragmenting 			 * the data. 			 */
 name|m
 operator|=
 name|m_devget
 argument_list|(
 name|rxbufpos
-operator|-
-name|RL_ETHER_ALIGN
 argument_list|,
 name|total_len
-operator|+
-name|RL_ETHER_ALIGN
 argument_list|,
-literal|0
+name|RL_ETHER_ALIGN
 argument_list|,
 name|ifp
 argument_list|,
@@ -4746,13 +4741,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|m_adj
-argument_list|(
-name|m
-argument_list|,
-name|RL_ETHER_ALIGN
-argument_list|)
-expr_stmt|;
 name|m_copyback
 argument_list|(
 name|m
@@ -4789,14 +4777,10 @@ operator|=
 name|m_devget
 argument_list|(
 name|rxbufpos
-operator|-
-name|RL_ETHER_ALIGN
 argument_list|,
 name|total_len
-operator|+
-name|RL_ETHER_ALIGN
 argument_list|,
-literal|0
+name|RL_ETHER_ALIGN
 argument_list|,
 name|ifp
 argument_list|,
@@ -4828,14 +4812,6 @@ name|total_len
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|m_adj
-argument_list|(
-name|m
-argument_list|,
-name|RL_ETHER_ALIGN
-argument_list|)
-expr_stmt|;
 name|cur_rx
 operator|+=
 name|total_len
