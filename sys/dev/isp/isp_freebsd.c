@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $Id: isp_freebsd.c,v 1.4 1998/04/15 17:36:08 mjacob Exp $ */
+comment|/* $Id: isp_freebsd.c,v 1.1 1998/04/22 17:54:50 mjacob Exp $ */
 end_comment
 
 begin_comment
@@ -331,11 +331,6 @@ literal|24
 operator|)
 expr_stmt|;
 block|}
-name|minphys
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
