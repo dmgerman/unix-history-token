@@ -553,7 +553,7 @@ name|suser_cred
 argument_list|(
 name|cred
 argument_list|,
-name|PRISON_ROOT
+name|SUSER_ALLOWJAIL
 argument_list|)
 operator|&&
 name|freespace
@@ -1000,7 +1000,7 @@ name|suser_cred
 argument_list|(
 name|cred
 argument_list|,
-name|PRISON_ROOT
+name|SUSER_ALLOWJAIL
 argument_list|)
 operator|&&
 name|freespace

@@ -4910,7 +4910,7 @@ name|suser_cred
 argument_list|(
 name|oldcred
 argument_list|,
-name|PRISON_ROOT
+name|SUSER_ALLOWJAIL
 argument_list|)
 operator|)
 operator|!=

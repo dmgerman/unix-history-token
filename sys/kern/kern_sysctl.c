@@ -5321,7 +5321,7 @@ name|CTLFLAG_PRISON
 condition|)
 name|flags
 operator|=
-name|PRISON_ROOT
+name|SUSER_ALLOWJAIL
 expr_stmt|;
 else|else
 name|flags

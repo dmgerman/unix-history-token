@@ -2142,7 +2142,7 @@ name|ap
 operator|->
 name|a_cred
 argument_list|,
-name|PRISON_ROOT
+name|SUSER_ALLOWJAIL
 argument_list|)
 operator|)
 operator|&&

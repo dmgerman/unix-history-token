@@ -1644,7 +1644,7 @@ name|suser_cred
 argument_list|(
 name|cred
 argument_list|,
-name|PRISON_ROOT
+name|SUSER_ALLOWJAIL
 argument_list|)
 condition|)
 return|return
@@ -2095,7 +2095,7 @@ name|suser_cred
 argument_list|(
 name|cred
 argument_list|,
-name|PRISON_ROOT
+name|SUSER_ALLOWJAIL
 argument_list|)
 operator|)
 operator|!=

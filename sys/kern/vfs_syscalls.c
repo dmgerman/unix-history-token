@@ -4206,7 +4206,7 @@ name|td
 operator|->
 name|td_ucred
 argument_list|,
-name|PRISON_ROOT
+name|SUSER_ALLOWJAIL
 argument_list|)
 expr_stmt|;
 if|if
@@ -5913,7 +5913,7 @@ name|td
 operator|->
 name|td_ucred
 argument_list|,
-name|PRISON_ROOT
+name|SUSER_ALLOWJAIL
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6985,7 +6985,7 @@ name|suser_cred
 argument_list|(
 name|cred
 argument_list|,
-name|PRISON_ROOT
+name|SUSER_ALLOWJAIL
 argument_list|)
 operator|==
 literal|0
@@ -11793,7 +11793,7 @@ name|td
 operator|->
 name|td_ucred
 argument_list|,
-name|PRISON_ROOT
+name|SUSER_ALLOWJAIL
 argument_list|)
 expr_stmt|;
 if|if
@@ -19208,7 +19208,7 @@ name|td
 operator|->
 name|td_ucred
 argument_list|,
-name|PRISON_ROOT
+name|SUSER_ALLOWJAIL
 argument_list|)
 expr_stmt|;
 if|if

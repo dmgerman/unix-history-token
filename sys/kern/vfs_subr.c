@@ -15418,7 +15418,7 @@ name|suser_cred
 argument_list|(
 name|cred
 argument_list|,
-name|PRISON_ROOT
+name|SUSER_ALLOWJAIL
 argument_list|)
 condition|)
 block|{
@@ -15483,7 +15483,7 @@ name|NULL
 argument_list|,
 name|CAP_DAC_READ_SEARCH
 argument_list|,
-name|PRISON_ROOT
+name|SUSER_ALLOWJAIL
 argument_list|)
 condition|)
 name|cap_granted
@@ -15520,7 +15520,7 @@ name|NULL
 argument_list|,
 name|CAP_DAC_EXECUTE
 argument_list|,
-name|PRISON_ROOT
+name|SUSER_ALLOWJAIL
 argument_list|)
 condition|)
 name|cap_granted
@@ -15555,7 +15555,7 @@ name|NULL
 argument_list|,
 name|CAP_DAC_READ_SEARCH
 argument_list|,
-name|PRISON_ROOT
+name|SUSER_ALLOWJAIL
 argument_list|)
 condition|)
 name|cap_granted
@@ -15589,7 +15589,7 @@ name|NULL
 argument_list|,
 name|CAP_DAC_WRITE
 argument_list|,
-name|PRISON_ROOT
+name|SUSER_ALLOWJAIL
 argument_list|)
 condition|)
 name|cap_granted
@@ -15627,7 +15627,7 @@ name|NULL
 argument_list|,
 name|CAP_FOWNER
 argument_list|,
-name|PRISON_ROOT
+name|SUSER_ALLOWJAIL
 argument_list|)
 condition|)
 name|cap_granted

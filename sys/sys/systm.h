@@ -1846,9 +1846,20 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRISON_ROOT
+name|SUSER_ALLOWJAIL
 value|1
 end_define
+
+begin_define
+define|#
+directive|define
+name|PRISON_ROOT
+value|SUSER_ALLOWJAIL
+end_define
+
+begin_comment
+comment|/* XXX Old name, will be removed */
+end_comment
 
 begin_define
 define|#

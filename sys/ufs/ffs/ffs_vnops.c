@@ -3339,7 +3339,7 @@ name|ap
 operator|->
 name|a_cred
 argument_list|,
-name|PRISON_ROOT
+name|SUSER_ALLOWJAIL
 argument_list|)
 condition|)
 block|{
@@ -5284,7 +5284,7 @@ name|suser_cred
 argument_list|(
 name|ucred
 argument_list|,
-name|PRISON_ROOT
+name|SUSER_ALLOWJAIL
 argument_list|)
 condition|)
 block|{

@@ -4459,7 +4459,7 @@ name|p
 operator|->
 name|p_ucred
 argument_list|,
-name|PRISON_ROOT
+name|SUSER_ALLOWJAIL
 argument_list|)
 operator|)
 operator|!=
@@ -4691,7 +4691,7 @@ name|p
 operator|->
 name|p_ucred
 argument_list|,
-name|PRISON_ROOT
+name|SUSER_ALLOWJAIL
 argument_list|)
 operator|)
 operator|!=

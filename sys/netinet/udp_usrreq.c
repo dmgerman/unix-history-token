@@ -3315,7 +3315,7 @@ name|td
 operator|->
 name|td_ucred
 argument_list|,
-name|PRISON_ROOT
+name|SUSER_ALLOWJAIL
 argument_list|)
 expr_stmt|;
 if|if
