@@ -3165,13 +3165,6 @@ operator|*
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|up
@@ -3183,8 +3176,6 @@ argument_list|(
 literal|"pmap_new_proc: u_map allocation failed"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|p
 operator|->
 name|p_addr
@@ -3669,13 +3660,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|rv
@@ -3691,8 +3675,6 @@ operator|->
 name|p_pid
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|m
 operator|=
 name|vm_page_lookup
@@ -5640,13 +5622,6 @@ argument_list|,
 name|VM_ALLOC_SYSTEM
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 operator|!
@@ -5657,8 +5632,6 @@ argument_list|(
 literal|"pmap_growkernel: no memory to grow kernel"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|printf
 argument_list|(
 literal|"pmap_growkernel: growing to %lx\n"
@@ -5801,13 +5774,6 @@ argument_list|,
 name|VM_ALLOC_SYSTEM
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 operator|!
@@ -5818,8 +5784,6 @@ argument_list|(
 literal|"pmap_growkernel: no memory to grow kernel"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|nklev3
 operator|++
 expr_stmt|;
@@ -5925,20 +5889,11 @@ argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 name|panic
 argument_list|(
 literal|"destroying a pmap is not yet implemented"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 end_function
@@ -7394,13 +7349,6 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 comment|/* 	 * Page Directory table entry not valid, we need a new PT page 	 */
 if|if
 condition|(
@@ -7419,8 +7367,6 @@ name|va
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|origpte
 operator|=
 operator|*
@@ -7535,13 +7481,6 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|err
@@ -7553,8 +7492,6 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 comment|/* 	 * Enter on the PV list if part of our managed memory Note that we 	 * raise IPL while manipulating pv_table since pmap_enter can be 	 * called at interrupt time. 	 */
 if|if

@@ -714,20 +714,11 @@ name|curproc
 argument_list|)
 condition|)
 block|{
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 name|printf
 argument_list|(
 literal|"vm_object_reference: delay in getting object\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 block|}
@@ -1371,13 +1362,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|p
@@ -1399,8 +1383,6 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|p

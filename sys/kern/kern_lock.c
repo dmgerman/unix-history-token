@@ -877,13 +877,6 @@ comment|/* fall into downgrade */
 case|case
 name|LK_DOWNGRADE
 case|:
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|lkp
@@ -903,8 +896,6 @@ argument_list|(
 literal|"lockmgr: not holding exclusive lock"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|sharelock
 argument_list|(
 name|lkp
@@ -988,13 +979,6 @@ case|case
 name|LK_UPGRADE
 case|:
 comment|/* 		 * Upgrade a shared lock to an exclusive one. If another 		 * shared lock has already requested an upgrade to an 		 * exclusive lock, our shared lock is released and an 		 * exclusive lock is requested (which will be granted 		 * after the upgrade). If we return an error, the file 		 * will always be unlocked. 		 */
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 operator|(
@@ -1018,8 +1002,6 @@ argument_list|(
 literal|"lockmgr: upgrade exclusive lock"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|shareunlock
 argument_list|(
 name|lkp
@@ -1122,13 +1104,6 @@ name|lk_lockholder
 operator|=
 name|pid
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|lkp
@@ -1142,8 +1117,6 @@ argument_list|(
 literal|"lockmgr: non-zero exclusive count"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|lkp
 operator|->
 name|lk_exclusivecount
@@ -1229,13 +1202,6 @@ name|LK_KERNPROC
 condition|)
 block|{
 comment|/* 			 *	Recursive lock. 			 */
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 operator|(
@@ -1255,8 +1221,6 @@ argument_list|(
 literal|"lockmgr: locking against myself"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -1380,13 +1344,6 @@ name|lk_lockholder
 operator|=
 name|pid
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|lkp
@@ -1400,8 +1357,6 @@ argument_list|(
 literal|"lockmgr: non-zero exclusive count"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|lkp
 operator|->
 name|lk_exclusivecount
@@ -1454,13 +1409,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|lkp
@@ -1490,8 +1438,6 @@ name|lk_lockholder
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|lkp
@@ -1596,13 +1542,6 @@ case|case
 name|LK_DRAIN
 case|:
 comment|/* 		 * Check that we do not already hold the lock, as it can  		 * never drain if we do. Unfortunately, we have no way to 		 * check for holding a shared lock, but at least we can 		 * check for an exclusive one. 		 */
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|lkp
@@ -1616,8 +1555,6 @@ argument_list|(
 literal|"lockmgr: draining against myself"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|acquiredrain
@@ -1687,13 +1624,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 name|simple_unlock
 argument_list|(
 operator|&
@@ -1711,8 +1641,6 @@ operator|&
 name|LK_TYPE_MASK
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* NOTREACHED */
 block|}
 if|if

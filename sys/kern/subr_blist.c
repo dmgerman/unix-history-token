@@ -1835,13 +1835,6 @@ operator|==
 name|radix
 condition|)
 return|return;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|scan
@@ -1867,8 +1860,6 @@ argument_list|,
 name|radix
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Break the free down into its components 	 */
 name|radix
 operator|>>=

@@ -6970,9 +6970,6 @@ operator|->
 name|a_reqpage
 index|]
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|MAX_PERF
 name|printf
 argument_list|(
 literal|"devfs_getpages: I/O read failure: (error code=%d)\n"
@@ -7018,8 +7015,6 @@ argument_list|,
 name|pcount
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 		 * Free the buffer header back to the swap buffer pool. 		 */
 name|relpbuf
 argument_list|(

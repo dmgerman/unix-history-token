@@ -5178,13 +5178,6 @@ literal|"pbrelvp: NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 comment|/* XXX REMOVE ME */
 if|if
 condition|(
@@ -5212,8 +5205,6 @@ name|b_flags
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|bp
 operator|->
 name|b_vp
@@ -5254,13 +5245,6 @@ modifier|*
 name|newvp
 decl_stmt|;
 block|{
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 operator|(
@@ -5282,8 +5266,6 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|bp
 operator|->
 name|b_vp
@@ -5346,13 +5328,6 @@ block|}
 operator|++
 name|reassignbufcalls
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 comment|/* 	 * B_PAGING flagged buffers cannot be reassigned because their vp 	 * is not fully linked in. 	 */
 if|if
 condition|(
@@ -5367,8 +5342,6 @@ argument_list|(
 literal|"cannot reassign paging buffer"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|s
 operator|=
 name|splbio

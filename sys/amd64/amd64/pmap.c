@@ -3649,13 +3649,6 @@ operator|*
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|up
@@ -3667,8 +3660,6 @@ argument_list|(
 literal|"pmap_new_proc: u_map allocation failed"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|p
 operator|->
 name|p_addr
@@ -4211,13 +4202,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|rv
@@ -4233,8 +4217,6 @@ operator|->
 name|p_pid
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|m
 operator|=
 name|vm_page_lookup
@@ -5015,13 +4997,6 @@ operator|.
 name|resident_count
 operator|--
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|p
@@ -5035,8 +5010,6 @@ literal|"pmap_release: freeing held page table page"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* 	 * Page directory pages need to have the kernel 	 * stuff cleared, so they can go into the zero queue also. 	 */
 if|if
 condition|(
@@ -5827,13 +5800,6 @@ argument_list|,
 name|VM_ALLOC_SYSTEM
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 operator|!
@@ -5844,8 +5810,6 @@ argument_list|(
 literal|"pmap_growkernel: no memory to grow kernel"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|nkpt
 operator|++
 expr_stmt|;
@@ -6011,20 +5975,11 @@ argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 name|panic
 argument_list|(
 literal|"destroying a pmap is not yet implemented"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 end_function
@@ -7987,13 +7942,6 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 comment|/* 	 * Page Directory table entry not valid, we need a new PT page 	 */
 if|if
 condition|(
@@ -8021,8 +7969,6 @@ name|va
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|origpte
 operator|=
 operator|*
@@ -8042,13 +7988,6 @@ name|origpte
 operator|&
 name|PG_FRAME
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|origpte
@@ -8060,8 +7999,6 @@ argument_list|(
 literal|"pmap_enter: attempted pmap_enter on 4MB page"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Mapping has not changed, must be protection or wiring change. 	 */
 if|if
 condition|(
@@ -8290,13 +8227,6 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|err
@@ -8308,8 +8238,6 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 comment|/* 	 * Enter on the PV list if part of our managed memory Note that we 	 * raise IPL while manipulating pv_table since pmap_enter can be 	 * called at interrupt time. 	 */
 if|if
@@ -8567,13 +8495,6 @@ condition|(
 name|ptepa
 condition|)
 block|{
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|ptepa
@@ -8585,8 +8506,6 @@ argument_list|(
 literal|"pmap_enter_quick: unexpected mapping into 4MB page"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|pmap
@@ -10197,13 +10116,6 @@ decl_stmt|;
 name|unsigned
 name|ptepindex
 decl_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|addr
@@ -10215,8 +10127,6 @@ argument_list|(
 literal|"pmap_copy: invalid to pmap_copy page tables\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 		 * Don't let optional prefaulting of pages make us go 		 * way below the low water mark of free pages or way 		 * above high water mark of used pv entries. 		 */
 if|if
 condition|(
@@ -10552,13 +10462,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|SMP
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 operator|*
@@ -10573,8 +10476,6 @@ argument_list|(
 literal|"pmap_zero_page: prv_CMAP3 busy"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 operator|*
 operator|(
 name|int
@@ -10639,13 +10540,6 @@ literal|0
 expr_stmt|;
 else|#
 directive|else
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 operator|*
@@ -10660,8 +10554,6 @@ argument_list|(
 literal|"pmap_zero_page: CMAP2 busy"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 operator|*
 operator|(
 name|int
@@ -10759,13 +10651,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|SMP
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 operator|*
@@ -10780,8 +10665,6 @@ argument_list|(
 literal|"pmap_zero_page: prv_CMAP3 busy"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 operator|*
 operator|(
 name|int
@@ -10860,13 +10743,6 @@ literal|0
 expr_stmt|;
 else|#
 directive|else
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 operator|*
@@ -10881,8 +10757,6 @@ argument_list|(
 literal|"pmap_zero_page: CMAP2 busy"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 operator|*
 operator|(
 name|int
@@ -10989,13 +10863,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|SMP
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 operator|*
@@ -11024,8 +10891,6 @@ argument_list|(
 literal|"pmap_copy_page: prv_CMAP2 busy"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 operator|*
 operator|(
 name|int
@@ -11103,13 +10968,6 @@ literal|0
 expr_stmt|;
 else|#
 directive|else
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 operator|*
@@ -11131,8 +10989,6 @@ argument_list|(
 literal|"pmap_copy_page: CMAP busy"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 operator|*
 operator|(
 name|int
@@ -12746,13 +12602,6 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 operator|!
@@ -12763,8 +12612,6 @@ argument_list|(
 literal|"pmap_mapdev: Couldn't alloc kernel virtual memory"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|pa
 operator|=
 name|pa
