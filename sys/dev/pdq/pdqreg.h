@@ -19,12 +19,6 @@ directive|define
 name|_PDQREG_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|<stddef.h>
-end_include
-
 begin_if
 if|#
 directive|if
