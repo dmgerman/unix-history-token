@@ -1482,10 +1482,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|xferq
-operator|=
-name|NULL
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -1527,9 +1523,11 @@ break|break;
 block|}
 if|if
 condition|(
-name|xferq
-operator|==
-name|NULL
+name|i
+operator|>=
+name|fc
+operator|->
+name|nisodma
 condition|)
 block|{
 name|printf
