@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dump.h	5.21 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dump.h	5.22 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -714,18 +714,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|flushtape
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
 name|startnewtape
 name|__P
 argument_list|(
@@ -833,6 +821,85 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* rdump routines */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RDUMP
+end_ifdef
+
+begin_decl_stmt
+name|void
+name|rmtclose
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|rmthost
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+name|host
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|rmtopen
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+name|tape
+operator|,
+name|int
+name|mode
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|rmtwrite
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+name|buf
+operator|,
+name|int
+name|count
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* RDUMP */
+end_comment
 
 begin_decl_stmt
 name|void
@@ -1232,6 +1299,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|__dead
 name|void
 name|exit
 parameter_list|()

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)unctime.c	5.5 (Berkeley) %G%"
+literal|"@(#)unctime.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,13 +37,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<time.h>
 end_include
 
 begin_ifdef
@@ -62,6 +62,23 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__P
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
 end_include
 
 begin_endif
@@ -119,13 +136,53 @@ name|E_YEAR
 value|20
 end_define
 
-begin_function_decl
+begin_decl_stmt
+specifier|static
+name|int
+name|dcmp
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|tm
+operator|*
+operator|,
+expr|struct
+name|tm
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|time_t
+name|emitl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|tm
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|int
 name|lookup
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|time_t
@@ -148,10 +205,6 @@ index|[
 literal|30
 index|]
 decl_stmt|;
-name|time_t
-name|emitl
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|strlen
@@ -166,7 +219,7 @@ index|[
 literal|25
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 operator|(
 name|void
@@ -185,7 +238,7 @@ operator|+
 literal|3
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -334,7 +387,7 @@ init|;
 operator|*
 name|cp
 operator|!=
-literal|0
+literal|'\0'
 condition|;
 name|cp
 operator|+=
@@ -377,24 +430,8 @@ begin_comment
 comment|/*  * Routine to convert a localtime(3) format date back into  * a system format date.  *  *	Use a binary search.  */
 end_comment
 
-begin_function_decl
-name|struct
-name|tm
-modifier|*
-name|localtime
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|dcmp
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_function
+specifier|static
 name|time_t
 name|emitl
 parameter_list|(

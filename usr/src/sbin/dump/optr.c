@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)optr.c	5.14 (Berkeley) %G%"
+literal|"@(#)optr.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,24 +28,6 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sunos
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
 begin_include
 include|#
 directive|include
@@ -56,12 +38,6 @@ begin_include
 include|#
 directive|include
 file|<sys/wait.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
 end_include
 
 begin_include
@@ -70,44 +46,10 @@ directive|include
 file|<sys/time.h>
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/wait.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<time.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -125,19 +67,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utmp.h>
+file|<signal.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<tzfile.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
+file|<stdio.h>
 end_include
 
 begin_ifdef
@@ -145,12 +81,6 @@ ifdef|#
 directive|ifdef
 name|__STDC__
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
 
 begin_include
 include|#
@@ -170,10 +100,45 @@ directive|include
 file|<stdarg.h>
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<tzfile.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<utmp.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__STDC__
+end_ifndef
 
 begin_include
 include|#
@@ -198,33 +163,66 @@ directive|include
 file|"pathnames.h"
 end_include
 
-begin_function_decl
-specifier|static
+begin_decl_stmt
 name|void
 name|alarmcatch
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+comment|/* int, int */
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+name|int
+name|datesort
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|void
+operator|*
+operator|,
+specifier|const
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|sendmes
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  *	Query the operator; This previously-fascist piece of code  *	no longer requires an exact response.  *	It is intended to protect dump aborting by inquisitive  *	people banging on the console terminal to see what is  *	happening which might cause dump to croak, destroying  *	a large number of hours of work.  *  *	Every 2 minutes we reprint the message, alerting others  *	that dump needs attention.  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|timeout
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|attnmessage
@@ -479,7 +477,6 @@ comment|/*  *	Alert the console operator, and enable the alarm clock to  *	sleep
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|alarmcatch
 parameter_list|()
@@ -667,15 +664,6 @@ return|return;
 block|}
 block|}
 end_function
-
-begin_function_decl
-name|struct
-name|tm
-modifier|*
-name|localtime
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 name|struct
@@ -1900,11 +1888,6 @@ name|fstab
 modifier|*
 name|fs
 decl_stmt|;
-name|char
-modifier|*
-name|rawname
-parameter_list|()
-function_decl|;
 for|for
 control|(
 name|pf
@@ -2085,9 +2068,6 @@ name|date
 decl_stmt|;
 name|int
 name|dumpme
-decl_stmt|,
-name|datesort
-argument_list|()
 decl_stmt|;
 name|time_t
 name|tnow
@@ -2307,6 +2287,7 @@ name|a1
 parameter_list|,
 name|a2
 parameter_list|)
+specifier|const
 name|void
 modifier|*
 name|a1

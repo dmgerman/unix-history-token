@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.24 (Berkeley) %G%"
+literal|"@(#)main.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,30 +52,6 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sunos
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
 begin_include
 include|#
 directive|include
@@ -85,7 +61,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<sys/time.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sunos
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/vnode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/inode.h>
 end_include
 
 begin_include
@@ -102,31 +96,19 @@ end_else
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ufs/ffs/fs.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
 directive|include
 file|<ufs/ufs/dinode.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -137,25 +119,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<errno.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -167,6 +132,12 @@ begin_include
 include|#
 directive|include
 file|<fstab.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -184,12 +155,6 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdlib.h>
 end_include
 
@@ -198,6 +163,35 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|rindex
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|calloc
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -323,25 +317,8 @@ begin_comment
 comment|/* remote host (if any) */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|RDUMP
-end_ifdef
-
-begin_function_decl
-name|int
-name|rmthost
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -510,9 +487,6 @@ literal|'w'
 argument_list|)
 expr_stmt|;
 comment|/* tell us only what has to be done */
-operator|(
-name|void
-operator|)
 name|exit
 argument_list|(
 literal|0
@@ -528,9 +502,6 @@ literal|'W'
 argument_list|)
 expr_stmt|;
 comment|/* tell us state of what is done */
-operator|(
-name|void
-operator|)
 name|exit
 argument_list|(
 literal|0
@@ -1177,9 +1148,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
 name|exit
 argument_list|(
 name|X_ABORT
@@ -1197,9 +1165,6 @@ argument_list|,
 literal|"remote dump not enabled\n"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|exit
 argument_list|(
 name|X_ABORT
@@ -1708,6 +1673,9 @@ argument_list|,
 name|TP_BSIZE
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|FS_44INODEFMT
 if|if
 condition|(
 name|sblock
@@ -1722,6 +1690,8 @@ name|c_flags
 operator||=
 name|DR_NEWINODEFMT
 expr_stmt|;
+endif|#
+directive|endif
 name|maxino
 operator|=
 name|sblock
@@ -2202,6 +2172,9 @@ name|maxino
 condition|;
 control|)
 block|{
+name|int
+name|mode
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -2245,15 +2218,17 @@ argument_list|(
 name|ino
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
+name|mode
+operator|=
 name|dp
 operator|->
 name|di_mode
 operator|&
 name|IFMT
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|mode
 operator|==
 name|IFDIR
 condition|)
@@ -2411,9 +2386,6 @@ expr_stmt|;
 name|close_rewind
 argument_list|()
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|exit
 argument_list|(
 name|X_REWRITE
@@ -2472,11 +2444,6 @@ index|[
 literal|32
 index|]
 decl_stmt|;
-name|char
-modifier|*
-name|rindex
-parameter_list|()
-function_decl|;
 name|char
 modifier|*
 name|dp
