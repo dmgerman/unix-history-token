@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vdreg.h	1.3	86/01/20	*/
+comment|/*	vdreg.h	1.4	86/07/31	*/
 end_comment
 
 begin_comment
@@ -47,7 +47,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|C
+name|RD_RAW
+value|0x600
+end_define
+
+begin_comment
+comment|/* Read unformatted disk sector */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMP
 value|0xa0
 end_define
 
@@ -1056,6 +1067,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CCF_DER
+value|0x8
+end_define
+
+begin_comment
+comment|/* Disable Error Recovery */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CCF_XMD
 value|0x60
 end_define
@@ -1150,6 +1172,17 @@ end_define
 
 begin_comment
 comment|/*   4 word transfer burst */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CCF_SEN
+value|0x400
+end_define
+
+begin_comment
+comment|/* Cylinder / track Skew ENable (for format) */
 end_comment
 
 begin_define
@@ -1617,6 +1650,10 @@ name|long
 name|slip_sec
 decl_stmt|;
 comment|/* # of slip sectors */
+name|long
+name|recovery
+decl_stmt|;
+comment|/* recovery flags */
 block|}
 name|treset
 typedef|;
@@ -1828,6 +1865,20 @@ name|u_long
 name|sec_size
 decl_stmt|;
 comment|/* drive sector size */
+name|u_short
+name|cdr_unused0
+decl_stmt|;
+name|u_char
+name|cyl_skew
+decl_stmt|;
+comment|/* cylinder to cylinder skew factor */
+name|u_char
+name|trk_skew
+decl_stmt|;
+comment|/* track to track skew factor */
+name|u_long
+name|cdr_unused1
+decl_stmt|;
 name|u_long
 name|diag_flags
 decl_stmt|;
@@ -1893,7 +1944,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* fujitsu */
+comment|/* Fujitsu 160 */
 end_comment
 
 begin_define
@@ -1924,6 +1975,17 @@ directive|define
 name|FSD
 value|4
 end_define
+
+begin_define
+define|#
+directive|define
+name|EGL
+value|5
+end_define
+
+begin_comment
+comment|/* Fujitsu Eagle */
+end_comment
 
 begin_comment
 comment|/*  * Drive logical partitions.  */
@@ -1983,6 +2045,11 @@ modifier|*
 name|type_name
 decl_stmt|;
 comment|/* drive name */
+name|char
+modifier|*
+name|type_descrip
+decl_stmt|;
+comment|/* drive description */
 name|long
 name|fmt_pat
 index|[
@@ -2026,6 +2093,14 @@ literal|0xf2200
 block|,
 literal|0xf2300
 block|,
+literal|0xf2400
+block|,
+literal|0xf2500
+block|,
+literal|0xf2600
+block|,
+literal|0xf2700
+block|,
 literal|0
 block|}
 decl_stmt|;
@@ -2058,11 +2133,12 @@ literal|0
 block|,
 literal|3600
 block|,
-literal|0
+literal|30240
 block|,
 literal|"xsd"
 block|,
-comment|/* 515 Mb FSD */
+literal|"515 Mb Control Data Winchester drive"
+block|,
 block|{
 literal|0x0264c993
 block|,
@@ -2120,40 +2196,124 @@ block|}
 block|,
 comment|/* xsd0c cyl 106 - 705 */
 block|{
-literal|0
+literal|118656
 block|,
-literal|61056
+literal|288000
 block|}
 block|,
-comment|/* xsd0d cyl 709 - 710 (a& b) */
+comment|/* xsd0d cyl 206 - 705 */
 block|{
-literal|0
+literal|176256
 block|,
-literal|406656
+literal|230400
 block|}
 block|,
-comment|/* xsd0e cyl   0 - 705 */
-block|{
-literal|30528
-block|,
-literal|376128
-block|}
-block|,
-comment|/* xsd0f cyl  53 - 705 (b& c) */
-block|{
-literal|61056
-block|,
-literal|172800
-block|}
-block|,
-comment|/* xsd0g cyl 106 - 405 (1/2 of c) */
+comment|/* xsd0e cyl 306 - 705 */
 block|{
 literal|233856
 block|,
 literal|172800
 block|}
+block|,
+comment|/* xsd0f cyl 406 - 705 */
+block|{
+literal|291456
+block|,
+literal|115200
 block|}
-comment|/* xsd0h cyl 406 - 705 (1/2 of c) */
+block|,
+comment|/* xsd0g cyl 506 - 705 */
+block|{
+literal|349056
+block|,
+literal|57600
+block|}
+block|}
+comment|/* xsd0h cyl 606 - 705 */
+block|}
+block|,
+block|{
+literal|512
+block|,
+literal|44
+block|,
+literal|20
+block|,
+literal|842
+block|,
+literal|0
+block|,
+literal|3961
+block|,
+literal|27720
+block|,
+literal|"egl"
+block|,
+literal|"474 Mb Fujitsu Eagle drive"
+block|,
+block|{
+literal|0x0264c993
+block|,
+literal|0x04c99326
+block|,
+literal|0x0993264c
+block|,
+literal|0x13264c98
+block|,
+literal|0x264c9930
+block|,
+literal|0x4c993260
+block|,
+literal|0x993264c0
+block|,
+literal|0x3264c980
+block|,
+literal|0x64c99300
+block|,
+literal|0xc9932600
+block|,
+literal|0x93264c00
+block|,
+literal|0x264c9800
+block|,
+literal|0x4c993000
+block|,
+literal|0x99326000
+block|,
+literal|0x3264c000
+block|,
+literal|0x54c98000
+block|}
+block|,
+block|{
+block|{
+literal|0
+block|,
+literal|26400
+block|}
+block|,
+comment|/* egl0a */
+block|{
+literal|26400
+block|,
+literal|33000
+block|}
+block|,
+comment|/* egl0b */
+block|{
+literal|59400
+block|,
+literal|308880
+block|}
+block|,
+comment|/* egl0c */
+block|{
+literal|0
+block|,
+literal|367840
+block|}
+block|}
+comment|/* egl0d */
 block|}
 block|,
 block|{
@@ -2169,11 +2329,13 @@ literal|0
 block|,
 literal|3600
 block|,
-literal|0
+literal|40960
 block|,
 literal|"fuj"
 block|,
 comment|/* 360 Mb Fujitsu */
+literal|"360 Mb Fujitsu Winchester drive"
+block|,
 block|{
 literal|0x0264c993
 block|,
@@ -2231,40 +2393,40 @@ block|}
 block|,
 comment|/* fuj0c cyl 135 - 817 */
 block|{
-literal|0
+literal|79680
 block|,
-literal|43200
+literal|182080
 block|}
 block|,
-comment|/* fuj0d cyl 821 - 822 (a& b) */
+comment|/* fuj0d cyl 249 - 817 */
 block|{
-literal|0
+literal|116160
 block|,
-literal|261760
+literal|145600
 block|}
 block|,
-comment|/* fuj0e cyl   0 - 817 */
-block|{
-literal|19200
-block|,
-literal|242560
-block|}
-block|,
-comment|/* fuj0f cyl   0 - 134 (b& c) */
-block|{
-literal|43200
-block|,
-literal|109440
-block|}
-block|,
-comment|/* fuj0g cyl 135 - 476 (1/2 of c) */
+comment|/* fuj0e cyl 363 - 817 */
 block|{
 literal|152640
 block|,
 literal|109120
 block|}
+block|,
+comment|/* fuj0f cyl 477 - 817 */
+block|{
+literal|189120
+block|,
+literal|72640
 block|}
-comment|/* fug0h cyl 477 - 817 (1/2 of c) */
+block|,
+comment|/* fuj0g cyl 591 - 817 */
+block|{
+literal|225600
+block|,
+literal|36160
+block|}
+block|}
+comment|/* fug0h cyl 705 - 817 */
 block|}
 block|,
 block|{
@@ -2280,11 +2442,13 @@ literal|0
 block|,
 literal|3600
 block|,
-literal|0
+literal|20160
 block|,
 literal|"xfd"
 block|,
 comment|/* 340 Mb FSD */
+literal|"340 Mb Control Data Winchester drive"
+block|,
 block|{
 literal|0x0d9b366c
 block|,
@@ -2391,40 +2555,40 @@ block|}
 block|,
 comment|/* xfd0c cyl 106 - 705 */
 block|{
-literal|0
+literal|79104
 block|,
-literal|40704
+literal|192000
 block|}
 block|,
-comment|/* xfd0d cyl 709 - 710 (a& b) */
+comment|/* xfd0d cyl 206 - 705 */
 block|{
-literal|0
+literal|117504
 block|,
-literal|271104
+literal|153600
 block|}
 block|,
-comment|/* xfd0e cyl   0 - 705 */
-block|{
-literal|20352
-block|,
-literal|250752
-block|}
-block|,
-comment|/* xfd0f cyl  53 - 705 (b& c) */
-block|{
-literal|40704
-block|,
-literal|115200
-block|}
-block|,
-comment|/* xfd0g cyl 106 - 405 (1/2 of c) */
+comment|/* xfd0e cyl 306 - 705 */
 block|{
 literal|155904
 block|,
 literal|115200
 block|}
+block|,
+comment|/* xfd0f cyl 406 - 705 */
+block|{
+literal|194304
+block|,
+literal|76800
 block|}
-comment|/* xfd0h cyl 406 - 705 (1/2 of c) */
+block|,
+comment|/* xfd0g cyl 506 - 705 */
+block|{
+literal|232704
+block|,
+literal|38400
+block|}
+block|}
+comment|/* xfd0h cyl 606 - 705 */
 endif|#
 directive|endif
 block|}
@@ -2442,11 +2606,13 @@ literal|0
 block|,
 literal|3600
 block|,
-literal|0
+literal|20160
 block|,
 literal|"smd"
 block|,
 comment|/* 300 Mb SMD */
+literal|"300 Mb Control Data removable media drive"
+block|,
 block|{
 literal|0x0d9b366c
 block|,
@@ -2504,27 +2670,40 @@ block|}
 block|,
 comment|/* smd0c cyl 111-817 */
 block|{
-literal|248672
+literal|69616
 block|,
-literal|1520
+literal|179056
 block|}
 block|,
-comment|/* smd0d cyl 818-822 */
+comment|/* smd0d cyl 229 - 817 */
 block|{
-literal|0
+literal|105488
 block|,
-literal|248672
+literal|143184
 block|}
 block|,
-comment|/* smd0e cyl   0-817 */
+comment|/* smd0e cyl 347 - 817 */
 block|{
-literal|0
+literal|141360
 block|,
-literal|250192
+literal|107312
+block|}
+block|,
+comment|/* smd0f cyl 465 - 817 */
+block|{
+literal|177232
+block|,
+literal|71440
+block|}
+block|,
+comment|/* smd0g cyl 583 - 817 */
+block|{
+literal|213104
+block|,
+literal|35568
 block|}
 block|}
-block|,
-comment|/* smd0f cyl   0-822 */
+comment|/* smd0h cyl 701 - 817 */
 block|}
 block|,
 block|{
@@ -2540,11 +2719,13 @@ literal|0
 block|,
 literal|3600
 block|,
-literal|0
+literal|20160
 block|,
 literal|"fsd"
 block|,
 comment|/* 160 Mb FSD */
+literal|"160 Mb Control Data Winchester drive"
+block|,
 block|{
 literal|0x0d9b366c
 block|,
@@ -2602,40 +2783,40 @@ block|}
 block|,
 comment|/* fsd0c cyl 135 - 817 */
 block|{
-literal|0
+literal|39840
 block|,
-literal|21600
+literal|91040
 block|}
 block|,
-comment|/* fsd0d cyl   0 - 134 (a& b) */
+comment|/* fsd0d cyl 249 - 817 */
 block|{
-literal|0
+literal|58080
 block|,
-literal|130880
+literal|72800
 block|}
 block|,
-comment|/* fsd0e cyl   0 - 817 */
+comment|/* fsd0e cyl 363 - 817 */
 block|{
-literal|9600
+literal|76320
 block|,
-literal|121280
+literal|54560
 block|}
 block|,
-comment|/* fsd0f cyl  60 - 817 (b& c) */
+comment|/* fsd0f cyl 477 - 817 */
 block|{
-literal|21600
+literal|94560
 block|,
-literal|54240
+literal|36320
 block|}
 block|,
-comment|/* fsd0g cyl 135 - 473 (1/2 of c) */
+comment|/* fsd0g cyl 591 - 817 */
 block|{
-literal|75840
+literal|112800
 block|,
-literal|55040
+literal|18080
 block|}
 block|}
-comment|/* fsd0h cyl 474 - 817 (1/2 of c) */
+comment|/* fsd0h cyl 705 - 817 */
 block|}
 block|}
 decl_stmt|;
