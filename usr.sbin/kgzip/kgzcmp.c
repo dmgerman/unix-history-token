@@ -784,7 +784,7 @@ literal|"gzip"
 argument_list|,
 literal|"gzip"
 argument_list|,
-literal|"-9"
+literal|"-9n"
 argument_list|,
 operator|(
 name|char
