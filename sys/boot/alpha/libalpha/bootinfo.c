@@ -230,7 +230,7 @@ name|a
 parameter_list|,
 name|s
 parameter_list|)
-value|{			\     const char *p = s ? s : "";			\     COPY32(t, a);				\     COPY32(strlen(p) + 1, a);			\     alpha_copyin(p, a, strlen(p) + 1);		\     a += roundup(strlen(p) + 1, sizeof(u_int64_t));\ }
+value|{			\     COPY32(t, a);				\     COPY32(strlen(s) + 1, a);			\     alpha_copyin(s, a, strlen(s) + 1);		\     a += roundup(strlen(s) + 1, sizeof(u_int64_t));\ }
 end_define
 
 begin_define
@@ -389,6 +389,12 @@ operator|->
 name|m_type
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|m_args
+condition|)
 name|MOD_ARGS
 argument_list|(
 name|addr
