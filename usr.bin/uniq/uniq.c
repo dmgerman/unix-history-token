@@ -806,7 +806,7 @@ name|str
 control|)
 if|if
 condition|(
-name|isspace
+name|isblank
 argument_list|(
 operator|(
 name|unsigned
