@@ -3358,24 +3358,6 @@ case|:
 if|if
 condition|(
 name|nsegs
-operator|>=
-literal|2
-condition|)
-block|{
-name|_rtld_error
-argument_list|(
-literal|"%s: too many PT_LOAD segments"
-argument_list|,
-name|path
-argument_list|)
-expr_stmt|;
-return|return
-name|NULL
-return|;
-block|}
-if|if
-condition|(
-name|nsegs
 operator|==
 literal|0
 condition|)
@@ -3485,7 +3467,7 @@ if|if
 condition|(
 name|nsegs
 operator|<
-literal|2
+literal|1
 condition|)
 block|{
 name|_rtld_error
