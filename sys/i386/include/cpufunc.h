@@ -19,7 +19,14 @@ directive|define
 name|_MACHINE_CPUFUNC_H_
 end_define
 
-begin_define
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_decl_stmt
+name|__BEGIN_DECLS
 define|#
 directive|define
 name|readb
@@ -27,9 +34,6 @@ parameter_list|(
 name|va
 parameter_list|)
 value|(*(volatile u_int8_t *) (va))
-end_define
-
-begin_define
 define|#
 directive|define
 name|readw
@@ -37,9 +41,6 @@ parameter_list|(
 name|va
 parameter_list|)
 value|(*(volatile u_int16_t *) (va))
-end_define
-
-begin_define
 define|#
 directive|define
 name|readl
@@ -47,9 +48,6 @@ parameter_list|(
 name|va
 parameter_list|)
 value|(*(volatile u_int32_t *) (va))
-end_define
-
-begin_define
 define|#
 directive|define
 name|writeb
@@ -59,9 +57,6 @@ parameter_list|,
 name|d
 parameter_list|)
 value|(*(volatile u_int8_t *) (va) = (d))
-end_define
-
-begin_define
 define|#
 directive|define
 name|writew
@@ -71,9 +66,6 @@ parameter_list|,
 name|d
 parameter_list|)
 value|(*(volatile u_int16_t *) (va) = (d))
-end_define
-
-begin_define
 define|#
 directive|define
 name|writel
@@ -83,42 +75,21 @@ parameter_list|,
 name|d
 parameter_list|)
 value|(*(volatile u_int32_t *) (va) = (d))
-end_define
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|__GNUC__
-end_ifdef
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|SMP
-end_ifdef
-
-begin_include
 include|#
 directive|include
 file|<machine/lock.h>
-end_include
-
-begin_comment
 comment|/* XXX */
-end_comment
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|SWTCH_OPTIM_STATS
-end_ifdef
-
-begin_decl_stmt
 specifier|extern
 name|int
 name|tlb_flush_count
@@ -2012,6 +1983,10 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#
