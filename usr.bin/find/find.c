@@ -274,7 +274,7 @@ decl_stmt|;
 name|char
 modifier|*
 modifier|*
-name|argv
+name|argv1
 init|=
 literal|0
 decl_stmt|;
@@ -287,7 +287,7 @@ condition|)
 block|{
 name|p
 operator|=
-name|option
+name|lookup_option
 argument_list|(
 literal|"-print"
 argument_list|)
@@ -303,7 +303,7 @@ argument_list|(
 name|p
 argument_list|,
 operator|&
-name|argv
+name|argv1
 argument_list|)
 expr_stmt|;
 name|tail
@@ -317,7 +317,7 @@ else|else
 block|{
 name|p
 operator|=
-name|option
+name|lookup_option
 argument_list|(
 literal|"("
 argument_list|)
@@ -333,7 +333,7 @@ argument_list|(
 name|p
 argument_list|,
 operator|&
-name|argv
+name|argv1
 argument_list|)
 expr_stmt|;
 name|new
@@ -348,7 +348,7 @@ name|new
 expr_stmt|;
 name|p
 operator|=
-name|option
+name|lookup_option
 argument_list|(
 literal|")"
 argument_list|)
@@ -364,7 +364,7 @@ argument_list|(
 name|p
 argument_list|,
 operator|&
-name|argv
+name|argv1
 argument_list|)
 expr_stmt|;
 name|tail
@@ -379,7 +379,7 @@ name|new
 expr_stmt|;
 name|p
 operator|=
-name|option
+name|lookup_option
 argument_list|(
 literal|"-print"
 argument_list|)
@@ -395,7 +395,7 @@ argument_list|(
 name|p
 argument_list|,
 operator|&
-name|argv
+name|argv1
 argument_list|)
 expr_stmt|;
 name|tail
@@ -478,7 +478,6 @@ name|paths
 decl_stmt|;
 comment|/* array of pathnames to traverse */
 block|{
-specifier|register
 name|FTSENT
 modifier|*
 name|entry

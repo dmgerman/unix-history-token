@@ -87,6 +87,24 @@ directive|include
 file|"find.h"
 end_include
 
+begin_decl_stmt
+name|int
+name|typecompare
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|void
+operator|*
+operator|,
+specifier|const
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* NB: the following table must be sorted lexically. */
 end_comment
@@ -754,7 +772,6 @@ modifier|*
 name|argvp
 decl_stmt|;
 block|{
-specifier|register
 name|OPTION
 modifier|*
 name|p
@@ -778,7 +795,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|option
+name|lookup_option
 argument_list|(
 operator|*
 name|argv
@@ -830,10 +847,11 @@ end_function
 begin_function
 name|OPTION
 modifier|*
-name|option
+name|lookup_option
 parameter_list|(
 name|name
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
@@ -841,21 +859,6 @@ decl_stmt|;
 block|{
 name|OPTION
 name|tmp
-decl_stmt|;
-name|int
-name|typecompare
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|void
-operator|*
-operator|,
-specifier|const
-name|void
-operator|*
-operator|)
-argument_list|)
 decl_stmt|;
 name|tmp
 operator|.
@@ -924,6 +927,7 @@ name|strcmp
 argument_list|(
 operator|(
 operator|(
+specifier|const
 name|OPTION
 operator|*
 operator|)
@@ -934,6 +938,7 @@ name|name
 argument_list|,
 operator|(
 operator|(
+specifier|const
 name|OPTION
 operator|*
 operator|)

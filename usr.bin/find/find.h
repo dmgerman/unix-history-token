@@ -521,6 +521,7 @@ typedef|typedef
 struct|struct
 name|_option
 block|{
+specifier|const
 name|char
 modifier|*
 name|name

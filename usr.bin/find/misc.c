@@ -137,11 +137,9 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|plen
 decl_stmt|;
-specifier|register
 name|char
 name|ch
 decl_stmt|,
@@ -268,7 +266,6 @@ name|queryuser
 parameter_list|(
 name|argv
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 modifier|*

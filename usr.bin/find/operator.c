@@ -76,6 +76,38 @@ directive|include
 file|"find.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|PLAN
+modifier|*
+name|yanknode
+name|__P
+argument_list|(
+operator|(
+name|PLAN
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|PLAN
+modifier|*
+name|yankexpr
+name|__P
+argument_list|(
+operator|(
+name|PLAN
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * yanknode --  *	destructively removes the top from the plan  */
 end_comment
@@ -163,7 +195,6 @@ name|planp
 decl_stmt|;
 comment|/* pointer to top of plan (modified) */
 block|{
-specifier|register
 name|PLAN
 modifier|*
 name|next
@@ -343,13 +374,11 @@ name|plan
 decl_stmt|;
 comment|/* plan with ( ) nodes */
 block|{
-specifier|register
 name|PLAN
 modifier|*
 name|expr
 decl_stmt|;
 comment|/* pointer to next expression */
-specifier|register
 name|PLAN
 modifier|*
 name|tail
@@ -456,19 +485,16 @@ name|plan
 decl_stmt|;
 comment|/* plan to process */
 block|{
-specifier|register
 name|PLAN
 modifier|*
 name|next
 decl_stmt|;
 comment|/* next node being processed */
-specifier|register
 name|PLAN
 modifier|*
 name|node
 decl_stmt|;
 comment|/* temporary node used in f_not processing */
-specifier|register
 name|PLAN
 modifier|*
 name|tail
@@ -707,13 +733,11 @@ name|plan
 decl_stmt|;
 comment|/* plan with ors to be squished */
 block|{
-specifier|register
 name|PLAN
 modifier|*
 name|next
 decl_stmt|;
 comment|/* next node being processed */
-specifier|register
 name|PLAN
 modifier|*
 name|tail

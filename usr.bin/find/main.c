@@ -288,7 +288,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 modifier|*
