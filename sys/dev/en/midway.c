@@ -305,6 +305,10 @@ directive|include
 file|"en.h"
 end_include
 
+begin_comment
+comment|/* XXX for midwayvar.h's NEN */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -355,20 +359,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_if
-if|#
-directive|if
-name|NEN
-operator|>
-literal|0
-operator|||
-operator|!
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
 
 begin_include
 include|#
@@ -17757,15 +17747,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NEN> 0 || !defined(__FreeBSD__) */
-end_comment
 
 end_unit
 
