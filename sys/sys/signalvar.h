@@ -231,7 +231,7 @@ parameter_list|,
 name|signo
 parameter_list|)
 define|\
-value|(set).__bits[_SIG_WORD(signo)] |= _SIG_BIT(signo)
+value|((set).__bits[_SIG_WORD(signo)] |= _SIG_BIT(signo))
 end_define
 
 begin_define
@@ -244,7 +244,7 @@ parameter_list|,
 name|signo
 parameter_list|)
 define|\
-value|(set).__bits[_SIG_WORD(signo)]&= ~_SIG_BIT(signo)
+value|((set).__bits[_SIG_WORD(signo)]&= ~_SIG_BIT(signo))
 end_define
 
 begin_define
@@ -289,7 +289,7 @@ name|SIGISEMPTY
 parameter_list|(
 name|set
 parameter_list|)
-value|__sigisempty(&(set))
+value|(__sigisempty(&(set)))
 end_define
 
 begin_define
@@ -311,7 +311,7 @@ name|set1
 parameter_list|,
 name|set2
 parameter_list|)
-value|__sigseteq(&(set1),&(set2))
+value|(__sigseteq(&(set1),&(set2)))
 end_define
 
 begin_define
@@ -438,7 +438,7 @@ name|sig
 parameter_list|,
 name|osig
 parameter_list|)
-value|osig = (sig).__bits[0]
+value|(osig = (sig).__bits[0])
 end_define
 
 begin_define
