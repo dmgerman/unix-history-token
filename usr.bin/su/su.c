@@ -1963,9 +1963,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
