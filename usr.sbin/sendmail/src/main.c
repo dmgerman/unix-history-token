@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.215 (Berkeley) 11/16/96"
+literal|"@(#)main.c	8.223 (Berkeley) 12/1/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -244,17 +244,14 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|DAEMON
-end_ifdef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
+operator|&&
+operator|!
 name|SMTP
-end_ifndef
+end_if
 
 begin_expr_stmt
 name|ERROR
@@ -264,7 +261,7 @@ operator|%
 operator|%
 name|Cannot
 name|have
-name|daemon
+name|DAEMON
 name|mode
 name|without
 name|SMTP
@@ -275,10 +272,32 @@ operator|%
 name|ERROR
 endif|#
 directive|endif
-comment|/* SMTP */
+comment|/* DAEMON&& !SMTP */
+if|#
+directive|if
+name|SMTP
+operator|&&
+operator|!
+name|QUEUE
+name|ERROR
+operator|%
+operator|%
+operator|%
+operator|%
+name|Cannot
+name|have
+name|SMTP
+name|mode
+name|without
+name|QUEUE
+operator|%
+operator|%
+operator|%
+operator|%
+name|ERROR
 endif|#
 directive|endif
-comment|/* DAEMON */
+comment|/* DAEMON&& !SMTP */
 define|#
 directive|define
 name|MAXCONFIGLEVEL
@@ -406,6 +425,8 @@ name|hp
 decl_stmt|;
 name|bool
 name|nullserver
+init|=
+name|FALSE
 decl_stmt|;
 name|char
 name|jbuf
@@ -2317,8 +2338,9 @@ case|:
 case|case
 name|MD_FGDAEMON
 case|:
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
 name|DAEMON
 name|usrerr
 argument_list|(
@@ -2336,8 +2358,9 @@ comment|/* DAEMON */
 case|case
 name|MD_SMTP
 case|:
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
 name|SMTP
 name|usrerr
 argument_list|(
@@ -2847,8 +2870,8 @@ case|case
 literal|'q'
 case|:
 comment|/* run queue files at intervals */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|QUEUE
 name|FullName
 operator|=
@@ -3878,6 +3901,20 @@ expr_stmt|;
 comment|/* fall through... */
 default|default:
 comment|/* arrange to exit cleanly on hangup signal */
+if|if
+condition|(
+name|setsignal
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|SIG_IGN
+argument_list|)
+operator|==
+operator|(
+name|sigfunc_t
+operator|)
+name|SIG_DFL
+condition|)
 name|setsignal
 argument_list|(
 name|SIGHUP
@@ -4343,21 +4380,6 @@ operator|->
 name|m_flags
 argument_list|)
 expr_stmt|;
-comment|/* propogate some envariables into children */
-name|setuserenv
-argument_list|(
-literal|"ISP"
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-name|setuserenv
-argument_list|(
-literal|"SYSTYPE"
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -4577,8 +4599,8 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|QUEUE
 if|if
 condition|(
@@ -4691,8 +4713,8 @@ case|case
 name|MD_PRINT
 case|:
 comment|/* print the queue */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|QUEUE
 name|dropenvelope
 argument_list|(
@@ -5087,8 +5109,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|QUEUE
 comment|/* 	**  If collecting stuff from the queue, go start doing that. 	*/
 if|if
@@ -5112,9 +5134,14 @@ argument_list|(
 literal|"HOSTALIASES"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|runqueue
 argument_list|(
 name|FALSE
+argument_list|,
+name|Verbose
 argument_list|)
 expr_stmt|;
 name|finis
@@ -5293,17 +5320,22 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|QUEUE
 if|if
 condition|(
 name|queuemode
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|runqueue
 argument_list|(
 name|TRUE
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -5331,8 +5363,8 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|DAEMON
 name|nullserver
 operator|=
@@ -5406,8 +5438,8 @@ endif|#
 directive|endif
 comment|/* DAEMON */
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|SMTP
 comment|/* 	**  If running SMTP protocol, start collecting and executing 	**  commands.  This will never return. 	*/
 if|if
@@ -6428,7 +6460,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"disconnect: In %d Out %d, e=%x\n"
+literal|"disconnect: In %d Out %d, e=%lx\n"
 argument_list|,
 name|fileno
 argument_list|(
@@ -6440,6 +6472,9 @@ argument_list|(
 name|OutChannel
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|e
 argument_list|)
 expr_stmt|;
@@ -7748,6 +7783,43 @@ name|void
 name|sighup
 parameter_list|()
 block|{
+if|if
+condition|(
+name|SaveArgv
+index|[
+literal|0
+index|]
+index|[
+literal|0
+index|]
+operator|!=
+literal|'/'
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|3
+condition|)
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"could not restart: need full path"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|exit
+argument_list|(
+name|EX_OSFILE
+argument_list|)
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|LOG

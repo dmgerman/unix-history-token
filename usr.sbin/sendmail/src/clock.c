@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clock.c	8.13 (Berkeley) 2/21/96"
+literal|"@(#)clock.c	8.16 (Berkeley) 11/27/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -261,7 +261,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"setevent: intvl=%ld, for=%ld, func=%x, arg=%d, ev=%x\n"
+literal|"setevent: intvl=%ld, for=%ld, func=%lx, arg=%d, ev=%lx\n"
 argument_list|,
 name|intvl
 argument_list|,
@@ -269,10 +269,16 @@ name|now
 operator|+
 name|intvl
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|func
 argument_list|,
 name|arg
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ev
 argument_list|)
 expr_stmt|;
@@ -325,8 +331,11 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"clrevent: ev=%x\n"
+literal|"clrevent: ev=%lx\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ev
 argument_list|)
 expr_stmt|;
@@ -560,10 +569,16 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"tick: ev=%x, func=%x, arg=%d, pid=%d\n"
+literal|"tick: ev=%lx, func=%lx, arg=%d, pid=%d\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ev
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ev
 operator|->
 name|ev_func
@@ -666,63 +681,14 @@ argument_list|,
 name|tick
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SIG_UNBLOCK
-comment|/* unblock SIGALRM signal */
-name|sigemptyset
-argument_list|(
-operator|&
-name|ss
-argument_list|)
-expr_stmt|;
-name|sigaddset
-argument_list|(
-operator|&
-name|ss
-argument_list|,
-name|SIGALRM
-argument_list|)
-expr_stmt|;
-name|sigprocmask
-argument_list|(
-name|SIG_UNBLOCK
-argument_list|,
-operator|&
-name|ss
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-if|#
-directive|if
-name|HASSIGSETMASK
-comment|/* reset 4.2bsd signal mask to allow future alarms */
 operator|(
 name|void
 operator|)
-name|sigsetmask
-argument_list|(
-name|sigblock
-argument_list|(
-literal|0
-argument_list|)
-operator|&
-operator|~
-name|sigmask
+name|releasesignal
 argument_list|(
 name|SIGALRM
 argument_list|)
-argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* HASSIGSETMASK */
-endif|#
-directive|endif
-comment|/* SIG_UNBLOCK */
 comment|/* call ev_func */
 name|errno
 operator|=
@@ -841,6 +807,9 @@ name|int
 name|intvl
 decl_stmt|;
 block|{
+name|int
+name|was_held
+decl_stmt|;
 if|if
 condition|(
 name|intvl
@@ -872,6 +841,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|was_held
+operator|=
+name|releasesignal
+argument_list|(
+name|SIGALRM
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|!
@@ -879,6 +855,17 @@ name|SleepDone
 condition|)
 name|pause
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|was_held
+operator|>
+literal|0
+condition|)
+name|blocksignal
+argument_list|(
+name|SIGALRM
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

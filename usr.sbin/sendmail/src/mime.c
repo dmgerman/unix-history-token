@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mime.c	8.49 (Berkeley) 10/30/96"
+literal|"@(#)mime.c	8.51 (Berkeley) 11/24/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -1799,8 +1799,14 @@ name|printf
 argument_list|(
 literal|"mime8to7: %ld high bit(s) in %ld byte(s), cte=%s, type=%s/%s\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|sectionhighbits
 argument_list|,
+operator|(
+name|long
+operator|)
 name|sectionsize
 argument_list|,
 name|cte
@@ -4261,13 +4267,8 @@ modifier|*
 name|obp
 decl_stmt|;
 name|u_char
-name|ch
-decl_stmt|,
 modifier|*
 name|fbufp
-decl_stmt|,
-modifier|*
-name|obufp
 decl_stmt|;
 name|char
 name|buf
@@ -4517,11 +4518,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|int
-name|nchar
-init|=
-literal|0
-decl_stmt|;
 name|int
 name|c1
 decl_stmt|,

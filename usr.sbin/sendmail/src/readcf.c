@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.176 (Berkeley) 11/10/96"
+literal|"@(#)readcf.c	8.181 (Berkeley) 12/1/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -5051,10 +5051,16 @@ name|m
 operator|->
 name|m_maxsize
 argument_list|,
+operator|(
+name|int
+operator|)
 name|m
 operator|->
 name|m_uid
 argument_list|,
+operator|(
+name|int
+operator|)
 name|m
 operator|->
 name|m_gid
@@ -5737,7 +5743,7 @@ literal|"TryNullMXList"
 block|,
 literal|'w'
 block|,
-name|TRUE
+name|FALSE
 block|}
 block|,
 block|{
@@ -6001,7 +6007,7 @@ literal|"DontInitGroups"
 block|,
 name|O_DONTINITGRPS
 block|,
-name|TRUE
+name|FALSE
 block|}
 block|,
 define|#
@@ -7050,8 +7056,9 @@ case|case
 name|SM_DEFER
 case|:
 comment|/* queue only and defer map lookups */
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
 name|QUEUE
 name|syserr
 argument_list|(
@@ -7535,6 +7542,9 @@ name|printf
 argument_list|(
 literal|"_res.options = %x, HasWildcardMX = %d\n"
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|_res
 operator|.
 name|options
@@ -7737,8 +7747,8 @@ case|case
 literal|'O'
 case|:
 comment|/* daemon options */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|DAEMON
 name|setdaemonoptions
 argument_list|(
