@@ -23,21 +23,17 @@ define|#
 directive|define
 name|MSG_MAGIC
 value|0x063062
-name|unsigned
-name|int
+name|u_int
 name|msg_magic
 decl_stmt|;
-name|unsigned
 name|int
 name|msg_size
 decl_stmt|;
 comment|/* size of buffer area */
-name|unsigned
 name|int
 name|msg_bufx
 decl_stmt|;
 comment|/* write pointer */
-name|unsigned
 name|int
 name|msg_bufr
 decl_stmt|;
@@ -81,7 +77,7 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|size_t
+name|int
 name|size
 parameter_list|)
 function_decl|;
