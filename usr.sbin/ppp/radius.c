@@ -2169,6 +2169,15 @@ name|len
 operator|--
 expr_stmt|;
 block|}
+else|else
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"Warning: The MS-CHAP-Error "
+literal|"attribute is mis-formatted.  Compensating\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2301,6 +2310,15 @@ name|len
 operator|--
 expr_stmt|;
 block|}
+else|else
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"Warning: The MS-CHAP2-Success "
+literal|"attribute is mis-formatted.  Compensating\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
