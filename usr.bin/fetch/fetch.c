@@ -1455,8 +1455,10 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 for|for
 control|(
@@ -1615,8 +1617,10 @@ condition|(
 name|nopwd
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 for|for
 control|(
@@ -1656,7 +1660,9 @@ operator|=
 literal|'\0'
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3595,7 +3601,9 @@ name|tmppath
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|r
+operator|)
 return|;
 block|}
 end_function
