@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty_tty.c	7.16 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty_tty.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -34,13 +34,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"tty.h"
+file|"proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|"tty.h"
 end_include
 
 begin_include
