@@ -86,6 +86,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/in.h>
+end_include
+
+begin_comment
+comment|/* N_BADMAG uses ntohl() */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<dirent.h>
 end_include
 
