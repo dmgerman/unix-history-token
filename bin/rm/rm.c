@@ -179,9 +179,9 @@ name|iflag
 decl_stmt|,
 name|Pflag
 decl_stmt|,
-name|Wflag
-decl_stmt|,
 name|vflag
+decl_stmt|,
+name|Wflag
 decl_stmt|,
 name|stdin_ok
 decl_stmt|;
@@ -327,7 +327,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dfiPRrWv"
+literal|"dfiPRrvW"
 argument_list|)
 operator|)
 operator|!=
@@ -392,17 +392,17 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'W'
+literal|'v'
 case|:
-name|Wflag
+name|vflag
 operator|=
 literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'v'
+literal|'W'
 case|:
-name|vflag
+name|Wflag
 operator|=
 literal|1
 expr_stmt|;
@@ -513,6 +513,9 @@ name|flags
 decl_stmt|;
 name|int
 name|rval
+decl_stmt|;
+name|int
+name|e
 decl_stmt|;
 comment|/* 	 * Remove a file hierarchy.  If forcing removal (-f), or interactive 	 * (-i) or can't ask anyway (stdin_ok), don't stat the file. 	 */
 name|needstat
@@ -921,9 +924,6 @@ operator|!
 name|rval
 condition|)
 block|{
-name|int
-name|e
-decl_stmt|;
 comment|/* 			 * If we can't read or search the directory, may still be 			 * able to remove it.  Don't print out the un{read,search}able 			 * message unless the remove fails. 			 */
 switch|switch
 condition|(
@@ -938,9 +938,6 @@ case|:
 case|case
 name|FTS_DNR
 case|:
-if|if
-condition|(
-operator|(
 name|e
 operator|=
 name|rmdir
@@ -949,7 +946,10 @@ name|p
 operator|->
 name|fts_accpath
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|e
 operator|==
 literal|0
 operator|||
@@ -988,10 +988,6 @@ break|break;
 case|case
 name|FTS_W
 case|:
-if|if
-condition|(
-operator|!
-operator|(
 name|e
 operator|=
 name|undelete
@@ -1000,7 +996,12 @@ name|p
 operator|->
 name|fts_accpath
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|e
+operator|==
+literal|0
 operator|||
 operator|(
 name|fflag
@@ -1048,10 +1049,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
 name|e
 operator|=
 name|unlink
@@ -1060,7 +1057,12 @@ name|p
 operator|->
 name|fts_accpath
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|e
+operator|==
+literal|0
 operator|||
 operator|(
 name|fflag
@@ -2123,7 +2125,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rm [-f | -i] [-dPRrWv] file ...\n"
+literal|"usage: rm [-f | -i] [-dPRrvW] file ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
