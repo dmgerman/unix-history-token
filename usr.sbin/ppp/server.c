@@ -101,6 +101,12 @@ directive|include
 file|"server.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"defs.h"
+end_include
+
 begin_decl_stmt
 name|int
 name|server
@@ -156,6 +162,33 @@ literal|"Local: Can't open socket %s: No password "
 literal|"in ppp.secret\n"
 argument_list|,
 name|name
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+if|if
+condition|(
+operator|!
+operator|(
+name|mode
+operator|&
+operator|(
+name|MODE_AUTO
+operator||
+name|MODE_DEDICATED
+operator||
+name|MODE_DIRECT
+operator|)
+operator|)
+condition|)
+block|{
+name|LogPrintf
+argument_list|(
+name|LogERROR
+argument_list|,
+literal|"Local: Can't open socket in interactive mode\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -434,6 +467,33 @@ literal|"Tcp: Can't open socket %d: No password "
 literal|"in ppp.secret\n"
 argument_list|,
 name|port
+argument_list|)
+expr_stmt|;
+return|return
+literal|6
+return|;
+block|}
+if|if
+condition|(
+operator|!
+operator|(
+name|mode
+operator|&
+operator|(
+name|MODE_AUTO
+operator||
+name|MODE_DEDICATED
+operator||
+name|MODE_DIRECT
+operator|)
+operator|)
+condition|)
+block|{
+name|LogPrintf
+argument_list|(
+name|LogERROR
+argument_list|,
+literal|"Tcp: Can't open socket in interactive mode\n"
 argument_list|)
 expr_stmt|;
 return|return
