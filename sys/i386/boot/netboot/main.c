@@ -1564,6 +1564,15 @@ operator|)
 operator|=
 literal|0
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"entry=0x%X.\n\r"
+argument_list|,
+name|head
+operator|.
+name|a_entry
+argument_list|)
+expr_stmt|;
 comment|/* Jump to kernel */
 name|bootinfo
 operator|.
