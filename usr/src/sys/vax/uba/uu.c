@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uu.c	4.8	83/07/07	*/
+comment|/*	uu.c	4.9	83/07/24	*/
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * TU58 DECtape II/DL11 device driver  *  * The TU58 is treated as a block device (only).  Error detection and  * recovery is not very extensive, but sufficient to handle the most  * common errors. It is assumed that the  * TU58 will follow the RSP protocol exactly, very few protocol  * errors are checked for.    */
+comment|/*  * TU58 DECtape II/DL11 device driver  *  * The TU58 is treated as a block device (only).  Error detection and  * recovery is not very extensive, but sufficient to handle the most  * common errors. It is assumed that the TU58 will follow the RSP   * protocol exactly, very few protocol errors are checked for.    *  * To reduce interrupt latency, `options UUDMA' should be specified   * in the config file to make sure the `pseudo-DMA' code in locore.s  * will be compiled into the system. Otherwise overrun errors will   * occur frequently (these errors are not reported).  *  * TODO:  *  * - Add ioctl code to wind/rewind cassette  *  */
 end_comment
 
 begin_include
@@ -158,7 +158,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NTUQ
+name|NUUQ
 value|02
 end_define
 
@@ -389,14 +389,10 @@ begin_decl_stmt
 name|u_char
 name|uunull
 index|[
-literal|4
+literal|2
 index|]
 init|=
 block|{
-literal|0
-block|,
-literal|0
-block|,
 literal|0
 block|,
 literal|0
@@ -500,7 +496,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|char
-name|pcnt
+name|uu_pcnt
 index|[
 name|NUX
 index|]
@@ -789,7 +785,7 @@ argument_list|(
 name|UUIPL
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the other device on this controller 	 * is already active, just return 	 */
+comment|/* 	 * If the other device on this controller 	 * is already active, no need to initialize 	 */
 if|if
 condition|(
 name|uuc
@@ -930,6 +926,10 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Wait for all outstanding IO on this drive  * complete, before closing. If both drives on  * this controller are idle, mark the controller  * `inactive'.  */
+end_comment
+
 begin_macro
 name|uuclose
 argument_list|(
@@ -953,38 +953,189 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|s
+decl_stmt|,
+name|unit
+init|=
+name|UNIT
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 specifier|register
 name|struct
 name|uu_softc
 modifier|*
 name|uuc
-decl_stmt|;
-name|uuc
-operator|=
+init|=
 operator|&
 name|uu_softc
 index|[
-name|UNIT
-argument_list|(
-name|dev
-argument_list|)
+name|unit
 operator|/
 name|NDPC
 index|]
+decl_stmt|;
+name|struct
+name|buf
+modifier|*
+name|bp
+decl_stmt|,
+modifier|*
+name|last
+init|=
+name|NULL
+decl_stmt|;
+name|struct
+name|uudevice
+modifier|*
+name|uuaddr
+init|=
+operator|(
+expr|struct
+name|uudevice
+operator|*
+operator|)
+name|uudinfo
+index|[
+name|unit
+operator|/
+name|NDPC
+index|]
+operator|->
+name|ui_addr
+decl_stmt|;
+name|s
+operator|=
+name|splx
+argument_list|(
+name|UUIPL
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|uu_pcnt
+index|[
+name|unit
+index|]
+condition|)
+name|sleep
+argument_list|(
+operator|&
+name|uu_pcnt
+index|[
+name|unit
+index|]
+argument_list|,
+name|PRIBIO
+argument_list|)
+expr_stmt|;
+comment|/* 	 * No more writes are pending, scan the  	 * buffer queue for oustanding reads from 	 * this unit. 	 */
+for|for
+control|(
+name|bp
+operator|=
+name|uitab
+index|[
+name|unit
+operator|/
+name|NDPC
+index|]
+operator|.
+name|b_actf
+init|;
+name|bp
+condition|;
+name|bp
+operator|=
+name|bp
+operator|->
+name|b_actf
+control|)
+if|if
+condition|(
+name|bp
+operator|->
+name|b_dev
+operator|==
+name|dev
+condition|)
+name|last
+operator|=
+name|bp
+expr_stmt|;
+if|if
+condition|(
+name|last
+condition|)
+name|iowait
+argument_list|(
+name|last
+argument_list|)
 expr_stmt|;
 name|uuc
 operator|->
 name|tu_dopen
 index|[
-name|UNIT
-argument_list|(
-name|dev
-argument_list|)
+name|unit
 operator|&
 name|UMASK
 index|]
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|uuc
+operator|->
+name|tu_dopen
+index|[
+literal|0
+index|]
+operator|&&
+operator|!
+name|uuc
+operator|->
+name|tu_dopen
+index|[
+literal|1
+index|]
+condition|)
+block|{
+name|uuc
+operator|->
+name|tu_flag
+operator|=
+literal|0
+expr_stmt|;
+name|uuaddr
+operator|->
+name|rcs
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 		 * Make sure the device is left in a 		 * known state.... 		 */
+if|if
+condition|(
+name|uuc
+operator|->
+name|tu_state
+operator|!=
+name|TUS_IDLE
+condition|)
+name|uuc
+operator|->
+name|tu_state
+operator|=
+name|TUS_INIT1
+expr_stmt|;
+block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -1082,6 +1233,12 @@ argument_list|(
 name|uunull
 argument_list|)
 expr_stmt|;
+name|uuc
+operator|->
+name|tu_rcnt
+operator|=
+literal|0
+expr_stmt|;
 name|cmd
 operator|->
 name|pk_flag
@@ -1178,30 +1335,26 @@ name|unit
 init|=
 name|UNIT
 argument_list|(
-name|minor
-argument_list|(
 name|bp
 operator|->
 name|b_dev
 argument_list|)
-argument_list|)
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|unit
 operator|>
 name|NUX
-condition|)
-goto|goto
-name|bad
-goto|;
-if|if
-condition|(
+operator|)
+operator|||
+operator|(
 name|bp
 operator|->
 name|b_blkno
 operator|>=
 name|NTUBLK
+operator|)
 condition|)
 goto|goto
 name|bad
@@ -1263,7 +1416,7 @@ condition|)
 name|tu_pee
 argument_list|(
 operator|&
-name|pcnt
+name|uu_pcnt
 index|[
 name|unit
 index|]
@@ -1271,7 +1424,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|av_forw
+name|b_actf
 operator|=
 name|NULL
 expr_stmt|;
@@ -1294,7 +1447,7 @@ name|uutab
 operator|->
 name|b_actl
 operator|->
-name|av_forw
+name|b_actf
 operator|=
 name|bp
 expr_stmt|;
@@ -1413,14 +1566,6 @@ index|[
 name|ctlr
 index|]
 expr_stmt|;
-name|cmd
-operator|=
-operator|&
-name|uucmd
-index|[
-name|ctlr
-index|]
-expr_stmt|;
 if|if
 condition|(
 name|uuc
@@ -1437,6 +1582,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|cmd
+operator|=
+operator|&
+name|uucmd
+index|[
+name|ctlr
+index|]
+expr_stmt|;
 name|uitab
 index|[
 name|ctlr
@@ -1550,13 +1703,12 @@ name|pk_unit
 operator|=
 name|UNIT
 argument_list|(
-name|minor
-argument_list|(
 name|bp
 operator|->
 name|b_dev
 argument_list|)
-argument_list|)
+operator|&
+name|UMASK
 expr_stmt|;
 name|cmd
 operator|->
@@ -1625,7 +1777,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * TU58 receiver interrupt,  * handles whatever condition the  * pseudo DMA routine in locore is   * unable to handle, or, if UUDMA is  * undefined, handle all receiver interrupt  * processing  */
+comment|/*  * TU58 receiver interrupt, handles whatever condition the  * pseudo DMA routine in locore is unable to handle,   * or, if UUDMA is undefined, handle all receiver interrupt  * processing.  */
 end_comment
 
 begin_macro
@@ -1811,6 +1963,21 @@ operator|->
 name|pk_unit
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|UUDEBUG
+else|else
+name|printf
+argument_list|(
+literal|"uu%d: data overrun, recovered\n"
+argument_list|,
+name|data
+operator|->
+name|pk_unit
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|uuc
 operator|->
 name|tu_serrs
@@ -2329,12 +2496,9 @@ name|unit
 operator|=
 name|UNIT
 argument_list|(
-name|minor
-argument_list|(
 name|bp
 operator|->
 name|b_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2360,7 +2524,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" pk_mod %o\n"
+literal|" pk_mod 0%o\n"
 argument_list|,
 name|data
 operator|->
@@ -2387,8 +2551,6 @@ condition|(
 name|data
 operator|->
 name|pk_mod
-operator|!=
-literal|0
 condition|)
 comment|/* soft error */
 name|uuc
@@ -2408,7 +2570,7 @@ name|b_actf
 operator|=
 name|bp
 operator|->
-name|av_forw
+name|b_actf
 expr_stmt|;
 name|bp
 operator|->
@@ -2433,7 +2595,7 @@ condition|)
 name|tu_vee
 argument_list|(
 operator|&
-name|pcnt
+name|uu_pcnt
 index|[
 name|unit
 index|]
@@ -2452,14 +2614,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * Neither data nor end: data was lost 			 * somehow, restart the transfer. 			 */
+comment|/* 			 * Neither data nor end: data was lost 			 * somehow, flush and restart the transfer. 			 */
 name|uuaddr
 operator|->
 name|rcs
 operator|=
 literal|0
 expr_stmt|;
-comment|/* flush the rest */
 name|uu_restart
 argument_list|(
 name|ctlr
@@ -2551,7 +2712,7 @@ name|b_actf
 operator|=
 name|bp
 operator|->
-name|av_forw
+name|b_actf
 expr_stmt|;
 if|if
 condition|(
@@ -2568,7 +2729,7 @@ condition|)
 name|tu_vee
 argument_list|(
 operator|&
-name|pcnt
+name|uu_pcnt
 index|[
 name|unit
 index|]
@@ -2720,6 +2881,8 @@ condition|(
 name|uuc
 operator|->
 name|tu_wcnt
+operator|>
+literal|0
 condition|)
 block|{
 comment|/* still stuff to send, send one byte */
@@ -2765,6 +2928,12 @@ comment|/* 	 * Two nulls have been sent, remove break, and send inits 	 */
 case|case
 name|TUS_INIT1
 case|:
+name|uuc
+operator|->
+name|tu_flag
+operator|=
+literal|0
+expr_stmt|;
 name|uuaddr
 operator|->
 name|tcs
@@ -2857,7 +3026,6 @@ name|tcs
 operator|=
 literal|0
 expr_stmt|;
-comment|/* disable transmitter interrupts */
 name|uuaddr
 operator|->
 name|rcs
@@ -2967,12 +3135,7 @@ name|uuc
 operator|->
 name|tu_wcnt
 operator|=
-sizeof|sizeof
-argument_list|(
-name|data
-operator|->
-name|pk_chksum
-argument_list|)
+literal|2
 expr_stmt|;
 goto|goto
 name|top
@@ -3003,6 +3166,8 @@ condition|(
 name|uuc
 operator|->
 name|tu_count
+operator|>
+literal|0
 condition|)
 block|{
 name|uuc
@@ -3058,7 +3223,6 @@ name|tcs
 operator|=
 literal|0
 expr_stmt|;
-comment|/* disable transm. interrupts */
 break|break;
 comment|/* 	 * Random interrupt 	 */
 case|case
@@ -3137,6 +3301,35 @@ index|[
 name|ctlr
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|uuc
+operator|->
+name|tu_dopen
+index|[
+literal|0
+index|]
+operator|||
+name|uuc
+operator|->
+name|tu_dopen
+index|[
+literal|1
+index|]
+condition|)
+name|active
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|uuc
+operator|->
+name|tu_flag
+operator|==
+literal|0
+condition|)
+comment|/* 			 * If no read is in progress 			 * just skip 			 */
+continue|continue;
 name|ui
 operator|=
 name|uudinfo
@@ -3165,72 +3358,11 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|uuc
-operator|->
-name|tu_dopen
-index|[
-literal|0
-index|]
-operator|==
-literal|0
-operator|)
-operator|&&
-operator|(
-name|uuc
-operator|->
-name|tu_dopen
-index|[
-literal|1
-index|]
-operator|==
-literal|0
-operator|)
-operator|&&
-operator|(
-name|uutab
-operator|->
-name|b_active
-operator|==
-literal|0
-operator|)
-condition|)
-block|{
-comment|/* 			 * If both devices on this controller have 			 * been closed and the request queue is 			 * empty, mark ths controller not active 			 */
-name|uuc
-operator|->
-name|tu_flag
-operator|=
-literal|0
-expr_stmt|;
-name|uuaddr
-operator|->
-name|rcs
-operator|=
-literal|0
-expr_stmt|;
-continue|continue;
-block|}
-name|active
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|uuc
-operator|->
-name|tu_flag
-condition|)
 name|uuc
 operator|->
 name|tu_flag
 operator|++
-expr_stmt|;
-if|if
-condition|(
-name|uuc
-operator|->
-name|tu_flag
-operator|<=
+operator|<
 literal|40
 condition|)
 continue|continue;
@@ -3248,7 +3380,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|notdef
+name|UUDEBUG
 name|printf
 argument_list|(
 literal|"%X %X %X %X %X %X %X\n"
@@ -3284,18 +3416,18 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|uuc
-operator|->
-name|tu_flag
-operator|=
-literal|0
-expr_stmt|;
 name|s
 operator|=
 name|splx
 argument_list|(
 name|UUIPL
 argument_list|)
+expr_stmt|;
+name|uuc
+operator|->
+name|tu_flag
+operator|=
+literal|0
 expr_stmt|;
 name|i
 operator|=
@@ -3392,16 +3524,13 @@ condition|)
 name|tu_vee
 argument_list|(
 operator|&
-name|pcnt
+name|uu_pcnt
 index|[
 name|UNIT
-argument_list|(
-name|minor
 argument_list|(
 name|bp
 operator|->
 name|b_dev
-argument_list|)
 argument_list|)
 index|]
 argument_list|)
@@ -3662,6 +3791,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Make sure this incredibly slow device  * doesn't eat up all the buffers in the  * system by putting the requesting process  * (remember: this device is 'single-user')  * to sleep if the write-behind queue grows  * larger than NUUQ.  */
+end_comment
+
 begin_macro
 name|tu_pee
 argument_list|(
@@ -3697,9 +3830,8 @@ operator|*
 name|cp
 operator|)
 operator|>
-name|NTUQ
+name|NUUQ
 condition|)
-block|{
 name|sleep
 argument_list|(
 name|cp
@@ -3707,7 +3839,6 @@ argument_list|,
 name|PRIBIO
 argument_list|)
 expr_stmt|;
-block|}
 name|splx
 argument_list|(
 name|s
@@ -3751,15 +3882,13 @@ operator|*
 name|cp
 operator|)
 operator|<=
-name|NTUQ
+name|NUUQ
 condition|)
-block|{
 name|wakeup
 argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
-block|}
 name|splx
 argument_list|(
 name|s
@@ -3809,11 +3938,6 @@ return|;
 block|}
 end_block
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_macro
 name|uu_restart
 argument_list|(
@@ -3860,6 +3984,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
