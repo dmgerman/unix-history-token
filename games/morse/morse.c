@@ -1299,7 +1299,7 @@ define|#
 directive|define
 name|USAGE
 define|\
-value|"usage: morse [-elps] [-d device] [-w speed] [-f frequency] [string ...]\n"
+value|"usage: morse [-eps] [-d device] [-w speed] [-f frequency] [string ...]\n"
 end_define
 
 begin_endif
