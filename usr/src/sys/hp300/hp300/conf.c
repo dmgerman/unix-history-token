@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *      @(#)conf.c	7.12 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *      @(#)conf.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -973,36 +973,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_include
-include|#
-directive|include
-file|"clock.h"
-end_include
-
-begin_expr_stmt
-name|cdev_decl
-argument_list|(
-name|clock
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* open, close, ioctl, map -- XXX should be a map device */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|cdev_clock_init
-parameter_list|(
-name|c
-parameter_list|,
-name|n
-parameter_list|)
-value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), (dev_type_read((*))) nullop, \ 	(dev_type_write((*))) nullop, dev_init(c,n,ioctl), \ 	(dev_type_stop((*))) enodev, (dev_type_reset((*))) nullop, 0, \ 	(dev_type_select((*))) nullop, dev_init(c,n,map), 0 }
-end_define
-
 begin_expr_stmt
 name|cdev_decl
 argument_list|(
@@ -1228,14 +1198,10 @@ name|cd
 argument_list|)
 block|,
 comment|/* 17: concatenated disk */
-name|cdev_clock_init
-argument_list|(
-name|NCLOCK
-argument_list|,
-name|clock
-argument_list|)
+name|cdev_notdef
+argument_list|()
 block|,
-comment|/* 18: mapped clock */
+comment|/* 18 */
 name|cdev_vn_init
 argument_list|(
 name|NVN
