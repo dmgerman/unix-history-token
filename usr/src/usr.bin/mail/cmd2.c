@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd2.c	2.3 %G%"
+literal|"@(#)cmd2.c	2.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -313,13 +313,81 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Save the indicated messages at the end of the passed file name.  */
+comment|/*  * Save a message in a file.  Mark the message as saved  * so we can discard when the user quits.  */
 end_comment
 
 begin_macro
 name|save
 argument_list|(
 argument|str
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+name|str
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+return|return
+operator|(
+name|save1
+argument_list|(
+name|str
+argument_list|,
+literal|1
+argument_list|)
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Copy a message to a file without affected its saved-ness  */
+end_comment
+
+begin_macro
+name|copycmd
+argument_list|(
+argument|str
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+name|str
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+return|return
+operator|(
+name|save1
+argument_list|(
+name|str
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Save/copy the indicated messages at the end of the passed file name.  * If mark is true, mark the message "saved."  */
+end_comment
+
+begin_macro
+name|save1
+argument_list|(
+argument|str
+argument_list|,
+argument|mark
 argument_list|)
 end_macro
 
@@ -351,6 +419,9 @@ name|file
 decl_stmt|,
 modifier|*
 name|disp
+decl_stmt|,
+modifier|*
+name|cmd
 decl_stmt|;
 name|int
 name|f
@@ -372,6 +443,14 @@ name|struct
 name|stat
 name|statb
 decl_stmt|;
+name|cmd
+operator|=
+name|mark
+condition|?
+literal|"save"
+else|:
+literal|"copy"
+expr_stmt|;
 name|msgvec
 operator|=
 operator|(
@@ -438,7 +517,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"No messages to save.\n"
+literal|"No messages to %s.\n"
+argument_list|,
+name|cmd
 argument_list|)
 expr_stmt|;
 return|return
@@ -639,6 +720,10 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mark
+condition|)
 name|mp
 operator|->
 name|m_flag
