@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)patch.c	5.5 (Berkeley) %G%"
+literal|"@(#)patch.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -626,6 +626,22 @@ end_decl_stmt
 
 begin_decl_stmt
 name|bool
+name|noreverse
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|skip_this_patch
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
 name|usepath
 init|=
 name|FALSE
@@ -1224,6 +1240,31 @@ operator|!
 name|reverse
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|noreverse
+condition|)
+block|{
+name|pch_swap
+argument_list|()
+expr_stmt|;
+comment|/* put it back to normal */
+name|reverse
+operator|=
+operator|!
+name|reverse
+expr_stmt|;
+name|say
+argument_list|(
+literal|"Ignoring previously applied (or reversed) patch.\n"
+argument_list|)
+expr_stmt|;
+name|skip_this_patch
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 else|else
 block|{
 name|say
@@ -1253,6 +1294,8 @@ name|Null
 argument_list|(
 name|LINENUM
 argument_list|)
+operator|||
+name|skip_this_patch
 condition|)
 block|{
 name|abort_hunk
@@ -1496,6 +1539,10 @@ name|Nullch
 expr_stmt|;
 block|}
 name|reverse
+operator|=
+name|FALSE
+expr_stmt|;
+name|skip_this_patch
 operator|=
 name|FALSE
 expr_stmt|;
@@ -1810,6 +1857,14 @@ case|case
 literal|'R'
 case|:
 name|reverse
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'N'
+case|:
+name|noreverse
 operator|=
 name|TRUE
 expr_stmt|;
@@ -6092,7 +6147,7 @@ condition|(
 name|no_input_file
 condition|)
 block|{
-if|if
+while|while
 condition|(
 name|filearg
 index|[
@@ -6118,7 +6173,6 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
 if|if
 condition|(
 name|verbose
@@ -7917,6 +7971,27 @@ block|{
 case|case
 literal|'*'
 case|:
+comment|/* another hunk */
+case|case
+literal|'d'
+case|:
+comment|/* another hunk in a different file */
+case|case
+literal|'B'
+case|:
+comment|/* ditto */
+case|case
+literal|'C'
+case|:
+comment|/* ditto */
+case|case
+literal|'F'
+case|:
+comment|/* ditto */
+case|case
+literal|'O'
+case|:
+comment|/* ditto */
 if|if
 condition|(
 name|strnEQ
@@ -7924,6 +7999,51 @@ argument_list|(
 name|buf
 argument_list|,
 literal|"********"
+argument_list|,
+literal|8
+argument_list|)
+operator|||
+name|strnEQ
+argument_list|(
+name|buf
+argument_list|,
+literal|"diff"
+argument_list|,
+literal|4
+argument_list|)
+operator|||
+name|strnEQ
+argument_list|(
+name|buf
+argument_list|,
+literal|"Binary files "
+argument_list|,
+literal|13
+argument_list|)
+operator|||
+name|strnEQ
+argument_list|(
+name|buf
+argument_list|,
+literal|"Files "
+argument_list|,
+literal|6
+argument_list|)
+operator|||
+name|strnEQ
+argument_list|(
+name|buf
+argument_list|,
+literal|"Common subdirectories: "
+argument_list|,
+literal|23
+argument_list|)
+operator|||
+name|strnEQ
+argument_list|(
+name|buf
+argument_list|,
+literal|"Only in "
 argument_list|,
 literal|8
 argument_list|)
@@ -8458,32 +8578,6 @@ name|filldst
 operator|++
 expr_stmt|;
 block|}
-name|assert
-argument_list|(
-name|fillsrc
-operator|==
-name|p_end
-operator|+
-literal|1
-operator|||
-name|fillsrc
-operator|==
-name|repl_beginning
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|filldst
-operator|==
-name|p_end
-operator|+
-literal|1
-operator|||
-name|filldst
-operator|==
-name|repl_beginning
-argument_list|)
-expr_stmt|;
 block|}
 name|p_repl_lines
 operator|=
