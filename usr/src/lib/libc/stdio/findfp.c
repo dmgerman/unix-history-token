@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)findfp.c	5.1 (Berkeley) %G%"
+literal|"@(#)findfp.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,6 +30,19 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -273,11 +286,17 @@ name|iov
 operator|>=
 name|endglue
 condition|)
+block|{
+name|errno
+operator|=
+name|EMFILE
+expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+block|}
 if|if
 condition|(
 operator|*
