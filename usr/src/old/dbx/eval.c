@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)eval.c	5.1 (Berkeley) %G%"
+literal|"@(#)eval.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6172,6 +6172,38 @@ begin_comment
 comment|/*  * Send a message to the current support person.  */
 end_comment
 
+begin_decl_stmt
+name|ifdef
+name|MAINTAINER
+specifier|static
+name|char
+name|maintainer
+index|[]
+init|=
+name|MAINTAINER
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|static
+name|char
+name|maintainer
+index|[]
+init|=
+literal|""
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|public
 name|gripe
@@ -6200,6 +6232,23 @@ index|[
 literal|100
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|maintainer
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+block|{
+name|puts
+argument_list|(
+literal|"Gripes not supported at this site.  Sorry."
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|puts
 argument_list|(
 literal|"Type control-D to end your message.  Be sure to include"
@@ -6247,7 +6296,7 @@ literal|"-s"
 argument_list|,
 name|subject
 argument_list|,
-name|MAINTAINER
+name|maintainer
 argument_list|,
 name|nil
 argument_list|)
