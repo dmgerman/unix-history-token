@@ -502,6 +502,7 @@ goto|;
 block|}
 block|}
 comment|/* 	 * If accounting was previously enabled, kill the old space-watcher, 	 * close the file, and (if no new file was specified, leave). 	 */
+comment|/* 	 * XXX arr: Should not hold lock over vnode operation. 	 */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -597,9 +598,17 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|acct_mtx
+argument_list|)
+expr_stmt|;
 goto|goto
 name|done2
 goto|;
+block|}
 comment|/* 	 * Save the new accounting file vnode, and schedule the new 	 * free space watcher. 	 */
 name|acctp
 operator|=
@@ -628,6 +637,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|acct_mtx
+argument_list|)
+expr_stmt|;
 name|acctwatch
 argument_list|(
 name|NULL
@@ -635,12 +650,6 @@ argument_list|)
 expr_stmt|;
 name|done2
 label|:
-name|mtx_unlock
-argument_list|(
-operator|&
-name|acct_mtx
-argument_list|)
-expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -1372,6 +1381,7 @@ operator|&
 name|acct_mtx
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX arr: Need to fix the issue of holding acct_mtx over 	 * the below vnode operations. 	 */
 if|if
 condition|(
 name|savacctp
@@ -1490,7 +1500,15 @@ name|acctp
 operator|==
 name|NULLVP
 condition|)
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|acct_mtx
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 if|if
 condition|(
 name|acctp
