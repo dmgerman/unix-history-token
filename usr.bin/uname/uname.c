@@ -272,10 +272,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
-name|char
-modifier|*
-name|prefix
+name|int
+name|space
 decl_stmt|;
 end_decl_stmt
 
@@ -298,16 +296,8 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|;
-name|prefix
-operator|=
-literal|""
-expr_stmt|;
 name|setup_get
 argument_list|()
-expr_stmt|;
-name|flags
-operator|=
-literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -453,7 +443,7 @@ parameter_list|,
 name|var
 parameter_list|)
 define|\
-value|do {						\ 	if ((var = getenv("UNAME_" opt)) == NULL) {	\ 		get_##var = native_##var;	\ 	} else {				\ 		get_##var = (get_t)NULL;	\ 	}					\ } while (0)
+value|do {							\ 	if ((var = getenv("UNAME_" opt)) == NULL) {	\ 		get_##var = native_##var;		\ 	} else {					\ 		get_##var = (get_t)NULL;		\ 	}						\ } while (0)
 end_define
 
 begin_function
@@ -520,7 +510,7 @@ parameter_list|,
 name|var
 parameter_list|)
 define|\
-value|if ((flags& flag) == flag) {		\ 		if (get_##var != NULL)		\ 			(*get_##var)();		\ 		printf("%s%s", prefix, var);	\ 		prefix = " ";			\ 	}
+value|if ((flags& flag) == flag) {		\ 		if (space)			\ 			printf(" ");		\ 		else				\ 			space++;		\ 		if (get_##var != NULL)		\ 			(*get_##var)();		\ 		printf("%s", var);		\ 	}
 end_define
 
 begin_function
