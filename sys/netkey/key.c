@@ -19494,6 +19494,10 @@ continue|continue;
 block|}
 block|}
 block|}
+comment|/* invalidate all cached SPD pointers on pcb */
+name|ipsec_invalpcbcacheall
+argument_list|()
+expr_stmt|;
 block|}
 comment|/* SAD */
 block|{
