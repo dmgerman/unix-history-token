@@ -743,7 +743,7 @@ if|if
 condition|(
 name|tcgetattr
 argument_list|(
-literal|0
+name|STDOUT_FILENO
 argument_list|,
 operator|&
 name|ts
@@ -772,7 +772,7 @@ name|NOKERNINFO
 expr_stmt|;
 name|tcsetattr
 argument_list|(
-literal|0
+name|STDOUT_FILENO
 argument_list|,
 name|TCSANOW
 argument_list|,
@@ -3894,7 +3894,7 @@ name|reset_kerninfo
 operator|&&
 name|tcgetattr
 argument_list|(
-literal|0
+name|STDOUT_FILENO
 argument_list|,
 operator|&
 name|ts
@@ -3913,7 +3913,7 @@ name|NOKERNINFO
 expr_stmt|;
 name|tcsetattr
 argument_list|(
-literal|0
+name|STDOUT_FILENO
 argument_list|,
 name|TCSANOW
 argument_list|,
