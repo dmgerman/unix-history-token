@@ -349,7 +349,8 @@ name|isfinite
 parameter_list|(
 name|x
 parameter_list|)
-value|((fpclassify(x)& (FP_INFINITE|FP_NAN)) == 0)
+define|\
+value|((sizeof (x) == sizeof (float)) ? __isfinitef(x)	\     : (sizeof (x) == sizeof (double)) ? __isfinite(x)	\     : __isfinitel(x))
 end_define
 
 begin_define
@@ -359,7 +360,8 @@ name|isinf
 parameter_list|(
 name|x
 parameter_list|)
-value|(fpclassify(x) == FP_INFINITE)
+define|\
+value|((sizeof (x) == sizeof (float)) ? __isinff(x)	\     : (sizeof (x) == sizeof (double)) ? isinf(x)	\     : __isinfl(x))
 end_define
 
 begin_define
@@ -369,7 +371,8 @@ name|isnan
 parameter_list|(
 name|x
 parameter_list|)
-value|(fpclassify(x) == FP_NAN)
+define|\
+value|((sizeof (x) == sizeof (float)) ? isnanf(x)		\     : (sizeof (x) == sizeof (double)) ? isnan(x)	\     : __isnanl(x))
 end_define
 
 begin_define
@@ -379,7 +382,8 @@ name|isnormal
 parameter_list|(
 name|x
 parameter_list|)
-value|(fpclassify(x) == FP_NORMAL)
+define|\
+value|((sizeof (x) == sizeof (float)) ? __isnormalf(x)	\     : (sizeof (x) == sizeof (double)) ? __isnormal(x)	\     : __isnormall(x))
 end_define
 
 begin_ifdef
@@ -873,16 +877,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|isnanf
-parameter_list|(
-name|x
-parameter_list|)
-value|isnan(x)
-end_define
-
 begin_if
 if|#
 directive|if
@@ -1008,6 +1002,100 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|__fpclassifyl
+argument_list|(
+name|long
+name|double
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|__isfinitef
+argument_list|(
+name|float
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|__isfinite
+argument_list|(
+name|double
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|__isfinitel
+argument_list|(
+name|long
+name|double
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|__isinff
+argument_list|(
+name|float
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|__isinfl
+argument_list|(
+name|long
+name|double
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|__isnanl
+argument_list|(
+name|long
+name|double
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|__isnormalf
+argument_list|(
+name|float
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|__isnormal
+argument_list|(
+name|double
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|__isnormall
 argument_list|(
 name|long
 name|double
@@ -1383,6 +1471,36 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_macro
+name|int
+argument_list|(
+argument|isinf
+argument_list|)
+end_macro
+
+begin_expr_stmt
+operator|(
+name|double
+operator|)
+name|__pure2
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|int
+argument_list|(
+argument|isnan
+argument_list|)
+end_macro
+
+begin_expr_stmt
+operator|(
+name|double
+operator|)
+name|__pure2
+expr_stmt|;
+end_expr_stmt
+
 begin_function_decl
 name|double
 name|lgamma
@@ -1675,6 +1793,16 @@ name|int
 name|finite
 argument_list|(
 name|double
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|isnanf
+argument_list|(
+name|float
 argument_list|)
 name|__pure2
 decl_stmt|;
