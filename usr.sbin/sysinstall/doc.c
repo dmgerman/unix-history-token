@@ -250,7 +250,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|strcmp
+name|strstr
 argument_list|(
 name|str
 argument_list|,
@@ -265,7 +265,7 @@ elseif|else
 if|if
 condition|(
 operator|!
-name|strcmp
+name|strstr
 argument_list|(
 name|str
 argument_list|,
@@ -285,7 +285,7 @@ elseif|else
 if|if
 condition|(
 operator|!
-name|strcmp
+name|strstr
 argument_list|(
 name|str
 argument_list|,
@@ -324,7 +324,7 @@ elseif|else
 if|if
 condition|(
 operator|!
-name|strcmp
+name|strstr
 argument_list|(
 name|str
 argument_list|,
