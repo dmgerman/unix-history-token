@@ -1385,6 +1385,14 @@ name|wcd
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|bufq_init
+argument_list|(
+operator|&
+name|t
+operator|->
+name|buf_queue
+argument_list|)
+expr_stmt|;
 name|t
 operator|->
 name|ata
