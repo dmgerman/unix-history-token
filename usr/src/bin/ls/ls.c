@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ls.c	4.20 (Berkeley) %G%"
+literal|"@(#)ls.c	4.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -215,6 +215,19 @@ literal|"."
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|winsize
+name|win
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|twidth
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|struct
 name|afile
@@ -383,6 +396,10 @@ name|now
 operator|+=
 literal|60
 expr_stmt|;
+name|twidth
+operator|=
+literal|80
+expr_stmt|;
 if|if
 condition|(
 name|isatty
@@ -407,6 +424,37 @@ argument_list|,
 operator|&
 name|sgbuf
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+literal|1
+argument_list|,
+name|TIOCGWINSZ
+argument_list|,
+operator|&
+name|win
+argument_list|)
+operator|!=
+operator|-
+literal|1
+condition|)
+name|twidth
+operator|=
+operator|(
+name|win
+operator|.
+name|ws_col
+operator|==
+literal|0
+condition|?
+literal|80
+else|:
+name|win
+operator|.
+name|ws_col
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -2130,7 +2178,7 @@ literal|2
 expr_stmt|;
 name|columns
 operator|=
-literal|80
+name|twidth
 operator|/
 name|width
 expr_stmt|;
