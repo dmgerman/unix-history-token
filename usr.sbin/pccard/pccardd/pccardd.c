@@ -769,7 +769,7 @@ decl_stmt|;
 define|#
 directive|define
 name|COM_OPTS
-value|":dvf:s:i:z"
+value|":Idvf:s:i:z"
 name|bzero
 argument_list|(
 name|irq_arg
@@ -779,6 +779,10 @@ argument_list|(
 name|irq_arg
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|use_kern_irq
+operator|=
+literal|1
 expr_stmt|;
 name|debug_level
 operator|=
@@ -818,6 +822,14 @@ condition|(
 name|count
 condition|)
 block|{
+case|case
+literal|'I'
+case|:
+name|use_kern_irq
+operator|=
+literal|0
+expr_stmt|;
+break|break;
 case|case
 literal|'d'
 case|:
