@@ -15,12 +15,6 @@ directive|define
 name|_NETNCP_NCP_CONN_H_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET
-end_ifdef
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -38,17 +32,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPX
-end_ifdef
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -60,11 +43,6 @@ include|#
 directive|include
 file|<netipx/ipx.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -104,7 +82,7 @@ begin_define
 define|#
 directive|define
 name|NCPFL_SOCONN
-value|0x01
+value|0x0001
 end_define
 
 begin_comment
@@ -115,7 +93,7 @@ begin_define
 define|#
 directive|define
 name|NCPFL_ATTACHED
-value|0x02
+value|0x0002
 end_define
 
 begin_comment
@@ -126,7 +104,7 @@ begin_define
 define|#
 directive|define
 name|NCPFL_LOGGED
-value|0x04
+value|0x0004
 end_define
 
 begin_comment
@@ -137,7 +115,7 @@ begin_define
 define|#
 directive|define
 name|NCPFL_INVALID
-value|0x08
+value|0x0008
 end_define
 
 begin_comment
@@ -148,7 +126,7 @@ begin_define
 define|#
 directive|define
 name|NCPFL_INTR
-value|0x10
+value|0x0010
 end_define
 
 begin_comment
@@ -159,7 +137,7 @@ begin_define
 define|#
 directive|define
 name|NCPFL_RESTORING
-value|0x20
+value|0x0020
 end_define
 
 begin_comment
@@ -170,7 +148,7 @@ begin_define
 define|#
 directive|define
 name|NCPFL_PERMANENT
-value|0x40
+value|0x0040
 end_define
 
 begin_comment
@@ -181,11 +159,33 @@ begin_define
 define|#
 directive|define
 name|NCPFL_PRIMARY
-value|0x80
+value|0x0080
 end_define
 
 begin_comment
 comment|/* have meaning only for owner */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NCPFL_WASATTACHED
+value|0x0100
+end_define
+
+begin_comment
+comment|/* there was at least one successfull connect */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NCPFL_WASLOGGED
+value|0x0200
+end_define
+
+begin_comment
+comment|/* there was at least one successfull login */
 end_comment
 
 begin_define
@@ -338,24 +338,14 @@ name|struct
 name|sockaddr
 name|addr
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|IPX
 name|struct
 name|sockaddr_ipx
 name|ipxaddr
 decl_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|INET
 name|struct
 name|sockaddr_in
 name|inaddr
 decl_stmt|;
-endif|#
-directive|endif
 block|}
 name|addr
 union|;
@@ -668,12 +658,6 @@ modifier|*
 name|ucred
 decl_stmt|;
 comment|/* usr currently operates */
-name|struct
-name|ncp_rq
-modifier|*
-name|nc_rq
-decl_stmt|;
-comment|/* current request */
 comment|/* Fields used to process ncp requests */
 name|int
 name|connid
@@ -730,36 +714,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|ncp_conn_signwanted
-parameter_list|(
-name|conn
-parameter_list|)
-value|((conn)->flags& NCPFL_SIGNWANTED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ncp_conn_valid
-parameter_list|(
-name|conn
-parameter_list|)
-value|((conn->flags& NCPFL_INVALID) == 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ncp_conn_invalidate
-parameter_list|(
-name|conn
-parameter_list|)
-value|{conn->flags |= NCPFL_INVALID;}
-end_define
-
 begin_function_decl
 name|int
 name|ncp_conn_init
@@ -782,6 +736,11 @@ begin_function_decl
 name|int
 name|ncp_conn_alloc
 parameter_list|(
+name|struct
+name|ncp_conn_args
+modifier|*
+name|cap
+parameter_list|,
 name|struct
 name|proc
 modifier|*
@@ -1122,6 +1081,18 @@ name|struct
 name|ncp_conn_stat
 modifier|*
 name|ncs
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ncp_conn_reconnect
+parameter_list|(
+name|struct
+name|ncp_conn
+modifier|*
+name|ncp
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -53,22 +53,12 @@ end_struct_decl
 
 begin_function_decl
 name|int
-name|ncp_sock_connect_ipx
+name|ncp_sock_connect
 parameter_list|(
 name|struct
 name|ncp_conn
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ncp_sock_connect_in
-parameter_list|(
-name|struct
-name|ncp_conn
-modifier|*
+name|ncp
 parameter_list|)
 function_decl|;
 end_function_decl
