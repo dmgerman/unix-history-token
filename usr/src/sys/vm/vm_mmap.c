@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_mmap.c 1.6 91/10/21$  *  *	@(#)vm_mmap.c	7.24 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_mmap.c 1.6 91/10/21$  *  *	@(#)vm_mmap.c	7.25 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -632,6 +632,14 @@ name|flags
 decl_stmt|,
 name|error
 decl_stmt|;
+name|prot
+operator|=
+name|uap
+operator|->
+name|prot
+operator|&
+name|VM_PROT_ALL
+expr_stmt|;
 name|flags
 operator|=
 name|uap
@@ -663,8 +671,6 @@ name|uap
 operator|->
 name|len
 argument_list|,
-name|uap
-operator|->
 name|prot
 argument_list|,
 name|flags
@@ -709,6 +715,9 @@ name|PAGE_MASK
 operator|)
 operator|)
 operator|||
+operator|(
+name|ssize_t
+operator|)
 name|uap
 operator|->
 name|len
@@ -829,7 +838,6 @@ operator|+
 name|MAXDSIZ
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we are mapping a file we need to check various 	 * file/vnode related things. 	 */
 if|if
 condition|(
 name|flags
@@ -837,6 +845,7 @@ operator|&
 name|MAP_ANON
 condition|)
 block|{
+comment|/* 		 * Mapping blank space is trivial. 		 */
 name|handle
 operator|=
 name|NULL
@@ -848,7 +857,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Mapping file, get fp for validation. 		 * Obtain vnode and make sure it is of appropriate type 		 */
+comment|/* 		 * Mapping file, get fp for validation. 		 * Obtain vnode and make sure it is of appropriate type. 		 */
 if|if
 condition|(
 operator|(
@@ -927,70 +936,12 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* 		 * Ensure that file protection and desired protection 		 * are compatible.  Note that we only worry about writability 		 * if mapping is shared. 		 */
-if|if
-condition|(
-operator|(
-name|uap
-operator|->
-name|prot
-operator|&
-name|PROT_READ
-operator|)
-operator|&&
-operator|(
-name|fp
-operator|->
-name|f_flag
-operator|&
-name|FREAD
-operator|)
-operator|==
-literal|0
-operator|||
-operator|(
-operator|(
-name|flags
-operator|&
-name|MAP_SHARED
-operator|)
-operator|&&
-operator|(
-name|uap
-operator|->
-name|prot
-operator|&
-name|PROT_WRITE
-operator|)
-operator|&&
-operator|(
-name|fp
-operator|->
-name|f_flag
-operator|&
-name|FWRITE
-operator|)
-operator|==
-literal|0
-operator|)
-condition|)
-return|return
-operator|(
-name|EACCES
-operator|)
-return|;
-name|handle
-operator|=
-operator|(
-name|caddr_t
-operator|)
-name|vp
-expr_stmt|;
-comment|/* 		 * Set maximum protection as dictated by the open file. 		 * XXX use the vnode instead?  Problem is: what credentials 		 * do we use for determination?  What if proc does a setuid? 		 */
+comment|/* 		 * Ensure that file and memory protections are compatible. 		 * Note that we only worry about writability if mapping is 		 * shared; in this case, current and max prot are dictated 		 * by the open file. 		 * XXX use the vnode instead?  Problem is: what credentials 		 * do we use for determination?  What if proc does a setuid? 		 */
 name|maxprot
 operator|=
-literal|0
+name|VM_PROT_EXECUTE
 expr_stmt|;
+comment|/* ??? */
 if|if
 condition|(
 name|fp
@@ -1002,9 +953,26 @@ condition|)
 name|maxprot
 operator||=
 name|VM_PROT_READ
-operator||
-name|VM_PROT_EXECUTE
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|prot
+operator|&
+name|PROT_READ
+condition|)
+return|return
+operator|(
+name|EACCES
+operator|)
+return|;
+if|if
+condition|(
+name|flags
+operator|&
+name|MAP_SHARED
+condition|)
+block|{
 if|if
 condition|(
 name|fp
@@ -1017,15 +985,32 @@ name|maxprot
 operator||=
 name|VM_PROT_WRITE
 expr_stmt|;
-block|}
-name|prot
-operator|=
-name|uap
-operator|->
+elseif|else
+if|if
+condition|(
 name|prot
 operator|&
-name|VM_PROT_ALL
+name|PROT_WRITE
+condition|)
+return|return
+operator|(
+name|EACCES
+operator|)
+return|;
+block|}
+else|else
+name|maxprot
+operator||=
+name|VM_PROT_WRITE
 expr_stmt|;
+name|handle
+operator|=
+operator|(
+name|caddr_t
+operator|)
+name|vp
+expr_stmt|;
+block|}
 name|error
 operator|=
 name|vm_mmap
