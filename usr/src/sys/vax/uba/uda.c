@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uda.c	4.19	83/02/23	*/
+comment|/*	uda.c	4.20	83/02/23	*/
 end_comment
 
 begin_include
@@ -490,6 +490,10 @@ index|[]
 init|=
 block|{
 literal|0772150
+block|,
+literal|0772550
+block|,
+literal|0777550
 block|,
 literal|0
 block|}
