@@ -2523,6 +2523,12 @@ condition|)
 return|return
 name|ENXIO
 return|;
+name|dev
+operator|->
+name|si_bsize_phys
+operator|=
+literal|2048
+expr_stmt|;
 if|if
 condition|(
 operator|!
