@@ -54,7 +54,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * User telnet program, modified for use by tn3270.c.  *  * Many of the FUNCTIONAL changes in this newest version of TELNET  * were suggested by Dave Borman of Cray Research, Inc.  *  * Other changes in the tn3270 side come from Alan Crosswell (Columbia),  * Bob Braden (ISI), Steve Jacobson (Berkeley), and Cliff Frost (Berkeley).  *  * This code is common between telnet(1c) and tn3270(1c).  There are the  * following defines used to generate the various versions:  *  *	TN3270		- 	This is to be linked with tn3270.  *  *	DEBUG		-	Allow for some extra debugging operations.  *  *	NOT43		-	Allows the program to compile and run on  *				a 4.2BSD system.  *  *	PUTCHAR		-	Within tn3270, on a NOT43 system,  *				allows the use of the 4.3 curses  *				(greater speed updating the screen).  *				You need the 4.3 curses for this to work.  *  *	FD_SETSIZE	-	On whichever system, if this isn't defined,  *				we patch over the FD_SET, etc., macros with  *				some homebrewed ones.  *  *	SO_OOBINLINE	-	This is a socket option which we would like  *				to set to allow TCP urgent data to come  *				to us "inline".  This is NECESSARY for  *				CORRECT operation, and desireable for  *				simpler operation.  *  *	LNOFLSH		-	Detects the presence of the LNOFLSH bit  *				in the tty structure.  *  *	unix		-	Compiles in unix specific stuff.  *  *	MSDOS		-	Compiles in MSDOS specific stuff.  *  */
+comment|/*  * User telnet program, modified for use by tn3270.c.  *  * Many of the FUNCTIONAL changes in this newest version of TELNET  * were suggested by Dave Borman of Cray Research, Inc.  *  * Other changes in the tn3270 side come from Alan Crosswell (Columbia),  * Bob Braden (ISI), Steve Jacobson (Berkeley), and Cliff Frost (Berkeley).  *  * This code is common between telnet(1c) and tn3270(1c).  There are the  * following defines used to generate the various versions:  *  *	TN3270		- 	This is to be linked with tn3270.  *  *	NOT43		-	Allows the program to compile and run on  *				a 4.2BSD system.  *  *	PUTCHAR		-	Within tn3270, on a NOT43 system,  *				allows the use of the 4.3 curses  *				(greater speed updating the screen).  *				You need the 4.3 curses for this to work.  *  *	FD_SETSIZE	-	On whichever system, if this isn't defined,  *				we patch over the FD_SET, etc., macros with  *				some homebrewed ones.  *  *	SO_OOBINLINE	-	This is a socket option which we would like  *				to set to allow TCP urgent data to come  *				to us "inline".  This is NECESSARY for  *				CORRECT operation, and desireable for  *				simpler operation.  *  *	LNOFLSH		-	Detects the presence of the LNOFLSH bit  *				in the tty structure.  *  *	unix		-	Compiles in unix specific stuff.  *  *	MSDOS		-	Compiles in MSDOS specific stuff.  *  */
 end_comment
 
 begin_if
@@ -933,6 +933,11 @@ name|crmod
 decl_stmt|,
 name|netdata
 decl_stmt|,
+name|noasynch
+init|=
+literal|0
+decl_stmt|,
+comment|/* User specified "-noasynch" on command line */
 name|askedSGA
 init|=
 literal|0
@@ -2490,12 +2495,13 @@ name|defined
 argument_list|(
 name|TN3270
 argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|DEBUG
-argument_list|)
+if|if
+condition|(
+name|noasynch
+operator|==
+literal|0
+condition|)
+block|{
 name|ioctl
 argument_list|(
 name|tin
@@ -2510,9 +2516,10 @@ operator|&
 name|onoff
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
-comment|/* defined(TN3270)&& !defined(DEBUG) */
+comment|/* defined(TN3270) */
 if|if
 condition|(
 name|MODE_LINE
@@ -10516,13 +10523,13 @@ name|defined
 argument_list|(
 name|TN3270
 argument_list|)
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|DEBUG
-argument_list|)
+if|if
+condition|(
+name|noasynch
+operator|==
+literal|0
+condition|)
+block|{
 comment|/* DBX can't handle! */
 name|NetSigIO
 argument_list|(
@@ -10531,9 +10538,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* !defined(DEBUG) */
+block|}
 name|NetSetPgrp
 argument_list|(
 name|net
@@ -10761,6 +10766,9 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* defined(MSDOS) */
 if|if
 condition|(
 name|shell_continue
@@ -10772,11 +10780,26 @@ block|{
 name|ConnectScreen
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MSDOS
+argument_list|)
 name|haventstopped
 operator|=
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* defined(MSDOS) */
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MSDOS
+argument_list|)
 name|setconnmode
 argument_list|()
 expr_stmt|;
@@ -14985,7 +15008,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|MSDOS
+name|TN3270
 argument_list|)
 name|shellhelp
 index|[]
@@ -14994,7 +15017,7 @@ literal|"invoke a subshell"
 decl_stmt|,
 endif|#
 directive|endif
-comment|/* defined(MSDOS) */
+comment|/* defined(TN3270) */
 name|modehelp
 index|[]
 init|=
@@ -15180,7 +15203,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|MSDOS
+name|TN3270
 argument_list|)
 block|{
 literal|"!"
@@ -15191,12 +15214,12 @@ name|shell
 block|,
 literal|1
 block|,
-literal|0
+literal|1
 block|}
 block|,
 endif|#
 directive|endif
-comment|/* defined(MSDOS) */
+comment|/* defined(TN3270) */
 block|{
 literal|"?"
 block|,
@@ -15686,9 +15709,17 @@ argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
 block|}
+if|if
+condition|(
+name|shell_active
+operator|==
+literal|0
+condition|)
+block|{
 name|setconnmode
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -15908,12 +15939,29 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-if|if
+while|while
 condition|(
+operator|(
 name|argc
 operator|>
 literal|1
+operator|)
 operator|&&
+operator|(
+name|argv
+index|[
+literal|1
+index|]
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+operator|)
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 name|strcmp
 argument_list|(
@@ -15930,19 +15978,10 @@ name|debug
 operator|=
 literal|1
 expr_stmt|;
-name|argv
-operator|++
-expr_stmt|;
-name|argc
-operator|--
-expr_stmt|;
 block|}
+elseif|else
 if|if
 condition|(
-name|argc
-operator|>
-literal|1
-operator|&&
 operator|!
 name|strcmp
 argument_list|(
@@ -15955,17 +15994,25 @@ literal|"-n"
 argument_list|)
 condition|)
 block|{
-name|argv
-operator|++
-expr_stmt|;
-name|argc
-operator|--
-expr_stmt|;
 if|if
 condition|(
+operator|(
 name|argc
 operator|>
 literal|1
+operator|)
+operator|&&
+operator|(
+name|argv
+index|[
+literal|1
+index|]
+index|[
+literal|0
+index|]
+operator|!=
+literal|'-'
+operator|)
 condition|)
 block|{
 comment|/* get file name */
@@ -16001,6 +16048,8 @@ expr_stmt|;
 block|}
 block|}
 block|}
+else|else
+block|{
 if|#
 directive|if
 name|defined
@@ -16014,10 +16063,6 @@ name|unix
 argument_list|)
 if|if
 condition|(
-name|argc
-operator|>
-literal|1
-operator|&&
 operator|!
 name|strcmp
 argument_list|(
@@ -16030,20 +16075,28 @@ literal|"-t"
 argument_list|)
 condition|)
 block|{
-name|argv
-operator|++
-expr_stmt|;
-name|argc
-operator|--
-expr_stmt|;
 if|if
 condition|(
+operator|(
 name|argc
 operator|>
 literal|1
+operator|)
+operator|&&
+operator|(
+name|argv
+index|[
+literal|1
+index|]
+index|[
+literal|0
+index|]
+operator|!=
+literal|'-'
+operator|)
 condition|)
 block|{
-comment|/* get command name */
+comment|/* get file name */
 name|transcom
 operator|=
 name|tline
@@ -16069,9 +16122,64 @@ operator|--
 expr_stmt|;
 block|}
 block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"-noasynch"
+argument_list|)
+condition|)
+block|{
+name|noasynch
+operator|=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
 endif|#
 directive|endif
 comment|/* defined(TN3270)&& defined(unix) */
+if|if
+condition|(
+name|argv
+index|[
+literal|1
+index|]
+index|[
+literal|1
+index|]
+operator|!=
+literal|'\0'
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Unknown option *%s*.\n"
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|argc
+operator|--
+expr_stmt|;
+name|argv
+operator|++
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|argc
@@ -16145,14 +16253,14 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|MSDOS
+name|TN3270
 argument_list|)
 name|shell_continue
 argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* defined(MSDOS) */
+comment|/* defined(TN3270) */
 block|}
 endif|#
 directive|endif
