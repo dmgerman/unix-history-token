@@ -2158,7 +2158,7 @@ condition|(
 name|bp
 operator|->
 name|b_iocmd
-operator|&
+operator|==
 name|BIO_DELETE
 condition|)
 block|{
@@ -3609,6 +3609,12 @@ operator|=
 name|B_ASYNC
 expr_stmt|;
 block|}
+name|bp
+operator|->
+name|b_iocmd
+operator|=
+name|BIO_WRITE
+expr_stmt|;
 name|bp
 operator|->
 name|b_spc
