@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)locate.c	5.4 (Berkeley) %G%"
+literal|"@(#)locate.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,6 +83,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"locate.h"
 end_include
 
@@ -100,6 +106,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -111,8 +118,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
 if|if
@@ -235,10 +242,6 @@ name|patend
 decl_stmt|,
 modifier|*
 name|q
-decl_stmt|,
-modifier|*
-name|index
-argument_list|()
 decl_stmt|,
 modifier|*
 name|patprep
