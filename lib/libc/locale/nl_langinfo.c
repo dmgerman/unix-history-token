@@ -723,6 +723,22 @@ block|}
 block|}
 block|}
 break|break;
+case|case
+name|D_MD_ORDER
+case|:
+comment|/* local extension */
+name|ret
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|__get_current_time_locale
+argument_list|()
+operator|->
+name|md_order
+expr_stmt|;
+break|break;
 default|default:
 name|ret
 operator|=
