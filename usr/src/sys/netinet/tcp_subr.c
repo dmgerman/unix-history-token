@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_subr.c	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_subr.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1263,7 +1263,7 @@ name|rtentry
 modifier|*
 name|rt
 decl_stmt|;
-comment|/* 	 * If we sent enough data to get some meaningful characteristics, 	 * save them in the routing entry.  'Enough' is arbitrarily  	 * defined as 4K (default tcp_sendspace) * 16.  This would 	 * give us 16 rtt samples assuming we only get one sample per 	 * window (the usual case on a long haul net).  16 samples is 	 * enough for the srtt filter to converge to within 5% of the correct 	 * value; fewer samples and we could save a very bogus rtt. 	 * 	 * Don't update the default route's characteristics and don't 	 * update anything that the user "locked". 	 */
+comment|/* 	 * If we sent enough data to get some meaningful characteristics, 	 * save them in the routing entry.  'Enough' is arbitrarily  	 * defined as the sendpipesize (default 4K) * 16.  This would 	 * give us 16 rtt samples assuming we only get one sample per 	 * window (the usual case on a long haul net).  16 samples is 	 * enough for the srtt filter to converge to within 5% of the correct 	 * value; fewer samples and we could save a very bogus rtt. 	 * 	 * Don't update the default route's characteristics and don't 	 * update anything that the user "locked". 	 */
 if|if
 condition|(
 name|SEQ_LT
@@ -1272,11 +1272,13 @@ name|tp
 operator|->
 name|iss
 operator|+
-operator|(
-literal|4096
+name|so
+operator|->
+name|so_snd
+operator|.
+name|sb_hiwat
 operator|*
 literal|16
-operator|)
 argument_list|,
 name|tp
 operator|->
