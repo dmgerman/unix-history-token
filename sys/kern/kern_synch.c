@@ -613,7 +613,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_WEXIT
+name|P_SINGLE_EXIT
 operator|)
 operator|&&
 name|p
