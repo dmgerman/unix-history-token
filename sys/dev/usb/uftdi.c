@@ -1168,15 +1168,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: could not read endpoint descriptor"
-literal|": %s\n"
+literal|"%s: could not read endpoint descriptor\n"
 argument_list|,
 name|devname
-argument_list|,
-name|usbd_errstr
-argument_list|(
-name|err
-argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
