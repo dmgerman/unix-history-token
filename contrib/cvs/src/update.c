@@ -502,6 +502,15 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|toss_local_changes
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|force_tag_match
 init|=
 literal|1
@@ -603,6 +612,8 @@ literal|"\t-A\tReset any sticky tags/date/kopts.\n"
 block|,
 literal|"\t-P\tPrune empty directories.\n"
 block|,
+literal|"\t-C\tOverwrite locally modified files with clean repository copies.\n"
+block|,
 literal|"\t-d\tBuild directories, like checkout does.\n"
 block|,
 literal|"\t-f\tForce a head revision match if tag/date not found.\n"
@@ -702,7 +713,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"+ApPflRQqduk:r:D:j:I:W:"
+literal|"+ApCPflRQqduk:r:D:j:I:W:"
 argument_list|)
 operator|)
 operator|!=
@@ -719,6 +730,14 @@ case|case
 literal|'A'
 case|:
 name|aflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'C'
+case|:
+name|toss_local_changes
 operator|=
 literal|1
 expr_stmt|;
@@ -1018,6 +1037,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|toss_local_changes
+condition|)
+name|send_arg
+argument_list|(
+literal|"-C"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|update_prune_dirs
 condition|)
 name|send_arg
@@ -1086,14 +1114,20 @@ expr_stmt|;
 name|wrap_send
 argument_list|()
 expr_stmt|;
-comment|/* If the server supports the command "update-patches", that means 	       that it knows how to handle the -u argument to update, which 	       means to send patches instead of complete files.  	       We don't send -u if failed_patches != NULL, so that the 	       server doesn't try to send patches which will just fail 	       again.  At least currently, the client also clobbers the 	       file and tells the server it is lost, which also will get 	       a full file instead of a patch, but it seems clean to omit 	       -u.  */
 if|if
 condition|(
-name|failed_patches
+name|failed_patches_count
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
+name|unsigned
+name|int
+name|flags
+init|=
+literal|0
+decl_stmt|;
+comment|/* If the server supports the command "update-patches", that  		   means that it knows how to handle the -u argument to update, 		   which means to send patches instead of complete files.  		   We don't send -u if failed_patches != NULL, so that the 		   server doesn't try to send patches which will just fail 		   again.  At least currently, the client also clobbers the 		   file and tells the server it is lost, which also will get 		   a full file instead of a patch, but it seems clean to omit 		   -u.  */
 if|if
 condition|(
 name|supported_request
@@ -1106,14 +1140,28 @@ argument_list|(
 literal|"-u"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
-name|failed_patches
-operator|==
-name|NULL
+name|update_build_dirs
+condition|)
+name|flags
+operator||=
+name|SEND_BUILD_DIRS
+expr_stmt|;
+if|if
+condition|(
+name|toss_local_changes
 condition|)
 block|{
+name|flags
+operator||=
+name|SEND_NO_CONTENTS
+expr_stmt|;
+name|flags
+operator||=
+name|BACKUP_MODIFIED_FILES
+expr_stmt|;
+block|}
 comment|/* If noexec, probably could be setting SEND_NO_CONTENTS. 		   Same caveats as for "cvs status" apply.  */
 name|send_files
 argument_list|(
@@ -1125,11 +1173,7 @@ name|local
 argument_list|,
 name|aflag
 argument_list|,
-name|update_build_dirs
-condition|?
-name|SEND_BUILD_DIRS
-else|:
-literal|0
+name|flags
 argument_list|)
 expr_stmt|;
 name|send_file_names
@@ -1254,15 +1298,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
-name|failed_patches
-operator|=
-name|NULL
-expr_stmt|;
+name|free_names
+argument_list|(
+operator|&
 name|failed_patches_count
-operator|=
-literal|0
+argument_list|,
+name|failed_patches
+argument_list|)
 expr_stmt|;
+block|}
 name|send_to_server
 argument_list|(
 literal|"update\012"
@@ -1284,9 +1328,9 @@ operator|!=
 literal|0
 operator|&&
 operator|(
-name|failed_patches
+name|failed_patches_count
 operator|==
-name|NULL
+literal|0
 operator|||
 name|pass
 operator|>
@@ -1294,6 +1338,20 @@ literal|1
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|failed_patches_count
+operator|>
+literal|0
+condition|)
+name|free_names
+argument_list|(
+operator|&
+name|failed_patches_count
+argument_list|,
+name|failed_patches
+argument_list|)
+expr_stmt|;
 return|return
 name|status
 return|;
@@ -1304,9 +1362,9 @@ expr_stmt|;
 block|}
 do|while
 condition|(
-name|failed_patches
-operator|!=
-name|NULL
+name|failed_patches_count
+operator|>
+literal|0
 condition|)
 do|;
 return|return
@@ -1427,18 +1485,31 @@ if|if
 condition|(
 name|server_active
 condition|)
-name|server_clear_entstat
-argument_list|(
-literal|"."
-argument_list|,
+block|{
+name|char
+modifier|*
+name|repos
+init|=
 name|Name_Repository
 argument_list|(
 name|NULL
 argument_list|,
 name|NULL
 argument_list|)
+decl_stmt|;
+name|server_clear_entstat
+argument_list|(
+literal|"."
+argument_list|,
+name|repos
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|repos
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 block|}
@@ -1452,6 +1523,17 @@ operator|||
 name|date
 condition|)
 block|{
+name|char
+modifier|*
+name|repos
+init|=
+name|Name_Repository
+argument_list|(
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+decl_stmt|;
 name|WriteTag
 argument_list|(
 operator|(
@@ -1468,12 +1550,12 @@ literal|0
 argument_list|,
 literal|"."
 argument_list|,
-name|Name_Repository
-argument_list|(
-name|NULL
-argument_list|,
-name|NULL
+name|repos
 argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|repos
 argument_list|)
 expr_stmt|;
 name|rewrite_tag
@@ -1902,44 +1984,30 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* see if we need to sleep before returning */
+comment|/* see if we need to sleep before returning to avoid time-stamp races */
 if|if
 condition|(
 name|last_register_time
 condition|)
 block|{
-name|time_t
-name|now
-decl_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-operator|(
-name|void
-operator|)
+while|while
+condition|(
 name|time
 argument_list|(
-operator|&
-name|now
+operator|(
+name|time_t
+operator|*
+operator|)
+name|NULL
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|now
-operator|!=
+operator|==
 name|last_register_time
 condition|)
-break|break;
 name|sleep
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* to avoid time-stamp races */
-block|}
 block|}
 return|return
 operator|(
@@ -2393,6 +2461,97 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+name|toss_local_changes
+condition|)
+block|{
+name|char
+modifier|*
+name|bakname
+decl_stmt|;
+name|bakname
+operator|=
+name|backup_file
+argument_list|(
+name|finfo
+operator|->
+name|file
+argument_list|,
+name|vers
+operator|->
+name|vn_user
+argument_list|)
+expr_stmt|;
+comment|/* This behavior is sufficiently unexpected to                        justify overinformativeness, I think. */
+ifdef|#
+directive|ifdef
+name|SERVER_SUPPORT
+if|if
+condition|(
+operator|(
+operator|!
+name|really_quiet
+operator|)
+operator|&&
+operator|(
+operator|!
+name|server_active
+operator|)
+condition|)
+else|#
+directive|else
+comment|/* ! SERVER_SUPPORT */
+if|if
+condition|(
+operator|!
+name|really_quiet
+condition|)
+endif|#
+directive|endif
+comment|/* SERVER_SUPPORT */
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"(Locally modified %s moved to %s)\n"
+argument_list|,
+name|finfo
+operator|->
+name|file
+argument_list|,
+name|bakname
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|bakname
+argument_list|)
+expr_stmt|;
+comment|/* The locally modified file is still present, but                        it will be overwritten by the repository copy                        after this. */
+name|status
+operator|=
+name|T_CHECKOUT
+expr_stmt|;
+name|retval
+operator|=
+name|checkout_file
+argument_list|(
+name|finfo
+argument_list|,
+name|vers
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
 name|vers
 operator|->
 name|ts_conflict
@@ -2405,7 +2564,7 @@ decl_stmt|;
 name|int
 name|retcode
 decl_stmt|;
-comment|/* 		     * If the timestamp has changed and no conflict indicators 		     * are found, it isn't a 'C' any more. 		     */
+comment|/*                          * If the timestamp has changed and no                          * conflict indicators are found, it isn't a                          * 'C' any more.                          */
 ifdef|#
 directive|ifdef
 name|SERVER_SUPPORT
@@ -2486,7 +2645,7 @@ condition|(
 name|retcode
 condition|)
 block|{
-comment|/* The timestamps differ.  But if there are conflict 			   markers print 'C' anyway.  */
+comment|/* The timestamps differ.  But if there                                are conflict markers print 'C' anyway.  */
 name|retcode
 operator|=
 operator|!
@@ -2573,6 +2732,7 @@ name|retval
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 break|break;
 ifdef|#
@@ -3426,6 +3586,8 @@ comment|/* This is a guess.  We will rewrite it later 			     via WriteTag.  */
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|rewrite_tag
@@ -3730,6 +3892,17 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
+comment|/* Delete the ignore list if it hasn't already been done.  */
+if|if
+condition|(
+name|ignlist
+condition|)
+name|dellist
+argument_list|(
+operator|&
+name|ignlist
+argument_list|)
+expr_stmt|;
 comment|/* If we set the tag or date for a new subdirectory in        update_dirent_proc, and we're now done with that subdirectory,        undo the tag/date setting.  Note that we know that the tag and        date were both originally NULL in this case.  */
 if|if
 condition|(
@@ -3940,6 +4113,9 @@ literal|"'\n"
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|cvs_flushout
+argument_list|()
 expr_stmt|;
 operator|(
 name|void
@@ -8130,7 +8306,7 @@ name|backup
 decl_stmt|;
 name|char
 modifier|*
-name|options
+name|t_options
 decl_stmt|;
 name|int
 name|status
@@ -8878,6 +9054,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* Reset any keyword expansion option.  Otherwise, when a 	       command like `cvs update -kk -jT1 -jT2' creates a new file 	       (because a file had the T2 tag, but not T1), the subsequent 	       commit of that just-added file effectively would set the 	       admin `-kk' option for that file in the repository.  */
+name|options
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* FIXME: If checkout_file fails, we should arrange to                return a non-zero exit status.  */
 name|status
 operator|=
@@ -9001,7 +9182,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"file %s is present in revision %s as of %s"
+literal|"file %s does not exist, but is present in revision %s as of %s"
 argument_list|,
 name|finfo
 operator|->
@@ -9019,7 +9200,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"file %s is present in revision %s"
+literal|"file %s does not exist, but is present in revision %s"
 argument_list|,
 name|finfo
 operator|->
@@ -9206,7 +9387,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|options
+name|t_options
 operator|=
 name|vers
 operator|->
@@ -9215,7 +9396,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (*options == '\0') 	options = "-kk";
+block|if (*t_options == '\0') 	t_options = "-kk";
 comment|/* to ignore keyword expansions */
 endif|#
 directive|endif
@@ -9263,7 +9444,7 @@ operator|&&
 operator|(
 name|strcmp
 argument_list|(
-name|options
+name|t_options
 argument_list|,
 literal|"-kb"
 argument_list|)
@@ -9296,7 +9477,7 @@ name|rev2
 argument_list|,
 name|NULL
 argument_list|,
-name|options
+name|t_options
 argument_list|,
 name|RUN_TTY
 argument_list|,
@@ -9343,7 +9524,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|options
+name|t_options
 argument_list|,
 literal|"-kb"
 argument_list|)
@@ -9384,7 +9565,7 @@ name|rev2
 argument_list|,
 name|NULL
 argument_list|,
-name|options
+name|t_options
 argument_list|,
 name|RUN_TTY
 argument_list|,
@@ -9481,7 +9662,7 @@ name|finfo
 operator|->
 name|file
 argument_list|,
-name|options
+name|t_options
 argument_list|,
 name|rev1
 argument_list|,
@@ -9608,6 +9789,12 @@ argument_list|,
 name|vers
 operator|->
 name|vn_rcs
+condition|?
+name|vers
+operator|->
+name|vn_rcs
+else|:
+literal|"0"
 argument_list|,
 literal|"Result of merge"
 argument_list|,
@@ -9783,10 +9970,14 @@ decl_stmt|;
 name|List
 modifier|*
 name|rev1_hardlinks
+init|=
+name|NULL
 decl_stmt|;
 name|List
 modifier|*
 name|rev2_hardlinks
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|check_uids
@@ -9866,6 +10057,9 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_ST_RDEV
 if|if
 condition|(
 name|CVS_LSTAT
@@ -9929,6 +10123,23 @@ name|sb
 operator|.
 name|st_rdev
 expr_stmt|;
+else|#
+directive|else
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"cannot handle device files on this system (%s)"
+argument_list|,
+name|finfo
+operator|->
+name|file
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|rev1_hardlinks
 operator|=
@@ -10269,6 +10480,9 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_ST_RDEV
 if|if
 condition|(
 name|CVS_LSTAT
@@ -10332,6 +10546,23 @@ name|sb
 operator|.
 name|st_rdev
 expr_stmt|;
+else|#
+directive|else
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"cannot handle device files on this system (%s)"
+argument_list|,
+name|finfo
+operator|->
+name|file
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|rev2_hardlinks
 operator|=

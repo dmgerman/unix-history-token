@@ -1598,6 +1598,26 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/*  * Return nonzero if currently in a critical section.  * Otherwise return zero.  */
+end_comment
+
+begin_function
+name|int
+name|SIG_inCrSect
+parameter_list|()
+block|{
+return|return
+name|SIG_crSectNest
+operator|>
+literal|0
+return|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
 comment|/*  * The following ends a critical section.  */
 end_comment
 

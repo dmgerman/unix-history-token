@@ -1782,6 +1782,50 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|strpbrk
+argument_list|(
+name|hostname
+argument_list|,
+literal|"+,>;=\t\n"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"host name (%s) contains an invalid character (+,>;=\\t\\n)"
+argument_list|,
+name|hostname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strpbrk
+argument_list|(
+name|CurDir
+argument_list|,
+literal|"+,>;=\t\n"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"current directory (%s) contains an invalid character (+,>;=\\t\\n)"
+argument_list|,
+name|CurDir
+argument_list|)
+expr_stmt|;
 comment|/* No need to readlock since we aren't doing anything to the        repository.  */
 name|err
 operator|=
@@ -2295,6 +2339,29 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|unedit_usage
+index|[]
+init|=
+block|{
+literal|"Usage: %s %s [-lR] [files...]\n"
+block|,
+literal|"-l: Local directory only, not recursive\n"
+block|,
+literal|"-R: Process directories recursively\n"
+block|,
+literal|"(Specify the --help global option for a list of other help options)\n"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|unedit
@@ -2332,7 +2399,7 @@ literal|1
 condition|)
 name|usage
 argument_list|(
-name|edit_usage
+name|unedit_usage
 argument_list|)
 expr_stmt|;
 name|optind
@@ -2385,7 +2452,7 @@ case|:
 default|default:
 name|usage
 argument_list|(
-name|edit_usage
+name|unedit_usage
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4507,6 +4574,11 @@ block|}
 name|out
 label|:
 empty_stmt|;
+name|free
+argument_list|(
+name|them
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;

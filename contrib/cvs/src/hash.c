@@ -412,7 +412,7 @@ name|p
 operator|->
 name|type
 operator|=
-name|UNKNOWN
+name|NT_UNKNOWN
 expr_stmt|;
 name|p
 operator|->
@@ -562,7 +562,7 @@ name|p
 operator|->
 name|type
 operator|=
-name|UNKNOWN
+name|NT_UNKNOWN
 expr_stmt|;
 return|return
 operator|(
@@ -797,7 +797,7 @@ name|p
 operator|->
 name|type
 operator|=
-name|UNKNOWN
+name|NT_UNKNOWN
 expr_stmt|;
 name|p
 operator|->
@@ -1937,7 +1937,7 @@ name|type
 condition|)
 block|{
 case|case
-name|UNKNOWN
+name|NT_UNKNOWN
 case|:
 return|return
 operator|(
@@ -2046,6 +2046,14 @@ case|:
 return|return
 operator|(
 literal|"RCSFIELD"
+operator|)
+return|;
+case|case
+name|RCSCMPFLD
+case|:
+return|return
+operator|(
+literal|"RCSCMPFLD"
 operator|)
 return|;
 block|}

@@ -823,6 +823,47 @@ name|sherr
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|SETXID_SUPPORT
+comment|/* 	** This prevents a user from creating a privileged shell 	** from the text editor when the SETXID_SUPPORT option is selected. 	*/
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|run_argv
+index|[
+literal|0
+index|]
+argument_list|,
+name|Editor
+argument_list|)
+operator|&&
+name|setegid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+condition|)
+block|{
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot set egid to gid"
+argument_list|)
+expr_stmt|;
+name|_exit
+argument_list|(
+literal|127
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 comment|/* dup'ing is done.  try to run it now */
 operator|(
 name|void

@@ -30,6 +30,8 @@ parameter_list|,
 name|nonbranch
 parameter_list|,
 name|warn
+parameter_list|,
+name|dotemplate
 parameter_list|)
 name|char
 modifier|*
@@ -56,6 +58,9 @@ name|nonbranch
 decl_stmt|;
 name|int
 name|warn
+decl_stmt|;
+name|int
+name|dotemplate
 decl_stmt|;
 block|{
 name|FILE
@@ -688,6 +693,8 @@ name|SERVER_SUPPORT
 if|if
 condition|(
 name|server_active
+operator|&&
+name|dotemplate
 condition|)
 block|{
 name|server_template

@@ -139,5 +139,45 @@ directive|undef
 name|HAVE_SETMODE
 end_undef
 
+begin_comment
+comment|/* Define if you have the crypt function.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_CRYPT
+end_undef
+
+begin_comment
+comment|/* Define if you have the getspnam function.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_GETSPNAM
+end_undef
+
+begin_comment
+comment|/* Define to force lib/regex.c to use malloc instead of alloca.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|REGEX_MALLOC
+end_undef
+
+begin_comment
+comment|/* Define to force lib/regex.c to define re_comp et al.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|_REGEX_RE_COMP
+end_undef
+
 end_unit
 

@@ -4,13 +4,27 @@ comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 
 end_comment
 
 begin_comment
-comment|/* String which indicates a conflict if it occurs at the start of a line.  */
+comment|/* Strings which indicate a conflict if they occur at the start of a line.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|RCS_MERGE_PAT
+name|RCS_MERGE_PAT_1
+value|"<<<<<<< "
+end_define
+
+begin_define
+define|#
+directive|define
+name|RCS_MERGE_PAT_2
+value|"=======\n"
+end_define
+
+begin_define
+define|#
+directive|define
+name|RCS_MERGE_PAT_3
 value|">>>>>>> "
 end_define
 
@@ -1178,6 +1192,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|RETSIGTYPE
+name|rcs_cleanup
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|RCS_rewrite
 name|PROTO
@@ -1190,6 +1216,19 @@ name|Deltatext
 operator|*
 operator|,
 name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|RCS_abandon
+name|PROTO
+argument_list|(
+operator|(
+name|RCSNode
 operator|*
 operator|)
 argument_list|)

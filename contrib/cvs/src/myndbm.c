@@ -980,6 +980,8 @@ argument_list|,
 literal|'\012'
 argument_list|,
 literal|0
+argument_list|,
+name|GETLINE_NO_LIMIT
 argument_list|)
 operator|)
 operator|>=

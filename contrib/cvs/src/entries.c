@@ -3317,11 +3317,15 @@ name|noexec
 condition|)
 block|{
 comment|/* Create Entries.Log so that Entries_Close will do something.  */
+name|entfilename
+operator|=
+name|CVSADM_ENTLOG
+expr_stmt|;
 name|fp
 operator|=
 name|CVS_FOPEN
 argument_list|(
-name|CVSADM_ENTLOG
+name|entfilename
 argument_list|,
 literal|"a"
 argument_list|)
@@ -3379,7 +3383,7 @@ name|errno
 argument_list|,
 literal|"cannot close %s"
 argument_list|,
-name|CVSADM_ENTLOG
+name|entfilename
 argument_list|)
 expr_stmt|;
 block|}
