@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: keyword.c,v 1.17 1997/08/11 02:35:16 steve Exp $"
+literal|"$Id: keyword.c,v 1.18 1997/08/11 02:41:02 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1346,7 +1346,7 @@ name|NULL
 block|,
 literal|0
 block|,
-name|pvar
+name|rtprior
 block|,
 name|NULL
 block|,
@@ -1354,12 +1354,8 @@ literal|7
 block|,
 name|POFF
 argument_list|(
-name|p_rtprio
+argument|p_rtprio
 argument_list|)
-block|,
-name|LONG
-block|,
-literal|"d"
 block|}
 block|,
 block|{
