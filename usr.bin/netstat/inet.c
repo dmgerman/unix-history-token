@@ -818,6 +818,16 @@ name|aflag
 operator|&&
 operator|(
 operator|(
+name|istcp
+operator|&&
+name|tp
+operator|->
+name|t_state
+operator|==
+name|TCPS_LISTEN
+operator|)
+operator|||
+operator|(
 name|af1
 operator|==
 name|AF_INET
