@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arithmetic.c	5.1 (Berkeley) %G%"
+literal|"@(#)arithmetic.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -330,37 +330,6 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
-comment|/* Check for a case that would cause trouble: arithmetic / 0. */
-if|if
-condition|(
-name|rangemax
-operator|==
-literal|0
-operator|&&
-name|index
-argument_list|(
-name|keys
-argument_list|,
-literal|'/'
-argument_list|)
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"arithmetic: you can't MAKE me divide by zero!\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Seed the random-number generator. */
 name|srandom
 argument_list|(
@@ -1407,7 +1376,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: arithmetic [-o [+-x/]] [-r range]\n"
+literal|"usage: arithmetic [-o +-x/] [-r range]\n"
 argument_list|)
 expr_stmt|;
 name|exit
