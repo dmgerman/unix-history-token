@@ -32,31 +32,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
 end_include
 
 begin_include
@@ -104,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/mpt/mpt.h>
+file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -224,8 +206,7 @@ specifier|static
 name|void
 name|mpt_free_bus_resources
 parameter_list|(
-name|struct
-name|mpt_softc
+name|mpt_softc_t
 modifier|*
 name|mpt
 parameter_list|)
@@ -257,8 +238,7 @@ specifier|static
 name|int
 name|mpt_dma_mem_alloc
 parameter_list|(
-name|struct
-name|mpt_softc
+name|mpt_softc_t
 modifier|*
 name|mpt
 parameter_list|)
@@ -270,8 +250,7 @@ specifier|static
 name|void
 name|mpt_dma_mem_free
 parameter_list|(
-name|struct
-name|mpt_softc
+name|mpt_softc_t
 modifier|*
 name|mpt
 parameter_list|)
@@ -283,10 +262,20 @@ specifier|static
 name|void
 name|mpt_read_config_regs
 parameter_list|(
-name|struct
-name|mpt_softc
+name|mpt_softc_t
 modifier|*
 name|mpt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|mpt_pci_intr
+parameter_list|(
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -348,8 +337,7 @@ name|mpt_methods
 block|,
 expr|sizeof
 operator|(
-expr|struct
-name|mpt_softc
+name|mpt_softc_t
 operator|)
 block|}
 decl_stmt|;
@@ -402,14 +390,12 @@ block|{
 name|u_int32_t
 name|reply
 decl_stmt|;
-name|struct
-name|mpt_softc
+name|mpt_softc_t
 modifier|*
 name|mpt
 init|=
 operator|(
-expr|struct
-name|mpt_softc
+name|mpt_softc_t
 operator|*
 operator|)
 name|dummy
@@ -594,8 +580,7 @@ specifier|static
 name|void
 name|mpt_set_options
 parameter_list|(
-name|struct
-name|mpt_softc
+name|mpt_softc_t
 modifier|*
 name|mpt
 parameter_list|)
@@ -699,8 +684,7 @@ specifier|static
 name|void
 name|mpt_set_options
 parameter_list|(
-name|struct
-name|mpt_softc
+name|mpt_softc_t
 modifier|*
 name|mpt
 parameter_list|)
@@ -817,8 +801,7 @@ name|data
 decl_stmt|,
 name|cmd
 decl_stmt|;
-name|struct
-name|mpt_softc
+name|mpt_softc_t
 modifier|*
 name|mpt
 decl_stmt|;
@@ -826,8 +809,7 @@ comment|/* Allocate the softc structure */
 name|mpt
 operator|=
 operator|(
-expr|struct
-name|mpt_softc
+name|mpt_softc_t
 operator|*
 operator|)
 name|device_get_softc
@@ -861,8 +843,7 @@ name|mpt
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|mpt_softc
+name|mpt_softc_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1042,8 +1023,7 @@ operator|->
 name|mpt2
 operator|=
 operator|(
-expr|struct
-name|mpt_softc
+name|mpt_softc_t
 operator|*
 operator|)
 name|devclass_get_softc
@@ -1286,19 +1266,9 @@ name|mpt
 operator|->
 name|pci_irq
 argument_list|,
-name|INTR_TYPE_CAM
+name|MPT_IFLAGS
 argument_list|,
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
-name|void
-operator|*
-argument_list|)
-operator|)
-name|mpt_intr
+name|mpt_pci_intr
 argument_list|,
 name|mpt
 argument_list|,
@@ -1320,6 +1290,11 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|MPT_LOCK_SETUP
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 comment|/* Disable interrupts at the part */
 name|mpt_disable_ints
 argument_list|(
@@ -1346,17 +1321,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/* Initialize character device */
-comment|/*   currently closed */
-name|mpt
-operator|->
-name|open
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Save the PCI config register values */
-comment|/*   Hard resets are known to screw up the BAR for diagnostic 	     memory accesses (Mem1). */
-comment|/*   Using Mem1 is known to make the chip stop responding to  	     configuration space transfers, so we need to save it now */
+comment|/* 	 * Save the PCI config register values  	 * 	 * Hard resets are known to screw up the BAR for diagnostic 	 * memory accesses (Mem1). 	 * 	 * Using Mem1 is known to make the chip stop responding to  	 * configuration space transfers, so we need to save it now 	 */
 name|mpt_read_config_regs
 argument_list|(
 name|mpt
@@ -1372,6 +1337,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|MPT_LOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mpt_init
@@ -1383,17 +1353,38 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|MPT_UNLOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
-comment|/* Attach to CAM */
+block|}
+comment|/* 		 *  Attach to CAM 		 */
+name|MPTLOCK_2_CAMLOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 name|mpt_cam_attach
 argument_list|(
 name|mpt
 argument_list|)
 expr_stmt|;
+name|CAMLOCK_2_MPTLOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
+name|MPT_UNLOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 block|}
-comment|/* Done */
 return|return
 operator|(
 literal|0
@@ -1421,7 +1412,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  * Free bus resources  */
+comment|/*  * Free bus resources  */
 end_comment
 
 begin_function
@@ -1429,8 +1420,7 @@ specifier|static
 name|void
 name|mpt_free_bus_resources
 parameter_list|(
-name|struct
-name|mpt_softc
+name|mpt_softc_t
 modifier|*
 name|mpt
 parameter_list|)
@@ -1524,42 +1514,16 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|mpt
-operator|->
-name|pci_mem
-condition|)
-block|{
-name|bus_release_resource
+name|MPT_LOCK_DESTROY
 argument_list|(
 name|mpt
-operator|->
-name|dev
-argument_list|,
-name|SYS_RES_MEMORY
-argument_list|,
-name|mpt
-operator|->
-name|pci_mem_id
-argument_list|,
-name|mpt
-operator|->
-name|pci_mem
 argument_list|)
 expr_stmt|;
-name|mpt
-operator|->
-name|pci_mem
-operator|=
-literal|0
-expr_stmt|;
-block|}
 block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  * Disconnect ourselves from the system.  */
+comment|/*  * Disconnect ourselves from the system.  */
 end_comment
 
 begin_function
@@ -1571,16 +1535,14 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|struct
-name|mpt_softc
+name|mpt_softc_t
 modifier|*
 name|mpt
 decl_stmt|;
 name|mpt
 operator|=
 operator|(
-expr|struct
-name|mpt_softc
+name|mpt_softc_t
 operator|*
 operator|)
 name|device_get_softc
@@ -1637,7 +1599,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  * Disable the hardware  */
+comment|/*  * Disable the hardware  */
 end_comment
 
 begin_function
@@ -1649,16 +1611,14 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|struct
-name|mpt_softc
+name|mpt_softc_t
 modifier|*
 name|mpt
 decl_stmt|;
 name|mpt
 operator|=
 operator|(
-expr|struct
-name|mpt_softc
+name|mpt_softc_t
 operator|*
 operator|)
 name|device_get_softc
@@ -1689,8 +1649,7 @@ begin_struct
 struct|struct
 name|imush
 block|{
-name|struct
-name|mpt_softc
+name|mpt_softc_t
 modifier|*
 name|mpt
 decl_stmt|;
@@ -1758,8 +1717,7 @@ specifier|static
 name|int
 name|mpt_dma_mem_alloc
 parameter_list|(
-name|struct
-name|mpt_softc
+name|mpt_softc_t
 modifier|*
 name|mpt
 parameter_list|)
@@ -2374,8 +2332,7 @@ specifier|static
 name|void
 name|mpt_dma_mem_free
 parameter_list|(
-name|struct
-name|mpt_softc
+name|mpt_softc_t
 modifier|*
 name|mpt
 parameter_list|)
@@ -2539,8 +2496,7 @@ specifier|static
 name|void
 name|mpt_read_config_regs
 parameter_list|(
-name|struct
-name|mpt_softc
+name|mpt_softc_t
 modifier|*
 name|mpt
 parameter_list|)
@@ -2746,8 +2702,7 @@ begin_function
 name|void
 name|mpt_set_config_regs
 parameter_list|(
-name|struct
-name|mpt_softc
+name|mpt_softc_t
 modifier|*
 name|mpt
 parameter_list|)
@@ -3076,6 +3031,40 @@ operator|.
 name|PMCSR
 argument_list|,
 literal|4
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|mpt_pci_intr
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|mpt_softc_t
+modifier|*
+name|mpt
+init|=
+name|arg
+decl_stmt|;
+name|MPT_LOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
+name|mpt_intr
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
+name|MPT_UNLOCK
+argument_list|(
+name|mpt
 argument_list|)
 expr_stmt|;
 block|}

@@ -14,7 +14,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/mpt/mpt.h>
+file|<dev/mpt/mpt_freebsd.h>
 end_include
 
 begin_struct
@@ -1669,11 +1669,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tFW Version    0x%04x\n"
+literal|"\tFW Version    0x%08x\n"
 argument_list|,
 name|msg
 operator|->
 name|FWVersion
+operator|.
+name|Word
 argument_list|)
 expr_stmt|;
 name|printf
