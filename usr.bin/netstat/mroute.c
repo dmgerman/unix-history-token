@@ -43,6 +43,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/socketvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/ip_mroute.h>
 end_include
 
