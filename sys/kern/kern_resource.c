@@ -4071,7 +4071,7 @@ return|return
 operator|(
 name|rl
 operator|.
-name|rlim_max
+name|rlim_cur
 operator|)
 return|;
 block|}
