@@ -973,7 +973,7 @@ operator|->
 name|vp
 condition|)
 block|{
-name|lockdrive
+name|LOCKDRIVE
 argument_list|(
 name|drive
 argument_list|)
@@ -3549,7 +3549,7 @@ operator|>
 name|drive_referenced
 condition|)
 block|{
-name|lockdrive
+name|LOCKDRIVE
 argument_list|(
 name|drive
 argument_list|)
@@ -3655,6 +3655,7 @@ name|setstate_force
 argument_list|)
 expr_stmt|;
 comment|/* tell it what's what */
+continue|continue;
 block|}
 if|if
 condition|(
@@ -3929,6 +3930,14 @@ expr_stmt|;
 comment|/* we've written it on at least one drive */
 block|}
 block|}
+else|else
+comment|/* not worth looking at, */
+name|unlockdrive
+argument_list|(
+name|drive
+argument_list|)
+expr_stmt|;
+comment|/* just unlock it again */
 block|}
 block|}
 name|Free
