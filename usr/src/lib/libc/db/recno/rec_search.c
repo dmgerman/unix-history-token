@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_search.c	5.3 (Berkeley) %G%"
+literal|"@(#)rec_search.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -229,7 +229,7 @@ operator|+
 name|r
 operator|->
 name|nrecs
-operator|>=
+operator|>
 name|recno
 condition|)
 break|break;
@@ -279,7 +279,11 @@ name|GETRINTERNAL
 argument_list|(
 name|h
 argument_list|,
+operator|(
 name|index
+operator|-
+literal|1
+operator|)
 argument_list|)
 operator|->
 name|nrecs
@@ -304,7 +308,11 @@ name|GETRINTERNAL
 argument_list|(
 name|h
 argument_list|,
+operator|(
 name|index
+operator|-
+literal|1
+operator|)
 argument_list|)
 operator|->
 name|nrecs
