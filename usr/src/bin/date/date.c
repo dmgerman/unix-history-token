@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)date.c	4.7 (Berkeley) %G%"
+literal|"@(#)date.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -398,6 +398,10 @@ specifier|register
 name|char
 modifier|*
 name|tzn
+decl_stmt|;
+specifier|extern
+name|int
+name|errno
 decl_stmt|;
 name|int
 name|bytenetorder
