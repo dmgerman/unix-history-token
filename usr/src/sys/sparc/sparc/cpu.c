@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)cpu.c	8.2 (Berkeley) %G%  *  * from: $Header: cpu.c,v 1.15.1.1 93/09/27 20:59:04 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)cpu.c	8.3 (Berkeley) %G%  *  * from: $Header: cpu.c,v 1.16.1.1 93/09/30 22:38:50 torek Exp $ (LBL)  */
 end_comment
 
 begin_include
@@ -567,29 +567,6 @@ name|vactype
 operator|=
 name|VAC_WRITETHROUGH
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: %d byte write-through cache, %d bytes/line, %cw flush\n"
-argument_list|,
-name|dev
-operator|->
-name|dv_xname
-argument_list|,
-name|cacheinfo
-operator|.
-name|c_totalsize
-argument_list|,
-name|l
-argument_list|,
-name|cacheinfo
-operator|.
-name|c_hwflush
-condition|?
-literal|'h'
-else|:
-literal|'s'
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Machines with "buserr-type" 1 have a bug in the cache 	 * chip that affects traps.  (I wish I knew more about this 	 * mysterious buserr-type variable....) 	 */
 if|if
 condition|(
@@ -625,6 +602,32 @@ name|dv_xname
 argument_list|)
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"%s: %d byte write-through, %d bytes/line, %cw flush "
+argument_list|,
+name|dev
+operator|->
+name|dv_xname
+argument_list|,
+name|cacheinfo
+operator|.
+name|c_totalsize
+argument_list|,
+name|l
+argument_list|,
+name|cacheinfo
+operator|.
+name|c_hwflush
+condition|?
+literal|'h'
+else|:
+literal|'s'
+argument_list|)
+expr_stmt|;
+name|cache_enable
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
