@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: measure.c,v 1.4 1997/10/22 06:19:48 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -549,7 +549,7 @@ name|oicp
 operator|->
 name|icmp_otime
 operator|=
-name|ntohl
+name|htonl
 argument_list|(
 operator|(
 name|tcur
