@@ -81,6 +81,50 @@ begin_comment
 comment|/* Adaptec 155p */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ATM_DEVICE_FORELE25
+value|6
+end_define
+
+begin_comment
+comment|/* ForeRunnerLE 25 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATM_DEVICE_FORELE155
+value|7
+end_define
+
+begin_comment
+comment|/* ForeRunnerLE 155 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATM_DEVICE_NICSTAR25
+value|8
+end_define
+
+begin_comment
+comment|/* other 77211 25.6MBit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATM_DEVICE_NICSTAR155
+value|9
+end_define
+
+begin_comment
+comment|/* other 77211 155MBit */
+end_comment
+
 begin_comment
 comment|/* map to strings and vendors */
 end_comment
@@ -90,7 +134,7 @@ define|#
 directive|define
 name|ATM_DEVICE_NAMES
 define|\
-value|{ "Unknown",	"Unknown" },				\ 	{ "PCA200-E",	"Fore/Marconi" },			\ 	{ "HE155",	"Fore/Marconi" },			\ 	{ "HE622",	"Fore/Marconi" },			\ 	{ "ENI155p",	"Efficient Networks" },			\ 	{ "ADP155p",	"Adaptec" },
+value|{ "Unknown",		"Unknown" },				\ 	{ "PCA200-E",		"Fore/Marconi" },			\ 	{ "HE155",		"Fore/Marconi" },			\ 	{ "HE622",		"Fore/Marconi" },			\ 	{ "ENI155p",		"Efficient Networks" },			\ 	{ "ADP155p",		"Adaptec" },				\ 	{ "ForeRunnerLE25",	"Fore/Marconi" },			\ 	{ "ForeRunnerLE155",	"Fore/Marconi" },			\ 	{ "IDT77211/25",	"IDT" },				\ 	{ "IDT77211/155",	"IDT" },
 end_define
 
 begin_comment
@@ -153,11 +197,313 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
+begin_comment
+comment|/*  * Traffic parameters for ATM connections. This contains all parameters  * to accomodate UBR, UBR+MCR, CBR, VBR and ABR connections.  *  * Keep in sync with ng_atm.h  */
+end_comment
+
+begin_struct
+struct|struct
+name|atmio_tparam
+block|{
+name|uint32_t
+name|pcr
+decl_stmt|;
+comment|/* 24bit: Peak Cell Rate */
+name|uint32_t
+name|scr
+decl_stmt|;
+comment|/* 24bit: VBR Sustainable Cell Rate */
+name|uint32_t
+name|mbs
+decl_stmt|;
+comment|/* 24bit: VBR Maximum burst size */
+name|uint32_t
+name|mcr
+decl_stmt|;
+comment|/* 24bit: ABR/VBR/UBR+MCR MCR */
+name|uint32_t
+name|icr
+decl_stmt|;
+comment|/* 24bit: ABR ICR */
+name|uint32_t
+name|tbe
+decl_stmt|;
+comment|/* 24bit: ABR TBE (1...2^24-1) */
+name|uint8_t
+name|nrm
+decl_stmt|;
+comment|/*  3bit: ABR Nrm */
+name|uint8_t
+name|trm
+decl_stmt|;
+comment|/*  3bit: ABR Trm */
+name|uint16_t
+name|adtf
+decl_stmt|;
+comment|/* 10bit: ABR ADTF */
+name|uint8_t
+name|rif
+decl_stmt|;
+comment|/*  4bit: ABR RIF */
+name|uint8_t
+name|rdf
+decl_stmt|;
+comment|/*  4bit: ABR RDF */
+name|uint8_t
+name|cdf
+decl_stmt|;
+comment|/*  3bit: ABR CDF */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * VCC parameters  *  * Keep in sync with ng_atm.h  */
+end_comment
+
+begin_struct
+struct|struct
+name|atmio_vcc
+block|{
+name|uint16_t
+name|flags
+decl_stmt|;
+comment|/* VCC flags */
+name|uint16_t
+name|vpi
+decl_stmt|;
+name|uint16_t
+name|vci
+decl_stmt|;
+name|uint16_t
+name|rmtu
+decl_stmt|;
+comment|/* maximum receive PDU */
+name|uint16_t
+name|tmtu
+decl_stmt|;
+comment|/* maximum transmit PDU */
+name|uint8_t
+name|aal
+decl_stmt|;
+comment|/* aal type */
+name|uint8_t
+name|traffic
+decl_stmt|;
+comment|/* traffic type */
+name|struct
+name|atmio_tparam
+name|tparam
+decl_stmt|;
+comment|/* traffic parameters */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* VCC flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATMIO_FLAG_LLCSNAP
+value|0x0002
+end_define
+
+begin_comment
+comment|/* same as ATM_PH_LLCSNAP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATMIO_FLAG_NG
+value|0x0010
+end_define
+
+begin_comment
+comment|/* owned by netgraph */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATMIO_FLAG_HARP
+value|0x0020
+end_define
+
+begin_comment
+comment|/* owned by HARP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATMIO_FLAG_NORX
+value|0x0100
+end_define
+
+begin_comment
+comment|/* not receiving on this VCC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATMIO_FLAG_NOTX
+value|0x0200
+end_define
+
+begin_comment
+comment|/* not transmitting on this VCC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATMIO_FLAG_PVC
+value|0x0400
+end_define
+
+begin_comment
+comment|/* this is a PVC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATMIO_FLAGS
+value|"\020\2LLCSNAP\5NG\6HARP\11NORX\12NOTX\13PVC"
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATMIO_AAL_0
+value|0
+end_define
+
+begin_comment
+comment|/* pure cells */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATMIO_AAL_34
+value|4
+end_define
+
+begin_comment
+comment|/* AAL3 and 4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATMIO_AAL_5
+value|5
+end_define
+
+begin_comment
+comment|/* AAL5 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATMIO_AAL_RAW
+value|10
+end_define
+
+begin_comment
+comment|/* whatever the card does */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATMIO_TRAFFIC_UBR
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATMIO_TRAFFIC_CBR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATMIO_TRAFFIC_ABR
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATMIO_TRAFFIC_VBR
+value|3
+end_define
+
+begin_comment
+comment|/*  * VCC table  *  * Keep in sync with ng_atm.h  */
+end_comment
+
+begin_struct
+struct|struct
+name|atmio_vcctable
+block|{
+name|uint32_t
+name|count
+decl_stmt|;
+comment|/* number of vccs */
+name|struct
+name|atmio_vcc
+name|vccs
+index|[
+literal|0
+index|]
+decl_stmt|;
+comment|/* array of VCCs */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Peak cell rates for various physical media. Note, that there are  * different opinions on what the correct values are.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATM_RATE_25_6M
+value|59259
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATM_RATE_155M
+value|353208
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATM_RATE_622M
+value|1412830
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATM_RATE_2_4G
+value|5651320
+end_define
 
 begin_comment
 comment|/*  * Common fields for all ATM interfaces. Each driver's softc must start with  * this structure.  */
@@ -190,36 +536,6 @@ comment|/* netgraph link */
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * Peak cell rates for various physical media. Note, that there are  * different opinions on what the correct values are.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATM_RATE_155M
-value|353208
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATM_RATE_622M
-value|1412830
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATM_RATE_24G
-value|5651320
-end_define
 
 begin_if
 if|#
@@ -454,6 +770,20 @@ end_define
 begin_comment
 comment|/* disable */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCATMGETVCCS
+value|_IOW('a', 125, struct atmio_vcctable)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCATMGVCCS
+value|_IOWR('i', 230, struct ifreq)
+end_define
 
 begin_comment
 comment|/*  * XXX forget all the garbage in if_llc.h and do it the easy way  */
