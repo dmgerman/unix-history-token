@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)object.c 1.2 %G%"
+literal|"@(#)object.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1403,6 +1403,11 @@ break|break;
 case|case
 name|N_PC
 case|:
+break|break;
+case|case
+name|N_LENG
+case|:
+comment|/* 	     * Should complain out this, obviously the wrong symbol format. 	     */
 break|break;
 default|default:
 if|if
