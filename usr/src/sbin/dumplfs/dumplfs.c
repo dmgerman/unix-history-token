@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumplfs.c	5.11 (Berkeley) %G%"
+literal|"@(#)dumplfs.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -369,7 +369,7 @@ define|#
 directive|define
 name|print_suheader
 define|\
-value|(void)printf("segnum\tstatus\tnbytes\t\tlastmod\n")
+value|(void)printf("segnum\tflags\tnbytes\tninos\tnsums\tlastmod\n")
 end_define
 
 begin_define
@@ -382,7 +382,7 @@ parameter_list|,
 name|sp
 parameter_list|)
 define|\
-value|(void)printf("%d\t%c%c%c\t%d\t%s", i, \ 	    (((sp)->su_flags& SEGUSE_ACTIVE) ? 'A' : ' '), \ 	    (((sp)->su_flags& SEGUSE_DIRTY) ? 'D' : 'C'), \ 	    (((sp)->su_flags& SEGUSE_SUPERBLOCK) ? 'S' : ' '), \ 	    (sp)->su_nbytes, ctime((time_t *)&(sp)->su_lastmod))
+value|(void)printf("%d\t%c%c%c\t%d\t%d\t%d\t%s", i, \ 	    (((sp)->su_flags& SEGUSE_ACTIVE) ? 'A' : ' '), \ 	    (((sp)->su_flags& SEGUSE_DIRTY) ? 'D' : 'C'), \ 	    (((sp)->su_flags& SEGUSE_SUPERBLOCK) ? 'S' : ' '), \ 	    (sp)->su_nbytes, (sp)->su_ninos, (sp)->su_nsums, \ 	    ctime((time_t *)&(sp)->su_lastmod))
 end_define
 
 begin_comment
@@ -2991,7 +2991,13 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s%d\t\t%s0x%X\t%s0x%qx\n"
+literal|"%s%d\t%s%d\t%s0x%X\t%s0x%qx\n"
+argument_list|,
+literal|"sushift  "
+argument_list|,
+name|lfsp
+operator|->
+name|lfs_sushift
 argument_list|,
 literal|"fsbtodb  "
 argument_list|,
