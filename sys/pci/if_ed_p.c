@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * Copyright (c) 1996 Stefan Esser<se@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Stefan Esser.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: if_ed_p.c,v 1.4 1996/08/28 18:54:26 bde Exp $  */
+comment|/*  *  * Copyright (c) 1996 Stefan Esser<se@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Stefan Esser.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: if_ed_p.c,v 1.5 1996/10/15 19:22:40 bde Exp $  */
 end_comment
 
 begin_include
@@ -62,8 +62,22 @@ end_include
 begin_define
 define|#
 directive|define
-name|PCI_DEVICE_ID_NE2000
+name|PCI_DEVICE_ID_RealTek_8029
 value|0x802910ec
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_DEVICE_ID_ProLAN_NE2000
+value|0x09401050
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_DEVICE_ID_Compex_NE2000
+value|0x140111f6
 end_define
 
 begin_decl_stmt
@@ -176,16 +190,29 @@ name|type
 condition|)
 block|{
 case|case
-name|PCI_DEVICE_ID_NE2000
+name|PCI_DEVICE_ID_RealTek_8029
 case|:
 return|return
 operator|(
-literal|"NE2000 compatible PCI Ethernet adapter"
+literal|"NE2000 PCI Ethernet (RealTek 8029)"
 operator|)
 return|;
-break|break;
-default|default:
-break|break;
+case|case
+name|PCI_DEVICE_ID_ProLAN_NE2000
+case|:
+return|return
+operator|(
+literal|"NE2000 PCI Ethernet (ProLAN)"
+operator|)
+return|;
+case|case
+name|PCI_DEVICE_ID_Compex_NE2000
+case|:
+return|return
+operator|(
+literal|"NE2000 PCI Ethernet (Compex)"
+operator|)
+return|;
 block|}
 return|return
 operator|(
@@ -221,7 +248,7 @@ name|int
 name|unit
 decl_stmt|;
 block|{
-name|u_long
+name|int
 name|io_port
 decl_stmt|;
 name|void
