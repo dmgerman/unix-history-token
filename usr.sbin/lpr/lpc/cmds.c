@@ -3446,11 +3446,14 @@ operator|++
 expr_stmt|;
 while|while
 condition|(
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|cp1
 operator|-
 name|buf
-operator|)
+argument_list|)
 operator|<
 sizeof|sizeof
 argument_list|(
