@@ -132,23 +132,6 @@ begin_comment
 comment|/* true if currently in a dependency 				 * line or its commands */
 end_comment
 
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|char
-modifier|*
-name|str
-decl_stmt|;
-name|char
-modifier|*
-name|ptr
-decl_stmt|;
-block|}
-name|PTR
-typedef|;
-end_typedef
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -170,45 +153,15 @@ begin_comment
 comment|/* The main target to create. This is the 				 * first target on the first dependency 				 * line in the first makefile */
 end_comment
 
-begin_comment
-comment|/*  * Definitions for handling #include specifications  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|IFile
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-comment|/* name of previous file */
-name|int
-name|lineno
-decl_stmt|;
-comment|/* saved line number */
-name|FILE
-modifier|*
-name|F
-decl_stmt|;
-comment|/* the open stream */
-name|PTR
-modifier|*
-name|p
-decl_stmt|;
-comment|/* the char pointer */
-block|}
-name|IFile
-typedef|;
-end_typedef
-
 begin_decl_stmt
-specifier|static
 name|IFile
 name|curFile
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* current makefile */
+end_comment
 
 begin_decl_stmt
 specifier|static
