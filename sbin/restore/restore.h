@@ -76,6 +76,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|uflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* unlink symlink targets */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|vflag
 decl_stmt|;
 end_decl_stmt

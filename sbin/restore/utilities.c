@@ -547,6 +547,9 @@ literal|0777
 argument_list|)
 operator|<
 literal|0
+operator|&&
+operator|!
+name|uflag
 condition|)
 block|{
 name|np
@@ -823,6 +826,22 @@ end_decl_stmt
 
 begin_block
 block|{
+comment|/* if we want to unlink first, do it now so *link() won't fail */
+if|if
+condition|(
+name|uflag
+operator|&&
+operator|!
+name|Nflag
+condition|)
+operator|(
+name|void
+operator|)
+name|unlink
+argument_list|(
+name|new
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|type

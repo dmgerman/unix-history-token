@@ -179,6 +179,14 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|uflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|dokerberos
 init|=
 literal|0
@@ -378,13 +386,13 @@ name|KERBEROS
 define|#
 directive|define
 name|optlist
-value|"b:cdf:hikmNRrs:tvxy"
+value|"b:cdf:hikmNRrs:tuvxy"
 else|#
 directive|else
 define|#
 directive|define
 name|optlist
-value|"b:cdf:himNRrs:tvxy"
+value|"b:cdf:himNRrs:tuvxy"
 endif|#
 directive|endif
 while|while
@@ -598,6 +606,14 @@ literal|1
 argument_list|,
 literal|"dump number must be greater than 0"
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'u'
+case|:
+name|uflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1114,13 +1130,13 @@ literal|"usage:\t%s%s%s%s%s"
 argument_list|,
 literal|"restore tfhksvy [file ...]\n"
 argument_list|,
-literal|"\trestore xfhkmsvy [file ...]\n"
+literal|"\trestore xfhkmsuvy [file ...]\n"
 argument_list|,
-literal|"\trestore ifhkmsvy\n"
+literal|"\trestore ifhkmsuvy\n"
 argument_list|,
-literal|"\trestore rfksvy\n"
+literal|"\trestore rfksvuy\n"
 argument_list|,
-literal|"\trestore Rfksvy\n"
+literal|"\trestore Rfksvuy\n"
 argument_list|)
 expr_stmt|;
 name|done
