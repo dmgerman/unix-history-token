@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.23 (Berkeley) %G% (with DBM)"
+literal|"@(#)alias.c	5.24 (Berkeley) %G% (with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.23 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	5.24 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,7 +57,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.23 (Berkeley) %G% (without DBM)"
+literal|"@(#)alias.c	5.24 (Berkeley) %G% (without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -731,6 +731,26 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|AliasDBptr
+operator|==
+name|NULL
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"initaliases: cannot open %s"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+name|NoAlias
+operator|=
+name|TRUE
+expr_stmt|;
+return|return;
+block|}
 else|#
 directive|else
 name|dbminit
@@ -826,6 +846,26 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|AliasDBptr
+operator|==
+name|NULL
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"initaliases: cannot open %s"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+name|NoAlias
+operator|=
+name|TRUE
+expr_stmt|;
+return|return;
+block|}
 else|#
 directive|else
 ifdef|#
@@ -1460,6 +1500,32 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dbp
+operator|==
+name|NULL
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"readaliases: cannot create %s"
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|oldsigint
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 endif|#
 directive|endif
 block|}
@@ -2093,17 +2159,15 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
 name|syserr
 argument_list|(
-literal|"cannot put alias %s"
+literal|"readaliases: db put (%s)"
 argument_list|,
 name|al
 operator|.
 name|q_user
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 block|}
@@ -2191,6 +2255,17 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|NEWDB
+if|if
+condition|(
+name|dbp
+operator|->
+name|sync
+argument_list|(
+name|dbp
+argument_list|)
+operator|!=
+literal|0
+operator|||
 name|dbp
 operator|->
 name|put
@@ -2205,12 +2280,21 @@ name|key
 argument_list|,
 name|R_PUT
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+operator|||
 name|dbp
 operator|->
 name|close
 argument_list|(
 name|dbp
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|syserr
+argument_list|(
+literal|"readaliases: db close failure"
 argument_list|)
 expr_stmt|;
 else|#
