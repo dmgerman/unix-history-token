@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c	5.3 (Berkeley) %G%"
+literal|"@(#)hash.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -658,8 +658,10 @@ block|}
 if|if
 condition|(
 name|file
-operator|&&
-operator|(
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|hashp
 operator|->
@@ -677,7 +679,6 @@ operator|)
 operator|==
 operator|-
 literal|1
-operator|)
 condition|)
 block|{
 name|RETURN_ERROR
@@ -702,6 +703,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|new_table
