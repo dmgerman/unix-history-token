@@ -920,7 +920,6 @@ comment|/* For chaining in the type driver */
 name|u_int32_t
 name|retry_count
 decl_stmt|;
-comment|/* Callback on completion function */
 name|void
 function_decl|(
 modifier|*
@@ -936,6 +935,7 @@ name|ccb
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/* Callback on completion function */
 name|xpt_opcode
 name|func_code
 decl_stmt|;
@@ -944,12 +944,12 @@ name|u_int32_t
 name|status
 decl_stmt|;
 comment|/* Status returned by CAM subsystem */
-comment|/* Compiled path for this ccb */
 name|struct
 name|cam_path
 modifier|*
 name|path
 decl_stmt|;
+comment|/* Compiled path for this ccb */
 name|path_id_t
 name|path_id
 decl_stmt|;
@@ -965,6 +965,7 @@ comment|/* Target LUN number */
 name|u_int32_t
 name|flags
 decl_stmt|;
+comment|/* ccb_flags */
 name|ccb_ppriv_area
 name|periph_priv
 decl_stmt|;
@@ -975,11 +976,11 @@ name|u_int32_t
 name|timeout
 decl_stmt|;
 comment|/* Timeout value */
-comment|/* Callout handle used for timeouts */
 name|struct
 name|callout_handle
 name|timeout_ch
 decl_stmt|;
+comment|/* Callout handle used for timeouts */
 block|}
 struct|;
 end_struct
