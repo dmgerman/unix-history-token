@@ -1255,7 +1255,6 @@ block|}
 comment|/* 	 * We use the ARMAG string to make sure this is an archive we 	 * can handle... 	 */
 if|if
 condition|(
-operator|(
 name|fread
 argument_list|(
 name|magic
@@ -1268,9 +1267,7 @@ name|arch
 argument_list|)
 operator|!=
 literal|1
-operator|)
 operator|||
-operator|(
 name|strncmp
 argument_list|(
 name|magic
@@ -1281,7 +1278,6 @@ name|SARMAG
 argument_list|)
 operator|!=
 literal|0
-operator|)
 condition|)
 block|{
 name|fclose
@@ -1307,13 +1303,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|cp
 operator|!=
 name|NULL
-operator|)
 operator|&&
-operator|(
 name|strcmp
 argument_list|(
 name|member
@@ -1322,7 +1315,6 @@ name|RANLIBMAG
 argument_list|)
 operator|!=
 literal|0
-operator|)
 condition|)
 block|{
 name|member
@@ -2234,13 +2226,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|cp
 operator|!=
 name|NULL
-operator|)
 operator|&&
-operator|(
 name|strcmp
 argument_list|(
 name|member
@@ -2249,7 +2238,6 @@ name|RANLIBMAG
 argument_list|)
 operator|!=
 literal|0
-operator|)
 condition|)
 name|member
 operator|=
@@ -2445,7 +2433,6 @@ block|}
 comment|/* 	 * We use the ARMAG string to make sure this is an archive we 	 * can handle... 	 */
 if|if
 condition|(
-operator|(
 name|fread
 argument_list|(
 name|magic
@@ -2458,9 +2445,7 @@ name|arch
 argument_list|)
 operator|!=
 literal|1
-operator|)
 operator|||
-operator|(
 name|strncmp
 argument_list|(
 name|magic
@@ -2471,7 +2456,6 @@ name|SARMAG
 argument_list|)
 operator|!=
 literal|0
-operator|)
 condition|)
 block|{
 name|fclose
@@ -3681,15 +3665,12 @@ return|;
 block|}
 if|if
 condition|(
-operator|(
 name|gn
 operator|->
 name|mtime
 operator|>
 name|now
-operator|)
 operator|||
-operator|(
 name|gn
 operator|->
 name|mtime
@@ -3697,7 +3678,6 @@ operator|<
 name|gn
 operator|->
 name|cmtime
-operator|)
 condition|)
 block|{
 return|return
