@@ -282,17 +282,13 @@ name|dq_flags
 decl_stmt|;
 comment|/* flags, see below */
 name|u_int16_t
-name|dq_cnt
-decl_stmt|;
-comment|/* count of active references */
-name|u_int16_t
-name|dq_spare
-decl_stmt|;
-comment|/* unused spare padding */
-name|u_int16_t
 name|dq_type
 decl_stmt|;
 comment|/* quota type of this dquot */
+name|u_int32_t
+name|dq_cnt
+decl_stmt|;
+comment|/* count of active references */
 name|u_int32_t
 name|dq_id
 decl_stmt|;
