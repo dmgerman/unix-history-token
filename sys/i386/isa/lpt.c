@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 William F. Jolitz, TeleMuse  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software is a component of "386BSD" developed by  *	William F. Jolitz, TeleMuse.  * 4. Neither the name of the developer nor the name "386BSD"  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS A COMPONENT OF 386BSD DEVELOPED BY WILLIAM F. JOLITZ  * AND IS INTENDED FOR RESEARCH AND EDUCATIONAL PURPOSES ONLY. THIS  * SOFTWARE SHOULD NOT BE CONSIDERED TO BE A COMMERCIAL PRODUCT.  * THE DEVELOPER URGES THAT USERS WHO REQUIRE A COMMERCIAL PRODUCT  * NOT MAKE USE OF THIS WORK.  *  * FOR USERS WHO WISH TO UNDERSTAND THE 386BSD SYSTEM DEVELOPED  * BY WILLIAM F. JOLITZ, WE RECOMMEND THE USER STUDY WRITTEN  * REFERENCES SUCH AS THE  "PORTING UNIX TO THE 386" SERIES  * (BEGINNING JANUARY 1991 "DR. DOBBS JOURNAL", USA AND BEGINNING  * JUNE 1991 "UNIX MAGAZIN", GERMANY) BY WILLIAM F. JOLITZ AND  * LYNNE GREER JOLITZ, AS WELL AS OTHER BOOKS ON UNIX AND THE  * ON-LINE 386BSD USER MANUAL BEFORE USE. A BOOK DISCUSSING THE INTERNALS  * OF 386BSD ENTITLED "386BSD FROM THE INSIDE OUT" WILL BE AVAILABLE LATE 1992.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: unknown origin, 386BSD 0.1  *	$Id: lpt.c,v 1.51 1996/03/28 14:28:44 scrappy Exp $  */
+comment|/*  * Copyright (c) 1990 William F. Jolitz, TeleMuse  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software is a component of "386BSD" developed by  *	William F. Jolitz, TeleMuse.  * 4. Neither the name of the developer nor the name "386BSD"  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS A COMPONENT OF 386BSD DEVELOPED BY WILLIAM F. JOLITZ  * AND IS INTENDED FOR RESEARCH AND EDUCATIONAL PURPOSES ONLY. THIS  * SOFTWARE SHOULD NOT BE CONSIDERED TO BE A COMMERCIAL PRODUCT.  * THE DEVELOPER URGES THAT USERS WHO REQUIRE A COMMERCIAL PRODUCT  * NOT MAKE USE OF THIS WORK.  *  * FOR USERS WHO WISH TO UNDERSTAND THE 386BSD SYSTEM DEVELOPED  * BY WILLIAM F. JOLITZ, WE RECOMMEND THE USER STUDY WRITTEN  * REFERENCES SUCH AS THE  "PORTING UNIX TO THE 386" SERIES  * (BEGINNING JANUARY 1991 "DR. DOBBS JOURNAL", USA AND BEGINNING  * JUNE 1991 "UNIX MAGAZIN", GERMANY) BY WILLIAM F. JOLITZ AND  * LYNNE GREER JOLITZ, AS WELL AS OTHER BOOKS ON UNIX AND THE  * ON-LINE 386BSD USER MANUAL BEFORE USE. A BOOK DISCUSSING THE INTERNALS  * OF 386BSD ENTITLED "386BSD FROM THE INSIDE OUT" WILL BE AVAILABLE LATE 1992.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: unknown origin, 386BSD 0.1  *	$Id: lpt.c,v 1.52 1996/03/29 11:54:56 bde Exp $  */
 end_comment
 
 begin_comment
@@ -272,12 +272,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LPTOUTTIME
-value|4
+name|LPTOUTINITIAL
+value|10
 end_define
 
 begin_comment
-comment|/* wait up to 4 seconds for a ready */
+comment|/* initial timeout to wait for ready 1/10 s */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LPTOUTMAX
+value|1
+end_define
+
+begin_comment
+comment|/* maximal timeout 1 s */
 end_comment
 
 begin_define
@@ -658,6 +669,10 @@ directive|define
 name|LP_ENABLE_IRQ
 value|0x04
 comment|/* enable IRQ on open */
+name|u_char
+name|sc_backoff
+decl_stmt|;
+comment|/* time to call lptout() again */
 ifdef|#
 directive|ifdef
 name|INET
@@ -2376,9 +2391,15 @@ name|caddr_t
 operator|)
 name|sc
 argument_list|,
+operator|(
+name|sc
+operator|->
+name|sc_backoff
+operator|=
 name|hz
 operator|/
-literal|2
+name|LPTOUTINITIAL
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2431,6 +2452,34 @@ name|sc_state
 operator|&
 name|OPEN
 condition|)
+block|{
+name|sc
+operator|->
+name|sc_backoff
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_backoff
+operator|>
+name|hz
+operator|/
+name|LPTOUTMAX
+condition|)
+name|sc
+operator|->
+name|sc_backoff
+operator|=
+name|sc
+operator|->
+name|sc_backoff
+operator|>
+name|hz
+operator|/
+name|LPTOUTMAX
+expr_stmt|;
 name|timeout
 argument_list|(
 operator|(
@@ -2443,11 +2492,12 @@ name|caddr_t
 operator|)
 name|sc
 argument_list|,
-name|hz
-operator|/
-literal|2
+name|sc
+operator|->
+name|sc_backoff
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|sc
 operator|->
@@ -3239,6 +3289,9 @@ name|sc_port
 decl_stmt|,
 name|sts
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|INET
@@ -3263,9 +3316,17 @@ block|}
 endif|#
 directive|endif
 comment|/* INET */
-comment|/* is printer online and ready for output */
-if|if
-condition|(
+comment|/* 	 * Is printer online and ready for output? 	 * 	 * Avoid falling back to lptout() too quickly.  First spin-loop 	 * to see if the printer will become ready ``really soon now''. 	 */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|100
+operator|&&
 operator|(
 operator|(
 name|sts
@@ -3277,6 +3338,20 @@ operator|+
 name|lpt_status
 argument_list|)
 operator|)
+operator|&
+name|RDY_MASK
+operator|)
+operator|!=
+name|LP_READY
+condition|;
+name|i
+operator|++
+control|)
+empty_stmt|;
+if|if
+condition|(
+operator|(
+name|sts
 operator|&
 name|RDY_MASK
 operator|)
@@ -3298,6 +3373,14 @@ operator|)
 operator|&
 operator|~
 name|ERROR
+expr_stmt|;
+name|sc
+operator|->
+name|sc_backoff
+operator|=
+name|hz
+operator|/
+name|LPTOUTINITIAL
 expr_stmt|;
 if|if
 condition|(
@@ -3427,6 +3510,7 @@ name|sc_state
 operator||=
 name|ERROR
 expr_stmt|;
+comment|/* lptout() will jump in and try to restart. */
 block|}
 name|lprintf
 argument_list|(
