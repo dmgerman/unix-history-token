@@ -1461,7 +1461,7 @@ name|sdl
 operator|=
 name|sdl
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ifinfo
 operator|->

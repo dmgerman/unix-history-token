@@ -434,10 +434,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|dr
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -445,13 +447,18 @@ name|dr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|dr
 operator|.
 name|ifname
 argument_list|,
 literal|"lo0"
+argument_list|,
+sizeof|sizeof
+name|dr
+operator|.
+name|ifname
 argument_list|)
 expr_stmt|;
 comment|/* dummy interface */
@@ -658,10 +665,12 @@ name|hoplimit
 init|=
 literal|1
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|sa6_probe
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

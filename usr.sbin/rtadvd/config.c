@@ -2867,11 +2867,13 @@ name|buf
 operator|+
 name|len
 decl_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
 name|string
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 if|if

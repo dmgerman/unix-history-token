@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: advcap.c,v 1.5 2001/02/01 09:12:08 jinmei Exp $	*/
+comment|/*	$KAME: advcap.c,v 1.11 2003/05/19 09:46:50 keiichi Exp $	*/
 end_comment
 
 begin_comment
@@ -772,13 +772,16 @@ operator|(
 literal|1
 operator|)
 return|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|tcname
 argument_list|,
 name|p
 operator|+
 literal|3
+argument_list|,
+sizeof|sizeof
+name|tcname
 argument_list|)
 expr_stmt|;
 name|q
