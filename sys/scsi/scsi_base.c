@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.21 1995/03/04 20:50:49 dufault Exp $  */
+comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.22 1995/03/15 14:22:05 dufault Exp $  */
 end_comment
 
 begin_define
@@ -3947,9 +3947,24 @@ modifier|*
 name|sc_link
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|sc_link
+operator|->
+name|device
+operator|->
+name|name
+argument_list|,
+literal|"probe"
+argument_list|)
+operator|!=
+literal|0
+condition|)
 name|printf
 argument_list|(
-literal|"%s%d(%s%d:%d:%d): "
+literal|"%s%d"
 argument_list|,
 name|sc_link
 operator|->
@@ -3960,6 +3975,11 @@ argument_list|,
 name|sc_link
 operator|->
 name|dev_unit
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"(%s%d:%d:%d): "
 argument_list|,
 name|sc_link
 operator|->
