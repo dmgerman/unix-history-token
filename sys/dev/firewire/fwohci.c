@@ -7412,6 +7412,13 @@ argument_list|(
 literal|"fwohci_db_init: fwdma_malloc_multiseg failed\n"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|db_tr
+argument_list|,
+name|M_FW
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 comment|/* Attach DB to DMA ch. */
