@@ -15018,7 +15018,7 @@ if|if
 condition|(
 name|cred
 operator|==
-name|NULL
+name|NOCRED
 condition|)
 return|return
 operator|(
