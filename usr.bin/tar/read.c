@@ -1015,7 +1015,7 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"%-*s"
+literal|"%-*s "
 argument_list|,
 operator|(
 name|int
