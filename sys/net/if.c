@@ -2264,6 +2264,13 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|ifnet_arrival_event
+argument_list|,
+name|ifp
+argument_list|)
+expr_stmt|;
 comment|/* Announce the interface. */
 name|rt_ifannouncemsg
 argument_list|(
@@ -2522,6 +2529,13 @@ name|domain
 modifier|*
 name|dp
 decl_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|ifnet_departure_event
+argument_list|,
+name|ifp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Remove routes and flush queues. 	 */
 name|s
 operator|=
@@ -4000,6 +4014,13 @@ name|bitoff
 operator|)
 expr_stmt|;
 block|}
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|if_clone_event
+argument_list|,
+name|ifc
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -6304,6 +6325,13 @@ operator|(
 name|EEXIST
 operator|)
 return|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|ifnet_departure_event
+argument_list|,
+name|ifp
+argument_list|)
+expr_stmt|;
 comment|/* Announce the departure of the interface. */
 name|rt_ifannouncemsg
 argument_list|(
@@ -6451,6 +6479,13 @@ expr_stmt|;
 name|IFA_UNLOCK
 argument_list|(
 name|ifa
+argument_list|)
+expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|ifnet_arrival_event
+argument_list|,
+name|ifp
 argument_list|)
 expr_stmt|;
 comment|/* Announce the return of the interface. */
