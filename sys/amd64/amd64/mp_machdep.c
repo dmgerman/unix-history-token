@@ -806,7 +806,11 @@ comment|/* round down to 4k boundary */
 if|if
 condition|(
 operator|(
+operator|(
 name|basemem
+operator|*
+literal|1024
+operator|)
 operator|-
 name|boot_address
 operator|)
