@@ -1521,16 +1521,42 @@ value|do {						\ 	mtx_assert(&sched_lock, MA_OWNED);				\ 	curproc->p_sflag&= ~
 end_define
 
 begin_comment
-comment|/*  * Notify the current process (p) that it has a signal pending,  * process as soon as possible.  */
+comment|/*  * Schedule an Asynchronous System Trap (AST) on return to user mode.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|aston
-parameter_list|()
-value|signotify(CURPROC)
+parameter_list|(
+name|p
+parameter_list|)
+value|do {							\ 	mtx_assert(&sched_lock, MA_OWNED);				\ 	(p)->p_sflag |= PS_ASTPENDING;					\ } while (0)
 end_define
+
+begin_define
+define|#
+directive|define
+name|astpending
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)->p_sflag& PS_ASTPENDING)
+end_define
+
+begin_define
+define|#
+directive|define
+name|astoff
+parameter_list|(
+name|p
+parameter_list|)
+value|do {							\ 	mtx_assert(&sched_lock, MA_OWNED);				\ 	(p)->p_sflag&= ~PS_ASTPENDING;					\ } while (0)
+end_define
+
+begin_comment
+comment|/*  * Notify the current process (p) that it has a signal pending,  * process as soon as possible.  */
+end_comment
 
 begin_define
 define|#
@@ -1539,23 +1565,7 @@ name|signotify
 parameter_list|(
 name|p
 parameter_list|)
-value|do {						\ 	mtx_assert(&sched_lock, MA_OWNED);				\ 	(p)->p_sflag |= PS_ASTPENDING;					\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|astpending
-parameter_list|()
-value|(curproc->p_sflag& PS_ASTPENDING)
-end_define
-
-begin_define
-define|#
-directive|define
-name|astoff
-parameter_list|()
-value|do {							\ 	mtx_assert(&sched_lock, MA_OWNED);				\ 	CURPROC->p_sflag&= ~PS_ASTPENDING;				\ } while (0)
+value|aston(p)
 end_define
 
 begin_comment

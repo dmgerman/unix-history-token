@@ -469,7 +469,9 @@ operator||=
 name|PS_ALRMPEND
 expr_stmt|;
 name|aston
-argument_list|()
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
@@ -522,7 +524,9 @@ operator||=
 name|PS_PROFPEND
 expr_stmt|;
 name|aston
-argument_list|()
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(

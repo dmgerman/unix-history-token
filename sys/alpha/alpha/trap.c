@@ -2967,7 +2967,9 @@ condition|(
 operator|!
 operator|(
 name|astpending
-argument_list|()
+argument_list|(
+name|p
+argument_list|)
 operator|||
 name|resched_wanted
 argument_list|()
@@ -2997,7 +2999,9 @@ operator|=
 name|framep
 expr_stmt|;
 name|astoff
-argument_list|()
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 name|cnt
 operator|.
