@@ -48,7 +48,24 @@ end_ifdef
 begin_warning
 warning|#
 directive|warning
-literal|"obsolete option GATEWAY - use `sysctl -w net.inet.ip_forwarding=1'"
+literal|"obsolete option GATEWAY - use `sysctl -w net.inet.ip.forwarding=1'"
+end_warning
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ARP_PROXYALL
+end_ifdef
+
+begin_warning
+warning|#
+directive|warning
+literal|"obsolete option ARP_PROXYALL - use `sysctl -w net.link.ether.inet.proxyall=1'"
 end_warning
 
 begin_endif
