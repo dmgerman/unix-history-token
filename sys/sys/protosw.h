@@ -150,7 +150,7 @@ comment|/* control output (from above) */
 comment|/* user-protocol hook */
 name|int
 argument_list|(
-argument|*pr_usrreq
+argument|*pr_ousrreq
 argument_list|)
 name|__P
 argument_list|(
@@ -682,6 +682,12 @@ name|stat
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|ifnet
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * If the ordering here looks odd, that's because it's alphabetical.  */
 end_comment
@@ -814,6 +820,11 @@ name|cmd
 operator|,
 name|caddr_t
 name|data
+operator|,
+expr|struct
+name|ifnet
+operator|*
+name|ifp
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1014,6 +1025,26 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+name|int
+name|pru_connect2_notsupp
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|socket
+operator|*
+name|so1
+operator|,
+expr|struct
+name|socket
+operator|*
+name|so2
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -1037,31 +1068,6 @@ name|pr_usrreqs
 name|pru_oldstyle
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|int
-name|pr_newstyle_usrreq
-parameter_list|(
-name|struct
-name|socket
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_endif
 endif|#
