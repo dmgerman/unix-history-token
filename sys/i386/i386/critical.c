@@ -145,39 +145,6 @@ comment|/* NOTE: not static, called from assembly */
 end_comment
 
 begin_comment
-comment|/*  * Instrument our ability to run critical sections with interrupts  * enabled.  Default is 1 (enabled).  The value can be changed on the  * fly, at any time.  If set to 0 the original interrupt disablement  * will be used for critical sections.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|critical_mode
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_debug
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|critical_mode
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|critical_mode
-argument_list|,
-literal|0
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/*  * cpu_unpend() -	called from critical_exit() inline after quick  *			interrupt-pending check.  */
 end_comment
 
@@ -236,7 +203,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cpu_critical_fork_exit() - cleanup after fork  *  *	For i386 we do not have to do anything, td_critnest and  *	td_savecrit are handled by the fork trampoline code.  */
+comment|/*  * cpu_critical_fork_exit() - cleanup after fork  *  *	For i386 we do not have to do anything, td_critnest is  *	handled by the fork trampoline code.  */
 end_comment
 
 begin_function
@@ -249,7 +216,7 @@ block|{ }
 end_function
 
 begin_comment
-comment|/*  * cpu_thread_link() - thread linkup, initialize machine-dependant fields  *  *	(copy code originally in kern/kern_proc.c).  XXX we actually  *	don't have to initialize this field but it's probably a good  *	idea for the moment for debugging's sake.  The field is only  *	valid when td_critnest is non-zero.  */
+comment|/*  * cpu_thread_link() - thread linkup, initialize machine-dependant fields  *  *	There are currently no machine-dependant fields that require   *	initialization.  */
 end_comment
 
 begin_function
@@ -261,16 +228,7 @@ name|thread
 modifier|*
 name|td
 parameter_list|)
-block|{
-name|td
-operator|->
-name|td_md
-operator|.
-name|md_savecrit
-operator|=
-literal|0
-expr_stmt|;
-block|}
+block|{ }
 end_function
 
 begin_comment
