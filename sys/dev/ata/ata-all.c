@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"pci.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_ata.h"
 end_include
 
@@ -1816,6 +1810,9 @@ expr_stmt|;
 return|return
 name|error
 return|;
+ifdef|#
+directive|ifdef
+name|DEV_ATADISK
 case|case
 name|ATAREBUILD
 case|:
@@ -1827,6 +1824,8 @@ operator|->
 name|channel
 argument_list|)
 return|;
+endif|#
+directive|endif
 case|case
 name|ATAGMODE
 case|:
