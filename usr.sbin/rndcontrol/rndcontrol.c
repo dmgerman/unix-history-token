@@ -106,10 +106,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-name|argv
-index|[
-literal|0
-index|]
+literal|"/dev/random"
 argument_list|)
 expr_stmt|;
 return|return
