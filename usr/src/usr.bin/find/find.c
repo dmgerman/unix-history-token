@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)find.c	4.15 (Berkeley) %G%"
+literal|"@(#)find.c	4.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1131,7 +1131,9 @@ name|a
 decl_stmt|,
 modifier|*
 name|b
-decl_stmt|,
+decl_stmt|;
+specifier|register
+name|int
 name|s
 decl_stmt|;
 name|a
