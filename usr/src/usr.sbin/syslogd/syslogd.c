@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.30 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -106,43 +106,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<utmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<strings.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<setjmp.h>
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
 end_include
 
 begin_include
@@ -229,19 +199,48 @@ directive|include
 file|<netdb.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|CTTY
-value|"/dev/console"
-end_define
+begin_include
+include|#
+directive|include
+file|<utmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
 
 begin_decl_stmt
 name|char
 modifier|*
 name|LogName
 init|=
-literal|"/dev/log"
+name|_PATH_LOG
 decl_stmt|;
 end_decl_stmt
 
@@ -250,7 +249,7 @@ name|char
 modifier|*
 name|ConfFile
 init|=
-literal|"/etc/syslog.conf"
+name|_PATH_LOGCONF
 decl_stmt|;
 end_decl_stmt
 
@@ -259,7 +258,7 @@ name|char
 modifier|*
 name|PidFile
 init|=
-literal|"/etc/syslog.pid"
+name|_PATH_LOGPID
 decl_stmt|;
 end_decl_stmt
 
@@ -268,7 +267,7 @@ name|char
 name|ctty
 index|[]
 init|=
-name|CTTY
+name|_PATH_CONSOLE
 decl_stmt|;
 end_decl_stmt
 
@@ -1455,9 +1454,11 @@ name|fklog
 operator|=
 name|open
 argument_list|(
-literal|"/dev/klog"
+name|_PATH_KLOG
 argument_list|,
 name|O_RDONLY
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|>=
@@ -1474,7 +1475,9 @@ else|else
 block|{
 name|dprintf
 argument_list|(
-literal|"can't open /dev/klog (%d)\n"
+literal|"can't open %s (%d)\n"
+argument_list|,
+name|_PATH_KLOG
 argument_list|,
 name|errno
 argument_list|)
@@ -3761,7 +3764,7 @@ name|uf
 operator|=
 name|fopen
 argument_list|(
-literal|"/etc/utmp"
+name|_PATH_UTMP
 argument_list|,
 literal|"r"
 argument_list|)
@@ -3772,7 +3775,7 @@ condition|)
 block|{
 name|logerror
 argument_list|(
-literal|"/etc/utmp"
+name|_PATH_UTMP
 argument_list|)
 expr_stmt|;
 name|reenter
