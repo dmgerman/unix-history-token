@@ -144,6 +144,9 @@ comment|/* none				*/
 name|O_VERSRCREACH
 block|,
 comment|/* none				*/
+name|O_ANTISPOOF
+block|,
+comment|/* none				*/
 name|O_PROBE_STATE
 block|,
 comment|/* none				*/

@@ -818,6 +818,8 @@ name|TOK_VERREVPATH
 block|,
 name|TOK_VERSRCREACH
 block|,
+name|TOK_ANTISPOOF
+block|,
 name|TOK_IPSEC
 block|,
 name|TOK_COMMENT
@@ -1394,6 +1396,12 @@ block|{
 literal|"versrcreach"
 block|,
 name|TOK_VERSRCREACH
+block|}
+block|,
+block|{
+literal|"antispoof"
+block|,
+name|TOK_ANTISPOOF
 block|}
 block|,
 block|{
@@ -6190,6 +6198,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|O_ANTISPOOF
+case|:
+name|printf
+argument_list|(
+literal|" antispoof"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|O_IPSEC
 case|:
 name|printf
@@ -9928,7 +9945,7 @@ literal|"	iplen LIST | ipoptions SPEC | ipprecedence | ipsec | iptos SPEC |\n"
 literal|"	ipttl LIST | ipversion VER | keep-state | layer2 | limit ... |\n"
 literal|"	mac ... | mac-type LIST | proto LIST | {recv|xmit|via} {IF|IPADDR} |\n"
 literal|"	setup | {tcpack|tcpseq|tcpwin} NN | tcpflags SPEC | tcpoptions SPEC |\n"
-literal|"	verrevpath | versrcreach\n"
+literal|"	verrevpath | versrcreach | antispoof\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -17754,6 +17771,21 @@ argument_list|(
 name|cmd
 argument_list|,
 name|O_VERSRCREACH
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|TOK_ANTISPOOF
+case|:
+name|fill_cmd
+argument_list|(
+name|cmd
+argument_list|,
+name|O_ANTISPOOF
 argument_list|,
 literal|0
 argument_list|,
