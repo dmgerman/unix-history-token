@@ -3754,6 +3754,8 @@ argument_list|)
 operator|)
 return|;
 comment|/* 	 * Since ucp is not an osigcontext but a ucontext_t, we have to 	 * check again if all of it is accessible.  A ucontext_t is 	 * much larger, so instead of just checking for the pointer 	 * being valid for the size of an osigcontext, now check for 	 * it being valid for a whole, new-style ucontext_t. 	 */
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -3778,8 +3780,6 @@ operator|(
 name|EFAULT
 operator|)
 return|;
-endif|#
-directive|endif
 name|regs
 operator|=
 name|p
