@@ -186,13 +186,16 @@ expr_stmt|;
 block|}
 do|while
 condition|(
+operator|(
 operator|!
 name|errno
 operator|||
 name|errno
 operator|==
 name|EINTR
-operator|||
+operator|)
+operator|&&
+operator|(
 name|time_to_sleep
 operator|.
 name|tv_sec
@@ -204,6 +207,7 @@ operator|.
 name|tv_nsec
 operator|!=
 literal|0
+operator|)
 condition|)
 do|;
 block|}
@@ -397,7 +401,9 @@ operator|||
 name|errno
 operator|==
 name|EINTR
-operator|||
+operator|)
+operator|&&
+operator|(
 name|time_to_sleep
 operator|.
 name|tv_sec
