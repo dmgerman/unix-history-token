@@ -5296,15 +5296,6 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-name|FILEDESC_UNLOCK
-argument_list|(
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_fd
-argument_list|)
-expr_stmt|;
 name|m_freem
 argument_list|(
 name|control
