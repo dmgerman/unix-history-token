@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.8 (Berkeley) %G%"
+literal|"@(#)tape.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|"dump.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_expr_stmt
@@ -1370,17 +1376,26 @@ condition|)
 endif|#
 directive|endif
 endif|RDUMP
+block|{
+name|msg
+argument_list|(
+literal|"Cannot open tape \"%s\".\n"
+argument_list|,
+name|tape
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|query
 argument_list|(
-literal|"Cannot open tape.  Do you want to retry the open?"
+literal|"Do you want to retry the open?"
 argument_list|)
 condition|)
 name|dumpabort
 argument_list|()
 expr_stmt|;
+block|}
 name|enslave
 argument_list|()
 expr_stmt|;
@@ -1608,7 +1623,7 @@ name|strcpy
 argument_list|(
 name|tmpname
 argument_list|,
-literal|"/tmp/dumplockXXXXXX"
+name|_PATH_LOCK
 argument_list|)
 expr_stmt|;
 name|mktemp
