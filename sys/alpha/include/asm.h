@@ -1861,5 +1861,58 @@ begin_comment
 comment|/* _KERNEL */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|lint
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|STRIP_FBSDID
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__FBSDID
+parameter_list|(
+name|s
+parameter_list|)
+value|.ident s
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__FBSDID
+parameter_list|(
+name|s
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint and not STRIP_FBSDID */
+end_comment
+
 end_unit
 
