@@ -2229,7 +2229,7 @@ block|{
 name|pv_entry_count
 operator|--
 expr_stmt|;
-name|zfreei
+name|zfree
 argument_list|(
 name|pvzone
 argument_list|,
@@ -2257,7 +2257,7 @@ operator|!
 name|pvinit
 condition|)
 return|return
-name|zalloci
+name|zalloc
 argument_list|(
 name|pvbootzone
 argument_list|)
@@ -2301,7 +2301,7 @@ name|IA64_PHYS_TO_RR7
 argument_list|(
 name|vtophys
 argument_list|(
-name|zalloci
+name|zalloc
 argument_list|(
 name|pvzone
 argument_list|)

@@ -5474,7 +5474,7 @@ block|{
 name|pv_entry_count
 operator|--
 expr_stmt|;
-name|zfreei
+name|zfree
 argument_list|(
 name|pvzone
 argument_list|,
@@ -5528,7 +5528,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-name|zalloci
+name|zalloc
 argument_list|(
 name|pvzone
 argument_list|)

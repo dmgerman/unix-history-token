@@ -429,7 +429,7 @@ name|so
 decl_stmt|;
 name|so
 operator|=
-name|zalloci
+name|zalloc
 argument_list|(
 name|socket_zone
 argument_list|)
@@ -975,7 +975,7 @@ operator|->
 name|so_cred
 argument_list|)
 expr_stmt|;
-name|zfreei
+name|zfree
 argument_list|(
 name|so
 operator|->

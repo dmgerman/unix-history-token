@@ -135,6 +135,18 @@ name|ZENTRY_FREE
 value|0x12342378
 end_define
 
+begin_function_decl
+specifier|static
+name|void
+modifier|*
+name|_zget
+parameter_list|(
+name|vm_zone_t
+name|z
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * void *zalloc(vm_zone_t zone) --  *	Returns an item from a specified zone.  *  * void zfree(vm_zone_t zone, void *item) --  *  Frees an item back to a specified zone.  */
 end_comment
@@ -1138,87 +1150,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * void *zalloc(vm_zone_t zone) --  *	Returns an item from a specified zone.  *  * void zfree(vm_zone_t zone, void *item) --  *  Frees an item back to a specified zone.  *  * void *zalloci(vm_zone_t zone) --  *	Returns an item from a specified zone, interrupt safe.  *  * void zfreei(vm_zone_t zone, void *item) --  *  Frees an item back to a specified zone, interrupt safe.  *  */
+comment|/*  * void *zalloc(vm_zone_t zone) --  *	Returns an item from a specified zone.  *  * void zfree(vm_zone_t zone, void *item) --  *  Frees an item back to a specified zone.  *  */
 end_comment
 
 begin_function
 name|void
 modifier|*
 name|zalloc
-parameter_list|(
-name|vm_zone_t
-name|z
-parameter_list|)
-block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SMP
-argument_list|)
-return|return
-name|zalloci
-argument_list|(
-name|z
-argument_list|)
-return|;
-else|#
-directive|else
-return|return
-name|_zalloc
-argument_list|(
-name|z
-argument_list|)
-return|;
-endif|#
-directive|endif
-block|}
-end_function
-
-begin_function
-name|void
-name|zfree
-parameter_list|(
-name|vm_zone_t
-name|z
-parameter_list|,
-name|void
-modifier|*
-name|item
-parameter_list|)
-block|{
-ifdef|#
-directive|ifdef
-name|SMP
-name|zfreei
-argument_list|(
-name|z
-argument_list|,
-name|item
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|_zfree
-argument_list|(
-name|z
-argument_list|,
-name|item
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-end_function
-
-begin_comment
-comment|/*  * Zone allocator/deallocator.  These are interrupt / (or potentially SMP)  * safe.  The raw zalloc/zfree routines are not interrupt safe, but are fast.  */
-end_comment
-
-begin_function
-name|void
-modifier|*
-name|zalloci
 parameter_list|(
 name|vm_zone_t
 name|z
@@ -1260,7 +1198,7 @@ end_function
 
 begin_function
 name|void
-name|zfreei
+name|zfree
 parameter_list|(
 name|vm_zone_t
 name|z
@@ -1303,6 +1241,7 @@ comment|/*  * Internal zone routine.  Not to be called from external (non vm_zon
 end_comment
 
 begin_function
+specifier|static
 name|void
 modifier|*
 name|_zget
@@ -1510,9 +1449,6 @@ operator|=
 name|splvm
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
 name|simple_unlock
 argument_list|(
 operator|&
@@ -1521,8 +1457,6 @@ operator|->
 name|zlock
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|item
 operator|=
 operator|(
@@ -1538,9 +1472,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
 name|simple_lock
 argument_list|(
 operator|&
@@ -1549,8 +1480,6 @@ operator|->
 name|zlock
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|item
@@ -1571,9 +1500,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|SMP
 name|simple_unlock
 argument_list|(
 operator|&
@@ -1582,8 +1508,6 @@ operator|->
 name|zlock
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|item
 operator|=
 operator|(
@@ -1597,9 +1521,6 @@ argument_list|,
 name|nbytes
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
 name|simple_lock
 argument_list|(
 operator|&
@@ -1608,8 +1529,6 @@ operator|->
 name|zlock
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|item

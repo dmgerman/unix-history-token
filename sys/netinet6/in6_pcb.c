@@ -1845,7 +1845,7 @@ name|inp_vflag
 operator|=
 literal|0
 expr_stmt|;
-name|zfreei
+name|zfree
 argument_list|(
 name|ipi
 operator|->
