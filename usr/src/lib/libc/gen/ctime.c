@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctime.c	5.16 (Berkeley) %G%"
+literal|"@(#)ctime.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6926,9 +6926,12 @@ name|tm_isdst
 operator|>
 literal|1
 condition|)
-return|return
-name|WRONG
-return|;
+name|tmp
+operator|->
+name|tm_isdst
+operator|=
+literal|1
+expr_stmt|;
 name|t
 operator|=
 name|time2
