@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.12 (Berkeley) %G%"
+literal|"@(#)print.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2486,6 +2486,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 		 * This counts time spent handling interrupts.  We could 		 * fix this, but it is not 100% trivial (and interrupt 		 * time fractions only work on the sparc anyway).	XXX 		 */
 name|secs
 operator|=
 name|KI_PROC
@@ -2493,16 +2494,7 @@ argument_list|(
 name|k
 argument_list|)
 operator|->
-name|p_utime
-operator|.
-name|tv_sec
-operator|+
-name|KI_PROC
-argument_list|(
-name|k
-argument_list|)
-operator|->
-name|p_stime
+name|p_rtime
 operator|.
 name|tv_sec
 expr_stmt|;
@@ -2513,16 +2505,7 @@ argument_list|(
 name|k
 argument_list|)
 operator|->
-name|p_utime
-operator|.
-name|tv_usec
-operator|+
-name|KI_PROC
-argument_list|(
-name|k
-argument_list|)
-operator|->
-name|p_stime
+name|p_rtime
 operator|.
 name|tv_usec
 expr_stmt|;
