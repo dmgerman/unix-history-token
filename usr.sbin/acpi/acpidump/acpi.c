@@ -4358,7 +4358,7 @@ name|ACPIsdt
 modifier|*
 name|sdt
 decl_stmt|;
-comment|/* Use the DSDT address if it is valid and version 2, else X_DSDT */
+comment|/* Use the DSDT address if it is valid and version 1, else X_DSDT */
 if|if
 condition|(
 name|addr_size
