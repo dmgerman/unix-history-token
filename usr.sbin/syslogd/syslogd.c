@@ -4582,6 +4582,13 @@ name|i
 index|]
 operator|==
 literal|'['
+operator|||
+name|msg
+index|[
+name|i
+index|]
+operator|==
+literal|'/'
 condition|)
 break|break;
 name|prog
