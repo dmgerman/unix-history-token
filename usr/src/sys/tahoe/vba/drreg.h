@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	drreg.h	1.1	86/07/20	*/
+comment|/*	drreg.h	1.2	86/11/23	*/
 end_comment
 
 begin_comment
@@ -954,7 +954,7 @@ begin_define
 define|#
 directive|define
 name|DR11STAT
-value|_IOWR(d,1,struct dr11io)
+value|_IOWR(d,30,struct dr11io)
 end_define
 
 begin_comment
@@ -965,7 +965,7 @@ begin_define
 define|#
 directive|define
 name|DR11LOOP
-value|_IOR(d,2,struct dr11io)
+value|_IOR(d,31,struct dr11io)
 end_define
 
 begin_comment
