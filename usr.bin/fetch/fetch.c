@@ -1845,6 +1845,9 @@ name|size
 operator|==
 operator|-
 literal|1
+operator|&&
+operator|!
+name|o_stdout
 condition|)
 name|warnx
 argument_list|(
