@@ -78,6 +78,14 @@ case|case
 literal|0x00
 case|:
 comment|/* Set display mode */
+if|if
+condition|(
+operator|!
+name|xmode
+condition|)
+goto|goto
+name|unsupported
+goto|;
 name|init_mode
 argument_list|(
 name|R_AL
