@@ -478,6 +478,9 @@ decl_stmt|;
 name|u_int32_t
 name|wi_icv
 decl_stmt|;
+name|int
+name|wi_icv_flag
+decl_stmt|;
 endif|#
 directive|endif
 name|struct
