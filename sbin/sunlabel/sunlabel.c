@@ -4454,6 +4454,9 @@ name|i
 argument_list|,
 name|make_h_number
 argument_list|(
+operator|(
+name|uintmax_t
+operator|)
 name|sl
 operator|->
 name|sl_part
@@ -4475,6 +4478,9 @@ literal|" %10s"
 argument_list|,
 name|make_h_number
 argument_list|(
+operator|(
+name|uintmax_t
+operator|)
 name|sl
 operator|->
 name|sl_part
