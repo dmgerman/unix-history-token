@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: yplib.c,v 1.13 1995/11/05 05:39:04 wpaul Exp $"
+literal|"$Id: yplib.c,v 1.15 1995/12/15 03:26:40 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3386,6 +3386,8 @@ name|clnt
 decl_stmt|;
 name|u_long
 name|status
+decl_stmt|,
+name|savstat
 decl_stmt|;
 name|int
 name|clnt_sock
@@ -3549,6 +3551,10 @@ argument_list|(
 name|clnt
 argument_list|)
 expr_stmt|;
+name|savstat
+operator|=
+name|status
+expr_stmt|;
 name|xdr_free
 argument_list|(
 name|xdr_ypresp_all_seq
@@ -3569,14 +3575,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|status
+name|savstat
 operator|!=
-name|YP_FALSE
+name|YP_NOMORE
 condition|)
 return|return
 name|ypprot_err
 argument_list|(
-name|status
+name|savstat
 argument_list|)
 return|;
 return|return
