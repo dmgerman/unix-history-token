@@ -3639,6 +3639,7 @@ name|trapframe
 modifier|*
 name|regs
 decl_stmt|;
+specifier|const
 name|ucontext_t
 modifier|*
 name|ucp
@@ -3661,6 +3662,9 @@ name|useracc
 argument_list|(
 operator|(
 name|caddr_t
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|ucp
 argument_list|,
