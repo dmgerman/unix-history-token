@@ -17,7 +17,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atan2.c	1.1 (Berkeley) %G%"
+literal|"@(#)atan2.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -513,10 +513,6 @@ name|finite
 argument_list|(
 name|x
 argument_list|)
-operator|&&
-name|x
-operator|==
-name|x
 condition|)
 if|if
 condition|(
@@ -525,10 +521,6 @@ name|finite
 argument_list|(
 name|y
 argument_list|)
-operator|&&
-name|y
-operator|==
-name|y
 condition|)
 return|return
 operator|(
@@ -577,10 +569,6 @@ name|finite
 argument_list|(
 name|y
 argument_list|)
-operator|&&
-name|y
-operator|==
-name|y
 condition|)
 return|return
 operator|(
