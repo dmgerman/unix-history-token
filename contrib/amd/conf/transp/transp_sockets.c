@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1998 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: transp_sockets.c,v 1.2 1998/11/10 16:23:41 ezk Exp $  *  * Socket specific utilities.  *      -Erez Zadok<ezk@cs.columbia.edu>  */
+comment|/*  * Copyright (c) 1997-1999 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: transp_sockets.c,v 1.5 1999/08/22 21:12:31 ezk Exp $  *  * Socket specific utilities.  *      -Erez Zadok<ezk@cs.columbia.edu>  */
 end_comment
 
 begin_ifdef
@@ -555,54 +555,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Bind NFS to a reserved port.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|bindnfs_port
-parameter_list|(
-name|int
-name|so
-parameter_list|,
-name|u_short
-modifier|*
-name|nfs_portp
-parameter_list|)
-block|{
-name|u_short
-name|port
-decl_stmt|;
-name|int
-name|error
-init|=
-name|bind_resv_port
-argument_list|(
-name|so
-argument_list|,
-operator|&
-name|port
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-condition|)
-operator|*
-name|nfs_portp
-operator|=
-name|port
-expr_stmt|;
-return|return
-name|error
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Create the nfs service for amd  */
 end_comment
 
@@ -659,12 +611,12 @@ name|soNFSp
 operator|<
 literal|0
 operator|||
-name|bindnfs_port
+name|bind_resv_port
 argument_list|(
 operator|*
 name|soNFSp
 argument_list|,
-name|nfs_portp
+name|NULL
 argument_list|)
 operator|<
 literal|0
@@ -706,6 +658,34 @@ argument_list|)
 expr_stmt|;
 return|return
 literal|2
+return|;
+block|}
+if|if
+condition|(
+operator|(
+operator|*
+name|nfs_portp
+operator|=
+operator|(
+operator|*
+name|nfs_xprtp
+operator|)
+operator|->
+name|xp_port
+operator|)
+operator|>=
+name|IPPORT_RESERVED
+condition|)
+block|{
+name|plog
+argument_list|(
+name|XLOG_FATAL
+argument_list|,
+literal|"Can't create privileged nfs port"
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
 return|;
 block|}
 if|if
@@ -1258,6 +1238,9 @@ name|XLOG_INFO
 argument_list|,
 literal|"get_nfs_version NFS(%d,%s) failed for %s :%s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|nfs_version
 argument_list|,
 name|proto
@@ -1279,6 +1262,9 @@ name|XLOG_INFO
 argument_list|,
 literal|"get_nfs_version NFS(%d,%s) failed for %s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|nfs_version
 argument_list|,
 name|proto
@@ -1386,6 +1372,9 @@ name|XLOG_INFO
 argument_list|,
 literal|"get_nfs_version NFS(%d,%s) failed for %s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|nfs_version
 argument_list|,
 name|proto
@@ -1403,6 +1392,9 @@ name|XLOG_INFO
 argument_list|,
 literal|"get_nfs_version: returning (%d,%s) on host %s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|nfs_version
 argument_list|,
 name|proto
