@@ -886,6 +886,7 @@ comment|/* used to hold the AP's until we are ready to release them */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mtx
 name|ap_boot_mtx
