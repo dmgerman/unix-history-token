@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_map.h	8.3 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*   * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_map.h	8.4 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_comment
@@ -230,6 +230,19 @@ begin_comment
 comment|/*  *	Macros:		vm_map_lock, etc.  *	Function:  *		Perform locking on the data portion of a map.  */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|proc
+modifier|*
+name|curproc
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -237,7 +250,7 @@ name|vm_map_lock
 parameter_list|(
 name|map
 parameter_list|)
-value|{ \ 	lock_write(&(map)->lock); \ 	(map)->timestamp++; \ }
+value|{ \ 	lockmgr(&(map)->lock, LK_EXCLUSIVE, curproc); \ 	(map)->timestamp++; \ }
 end_define
 
 begin_define
@@ -247,7 +260,7 @@ name|vm_map_unlock
 parameter_list|(
 name|map
 parameter_list|)
-value|lock_write_done(&(map)->lock)
+value|lockmgr(&(map)->lock, LK_RELEASE, curproc)
 end_define
 
 begin_define
@@ -257,7 +270,7 @@ name|vm_map_lock_read
 parameter_list|(
 name|map
 parameter_list|)
-value|lock_read(&(map)->lock)
+value|lockmgr(&(map)->lock, LK_SHARED, curproc)
 end_define
 
 begin_define
@@ -267,7 +280,7 @@ name|vm_map_unlock_read
 parameter_list|(
 name|map
 parameter_list|)
-value|lock_read_done(&(map)->lock)
+value|lockmgr(&(map)->lock, LK_RELEASE, curproc)
 end_define
 
 begin_comment
