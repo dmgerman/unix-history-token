@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)boot.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)boot.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -141,17 +141,6 @@ argument_list|(
 name|boot
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"boot '%s'\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 block|}
 name|howto
 operator|=
