@@ -2254,15 +2254,11 @@ operator|!=
 name|AF_INET
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"sl%d: af%d not supported\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|sc_if
-operator|.
-name|if_unit
+literal|"af%d not supported\n"
 argument_list|,
 name|dst
 operator|->
