@@ -1563,7 +1563,7 @@ directive|ifdef
 name|VP0_DEBUG
 name|printf
 argument_list|(
-literal|"vpo%d: XPT_CALC_GEOMETRY (bs=%d,vs=%d,c=%d,h=%d,spt=%d) request\n"
+literal|"vpo%d: XPT_CALC_GEOMETRY (bs=%d,vs=%jd,c=%d,h=%d,spt=%d) request\n"
 argument_list|,
 name|vpo
 operator|->
@@ -1573,6 +1573,9 @@ name|ccg
 operator|->
 name|block_size
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|ccg
 operator|->
 name|volume_size
