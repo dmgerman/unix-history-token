@@ -2478,6 +2478,8 @@ operator|&
 name|it
 operator|->
 name|inp_tp_rexmt
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -2490,6 +2492,8 @@ operator|&
 name|it
 operator|->
 name|inp_tp_persist
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -2502,6 +2506,8 @@ operator|&
 name|it
 operator|->
 name|inp_tp_keep
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -2514,6 +2520,8 @@ operator|&
 name|it
 operator|->
 name|inp_tp_2msl
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -2526,6 +2534,8 @@ operator|&
 name|it
 operator|->
 name|inp_tp_delack
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

@@ -238,6 +238,8 @@ operator|(
 expr|struct
 name|callout
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -255,7 +257,7 @@ end_define
 
 begin_decl_stmt
 name|void
-name|_callout_reset
+name|callout_reset
 name|__P
 argument_list|(
 operator|(
@@ -276,8 +278,6 @@ argument_list|)
 operator|,
 name|void
 operator|*
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -296,40 +296,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|callout_reset
-parameter_list|(
-name|c
-parameter_list|,
-name|ticks
-parameter_list|,
-name|func
-parameter_list|,
-name|arg
-parameter_list|)
-define|\
-value|_callout_reset((c), (ticks), (func), (arg), 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mp_callout_reset
-parameter_list|(
-name|c
-parameter_list|,
-name|ticks
-parameter_list|,
-name|func
-parameter_list|,
-name|arg
-parameter_list|)
-define|\
-value|_callout_reset((c), (ticks), (func), (arg), CALLOUT_MPSAFE)
-end_define
 
 begin_endif
 endif|#
