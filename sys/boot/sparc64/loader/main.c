@@ -1225,11 +1225,12 @@ continue|continue;
 block|}
 name|tte
 operator|.
-name|tte_tag
+name|tte_vpn
 operator|=
+name|TV_VPN
+argument_list|(
 name|va
-operator|>>
-name|PAGE_SHIFT
+argument_list|)
 expr_stmt|;
 name|tte
 operator|.
@@ -1276,7 +1277,7 @@ name|dtlb_slot
 argument_list|,
 name|tte
 operator|.
-name|tte_tag
+name|tte_vpn
 argument_list|,
 name|tte
 operator|.
@@ -1289,7 +1290,7 @@ name|itlb_slot
 argument_list|,
 name|tte
 operator|.
-name|tte_tag
+name|tte_vpn
 argument_list|,
 name|tte
 operator|.
