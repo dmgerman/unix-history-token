@@ -504,11 +504,23 @@ name|void
 name|vinumstrategy
 parameter_list|(
 name|struct
+name|bio
+modifier|*
+name|bip
+parameter_list|)
+block|{
+name|struct
 name|buf
 modifier|*
 name|bp
-parameter_list|)
-block|{
+init|=
+operator|(
+expr|struct
+name|buf
+operator|*
+operator|)
+name|bip
+decl_stmt|;
 name|int
 name|volno
 decl_stmt|;
@@ -559,7 +571,7 @@ name|b_ioflags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)
@@ -609,7 +621,7 @@ name|b_ioflags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)
@@ -629,7 +641,7 @@ literal|0
 condition|)
 block|{
 comment|/* don't like them bounds */
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)
@@ -756,7 +768,7 @@ name|b_ioflags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)
@@ -804,7 +816,7 @@ name|b_ioflags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)
@@ -1078,7 +1090,7 @@ operator||=
 name|BIO_ERROR
 expr_stmt|;
 block|}
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)
@@ -1224,7 +1236,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)
@@ -2159,7 +2171,7 @@ name|b_error
 operator|=
 name|ENOMEM
 expr_stmt|;
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)
@@ -2389,7 +2401,7 @@ name|b_error
 operator|=
 name|ENOMEM
 expr_stmt|;
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)
@@ -2543,7 +2555,7 @@ name|b_error
 operator|=
 name|ENOMEM
 expr_stmt|;
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)
@@ -2844,7 +2856,7 @@ name|b_error
 operator|=
 name|ENOMEM
 expr_stmt|;
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)
@@ -3826,7 +3838,7 @@ name|rq
 argument_list|)
 expr_stmt|;
 comment|/* free everything we're doing */
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)
@@ -4014,7 +4026,7 @@ name|b_error
 operator|=
 name|EIO
 expr_stmt|;
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)
@@ -4044,7 +4056,7 @@ name|b_error
 operator|=
 name|EIO
 expr_stmt|;
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)
@@ -4087,7 +4099,7 @@ name|b_error
 operator|=
 name|ENOMEM
 expr_stmt|;
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)
@@ -4316,7 +4328,7 @@ operator|->
 name|b_bcount
 expr_stmt|;
 comment|/* nothing transferred */
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)

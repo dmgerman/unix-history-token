@@ -1396,7 +1396,7 @@ name|b_error
 operator|=
 name|ENOMEM
 expr_stmt|;
-name|biodone
+name|bufdone
 argument_list|(
 name|bp
 argument_list|)

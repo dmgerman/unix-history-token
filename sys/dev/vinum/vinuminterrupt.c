@@ -1019,7 +1019,7 @@ name|active
 operator|--
 expr_stmt|;
 comment|/* another request finished */
-name|biodone
+name|bufdone
 argument_list|(
 name|ubp
 argument_list|)
@@ -1397,7 +1397,7 @@ operator|.
 name|b_bcount
 expr_stmt|;
 block|}
-name|biodone
+name|bufdone
 argument_list|(
 name|sbp
 operator|->
