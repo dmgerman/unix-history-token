@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ftp.c,v 1.7 1995/05/24 18:35:10 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ftp.c,v 1.8 1995/05/24 19:31:26 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -152,15 +152,44 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|STANDALONE_FTP
+name|strcpy
+argument_list|(
+name|p
+argument_list|,
+literal|"LIBFTP: "
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
 name|vsnprintf
 argument_list|(
 name|p
+operator|+
+name|strlen
+argument_list|(
+name|p
+argument_list|)
 argument_list|,
 sizeof|sizeof
 name|p
+operator|-
+name|strlen
+argument_list|(
+name|p
+argument_list|)
 argument_list|,
 name|fmt
 argument_list|,
@@ -341,7 +370,7 @@ name|debug
 argument_list|(
 name|ftp
 argument_list|,
-literal|"LIBFTP: received<%s>\n"
+literal|"received<%s>\n"
 argument_list|,
 name|buf
 argument_list|)
@@ -547,7 +576,7 @@ name|debug
 argument_list|(
 name|ftp
 argument_list|,
-literal|"LIBFTP: Botch: %s called outside state %s\n"
+literal|"Botch: %s called outside state %s\n"
 argument_list|,
 name|func
 argument_list|,
@@ -663,7 +692,7 @@ name|debug
 argument_list|(
 name|ftp
 argument_list|,
-literal|"LIBFTP: send<%s>\n"
+literal|"send<%s>\n"
 argument_list|,
 name|p
 argument_list|)
@@ -703,7 +732,7 @@ name|debug
 argument_list|(
 name|ftp
 argument_list|,
-literal|"LIBFTP: got %d\n"
+literal|"got %d\n"
 argument_list|,
 name|i
 argument_list|)
@@ -1124,7 +1153,7 @@ name|debug
 argument_list|(
 name|ftp
 argument_list|,
-literal|"LIBFTP: open (%d)\n"
+literal|"open (%d)\n"
 argument_list|,
 name|get_a_number
 argument_list|(
@@ -1145,6 +1174,16 @@ argument_list|,
 name|user
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>=
+literal|300
+operator|&&
+name|i
+operator|<
+literal|400
+condition|)
 name|i
 operator|=
 name|cmd
@@ -1156,6 +1195,16 @@ argument_list|,
 name|passwd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>=
+literal|299
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|ftp
 operator|->
 name|state
@@ -1404,7 +1453,7 @@ name|debug
 argument_list|(
 name|ftp
 argument_list|,
-literal|"LIBFTP: send<%s>\n"
+literal|"send<%s>\n"
 argument_list|,
 literal|"PASV"
 argument_list|)
