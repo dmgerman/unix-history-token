@@ -5644,6 +5644,16 @@ argument_list|(
 name|__func__
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|witness_trace
+operator|&&
+name|n
+condition|)
+name|backtrace
+argument_list|()
+expr_stmt|;
 endif|#
 directive|endif
 return|return
