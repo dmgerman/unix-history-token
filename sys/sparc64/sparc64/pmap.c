@@ -5609,19 +5609,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * This routine is very drastic, but can save the system  * in a pinch.  */
-end_comment
-
-begin_function
-name|void
-name|pmap_collect
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
-end_function
-
 begin_function
 name|int
 name|pmap_remove_tte

@@ -72,6 +72,13 @@ name|thread
 struct_decl|;
 end_struct_decl
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|pmap_pagedaemon_waken
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -122,15 +129,6 @@ name|pmap_clear_reference
 parameter_list|(
 name|vm_page_t
 name|m
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pmap_collect
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl

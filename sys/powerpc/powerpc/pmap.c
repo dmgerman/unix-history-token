@@ -4134,18 +4134,6 @@ end_function
 
 begin_function
 name|void
-name|pmap_collect
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|TODO
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
 name|pmap_copy
 parameter_list|(
 name|pmap_t
