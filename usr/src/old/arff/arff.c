@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)arff.c	4.3 (Berkeley) 81/03/22"
+literal|"@(#)arff.c	4.4 (Berkeley) 81/03/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,7 +57,7 @@ name|rt_yr
 range|:
 literal|5
 decl_stmt|;
-comment|/*Year - 1972			*/
+comment|/* Year - 1972			 */
 name|unsigned
 name|short
 name|int
@@ -65,7 +65,7 @@ name|rt_dy
 range|:
 literal|5
 decl_stmt|;
-comment|/*day				*/
+comment|/* day				 */
 name|unsigned
 name|short
 name|int
@@ -73,7 +73,7 @@ name|rt_mo
 range|:
 literal|5
 decl_stmt|;
-comment|/*month				*/
+comment|/* month				 */
 block|}
 struct|;
 end_struct
@@ -99,11 +99,11 @@ block|{
 name|char
 name|rt_pad
 decl_stmt|;
-comment|/*unusued		     */
+comment|/* unusued		     */
 name|char
 name|rt_stat
 decl_stmt|;
-comment|/*Type of entry, or end of seg*/
+comment|/* Type of entry, or end of seg */
 name|unsigned
 name|short
 name|rt_name
@@ -111,24 +111,24 @@ index|[
 literal|3
 index|]
 decl_stmt|;
-comment|/*Name, 3 words in rad50 form */
+comment|/* Name, 3 words in rad50 form */
 name|short
 name|rt_len
 decl_stmt|;
-comment|/*Length of file	      */
+comment|/* Length of file	      */
 name|char
 name|rt_chan
 decl_stmt|;
-comment|/*Only used in temporary files*/
+comment|/* Only used in temporary files */
 name|char
 name|rt_job
 decl_stmt|;
-comment|/*Only used in temporary files*/
+comment|/* Only used in temporary files */
 name|struct
 name|rt_dat
 name|rt_date
 decl_stmt|;
-comment|/*Creation Date			*/
+comment|/* Creation Date			 */
 block|}
 struct|;
 end_struct
@@ -186,24 +186,24 @@ block|{
 name|short
 name|rt_numseg
 decl_stmt|;
-comment|/*number of segments available*/
+comment|/* number of segments available */
 name|short
 name|rt_nxtseg
 decl_stmt|;
-comment|/*segment no of next log. seg */
+comment|/* segment no of next log. seg */
 name|short
 name|rt_lstseg
 decl_stmt|;
-comment|/*highest seg currenltly open */
+comment|/* highest seg currenltly open */
 name|unsigned
 name|short
 name|rt_entpad
 decl_stmt|;
-comment|/*extra words/dir. entry      */
+comment|/* extra words/dir. entry      */
 name|short
 name|rt_stfile
 decl_stmt|;
-comment|/*block no where files begin  */
+comment|/* block no where files begin  */
 block|}
 struct|;
 end_struct
@@ -586,7 +586,7 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-comment|/*register i; 	for(i=0; signum[i]; i++) 		if(signal(signum[i], SIG_IGN) != SIG_IGN) 			signal(signum[i], sigdone);*/
+comment|/* register i; 	for(i=0; signum[i]; i++) 		if(signal(signum[i], SIG_IGN) != SIG_IGN) 			signal(signum[i], sigdone); */
 if|if
 condition|(
 name|argc
@@ -690,7 +690,10 @@ name|tty
 argument_list|,
 name|response
 argument_list|,
-literal|128
+sizeof|sizeof
+argument_list|(
+name|response
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -921,8 +924,10 @@ end_macro
 
 begin_block
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"usage: ar [%s][%s] archive files ...\n"
 argument_list|,
 name|opt
@@ -1879,11 +1884,18 @@ operator|)
 operator|<
 literal|0
 condition|)
+block|{
 name|dbprintf
 argument_list|(
 literal|"Floppy open failed\n"
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|flag
@@ -2170,7 +2182,7 @@ argument_list|,
 name|rname
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  Search for name, accumulate blocks in index 	 */
+comment|/*  	 *  Search for name, accumulate blocks in index 	 */
 name|rt_init
 argument_list|()
 expr_stmt|;
@@ -2256,14 +2268,6 @@ operator|->
 name|rt_stat
 condition|)
 block|{
-case|case
-name|RT_ESEG
-case|:
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 case|case
 name|RT_FILE
 case|:
@@ -2696,7 +2700,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* 	 * Find end of pathname 	 */
+comment|/*  	 * Find end of pathname 	 */
 for|for
 control|(
 name|cp
@@ -2725,7 +2729,7 @@ empty_stmt|;
 name|cp
 operator|++
 expr_stmt|;
-comment|/* 	 * Change to rad50 	 * 	 */
+comment|/*  	 * Change to rad50 	 * 	 */
 for|for
 control|(
 name|index
@@ -3744,12 +3748,27 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|read
 argument_list|(
 name|floppydes
 argument_list|,
 name|obuff
 argument_list|,
+literal|128
+argument_list|)
+operator|!=
+literal|128
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"arff: read error block %d\n"
+argument_list|,
+name|startad
+operator|/
 literal|128
 argument_list|)
 expr_stmt|;
@@ -3788,12 +3807,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|read
+name|fprintf
 argument_list|(
-name|floppydes
+name|stderr
 argument_list|,
-name|obuff
+literal|"arff: read error block %d\n"
 argument_list|,
+name|startad
+operator|/
 literal|512
 argument_list|)
 expr_stmt|;
@@ -3877,12 +3898,27 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|write
 argument_list|(
 name|floppydes
 argument_list|,
 name|obuff
 argument_list|,
+literal|128
+argument_list|)
+operator|!=
+literal|128
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"arff: write error block %d\n"
+argument_list|,
+name|startad
+operator|/
 literal|128
 argument_list|)
 expr_stmt|;
@@ -3921,12 +3957,27 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|write
 argument_list|(
 name|floppydes
 argument_list|,
 name|obuff
 argument_list|,
+literal|512
+argument_list|)
+operator|!=
+literal|512
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"arff: write error block %d\n"
+argument_list|,
+name|startad
+operator|/
 literal|512
 argument_list|)
 expr_stmt|;
@@ -3953,9 +4004,6 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|int
-name|debug
-decl_stmt|;
 name|rt_init
 argument_list|()
 expr_stmt|;
@@ -3980,9 +4028,6 @@ operator|++
 control|)
 if|if
 condition|(
-operator|(
-name|debug
-operator|=
 name|rtr
 argument_list|(
 name|namv
@@ -3990,7 +4035,6 @@ index|[
 name|i
 index|]
 argument_list|)
-operator|)
 operator|==
 literal|0
 condition|)
@@ -4000,14 +4044,6 @@ name|i
 index|]
 operator|=
 literal|0
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"debug-rtr returns %d\n"
-argument_list|,
-name|debug
-argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -4127,8 +4163,10 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s will not fit in currently used file on floppy\n"
 argument_list|,
 name|name
@@ -4254,14 +4292,6 @@ name|found
 goto|;
 block|}
 continue|continue;
-case|case
-name|RT_ESEG
-case|:
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 block|}
@@ -4688,8 +4718,10 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"arff: couldn't open %s\n"
 argument_list|,
 name|name
