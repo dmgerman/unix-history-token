@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	4.30	82/06/20	*/
+comment|/*	udp_usrreq.c	4.31	82/08/15	*/
 end_comment
 
 begin_include
@@ -190,8 +190,6 @@ name|m
 decl_stmt|;
 name|int
 name|len
-decl_stmt|,
-name|ulen
 decl_stmt|;
 comment|/* 	 * Get IP and UDP header together in first mbuf. 	 */
 name|m
@@ -295,7 +293,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Make mbuf data length reflect UDP length. 	 * If not enough data to reflect UDP length, drop. 	 */
-name|ulen
+name|len
 operator|=
 name|ntohs
 argument_list|(
@@ -306,16 +304,6 @@ name|ui
 operator|->
 name|ui_ulen
 argument_list|)
-expr_stmt|;
-name|len
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|udphdr
-argument_list|)
-operator|+
-name|ulen
 expr_stmt|;
 if|if
 condition|(
@@ -406,18 +394,10 @@ name|ui_len
 operator|=
 name|htons
 argument_list|(
-call|(
+operator|(
 name|u_short
-call|)
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|udphdr
-argument_list|)
-operator|+
-name|ulen
-argument_list|)
+operator|)
+name|len
 argument_list|)
 expr_stmt|;
 if|if
@@ -431,6 +411,12 @@ argument_list|(
 name|m
 argument_list|,
 name|len
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -456,7 +442,7 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/* 	 * Locate pcb for datagram.  On wildcard match, update 	 * control block to anchor network and host address. 	 */
+comment|/* 	 * Locate pcb for datagram. 	 */
 name|inp
 operator|=
 name|in_pcblookup
@@ -926,13 +912,13 @@ name|ui
 operator|->
 name|ui_len
 operator|=
+name|len
+operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|udpiphdr
+name|udphdr
 argument_list|)
-operator|+
-name|len
 expr_stmt|;
 name|ui
 operator|->
@@ -970,24 +956,16 @@ name|ui
 operator|->
 name|ui_ulen
 operator|=
-name|len
-expr_stmt|;
-if|#
-directive|if
-name|vax
-name|ui
-operator|->
-name|ui_ulen
-operator|=
 name|htons
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|ui
 operator|->
-name|ui_ulen
+name|ui_len
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Stuff checksum and output datagram. 	 */
 name|ui
 operator|->
