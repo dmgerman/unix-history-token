@@ -3172,6 +3172,28 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * If the process got swapped out some of its UPAGES might have gotten 	 * swapped.  Just get rid of the object to clean up the swap use 	 * proactively.  NOTE! might block waiting for paging I/O to complete. 	 */
+if|if
+condition|(
+name|upobj
+operator|->
+name|type
+operator|==
+name|OBJT_SWAP
+condition|)
+block|{
+name|p
+operator|->
+name|p_upages_obj
+operator|=
+name|NULL
+expr_stmt|;
+name|vm_object_deallocate
+argument_list|(
+name|upobj
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
