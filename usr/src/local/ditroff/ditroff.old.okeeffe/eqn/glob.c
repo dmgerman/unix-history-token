@@ -107,93 +107,42 @@ begin_comment
 comment|/* default font */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|APS
-end_ifdef
-
 begin_decl_stmt
-name|int
-name|ttype
+name|char
+modifier|*
+name|device
 init|=
-name|DEVAPS
+literal|"var"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* type of typesetter today */
+comment|/* device for "res" and "minsize" (default = varian) */
 end_comment
 
 begin_decl_stmt
 name|int
 name|res
 init|=
-literal|723
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* resolution of typesetter; dflt = 202 */
+comment|/* resolution of typesetter; no default */
 end_comment
 
 begin_decl_stmt
 name|int
 name|minsize
 init|=
-literal|5
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* min size it can handle; ditto */
+comment|/* min size it can handle; no default */
 end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|int
-name|ttype
-init|=
-name|DEVCAT
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* type of typesetter today */
-end_comment
-
-begin_decl_stmt
-name|int
-name|res
-init|=
-literal|200
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* resolution of typesetter; dflt = 202 */
-end_comment
-
-begin_decl_stmt
-name|int
-name|minsize
-init|=
-literal|6
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* min size it can handle; ditto */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|FILE

@@ -163,6 +163,18 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|char
+modifier|*
+name|device
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name of output device */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|res
 decl_stmt|;
@@ -182,38 +194,6 @@ end_decl_stmt
 begin_comment
 comment|/* min size it can print */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ttype
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* actual type of typesetter: */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEVCAT
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEV202
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEVAPS
-value|3
-end_define
 
 begin_decl_stmt
 specifier|extern
