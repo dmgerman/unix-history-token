@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_vnops.c	7.37 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_vnops.c	7.38 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -73,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|"tty.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
 end_include
 
 begin_decl_stmt
@@ -1635,51 +1641,27 @@ name|va_size
 expr_stmt|;
 name|sb
 operator|->
-name|st_atime
+name|st_atimeval
 operator|=
 name|vap
 operator|->
 name|va_atime
-operator|.
-name|tv_sec
 expr_stmt|;
 name|sb
 operator|->
-name|st_spare1
-operator|=
-literal|0
-expr_stmt|;
-name|sb
-operator|->
-name|st_mtime
+name|st_mtimeval
 operator|=
 name|vap
 operator|->
 name|va_mtime
-operator|.
-name|tv_sec
 expr_stmt|;
 name|sb
 operator|->
-name|st_spare2
-operator|=
-literal|0
-expr_stmt|;
-name|sb
-operator|->
-name|st_ctime
+name|st_ctimeval
 operator|=
 name|vap
 operator|->
 name|va_ctime
-operator|.
-name|tv_sec
-expr_stmt|;
-name|sb
-operator|->
-name|st_spare3
-operator|=
-literal|0
 expr_stmt|;
 name|sb
 operator|->
