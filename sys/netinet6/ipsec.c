@@ -11084,8 +11084,6 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|p
-operator|&&
 operator|*
 name|p
 condition|)
@@ -11132,8 +11130,6 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|p
-operator|&&
 operator|*
 name|p
 condition|)
@@ -11180,8 +11176,6 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|p
-operator|&&
 operator|*
 name|p
 condition|)
