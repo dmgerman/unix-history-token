@@ -1450,11 +1450,7 @@ name|dev
 index|]
 condition|)
 block|{
-name|dma_reset
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
+comment|/* dma_reset (dev); */
 name|dev_needs_restart
 index|[
 name|dev
@@ -1479,11 +1475,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|dma_reset
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
+comment|/* dma_reset (dev); */
 name|dma_mode
 index|[
 name|dev
@@ -2004,11 +1996,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|dma_reset
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
+comment|/* dma_reset (dev); */
 return|return
 literal|0
 return|;
@@ -2224,11 +2212,7 @@ name|DMODE_INPUT
 condition|)
 comment|/* Was input -> Direction change */
 block|{
-name|dma_reset
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
+comment|/* dma_reset (dev); */
 name|dma_mode
 index|[
 name|dev
@@ -2252,11 +2236,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|dma_reset
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
+comment|/* dma_reset (dev); */
 block|}
 name|dev_needs_restart
 index|[
