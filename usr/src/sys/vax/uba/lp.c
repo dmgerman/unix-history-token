@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lp.c	4.22	82/02/03	*/
+comment|/*	lp.c	4.23	82/04/14	*/
 end_comment
 
 begin_include
@@ -417,6 +417,24 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|INGVAX
+name|br
+operator|=
+literal|0x14
+expr_stmt|;
+name|cvec
+operator|=
+literal|0200
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+else|#
+directive|else
 name|lpaddr
 operator|->
 name|lpsr
@@ -439,6 +457,8 @@ operator|(
 literal|1
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_block
 
