@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1998 Marshall Kirk McKusick. All Rights Reserved.  *  * The soft updates code is derived from the appendix of a University  * of Michigan technical report (Gregory R. Ganger and Yale N. Patt,  * "Soft Updates: A Solution to the Metadata Update Problem in File  * Systems", CSE-TR-254-95, August 1995).  *  * The following are the copyrights and redistribution conditions that  * apply to this copy of the soft update software. For a license  * to use, redistribute or sell the soft update software under  * conditions other than those described here, please contact the  * author at one of the following addresses:  *  *	Marshall Kirk McKusick		mckusick@mckusick.com  *	1614 Oxford Street		+1-510-843-9542  *	Berkeley, CA 94709-1608  *	USA  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. None of the names of McKusick, Ganger, Patt, or the University of  *    Michigan may be used to endorse or promote products derived from  *    this software without specific prior written permission.  * 4. Redistributions in any form must be accompanied by information on  *    how to obtain complete source code for any accompanying software  *    that uses this software. This source code must either be included  *    in the distribution or be available for no more than the cost of  *    distribution plus a nominal fee, and must be freely redistributable  *    under reasonable conditions. For an executable file, complete  *    source code means the source code for all modules it contains.  *    It does not mean source code for modules or files that typically  *    accompany the operating system on which the executable file runs,  *    e.g., standard library modules or system header files.  *  * THIS SOFTWARE IS PROVIDED BY MARSHALL KIRK MCKUSICK ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL MARSHALL KIRK MCKUSICK BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ffs_softdep.c	9.56 (McKusick) 1/17/00  * $FreeBSD$  */
+comment|/*  * Copyright 1998 Marshall Kirk McKusick. All Rights Reserved.  *  * The soft updates code is derived from the appendix of a University  * of Michigan technical report (Gregory R. Ganger and Yale N. Patt,  * "Soft Updates: A Solution to the Metadata Update Problem in File  * Systems", CSE-TR-254-95, August 1995).  *  * The following are the copyrights and redistribution conditions that  * apply to this copy of the soft update software. For a license  * to use, redistribute or sell the soft update software under  * conditions other than those described here, please contact the  * author at one of the following addresses:  *  *	Marshall Kirk McKusick		mckusick@mckusick.com  *	1614 Oxford Street		+1-510-843-9542  *	Berkeley, CA 94709-1608  *	USA  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. None of the names of McKusick, Ganger, Patt, or the University of  *    Michigan may be used to endorse or promote products derived from  *    this software without specific prior written permission.  * 4. Redistributions in any form must be accompanied by information on  *    how to obtain complete source code for any accompanying software  *    that uses this software. This source code must either be included  *    in the distribution or be available for no more than the cost of  *    distribution plus a nominal fee, and must be freely redistributable  *    under reasonable conditions. For an executable file, complete  *    source code means the source code for all modules it contains.  *    It does not mean source code for modules or files that typically  *    accompany the operating system on which the executable file runs,  *    e.g., standard library modules or system header files.  *  * THIS SOFTWARE IS PROVIDED BY MARSHALL KIRK MCKUSICK ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL MARSHALL KIRK MCKUSICK BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ffs_softdep.c	9.57 (McKusick) 3/17/00  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -7217,6 +7217,10 @@ operator|->
 name|ai_offset
 condition|)
 break|break;
+name|freefrag
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|oldaip
@@ -7249,14 +7253,6 @@ name|ai_oldblkno
 expr_stmt|;
 name|freefrag
 operator|=
-name|oldaip
-operator|->
-name|ai_freefrag
-expr_stmt|;
-name|oldaip
-operator|->
-name|ai_freefrag
-operator|=
 name|aip
 operator|->
 name|ai_freefrag
@@ -7265,7 +7261,15 @@ name|aip
 operator|->
 name|ai_freefrag
 operator|=
-name|freefrag
+name|oldaip
+operator|->
+name|ai_freefrag
+expr_stmt|;
+name|oldaip
+operator|->
+name|ai_freefrag
+operator|=
+name|NULL
 expr_stmt|;
 name|free_allocindir
 argument_list|(
@@ -7312,6 +7316,17 @@ name|FREE_LOCK
 argument_list|(
 operator|&
 name|lk
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|freefrag
+operator|!=
+name|NULL
+condition|)
+name|handle_workitem_freefrag
+argument_list|(
+name|freefrag
 argument_list|)
 expr_stmt|;
 block|}
@@ -7540,6 +7555,8 @@ name|fs
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|delay
 decl_stmt|,
 name|error
 decl_stmt|;
@@ -7853,11 +7870,21 @@ argument_list|(
 literal|"softdep_setup_freeblocks: inode busy"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Because the file length has been truncated to zero, any 	 * pending block allocation dependency structures associated 	 * with this inode are obsolete and can simply be de-allocated. 	 * We must first merge the two dependency lists to get rid of 	 * any duplicate freefrag structures, then purge the merged list. 	 */
+comment|/* 	 * Because the file length has been truncated to zero, any 	 * pending block allocation dependency structures associated 	 * with this inode are obsolete and can simply be de-allocated. 	 * We must first merge the two dependency lists to get rid of 	 * any duplicate freefrag structures, then purge the merged list. 	 * If we still have a bitmap dependency, then the inode has never 	 * been written to disk, so we can free any fragments without delay. 	 */
 name|merge_inode_lists
 argument_list|(
 name|inodedep
 argument_list|)
+expr_stmt|;
+name|delay
+operator|=
+operator|(
+name|inodedep
+operator|->
+name|id_state
+operator|&
+name|DEPCOMPLETE
+operator|)
 expr_stmt|;
 while|while
 condition|(
@@ -7884,7 +7911,7 @@ name|id_inoupdt
 argument_list|,
 name|adp
 argument_list|,
-literal|1
+name|delay
 argument_list|)
 expr_stmt|;
 name|FREE_LOCK
@@ -14607,6 +14634,8 @@ name|inodedep
 decl_stmt|;
 name|long
 name|bsize
+decl_stmt|,
+name|delay
 decl_stmt|;
 if|if
 condition|(
@@ -14758,7 +14787,17 @@ directive|endif
 comment|/* DEBUG */
 return|return;
 block|}
-comment|/* 	 * If we have found the just finished dependency, then free 	 * it along with anything that follows it that is complete. 	 */
+comment|/* 	 * If we have found the just finished dependency, then free 	 * it along with anything that follows it that is complete. 	 * If the inode still has a bitmap dependency, then it has 	 * never been written to disk, hence the on-disk inode cannot 	 * reference the old fragment so we can free it without delay. 	 */
+name|delay
+operator|=
+operator|(
+name|inodedep
+operator|->
+name|id_state
+operator|&
+name|DEPCOMPLETE
+operator|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -14800,7 +14839,7 @@ name|id_inoupdt
 argument_list|,
 name|adp
 argument_list|,
-literal|1
+name|delay
 argument_list|)
 expr_stmt|;
 block|}
