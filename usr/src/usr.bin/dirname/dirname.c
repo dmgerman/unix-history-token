@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirname.c	5.2 (Berkeley) %G%"
+literal|"@(#)dirname.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,6 +51,12 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
 
 begin_function
 name|main
@@ -76,6 +82,28 @@ modifier|*
 name|rindex
 argument_list|()
 decl_stmt|;
+if|if
+condition|(
+name|argc
+operator|!=
+literal|2
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: dirname path\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|p
 operator|=
 name|rindex
@@ -86,11 +114,9 @@ name|argv
 argument_list|,
 literal|'/'
 argument_list|)
-expr_stmt|;
+condition|)
 if|if
 condition|(
-name|p
-operator|&&
 name|p
 operator|>
 operator|*
@@ -101,8 +127,17 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
-name|puts
+else|else
+operator|*
+operator|++
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
+name|printf
 argument_list|(
+literal|"%s\n"
+argument_list|,
 operator|*
 name|argv
 argument_list|)
