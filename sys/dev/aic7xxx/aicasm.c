@@ -9,7 +9,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"$Id: aic7xxx_asm.c,v 1.10 1996/01/03 06:25:31 gibbs Exp $"
+literal|"$Id: aic7xxx_asm.c,v 1.11 1996/01/05 01:48:07 gibbs Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3594,7 +3594,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dho:vD"
+literal|"dho:vD:"
 argument_list|)
 operator|)
 operator|!=
@@ -3686,8 +3686,8 @@ argument_list|,
 literal|"w"
 argument_list|)
 operator|)
-operator|<
-literal|0
+operator|==
+name|NULL
 condition|)
 block|{
 name|perror
@@ -3821,8 +3821,8 @@ argument_list|,
 literal|"w"
 argument_list|)
 operator|)
-operator|<
-literal|0
+operator|==
+name|NULL
 condition|)
 block|{
 name|perror

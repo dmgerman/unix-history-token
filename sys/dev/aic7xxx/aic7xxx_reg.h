@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Aic7xxx register and scratch ram definitions.  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx_reg.h,v 1.5 1996/01/29 03:12:06 gibbs Exp $  */
+comment|/*  * Aic7xxx register and scratch ram definitions.  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx_reg.h,v 1.6 1996/03/10 07:02:32 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -1677,17 +1677,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PARITY_ERROR
-value|0xe1
-end_define
-
-begin_comment
-comment|/* 						 * Sequencer detected a parity 						 * error. 						 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|BRKADRINT
 value|0x08
 end_define
@@ -2765,12 +2754,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|WAITING_SCBT
+name|QCNTMASK
 value|0x058
 end_define
 
 begin_comment
-comment|/* 					 * tail of list of SCBs awaiting 					 * selection 					 */
+comment|/* 					 * Mask of bits to test against 					 * when looking at the Queue Count 					 * registers.  Works around a bug 					 * on aic7850 chips.  					 */
 end_comment
 
 begin_define
