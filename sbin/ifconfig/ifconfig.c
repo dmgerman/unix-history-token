@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ifconfig.c,v 1.30 1997/05/10 17:14:52 peter Exp $"
+literal|"$Id: ifconfig.c,v 1.31 1997/10/16 03:55:28 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1746,7 +1746,7 @@ break|break;
 case|case
 literal|'u'
 case|:
-comment|/* restrict scan to "down" interfaces */
+comment|/* restrict scan to "up" interfaces */
 name|uponly
 operator|++
 expr_stmt|;
