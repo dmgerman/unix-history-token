@@ -51,7 +51,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.100
+literal|3.101
 operator|%
 name|G
 operator|%
@@ -443,20 +443,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|time
-argument_list|(
-operator|&
-name|CurTime
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|MainEnvelope
 operator|.
 name|e_ctime
 operator|=
-name|CurTime
+name|curtime
+argument_list|()
 expr_stmt|;
 end_expr_stmt
 
@@ -1725,11 +1717,11 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SMTP
+name|QUEUE
 end_ifdef
 
 begin_comment
-comment|/* 	if (Smtp) 		smtp(); # endif SMTP  # ifdef QUEUE 	/* 	**  If collecting stuff from the queue, go start doing that. 	*/
+comment|/* 	**  If collecting stuff from the queue, go start doing that. 	*/
 end_comment
 
 begin_if
@@ -1757,6 +1749,49 @@ begin_endif
 endif|#
 directive|endif
 endif|QUEUE
+end_endif
+
+begin_comment
+comment|/* give this transaction an id */
+end_comment
+
+begin_expr_stmt
+operator|(
+name|void
+operator|)
+name|queuename
+argument_list|(
+name|CurEnv
+argument_list|,
+literal|'\0'
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMTP
+end_ifdef
+
+begin_comment
+comment|/* 	**  If running SMTP protocol, start collecting and executing 	**  commands.  This will never return. 	*/
+end_comment
+
+begin_if
+if|if
+condition|(
+name|Smtp
+condition|)
+name|smtp
+argument_list|()
+expr_stmt|;
+end_if
+
+begin_endif
+endif|#
+directive|endif
+endif|SMTP
 end_endif
 
 begin_comment
@@ -3287,6 +3322,10 @@ modifier|*
 name|gmtime
 parameter_list|()
 function_decl|;
+specifier|auto
+name|time_t
+name|now
+decl_stmt|;
 comment|/* process id */
 operator|(
 name|void
@@ -3329,21 +3368,17 @@ name|cbuf
 argument_list|)
 expr_stmt|;
 comment|/* time as integer, unix time, arpa time */
-operator|(
-name|void
-operator|)
-name|time
-argument_list|(
-operator|&
-name|CurTime
-argument_list|)
+name|now
+operator|=
+name|curtime
+argument_list|()
 expr_stmt|;
 name|tm
 operator|=
 name|gmtime
 argument_list|(
 operator|&
-name|CurTime
+name|now
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3393,7 +3428,7 @@ argument_list|,
 name|ctime
 argument_list|(
 operator|&
-name|CurTime
+name|now
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3849,7 +3884,8 @@ name|e
 operator|->
 name|e_ctime
 operator|=
-name|CurTime
+name|curtime
+argument_list|()
 expr_stmt|;
 return|return
 operator|(

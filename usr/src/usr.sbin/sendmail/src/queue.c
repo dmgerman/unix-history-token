@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.38
+literal|3.39
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.38
+literal|3.39
 operator|%
 name|G
 operator|%
@@ -1955,9 +1955,10 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"CurTime=%ld, TimeOut=%ld\n"
+literal|"curtime=%ld, TimeOut=%ld\n"
 argument_list|,
-name|CurTime
+name|curtime
+argument_list|()
 argument_list|,
 name|CurEnv
 operator|->
@@ -1975,7 +1976,8 @@ name|CurEnv
 operator|->
 name|e_queueup
 operator|&&
-name|CurTime
+name|curtime
+argument_list|()
 operator|>
 name|CurEnv
 operator|->

@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.24
+literal|3.25
 operator|%
 name|G
 operator|%
@@ -81,7 +81,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.24
+literal|3.25
 operator|%
 name|G
 operator|%
@@ -309,6 +309,11 @@ block|{
 name|int
 name|acptcnt
 decl_stmt|;
+comment|/* for debugging */
+name|time_t
+name|lasttick
+decl_stmt|;
+comment|/* for debugging */
 comment|/* get a socket for the SMTP connection */
 name|s
 operator|=
@@ -362,14 +367,10 @@ endif|#
 directive|endif
 endif|DEBUG
 comment|/* wait for a connection */
-operator|(
-name|void
-operator|)
-name|time
-argument_list|(
-operator|&
-name|CurTime
-argument_list|)
+name|lasttick
+operator|=
+name|curtime
+argument_list|()
 expr_stmt|;
 name|acptcnt
 operator|=
@@ -377,9 +378,6 @@ literal|0
 expr_stmt|;
 do|do
 block|{
-name|long
-name|now
-decl_stmt|;
 name|errno
 operator|=
 literal|0
@@ -395,20 +393,12 @@ operator|&
 name|otherend
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|time
-argument_list|(
-operator|&
-name|now
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|now
+name|lasttick
 operator|==
-name|CurTime
+name|curtime
+argument_list|()
 condition|)
 block|{
 if|if
@@ -430,9 +420,10 @@ block|}
 block|}
 else|else
 block|{
-name|CurTime
+name|lasttick
 operator|=
-name|now
+name|curtime
+argument_list|()
 expr_stmt|;
 name|acptcnt
 operator|=

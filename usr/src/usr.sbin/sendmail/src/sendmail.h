@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.81		%G%"
+literal|"@(#)sendmail.h	3.82		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2183,17 +2183,6 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|time_t
-name|CurTime
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* time of this message */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
 name|jmp_buf
 name|TopFrame
 decl_stmt|;
@@ -2373,6 +2362,14 @@ specifier|extern
 name|char
 modifier|*
 name|queuename
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|time_t
+name|curtime
 parameter_list|()
 function_decl|;
 end_function_decl
