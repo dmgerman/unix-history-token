@@ -94,31 +94,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/digi/digireg.h>
+file|<sys/digiio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/digi/digiio.h>
+file|<digi/digireg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/digi/digi.h>
+file|<digi/digi.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/digi/digi_mod.h>
+file|<digi/digi_mod.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/digi/digi_pci.h>
+file|<digi/digi_pci.h>
 end_include
 
 begin_define

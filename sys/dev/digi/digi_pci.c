@@ -72,13 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<digi/digireg.h>
+file|<sys/digiio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<digi/digiio.h>
+file|<digi/digireg.h>
 end_include
 
 begin_include
