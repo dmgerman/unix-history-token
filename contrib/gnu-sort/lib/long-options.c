@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Utility to accept --help and --version options as unobtrusively as possible.    Copyright (C) 1993, 1994, 1998, 1999, 2000 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Utility to accept --help and --version options as unobtrusively as possible.     Copyright (C) 1993, 1994, 1998, 1999, 2000, 2002, 2003, 2004 Free    Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -24,34 +24,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<getopt.h>
-end_include
-
-begin_if
-if|#
-directive|if
-name|HAVE_STDLIB_H
-end_if
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* Specification.  */
+end_comment
 
 begin_include
 include|#
@@ -62,50 +37,32 @@ end_include
 begin_include
 include|#
 directive|include
-file|"version-etc.h"
+file|<stdarg.h>
 end_include
-
-begin_if
-if|#
-directive|if
-name|ENABLE_NLS
-end_if
 
 begin_include
 include|#
 directive|include
-file|<libintl.h>
+file|<stdio.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|_
-parameter_list|(
-name|Text
-parameter_list|)
-value|gettext (Text)
-end_define
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
-begin_else
-else|#
-directive|else
-end_else
+begin_include
+include|#
+directive|include
+file|<getopt.h>
+end_include
 
-begin_define
-define|#
-directive|define
-name|_
-parameter_list|(
-name|Text
-parameter_list|)
-value|Text
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|"version-etc.h"
+end_include
 
 begin_decl_stmt
 specifier|static
@@ -180,17 +137,17 @@ name|char
 modifier|*
 name|version
 parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|authors
-parameter_list|,
 name|void
 function_decl|(
 modifier|*
 name|usage_func
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|int
+parameter_list|)
+parameter_list|,
+comment|/* const char *author1, ...*/
+modifier|...
 parameter_list|)
 block|{
 name|int
@@ -248,13 +205,24 @@ modifier|*
 name|usage_func
 call|)
 argument_list|(
-literal|0
+name|EXIT_SUCCESS
 argument_list|)
 expr_stmt|;
 case|case
 literal|'v'
 case|:
-name|version_etc
+block|{
+name|va_list
+name|authors
+decl_stmt|;
+name|va_start
+argument_list|(
+name|authors
+argument_list|,
+name|usage_func
+argument_list|)
+expr_stmt|;
+name|version_etc_va
 argument_list|(
 name|stdout
 argument_list|,
@@ -272,6 +240,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 default|default:
 comment|/* Don't process any other long-named options.  */
 break|break;

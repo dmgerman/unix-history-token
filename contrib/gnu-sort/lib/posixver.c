@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Which POSIX version to conform to, for utilities.     Copyright (C) 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify it    under the terms of the GNU Library General Public License as published    by the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,    USA.  */
+comment|/* Which POSIX version to conform to, for utilities.     Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License along    with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -27,6 +27,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|"posixver.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<limits.h>
 end_include
 
@@ -35,30 +41,6 @@ include|#
 directive|include
 file|<stdlib.h>
 end_include
-
-begin_if
-if|#
-directive|if
-operator|!
-name|HAVE_DECL_GETENV
-operator|&&
-operator|!
-name|defined
-name|getenv
-end_if
-
-begin_function_decl
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -95,6 +77,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DEFAULT_POSIX2_VERSION
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_POSIX2_VERSION
+value|_POSIX2_VERSION
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* The POSIX version that utilities should conform to.  The default is    specified by the system.  */
 end_comment
@@ -110,7 +110,7 @@ name|long
 name|int
 name|v
 init|=
-name|_POSIX2_VERSION
+name|DEFAULT_POSIX2_VERSION
 decl_stmt|;
 name|char
 specifier|const

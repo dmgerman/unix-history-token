@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Locale-specific memory comparison.    Copyright 1999, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Locale-specific memory comparison.    Copyright (C) 1999, 2002, 2003 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -23,6 +23,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"memcoll.h"
+end_include
 
 begin_include
 include|#
@@ -51,28 +57,11 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_if
-if|#
-directive|if
-name|HAVE_STRING_H
-end_if
-
-begin_include
-include|#
-directive|include
 file|<string.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* Compare S1 (with length S1LEN) and S2 (with length S2LEN) according    to the LC_COLLATE locale.  S1 and S2 do not overlap, and are not    adjacent.  Temporarily modify the bytes after S1 and S2, but    restore their original contents before returning.  Set errno to an    error number if there is an error, and to zero otherwise.  */
+comment|/* Compare S1 (with length S1LEN) and S2 (with length S2LEN) according    to the LC_COLLATE locale.  S1 and S2 do not overlap, and are not    adjacent.  Perhaps temporarily modify the bytes after S1 and S2,    but restore their original contents before returning.  Set errno to an    error number if there is an error, and to zero otherwise.  */
 end_comment
 
 begin_function
@@ -97,6 +86,9 @@ block|{
 name|int
 name|diff
 decl_stmt|;
+if|#
+directive|if
+name|HAVE_STRCOLL
 name|char
 name|n1
 init|=
@@ -242,6 +234,49 @@ index|]
 operator|=
 name|n2
 expr_stmt|;
+else|#
+directive|else
+name|diff
+operator|=
+name|memcmp
+argument_list|(
+name|s1
+argument_list|,
+name|s2
+argument_list|,
+name|s1len
+operator|<
+name|s2len
+condition|?
+name|s1len
+else|:
+name|s2len
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|diff
+condition|)
+name|diff
+operator|=
+name|s1len
+operator|<
+name|s2len
+condition|?
+operator|-
+literal|1
+else|:
+name|s1len
+operator|!=
+name|s2len
+expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|diff
 return|;
