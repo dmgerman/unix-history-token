@@ -1209,7 +1209,10 @@ if|if
 condition|(
 name|pcb
 operator|!=
+name|PCPU_GET
+argument_list|(
 name|curpcb
+argument_list|)
 condition|)
 return|return;
 name|pcb_ldt
@@ -1223,7 +1226,10 @@ directive|ifdef
 name|SMP
 name|gdt
 index|[
+name|PCPU_GET
+argument_list|(
 name|cpuid
+argument_list|)
 operator|*
 name|NGDT
 operator|+
@@ -1533,7 +1539,10 @@ if|if
 condition|(
 name|pcb
 operator|==
+name|PCPU_GET
+argument_list|(
 name|curpcb
+argument_list|)
 condition|)
 block|{
 name|lldt

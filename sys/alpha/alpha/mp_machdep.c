@@ -2323,7 +2323,10 @@ if|if
 condition|(
 name|id
 operator|==
+name|PCPU_GET
+argument_list|(
 name|cpuid
+argument_list|)
 condition|)
 continue|continue;
 if|if
@@ -2555,7 +2558,10 @@ if|if
 condition|(
 name|id
 operator|==
+name|PCPU_GET
+argument_list|(
 name|cpuid
+argument_list|)
 condition|)
 continue|continue;
 if|if
@@ -3670,8 +3676,7 @@ name|ipis
 init|=
 name|atomic_readandclear
 argument_list|(
-operator|&
-name|PCPU_GET
+name|PCPU_PTR
 argument_list|(
 name|pending_ipis
 argument_list|)

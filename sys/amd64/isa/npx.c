@@ -1823,14 +1823,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|PCPU_GET
+argument_list|(
 name|curpcb
+argument_list|)
 operator|!=
 name|NULL
 condition|)
 name|fnsave
 argument_list|(
 operator|&
+name|PCPU_GET
+argument_list|(
 name|curpcb
+argument_list|)
 operator|->
 name|pcb_savefpu
 argument_list|)
@@ -1861,12 +1867,18 @@ if|if
 condition|(
 name|p
 operator|==
+name|PCPU_GET
+argument_list|(
 name|npxproc
+argument_list|)
 condition|)
 name|npxsave
 argument_list|(
 operator|&
+name|PCPU_GET
+argument_list|(
 name|curpcb
+argument_list|)
 operator|->
 name|pcb_savefpu
 argument_list|)
@@ -1884,7 +1896,10 @@ name|masked_exceptions
 decl_stmt|;
 name|masked_exceptions
 operator|=
+name|PCPU_GET
+argument_list|(
 name|curpcb
+argument_list|)
 operator|->
 name|pcb_savefpu
 operator|.
@@ -1892,7 +1907,10 @@ name|sv_env
 operator|.
 name|en_cw
 operator|&
+name|PCPU_GET
+argument_list|(
 name|curpcb
+argument_list|)
 operator|->
 name|pcb_savefpu
 operator|.
@@ -2360,7 +2378,10 @@ name|frame
 decl_stmt|;
 if|if
 condition|(
+name|PCPU_GET
+argument_list|(
 name|npxproc
+argument_list|)
 operator|==
 name|NULL
 operator|||
@@ -2372,7 +2393,10 @@ name|printf
 argument_list|(
 literal|"npxintr: npxproc = %p, curproc = %p, npx_exists = %d\n"
 argument_list|,
+name|PCPU_GET
+argument_list|(
 name|npxproc
+argument_list|)
 argument_list|,
 name|curproc
 argument_list|,
@@ -2387,7 +2411,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|PCPU_GET
+argument_list|(
 name|npxproc
+argument_list|)
 operator|!=
 name|curproc
 condition|)
@@ -2396,7 +2423,10 @@ name|printf
 argument_list|(
 literal|"npxintr: npxproc = %p, curproc = %p, npx_exists = %d\n"
 argument_list|,
+name|PCPU_GET
+argument_list|(
 name|npxproc
+argument_list|)
 argument_list|,
 name|curproc
 argument_list|,
@@ -2419,7 +2449,10 @@ expr_stmt|;
 name|fnstsw
 argument_list|(
 operator|&
+name|PCPU_GET
+argument_list|(
 name|curpcb
+argument_list|)
 operator|->
 name|pcb_savefpu
 operator|.
@@ -2487,7 +2520,10 @@ operator|=
 name|fpetable
 index|[
 operator|(
+name|PCPU_GET
+argument_list|(
 name|curpcb
+argument_list|)
 operator|->
 name|pcb_savefpu
 operator|.
@@ -2500,7 +2536,10 @@ literal|0x3f
 operator|)
 operator||
 operator|(
+name|PCPU_GET
+argument_list|(
 name|curpcb
+argument_list|)
 operator|->
 name|pcb_savefpu
 operator|.
@@ -2555,7 +2594,10 @@ operator|)
 return|;
 if|if
 condition|(
+name|PCPU_GET
+argument_list|(
 name|npxproc
+argument_list|)
 operator|!=
 name|NULL
 condition|)
@@ -2564,7 +2606,10 @@ name|printf
 argument_list|(
 literal|"npxdna: npxproc = %p, curproc = %p\n"
 argument_list|,
+name|PCPU_GET
+argument_list|(
 name|npxproc
+argument_list|)
 argument_list|,
 name|curproc
 argument_list|)
@@ -2586,7 +2631,10 @@ argument_list|,
 name|CURPROC
 argument_list|)
 expr_stmt|;
+name|PCPU_GET
+argument_list|(
 name|curpcb
+argument_list|)
 operator|->
 name|pcb_savefpu
 operator|.
@@ -2598,7 +2646,10 @@ comment|/* 	 * The following frstor may cause an IRQ13 when the state being 	 * 
 name|frstor
 argument_list|(
 operator|&
+name|PCPU_GET
+argument_list|(
 name|curpcb
+argument_list|)
 operator|->
 name|pcb_savefpu
 argument_list|)

@@ -2462,8 +2462,10 @@ argument_list|(
 operator|&
 name|tv
 argument_list|,
-operator|&
+name|PCPU_PTR
+argument_list|(
 name|switchtime
+argument_list|)
 argument_list|,
 operator|<
 argument_list|)
@@ -2472,13 +2474,19 @@ name|printf
 argument_list|(
 literal|"microuptime() went backwards (%ld.%06ld -> %ld.%06ld)\n"
 argument_list|,
+name|PCPU_GET
+argument_list|(
 name|switchtime
 operator|.
 name|tv_sec
+argument_list|)
 argument_list|,
+name|PCPU_GET
+argument_list|(
 name|switchtime
 operator|.
 name|tv_usec
+argument_list|)
 argument_list|,
 name|tv
 operator|.
@@ -2497,9 +2505,12 @@ name|tv
 operator|.
 name|tv_usec
 operator|-
+name|PCPU_GET
+argument_list|(
 name|switchtime
 operator|.
 name|tv_usec
+argument_list|)
 operator|)
 operator|+
 operator|(
@@ -2507,9 +2518,12 @@ name|tv
 operator|.
 name|tv_sec
 operator|-
+name|PCPU_GET
+argument_list|(
 name|switchtime
 operator|.
 name|tv_sec
+argument_list|)
 operator|)
 operator|*
 operator|(

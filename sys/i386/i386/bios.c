@@ -1054,7 +1054,10 @@ operator|=
 operator|&
 name|gdt
 index|[
+name|PCPU_GET
+argument_list|(
 name|cpuid
+argument_list|)
 operator|*
 name|NGDT
 index|]

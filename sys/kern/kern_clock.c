@@ -401,7 +401,10 @@ if|if
 condition|(
 name|p
 operator|!=
+name|PCPU_GET
+argument_list|(
 name|idleproc
+argument_list|)
 condition|)
 block|{
 specifier|register
@@ -1261,7 +1264,10 @@ if|if
 condition|(
 name|p
 operator|!=
+name|PCPU_GET
+argument_list|(
 name|idleproc
+argument_list|)
 condition|)
 name|cp_time
 index|[

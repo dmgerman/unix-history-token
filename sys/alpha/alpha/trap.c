@@ -1383,7 +1383,10 @@ case|:
 comment|/* 			 * on exit from the kernel, if proc == fpcurproc, 			 * FP is enabled. 			 */
 if|if
 condition|(
+name|PCPU_GET
+argument_list|(
 name|fpcurproc
+argument_list|)
 operator|==
 name|p
 condition|)

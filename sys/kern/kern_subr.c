@@ -265,7 +265,10 @@ if|if
 condition|(
 name|ticks
 operator|-
+name|PCPU_GET
+argument_list|(
 name|switchticks
+argument_list|)
 operator|>=
 name|hogticks
 condition|)
@@ -566,7 +569,10 @@ if|if
 condition|(
 name|ticks
 operator|-
+name|PCPU_GET
+argument_list|(
 name|switchticks
+argument_list|)
 operator|>=
 name|hogticks
 condition|)
@@ -984,7 +990,10 @@ if|if
 condition|(
 name|ticks
 operator|-
+name|PCPU_GET
+argument_list|(
 name|switchticks
+argument_list|)
 operator|>=
 name|hogticks
 condition|)

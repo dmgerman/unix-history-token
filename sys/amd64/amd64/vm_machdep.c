@@ -493,7 +493,10 @@ literal|0
 comment|/* Ensure that p1's pcb is up to date. */
 if|if
 condition|(
+name|PCPU_GET
+argument_list|(
 name|npxproc
+argument_list|)
 operator|==
 name|p1
 condition|)
@@ -1640,12 +1643,18 @@ name|printf
 argument_list|(
 literal|"cpu_reset called on cpu#%d\n"
 argument_list|,
+name|PCPU_GET
+argument_list|(
 name|cpuid
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|map
 operator|=
+name|PCPU_GET
+argument_list|(
 name|other_cpus
+argument_list|)
 operator|&
 operator|~
 name|stopped_cpus
@@ -1671,7 +1680,10 @@ comment|/* Stop all other CPUs */
 block|}
 if|if
 condition|(
+name|PCPU_GET
+argument_list|(
 name|cpuid
+argument_list|)
 operator|==
 literal|0
 condition|)
@@ -1691,7 +1703,10 @@ block|{
 comment|/* We are not BSP (CPU #0) */
 name|cpu_reset_proxyid
 operator|=
+name|PCPU_GET
+argument_list|(
 name|cpuid
+argument_list|)
 expr_stmt|;
 name|cpustop_restartfunc
 operator|=

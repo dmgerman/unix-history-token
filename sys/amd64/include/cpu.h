@@ -123,7 +123,7 @@ name|CLKF_INTR
 parameter_list|(
 name|framep
 parameter_list|)
-value|(intr_nesting_level>= 2)
+value|(PCPU_GET(intr_nesting_level)>= 2)
 end_define
 
 begin_define
@@ -171,7 +171,7 @@ define|#
 directive|define
 name|resched_wanted
 parameter_list|()
-value|(astpending& AST_RESCHED)
+value|(PCPU_GET(astpending)& AST_RESCHED)
 end_define
 
 begin_comment
@@ -208,7 +208,7 @@ define|#
 directive|define
 name|aston
 parameter_list|()
-value|do {							\ 	PCPU_SET(astpending, astpending | AST_PENDING);			\ } while (0)
+value|do {							\ 	PCPU_SET(astpending, PCPU_GET(astpending) | AST_PENDING);	\ } while (0)
 end_define
 
 begin_define

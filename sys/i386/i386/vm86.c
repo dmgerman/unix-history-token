@@ -578,7 +578,10 @@ decl_stmt|;
 comment|/* 	 * pcb_ext contains the address of the extension area, or zero if 	 * the extension is not present.  (This check should not be needed, 	 * as we can't enter vm86 mode until we set up an extension area) 	 */
 if|if
 condition|(
+name|PCPU_GET
+argument_list|(
 name|curpcb
+argument_list|)
 operator|->
 name|pcb_ext
 operator|==
@@ -592,7 +595,10 @@ return|;
 name|vm86
 operator|=
 operator|&
+name|PCPU_GET
+argument_list|(
 name|curpcb
+argument_list|)
 operator|->
 name|pcb_ext
 operator|->
@@ -2275,7 +2281,10 @@ modifier|*
 name|vm86
 init|=
 operator|&
+name|PCPU_GET
+argument_list|(
 name|curpcb
+argument_list|)
 operator|->
 name|pcb_ext
 operator|->

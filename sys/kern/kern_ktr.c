@@ -143,7 +143,7 @@ begin_define
 define|#
 directive|define
 name|KTR_CPU
-value|cpuid
+value|PCPU_GET(cpuid)
 end_define
 
 begin_else

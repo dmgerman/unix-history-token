@@ -391,7 +391,10 @@ name|p
 operator|&&
 name|p
 operator|!=
+name|PCPU_GET
+argument_list|(
 name|idleproc
+argument_list|)
 operator|&&
 name|p
 operator|->

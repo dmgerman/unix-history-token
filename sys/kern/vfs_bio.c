@@ -2090,7 +2090,10 @@ if|if
 condition|(
 name|curproc
 operator|!=
+name|PCPU_GET
+argument_list|(
 name|idleproc
+argument_list|)
 condition|)
 name|curproc
 operator|->
@@ -2295,7 +2298,10 @@ if|if
 condition|(
 name|curproc
 operator|!=
+name|PCPU_GET
+argument_list|(
 name|idleproc
+argument_list|)
 condition|)
 name|curproc
 operator|->
@@ -2436,7 +2442,10 @@ if|if
 condition|(
 name|curproc
 operator|!=
+name|PCPU_GET
+argument_list|(
 name|idleproc
+argument_list|)
 condition|)
 name|curproc
 operator|->
@@ -2913,7 +2922,10 @@ if|if
 condition|(
 name|curproc
 operator|!=
+name|PCPU_GET
+argument_list|(
 name|idleproc
+argument_list|)
 condition|)
 name|curproc
 operator|->
@@ -7844,7 +7856,10 @@ if|if
 condition|(
 name|curproc
 operator|==
+name|PCPU_GET
+argument_list|(
 name|idleproc
+argument_list|)
 condition|)
 return|return
 name|NULL

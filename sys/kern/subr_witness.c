@@ -3795,7 +3795,10 @@ argument_list|)
 expr_stmt|;
 name|i
 operator|=
+name|PCPU_GET
+argument_list|(
 name|witness_spin_check
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4511,7 +4514,10 @@ name|PCPU_SET
 argument_list|(
 name|witness_spin_check
 argument_list|,
+name|PCPU_GET
+argument_list|(
 name|witness_spin_check
+argument_list|)
 operator|&
 operator|~
 name|w
@@ -4698,7 +4704,10 @@ name|PCPU_SET
 argument_list|(
 name|witness_spin_check
 argument_list|,
+name|PCPU_GET
+argument_list|(
 name|witness_spin_check
+argument_list|)
 operator||
 name|w
 operator|->

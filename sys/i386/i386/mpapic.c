@@ -174,7 +174,10 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+name|PCPU_GET
+argument_list|(
 name|cpuid
+argument_list|)
 operator|==
 literal|0
 condition|)
@@ -308,7 +311,10 @@ name|TEST_TEST1
 argument_list|)
 if|if
 condition|(
+name|PCPU_GET
+argument_list|(
 name|cpuid
+argument_list|)
 operator|==
 name|GUARD_CPU
 condition|)
@@ -358,7 +364,10 @@ name|printf
 argument_list|(
 literal|"SMP: CPU%d %s:\n"
 argument_list|,
+name|PCPU_GET
+argument_list|(
 name|cpuid
+argument_list|)
 argument_list|,
 name|str
 argument_list|)

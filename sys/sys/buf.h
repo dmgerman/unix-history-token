@@ -1258,7 +1258,10 @@ if|if
 condition|(
 name|p
 operator|!=
+name|PCPU_GET
+argument_list|(
 name|idleproc
+argument_list|)
 operator|&&
 name|bp
 operator|->

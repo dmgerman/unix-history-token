@@ -1644,8 +1644,10 @@ argument_list|)
 expr_stmt|;
 name|microuptime
 argument_list|(
-operator|&
+name|PCPU_PTR
+argument_list|(
 name|switchtime
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|PCPU_SET

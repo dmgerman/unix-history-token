@@ -796,7 +796,10 @@ name|printf
 argument_list|(
 literal|"boot() called on cpu#%d\n"
 argument_list|,
+name|PCPU_GET
+argument_list|(
 name|cpuid
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2139,7 +2142,10 @@ name|printf
 argument_list|(
 literal|"cpuid = %d; "
 argument_list|,
+name|PCPU_GET
+argument_list|(
 name|cpuid
+argument_list|)
 argument_list|)
 expr_stmt|;
 ifdef|#

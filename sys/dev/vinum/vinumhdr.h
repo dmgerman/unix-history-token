@@ -327,7 +327,7 @@ name|Malloc
 parameter_list|(
 name|x
 parameter_list|)
-value|malloc((x), M_DEVBUF, intr_nesting_level == 0)
+value|malloc((x), M_DEVBUF, PCPU_GET(intr_nesting_level) == 0)
 end_define
 
 begin_define

@@ -390,9 +390,15 @@ name|db_printf
 argument_list|(
 literal|"\nCPU%d stopping CPUs: 0x%08x..."
 argument_list|,
+name|PCPU_GET
+argument_list|(
 name|cpuid
+argument_list|)
 argument_list|,
+name|PCPU_GET
+argument_list|(
 name|other_cpus
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -401,7 +407,10 @@ comment|/* VERBOSE_CPUSTOP_ON_DDBBREAK */
 comment|/* We stop all CPUs except ourselves (obviously) */
 name|stop_cpus
 argument_list|(
+name|PCPU_GET
+argument_list|(
 name|other_cpus
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|#
@@ -496,7 +505,10 @@ name|db_printf
 argument_list|(
 literal|"\nCPU%d restarting CPUs: 0x%08x..."
 argument_list|,
+name|PCPU_GET
+argument_list|(
 name|cpuid
+argument_list|)
 argument_list|,
 name|stopped_cpus
 argument_list|)
@@ -509,7 +521,10 @@ if|if
 condition|(
 name|stopped_cpus
 operator|!=
+name|PCPU_GET
+argument_list|(
 name|other_cpus
+argument_list|)
 operator|&&
 name|smp_started
 operator|!=
@@ -520,7 +535,10 @@ name|db_printf
 argument_list|(
 literal|"whoa, other_cpus: 0x%08x, stopped_cpus: 0x%08x\n"
 argument_list|,
+name|PCPU_GET
+argument_list|(
 name|other_cpus
+argument_list|)
 argument_list|,
 name|stopped_cpus
 argument_list|)

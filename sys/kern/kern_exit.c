@@ -1085,13 +1085,18 @@ expr_stmt|;
 comment|/* 	 * Pretend that an mi_switch() to the next process occurs now.  We 	 * must set `switchtime' directly since we will call cpu_switch() 	 * directly.  Set it now so that the rest of the exit time gets 	 * counted somewhere if possible. 	 */
 name|microuptime
 argument_list|(
-operator|&
+name|PCPU_PTR
+argument_list|(
 name|switchtime
 argument_list|)
+argument_list|)
 expr_stmt|;
+name|PCPU_SET
+argument_list|(
 name|switchticks
-operator|=
+argument_list|,
 name|ticks
+argument_list|)
 expr_stmt|;
 comment|/* 	 * notify interested parties of our demise. 	 */
 name|KNOTE

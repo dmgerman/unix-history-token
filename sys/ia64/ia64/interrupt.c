@@ -224,8 +224,7 @@ parameter_list|)
 block|{
 name|atomic_add_int
 argument_list|(
-operator|&
-name|PCPU_GET
+name|PCPU_PTR
 argument_list|(
 name|intr_nesting_level
 argument_list|)
@@ -336,8 +335,7 @@ comment|/* NOTREACHED */
 block|}
 name|atomic_subtract_int
 argument_list|(
-operator|&
-name|PCPU_GET
+name|PCPU_PTR
 argument_list|(
 name|intr_nesting_level
 argument_list|)

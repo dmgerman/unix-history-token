@@ -917,7 +917,10 @@ name|mtx_lock
 argument_list|)
 expr_stmt|;
 return|return
+name|PCPU_GET
+argument_list|(
 name|idleproc
+argument_list|)
 return|;
 block|}
 name|p
@@ -933,7 +936,10 @@ name|SMP
 comment|/* wander down the current run queue for this pri level for a match */
 name|id
 operator|=
+name|PCPU_GET
+argument_list|(
 name|cpuid
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
