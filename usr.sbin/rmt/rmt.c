@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: rmt.c,v 1.1 1998/05/15 12:09:06 hans Exp hans $"
 decl_stmt|;
 end_decl_stmt
 
@@ -920,6 +920,29 @@ goto|goto
 name|top
 goto|;
 block|}
+case|case
+literal|'V'
+case|:
+comment|/* version */
+name|getstring
+argument_list|(
+name|op
+argument_list|)
+expr_stmt|;
+name|DEBUG1
+argument_list|(
+literal|"rmtd: V %s\n"
+argument_list|,
+name|op
+argument_list|)
+expr_stmt|;
+name|rval
+operator|=
+literal|2
+expr_stmt|;
+goto|goto
+name|respond
+goto|;
 default|default:
 name|DEBUG1
 argument_list|(
