@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	6.26 (Berkeley) %G%"
+literal|"@(#)headers.c	6.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2115,6 +2115,20 @@ operator|==
 literal|'\\'
 condition|)
 block|{
+comment|/* arrange to quote the address */
+if|if
+condition|(
+name|cmtlev
+operator|<=
+literal|0
+operator|&&
+operator|!
+name|qmode
+condition|)
+name|quoteit
+operator|=
+name|TRUE
+expr_stmt|;
 if|if
 condition|(
 operator|(
