@@ -908,12 +908,6 @@ begin_comment
 comment|/* char	*gcvt(double, int, int * __restrict, int * __restrict); */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_GETSUBOPT_DECLARED
-end_ifndef
-
 begin_function_decl
 name|int
 name|getsubopt
@@ -933,17 +927,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|_GETSUBOPT_DECLARED
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|int
@@ -1818,6 +1801,18 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|suboptarg
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* getsubopt(3) external variable */
+end_comment
 
 begin_endif
 endif|#
