@@ -182,11 +182,38 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ok
+parameter_list|(
+name|number
+parameter_list|)
+value|((number) - kernbase)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|__alpha__
-end_ifdef
+argument_list|)
+end_elif
 
 begin_define
 define|#
@@ -198,26 +225,16 @@ parameter_list|)
 value|ALPHA_K0SEG_TO_PHYS(number)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_else
+else|#
+directive|else
+end_else
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__i386__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ok
-parameter_list|(
-name|number
-parameter_list|)
-value|((number) - kernbase)
-end_define
+begin_error
+error|#
+directive|error
+error|savecore has not been ported to this platform yet.
+end_error
 
 begin_endif
 endif|#
@@ -519,11 +536,19 @@ begin_comment
 comment|/* version of kernel that crashed */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__i386__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
+end_if
 
 begin_decl_stmt
 name|u_long
@@ -1270,9 +1295,17 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
 if|if
 condition|(
 name|dump_nl
