@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.10.2.24 1998/02/04 01:06:23 brian Exp $  *  * TODO:  *      o Validate magic number received from peer.  *	o Limit data field length by MRU  */
+comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.10.2.25 1998/06/27 12:05:24 brian Exp $  *  * TODO:  *      o Validate magic number received from peer.  *	o Limit data field length by MRU  */
 end_comment
 
 begin_include
@@ -1181,7 +1181,7 @@ parameter_list|,
 name|arg
 parameter_list|)
 define|\
-value|do {								\   o.id = ty;							\   o.len = 6;							\   *(u_long *)o.data = htonl(arg);				\   cp += LcpPutConf(LogLCP, cp,&o, cftypes[o.id], "0x%08lx", (u_long)arg);\ } while (0)
+value|do {								\   o.id = ty;							\   o.len = 6;							\   *(u_int32_t *)o.data = htonl(arg);				\   cp += LcpPutConf(LogLCP, cp,&o, cftypes[o.id], "0x%08lx", (u_long)arg);\ } while (0)
 end_define
 
 begin_define
@@ -1223,7 +1223,7 @@ parameter_list|(
 name|period
 parameter_list|)
 define|\
-value|do {								\   o.id = TY_QUALPROTO;						\   o.len = 8;							\   *(u_short *)o.data = htons(PROTO_LQR);			\   *(u_long *)(o.data+2) = htonl(period);			\   cp += LcpPutConf(LogLCP, cp,&o, cftypes[o.id],		\                    "period %ld", (u_long)period);		\ } while (0)
+value|do {								\   o.id = TY_QUALPROTO;						\   o.len = 8;							\   *(u_short *)o.data = htons(PROTO_LQR);			\   *(u_int32_t *)(o.data+2) = htonl(period);			\   cp += LcpPutConf(LogLCP, cp,&o, cftypes[o.id],		\                    "period %ld", (u_long)period);		\ } while (0)
 end_define
 
 begin_define

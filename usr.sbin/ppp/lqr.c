@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Line Quality Monitoring (LQM) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lqr.c,v 1.7.2.10 1998/03/13 00:58:09 brian Exp $  *  *	o LQR based on RFC1333  *  * TODO:  *	o LQM policy  *	o Allow user to configure LQM method and interval.  */
+comment|/*  *	      PPP Line Quality Monitoring (LQM) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lqr.c,v 1.7.2.11 1998/06/26 19:04:31 brian Exp $  *  *	o LQR based on RFC1333  *  * TODO:  *	o LQM policy  *	o Allow user to configure LQM method and interval.  */
 end_comment
 
 begin_include
@@ -861,7 +861,7 @@ operator|/
 name|SECTICKS
 operator|>
 operator|(
-name|u_int32_t
+name|u_long
 operator|)
 name|LqrTimer
 operator|.
@@ -1056,6 +1056,9 @@ operator|=
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|u_long
 operator|)
 name|lcp
 operator|->
