@@ -1484,7 +1484,7 @@ end_function
 begin_define
 define|#
 directive|define
-name|isspace
+name|IS_SPACE_CHAR
 parameter_list|(
 name|c
 parameter_list|)
@@ -1549,7 +1549,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|isspace
+name|IS_SPACE_CHAR
 argument_list|(
 name|c
 argument_list|)
@@ -1624,7 +1624,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|isspace
+name|IS_SPACE_CHAR
 argument_list|(
 name|c
 argument_list|)
@@ -1771,7 +1771,7 @@ comment|/* remember the position of the last non-space char */
 if|if
 condition|(
 operator|!
-name|isspace
+name|IS_SPACE_CHAR
 argument_list|(
 name|cut_buffer
 index|[
@@ -1866,7 +1866,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|isspace
+name|IS_SPACE_CHAR
 argument_list|(
 name|c
 argument_list|)
@@ -2477,7 +2477,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|isspace
+name|IS_SPACE_CHAR
 argument_list|(
 name|c
 argument_list|)
@@ -2515,7 +2515,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|isspace
+name|IS_SPACE_CHAR
 argument_list|(
 name|c
 argument_list|)
@@ -2558,7 +2558,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|isspace
+name|IS_SPACE_CHAR
 argument_list|(
 name|c
 argument_list|)
@@ -2605,7 +2605,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|isspace
+name|IS_SPACE_CHAR
 argument_list|(
 name|c
 argument_list|)
@@ -2647,7 +2647,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|isspace
+name|IS_SPACE_CHAR
 argument_list|(
 name|c
 argument_list|)

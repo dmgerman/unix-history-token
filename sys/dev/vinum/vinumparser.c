@@ -136,7 +136,7 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|isspace
+name|SPACETAB
 parameter_list|(
 name|c
 parameter_list|)
@@ -664,7 +664,7 @@ control|)
 block|{
 while|while
 condition|(
-name|isspace
+name|SPACETAB
 argument_list|(
 operator|*
 name|cptr
@@ -773,7 +773,7 @@ comment|/* move on past */
 if|if
 condition|(
 operator|!
-name|isspace
+name|SPACETAB
 argument_list|(
 operator|*
 name|cptr
@@ -830,7 +830,7 @@ operator|)
 operator|&&
 operator|(
 operator|!
-name|isspace
+name|SPACETAB
 argument_list|(
 operator|*
 name|cptr
