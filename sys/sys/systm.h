@@ -2641,18 +2641,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|cdev
-modifier|*
-name|findcdev
-parameter_list|(
-name|dev_t
-name|x
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|uminor
 parameter_list|(
