@@ -650,32 +650,44 @@ decl_stmt|;
 comment|/* HCC control clr 0x54 */
 define|#
 directive|define
+name|OHCI_HCC_BIBIV
+value|(1<< 31)
+comment|/* BIBimage Valid */
+define|#
+directive|define
 name|OHCI_HCC_BIGEND
 value|(1<< 30)
+comment|/* noByteSwapData */
 define|#
 directive|define
 name|OHCI_HCC_PRPHY
 value|(1<< 23)
+comment|/* programPhyEnable */
 define|#
 directive|define
 name|OHCI_HCC_PHYEN
 value|(1<< 22)
+comment|/* aPhyEnhanceEnable */
 define|#
 directive|define
 name|OHCI_HCC_LPS
 value|(1<< 19)
+comment|/* LPS */
 define|#
 directive|define
 name|OHCI_HCC_POSTWR
 value|(1<< 18)
+comment|/* postedWriteEnable */
 define|#
 directive|define
 name|OHCI_HCC_LINKEN
 value|(1<< 17)
+comment|/* linkEnable */
 define|#
 directive|define
 name|OHCI_HCC_RESET
 value|(1<< 16)
+comment|/* softReset */
 name|fwohcireg_t
 name|dummy2
 index|[

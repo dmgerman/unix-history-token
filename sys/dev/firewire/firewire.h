@@ -2120,13 +2120,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|FW_GSPMAP
-value|_IOW('S', 6, struct fw_speed_map *)
-end_define
-
-begin_define
-define|#
-directive|define
 name|FW_GCROM
 value|_IOWR('S', 7, struct fw_crom_buf)
 end_define
