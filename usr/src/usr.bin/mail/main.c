@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.6 (Berkeley) %G%"
+literal|"@(#)main.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -522,7 +522,7 @@ literal|'?'
 case|:
 name|fputs
 argument_list|(
-literal|"Usage: XXX\n"
+literal|"\ Usage: mail [-iInv] [-s subject] [-c cc-addr] [-b bcc-addr] to-addr ...\n\             [- sendmail-options ...]\n\        mail [-iInNv] -f [name]\n\        mail [-iInNv] [-u user]\n"
 argument_list|,
 name|stderr
 argument_list|)
