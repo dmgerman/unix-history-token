@@ -2516,6 +2516,27 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|Device
+modifier|*
+modifier|*
+name|deviceFindDescr
+parameter_list|(
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|char
+modifier|*
+name|desc
+parameter_list|,
+name|DeviceType
+name|class
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|deviceCount
 parameter_list|(

@@ -1601,11 +1601,15 @@ name|devs
 decl_stmt|;
 name|devs
 operator|=
-name|deviceFind
+name|deviceFindDescr
 argument_list|(
 name|self
 operator|->
 name|prompt
+argument_list|,
+name|self
+operator|->
+name|title
 argument_list|,
 name|DEVICE_TYPE_NETWORK
 argument_list|)

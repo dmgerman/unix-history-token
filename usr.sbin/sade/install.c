@@ -2654,7 +2654,10 @@ if|if
 condition|(
 operator|!
 name|mediaDevice
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 name|msgYesNo
 argument_list|(
@@ -2677,6 +2680,13 @@ operator|||
 operator|!
 name|mediaDevice
 condition|)
+return|return
+name|DITEM_FAILURE
+operator||
+name|DITEM_RECREATE
+return|;
+block|}
+else|else
 return|return
 name|DITEM_FAILURE
 operator||

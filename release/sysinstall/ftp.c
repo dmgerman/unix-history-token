@@ -411,7 +411,10 @@ literal|550
 condition|)
 name|msgConfirm
 argument_list|(
-literal|"No such directory %s, please check your path and try again."
+literal|"No such directory ftp://%s/%s\n"
+literal|"please check your URL and try again."
+argument_list|,
+name|hostname
 argument_list|,
 name|dir
 argument_list|)
@@ -419,7 +422,9 @@ expr_stmt|;
 else|else
 name|msgConfirm
 argument_list|(
-literal|"FTP chdir to directory %s returned FTP error status %d\n"
+literal|"FTP chdir to ftp://%s/%s returned error status %d\n"
+argument_list|,
+name|hostname
 argument_list|,
 name|dir
 argument_list|,
