@@ -1014,37 +1014,42 @@ block|,
 literal|"Creative ViBRA16C"
 block|}
 block|,
+comment|/* CTL0001 */
 block|{
 literal|0x31008c0e
 block|,
 literal|"Creative SB16/SB32"
 block|}
 block|,
+comment|/* CTL0031 */
 block|{
 literal|0x41008c0e
 block|,
 literal|"Creative SB16/SB32"
 block|}
 block|,
+comment|/* CTL0041 */
 block|{
 literal|0x42008c0e
 block|,
 literal|"Creative SB AWE64"
 block|}
 block|,
-comment|/* CTL00c1 */
+comment|/* CTL0042 */
 block|{
 literal|0x43008c0e
 block|,
 literal|"Creative ViBRA16X"
 block|}
 block|,
+comment|/* CTL0043 */
 block|{
 literal|0x44008c0e
 block|,
 literal|"Creative SB AWE64 Gold"
 block|}
 block|,
+comment|/* CTL0044 */
 block|{
 literal|0x45008c0e
 block|,
@@ -1053,23 +1058,19 @@ block|}
 block|,
 comment|/* CTL0045 */
 block|{
-literal|0x01000000
-block|,
-literal|"Avance Asound 100"
-block|}
-block|,
-block|{
 literal|0x01100000
 block|,
 literal|"Avance Asound 110"
 block|}
 block|,
+comment|/* @@@1001 */
 block|{
 literal|0x01200001
 block|,
 literal|"Avance Logic ALS120"
 block|}
 block|,
+comment|/* @@@2001 */
 block|{
 literal|0x68187316
 block|,
@@ -1090,6 +1091,7 @@ block|,
 literal|"ESS ES1869 (Compaq OEM)"
 block|}
 block|,
+comment|/* CPQb0ac */
 block|{
 literal|0x79187316
 block|,
@@ -1110,7 +1112,7 @@ block|,
 literal|"ESS ES1888 (DEC OEM)"
 block|}
 block|,
-comment|/* DEC on-board ESS1888 */
+comment|/* ESS0107 */
 block|{
 literal|0
 block|}
