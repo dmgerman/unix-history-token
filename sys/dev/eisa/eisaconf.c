@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * EISA bus probe and attach routines   *  * Copyright (c) 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: eisaconf.c,v 1.5 1995/11/09 07:14:11 gibbs Exp $  */
+comment|/*  * EISA bus probe and attach routines   *  * Copyright (c) 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: eisaconf.c,v 1.6 1995/11/09 22:43:25 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -128,7 +128,7 @@ comment|/* no parentdata */
 name|DC_BUSY
 block|,
 comment|/* busses are always busy */
-literal|"EISA bus"
+name|NULL
 block|,
 name|DC_CLS_BUS
 comment|/* class */
@@ -189,6 +189,20 @@ name|eisa_unit
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Add the mainboard_drv to the eisa driver linkerset so that it is  * defined even if no EISA drivers are linked into the kernel.  */
+end_comment
+
+begin_expr_stmt
+name|DATA_SET
+argument_list|(
+name|eisadriver_set
+argument_list|,
+name|mainboard_drv
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* ** probe for EISA devices */
@@ -647,9 +661,63 @@ expr_stmt|;
 comment|/* Should set the iosize, but I don't have a spec handy */
 name|kdc_eisa0
 operator|.
-name|kdc_parentdata
+name|kdc_description
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|strlen
+argument_list|(
 name|e_dev
+operator|->
+name|full_name
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+literal|"EISA bus<>"
+argument_list|)
+operator|+
+literal|1
+argument_list|,
+name|M_DEVBUF
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|kdc_eisa0
+operator|.
+name|kdc_description
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"Eisa probe unable to malloc"
+argument_list|)
+expr_stmt|;
+block|}
+name|sprintf
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|kdc_eisa0
+operator|.
+name|kdc_description
+argument_list|,
+literal|"EISA bus<%s>"
+argument_list|,
+name|e_dev
+operator|->
+name|full_name
+argument_list|)
 expr_stmt|;
 name|dev_attach
 argument_list|(
@@ -690,6 +758,12 @@ operator|++
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|e_drv
+operator|->
+name|probe
+condition|)
 call|(
 modifier|*
 name|e_drv
@@ -1765,7 +1839,7 @@ begin_function
 name|int
 name|eisa_externalize
 parameter_list|(
-name|id
+name|e_dev
 parameter_list|,
 name|userp
 parameter_list|,
@@ -1774,7 +1848,7 @@ parameter_list|)
 name|struct
 name|eisa_device
 modifier|*
-name|id
+name|e_dev
 decl_stmt|;
 name|void
 modifier|*
@@ -1790,11 +1864,9 @@ condition|(
 operator|*
 name|maxlen
 operator|<
-operator|(
 sizeof|sizeof
 expr|*
-name|id
-operator|)
+name|e_dev
 condition|)
 block|{
 return|return
@@ -1804,23 +1876,21 @@ block|}
 operator|*
 name|maxlen
 operator|-=
-operator|(
 sizeof|sizeof
 expr|*
-name|id
-operator|)
+name|e_dev
 expr_stmt|;
 return|return
 operator|(
 name|copyout
 argument_list|(
-name|id
+name|e_dev
 argument_list|,
 name|userp
 argument_list|,
 sizeof|sizeof
 expr|*
-name|id
+name|e_dev
 argument_list|)
 operator|)
 return|;
