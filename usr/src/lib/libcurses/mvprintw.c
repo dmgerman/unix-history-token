@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mvprintw.c	5.7 (Berkeley) %G%"
+literal|"@(#)mvprintw.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -313,6 +313,8 @@ operator|=
 name|_sprintw
 argument_list|(
 name|win
+argument_list|,
+name|fmt
 argument_list|,
 name|ap
 argument_list|)
