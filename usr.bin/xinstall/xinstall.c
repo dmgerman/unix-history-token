@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: xinstall.c,v 1.27 1997/10/28 14:20:10 ache Exp $"
+literal|"$Id: xinstall.c,v 1.18.2.3 1997/10/30 21:01:18 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,7 +68,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*-  * Todo:  * o for -C, compare original files except in -s case.  * o for -C, don't change anything if nothing needs be changed.  In  *   particular, don't toggle the immutable flags just to allow null  *   attribute changes and don't clear the dump flag.  (I think inode  *   ctimes are not updated for null attribute changes, but this is a  *   bug.)  * o independent of -C, if a copy must be made, then copy to a tmpfile,  *   set all attributes except the immutable flags, then rename, then  *   set the immutable flags.  It's annoying that the immutable flags  *   defeat the atomicicity of rename - it seems that there must be  * o a window where the target is not immutable.  */
+comment|/*-  * Todo:  * o for -C, compare original files except in -s case.  * o for -C, don't change anything if nothing needs be changed.  In  *   particular, don't toggle the immutable flags just to allow null  *   attribute changes and don't clear the dump flag.  (I think inode  *   ctimes are not updated for null attribute changes, but this is a  *   bug.)  * o independent of -C, if a copy must be made, then copy to a tmpfile,  *   set all attributes except the immutable flags, then rename, then  *   set the immutable flags.  It's annoying that the immutable flags  *   defeat the atomicicity of rename - it seems that there must be  *   a window where the target is not immutable.  */
 end_comment
 
 begin_include

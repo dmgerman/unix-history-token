@@ -677,8 +677,7 @@ operator|(
 name|void
 operator|*
 operator|)
-operator|-
-literal|1
+name|MAP_FAILED
 condition|)
 name|err
 argument_list|(
