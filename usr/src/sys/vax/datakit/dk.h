@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	DATAKIT VCS User Level definitions  *		@(#)dk.h	2.1 DKHOST 84/07/03  */
+comment|/*  *	@(#)dk.h	1.3 (Berkeley) %G%  *  *	DATAKIT VCS User Level definitions  *		@(#)dk.h	2.1 DKHOST 84/07/03  */
 end_comment
 
 begin_comment
@@ -361,7 +361,7 @@ decl_stmt|;
 name|char
 name|dialstring
 index|[
-literal|112
+name|MLEN
 operator|-
 sizeof|sizeof
 argument_list|(
@@ -452,7 +452,7 @@ comment|/* Annotation type */
 name|char
 name|dct_name
 index|[
-literal|112
+name|MLEN
 operator|-
 sizeof|sizeof
 argument_list|(
