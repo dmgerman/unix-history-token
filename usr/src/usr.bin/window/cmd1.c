@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd1.c	3.4 83/08/18"
+literal|"@(#)cmd1.c	3.5 83/08/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -848,6 +848,12 @@ name|setselwin
 argument_list|(
 name|w
 argument_list|)
+expr_stmt|;
+name|wwupdate
+argument_list|()
+expr_stmt|;
+name|wwflush
+argument_list|()
 expr_stmt|;
 switch|switch
 condition|(
