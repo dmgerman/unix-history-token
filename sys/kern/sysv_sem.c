@@ -1029,10 +1029,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*-  * RW seminfo.semmap: SEMMAP unused  * RO seminfo.semmni  * RO seminfo.semmns  * RO seminfo.semmnu: undo entries per system  * RW seminfo.semmsl  * RO seminfo.semopm: SEMOPM unused  * RO seminfo.semume  * RO seminfo.semusz: param - derived from SEMUME for per-proc sizeof  * RW seminfo.semvmx: SEMVMX unused - user param  * RW seminfo.semaem: SEMAEM unused - user param  */
-end_comment
-
 begin_function
 specifier|static
 name|void
