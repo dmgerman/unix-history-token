@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)boot.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)boot.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -66,14 +66,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|retry
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|unsigned
 name|opendev
@@ -93,6 +85,8 @@ decl_stmt|;
 comment|/* howto=r11, devtype=r10 */
 name|int
 name|io
+decl_stmt|,
+name|retry
 decl_stmt|,
 name|type
 decl_stmt|;
@@ -181,6 +175,9 @@ endif|#
 directive|endif
 for|for
 control|(
+name|retry
+operator|=
+literal|0
 init|;
 condition|;
 control|)
