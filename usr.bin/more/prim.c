@@ -439,17 +439,6 @@ name|home
 argument_list|()
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-operator|!
-name|first_time
-condition|)
-name|putstr
-argument_list|(
-literal|"...skipping...\n"
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 for|for
