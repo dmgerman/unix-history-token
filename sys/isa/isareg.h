@@ -772,15 +772,30 @@ begin_comment
 comment|/* 8042 Keyboard controllers */
 end_comment
 
+begin_comment
+comment|/* The following line was changed to support more architectures (simpler    chipsets (like those for Alpha) only use 4, but more complex controllers    (usually modern i386's) can use an additional 4; the probe to see if    the additional 4 can be used by the specific chipset is now done in the ppc    code by ppc_probe()... */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|IO_LPTSIZE
+name|IO_LPTSIZE_EXTENDED
 value|8
 end_define
 
 begin_comment
-comment|/* LPT controllers, some use only 4 */
+comment|/* "Extended" LPT controllers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_LPTSIZE_NORMAL
+value|4
+end_define
+
+begin_comment
+comment|/* "Normal" LPT controllers */
 end_comment
 
 begin_define

@@ -100,6 +100,13 @@ name|NS_PC87334
 value|10
 end_define
 
+begin_define
+define|#
+directive|define
+name|SMC_37C935
+value|11
+end_define
+
 begin_comment
 comment|/*  * Parallel Port Chipset Type. SMC versus GENERIC (others)  */
 end_comment
@@ -988,6 +995,134 @@ end_define
 begin_comment
 comment|/* ECP and EPP */
 end_comment
+
+begin_comment
+comment|/*  * Register defines for the SMC FDC37C935 parts  */
+end_comment
+
+begin_comment
+comment|/* Configuration ports */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMC935_CFG
+value|0x370
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMC935_IND
+value|0x370
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMC935_DAT
+value|0x371
+end_define
+
+begin_comment
+comment|/* Registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMC935_LOGDEV
+value|0x7
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMC935_ID
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMC935_PORTHI
+value|0x60
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMC935_PORTLO
+value|0x61
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMC935_PPMODE
+value|0xf0
+end_define
+
+begin_comment
+comment|/* Parallel port modes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMC935_SPP
+value|0x38 + 0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMC935_EPP19SPP
+value|0x38 + 1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMC935_ECP
+value|0x38 + 2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMC935_ECPEPP19
+value|0x38 + 3
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMC935_CENT
+value|0x38 + 4
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMC935_EPP17SPP
+value|0x38 + 5
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMC935_UNUSED
+value|0x38 + 6
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMC935_ECPEPP17
+value|0x38 + 7
+end_define
 
 begin_comment
 comment|/*  * Register defines for the Winbond W83877F parts  */
