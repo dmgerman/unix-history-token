@@ -52,12 +52,6 @@ name|UP
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|short
-name|ospeed
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* normal frame */
 end_comment
@@ -2013,10 +2007,6 @@ operator|->
 name|ts_str
 else|:
 literal|0
-expr_stmt|;
-name|ospeed
-operator|=
-name|wwospeed
 expr_stmt|;
 name|gen_CM
 operator|=

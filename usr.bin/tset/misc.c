@@ -202,7 +202,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|outc
 parameter_list|(
 name|c
@@ -211,16 +211,14 @@ name|int
 name|c
 decl_stmt|;
 block|{
-operator|(
-name|void
-operator|)
+return|return
 name|putc
 argument_list|(
 name|c
 argument_list|,
 name|stderr
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 
