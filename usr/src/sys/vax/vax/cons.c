@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cons.c	4.7	81/03/09	*/
+comment|/*	cons.c	4.8	81/03/11	*/
 end_comment
 
 begin_comment
-comment|/*  * Vax console driver and floppy interface  *  * WE AVOID USE THE READY BIT IN TXCS BECAUSE IT DOESN'T  * WORK ON AN 11/750 WITH AN RDM PLUGGED IN.  */
+comment|/*  * Vax console driver and floppy interface  *  * Note:  *	We avoid use the ready bit in txcs because it doesn't  *	work on an 11/750 with an rdm plugged in.  */
 end_comment
 
 begin_include
@@ -66,41 +66,6 @@ include|#
 directive|include
 file|"../h/cpu.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|NL1
-value|000400
-end_define
-
-begin_define
-define|#
-directive|define
-name|NL2
-value|001000
-end_define
-
-begin_define
-define|#
-directive|define
-name|CR2
-value|020000
-end_define
-
-begin_define
-define|#
-directive|define
-name|FF1
-value|040000
-end_define
-
-begin_define
-define|#
-directive|define
-name|TAB1
-value|002000
-end_define
 
 begin_decl_stmt
 name|struct
