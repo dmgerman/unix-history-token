@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dbm.c	5.2 (Berkeley) 85/06/26"
+literal|"@(#)dbm.c	5.3 (Berkeley) 85/08/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,6 +114,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cur_db
+operator|==
+name|NODB
+condition|)
 return|return
 operator|(
 operator|-
