@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)glob.c	5.36 (Berkeley) %G%"
+literal|"@(#)glob.c	5.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3427,45 +3427,6 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|didfds
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* 	 * Make sure that we have some file descriptors to 	 * play with, so that the processes have at least 0, 1, 2 	 * open 	 */
-operator|(
-name|void
-operator|)
-name|dcopy
-argument_list|(
-name|SHIN
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|dcopy
-argument_list|(
-name|SHOUT
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|dcopy
-argument_list|(
-name|SHERR
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-block|}
 comment|/*      * We do the psave job to temporarily change the current job so that the      * following fork is considered a separate job.  This is so that when      * backquotes are used in a builtin function that calls glob the "current      * job" is not corrupted.  We only need one level of pushed jobs as long as      * we are sure to fork here.      */
 name|psavejob
 argument_list|()
