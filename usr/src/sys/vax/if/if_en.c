@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.17	81/12/03	*/
+comment|/*	if_en.c	4.18	81/12/09	*/
 end_comment
 
 begin_include
@@ -137,7 +137,7 @@ begin_define
 define|#
 directive|define
 name|ENMTU
-value|1024
+value|(1024+512)
 end_define
 
 begin_decl_stmt
@@ -480,6 +480,7 @@ index|[
 literal|0
 index|]
 operator|=
+operator|(
 operator|~
 operator|(
 operator|(
@@ -494,9 +495,12 @@ name|ui
 operator|->
 name|ui_unit
 index|]
+operator|->
+name|ui_addr
 operator|)
 operator|->
 name|en_addr
+operator|)
 operator|)
 operator|&
 literal|0xff
@@ -926,6 +930,26 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
+name|dest
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|en_header
+operator|*
+argument_list|)
+operator|->
+name|en_dhost
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"if_wubaput m=%x\n"
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
 name|es
 operator|->
 name|es_olen
@@ -940,20 +964,25 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Ethernet cannot take back-to-back packets (no 	 * buffering in interface.  To avoid overrunning 	 * receiver, enforce a small delay (about 1ms) in interface 	 * on successive packets sent to same host. 	 */
-name|dest
-operator|=
-name|mtod
+name|printf
 argument_list|(
-name|m
+literal|"wubaput to %x len %d\n"
 argument_list|,
-expr|struct
-name|en_header
-operator|*
-argument_list|)
+name|es
 operator|->
-name|en_dhost
+name|es_ifuba
+operator|.
+name|ifu_w
+operator|.
+name|ifrw_addr
+argument_list|,
+name|es
+operator|->
+name|es_olen
+argument_list|)
 expr_stmt|;
+asm|asm("halt");
+comment|/* 	 * Ethernet cannot take back-to-back packets (no 	 * buffering in interface.  To avoid overrunning 	 * receiver, enforce a small delay (about 1ms) in interface 	 * on successive packets sent to same host. 	 */
 if|if
 condition|(
 name|es
@@ -1120,6 +1149,11 @@ argument_list|(
 name|ENXINT
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"enxint\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|es
@@ -1176,7 +1210,7 @@ name|EN_OERROR
 condition|)
 name|printf
 argument_list|(
-literal|"es%d: output error\n"
+literal|"en%d: output error\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -1280,6 +1314,11 @@ argument_list|(
 name|ENCOLLIDE
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"encollide\n"
+argument_list|)
+expr_stmt|;
 name|es
 operator|->
 name|es_if
@@ -1308,7 +1347,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"es%d: send error\n"
+literal|"en%d: send error\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -1425,6 +1464,11 @@ argument_list|(
 name|ENRINT
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"enrint\n"
+argument_list|)
+expr_stmt|;
 name|es
 operator|->
 name|es_if
@@ -1468,7 +1512,7 @@ operator|++
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"es%d: input error\n"
+literal|"en%d: input error\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -1494,6 +1538,17 @@ name|ifu_r
 operator|.
 name|ifrw_addr
 operator|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"en %x, en->en_type %d\n"
+argument_list|,
+name|en
+argument_list|,
+name|en
+operator|->
+name|en_type
+argument_list|)
 expr_stmt|;
 define|#
 directive|define
@@ -1566,6 +1621,13 @@ name|off
 operator|=
 literal|0
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"off %d\n"
+argument_list|,
+name|off
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Attempt to infer packet length from type; 	 * can't deal with packet if can't infer length. 	 */
 switch|switch
 condition|(
@@ -1582,11 +1644,15 @@ name|ENPUP_IPTYPE
 case|:
 name|len
 operator|=
+name|htons
+argument_list|(
 name|endataaddr
 argument_list|(
 name|en
 argument_list|,
 name|off
+operator|+
+literal|2
 argument_list|,
 expr|struct
 name|ip
@@ -1594,6 +1660,9 @@ operator|*
 argument_list|)
 operator|->
 name|ip_len
+argument_list|)
+operator|+
+literal|2
 expr_stmt|;
 name|setipintr
 argument_list|()
@@ -1644,6 +1713,23 @@ argument_list|,
 name|off
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+literal|0
+condition|)
+goto|goto
+name|setup
+goto|;
+name|printf
+argument_list|(
+literal|"rubaget returns m %x\n"
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+asm|asm("halt");
 if|if
 condition|(
 name|off
@@ -1815,13 +1901,31 @@ literal|24
 expr_stmt|;
 name|off
 operator|=
+name|ntohs
+argument_list|(
 name|ip
 operator|->
 name|ip_len
+argument_list|)
 operator|-
 name|m
 operator|->
 name|m_len
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"PF_INET enoutput off %d m->m_off %d m->m_len %d\n"
+argument_list|,
+name|off
+argument_list|,
+name|m
+operator|->
+name|m_off
+argument_list|,
+name|m
+operator|->
+name|m_len
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1957,11 +2061,25 @@ name|m0
 operator|=
 name|m
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"m %x after trailer futz\n"
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+asm|asm("halt");
 name|gottype
 label|:
 comment|/* 	 * Add local net header.  If no space in first mbuf, 	 * allocate another. 	 */
 if|if
 condition|(
+name|m
+operator|->
+name|m_off
+operator|>
+name|MMAXOFF
+operator|||
 name|MMINOFF
 operator|+
 sizeof|sizeof
@@ -2026,10 +2144,6 @@ block|}
 else|else
 block|{
 name|m
-operator|=
-name|m0
-expr_stmt|;
-name|m
 operator|->
 name|m_off
 operator|-=
@@ -2090,6 +2204,14 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"queueing %x\n"
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+asm|asm("halt");
 name|IF_ENQUEUE
 argument_list|(
 operator|&
