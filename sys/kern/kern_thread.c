@@ -268,20 +268,6 @@ name|virtual_cpu
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|RANGEOF
-parameter_list|(
-name|type
-parameter_list|,
-name|start
-parameter_list|,
-name|end
-parameter_list|)
-value|(offsetof(type, end) - offsetof(type, start))
-end_define
-
 begin_macro
 name|TAILQ_HEAD
 argument_list|(
