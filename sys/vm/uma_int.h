@@ -1017,9 +1017,6 @@ name|PHYS_TO_VM_PAGE
 argument_list|(
 name|pmap_kextract
 argument_list|(
-operator|(
-name|vm_offset_t
-operator|)
 name|va
 argument_list|)
 argument_list|)
@@ -1064,9 +1061,6 @@ name|PHYS_TO_VM_PAGE
 argument_list|(
 name|pmap_kextract
 argument_list|(
-operator|(
-name|vm_offset_t
-operator|)
 name|va
 argument_list|)
 argument_list|)
