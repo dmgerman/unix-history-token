@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pty.c	8.1 (Berkeley) %G%"
+literal|"@(#)pty.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -243,6 +243,13 @@ control|)
 block|{
 name|line
 index|[
+literal|5
+index|]
+operator|=
+literal|'p'
+expr_stmt|;
+name|line
+index|[
 literal|9
 index|]
 operator|=
@@ -415,13 +422,6 @@ name|close
 argument_list|(
 name|master
 argument_list|)
-expr_stmt|;
-name|line
-index|[
-literal|5
-index|]
-operator|=
-literal|'p'
 expr_stmt|;
 block|}
 block|}
