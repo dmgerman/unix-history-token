@@ -143,10 +143,6 @@ begin_comment
 comment|/*0xffe */
 end_comment
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_expr_stmt
 specifier|static
 name|__color
