@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vlimit.c	5.3 (Berkeley) %G%"
+literal|"@(#)vlimit.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,6 +40,12 @@ end_comment
 begin_comment
 comment|/*  * (Almost) backwards compatible vlimit.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#
