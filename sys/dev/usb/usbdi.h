@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi.h,v 1.46 2001/01/18 20:28:23 jdolecek Exp $	*/
+comment|/*	$NetBSD: usbdi.h,v 1.47 2001/01/21 02:39:53 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1389,12 +1389,26 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * XXX  * splusb MUST be the lowest level interrupt so that within USB callbacks  * the level can be raised the appropriate level.  * XXX Should probably use a softsplusb.  */
+comment|/* XXX Perhaps USB should have its own levels? */
 end_comment
 
-begin_comment
-comment|/* XXX */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USB_USE_SOFTINTR
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|splusb
+value|splsoftnet
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -1402,6 +1416,11 @@ directive|define
 name|splusb
 value|splbio
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1416,10 +1435,6 @@ directive|define
 name|IPL_USB
 value|IPL_BIO
 end_define
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 end_unit
 

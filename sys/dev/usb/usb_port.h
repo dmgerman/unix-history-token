@@ -46,6 +46,10 @@ directive|include
 file|"opt_usbverbose.h"
 end_include
 
+begin_comment
+comment|/*#define USB_USE_SOFTINTR */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef

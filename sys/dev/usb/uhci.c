@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhci.c,v 1.132 2001/01/20 23:36:02 augustss Exp $	*/
+comment|/*	$NetBSD: uhci.c,v 1.133 2001/01/21 02:39:52 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1283,8 +1283,7 @@ name|Static
 name|void
 name|uhci_softintr
 parameter_list|(
-name|struct
-name|usbd_bus
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -6210,21 +6209,16 @@ begin_function
 name|void
 name|uhci_softintr
 parameter_list|(
-name|struct
-name|usbd_bus
+name|void
 modifier|*
-name|bus
+name|v
 parameter_list|)
 block|{
 name|uhci_softc_t
 modifier|*
 name|sc
 init|=
-operator|(
-name|uhci_softc_t
-operator|*
-operator|)
-name|bus
+name|v
 decl_stmt|;
 name|uhci_intr_info_t
 modifier|*

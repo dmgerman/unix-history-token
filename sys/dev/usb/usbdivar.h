@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdivar.h,v 1.61 2001/01/18 20:28:23 jdolecek Exp $	*/
+comment|/*	$NetBSD: usbdivar.h,v 1.62 2001/01/21 02:39:53 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -75,8 +75,7 @@ modifier|*
 name|soft_intr
 function_decl|)
 parameter_list|(
-name|struct
-name|usbd_bus
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -379,7 +378,28 @@ value|4
 define|#
 directive|define
 name|USBREV_STR
-value|{ "unknown", "pre 1.0", "1.0", "1.1" }
+value|{ "unknown", "pre 1.0", "1.0", "1.1", "2.0" }
+ifdef|#
+directive|ifdef
+name|USB_USE_SOFTINTR
+ifdef|#
+directive|ifdef
+name|__HAVE_GENERIC_SOFT_INTERRUPTS
+name|void
+modifier|*
+name|soft
+decl_stmt|;
+comment|/* soft interrupt cookie */
+else|#
+directive|else
+name|struct
+name|callout
+name|softi
+decl_stmt|;
+endif|#
+directive|endif
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined

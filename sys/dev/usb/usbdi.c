@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb/usbdi.c,v 1.78 2001/01/19 04:01:10 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi.c,v 1.79 2001/01/21 02:39:53 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1392,6 +1392,15 @@ name|timeout
 operator|*
 literal|1000
 decl_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|2
+argument_list|,
+operator|(
+literal|"usbd_transfer: polling\n"
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1429,6 +1438,20 @@ name|done
 condition|)
 break|break;
 block|}
+name|DPRINTFN
+argument_list|(
+literal|2
+argument_list|,
+operator|(
+literal|"usbd_transfer: polling done =\n"
+operator|,
+name|xfer
+operator|->
+name|done
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* XXX Is this right, what about the HC timeout? */
 if|if
 condition|(
 operator|!
