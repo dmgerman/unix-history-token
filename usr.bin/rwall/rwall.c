@@ -304,11 +304,17 @@ name|cl
 argument_list|,
 name|WALLPROC_WALL
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_wrapstring
 argument_list|,
 operator|&
 name|mbuf
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_void
 argument_list|,
 operator|&
