@@ -31,7 +31,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)optim.c	2.4 %G%"
+literal|"@(#)optim.c	2.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2346,7 +2346,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|nettypetab
+name|ntypetab
 modifier|*
 name|np
 decl_stmt|;
@@ -2354,7 +2354,7 @@ for|for
 control|(
 name|np
 operator|=
-name|nettypetab
+name|ntypetab
 init|;
 name|np
 operator|->
@@ -2377,7 +2377,7 @@ return|return
 operator|(
 name|np
 operator|->
-name|nt_type
+name|nt_bcode
 operator|)
 return|;
 return|return
@@ -2407,7 +2407,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|netkindtab
+name|nkindtab
 modifier|*
 name|np
 decl_stmt|;
@@ -2415,7 +2415,7 @@ for|for
 control|(
 name|np
 operator|=
-name|netkindtab
+name|nkindtab
 init|;
 name|np
 operator|->
