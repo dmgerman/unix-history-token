@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)io.c	5.2 (Berkeley) %G%"
+literal|"@(#)io.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,7 +25,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * io.c  *  * Routines to generate code for I/O statements.  * Some corrections and improvements due to David Wasley, U. C. Berkeley  *  * University of Utah CS Dept modification history:  *  * $Header: io.c,v 5.2 85/12/19 17:22:35 donn Exp $  * $Log:	io.c,v $  * Revision 5.2  85/12/19  17:22:35  donn  * Don't permit more than one 'positional iocontrol' parameter unless we  * are doing a READ or a WRITE.  *   * Revision 5.1  85/08/10  03:47:42  donn  * 4.3 alpha  *   * Revision 2.4  85/02/23  21:09:02  donn  * Jerry Berkman's compiled format fixes move setfmt into a separate file.  *   * Revision 2.3  85/01/10  22:33:41  donn  * Added some strategic cpexpr()s to prevent memory management bugs.  *   * Revision 2.2  84/08/04  21:15:47  donn  * Removed code that creates extra statement labels, per Jerry Berkman's  * fixes to make ASSIGNs work right.  *   * Revision 2.1  84/07/19  12:03:33  donn  * Changed comment headers for UofU.  *   * Revision 1.2  84/02/26  06:35:57  donn  * Added Berkeley changes necessary for shortening offsets to data.  *   */
+comment|/*  * io.c  *  * Routines to generate code for I/O statements.  * Some corrections and improvements due to David Wasley, U. C. Berkeley  *  * University of Utah CS Dept modification history:  *  * $Header: io.c,v 5.3 86/03/04 17:45:33 donn Exp $  * $Log:	io.c,v $  * Revision 5.3  86/03/04  17:45:33  donn  * Change the order of length and offset code in startrw() -- always emit  * the memoffset first, since it may define a temporary which is used in  * the length expression.  *   * Revision 5.2  85/12/19  17:22:35  donn  * Don't permit more than one 'positional iocontrol' parameter unless we  * are doing a READ or a WRITE.  *   * Revision 5.1  85/08/10  03:47:42  donn  * 4.3 alpha  *   * Revision 2.4  85/02/23  21:09:02  donn  * Jerry Berkman's compiled format fixes move setfmt into a separate file.  *   * Revision 2.3  85/01/10  22:33:41  donn  * Added some strategic cpexpr()s to prevent memory management bugs.  *   * Revision 2.2  84/08/04  21:15:47  donn  * Removed code that creates extra statement labels, per Jerry Berkman's  * fixes to make ASSIGNs work right.  *   * Revision 2.1  84/07/19  12:03:33  donn  * Changed comment headers for UofU.  *   * Revision 1.2  84/02/26  06:35:57  donn  * Added Berkeley changes necessary for shortening offsets to data.  *   */
 end_comment
 
 begin_comment
@@ -3759,6 +3759,16 @@ argument_list|,
 name|nump
 argument_list|)
 expr_stmt|;
+name|ioseta
+argument_list|(
+name|XIUNIT
+argument_list|,
+name|cpexpr
+argument_list|(
+name|unitp
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ioset
 argument_list|(
 name|TYIOINT
@@ -3773,10 +3783,8 @@ name|vleng
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ioseta
+name|frexpr
 argument_list|(
-name|XIUNIT
-argument_list|,
 name|unitp
 argument_list|)
 expr_stmt|;
