@@ -5052,7 +5052,7 @@ argument_list|(
 operator|&
 name|uma_callout
 argument_list|,
-literal|0
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|callout_reset
