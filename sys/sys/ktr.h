@@ -496,6 +496,9 @@ decl_stmt|;
 name|u_long
 name|ktr_parm5
 decl_stmt|;
+name|u_long
+name|ktr_parm6
+decl_stmt|;
 endif|#
 directive|endif
 block|}
@@ -644,6 +647,9 @@ name|arg4
 parameter_list|,
 name|u_long
 name|arg5
+parameter_list|,
+name|u_long
+name|arg6
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -814,28 +820,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CTR5
-parameter_list|(
-name|m
-parameter_list|,
-name|format
-parameter_list|,
-name|p1
-parameter_list|,
-name|p2
-parameter_list|,
-name|p3
-parameter_list|,
-name|p4
-parameter_list|,
-name|p5
-parameter_list|)
-value|do {			\ 	if (KTR_COMPILE& (m))						\ 		ktr_tracepoint((m), format, (u_long)p1, (u_long)p2,	\ 		    (u_long)p3, (u_long)p4, (u_long)p5);		\ 	} while(0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|CTR6
 parameter_list|(
 name|m
@@ -866,7 +850,7 @@ name|m
 parameter_list|,
 name|format
 parameter_list|)
-value|CTR5(m, format, 0, 0, 0, 0, 0)
+value|CTR6(m, format, 0, 0, 0, 0, 0, 0)
 end_define
 
 begin_define
@@ -880,7 +864,7 @@ name|format
 parameter_list|,
 name|p1
 parameter_list|)
-value|CTR5(m, format, p1, 0, 0, 0, 0)
+value|CTR6(m, format, p1, 0, 0, 0, 0, 0)
 end_define
 
 begin_define
@@ -896,7 +880,7 @@ name|p1
 parameter_list|,
 name|p2
 parameter_list|)
-value|CTR5(m, format, p1, p2, 0, 0, 0)
+value|CTR6(m, format, p1, p2, 0, 0, 0, 0)
 end_define
 
 begin_define
@@ -914,7 +898,7 @@ name|p2
 parameter_list|,
 name|p3
 parameter_list|)
-value|CTR5(m, format, p1, p2, p3, 0, 0)
+value|CTR6(m, format, p1, p2, p3, 0, 0, 0)
 end_define
 
 begin_define
@@ -934,7 +918,29 @@ name|p3
 parameter_list|,
 name|p4
 parameter_list|)
-value|CTR5(m, format, p1, p2, p3, p4, 0)
+value|CTR6(m, format, p1, p2, p3, p4, 0, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CTR5
+parameter_list|(
+name|m
+parameter_list|,
+name|format
+parameter_list|,
+name|p1
+parameter_list|,
+name|p2
+parameter_list|,
+name|p3
+parameter_list|,
+name|p4
+parameter_list|,
+name|p5
+parameter_list|)
+value|CTR6(m, format, p1, p2, p3, p4, p5, 0)
 end_define
 
 begin_endif
@@ -1186,6 +1192,28 @@ parameter_list|)
 value|CTR5(KTR_GEN, d, p1, p2, p3, p4, p5)
 end_define
 
+begin_define
+define|#
+directive|define
+name|TR6
+parameter_list|(
+name|d
+parameter_list|,
+name|p1
+parameter_list|,
+name|p2
+parameter_list|,
+name|p3
+parameter_list|,
+name|p4
+parameter_list|,
+name|p5
+parameter_list|,
+name|p6
+parameter_list|)
+value|CTR5(KTR_GEN, d, p1, p2, p3, p4, p5, p6)
+end_define
+
 begin_comment
 comment|/*  * Trace initialization events, similar to CTR with KTR_INIT, but  * completely ifdef'ed out if KTR_INIT isn't in KTR_COMPILE (to  * save string space, the compiler doesn't optimize out strings  * for the conditional ones above).  */
 end_comment
@@ -1292,6 +1320,28 @@ parameter_list|)
 value|CTR5(KTR_INIT, d, p1, p2, p3, p4, p5)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ITR6
+parameter_list|(
+name|d
+parameter_list|,
+name|p1
+parameter_list|,
+name|p2
+parameter_list|,
+name|p3
+parameter_list|,
+name|p4
+parameter_list|,
+name|p5
+parameter_list|,
+name|p6
+parameter_list|)
+value|CTR5(KTR_INIT, d, p1, p2, p3, p4, p5, p6)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1378,6 +1428,27 @@ parameter_list|,
 name|p4
 parameter_list|,
 name|p5
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ITR6
+parameter_list|(
+name|d
+parameter_list|,
+name|p1
+parameter_list|,
+name|p2
+parameter_list|,
+name|p3
+parameter_list|,
+name|p4
+parameter_list|,
+name|p5
+parameter_list|,
+name|p6
 parameter_list|)
 end_define
 
