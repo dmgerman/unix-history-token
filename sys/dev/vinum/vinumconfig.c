@@ -1574,12 +1574,15 @@ name|state
 operator|!=
 name|drive_up
 condition|)
+block|{
 name|update_sd_state
 argument_list|(
 name|sdno
 argument_list|)
 expr_stmt|;
 comment|/* that crashes the subdisk */
+return|return;
+block|}
 if|if
 condition|(
 operator|(
@@ -1817,7 +1820,6 @@ name|sectors
 expr_stmt|;
 comment|/* and note how much less space we have */
 block|}
-comment|/* no offset specified, find one */
 elseif|else
 if|if
 condition|(
@@ -1828,6 +1830,7 @@ operator|<
 literal|0
 condition|)
 block|{
+comment|/* no offset specified, find one */
 for|for
 control|(
 name|fe
@@ -4717,6 +4720,41 @@ case|case
 name|DL_WRONG_DRIVE
 case|:
 comment|/* valid drive, not the name we expected */
+if|if
+condition|(
+name|vinum_conf
+operator|.
+name|flags
+operator|&
+name|VF_FORCECONFIG
+condition|)
+block|{
+comment|/* but we'll accept that */
+name|bcopy
+argument_list|(
+name|token
+index|[
+literal|1
+index|]
+argument_list|,
+name|drive
+operator|->
+name|label
+operator|.
+name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|drive
+operator|->
+name|label
+operator|.
+name|name
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|close_drive
 argument_list|(
 name|drive
@@ -8289,6 +8327,16 @@ name|volume
 modifier|*
 name|vol
 decl_stmt|;
+if|if
+condition|(
+name|plex
+operator|->
+name|state
+operator|<
+name|plex_faulty
+condition|)
+comment|/* not a real plex, */
+return|return;
 name|added_plex
 operator|=
 literal|0
@@ -8444,11 +8492,17 @@ operator|->
 name|length
 operator|%
 operator|(
+operator|(
 name|u_int64_t
 operator|)
 name|plex
 operator|->
 name|stripesize
+operator|*
+name|plex
+operator|->
+name|subdisks
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* are we exact? */
@@ -8973,7 +9027,8 @@ begin_function
 name|int
 name|start_config
 parameter_list|(
-name|void
+name|int
+name|force
 parameter_list|)
 block|{
 name|int
@@ -9033,6 +9088,17 @@ name|VF_CONFIGURING
 operator||
 name|VF_CONFIG_INCOMPLETE
 expr_stmt|;
+if|if
+condition|(
+name|force
+condition|)
+name|vinum_conf
+operator|.
+name|flags
+operator||=
+name|VF_FORCECONFIG
+expr_stmt|;
+comment|/* overwrite differently named drives */
 name|current_drive
 operator|=
 operator|-
@@ -9069,6 +9135,7 @@ name|int
 name|update
 parameter_list|)
 block|{
+comment|/* we've finished our config */
 name|vinum_conf
 operator|.
 name|flags
@@ -9078,9 +9145,10 @@ operator|(
 name|VF_CONFIG_INCOMPLETE
 operator||
 name|VF_READING_CONFIG
+operator||
+name|VF_FORCECONFIG
 operator|)
 expr_stmt|;
-comment|/* we've finished our config */
 if|if
 condition|(
 name|update
