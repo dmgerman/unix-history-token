@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/map.h>
 end_include
 
@@ -48,37 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/user.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/msgbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/syscall.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
 end_include
 
 begin_include
@@ -479,20 +443,6 @@ argument_list|(
 literal|"#define\tSIGFPE %d\n"
 argument_list|,
 name|SIGFPE
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tSYS_execve %d\n"
-argument_list|,
-name|SYS_execve
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tSYS_exit %d\n"
-argument_list|,
-name|SYS_exit
 argument_list|)
 expr_stmt|;
 name|exit
