@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 1994,1995 by Andrey A. Chernov, Moscow, Russia.  * A
 end_comment
 
 begin_comment
-comment|/* $Id: termcap.h,v 1.7 1996/07/12 18:57:26 jkh Exp $ */
+comment|/* $Id: termcap.h,v 1.11 1997/04/13 11:41:59 bde Exp $ */
 end_comment
 
 begin_ifndef
@@ -172,6 +172,20 @@ name|char
 operator|*
 operator|,
 operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|__set_ospeed
+name|__P
+argument_list|(
+operator|(
+name|long
+name|speed
 operator|)
 argument_list|)
 decl_stmt|;

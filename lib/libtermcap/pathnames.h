@@ -10,5 +10,12 @@ name|_PATH_DEF
 value|".termcap /usr/share/misc/termcap"
 end_define
 
+begin_define
+define|#
+directive|define
+name|_PATH_DEF_SEC
+value|"/usr/share/misc/termcap"
+end_define
+
 end_unit
 
