@@ -3000,7 +3000,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create and activate an interrupt handler descriptor data structure.  *  * The dev_instance pointer is required for resource management, and will  * only be passed through to resource_claim().  *  * There will be functions that derive a driver and unit name from a  * dev_instance variable, and those functions will be used to maintain the  * interrupt counter label array referenced by systat and vmstat to report  * device interrupt rates (->update_intrlabels).  *  * Add the interrupt handler descriptor data structure created by an  * earlier call of create_intr() to the linked list for its irq and  * adjust the interrupt masks if necessary.  */
+comment|/*  * Create and activate an interrupt handler descriptor data structure.  *  * The dev_instance pointer is required for resource management, and will  * only be passed through to resource_claim().  *  * There will be functions that derive a driver and unit name from a  * dev_instance variable, and those functions will be used to maintain the  * interrupt counter label array referenced by systat and vmstat to report  * device interrupt rates (->update_intrlabels).  *  * Add the interrupt handler descriptor data structure created by an  * earlier call of create_intr() to the linked list for its irq and  * adjust the interrupt masks if necessary.  *  * WARNING: This is an internal function and not to be used by device  * drivers.  It is subject to change without notice.  */
 end_comment
 
 begin_function

@@ -850,6 +850,10 @@ begin_comment
 comment|/* excl. intr, default is shared */
 end_comment
 
+begin_comment
+comment|/*  * WARNING: These are internal functions and not to be used by device drivers!  * They are subject to change without notice.   */
+end_comment
+
 begin_function_decl
 name|struct
 name|intrec
