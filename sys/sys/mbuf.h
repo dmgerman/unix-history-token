@@ -1193,6 +1193,20 @@ value|do {						\ 	(m)->m_data += (MHLEN - (len))& ~(sizeof(long) - 1);		\ } whi
 end_define
 
 begin_comment
+comment|/*  * Check if we can write to an mbuf.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_WRITABLE
+parameter_list|(
+name|m
+parameter_list|)
+value|(!((m)->m_flags& M_EXT) || \     ((m)->m_ext.ext_free == NULL&& mclrefcnt[mtocl((m)->m_ext.ext_buf)] == 1))
+end_define
+
+begin_comment
 comment|/*  * Compute the amount of space available  * before the current start of data in an mbuf.  */
 end_comment
 
