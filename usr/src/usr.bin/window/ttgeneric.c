@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ttgeneric.c	3.6 83/08/15"
+literal|"@(#)ttgeneric.c	3.7 83/08/17"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,12 +102,6 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 name|gen_modes
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|gen_availmodes
 decl_stmt|;
 end_decl_stmt
 
@@ -464,7 +458,9 @@ name|diff
 expr_stmt|;
 name|new
 operator|&=
-name|gen_availmodes
+name|tt
+operator|.
+name|tt_availmodes
 expr_stmt|;
 if|if
 condition|(
@@ -1693,7 +1689,9 @@ if|if
 condition|(
 name|gen_SO
 condition|)
-name|gen_availmodes
+name|tt
+operator|.
+name|tt_availmodes
 operator||=
 name|WWM_REV
 expr_stmt|;
@@ -1701,7 +1699,9 @@ if|if
 condition|(
 name|gen_US
 condition|)
-name|gen_availmodes
+name|tt
+operator|.
+name|tt_availmodes
 operator||=
 name|WWM_UL
 expr_stmt|;

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwinit.c	3.4 83/08/16"
+literal|"@(#)wwinit.c	3.5 83/08/17"
 decl_stmt|;
 end_decl_stmt
 
@@ -270,6 +270,12 @@ operator|=
 name|tt
 operator|.
 name|tt_ncol
+expr_stmt|;
+name|wwavailmodes
+operator|=
+name|tt
+operator|.
+name|tt_availmodes
 expr_stmt|;
 call|(
 modifier|*

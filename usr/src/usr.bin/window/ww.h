@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ww.h	3.4 83/08/16	  */
+comment|/*  *	@(#)ww.h	3.5 83/08/17	  */
 end_comment
 
 begin_include
@@ -89,19 +89,23 @@ name|char
 name|ww_wstate
 decl_stmt|;
 comment|/* state for printing charcters */
-name|int
+name|char
+name|ww_modes
+decl_stmt|;
+comment|/* current printing modes */
+name|char
 name|ww_insert
 range|:
 literal|1
 decl_stmt|;
 comment|/* insert mode, for printing */
-name|int
+name|char
 name|ww_mapnl
 range|:
 literal|1
 decl_stmt|;
 comment|/* map \n to \r\n */
-name|int
+name|char
 name|ww_haspty
 range|:
 literal|1
@@ -617,6 +621,16 @@ comment|/* the screen size */
 end_comment
 
 begin_decl_stmt
+name|char
+name|wwavailmodes
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* actually supported modes */
+end_comment
+
+begin_decl_stmt
 name|int
 name|wwdtablesize
 decl_stmt|;
@@ -794,6 +808,38 @@ directive|define
 name|wwbell
 parameter_list|()
 value|putchar(CTRL(g))
+end_define
+
+begin_comment
+comment|/* the window virtual terminal */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WWT_TERM
+value|"TERM=window"
+end_define
+
+begin_define
+define|#
+directive|define
+name|WWT_TERMCAP
+value|"TERMCAP=WW|window|window package:\ 	:cr=^M:nl=^J:bl=^G:\ 	:al=\\EL:am:le=^H:bs:cd=\\EJ:ce=\\EK:cl=\\EE:cm=\\EY%%+ %%+ :\ 	:co#%d:dc=\\EN:dl=\\EM:do=\\EB:ei=\\EO:ho=\\EH:li#%d:im=\\E@:mi:\ 	:nd=\\EC:ta=^I:pt:up=\\EA:"
+end_define
+
+begin_define
+define|#
+directive|define
+name|WWT_REV
+value|"se=\\Eq:so=\\Ep:"
+end_define
+
+begin_define
+define|#
+directive|define
+name|WWT_UL
+value|"ue=\\Es:us=\\Er:"
 end_define
 
 begin_comment
