@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|ISP_PLATFORM_VERSION_MINOR
-value|7
+value|8
 end_define
 
 begin_include
@@ -978,7 +978,7 @@ parameter_list|,
 name|sp
 parameter_list|)
 define|\
-value|bcopy(sp->req_sense_data,&(xs)->sense_data,	\ 	    imin(XS_SNSLEN(xs), sp->req_sense_len))
+value|(xs)->ccb_h.status |= CAM_AUTOSNS_VALID,	\ 	bcopy(sp->req_sense_data,&(xs)->sense_data,	\ 	    imin(XS_SNSLEN(xs), sp->req_sense_len))
 end_define
 
 begin_define
@@ -1594,7 +1594,7 @@ name|PRIBIO
 argument_list|,
 literal|"isp_mboxwaiting"
 argument_list|,
-literal|5
+literal|10
 operator|*
 name|hz
 argument_list|)
@@ -1617,7 +1617,7 @@ name|PRIBIO
 argument_list|,
 literal|"isp_mboxwaiting"
 argument_list|,
-literal|5
+literal|10
 operator|*
 name|hz
 argument_list|)
@@ -1639,7 +1639,11 @@ name|isp
 argument_list|,
 name|ISP_LOGWARN
 argument_list|,
-literal|"interrupting mbox timeout"
+literal|"Interrupting Mailbox Command (0x%x) Timeout"
+argument_list|,
+name|isp
+operator|->
+name|isp_lastmbxcmd
 argument_list|)
 expr_stmt|;
 name|isp
@@ -1673,7 +1677,7 @@ name|j
 operator|<
 literal|60
 operator|*
-literal|2000
+literal|10000
 condition|;
 name|j
 operator|++
@@ -1722,7 +1726,11 @@ name|isp
 argument_list|,
 name|ISP_LOGWARN
 argument_list|,
-literal|"polled mbox timeout"
+literal|"Polled Mailbox Command (0x%x) Timeout"
+argument_list|,
+name|isp
+operator|->
+name|isp_lastmbxcmd
 argument_list|)
 expr_stmt|;
 block|}
