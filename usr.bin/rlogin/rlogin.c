@@ -721,15 +721,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 name|struct
 name|passwd
 modifier|*
@@ -4410,7 +4401,7 @@ directive|else
 end_else
 
 begin_expr_stmt
-literal|"8DELd"
+literal|"8DEKLd"
 operator|,
 literal|" "
 end_expr_stmt
