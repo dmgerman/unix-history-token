@@ -4,11 +4,11 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*	fs.h	2.1	%G%	*/
+comment|/*	fs.h	2.2	%G%	*/
 end_comment
 
 begin_comment
-comment|/*  * Each disk drive contains some number of file systems.  * A file system consists of a number of cylinder groups.  * Each cylinder group has inodes and data.  *  * A file system is described by its super-block, which in turn  * describes the cylinder groups.  The super-block is critical  * data and is replicated in each cylinder group to protect against  * catastrophic loss.  This is done at mkfs time and the critical  * super-block data does not change, so the copies need not be  * referenced further unless disaster strikes.  *  * For file system fs, the offsets of the various blocks of interest  * are given in the super block as:  *	[fs->fs_bblkno]		Boot sector  *	[fs->fs_sblkno]		Super-block  *	[fs->fs_cblkno]		Cylinder group block  *	[fs->fs_iblkno]		Inode blocks  *	[fs->fs_dblkno]		Data blocks  * The beginning of cylinder group cg in fs, is given by  * the ``cgbase(fs, cg)'' macro.  *  * The first boot and super blocks are given in absolute disk addresses.  */
+comment|/*  * Each disk drive contains some number of file systems.  * A file system consists of a number of cylinder groups.  * Each cylinder group has inodes and data.  *  * A file system is described by its super-block, which in turn  * describes the cylinder groups.  The super-block is critical  * data and is replicated in each cylinder group to protect against  * catastrophic loss.  This is done at mkfs time and the critical  * super-block data does not change, so the copies need not be  * referenced further unless disaster strikes.  *  * For file system fs, the offsets of the various blocks of interest  * are given in the super block as:  *	[fs->fs_sblkno]		Super-block  *	[fs->fs_cblkno]		Cylinder group block  *	[fs->fs_iblkno]		Inode blocks  *	[fs->fs_dblkno]		Data blocks  * The beginning of cylinder group cg in fs, is given by  * the ``cgbase(fs, cg)'' macro.  *  * The first boot and super blocks are given in absolute disk addresses.  */
 end_comment
 
 begin_define
@@ -80,7 +80,7 @@ value|4
 end_define
 
 begin_comment
-comment|/*  * Under current technology, most 300MB disks have 32 sectors and  * 19 tracks, thus these are the defaults used for fs_nsect and   * fs_ntrak respectively.  */
+comment|/*  * Under current technology, most 300MB disks have 32 sectors and  * 16 tracks, thus these are the defaults used for fs_nsect and   * fs_ntrak respectively.  */
 end_comment
 
 begin_define
@@ -94,7 +94,7 @@ begin_define
 define|#
 directive|define
 name|DFLNTRAK
-value|19
+value|16
 end_define
 
 begin_comment
@@ -175,21 +175,21 @@ comment|/* maximum fs_cpg */
 end_comment
 
 begin_comment
-comment|/*  * The path name on which the file system is mounted is maintained  * in fs_fsmnt. MAXMNTLEN defines the amount of space allocated in   * the super block for this name.  * The limit on the amount of summary information per file system  * is defined by MAXCSBUFS. It is currently parameterized for 1Meg  * cylinders maximum.  */
+comment|/*  * The path name on which the file system is mounted is maintained  * in fs_fsmnt. MAXMNTLEN defines the amount of space allocated in   * the super block for this name.  * The limit on the amount of summary information per file system  * is defined by MAXCSBUFS. It is currently parameterized for a  * maximum of two million cylinders.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MAXMNTLEN
-value|34
+value|512
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAXCSBUFS
-value|16
+value|32
 end_define
 
 begin_comment
@@ -240,13 +240,9 @@ name|fs_magic
 decl_stmt|;
 comment|/* magic number */
 name|daddr_t
-name|fs_bblkno
-decl_stmt|;
-comment|/* abs addr of boot-block in filesys */
-name|daddr_t
 name|fs_sblkno
 decl_stmt|;
-comment|/* abs addr of super-block in filesys */
+comment|/* addr of super-block in filesys */
 name|daddr_t
 name|fs_cblkno
 decl_stmt|;
@@ -258,7 +254,15 @@ comment|/* offset of inode-blocks in filesys */
 name|daddr_t
 name|fs_dblkno
 decl_stmt|;
-comment|/* offset of data-blocks in filesys */
+comment|/* offset of first data after cg */
+name|long
+name|fs_cgoffset
+decl_stmt|;
+comment|/* cylinder group offset in cylinder */
+name|long
+name|fs_cgmask
+decl_stmt|;
+comment|/* used to calc mod fs_ntrak */
 name|time_t
 name|fs_time
 decl_stmt|;
@@ -283,19 +287,19 @@ name|long
 name|fs_fsize
 decl_stmt|;
 comment|/* size of frag blocks in fs */
-name|short
+name|long
 name|fs_frag
 decl_stmt|;
 comment|/* number of frags in a block in fs */
-name|short
+name|long
 name|fs_minfree
 decl_stmt|;
 comment|/* minimum percentage of free blocks */
-name|short
+name|long
 name|fs_rotdelay
 decl_stmt|;
 comment|/* num of ms for optimal next block */
-name|short
+name|long
 name|fs_rps
 decl_stmt|;
 comment|/* disk revolutions per second */
@@ -307,14 +311,21 @@ name|long
 name|fs_fmask
 decl_stmt|;
 comment|/* ``fragoff'' calc of frag offsets */
-name|short
+name|long
 name|fs_bshift
 decl_stmt|;
 comment|/* ``lblkno'' calc of logical blkno */
-name|short
+name|long
 name|fs_fshift
 decl_stmt|;
 comment|/* ``numfrags'' calc number of frags */
+name|long
+name|fs_sparecon
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* reserved for future constants */
 comment|/* sizes determined by number of cylinder groups and their sizes */
 name|daddr_t
 name|fs_csaddr
@@ -329,11 +340,11 @@ name|fs_cgsize
 decl_stmt|;
 comment|/* cylinder group size */
 comment|/* these fields should be derived from the hardware */
-name|short
+name|long
 name|fs_ntrak
 decl_stmt|;
 comment|/* tracks per cylinder */
-name|short
+name|long
 name|fs_nsect
 decl_stmt|;
 comment|/* sectors per track */
@@ -347,11 +358,11 @@ name|fs_ncyl
 decl_stmt|;
 comment|/* cylinders in file system */
 comment|/* these fields can be computed from the others */
-name|short
+name|long
 name|fs_cpg
 decl_stmt|;
 comment|/* cylinders per group */
-name|short
+name|long
 name|fs_ipg
 decl_stmt|;
 comment|/* inodes per group */
@@ -371,9 +382,17 @@ name|fs_fmod
 decl_stmt|;
 comment|/* super block modified flag */
 name|char
+name|fs_clean
+decl_stmt|;
+comment|/* file system is clean flag */
+name|char
 name|fs_ronly
 decl_stmt|;
 comment|/* mounted read-only flag */
+name|char
+name|fs_flags
+decl_stmt|;
+comment|/* currently unused flag */
 name|char
 name|fs_fsmnt
 index|[
@@ -395,7 +414,7 @@ name|MAXCSBUFS
 index|]
 decl_stmt|;
 comment|/* list of fs_cs info buffers */
-name|short
+name|long
 name|fs_cpc
 decl_stmt|;
 comment|/* cyl per cycle in postbl */
@@ -594,35 +613,7 @@ value|((b) / ((fs)->fs_fsize / DEV_BSIZE))
 end_define
 
 begin_comment
-comment|/*  * Cylinder group macros to locate things in cylinder groups.  *  * Cylinder group to disk block address of spare boot block  * and super block.  * Note that these are in absolute addresses, and can NOT  * in general be expressable in terms of file system addresses.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|cgbblock
-parameter_list|(
-name|fs
-parameter_list|,
-name|c
-parameter_list|)
-value|(fsbtodb(fs, cgbase(fs, c)) + (fs)->fs_bblkno)
-end_define
-
-begin_define
-define|#
-directive|define
-name|cgsblock
-parameter_list|(
-name|fs
-parameter_list|,
-name|c
-parameter_list|)
-value|(fsbtodb(fs, cgbase(fs, c)) + (fs)->fs_sblkno)
-end_define
-
-begin_comment
-comment|/*  * File system addresses of cylinder group data structures.  */
+comment|/*  * Cylinder group macros to locate things in cylinder groups.  * They calc file system addresses of cylinder group data structures.  */
 end_comment
 
 begin_define
@@ -637,8 +628,33 @@ parameter_list|)
 value|((daddr_t)((fs)->fs_fpg * (c)))
 end_define
 
+begin_define
+define|#
+directive|define
+name|cgstart
+parameter_list|(
+name|fs
+parameter_list|,
+name|c
+parameter_list|)
+define|\
+value|(cgbase(fs, c) + (fs)->fs_cgoffset * ((c)& ~((fs)->fs_cgmask)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|cgsblock
+parameter_list|(
+name|fs
+parameter_list|,
+name|c
+parameter_list|)
+value|(cgstart(fs, c) + (fs)->fs_sblkno)
+end_define
+
 begin_comment
-comment|/* base addr */
+comment|/* super blk */
 end_comment
 
 begin_define
@@ -650,7 +666,7 @@ name|fs
 parameter_list|,
 name|c
 parameter_list|)
-value|(cgbase(fs, c) + (fs)->fs_cblkno)
+value|(cgstart(fs, c) + (fs)->fs_cblkno)
 end_define
 
 begin_comment
@@ -666,7 +682,7 @@ name|fs
 parameter_list|,
 name|c
 parameter_list|)
-value|(cgbase(fs, c) + (fs)->fs_iblkno)
+value|(cgstart(fs, c) + (fs)->fs_iblkno)
 end_define
 
 begin_comment
@@ -682,7 +698,7 @@ name|fs
 parameter_list|,
 name|c
 parameter_list|)
-value|(cgbase(fs, c) + (fs)->fs_dblkno)
+value|(cgstart(fs, c) + (fs)->fs_dblkno)
 end_define
 
 begin_comment
