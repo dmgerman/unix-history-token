@@ -4889,6 +4889,11 @@ name|ui_sbsize
 operator|=
 name|new
 expr_stmt|;
+name|UIDINFO_UNLOCK
+argument_list|(
+name|uip
+argument_list|)
+expr_stmt|;
 operator|*
 name|hiwat
 operator|=
@@ -4896,9 +4901,7 @@ name|to
 expr_stmt|;
 if|if
 condition|(
-name|uip
-operator|->
-name|ui_sbsize
+name|new
 operator|<
 literal|0
 condition|)
@@ -4909,11 +4912,6 @@ argument_list|,
 name|uip
 operator|->
 name|ui_uid
-argument_list|)
-expr_stmt|;
-name|UIDINFO_UNLOCK
-argument_list|(
-name|uip
 argument_list|)
 expr_stmt|;
 return|return
