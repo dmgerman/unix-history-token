@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_init.c	5.6 (Berkeley) %G%"
+literal|"@(#)res_init.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,12 +47,6 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netdb.h>
 end_include
 
 begin_include
@@ -171,11 +165,6 @@ modifier|*
 name|strncpy
 argument_list|()
 decl_stmt|;
-name|struct
-name|servent
-modifier|*
-name|serv
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -214,39 +203,16 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|serv
-operator|=
-name|getservbyname
-argument_list|(
-name|NAMESERVER_SNAME
-argument_list|,
-literal|"tcp"
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
 name|_res
 operator|.
 name|nsaddr
 operator|.
 name|sin_port
 operator|=
-operator|(
-name|u_short
-operator|)
-name|serv
-operator|->
-name|s_port
+name|htons
+argument_list|(
+name|NAMESERVER_PORT
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
