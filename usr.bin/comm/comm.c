@@ -296,7 +296,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-123i"
+literal|"123i"
 argument_list|)
 operator|)
 operator|!=
@@ -308,15 +308,6 @@ condition|(
 name|ch
 condition|)
 block|{
-case|case
-literal|'-'
-case|:
-operator|--
-name|optind
-expr_stmt|;
-goto|goto
-name|done
-goto|;
 case|case
 literal|'1'
 case|:
@@ -357,8 +348,6 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
-name|done
-label|:
 name|argc
 operator|-=
 name|optind
