@@ -1098,13 +1098,8 @@ name|n2
 operator|=
 name|n
 expr_stmt|;
-while|while
-condition|(
-name|n
-operator|>
-literal|0
-operator|&&
-operator|(
+do|do
+block|{
 name|swap_zone
 operator|=
 name|zinit
@@ -1123,23 +1118,44 @@ name|ZONE_INTERRUPT
 argument_list|,
 literal|1
 argument_list|)
-operator|)
-operator|==
+expr_stmt|;
+if|if
+condition|(
+name|swap_zone
+operator|!=
 name|NULL
 condition|)
+break|break;
+comment|/* 		 * if the allocation failed, try a zone two thirds the 		 * size of the previous attempt. 		 */
 name|n
-operator|>>=
-literal|1
+operator|-=
+operator|(
+operator|(
+name|n
+operator|+
+literal|2
+operator|)
+operator|/
+literal|3
+operator|)
 expr_stmt|;
+block|}
+do|while
+condition|(
+name|n
+operator|>
+literal|0
+condition|)
+do|;
 if|if
 condition|(
 name|swap_zone
 operator|==
 name|NULL
 condition|)
-name|printf
+name|panic
 argument_list|(
-literal|"WARNING: failed to init swap_zone!\n"
+literal|"failed to zinit swap_zone."
 argument_list|)
 expr_stmt|;
 if|if
@@ -1150,7 +1166,9 @@ name|n
 condition|)
 name|printf
 argument_list|(
-literal|"Swap zone entries reduced to %d.\n"
+literal|"Swap zone entries reduced from %d to %d.\n"
+argument_list|,
+name|n2
 argument_list|,
 name|n
 argument_list|)
@@ -1169,10 +1187,12 @@ init|;
 name|n
 operator|<
 name|n2
+operator|/
+literal|8
 condition|;
 name|n
-operator|<<=
-literal|1
+operator|*=
+literal|2
 control|)
 empty_stmt|;
 name|swhash
