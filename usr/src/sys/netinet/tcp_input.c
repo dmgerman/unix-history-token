@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.87	83/01/17	*/
+comment|/*	tcp_input.c	1.88	83/02/08	*/
 end_comment
 
 begin_include
@@ -245,6 +245,11 @@ decl_stmt|;
 name|struct
 name|in_addr
 name|laddr
+decl_stmt|;
+name|int
+name|dropsocket
+init|=
+literal|0
 decl_stmt|;
 comment|/* 	 * Get IP and TCP header together in first mbuf. 	 * Note: IP leaves IP header in first mbuf. 	 */
 name|m
@@ -840,6 +845,10 @@ condition|)
 goto|goto
 name|drop
 goto|;
+comment|/* 		 * This is ugly, but .... 		 * 		 * Mark socket as temporary until we're 		 * committed to keeping it.  The code at 		 * ``drop'' and ``dropwithreset'' check the 		 * flag dropsocket to see if the temporary 		 * socket created here should be discarded. 		 * We mark the socket as discardable until 		 * we're committed to it below in TCPS_LISTEN. 		 */
+name|dropsocket
+operator|++
+expr_stmt|;
 name|inp
 operator|=
 operator|(
@@ -1199,6 +1208,11 @@ index|]
 operator|=
 name|TCPTV_KEEP
 expr_stmt|;
+name|dropsocket
+operator|=
+literal|0
+expr_stmt|;
+comment|/* committed to socket */
 goto|goto
 name|trimthenstep6
 goto|;
@@ -2993,6 +3007,19 @@ name|TH_ACK
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* destroy temporarily created socket */
+if|if
+condition|(
+name|dropsocket
+condition|)
+operator|(
+name|void
+operator|)
+name|soabort
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 return|return;
 name|drop
 label|:
@@ -3030,6 +3057,19 @@ expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
+argument_list|)
+expr_stmt|;
+comment|/* destroy temporarily created socket */
+if|if
+condition|(
+name|dropsocket
+condition|)
+operator|(
+name|void
+operator|)
+name|soabort
+argument_list|(
+name|so
 argument_list|)
 expr_stmt|;
 return|return;
