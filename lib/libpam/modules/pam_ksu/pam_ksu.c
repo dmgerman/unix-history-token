@@ -1179,5 +1179,13 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|PAM_MODULE_ENTRY
+argument_list|(
+literal|"pam_ksu"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 
