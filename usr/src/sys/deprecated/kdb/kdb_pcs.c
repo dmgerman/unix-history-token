@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_pcs.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_pcs.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -340,6 +340,19 @@ operator|=
 name|CONTIN
 expr_stmt|;
 break|break;
+comment|/* kill */
+case|case
+literal|'k'
+case|:
+case|case
+literal|'K'
+case|:
+name|reset
+argument_list|(
+name|PANIC
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
 default|default:
 name|error
 argument_list|(
