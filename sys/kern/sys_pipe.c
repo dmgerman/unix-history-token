@@ -5091,6 +5091,7 @@ name|data
 operator|=
 name|fgetown
 argument_list|(
+operator|&
 name|mpipe
 operator|->
 name|pipe_sigio
@@ -5150,6 +5151,7 @@ operator|=
 operator|-
 name|fgetown
 argument_list|(
+operator|&
 name|mpipe
 operator|->
 name|pipe_sigio

@@ -6371,6 +6371,7 @@ name|data
 operator|=
 name|fgetown
 argument_list|(
+operator|&
 name|dev
 operator|->
 name|buf_sigio

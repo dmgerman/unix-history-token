@@ -533,6 +533,7 @@ name|data
 operator|=
 name|fgetown
 argument_list|(
+operator|&
 name|so
 operator|->
 name|so_sigio
@@ -580,6 +581,7 @@ operator|=
 operator|-
 name|fgetown
 argument_list|(
+operator|&
 name|so
 operator|->
 name|so_sigio

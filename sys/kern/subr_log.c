@@ -1025,6 +1025,7 @@ name|data
 operator|=
 name|fgetown
 argument_list|(
+operator|&
 name|logsoftc
 operator|.
 name|sc_sigio
@@ -1070,6 +1071,7 @@ operator|=
 operator|-
 name|fgetown
 argument_list|(
+operator|&
 name|logsoftc
 operator|.
 name|sc_sigio

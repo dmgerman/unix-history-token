@@ -4593,6 +4593,7 @@ name|data
 operator|=
 name|fgetown
 argument_list|(
+operator|&
 name|tp
 operator|->
 name|t_sigio

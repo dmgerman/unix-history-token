@@ -567,7 +567,8 @@ parameter_list|(
 name|struct
 name|sigio
 modifier|*
-name|sigio
+modifier|*
+name|sigiop
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -3182,6 +3182,7 @@ name|data
 operator|=
 name|fgetown
 argument_list|(
+operator|&
 name|tp
 operator|->
 name|tun_sigio
@@ -3231,6 +3232,7 @@ operator|=
 operator|-
 name|fgetown
 argument_list|(
+operator|&
 name|tp
 operator|->
 name|tun_sigio

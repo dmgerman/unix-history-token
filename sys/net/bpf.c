@@ -3164,6 +3164,7 @@ name|addr
 operator|=
 name|fgetown
 argument_list|(
+operator|&
 name|d
 operator|->
 name|bd_sigio
@@ -3209,6 +3210,7 @@ operator|=
 operator|-
 name|fgetown
 argument_list|(
+operator|&
 name|d
 operator|->
 name|bd_sigio
