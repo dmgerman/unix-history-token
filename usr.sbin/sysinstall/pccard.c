@@ -581,11 +581,13 @@ argument_list|,
 literal|" -z"
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|variable_set2
 argument_list|(
-name|pccardd_flags
+literal|"pccard_enable"
 argument_list|,
-name|card_irq
+literal|"YES"
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|variable_set2
@@ -595,6 +597,13 @@ argument_list|,
 name|card_irq
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|pccardd_flags
+argument_list|,
+name|card_irq
 argument_list|)
 expr_stmt|;
 name|vsystem
