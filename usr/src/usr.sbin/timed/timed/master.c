@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)master.c	1.2 (Berkeley) %G%"
+literal|"@(#)master.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -239,8 +239,10 @@ name|acksend
 argument_list|()
 decl_stmt|;
 name|char
-modifier|*
 name|olddate
+index|[
+literal|32
+index|]
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -580,10 +582,17 @@ name|tv_usec
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 			 * the following line is necessary due to syslog 			 * calling ctime() which clobbers the static buffer 			 */
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
 name|olddate
-operator|=
+argument_list|,
 name|date
 argument_list|()
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -781,10 +790,17 @@ name|tv_usec
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 				 * the following line is necessary due to syslog 				 * calling ctime() which clobbers the static buffer 				 */
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
 name|olddate
-operator|=
+argument_list|,
 name|date
 argument_list|()
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
