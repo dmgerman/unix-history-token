@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.51.2.20 1998/10/06 09:55:01 luigi Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.51.2.21 1998/10/14 16:29:58 luigi Exp $  */
 end_comment
 
 begin_comment
@@ -2251,7 +2251,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parameters:  *  *	pip	Pointer to packet header (struct ip **)  *  XXX future extension: pip = NULL means a complete ethernet packet  *	including ethernet header in the mbuf. Other fields  *	are ignored/invalid.  *  *	hlen	Packet header length  *	oif	Outgoing interface, or NULL if packet is incoming  * #ifndef IPFW_DIVERT_RESTART  *      *cookie Ignore all divert/tee rules to this port (if non-zero)  * #else  *	*cookie Skip up to the first rule past this rule number;  * #endif  *	*m	The packet; we set to NULL when/if we nuke it.  *	*flow_id pointer to the last matching rule (in/out)  *  * Return value:  *  *	0	The packet is to be accepted and routed normally OR  *      	the packet was denied/rejected and has been dropped;  *		in the latter case, *m is equal to NULL upon return.  *	port	Divert the packet to port.  */
+comment|/*  * Parameters:  *  *	pip	Pointer to packet header (struct ip **)  *  	bridge_ipfw extension: pip = NULL means a complete ethernet packet  *	including ethernet header in the mbuf. Other fields  *	are ignored/invalid.  *  *	hlen	Packet header length  *	oif	Outgoing interface, or NULL if packet is incoming  * #ifndef IPFW_DIVERT_RESTART  *      *cookie Ignore all divert/tee rules to this port (if non-zero)  * #else  *	*cookie Skip up to the first rule past this rule number;  * #endif  *	*m	The packet; we set to NULL when/if we nuke it.  *	*flow_id pointer to the last matching rule (in/out)  *  * Return value:  *  *	0	The packet is to be accepted and routed normally OR  *      	the packet was denied/rejected and has been dropped;  *		in the latter case, *m is equal to NULL upon return.  *	port	Divert the packet to port.  */
 end_comment
 
 begin_function
@@ -2326,6 +2326,8 @@ name|rcvif
 decl_stmt|;
 name|u_short
 name|offset
+init|=
+literal|0
 decl_stmt|;
 name|u_short
 name|src_port
@@ -2512,9 +2514,12 @@ block|}
 name|offset
 operator|=
 operator|(
+name|ntohs
+argument_list|(
 name|ip
 operator|->
 name|ip_off
+argument_list|)
 operator|&
 name|IP_OFFMASK
 operator|)
@@ -2846,14 +2851,9 @@ operator|&
 name|IP_FW_F_FRAG
 operator|)
 operator|&&
-operator|!
-operator|(
-name|ip
-operator|->
-name|ip_off
-operator|&
-name|IP_OFFMASK
-operator|)
+name|offset
+operator|==
+literal|0
 condition|)
 continue|continue;
 comment|/* If src-addr doesn't match, not this rule. */
@@ -3104,7 +3104,7 @@ name|PULLUP_TO
 parameter_list|(
 name|len
 parameter_list|)
-value|do {						\ 			    if ((*m)->m_len< (len) ) {			\ 				if ( (*m = m_pullup(*m, (len))) == 0) 	\ 				    goto bogusfrag;			\ 				*pip = ip = mtod(*m, struct ip *);	\ 				offset = (ip->ip_off& IP_OFFMASK);	\ 			    }						\ 			} while (0)
+value|do {						\ 			    if ((*m)->m_len< (len) ) {			\ 				if ( (*m = m_pullup(*m, (len))) == 0) 	\ 				    goto bogusfrag;			\ 				ip = mtod(*m, struct ip *);		\ 				if (pip) {				\ 				    *pip = ip ;				\ 				    offset = (ip->ip_off& IP_OFFMASK);	\ 				} else					\ 				    offset = (ntohs(ip->ip_off)& IP_OFFMASK);\ 			    }						\ 			} while (0)
 comment|/* Protocol specific checks */
 switch|switch
 condition|(
@@ -3490,29 +3490,21 @@ name|fw_pcnt
 operator|+=
 literal|1
 expr_stmt|;
-comment|/* 		 * note -- bridged-ip packets still have some fields 		 * in network order, including ip_len 		 */
 if|if
 condition|(
 name|ip
 condition|)
 block|{
-if|if
-condition|(
-name|pip
-condition|)
 name|f
 operator|->
 name|fw_bcnt
 operator|+=
+name|pip
+condition|?
 name|ip
 operator|->
 name|ip_len
-expr_stmt|;
-else|else
-name|f
-operator|->
-name|fw_bcnt
-operator|+=
+else|:
 name|ntohs
 argument_list|(
 name|ip
