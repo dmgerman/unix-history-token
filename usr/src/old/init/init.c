@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	5.4 (Berkeley) %G%"
+literal|"@(#)init.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -479,7 +479,7 @@ name|LOG_CONS
 operator||
 name|LOG_ODELAY
 argument_list|,
-literal|0
+name|LOG_AUTH
 argument_list|)
 expr_stmt|;
 name|sigvec

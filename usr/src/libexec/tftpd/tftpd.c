@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tftpd.c	5.1 (Berkeley) %G%"
+literal|"@(#)tftpd.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -219,6 +219,15 @@ specifier|register
 name|int
 name|n
 decl_stmt|;
+name|openlog
+argument_list|(
+literal|"tftpd"
+argument_list|,
+name|LOG_PID
+argument_list|,
+name|LOG_DAEMON
+argument_list|)
+expr_stmt|;
 name|alarm
 argument_list|(
 literal|10
@@ -313,15 +322,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|openlog
-argument_list|(
-literal|"tftpd"
-argument_list|,
-name|LOG_PID
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -356,15 +356,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|openlog
-argument_list|(
-literal|"tftpd"
-argument_list|,
-name|LOG_PID
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -399,15 +390,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|openlog
-argument_list|(
-literal|"tftpd"
-argument_list|,
-name|LOG_PID
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR

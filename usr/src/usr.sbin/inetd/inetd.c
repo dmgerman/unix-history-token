@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inetd.c	5.1 (Berkeley) %G%"
+literal|"@(#)inetd.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -520,7 +520,7 @@ literal|"inetd"
 argument_list|,
 name|LOG_PID
 argument_list|,
-literal|0
+name|LOG_DAEMON
 argument_list|)
 expr_stmt|;
 name|config

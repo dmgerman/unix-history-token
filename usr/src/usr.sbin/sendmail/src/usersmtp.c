@@ -45,7 +45,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.3 (Berkeley) %G%	(no SMTP)"
+literal|"@(#)usersmtp.c	5.4 (Berkeley) %G%	(no SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,7 +73,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.3 (Berkeley) %G%"
+literal|"@(#)usersmtp.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1656,7 +1656,7 @@ directive|ifdef
 name|LOG
 name|syslog
 argument_list|(
-name|LOG_MAIL
+name|LOG_ERR
 argument_list|,
 literal|"%s"
 argument_list|,

@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.6 (Berkeley) %G%	(w/o daemon mode)"
+literal|"@(#)daemon.c	5.7 (Berkeley) %G%	(w/o daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,7 +102,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.6 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.7 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -301,7 +301,7 @@ literal|0
 condition|)
 name|syslog
 argument_list|(
-name|LOG_SALERT
+name|LOG_ALERT
 argument_list|,
 literal|"cannot get connection"
 argument_list|)

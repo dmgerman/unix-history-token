@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)err.c	5.2 (Berkeley) %G%"
+literal|"@(#)err.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -220,7 +220,7 @@ literal|0
 condition|)
 name|syslog
 argument_list|(
-name|LOG_MAIL
+name|LOG_CRIT
 argument_list|,
 literal|"%s: SYSERR: %s"
 argument_list|,

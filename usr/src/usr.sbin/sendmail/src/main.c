@@ -36,7 +36,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	5.4 (Berkeley) %G%"
+literal|"@(#)main.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -742,7 +742,7 @@ literal|"sendmail"
 argument_list|,
 name|LOG_PID
 argument_list|,
-literal|0
+name|LOG_MAIL
 argument_list|)
 expr_stmt|;
 end_expr_stmt

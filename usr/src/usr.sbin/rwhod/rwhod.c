@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwhod.c	5.4 (Berkeley) %G%"
+literal|"@(#)rwhod.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -548,7 +548,7 @@ literal|"rwhod"
 argument_list|,
 name|LOG_PID
 argument_list|,
-literal|0
+name|LOG_DAEMON
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Establish host name as returned by system. 	 */

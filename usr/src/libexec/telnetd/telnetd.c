@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	5.2 (Berkeley) %G%"
+literal|"@(#)telnetd.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -375,6 +375,17 @@ literal|1
 decl_stmt|,
 name|fromlen
 decl_stmt|;
+name|openlog
+argument_list|(
+literal|"telnetd"
+argument_list|,
+name|LOG_PID
+operator||
+name|LOG_ODELAY
+argument_list|,
+name|LOG_DAEMON
+argument_list|)
+expr_stmt|;
 name|fromlen
 operator|=
 sizeof|sizeof
@@ -443,18 +454,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|openlog
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|,
-name|LOG_PID
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_WARNING

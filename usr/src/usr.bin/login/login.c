@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.4 (Berkeley) %G%"
+literal|"@(#)login.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -965,7 +965,7 @@ literal|"login"
 argument_list|,
 name|LOG_ODELAY
 argument_list|,
-literal|0
+name|LOG_AUTH
 argument_list|)
 expr_stmt|;
 name|t
@@ -1239,7 +1239,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_SECURITY
+name|LOG_CRIT
 argument_list|,
 literal|"ROOT LOGIN REFUSED %s"
 argument_list|,
@@ -1271,7 +1271,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_SECURITY
+name|LOG_CRIT
 argument_list|,
 literal|"REPEATED LOGIN FAILURES %s, %s"
 argument_list|,
@@ -2127,7 +2127,7 @@ literal|0
 condition|)
 name|syslog
 argument_list|(
-name|LOG_SECURITY
+name|LOG_NOTICE
 argument_list|,
 literal|"ROOT LOGIN %s"
 argument_list|,

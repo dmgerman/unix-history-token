@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printjob.c	5.1 (Berkeley) %G%"
+literal|"@(#)printjob.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3876,7 +3876,7 @@ literal|10
 condition|)
 name|syslog
 argument_list|(
-name|LOG_SALERT
+name|LOG_ALERT
 argument_list|,
 literal|"%s: can't send to %s; queue full"
 argument_list|,

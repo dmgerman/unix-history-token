@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpd.c	5.1 (Berkeley) %G%"
+literal|"@(#)lpd.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -299,7 +299,7 @@ literal|"lpd"
 argument_list|,
 name|LOG_PID
 argument_list|,
-literal|0
+name|LOG_DAEMON
 argument_list|)
 expr_stmt|;
 operator|(
