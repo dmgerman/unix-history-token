@@ -2938,6 +2938,15 @@ expr|*
 name|ret
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|out
+goto|;
 switch|switch
 condition|(
 name|af
@@ -3127,7 +3136,7 @@ condition|)
 block|{
 name|free
 argument_list|(
-name|sin
+name|sin6
 argument_list|)
 expr_stmt|;
 name|free
