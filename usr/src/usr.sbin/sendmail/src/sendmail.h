@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.51 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.52 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	6.51		%G%"
+literal|"@(#)sendmail.h	6.52		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1992,10 +1992,6 @@ name|short
 name|mci_state
 decl_stmt|;
 comment|/* SMTP state */
-name|short
-name|mci_options
-decl_stmt|;
-comment|/* ESMTP options */
 name|long
 name|mci_maxsize
 decl_stmt|;
@@ -2049,7 +2045,7 @@ begin_define
 define|#
 directive|define
 name|MCIF_VALID
-value|00001
+value|000001
 end_define
 
 begin_comment
@@ -2060,7 +2056,7 @@ begin_define
 define|#
 directive|define
 name|MCIF_TEMP
-value|00002
+value|000002
 end_define
 
 begin_comment
@@ -2071,11 +2067,55 @@ begin_define
 define|#
 directive|define
 name|MCIF_CACHED
-value|00004
+value|000004
 end_define
 
 begin_comment
 comment|/* currently in open cache */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIF_ESMTP
+value|000010
+end_define
+
+begin_comment
+comment|/* this host speaks ESMTP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIF_EXPN
+value|000020
+end_define
+
+begin_comment
+comment|/* EXPN command supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIF_SIZE
+value|000040
+end_define
+
+begin_comment
+comment|/* SIZE option supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIF_8BITMIME
+value|000100
+end_define
+
+begin_comment
+comment|/* BODY=8BITMIME supported */
 end_comment
 
 begin_comment
@@ -2157,54 +2197,6 @@ end_define
 
 begin_comment
 comment|/* I/O error on connection */
-end_comment
-
-begin_comment
-comment|/* options bits */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MCIO_ESMTP
-value|0x0001
-end_define
-
-begin_comment
-comment|/* this host speaks ESMTP */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MCIO_EXPN
-value|0x0002
-end_define
-
-begin_comment
-comment|/* EXPN command supported */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MCIO_SIZE
-value|0x0004
-end_define
-
-begin_comment
-comment|/* SIZE option supported */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MCIO_8BITMIME
-value|0x0008
-end_define
-
-begin_comment
-comment|/* BODY=8BITMIME supported */
 end_comment
 
 begin_escape
