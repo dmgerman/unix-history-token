@@ -1811,16 +1811,6 @@ name|aa_lastnet
 argument_list|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"at_pcbconnect: found ifp net=%u\n"
-argument_list|,
-name|ntohs
-argument_list|(
-name|net
-argument_list|)
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 block|}
@@ -1876,15 +1866,6 @@ name|s_node
 operator|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"at_pcbconnect: freeing ro->ro_rt=0x%x\n"
-argument_list|,
-name|ro
-operator|->
-name|ro_rt
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ultrix
@@ -2097,32 +2078,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"at_pcbconnect: ro->ro_rt=0x%x\n"
-argument_list|,
-name|ro
-operator|->
-name|ro_rt
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ro
-operator|->
-name|ro_rt
-condition|)
-name|printf
-argument_list|(
-literal|"at_pcbconnect: ro->ro_rt->rt_ifp=0x%x"
-argument_list|,
-name|ro
-operator|->
-name|ro_rt
-operator|->
-name|rt_ifp
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENETUNREACH
