@@ -93,7 +93,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: comcontrol<filename>|- [dtrwait<n>] [drainwait<n>]\n"
+literal|"usage: comcontrol<filename> [dtrwait<n>] [drainwait<n>]\n"
 argument_list|)
 expr_stmt|;
 name|exit
