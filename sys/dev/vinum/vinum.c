@@ -1263,6 +1263,10 @@ condition|)
 return|return
 name|ENXIO
 return|;
+comment|/* FALLTHROUGH */
+case|case
+name|VINUM_RAWPLEX_TYPE
+case|:
 name|index
 operator|=
 name|Plexno
