@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	4.18	82/01/19	*/
+comment|/*	tty.c	4.19	82/01/24	*/
 end_comment
 
 begin_comment
@@ -1445,6 +1445,28 @@ name|void
 operator|)
 name|spl0
 argument_list|()
+expr_stmt|;
+break|break;
+comment|/* 	 * Prevent more opens on channel 	 */
+case|case
+name|TIOCEXCL
+case|:
+name|tp
+operator|->
+name|t_state
+operator||=
+name|TS_XCLUDE
+expr_stmt|;
+break|break;
+case|case
+name|TIOCNXCL
+case|:
+name|tp
+operator|->
+name|t_state
+operator|&=
+operator|~
+name|TS_XCLUDE
 expr_stmt|;
 break|break;
 comment|/* 	 * Set new parameters 	 */
