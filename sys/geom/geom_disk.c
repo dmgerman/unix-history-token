@@ -846,6 +846,12 @@ name|d_dev
 operator|=
 name|dev
 expr_stmt|;
+name|dp
+operator|->
+name|d_devsw
+operator|=
+name|cdevsw
+expr_stmt|;
 name|dev
 operator|->
 name|si_devsw
