@@ -1031,9 +1031,9 @@ name|SYSCTL_PROC
 argument_list|(
 name|_vm
 argument_list|,
-name|VM_METER
+name|VM_TOTAL
 argument_list|,
-name|vmmeter
+name|vmtotal
 argument_list|,
 name|CTLTYPE_OPAQUE
 operator||

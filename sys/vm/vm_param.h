@@ -32,12 +32,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VM_METER
+name|VM_TOTAL
 value|1
 end_define
 
 begin_comment
-comment|/* struct vmmeter */
+comment|/* struct vmtotal */
 end_comment
 
 begin_define
@@ -165,7 +165,7 @@ begin_define
 define|#
 directive|define
 name|CTL_VM_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "vmmeter", CTLTYPE_STRUCT }, \ 	{ "loadavg", CTLTYPE_STRUCT }, \ 	{ "v_free_min", CTLTYPE_INT }, \ 	{ "v_free_target", CTLTYPE_INT }, \ 	{ "v_free_reserved", CTLTYPE_INT }, \ 	{ "v_inactive_target", CTLTYPE_INT }, \ 	{ "v_cache_min", CTLTYPE_INT }, \ 	{ "v_cache_max", CTLTYPE_INT }, \ 	{ "v_pageout_free_min", CTLTYPE_INT}, \ 	{ "pageout_algorithm", CTLTYPE_INT}, \ 	{ "swapping_enabled", CTLTYPE_INT},\ }
+value|{ \ 	{ 0, 0 }, \ 	{ "vmtotal", CTLTYPE_STRUCT }, \ 	{ "loadavg", CTLTYPE_STRUCT }, \ 	{ "v_free_min", CTLTYPE_INT }, \ 	{ "v_free_target", CTLTYPE_INT }, \ 	{ "v_free_reserved", CTLTYPE_INT }, \ 	{ "v_inactive_target", CTLTYPE_INT }, \ 	{ "v_cache_min", CTLTYPE_INT }, \ 	{ "v_cache_max", CTLTYPE_INT }, \ 	{ "v_pageout_free_min", CTLTYPE_INT}, \ 	{ "pageout_algorithm", CTLTYPE_INT}, \ 	{ "swapping_enabled", CTLTYPE_INT},\ }
 end_define
 
 begin_comment

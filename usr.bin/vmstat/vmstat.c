@@ -2121,7 +2121,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|VM_METER
+name|VM_TOTAL
 expr_stmt|;
 if|if
 condition|(
