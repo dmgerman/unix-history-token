@@ -1475,6 +1475,7 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
+comment|/* 	 * Processes with privilege, but in jail, are not allowed to 	 * configure extended attributes. 	 */
 if|if
 condition|(
 operator|(
@@ -1786,7 +1787,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * XXX What capability should apply here? 	 */
+comment|/* 	 * Do not allow privileged processes in jail to directly 	 * manipulate system attributes. 	 * 	 * XXX What capability should apply here? 	 * Probably CAP_SYS_SETFFLAG. 	 */
 if|if
 condition|(
 name|system_namespace
@@ -1799,7 +1800,7 @@ name|cred
 argument_list|,
 name|p
 argument_list|,
-name|PRISON_ROOT
+literal|0
 argument_list|)
 operator|)
 return|;
