@@ -1133,7 +1133,7 @@ argument_list|)
 operator|>=
 literal|0
 condition|)
-break|break;
+return|return;
 if|if
 condition|(
 name|status
@@ -1150,6 +1150,8 @@ name|ENOBUFS
 condition|)
 do|;
 block|}
+else|else
+return|return;
 comment|/* 	 * Output the message to the console; try not to block 	 * as a blocking console should not stop other processes. 	 * Make sure the error reported is the one from the syslogd failure. 	 */
 if|if
 condition|(
