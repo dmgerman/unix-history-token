@@ -1099,6 +1099,8 @@ name|newtd
 operator|==
 name|NULL
 operator|)
+operator|||
+name|panicstr
 argument_list|,
 operator|(
 literal|"mi_switch: switch in a critical section"
