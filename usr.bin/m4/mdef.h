@@ -706,7 +706,7 @@ define|#
 directive|define
 name|gpbc
 parameter_list|()
-value|(bp> bufbase) ? (*--bp ? *bp : EOF) : \ 	((chscratch = obtain_char(infile+ilevel)) == '\n'&& \ 	++inlineno[ilevel], chscratch)
+value|(bp> bufbase) ? (*--bp ? (*bp& 0xFF) : EOF) : \ 	((chscratch = obtain_char(infile+ilevel)) == '\n'&& \ 	++inlineno[ilevel], chscratch)
 end_define
 
 begin_define
