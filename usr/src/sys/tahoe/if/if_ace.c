@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ace.c	1.12	86/12/15	*/
+comment|/*	if_ace.c	1.13	87/06/30	*/
 end_comment
 
 begin_comment
@@ -799,6 +799,8 @@ literal|0xffff
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Allocate and map dual ported VERSAbus memory. 	 */
+if|if
+condition|(
 name|vbmemalloc
 argument_list|(
 literal|32
@@ -820,7 +822,19 @@ name|is
 operator|->
 name|is_dpm
 argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ace%d: can't allocate VERSAbus memory map\n"
+argument_list|,
+name|unit
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
 name|ifp
 operator|->
 name|if_init
