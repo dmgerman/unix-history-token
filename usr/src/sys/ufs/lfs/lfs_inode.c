@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.48 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.49 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -98,6 +98,16 @@ name|int
 name|lfs_init
 parameter_list|()
 block|{
+ifdef|#
+directive|ifdef
+name|VERBOSE
+name|printf
+argument_list|(
+literal|"lfs_init\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|ufs_init
@@ -169,6 +179,16 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|VERBOSE
+name|printf
+argument_list|(
+literal|"lfs_vget\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ump
 operator|=
 name|VFSTOUFS
@@ -281,7 +301,7 @@ name|bp
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * The inode does not contain anything useful, so it would 		 * be misleading to leave it on its hash chain.  Iput() will 		 * return it to the free list. 		 */
+comment|/* 		 * The inode does not contain anything useful, so it 		 * would be misleading to leave it on its hash chain. 		 * Iput() will return it to the free list. 		 */
 name|remque
 argument_list|(
 name|ip
@@ -464,6 +484,16 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|VERBOSE
+name|printf
+argument_list|(
+literal|"lfs_update\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|vp
@@ -640,6 +670,16 @@ name|offset
 decl_stmt|,
 name|size
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|VERBOSE
+name|printf
+argument_list|(
+literal|"lfs_truncate\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|vnode_pager_setsize
 argument_list|(
 name|ovp
@@ -785,7 +825,6 @@ argument_list|(
 name|fs
 argument_list|)
 expr_stmt|;
-comment|/* LFS */
 operator|(
 name|void
 operator|)
@@ -827,7 +866,24 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* BZERO INODE BLOCK POINTERS HERE, FOR CONSISTENCY XXX */
+comment|/* XXX: BZERO INODE BLOCK POINTERS HERE, FOR CONSISTENCY. */
+operator|(
+name|void
+operator|)
+name|vinvalbuf
+argument_list|(
+name|ovp
+argument_list|,
+name|length
+operator|>
+literal|0
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
