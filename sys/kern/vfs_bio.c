@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.181 1998/10/28 13:36:59 dg Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.182 1998/10/29 11:04:22 dg Exp $  */
 end_comment
 
 begin_comment
@@ -3614,23 +3614,12 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* 		 * In order to keep page LRU ordering consistent, put 		 * everything on the inactive queue. 		 */
 name|vm_page_unwire
 argument_list|(
 name|m
 argument_list|,
-operator|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_ASYNC
-operator|)
-operator|==
 literal|0
-condition|?
-literal|0
-else|:
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 		 * We don't mess with busy pages, it is 		 * the responsibility of the process that 		 * busied the pages to deal with them. 		 */
@@ -3669,7 +3658,7 @@ argument_list|,
 name|PG_ZERO
 argument_list|)
 expr_stmt|;
-comment|/* 			 * If this is an async free -- we cannot place 			 * pages onto the cache queue.  If it is an 			 * async free, then we don't modify any queues. 			 * This is probably in error (for perf reasons), 			 * and we will eventually need to build 			 * a more complete infrastructure to support I/O 			 * rundown. 			 */
+comment|/* 			 * Might as well free the page if we can and it has 			 * no valid data. 			 */
 if|if
 condition|(
 operator|(
@@ -3681,53 +3670,12 @@ name|B_ASYNC
 operator|)
 operator|==
 literal|0
-condition|)
-block|{
-comment|/* 			 * In the case of sync buffer frees, we can do pretty much 			 * anything to any of the memory queues.  Specifically, 			 * the cache queue is okay to be modified. 			 */
-if|if
-condition|(
+operator|&&
+operator|!
 name|m
 operator|->
 name|valid
-condition|)
-block|{
-if|if
-condition|(
-name|m
-operator|->
-name|dirty
-operator|==
-literal|0
-condition|)
-name|vm_page_test_dirty
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-comment|/* 					 * this keeps pressure off of the process memory 					 */
-if|if
-condition|(
-name|m
-operator|->
-name|dirty
-operator|==
-literal|0
 operator|&&
-name|m
-operator|->
-name|hold_count
-operator|==
-literal|0
-condition|)
-name|vm_page_cache
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
 name|m
 operator|->
 name|hold_count
@@ -3751,17 +3699,6 @@ name|vm_page_free
 argument_list|(
 name|m
 argument_list|)
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-comment|/* 				 * If async, then at least we clear the 				 * act_count. 				 */
-name|m
-operator|->
-name|act_count
-operator|=
-literal|0
 expr_stmt|;
 block|}
 block|}
