@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rsp.h	4.2	83/06/01	*/
+comment|/*	rsp.h	4.3	83/06/08	*/
 end_comment
 
 begin_comment
@@ -55,72 +55,6 @@ name|u_short
 name|pk_chksum
 decl_stmt|;
 comment|/* checksum, by words with end around carry */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * State information  */
-end_comment
-
-begin_struct
-struct|struct
-name|tu
-block|{
-name|u_char
-modifier|*
-name|tu_rbptr
-decl_stmt|;
-comment|/* pointer to buffer for read */
-name|int
-name|tu_rcnt
-decl_stmt|;
-comment|/* how much to read */
-name|u_char
-modifier|*
-name|tu_wbptr
-decl_stmt|;
-comment|/* pointer to buffer for write */
-name|int
-name|tu_wcnt
-decl_stmt|;
-comment|/* how much to write */
-name|int
-name|tu_state
-decl_stmt|;
-comment|/* current state of tansfer operation */
-name|int
-name|tu_flag
-decl_stmt|;
-comment|/* read in progress flag */
-name|char
-modifier|*
-name|tu_addr
-decl_stmt|;
-comment|/* real buffer data address */
-name|int
-name|tu_count
-decl_stmt|;
-comment|/* real requested count */
-name|int
-name|tu_serrs
-decl_stmt|;
-comment|/* count of soft errors */
-name|int
-name|tu_cerrs
-decl_stmt|;
-comment|/* count of checksum errors */
-name|int
-name|tu_herrs
-decl_stmt|;
-comment|/* count of hard errors */
-name|char
-name|tu_dopen
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* drive is open */
 block|}
 struct|;
 end_struct
@@ -275,8 +209,30 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TUS_NSTATES
+name|TUS_RCVERR
 value|13
+end_define
+
+begin_comment
+comment|/* receiver error in pseudo DMA routine */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TUS_CHKERR
+value|14
+end_define
+
+begin_comment
+comment|/* checksum error in pseudo DMA routine */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TUS_NSTATES
+value|15
 end_define
 
 begin_define
