@@ -184,8 +184,6 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|,
-name|length
-decl_stmt|,
 name|port
 decl_stmt|,
 name|timed_ack
@@ -193,6 +191,9 @@ decl_stmt|,
 name|found
 decl_stmt|,
 name|lerr
+decl_stmt|;
+name|socklen_t
+name|length
 decl_stmt|;
 name|char
 name|hostname
