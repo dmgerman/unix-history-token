@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 John Hay.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by [your name]  *	and [any other names deserving credit ]  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY [your name] AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1995, 1999 John Hay.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY [your name] AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -81,6 +81,70 @@ define|#
 directive|define
 name|ARC_WIN_SHFT
 value|14
+end_define
+
+begin_comment
+comment|/* Some PCI specific offsets. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_PCI_SCA_1_OFFSET
+value|0x00040000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_PCI_SCA_2_OFFSET
+value|0x00040400
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_PCI_ORBASE_OFFSET
+value|0x00041000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_PCI_SCA_PCR
+value|0x0208
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_PCI_SCA_DMER
+value|0x0309
+end_define
+
+begin_comment
+comment|/* PCI Legacy (below 1M) offsets. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_PCI_L_SCA_1_OFFSET
+value|0x00004000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_PCI_L_SCA_2_OFFSET
+value|0x00004400
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_PCI_L_ORBASE_OFFSET
+value|0x00005000
 end_define
 
 begin_define
@@ -260,6 +324,53 @@ comment|/* WO, Tx Clock and DTR control 2 + 3 */
 end_comment
 
 begin_comment
+comment|/* PCI only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_PIMCTRL
+value|0x4C
+end_define
+
+begin_comment
+comment|/* RW, PIM and LEDs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_INT_SCB
+value|0x50
+end_define
+
+begin_comment
+comment|/* RO, Interrupt Scoreboard */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_REV_MSK
+value|0x0F
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_WSIZ_MSK
+value|0xE0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_WSIZ_SHFT
+value|5
+end_define
+
+begin_comment
 comment|/* Bus memory and interface type */
 end_comment
 
@@ -289,6 +400,13 @@ define|#
 directive|define
 name|AR_BUS_EISA
 value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_BUS_PCI
+value|0x03
 end_define
 
 begin_define
@@ -397,6 +515,31 @@ end_define
 begin_comment
 comment|/* X.21 / EIA-530 */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_IFACE_PIM
+value|0xE0
+end_define
+
+begin_comment
+comment|/* PIM module */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_IFACE_LOOPBACK
+value|0xFE
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_IFACE_UNKNOWN
+value|0xFF
+end_define
 
 begin_comment
 comment|/* Supported Handshake signals */
@@ -657,8 +800,89 @@ value|0x20
 end_define
 
 begin_comment
-comment|/* Memory select register */
+comment|/* Advanced PIM Control */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_PIM_STROBE
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_PIM_DATA
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_PIM_MODEG
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_PIM_A2D_STROBE
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_PIM_MODEY
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_PIM_A2D_DOUT
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_PIM_AUTO_LED
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_PIM_INT
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_PIM_RESET
+value|0x00
+end_define
+
+begin_comment
+comment|/* MODEG and MODEY 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_PIM_READ
+value|AR_PIM_MODEG
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_PIM_WRITE
+value|AR_PIM_MODEY
+end_define
 
 begin_endif
 endif|#
