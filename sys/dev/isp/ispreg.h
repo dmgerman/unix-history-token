@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: $ */
+comment|/* $Id: ispreg.h,v 1.4 1998/12/28 19:22:27 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_12_28_98_A */
+comment|/* release_5_11_99 */
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ comment|/*  * This defines types of access to various registers.  *  *  	R:		Rea
 end_comment
 
 begin_comment
-comment|/*  * Offsets for various register blocks.  *  * Sad but true, different architectures have different offsets.  */
+comment|/*  * Offsets for various register blocks.  *  * Sad but true, different architectures have different offsets.  *  * Don't be alarmed if none of this makes sense. The original register  * layout set some defines in a certain pattern. Everything else has been  * grafted on since. For example, the ISP1080 manual will state that DMA  * registers start at 0x80 from the base of the register address space.  * That's true, but for our purposes, we define DMA_REGS_OFF for the 1080  * to start at offset 0x60 because the DMA registers are all defined to  * be DMA_BLOCK+0x20 and so on. Clear?  */
 end_comment
 
 begin_define
@@ -92,19 +92,90 @@ value|0x400
 end_define
 
 begin_comment
-comment|/*  * NB:	The *_BLOCK definitions have no specific hardware meaning.  *	They serve simply to note to the MD layer which block of  *	registers offsets are being accessed.  */
-end_comment
-
-begin_comment
-comment|/*  * Bus Interface Block Register Offsets  */
+comment|/* Bless me! Chip designers have putzed it again! */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|BIU_BLOCK
-value|0x0100
+name|ISP1080_DMA_REGS_OFF
+value|0x60
 end_define
+
+begin_define
+define|#
+directive|define
+name|DMA_REGS_OFF
+value|0x00
+end_define
+
+begin_comment
+comment|/* same as BIU block */
+end_comment
+
+begin_comment
+comment|/*  * NB:	The *_BLOCK definitions have no specific hardware meaning.  *	They serve simply to note to the MD layer which block of  *	registers offsets are being accessed.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_NREG_BLKS
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|_BLK_REG_SHFT
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|_BLK_REG_MASK
+value|(7<< _BLK_REG_SHFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIU_BLOCK
+value|(0<< _BLK_REG_SHFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_BLOCK
+value|(1<< _BLK_REG_SHFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SXP_BLOCK
+value|(2<< _BLK_REG_SHFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RISC_BLOCK
+value|(3<< _BLK_REG_SHFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMA_BLOCK
+value|(4<< _BLK_REG_SHFT)
+end_define
+
+begin_comment
+comment|/*  * Bus Interface Block Register Offsets  */
+end_comment
 
 begin_define
 define|#
@@ -218,237 +289,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CDMA_CONF
-value|BIU_BLOCK+0x20
-end_define
-
-begin_comment
-comment|/* RW*: DMA Configuration */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CDMA2100_CONTROL
-value|CDMA_CONF
-end_define
-
-begin_define
-define|#
-directive|define
-name|CDMA_CONTROL
-value|BIU_BLOCK+0x22
-end_define
-
-begin_comment
-comment|/* RW*: DMA Control */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CDMA_STATUS
-value|BIU_BLOCK+0x24
-end_define
-
-begin_comment
-comment|/* R  : DMA Status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CDMA_FIFO_STS
-value|BIU_BLOCK+0x26
-end_define
-
-begin_comment
-comment|/* R  : DMA FIFO Status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CDMA_COUNT
-value|BIU_BLOCK+0x28
-end_define
-
-begin_comment
-comment|/* RW*: DMA Transfer Count */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CDMA_ADDR0
-value|BIU_BLOCK+0x2C
-end_define
-
-begin_comment
-comment|/* RW*: DMA Address, Word 0 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CDMA_ADDR1
-value|BIU_BLOCK+0x2E
-end_define
-
-begin_comment
-comment|/* RW*: DMA Address, Word 1 */
-end_comment
-
-begin_comment
-comment|/* these are for the 1040A cards */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CDMA_ADDR2
-value|BIU_BLOCK+0x30
-end_define
-
-begin_comment
-comment|/* RW*: DMA Address, Word 2 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CDMA_ADDR3
-value|BIU_BLOCK+0x32
-end_define
-
-begin_comment
-comment|/* RW*: DMA Address, Word 3 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DDMA_CONF
-value|BIU_BLOCK+0x40
-end_define
-
-begin_comment
-comment|/* RW*: DMA Configuration */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TDMA2100_CONTROL
-value|DDMA_CONF
-end_define
-
-begin_define
-define|#
-directive|define
-name|DDMA_CONTROL
-value|BIU_BLOCK+0x42
-end_define
-
-begin_comment
-comment|/* RW*: DMA Control */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DDMA_STATUS
-value|BIU_BLOCK+0x44
-end_define
-
-begin_comment
-comment|/* R  : DMA Status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DDMA_FIFO_STS
-value|BIU_BLOCK+0x46
-end_define
-
-begin_comment
-comment|/* R  : DMA FIFO Status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DDMA_COUNT_LO
-value|BIU_BLOCK+0x48
-end_define
-
-begin_comment
-comment|/* RW*: DMA Xfer Count, Low */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DDMA_COUNT_HI
-value|BIU_BLOCK+0x4A
-end_define
-
-begin_comment
-comment|/* RW*: DMA Xfer Count, High */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DDMA_ADDR0
-value|BIU_BLOCK+0x4C
-end_define
-
-begin_comment
-comment|/* RW*: DMA Address, Word 0 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DDMA_ADDR1
-value|BIU_BLOCK+0x4E
-end_define
-
-begin_comment
-comment|/* RW*: DMA Address, Word 1 */
-end_comment
-
-begin_comment
-comment|/* these are for the 1040A cards */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DDMA_ADDR2
-value|BIU_BLOCK+0x50
-end_define
-
-begin_comment
-comment|/* RW*: DMA Address, Word 2 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DDMA_ADDR3
-value|BIU_BLOCK+0x52
-end_define
-
-begin_comment
-comment|/* RW*: DMA Address, Word 3 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|DFIFO_COMMAND
 value|BIU_BLOCK+0x60
 end_define
@@ -473,6 +313,237 @@ end_define
 
 begin_comment
 comment|/* RW : Data FIFO Port */
+end_comment
+
+begin_comment
+comment|/*  * Putzed DMA register layouts.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CDMA_CONF
+value|DMA_BLOCK+0x20
+end_define
+
+begin_comment
+comment|/* RW*: DMA Configuration */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CDMA2100_CONTROL
+value|CDMA_CONF
+end_define
+
+begin_define
+define|#
+directive|define
+name|CDMA_CONTROL
+value|DMA_BLOCK+0x22
+end_define
+
+begin_comment
+comment|/* RW*: DMA Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CDMA_STATUS
+value|DMA_BLOCK+0x24
+end_define
+
+begin_comment
+comment|/* R  : DMA Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CDMA_FIFO_STS
+value|DMA_BLOCK+0x26
+end_define
+
+begin_comment
+comment|/* R  : DMA FIFO Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CDMA_COUNT
+value|DMA_BLOCK+0x28
+end_define
+
+begin_comment
+comment|/* RW*: DMA Transfer Count */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CDMA_ADDR0
+value|DMA_BLOCK+0x2C
+end_define
+
+begin_comment
+comment|/* RW*: DMA Address, Word 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CDMA_ADDR1
+value|DMA_BLOCK+0x2E
+end_define
+
+begin_comment
+comment|/* RW*: DMA Address, Word 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CDMA_ADDR2
+value|DMA_BLOCK+0x30
+end_define
+
+begin_comment
+comment|/* RW*: DMA Address, Word 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CDMA_ADDR3
+value|DMA_BLOCK+0x32
+end_define
+
+begin_comment
+comment|/* RW*: DMA Address, Word 3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DDMA_CONF
+value|DMA_BLOCK+0x40
+end_define
+
+begin_comment
+comment|/* RW*: DMA Configuration */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDMA2100_CONTROL
+value|DDMA_CONF
+end_define
+
+begin_define
+define|#
+directive|define
+name|DDMA_CONTROL
+value|DMA_BLOCK+0x42
+end_define
+
+begin_comment
+comment|/* RW*: DMA Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DDMA_STATUS
+value|DMA_BLOCK+0x44
+end_define
+
+begin_comment
+comment|/* R  : DMA Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DDMA_FIFO_STS
+value|DMA_BLOCK+0x46
+end_define
+
+begin_comment
+comment|/* R  : DMA FIFO Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DDMA_COUNT_LO
+value|DMA_BLOCK+0x48
+end_define
+
+begin_comment
+comment|/* RW*: DMA Xfer Count, Low */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DDMA_COUNT_HI
+value|DMA_BLOCK+0x4A
+end_define
+
+begin_comment
+comment|/* RW*: DMA Xfer Count, High */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DDMA_ADDR0
+value|DMA_BLOCK+0x4C
+end_define
+
+begin_comment
+comment|/* RW*: DMA Address, Word 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DDMA_ADDR1
+value|DMA_BLOCK+0x4E
+end_define
+
+begin_comment
+comment|/* RW*: DMA Address, Word 1 */
+end_comment
+
+begin_comment
+comment|/* these are for the 1040A cards */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DDMA_ADDR2
+value|DMA_BLOCK+0x50
+end_define
+
+begin_comment
+comment|/* RW*: DMA Address, Word 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DDMA_ADDR3
+value|DMA_BLOCK+0x52
+end_define
+
+begin_comment
+comment|/* RW*: DMA Address, Word 3 */
 end_comment
 
 begin_comment
@@ -639,6 +710,28 @@ end_define
 
 begin_comment
 comment|/* SXP register select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIU_PCI1080_CONF1_SXP
+value|0x0100
+end_define
+
+begin_comment
+comment|/* SXP bank select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIU_PCI1080_CONF1_DMA
+value|0x0300
+end_define
+
+begin_comment
+comment|/* DMA bank select */
 end_comment
 
 begin_comment
@@ -866,7 +959,17 @@ name|ENABLE_INTS
 parameter_list|(
 name|isp
 parameter_list|)
-value|(isp->isp_type& ISP_HA_SCSI)?  \  ISP_WRITE(isp, BIU_ICR, BIU_ICR_ENABLE_RISC_INT | BIU_ICR_ENABLE_ALL_INTS) : \  ISP_WRITE(isp, BIU_ICR, BIU2100_ICR_ENA_RISC_INT | BIU2100_ICR_ENABLE_ALL_INTS)
+value|(IS_SCSI(isp))?  \  ISP_WRITE(isp, BIU_ICR, BIU_ICR_ENABLE_RISC_INT | BIU_ICR_ENABLE_ALL_INTS) : \  ISP_WRITE(isp, BIU_ICR, BIU2100_ICR_ENA_RISC_INT | BIU2100_ICR_ENABLE_ALL_INTS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTS_ENABLED
+parameter_list|(
+name|isp
+parameter_list|)
+value|((IS_SCSI(isp))?  \  (ISP_READ(isp, BIU_ICR)& (BIU_ICR_ENABLE_RISC_INT|BIU_ICR_ENABLE_ALL_INTS)) :\  (ISP_READ(isp, BIU_ICR)& \ 	(BIU2100_ICR_ENA_RISC_INT|BIU2100_ICR_ENABLE_ALL_INTS)))
 end_define
 
 begin_define
@@ -1613,13 +1716,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MBOX_BLOCK
-value|0x0200
-end_define
-
-begin_define
-define|#
-directive|define
 name|INMAILBOX0
 value|MBOX_BLOCK+0x0
 end_define
@@ -1753,13 +1849,6 @@ end_define
 begin_comment
 comment|/*  * SXP Block Register Offsets  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SXP_BLOCK
-value|0x0400
-end_define
 
 begin_define
 define|#
@@ -3222,15 +3311,66 @@ comment|/* Enable SXP initiator mode */
 end_comment
 
 begin_comment
-comment|/*  * RISC and Host Command and Control Block Register Offsets  */
+comment|/* 1080 only */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|RISC_BLOCK
+name|SXP_PINS_LVD_MODE
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SXP_PINS_HVD_MODE
 value|0x0800
 end_define
+
+begin_define
+define|#
+directive|define
+name|SXP_PINS_SE_MODE
+value|0x0400
+end_define
+
+begin_comment
+comment|/* The above have to be put together with the DIFFM pin to make sense */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP1080_LVD_MODE
+value|(SXP_PINS_LVD_MODE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_HVD_MODE
+value|(SXP_PINS_HVD_MODE|SXP_PINS_DIFF_MODE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_SE_MODE
+value|(SXP_PINS_SE_MODE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_MODE_MASK
+define|\
+value|(SXP_PINS_LVD_MODE|SXP_PINS_HVD_MODE|SXP_PINS_SE_MODE|SXP_PINS_DIFF_MODE)
+end_define
+
+begin_comment
+comment|/*  * RISC and Host Command and Control Block Register Offsets  */
+end_comment
 
 begin_define
 define|#
@@ -3513,6 +3653,13 @@ end_define
 begin_comment
 comment|/* RW*: Ext Mem Boundary */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DUAL_BANK
+value|8
+end_define
 
 begin_define
 define|#
@@ -3953,15 +4100,8 @@ comment|/*  W : BIOS enable */
 end_comment
 
 begin_comment
-comment|/*  * Qlogic 1XXX NVRAM is an array of 128 bytes.  *  * Some portion of the front of this is for general host adapter properties  * This is followed by an array of per-target parameters, and is tailed off  * with a checksum xor byte at offset 127. For non-byte entities data is  * stored in Little Endian order.  */
+comment|/*  * NVRAM Definitions (PCI cards only)  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|ISP_NVRAM_SIZE
-value|128
-end_define
 
 begin_define
 define|#
@@ -3978,6 +4118,17 @@ name|mask
 parameter_list|)
 define|\
 value|(((c)[(byte)]>> (shift))& (mask))
+end_define
+
+begin_comment
+comment|/*  * Qlogic 1020/1040 NVRAM is an array of 128 bytes.  *  * Some portion of the front of this is for general host adapter properties  * This is followed by an array of per-target parameters, and is tailed off  * with a checksum xor byte at offset 127. For non-byte entities data is  * stored in Little Endian order.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_NVRAM_SIZE
+value|128
 end_define
 
 begin_define
@@ -4464,6 +4615,480 @@ value|ISPBSMX(c, _IxT(t, 3), 5, 0x01)
 end_define
 
 begin_comment
+comment|/*  * Qlogic 1080/1240 NVRAM is an array of 256 bytes.  *  * Some portion of the front of this is for general host adapter properties  * This is followed by an array of per-target parameters, and is tailed off  * with a checksum xor byte at offset 256. For non-byte entities data is  * stored in Little Endian order.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_SIZE
+value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_VERSION
+parameter_list|(
+name|c
+parameter_list|)
+value|ISP_NVRAM_VERSION(c)
+end_define
+
+begin_comment
+comment|/* Offset 5 */
+end_comment
+
+begin_comment
+comment|/* 	uint8_t bios_configuration_mode     :2; 	uint8_t bios_disable                :1; 	uint8_t selectable_scsi_boot_enable :1; 	uint8_t cd_rom_boot_enable          :1; 	uint8_t disable_loading_risc_code   :1; 	uint8_t enable_64bit_addressing     :1; 	uint8_t unused_7                    :1;  */
+end_comment
+
+begin_comment
+comment|/* Offsets 6, 7 */
+end_comment
+
+begin_comment
+comment|/*         uint8_t boot_lun_number    :5;         uint8_t scsi_bus_number    :1;         uint8_t unused_6           :1;         uint8_t unused_7           :1;         uint8_t boot_target_number :4;         uint8_t unused_12          :1;         uint8_t unused_13          :1;         uint8_t unused_14          :1;         uint8_t unused_15          :1;  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_HBA_ENABLE
+parameter_list|(
+name|c
+parameter_list|)
+value|ISPBSMX(c, 16, 3, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_BURST_ENABLE
+parameter_list|(
+name|c
+parameter_list|)
+value|ISPBSMX(c, 16, 1, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_FIFO_THRESHOLD
+parameter_list|(
+name|c
+parameter_list|)
+value|ISPBSMX(c, 16, 4, 0x0f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_AUTO_TERM_SUPPORT
+parameter_list|(
+name|c
+parameter_list|)
+value|ISPBSMX(c, 17, 7, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_BUS0_TERM_MODE
+parameter_list|(
+name|c
+parameter_list|)
+value|ISPBSMX(c, 17, 0, 0x03)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_BUS1_TERM_MODE
+parameter_list|(
+name|c
+parameter_list|)
+value|ISPBSMX(c, 17, 2, 0x03)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_ISP_PARAMETER
+parameter_list|(
+name|c
+parameter_list|)
+define|\
+value|(((c)[18]) | ((c)[19]<< 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_FAST_POST
+value|ISPBSMX(c, 20, 0, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_REPORT_LVD_TRANSITION
+value|ISPBSMX(c, 20, 1, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_BUS1_OFF
+value|112
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_INITIATOR_ID
+parameter_list|(
+name|c
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, ((b == 0)? 0 : ISP1080_BUS1_OFF) + 24, 0, 0x0f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_BUS_RESET_DELAY
+parameter_list|(
+name|c
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|(c)[((b == 0)? 0 : ISP1080_BUS1_OFF) + 25]
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_BUS_RETRY_COUNT
+parameter_list|(
+name|c
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|(c)[((b == 0)? 0 : ISP1080_BUS1_OFF) + 26]
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_BUS_RETRY_DELAY
+parameter_list|(
+name|c
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|(c)[((b == 0)? 0 : ISP1080_BUS1_OFF) + 27]
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_ASYNC_DATA_SETUP_TIME
+parameter_list|(
+name|c
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, ((b == 0)? 0 : ISP1080_BUS1_OFF) + 28, 0, 0x0f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_REQ_ACK_ACTIVE_NEGATION
+parameter_list|(
+name|c
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, ((b == 0)? 0 : ISP1080_BUS1_OFF) + 28, 4, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_DATA_LINE_ACTIVE_NEGATION
+parameter_list|(
+name|c
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, ((b == 0)? 0 : ISP1080_BUS1_OFF) + 28, 5, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_SELECTION_TIMEOUT
+parameter_list|(
+name|c
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|(((c)[((b == 0)? 0 : ISP1080_BUS1_OFF) + 30]) | \ 	((c)[((b == 0)? 0 : ISP1080_BUS1_OFF) + 31]<< 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_MAX_QUEUE_DEPTH
+parameter_list|(
+name|c
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|(((c)[((b == 0)? 0 : ISP1080_BUS1_OFF) + 32]) | \ 	((c)[((b == 0)? 0 : ISP1080_BUS1_OFF) + 33]<< 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_TARGOFF
+parameter_list|(
+name|b
+parameter_list|)
+define|\
+value|((b == 0)? 40: (40 + ISP1080_BUS1_OFF))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_TARGSIZE
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|_IxT8
+parameter_list|(
+name|tgt
+parameter_list|,
+name|tidx
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|(ISP1080_NVRAM_TARGOFF((b)) + (ISP1080_NVRAM_TARGSIZE * (tgt)) + (tidx))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_TGT_RENEG
+parameter_list|(
+name|c
+parameter_list|,
+name|t
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, _IxT8(t, 0, (b)), 0, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_TGT_QFRZ
+parameter_list|(
+name|c
+parameter_list|,
+name|t
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, _IxT8(t, 0, (b)), 1, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_TGT_ARQ
+parameter_list|(
+name|c
+parameter_list|,
+name|t
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, _IxT8(t, 0, (b)), 2, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_TGT_TQING
+parameter_list|(
+name|c
+parameter_list|,
+name|t
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, _IxT8(t, 0, (b)), 3, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_TGT_SYNC
+parameter_list|(
+name|c
+parameter_list|,
+name|t
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, _IxT8(t, 0, (b)), 4, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_TGT_WIDE
+parameter_list|(
+name|c
+parameter_list|,
+name|t
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, _IxT8(t, 0, (b)), 5, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_TGT_PARITY
+parameter_list|(
+name|c
+parameter_list|,
+name|t
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, _IxT8(t, 0, (b)), 6, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_TGT_DISC
+parameter_list|(
+name|c
+parameter_list|,
+name|t
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, _IxT8(t, 0, (b)), 7, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_TGT_EXEC_THROTTLE
+parameter_list|(
+name|c
+parameter_list|,
+name|t
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, _IxT8(t, 1, (b)), 0, 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_TGT_SYNC_PERIOD
+parameter_list|(
+name|c
+parameter_list|,
+name|t
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, _IxT8(t, 2, (b)), 0, 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_TGT_SYNC_OFFSET
+parameter_list|(
+name|c
+parameter_list|,
+name|t
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, _IxT8(t, 3, (b)), 0, 0x0f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_TGT_DEVICE_ENABLE
+parameter_list|(
+name|c
+parameter_list|,
+name|t
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, _IxT8(t, 3, (b)), 4, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_TGT_LUN_DISABLE
+parameter_list|(
+name|c
+parameter_list|,
+name|t
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, _IxT8(t, 3, (b)), 5, 0x01)
+end_define
+
+begin_comment
 comment|/*  * Qlogic 2XXX NVRAM is an array of 256 bytes.  *  * Some portion of the front of this is for general RISC engine parameters,  * mostly reflecting the state of the last INITIALIZE FIRMWARE mailbox command.  *  * This is followed by some general host adapter parameters, and ends with  * a checksum xor byte at offset 255. For non-byte entities data is stored  * in Little Endian order.  */
 end_comment
 
@@ -4491,71 +5116,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|ISP2100_NVRAM_ENABLE_HARDLOOPID
+name|ISP2100_NVRAM_OPTIONS
 parameter_list|(
 name|c
 parameter_list|)
-value|ISPBSMX(c, 8, 0, 0x01)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP2100_NVRAM_ENABLE_FAIRNESS
-parameter_list|(
-name|c
-parameter_list|)
-value|ISPBSMX(c, 8, 1, 0x01)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP2100_NVRAM_ENABLE_FULLDUPLEX
-parameter_list|(
-name|c
-parameter_list|)
-value|ISPBSMX(c, 8, 2, 0x01)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP2100_NVRAM_ENABLE_FAST_POSTING
-parameter_list|(
-name|c
-parameter_list|)
-value|ISPBSMX(c, 8, 3, 0x01)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP2100_NVRAM_ENABLE_TARGET_MODE
-parameter_list|(
-name|c
-parameter_list|)
-value|ISPBSMX(c, 8, 4, 0x01)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP2100_NVRAM_ENABLE_INITIATOR_MODE
-parameter_list|(
-name|c
-parameter_list|)
-value|ISPBSMX(c, 8, 5, 0x01)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP2100_NVRAM_QFRZ
-parameter_list|(
-name|c
-parameter_list|)
-value|ISPBSMX(c, 8, 6, 0x01)
+value|(c)[8]
 end_define
 
 begin_define
@@ -4615,7 +5180,7 @@ name|ISP2100_NVRAM_NODE_NAME
 parameter_list|(
 name|c
 parameter_list|)
-value|( \ 		(((u_int64_t)(c)[18])<< 56) | \ 		(((u_int64_t)(c)[19])<< 48) | \ 		(((u_int64_t)(c)[20])<< 40) | \ 		(((u_int64_t)(c)[21])<< 32) | \ 		(((u_int64_t)(c)[22])<< 24) | \ 		(((u_int64_t)(c)[23])<< 16) | \ 		(((u_int64_t)(c)[24])<<  8) | \ 		(((u_int64_t)(c)[25])<<  0))
+value|(\ 		(((u_int64_t)(c)[18])<< 56) | \ 		(((u_int64_t)(c)[19])<< 48) | \ 		(((u_int64_t)(c)[20])<< 40) | \ 		(((u_int64_t)(c)[21])<< 32) | \ 		(((u_int64_t)(c)[22])<< 24) | \ 		(((u_int64_t)(c)[23])<< 16) | \ 		(((u_int64_t)(c)[24])<<  8) | \ 		(((u_int64_t)(c)[25])<<  0))
 end_define
 
 begin_define
@@ -4626,6 +5191,16 @@ parameter_list|(
 name|c
 parameter_list|)
 value|(c)[26]
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2100_NVRAM_HBA_OPTIONS
+parameter_list|(
+name|c
+parameter_list|)
+value|(c)[70]
 end_define
 
 begin_define
@@ -4695,7 +5270,7 @@ name|ISP2100_NVRAM_BOOT_NODE_NAME
 parameter_list|(
 name|c
 parameter_list|)
-value|( \ 		(((u_int64_t)(c)[72])<< 56) | \ 		(((u_int64_t)(c)[73])<< 48) | \ 		(((u_int64_t)(c)[74])<< 40) | \ 		(((u_int64_t)(c)[75])<< 32) | \ 		(((u_int64_t)(c)[76])<< 24) | \ 		(((u_int64_t)(c)[77])<< 16) | \ 		(((u_int64_t)(c)[78])<<  8) | \ 		(((u_int64_t)(c)[79])<<  0))
+value|(\ 		(((u_int64_t)(c)[72])<< 56) | \ 		(((u_int64_t)(c)[73])<< 48) | \ 		(((u_int64_t)(c)[74])<< 40) | \ 		(((u_int64_t)(c)[75])<< 32) | \ 		(((u_int64_t)(c)[76])<< 24) | \ 		(((u_int64_t)(c)[77])<< 16) | \ 		(((u_int64_t)(c)[78])<<  8) | \ 		(((u_int64_t)(c)[79])<<  0))
 end_define
 
 begin_define
