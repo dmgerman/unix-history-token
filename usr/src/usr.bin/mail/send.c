@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)send.c	5.21 (Berkeley) %G%"
+literal|"@(#)send.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -129,6 +129,13 @@ name|int
 name|prefixlen
 decl_stmt|;
 comment|/* 	 * Compute the prefix string, without trailing whitespace 	 */
+if|if
+condition|(
+name|prefix
+operator|!=
+name|NOSTR
+condition|)
+block|{
 name|cp2
 operator|=
 literal|0
@@ -175,6 +182,7 @@ name|prefix
 operator|+
 literal|1
 expr_stmt|;
+block|}
 name|ibuf
 operator|=
 name|setinput
