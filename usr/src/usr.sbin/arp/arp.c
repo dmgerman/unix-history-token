@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arp.c	5.6 (Berkeley) %G%"
+literal|"@(#)arp.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1757,7 +1757,7 @@ condition|)
 block|{
 name|fprintf
 argument_list|(
-name|fprintf
+name|stderr
 argument_list|,
 literal|"arp: cannot open %s\n"
 argument_list|,
