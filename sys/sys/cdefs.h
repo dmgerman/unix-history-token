@@ -397,15 +397,6 @@ end_if
 begin_define
 define|#
 directive|define
-name|__attribute__
-parameter_list|(
-name|x
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
 name|__dead2
 end_define
 
