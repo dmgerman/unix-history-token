@@ -3,20 +3,6 @@ begin_comment
 comment|/*  * Copyright (c) 1994 Herb Peyerl<hpeyerl@novatel.ca>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Herb Peyerl.  * 4. The name of Herb Peyerl may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*  * Pccard support for 3C589 by:  *		HAMADA Naoki  *		nao@tom-yam.or.jp  */
 end_comment
@@ -341,7 +327,7 @@ argument_list|,
 name|desc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * For some reason the 3c574 needs this. 	 */
+comment|/* 	 * Newer cards supported by this device need to have their 	 * MAC address set. 	 */
 name|error
 operator|=
 name|ep_get_macaddr
@@ -454,7 +440,22 @@ operator|(
 literal|"3Com Megahertz C1"
 operator|)
 return|;
+case|case
+literal|0x0035
+case|:
+return|return
+operator|(
+literal|"3Com 3CCEM556"
+operator|)
+return|;
 default|default:
+name|printf
+argument_list|(
+literal|"Unknown ID: 0x%x\n"
+argument_list|,
+name|id
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -522,6 +523,10 @@ case|case
 literal|0x0010
 case|:
 comment|/* 3C1 */
+case|case
+literal|0x0035
+case|:
+comment|/* 3C[XC]EM556 */
 name|epb
 operator|->
 name|mii_trans
@@ -737,7 +742,7 @@ operator|&
 literal|0xc000
 argument_list|)
 expr_stmt|;
-comment|/* Fake IRQ must be 3 */
+comment|/*  	 * Fake IRQ must be 3 for 3C589 and 3C589B.  3C589D and newer 	 * ignore this value.  3C589C is unknown, as are the other 	 * cards supported by this driver, but it appears to never hurt 	 * and always helps. 	 */
 name|SET_IRQ
 argument_list|(
 name|sc
