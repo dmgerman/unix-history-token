@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ps.c	5.5 (Berkeley) %G%"
+literal|"@(#)ps.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1202,7 +1202,7 @@ if|if
 condition|(
 name|ioctl
 argument_list|(
-literal|0
+literal|1
 argument_list|,
 name|TIOCGWINSZ
 argument_list|,
