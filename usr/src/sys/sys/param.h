@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	4.14	81/11/26	*/
+comment|/*	param.h	4.15	82/02/15	*/
 end_comment
 
 begin_comment
@@ -353,6 +353,17 @@ end_define
 
 begin_comment
 comment|/* max characters per directory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGRPS
+value|256
+end_define
+
+begin_comment
+comment|/* max number groups */
 end_comment
 
 begin_comment

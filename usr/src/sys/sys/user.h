@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	4.9	81/11/29	*/
+comment|/*	user.h	4.10	82/02/15	*/
 end_comment
 
 begin_ifdef
@@ -107,6 +107,22 @@ name|short
 name|u_gid
 decl_stmt|;
 comment|/* effective group id */
+name|int
+name|u_grps
+index|[
+name|NGRPS
+operator|/
+operator|(
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+operator|*
+literal|8
+operator|)
+index|]
+decl_stmt|;
+comment|/* group bit array */
 name|short
 name|u_ruid
 decl_stmt|;
