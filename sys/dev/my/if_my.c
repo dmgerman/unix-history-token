@@ -5550,6 +5550,11 @@ operator|->
 name|my_unit
 argument_list|)
 expr_stmt|;
+name|MY_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOBUFS
@@ -5587,6 +5592,11 @@ expr_stmt|;
 name|m_freem
 argument_list|(
 name|m_new
+argument_list|)
+expr_stmt|;
+name|MY_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 return|return
@@ -6069,7 +6079,14 @@ name|my_tx_head
 operator|==
 name|NULL
 condition|)
+block|{
+name|MY_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 comment|/* 	 * Go through our tx list and free mbufs for those frames that have 	 * been transmitted. 	 */
 while|while
 condition|(
@@ -6757,6 +6774,11 @@ operator|->
 name|my_unit
 argument_list|)
 expr_stmt|;
+name|MY_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -6805,6 +6827,11 @@ argument_list|,
 name|sc
 operator|->
 name|my_unit
+argument_list|)
+expr_stmt|;
+name|MY_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 return|return
