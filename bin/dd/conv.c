@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: conv.c,v 1.9 1998/05/06 06:51:30 charnier Exp $"
+literal|"$Id: conv.c,v 1.10 1998/05/13 07:33:39 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,7 +80,7 @@ name|void
 name|def
 parameter_list|()
 block|{
-name|int
+name|size_t
 name|cnt
 decl_stmt|;
 name|u_char
@@ -224,7 +224,8 @@ name|intrunc
 decl_stmt|;
 name|int
 name|ch
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|cnt
 decl_stmt|,
 name|maxlen
@@ -701,7 +702,7 @@ name|void
 name|unblock
 parameter_list|()
 block|{
-name|int
+name|size_t
 name|cnt
 decl_stmt|;
 name|u_char
@@ -838,11 +839,6 @@ operator|+=
 name|cnt
 expr_stmt|;
 block|}
-operator|++
-name|out
-operator|.
-name|dbcnt
-expr_stmt|;
 operator|*
 name|out
 operator|.
@@ -853,6 +849,7 @@ literal|'\n'
 expr_stmt|;
 if|if
 condition|(
+operator|++
 name|out
 operator|.
 name|dbcnt
@@ -912,7 +909,7 @@ name|void
 name|unblock_close
 parameter_list|()
 block|{
-name|int
+name|size_t
 name|cnt
 decl_stmt|;
 name|u_char

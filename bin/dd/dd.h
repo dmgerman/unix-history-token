@@ -1,7 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego and Lance  * Visser of Convex Computer Corporation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)dd.h	8.3 (Berkeley) 4/2/94  *	$Id: dd.h,v 1.7 1997/10/11 20:09:05 joerg Exp $  */
+comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego and Lance  * Visser of Convex Computer Corporation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)dd.h	8.3 (Berkeley) 4/2/94  *	$Id: dd.h,v 1.8 1998/02/11 02:23:31 asami Exp $  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|uint64
+value|u_int64_t
+end_define
 
 begin_comment
 comment|/* Input/output stream state. */
@@ -21,15 +28,13 @@ modifier|*
 name|dbp
 decl_stmt|;
 comment|/* current buffer I/O address */
-name|u_long
+name|size_t
 name|dbcnt
-decl_stmt|;
+decl_stmt|,
 comment|/* current buffer byte count */
-name|int
 name|dbrcnt
-decl_stmt|;
+decl_stmt|,
 comment|/* last read byte count */
-name|u_long
 name|dbsz
 decl_stmt|;
 comment|/* buffer size */
@@ -65,23 +70,20 @@ name|int
 name|fd
 decl_stmt|;
 comment|/* file descriptor */
-name|u_long
+name|off_t
 name|offset
 decl_stmt|;
 comment|/* # of blocks to skip */
-name|u_long
+name|uint64
 name|f_stats
-decl_stmt|;
+decl_stmt|,
 comment|/* # of full blocks processed */
-name|u_long
 name|p_stats
-decl_stmt|;
+decl_stmt|,
 comment|/* # of partial blocks processed */
-name|u_long
 name|s_stats
-decl_stmt|;
+decl_stmt|,
 comment|/* # of odd swab blocks */
-name|u_long
 name|t_stats
 decl_stmt|;
 comment|/* # of truncations */
@@ -94,31 +96,25 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_long
+name|uint64
 name|in_full
-decl_stmt|;
+decl_stmt|,
 comment|/* # of full input blocks */
-name|u_long
 name|in_part
-decl_stmt|;
+decl_stmt|,
 comment|/* # of partial input blocks */
-name|u_long
 name|out_full
-decl_stmt|;
+decl_stmt|,
 comment|/* # of full output blocks */
-name|u_long
 name|out_part
-decl_stmt|;
+decl_stmt|,
 comment|/* # of partial output blocks */
-name|u_long
 name|trunc
-decl_stmt|;
+decl_stmt|,
 comment|/* # of truncated records */
-name|u_long
 name|swab
-decl_stmt|;
+decl_stmt|,
 comment|/* # of odd-length swab blocks */
-name|u_int64_t
 name|bytes
 decl_stmt|;
 comment|/* # of bytes written */

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: position.c,v 1.7 1998/05/06 06:51:42 charnier Exp $"
+literal|"$Id: position.c,v 1.8 1998/05/13 07:33:54 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,13 +86,16 @@ name|void
 name|pos_in
 parameter_list|()
 block|{
-name|int
+name|size_t
 name|bcnt
-decl_stmt|,
-name|cnt
-decl_stmt|,
+decl_stmt|;
+name|ssize_t
 name|nr
-decl_stmt|,
+decl_stmt|;
+name|off_t
+name|cnt
+decl_stmt|;
+name|int
 name|warned
 decl_stmt|;
 comment|/* If not a character, pipe or tape device, try to seek on it. */
@@ -122,9 +125,6 @@ name|in
 operator|.
 name|fd
 argument_list|,
-operator|(
-name|off_t
-operator|)
 name|in
 operator|.
 name|offset
@@ -317,9 +317,10 @@ name|struct
 name|mtop
 name|t_op
 decl_stmt|;
-name|int
+name|off_t
 name|cnt
-decl_stmt|,
+decl_stmt|;
+name|ssize_t
 name|n
 decl_stmt|;
 comment|/* 	 * If not a tape, try seeking on the file.  Seeking on a pipe is 	 * going to fail, but don't protect the user -- they shouldn't 	 * have specified the seek operand. 	 */
@@ -343,9 +344,6 @@ name|out
 operator|.
 name|fd
 argument_list|,
-operator|(
-name|off_t
-operator|)
 name|out
 operator|.
 name|offset
@@ -410,8 +408,9 @@ argument_list|,
 operator|&
 name|t_op
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 name|err
 argument_list|(
@@ -470,8 +469,9 @@ continue|continue;
 if|if
 condition|(
 name|n
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 name|err
 argument_list|(

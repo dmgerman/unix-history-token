@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dd.c,v 1.15 1998/05/13 07:33:47 charnier Exp $"
+literal|"$Id: dd.c,v 1.16 1999/04/25 21:13:33 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -248,7 +248,7 @@ comment|/* conversion function */
 end_comment
 
 begin_decl_stmt
-name|u_long
+name|size_t
 name|cpy_cnt
 decl_stmt|;
 end_decl_stmt
@@ -258,7 +258,7 @@ comment|/* # of blocks to copy */
 end_comment
 
 begin_decl_stmt
-name|u_long
+name|size_t
 name|pending
 init|=
 literal|0
@@ -280,7 +280,7 @@ comment|/* conversion options */
 end_comment
 
 begin_decl_stmt
-name|u_int
+name|size_t
 name|cbsz
 decl_stmt|;
 end_decl_stmt
@@ -290,7 +290,7 @@ comment|/* conversion block size */
 end_comment
 
 begin_decl_stmt
-name|u_int
+name|int
 name|files_cnt
 init|=
 literal|1
@@ -439,8 +439,6 @@ operator|.
 name|name
 argument_list|,
 name|O_RDONLY
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -448,8 +446,9 @@ condition|(
 name|in
 operator|.
 name|fd
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 name|err
 argument_list|(
@@ -544,8 +543,9 @@ condition|(
 name|out
 operator|.
 name|fd
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|out
@@ -577,8 +577,9 @@ condition|(
 name|out
 operator|.
 name|fd
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 name|err
 argument_list|(
@@ -662,10 +663,6 @@ name|db
 operator|=
 name|malloc
 argument_list|(
-call|(
-name|u_int
-call|)
-argument_list|(
 name|MAX
 argument_list|(
 name|in
@@ -676,7 +673,6 @@ name|cbsz
 argument_list|)
 operator|+
 name|cbsz
-argument_list|)
 argument_list|)
 operator|)
 operator|==
@@ -689,16 +685,11 @@ name|db
 operator|=
 name|malloc
 argument_list|(
-call|(
-name|u_int
-call|)
-argument_list|(
 name|out
 operator|.
 name|dbsz
 operator|+
 name|cbsz
-argument_list|)
 argument_list|)
 operator|)
 operator|==
@@ -776,9 +767,6 @@ name|out
 operator|.
 name|fd
 argument_list|,
-operator|(
-name|off_t
-operator|)
 name|out
 operator|.
 name|offset
@@ -1223,7 +1211,7 @@ name|void
 name|dd_in
 parameter_list|()
 block|{
-name|int
+name|ssize_t
 name|n
 decl_stmt|;
 for|for
@@ -1256,6 +1244,7 @@ name|ddflags
 operator|&
 name|C_SYNC
 condition|)
+block|{
 if|if
 condition|(
 name|ddflags
@@ -1293,6 +1282,7 @@ operator|.
 name|dbsz
 argument_list|)
 expr_stmt|;
+block|}
 name|n
 operator|=
 name|read
@@ -1329,8 +1319,9 @@ comment|/* Read error. */
 if|if
 condition|(
 name|n
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 comment|/* 			 * If noerror not specified, die.  POSIX requires that 			 * the warning message be followed by an I/O display. 			 */
@@ -1736,15 +1727,17 @@ name|int
 name|warned
 decl_stmt|;
 name|int
+name|sparse
+decl_stmt|;
+name|size_t
 name|cnt
 decl_stmt|,
 name|n
 decl_stmt|,
-name|nw
-decl_stmt|,
 name|i
-decl_stmt|,
-name|sparse
+decl_stmt|;
+name|ssize_t
+name|nw
 decl_stmt|;
 name|u_char
 modifier|*
@@ -1878,6 +1871,9 @@ name|out
 operator|.
 name|fd
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|pending
 argument_list|,
 name|SEEK_CUR
@@ -1890,7 +1886,8 @@ name|err
 argument_list|(
 literal|2
 argument_list|,
-literal|"%s: seek error creating sparse file"
+literal|"%s: seek error creating"
+literal|" sparse file"
 argument_list|,
 name|out
 operator|.

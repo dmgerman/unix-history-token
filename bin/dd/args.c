@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: args.c,v 1.13 1998/05/13 07:33:36 charnier Exp $"
+literal|"$Id: args.c,v 1.14 1999/05/08 10:20:05 kris Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -283,7 +283,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|int64_t
 name|get_bsz
 name|__P
 argument_list|(
@@ -524,7 +524,8 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"unable to allocate space for the argument \"%s\""
+literal|"unable to allocate space for the argument "
+literal|"\"%s\""
 argument_list|,
 operator|*
 name|argv
@@ -587,11 +588,6 @@ operator|!
 operator|(
 name|ap
 operator|=
-operator|(
-expr|struct
-name|arg
-operator|*
-operator|)
 name|bsearch
 argument_list|(
 operator|&
@@ -643,7 +639,8 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: illegal argument combination or already set"
+literal|"%s: illegal argument combination or "
+literal|"already set"
 argument_list|,
 name|tmp
 operator|.
@@ -862,61 +859,6 @@ argument_list|,
 literal|"buffer sizes cannot be zero"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Read, write and seek calls take ints as arguments.  Seek sizes 	 * could be larger if we wanted to do it in stages or check only 	 * regular files, but it's probably not worth it. 	 */
-if|if
-condition|(
-name|in
-operator|.
-name|dbsz
-operator|>
-name|INT_MAX
-operator|||
-name|out
-operator|.
-name|dbsz
-operator|>
-name|INT_MAX
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"buffer sizes cannot be greater than %d"
-argument_list|,
-name|INT_MAX
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|in
-operator|.
-name|offset
-operator|>
-name|INT_MAX
-operator|/
-name|in
-operator|.
-name|dbsz
-operator|||
-name|out
-operator|.
-name|offset
-operator|>
-name|INT_MAX
-operator|/
-name|out
-operator|.
-name|dbsz
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"seek offsets cannot be larger than %d"
-argument_list|,
-name|INT_MAX
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -993,7 +935,7 @@ operator|.
 name|dbsz
 operator|=
 operator|(
-name|int
+name|size_t
 operator|)
 name|get_bsz
 argument_list|(
@@ -1018,7 +960,7 @@ block|{
 name|cbsz
 operator|=
 operator|(
-name|int
+name|size_t
 operator|)
 name|get_bsz
 argument_list|(
@@ -1043,7 +985,7 @@ block|{
 name|cpy_cnt
 operator|=
 operator|(
-name|u_int
+name|size_t
 operator|)
 name|get_bsz
 argument_list|(
@@ -1114,7 +1056,7 @@ operator|.
 name|dbsz
 operator|=
 operator|(
-name|int
+name|size_t
 operator|)
 name|get_bsz
 argument_list|(
@@ -1171,7 +1113,7 @@ operator|.
 name|dbsz
 operator|=
 operator|(
-name|int
+name|size_t
 operator|)
 name|get_bsz
 argument_list|(
@@ -1218,9 +1160,6 @@ name|out
 operator|.
 name|offset
 operator|=
-operator|(
-name|u_int
-operator|)
 name|get_bsz
 argument_list|(
 name|arg
@@ -1245,9 +1184,6 @@ name|in
 operator|.
 name|offset
 operator|=
-operator|(
-name|u_int
-operator|)
 name|get_bsz
 argument_list|(
 name|arg
@@ -1486,11 +1422,6 @@ operator|!
 operator|(
 name|cp
 operator|=
-operator|(
-expr|struct
-name|conv
-operator|*
-operator|)
 name|bsearch
 argument_list|(
 operator|&
@@ -1624,12 +1555,12 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Convert an expression of the following forms to an unsigned long.  * 	1) A positive decimal number.  *	2) A positive decimal number followed by a b (mult by 512).  *	3) A positive decimal number followed by a k (mult by 1024).  *	4) A positive decimal number followed by a m (mult by 512).  *	5) A positive decimal number followed by a w (mult by sizeof int)  *	6) Two or more positive decimal numbers (with/without k,b or w).  *	   separated by x (also * for backwards compatibility), specifying  *	   the product of the indicated values.  */
+comment|/*  * Convert an expression of the following forms to a 64-bit integer.  * 	1) A positive decimal number.  *	2) A positive decimal number followed by a b (mult by 512).  *	3) A positive decimal number followed by a k (mult by 1024).  *	4) A positive decimal number followed by a m (mult by 512).  *	5) A positive decimal number followed by a w (mult by sizeof int)  *	6) Two or more positive decimal numbers (with/without k,b or w).  *	   separated by x (also * for backwards compatibility), specifying  *	   the product of the indicated values.  */
 end_comment
 
 begin_function
 specifier|static
-name|u_long
+name|int64_t
 name|get_bsz
 parameter_list|(
 name|val
@@ -1639,7 +1570,7 @@ modifier|*
 name|val
 decl_stmt|;
 block|{
-name|u_long
+name|int64_t
 name|num
 decl_stmt|,
 name|t
@@ -1650,7 +1581,7 @@ name|expr
 decl_stmt|;
 name|num
 operator|=
-name|strtoul
+name|strtoq
 argument_list|(
 name|val
 argument_list|,
@@ -1664,25 +1595,16 @@ if|if
 condition|(
 name|num
 operator|==
-name|ULONG_MAX
-condition|)
-comment|/* Overflow. */
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"%s"
-argument_list|,
-name|oper
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+name|QUAD_MAX
+operator|||
+name|num
+operator|<
+literal|0
+operator|||
 name|expr
 operator|==
 name|val
 condition|)
-comment|/* No digits. */
 name|errx
 argument_list|(
 literal|1
