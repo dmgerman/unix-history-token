@@ -367,14 +367,11 @@ index|]
 expr_stmt|;
 name|cp
 operator|=
-name|malloc
+name|smb_simplecrypt
 argument_list|(
-name|strlen
-argument_list|(
+name|NULL
+argument_list|,
 name|psw
-operator|+
-literal|4
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -388,13 +385,6 @@ argument_list|(
 name|EX_DATAERR
 argument_list|,
 literal|"out of memory"
-argument_list|)
-expr_stmt|;
-name|smb_simplecrypt
-argument_list|(
-name|cp
-argument_list|,
-name|psw
 argument_list|)
 expr_stmt|;
 name|printf
@@ -532,6 +522,20 @@ decl_stmt|;
 name|int
 name|opt
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|APPLE
+specifier|extern
+name|void
+name|dropsuid
+parameter_list|()
+function_decl|;
+name|dropsuid
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* APPLE */
 if|if
 condition|(
 name|argc
