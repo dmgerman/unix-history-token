@@ -557,6 +557,9 @@ if|if
 condition|(
 name|newsize
 operator|<
+operator|(
+name|int
+operator|)
 name|SBUF_MAXEXTENDSIZE
 condition|)
 name|newsize
