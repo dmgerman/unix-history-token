@@ -978,9 +978,9 @@ name|cfg
 operator|.
 name|cd
 operator|.
-name|required
+name|necessity
 operator|=
-literal|0
+name|CD_VARIABLE
 expr_stmt|;
 name|p
 operator|->
@@ -2747,7 +2747,39 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" CD check delay:  %d second%s"
+literal|" CD check delay:  "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|cfg
+operator|.
+name|cd
+operator|.
+name|necessity
+operator|==
+name|CD_NOTREQUIRED
+condition|)
+name|prompt_Printf
+argument_list|(
+name|arg
+operator|->
+name|prompt
+argument_list|,
+literal|"no cd"
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|prompt_Printf
+argument_list|(
+name|arg
+operator|->
+name|prompt
+argument_list|,
+literal|"%d second%s"
 argument_list|,
 name|p
 operator|->
@@ -2780,7 +2812,9 @@ name|cfg
 operator|.
 name|cd
 operator|.
-name|required
+name|necessity
+operator|==
+name|CD_REQUIRED
 condition|)
 name|prompt_Printf
 argument_list|(
@@ -2788,10 +2822,10 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" (required!)\n\n"
+literal|" (required!)"
 argument_list|)
 expr_stmt|;
-else|else
+block|}
 name|prompt_Printf
 argument_list|(
 name|arg

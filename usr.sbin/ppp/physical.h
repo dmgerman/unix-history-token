@@ -109,6 +109,31 @@ name|CARRIER_LOST
 value|3
 end_define
 
+begin_comment
+comment|/* A cd ``necessity'' value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CD_VARIABLE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CD_REQUIRED
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|CD_NOTREQUIRED
+value|3
+end_define
+
 begin_struct
 struct|struct
 name|device
@@ -392,11 +417,11 @@ comment|/* number of devices in list */
 struct|struct
 block|{
 name|unsigned
-name|required
+name|necessity
 range|:
-literal|1
+literal|2
 decl_stmt|;
-comment|/* Is cd *REQUIRED* on this device */
+comment|/* A CD_ value */
 name|int
 name|delay
 decl_stmt|;
