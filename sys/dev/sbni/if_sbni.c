@@ -5226,12 +5226,11 @@ literal|"xorb	2(%%esi), %%bl\n"
 literal|"xorl	(%%edi,%%ebx,4), %%eax\n"
 literal|"2:\n"
 operator|:
-operator|:
-literal|"a"
+literal|"=a"
 operator|(
 name|_crc
 operator|)
-operator|,
+operator|:
 literal|"g"
 operator|(
 name|p
@@ -5242,8 +5241,6 @@ operator|(
 name|len
 operator|)
 operator|:
-literal|"ax"
-operator|,
 literal|"bx"
 operator|,
 literal|"cx"
