@@ -50,7 +50,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vacation.c,v 1.6 1997/03/29 04:33:44 imp Exp $"
+literal|"$Id: vacation.c,v 1.7 1997/04/23 22:25:20 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1983,7 +1983,7 @@ expr_stmt|;
 block|}
 name|i
 operator|=
-name|fork
+name|vfork
 argument_list|()
 expr_stmt|;
 if|if
@@ -2044,11 +2044,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|fclose
-argument_list|(
-name|mfp
-argument_list|)
-expr_stmt|;
 name|execl
 argument_list|(
 name|_PATH_SENDMAIL
@@ -2078,7 +2073,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
+name|_exit
 argument_list|(
 literal|1
 argument_list|)
