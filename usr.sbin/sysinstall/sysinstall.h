@@ -2084,6 +2084,12 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|__i386__
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|PC98
 end_ifdef
 
@@ -2113,6 +2119,11 @@ end_decl_stmt
 begin_comment
 comment|/* Type of MBR to write on the disk		*/
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -2207,6 +2218,12 @@ begin_comment
 comment|/* Media type menu				*/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_MICE
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|DMenu
@@ -2217,6 +2234,11 @@ end_decl_stmt
 begin_comment
 comment|/* Mouse type menu				*/
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -2328,6 +2350,12 @@ begin_comment
 comment|/* Startup services menu			*/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_SYSCONS
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|DMenu
@@ -2404,6 +2432,11 @@ end_decl_stmt
 begin_comment
 comment|/* System console terminal type menu            */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -3446,6 +3479,24 @@ begin_comment
 comment|/* disks.c */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_SLICES
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|void
+name|diskPartition
+parameter_list|(
+name|Device
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 specifier|extern
 name|int
@@ -3457,6 +3508,11 @@ name|self
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|extern
@@ -3480,18 +3536,6 @@ modifier|*
 modifier|*
 modifier|*
 name|devs
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|diskPartition
-parameter_list|(
-name|Device
-modifier|*
-name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
