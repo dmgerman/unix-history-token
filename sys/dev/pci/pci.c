@@ -3724,9 +3724,11 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+comment|/* Allow newbus drivers to match "better" */
 name|error
 operator|=
-literal|0
+operator|-
+literal|1000
 expr_stmt|;
 block|}
 block|}
