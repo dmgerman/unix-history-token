@@ -1970,7 +1970,7 @@ literal|0
 argument_list|,
 argument|*c2
 argument_list|,
-argument|*c3; 	chunk_e type = c->type; 	long offset = c->offset;  	if(type == whole) 		return
+argument|*c3; 	chunk_e type = c->type; 	u_long offset = c->offset;  	if(type == whole) 		return
 literal|1
 argument|;
 ifndef|#
