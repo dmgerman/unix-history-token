@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)commands.c	1.31 (Berkeley) %G%"
+literal|"@(#)commands.c	1.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8006,12 +8006,6 @@ argument_list|)
 expr_stmt|;
 name|ep
 operator|->
-name|export
-operator|=
-literal|1
-expr_stmt|;
-name|ep
-operator|->
 name|next
 operator|=
 name|envlisthead
@@ -8046,6 +8040,12 @@ operator|=
 name|ep
 expr_stmt|;
 block|}
+name|ep
+operator|->
+name|export
+operator|=
+literal|1
+expr_stmt|;
 name|ep
 operator|->
 name|var
