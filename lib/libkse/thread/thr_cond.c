@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 John Birrell<jb@cimlogic.com.au>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * Copyright (c) 1995 John Birrell<jb@cimlogic.com.au>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id$  */
 end_comment
 
 begin_include
@@ -79,6 +79,124 @@ name|pthread_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Reinitialize a condition variable to defaults. */
+end_comment
+
+begin_function
+name|int
+name|_cond_reinit
+parameter_list|(
+name|pthread_cond_t
+modifier|*
+name|cond
+parameter_list|)
+block|{
+name|int
+name|ret
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|cond
+operator|==
+name|NULL
+condition|)
+name|ret
+operator|=
+name|EINVAL
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|*
+name|cond
+operator|==
+name|NULL
+condition|)
+name|ret
+operator|=
+name|pthread_cond_init
+argument_list|(
+name|cond
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+comment|/* 		 * Initialize the condition variable structure: 		 */
+name|TAILQ_INIT
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|c_queue
+argument_list|)
+expr_stmt|;
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|c_flags
+operator|=
+name|COND_FLAGS_INITED
+expr_stmt|;
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|c_type
+operator|=
+name|COND_TYPE_FAST
+expr_stmt|;
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|c_mutex
+operator|=
+name|NULL
+expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|lock
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|lock
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 name|int
@@ -388,6 +506,18 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* Lock the condition variable structure: */
+name|_SPINLOCK
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 comment|/* 		 * If the condvar was statically allocated, properly 		 * initialize the tail queue. 		 */
 if|if
 condition|(
@@ -426,18 +556,6 @@ operator||=
 name|COND_FLAGS_INITED
 expr_stmt|;
 block|}
-comment|/* Lock the condition variable structure: */
-name|_SPINLOCK
-argument_list|(
-operator|&
-operator|(
-operator|*
-name|cond
-operator|)
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
 comment|/* Process according to condition variable type: */
 switch|switch
 condition|(
@@ -728,6 +846,18 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* Lock the condition variable structure: */
+name|_SPINLOCK
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 comment|/* 		 * If the condvar was statically allocated, properly 		 * initialize the tail queue. 		 */
 if|if
 condition|(
@@ -766,18 +896,6 @@ operator||=
 name|COND_FLAGS_INITED
 expr_stmt|;
 block|}
-comment|/* Lock the condition variable structure: */
-name|_SPINLOCK
-argument_list|(
-operator|&
-operator|(
-operator|*
-name|cond
-operator|)
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
 comment|/* Process according to condition variable type: */
 switch|switch
 condition|(
@@ -1139,6 +1257,10 @@ name|EINVAL
 expr_stmt|;
 else|else
 block|{
+comment|/* 		 * Defer signals to protect the scheduling queues 		 * from access by the signal handler: 		 */
+name|_thread_kern_sig_defer
+argument_list|()
+expr_stmt|;
 comment|/* Lock the condition variable structure: */
 name|_SPINLOCK
 argument_list|(
@@ -1253,6 +1375,10 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Undefer and handle pending signals, yielding if 		 * necessary: 		 */
+name|_thread_kern_sig_undefer
+argument_list|()
+expr_stmt|;
 block|}
 comment|/* Return the completion status: */
 return|return
@@ -1297,8 +1423,8 @@ name|EINVAL
 expr_stmt|;
 else|else
 block|{
-comment|/* 		 * Guard against preemption by a scheduling signal. 		 * A change of thread state modifies the waiting 		 * and priority queues.  In addition, we must assure 		 * that all threads currently waiting on the condition 		 * variable are signaled and are not timedout by a 		 * scheduling signal that causes a preemption. 		 */
-name|_thread_kern_sched_defer
+comment|/* 		 * Defer signals to protect the scheduling queues 		 * from access by the signal handler: 		 */
+name|_thread_kern_sig_defer
 argument_list|()
 expr_stmt|;
 comment|/* Lock the condition variable structure: */
@@ -1393,8 +1519,8 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-comment|/* Reenable preemption and yield if necessary. 		 */
-name|_thread_kern_sched_undefer
+comment|/* 		 * Undefer and handle pending signals, yielding if 		 * necessary: 		 */
+name|_thread_kern_sig_undefer
 argument_list|()
 expr_stmt|;
 block|}
@@ -1458,7 +1584,7 @@ operator|->
 name|flags
 operator|&=
 operator|~
-name|PTHREAD_FLAGS_QUEUED
+name|PTHREAD_FLAGS_IN_CONDQ
 expr_stmt|;
 block|}
 return|return
@@ -1493,7 +1619,7 @@ name|pthread
 operator|->
 name|flags
 operator|&
-name|PTHREAD_FLAGS_QUEUED
+name|PTHREAD_FLAGS_IN_CONDQ
 condition|)
 block|{
 name|TAILQ_REMOVE
@@ -1513,7 +1639,7 @@ operator|->
 name|flags
 operator|&=
 operator|~
-name|PTHREAD_FLAGS_QUEUED
+name|PTHREAD_FLAGS_IN_CONDQ
 expr_stmt|;
 block|}
 block|}
@@ -1625,7 +1751,7 @@ name|pthread
 operator|->
 name|flags
 operator||=
-name|PTHREAD_FLAGS_QUEUED
+name|PTHREAD_FLAGS_IN_CONDQ
 expr_stmt|;
 block|}
 end_function

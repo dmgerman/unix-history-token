@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995-1998 John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * Copyright (c) 1995-1998 John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id$  */
 end_comment
 
 begin_include
@@ -283,11 +283,25 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Force this process to exit: */
+comment|/* XXX - Do we want abort to be conditional on _PTHREADS_INVARIANTS? */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_PTHREADS_INVARIANTS
+argument_list|)
+name|abort
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
 name|_exit
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -413,8 +427,8 @@ name|_thread_cleanupspecific
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* 	 * Guard against preemption by a scheduling signal.  A change of 	 * thread state modifies the waiting and priority queues. 	 */
-name|_thread_kern_sched_defer
+comment|/* 	 * Defer signals to protect the scheduling queues from access 	 * by the signal handler: 	 */
+name|_thread_kern_sig_defer
 argument_list|()
 expr_stmt|;
 comment|/* Check if there are any threads joined to this one: */
@@ -423,7 +437,7 @@ condition|(
 operator|(
 name|pthread
 operator|=
-name|_thread_queue_deq
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 operator|(
@@ -437,6 +451,19 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* Remove the thread from the queue: */
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|_thread_run
+operator|->
+name|join_queue
+argument_list|,
+name|pthread
+argument_list|,
+name|qe
+argument_list|)
+expr_stmt|;
 comment|/* Wake the joined thread and let it detach this thread: */
 name|PTHREAD_NEW_STATE
 argument_list|(
@@ -446,8 +473,8 @@ name|PS_RUNNING
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Reenable preemption and yield if a scheduling signal 	 * occurred while in the critical region. 	 */
-name|_thread_kern_sched_undefer
+comment|/* 	 * Undefer and handle pending signals, yielding if necessary: 	 */
+name|_thread_kern_sig_undefer
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Lock the garbage collector mutex to ensure that the garbage 	 * collector is not using the dead thread list. 	 */
@@ -467,15 +494,34 @@ literal|"Cannot lock gc mutex"
 argument_list|)
 expr_stmt|;
 comment|/* Add this thread to the list of dead threads. */
+name|TAILQ_INSERT_HEAD
+argument_list|(
+operator|&
+name|_dead_list
+argument_list|,
 name|_thread_run
-operator|->
-name|nxt_dead
-operator|=
-name|_thread_dead
+argument_list|,
+name|dle
+argument_list|)
 expr_stmt|;
-name|_thread_dead
-operator|=
+comment|/* 	 * Defer signals to protect the scheduling queues from access 	 * by the signal handler: 	 */
+name|_thread_kern_sig_defer
+argument_list|()
+expr_stmt|;
+comment|/* Remove this thread from the thread list: */
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|_thread_list
+argument_list|,
 name|_thread_run
+argument_list|,
+name|tle
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Undefer and handle pending signals, yielding if necessary: 	 */
+name|_thread_kern_sig_undefer
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Signal the garbage collector thread that there is something 	 * to clean up. 	 */
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 John Birrell<jb@cimlogic.com.au>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * Copyright (c) 1995 John Birrell<jb@cimlogic.com.au>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id$  */
 end_comment
 
 begin_include
@@ -50,6 +50,82 @@ include|#
 directive|include
 file|"pthread_private.h"
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_PTHREADS_INVARIANTS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|_MUTEX_INIT_LINK
+parameter_list|(
+name|m
+parameter_list|)
+value|do {		\ 	(m)->m_qe.tqe_prev = NULL;			\ 	(m)->m_qe.tqe_next = NULL;			\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_MUTEX_ASSERT_IS_OWNED
+parameter_list|(
+name|m
+parameter_list|)
+value|do {		\ 	if ((m)->m_qe.tqe_prev == NULL)			\ 		PANIC("mutex is not on list");		\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_MUTEX_ASSERT_NOT_OWNED
+parameter_list|(
+name|m
+parameter_list|)
+value|do {		\ 	if (((m)->m_qe.tqe_prev != NULL) ||		\ 	    ((m)->m_qe.tqe_next != NULL))		\ 		PANIC("mutex is on list");		\ } while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_MUTEX_INIT_LINK
+parameter_list|(
+name|m
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_MUTEX_ASSERT_IS_OWNED
+parameter_list|(
+name|m
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_MUTEX_ASSERT_NOT_OWNED
+parameter_list|(
+name|m
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Prototypes  */
@@ -158,6 +234,177 @@ init|=
 name|_SPINLOCK_INITIALIZER
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Reinitialize a mutex to defaults. */
+end_comment
+
+begin_function
+name|int
+name|_mutex_reinit
+parameter_list|(
+name|pthread_mutex_t
+modifier|*
+name|mutex
+parameter_list|)
+block|{
+name|int
+name|ret
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|mutex
+operator|==
+name|NULL
+condition|)
+name|ret
+operator|=
+name|EINVAL
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|*
+name|mutex
+operator|==
+name|NULL
+condition|)
+name|ret
+operator|=
+name|pthread_mutex_init
+argument_list|(
+name|mutex
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+comment|/* 		 * Initialize the mutex structure: 		 */
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|m_type
+operator|=
+name|PTHREAD_MUTEX_DEFAULT
+expr_stmt|;
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|m_protocol
+operator|=
+name|PTHREAD_PRIO_NONE
+expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|m_queue
+argument_list|)
+expr_stmt|;
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|m_owner
+operator|=
+name|NULL
+expr_stmt|;
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|m_data
+operator|.
+name|m_count
+operator|=
+literal|0
+expr_stmt|;
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|m_flags
+operator|=
+name|MUTEX_FLAGS_INITED
+expr_stmt|;
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|m_refcount
+operator|=
+literal|0
+expr_stmt|;
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|m_prio
+operator|=
+literal|0
+expr_stmt|;
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|m_saved_prio
+operator|=
+literal|0
+expr_stmt|;
+name|_MUTEX_INIT_LINK
+argument_list|(
+operator|*
+name|mutex
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|lock
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|lock
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 name|int
@@ -472,6 +719,11 @@ name|m_saved_prio
 operator|=
 literal|0
 expr_stmt|;
+name|_MUTEX_INIT_LINK
+argument_list|(
+name|pmutex
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -623,6 +875,12 @@ block|}
 else|else
 block|{
 comment|/* 			 * Free the memory allocated for the mutex 			 * structure: 			 */
+name|_MUTEX_ASSERT_NOT_OWNED
+argument_list|(
+operator|*
+name|mutex
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 operator|*
@@ -745,6 +1003,22 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 		 * Defer signals to protect the scheduling queues from 		 * access by the signal handler: 		 */
+name|_thread_kern_sig_defer
+argument_list|()
+expr_stmt|;
+comment|/* Lock the mutex structure: */
+name|_SPINLOCK
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 comment|/* 		 * If the mutex was statically allocated, properly 		 * initialize the tail queue. 		 */
 if|if
 condition|(
@@ -773,6 +1047,12 @@ operator|->
 name|m_queue
 argument_list|)
 expr_stmt|;
+name|_MUTEX_INIT_LINK
+argument_list|(
+operator|*
+name|mutex
+argument_list|)
+expr_stmt|;
 operator|(
 operator|*
 name|mutex
@@ -783,22 +1063,6 @@ operator||=
 name|MUTEX_FLAGS_INITED
 expr_stmt|;
 block|}
-comment|/* 		 * Guard against being preempted by a scheduling signal. 		 * To support priority inheritence mutexes, we need to 		 * maintain lists of mutex ownerships for each thread as 		 * well as lists of waiting threads for each mutex.  In 		 * order to propagate priorities we need to atomically 		 * walk these lists and cannot rely on a single mutex 		 * lock to provide protection against modification. 		 */
-name|_thread_kern_sched_defer
-argument_list|()
-expr_stmt|;
-comment|/* Lock the mutex structure: */
-name|_SPINLOCK
-argument_list|(
-operator|&
-operator|(
-operator|*
-name|mutex
-operator|)
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
 comment|/* Process according to mutex type: */
 switch|switch
 condition|(
@@ -838,6 +1102,12 @@ operator|=
 name|_thread_run
 expr_stmt|;
 comment|/* Add to the list of owned mutexes: */
+name|_MUTEX_ASSERT_NOT_OWNED
+argument_list|(
+operator|*
+name|mutex
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -938,6 +1208,12 @@ operator|->
 name|inherited_priority
 expr_stmt|;
 comment|/* Add to the list of owned mutexes: */
+name|_MUTEX_ASSERT_NOT_OWNED
+argument_list|(
+operator|*
+name|mutex
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -1068,6 +1344,12 @@ operator|->
 name|m_prio
 expr_stmt|;
 comment|/* Add to the list of owned mutexes: */
+name|_MUTEX_ASSERT_NOT_OWNED
+argument_list|(
+operator|*
+name|mutex
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -1132,8 +1414,8 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Renable preemption and yield if a scheduling signal 		 * arrived while in the critical region: 		 */
-name|_thread_kern_sched_undefer
+comment|/* 		 * Undefer and handle pending signals, yielding if 		 * necessary: 		 */
+name|_thread_kern_sig_undefer
 argument_list|()
 expr_stmt|;
 block|}
@@ -1191,6 +1473,22 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 		 * Defer signals to protect the scheduling queues from 		 * access by the signal handler: 		 */
+name|_thread_kern_sig_defer
+argument_list|()
+expr_stmt|;
+comment|/* Lock the mutex structure: */
+name|_SPINLOCK
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 comment|/* 		 * If the mutex was statically allocated, properly 		 * initialize the tail queue. 		 */
 if|if
 condition|(
@@ -1228,23 +1526,13 @@ name|m_flags
 operator||=
 name|MUTEX_FLAGS_INITED
 expr_stmt|;
-block|}
-comment|/* 		 * Guard against being preempted by a scheduling signal. 		 * To support priority inheritence mutexes, we need to 		 * maintain lists of mutex ownerships for each thread as 		 * well as lists of waiting threads for each mutex.  In 		 * order to propagate priorities we need to atomically 		 * walk these lists and cannot rely on a single mutex 		 * lock to provide protection against modification. 		 */
-name|_thread_kern_sched_defer
-argument_list|()
-expr_stmt|;
-comment|/* Lock the mutex structure: */
-name|_SPINLOCK
+name|_MUTEX_INIT_LINK
 argument_list|(
-operator|&
-operator|(
 operator|*
 name|mutex
-operator|)
-operator|->
-name|lock
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Process according to mutex type: */
 switch|switch
 condition|(
@@ -1283,6 +1571,12 @@ operator|=
 name|_thread_run
 expr_stmt|;
 comment|/* Add to the list of owned mutexes: */
+name|_MUTEX_ASSERT_NOT_OWNED
+argument_list|(
+operator|*
+name|mutex
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -1370,15 +1664,6 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-comment|/* 				 * This thread is no longer waiting for 				 * the mutex: 				 */
-name|_thread_run
-operator|->
-name|data
-operator|.
-name|mutex
-operator|=
-name|NULL
-expr_stmt|;
 block|}
 break|break;
 comment|/* POSIX priority inheritence mutex: */
@@ -1449,6 +1734,12 @@ operator|->
 name|m_prio
 expr_stmt|;
 comment|/* Add to the list of owned mutexes: */
+name|_MUTEX_ASSERT_NOT_OWNED
+argument_list|(
+operator|*
+name|mutex
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -1556,15 +1847,6 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-comment|/* 				 * This thread is no longer waiting for 				 * the mutex: 				 */
-name|_thread_run
-operator|->
-name|data
-operator|.
-name|mutex
-operator|=
-name|NULL
-expr_stmt|;
 block|}
 break|break;
 comment|/* POSIX priority protection mutex: */
@@ -1654,6 +1936,12 @@ operator|->
 name|m_prio
 expr_stmt|;
 comment|/* Add to the list of owned mutexes: */
+name|_MUTEX_ASSERT_NOT_OWNED
+argument_list|(
+operator|*
+name|mutex
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -1761,15 +2049,6 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 				 * This thread is no longer waiting for 				 * the mutex: 				 */
-name|_thread_run
-operator|->
-name|data
-operator|.
-name|mutex
-operator|=
-name|NULL
-expr_stmt|;
 block|}
 break|break;
 comment|/* Trap invalid mutex types: */
@@ -1793,8 +2072,8 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Renable preemption and yield if a scheduling signal 		 * arrived while in the critical region: 		 */
-name|_thread_kern_sched_undefer
+comment|/* 		 * Undefer and handle pending signals, yielding if 		 * necessary: 		 */
+name|_thread_kern_sig_undefer
 argument_list|()
 expr_stmt|;
 block|}
@@ -2072,8 +2351,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Guard against being preempted by a scheduling signal. 		 * To support priority inheritence mutexes, we need to 		 * maintain lists of mutex ownerships for each thread as 		 * well as lists of waiting threads for each mutex.  In 		 * order to propagate priorities we need to atomically 		 * walk these lists and cannot rely on a single mutex 		 * lock to provide protection against modification. 		 */
-name|_thread_kern_sched_defer
+comment|/* 		 * Defer signals to protect the scheduling queues from 		 * access by the signal handler: 		 */
+name|_thread_kern_sig_defer
 argument_list|()
 expr_stmt|;
 comment|/* Lock the mutex structure: */
@@ -2188,6 +2467,12 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Remove the mutex from the threads queue. */
+name|_MUTEX_ASSERT_IS_OWNED
+argument_list|(
+operator|*
+name|mutex
+argument_list|)
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -2206,6 +2491,12 @@ name|mutex
 operator|)
 argument_list|,
 name|m_qe
+argument_list|)
+expr_stmt|;
+name|_MUTEX_INIT_LINK
+argument_list|(
+operator|*
+name|mutex
 argument_list|)
 expr_stmt|;
 comment|/* 				 * Get the next thread from the queue of 				 * threads waiting on the mutex:  				 */
@@ -2241,6 +2532,41 @@ name|m_owner
 argument_list|,
 name|PS_RUNNING
 argument_list|)
+expr_stmt|;
+comment|/* 					 * Add the mutex to the threads list of 					 * owned mutexes: 					 */
+name|TAILQ_INSERT_TAIL
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|m_owner
+operator|->
+name|mutexq
+argument_list|,
+operator|(
+operator|*
+name|mutex
+operator|)
+argument_list|,
+name|m_qe
+argument_list|)
+expr_stmt|;
+comment|/* 					 * The owner is no longer waiting for 					 * this mutex: 					 */
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|m_owner
+operator|->
+name|data
+operator|.
+name|mutex
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 block|}
@@ -2367,6 +2693,12 @@ name|priority_mutex_count
 operator|--
 expr_stmt|;
 comment|/* Remove the mutex from the threads queue. */
+name|_MUTEX_ASSERT_IS_OWNED
+argument_list|(
+operator|*
+name|mutex
+argument_list|)
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -2385,6 +2717,12 @@ name|mutex
 operator|)
 argument_list|,
 name|m_qe
+argument_list|)
+expr_stmt|;
+name|_MUTEX_INIT_LINK
+argument_list|(
+operator|*
+name|mutex
 argument_list|)
 expr_stmt|;
 comment|/* 				 * Get the next thread from the queue of threads 				 * waiting on the mutex:  				 */
@@ -2654,6 +2992,12 @@ name|priority_mutex_count
 operator|--
 expr_stmt|;
 comment|/* Remove the mutex from the threads queue. */
+name|_MUTEX_ASSERT_IS_OWNED
+argument_list|(
+operator|*
+name|mutex
+argument_list|)
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -2672,6 +3016,12 @@ name|mutex
 operator|)
 argument_list|,
 name|m_qe
+argument_list|)
+expr_stmt|;
+name|_MUTEX_INIT_LINK
+argument_list|(
+operator|*
+name|mutex
 argument_list|)
 expr_stmt|;
 comment|/* 				 * Enter a loop to find a waiting thread whose 				 * active priority will not cause a ceiling 				 * violation: 				 */
@@ -2738,6 +3088,20 @@ name|m_owner
 argument_list|,
 name|PS_RUNNING
 argument_list|)
+expr_stmt|;
+comment|/* 					 * The thread is no longer waiting for 					 * this mutex: 					 */
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|m_owner
+operator|->
+name|data
+operator|.
+name|mutex
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 comment|/* Check for a new owner: */
@@ -2911,8 +3275,8 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Renable preemption and yield if a scheduling signal 		 * arrived while in the critical region: 		 */
-name|_thread_kern_sched_undefer
+comment|/* 		 * Undefer and handle pending signals, yielding if 		 * necessary: 		 */
+name|_thread_kern_sig_undefer
 argument_list|()
 expr_stmt|;
 block|}
@@ -2926,7 +3290,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function is called when a change in base priority occurs  * for a thread that is thread holding, or waiting for, a priority  * protection or inheritence mutex.  A change in a threads base  * priority can effect changes to active priorities of other threads  * and to the ordering of mutex locking by waiting threads.  *  * This must be called while thread scheduling is deferred.  */
+comment|/*  * This function is called when a change in base priority occurs for  * a thread that is holding or waiting for a priority protection or  * inheritence mutex.  A change in a threads base priority can effect  * changes to active priorities of other threads and to the ordering  * of mutex locking by waiting threads.  *  * This must be called while thread scheduling is deferred.  */
 end_comment
 
 begin_function
@@ -3489,19 +3853,11 @@ block|{
 comment|/* 		 * If this thread is in the priority queue, it must be 		 * removed and reinserted for its new priority. 	 	 */
 if|if
 condition|(
-operator|(
-name|pthread
-operator|!=
-name|_thread_run
-operator|)
-operator|&&
-operator|(
 name|pthread
 operator|->
-name|state
-operator|==
-name|PS_RUNNING
-operator|)
+name|flags
+operator|&
+name|PTHREAD_FLAGS_IN_PRIOQ
 condition|)
 block|{
 comment|/* 			 * Remove the thread from the priority queue 			 * before changing its priority: 			 */

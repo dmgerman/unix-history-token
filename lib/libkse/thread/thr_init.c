@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995-1998 John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * Copyright (c) 1995-1998 John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id$  */
 end_comment
 
 begin_comment
@@ -46,7 +46,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<poll.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -255,6 +267,19 @@ name|flags
 decl_stmt|;
 name|int
 name|i
+decl_stmt|;
+name|int
+name|len
+decl_stmt|;
+name|int
+name|mib
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|struct
+name|clockinfo
+name|clockinfo
 decl_stmt|;
 name|struct
 name|sigaction
@@ -578,11 +603,11 @@ literal|"Cannot get kernel write pipe flags"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Initialize the ready queue: */
+comment|/* Allocate and initialize the ready queue: */
 elseif|else
 if|if
 condition|(
-name|_pq_init
+name|_pq_alloc
 argument_list|(
 operator|&
 name|_readyq
@@ -668,11 +693,17 @@ name|pthread
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Initialize the waiting queue: */
+comment|/* Initialize the waiting and work queues: */
 name|TAILQ_INIT
 argument_list|(
 operator|&
 name|_waitingq
+argument_list|)
+expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|_workq
 argument_list|)
 expr_stmt|;
 comment|/* Initialize the scheduling switch hook routine: */
@@ -714,7 +745,7 @@ operator|=
 name|PS_RUNNING
 expr_stmt|;
 comment|/* Initialise the queue: */
-name|_thread_queue_init
+name|TAILQ_INIT
 argument_list|(
 operator|&
 operator|(
@@ -744,13 +775,29 @@ expr_stmt|;
 comment|/* Initialise the rest of the fields: */
 name|_thread_initial
 operator|->
-name|sched_defer_count
+name|poll_data
+operator|.
+name|nfds
 operator|=
 literal|0
 expr_stmt|;
 name|_thread_initial
 operator|->
-name|yield_on_sched_undefer
+name|poll_data
+operator|.
+name|fds
+operator|=
+name|NULL
+expr_stmt|;
+name|_thread_initial
+operator|->
+name|sig_defer_count
+operator|=
+literal|0
+expr_stmt|;
+name|_thread_initial
+operator|->
+name|yield_on_sig_undefer
 operator|=
 literal|0
 expr_stmt|;
@@ -768,24 +815,6 @@ name|NULL
 expr_stmt|;
 name|_thread_initial
 operator|->
-name|queue
-operator|=
-name|NULL
-expr_stmt|;
-name|_thread_initial
-operator|->
-name|qnxt
-operator|=
-name|NULL
-expr_stmt|;
-name|_thread_initial
-operator|->
-name|nxt
-operator|=
-name|NULL
-expr_stmt|;
-name|_thread_initial
-operator|->
 name|flags
 operator|=
 literal|0
@@ -796,9 +825,21 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-name|_thread_link_list
-operator|=
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|_thread_list
+argument_list|)
+expr_stmt|;
+name|TAILQ_INSERT_HEAD
+argument_list|(
+operator|&
+name|_thread_list
+argument_list|,
 name|_thread_initial
+argument_list|,
+name|tle
+argument_list|)
 expr_stmt|;
 name|_thread_run
 operator|=
@@ -831,6 +872,10 @@ operator|.
 name|sa_flags
 operator|=
 literal|0
+expr_stmt|;
+comment|/* Initialize signal handling: */
+name|_thread_sig_init
+argument_list|()
 expr_stmt|;
 comment|/* Enter a loop to get the existing signal status: */
 for|for
@@ -936,6 +981,58 @@ literal|"Cannot initialise signal handler"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Get the kernel clockrate: */
+name|mib
+index|[
+literal|0
+index|]
+operator|=
+name|CTL_KERN
+expr_stmt|;
+name|mib
+index|[
+literal|1
+index|]
+operator|=
+name|KERN_CLOCKRATE
+expr_stmt|;
+name|len
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|clockinfo
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sysctl
+argument_list|(
+name|mib
+argument_list|,
+literal|2
+argument_list|,
+operator|&
+name|clockinfo
+argument_list|,
+operator|&
+name|len
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|_clock_res_nsec
+operator|=
+name|clockinfo
+operator|.
+name|tick
+operator|*
+literal|1000
+expr_stmt|;
 comment|/* Get the table size: */
 if|if
 condition|(
@@ -991,6 +1088,39 @@ literal|"Cannot allocate memory for file descriptor table"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Allocate memory for the pollfd table: */
+if|if
+condition|(
+operator|(
+name|_thread_pfd_table
+operator|=
+operator|(
+expr|struct
+name|pollfd
+operator|*
+operator|)
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pollfd
+argument_list|)
+operator|*
+name|_thread_dtablesize
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* 			 * Cannot allocate memory for the file descriptor 			 * table, so abort this process.  			 */
+name|PANIC
+argument_list|(
+literal|"Cannot allocate memory for pollfd table"
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 comment|/* 			 * Enter a loop to initialise the file descriptor 			 * table:  			 */
@@ -1015,6 +1145,44 @@ name|i
 index|]
 operator|=
 name|NULL
+expr_stmt|;
+block|}
+comment|/* Initialize stdio file descriptor table entries: */
+if|if
+condition|(
+operator|(
+name|_thread_fd_table_init
+argument_list|(
+literal|0
+argument_list|)
+operator|!=
+literal|0
+operator|)
+operator|||
+operator|(
+name|_thread_fd_table_init
+argument_list|(
+literal|1
+argument_list|)
+operator|!=
+literal|0
+operator|)
+operator|||
+operator|(
+name|_thread_fd_table_init
+argument_list|(
+literal|2
+argument_list|)
+operator|!=
+literal|0
+operator|)
+condition|)
+block|{
+name|PANIC
+argument_list|(
+literal|"Cannot initialize stdio file descriptor "
+literal|"table entries"
+argument_list|)
 expr_stmt|;
 block|}
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 John Birrell<jb@cimlogic.com.au>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * Copyright (c) 1997 John Birrell<jb@cimlogic.com.au>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id$  */
 end_comment
 
 begin_include
@@ -57,6 +57,8 @@ name|i
 decl_stmt|;
 name|sigset_t
 name|tempset
+decl_stmt|,
+name|waitset
 decl_stmt|;
 name|struct
 name|sigaction
@@ -89,28 +91,8 @@ operator|=
 operator|*
 name|set
 expr_stmt|;
-comment|/* 	 * These signals can't be waited on. 	 */
-name|sigdelset
-argument_list|(
-operator|&
-name|act
-operator|.
-name|sa_mask
-argument_list|,
-name|SIGKILL
-argument_list|)
-expr_stmt|;
-name|sigdelset
-argument_list|(
-operator|&
-name|act
-operator|.
-name|sa_mask
-argument_list|,
-name|SIGSTOP
-argument_list|)
-expr_stmt|;
-name|sigdelset
+comment|/* Ensure the scheduling signal is masked: */
+name|sigaddset
 argument_list|(
 operator|&
 name|act
@@ -120,12 +102,41 @@ argument_list|,
 name|_SCHED_SIGNAL
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Initialize the set of signals that will be waited on: 	 */
+name|waitset
+operator|=
+operator|*
+name|set
+expr_stmt|;
+comment|/* These signals can't be waited on. */
 name|sigdelset
 argument_list|(
 operator|&
-name|act
-operator|.
-name|sa_mask
+name|waitset
+argument_list|,
+name|SIGKILL
+argument_list|)
+expr_stmt|;
+name|sigdelset
+argument_list|(
+operator|&
+name|waitset
+argument_list|,
+name|SIGSTOP
+argument_list|)
+expr_stmt|;
+name|sigdelset
+argument_list|(
+operator|&
+name|waitset
+argument_list|,
+name|_SCHED_SIGNAL
+argument_list|)
+expr_stmt|;
+name|sigdelset
+argument_list|(
+operator|&
+name|waitset
 argument_list|,
 name|SIGCHLD
 argument_list|)
@@ -133,9 +144,7 @@ expr_stmt|;
 name|sigdelset
 argument_list|(
 operator|&
-name|act
-operator|.
-name|sa_mask
+name|waitset
 argument_list|,
 name|SIGINFO
 argument_list|)
@@ -150,9 +159,7 @@ name|_thread_run
 operator|->
 name|sigpend
 operator|&
-name|act
-operator|.
-name|sa_mask
+name|waitset
 operator|)
 condition|)
 block|{
@@ -206,7 +213,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Enter a loop to find the signals that are SIG_DFL.  For 	 * these signals we must install a dummy signal handler in 	 * order for the kernel to pass them in to us.  POSIX says 	 * that the application must explicitly install a dummy 	 * handler for signals that are SIG_IGN in order to sigwait 	 * on them.  Note that SIG_IGN signals are left in the 	 * mask because a subsequent sigaction could enable an 	 * ignored signal. 	 */
+comment|/* 	 * Enter a loop to find the signals that are SIG_DFL.  For 	 * these signals we must install a dummy signal handler in 	 * order for the kernel to pass them in to us.  POSIX says 	 * that the _application_ must explicitly install a dummy 	 * handler for signals that are SIG_IGN in order to sigwait 	 * on them.  Note that SIG_IGN signals are left in the 	 * mask because a subsequent sigaction could enable an 	 * ignored signal. 	 */
 for|for
 control|(
 name|i
@@ -226,16 +233,12 @@ condition|(
 name|sigismember
 argument_list|(
 operator|&
-name|act
-operator|.
-name|sa_mask
+name|waitset
 argument_list|,
 name|i
 argument_list|)
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
+operator|(
 name|_thread_sigact
 index|[
 name|i
@@ -246,7 +249,9 @@ operator|.
 name|sa_handler
 operator|==
 name|SIG_DFL
+operator|)
 condition|)
+block|{
 if|if
 condition|(
 name|_thread_sys_sigaction
@@ -283,9 +288,7 @@ operator|.
 name|sigwait
 operator|=
 operator|&
-name|act
-operator|.
-name|sa_mask
+name|waitset
 expr_stmt|;
 comment|/* Wait for a signal: */
 name|_thread_kern_sched_state
@@ -341,9 +344,7 @@ condition|(
 name|sigismember
 argument_list|(
 operator|&
-name|act
-operator|.
-name|sa_mask
+name|waitset
 argument_list|,
 name|i
 argument_list|)
