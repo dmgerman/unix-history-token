@@ -441,6 +441,16 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
+specifier|register
+name|SVCXPRT
+modifier|*
+name|transp
+decl_stmt|;
+name|int
+name|sock
+init|=
+name|RPC_ANYSOCK
+decl_stmt|;
 name|int
 name|warn
 init|=
