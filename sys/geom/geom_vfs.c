@@ -128,6 +128,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|g_orphan_t
+name|g_vfs_orphan
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|g_class
 name|g_vfs_class
@@ -381,6 +388,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|g_vfs_orphan
 parameter_list|(

@@ -233,6 +233,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|kproc_desc
 name|g_up_kp
@@ -325,6 +326,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|kproc_desc
 name|g_down_kp
