@@ -756,51 +756,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|newaf
-operator|=
-name|NULL
-expr_stmt|;
-name|afap
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* 	 * XXXRW: Configuring accept filters should be an atomic test-and-set 	 * operation to prevent races during setup and attach.  There may be 	 * more general issues of racing and ordering here that are not yet 	 * addressed by locking. 	 */
-comment|/* do not set/remove accept filters on non listen sockets */
-name|SOCK_LOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|so
-operator|->
-name|so_options
-operator|&
-name|SO_ACCEPTCONN
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|SOCK_UNLOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-block|}
-name|SOCK_UNLOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-comment|/*- 	 * Adding a filter. 	 * 	 * Do memory allocation, copyin, and filter lookup now while we're 	 * not holding any locks.  Avoids sleeping with a mutex, as well as 	 * introducing a lock order between accept filter locks and socket 	 * locks here. 	 */
+comment|/* 	 * Pre-allocate any memory we may need later to avoid blocking at 	 * untimely moments.  This does not optimize for invalid arguments. 	 */
 name|MALLOC
 argument_list|(
 name|afap
@@ -820,7 +776,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-comment|/* don't put large objects on the kernel stack */
 name|error
 operator|=
 name|sooptcopyin
@@ -917,7 +872,7 @@ name|ENOENT
 operator|)
 return|;
 block|}
-comment|/* 	 * Allocate the new accept filter instance storage.  We may have to 	 * free it again later if we fail to attach it.  If attached 	 * properly, 'newaf' is NULLed to avoid a free() while in use. 	 */
+comment|/* 	 * Allocate the new accept filter instance storage.  We may 	 * have to free it again later if we fail to attach it.  If 	 * attached properly, 'newaf' is NULLed to avoid a free() 	 * while in use. 	 */
 name|MALLOC
 argument_list|(
 name|newaf
@@ -997,19 +952,33 @@ name|af_name
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Require a listen socket; don't try to replace an existing filter 	 * without first removing it. 	 */
 name|SOCK_LOCK
 argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-comment|/* must remove previous filter first */
 if|if
 condition|(
+operator|(
+operator|(
+name|so
+operator|->
+name|so_options
+operator|&
+name|SO_ACCEPTCONN
+operator|)
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
 name|so
 operator|->
 name|so_accf
 operator|!=
 name|NULL
+operator|)
 condition|)
 block|{
 name|error
@@ -1020,7 +989,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 	 * Invoke the accf_create() method of the filter if required. 	 * XXXRW: the socket mutex is held over this call, so the create 	 * method cannot block.  This may be something we have to change, but 	 * it would require addressing possible races. 	 */
+comment|/* 	 * Invoke the accf_create() method of the filter if required.  The 	 * socket mutex is held over this call, so create methods for filters 	 * can't block. 	 */
 if|if
 condition|(
 name|afp
