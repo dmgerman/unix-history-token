@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.56 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.57 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2778,6 +2778,9 @@ name|p
 operator|->
 name|p_dupfd
 operator|=
+operator|(
+name|u_char
+operator|)
 operator|-
 literal|1
 expr_stmt|;
@@ -2818,8 +2821,12 @@ comment|/* XXX from fdopen */
 name|p
 operator|->
 name|p_dupfd
-operator|>=
-literal|0
+operator|!=
+operator|(
+name|u_char
+operator|)
+operator|-
+literal|1
 operator|&&
 operator|(
 name|error
