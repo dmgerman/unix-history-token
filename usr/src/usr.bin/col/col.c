@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)col.c	5.1 (Berkeley) %G%"
+literal|"@(#)col.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -135,7 +135,7 @@ begin_define
 define|#
 directive|define
 name|ESC
-value|033
+value|'\033'
 end_define
 
 begin_comment
@@ -146,7 +146,7 @@ begin_define
 define|#
 directive|define
 name|SI
-value|017
+value|'\017'
 end_define
 
 begin_comment
@@ -157,7 +157,7 @@ begin_define
 define|#
 directive|define
 name|SO
-value|016
+value|'\016'
 end_define
 
 begin_comment
@@ -168,7 +168,7 @@ begin_define
 define|#
 directive|define
 name|VT
-value|013
+value|'\013'
 end_define
 
 begin_comment
@@ -179,7 +179,7 @@ begin_define
 define|#
 directive|define
 name|RLF
-value|07
+value|'\07'
 end_define
 
 begin_comment
@@ -190,7 +190,7 @@ begin_define
 define|#
 directive|define
 name|RHLF
-value|08
+value|'\08'
 end_define
 
 begin_comment
@@ -201,7 +201,7 @@ begin_define
 define|#
 directive|define
 name|FHLF
-value|09
+value|'\09'
 end_define
 
 begin_comment
