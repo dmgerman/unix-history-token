@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	7.45 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	7.46 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -987,7 +987,7 @@ literal|'\0'
 expr_stmt|;
 name|addr
 operator|=
-literal|0
+name|VM_MIN_ADDRESS
 expr_stmt|;
 name|initproc
 operator|=
@@ -1026,7 +1026,7 @@ literal|0
 operator|||
 name|addr
 operator|!=
-literal|0
+name|VM_MIN_ADDRESS
 condition|)
 name|panic
 argument_list|(
@@ -1093,7 +1093,7 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-literal|0
+name|VM_MIN_ADDRESS
 argument_list|,
 operator|(
 name|u_int
@@ -1108,10 +1108,14 @@ name|copyout
 argument_list|(
 name|initflags
 argument_list|,
-operator|(
+call|(
 name|caddr_t
-operator|)
+call|)
+argument_list|(
+name|VM_MIN_ADDRESS
+operator|+
 name|szicode
+argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
