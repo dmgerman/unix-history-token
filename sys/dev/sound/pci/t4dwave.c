@@ -62,6 +62,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ALI_PCI_ID
+value|0x545110b9
+end_define
+
+begin_define
+define|#
+directive|define
 name|SPA_PCI_ID
 value|0x70181039
 end_define
@@ -597,6 +604,9 @@ name|SPA_CDC_RWSTAT
 expr_stmt|;
 break|break;
 case|case
+name|ALI_PCI_ID
+case|:
+case|case
 name|TDX_PCI_ID
 case|:
 name|treg
@@ -790,6 +800,9 @@ operator|=
 name|SPA_CDC_RWSTAT
 expr_stmt|;
 break|break;
+case|case
+name|ALI_PCI_ID
+case|:
 case|case
 name|TDX_PCI_ID
 case|:
@@ -1594,6 +1607,9 @@ case|case
 name|SPA_PCI_ID
 case|:
 case|case
+name|ALI_PCI_ID
+case|:
+case|case
 name|TDX_PCI_ID
 case|:
 name|ch
@@ -2020,6 +2036,9 @@ condition|)
 block|{
 case|case
 name|SPA_PCI_ID
+case|:
+case|case
+name|ALI_PCI_ID
 case|:
 case|case
 name|TDX_PCI_ID
@@ -3900,6 +3919,19 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"SiS 7018"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+case|case
+name|ALI_PCI_ID
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Acer Labs M5451"
 argument_list|)
 expr_stmt|;
 return|return
