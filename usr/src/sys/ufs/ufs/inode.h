@@ -28,19 +28,13 @@ begin_struct
 struct|struct
 name|inode
 block|{
-name|struct
-name|inode
-modifier|*
-name|i_next
-decl_stmt|;
-comment|/* Hash chain forward. */
-name|struct
-name|inode
-modifier|*
-modifier|*
-name|i_prev
-decl_stmt|;
-comment|/* Hash chain back. */
+name|LIST_ENTRY
+argument_list|(
+argument|inode
+argument_list|)
+name|i_hash
+expr_stmt|;
+comment|/* Hash chain. */
 name|struct
 name|vnode
 modifier|*
@@ -163,6 +157,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|i_atimensec
+value|i_din.di_atimensec
+end_define
+
+begin_define
+define|#
+directive|define
 name|i_blocks
 value|i_din.di_blocks
 end_define
@@ -172,6 +173,13 @@ define|#
 directive|define
 name|i_ctime
 value|i_din.di_ctime
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_ctimensec
+value|i_din.di_ctimensec
 end_define
 
 begin_define
@@ -221,6 +229,13 @@ define|#
 directive|define
 name|i_mtime
 value|i_din.di_mtime
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_mtimensec
+value|i_din.di_mtimensec
 end_define
 
 begin_define
@@ -386,7 +401,7 @@ begin_struct
 struct|struct
 name|indir
 block|{
-name|daddr_t
+name|ufs_daddr_t
 name|in_lbn
 decl_stmt|;
 comment|/* Logical block number. */
@@ -437,7 +452,7 @@ name|t1
 parameter_list|,
 name|t2
 parameter_list|)
-value|{						\ 	if ((ip)->i_flag& (IN_ACCESS | IN_CHANGE | IN_UPDATE)) {	\ 		(ip)->i_flag |= IN_MODIFIED;				\ 		if ((ip)->i_flag& IN_ACCESS)				\ 			(ip)->i_atime.ts_sec = (t1)->tv_sec;		\ 		if ((ip)->i_flag& IN_UPDATE) {				\ 			(ip)->i_mtime.ts_sec = (t2)->tv_sec;		\ 			(ip)->i_modrev++;				\ 		}							\ 		if ((ip)->i_flag& IN_CHANGE)				\ 			(ip)->i_ctime.ts_sec = time.tv_sec;		\ 		(ip)->i_flag&= ~(IN_ACCESS | IN_CHANGE | IN_UPDATE);	\ 	}								\ }
+value|{						\ 	if ((ip)->i_flag& (IN_ACCESS | IN_CHANGE | IN_UPDATE)) {	\ 		(ip)->i_flag |= IN_MODIFIED;				\ 		if ((ip)->i_flag& IN_ACCESS)				\ 			(ip)->i_atime = (t1)->tv_sec;			\ 		if ((ip)->i_flag& IN_UPDATE) {				\ 			(ip)->i_mtime = (t2)->tv_sec;			\ 			(ip)->i_modrev++;				\ 		}							\ 		if ((ip)->i_flag& IN_CHANGE)				\ 			(ip)->i_ctime = time.tv_sec;			\ 		(ip)->i_flag&= ~(IN_ACCESS | IN_CHANGE | IN_UPDATE);	\ 	}								\ }
 end_define
 
 begin_comment
