@@ -2070,7 +2070,7 @@ name|io
 operator|.
 name|sad
 operator|=
-name|v
+name|sad
 expr_stmt|;
 name|io
 operator|.
