@@ -353,6 +353,23 @@ operator|)
 operator|!=
 literal|0
 expr_stmt|;
+comment|/* ai_canonname may not be filled in if the user specified an IP. */
+if|if
+condition|(
+name|ai0
+operator|->
+name|ai_canonname
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"[%s]\n"
+argument_list|,
+name|host
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"[%s]\n"
