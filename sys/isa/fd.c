@@ -285,14 +285,14 @@ begin_define
 define|#
 directive|define
 name|NUMTYPES
-value|14
+value|17
 end_define
 
 begin_define
 define|#
 directive|define
 name|NUMDENS
-value|(NUMTYPES - 6)
+value|(NUMTYPES - 7)
 end_define
 
 begin_comment
@@ -380,43 +380,64 @@ end_define
 begin_define
 define|#
 directive|define
-name|FD_1480in5_25
+name|FD_640
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|FD_1440in5_25
+name|FD_1232
 value|10
 end_define
 
 begin_define
 define|#
 directive|define
-name|FD_820in5_25
+name|FD_1480in5_25
 value|11
 end_define
 
 begin_define
 define|#
 directive|define
-name|FD_800in5_25
+name|FD_1440in5_25
 value|12
 end_define
 
 begin_define
 define|#
 directive|define
-name|FD_720in5_25
+name|FD_820in5_25
 value|13
 end_define
 
 begin_define
 define|#
 directive|define
-name|FD_360in5_25
+name|FD_800in5_25
 value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|FD_720in5_25
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|FD_360in5_25
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|FD_640in5_25
+value|17
 end_define
 
 begin_decl_stmt
@@ -630,6 +651,56 @@ block|}
 block|,
 comment|/*  360K in DD 5.25in */
 block|{
+literal|8
+block|,
+literal|2
+block|,
+literal|0xFF
+block|,
+literal|0x2A
+block|,
+literal|80
+block|,
+literal|1280
+block|,
+literal|1
+block|,
+name|FDC_250KBPS
+block|,
+literal|2
+block|,
+literal|0x50
+block|,
+literal|1
+block|}
+block|,
+comment|/*  640K in DD 5.25in */
+block|{
+literal|8
+block|,
+literal|3
+block|,
+literal|0xFF
+block|,
+literal|0x35
+block|,
+literal|77
+block|,
+literal|1232
+block|,
+literal|1
+block|,
+name|FDC_500KBPS
+block|,
+literal|2
+block|,
+literal|0x74
+block|,
+literal|1
+block|}
+block|,
+comment|/* 1.23M in HD 5.25in */
+block|{
 literal|18
 block|,
 literal|2
@@ -779,6 +850,31 @@ literal|1
 block|}
 block|,
 comment|/*  360K in HD 5.25in */
+block|{
+literal|8
+block|,
+literal|2
+block|,
+literal|0xFF
+block|,
+literal|0x2A
+block|,
+literal|80
+block|,
+literal|1280
+block|,
+literal|1
+block|,
+name|FDC_300KBPS
+block|,
+literal|2
+block|,
+literal|0x50
+block|,
+literal|1
+block|}
+block|,
+comment|/*  640K in HD 5.25in */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -6578,6 +6674,10 @@ operator|&&
 name|type
 operator|!=
 name|FD_800
+operator|&&
+name|type
+operator|!=
+name|FD_640
 condition|)
 return|return
 operator|(
@@ -6610,6 +6710,10 @@ name|FD_1440in5_25
 expr_stmt|;
 break|break;
 case|case
+name|FD_1232
+case|:
+break|break;
+case|case
 name|FD_820
 case|:
 name|type
@@ -6631,6 +6735,14 @@ case|:
 name|type
 operator|=
 name|FD_720in5_25
+expr_stmt|;
+break|break;
+case|case
+name|FD_640
+case|:
+name|type
+operator|=
+name|FD_640in5_25
 expr_stmt|;
 break|break;
 case|case
@@ -6677,6 +6789,10 @@ operator|&&
 name|type
 operator|!=
 name|FD_720
+operator|&&
+name|type
+operator|!=
+name|FD_640
 condition|)
 return|return
 operator|(
