@@ -710,6 +710,11 @@ name|twa_intr_handle
 decl_stmt|;
 comment|/* interrupt handle */
 name|struct
+name|intr_config_hook
+name|twa_ich
+decl_stmt|;
+comment|/* delayed-startup hook */
+name|struct
 name|sysctl_ctx_list
 name|twa_sysctl_ctx
 decl_stmt|;
