@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_log.c	6.1	84/07/16	*/
+comment|/*	subr_log.c	6.2	84/07/17	*/
 end_comment
 
 begin_comment
@@ -113,6 +113,65 @@ name|logsoftc
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOGDEBUG
+end_ifdef
+
+begin_comment
+comment|/*VARARGS1*/
+end_comment
+
+begin_macro
+name|xprintf
+argument_list|(
+argument|fmt
+argument_list|,
+argument|x1
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|fmt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|x1
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|prf
+argument_list|(
+name|fmt
+argument_list|,
+operator|&
+name|x1
+argument_list|,
+literal|1
+argument_list|,
+operator|(
+expr|struct
+name|tty
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_macro
 name|logopen
 argument_list|(
@@ -131,7 +190,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|LOGDEBUG
-name|printf
+name|xprintf
 argument_list|(
 literal|"logopen: dev=0x%x\n"
 argument_list|,
@@ -228,6 +287,24 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|LOGDEBUG
+name|xprintf
+argument_list|(
+literal|"logopen: bufx=%d, bufr=%d\n"
+argument_list|,
+name|msgbuf
+operator|.
+name|msg_bufx
+argument_list|,
+name|msgbuf
+operator|.
+name|msg_bufr
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -274,7 +351,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOGDEBUG
-name|printf
+name|xprintf
 argument_list|(
 literal|"logclose: dev=0x%x\n"
 argument_list|,
@@ -337,7 +414,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|LOGDEBUG
-name|printf
+name|xprintf
 argument_list|(
 literal|"logread: dev=0x%x\n"
 argument_list|,
@@ -462,6 +539,35 @@ operator|->
 name|uio_resid
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOGDEBUG
+name|xprintf
+argument_list|(
+literal|"logread: bufx=%d, bufr=%d, l=%d, c=%d\n"
+argument_list|,
+name|msgbuf
+operator|.
+name|msg_bufx
+argument_list|,
+name|msgbuf
+operator|.
+name|msg_bufr
+argument_list|,
+name|l
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|c
+operator|<=
+literal|0
+condition|)
+break|break;
 name|error
 operator|=
 name|uiomove
@@ -588,7 +694,7 @@ name|logsoftc
 operator|.
 name|sc_selp
 condition|)
-name|printf
+name|xprintf
 argument_list|(
 literal|"logselect: collision\n"
 argument_list|)
@@ -610,7 +716,7 @@ case|:
 ifdef|#
 directive|ifdef
 name|LOGDEBUG
-name|printf
+name|xprintf
 argument_list|(
 literal|"logselect: FWRITE\n"
 argument_list|)
