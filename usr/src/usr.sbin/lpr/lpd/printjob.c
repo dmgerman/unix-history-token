@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printjob.c	5.10 (Berkeley) %G%"
+literal|"@(#)printjob.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6462,6 +6462,9 @@ block|}
 comment|/* 	 * Start up an output filter, if needed. 	 */
 if|if
 condition|(
+operator|!
+name|remote
+operator|&&
 name|OF
 condition|)
 block|{
