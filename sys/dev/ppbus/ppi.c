@@ -656,7 +656,7 @@ name|ppbus
 argument_list|)
 condition|)
 block|{
-comment|/* accept IEEE1284 negociation then wakeup an waiting process to 	 * continue negociation at process level */
+comment|/* accept IEEE1284 negotiation then wakeup a waiting process to 	 * continue negotiation at process level */
 case|case
 name|PPB_FORWARD_IDLE
 case|:
@@ -683,7 +683,7 @@ name|nBUSY
 operator|)
 condition|)
 block|{
-comment|/* IEEE1284 negociation */
+comment|/* IEEE1284 negotiation */
 ifdef|#
 directive|ifdef
 name|DEBUG_1284
@@ -745,7 +745,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* wake up any process waiting for negociation from 		 * remote master host */
+comment|/* wake up any process waiting for negotiation from 		 * remote master host */
 comment|/* XXX should set a variable to warn the process about 		 * the interrupt */
 name|wakeup
 argument_list|(
@@ -1109,7 +1109,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ppiread()  *  * IEEE1284 compliant read.  *  * First, try negociation to BYTE then NIBBLE mode  * If no data is available, wait for it otherwise transfer as much as possible  */
+comment|/*  * ppiread()  *  * IEEE1284 compliant read.  *  * First, try negotiation to BYTE then NIBBLE mode  * If no data is available, wait for it otherwise transfer as much as possible  */
 end_comment
 
 begin_function
@@ -1195,7 +1195,7 @@ comment|/* FALLTHROUGH */
 case|case
 name|PPB_FORWARD_IDLE
 case|:
-comment|/* if can't negociate NIBBLE mode then try BYTE mode, 		 * the peripheral may be a computer 		 */
+comment|/* if can't negotiate NIBBLE mode then try BYTE mode, 		 * the peripheral may be a computer 		 */
 if|if
 condition|(
 operator|(
@@ -1385,7 +1385,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ppiwrite()  *  * IEEE1284 compliant write  *  * Actually, this is the peripheral side of a remote IEEE1284 read  *  * The first part of the negociation (IEEE1284 device detection) is  * done at interrupt level, then the remaining is done by the writing  * process  *  * Once negociation done, transfer data  */
+comment|/*  * ppiwrite()  *  * IEEE1284 compliant write  *  * Actually, this is the peripheral side of a remote IEEE1284 read  *  * The first part of the negotiation (IEEE1284 device detection) is  * done at interrupt level, then the remaining is done by the writing  * process  *  * Once negotiation done, transfer data  */
 end_comment
 
 begin_function
@@ -1464,8 +1464,8 @@ directive|define
 name|LENGTH
 value|MS_PARAM(0, 1, MS_TYP_INT)
 block|struct ppb_microseq msq[] = { 		  { MS_OP_PUT, { MS_UNKNOWN, MS_UNKNOWN, MS_UNKNOWN } }, 		  MS_RET(0) 	};
-comment|/* negociate ECP mode */
-block|if (ppb_1284_negociate(ppbus, PPB_ECP, 0)) { 		printf("ppiwrite: ECP negociation failed\n"); 	}  	while (!error&& (len = min(uio->uio_resid, BUFSIZE))) { 		uiomove(ppi->ppi_buffer, len, uio);  		ppb_MS_init_msq(msq, 2, ADDRESS, ppi->ppi_buffer, LENGTH, len);  		error = ppb_MS_microseq(ppbus, msq,&ret); 	}
+comment|/* negotiate ECP mode */
+block|if (ppb_1284_negociate(ppbus, PPB_ECP, 0)) { 		printf("ppiwrite: ECP negotiation failed\n"); 	}  	while (!error&& (len = min(uio->uio_resid, BUFSIZE))) { 		uiomove(ppi->ppi_buffer, len, uio);  		ppb_MS_init_msq(msq, 2, ADDRESS, ppi->ppi_buffer, LENGTH, len);  		error = ppb_MS_microseq(ppbus, msq,&ret); 	}
 endif|#
 directive|endif
 comment|/* we have to be peripheral to be able to send data, so 	 * wait for the appropriate state 	 */
@@ -1509,7 +1509,7 @@ argument_list|(
 name|ppidev
 argument_list|)
 expr_stmt|;
-comment|/* sleep until IEEE1284 negociation starts */
+comment|/* sleep until IEEE1284 negotiation starts */
 name|error
 operator|=
 name|tsleep
@@ -1533,7 +1533,7 @@ block|{
 case|case
 literal|0
 case|:
-comment|/* negociate peripheral side with BYTE mode */
+comment|/* negotiate peripheral side with BYTE mode */
 name|ppb_peripheral_negociate
 argument_list|(
 name|ppbus
@@ -1564,7 +1564,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* negociation done, write bytes to master host */
+comment|/* negotiation done, write bytes to master host */
 while|while
 condition|(
 operator|(

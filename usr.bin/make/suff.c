@@ -3304,7 +3304,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *----------------------------------------------------------------------  * SuffRemoveSrc --  *	Free all src structures in list that don't have a reference count  *  * Results:  *	Ture if an src was removed  *  * Side Effects:  *	The memory is free'd.  *----------------------------------------------------------------------  */
+comment|/*-  *----------------------------------------------------------------------  * SuffRemoveSrc --  *	Free all src structures in list that don't have a reference count  *  * Results:  *	True if a src was removed  *  * Side Effects:  *	The memory is free'd.  *----------------------------------------------------------------------  */
 end_comment
 
 begin_function

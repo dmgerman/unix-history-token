@@ -363,7 +363,7 @@ comment|/* max # of *tries* to transmit DAD packet */
 end_comment
 
 begin_comment
-comment|/*  * Input an Neighbor Solicitation Message.  *  * Based on RFC 2461  * Based on RFC 2462 (duplicated address detection)  */
+comment|/*  * Input a Neighbor Solicitation Message.  *  * Based on RFC 2461  * Based on RFC 2462 (duplicated address detection)  */
 end_comment
 
 begin_function
@@ -1382,7 +1382,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Output an Neighbor Solicitation Message. Caller specifies:  *	- ICMP6 header source IP6 address  *	- ND6 header target IP6 address  *	- ND6 header source datalink address  *  * Based on RFC 2461  * Based on RFC 2462 (duplicated address detection)  */
+comment|/*  * Output a Neighbor Solicitation Message. Caller specifies:  *	- ICMP6 header source IP6 address  *	- ND6 header target IP6 address  *	- ND6 header source datalink address  *  * Based on RFC 2461  * Based on RFC 2462 (duplicated address detection)  */
 end_comment
 
 begin_function

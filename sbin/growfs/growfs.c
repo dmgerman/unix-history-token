@@ -2857,7 +2857,7 @@ comment|/* ******************************************************* frag_adjust *
 end_comment
 
 begin_comment
-comment|/*  * Here  we add or subtract (sign +1/-1) the available fragments in  a  given  * block to or from the fragment statistics. By subtracting before and adding  * after  an operation on the free frag map we can easy update  the  fragment  * statistic, which seems to be otherwise an rather complex operation.  */
+comment|/*  * Here  we add or subtract (sign +1/-1) the available fragments in  a  given  * block to or from the fragment statistics. By subtracting before and adding  * after  an operation on the free frag map we can easy update  the  fragment  * statistic, which seems to be otherwise a rather complex operation.  */
 end_comment
 
 begin_function

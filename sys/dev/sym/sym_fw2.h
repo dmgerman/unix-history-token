@@ -2181,7 +2181,7 @@ operator|.
 name|status
 argument_list|)
 block|,
-comment|/* 	 *  If QUIRK_AUTOSAVE is set, 	 *  do an "save pointer" operation. 	 */
+comment|/* 	 *  If QUIRK_AUTOSAVE is set, 	 *  do a "save pointer" operation. 	 */
 name|SCR_FROM_REG
 argument_list|(
 name|QU_REG

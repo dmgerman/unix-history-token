@@ -717,7 +717,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * camq_change_priority:  Given an array of cam_pinfo* elements with the  * Heap(1, num_entries) property, an index such that 1<= index<= num_elements,  * and an new priority for the element at index, change the priority of  * element index and restore the Heap(0, num_elements) property.  */
+comment|/*  * camq_change_priority:  Given an array of cam_pinfo* elements with the  * Heap(1, num_entries) property, an index such that 1<= index<= num_elements,  * and a new priority for the element at index, change the priority of  * element index and restore the Heap(0, num_elements) property.  */
 end_comment
 
 begin_function

@@ -335,7 +335,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Store an group member entry and/or update its grouplist.  */
+comment|/*  * Store a group member entry and/or update its grouplist.  */
 end_comment
 
 begin_function

@@ -41,6 +41,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_include
 include|#
 directive|include
@@ -822,7 +830,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * write information about an global declared/defined symbol  * with storage class extern  *  * informations about function definitions are written in outfdef(),  * not here  */
+comment|/*  * write information about a global declared/defined symbol  * with storage class extern  *  * informations about function definitions are written in outfdef(),  * not here  */
 end_comment
 
 begin_function

@@ -115,7 +115,7 @@ end_else
 begin_error
 error|#
 directive|error
-error|Provide an bitops.h file, please !
+error|Provide a bitops.h file, please!
 end_error
 
 begin_endif

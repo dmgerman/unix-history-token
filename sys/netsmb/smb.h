@@ -1642,7 +1642,7 @@ value|0x03
 end_define
 
 begin_comment
-comment|/* Error is an hardware error. */
+comment|/* Error is a hardware error. */
 end_comment
 
 begin_define

@@ -4702,7 +4702,7 @@ name|time_now
 operator|*
 name|NFORWARD
 expr_stmt|;
-comment|/* 	 * Check if it is an duplicate entry. Then, 	 * try to find an empty slot.  If not available, then 	 * use the slot with the earliest time. 	 */
+comment|/* 	 * Check if it is a duplicate entry. Then, 	 * try to find an empty slot.  If not available, then 	 * use the slot with the earliest time. 	 */
 for|for
 control|(
 name|i

@@ -5614,7 +5614,7 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * Adjust start upwards, if necessary, to fall on an head boundary. 	 */
+comment|/* 	 * Adjust start upwards, if necessary, to fall on a head boundary. 	 */
 if|if
 condition|(
 name|partp
@@ -6424,7 +6424,7 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/*      * Adjust start upwards, if necessary, to fall on an head boundary.      */
+comment|/*      * Adjust start upwards, if necessary, to fall on a head boundary.      */
 if|if
 condition|(
 name|start

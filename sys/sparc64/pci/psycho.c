@@ -2515,7 +2515,7 @@ name|PSR_TC0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Setup IOMMU and PCI configuration if we're the first 		 * of a pair of psycho's to arrive here. 		 * 		 * We should calculate a TSB size based on amount of RAM 		 * and number of bus controllers and number an type of 		 * child devices. 		 * 		 * For the moment, 32KB should be more than enough. 		 */
+comment|/* 		 * Setup IOMMU and PCI configuration if we're the first 		 * of a pair of psycho's to arrive here. 		 * 		 * We should calculate a TSB size based on amount of RAM 		 * and number of bus controllers and number and type of 		 * child devices. 		 * 		 * For the moment, 32KB should be more than enough. 		 */
 name|sc
 operator|->
 name|sc_is

@@ -456,7 +456,7 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-comment|/* number of times that an deprecated address is chosen */
+comment|/* number of times that a deprecated address is chosen */
 name|u_quad_t
 name|ip6s_sources_deprecated
 index|[

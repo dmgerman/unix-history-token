@@ -3628,7 +3628,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Process a close response or close confirmation  *  * Called when an close response or close confirmation is received.  * Processing will be based on the state of the requested connection and  * the returned status.  *  * Arguments:  *	spp	pointer to SPANS protocol instance block  *	msg	pointer to the close response or confirmation message  *  * Returns:  *	none  *  */
+comment|/*  * Process a close response or close confirmation  *  * Called when a close response or close confirmation is received.  * Processing will be based on the state of the requested connection and  * the returned status.  *  * Arguments:  *	spp	pointer to SPANS protocol instance block  *	msg	pointer to the close response or confirmation message  *  * Returns:  *	none  *  */
 end_comment
 
 begin_function
@@ -4200,7 +4200,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Process a join request  *  * Called when an join request is received.  We don't support group  * addresses, so we just reject the request.  *  * Arguments:  *	spp	pointer to SPANS protocol instance block  *	msg	pointer to the join request message  *  * Returns:  *	none  *  */
+comment|/*  * Process a join request  *  * Called when a join request is received.  We don't support group  * addresses, so we just reject the request.  *  * Arguments:  *	spp	pointer to SPANS protocol instance block  *	msg	pointer to the join request message  *  * Returns:  *	none  *  */
 end_comment
 
 begin_function
@@ -4303,7 +4303,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Process a leave request  *  * Called when an leave request is received.  We don't support group  * addresses, so we just reject the request.  *  * Arguments:  *	spp	pointer to SPANS protocol instance block  *	msg	pointer to the leave request message  *  * Returns:  *	none  *  */
+comment|/*  * Process a leave request  *  * Called when a leave request is received.  We don't support group  * addresses, so we just reject the request.  *  * Arguments:  *	spp	pointer to SPANS protocol instance block  *	msg	pointer to the leave request message  *  * Returns:  *	none  *  */
 end_comment
 
 begin_function

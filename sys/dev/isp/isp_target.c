@@ -3487,7 +3487,7 @@ break|break;
 case|case
 name|AT_RESET
 case|:
-comment|/* 		 * A bus reset came along an blew away this command. Why 		 * they do this in addition the async event code stuff, 		 * I dunno. 		 * 		 * Ignore it because the async event will clear things 		 * up for us. 		 */
+comment|/* 		 * A bus reset came along and blew away this command. Why 		 * they do this in addition the async event code stuff, 		 * I dunno. 		 * 		 * Ignore it because the async event will clear things 		 * up for us. 		 */
 name|isp_prt
 argument_list|(
 name|isp

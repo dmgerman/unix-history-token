@@ -3706,7 +3706,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * watchdog routine for transmitter.  *  * We need this, because else a receiver whose hardware is alive, but whose  * software has not enabled the Receiver, would make our hardware wait forever  * Discovered this after 20 times reading the docs.  *  * Only thing we do is disable transmitter. We'll get an transmit timeout,  * and the int handler will have to decide not to retransmit (in case  * retransmission is implemented).  *  * This one assumes being called inside splimp()  */
+comment|/*  * watchdog routine for transmitter.  *  * We need this, because else a receiver whose hardware is alive, but whose  * software has not enabled the Receiver, would make our hardware wait forever  * Discovered this after 20 times reading the docs.  *  * Only thing we do is disable transmitter. We'll get a transmit timeout,  * and the int handler will have to decide not to retransmit (in case  * retransmission is implemented).  *  * This one assumes being called inside splimp()  */
 end_comment
 
 begin_function

@@ -157,7 +157,7 @@ comment|/*  * Local variables  */
 end_comment
 
 begin_comment
-comment|/*  * Stack commands with arg1 containing an buffer pointer  */
+comment|/*  * Stack commands with arg1 containing a buffer pointer  */
 end_comment
 
 begin_decl_stmt

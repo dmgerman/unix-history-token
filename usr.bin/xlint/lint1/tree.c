@@ -11852,7 +11852,7 @@ name|xmsk1
 operator|)
 condition|)
 block|{
-comment|/* 			 * Loss of significant bit(s). All truncated bits 			 * of unsigned types or all truncated bits plus the 			 * msb of the target for signed types are considered 			 * to be significant bits. Loss of significant bits 			 * means that at least on of the bits was set in an 			 * unsigned type or that at least one, but not all of 			 * the bits was set in an signed type. 			 * Loss of significant bits means that it is not 			 * possible, also not with necessary casts, to convert 			 * back to the original type. A example for a 			 * necessary cast is: 			 *	char c;	int	i; c = 128; 			 *	i = c;			** yields -128 ** 			 *	i = (unsigned char)c;	** yields 128 ** 			 */
+comment|/* 			 * Loss of significant bit(s). All truncated bits 			 * of unsigned types or all truncated bits plus the 			 * msb of the target for signed types are considered 			 * to be significant bits. Loss of significant bits 			 * means that at least on of the bits was set in an 			 * unsigned type or that at least one, but not all of 			 * the bits was set in a signed type. 			 * Loss of significant bits means that it is not 			 * possible, also not with necessary casts, to convert 			 * back to the original type. A example for a 			 * necessary cast is: 			 *	char c;	int	i; c = 128; 			 *	i = c;			** yields -128 ** 			 *	i = (unsigned char)c;	** yields 128 ** 			 */
 if|if
 condition|(
 name|op

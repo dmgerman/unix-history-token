@@ -7332,7 +7332,7 @@ index|]
 operator|&
 literal|0xff
 expr_stmt|;
-comment|/* 	 * Check to see if we're on a fabric by trying to see if we 	 * can talk to the fabric name server. This can be a bit 	 * tricky because if we're a 2100, we should check always 	 * (in case we're connected to an server doing aliasing). 	 */
+comment|/* 	 * Check to see if we're on a fabric by trying to see if we 	 * can talk to the fabric name server. This can be a bit 	 * tricky because if we're a 2100, we should check always 	 * (in case we're connected to a server doing aliasing). 	 */
 name|fcp
 operator|->
 name|isp_onfabric

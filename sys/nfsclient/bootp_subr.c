@@ -6799,7 +6799,7 @@ argument_list|(
 literal|0x8000
 argument_list|)
 expr_stmt|;
-comment|/* We need an broadcast answer */
+comment|/* We need a broadcast answer */
 block|}
 end_function
 

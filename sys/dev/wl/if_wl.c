@@ -3809,7 +3809,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * wlread:  *  *	This routine does the actual copy of data (including ethernet header  *	structure) from the WaveLAN to an mbuf chain that will be passed up  *	to the "if" (network interface) layer.  NOTE:  we currently  *	don't handle trailer protocols, so if that is needed, it will  *	(at least in part) be added here.  For simplicities sake, this  *	routine copies the receive buffers from the board into a local (stack)  *	buffer until the frame has been copied from the board.  Once in  *	the local buffer, the contents are copied to an mbuf chain that  *	is then enqueued onto the appropriate "if" queue.  *  * input	: board number, and an frame descriptor address  * output	: the packet is put into an mbuf chain, and passed up  * assumes	: if any errors occur, packet is "dropped on the floor"  *  */
+comment|/*  * wlread:  *  *	This routine does the actual copy of data (including ethernet header  *	structure) from the WaveLAN to an mbuf chain that will be passed up  *	to the "if" (network interface) layer.  NOTE:  we currently  *	don't handle trailer protocols, so if that is needed, it will  *	(at least in part) be added here.  For simplicities sake, this  *	routine copies the receive buffers from the board into a local (stack)  *	buffer until the frame has been copied from the board.  Once in  *	the local buffer, the contents are copied to an mbuf chain that  *	is then enqueued onto the appropriate "if" queue.  *  * input	: board number, and a frame descriptor address  * output	: the packet is put into an mbuf chain, and passed up  * assumes	: if any errors occur, packet is "dropped on the floor"  *  */
 end_comment
 
 begin_function

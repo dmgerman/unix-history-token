@@ -1235,7 +1235,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * return result as an pseudo-english word  */
+comment|/*  * return result as a pseudo-english word  */
 end_comment
 
 begin_function

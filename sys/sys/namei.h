@@ -503,7 +503,7 @@ comment|/* mask of parameter descriptors */
 end_comment
 
 begin_comment
-comment|/*  * Initialization of an nameidata structure.  */
+comment|/*  * Initialization of a nameidata structure.  */
 end_comment
 
 begin_function_decl

@@ -1845,7 +1845,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"<%s> need %s as an prefix for "
+literal|"<%s> need %s as a prefix for "
 literal|"interface %s"
 argument_list|,
 name|__FUNCTION__
@@ -2440,7 +2440,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"<%s> need %s as an route for "
+literal|"<%s> need %s as a route for "
 literal|"interface %s"
 argument_list|,
 name|__FUNCTION__

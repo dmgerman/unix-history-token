@@ -749,7 +749,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find a connection  *  * Find a VCCB given the connection structure.  *  * Arguments:  *	spp	pointer to SPANS protocol instance  *	p	pointer to an spans_atm_conn structure  *  * Returns:  *	0	there is no such VCCB  *	address	the address of the VCCB  *  */
+comment|/*  * Find a connection  *  * Find a VCCB given the connection structure.  *  * Arguments:  *	spp	pointer to SPANS protocol instance  *	p	pointer to a spans_atm_conn structure  *  * Returns:  *	0	there is no such VCCB  *	address	the address of the VCCB  *  */
 end_comment
 
 begin_function

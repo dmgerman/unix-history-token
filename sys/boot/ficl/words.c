@@ -16453,7 +16453,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/**************************************************************************                         f i c l W o r d C l a s s i f y ** This public function helps to classify word types for SEE ** and the deugger in tools.c. Given an pointer to a word, it returns ** a member of WOR **************************************************************************/
+comment|/**************************************************************************                         f i c l W o r d C l a s s i f y ** This public function helps to classify word types for SEE ** and the deugger in tools.c. Given a pointer to a word, it returns ** a member of WOR **************************************************************************/
 end_comment
 
 begin_function

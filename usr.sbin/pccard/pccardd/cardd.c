@@ -2801,7 +2801,7 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-comment|/* 			 * Ask the kernel if we have an free irq. 			 */
+comment|/* 			 * Ask the kernel if we have a free irq. 			 */
 name|res
 operator|.
 name|min

@@ -2723,7 +2723,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * fsm_rcoderej - Receive an Code-Reject.  */
+comment|/*  * fsm_rcoderej - Receive a Code-Reject.  */
 end_comment
 
 begin_function

@@ -1444,7 +1444,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is just an brute force interrupt handler. It just calls all the  * registered handlers sequencially.  *  * Later on we should maybe have a different handler for boards that can  * tell us which device generated the interrupt.  */
+comment|/*  * This is just a brute force interrupt handler. It just calls all the  * registered handlers sequencially.  *  * Later on we should maybe have a different handler for boards that can  * tell us which device generated the interrupt.  */
 end_comment
 
 begin_function

@@ -7600,7 +7600,7 @@ operator|==
 name|AMR_SIG_438
 condition|)
 block|{
-comment|/* the AMI 438 is an NetRaid 3si in HP-land */
+comment|/* the AMI 438 is a NetRaid 3si in HP-land */
 name|prod
 operator|=
 literal|"HP NetRaid 3si"

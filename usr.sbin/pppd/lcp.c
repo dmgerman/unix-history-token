@@ -1651,7 +1651,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * lcp_rprotrej - Receive an Protocol-Reject.  *  * Figure out which protocol is rejected and inform it.  */
+comment|/*  * lcp_rprotrej - Receive a Protocol-Reject.  *  * Figure out which protocol is rejected and inform it.  */
 end_comment
 
 begin_function

@@ -1454,7 +1454,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 		 * Couldn't match using NIS-exclusive mode. If the error 	 	 * was YPERR_MAP, then the failure happened because there 	 	 * was no netgroup.byhost or netgroup.byuser map. The odds 		 * are we are talking to an Sun NIS+ server in YP emulation 		 * mode; if this is the case, then we have to do the check 		 * the 'old-fashioned' way by grovelling through the netgroup 		 * map and resolving memberships on the fly. 		 */
+comment|/* 		 * Couldn't match using NIS-exclusive mode. If the error 	 	 * was YPERR_MAP, then the failure happened because there 	 	 * was no netgroup.byhost or netgroup.byuser map. The odds 		 * are we are talking to a Sun NIS+ server in YP emulation 		 * mode; if this is the case, then we have to do the check 		 * the 'old-fashioned' way by grovelling through the netgroup 		 * map and resolving memberships on the fly. 		 */
 if|if
 condition|(
 name|y

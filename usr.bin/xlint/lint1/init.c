@@ -41,6 +41,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_include
 include|#
 directive|include
@@ -524,7 +532,7 @@ operator|->
 name|t_dim
 operator|++
 expr_stmt|;
-comment|/* from now its an complete type */
+comment|/* from now its a complete type */
 name|setcompl
 argument_list|(
 name|istk

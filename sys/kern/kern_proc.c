@@ -2712,7 +2712,7 @@ comment|/* DDB */
 end_comment
 
 begin_comment
-comment|/*  * Fill in an kinfo_proc structure for the specified process.  * Must be called with the target process locked.  */
+comment|/*  * Fill in a kinfo_proc structure for the specified process.  * Must be called with the target process locked.  */
 end_comment
 
 begin_function

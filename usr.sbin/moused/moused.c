@@ -6181,7 +6181,7 @@ index|]
 expr_stmt|;
 comment|/* header bit pattern */
 block|}
-comment|/* maybe this is an PnP mouse... */
+comment|/* maybe this is a PnP mouse... */
 if|if
 condition|(
 name|rodent

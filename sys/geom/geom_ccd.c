@@ -2174,7 +2174,7 @@ name|ccg
 operator|->
 name|ccg_nsectors
 expr_stmt|;
-comment|/* 	 * Add an devstat entry for this device. 	 */
+comment|/* 	 * Add a devstat entry for this device. 	 */
 name|devstat_add_entry
 argument_list|(
 operator|&

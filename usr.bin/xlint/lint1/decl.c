@@ -12611,7 +12611,7 @@ name|t_tspec
 operator|==
 name|FUNC
 condition|)
-comment|/* 			 * this can happen if an syntax error occurred 			 * after a function declaration 			 */
+comment|/* 			 * this can happen if a syntax error occurred 			 * after a function declaration 			 */
 return|return;
 name|STRUCT_ASSIGN
 argument_list|(

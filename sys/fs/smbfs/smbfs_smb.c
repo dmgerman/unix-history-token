@@ -1854,7 +1854,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* not an regular open file */
+comment|/* not a regular open file */
 name|error
 operator|=
 name|smb_rq_init

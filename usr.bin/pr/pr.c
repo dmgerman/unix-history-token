@@ -5467,7 +5467,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * posix is not clear if the header is subject to line length 	 * restrictions. The specification for header line format 	 * in the spec clearly does not limit length. No pr currently 	 * restricts header length. However if we need to truncate in 	 * an reasonable way, adjust the length of the printf by 	 * changing HDFMT to allow a length max as an arguement printf. 	 * buf (which contains the offset spaces and time field could 	 * also be trimmed 	 * 	 * note only the offset (if any) is processed for tab expansion 	 */
+comment|/* 	 * posix is not clear if the header is subject to line length 	 * restrictions. The specification for header line format 	 * in the spec clearly does not limit length. No pr currently 	 * restricts header length. However if we need to truncate in 	 * a reasonable way, adjust the length of the printf by 	 * changing HDFMT to allow a length max as an arguement printf. 	 * buf (which contains the offset spaces and time field could 	 * also be trimmed 	 * 	 * note only the offset (if any) is processed for tab expansion 	 */
 if|if
 condition|(
 name|offst

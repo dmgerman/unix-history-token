@@ -3183,7 +3183,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Probe for an NatSemi chip. Check the PCI vendor and device  * IDs against our list and return a device name if we find a match.  */
+comment|/*  * Probe for a NatSemi chip. Check the PCI vendor and device  * IDs against our list and return a device name if we find a match.  */
 end_comment
 
 begin_function

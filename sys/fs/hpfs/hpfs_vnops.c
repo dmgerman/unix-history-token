@@ -2951,7 +2951,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Last reference to an node.  If necessary, write or delete it.  */
+comment|/*  * Last reference to a node.  If necessary, write or delete it.  */
 end_comment
 
 begin_function
