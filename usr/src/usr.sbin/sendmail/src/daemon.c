@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.51
+literal|3.52
 operator|%
 name|G
 operator|%
@@ -87,7 +87,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.51
+literal|3.52
 operator|%
 name|G
 operator|%
@@ -927,6 +927,9 @@ name|ENOBUFS
 case|:
 case|case
 name|ECONNREFUSED
+case|:
+case|case
+name|ECONNRESET
 case|:
 case|case
 name|EHOSTUNREACH
