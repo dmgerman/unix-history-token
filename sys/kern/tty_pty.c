@@ -10,16 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"pty.h"
-end_include
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|"opt_compat.h"
 end_include
 
