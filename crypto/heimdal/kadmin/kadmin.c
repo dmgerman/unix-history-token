@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kadmin.c,v 1.34 2001/01/26 22:20:52 joda Exp $"
+literal|"$Id: kadmin.c,v 1.38 2001/05/15 06:34:35 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -95,6 +95,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|char
+modifier|*
+name|keytab
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|getargs
 name|args
@@ -112,6 +120,19 @@ operator|&
 name|client_name
 block|,
 literal|"principal to authenticate as"
+block|}
+block|,
+block|{
+literal|"keytab"
+block|,
+literal|'K'
+block|,
+name|arg_string
+block|,
+operator|&
+name|keytab
+block|,
+literal|"keytab for authentication pricipal"
 block|}
 block|,
 block|{
@@ -771,7 +792,7 @@ decl_stmt|;
 name|int
 name|e
 decl_stmt|;
-name|set_progname
+name|setprogname
 argument_list|(
 name|argv
 index|[
@@ -880,6 +901,8 @@ if|if
 condition|(
 name|krb5_config_parse_file
 argument_list|(
+name|context
+argument_list|,
 name|config_file
 argument_list|,
 operator|&
@@ -919,6 +942,11 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+name|krb5_clear_error_string
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -1029,6 +1057,43 @@ name|actual_cmds
 operator|=
 name|commands
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|keytab
+condition|)
+block|{
+name|ret
+operator|=
+name|kadm5_c_init_with_skey_ctx
+argument_list|(
+name|context
+argument_list|,
+name|client_name
+argument_list|,
+name|keytab
+argument_list|,
+name|KADM5_ADMIN_SERVICE
+argument_list|,
+operator|&
+name|conf
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|kadm_handle
+argument_list|)
+expr_stmt|;
+name|actual_cmds
+operator|=
+name|commands
+operator|+
+literal|4
+expr_stmt|;
+comment|/* XXX */
 block|}
 else|else
 block|{

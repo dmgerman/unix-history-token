@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: hdb-ldap.c,v 1.7 2001/01/30 16:59:08 assar Exp $"
+literal|"$Id: hdb-ldap.c,v 1.8 2001/03/26 00:59:37 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -26,13 +26,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<ldap.h>
+file|<lber.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<lber.h>
+file|<ldap.h>
 end_include
 
 begin_include

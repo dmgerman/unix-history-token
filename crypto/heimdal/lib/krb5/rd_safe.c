@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rd_safe.c,v 1.23 2001/01/19 04:25:37 assar Exp $"
+literal|"$Id: rd_safe.c,v 1.24 2001/05/14 06:14:51 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -110,6 +110,13 @@ block|{
 name|ret
 operator|=
 name|ENOMEM
+expr_stmt|;
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -277,6 +284,11 @@ name|ret
 operator|=
 name|KRB5KRB_AP_ERR_BADVERSION
 expr_stmt|;
+name|krb5_clear_error_string
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
 goto|goto
 name|failure
 goto|;
@@ -293,6 +305,11 @@ block|{
 name|ret
 operator|=
 name|KRB5KRB_AP_ERR_MSG_TYPE
+expr_stmt|;
+name|krb5_clear_error_string
+argument_list|(
+name|context
+argument_list|)
 expr_stmt|;
 goto|goto
 name|failure
@@ -328,6 +345,11 @@ block|{
 name|ret
 operator|=
 name|KRB5KRB_AP_ERR_INAPP_CKSUM
+expr_stmt|;
+name|krb5_clear_error_string
+argument_list|(
+name|context
+argument_list|)
 expr_stmt|;
 goto|goto
 name|failure
@@ -367,6 +389,11 @@ name|ret
 operator|=
 name|KRB5KRB_AP_ERR_BADADDR
 expr_stmt|;
+name|krb5_clear_error_string
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
 goto|goto
 name|failure
 goto|;
@@ -404,6 +431,11 @@ block|{
 name|ret
 operator|=
 name|KRB5KRB_AP_ERR_BADADDR
+expr_stmt|;
+name|krb5_clear_error_string
+argument_list|(
+name|context
+argument_list|)
 expr_stmt|;
 goto|goto
 name|failure
@@ -469,6 +501,11 @@ name|ret
 operator|=
 name|KRB5KRB_AP_ERR_SKEW
 expr_stmt|;
+name|krb5_clear_error_string
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
 goto|goto
 name|failure
 goto|;
@@ -528,6 +565,11 @@ block|{
 name|ret
 operator|=
 name|KRB5KRB_AP_ERR_BADORDER
+expr_stmt|;
+name|krb5_clear_error_string
+argument_list|(
+name|context
+argument_list|)
 expr_stmt|;
 goto|goto
 name|failure
@@ -593,6 +635,13 @@ block|{
 name|ret
 operator|=
 name|ENOMEM
+expr_stmt|;
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
 expr_stmt|;
 goto|goto
 name|failure

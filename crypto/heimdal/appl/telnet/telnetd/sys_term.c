@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: sys_term.c,v 1.97 2000/12/08 23:32:06 assar Exp $"
+literal|"$Id: sys_term.c,v 1.100 2001/04/24 23:11:43 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4597,9 +4597,15 @@ begin_function
 name|void
 name|startslave
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|host
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|utmp_host
 parameter_list|,
 name|int
 name|autologin
@@ -4794,7 +4800,7 @@ name|wtmp
 operator|.
 name|ut_host
 argument_list|,
-name|host
+name|utmp_host
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4973,16 +4979,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|extern
-name|char
-modifier|*
-name|getenv
-argument_list|(
-specifier|const
-name|char
-operator|*
-argument_list|)
-decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -5241,6 +5237,7 @@ decl_stmt|;
 name|int
 name|argc
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -5259,6 +5256,7 @@ name|struct
 name|arg_val
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -5273,6 +5271,7 @@ begin_function
 name|void
 name|start_login
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|host
@@ -5292,6 +5291,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|user
+decl_stmt|;
+name|int
+name|save_errno
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -5449,11 +5451,6 @@ name|argv
 operator|.
 name|argv
 operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|malloc
 argument_list|(
 literal|0
@@ -5672,6 +5669,10 @@ operator|.
 name|argv
 argument_list|)
 expr_stmt|;
+name|save_errno
+operator|=
+name|errno
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -5681,11 +5682,13 @@ argument_list|,
 name|new_login
 argument_list|)
 expr_stmt|;
-name|fatalperror
+name|fatalperror_errno
 argument_list|(
 name|net
 argument_list|,
 name|new_login
+argument_list|,
+name|save_errno
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -5702,6 +5705,7 @@ name|arg_val
 modifier|*
 name|argv
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|val

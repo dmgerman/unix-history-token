@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2000 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997-2001 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: cache.c,v 1.45 2000/12/05 09:18:29 joda Exp $"
+literal|"$Id: cache.c,v 1.47 2001/05/14 06:14:45 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -37,6 +37,10 @@ name|krb5_boolean
 name|override
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|prefix_copy
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -103,10 +107,50 @@ name|prefix
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"ccache type %s already exists"
+argument_list|,
+name|ops
+operator|->
+name|prefix
+argument_list|)
+expr_stmt|;
 return|return
 name|KRB5_CC_TYPE_EXISTS
 return|;
 block|}
+block|}
+block|}
+name|prefix_copy
+operator|=
+name|strdup
+argument_list|(
+name|ops
+operator|->
+name|prefix
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|prefix_copy
+operator|==
+name|NULL
+condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
+return|return
+name|KRB5_CC_NOMEM
+return|;
 block|}
 if|if
 condition|(
@@ -150,9 +194,23 @@ name|o
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|prefix_copy
+argument_list|)
+expr_stmt|;
 return|return
 name|KRB5_CC_NOMEM
 return|;
+block|}
 name|context
 operator|->
 name|num_cc_ops
@@ -224,29 +282,8 @@ index|]
 operator|.
 name|prefix
 operator|=
-name|strdup
-argument_list|(
-name|ops
-operator|->
-name|prefix
-argument_list|)
+name|prefix_copy
 expr_stmt|;
-if|if
-condition|(
-name|context
-operator|->
-name|cc_ops
-index|[
-name|i
-index|]
-operator|.
-name|prefix
-operator|==
-name|NULL
-condition|)
-return|return
-name|KRB5_CC_NOMEM
-return|;
 return|return
 literal|0
 return|;
@@ -303,9 +340,18 @@ name|p
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|KRB5_CC_NOMEM
 return|;
+block|}
 name|p
 operator|->
 name|ops
@@ -488,9 +534,20 @@ name|id
 argument_list|)
 return|;
 else|else
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"unknown ccache type %s"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 return|return
 name|KRB5_CC_UNKNOWN_TYPE
 return|;
+block|}
 block|}
 end_function
 
@@ -535,9 +592,18 @@ name|p
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|KRB5_CC_NOMEM
 return|;
+block|}
 name|p
 operator|->
 name|ops
@@ -939,10 +1005,10 @@ name|context
 argument_list|,
 name|id
 argument_list|,
-name|creds
-argument_list|,
 operator|&
 name|cursor
+argument_list|,
+name|creds
 argument_list|)
 operator|)
 operator|==
@@ -1081,13 +1147,13 @@ specifier|const
 name|krb5_ccache
 name|id
 parameter_list|,
-name|krb5_creds
-modifier|*
-name|creds
-parameter_list|,
 name|krb5_cc_cursor
 modifier|*
 name|cursor
+parameter_list|,
+name|krb5_creds
+modifier|*
+name|creds
 parameter_list|)
 block|{
 return|return
@@ -1178,10 +1244,25 @@ name|remove_cred
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"ccache %s does not support remove_cred"
+argument_list|,
+name|id
+operator|->
+name|ops
+operator|->
+name|prefix
+argument_list|)
+expr_stmt|;
 return|return
 name|EACCES
 return|;
 comment|/* XXX */
+block|}
 return|return
 call|(
 modifier|*
@@ -1357,10 +1438,10 @@ argument_list|,
 name|from
 argument_list|,
 operator|&
-name|cred
+name|cursor
 argument_list|,
 operator|&
-name|cursor
+name|cred
 argument_list|)
 operator|==
 literal|0

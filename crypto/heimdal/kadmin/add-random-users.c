@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: add-random-users.c,v 1.2 2000/12/31 07:43:39 assar Exp $"
+literal|"$Id: add-random-users.c,v 1.3 2001/02/20 01:44:49 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -602,7 +602,7 @@ name|optind
 init|=
 literal|0
 decl_stmt|;
-name|set_progname
+name|setprogname
 argument_list|(
 name|argv
 index|[

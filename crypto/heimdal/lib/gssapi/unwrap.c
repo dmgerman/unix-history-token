@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: unwrap.c,v 1.15 2001/01/29 02:08:58 assar Exp $"
+literal|"$Id: unwrap.c,v 1.17 2001/05/11 09:16:47 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -209,9 +209,16 @@ if|if
 condition|(
 name|ret
 condition|)
+block|{
+operator|*
+name|minor_status
+operator|=
+literal|0
+expr_stmt|;
 return|return
 name|ret
 return|;
+block|}
 if|if
 condition|(
 name|memcmp
@@ -1115,6 +1122,9 @@ condition|(
 name|ret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -1158,6 +1168,9 @@ condition|(
 name|ret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -1362,6 +1375,9 @@ condition|(
 name|ret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -1421,6 +1437,9 @@ condition|(
 name|ret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -1559,6 +1578,9 @@ condition|(
 name|ret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -1606,6 +1628,9 @@ condition|(
 name|ret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -1732,6 +1757,9 @@ condition|(
 name|ret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=

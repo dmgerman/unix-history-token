@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: krb4encpwd.c,v 1.18 1999/09/16 20:41:34 assar Exp $"
+literal|"$Id: krb4encpwd.c,v 1.19 2001/02/15 04:20:52 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -49,12 +49,6 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<des.h>
 end_include
 
 begin_include

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: su.c,v 1.18 2001/01/26 16:02:49 joda Exp $"
+literal|"$Id: su.c,v 1.20 2001/02/20 01:44:48 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -81,11 +81,33 @@ directive|include
 file|<pwd.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_OPENSSL_DES_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<openssl/des.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<des.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1206,7 +1228,7 @@ name|kerberos_error
 init|=
 literal|1
 decl_stmt|;
-name|set_progname
+name|setprogname
 argument_list|(
 name|argv
 index|[

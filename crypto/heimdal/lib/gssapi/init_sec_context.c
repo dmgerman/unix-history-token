@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: init_sec_context.c,v 1.25 2001/01/30 22:49:56 assar Exp $"
+literal|"$Id: init_sec_context.c,v 1.27 2001/05/11 09:16:46 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -775,6 +775,9 @@ condition|(
 name|kret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -889,6 +892,9 @@ condition|(
 name|kret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -932,6 +938,9 @@ condition|(
 name|kret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -967,6 +976,9 @@ condition|(
 name|kret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -1081,6 +1093,9 @@ condition|(
 name|kret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -1256,6 +1271,9 @@ condition|(
 name|kret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -1376,6 +1394,9 @@ condition|(
 name|kret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -1412,6 +1433,9 @@ condition|(
 name|kret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -1648,6 +1672,11 @@ name|ret
 condition|)
 block|{
 comment|/* XXX - Handle AP_ERROR */
+operator|*
+name|minor_status
+operator|=
+literal|0
+expr_stmt|;
 return|return
 name|GSS_S_FAILURE
 return|;
@@ -1676,9 +1705,19 @@ if|if
 condition|(
 name|kret
 condition|)
+block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
+operator|*
+name|minor_status
+operator|=
+name|kret
+expr_stmt|;
 return|return
 name|GSS_S_FAILURE
 return|;
+block|}
 name|krb5_free_ap_rep_enc_part
 argument_list|(
 name|gssapi_krb5_context

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: main.c,v 1.24 2000/12/31 07:46:14 assar Exp $"
+literal|"$Id: main.c,v 1.25 2001/02/20 01:44:50 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -63,7 +63,7 @@ block|{
 name|krb5_error_code
 name|ret
 decl_stmt|;
-name|set_progname
+name|setprogname
 argument_list|(
 name|argv
 index|[

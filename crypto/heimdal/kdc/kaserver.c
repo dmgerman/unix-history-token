@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kaserver.c,v 1.15 2001/01/28 21:51:05 assar Exp $"
+literal|"$Id: kaserver.c,v 1.16 2001/02/05 10:49:43 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -22,12 +22,6 @@ ifdef|#
 directive|ifdef
 name|KASERVER
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"kerberos4.h"
-end_include
 
 begin_include
 include|#
@@ -2107,7 +2101,7 @@ argument_list|,
 name|v4_realm
 argument_list|)
 expr_stmt|;
-name|client_entry
+name|ret
 operator|=
 name|db_fetch4
 argument_list|(
@@ -2116,22 +2110,30 @@ argument_list|,
 name|instance
 argument_list|,
 name|v4_realm
+argument_list|,
+operator|&
+name|client_entry
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|client_entry
-operator|==
-name|NULL
+name|ret
 condition|)
 block|{
 name|kdc_log
 argument_list|(
 literal|0
 argument_list|,
-literal|"Client not found in database: %s"
+literal|"Client not found in database: %s: %s"
 argument_list|,
 name|client_name
+argument_list|,
+name|krb5_get_err_text
+argument_list|(
+name|context
+argument_list|,
+name|ret
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|make_error_reply
@@ -2165,7 +2167,7 @@ argument_list|,
 name|v4_realm
 argument_list|)
 expr_stmt|;
-name|server_entry
+name|ret
 operator|=
 name|db_fetch4
 argument_list|(
@@ -2174,22 +2176,30 @@ argument_list|,
 name|v4_realm
 argument_list|,
 name|v4_realm
+argument_list|,
+operator|&
+name|server_entry
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|server_entry
-operator|==
-name|NULL
+name|ret
 condition|)
 block|{
 name|kdc_log
 argument_list|(
 literal|0
 argument_list|,
-literal|"Server not found in database: %s"
+literal|"Server not found in database: %s: %s"
 argument_list|,
 name|server_name
+argument_list|,
+name|krb5_get_err_text
+argument_list|(
+name|context
+argument_list|,
+name|ret
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|make_error_reply
@@ -3136,7 +3146,7 @@ argument_list|,
 name|v4_realm
 argument_list|)
 expr_stmt|;
-name|server_entry
+name|ret
 operator|=
 name|db_fetch4
 argument_list|(
@@ -3145,22 +3155,30 @@ argument_list|,
 name|instance
 argument_list|,
 name|v4_realm
+argument_list|,
+operator|&
+name|server_entry
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|server_entry
-operator|==
-name|NULL
+name|ret
 condition|)
 block|{
 name|kdc_log
 argument_list|(
 literal|0
 argument_list|,
-literal|"Server not found in database: %s"
+literal|"Server not found in database: %s: %s"
 argument_list|,
 name|server_name
+argument_list|,
+name|krb5_get_err_text
+argument_list|(
+name|context
+argument_list|,
+name|ret
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|make_error_reply
@@ -3209,7 +3227,7 @@ goto|goto
 name|out
 goto|;
 block|}
-name|krbtgt_entry
+name|ret
 operator|=
 name|db_fetch4
 argument_list|(
@@ -3218,26 +3236,34 @@ argument_list|,
 name|v4_realm
 argument_list|,
 name|v4_realm
+argument_list|,
+operator|&
+name|krbtgt_entry
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|krbtgt_entry
-operator|==
-name|NULL
+name|ret
 condition|)
 block|{
 name|kdc_log
 argument_list|(
 literal|0
 argument_list|,
-literal|"Server not found in database: %s.%s@%s"
+literal|"Server not found in database: %s.%s@%s: %s"
 argument_list|,
 literal|"krbtgt"
 argument_list|,
 name|v4_realm
 argument_list|,
 name|v4_realm
+argument_list|,
+name|krb5_get_err_text
+argument_list|(
+name|context
+argument_list|,
+name|ret
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|make_error_reply

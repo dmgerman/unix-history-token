@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kpasswdd.c,v 1.49 2001/01/11 21:33:53 assar Exp $"
+literal|"$Id: kpasswdd.c,v 1.51 2001/05/14 06:18:56 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -520,7 +520,9 @@ name|NULL
 argument_list|,
 name|server
 argument_list|,
-literal|0
+name|NULL
+argument_list|,
+name|NULL
 argument_list|,
 operator|&
 name|error_data
@@ -1597,10 +1599,21 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|krb5_auth_con_setflags
+argument_list|(
+name|context
+argument_list|,
+name|auth_context
+argument_list|,
+name|KRB5_AUTH_CONTEXT_DO_SEQUENCE
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|krb5_sockaddr2address
 argument_list|(
+name|context
+argument_list|,
 name|sa
 argument_list|,
 operator|&
@@ -1971,6 +1984,8 @@ name|sa_size
 decl_stmt|;
 name|krb5_addr2sockaddr
 argument_list|(
+name|context
+argument_list|,
 operator|&
 name|addrs
 operator|.

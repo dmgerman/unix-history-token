@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1988, 1990, 1993  *	The Regents of the University of
 end_comment
 
 begin_comment
-comment|/* $Id: externs.h,v 1.20 2000/11/15 23:01:29 assar Exp $ */
+comment|/* $Id: externs.h,v 1.21 2001/03/06 20:10:13 assar Exp $ */
 end_comment
 
 begin_ifndef
@@ -1125,7 +1125,7 @@ name|SIGINFO
 end_ifdef
 
 begin_function_decl
-name|void
+name|RETSIGTYPE
 name|ayt_status
 parameter_list|(
 name|int
@@ -2632,6 +2632,38 @@ decl_stmt|,
 name|ttyiring
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|resettermname
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|linemode
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KLUDGELINEMODE
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|kludgelinemode
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: sia.c,v 1.34 2000/12/31 07:57:46 assar Exp $"
+literal|"$Id: sia.c,v 1.35 2001/02/20 01:44:53 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2596,7 +2596,7 @@ name|et_list
 modifier|*
 name|et_list
 decl_stmt|;
-name|set_progname
+name|setprogname
 argument_list|(
 name|argv
 index|[

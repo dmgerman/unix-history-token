@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: afslog.c,v 1.14 2001/01/25 12:44:46 assar Exp $"
+literal|"$Id: afslog.c,v 1.16 2001/05/16 22:10:15 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -649,7 +649,7 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-name|set_progname
+name|setprogname
 argument_list|(
 name|argv
 index|[
@@ -798,6 +798,12 @@ expr_stmt|;
 name|num
 operator|++
 expr_stmt|;
+name|free_getarg_strings
+argument_list|(
+operator|&
+name|files
+argument_list|)
+expr_stmt|;
 block|}
 for|for
 control|(
@@ -833,6 +839,12 @@ argument_list|)
 expr_stmt|;
 name|num
 operator|++
+expr_stmt|;
+name|free_getarg_strings
+argument_list|(
+operator|&
+name|cells
+argument_list|)
 expr_stmt|;
 block|}
 for|for

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: push.c,v 1.43 2000/12/31 07:35:59 assar Exp $"
+literal|"$Id: push.c,v 1.44 2001/02/20 01:44:47 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3716,7 +3716,7 @@ name|pobox
 init|=
 name|NULL
 decl_stmt|;
-name|set_progname
+name|setprogname
 argument_list|(
 name|argv
 index|[

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: 524.c,v 1.19 2001/01/30 01:44:07 assar Exp $"
+literal|"$Id: 524.c,v 1.20 2001/05/14 06:17:47 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -463,6 +463,8 @@ name|ret
 operator|=
 name|krb5_sockaddr2address
 argument_list|(
+name|context
+argument_list|,
 name|addr
 argument_list|,
 name|v4_addr

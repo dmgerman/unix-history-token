@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: getaddrinfo-test.c,v 1.3 2000/07/08 14:22:09 assar Exp $"
+literal|"$Id: getaddrinfo-test.c,v 1.4 2001/02/20 01:44:54 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -448,7 +448,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|set_progname
+name|setprogname
 argument_list|(
 name|argv
 index|[
@@ -508,7 +508,8 @@ name|stderr
 argument_list|,
 literal|"%s from %s-%s)\n"
 argument_list|,
-name|__progname
+name|getprogname
+argument_list|()
 argument_list|,
 name|PACKAGE
 argument_list|,

@@ -27,7 +27,7 @@ end_endif
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kerberos.c,v 1.50 2000/11/23 02:28:06 joda Exp $"
+literal|"$Id: kerberos.c,v 1.51 2001/02/15 04:20:52 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -77,16 +77,6 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<des.h>
-end_include
-
-begin_comment
-comment|/* BSD wont include this in krb.h, so we do it here */
-end_comment
 
 begin_include
 include|#

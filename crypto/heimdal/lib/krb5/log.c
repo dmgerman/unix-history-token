@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: log.c,v 1.25 2000/09/17 21:46:07 assar Exp $"
+literal|"$Id: log.c,v 1.26 2001/05/14 06:14:49 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -402,9 +402,18 @@ name|f
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 name|f
 operator|->
 name|program
@@ -426,6 +435,13 @@ block|{
 name|free
 argument_list|(
 name|f
+argument_list|)
+expr_stmt|;
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
 argument_list|)
 expr_stmt|;
 return|return
@@ -487,9 +503,18 @@ name|fp
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 name|fp
 operator|->
 name|min
@@ -651,9 +676,18 @@ name|sd
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 name|i
 operator|=
 name|find_value
@@ -949,9 +983,18 @@ name|fd
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 name|fd
 operator|->
 name|filename
@@ -1011,7 +1054,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|p
+name|orig
 parameter_list|)
 block|{
 name|krb5_error_code
@@ -1033,6 +1076,13 @@ name|n
 decl_stmt|;
 name|char
 name|c
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|p
+init|=
+name|orig
 decl_stmt|;
 name|n
 operator|=
@@ -1112,9 +1162,20 @@ name|p
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"failed to parse \"%s\""
+argument_list|,
+name|orig
+argument_list|)
+expr_stmt|;
 return|return
 name|HEIM_ERR_LOG_PARSE
 return|;
+block|}
 name|p
 operator|++
 expr_stmt|;
@@ -1249,9 +1310,18 @@ name|fn
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 if|if
 condition|(
 name|p
@@ -1286,9 +1356,29 @@ name|i
 operator|<
 literal|0
 condition|)
-return|return
+block|{
+name|ret
+operator|=
 name|errno
+expr_stmt|;
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"open(%s): %s"
+argument_list|,
+name|fn
+argument_list|,
+name|strerror
+argument_list|(
+name|ret
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
 return|;
+block|}
 name|file
 operator|=
 name|fdopen
@@ -1305,13 +1395,31 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|ret
+operator|=
+name|errno
+expr_stmt|;
 name|close
 argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"fdopen(%s): %s"
+argument_list|,
+name|fn
+argument_list|,
+name|strerror
+argument_list|(
+name|ret
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
-name|errno
+name|ret
 return|;
 block|}
 name|keep_open
@@ -1464,6 +1572,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"unknown log type: %s"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|HEIM_ERR_LOG_PARSE

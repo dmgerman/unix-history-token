@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of Calif
 end_comment
 
 begin_comment
-comment|/* $Id: ext.h,v 1.20 2000/11/15 23:03:38 assar Exp $ */
+comment|/* $Id: ext.h,v 1.22 2001/04/24 23:12:11 assar Exp $ */
 end_comment
 
 begin_ifndef
@@ -698,9 +698,14 @@ begin_function_decl
 name|void
 name|startslave
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|host
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|,
 name|int
 name|autologin
@@ -725,6 +730,7 @@ begin_function_decl
 name|void
 name|start_login
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|host
@@ -807,6 +813,11 @@ parameter_list|,
 name|int
 name|p
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -986,6 +997,24 @@ specifier|const
 name|char
 modifier|*
 name|msg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|fatalperror_errno
+parameter_list|(
+name|int
+name|f
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|msg
+parameter_list|,
+name|int
+name|error
 parameter_list|)
 function_decl|;
 end_function_decl

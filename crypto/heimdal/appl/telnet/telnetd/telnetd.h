@@ -638,12 +638,6 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<des.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<krb.h>
 end_include
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2000 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2001 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -18,10 +18,51 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: warn.c,v 1.11 2000/08/16 07:37:41 assar Exp $"
+literal|"$Id: warn.c,v 1.13 2001/05/07 21:04:34 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function_decl
+specifier|static
+name|krb5_error_code
+name|_warnerr
+parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+name|int
+name|do_errtext
+parameter_list|,
+name|krb5_error_code
+name|code
+parameter_list|,
+name|int
+name|level
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+name|va_list
+name|ap
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__format__
+parameter_list|(
+name|__printf__
+parameter_list|,
+function_decl|5
+operator|,
+function_decl|0
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
 
 begin_function
 specifier|static
@@ -72,6 +113,12 @@ decl_stmt|;
 name|char
 modifier|*
 name|msg
+init|=
+name|NULL
+decl_stmt|;
+name|char
+modifier|*
+name|err_str
 init|=
 name|NULL
 decl_stmt|;
@@ -159,6 +206,29 @@ argument_list|,
 literal|"%s"
 argument_list|)
 expr_stmt|;
+name|err_str
+operator|=
+name|krb5_get_error_string
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err_str
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|*
+name|arg
+operator|++
+operator|=
+name|err_str
+expr_stmt|;
+block|}
+else|else
+block|{
 name|err_msg
 operator|=
 name|krb5_get_err_text
@@ -185,6 +255,7 @@ operator|++
 operator|=
 literal|"<unknown error>"
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -236,6 +307,11 @@ expr_stmt|;
 name|free
 argument_list|(
 name|msg
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|err_str
 argument_list|)
 expr_stmt|;
 return|return

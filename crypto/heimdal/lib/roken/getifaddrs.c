@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: getifaddrs.c,v 1.4 2001/01/28 23:02:46 assar Exp $"
+literal|"$Id: getifaddrs.c,v 1.5 2001/04/17 08:27:47 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -648,6 +648,11 @@ name|ifap
 operator|=
 name|start
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|buf
@@ -658,6 +663,11 @@ literal|0
 return|;
 name|error_out
 label|:
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|buf

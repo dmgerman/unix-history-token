@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: hprop.c,v 1.60 2001/02/05 03:40:00 assar Exp $"
+literal|"$Id: hprop.c,v 1.62 2001/02/20 01:44:50 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3027,8 +3027,11 @@ name|context
 argument_list|,
 literal|1
 argument_list|,
-literal|"Version mismatch in header: %d/%d"
+literal|"Version mismatch in header: %ld/%ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|header
@@ -3036,6 +3039,9 @@ operator|.
 name|version1
 argument_list|)
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|header
@@ -3063,8 +3069,11 @@ name|context
 argument_list|,
 literal|1
 argument_list|,
-literal|"Unknown database version %d (expected 5)"
+literal|"Unknown database version %ld (expected 5)"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|header
@@ -4805,7 +4814,7 @@ name|type
 init|=
 literal|0
 decl_stmt|;
-name|set_progname
+name|setprogname
 argument_list|(
 name|argv
 index|[

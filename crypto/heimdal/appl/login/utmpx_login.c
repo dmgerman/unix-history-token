@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: utmpx_login.c,v 1.24 1999/08/04 17:03:15 assar Exp $"
+literal|"$Id: utmpx_login.c,v 1.25 2001/02/08 16:08:47 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -151,13 +151,13 @@ name|ut_user
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|shrink_hostname
 argument_list|(
+name|host
+argument_list|,
 name|ut
 operator|->
 name|ut_host
-argument_list|,
-name|host
 argument_list|,
 sizeof|sizeof
 argument_list|(

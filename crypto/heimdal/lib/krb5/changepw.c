@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2000 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2001 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: changepw.c,v 1.30 2000/12/10 23:10:10 assar Exp $"
+literal|"$Id: changepw.c,v 1.32 2001/05/14 22:49:55 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -33,6 +33,11 @@ name|addrinfo
 modifier|*
 modifier|*
 name|ai
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|ret_host
 parameter_list|)
 block|{
 name|krb5_error_code
@@ -50,6 +55,13 @@ literal|0
 decl_stmt|;
 name|int
 name|error
+decl_stmt|;
+name|char
+modifier|*
+name|host
+decl_stmt|;
+name|int
+name|save_errno
 decl_stmt|;
 name|ret
 operator|=
@@ -71,6 +83,39 @@ condition|)
 return|return
 name|ret
 return|;
+name|host
+operator|=
+name|strdup
+argument_list|(
+operator|*
+name|hostlist
+argument_list|)
+expr_stmt|;
+name|krb5_free_krbhst
+argument_list|(
+name|context
+argument_list|,
+name|hostlist
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|host
+operator|==
+name|NULL
+condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
+return|return
+name|ENOMEM
+return|;
+block|}
 name|port
 operator|=
 name|ntohs
@@ -91,8 +136,7 @@ name|error
 operator|=
 name|roken_getaddrinfo_hostspec2
 argument_list|(
-operator|*
-name|hostlist
+name|host
 argument_list|,
 name|SOCK_DGRAM
 argument_list|,
@@ -101,23 +145,43 @@ argument_list|,
 name|ai
 argument_list|)
 expr_stmt|;
-name|krb5_free_krbhst
-argument_list|(
-name|context
-argument_list|,
-name|hostlist
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
 condition|)
+block|{
+name|save_errno
+operator|=
+name|errno
+expr_stmt|;
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"resolving %s: %s"
+argument_list|,
+name|host
+argument_list|,
+name|gai_strerror
+argument_list|(
+name|error
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 name|krb5_eai_to_heim_errno
 argument_list|(
 name|error
+argument_list|,
+name|save_errno
 argument_list|)
 return|;
+block|}
+operator|*
+name|ret_host
+operator|=
+name|host
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -154,6 +218,11 @@ parameter_list|,
 name|char
 modifier|*
 name|passwd
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|host
 parameter_list|)
 block|{
 name|krb5_error_code
@@ -486,10 +555,26 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
 name|ret
 operator|=
 name|errno
 expr_stmt|;
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"sendmsg %s: %s"
+argument_list|,
+name|host
+argument_list|,
+name|strerror
+argument_list|(
+name|ret
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 name|krb5_data_free
 argument_list|(
 operator|&
@@ -623,6 +708,11 @@ parameter_list|,
 name|krb5_data
 modifier|*
 name|result_string
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|host
 parameter_list|)
 block|{
 name|krb5_error_code
@@ -644,6 +734,9 @@ name|pkt_ver
 decl_stmt|;
 name|krb5_data
 name|ap_rep_data
+decl_stmt|;
+name|int
+name|save_errno
 decl_stmt|;
 name|ret
 operator|=
@@ -671,9 +764,29 @@ name|ret
 operator|<
 literal|0
 condition|)
-return|return
+block|{
+name|save_errno
+operator|=
 name|errno
+expr_stmt|;
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"recvfrom %s: %s"
+argument_list|,
+name|host
+argument_list|,
+name|strerror
+argument_list|(
+name|save_errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|save_errno
 return|;
+block|}
 name|len
 operator|=
 name|ret
@@ -1030,6 +1143,7 @@ expr_stmt|;
 return|return
 literal|1
 return|;
+comment|/* XXX */
 block|}
 name|p
 operator|=
@@ -1079,6 +1193,10 @@ return|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*  * change the password using the credentials in `creds' (for the  * principal indicated in them) to `newpw', storing the result of  * the operation in `result_*' and an error code or 0.  */
+end_comment
 
 begin_function
 name|krb5_error_code
@@ -1135,6 +1253,12 @@ name|done
 init|=
 literal|0
 decl_stmt|;
+name|char
+modifier|*
+name|host
+init|=
+name|NULL
+decl_stmt|;
 name|ret
 operator|=
 name|krb5_auth_con_init
@@ -1166,6 +1290,9 @@ name|realm
 argument_list|,
 operator|&
 name|ai
+argument_list|,
+operator|&
+name|host
 argument_list|)
 expr_stmt|;
 if|if
@@ -1280,6 +1407,8 @@ operator|->
 name|ai_addrlen
 argument_list|,
 name|newpw
+argument_list|,
+name|host
 argument_list|)
 expr_stmt|;
 if|if
@@ -1304,6 +1433,15 @@ operator|>=
 name|FD_SETSIZE
 condition|)
 block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"fd %d too large"
+argument_list|,
+name|sock
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|ERANGE
@@ -1410,6 +1548,8 @@ argument_list|,
 name|result_code_string
 argument_list|,
 name|result_string
+argument_list|,
+name|host
 argument_list|)
 expr_stmt|;
 if|if
@@ -1466,6 +1606,11 @@ argument_list|,
 name|auth_context
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|host
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|done
@@ -1474,9 +1619,33 @@ return|return
 literal|0
 return|;
 else|else
+block|{
+if|if
+condition|(
+name|ret
+operator|==
+name|KRB5_KDC_UNREACH
+condition|)
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"failed to reach kpasswd server %s "
+literal|"in realm %s"
+argument_list|,
+name|host
+argument_list|,
+name|creds
+operator|->
+name|client
+operator|->
+name|realm
+argument_list|)
+expr_stmt|;
 return|return
 name|ret
 return|;
+block|}
 block|}
 end_function
 

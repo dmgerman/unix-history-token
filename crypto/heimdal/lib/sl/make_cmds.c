@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: make_cmds.c,v 1.6 1999/12/02 16:58:55 joda Exp $"
+literal|"$Id: make_cmds.c,v 1.7 2001/02/20 01:44:55 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -970,7 +970,7 @@ name|optind
 init|=
 literal|0
 decl_stmt|;
-name|set_progname
+name|setprogname
 argument_list|(
 name|argv
 index|[

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: utility.c,v 1.23 2000/10/08 13:34:27 assar Exp $"
+literal|"$Id: utility.c,v 1.25 2001/05/17 00:34:42 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1122,7 +1122,7 @@ end_function
 
 begin_function
 name|void
-name|fatalperror
+name|fatalperror_errno
 parameter_list|(
 name|int
 name|f
@@ -1131,6 +1131,9 @@ specifier|const
 name|char
 modifier|*
 name|msg
+parameter_list|,
+name|int
+name|error
 parameter_list|)
 block|{
 name|char
@@ -1154,7 +1157,7 @@ name|msg
 argument_list|,
 name|strerror
 argument_list|(
-name|errno
+name|error
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1163,6 +1166,31 @@ argument_list|(
 name|f
 argument_list|,
 name|buf
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|fatalperror
+parameter_list|(
+name|int
+name|f
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|msg
+parameter_list|)
+block|{
+name|fatalperror_errno
+argument_list|(
+name|f
+argument_list|,
+name|msg
+argument_list|,
+name|errno
 argument_list|)
 expr_stmt|;
 block|}
