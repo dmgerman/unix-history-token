@@ -1809,9 +1809,9 @@ name|ki_slptime
 operator|=
 name|proc
 operator|.
-name|p_kse
+name|p_ksegrp
 operator|.
-name|ke_slptime
+name|kg_slptime
 expr_stmt|;
 name|kp
 operator|->
