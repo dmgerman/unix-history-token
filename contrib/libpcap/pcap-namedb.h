@@ -15,11 +15,19 @@ directive|define
 name|lib_pcap_ethers_h
 end_define
 
-begin_comment
-comment|/*  * As returned by the pcap_next_etherent()  * XXX this stuff doesn't belong in this interface, but this  * library already must do name to address translation, so  * on systems that don't have support for /etc/ethers, we  * export these hooks since they'll  */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
 
-begin_struct
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
+comment|/*  * As returned by the pcap_next_etherent()  * XXX this stuff doesn't belong in this interface, but this  * library already must do name to address translation, so  * on systems that don't have support for /etc/ethers, we  * export these hooks since they'll  */
 struct|struct
 name|pcap_etherent
 block|{
@@ -37,27 +45,15 @@ index|]
 decl_stmt|;
 block|}
 struct|;
-end_struct
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|PCAP_ETHERS_FILE
-end_ifndef
-
-begin_define
 define|#
 directive|define
 name|PCAP_ETHERS_FILE
 value|"/etc/ethers"
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_function_decl
 name|struct
 name|pcap_etherent
 modifier|*
@@ -67,9 +63,6 @@ name|FILE
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|u_char
 modifier|*
 name|pcap_ether_hostton
@@ -79,9 +72,6 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|u_char
 modifier|*
 name|pcap_ether_aton
@@ -91,9 +81,6 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|bpf_u_int32
 modifier|*
 modifier|*
@@ -104,9 +91,6 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|bpf_u_int32
 name|pcap_nametonetaddr
 parameter_list|(
@@ -115,9 +99,6 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|pcap_nametoport
 parameter_list|(
@@ -132,9 +113,6 @@ name|int
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|pcap_nametoproto
 parameter_list|(
@@ -143,9 +121,6 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|pcap_nametoeproto
 parameter_list|(
@@ -154,24 +129,12 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * If a protocol is unknown, PROTO_UNDEF is returned.  * Also, pcap_nametoport() returns the protocol along with the port number.  * If there are ambiguous entried in /etc/services (i.e. domain  * can be either tcp or udp) PROTO_UNDEF is returned.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|PROTO_UNDEF
 value|-1
-end_define
-
-begin_comment
 comment|/* XXX move these to pcap-int.h? */
-end_comment
-
-begin_function_decl
 name|int
 name|__pcap_atodn
 parameter_list|(
@@ -183,9 +146,6 @@ name|bpf_u_int32
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|__pcap_atoin
 parameter_list|(
@@ -197,9 +157,6 @@ name|bpf_u_int32
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|u_short
 name|__pcap_nametodnaddr
 parameter_list|(
@@ -208,7 +165,16 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

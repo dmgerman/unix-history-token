@@ -39,32 +39,31 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_define
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
 define|#
 directive|define
 name|PCAP_VERSION_MAJOR
 value|2
-end_define
-
-begin_define
 define|#
 directive|define
 name|PCAP_VERSION_MINOR
 value|4
-end_define
-
-begin_define
 define|#
 directive|define
 name|PCAP_ERRBUF_SIZE
 value|256
-end_define
-
-begin_comment
 comment|/*  * Compatibility for systems that have a bpf.h that  * predates the bpf typedefs for 64-bit support.  */
-end_comment
-
-begin_if
 if|#
 directive|if
 name|BPF_RELEASE
@@ -72,48 +71,27 @@ operator|-
 literal|0
 operator|<
 literal|199406
-end_if
-
-begin_typedef
 typedef|typedef
 name|int
 name|bpf_int32
 typedef|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|u_int
 name|bpf_u_int32
 typedef|;
-end_typedef
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_typedef
 typedef|typedef
 name|struct
 name|pcap
 name|pcap_t
 typedef|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|struct
 name|pcap_dumper
 name|pcap_dumper_t
 typedef|;
-end_typedef
-
-begin_comment
 comment|/*  * The first record in the file contains saved values for some  * of the flags used in the printout phases of tcpdump.  * Many fields here are 32 bit ints so compilers won't insert unwanted  * padding; these files need to be interchangeable across architectures.  */
-end_comment
-
-begin_struct
 struct|struct
 name|pcap_file_header
 block|{
@@ -144,13 +122,7 @@ decl_stmt|;
 comment|/* data link type (DLT_*) */
 block|}
 struct|;
-end_struct
-
-begin_comment
 comment|/*  * Each packet in the dump file is prepended with this generic header.  * This gets around the problem of different headers for different  * packet interfaces.  */
-end_comment
-
-begin_struct
 struct|struct
 name|pcap_pkthdr
 block|{
@@ -169,13 +141,7 @@ decl_stmt|;
 comment|/* length this packet (off wire) */
 block|}
 struct|;
-end_struct
-
-begin_comment
 comment|/*  * As returned by the pcap_stats()  */
-end_comment
-
-begin_struct
 struct|struct
 name|pcap_stat
 block|{
@@ -193,9 +159,6 @@ decl_stmt|;
 comment|/* drops by interface XXX not yet supported */
 block|}
 struct|;
-end_struct
-
-begin_typedef
 typedef|typedef
 name|void
 function_decl|(
@@ -216,9 +179,6 @@ name|u_char
 modifier|*
 parameter_list|)
 function_decl|;
-end_typedef
-
-begin_function_decl
 name|char
 modifier|*
 name|pcap_lookupdev
@@ -227,9 +187,6 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|pcap_lookupnet
 parameter_list|(
@@ -246,9 +203,6 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|pcap_t
 modifier|*
 name|pcap_open_live
@@ -266,9 +220,6 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|pcap_t
 modifier|*
 name|pcap_open_offline
@@ -280,9 +231,6 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|pcap_close
 parameter_list|(
@@ -290,9 +238,6 @@ name|pcap_t
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|pcap_loop
 parameter_list|(
@@ -307,9 +252,6 @@ name|u_char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|pcap_dispatch
 parameter_list|(
@@ -324,9 +266,6 @@ name|u_char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|const
 name|u_char
 modifier|*
@@ -340,9 +279,6 @@ name|pcap_pkthdr
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|pcap_stats
 parameter_list|(
@@ -354,9 +290,6 @@ name|pcap_stat
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|pcap_setfilter
 parameter_list|(
@@ -368,9 +301,6 @@ name|bpf_program
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|pcap_perror
 parameter_list|(
@@ -381,9 +311,6 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|char
 modifier|*
 name|pcap_strerror
@@ -391,9 +318,6 @@ parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|char
 modifier|*
 name|pcap_geterr
@@ -402,9 +326,6 @@ name|pcap_t
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|pcap_compile
 parameter_list|(
@@ -423,13 +344,7 @@ parameter_list|,
 name|bpf_u_int32
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* XXX */
-end_comment
-
-begin_function_decl
 name|int
 name|pcap_freecode
 parameter_list|(
@@ -441,9 +356,6 @@ name|bpf_program
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|pcap_datalink
 parameter_list|(
@@ -451,9 +363,6 @@ name|pcap_t
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|pcap_snapshot
 parameter_list|(
@@ -461,9 +370,6 @@ name|pcap_t
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|pcap_is_swapped
 parameter_list|(
@@ -471,9 +377,6 @@ name|pcap_t
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|pcap_major_version
 parameter_list|(
@@ -481,9 +384,6 @@ name|pcap_t
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|pcap_minor_version
 parameter_list|(
@@ -491,13 +391,7 @@ name|pcap_t
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* XXX */
-end_comment
-
-begin_function_decl
 name|FILE
 modifier|*
 name|pcap_file
@@ -506,9 +400,6 @@ name|pcap_t
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|pcap_fileno
 parameter_list|(
@@ -516,9 +407,6 @@ name|pcap_t
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|pcap_dumper_t
 modifier|*
 name|pcap_dump_open
@@ -530,9 +418,6 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|pcap_dump_close
 parameter_list|(
@@ -540,9 +425,6 @@ name|pcap_dumper_t
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|pcap_dump
 parameter_list|(
@@ -559,13 +441,7 @@ name|u_char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* XXX this guy lives in the bpf tree */
-end_comment
-
-begin_function_decl
 name|u_int
 name|bpf_filter
 parameter_list|(
@@ -581,9 +457,6 @@ parameter_list|,
 name|u_int
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|char
 modifier|*
 name|bpf_image
@@ -595,7 +468,16 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-end_function_decl
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

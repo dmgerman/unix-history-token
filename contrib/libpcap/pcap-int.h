@@ -15,17 +15,22 @@ directive|define
 name|pcap_int_h
 end_define
 
-begin_include
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
 include|#
 directive|include
 file|<pcap.h>
-end_include
-
-begin_comment
 comment|/*  * Savefile  */
-end_comment
-
-begin_struct
 struct|struct
 name|pcap_sf
 block|{
@@ -48,9 +53,6 @@ name|base
 decl_stmt|;
 block|}
 struct|;
-end_struct
-
-begin_struct
 struct|struct
 name|pcap_md
 block|{
@@ -99,9 +101,6 @@ endif|#
 directive|endif
 block|}
 struct|;
-end_struct
-
-begin_struct
 struct|struct
 name|pcap
 block|{
@@ -163,24 +162,15 @@ index|]
 decl_stmt|;
 block|}
 struct|;
-end_struct
-
-begin_function_decl
 name|int
 name|yylex
 parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|min
-end_ifndef
-
-begin_define
 define|#
 directive|define
 name|min
@@ -190,18 +180,9 @@ parameter_list|,
 name|b
 parameter_list|)
 value|((a)> (b) ? (b) : (a))
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* XXX should these be in pcap.h? */
-end_comment
-
-begin_function_decl
 name|int
 name|pcap_offline_read
 parameter_list|(
@@ -216,9 +197,6 @@ name|u_char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|pcap_read
 parameter_list|(
@@ -234,13 +212,7 @@ name|u_char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Ultrix pads to make everything line up on a nice boundary */
-end_comment
-
-begin_if
 if|#
 directive|if
 name|defined
@@ -252,30 +224,27 @@ name|defined
 argument_list|(
 name|__alpha
 argument_list|)
-end_if
-
-begin_define
 define|#
 directive|define
 name|PCAP_FDDIPAD
 value|3
-end_define
+endif|#
+directive|endif
+comment|/* XXX */
+specifier|extern
+name|int
+name|pcap_fddipad
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|pcap_fddipad
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#
