@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dmesg.c	5.2 (Berkeley) %G%"
+literal|"@(#)dmesg.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -353,6 +353,34 @@ argument_list|(
 literal|"Magic number wrong (namelist mismatch?)\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|msgbuf
+operator|.
+name|msg_bufx
+operator|>=
+name|MSG_BSIZE
+condition|)
+name|msgbuf
+operator|.
+name|msg_bufx
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|omsgbuf
+operator|.
+name|msg_bufx
+operator|>=
+name|MSG_BSIZE
+condition|)
+name|omsgbuf
+operator|.
+name|msg_bufx
+operator|=
+literal|0
+expr_stmt|;
 name|mstart
 operator|=
 operator|&
@@ -429,7 +457,7 @@ block|}
 if|if
 condition|(
 name|mp
-operator|==
+operator|>=
 operator|&
 name|msgbuf
 operator|.
@@ -446,7 +474,7 @@ name|msg_bufc
 expr_stmt|;
 if|if
 condition|(omp
-operator|==
+operator|>=
 operator|&
 name|omesg
 operator|.
@@ -563,7 +591,7 @@ expr_stmt|;
 if|if
 condition|(
 name|mp
-operator|==
+operator|>=
 operator|&
 name|msgbuf
 operator|.
