@@ -1637,6 +1637,21 @@ return|;
 ifdef|#
 directive|ifdef
 name|UFS_ACL
+if|if
+condition|(
+operator|(
+name|vp
+operator|->
+name|v_mount
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_ACLS
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
 name|MALLOC
 argument_list|(
 name|acl
@@ -1764,7 +1779,7 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX: Fall back until debugged.  Should eventually 		 * possibly log an error, and return EPERM for safety. 		 */
+comment|/* 			 * XXX: Fall back until debugged.  Should 			 * eventually possibly log an error, and return 			 * EPERM for safety. 			 */
 name|error
 operator|=
 name|vaccess
@@ -1804,8 +1819,11 @@ argument_list|,
 name|M_ACL
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+block|}
+else|else
+endif|#
+directive|endif
+comment|/* !UFS_ACL */
 name|error
 operator|=
 name|vaccess
@@ -1837,8 +1855,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|error
@@ -7086,6 +7102,27 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|UFS_ACL
+name|acl
+operator|=
+name|dacl
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|dvp
+operator|->
+name|v_mount
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_ACLS
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
 name|MALLOC
 argument_list|(
 name|acl
@@ -7116,7 +7153,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
-name|acl
+name|dacl
 argument_list|)
 argument_list|,
 name|M_ACL
@@ -7124,7 +7161,7 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Retrieve default ACL from parent, if any. 	 */
+comment|/* 		 * Retrieve default ACL from parent, if any. 		 */
 name|error
 operator|=
 name|VOP_GETACL
@@ -7152,7 +7189,7 @@ block|{
 case|case
 literal|0
 case|:
-comment|/* 		 * Retrieved a default ACL, so merge mode and ACL if 		 * necessary. 		 */
+comment|/* 			 * Retrieved a default ACL, so merge mode and ACL if 			 * necessary. 			 */
 if|if
 condition|(
 name|acl
@@ -7162,7 +7199,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 			 * Two possible ways for default ACL to not be 			 * present.  First, the EA can be undefined, 			 * or second, the default ACL can be blank. 			 * If it's blank, fall through to the it's 			 * not defined case. 			 */
+comment|/* 				 * Two possible ways for default ACL to not 				 * be present.  First, the EA can be 				 * undefined, or second, the default ACL can 				 * be blank.  If it's blank, fall through to 				 * the it's not defined case. 				 */
 name|ip
 operator|->
 name|i_mode
@@ -7197,7 +7234,7 @@ comment|/* FALLTHROUGH */
 case|case
 name|EOPNOTSUPP
 case|:
-comment|/* 		 * Just use the mode as-is. 		 */
+comment|/* 			 * Just use the mode as-is. 			 */
 name|ip
 operator|->
 name|i_mode
@@ -7271,8 +7308,11 @@ name|error
 operator|)
 return|;
 block|}
-else|#
-directive|else
+block|}
+else|else
+block|{
+endif|#
+directive|endif
 comment|/* !UFS_ACL */
 name|ip
 operator|->
@@ -7289,9 +7329,12 @@ argument_list|)
 operator|=
 name|dmode
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|UFS_ACL
+block|}
 endif|#
 directive|endif
-comment|/* !UFS_ACL */
 name|tvp
 operator|->
 name|v_type
@@ -11136,6 +11179,25 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|UFS_ACL
+name|acl
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|dvp
+operator|->
+name|v_mount
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_ACLS
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
 name|MALLOC
 argument_list|(
 name|acl
@@ -11155,7 +11217,7 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Retrieve default ACL for parent, if any. 	 */
+comment|/* 		 * Retrieve default ACL for parent, if any. 		 */
 name|error
 operator|=
 name|VOP_GETACL
@@ -11183,7 +11245,7 @@ block|{
 case|case
 literal|0
 case|:
-comment|/* 		 * Retrieved a default ACL, so merge mode and ACL if 		 * necessary. 		 */
+comment|/* 			 * Retrieved a default ACL, so merge mode and ACL if 			 * necessary. 			 */
 if|if
 condition|(
 name|acl
@@ -11193,7 +11255,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 			 * Two possible ways for default ACL to not be 			 * present.  First, the EA can be undefined, 			 * or second, the default ACL can be blank. 			 * If it's blank, fall through to the it's 			 * not defined case. 			 */
+comment|/* 				 * Two possible ways for default ACL to not 				 * be present.  First, the EA can be 				 * undefined, or second, the default ACL can 				 * be blank.  If it's blank, fall through to 				 * the it's not defined case. 				 */
 name|ip
 operator|->
 name|i_mode
@@ -11218,10 +11280,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* FALLTHROUGH */
 case|case
 name|EOPNOTSUPP
 case|:
-comment|/* 		 * Just use the mode as-is. 		 */
+comment|/* 			 * Just use the mode as-is. 			 */
 name|ip
 operator|->
 name|i_mode
@@ -11283,9 +11346,11 @@ name|error
 operator|)
 return|;
 block|}
-else|#
-directive|else
-comment|/* !UFS_ACL */
+block|}
+else|else
+block|{
+endif|#
+directive|endif
 name|ip
 operator|->
 name|i_mode
@@ -11301,9 +11366,12 @@ argument_list|)
 operator|=
 name|mode
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|UFS_ACL
+block|}
 endif|#
 directive|endif
-comment|/* !UFS_ACL */
 name|tvp
 operator|->
 name|v_type
