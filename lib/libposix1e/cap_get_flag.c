@@ -43,11 +43,7 @@ modifier|*
 name|value_p
 parameter_list|)
 block|{
-name|cap_flag_value_t
-name|result
-decl_stmt|;
-name|u_int32_t
-modifier|*
+name|u_int64_t
 name|mask
 decl_stmt|;
 switch|switch

@@ -26,13 +26,6 @@ name|POSIX1E_CAPABILITY_EXTATTR_NAME
 value|"$posix1e.cap"
 end_define
 
-begin_define
-define|#
-directive|define
-name|__CAP_MASK_LEN
-value|2
-end_define
-
 begin_typedef
 typedef|typedef
 name|int
@@ -49,7 +42,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_int
+name|u_int64_t
 name|cap_value_t
 typedef|;
 end_typedef
@@ -58,23 +51,14 @@ begin_struct
 struct|struct
 name|cap
 block|{
-name|u_int
+name|u_int64_t
 name|c_effective
-index|[
-name|__CAP_MASK_LEN
-index|]
 decl_stmt|;
-name|u_int
+name|u_int64_t
 name|c_permitted
-index|[
-name|__CAP_MASK_LEN
-index|]
 decl_stmt|;
-name|u_int
+name|u_int64_t
 name|c_inheritable
-index|[
-name|__CAP_MASK_LEN
-index|]
 decl_stmt|;
 block|}
 struct|;
@@ -92,48 +76,13 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|CAP_TYPE_MASK
-value|0xff
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_MIN_TYPE
-value|POSIX1E_CAPABILITY
-end_define
-
-begin_define
-define|#
-directive|define
-name|POSIX1E_CAPABILITY
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|SYSTEM_CAPABILITY
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_MAX_TYPE
-value|SYSTEM_CAPABILITY
-end_define
-
-begin_define
-define|#
-directive|define
 name|SET_CAPABILITY
 parameter_list|(
 name|mask
 parameter_list|,
 name|cap
 parameter_list|)
-value|do { \ 	(mask)[(cap)& CAP_TYPE_MASK] |= (cap)& ~CAP_TYPE_MASK; \ 	} while (0)
+value|do { \ 	(mask) |= cap; \ 	} while (0)
 end_define
 
 begin_define
@@ -145,7 +94,7 @@ name|mask
 parameter_list|,
 name|cap
 parameter_list|)
-value|do { \ 	(mask)[(cap)& CAP_TYPE_MASK]&= ~(cap)& ~CAP_TYPE_MASK; \ 	} while (0)
+value|do { \ 	(mask)&= ~(cap); \ 	} while (0)
 end_define
 
 begin_define
@@ -158,7 +107,7 @@ parameter_list|,
 name|cap
 parameter_list|)
 define|\
-value|((mask)[(cap)& CAP_TYPE_MASK]& (cap)& ~CAP_TYPE_MASK)
+value|((mask)& (cap))
 end_define
 
 begin_comment
@@ -175,7 +124,7 @@ parameter_list|,
 name|tcap
 parameter_list|)
 define|\
-value|((((scap).c_permitted[0] | (tcap).c_permitted[0]) \ 	 == (scap).c_permitted[0])&& \ 	 (((tcap.c_permitted[0] | (tcap).c_effective[0]) \ 	 == (tcap).c_permitted[0])&& \ 	 (((scap).c_permitted[1] | (tcap).c_permitted[1]) \ 	 == (scap).c_permitted[1])&& \ 	 (((tcap).c_permitted[1] | (tcap).c_effective[1]) \ 	 == (tcap).c_permitted[1]))
+value|(((scap).c_permitted | (tcap).c_permitted == (scap).c_permitted)&& \ 	((scap).c_effective | (tcap).c_effective == (scap).c_effective)&& \ 	((scap).c_inheritable | (tcap).c_inheritable == (scap).c_inheritable))
 end_define
 
 begin_comment
@@ -229,154 +178,154 @@ begin_define
 define|#
 directive|define
 name|CAP_CHOWN
-value|(0x00000100 | POSIX1E_CAPABILITY)
+value|(0x0000000000000001)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_DAC_EXECUTE
-value|(0x00000200 | POSIX1E_CAPABILITY)
+value|(0x0000000000000002)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_DAC_WRITE
-value|(0x00000400 | POSIX1E_CAPABILITY)
+value|(0x0000000000000004)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_DAC_READ_SEARCH
-value|(0x00000800 | POSIX1E_CAPABILITY)
+value|(0x0000000000000008)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_FOWNER
-value|(0x00001000 | POSIX1E_CAPABILITY)
+value|(0x0000000000000010)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_FSETID
-value|(0x00002000 | POSIX1E_CAPABILITY)
+value|(0x0000000000000020)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_KILL
-value|(0x00004000 | POSIX1E_CAPABILITY)
+value|(0x0000000000000040)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_LINK_DIR
-value|(0x00008000 | POSIX1E_CAPABILITY)
+value|(0x0000000000000080)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_SETFCAP
-value|(0x00010000 | POSIX1E_CAPABILITY)
+value|(0x0000000000000100)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_SETGID
-value|(0x00020000 | POSIX1E_CAPABILITY)
+value|(0x0000000000000200)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_SETUID
-value|(0x00040000 | POSIX1E_CAPABILITY)
+value|(0x0000000000000400)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_MAC_DOWNGRADE
-value|(0x00080000 | POSIX1E_CAPABILITY)
+value|(0x0000000000000800)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_MAC_READ
-value|(0x00100000 | POSIX1E_CAPABILITY)
+value|(0x0000000000001000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_MAC_RELABEL_SUBJ
-value|(0x00200000 | POSIX1E_CAPABILITY)
+value|(0x0000000000002000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_MAC_UPGRADE
-value|(0x00400000 | POSIX1E_CAPABILITY)
+value|(0x0000000000004000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_MAC_WRITE
-value|(0x00800000 | POSIX1E_CAPABILITY)
+value|(0x0000000000008000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_INF_NOFLOAT_OBJ
-value|(0x01000000 | POSIX1E_CAPABILITY)
+value|(0x0000000000010000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_INF_NOFLOAT_SUBJ
-value|(0x02000000 | POSIX1E_CAPABILITY)
+value|(0x0000000000020000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_INF_RELABEL_OBJ
-value|(0x04000000 | POSIX1E_CAPABILITY)
+value|(0x0000000000040000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_INF_RELABEL_SUBJ
-value|(0x08000000 | POSIX1E_CAPABILITY)
+value|(0x0000000000080000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_AUDIT_CONTROL
-value|(0x10000000 | POSIX1E_CAPABILITY)
+value|(0x0000000000100000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_AUDIT_WRITE
-value|(0x20000000 | POSIX1E_CAPABILITY)
+value|(0x0000000000200000)
 end_define
 
 begin_comment
@@ -387,113 +336,191 @@ begin_define
 define|#
 directive|define
 name|CAP_SETPCAP
-value|(0x00000100 | SYSTEM_CAPABILITY)
+value|(0x0000000000400000)
 end_define
 
 begin_comment
-comment|/*  * The following capability, borrowed from Linux, is not appropriate  * in the BSD file environment  * #define	CAP_LINUX_IMMUTABLE	(0x00000200 | SYSTEM_CAPABILITY)  */
+comment|/* This is unallocated: */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CAP_BSD_SETFFLAG
-value|(0x00000200 | SYSTEM_CAPABILITY)
+name|CAP_XXX_INVALID1
+value|(0x0000000000800000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_SYS_SETFFLAG
+value|(0x0000000001000000)
+end_define
+
+begin_comment
+comment|/*  * The CAP_LINUX_IMMUTABLE flag approximately maps into the  * general file flag setting capability in BSD.  Therfore, for  * compatibility, map the constants.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAP_LINUX_IMMUTABLE
+value|CAP_SYS_SETFFLAG
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_NET_BIND_SERVICE
-value|(0x00000400 | SYSTEM_CAPABILITY)
+value|(0x0000000002000000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_NET_BROADCAST
-value|(0x00000800 | SYSTEM_CAPABILITY)
+value|(0x0000000004000000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_NET_ADMIN
-value|(0x00001000 | SYSTEM_CAPABILITY)
+value|(0x0000000008000000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_NET_RAW
-value|(0x00002000 | SYSTEM_CAPABILITY)
+value|(0x0000000010000000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_IPC_LOCK
-value|(0x00004000 | SYSTEM_CAPABILITY)
+value|(0x0000000020000000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_IPC_OWNER
-value|(0x00008000 | SYSTEM_CAPABILITY)
+value|(0x0000000040000000)
 end_define
 
 begin_comment
-comment|/*  * The following capabilities, borrowed from Linux, are unsafe in a  * secure environment.  *  * #define	CAP_SYS_MODULE		(0x00010000 | SYSTEM_CAPABILITY)  * #define	CAP_SYS_RAWIO		(0x00020000 | SYSTEM_CAPABILITY)  * #define	CAP_SYS_CHROOT		(0x00040000 | SYSTEM_CAPABILITY)  * #define	CAP_SYS_PTRACE		(0x00080000 | SYSTEM_CAPABILITY)  */
+comment|/*  * The following capabilities, borrowed from Linux, are unsafe in a  * secure environment.  *  */
 end_comment
 
 begin_define
 define|#
 directive|define
+name|CAP_SYS_MODULE
+value|(0x0000000080000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_SYS_RAWIO
+value|(0x0000000100000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_SYS_CHROOT
+value|(0x0000000200000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_SYS_PTRACE
+value|(0x0000000400000000)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CAP_SYS_PACCT
-value|(0x00100000 | SYSTEM_CAPABILITY)
+value|(0x0000000800000000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_SYS_ADMIN
-value|(0x00200000 | SYSTEM_CAPABILITY)
+value|(0x0000001000000000)
 end_define
+
+begin_comment
+comment|/*  * Back to the safe ones, again  */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|CAP_SYS_BOOT
-value|(0x00400000 | SYSTEM_CAPABILITY)
+value|(0x0000002000000000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_SYS_NICE
-value|(0x00800000 | SYSTEM_CAPABILITY)
+value|(0x0000004000000000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_SYS_RESOURCE
-value|(0x01000000 | SYSTEM_CAPABILITY)
+value|(0x0000008000000000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_SYS_TIME
-value|(0x02000000 | SYSTEM_CAPABILITY)
+value|(0x0000010000000000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_SYS_TTY_CONFIG
-value|(0x04000000 | SYSTEM_CAPABILITY)
+value|(0x0000020000000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_MKNOD
+value|(0x0000040000000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_MAX_ID
+value|CAP_MKNOD
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_ALL_ON
+value|(CAP_CHOWN | CAP_DAC_EXECUTE | CAP_DAC_WRITE | \     CAP_DAC_READ_SEARCH | CAP_FOWNER | CAP_FSETID | CAP_KILL | CAP_LINK_DIR | \     CAP_SETFCAP | CAP_SETGID | CAP_SETUID | CAP_MAC_DOWNGRADE | \     CAP_MAC_READ | CAP_MAC_RELABEL_SUBJ | CAP_MAC_UPGRADE | \     CAP_MAC_WRITE | CAP_INF_NOFLOAT_OBJ | CAP_INF_NOFLOAT_SUBJ | \     CAP_INF_RELABEL_OBJ | CAP_INF_RELABEL_SUBJ | CAP_AUDIT_CONTROL | \     CAP_AUDIT_WRITE | CAP_SETPCAP | CAP_SYS_SETFFLAG | CAP_NET_BIND_SERVICE | \     CAP_NET_BROADCAST | CAP_NET_ADMIN | CAP_NET_RAW | CAP_IPC_LOCK | \     CAP_IPC_OWNER | CAP_SYS_MODULE | CAP_SYS_RAWIO | CAP_SYS_CHROOT | \     CAP_SYS_PTRACE | CAP_SYS_PACCT | CAP_SYS_ADMIN | CAP_SYS_BOOT | \     CAP_SYS_NICE | CAP_SYS_RESOURCE | CAP_SYS_TIME | CAP_SYS_TTY_CONFIG | \     CAP_MKNOD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_ALL_OFF
+value|(0)
 end_define
 
 begin_ifdef
@@ -524,23 +551,12 @@ begin_function_decl
 name|int
 name|cap_check
 parameter_list|(
-name|struct
-name|proc
-modifier|*
-parameter_list|,
-name|cap_value_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|cap_check_xxx
-parameter_list|(
+specifier|const
 name|struct
 name|ucred
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|proc
 modifier|*
@@ -565,7 +581,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|cap_inherit
 parameter_list|(
 name|struct

@@ -46,7 +46,7 @@ name|cap_flag_value_t
 name|value
 parameter_list|)
 block|{
-name|u_int
+name|u_int64_t
 modifier|*
 name|mask
 decl_stmt|;
@@ -67,9 +67,6 @@ operator|&
 name|cap_p
 operator|->
 name|c_effective
-index|[
-literal|0
-index|]
 expr_stmt|;
 break|break;
 case|case
@@ -81,9 +78,6 @@ operator|&
 name|cap_p
 operator|->
 name|c_inheritable
-index|[
-literal|0
-index|]
 expr_stmt|;
 break|break;
 case|case
@@ -95,9 +89,6 @@ operator|&
 name|cap_p
 operator|->
 name|c_permitted
-index|[
-literal|0
-index|]
 expr_stmt|;
 break|break;
 default|default:
@@ -107,6 +98,21 @@ name|EINVAL
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|value
+operator|!=
+name|CAP_SET
+operator|&&
+name|value
+operator|!=
+name|CAP_CLEAR
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 for|for
 control|(
 name|i
@@ -128,6 +134,7 @@ name|CAP_SET
 condition|)
 name|SET_CAPABILITY
 argument_list|(
+operator|*
 name|mask
 argument_list|,
 name|caps
@@ -139,6 +146,7 @@ expr_stmt|;
 else|else
 name|UNSET_CAPABILITY
 argument_list|(
+operator|*
 name|mask
 argument_list|,
 name|caps
