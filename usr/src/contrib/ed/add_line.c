@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)add_line.c	5.5 (Berkeley) %G%"
+literal|"@(#)add_line.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -346,11 +346,11 @@ condition|(
 name|tmp
 condition|)
 block|{
-name|bcopy
+name|memmove
 argument_list|(
-name|p
-argument_list|,
 name|tmp
+argument_list|,
+name|p
 argument_list|,
 name|len
 argument_list|)
