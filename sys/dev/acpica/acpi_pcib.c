@@ -386,11 +386,12 @@ if|if
 condition|(
 name|bootverbose
 condition|)
+block|{
 name|device_printf
 argument_list|(
 name|pcib
 argument_list|,
-literal|"matched entry for %d.%d.INT%c (src %s)\n"
+literal|"matched entry for %d.%d.INT%c"
 argument_list|,
 name|pci_get_bus
 argument_list|(
@@ -405,6 +406,22 @@ argument_list|,
 literal|'A'
 operator|+
 name|pin
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|prt
+operator|->
+name|Source
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+name|printf
+argument_list|(
+literal|" (src %s)"
 argument_list|,
 name|acpi_name
 argument_list|(
@@ -414,6 +431,12 @@ name|prt_source
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*      * If source is empty/NULL, the source index is a global IRQ number      * and it's hard-wired so we're done.      */
 if|if
 condition|(
