@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: moused.c,v 1.23 1998/11/20 11:22:17 yokota Exp $"
+literal|"$Id: moused.c,v 1.24 1998/12/13 23:26:21 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -7346,7 +7346,7 @@ operator|=
 operator|(
 name|pBuf
 index|[
-literal|1
+literal|2
 index|]
 operator|&
 name|MOUSE_PS2PLUS_ZNEG
