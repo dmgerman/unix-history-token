@@ -966,6 +966,11 @@ name|pflags
 operator||=
 name|VM_ALLOC_ZERO
 expr_stmt|;
+name|vm_object_lock
+argument_list|(
+name|kmem_object
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1018,6 +1023,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|vm_object_unlock
+argument_list|(
+name|kmem_object
+argument_list|)
+expr_stmt|;
 name|vm_map_unlock
 argument_list|(
 name|map
@@ -1028,6 +1038,11 @@ expr_stmt|;
 name|vm_map_lock
 argument_list|(
 name|map
+argument_list|)
+expr_stmt|;
+name|vm_object_lock
+argument_list|(
+name|kmem_object
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1045,11 +1060,6 @@ block|{
 name|i
 operator|-=
 name|PAGE_SIZE
-expr_stmt|;
-name|vm_object_lock
-argument_list|(
-name|kmem_object
-argument_list|)
 expr_stmt|;
 name|m
 operator|=
@@ -1076,12 +1086,12 @@ expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
+block|}
 name|vm_object_unlock
 argument_list|(
 name|kmem_object
 argument_list|)
 expr_stmt|;
-block|}
 name|vm_map_delete
 argument_list|(
 name|map
@@ -1137,6 +1147,11 @@ operator|=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;
 block|}
+name|vm_object_unlock
+argument_list|(
+name|kmem_object
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Mark map entry as non-pageable. Assert: vm_map_insert() will never 	 * be able to extend the previous entry so there will be a new entry 	 * exactly corresponding to this address range and it will have 	 * wired_count == 0. 	 */
 if|if
 condition|(
