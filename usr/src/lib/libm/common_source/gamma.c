@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gamma.c	5.2 (Berkeley) %G%"
+literal|"@(#)gamma.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1862,12 +1862,12 @@ name|z
 operator|=
 operator|(
 name|y
-operator|-
+operator|+
 name|lg
 operator|.
 name|a
 operator|)
-operator|-
+operator|+
 name|lg
 operator|.
 name|b
