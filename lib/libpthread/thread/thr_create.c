@@ -140,7 +140,9 @@ name|_thread_ctx_offset
 init|=
 name|OFF
 argument_list|(
-name|ctx
+name|mailbox
+operator|.
+name|tm_context
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -422,12 +424,16 @@ argument_list|(
 operator|&
 name|new_thread
 operator|->
-name|ctx
+name|mailbox
+operator|.
+name|tm_context
 argument_list|)
 expr_stmt|;
 name|new_thread
 operator|->
-name|ctx
+name|mailbox
+operator|.
+name|tm_context
 operator|.
 name|uc_stack
 operator|.
@@ -439,7 +445,9 @@ name|stack
 expr_stmt|;
 name|new_thread
 operator|->
-name|ctx
+name|mailbox
+operator|.
+name|tm_context
 operator|.
 name|uc_stack
 operator|.
@@ -454,12 +462,26 @@ argument_list|(
 operator|&
 name|new_thread
 operator|->
-name|ctx
+name|mailbox
+operator|.
+name|tm_context
 argument_list|,
 name|_thread_start
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+name|new_thread
+operator|->
+name|mailbox
+operator|.
+name|tm_udata
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|new_thread
 expr_stmt|;
 comment|/* Copy the thread attributes: */
 name|memcpy
@@ -735,11 +757,6 @@ init|=
 name|_get_curthread
 argument_list|()
 decl_stmt|;
-comment|/* We just left the scheduler via swapcontext: */
-name|_thread_kern_in_sched
-operator|=
-literal|0
-expr_stmt|;
 comment|/* Run the current thread's start routine with argument: */
 name|pthread_exit
 argument_list|(

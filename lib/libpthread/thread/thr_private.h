@@ -91,6 +91,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kse.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sched.h>
 end_include
 
@@ -138,7 +144,7 @@ parameter_list|(
 name|args
 modifier|...
 parameter_list|)
-value|do {		\ 	char buf[128];				\ 	snprintf(buf, sizeof(buf), ##args);	\ 	__sys_write(1, buf, strlen(buf));	\ } while (0)
+value|_thread_printf(STDOUT_FILENO, args)
 end_define
 
 begin_define
@@ -149,7 +155,7 @@ parameter_list|(
 name|args
 modifier|...
 parameter_list|)
-value|do {		\ 	char buf[128];				\ 	snprintf(buf, sizeof(buf), ##args);	\ 	__sys_write(2, buf, strlen(buf));	\ } while (0)
+value|_thread_printf(STDOUT_FILENO, args)
 end_define
 
 begin_comment
@@ -1245,8 +1251,9 @@ name|pthread_attr
 name|attr
 decl_stmt|;
 comment|/* 	 * Machine context, including signal state. 	 */
-name|ucontext_t
-name|ctx
+name|struct
+name|kse_thr_mailbox
+name|mailbox
 decl_stmt|;
 comment|/* 	 * Cancelability flags - the lower 2 bits are used by cancel 	 * definitions in pthread.h 	 */
 define|#
@@ -1589,32 +1596,6 @@ name|TAILQ_HEAD_INITIALIZER
 argument_list|(
 name|_thread_list
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-name|SCLASS
-name|int
-name|_thread_kern_in_sched
-ifdef|#
-directive|ifdef
-name|GLOBAL_PTHREAD_PRIVATE
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -2033,8 +2014,9 @@ end_comment
 
 begin_decl_stmt
 name|SCLASS
-name|ucontext_t
-name|_thread_kern_sched_ctx
+name|struct
+name|kse_mailbox
+name|_thread_kern_kse_mailbox
 decl_stmt|;
 end_decl_stmt
 
@@ -2667,7 +2649,9 @@ begin_function_decl
 name|void
 name|_thread_kern_scheduler
 parameter_list|(
-name|void
+name|struct
+name|kse_mailbox
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2743,6 +2727,22 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|_thread_printf
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|_thread_start
 parameter_list|(
 name|void
@@ -2757,6 +2757,39 @@ parameter_list|(
 name|pthread_t
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_thread_enter_uts
+parameter_list|(
+name|struct
+name|kse_thr_mailbox
+modifier|*
+name|tm
+parameter_list|,
+name|struct
+name|kse_mailbox
+modifier|*
+name|km
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_thread_switch
+parameter_list|(
+name|struct
+name|kse_thr_mailbox
+modifier|*
+parameter_list|,
+name|struct
+name|kse_thr_mailbox
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3733,7 +3766,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_THR_PRIVATE_H */
+comment|/* !_PTHREAD_PRIVATE_H */
 end_comment
 
 end_unit

@@ -202,6 +202,14 @@ name|void
 parameter_list|)
 block|{
 name|struct
+name|timespec
+name|ts
+decl_stmt|;
+name|struct
+name|timeval
+name|tv
+decl_stmt|;
+name|struct
 name|pthread
 modifier|*
 name|curthread
@@ -209,35 +217,327 @@ init|=
 name|_get_curthread
 argument_list|()
 decl_stmt|;
-comment|/* 	 * Flag the pthread kernel as executing scheduler code 	 * to avoid a scheduler signal from interrupting this 	 * execution and calling the scheduler again. 	 */
-name|_thread_kern_in_sched
+name|unsigned
+name|int
+name|current_tick
+decl_stmt|;
+comment|/* Get the current time of day. */
+name|GET_CURRENT_TOD
+argument_list|(
+name|tv
+argument_list|)
+expr_stmt|;
+name|TIMEVAL_TO_TIMESPEC
+argument_list|(
+operator|&
+name|tv
+argument_list|,
+operator|&
+name|ts
+argument_list|)
+expr_stmt|;
+name|current_tick
 operator|=
+name|_sched_ticks
+expr_stmt|;
+comment|/* 	 * Enter a critical section. 	 */
+name|_thread_kern_kse_mailbox
+operator|.
+name|km_curthread
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* 	 * If this thread is becoming inactive, make note of the 	 * time. 	 */
+if|if
+condition|(
+name|curthread
+operator|->
+name|state
+operator|!=
+name|PS_RUNNING
+condition|)
+block|{
+comment|/* 		 * Save the current time as the time that the 		 * thread became inactive: 		 */
+name|curthread
+operator|->
+name|last_inactive
+operator|=
+operator|(
+name|long
+operator|)
+name|current_tick
+expr_stmt|;
+if|if
+condition|(
+name|curthread
+operator|->
+name|last_inactive
+operator|<
+name|curthread
+operator|->
+name|last_active
+condition|)
+block|{
+comment|/* Account for a rollover: */
+name|curthread
+operator|->
+name|last_inactive
+operator|=
+operator|+
+name|UINT_MAX
+operator|+
 literal|1
 expr_stmt|;
+block|}
+block|}
+comment|/* 	 * Place this thread into the appropriate queue(s). 	 */
+switch|switch
+condition|(
+name|curthread
+operator|->
+name|state
+condition|)
+block|{
+case|case
+name|PS_DEAD
+case|:
+case|case
+name|PS_STATE_MAX
+case|:
+comment|/* XXX: silences -Wall */
+case|case
+name|PS_SUSPENDED
+case|:
+comment|/* Dead or suspended threads are not placed in any queue. */
+break|break;
+case|case
+name|PS_RUNNING
+case|:
+comment|/* 		 * Save the current time as the time that the 		 * thread became inactive: 		 */
+name|current_tick
+operator|=
+name|_sched_ticks
+expr_stmt|;
+name|curthread
+operator|->
+name|last_inactive
+operator|=
+operator|(
+name|long
+operator|)
+name|current_tick
+expr_stmt|;
+if|if
+condition|(
+name|curthread
+operator|->
+name|last_inactive
+operator|<
+name|curthread
+operator|->
+name|last_active
+condition|)
+block|{
+comment|/* Account for a rollover: */
+name|curthread
+operator|->
+name|last_inactive
+operator|=
+operator|+
+name|UINT_MAX
+operator|+
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|curthread
+operator|->
+name|slice_usec
+operator|!=
+operator|-
+literal|1
+operator|)
+operator|&&
+operator|(
+name|curthread
+operator|->
+name|attr
+operator|.
+name|sched_policy
+operator|!=
+name|SCHED_FIFO
+operator|)
+condition|)
+block|{
+comment|/* 			 * Accumulate the number of microseconds for 			 * which the current thread has run: 			 */
+name|curthread
+operator|->
+name|slice_usec
+operator|+=
+operator|(
+name|curthread
+operator|->
+name|last_inactive
+operator|-
+name|curthread
+operator|->
+name|last_active
+operator|)
+operator|*
+operator|(
+name|long
+operator|)
+name|_clock_res_usec
+expr_stmt|;
+comment|/* Check for time quantum exceeded: */
+if|if
+condition|(
+name|curthread
+operator|->
+name|slice_usec
+operator|>
+name|TIMESLICE_USEC
+condition|)
+name|curthread
+operator|->
+name|slice_usec
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|curthread
+operator|->
+name|slice_usec
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+comment|/* 			 * The thread exceeded its time 			 * quantum or it yielded the CPU; 			 * place it at the tail of the 			 * queue for its priority. 			 */
+name|PTHREAD_PRIOQ_INSERT_TAIL
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 			 * The thread hasn't exceeded its 			 * interval.  Place it at the head 			 * of the queue for its priority. 			 */
+name|PTHREAD_PRIOQ_INSERT_HEAD
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|PS_SPINBLOCK
+case|:
+comment|/* Increment spinblock count. */
+name|_spinblock_count
+operator|++
+expr_stmt|;
+comment|/*FALLTHROUGH*/
+case|case
+name|PS_DEADLOCK
+case|:
+case|case
+name|PS_JOIN
+case|:
+case|case
+name|PS_MUTEX_WAIT
+case|:
+case|case
+name|PS_WAIT_WAIT
+case|:
+comment|/* No timeouts for these states. */
+name|curthread
+operator|->
+name|wakeup_time
+operator|.
+name|tv_sec
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|curthread
+operator|->
+name|wakeup_time
+operator|.
+name|tv_nsec
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* Restart the time slice. */
+name|curthread
+operator|->
+name|slice_usec
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* Insert into the waiting queue. */
+name|PTHREAD_WAITQ_INSERT
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PS_COND_WAIT
+case|:
+case|case
+name|PS_SLEEP_WAIT
+case|:
+comment|/* These states can timeout. */
+comment|/* Restart the time slice. */
+name|curthread
+operator|->
+name|slice_usec
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* Insert into the waiting queue. */
+name|PTHREAD_WAITQ_INSERT
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 comment|/* Switch into the scheduler's context. */
-name|swapcontext
+name|DBG_MSG
+argument_list|(
+literal|"Calling _thread_enter_uts()\n"
+argument_list|)
+expr_stmt|;
+name|_thread_enter_uts
 argument_list|(
 operator|&
 name|curthread
 operator|->
-name|ctx
+name|mailbox
 argument_list|,
 operator|&
-name|_thread_kern_sched_ctx
+name|_thread_kern_kse_mailbox
 argument_list|)
 expr_stmt|;
 name|DBG_MSG
 argument_list|(
-literal|"Returned from swapcontext, thread %p\n"
+literal|"Returned from _thread_enter_uts, thread %p\n"
 argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
-comment|/* 	 * This point is reached when swapcontext() is called 	 * to restore the state of a thread. 	 * 	 * This is the normal way out of the scheduler. 	 */
-name|_thread_kern_in_sched
-operator|=
-literal|0
-expr_stmt|;
+comment|/* 	 * This point is reached when _thread_switch() is called 	 * to restore the state of a thread. 	 * 	 * This is the normal way out of the scheduler (for synchronous 	 * switches). 	 */
+comment|/* XXXKSE: Do this inside _thread_kern_scheduler() */
 if|if
 condition|(
 name|curthread
@@ -301,7 +601,10 @@ begin_function
 name|void
 name|_thread_kern_scheduler
 parameter_list|(
-name|void
+name|struct
+name|kse_mailbox
+modifier|*
+name|km
 parameter_list|)
 block|{
 name|struct
@@ -312,15 +615,9 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
-name|struct
-name|pthread
-modifier|*
-name|curthread
-init|=
-name|_get_curthread
-argument_list|()
-decl_stmt|;
 name|pthread_t
+name|td
+decl_stmt|,
 name|pthread
 decl_stmt|,
 name|pthread_h
@@ -329,40 +626,30 @@ name|unsigned
 name|int
 name|current_tick
 decl_stmt|;
-name|int
-name|add_to_prioq
+name|struct
+name|kse_thr_mailbox
+modifier|*
+name|tm
+decl_stmt|,
+modifier|*
+name|p
 decl_stmt|;
-comment|/* 	 * Enter a scheduling loop that finds the next thread that is 	 * ready to run. This loop completes when there are no more threads 	 * in the global list. It is interrupted each time a thread is 	 * scheduled, but will continue when we return. 	 */
+name|DBG_MSG
+argument_list|(
+literal|"entering\n"
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|!
-operator|(
 name|TAILQ_EMPTY
 argument_list|(
 operator|&
 name|_thread_list
 argument_list|)
-operator|)
 condition|)
 block|{
-comment|/* If the currently running thread is a user thread, save it: */
-if|if
-condition|(
-operator|(
-name|curthread
-operator|->
-name|flags
-operator|&
-name|PTHREAD_FLAGS_PRIVATE
-operator|)
-operator|==
-literal|0
-condition|)
-name|_last_user_thread
-operator|=
-name|curthread
-expr_stmt|;
-comment|/* Get the current time of day: */
+comment|/* Get the current time of day. */
 name|GET_CURRENT_TOD
 argument_list|(
 name|tv
@@ -381,196 +668,96 @@ name|current_tick
 operator|=
 name|_sched_ticks
 expr_stmt|;
-name|add_to_prioq
-operator|=
-literal|0
+comment|/* 		 * Pick up threads that had blocked in the kernel and 		 * have now completed their trap (syscall, vm fault, etc). 		 * These threads were PS_RUNNING (and still are), but they 		 * need to be added to the run queue so that they can be 		 * scheduled again. 		 */
+name|DBG_MSG
+argument_list|(
+literal|"Picking up km_completed\n"
+argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|curthread
-operator|!=
-operator|&
-name|_thread_kern_thread
-condition|)
-block|{
-comment|/* 			 * This thread no longer needs to yield the CPU. 			 */
-if|if
-condition|(
-name|curthread
-operator|->
-name|state
-operator|!=
-name|PS_RUNNING
-condition|)
-block|{
-comment|/* 				 * Save the current time as the time that the 				 * thread became inactive: 				 */
-name|curthread
-operator|->
-name|last_inactive
+name|p
 operator|=
+name|km
+operator|->
+name|km_completed
+expr_stmt|;
+name|km
+operator|->
+name|km_completed
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* XXX: Atomic xchg here. */
+while|while
+condition|(
 operator|(
-name|long
+name|tm
+operator|=
+name|p
 operator|)
-name|current_tick
-expr_stmt|;
-if|if
-condition|(
-name|curthread
-operator|->
-name|last_inactive
-operator|<
-name|curthread
-operator|->
-name|last_active
+operator|!=
+name|NULL
 condition|)
 block|{
-comment|/* Account for a rollover: */
-name|curthread
-operator|->
-name|last_inactive
+name|p
 operator|=
-operator|+
-name|UINT_MAX
-operator|+
-literal|1
-expr_stmt|;
-block|}
-block|}
-comment|/* 			 * Place the currently running thread into the 			 * appropriate queue(s). 			 */
-switch|switch
-condition|(
-name|curthread
+name|tm
 operator|->
-name|state
-condition|)
-block|{
-case|case
-name|PS_DEAD
-case|:
-case|case
-name|PS_STATE_MAX
-case|:
-comment|/* to silence -Wall */
-case|case
-name|PS_SUSPENDED
-case|:
-comment|/* 				 * Dead and suspended threads are not placed 				 * in any queue: 				 */
-break|break;
-case|case
-name|PS_RUNNING
-case|:
-comment|/* 				 * Runnable threads can't be placed in the 				 * priority queue until after waiting threads 				 * are polled (to preserve round-robin 				 * scheduling). 				 */
-name|add_to_prioq
-operator|=
-literal|1
+name|tm_next
 expr_stmt|;
-break|break;
-comment|/* 			 * States which do not depend on file descriptor I/O 			 * operations or timeouts: 			 */
-case|case
-name|PS_DEADLOCK
-case|:
-case|case
-name|PS_JOIN
-case|:
-case|case
-name|PS_MUTEX_WAIT
-case|:
-case|case
-name|PS_WAIT_WAIT
-case|:
-comment|/* No timeouts for these states: */
-name|curthread
+name|tm
 operator|->
-name|wakeup_time
-operator|.
-name|tv_sec
+name|tm_next
 operator|=
-operator|-
-literal|1
+name|NULL
 expr_stmt|;
-name|curthread
-operator|->
-name|wakeup_time
-operator|.
-name|tv_nsec
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-comment|/* Restart the time slice: */
-name|curthread
-operator|->
-name|slice_usec
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-comment|/* Insert into the waiting queue: */
-name|PTHREAD_WAITQ_INSERT
+name|DBG_MSG
 argument_list|(
-name|curthread
+literal|"\tmailbox=%p pthread=%p\n"
+argument_list|,
+name|tm
+argument_list|,
+name|tm
+operator|->
+name|tm_udata
 argument_list|)
 expr_stmt|;
-break|break;
-comment|/* States which can timeout: */
-case|case
-name|PS_COND_WAIT
-case|:
-case|case
-name|PS_SLEEP_WAIT
-case|:
-comment|/* Restart the time slice: */
-name|curthread
-operator|->
-name|slice_usec
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-comment|/* Insert into the waiting queue: */
-name|PTHREAD_WAITQ_INSERT
+name|PTHREAD_PRIOQ_INSERT_TAIL
 argument_list|(
-name|curthread
+operator|(
+name|pthread_t
+operator|)
+name|tm
+operator|->
+name|tm_udata
 argument_list|)
 expr_stmt|;
-break|break;
-comment|/* States that require periodic work: */
-case|case
-name|PS_SPINBLOCK
-case|:
-comment|/* No timeouts for this state: */
-name|curthread
-operator|->
-name|wakeup_time
-operator|.
-name|tv_sec
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|curthread
-operator|->
-name|wakeup_time
-operator|.
-name|tv_nsec
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-comment|/* Increment spinblock count: */
-name|_spinblock_count
-operator|++
-expr_stmt|;
-comment|/* FALLTHROUGH */
 block|}
-block|}
-name|last_tick
-operator|=
-name|current_tick
+comment|/* Deliver posted signals. */
+comment|/* XXX: Not yet. */
+name|DBG_MSG
+argument_list|(
+literal|"Picking up signals\n"
+argument_list|)
 expr_stmt|;
-comment|/* 		 * Wake up threads that have timedout.  This has to be 		 * done after polling in case a thread does a poll or 		 * select with zero time. 		 */
+comment|/* Wake up threads that have timed out.  */
+name|DBG_MSG
+argument_list|(
+literal|"setactive\n"
+argument_list|)
+expr_stmt|;
 name|PTHREAD_WAITQ_SETACTIVE
 argument_list|()
+expr_stmt|;
+name|DBG_MSG
+argument_list|(
+literal|"Picking up timeouts (%x)\n"
+argument_list|,
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|_waitingq
+argument_list|)
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -662,6 +849,11 @@ operator|)
 operator|)
 condition|)
 block|{
+name|DBG_MSG
+argument_list|(
+literal|"\t...\n"
+argument_list|)
+expr_stmt|;
 comment|/* 			 * Remove this thread from the waiting queue 			 * (and work queue if necessary) and place it 			 * in the ready queue. 			 */
 name|PTHREAD_WAITQ_CLEARACTIVE
 argument_list|()
@@ -677,6 +869,11 @@ condition|)
 name|PTHREAD_WORKQ_REMOVE
 argument_list|(
 name|pthread
+argument_list|)
+expr_stmt|;
+name|DBG_MSG
+argument_list|(
+literal|"\twaking thread\n"
 argument_list|)
 expr_stmt|;
 name|PTHREAD_NEW_STATE
@@ -697,140 +894,20 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+name|DBG_MSG
+argument_list|(
+literal|"clearactive\n"
+argument_list|)
+expr_stmt|;
 name|PTHREAD_WAITQ_CLEARACTIVE
 argument_list|()
 expr_stmt|;
-comment|/* 		 * Check to see if the current thread needs to be added 		 * to the priority queue: 		 */
-if|if
-condition|(
-name|add_to_prioq
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* 			 * Save the current time as the time that the 			 * thread became inactive: 			 */
-name|current_tick
-operator|=
-name|_sched_ticks
-expr_stmt|;
-name|curthread
-operator|->
-name|last_inactive
-operator|=
-operator|(
-name|long
-operator|)
-name|current_tick
-expr_stmt|;
-if|if
-condition|(
-name|curthread
-operator|->
-name|last_inactive
-operator|<
-name|curthread
-operator|->
-name|last_active
-condition|)
-block|{
-comment|/* Account for a rollover: */
-name|curthread
-operator|->
-name|last_inactive
-operator|=
-operator|+
-name|UINT_MAX
-operator|+
-literal|1
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|(
-name|curthread
-operator|->
-name|slice_usec
-operator|!=
-operator|-
-literal|1
-operator|)
-operator|&&
-operator|(
-name|curthread
-operator|->
-name|attr
-operator|.
-name|sched_policy
-operator|!=
-name|SCHED_FIFO
-operator|)
-condition|)
-block|{
-comment|/* 				 * Accumulate the number of microseconds for 				 * which the current thread has run: 				 */
-name|curthread
-operator|->
-name|slice_usec
-operator|+=
-operator|(
-name|curthread
-operator|->
-name|last_inactive
-operator|-
-name|curthread
-operator|->
-name|last_active
-operator|)
-operator|*
-operator|(
-name|long
-operator|)
-name|_clock_res_usec
-expr_stmt|;
-comment|/* Check for time quantum exceeded: */
-if|if
-condition|(
-name|curthread
-operator|->
-name|slice_usec
-operator|>
-name|TIMESLICE_USEC
-condition|)
-name|curthread
-operator|->
-name|slice_usec
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|curthread
-operator|->
-name|slice_usec
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-comment|/* 				 * The thread exceeded its time 				 * quantum or it yielded the CPU; 				 * place it at the tail of the 				 * queue for its priority. 				 */
-name|PTHREAD_PRIOQ_INSERT_TAIL
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 				 * The thread hasn't exceeded its 				 * interval.  Place it at the head 				 * of the queue for its priority. 				 */
-name|PTHREAD_PRIOQ_INSERT_HEAD
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 comment|/* 		 * Get the highest priority thread in the ready queue. 		 */
+name|DBG_MSG
+argument_list|(
+literal|"Selecting thread\n"
+argument_list|)
+expr_stmt|;
 name|pthread_h
 operator|=
 name|PTHREAD_PRIOQ_FIRST
@@ -840,61 +917,13 @@ comment|/* Check if there are no threads ready to run: */
 if|if
 condition|(
 name|pthread_h
-operator|==
-name|NULL
 condition|)
 block|{
-comment|/* 			 * Lock the pthread kernel by changing the pointer to 			 * the running thread to point to the global kernel 			 * thread structure: 			 */
-name|_set_curthread
-argument_list|(
-operator|&
-name|_thread_kern_thread
-argument_list|)
-expr_stmt|;
-name|curthread
-operator|=
-operator|&
-name|_thread_kern_thread
-expr_stmt|;
 name|DBG_MSG
 argument_list|(
-literal|"No runnable threads, using kernel thread %p\n"
-argument_list|,
-name|curthread
+literal|"Scheduling thread\n"
 argument_list|)
 expr_stmt|;
-comment|/* 			 * There are no threads ready to run, so wait until 			 * something happens that changes this condition: 			 */
-name|thread_kern_idle
-argument_list|()
-expr_stmt|;
-comment|/* 			 * This process' usage will likely be very small 			 * while waiting in a poll.  Since the scheduling 			 * clock is based on the profiling timer, it is 			 * unlikely that the profiling timer will fire 			 * and update the time of day.  To account for this, 			 * get the time of day after polling with a timeout. 			 */
-name|gettimeofday
-argument_list|(
-operator|(
-expr|struct
-name|timeval
-operator|*
-operator|)
-operator|&
-name|_sched_tod
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-comment|/* Check once more for a runnable thread: */
-name|pthread_h
-operator|=
-name|PTHREAD_PRIOQ_FIRST
-argument_list|()
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|pthread_h
-operator|!=
-name|NULL
-condition|)
-block|{
 comment|/* Remove the thread from the ready queue: */
 name|PTHREAD_PRIOQ_REMOVE
 argument_list|(
@@ -907,16 +936,12 @@ argument_list|(
 name|pthread_h
 argument_list|)
 expr_stmt|;
-name|curthread
-operator|=
-name|pthread_h
-expr_stmt|;
 comment|/* 			 * Save the current time as the time that the thread 			 * became active: 			 */
 name|current_tick
 operator|=
 name|_sched_ticks
 expr_stmt|;
-name|curthread
+name|pthread_h
 operator|->
 name|last_active
 operator|=
@@ -928,7 +953,7 @@ expr_stmt|;
 comment|/* 			 * Check if this thread is running for the first time 			 * or running again after using its full time slice 			 * allocation: 			 */
 if|if
 condition|(
-name|curthread
+name|pthread_h
 operator|->
 name|slice_usec
 operator|==
@@ -937,7 +962,7 @@ literal|1
 condition|)
 block|{
 comment|/* Reset the accumulated time slice period: */
-name|curthread
+name|pthread_h
 operator|->
 name|slice_usec
 operator|=
@@ -956,7 +981,7 @@ operator|&&
 operator|(
 name|_last_user_thread
 operator|!=
-name|curthread
+name|pthread_h
 operator|)
 condition|)
 block|{
@@ -964,25 +989,79 @@ name|thread_run_switch_hook
 argument_list|(
 name|_last_user_thread
 argument_list|,
-name|curthread
+name|pthread_h
 argument_list|)
 expr_stmt|;
 block|}
 comment|/* 			 * Continue the thread at its current frame: 			 */
-name|swapcontext
+name|_last_user_thread
+operator|=
+name|td
+expr_stmt|;
+name|DBG_MSG
+argument_list|(
+literal|"switch in\n"
+argument_list|)
+expr_stmt|;
+name|_thread_switch
 argument_list|(
 operator|&
-name|_thread_kern_sched_ctx
+name|pthread_h
+operator|->
+name|mailbox
 argument_list|,
 operator|&
-name|curthread
-operator|->
-name|ctx
+name|_thread_kern_kse_mailbox
+operator|.
+name|km_curthread
+argument_list|)
+expr_stmt|;
+name|DBG_MSG
+argument_list|(
+literal|"switch out\n"
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+comment|/* 			 * There is nothing for us to do. Either 			 * yield, or idle until something wakes up. 			 */
+name|DBG_MSG
+argument_list|(
+literal|"No runnable threads, idling.\n"
+argument_list|)
+expr_stmt|;
+comment|/* 			 * kse_release() only returns if we are the 			 * only thread in this process. If so, then 			 * we drop into an idle loop. 			 */
+comment|/* XXX: kse_release(); */
+name|thread_kern_idle
+argument_list|()
+expr_stmt|;
+comment|/* 			 * This thread's usage will likely be very small 			 * while waiting in a poll.  Since the scheduling 			 * clock is based on the profiling timer, it is 			 * unlikely that the profiling timer will fire 			 * and update the time of day.  To account for this, 			 * get the time of day after polling with a timeout. 			 */
+name|gettimeofday
+argument_list|(
+operator|(
+expr|struct
+name|timeval
+operator|*
+operator|)
+operator|&
+name|_sched_tod
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 block|}
-comment|/* There are no more threads, so exit this process: */
+name|DBG_MSG
+argument_list|(
+literal|"looping\n"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* There are no threads; exit. */
+name|DBG_MSG
+argument_list|(
+literal|"No threads, exiting.\n"
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0
@@ -1015,10 +1094,12 @@ init|=
 name|_get_curthread
 argument_list|()
 decl_stmt|;
-comment|/* 	 * Flag the pthread kernel as executing scheduler code 	 * to avoid a scheduler signal from interrupting this 	 * execution and calling the scheduler again. 	 */
-name|_thread_kern_in_sched
+comment|/* 	 * Flag the pthread kernel as executing scheduler code 	 * to avoid an upcall from interrupting this execution 	 * and calling the scheduler again. 	 */
+name|_thread_kern_kse_mailbox
+operator|.
+name|km_curthread
 operator|=
-literal|1
+name|NULL
 expr_stmt|;
 comment|/* Change the state of the current thread: */
 name|curthread
@@ -1074,10 +1155,12 @@ init|=
 name|_get_curthread
 argument_list|()
 decl_stmt|;
-comment|/* 	 * Flag the pthread kernel as executing scheduler code 	 * to avoid a scheduler signal from interrupting this 	 * execution and calling the scheduler again. 	 */
-name|_thread_kern_in_sched
+comment|/* 	 * Flag the pthread kernel as executing scheduler code 	 * to avoid an upcall from interrupting this execution 	 * and calling the scheduler again. 	 */
+name|_thread_kern_kse_mailbox
+operator|.
+name|km_curthread
 operator|=
-literal|1
+name|NULL
 expr_stmt|;
 comment|/* Change the state of the current thread: */
 name|curthread
@@ -1109,6 +1192,10 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * XXX - What we need to do here is schedule ourselves an idle thread,  * which does the poll()/nanosleep()/whatever, and then will cause an  * upcall when it expires. This thread never gets inserted into the  * run_queue (in fact, there's no need for it to be a thread at all).  * timeout period has arrived.  */
+end_comment
 
 begin_function
 specifier|static
@@ -1192,7 +1279,7 @@ literal|1
 operator|)
 condition|)
 block|{
-comment|/* 		 * Either there are no threads in the waiting queue, 		 * or there are no threads that can timeout. 		 */
+comment|/* 		 * Either there are no threads in the waiting queue, 		 * or there are no threads that can timeout. 		 * 		 * XXX: kse_yield() here, maybe? 		 */
 name|PANIC
 argument_list|(
 literal|"Would idle forever"
