@@ -582,7 +582,7 @@ name|ioctl
 argument_list|(
 name|fd
 argument_list|,
-name|DIOCGPC98
+name|DIOCSPC98
 argument_list|,
 name|boot
 argument_list|)
@@ -597,7 +597,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: ioctl DIOCGPC98"
+literal|"%s: ioctl DIOCSPC98"
 argument_list|,
 name|disk
 argument_list|)
