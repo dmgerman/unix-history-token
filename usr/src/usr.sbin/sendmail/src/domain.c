@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.21 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.22 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.21 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.22 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,7 +91,7 @@ block|{
 name|HEADER
 name|qb1
 decl_stmt|;
-name|char
+name|u_char
 name|qb2
 index|[
 name|PACKETSZ
@@ -2076,10 +2076,14 @@ name|qtype
 argument_list|,
 operator|&
 name|answer
+operator|.
+name|qb2
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|answer
+operator|.
+name|qb2
 argument_list|)
 argument_list|)
 expr_stmt|;
