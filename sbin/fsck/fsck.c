@@ -2876,7 +2876,7 @@ name|char
 name|common
 index|[]
 init|=
-literal|"[-dpvlyn] [-T fstype:fsoptions] [-t fstype]"
+literal|"[-BFdpvlyn] [-T fstype:fsoptions] [-t fstype]"
 decl_stmt|;
 operator|(
 name|void

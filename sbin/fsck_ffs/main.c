@@ -2332,7 +2332,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-dfnpy] [-B be|le] [-b block] [-c level] [-m mode] "
+literal|"Usage: %s [-BFpfny] [-b block] [-c level] [-m mode] "
 literal|"filesystem ...\n"
 argument_list|,
 name|__progname
