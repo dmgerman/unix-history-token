@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	refer..c	4.4	87/10/22	*/
+comment|/*-  * %sccs.include.proprietary.c%  *  *	@(#)refer..c	4.5 (Berkeley) %G%  */
 end_comment
 
 begin_include

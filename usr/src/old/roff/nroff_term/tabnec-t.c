@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tabnec-t.c	4.3	86/02/26	*/
+comment|/*-  * %sccs.include.proprietary.c%  *  *	@(#)tabnec-t.c	4.3 (Berkeley) %G%  */
 end_comment
 
 begin_define

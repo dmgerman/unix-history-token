@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*-  * %sccs.include.proprietary.c%  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -11,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crtdriver.c	4.2 (Berkeley) %G%"
+literal|"@(#)crtdriver.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,6 +23,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/* This driver is used with crtplot.c. It is essentially the same driver as the one in /usr/src/cmd/plot. Unfortunately, the curses library has some of the same names as does as the functions that the driver calls.  These have been changed.  Also, one of the commands has been removed since they don't make sense for crt's. */

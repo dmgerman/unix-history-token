@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*-  * %sccs.include.proprietary.c%  *  *	@(#)tabepson.c	1.4 (Berkeley) %G%  */
+end_comment
+
+begin_comment
 comment|/*************************************************************************  * This is 'tabepson.c' for an Epson FX80. Default spacing is elite.	 *  * This represents a combination and very slight modification of two	 *  *  nroff driving tables. Specifically :				 *  *									 *  *     tablpr.c  by UCB Computing Center (the approximation of greek)    *  *									 *  *     tabfx80p.c by Goeke@MIT-Multics.ARPA (Epson print mode switching) *  *	replaces big curly bracket parts with the following:		 *  *									 *  *		PRINT MODE:		  CHARACTER SEQUENCE		 *  *		FX80 set Double Strike 	 	\(lt			 *  *		FX80 cancels D.S.  	 	\(lb			 *  *		FX80 set Condensed 	 	\(rt			 *  *		FX80 cancels Condensed 	 	\(rb			 *  *		FX80 set Pica size 	 	\(lk			 *  *		FX80 set Elite size	 	\(rk			 *  *		FX80 set Proportional 	 	\(bv 			 *  *		FX80 set Expanded Mode 	 	\(lf 			 *  *		FX80 cancel Expanded Mode	\(rf 			 *  *		FX80 underline on 	 	\(lc 			 *  *		FX80 underline off 	 	\(rc 			 *  *									 *  *  --> J. Michael Cherry, 1/18/85  molbio@ucblapis or			 *  *				    ucbvax!molbio!mike			 *  *									 *  *************************************************************************/
 end_comment
 

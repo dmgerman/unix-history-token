@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tab302-12.c	4.1	83/08/05	*/
+comment|/*-  * %sccs.include.proprietary.c%  *  *	@(#)tab302-12.c	4.2 (Berkeley) %G%  */
 end_comment
 
 begin_define
