@@ -2981,6 +2981,11 @@ name|changer_links
 argument_list|)
 expr_stmt|;
 block|}
+name|xpt_free_path
+argument_list|(
+name|path
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -3342,6 +3347,11 @@ argument_list|,
 name|nsoftc
 argument_list|,
 name|changer_links
+argument_list|)
+expr_stmt|;
+name|xpt_free_path
+argument_list|(
+name|path
 argument_list|)
 expr_stmt|;
 block|}
