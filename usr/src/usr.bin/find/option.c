@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)option.c	5.10 (Berkeley) %G%"
+literal|"@(#)option.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -123,10 +123,11 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* NB: the following table must be sorted in machine (strcmp) order */
+comment|/* NB: the following table must be sorted lexically. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|OPTION
 name|options
 index|[]
