@@ -552,6 +552,36 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|static
+name|int
+name|tcp_insecure_rst
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_tcp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|insecure_rst
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|tcp_insecure_rst
+argument_list|,
+literal|0
+argument_list|,
+literal|"Follow the old (insecure) criteria for accepting RST packets."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
@@ -5508,7 +5538,7 @@ block|}
 break|break;
 comment|/* continue normal processing */
 block|}
-comment|/* 	 * States other than LISTEN or SYN_SENT. 	 * First check the RST flag and sequence number since reset segments 	 * are exempt from the timestamp and connection count tests.  This 	 * fixes a bug introduced by the Stevens, vol. 2, p. 960 bugfix 	 * below which allowed reset segments in half the sequence space 	 * to fall though and be processed (which gives forged reset 	 * segments with a random sequence number a 50 percent chance of 	 * killing a connection). 	 * Then check timestamp, if present. 	 * Then check the connection count, if present. 	 * Then check that at least some bytes of segment are within 	 * receive window.  If segment begins before rcv_nxt, 	 * drop leading data (and SYN); if nothing left, just ack. 	 * 	 * 	 * If the RST bit is set, check the sequence number to see 	 * if this is a valid reset segment. 	 * RFC 793 page 37: 	 *   In all states except SYN-SENT, all reset (RST) segments 	 *   are validated by checking their SEQ-fields.  A reset is 	 *   valid if its sequence number is in the window. 	 * Note: this does not take into account delayed ACKs, so 	 *   we should test against last_ack_sent instead of rcv_nxt. 	 *   The sequence number in the reset segment is normally an 	 *   echo of our outgoing acknowlegement numbers, but some hosts 	 *   send a reset with the sequence number at the rightmost edge 	 *   of our receive window, and we have to handle this case. 	 * If we have multiple segments in flight, the intial reset 	 * segment sequence numbers will be to the left of last_ack_sent, 	 * but they will eventually catch up. 	 * In any case, it never made sense to trim reset segments to 	 * fit the receive window since RFC 1122 says: 	 *   4.2.2.12  RST Segment: RFC-793 Section 3.4 	 * 	 *    A TCP SHOULD allow a received RST segment to include data. 	 * 	 *    DISCUSSION 	 *         It has been suggested that a RST segment could contain 	 *         ASCII text that encoded and explained the cause of the 	 *         RST.  No standard has yet been established for such 	 *         data. 	 * 	 * If the reset segment passes the sequence number test examine 	 * the state: 	 *    SYN_RECEIVED STATE: 	 *	If passive open, return to LISTEN state. 	 *	If active open, inform user that connection was refused. 	 *    ESTABLISHED, FIN_WAIT_1, FIN_WAIT_2, CLOSE_WAIT STATES: 	 *	Inform user that connection was reset, and close tcb. 	 *    CLOSING, LAST_ACK STATES: 	 *	Close the tcb. 	 *    TIME_WAIT STATE: 	 *	Drop the segment - see Stevens, vol. 2, p. 964 and 	 *      RFC 1337. 	 */
+comment|/* 	 * States other than LISTEN or SYN_SENT. 	 * First check the RST flag and sequence number since reset segments 	 * are exempt from the timestamp and connection count tests.  This 	 * fixes a bug introduced by the Stevens, vol. 2, p. 960 bugfix 	 * below which allowed reset segments in half the sequence space 	 * to fall though and be processed (which gives forged reset 	 * segments with a random sequence number a 50 percent chance of 	 * killing a connection). 	 * Then check timestamp, if present. 	 * Then check the connection count, if present. 	 * Then check that at least some bytes of segment are within 	 * receive window.  If segment begins before rcv_nxt, 	 * drop leading data (and SYN); if nothing left, just ack. 	 * 	 * 	 * If the RST bit is set, check the sequence number to see 	 * if this is a valid reset segment. 	 * RFC 793 page 37: 	 *   In all states except SYN-SENT, all reset (RST) segments 	 *   are validated by checking their SEQ-fields.  A reset is 	 *   valid if its sequence number is in the window. 	 * Note: this does not take into account delayed ACKs, so 	 *   we should test against last_ack_sent instead of rcv_nxt. 	 *   The sequence number in the reset segment is normally an 	 *   echo of our outgoing acknowlegement numbers, but some hosts 	 *   send a reset with the sequence number at the rightmost edge 	 *   of our receive window, and we have to handle this case. 	 * Note 2: Paul Watson's paper "Slipping in the Window" has shown 	 *   that brute force RST attacks are possible.  To combat this, 	 *   we use a much stricter check while in the ESTABLISHED state, 	 *   only accepting RSTs where the sequence number is equal to 	 *   last_ack_sent.  In all other states (the states in which a 	 *   RST is more likely), the more permissive check is used. 	 * If we have multiple segments in flight, the intial reset 	 * segment sequence numbers will be to the left of last_ack_sent, 	 * but they will eventually catch up. 	 * In any case, it never made sense to trim reset segments to 	 * fit the receive window since RFC 1122 says: 	 *   4.2.2.12  RST Segment: RFC-793 Section 3.4 	 * 	 *    A TCP SHOULD allow a received RST segment to include data. 	 * 	 *    DISCUSSION 	 *         It has been suggested that a RST segment could contain 	 *         ASCII text that encoded and explained the cause of the 	 *         RST.  No standard has yet been established for such 	 *         data. 	 * 	 * If the reset segment passes the sequence number test examine 	 * the state: 	 *    SYN_RECEIVED STATE: 	 *	If passive open, return to LISTEN state. 	 *	If active open, inform user that connection was refused. 	 *    ESTABLISHED, FIN_WAIT_1, FIN_WAIT_2, CLOSE_WAIT STATES: 	 *	Inform user that connection was reset, and close tcb. 	 *    CLOSING, LAST_ACK STATES: 	 *	Close the tcb. 	 *    TIME_WAIT STATE: 	 *	Drop the segment - see Stevens, vol. 2, p. 964 and 	 *      RFC 1337. 	 */
 if|if
 condition|(
 name|thflags
@@ -5585,6 +5615,26 @@ goto|;
 case|case
 name|TCPS_ESTABLISHED
 case|:
+if|if
+condition|(
+name|tp
+operator|->
+name|last_ack_sent
+operator|!=
+name|th
+operator|->
+name|th_seq
+operator|&&
+name|tcp_insecure_rst
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* tcpstat.tcps_badrst++; */
+goto|goto
+name|drop
+goto|;
+block|}
 case|case
 name|TCPS_FIN_WAIT_1
 case|:
