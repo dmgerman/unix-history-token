@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dbtest.c	5.13 (Berkeley) %G%"
+literal|"@(#)dbtest.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -458,6 +458,9 @@ name|ch
 decl_stmt|;
 name|char
 modifier|*
+name|fname
+decl_stmt|,
+modifier|*
 name|infoarg
 decl_stmt|,
 modifier|*
@@ -474,6 +477,10 @@ name|infoarg
 operator|=
 name|NULL
 expr_stmt|;
+name|fname
+operator|=
+name|NULL
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -485,7 +492,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"i:o:"
+literal|"f:i:o:"
 argument_list|)
 operator|)
 operator|!=
@@ -496,6 +503,14 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'f'
+case|:
+name|fname
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
 case|case
 literal|'i'
 case|:
@@ -656,11 +671,22 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+comment|/* Open the DB. */
 define|#
 directive|define
 name|BACKINGFILE
 value|"/tmp/__dbtest"
-comment|/* Open the DB. */
+if|if
+condition|(
+name|fname
+operator|==
+name|NULL
+condition|)
+block|{
+name|fname
+operator|=
+name|BACKINGFILE
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -669,6 +695,7 @@ argument_list|(
 name|BACKINGFILE
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -676,7 +703,7 @@ name|dbp
 operator|=
 name|dbopen
 argument_list|(
-name|BACKINGFILE
+name|fname
 argument_list|,
 name|O_CREAT
 operator||
@@ -1412,6 +1439,25 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|dbp
+operator|->
+name|close
+argument_list|(
+name|dbp
+argument_list|)
+condition|)
+name|err
+argument_list|(
+literal|"db->close: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -3305,7 +3351,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: dbtest [-i info] [-o file] type script\n"
+literal|"usage: dbtest [-f file] [-i info] [-o file] type script\n"
 argument_list|)
 expr_stmt|;
 name|exit
