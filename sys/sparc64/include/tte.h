@@ -98,7 +98,7 @@ name|TT_CTX
 parameter_list|(
 name|ctx
 parameter_list|)
-value|(((u_long)(ctx)<< TT_CTX_SHIFT)& TT_CTX_MASK)
+value|(((u_long)(ctx)& TT_CTX_MASK)<< TT_CTX_SHIFT)
 end_define
 
 begin_define
@@ -108,7 +108,7 @@ name|TT_VA
 parameter_list|(
 name|va
 parameter_list|)
-value|(((u_long)(va)>> TT_VA_SHIFT)& TT_VA_MASK)
+value|((u_long)(va)>> TT_VA_SHIFT)
 end_define
 
 begin_define
@@ -234,6 +234,20 @@ begin_define
 define|#
 directive|define
 name|TS_EXEC
+value|(1L<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TS_INIT
+value|(1L<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TS_MNG
 value|(1L<< 3)
 end_define
 
@@ -342,6 +356,20 @@ define|#
 directive|define
 name|TD_EXEC
 value|(TS_EXEC<< TD_SOFT_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_INIT
+value|(TS_INIT<< TD_SOFT_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_MNG
+value|(TS_MNG<< TD_SOFT_SHIFT)
 end_define
 
 begin_define
@@ -463,11 +491,11 @@ operator|(
 name|tte
 operator|.
 name|tte_tag
-operator|&
-name|TT_CTX_MASK
-operator|)
 operator|>>
 name|TT_CTX_SHIFT
+operator|)
+operator|&
+name|TT_CTX_MASK
 operator|)
 return|;
 block|}
