@@ -246,7 +246,7 @@ begin_define
 define|#
 directive|define
 name|MAXNFSDCNT
-value|20
+value|256
 end_define
 
 begin_define
