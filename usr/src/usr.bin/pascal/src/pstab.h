@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	static	char sccsid[] = "@(#)pstab.h 1.2 %G%"; */
+comment|/*	static	char sccsid[] = "@(#)pstab.h 1.3 %G%"; */
 end_comment
 
 begin_comment
@@ -115,6 +115,28 @@ end_define
 
 begin_comment
 comment|/* external procedure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|N_PLDATA
+value|0xb
+end_define
+
+begin_comment
+comment|/* library variable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|N_PLTEXT
+value|0xc
+end_define
+
+begin_comment
+comment|/* library routine */
 end_comment
 
 end_unit

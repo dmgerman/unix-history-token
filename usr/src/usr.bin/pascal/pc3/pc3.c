@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pc3.c 1.8 %G%"
+literal|"@(#)pc3.c 1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1062,6 +1062,9 @@ name|symbol
 modifier|*
 name|symbolp
 decl_stmt|;
+name|int
+name|errtype
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1204,6 +1207,12 @@ name|N_PGFUNC
 case|:
 case|case
 name|N_PGPROC
+case|:
+case|case
+name|N_PLDATA
+case|:
+case|case
+name|N_PLTEXT
 case|:
 name|symbolp
 operator|->
@@ -1433,6 +1442,10 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|DEBUG
+name|errtype
+operator|=
+name|ERROR
+expr_stmt|;
 switch|switch
 condition|(
 name|symbolp
@@ -1687,7 +1700,7 @@ name|error
 argument_list|(
 name|ERROR
 argument_list|,
-literal|"%s, line %d: %s already defined (%s, line %d)."
+literal|"%s, line %d: %s is already defined\n\t(%s, line %d)."
 argument_list|,
 name|ifilep
 operator|->
@@ -1782,13 +1795,84 @@ operator|=
 name|pfilep
 expr_stmt|;
 return|return;
+case|case
+name|N_PLDATA
+case|:
+case|case
+name|N_PLTEXT
+case|:
+switch|switch
+condition|(
+name|nlp
+operator|->
+name|n_desc
+condition|)
+block|{
+default|default:
+name|error
+argument_list|(
+name|FATAL
+argument_list|,
+literal|"pc3: unknown stab 0x%x"
+argument_list|,
+name|nlp
+operator|->
+name|n_desc
+argument_list|)
+expr_stmt|;
+return|return;
+case|case
+name|N_PSO
+case|:
+case|case
+name|N_PSOL
+case|:
+case|case
+name|N_PGCONST
+case|:
+case|case
+name|N_PGTYPE
+case|:
+comment|/* these won't conflict with library */
+return|return;
+case|case
+name|N_PGLABEL
+case|:
+case|case
+name|N_PGVAR
+case|:
+case|case
+name|N_PGFUNC
+case|:
+case|case
+name|N_PGPROC
+case|:
+case|case
+name|N_PEFUNC
+case|:
+case|case
+name|N_PEPROC
+case|:
+case|case
+name|N_PLDATA
+case|:
+case|case
+name|N_PLTEXT
+case|:
+name|errtype
+operator|=
+name|WARNING
+expr_stmt|;
+break|break;
+block|}
+break|break;
 block|}
 comment|/* 		 *	this is the breaks 		 */
 name|error
 argument_list|(
-name|ERROR
+name|errtype
 argument_list|,
-literal|"%s, line %d: %s already defined (%s, line %d)."
+literal|"%s, line %d: %s %s is already defined\n\t%s%s (%s, line %d)."
 argument_list|,
 name|ifilep
 operator|->
@@ -1798,11 +1882,51 @@ name|nlp
 operator|->
 name|n_value
 argument_list|,
+name|classify
+argument_list|(
+name|nlp
+operator|->
+name|n_desc
+argument_list|)
+argument_list|,
 name|nlp
 operator|->
 name|n_un
 operator|.
 name|n_name
+argument_list|,
+operator|(
+name|symbolp
+operator|->
+name|desc
+operator|==
+name|nlp
+operator|->
+name|n_desc
+condition|?
+literal|""
+else|:
+literal|" as "
+operator|)
+argument_list|,
+operator|(
+name|symbolp
+operator|->
+name|desc
+operator|==
+name|nlp
+operator|->
+name|n_desc
+condition|?
+literal|""
+else|:
+name|article
+argument_list|(
+name|symbolp
+operator|->
+name|desc
+argument_list|)
+operator|)
 argument_list|,
 name|symbolp
 operator|->
@@ -2988,6 +3112,10 @@ argument_list|,
 argument|arg5
 argument_list|,
 argument|arg6
+argument_list|,
+argument|arg7
+argument_list|,
+argument|arg8
 argument_list|)
 end_macro
 
@@ -3101,6 +3229,10 @@ argument_list|,
 name|arg5
 argument_list|,
 name|arg6
+argument_list|,
+name|arg7
+argument_list|,
+name|arg8
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -3279,9 +3411,118 @@ case|:
 return|return
 literal|"external procedure"
 return|;
+case|case
+name|N_PLDATA
+case|:
+return|return
+literal|"library variable"
+return|;
+case|case
+name|N_PLTEXT
+case|:
+return|return
+literal|"library routine"
+return|;
 default|default:
 return|return
 literal|"unknown symbol"
+return|;
+block|}
+block|}
+end_function
+
+begin_function
+name|char
+modifier|*
+name|article
+parameter_list|(
+name|type
+parameter_list|)
+name|unsigned
+name|char
+name|type
+decl_stmt|;
+block|{
+switch|switch
+condition|(
+name|type
+condition|)
+block|{
+case|case
+name|N_PSO
+case|:
+return|return
+literal|"a source file"
+return|;
+case|case
+name|N_PSOL
+case|:
+return|return
+literal|"an include file"
+return|;
+case|case
+name|N_PGLABEL
+case|:
+return|return
+literal|"a label"
+return|;
+case|case
+name|N_PGCONST
+case|:
+return|return
+literal|"a constant"
+return|;
+case|case
+name|N_PGTYPE
+case|:
+return|return
+literal|"a type"
+return|;
+case|case
+name|N_PGVAR
+case|:
+return|return
+literal|"a variable"
+return|;
+case|case
+name|N_PGFUNC
+case|:
+return|return
+literal|"a function"
+return|;
+case|case
+name|N_PGPROC
+case|:
+return|return
+literal|"a procedure"
+return|;
+case|case
+name|N_PEFUNC
+case|:
+return|return
+literal|"an external function"
+return|;
+case|case
+name|N_PEPROC
+case|:
+return|return
+literal|"an external procedure"
+return|;
+case|case
+name|N_PLDATA
+case|:
+return|return
+literal|"a library variable"
+return|;
+case|case
+name|N_PLTEXT
+case|:
+return|return
+literal|"a library routine"
+return|;
+default|default:
+return|return
+literal|"an unknown symbol"
 return|;
 block|}
 block|}

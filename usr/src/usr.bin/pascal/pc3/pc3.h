@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1980 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*	static	char sccsid[] = "@(#)pc3.h 1.4 %G%"; */
+comment|/*	static	char sccsid[] = "@(#)pc3.h 1.5 %G%"; */
 end_comment
 
 begin_comment
@@ -373,6 +373,14 @@ begin_function_decl
 name|char
 modifier|*
 name|classify
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|article
 parameter_list|()
 function_decl|;
 end_function_decl
