@@ -1596,6 +1596,17 @@ begin_comment
 comment|/* PGM */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IPPROTO_PFSYNC
+value|240
+end_define
+
+begin_comment
+comment|/* PFSYNC */
+end_comment
+
 begin_comment
 comment|/* 255: Reserved */
 end_comment
@@ -1943,6 +1954,17 @@ end_define
 
 begin_comment
 comment|/* 224.0.0.2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INADDR_PFSYNC_GROUP
+value|(u_int32_t)0xe00000f0
+end_define
+
+begin_comment
+comment|/* 224.0.0.240 */
 end_comment
 
 begin_define

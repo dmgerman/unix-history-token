@@ -2806,6 +2806,17 @@ begin_comment
 comment|/* rtsock sa family */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_PF_TRANSLATE_LOCALHOST
+value|26
+end_define
+
+begin_comment
+comment|/* PF translate localhost */
+end_comment
+
 begin_comment
 comment|/* Packet tag routines. */
 end_comment
