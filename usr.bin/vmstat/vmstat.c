@@ -4046,13 +4046,15 @@ name|dointr
 parameter_list|()
 block|{
 specifier|register
-name|long
+name|u_long
 modifier|*
 name|intrcnt
 decl_stmt|,
-name|inttotal
-decl_stmt|,
 name|uptime
+decl_stmt|;
+specifier|register
+name|u_int64_t
+name|inttotal
 decl_stmt|;
 specifier|register
 name|int
@@ -4200,7 +4202,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-12s %8ld %8ld\n"
+literal|"%-12s %8lu %8lu\n"
 argument_list|,
 name|intrname
 argument_list|,
@@ -4234,12 +4236,15 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"Total        %8ld %8ld\n"
+literal|"Total        %8llu %8llu\n"
 argument_list|,
 name|inttotal
 argument_list|,
 name|inttotal
 operator|/
+operator|(
+name|u_int64_t
+operator|)
 name|uptime
 argument_list|)
 expr_stmt|;
