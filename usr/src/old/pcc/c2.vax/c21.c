@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c21.c 4.19 %G%"
+literal|"@(#)c21.c 4.20 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8724,6 +8724,27 @@ operator|!=
 name|p2
 operator|->
 name|combop
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
+name|p1
+operator|->
+name|combop
+operator|==
+literal|0
+operator|&&
+name|p1
+operator|->
+name|pop
+operator|!=
+name|p2
+operator|->
+name|pop
 condition|)
 return|return
 operator|(
