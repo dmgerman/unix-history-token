@@ -270,20 +270,12 @@ argument_list|)
 name|v_cache_dst
 expr_stmt|;
 comment|/* c Cache entries to us */
-name|u_long
-name|v_id
-decl_stmt|;
-comment|/* c capability identifier */
 name|struct
 name|vnode
 modifier|*
 name|v_dd
 decl_stmt|;
 comment|/* c .. vnode */
-name|u_long
-name|v_ddid
-decl_stmt|;
-comment|/* c .. capability identifier */
 comment|/* 	 * clustering stuff 	 */
 name|daddr_t
 name|v_cstart
