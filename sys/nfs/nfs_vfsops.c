@@ -1720,7 +1720,7 @@ if|if
 condition|(
 operator|(
 call|(
-name|long
+name|quad_t
 call|)
 argument_list|(
 name|tquad
@@ -1733,7 +1733,7 @@ operator|)
 operator|||
 operator|(
 call|(
-name|long
+name|quad_t
 call|)
 argument_list|(
 name|tquad
@@ -1767,7 +1767,7 @@ if|if
 condition|(
 operator|(
 call|(
-name|long
+name|quad_t
 call|)
 argument_list|(
 name|tquad
@@ -1780,7 +1780,7 @@ operator|)
 operator|||
 operator|(
 call|(
-name|long
+name|quad_t
 call|)
 argument_list|(
 name|tquad
@@ -1814,7 +1814,7 @@ if|if
 condition|(
 operator|(
 call|(
-name|long
+name|quad_t
 call|)
 argument_list|(
 name|tquad
@@ -1827,7 +1827,7 @@ operator|)
 operator|||
 operator|(
 call|(
-name|long
+name|quad_t
 call|)
 argument_list|(
 name|tquad
