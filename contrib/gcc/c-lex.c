@@ -3,10 +3,6 @@ begin_comment
 comment|/* Mainly the interface between cpplib and the C front ends.    Copyright (C) 1987, 1988, 1989, 1992, 1994, 1995, 1996, 1997    1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
-begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -1149,9 +1145,19 @@ name|token
 decl_stmt|;
 name|int
 name|parsing_args
-name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|token
+operator|->
+name|type
+operator|==
+name|CPP_EOF
+operator|||
+name|parsing_args
+condition|)
+return|return;
 name|src_lineno
 operator|=
 name|SOURCE_LINE
@@ -1364,30 +1370,12 @@ argument_list|)
 expr_stmt|;
 name|in_system_header
 operator|=
-operator|(
-name|warn_system_headers
-operator|&&
 name|new_map
 operator|->
 name|sysp
 operator|!=
 literal|0
-operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FREEBSD_NATIVE
-comment|/* Correct logic should be: if warn_system_headers is set, no      header file should be considered system, so that no warnings      will be suppressed.  */
-if|if
-condition|(
-name|warn_system_headers
-condition|)
-name|in_system_header
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 name|input_filename
 operator|=
 name|new_map
