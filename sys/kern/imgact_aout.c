@@ -606,6 +606,12 @@ name|imgp
 operator|->
 name|vp
 expr_stmt|;
+name|object
+operator|=
+name|imgp
+operator|->
+name|object
+expr_stmt|;
 name|map
 operator|=
 operator|&
@@ -616,14 +622,6 @@ expr_stmt|;
 name|vm_map_lock
 argument_list|(
 name|map
-argument_list|)
-expr_stmt|;
-name|VOP_GETVOBJECT
-argument_list|(
-name|vp
-argument_list|,
-operator|&
-name|object
 argument_list|)
 expr_stmt|;
 name|vm_object_reference

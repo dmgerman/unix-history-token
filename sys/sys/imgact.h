@@ -22,6 +22,12 @@ name|MAXSHELLCMDLEN
 value|128
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|vm_object
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|image_params
@@ -44,6 +50,12 @@ modifier|*
 name|vp
 decl_stmt|;
 comment|/* pointer to vnode of file to exec */
+name|struct
+name|vm_object
+modifier|*
+name|object
+decl_stmt|;
+comment|/* The vm object for this vp */
 name|struct
 name|vattr
 modifier|*
