@@ -2,7 +2,7 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_NETINET_IF_ETHER_H_
+name|_NET_IF_ARP_H_
 end_ifdef
 
 begin_decl_stmt

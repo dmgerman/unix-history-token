@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_inet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -107,28 +113,17 @@ directive|include
 file|<net/if.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<netinet/in.h>
+file|<net/ethernet.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/if_ether.h>
+file|<net/if_arp.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#

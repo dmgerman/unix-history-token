@@ -33,6 +33,12 @@ directive|include
 file|"bpfilter.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_inet.h"
+end_include
+
 begin_comment
 comment|/* Some defines that should really be in generic locations */
 end_comment
@@ -102,7 +108,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/ethernet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_arp.h>
 end_include
 
 begin_include
@@ -179,7 +197,7 @@ name|struct
 name|arpcom
 name|arpcom
 decl_stmt|;
-comment|/* see ../../netinet/if_ether.h */
+comment|/* see ../../net/if_arp.h */
 name|struct
 name|nic_info
 name|nic

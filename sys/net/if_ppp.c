@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.51 1997/12/06 13:24:25 bde Exp $ */
+comment|/* $Id: if_ppp.c,v 1.52 1997/12/15 20:31:04 eivind Exp $ */
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|"opt_ppp.h"
+file|"opt_inet.h"
 end_include
 
 begin_include
@@ -41,11 +41,28 @@ directive|include
 file|"opt_ipx.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_ppp.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|VJC
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

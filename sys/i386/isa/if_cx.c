@@ -24,6 +24,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"sppp.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NSPPP
+operator|<=
+literal|0
+end_if
+
+begin_error
+error|#
+directive|error
+error|The device 'cx' requires sppp.
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 

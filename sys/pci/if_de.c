@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_de.c,v 1.56 1997/10/20 14:32:46 matt Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_de.c,v 1.75 1997/11/22 06:45:57 bde Exp $ */
+comment|/*	$Id: if_de.c,v 1.76 1997/12/15 20:31:25 eivind Exp $ */
 end_comment
 
 begin_comment
@@ -20,6 +20,12 @@ define|#
 directive|define
 name|TULIP_HDR_DATA
 end_define
+
+begin_include
+include|#
+directive|include
+file|"opt_inet.h"
+end_include
 
 begin_include
 include|#
@@ -270,6 +276,12 @@ directive|include
 file|<netinet/in.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/if_ether.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -351,7 +363,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/if_ether.h>
+file|<net/ethernet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_arp.h>
 end_include
 
 begin_if

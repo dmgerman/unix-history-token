@@ -24,6 +24,12 @@ end_if
 begin_include
 include|#
 directive|include
+file|"opt_inet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -1186,6 +1192,10 @@ name|ifa_link
 operator|.
 name|tqe_next
 control|)
+block|{
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 name|ifa
@@ -1256,6 +1266,9 @@ name|tun_flags
 operator||=
 name|TUN_DSTADDR
 expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 return|return
 literal|0
@@ -2820,6 +2833,9 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|INET
 name|s
 operator|=
 name|splimp
@@ -2888,6 +2904,8 @@ argument_list|(
 name|NETISR_IP
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|error
 return|;

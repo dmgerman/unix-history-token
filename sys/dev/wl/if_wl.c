@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: if_wl.c,v 1.8 1997/08/25 22:34:25 bde Exp $ */
+comment|/* $Id: if_wl.c,v 1.9 1997/09/21 21:41:13 gibbs Exp $ */
 end_comment
 
 begin_comment
@@ -50,6 +50,12 @@ begin_include
 include|#
 directive|include
 file|"bpfilter.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_inet.h"
 end_include
 
 begin_include
@@ -109,7 +115,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/ethernet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_arp.h>
 end_include
 
 begin_include
@@ -11939,6 +11957,9 @@ init|=
 name|wl_cache_iponly
 decl_stmt|;
 comment|/* filters: 	 * 1. ip only 	 * 2. configurable filter to throw out unicast packets, 	 * keep multicast only. 	 */
+ifdef|#
+directive|ifdef
+name|INET
 comment|/* reject if not IP packet 	*/
 if|if
 condition|(
@@ -12272,6 +12293,9 @@ name|snr
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* INET */
 block|}
 endif|#
 directive|endif
