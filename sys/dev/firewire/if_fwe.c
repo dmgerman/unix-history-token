@@ -127,7 +127,7 @@ begin_define
 define|#
 directive|define
 name|FWEDEBUG
-value|if (fwedebug) printf
+value|if (fwedebug) if_printf
 end_define
 
 begin_define
@@ -135,13 +135,6 @@ define|#
 directive|define
 name|TX_MAX_QUEUE
 value|(FWMAXQUEUE - 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RX_MAX_QUEUE
-value|FWMAXQUEUE
 end_define
 
 begin_comment
@@ -272,6 +265,15 @@ literal|2
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|rx_queue_len
+init|=
+name|FWMAXQUEUE
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
@@ -326,7 +328,7 @@ name|CTLFLAG_RD
 argument_list|,
 literal|0
 argument_list|,
-literal|"Ethernet Emulation Subsystem"
+literal|"Ethernet emulation subsystem"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -368,7 +370,61 @@ name|tx_speed
 argument_list|,
 literal|0
 argument_list|,
-literal|"Transmission Speed"
+literal|"Transmission speed"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_firewire_fwe
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|rx_queue_len
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|rx_queue_len
+argument_list|,
+literal|0
+argument_list|,
+literal|"Length of the receive queue"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.firewire.fwe.stream_ch"
+argument_list|,
+operator|&
+name|stream_ch
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.firewire.fwe.tx_speed"
+argument_list|,
+operator|&
+name|tx_speed
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.firewire.fwe.rx_queue_len"
+argument_list|,
+operator|&
+name|rx_queue_len
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -552,7 +608,7 @@ name|parent
 argument_list|,
 literal|0
 argument_list|,
-literal|"if_fwe"
+literal|"fwe"
 argument_list|,
 name|device_get_unit
 argument_list|(
@@ -936,6 +992,25 @@ name|fwe
 operator|->
 name|eth_softc
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|501113
+name|if_initname
+argument_list|(
+name|ifp
+argument_list|,
+name|device_get_name
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|ifp
 operator|->
 name|if_unit
@@ -948,6 +1023,8 @@ name|if_name
 operator|=
 literal|"fwe"
 expr_stmt|;
+endif|#
+directive|endif
 name|ifp
 operator|->
 name|if_init
@@ -1059,15 +1136,9 @@ endif|#
 directive|endif
 name|FWEDEBUG
 argument_list|(
-literal|"interface %s%d created.\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"interface created\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1443,15 +1514,9 @@ name|i
 decl_stmt|;
 name|FWEDEBUG
 argument_list|(
-literal|"initializing %s%d\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"initializing\n"
 argument_list|)
 expr_stmt|;
 comment|/* XXX keep promiscoud mode */
@@ -1607,7 +1672,7 @@ name|xferq
 operator|->
 name|bnchunk
 operator|=
-name|RX_MAX_QUEUE
+name|rx_queue_len
 expr_stmt|;
 name|xferq
 operator|->
@@ -1848,6 +1913,8 @@ condition|)
 break|break;
 name|xfer
 operator|->
+name|send
+operator|.
 name|spd
 operator|=
 name|tx_speed
@@ -2277,6 +2344,8 @@ expr_stmt|;
 comment|/* XXX error check */
 name|FWEDEBUG
 argument_list|(
+name|ifp
+argument_list|,
 literal|"resp = %d\n"
 argument_list|,
 name|xfer
@@ -2303,14 +2372,6 @@ name|xfer
 operator|->
 name|mbuf
 argument_list|)
-expr_stmt|;
-name|xfer
-operator|->
-name|send
-operator|.
-name|buf
-operator|=
-name|NULL
 expr_stmt|;
 name|fw_xfer_unload
 argument_list|(
@@ -2392,15 +2453,9 @@ name|s
 decl_stmt|;
 name|FWEDEBUG
 argument_list|(
-literal|"%s%d starting\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"starting\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2421,15 +2476,9 @@ name|NULL
 decl_stmt|;
 name|FWEDEBUG
 argument_list|(
-literal|"%s%d not ready.\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"not ready\n"
 argument_list|)
 expr_stmt|;
 name|s
@@ -2714,23 +2763,26 @@ argument_list|)
 expr_stmt|;
 name|fp
 operator|=
+operator|&
+name|xfer
+operator|->
+name|send
+operator|.
+name|hdr
+expr_stmt|;
+operator|*
 operator|(
-expr|struct
-name|fw_pkt
+name|u_int32_t
 operator|*
 operator|)
 operator|&
 name|xfer
 operator|->
-name|dst
-expr_stmt|;
-comment|/* XXX */
-name|xfer
-operator|->
-name|dst
+name|send
+operator|.
+name|hdr
 operator|=
 operator|*
-operator|(
 operator|(
 name|int32_t
 operator|*
@@ -2739,7 +2791,6 @@ operator|&
 name|fwe
 operator|->
 name|pkt_hdr
-operator|)
 expr_stmt|;
 name|fp
 operator|->
@@ -2757,17 +2808,6 @@ name|len
 expr_stmt|;
 name|xfer
 operator|->
-name|send
-operator|.
-name|buf
-operator|=
-operator|(
-name|caddr_t
-operator|)
-name|fp
-expr_stmt|;
-name|xfer
-operator|->
 name|mbuf
 operator|=
 name|m
@@ -2776,15 +2816,13 @@ name|xfer
 operator|->
 name|send
 operator|.
-name|len
+name|pay_len
 operator|=
 name|m
 operator|->
 name|m_pkthdr
 operator|.
 name|len
-operator|+
-name|HDR_LEN
 expr_stmt|;
 if|if
 condition|(
@@ -3188,7 +3226,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|FWEDEBUG("%02x %02x %02x %02x %02x %02x\n" 			 "%02x %02x %02x %02x %02x %02x\n" 			 "%02x %02x %02x %02x\n" 			 "%02x %02x %02x %02x\n" 			 "%02x %02x %02x %02x\n" 			 "%02x %02x %02x %02x\n", 			 c[0], c[1], c[2], c[3], c[4], c[5], 			 c[6], c[7], c[8], c[9], c[10], c[11], 			 c[12], c[13], c[14], c[15], 			 c[16], c[17], c[18], c[19], 			 c[20], c[21], c[22], c[23], 			 c[20], c[21], c[22], c[23] 		 );
+block|FWEDEBUG(ifp, "%02x %02x %02x %02x %02x %02x\n" 			 "%02x %02x %02x %02x %02x %02x\n" 			 "%02x %02x %02x %02x\n" 			 "%02x %02x %02x %02x\n" 			 "%02x %02x %02x %02x\n" 			 "%02x %02x %02x %02x\n", 			 c[0], c[1], c[2], c[3], c[4], c[5], 			 c[6], c[7], c[8], c[9], c[10], c[11], 			 c[12], c[13], c[14], c[15], 			 c[16], c[17], c[18], c[19], 			 c[20], c[21], c[22], c[23], 			 c[20], c[21], c[22], c[23] 		 );
 endif|#
 directive|endif
 if|#
@@ -3319,7 +3357,7 @@ name|driver_t
 name|fwe_driver
 init|=
 block|{
-literal|"if_fwe"
+literal|"fwe"
 block|,
 name|fwe_methods
 block|,

@@ -978,7 +978,6 @@ expr|struct
 name|fwohcidb_tr
 operator|*
 operator|,
-specifier|volatile
 expr|struct
 name|fwohcidb
 operator|*
@@ -3598,6 +3597,8 @@ parameter_list|)
 block|{
 name|int
 name|i
+decl_stmt|,
+name|mver
 decl_stmt|;
 name|u_int32_t
 name|reg
@@ -3627,6 +3628,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* OHCI version */
 name|reg
 operator|=
 name|OREAD
@@ -3636,12 +3638,8 @@ argument_list|,
 name|OHCI_VERSION
 argument_list|)
 expr_stmt|;
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"OHCI version %x.%x (ROM=%d)\n"
-argument_list|,
+name|mver
+operator|=
 operator|(
 name|reg
 operator|>>
@@ -3649,6 +3647,14 @@ literal|16
 operator|)
 operator|&
 literal|0xff
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"OHCI version %x.%x (ROM=%d)\n"
+argument_list|,
+name|mver
 argument_list|,
 name|reg
 operator|&
@@ -3665,17 +3671,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-operator|(
-name|reg
-operator|>>
-literal|16
-operator|)
-operator|&
-literal|0xff
-operator|)
+name|mver
 operator|<
 literal|1
+operator|||
+name|mver
+operator|>
+literal|9
 condition|)
 block|{
 name|device_printf
@@ -4982,7 +4984,6 @@ name|fwohcidb_tr
 modifier|*
 name|db_tr
 decl_stmt|;
-specifier|volatile
 name|struct
 name|fwohcidb
 modifier|*
@@ -5179,8 +5180,6 @@ decl_stmt|,
 name|hdr_len
 decl_stmt|,
 name|pl_off
-decl_stmt|,
-name|pl_len
 decl_stmt|;
 name|int
 name|fsegment
@@ -5201,7 +5200,6 @@ name|fw_pkt
 modifier|*
 name|fp
 decl_stmt|;
-specifier|volatile
 name|struct
 name|fwohci_txpkthdr
 modifier|*
@@ -5212,13 +5210,11 @@ name|fwohcidb_tr
 modifier|*
 name|db_tr
 decl_stmt|;
-specifier|volatile
 name|struct
 name|fwohcidb
 modifier|*
 name|db
 decl_stmt|;
-specifier|volatile
 name|u_int32_t
 modifier|*
 name|ld
@@ -5363,16 +5359,12 @@ name|FWXF_START
 expr_stmt|;
 name|fp
 operator|=
-operator|(
-expr|struct
-name|fw_pkt
-operator|*
-operator|)
+operator|&
 name|xfer
 operator|->
 name|send
 operator|.
-name|buf
+name|hdr
 expr_stmt|;
 name|tcode
 operator|=
@@ -5387,7 +5379,6 @@ expr_stmt|;
 name|ohcifp
 operator|=
 operator|(
-specifier|volatile
 expr|struct
 name|fwohci_txpkthdr
 operator|*
@@ -5495,6 +5486,8 @@ name|spd
 operator|=
 name|xfer
 operator|->
+name|send
+operator|.
 name|spd
 operator|&
 literal|0x7
@@ -5789,19 +5782,13 @@ operator|->
 name|dbcnt
 index|]
 expr_stmt|;
-name|pl_len
-operator|=
+if|if
+condition|(
 name|xfer
 operator|->
 name|send
 operator|.
-name|len
-operator|-
-name|pl_off
-expr_stmt|;
-if|if
-condition|(
-name|pl_len
+name|pay_len
 operator|>
 literal|0
 condition|)
@@ -5819,19 +5806,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|caddr_t
-name|pl_addr
-decl_stmt|;
-name|pl_addr
-operator|=
-name|xfer
-operator|->
-name|send
-operator|.
-name|buf
-operator|+
-name|pl_off
-expr_stmt|;
 name|err
 operator|=
 name|bus_dmamap_load
@@ -5844,9 +5818,21 @@ name|db_tr
 operator|->
 name|dma_map
 argument_list|,
-name|pl_addr
+operator|&
+name|xfer
+operator|->
+name|send
+operator|.
+name|payload
+index|[
+literal|0
+index|]
 argument_list|,
-name|pl_len
+name|xfer
+operator|->
+name|send
+operator|.
+name|pay_len
 argument_list|,
 name|fwohci_execute_db
 argument_list|,
@@ -6439,7 +6425,6 @@ name|fwohcidb_tr
 modifier|*
 name|tr
 decl_stmt|;
-specifier|volatile
 name|struct
 name|fwohcidb
 modifier|*
@@ -6871,15 +6856,12 @@ operator|==
 name|FWXF_RCVD
 condition|)
 block|{
-if|if
-condition|(
-name|firewire_debug
-condition|)
-name|printf
-argument_list|(
-literal|"already rcvd\n"
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|if (firewire_debug) 					printf("already rcvd\n");
+endif|#
+directive|endif
 name|fw_xfer_done
 argument_list|(
 name|xfer
@@ -6940,7 +6922,7 @@ name|xfer
 operator|->
 name|recv
 operator|.
-name|len
+name|pay_len
 operator|=
 literal|0
 expr_stmt|;
@@ -6981,7 +6963,7 @@ name|xfer
 operator|->
 name|recv
 operator|.
-name|len
+name|pay_len
 operator|=
 literal|0
 expr_stmt|;
@@ -8095,7 +8077,6 @@ name|fwohcidb_tr
 modifier|*
 name|db_tr
 decl_stmt|;
-specifier|volatile
 name|struct
 name|fwohcidb
 modifier|*
@@ -8505,7 +8486,6 @@ name|fwohcidb_tr
 modifier|*
 name|db_tr
 decl_stmt|;
-specifier|volatile
 name|struct
 name|fwohcidb
 modifier|*
@@ -9332,7 +9312,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-specifier|volatile
 name|struct
 name|fwohcidb
 modifier|*
@@ -10110,7 +10089,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-specifier|volatile
 name|struct
 name|fwohcidb
 modifier|*
@@ -12760,7 +12738,6 @@ name|sc
 operator|->
 name|fc
 decl_stmt|;
-specifier|volatile
 name|struct
 name|fwohcidb
 modifier|*
@@ -13044,7 +13021,6 @@ name|sc
 operator|->
 name|fc
 decl_stmt|;
-specifier|volatile
 name|struct
 name|fwohcidb_tr
 modifier|*
@@ -13650,7 +13626,6 @@ name|np
 init|=
 name|NULL
 decl_stmt|;
-specifier|volatile
 name|struct
 name|fwohcidb
 modifier|*
@@ -14064,7 +14039,6 @@ name|fwohcidb_tr
 modifier|*
 name|db_tr
 parameter_list|,
-specifier|volatile
 name|struct
 name|fwohcidb
 modifier|*
@@ -14291,13 +14265,13 @@ endif|#
 directive|endif
 argument|}  void fwohci_txbufdb(struct fwohci_softc *sc, int dmach, struct fw_bulkxfer *bulkxfer) { 	struct fwohcidb_tr *db_tr
 argument_list|,
-argument|*fdb_tr; 	struct fwohci_dbch *dbch; 	volatile struct fwohcidb *db; 	struct fw_pkt *fp; 	volatile struct fwohci_txpkthdr *ohcifp; 	unsigned short chtag; 	int idb;  	dbch =&sc->it[dmach]; 	chtag = sc->it[dmach].xferq.flag&
+argument|*fdb_tr; 	struct fwohci_dbch *dbch; 	struct fwohcidb *db; 	struct fw_pkt *fp; 	struct fwohci_txpkthdr *ohcifp; 	unsigned short chtag; 	int idb;  	dbch =&sc->it[dmach]; 	chtag = sc->it[dmach].xferq.flag&
 literal|0xff
 argument|;  	db_tr = (struct fwohcidb_tr *)(bulkxfer->start); 	fdb_tr = (struct fwohcidb_tr *)(bulkxfer->end);
 comment|/* device_printf(sc->fc.dev, "DB %08x %08x %08x\n", bulkxfer, db_tr->bus_addr, fdb_tr->bus_addr); */
 argument|for (idb =
 literal|0
-argument|; idb< dbch->xferq.bnpacket; idb ++) { 		db = db_tr->db; 		fp = (struct fw_pkt *)db_tr->buf; 		ohcifp = (volatile struct fwohci_txpkthdr *) db[
+argument|; idb< dbch->xferq.bnpacket; idb ++) { 		db = db_tr->db; 		fp = (struct fw_pkt *)db_tr->buf; 		ohcifp = (struct fwohci_txpkthdr *) db[
 literal|1
 argument|].db.immed; 		ohcifp->mode.ld[
 literal|0
@@ -14376,7 +14350,7 @@ argument|db[0].db.desc.control |= OHCI_INTERRUPT_ALWAYS;
 endif|#
 directive|endif
 comment|/* 	db_tr = (struct fwohcidb_tr *)bulkxfer->start; 	fdb_tr = (struct fwohcidb_tr *)bulkxfer->end; device_printf(sc->fc.dev, "DB %08x %3d %08x %08x\n", bulkxfer, bulkxfer->npacket, db_tr->bus_addr, fdb_tr->bus_addr); */
-argument|return; }  static int fwohci_add_tx_buf(struct fwohci_dbch *dbch, struct fwohcidb_tr *db_tr, 								int poffset) { 	volatile struct fwohcidb *db = db_tr->db; 	struct fw_xferq *it; 	int err =
+argument|return; }  static int fwohci_add_tx_buf(struct fwohci_dbch *dbch, struct fwohcidb_tr *db_tr, 								int poffset) { 	struct fwohcidb *db = db_tr->db; 	struct fw_xferq *it; 	int err =
 literal|0
 argument|;  	it =&dbch->xferq; 	if(it->buf ==
 literal|0
@@ -14390,7 +14364,7 @@ argument|); 	FWOHCI_DMA_WRITE(db[
 literal|0
 argument|].db.desc.addr,
 literal|0
-argument|); 	bzero((void *)(uintptr_t)(volatile void *)&db[
+argument|); 	bzero((void *)&db[
 literal|1
 argument|].db.immed[
 literal|0
@@ -14417,7 +14391,7 @@ endif|#
 directive|endif
 argument|return
 literal|0
-argument|; }  int fwohci_add_rx_buf(struct fwohci_dbch *dbch, struct fwohcidb_tr *db_tr, 		int poffset, struct fwdma_alloc *dummy_dma) { 	volatile struct fwohcidb *db = db_tr->db; 	struct fw_xferq *ir; 	int i
+argument|; }  int fwohci_add_rx_buf(struct fwohci_dbch *dbch, struct fwohcidb_tr *db_tr, 		int poffset, struct fwdma_alloc *dummy_dma) { 	struct fwohcidb *db = db_tr->db; 	struct fw_xferq *ir; 	int i
 argument_list|,
 argument|ldesc; 	bus_addr_t dbuf[
 literal|2
@@ -14439,7 +14413,9 @@ argument|; i< db_tr->dbcnt ; i++){ 		FWOHCI_DMA_WRITE(db[i].db.desc.addr, dbuf[i
 literal|1
 argument|; 	if (ir->flag& FWXFERQ_STREAM) { 		FWOHCI_DMA_SET(db[ldesc].db.desc.cmd, OHCI_INPUT_LAST); 	} 	FWOHCI_DMA_SET(db[ldesc].db.desc.cmd, OHCI_BRANCH_ALWAYS); 	return
 literal|0
-argument|; }   static int fwohci_arcv_swap(struct fw_pkt *fp, int len) { 	struct fw_pkt *fp0; 	u_int32_t ld0; 	int slen;
+argument|; }   static int fwohci_arcv_swap(struct fw_pkt *fp, int len) { 	struct fw_pkt *fp0; 	u_int32_t ld0; 	int slen
+argument_list|,
+argument|hlen;
 if|#
 directive|if
 name|BYTE_ORDER
@@ -14457,7 +14433,9 @@ literal|0
 argument|printf("ld0: x%08x\n", ld0);
 endif|#
 directive|endif
-argument|fp0 = (struct fw_pkt *)&ld0; 	switch (fp0->mode.common.tcode) { 	case FWTCODE_RREQQ: 	case FWTCODE_WRES: 	case FWTCODE_WREQQ: 	case FWTCODE_RRESQ: 	case FWOHCITCODE_PHY: 		slen =
+argument|fp0 = (struct fw_pkt *)&ld0;
+comment|/* determine length to swap */
+argument|switch (fp0->mode.common.tcode) { 	case FWTCODE_RREQQ: 	case FWTCODE_WRES: 	case FWTCODE_WREQQ: 	case FWTCODE_RRESQ: 	case FWOHCITCODE_PHY: 		slen =
 literal|12
 argument|; 		break; 	case FWTCODE_RREQB: 	case FWTCODE_WREQB: 	case FWTCODE_LREQ: 	case FWTCODE_RRESB: 	case FWTCODE_LRES: 		slen =
 literal|16
@@ -14465,9 +14443,9 @@ argument|; 		break; 	default: 		printf(
 literal|"Unknown tcode %d\n"
 argument|, fp0->mode.common.tcode); 		return(
 literal|0
-argument|); 	} 	if (slen> len) { 		if (firewire_debug) 			printf(
+argument|); 	} 	hlen = tinfo[fp0->mode.common.tcode].hdr_len; 	if (hlen> len) { 		if (firewire_debug) 			printf(
 literal|"splitted header\n"
-argument|); 		return(-slen); 	}
+argument|); 		return(-hlen); 	}
 if|#
 directive|if
 name|BYTE_ORDER
@@ -14480,25 +14458,17 @@ literal|4
 argument|; i ++) 		fp->mode.ld[i] = FWOHCI_DMA_READ(fp->mode.ld[i]);
 endif|#
 directive|endif
-argument|return(slen); }
-define|#
-directive|define
-name|PLEN
-parameter_list|(
-name|x
-parameter_list|)
-value|roundup2(x, sizeof(u_int32_t))
-argument|static int fwohci_get_plen(struct fwohci_softc *sc, struct fwohci_dbch *dbch, struct fw_pkt *fp) { 	int r;  	switch(fp->mode.common.tcode){ 	case FWTCODE_RREQQ: 		r = sizeof(fp->mode.rreqq) + sizeof(u_int32_t); 		break; 	case FWTCODE_WRES: 		r = sizeof(fp->mode.wres) + sizeof(u_int32_t); 		break; 	case FWTCODE_WREQQ: 		r = sizeof(fp->mode.wreqq) + sizeof(u_int32_t); 		break; 	case FWTCODE_RREQB: 		r = sizeof(fp->mode.rreqb) + sizeof(u_int32_t); 		break; 	case FWTCODE_RRESQ: 		r = sizeof(fp->mode.rresq) + sizeof(u_int32_t); 		break; 	case FWTCODE_WREQB: 		r = sizeof(struct fw_asyhdr) + PLEN(fp->mode.wreqb.len) 						+ sizeof(u_int32_t); 		break; 	case FWTCODE_LREQ: 		r = sizeof(struct fw_asyhdr) + PLEN(fp->mode.lreq.len) 						+ sizeof(u_int32_t); 		break; 	case FWTCODE_RRESB: 		r = sizeof(struct fw_asyhdr) + PLEN(fp->mode.rresb.len) 						+ sizeof(u_int32_t); 		break; 	case FWTCODE_LRES: 		r = sizeof(struct fw_asyhdr) + PLEN(fp->mode.lres.len) 						+ sizeof(u_int32_t); 		break; 	case FWOHCITCODE_PHY: 		r =
-literal|16
-argument|; 		break; 	default: 		device_printf(sc->fc.dev,
-literal|"Unknown tcode %d\n"
-argument|, 						fp->mode.common.tcode); 		r =
+argument|return(hlen); }  static int fwohci_get_plen(struct fwohci_softc *sc, struct fwohci_dbch *dbch, struct fw_pkt *fp) { 	struct tcode_info *info; 	int r;  	info =&tinfo[fp->mode.common.tcode]; 	r = info->hdr_len + sizeof(u_int32_t); 	if ((info->flag& FWTI_BLOCK_ASY) !=
 literal|0
-argument|; 	} 	if (r> dbch->xferq.psize) { 		device_printf(sc->fc.dev,
+argument|) 		r += roundup2(fp->mode.wreqb.len, sizeof(u_int32_t));  	if (r == sizeof(u_int32_t))
+comment|/* XXX */
+argument|device_printf(sc->fc.dev,
+literal|"Unknown tcode %d\n"
+argument|, 						fp->mode.common.tcode);  	if (r> dbch->xferq.psize) { 		device_printf(sc->fc.dev,
 literal|"Invalid packet length %d\n"
 argument|, r);
 comment|/* panic ? */
-argument|} 	return r; }  static void fwohci_arcv_free_buf(struct fwohci_dbch *dbch, struct fwohcidb_tr *db_tr) { 	volatile struct fwohcidb *db =&db_tr->db[
+argument|}  	return r; }  static void fwohci_arcv_free_buf(struct fwohci_dbch *dbch, struct fwohcidb_tr *db_tr) { 	struct fwohcidb *db =&db_tr->db[
 literal|0
 argument|];  	FWOHCI_DMA_CLEAR(db->db.desc.depend,
 literal|0xf
@@ -14600,8 +14570,8 @@ literal|0
 argument|) {
 comment|/* minimum header size + trailer 				= sizeof(fw_pkt) so this shouldn't happens */
 argument|printf(
-literal|"plen is negative! offset=%d\n"
-argument|, offset); 				goto out; 			} 			if (plen>
+literal|"plen(%d) is negative! offset=%d\n"
+argument|, 				    plen, offset); 				goto out; 			} 			if (plen>
 literal|0
 argument|) { 				len -= plen; 				if (len<
 literal|0
@@ -14635,7 +14605,7 @@ directive|endif
 if|#
 directive|if
 literal|0
-argument|printf("plen: %d, stat %x\n", plen ,stat);
+argument|printf("plen: %d, stat %x\n", 			    plen ,stat);
 endif|#
 directive|endif
 argument|spd = (stat>>
@@ -14652,13 +14622,11 @@ argument|printf("fwohci_arcv: ack pending tcode=0x%x..\n", fp->mode.common.tcode
 endif|#
 directive|endif
 comment|/* fall through */
-argument|case FWOHCIEV_ACKCOMPL: 				if ((vec[nvec-
+argument|case FWOHCIEV_ACKCOMPL: 			{ 				struct fw_rcv_buf rb;  				if ((vec[nvec-
 literal|1
 argument|].iov_len -= 					sizeof(struct fwohci_trailer)) ==
 literal|0
-argument|) 					nvec--;  				fw_rcv(&sc->fc, vec, nvec,
-literal|0
-argument|, spd); 					break; 			case FWOHCIEV_BUSRST: 				if (sc->fc.status != FWBUSRESET)  					printf(
+argument|) 					nvec--;  				rb.fc =&sc->fc; 				rb.vec = vec; 				rb.nvec = nvec; 				rb.spd = spd; 				fw_rcv(&rb); 				break; 			} 			case FWOHCIEV_BUSRST: 				if (sc->fc.status != FWBUSRESET)  					printf(
 literal|"got BUSRST packet!?\n"
 argument|); 				break; 			default: 				device_printf(sc->fc.dev,
 literal|"Async DMA Receive error err = %02x %s\n"

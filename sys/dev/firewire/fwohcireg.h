@@ -243,7 +243,6 @@ end_define
 
 begin_typedef
 typedef|typedef
-specifier|volatile
 name|u_int32_t
 name|fwohcireg_t
 typedef|;
@@ -371,26 +370,21 @@ union|union
 block|{
 struct|struct
 block|{
-specifier|volatile
 name|u_int32_t
 name|cmd
 decl_stmt|;
-specifier|volatile
 name|u_int32_t
 name|addr
 decl_stmt|;
-specifier|volatile
 name|u_int32_t
 name|depend
 decl_stmt|;
-specifier|volatile
 name|u_int32_t
 name|res
 decl_stmt|;
 block|}
 name|desc
 struct|;
-specifier|volatile
 name|u_int32_t
 name|immed
 index|[
@@ -1235,7 +1229,6 @@ name|fw_xfer
 modifier|*
 name|xfer
 decl_stmt|;
-specifier|volatile
 name|struct
 name|fwohcidb
 modifier|*

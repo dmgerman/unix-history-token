@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2003 Hidetosh Shimokawa  * Copyright (c) 1998-2002 Katsushi Kobayashi and Hidetosh Shimokawa  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the acknowledgement as bellow:  *  *    This product includes software developed by K. Kobayashi and H. Shimokawa  *  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *   * $FreeBSD$  *  */
+comment|/*  * Copyright (c) 2003 Hidetoshi Shimokawa  * Copyright (c) 1998-2002 Katsushi Kobayashi and Hidetoshi Shimokawa  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the acknowledgement as bellow:  *  *    This product includes software developed by K. Kobayashi and H. Shimokawa  *  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *   * $FreeBSD$  *  */
 end_comment
 
 begin_include
@@ -165,6 +165,12 @@ directive|include
 file|<dev/firewire/iec13213.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/firewire/sbp.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -190,16 +196,16 @@ begin_comment
 comment|/* MAX 64 */
 end_comment
 
+begin_comment
+comment|/*  * Scan_bus doesn't work for more than 8 LUNs  * because of CAM_SCSI2_MAXLUN in cam_xpt.c  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SBP_NUM_LUNS
-value|8
+value|64
 end_define
-
-begin_comment
-comment|/* limited by CAM_SCSI2_MAXLUN in cam_xpt.c */
-end_comment
 
 begin_define
 define|#
@@ -229,22 +235,8 @@ name|SBP_NUM_OCB
 value|(SBP_QUEUE_LEN * SBP_NUM_TARGETS)
 end_define
 
-begin_define
-define|#
-directive|define
-name|SBP_INITIATOR
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|LOGIN_DELAY
-value|2
-end_define
-
 begin_comment
-comment|/*   * STATUS FIFO addressing  *   bit  * -----------------------  *  0- 1( 2): 0 (alingment)  *  2- 7( 6): target  *  8-15( 8): lun  * 16-23( 8): unit  * 24-31( 8): reserved  * 32-47(16): SBP_BIND_HI   * 48-64(16): bus_id, node_id   */
+comment|/*   * STATUS FIFO addressing  *   bit  * -----------------------  *  0- 1( 2): 0 (alingment)  *  2- 7( 6): target  *  8-15( 8): lun  * 16-31( 8): reserved  * 32-47(16): SBP_BIND_HI   * 48-64(16): bus_id, node_id   */
 end_comment
 
 begin_define
@@ -259,14 +251,12 @@ define|#
 directive|define
 name|SBP_DEV2ADDR
 parameter_list|(
-name|u
-parameter_list|,
 name|t
 parameter_list|,
 name|l
 parameter_list|)
 define|\
-value|((((u)& 0xff)<< 16) | (((l)& 0xff)<< 8) | (((t)& 0x3f)<< 2))
+value|(((u_int64_t)SBP_BIND_HI<< 32) \ 	| (((l)& 0xff)<< 8) \ 	| (((t)& 0x3f)<< 2))
 end_define
 
 begin_define
@@ -292,175 +282,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|ORB_NOTIFY
-value|(1<< 31)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ORB_FMT_STD
-value|(0<< 29)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ORB_FMT_VED
-value|(2<< 29)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ORB_FMT_NOP
-value|(3<< 29)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ORB_FMT_MSK
-value|(3<< 29)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ORB_EXV
-value|(1<< 28)
-end_define
-
-begin_comment
-comment|/* */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ORB_CMD_IN
-value|(1<< 27)
-end_define
-
-begin_comment
-comment|/* */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ORB_CMD_SPD
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)<< 24)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ORB_CMD_MAXP
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)<< 20)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ORB_RCN_TMO
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)<< 20)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ORB_CMD_PTBL
-value|(1<< 19)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ORB_CMD_PSZ
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)<< 16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ORB_FUN_LGI
-value|(0<< 16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ORB_FUN_QLG
-value|(1<< 16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ORB_FUN_RCN
-value|(3<< 16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ORB_FUN_LGO
-value|(7<< 16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ORB_FUN_ATA
-value|(0xb<< 16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ORB_FUN_ATS
-value|(0xc<< 16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ORB_FUN_LUR
-value|(0xe<< 16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ORB_FUN_RST
-value|(0xf<< 16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ORB_FUN_MSK
-value|(0xf<< 16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ORB_FUN_RUNQUEUE
-value|0xffff
+name|SBP_INITIATOR
+value|7
 end_define
 
 begin_decl_stmt
@@ -471,84 +294,10 @@ name|orb_fun_name
 index|[]
 init|=
 block|{
-comment|/* 0 */
-literal|"LOGIN"
-block|,
-comment|/* 1 */
-literal|"QUERY LOGINS"
-block|,
-comment|/* 2 */
-literal|"Reserved"
-block|,
-comment|/* 3 */
-literal|"RECONNECT"
-block|,
-comment|/* 4 */
-literal|"SET PASSWORD"
-block|,
-comment|/* 5 */
-literal|"Reserved"
-block|,
-comment|/* 6 */
-literal|"Reserved"
-block|,
-comment|/* 7 */
-literal|"LOGOUT"
-block|,
-comment|/* 8 */
-literal|"Reserved"
-block|,
-comment|/* 9 */
-literal|"Reserved"
-block|,
-comment|/* A */
-literal|"Reserved"
-block|,
-comment|/* B */
-literal|"ABORT TASK"
-block|,
-comment|/* C */
-literal|"ABORT TASK SET"
-block|,
-comment|/* D */
-literal|"Reserved"
-block|,
-comment|/* E */
-literal|"LOGICAL UNIT RESET"
-block|,
-comment|/* F */
-literal|"TARGET RESET"
+name|ORB_FUN_NAMES
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|ORB_RES_CMPL
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|ORB_RES_FAIL
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|ORB_RES_ILLE
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|ORB_RES_VEND
-value|3
-end_define
 
 begin_decl_stmt
 specifier|static
@@ -585,6 +334,41 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ex_login
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|login_delay
+init|=
+literal|1000
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* msec */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|scan_delay
+init|=
+literal|500
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* msec */
+end_comment
 
 begin_expr_stmt
 name|SYSCTL_DECL
@@ -675,22 +459,123 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|SBP_DEBUG
-parameter_list|(
-name|x
-parameter_list|)
-value|if (debug> x) {
-end_define
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_firewire_sbp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|exclusive_login
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ex_login
+argument_list|,
+literal|0
+argument_list|,
+literal|"SBP transfer max speed"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|END_DEBUG
-value|}
-end_define
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_firewire_sbp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|login_delay
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|login_delay
+argument_list|,
+literal|0
+argument_list|,
+literal|"SBP login delay in msec"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_firewire_sbp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|scan_delay
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|scan_delay
+argument_list|,
+literal|0
+argument_list|,
+literal|"SBP scan delay in msec"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.firewire.sbp.auto_login"
+argument_list|,
+operator|&
+name|auto_login
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.firewire.sbp.max_speed"
+argument_list|,
+operator|&
+name|max_speed
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.firewire.sbp.exclusive_login"
+argument_list|,
+operator|&
+name|ex_login
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.firewire.sbp.login_delay"
+argument_list|,
+operator|&
+name|login_delay
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.firewire.sbp.scan_delay"
+argument_list|,
+operator|&
+name|scan_delay
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -698,19 +583,6 @@ directive|define
 name|NEED_RESPONSE
 value|0
 end_define
-
-begin_struct
-struct|struct
-name|ind_ptr
-block|{
-name|u_int32_t
-name|hi
-decl_stmt|,
-name|lo
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_define
 define|#
@@ -771,7 +643,6 @@ decl_stmt|;
 name|bus_addr_t
 name|bus_addr
 decl_stmt|;
-specifier|volatile
 name|u_int32_t
 name|orb
 index|[
@@ -782,7 +653,6 @@ define|#
 directive|define
 name|IND_PTR_OFFSET
 value|(8*sizeof(u_int32_t))
-specifier|volatile
 name|struct
 name|ind_ptr
 name|ind_ptr
@@ -831,242 +701,6 @@ name|s
 parameter_list|)
 value|((o)->bus_addr == ntohl((s)->orb_lo))
 end_define
-
-begin_define
-define|#
-directive|define
-name|SBP_RECV_LEN
-value|(16 + 32)
-end_define
-
-begin_comment
-comment|/* header + payload */
-end_comment
-
-begin_struct
-struct|struct
-name|sbp_login_res
-block|{
-name|u_int16_t
-name|len
-decl_stmt|;
-name|u_int16_t
-name|id
-decl_stmt|;
-name|u_int16_t
-name|res0
-decl_stmt|;
-name|u_int16_t
-name|cmd_hi
-decl_stmt|;
-name|u_int32_t
-name|cmd_lo
-decl_stmt|;
-name|u_int16_t
-name|res1
-decl_stmt|;
-name|u_int16_t
-name|recon_hold
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|sbp_status
-block|{
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|BIG_ENDIAN
-name|u_int8_t
-name|src
-range|:
-literal|2
-decl_stmt|,
-name|resp
-range|:
-literal|2
-decl_stmt|,
-name|dead
-range|:
-literal|1
-decl_stmt|,
-name|len
-range|:
-literal|3
-decl_stmt|;
-else|#
-directive|else
-name|u_int8_t
-name|len
-range|:
-literal|3
-decl_stmt|,
-name|dead
-range|:
-literal|1
-decl_stmt|,
-name|resp
-range|:
-literal|2
-decl_stmt|,
-name|src
-range|:
-literal|2
-decl_stmt|;
-endif|#
-directive|endif
-name|u_int8_t
-name|status
-decl_stmt|;
-name|u_int16_t
-name|orb_hi
-decl_stmt|;
-name|u_int32_t
-name|orb_lo
-decl_stmt|;
-name|u_int32_t
-name|data
-index|[
-literal|6
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|sbp_cmd_status
-block|{
-define|#
-directive|define
-name|SBP_SFMT_CURR
-value|0
-define|#
-directive|define
-name|SBP_SFMT_DEFER
-value|1
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|BIG_ENDIAN
-name|u_int8_t
-name|sfmt
-range|:
-literal|2
-decl_stmt|,
-name|status
-range|:
-literal|6
-decl_stmt|;
-name|u_int8_t
-name|valid
-range|:
-literal|1
-decl_stmt|,
-name|mark
-range|:
-literal|1
-decl_stmt|,
-name|eom
-range|:
-literal|1
-decl_stmt|,
-name|ill_len
-range|:
-literal|1
-decl_stmt|,
-name|s_key
-range|:
-literal|4
-decl_stmt|;
-else|#
-directive|else
-name|u_int8_t
-name|status
-range|:
-literal|6
-decl_stmt|,
-name|sfmt
-range|:
-literal|2
-decl_stmt|;
-name|u_int8_t
-name|s_key
-range|:
-literal|4
-decl_stmt|,
-name|ill_len
-range|:
-literal|1
-decl_stmt|,
-name|eom
-range|:
-literal|1
-decl_stmt|,
-name|mark
-range|:
-literal|1
-decl_stmt|,
-name|valid
-range|:
-literal|1
-decl_stmt|;
-endif|#
-directive|endif
-name|u_int8_t
-name|s_code
-decl_stmt|;
-name|u_int8_t
-name|s_qlfr
-decl_stmt|;
-name|u_int32_t
-name|info
-decl_stmt|;
-name|u_int32_t
-name|cdb
-decl_stmt|;
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|BIG_ENDIAN
-name|u_int32_t
-name|s_keydep
-range|:
-literal|24
-decl_stmt|,
-name|fru
-range|:
-literal|8
-decl_stmt|;
-else|#
-directive|else
-name|u_int32_t
-name|fru
-range|:
-literal|8
-decl_stmt|,
-name|s_keydep
-range|:
-literal|24
-decl_stmt|;
-endif|#
-directive|endif
-name|u_int32_t
-name|vend
-index|[
-literal|2
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_struct
 struct|struct
@@ -1132,8 +766,27 @@ decl_stmt|;
 name|u_int16_t
 name|lun_id
 decl_stmt|;
-name|int
+name|u_int16_t
 name|freeze
+decl_stmt|;
+define|#
+directive|define
+name|ORB_LINK_DEAD
+value|(1<< 0)
+define|#
+directive|define
+name|VALID_LUN
+value|(1<< 1)
+define|#
+directive|define
+name|ORB_POINTER_ACTIVE
+value|(1<< 2)
+define|#
+directive|define
+name|ORB_POINTER_NEED
+value|(1<< 3)
+name|u_int16_t
+name|flags
 decl_stmt|;
 name|struct
 name|cam_path
@@ -1212,6 +865,7 @@ decl_stmt|;
 name|struct
 name|sbp_dev
 modifier|*
+modifier|*
 name|luns
 decl_stmt|;
 name|struct
@@ -1245,10 +899,6 @@ name|struct
 name|callout
 name|mgm_ocb_timeout
 decl_stmt|;
-define|#
-directive|define
-name|SCAN_DELAY
-value|2
 name|struct
 name|callout
 name|scan_callout
@@ -1299,13 +949,9 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|dmat
 decl_stmt|;
-define|#
-directive|define
-name|SBP_RESOURCE_SHORTAGE
-value|0x10
-name|unsigned
-name|char
-name|flags
+name|struct
+name|timeval
+name|last_busreset
 decl_stmt|;
 block|}
 struct|;
@@ -1355,20 +1001,17 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|void
-name|sbp_cmd_callback
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|fw_xfer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static void sbp_cmd_callback __P((struct fw_xfer *));
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1543,10 +1186,49 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|void
+name|sbp_cam_detach_sdev
+parameter_list|(
+name|struct
+name|sbp_dev
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|sbp_free_sdev
+parameter_list|(
+name|struct
+name|sbp_dev
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|void
 name|sbp_cam_detach_target
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|sbp_target
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|sbp_free_target
 name|__P
 argument_list|(
 operator|(
@@ -1608,17 +1290,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|sbp_login
-parameter_list|(
-name|sdev
-parameter_list|)
-define|\
-value|callout_reset(&(sdev)->login_callout, LOGIN_DELAY * hz, \ 			sbp_login_callout, (void *)(sdev));
-end_define
 
 begin_expr_stmt
 name|MALLOC_DEFINE
@@ -1935,7 +1606,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"SBP2/SCSI over firewire"
+literal|"SBP-2/SCSI over FireWire"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2405,6 +2076,846 @@ end_function
 
 begin_function
 specifier|static
+name|void
+name|sbp_alloc_lun
+parameter_list|(
+name|struct
+name|sbp_target
+modifier|*
+name|target
+parameter_list|)
+block|{
+name|struct
+name|crom_context
+name|cc
+decl_stmt|;
+name|struct
+name|csrreg
+modifier|*
+name|reg
+decl_stmt|;
+name|struct
+name|sbp_dev
+modifier|*
+name|sdev
+decl_stmt|,
+modifier|*
+modifier|*
+name|newluns
+decl_stmt|;
+name|struct
+name|sbp_softc
+modifier|*
+name|sbp
+decl_stmt|;
+name|int
+name|maxlun
+decl_stmt|,
+name|lun
+decl_stmt|,
+name|i
+decl_stmt|;
+name|sbp
+operator|=
+name|target
+operator|->
+name|sbp
+expr_stmt|;
+name|crom_init_context
+argument_list|(
+operator|&
+name|cc
+argument_list|,
+name|target
+operator|->
+name|fwdev
+operator|->
+name|csrrom
+argument_list|)
+expr_stmt|;
+comment|/* XXX shoud parse appropriate unit directories only */
+name|maxlun
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+while|while
+condition|(
+name|cc
+operator|.
+name|depth
+operator|>=
+literal|0
+condition|)
+block|{
+name|reg
+operator|=
+name|crom_search_key
+argument_list|(
+operator|&
+name|cc
+argument_list|,
+name|CROM_LUN
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|reg
+operator|==
+name|NULL
+condition|)
+break|break;
+name|lun
+operator|=
+name|reg
+operator|->
+name|val
+operator|&
+literal|0xffff
+expr_stmt|;
+name|SBP_DEBUG
+argument_list|(
+literal|0
+argument_list|)
+name|printf
+argument_list|(
+literal|"target %d lun %d found\n"
+argument_list|,
+name|target
+operator|->
+name|target_id
+argument_list|,
+name|lun
+argument_list|)
+expr_stmt|;
+name|END_DEBUG
+if|if
+condition|(
+name|maxlun
+operator|<
+name|lun
+condition|)
+name|maxlun
+operator|=
+name|lun
+expr_stmt|;
+name|crom_next
+argument_list|(
+operator|&
+name|cc
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|maxlun
+operator|<
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"%s:%d no LUN found\n"
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|target
+operator|->
+name|sbp
+operator|->
+name|fd
+operator|.
+name|dev
+argument_list|)
+argument_list|,
+name|target
+operator|->
+name|target_id
+argument_list|)
+expr_stmt|;
+name|maxlun
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|maxlun
+operator|>=
+name|SBP_NUM_LUNS
+condition|)
+name|maxlun
+operator|=
+name|SBP_NUM_LUNS
+expr_stmt|;
+comment|/* Invalidiate stale devices */
+for|for
+control|(
+name|lun
+operator|=
+literal|0
+init|;
+name|lun
+operator|<
+name|target
+operator|->
+name|num_lun
+condition|;
+name|lun
+operator|++
+control|)
+block|{
+name|sdev
+operator|=
+name|target
+operator|->
+name|luns
+index|[
+name|lun
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|sdev
+operator|==
+name|NULL
+condition|)
+continue|continue;
+name|sdev
+operator|->
+name|flags
+operator|&=
+operator|~
+name|VALID_LUN
+expr_stmt|;
+if|if
+condition|(
+name|lun
+operator|>=
+name|maxlun
+condition|)
+block|{
+comment|/* lost device */
+name|sbp_cam_detach_sdev
+argument_list|(
+name|sdev
+argument_list|)
+expr_stmt|;
+name|sbp_free_sdev
+argument_list|(
+name|sdev
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/* Reallocate */
+if|if
+condition|(
+name|maxlun
+operator|!=
+name|target
+operator|->
+name|num_lun
+condition|)
+block|{
+name|newluns
+operator|=
+operator|(
+expr|struct
+name|sbp_dev
+operator|*
+operator|*
+operator|)
+name|realloc
+argument_list|(
+name|target
+operator|->
+name|luns
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sbp_dev
+operator|*
+argument_list|)
+operator|*
+name|maxlun
+argument_list|,
+name|M_SBP
+argument_list|,
+name|M_NOWAIT
+operator||
+name|M_ZERO
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|newluns
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: realloc failed\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
+name|newluns
+operator|=
+name|target
+operator|->
+name|luns
+expr_stmt|;
+name|maxlun
+operator|=
+name|target
+operator|->
+name|num_lun
+expr_stmt|;
+block|}
+comment|/* 		 * We must zero the extended region for the case 		 * realloc() doesn't allocate new buffer. 		 */
+if|if
+condition|(
+name|maxlun
+operator|>
+name|target
+operator|->
+name|num_lun
+condition|)
+name|bzero
+argument_list|(
+operator|&
+name|newluns
+index|[
+name|target
+operator|->
+name|num_lun
+index|]
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sbp_dev
+operator|*
+argument_list|)
+operator|*
+operator|(
+name|maxlun
+operator|-
+name|target
+operator|->
+name|num_lun
+operator|)
+argument_list|)
+expr_stmt|;
+name|target
+operator|->
+name|luns
+operator|=
+name|newluns
+expr_stmt|;
+name|target
+operator|->
+name|num_lun
+operator|=
+name|maxlun
+expr_stmt|;
+block|}
+name|crom_init_context
+argument_list|(
+operator|&
+name|cc
+argument_list|,
+name|target
+operator|->
+name|fwdev
+operator|->
+name|csrrom
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|cc
+operator|.
+name|depth
+operator|>=
+literal|0
+condition|)
+block|{
+name|int
+name|new
+init|=
+literal|0
+decl_stmt|;
+name|reg
+operator|=
+name|crom_search_key
+argument_list|(
+operator|&
+name|cc
+argument_list|,
+name|CROM_LUN
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|reg
+operator|==
+name|NULL
+condition|)
+break|break;
+name|lun
+operator|=
+name|reg
+operator|->
+name|val
+operator|&
+literal|0xffff
+expr_stmt|;
+if|if
+condition|(
+name|lun
+operator|>=
+name|SBP_NUM_LUNS
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"too large lun %d\n"
+argument_list|,
+name|lun
+argument_list|)
+expr_stmt|;
+goto|goto
+name|next
+goto|;
+block|}
+name|sdev
+operator|=
+name|target
+operator|->
+name|luns
+index|[
+name|lun
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|sdev
+operator|==
+name|NULL
+condition|)
+block|{
+name|sdev
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sbp_dev
+argument_list|)
+argument_list|,
+name|M_SBP
+argument_list|,
+name|M_NOWAIT
+operator||
+name|M_ZERO
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sdev
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: malloc failed\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
+goto|goto
+name|next
+goto|;
+block|}
+name|target
+operator|->
+name|luns
+index|[
+name|lun
+index|]
+operator|=
+name|sdev
+expr_stmt|;
+name|sdev
+operator|->
+name|lun_id
+operator|=
+name|lun
+expr_stmt|;
+name|sdev
+operator|->
+name|target
+operator|=
+name|target
+expr_stmt|;
+name|STAILQ_INIT
+argument_list|(
+operator|&
+name|sdev
+operator|->
+name|ocbs
+argument_list|)
+expr_stmt|;
+name|CALLOUT_INIT
+argument_list|(
+operator|&
+name|sdev
+operator|->
+name|login_callout
+argument_list|)
+expr_stmt|;
+name|sdev
+operator|->
+name|status
+operator|=
+name|SBP_DEV_RESET
+expr_stmt|;
+name|new
+operator|=
+literal|1
+expr_stmt|;
+block|}
+name|sdev
+operator|->
+name|flags
+operator||=
+name|VALID_LUN
+expr_stmt|;
+name|sdev
+operator|->
+name|type
+operator|=
+operator|(
+name|reg
+operator|->
+name|val
+operator|&
+literal|0xff0000
+operator|)
+operator|>>
+literal|16
+expr_stmt|;
+if|if
+condition|(
+name|new
+operator|==
+literal|0
+condition|)
+goto|goto
+name|next
+goto|;
+name|fwdma_malloc
+argument_list|(
+name|sbp
+operator|->
+name|fd
+operator|.
+name|fc
+argument_list|,
+comment|/* alignment */
+sizeof|sizeof
+argument_list|(
+name|u_int32_t
+argument_list|)
+argument_list|,
+name|SBP_DMA_SIZE
+argument_list|,
+operator|&
+name|sdev
+operator|->
+name|dma
+argument_list|,
+name|BUS_DMA_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sdev
+operator|->
+name|dma
+operator|.
+name|v_addr
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: dma space allocation failed\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|sdev
+argument_list|,
+name|M_SBP
+argument_list|)
+expr_stmt|;
+name|target
+operator|->
+name|luns
+index|[
+name|lun
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+goto|goto
+name|next
+goto|;
+block|}
+name|sdev
+operator|->
+name|login
+operator|=
+operator|(
+expr|struct
+name|sbp_login_res
+operator|*
+operator|)
+name|sdev
+operator|->
+name|dma
+operator|.
+name|v_addr
+expr_stmt|;
+name|sdev
+operator|->
+name|ocb
+operator|=
+operator|(
+expr|struct
+name|sbp_ocb
+operator|*
+operator|)
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+name|sdev
+operator|->
+name|dma
+operator|.
+name|v_addr
+operator|+
+name|SBP_LOGIN_SIZE
+operator|)
+expr_stmt|;
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|sdev
+operator|->
+name|ocb
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sbp_ocb
+argument_list|)
+operator|*
+name|SBP_QUEUE_LEN
+argument_list|)
+expr_stmt|;
+name|STAILQ_INIT
+argument_list|(
+operator|&
+name|sdev
+operator|->
+name|free_ocbs
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|SBP_QUEUE_LEN
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|struct
+name|sbp_ocb
+modifier|*
+name|ocb
+decl_stmt|;
+name|ocb
+operator|=
+operator|&
+name|sdev
+operator|->
+name|ocb
+index|[
+name|i
+index|]
+expr_stmt|;
+name|ocb
+operator|->
+name|bus_addr
+operator|=
+name|sdev
+operator|->
+name|dma
+operator|.
+name|bus_addr
+operator|+
+name|SBP_LOGIN_SIZE
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sbp_ocb
+argument_list|)
+operator|*
+name|i
+operator|+
+name|offsetof
+argument_list|(
+expr|struct
+name|sbp_ocb
+argument_list|,
+name|orb
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bus_dmamap_create
+argument_list|(
+name|sbp
+operator|->
+name|dmat
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|ocb
+operator|->
+name|dmamap
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"sbp_attach: cannot create dmamap\n"
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
+goto|goto
+name|next
+goto|;
+block|}
+name|sbp_free_ocb
+argument_list|(
+name|sdev
+argument_list|,
+name|ocb
+argument_list|)
+expr_stmt|;
+block|}
+name|next
+label|:
+name|crom_next
+argument_list|(
+operator|&
+name|cc
+argument_list|)
+expr_stmt|;
+block|}
+for|for
+control|(
+name|lun
+operator|=
+literal|0
+init|;
+name|lun
+operator|<
+name|target
+operator|->
+name|num_lun
+condition|;
+name|lun
+operator|++
+control|)
+block|{
+name|sdev
+operator|=
+name|target
+operator|->
+name|luns
+index|[
+name|lun
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|sdev
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|sdev
+operator|->
+name|flags
+operator|&
+name|VALID_LUN
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|sbp_cam_detach_sdev
+argument_list|(
+name|sdev
+argument_list|)
+expr_stmt|;
+name|sbp_free_sdev
+argument_list|(
+name|sdev
+argument_list|)
+expr_stmt|;
+name|target
+operator|->
+name|luns
+index|[
+name|lun
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
 name|struct
 name|sbp_target
 modifier|*
@@ -2423,20 +2934,11 @@ parameter_list|)
 block|{
 name|int
 name|i
-decl_stmt|,
-name|maxlun
-decl_stmt|,
-name|lun
 decl_stmt|;
 name|struct
 name|sbp_target
 modifier|*
 name|target
-decl_stmt|;
-name|struct
-name|sbp_dev
-modifier|*
-name|sdev
 decl_stmt|;
 name|struct
 name|crom_context
@@ -2649,518 +3151,18 @@ operator|->
 name|scan_callout
 argument_list|)
 expr_stmt|;
-comment|/* XXX num_lun may be changed. realloc luns? */
-name|crom_init_context
-argument_list|(
-operator|&
-name|cc
-argument_list|,
 name|target
 operator|->
-name|fwdev
-operator|->
-name|csrrom
-argument_list|)
-expr_stmt|;
-comment|/* XXX shoud parse appropriate unit directories only */
-name|maxlun
+name|luns
 operator|=
-operator|-
-literal|1
-expr_stmt|;
-while|while
-condition|(
-name|cc
-operator|.
-name|depth
-operator|>=
-literal|0
-condition|)
-block|{
-name|reg
-operator|=
-name|crom_search_key
-argument_list|(
-operator|&
-name|cc
-argument_list|,
-name|CROM_LUN
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|reg
-operator|==
 name|NULL
-condition|)
-break|break;
-name|lun
-operator|=
-name|reg
-operator|->
-name|val
-operator|&
-literal|0xffff
-expr_stmt|;
-name|SBP_DEBUG
-argument_list|(
-literal|0
-argument_list|)
-name|printf
-argument_list|(
-literal|"target %d lun %d found\n"
-argument_list|,
-name|target
-operator|->
-name|target_id
-argument_list|,
-name|lun
-argument_list|)
-expr_stmt|;
-name|END_DEBUG
-if|if
-condition|(
-name|maxlun
-operator|<
-name|lun
-condition|)
-name|maxlun
-operator|=
-name|lun
-expr_stmt|;
-name|crom_next
-argument_list|(
-operator|&
-name|cc
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|maxlun
-operator|<
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"no lun found!\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|maxlun
-operator|>=
-name|SBP_NUM_LUNS
-condition|)
-name|maxlun
-operator|=
-name|SBP_NUM_LUNS
 expr_stmt|;
 name|target
 operator|->
 name|num_lun
 operator|=
-name|maxlun
-operator|+
-literal|1
-expr_stmt|;
-name|target
-operator|->
-name|luns
-operator|=
-operator|(
-expr|struct
-name|sbp_dev
-operator|*
-operator|)
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sbp_dev
-argument_list|)
-operator|*
-name|target
-operator|->
-name|num_lun
-argument_list|,
-name|M_SBP
-argument_list|,
-name|M_NOWAIT
-operator||
-name|M_ZERO
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
 literal|0
-init|;
-name|i
-operator|<
-name|target
-operator|->
-name|num_lun
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|sdev
-operator|=
-operator|&
-name|target
-operator|->
-name|luns
-index|[
-name|i
-index|]
 expr_stmt|;
-name|sdev
-operator|->
-name|lun_id
-operator|=
-name|i
-expr_stmt|;
-name|sdev
-operator|->
-name|target
-operator|=
-name|target
-expr_stmt|;
-name|STAILQ_INIT
-argument_list|(
-operator|&
-name|sdev
-operator|->
-name|ocbs
-argument_list|)
-expr_stmt|;
-name|CALLOUT_INIT
-argument_list|(
-operator|&
-name|sdev
-operator|->
-name|login_callout
-argument_list|)
-expr_stmt|;
-name|sdev
-operator|->
-name|status
-operator|=
-name|SBP_DEV_DEAD
-expr_stmt|;
-block|}
-name|crom_init_context
-argument_list|(
-operator|&
-name|cc
-argument_list|,
-name|target
-operator|->
-name|fwdev
-operator|->
-name|csrrom
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-name|cc
-operator|.
-name|depth
-operator|>=
-literal|0
-condition|)
-block|{
-name|reg
-operator|=
-name|crom_search_key
-argument_list|(
-operator|&
-name|cc
-argument_list|,
-name|CROM_LUN
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|reg
-operator|==
-name|NULL
-condition|)
-break|break;
-name|lun
-operator|=
-name|reg
-operator|->
-name|val
-operator|&
-literal|0xffff
-expr_stmt|;
-if|if
-condition|(
-name|lun
-operator|>=
-name|SBP_NUM_LUNS
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"too large lun %d\n"
-argument_list|,
-name|lun
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
-name|sdev
-operator|=
-operator|&
-name|target
-operator|->
-name|luns
-index|[
-name|lun
-index|]
-expr_stmt|;
-name|sdev
-operator|->
-name|status
-operator|=
-name|SBP_DEV_RESET
-expr_stmt|;
-name|sdev
-operator|->
-name|type
-operator|=
-operator|(
-name|reg
-operator|->
-name|val
-operator|&
-literal|0xff0000
-operator|)
-operator|>>
-literal|16
-expr_stmt|;
-name|fwdma_malloc
-argument_list|(
-name|sbp
-operator|->
-name|fd
-operator|.
-name|fc
-argument_list|,
-comment|/* alignment */
-sizeof|sizeof
-argument_list|(
-name|u_int32_t
-argument_list|)
-argument_list|,
-name|SBP_DMA_SIZE
-argument_list|,
-operator|&
-name|sdev
-operator|->
-name|dma
-argument_list|,
-name|BUS_DMA_NOWAIT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sdev
-operator|->
-name|dma
-operator|.
-name|v_addr
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s: dma space allocation failed\n"
-argument_list|,
-name|__FUNCTION__
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-name|sdev
-operator|->
-name|login
-operator|=
-operator|(
-expr|struct
-name|sbp_login_res
-operator|*
-operator|)
-name|sdev
-operator|->
-name|dma
-operator|.
-name|v_addr
-expr_stmt|;
-name|sdev
-operator|->
-name|ocb
-operator|=
-operator|(
-expr|struct
-name|sbp_ocb
-operator|*
-operator|)
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-name|sdev
-operator|->
-name|dma
-operator|.
-name|v_addr
-operator|+
-name|SBP_LOGIN_SIZE
-operator|)
-expr_stmt|;
-name|bzero
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|sdev
-operator|->
-name|ocb
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sbp_ocb
-argument_list|)
-operator|*
-name|SBP_QUEUE_LEN
-argument_list|)
-expr_stmt|;
-name|STAILQ_INIT
-argument_list|(
-operator|&
-name|sdev
-operator|->
-name|free_ocbs
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|SBP_QUEUE_LEN
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|struct
-name|sbp_ocb
-modifier|*
-name|ocb
-decl_stmt|;
-name|ocb
-operator|=
-operator|&
-name|sdev
-operator|->
-name|ocb
-index|[
-name|i
-index|]
-expr_stmt|;
-name|ocb
-operator|->
-name|bus_addr
-operator|=
-name|sdev
-operator|->
-name|dma
-operator|.
-name|bus_addr
-operator|+
-name|SBP_LOGIN_SIZE
-operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sbp_ocb
-argument_list|)
-operator|*
-name|i
-operator|+
-name|offsetof
-argument_list|(
-expr|struct
-name|sbp_ocb
-argument_list|,
-name|orb
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bus_dmamap_create
-argument_list|(
-name|sbp
-operator|->
-name|dmat
-argument_list|,
-literal|0
-argument_list|,
-operator|&
-name|ocb
-operator|->
-name|dmamap
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"sbp_attach: cannot create dmamap\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-name|sbp_free_ocb
-argument_list|(
-name|sdev
-argument_list|,
-name|ocb
-argument_list|)
-expr_stmt|;
-block|}
-name|crom_next
-argument_list|(
-operator|&
-name|cc
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 name|target
 return|;
@@ -3406,6 +3408,159 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|sbp_login
+parameter_list|(
+name|struct
+name|sbp_dev
+modifier|*
+name|sdev
+parameter_list|)
+block|{
+name|struct
+name|timeval
+name|delta
+decl_stmt|;
+name|struct
+name|timeval
+name|t
+decl_stmt|;
+name|int
+name|ticks
+init|=
+literal|0
+decl_stmt|;
+name|microtime
+argument_list|(
+operator|&
+name|delta
+argument_list|)
+expr_stmt|;
+name|timevalsub
+argument_list|(
+operator|&
+name|delta
+argument_list|,
+operator|&
+name|sdev
+operator|->
+name|target
+operator|->
+name|sbp
+operator|->
+name|last_busreset
+argument_list|)
+expr_stmt|;
+name|t
+operator|.
+name|tv_sec
+operator|=
+name|login_delay
+operator|/
+literal|1000
+expr_stmt|;
+name|t
+operator|.
+name|tv_usec
+operator|=
+operator|(
+name|login_delay
+operator|%
+literal|1000
+operator|)
+operator|*
+literal|1000
+expr_stmt|;
+name|timevalsub
+argument_list|(
+operator|&
+name|t
+argument_list|,
+operator|&
+name|delta
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|t
+operator|.
+name|tv_sec
+operator|>=
+literal|0
+operator|&&
+name|t
+operator|.
+name|tv_usec
+operator|>
+literal|0
+condition|)
+name|ticks
+operator|=
+operator|(
+name|t
+operator|.
+name|tv_sec
+operator|*
+literal|1000
+operator|+
+name|t
+operator|.
+name|tv_usec
+operator|/
+literal|1000
+operator|)
+operator|*
+name|hz
+operator|/
+literal|1000
+expr_stmt|;
+name|SBP_DEBUG
+argument_list|(
+literal|0
+argument_list|)
+name|printf
+argument_list|(
+literal|"%s: sec = %ld usec = %ld ticks = %d\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|,
+name|t
+operator|.
+name|tv_sec
+argument_list|,
+name|t
+operator|.
+name|tv_usec
+argument_list|,
+name|ticks
+argument_list|)
+expr_stmt|;
+name|END_DEBUG
+name|callout_reset
+argument_list|(
+operator|&
+name|sdev
+operator|->
+name|login_callout
+argument_list|,
+name|ticks
+argument_list|,
+name|sbp_login_callout
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|sdev
+operator|)
+argument_list|)
+decl_stmt|;
+block|}
+end_function
+
 begin_define
 define|#
 directive|define
@@ -3507,6 +3662,11 @@ name|fd
 operator|.
 name|fc
 expr_stmt|;
+name|sbp_alloc_lun
+argument_list|(
+name|target
+argument_list|)
+expr_stmt|;
 comment|/* XXX untimeout mgm_ocb and dequeue */
 for|for
 control|(
@@ -3526,7 +3686,6 @@ control|)
 block|{
 name|sdev
 operator|=
-operator|&
 name|target
 operator|->
 name|luns
@@ -3534,6 +3693,13 @@ index|[
 name|i
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|sdev
+operator|==
+name|NULL
+condition|)
+continue|continue;
 if|if
 condition|(
 name|alive
@@ -3776,6 +3942,14 @@ literal|"sbp_post_busreset\n"
 argument_list|)
 expr_stmt|;
 name|END_DEBUG
+name|microtime
+argument_list|(
+operator|&
+name|sbp
+operator|->
+name|last_busreset
+argument_list|)
+decl_stmt|;
 block|}
 end_function
 
@@ -3828,15 +4002,6 @@ name|sbp_cold
 argument_list|)
 expr_stmt|;
 name|END_DEBUG
-if|#
-directive|if
-literal|0
-comment|/* 	 * XXX don't let CAM the bus rest. CAM tries to do something with 	 * freezed (DEV_RETRY) devices  	 */
-block|xpt_async(AC_BUS_RESET, sbp->path,
-comment|/*arg*/
-block|NULL);
-endif|#
-directive|endif
 if|if
 condition|(
 name|sbp_cold
@@ -3846,6 +4011,15 @@ condition|)
 name|sbp_cold
 operator|--
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* 	 * XXX don't let CAM the bus rest. 	 * CAM tries to do something with freezed (DEV_RETRY) devices. 	 */
+block|xpt_async(AC_BUS_RESET, sbp->path,
+comment|/*arg*/
+block|NULL);
+endif|#
+directive|endif
 comment|/* Gabage Collection */
 for|for
 control|(
@@ -3907,41 +4081,10 @@ argument_list|(
 name|target
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|target
-operator|->
-name|luns
-operator|!=
-name|NULL
-condition|)
-name|free
+name|sbp_free_target
 argument_list|(
 name|target
-operator|->
-name|luns
-argument_list|,
-name|M_SBP
 argument_list|)
-expr_stmt|;
-name|target
-operator|->
-name|num_lun
-operator|=
-literal|0
-expr_stmt|;
-empty_stmt|;
-name|target
-operator|->
-name|luns
-operator|=
-name|NULL
-expr_stmt|;
-name|target
-operator|->
-name|fwdev
-operator|=
-name|NULL
 expr_stmt|;
 block|}
 block|}
@@ -4085,6 +4228,19 @@ operator|(
 name|void
 operator|*
 operator|)
+name|target
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|target
+operator|->
+name|num_lun
+operator|==
+literal|0
+condition|)
+name|sbp_free_target
+argument_list|(
 name|target
 argument_list|)
 expr_stmt|;
@@ -4330,7 +4486,6 @@ control|)
 block|{
 name|tsdev
 operator|=
-operator|&
 name|target
 operator|->
 name|luns
@@ -4341,6 +4496,10 @@ expr_stmt|;
 if|if
 condition|(
 name|tsdev
+operator|!=
+name|NULL
+operator|&&
+name|tsdev
 operator|->
 name|status
 operator|==
@@ -4348,7 +4507,7 @@ name|SBP_DEV_LOGIN
 condition|)
 name|sbp_login
 argument_list|(
-name|sdev
+name|tsdev
 argument_list|)
 expr_stmt|;
 block|}
@@ -4414,16 +4573,12 @@ name|sbp_reset_start_callback
 expr_stmt|;
 name|fp
 operator|=
-operator|(
-expr|struct
-name|fw_pkt
-operator|*
-operator|)
+operator|&
 name|xfer
 operator|->
 name|send
 operator|.
-name|buf
+name|hdr
 expr_stmt|;
 name|fp
 operator|->
@@ -4545,59 +4700,6 @@ end_function
 
 begin_function
 specifier|static
-name|void
-name|sbp_cmd_callback
-parameter_list|(
-name|struct
-name|fw_xfer
-modifier|*
-name|xfer
-parameter_list|)
-block|{
-name|SBP_DEBUG
-argument_list|(
-literal|2
-argument_list|)
-name|struct
-name|sbp_dev
-modifier|*
-name|sdev
-decl_stmt|;
-name|sdev
-operator|=
-operator|(
-expr|struct
-name|sbp_dev
-operator|*
-operator|)
-name|xfer
-operator|->
-name|sc
-expr_stmt|;
-name|sbp_show_sdev_info
-argument_list|(
-name|sdev
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"sbp_cmd_callback\n"
-argument_list|)
-expr_stmt|;
-name|END_DEBUG
-name|sbp_xfer_free
-argument_list|(
-name|xfer
-argument_list|)
-decl_stmt|;
-return|return;
-block|}
-end_function
-
-begin_function
-specifier|static
 name|struct
 name|sbp_dev
 modifier|*
@@ -4615,7 +4717,8 @@ block|{
 name|struct
 name|sbp_dev
 modifier|*
-name|sdev
+modifier|*
+name|sdevp
 decl_stmt|;
 name|int
 name|i
@@ -4626,7 +4729,7 @@ name|i
 operator|=
 name|lun
 operator|,
-name|sdev
+name|sdevp
 operator|=
 operator|&
 name|target
@@ -4645,36 +4748,34 @@ condition|;
 name|i
 operator|++
 operator|,
-name|sdev
+name|sdevp
 operator|++
 control|)
-block|{
 if|if
 condition|(
-name|sdev
+operator|*
+name|sdevp
+operator|!=
+name|NULL
+operator|&&
+operator|(
+operator|*
+name|sdevp
+operator|)
 operator|->
 name|status
 operator|==
 name|SBP_DEV_PROBE
 condition|)
-break|break;
-block|}
-if|if
-condition|(
-name|i
-operator|>=
-name|target
-operator|->
-name|num_lun
-condition|)
 return|return
 operator|(
-name|NULL
+operator|*
+name|sdevp
 operator|)
 return|;
 return|return
 operator|(
-name|sdev
+name|NULL
 operator|)
 return|;
 block|}
@@ -5081,9 +5182,11 @@ name|target
 operator|->
 name|scan_callout
 argument_list|,
-name|SCAN_DELAY
+name|scan_delay
 operator|*
 name|hz
+operator|/
+literal|1000
 argument_list|,
 name|sbp_cam_scan_target
 argument_list|,
@@ -5270,7 +5373,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"sbp_cmd_callback\n"
+literal|"%s\n"
+argument_list|,
+name|__FUNCTION__
 argument_list|)
 expr_stmt|;
 name|END_DEBUG
@@ -5292,7 +5397,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"sbp_cmd_callback resp=%d\n"
+literal|"%s: resp=%d\n"
+argument_list|,
+name|__FUNCTION__
 argument_list|,
 name|xfer
 operator|->
@@ -5424,16 +5531,12 @@ name|sbp_do_attach
 expr_stmt|;
 name|fp
 operator|=
-operator|(
-expr|struct
-name|fw_pkt
-operator|*
-operator|)
+operator|&
 name|xfer
 operator|->
 name|send
 operator|.
-name|buf
+name|hdr
 expr_stmt|;
 name|fp
 operator|->
@@ -5586,16 +5689,12 @@ name|sbp_busy_timeout_callback
 expr_stmt|;
 name|fp
 operator|=
-operator|(
-expr|struct
-name|fw_pkt
-operator|*
-operator|)
+operator|&
 name|xfer
 operator|->
 name|send
 operator|.
-name|buf
+name|hdr
 expr_stmt|;
 name|fp
 operator|->
@@ -5660,6 +5759,139 @@ end_function
 begin_function
 specifier|static
 name|void
+name|sbp_orb_pointer_callback
+parameter_list|(
+name|struct
+name|fw_xfer
+modifier|*
+name|xfer
+parameter_list|)
+block|{
+name|struct
+name|sbp_dev
+modifier|*
+name|sdev
+decl_stmt|;
+name|sdev
+operator|=
+operator|(
+expr|struct
+name|sbp_dev
+operator|*
+operator|)
+name|xfer
+operator|->
+name|sc
+expr_stmt|;
+name|SBP_DEBUG
+argument_list|(
+literal|1
+argument_list|)
+name|sbp_show_sdev_info
+argument_list|(
+name|sdev
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
+name|END_DEBUG
+if|if
+condition|(
+name|xfer
+operator|->
+name|resp
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* XXX */
+name|printf
+argument_list|(
+literal|"%s: xfer->resp = %d\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|,
+name|xfer
+operator|->
+name|resp
+argument_list|)
+expr_stmt|;
+block|}
+name|sbp_xfer_free
+argument_list|(
+name|xfer
+argument_list|)
+expr_stmt|;
+name|sdev
+operator|->
+name|flags
+operator|&=
+operator|~
+name|ORB_POINTER_ACTIVE
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|sdev
+operator|->
+name|flags
+operator|&
+name|ORB_POINTER_NEED
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|struct
+name|sbp_ocb
+modifier|*
+name|ocb
+decl_stmt|;
+name|sdev
+operator|->
+name|flags
+operator|&=
+operator|~
+name|ORB_POINTER_NEED
+expr_stmt|;
+name|ocb
+operator|=
+name|STAILQ_FIRST
+argument_list|(
+operator|&
+name|sdev
+operator|->
+name|ocbs
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ocb
+operator|!=
+name|NULL
+condition|)
+name|sbp_orb_pointer
+argument_list|(
+name|sdev
+argument_list|,
+name|ocb
+argument_list|)
+expr_stmt|;
+block|}
+return|return;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|sbp_orb_pointer
 parameter_list|(
 name|struct
@@ -5685,7 +5917,7 @@ name|fp
 decl_stmt|;
 name|SBP_DEBUG
 argument_list|(
-literal|2
+literal|1
 argument_list|)
 name|sbp_show_sdev_info
 argument_list|(
@@ -5696,12 +5928,60 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"sbp_orb_pointer\n"
+literal|"%s: 0x%08x\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|,
+operator|(
+name|u_int32_t
+operator|)
+name|ocb
+operator|->
+name|bus_addr
 argument_list|)
 expr_stmt|;
 name|END_DEBUG
+if|if
+condition|(
+operator|(
+name|sdev
+operator|->
+name|flags
+operator|&
+name|ORB_POINTER_ACTIVE
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|SBP_DEBUG
+argument_list|(
+literal|0
+argument_list|)
+name|printf
+argument_list|(
+literal|"%s: orb pointer active\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
+name|END_DEBUG
+name|sdev
+operator|->
+name|flags
+operator||=
+name|ORB_POINTER_NEED
+expr_stmt|;
+return|return;
+block|}
+name|sdev
+operator|->
+name|flags
+operator||=
+name|ORB_POINTER_ACTIVE
+expr_stmt|;
 name|xfer
-init|=
+operator|=
 name|sbp_write_cmd
 argument_list|(
 name|sdev
@@ -5710,7 +5990,7 @@ name|FWTCODE_WREQB
 argument_list|,
 literal|0x08
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|xfer
@@ -5724,20 +6004,16 @@ name|act
 operator|.
 name|hand
 operator|=
-name|sbp_cmd_callback
+name|sbp_orb_pointer_callback
 expr_stmt|;
 name|fp
 operator|=
-operator|(
-expr|struct
-name|fw_pkt
-operator|*
-operator|)
+operator|&
 name|xfer
 operator|->
 name|send
 operator|.
-name|buf
+name|hdr
 expr_stmt|;
 name|fp
 operator|->
@@ -5759,11 +6035,9 @@ name|extcode
 operator|=
 literal|0
 expr_stmt|;
-name|fp
+name|xfer
 operator|->
-name|mode
-operator|.
-name|wreqb
+name|send
 operator|.
 name|payload
 index|[
@@ -5793,11 +6067,9 @@ literal|16
 operator|)
 argument_list|)
 expr_stmt|;
-name|fp
+name|xfer
 operator|->
-name|mode
-operator|.
-name|wreqb
+name|send
 operator|.
 name|payload
 index|[
@@ -5806,6 +6078,9 @@ index|]
 operator|=
 name|htonl
 argument_list|(
+operator|(
+name|u_int32_t
+operator|)
 name|ocb
 operator|->
 name|bus_addr
@@ -5860,8 +6135,13 @@ directive|if
 literal|0
 end_if
 
+begin_comment
+unit|static void sbp_cmd_callback(struct fw_xfer *xfer) { SBP_DEBUG(1) 	struct sbp_dev *sdev; 	sdev = (struct sbp_dev *)xfer->sc; 	sbp_show_sdev_info(sdev, 2); 	printf("sbp_cmd_callback\n"); END_DEBUG 	if (xfer->resp != 0) {
+comment|/* XXX */
+end_comment
+
 begin_endif
-unit|static void sbp_doorbell(struct sbp_dev *sdev) { 	struct fw_xfer *xfer; 	struct fw_pkt *fp; SBP_DEBUG(1) 	sbp_show_sdev_info(sdev, 2); 	printf("sbp_doorbell\n"); END_DEBUG  	xfer = sbp_write_cmd(sdev, FWTCODE_WREQQ, 0x10); 	if (xfer == NULL) 		return; 	xfer->act.hand = sbp_cmd_callback; 	fp = (struct fw_pkt *)xfer->send.buf; 	fp->mode.wreqq.data = htonl(0xf); 	fw_asyreq(xfer->fc, -1, xfer); }
+unit|printf("%s: xfer->resp = %d\n", __FUNCTION__, xfer->resp); 	} 	sbp_xfer_free(xfer); 	return; }  static void sbp_doorbell(struct sbp_dev *sdev) { 	struct fw_xfer *xfer; 	struct fw_pkt *fp; SBP_DEBUG(1) 	sbp_show_sdev_info(sdev, 2); 	printf("sbp_doorbell\n"); END_DEBUG  	xfer = sbp_write_cmd(sdev, FWTCODE_WREQQ, 0x10); 	if (xfer == NULL) 		return; 	xfer->act.hand = sbp_cmd_callback; 	fp = (struct fw_pkt *)xfer->send.buf; 	fp->mode.wreqq.data = htonl(0xf); 	fw_asyreq(xfer->fc, -1, xfer); }
 endif|#
 directive|endif
 end_endif
@@ -5967,9 +6247,9 @@ name|fw_xfer_alloc_buf
 argument_list|(
 name|M_SBP
 argument_list|,
-literal|24
+literal|8
 argument_list|,
-literal|12
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -6044,42 +6324,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|tcode
-operator|==
-name|FWTCODE_WREQQ
-condition|)
-name|xfer
-operator|->
-name|send
-operator|.
-name|len
-operator|=
-literal|16
-expr_stmt|;
-else|else
-name|xfer
-operator|->
-name|send
-operator|.
-name|len
-operator|=
-literal|24
-expr_stmt|;
-name|xfer
-operator|->
-name|recv
-operator|.
-name|len
-operator|=
-literal|12
-expr_stmt|;
-if|if
-condition|(
 name|new
 condition|)
 block|{
 name|xfer
 operator|->
+name|recv
+operator|.
+name|pay_len
+operator|=
+literal|0
+expr_stmt|;
+name|xfer
+operator|->
+name|send
+operator|.
 name|spd
 operator|=
 name|min
@@ -6116,6 +6375,29 @@ operator|=
 name|fw_asybusy
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|tcode
+operator|==
+name|FWTCODE_WREQB
+condition|)
+name|xfer
+operator|->
+name|send
+operator|.
+name|pay_len
+operator|=
+literal|8
+expr_stmt|;
+else|else
+name|xfer
+operator|->
+name|send
+operator|.
+name|pay_len
+operator|=
+literal|0
+expr_stmt|;
 name|xfer
 operator|->
 name|sc
@@ -6127,16 +6409,12 @@ name|sdev
 expr_stmt|;
 name|fp
 operator|=
-operator|(
-expr|struct
-name|fw_pkt
-operator|*
-operator|)
+operator|&
 name|xfer
 operator|->
 name|send
 operator|.
-name|buf
+name|hdr
 expr_stmt|;
 name|fp
 operator|->
@@ -6198,8 +6476,12 @@ name|pri
 operator|=
 literal|0
 expr_stmt|;
-name|xfer
+name|fp
 operator|->
+name|mode
+operator|.
+name|wreqq
+operator|.
 name|dst
 operator|=
 name|FWLOCALBUS
@@ -6209,18 +6491,6 @@ operator|->
 name|target
 operator|->
 name|fwdev
-operator|->
-name|dst
-expr_stmt|;
-name|fp
-operator|->
-name|mode
-operator|.
-name|wreqq
-operator|.
-name|dst
-operator|=
-name|xfer
 operator|->
 name|dst
 expr_stmt|;
@@ -6369,6 +6639,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 return|return;
 block|}
 name|ocb
@@ -6386,14 +6657,6 @@ expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|uintptr_t
-operator|)
-operator|(
-specifier|volatile
 name|void
 operator|*
 operator|)
@@ -6438,17 +6701,6 @@ name|htonl
 argument_list|(
 name|SBP_DEV2ADDR
 argument_list|(
-name|device_get_unit
-argument_list|(
-name|target
-operator|->
-name|sbp
-operator|->
-name|fd
-operator|.
-name|dev
-argument_list|)
-argument_list|,
 name|target
 operator|->
 name|target_id
@@ -6499,6 +6751,23 @@ name|ocb
 operator|->
 name|orb
 index|[
+literal|0
+index|]
+operator|=
+name|ocb
+operator|->
+name|orb
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* password */
+name|ocb
+operator|->
+name|orb
+index|[
 literal|2
 index|]
 operator|=
@@ -6536,11 +6805,25 @@ name|htonl
 argument_list|(
 name|ORB_NOTIFY
 operator||
-name|ORB_EXV
-operator||
 name|sdev
 operator|->
 name|lun_id
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ex_login
+condition|)
+name|ocb
+operator|->
+name|orb
+index|[
+literal|4
+index|]
+operator||=
+name|htonl
+argument_list|(
+name|ORB_EXV
 argument_list|)
 expr_stmt|;
 name|ocb
@@ -6734,16 +7017,12 @@ name|sbp_mgm_callback
 expr_stmt|;
 name|fp
 operator|=
-operator|(
-expr|struct
-name|fw_pkt
-operator|*
-operator|)
+operator|&
 name|xfer
 operator|->
 name|send
 operator|.
-name|buf
+name|hdr
 expr_stmt|;
 name|fp
 operator|->
@@ -6793,11 +7072,9 @@ name|extcode
 operator|=
 literal|0
 expr_stmt|;
-name|fp
+name|xfer
 operator|->
-name|mode
-operator|.
-name|wreqb
+name|send
 operator|.
 name|payload
 index|[
@@ -6811,11 +7088,9 @@ operator|<<
 literal|16
 argument_list|)
 expr_stmt|;
-name|fp
+name|xfer
 operator|->
-name|mode
-operator|.
-name|wreqb
+name|send
 operator|.
 name|payload
 index|[
@@ -6827,8 +7102,34 @@ argument_list|(
 name|ocb
 operator|->
 name|bus_addr
+operator|&
+literal|0xffffffff
 argument_list|)
 expr_stmt|;
+name|SBP_DEBUG
+argument_list|(
+literal|0
+argument_list|)
+name|sbp_show_sdev_info
+argument_list|(
+name|sdev
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"mgm orb: %08x\n"
+argument_list|,
+operator|(
+name|u_int32_t
+operator|)
+name|ocb
+operator|->
+name|bus_addr
+argument_list|)
+expr_stmt|;
+name|END_DEBUG
 name|fw_asyreq
 argument_list|(
 name|xfer
@@ -6840,7 +7141,7 @@ literal|1
 argument_list|,
 name|xfer
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 block|}
 end_function
 
@@ -7221,81 +7522,23 @@ name|flags
 operator||=
 name|SSD_ILI
 expr_stmt|;
+name|bcopy
+argument_list|(
+operator|&
+name|sbp_cmd_status
+operator|->
+name|info
+argument_list|,
+operator|&
 name|sense
 operator|->
 name|info
 index|[
 literal|0
 index|]
-operator|=
-name|ntohl
-argument_list|(
-name|sbp_cmd_status
-operator|->
-name|info
+argument_list|,
+literal|4
 argument_list|)
-operator|&
-literal|0xff
-expr_stmt|;
-name|sense
-operator|->
-name|info
-index|[
-literal|1
-index|]
-operator|=
-operator|(
-name|ntohl
-argument_list|(
-name|sbp_cmd_status
-operator|->
-name|info
-argument_list|)
-operator|>>
-literal|8
-operator|)
-operator|&
-literal|0xff
-expr_stmt|;
-name|sense
-operator|->
-name|info
-index|[
-literal|2
-index|]
-operator|=
-operator|(
-name|ntohl
-argument_list|(
-name|sbp_cmd_status
-operator|->
-name|info
-argument_list|)
-operator|>>
-literal|16
-operator|)
-operator|&
-literal|0xff
-expr_stmt|;
-name|sense
-operator|->
-name|info
-index|[
-literal|3
-index|]
-operator|=
-operator|(
-name|ntohl
-argument_list|(
-name|sbp_cmd_status
-operator|->
-name|info
-argument_list|)
-operator|>>
-literal|24
-operator|)
-operator|&
-literal|0xff
 expr_stmt|;
 if|if
 condition|(
@@ -7336,81 +7579,23 @@ name|extra_len
 operator|=
 literal|10
 expr_stmt|;
+name|bcopy
+argument_list|(
+operator|&
+name|sbp_cmd_status
+operator|->
+name|cdb
+argument_list|,
+operator|&
 name|sense
 operator|->
 name|cmd_spec_info
 index|[
 literal|0
 index|]
-operator|=
-name|ntohl
-argument_list|(
-name|sbp_cmd_status
-operator|->
-name|cdb
+argument_list|,
+literal|4
 argument_list|)
-operator|&
-literal|0xff
-expr_stmt|;
-name|sense
-operator|->
-name|cmd_spec_info
-index|[
-literal|1
-index|]
-operator|=
-operator|(
-name|ntohl
-argument_list|(
-name|sbp_cmd_status
-operator|->
-name|cdb
-argument_list|)
-operator|>>
-literal|8
-operator|)
-operator|&
-literal|0xff
-expr_stmt|;
-name|sense
-operator|->
-name|cmd_spec_info
-index|[
-literal|2
-index|]
-operator|=
-operator|(
-name|ntohl
-argument_list|(
-name|sbp_cmd_status
-operator|->
-name|cdb
-argument_list|)
-operator|>>
-literal|16
-operator|)
-operator|&
-literal|0xff
-expr_stmt|;
-name|sense
-operator|->
-name|cmd_spec_info
-index|[
-literal|3
-index|]
-operator|=
-operator|(
-name|ntohl
-argument_list|(
-name|sbp_cmd_status
-operator|->
-name|cdb
-argument_list|)
-operator|>>
-literal|24
-operator|)
-operator|&
-literal|0xff
 expr_stmt|;
 name|sense
 operator|->
@@ -7436,61 +7621,26 @@ name|sbp_cmd_status
 operator|->
 name|fru
 expr_stmt|;
+name|bcopy
+argument_list|(
+operator|&
+name|sbp_cmd_status
+operator|->
+name|s_keydep
+index|[
+literal|0
+index|]
+argument_list|,
+operator|&
 name|sense
 operator|->
 name|sense_key_spec
 index|[
 literal|0
 index|]
-operator|=
-name|ntohl
-argument_list|(
-name|sbp_cmd_status
-operator|->
-name|s_keydep
+argument_list|,
+literal|3
 argument_list|)
-operator|&
-literal|0xff
-expr_stmt|;
-name|sense
-operator|->
-name|sense_key_spec
-index|[
-literal|1
-index|]
-operator|=
-operator|(
-name|ntohl
-argument_list|(
-name|sbp_cmd_status
-operator|->
-name|s_keydep
-argument_list|)
-operator|>>
-literal|8
-operator|)
-operator|&
-literal|0xff
-expr_stmt|;
-name|sense
-operator|->
-name|sense_key_spec
-index|[
-literal|2
-index|]
-operator|=
-operator|(
-name|ntohl
-argument_list|(
-name|sbp_cmd_status
-operator|->
-name|s_keydep
-argument_list|)
-operator|>>
-literal|16
-operator|)
-operator|&
-literal|0xff
 expr_stmt|;
 name|ocb
 operator|->
@@ -7827,7 +7977,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"sbp_recv: xfer->resp != 0\n"
+literal|"sbp_recv: xfer->resp = %d\n"
+argument_list|,
+name|xfer
+operator|->
+name|resp
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -7840,43 +7994,28 @@ name|xfer
 operator|->
 name|recv
 operator|.
-name|buf
+name|payload
 operator|==
 name|NULL
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"sbp_recv: xfer->recv.buf == NULL\n"
+literal|"sbp_recv: xfer->recv.payload == NULL\n"
 argument_list|)
 expr_stmt|;
 goto|goto
 name|done0
 goto|;
 block|}
-name|sbp
-operator|=
-operator|(
-expr|struct
-name|sbp_softc
-operator|*
-operator|)
-name|xfer
-operator|->
-name|sc
-expr_stmt|;
 name|rfp
 operator|=
-operator|(
-expr|struct
-name|fw_pkt
-operator|*
-operator|)
+operator|&
 name|xfer
 operator|->
 name|recv
 operator|.
-name|buf
+name|hdr
 expr_stmt|;
 if|if
 condition|(
@@ -7915,11 +8054,9 @@ expr|struct
 name|sbp_status
 operator|*
 operator|)
-name|rfp
+name|xfer
 operator|->
-name|mode
-operator|.
-name|wreqb
+name|recv
 operator|.
 name|payload
 expr_stmt|;
@@ -8000,6 +8137,15 @@ operator|>=
 name|target
 operator|->
 name|num_lun
+operator|||
+name|target
+operator|->
+name|luns
+index|[
+name|l
+index|]
+operator|==
+name|NULL
 condition|)
 block|{
 name|device_printf
@@ -8023,7 +8169,6 @@ goto|;
 block|}
 name|sdev
 operator|=
-operator|&
 name|target
 operator|->
 name|luns
@@ -8147,7 +8292,7 @@ literal|0
 argument|); 	status_valid = (status_valid0&& sbp_status->status ==
 literal|0
 argument|);  	if (!status_valid0 || debug>
-literal|1
+literal|2
 argument|){ 		int status; SBP_DEBUG(
 literal|0
 argument|) 		sbp_show_sdev_info(sdev,
@@ -8205,7 +8350,9 @@ argument|; 	}  	if (ocb == NULL) 		goto done;  	switch(ntohl(ocb->orb[
 literal|4
 argument|])& ORB_FMT_MSK){ 	case ORB_FMT_NOP: 		break; 	case ORB_FMT_VED: 		break; 	case ORB_FMT_STD: 		switch(ocb->flags) { 		case OCB_ACT_MGM: 			orb_fun = ntohl(ocb->orb[
 literal|4
-argument|])& ORB_FUN_MSK; 			switch(orb_fun) { 			case ORB_FUN_LGI: 				fwdma_sync(&sdev->dma, BUS_DMASYNC_POSTREAD); 				login_res = sdev->login; 				login_res->len = ntohs(login_res->len); 				login_res->id = ntohs(login_res->id); 				login_res->cmd_hi = ntohs(login_res->cmd_hi); 				login_res->cmd_lo = ntohl(login_res->cmd_lo); 				if (status_valid) { SBP_DEBUG(
+argument|])& ORB_FUN_MSK; 			reset_agent =
+literal|0
+argument|; 			switch(orb_fun) { 			case ORB_FUN_LGI: 				fwdma_sync(&sdev->dma, BUS_DMASYNC_POSTREAD); 				login_res = sdev->login; 				login_res->len = ntohs(login_res->len); 				login_res->id = ntohs(login_res->id); 				login_res->cmd_hi = ntohs(login_res->cmd_hi); 				login_res->cmd_lo = ntohl(login_res->cmd_lo); 				if (status_valid) { SBP_DEBUG(
 literal|0
 argument|) sbp_show_sdev_info(sdev,
 literal|2
@@ -8255,7 +8402,7 @@ argument|){ 					sbp_scsi_status(sbp_status, ocb); 				}else{ 					if(sbp_status
 comment|/* fix up inq data */
 argument|if (ccb->csio.cdb_io.cdb_bytes[
 literal|0
-argument|] == INQUIRY) 					sbp_fix_inq_data(ocb); 				xpt_done(ccb); 			} 			break; 		default: 			break; 		} 	}  	sbp_free_ocb(sdev, ocb); done: 	if (reset_agent) 		sbp_agent_reset(sdev);  done0:
+argument|] == INQUIRY) 					sbp_fix_inq_data(ocb); 				xpt_done(ccb); 			} 			break; 		default: 			break; 		} 	}  	sbp_free_ocb(sdev, ocb); done: 	if (reset_agent) 		sbp_agent_reset(sdev);  done0: 	xfer->recv.pay_len = SBP_RECV_LEN;
 comment|/* The received packet is usually small enough to be stored within  * the buffer. In that case, the controller return ack_complete and  * no respose is necessary.  *  * XXX fwohci.c and firewire.c should inform event_code such as   * ack_complete or ack_pending to upper driver.  */
 if|#
 directive|if
@@ -8272,7 +8419,7 @@ argument|, xfer);
 else|#
 directive|else
 comment|/* recycle */
-argument|xfer->recv.len = SBP_RECV_LEN; 	STAILQ_INSERT_TAIL(&sbp->fwb.xferlist, xfer, link);
+argument|STAILQ_INSERT_TAIL(&sbp->fwb.xferlist, xfer, link);
 endif|#
 directive|endif
 argument|return;  }  static void sbp_recv(struct fw_xfer *xfer) { 	int s;  	s = splcam(); 	sbp_recv1(xfer); 	splx(s); }
@@ -8339,16 +8486,20 @@ comment|/*untagged*/
 literal|1
 argument|,
 comment|/*tagged*/
-argument|SBP_QUEUE_LEN, 				 devq);  	if (sbp->sim == NULL) { 		cam_simq_free(devq); 		return (ENXIO); 	}   	if (xpt_bus_register(sbp->sim,
+argument|SBP_QUEUE_LEN -
+literal|1
+argument|, 				 devq);  	if (sbp->sim == NULL) { 		cam_simq_free(devq); 		return (ENXIO); 	}   	if (xpt_bus_register(sbp->sim,
 comment|/*bus*/
 literal|0
-argument|) != CAM_SUCCESS) 		goto fail;  	if (xpt_create_path(&sbp->path, xpt_periph, cam_sim_path(sbp->sim), 			CAM_TARGET_WILDCARD, CAM_LUN_WILDCARD) != CAM_REQ_CMP) 		goto fail;  	sbp->fwb.start_hi = SBP_BIND_HI; 	sbp->fwb.start_lo = SBP_DEV2ADDR(device_get_unit(sbp->fd.dev),
+argument|) != CAM_SUCCESS) 		goto fail;  	if (xpt_create_path(&sbp->path, xpt_periph, cam_sim_path(sbp->sim), 	    CAM_TARGET_WILDCARD, CAM_LUN_WILDCARD) != CAM_REQ_CMP) { 		xpt_bus_deregister(cam_sim_path(sbp->sim)); 		goto fail; 	}
+comment|/* We reserve 16 bit space (4 bytes X 64 targets X 256 luns) */
+argument|sbp->fwb.start = ((u_int64_t)SBP_BIND_HI<<
+literal|32
+argument|) | SBP_DEV2ADDR(
 literal|0
 argument|,
 literal|0
-argument|);
-comment|/* We reserve 16 bit space (4 bytes X 64 targets X 256 luns) */
-argument|sbp->fwb.addrlen =
+argument|); 	sbp->fwb.end = sbp->fwb.start +
 literal|0xffff
 argument|; 	sbp->fwb.act_type = FWACT_XFER;
 comment|/* pre-allocate xfer */
@@ -8357,19 +8508,9 @@ literal|0
 argument|; i< SBP_NUM_OCB/
 literal|2
 argument|; i ++) { 		xfer = fw_xfer_alloc_buf(M_SBP,
-if|#
-directive|if
-name|NEED_RESPONSE
-comment|/* send */
-literal|12
-argument|,
-else|#
-directive|else
 comment|/* send */
 literal|0
 argument|,
-endif|#
-directive|endif
 comment|/* recv */
 argument|SBP_RECV_LEN); 		xfer->act.hand = sbp_recv;
 if|#
@@ -8380,7 +8521,9 @@ endif|#
 directive|endif
 argument|xfer->sc = (caddr_t)sbp; 		STAILQ_INSERT_TAIL(&sbp->fwb.xferlist, xfer, link); 	} 	fw_bindadd(sbp->fd.fc,&sbp->fwb);  	sbp->fd.post_busreset = sbp_post_busreset; 	sbp->fd.post_explore = sbp_post_explore;  	if (sbp->fd.fc->status != -
 literal|1
-argument|) { 		s = splfw(); 		sbp_post_explore((void *)sbp); 		splx(s); 	}  	return (
+argument|) { 		s = splfw(); 		sbp_post_busreset((void *)sbp); 		sbp_post_explore((void *)sbp); 		splx(s); 	} 	xpt_async(AC_BUS_RESET, sbp->path,
+comment|/*arg*/
+argument|NULL);  	return (
 literal|0
 argument|); fail: 	cam_sim_free(sbp->sim,
 comment|/*free_devq*/
@@ -8394,21 +8537,31 @@ argument|); END_DEBUG 	for (i =
 literal|0
 argument|; i< SBP_NUM_TARGETS ; i ++) { 		target =&sbp->targets[i]; 		if (target->luns == NULL) 			continue; 		for (j =
 literal|0
-argument|; j< target->num_lun; j++) { 			sdev =&target->luns[j]; 			callout_stop(&sdev->login_callout); 			if (sdev->status>= SBP_DEV_TOATTACH&& 					sdev->status<= SBP_DEV_ATTACHED) 				sbp_mgm_orb(sdev, ORB_FUN_LGO, NULL); 		} 	}  	return
+argument|; j< target->num_lun; j++) { 			sdev = target->luns[j]; 			if (sdev == NULL) 				continue; 			callout_stop(&sdev->login_callout); 			if (sdev->status>= SBP_DEV_TOATTACH&& 					sdev->status<= SBP_DEV_ATTACHED) 				sbp_mgm_orb(sdev, ORB_FUN_LGO, NULL); 		} 	}  	return
 literal|0
 argument|; }  static int sbp_shutdown(device_t dev) { 	struct sbp_softc *sbp = ((struct sbp_softc *)device_get_softc(dev));  	sbp_logout_all(sbp); 	return (
 literal|0
-argument|); }  static int sbp_detach(device_t dev) { 	struct sbp_softc *sbp = ((struct sbp_softc *)device_get_softc(dev)); 	struct firewire_comm *fc = sbp->fd.fc; 	struct sbp_target *target; 	struct sbp_dev *sdev; 	struct fw_xfer *xfer
+argument|); }  static void sbp_free_sdev(struct sbp_dev *sdev) { 	int i;  	if (sdev == NULL) 		return; 	for (i =
+literal|0
+argument|; i< SBP_QUEUE_LEN; i++) 		bus_dmamap_destroy(sdev->target->sbp->dmat, 		    sdev->ocb[i].dmamap); 	fwdma_free(sdev->target->sbp->fd.fc,&sdev->dma); 	free(sdev, M_SBP); }  static void sbp_free_target(struct sbp_target *target) { 	struct sbp_softc *sbp; 	struct fw_xfer *xfer
 argument_list|,
-argument|*next; 	int i
+argument|*next; 	int i;  	if (target->luns == NULL) 		return; 	callout_stop(&target->mgm_ocb_timeout); 	sbp = target->sbp; 	for (i =
+literal|0
+argument|; i< target->num_lun; i++) 		sbp_free_sdev(target->luns[i]);  	for (xfer = STAILQ_FIRST(&target->xferlist); 			xfer != NULL; xfer = next) { 		next = STAILQ_NEXT(xfer, link); 		fw_xfer_free_buf(xfer); 	} 	STAILQ_INIT(&target->xferlist); 	free(target->luns, M_SBP); 	target->num_lun =
+literal|0
+argument|;; 	target->luns = NULL; 	target->fwdev = NULL; }  static int sbp_detach(device_t dev) { 	struct sbp_softc *sbp = ((struct sbp_softc *)device_get_softc(dev)); 	struct firewire_comm *fc = sbp->fd.fc; 	struct fw_xfer *xfer
 argument_list|,
-argument|j;  SBP_DEBUG(
+argument|*next; 	int i;  SBP_DEBUG(
 literal|0
 argument|) 	printf(
 literal|"sbp_detach\n"
 argument|); END_DEBUG  	for (i =
 literal|0
-argument|; i< SBP_NUM_TARGETS; i ++)  		sbp_cam_detach_target(&sbp->targets[i]); 	xpt_free_path(sbp->path); 	xpt_bus_deregister(cam_sim_path(sbp->sim));  	sbp_logout_all(sbp);
+argument|; i< SBP_NUM_TARGETS; i ++)  		sbp_cam_detach_target(&sbp->targets[i]); 	xpt_async(AC_LOST_DEVICE, sbp->path, NULL); 	xpt_free_path(sbp->path); 	xpt_bus_deregister(cam_sim_path(sbp->sim)); 	cam_sim_free(sbp->sim,
+comment|/*free_devq*/
+argument|TRUE)
+argument_list|,
+argument|sbp_logout_all(sbp);
 comment|/* XXX wait for logout completion */
 argument|tsleep(&i, FWPRI,
 literal|"sbpdtc"
@@ -8416,23 +8569,19 @@ argument|, hz/
 literal|2
 argument|);  	for (i =
 literal|0
-argument|; i< SBP_NUM_TARGETS ; i ++) { 		target =&sbp->targets[i]; 		if (target->luns == NULL) 			continue; 		callout_stop(&target->mgm_ocb_timeout); 		for (j =
+argument|; i< SBP_NUM_TARGETS ; i ++) 		sbp_free_target(&sbp->targets[i]);  	for (xfer = STAILQ_FIRST(&sbp->fwb.xferlist); 				xfer != NULL; xfer = next) { 		next = STAILQ_NEXT(xfer, link); 		fw_xfer_free_buf(xfer); 	} 	STAILQ_INIT(&sbp->fwb.xferlist); 	fw_bindremove(fc,&sbp->fwb);  	bus_dma_tag_destroy(sbp->dmat);  	return (
 literal|0
-argument|; j< target->num_lun; j++) { 			sdev =&target->luns[j]; 			if (sdev->status != SBP_DEV_DEAD) { 				for (i =
+argument|); }  static void sbp_cam_detach_sdev(struct sbp_dev *sdev) { 	if (sdev == NULL) 		return; 	if (sdev->status == SBP_DEV_DEAD) 		return; 	if (sdev->status == SBP_DEV_RESET) 		return; 	if (sdev->path) { 		xpt_release_devq(sdev->path, 				 sdev->freeze, TRUE); 		sdev->freeze =
 literal|0
-argument|; i< SBP_QUEUE_LEN; i++) 					bus_dmamap_destroy(sbp->dmat, 						sdev->ocb[i].dmamap); 				fwdma_free(sbp->fd.fc,&sdev->dma); 			} 		} 		for (xfer = STAILQ_FIRST(&target->xferlist); 				xfer != NULL; xfer = next) { 			next = STAILQ_NEXT(xfer, link); 			fw_xfer_free(xfer); 		} 		free(target->luns, M_SBP); 	}  	for (xfer = STAILQ_FIRST(&sbp->fwb.xferlist); 				xfer != NULL; xfer = next) { 		next = STAILQ_NEXT(xfer, link); 		fw_xfer_free(xfer); 	} 	STAILQ_INIT(&sbp->fwb.xferlist); 	fw_bindremove(fc,&sbp->fwb);  	bus_dma_tag_destroy(sbp->dmat);  	return (
-literal|0
-argument|); }  static void sbp_cam_detach_target(struct sbp_target *target) { 	struct sbp_dev *sdev; 	int i;  	if (target->luns != NULL) { SBP_DEBUG(
+argument|; 		xpt_async(AC_LOST_DEVICE, sdev->path, NULL); 		xpt_free_path(sdev->path); 		sdev->path = NULL; 	} 	sbp_abort_all_ocbs(sdev, CAM_DEV_NOT_THERE); }  static void sbp_cam_detach_target(struct sbp_target *target) { 	int i;  	if (target->luns != NULL) { SBP_DEBUG(
 literal|0
 argument|) 		printf(
 literal|"sbp_detach_target %d\n"
 argument|, target->target_id); END_DEBUG 		callout_stop(&target->scan_callout); 		for (i =
 literal|0
-argument|; i< target->num_lun; i++) { 			sdev =&target->luns[i]; 			if (sdev->status == SBP_DEV_DEAD) 				continue; 			if (sdev->status == SBP_DEV_RESET) 				continue; 			if (sdev->path) { 				xpt_release_devq(sdev->path, 						 sdev->freeze, TRUE); 				sdev->freeze =
+argument|; i< target->num_lun; i++) 			sbp_cam_detach_sdev(target->luns[i]); 	} }  static void sbp_target_reset(struct sbp_dev *sdev, int method) { 	int i; 	struct sbp_target *target = sdev->target; 	struct sbp_dev *tsdev;  	for (i =
 literal|0
-argument|; 				xpt_async(AC_LOST_DEVICE, sdev->path, NULL); 				xpt_free_path(sdev->path); 				sdev->path = NULL; 			} 			sbp_abort_all_ocbs(sdev, CAM_DEV_NOT_THERE); 		} 	} }  static void sbp_target_reset(struct sbp_dev *sdev, int method) { 	int i; 	struct sbp_target *target = sdev->target; 	struct sbp_dev *tsdev;  	for (i =
-literal|0
-argument|; i< target->num_lun; i++) { 		tsdev =&target->luns[i]; 		if (tsdev->status == SBP_DEV_DEAD) 			continue; 		if (tsdev->status == SBP_DEV_RESET) 			continue; 		xpt_freeze_devq(tsdev->path,
+argument|; i< target->num_lun; i++) { 		tsdev = target->luns[i]; 		if (tsdev == NULL) 			continue; 		if (tsdev->status == SBP_DEV_DEAD) 			continue; 		if (tsdev->status == SBP_DEV_RESET) 			continue; 		xpt_freeze_devq(tsdev->path,
 literal|1
 argument|); 		tsdev->freeze ++; 		sbp_abort_all_ocbs(tsdev, CAM_CMD_TIMEOUT); 		if (method ==
 literal|2
@@ -8447,26 +8596,28 @@ literal|"reset start\n"
 argument|); 		sbp_reset_start(sdev); 		break; 	} 			 }  static void sbp_mgm_timeout(void *arg) { 	struct sbp_ocb *ocb = (struct sbp_ocb *)arg; 	struct sbp_dev *sdev = ocb->sdev; 	struct sbp_target *target = sdev->target;  	sbp_show_sdev_info(sdev,
 literal|2
 argument|); 	printf(
-literal|"management ORB timeout\n"
-argument|); 	target->mgm_ocb_cur = NULL; 	sbp_free_ocb(sdev, ocb);
+literal|"request timeout(mgm orb:0x%08x) ... "
+argument|, 	    (u_int32_t)ocb->bus_addr); 	target->mgm_ocb_cur = NULL; 	sbp_free_ocb(sdev, ocb);
 if|#
 directive|if
 literal|0
 comment|/* XXX */
-argument|sbp_mgm_orb(sdev, ORB_FUN_RUNQUEUE, NULL);
+argument|printf("run next request\n"); 	sbp_mgm_orb(sdev, ORB_FUN_RUNQUEUE, NULL);
 endif|#
 directive|endif
 if|#
 directive|if
-literal|0
-argument|sbp_reset_start(sdev);
+literal|1
+argument|printf(
+literal|"reset start\n"
+argument|); 	sbp_reset_start(sdev);
 endif|#
 directive|endif
 argument|}  static void sbp_timeout(void *arg) { 	struct sbp_ocb *ocb = (struct sbp_ocb *)arg; 	struct sbp_dev *sdev = ocb->sdev;  	sbp_show_sdev_info(sdev,
 literal|2
 argument|); 	printf(
-literal|"request timeout ... "
-argument|);  	sdev->timeout ++; 	switch(sdev->timeout) { 	case
+literal|"request timeout(cmd orb:0x%08x) ... "
+argument|, 	    (u_int32_t)ocb->bus_addr);  	sdev->timeout ++; 	switch(sdev->timeout) { 	case
 literal|1
 argument|: 		printf(
 literal|"agent reset\n"
@@ -8489,7 +8640,7 @@ endif|#
 directive|endif
 argument|} }  static void sbp_action1(struct cam_sim *sim, union ccb *ccb) {  	struct sbp_softc *sbp = (struct sbp_softc *)sim->softc; 	struct sbp_target *target = NULL; 	struct sbp_dev *sdev = NULL;
 comment|/* target:lun -> sdev mapping */
-argument|if (sbp != NULL&& ccb->ccb_h.target_id != CAM_TARGET_WILDCARD&& ccb->ccb_h.target_id< SBP_NUM_TARGETS) { 		target =&sbp->targets[ccb->ccb_h.target_id]; 		if (target->fwdev != NULL&& ccb->ccb_h.target_lun != CAM_LUN_WILDCARD&& ccb->ccb_h.target_lun< target->num_lun) { 			sdev =&target->luns[ccb->ccb_h.target_lun]; 			if (sdev->status != SBP_DEV_ATTACHED&& 				sdev->status != SBP_DEV_PROBE) 				sdev = NULL; 		} 	}  SBP_DEBUG(
+argument|if (sbp != NULL&& ccb->ccb_h.target_id != CAM_TARGET_WILDCARD&& ccb->ccb_h.target_id< SBP_NUM_TARGETS) { 		target =&sbp->targets[ccb->ccb_h.target_id]; 		if (target->fwdev != NULL&& ccb->ccb_h.target_lun != CAM_LUN_WILDCARD&& ccb->ccb_h.target_lun< target->num_lun) { 			sdev = target->luns[ccb->ccb_h.target_lun]; 			if (sdev != NULL&& sdev->status != SBP_DEV_ATTACHED&& 				sdev->status != SBP_DEV_PROBE) 				sdev = NULL; 		} 	}  SBP_DEBUG(
 literal|1
 argument|) 	if (sdev == NULL) 		printf(
 literal|"invalid target %d lun %d\n"
@@ -8508,7 +8659,7 @@ literal|"Invalid target (no wildcard)\n"
 argument|, 				device_get_nameunit(sbp->fd.dev), 				ccb->ccb_h.target_id, ccb->ccb_h.target_lun, 				ccb->ccb_h.func_code); END_DEBUG 			ccb->ccb_h.status = CAM_DEV_NOT_THERE; 			xpt_done(ccb); 			return; 		} 		break; 	default:
 comment|/* XXX Hm, we should check the input parameters */
 argument|break; 	}  	switch (ccb->ccb_h.func_code) { 	case XPT_SCSI_IO: 	{ 		struct ccb_scsiio *csio; 		struct sbp_ocb *ocb; 		int speed; 		void *cdb;  		csio =&ccb->csio;  SBP_DEBUG(
-literal|1
+literal|2
 argument|) 		printf(
 literal|"%s:%d:%d XPT_SCSI_IO: "
 literal|"cmd: %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x"
@@ -8542,7 +8693,7 @@ comment|/* if we are in probe stage, pass only probe commands */
 argument|if (sdev->status == SBP_DEV_PROBE) { 			char *name; 			name = xpt_path_periph(ccb->ccb_h.path)->periph_name; 			printf("probe stage, periph name: %s\n", name); 			if (strcmp(name, "probe") != 0) { 				ccb->ccb_h.status = CAM_REQUEUE_REQ; 				xpt_done(ccb); 				return; 			} 		}
 endif|#
 directive|endif
-argument|if ((ocb = sbp_get_ocb(sdev)) == NULL) 			return;  		ocb->flags = OCB_ACT_CMD; 		ocb->sdev = sdev; 		ocb->ccb = ccb; 		ccb->ccb_h.ccb_sdev_ptr = sdev; 		ocb->orb[
+argument|if ((ocb = sbp_get_ocb(sdev)) == NULL) { 			ccb->ccb_h.status = CAM_REQUEUE_REQ; 			xpt_done(ccb); 			return; 		}  		ocb->flags = OCB_ACT_CMD; 		ocb->sdev = sdev; 		ocb->ccb = ccb; 		ccb->ccb_h.ccb_sdev_ptr = sdev; 		ocb->orb[
 literal|0
 argument|] = htonl(
 literal|1
@@ -8568,9 +8719,9 @@ argument|] |= htonl(ORB_CMD_IN); 		}  		if (csio->ccb_h.flags& CAM_SCATTER_VALID
 literal|"sbp: CAM_SCATTER_VALID\n"
 argument|); 		if (csio->ccb_h.flags& CAM_DATA_PHYS) 			printf(
 literal|"sbp: CAM_DATA_PHYS\n"
-argument|);  		if (csio->ccb_h.flags& CAM_CDB_POINTER) 			cdb = (void *)csio->cdb_io.cdb_ptr; 		else 			cdb = (void *)&csio->cdb_io.cdb_bytes; 		bcopy(cdb, 			(void *)(uintptr_t)(volatile void *)&ocb->orb[
+argument|);  		if (csio->ccb_h.flags& CAM_CDB_POINTER) 			cdb = (void *)csio->cdb_io.cdb_ptr; 		else 			cdb = (void *)&csio->cdb_io.cdb_bytes; 		bcopy(cdb, (void *)&ocb->orb[
 literal|5
-argument|], 				csio->cdb_len);
+argument|], csio->cdb_len);
 comment|/* printf("ORB %08x %08x %08x %08x\n", ntohl(ocb->orb[0]), ntohl(ocb->orb[1]), ntohl(ocb->orb[2]), ntohl(ocb->orb[3])); printf("ORB %08x %08x %08x %08x\n", ntohl(ocb->orb[4]), ntohl(ocb->orb[5]), ntohl(ocb->orb[6]), ntohl(ocb->orb[7])); */
 argument|if (ccb->csio.dxfer_len>
 literal|0
@@ -8704,7 +8855,7 @@ comment|/* XXX */
 argument|default: 		ccb->ccb_h.status = CAM_REQ_INVALID; 		xpt_done(ccb); 		break; 	} 	return; }  static void sbp_action(struct cam_sim *sim, union ccb *ccb) { 	int s;  	s = splfw(); 	sbp_action1(sim, ccb); 	splx(s); }  static void sbp_execute_ocb(void *arg,  bus_dma_segment_t *segments, int seg, int error) { 	int i; 	struct sbp_ocb *ocb; 	struct sbp_ocb *prev; 	bus_dma_segment_t *s;  	if (error) 		printf(
 literal|"sbp_execute_ocb: error=%d\n"
 argument|, error);  	ocb = (struct sbp_ocb *)arg;  SBP_DEBUG(
-literal|1
+literal|2
 argument|) 	printf(
 literal|"sbp_execute_ocb: seg %d"
 argument|, seg); 	for (i =
@@ -8777,54 +8928,18 @@ argument|] |= htonl(ORB_CMD_PTBL | seg); 	} 	 	if (seg>
 literal|0
 argument|) 		bus_dmamap_sync(ocb->sdev->target->sbp->dmat, ocb->dmamap, 			(ntohl(ocb->orb[
 literal|4
-argument|])& ORB_CMD_IN) ? 			BUS_DMASYNC_PREREAD : BUS_DMASYNC_PREWRITE); 	prev = sbp_enqueue_ocb(ocb->sdev, ocb); 	fwdma_sync(&ocb->sdev->dma, BUS_DMASYNC_PREWRITE); 	if (prev == NULL) 		sbp_orb_pointer(ocb->sdev, ocb);  }  static void sbp_poll(struct cam_sim *sim) {
-comment|/* should call fwohci_intr? */
-argument|return; } static struct sbp_ocb * sbp_dequeue_ocb(struct sbp_dev *sdev, struct sbp_status *sbp_status) { 	struct sbp_ocb *ocb; 	struct sbp_ocb *next; 	int s = splfw()
+argument|])& ORB_CMD_IN) ? 			BUS_DMASYNC_PREREAD : BUS_DMASYNC_PREWRITE); 	prev = sbp_enqueue_ocb(ocb->sdev, ocb); 	fwdma_sync(&ocb->sdev->dma, BUS_DMASYNC_PREWRITE); 	if (prev == NULL || (ocb->sdev->flags& ORB_LINK_DEAD) !=
+literal|0
+argument|) { 		ocb->sdev->flags&= ~ORB_LINK_DEAD; 		sbp_orb_pointer(ocb->sdev, ocb);  	} }  static void sbp_poll(struct cam_sim *sim) {        	struct sbp_softc *sbp; 	struct firewire_comm *fc;  	sbp = (struct sbp_softc *)sim->softc; 	fc = sbp->fd.fc;  	fc->poll(fc,
+literal|0
+argument|, -
+literal|1
+argument|);  	return; }  static struct sbp_ocb * sbp_dequeue_ocb(struct sbp_dev *sdev, struct sbp_status *sbp_status) { 	struct sbp_ocb *ocb; 	struct sbp_ocb *next; 	int s = splfw()
 argument_list|,
 argument|order =
 literal|0
-argument|; 	int flags;  	for (ocb = STAILQ_FIRST(&sdev->ocbs); ocb != NULL; ocb = next) { 		next = STAILQ_NEXT(ocb, ocb); 		flags = ocb->flags; SBP_DEBUG(
+argument|; 	int flags;  SBP_DEBUG(
 literal|1
-argument|) 		sbp_show_sdev_info(sdev,
-literal|2
-argument|);
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
-argument|printf(
-literal|"orb: 0x%jx next: 0x%x, flags %x\n"
-argument|, 			(uintmax_t)ocb->bus_addr,
-else|#
-directive|else
-argument|printf(
-literal|"orb: 0x%x next: 0x%lx, flags %x\n"
-argument|, 			ocb->bus_addr,
-endif|#
-directive|endif
-argument|ntohl(ocb->orb[
-literal|1
-argument|]), flags); END_DEBUG 		if (OCB_MATCH(ocb, sbp_status)) {
-comment|/* found */
-argument|STAILQ_REMOVE(&sdev->ocbs, ocb, sbp_ocb, ocb); 			if (ocb->ccb != NULL) 				untimeout(sbp_timeout, (caddr_t)ocb, 						ocb->ccb->ccb_h.timeout_ch); 			if (ntohl(ocb->orb[
-literal|4
-argument|])&
-literal|0xffff
-argument|) { 				bus_dmamap_sync(sdev->target->sbp->dmat, 					ocb->dmamap, 					(ntohl(ocb->orb[
-literal|4
-argument|])& ORB_CMD_IN) ? 					BUS_DMASYNC_POSTREAD : 					BUS_DMASYNC_POSTWRITE); 				bus_dmamap_unload(sdev->target->sbp->dmat, 					ocb->dmamap); 			} 			if (next != NULL&& sbp_status->src ==
-literal|1
-argument|) 				sbp_orb_pointer(sdev, next);  			break; 		} else 			order ++; 	} 	splx(s); SBP_DEBUG(
-literal|0
-argument|) 	if (ocb&& order>
-literal|0
-argument|) { 		sbp_show_sdev_info(sdev,
-literal|2
-argument|); 		printf(
-literal|"unordered execution order:%d\n"
-argument|, order); 	} END_DEBUG 	return (ocb); }  static struct sbp_ocb * sbp_enqueue_ocb(struct sbp_dev *sdev, struct sbp_ocb *ocb) { 	int s = splfw(); 	struct sbp_ocb *prev;  SBP_DEBUG(
-literal|2
 argument|) 	sbp_show_sdev_info(sdev,
 literal|2
 argument|);
@@ -8834,19 +8949,59 @@ name|__FreeBSD_version
 operator|>=
 literal|500000
 argument|printf(
-literal|"sbp_enqueue_ocb orb=0x%jx in physical memory\n"
-argument|,  		(uintmax_t)ocb->bus_addr);
+literal|"%s: 0x%08x src %d\n"
+argument|,
 else|#
 directive|else
 argument|printf(
-literal|"sbp_enqueue_ocb orb=0x%x in physical memory\n"
-argument|, ocb->bus_addr);
+literal|"%s: 0x%08lx src %d\n"
+argument|,
+endif|#
+directive|endif
+argument|__FUNCTION__, ntohl(sbp_status->orb_lo), sbp_status->src); END_DEBUG 	for (ocb = STAILQ_FIRST(&sdev->ocbs); ocb != NULL; ocb = next) { 		next = STAILQ_NEXT(ocb, ocb); 		flags = ocb->flags; 		if (OCB_MATCH(ocb, sbp_status)) {
+comment|/* found */
+argument|STAILQ_REMOVE(&sdev->ocbs, ocb, sbp_ocb, ocb); 			if (ocb->ccb != NULL) 				untimeout(sbp_timeout, (caddr_t)ocb, 						ocb->ccb->ccb_h.timeout_ch); 			if (ntohl(ocb->orb[
+literal|4
+argument|])&
+literal|0xffff
+argument|) { 				bus_dmamap_sync(sdev->target->sbp->dmat, 					ocb->dmamap, 					(ntohl(ocb->orb[
+literal|4
+argument|])& ORB_CMD_IN) ? 					BUS_DMASYNC_POSTREAD : 					BUS_DMASYNC_POSTWRITE); 				bus_dmamap_unload(sdev->target->sbp->dmat, 					ocb->dmamap); 			} 			if (sbp_status->src == SRC_NO_NEXT) { 				if (next != NULL) 					sbp_orb_pointer(sdev, next);  				else if (order>
+literal|0
+argument|) {
+comment|/* 					 * Unordered execution 					 * We need to send pointer for 					 * next ORB 					 */
+argument|sdev->flags |= ORB_LINK_DEAD; 				} 			} 			break; 		} else 			order ++; 	} 	splx(s); SBP_DEBUG(
+literal|0
+argument|) 	if (ocb&& order>
+literal|0
+argument|) { 		sbp_show_sdev_info(sdev,
+literal|2
+argument|); 		printf(
+literal|"unordered execution order:%d\n"
+argument|, order); 	} END_DEBUG 	return (ocb); }  static struct sbp_ocb * sbp_enqueue_ocb(struct sbp_dev *sdev, struct sbp_ocb *ocb) { 	int s = splfw(); 	struct sbp_ocb *prev;  SBP_DEBUG(
+literal|1
+argument|) 	sbp_show_sdev_info(sdev,
+literal|2
+argument|);
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+argument|printf(
+literal|"%s: 0x%08jx\n"
+argument|, __FUNCTION__, (uintmax_t)ocb->bus_addr);
+else|#
+directive|else
+argument|printf(
+literal|"%s: 0x%08x\n"
+argument|, __FUNCTION__, ocb->bus_addr);
 endif|#
 directive|endif
 argument|END_DEBUG 	prev = STAILQ_LAST(&sdev->ocbs, sbp_ocb, ocb); 	STAILQ_INSERT_TAIL(&sdev->ocbs, ocb, ocb);  	if (ocb->ccb != NULL) 		ocb->ccb->ccb_h.timeout_ch = timeout(sbp_timeout, (caddr_t)ocb, 					(ocb->ccb->ccb_h.timeout * hz) /
 literal|1000
-argument|);  	if (prev != NULL ) { SBP_DEBUG(
-literal|1
+argument|);  	if (prev != NULL) { SBP_DEBUG(
+literal|2
 argument|)
 if|#
 directive|if
@@ -8855,12 +9010,12 @@ operator|>=
 literal|500000
 argument|printf(
 literal|"linking chain 0x%jx -> 0x%jx\n"
-argument|, 		(uintmax_t)prev->bus_addr, (uintmax_t)ocb->bus_addr);
+argument|, 		    (uintmax_t)prev->bus_addr, (uintmax_t)ocb->bus_addr);
 else|#
 directive|else
 argument|printf(
 literal|"linking chain 0x%x -> 0x%x\n"
-argument|, prev->bus_addr, ocb->bus_addr);
+argument|, 		    prev->bus_addr, ocb->bus_addr);
 endif|#
 directive|endif
 argument|END_DEBUG 		prev->orb[
