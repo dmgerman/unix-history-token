@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: param.h,v 1.8 1999/02/19 19:34:47 luoqi Exp $ */
+comment|/* $Id: param.h,v 1.9 1999/03/01 06:10:16 imp Exp $ */
 end_comment
 
 begin_comment
@@ -400,55 +400,6 @@ directive|define
 name|MCLOFSET
 value|(MCLBYTES - 1)
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NMBCLUSTERS
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GATEWAY
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|NMBCLUSTERS
-value|512
-end_define
-
-begin_comment
-comment|/* map size, max cluster allocation */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|NMBCLUSTERS
-value|256
-end_define
-
-begin_comment
-comment|/* map size, max cluster allocation */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Size of kernel malloc arena in CLBYTES-sized logical pages  */
