@@ -913,10 +913,15 @@ block|{
 name|int
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 name|int
 modifier|*
 name|poke
 decl_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|i
