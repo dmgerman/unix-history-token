@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)proc.c 1.8 %G%"
+literal|"@(#)proc.c 1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -223,6 +223,11 @@ decl_stmt|;
 name|struct
 name|tmps
 name|soffset
+decl_stmt|;
+name|struct
+name|nl
+modifier|*
+name|tempnlp
 decl_stmt|;
 define|#
 directive|define
@@ -1949,7 +1954,7 @@ index|]
 operator|.
 name|curtmps
 expr_stmt|;
-name|i
+name|tempnlp
 operator|=
 name|tmpalloc
 argument_list|(
@@ -1977,7 +1982,12 @@ literal|8
 operator|+
 name|INDX
 argument_list|,
-name|i
+name|tempnlp
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -2063,7 +2073,12 @@ literal|8
 operator|+
 name|INDX
 argument_list|,
-name|i
+name|tempnlp
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2124,7 +2139,12 @@ literal|8
 operator|+
 name|INDX
 argument_list|,
-name|i
+name|tempnlp
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
 argument_list|)
 expr_stmt|;
 name|fmtspec
@@ -2172,7 +2192,12 @@ literal|8
 operator|+
 name|INDX
 argument_list|,
-name|i
+name|tempnlp
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
 argument_list|)
 expr_stmt|;
 name|put
@@ -2496,7 +2521,12 @@ literal|8
 operator|+
 name|INDX
 argument_list|,
-name|i
+name|tempnlp
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
 argument_list|)
 expr_stmt|;
 name|put
