@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -210,6 +216,20 @@ ifdef|#
 directive|ifdef
 name|MAC
 end_ifdef
+
+begin_comment
+comment|/*  * Declare that the kernel provides MAC support, version 1.  This permits  * modules to refuse to be loaded if the necessary support isn't present,  * even if it's pre-boot.  */
+end_comment
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|kernel_mac_support
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_DECL
