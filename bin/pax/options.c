@@ -1621,7 +1621,7 @@ break|break;
 case|case
 literal|'X'
 case|:
-comment|/* 			 * do not pass over mount points in the file system 			 */
+comment|/* 			 * do not pass over mount points in the filesystem 			 */
 name|Xflag
 operator|=
 literal|1
@@ -2396,7 +2396,7 @@ break|break;
 case|case
 literal|'X'
 case|:
-comment|/* 			 * do not pass over mount points in the file system 			 */
+comment|/* 			 * do not pass over mount points in the filesystem 			 */
 name|Xflag
 operator|=
 literal|1

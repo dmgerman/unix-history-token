@@ -1714,7 +1714,7 @@ name|HD_TAR
 argument_list|)
 index|]
 decl_stmt|;
-comment|/* 	 * check for those file system types which tar cannot store 	 */
+comment|/* 	 * check for those filesystem types which tar cannot store 	 */
 switch|switch
 condition|(
 name|arcn
@@ -3585,7 +3585,7 @@ name|HD_USTAR
 argument_list|)
 index|]
 decl_stmt|;
-comment|/* 	 * check for those file system types ustar cannot store 	 */
+comment|/* 	 * check for those filesystem types ustar cannot store 	 */
 if|if
 condition|(
 name|arcn

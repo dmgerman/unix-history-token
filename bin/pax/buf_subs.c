@@ -544,7 +544,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cp_start()  *	set up buffer system for copying within the file system  */
+comment|/*  * cp_start()  *	set up buffer system for copying within the filesystem  */
 end_comment
 
 begin_function

@@ -645,7 +645,7 @@ name|ENOSPC
 block|,
 name|ALL
 block|,
-literal|"file system full"
+literal|"filesystem full"
 block|}
 block|,
 ifdef|#
@@ -687,7 +687,7 @@ name|EROFS
 block|,
 name|ALL
 block|,
-literal|"read-only file system"
+literal|"read-only filesystem"
 block|}
 block|,
 block|{

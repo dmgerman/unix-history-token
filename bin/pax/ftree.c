@@ -1161,7 +1161,7 @@ continue|continue;
 case|case
 name|FTS_DC
 case|:
-comment|/* 			 * fts claims a file system cycle 			 */
+comment|/* 			 * fts claims a filesystem cycle 			 */
 name|paxwarn
 argument_list|(
 literal|1
