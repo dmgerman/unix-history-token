@@ -733,7 +733,7 @@ name|width
 parameter_list|,
 name|type
 parameter_list|)
-value|do {	\         vm_offset_t va;					\ 	type data;					\ 	va = TSUNAMI_CFGADDR(b, s, f, r, h);		\ 	tsunami_clear_abort();				\ 	if (badaddr((caddr_t)va, width)) {		\ 		tsunami_check_abort();			\ 		return ~0;				\ 	}						\ 	data = ##op##(va);				\ 	if (tsunami_check_abort())			\ 		return ~0;				\ 	return data;					\ } while (0)
+value|do {	\         vm_offset_t va;					\ 	type data;					\ 	va = TSUNAMI_CFGADDR(b, s, f, r, h);		\ 	tsunami_clear_abort();				\ 	if (badaddr((caddr_t)va, width)) {		\ 		tsunami_check_abort();			\ 		return ~0;				\ 	}						\ 	data = op(va);					\ 	if (tsunami_check_abort())			\ 		return ~0;				\ 	return data;					\ } while (0)
 end_define
 
 begin_define
@@ -757,7 +757,7 @@ name|op
 parameter_list|,
 name|width
 parameter_list|)
-value|do {	\         vm_offset_t va;					\ 	va = TSUNAMI_CFGADDR(b, s, f, r, h);		\ 	tsunami_clear_abort();				\ 	if (badaddr((caddr_t)va, width))		\ 		return;					\ 	##op##(va, data);				\ 	tsunami_check_abort();				\ } while (0)
+value|do {	\         vm_offset_t va;					\ 	va = TSUNAMI_CFGADDR(b, s, f, r, h);		\ 	tsunami_clear_abort();				\ 	if (badaddr((caddr_t)va, width))		\ 		return;					\ 	op(va, data);					\ 	tsunami_check_abort();				\ } while (0)
 end_define
 
 begin_function
