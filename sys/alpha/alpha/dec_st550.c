@@ -96,12 +96,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pci/pci_ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<alpha/pci/ciareg.h>
 end_include
 

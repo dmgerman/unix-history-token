@@ -35,16 +35,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<pci/pci_ioctl.h>
-end_include
-
-begin_comment
-comment|/* XXX KDM */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<sys/queue.h>
 end_include
 

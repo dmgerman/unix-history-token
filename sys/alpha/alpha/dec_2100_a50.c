@@ -76,12 +76,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pci/pci_ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<alpha/pci/apecsreg.h>
 end_include
 

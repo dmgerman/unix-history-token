@@ -74,13 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pci/pcivar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pci/pci_ioctl.h>
+file|<sys/pciio.h>
 end_include
 
 begin_include

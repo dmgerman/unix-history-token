@@ -1,15 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*-  * Copyright (c) 1997, Stefan Esser<se@FreeBSD.ORG>  * Copyright (c) 1997, 1998, 1999, Kenneth D. Merry<ken@FreeBSD.ORG>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$FreeBSD$  *  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_PCI_IOCTL_H
+name|_SYS_PCIIO_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_PCI_IOCTL_H
-value|1
+name|_SYS_PCIIO_H_
 end_define
 
 begin_include
@@ -24,10 +27,6 @@ directive|define
 name|PCI_MAXNAMELEN
 value|16
 end_define
-
-begin_comment
-comment|/* max no. of characters in a device name */
-end_comment
 
 begin_typedef
 typedef|typedef
@@ -162,11 +161,11 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-comment|/* Name of peripheral  						         device */
+comment|/* device name */
 name|u_long
 name|pd_unit
 decl_stmt|;
-comment|/* Unit number */
+comment|/* device unit number */
 block|}
 struct|;
 end_struct
@@ -188,7 +187,7 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-comment|/* Name of peripheral  							 device */
+comment|/* device name */
 name|u_long
 name|pd_unit
 decl_stmt|;
@@ -220,43 +219,43 @@ block|{
 name|u_int32_t
 name|pat_buf_len
 decl_stmt|;
-comment|/*  					 * Length of buffer passed in from 					 * user space. 					 */
+comment|/* pattern buffer length */
 name|u_int32_t
 name|num_patterns
 decl_stmt|;
-comment|/*  					 * Number of pci_match_conf structures  					 * passed in by the user. 					 */
+comment|/* number of patterns */
 name|struct
 name|pci_match_conf
 modifier|*
 name|patterns
 decl_stmt|;
-comment|/* 					 * Patterns passed in by the user. 					 */
+comment|/* pattern buffer */
 name|u_int32_t
 name|match_buf_len
 decl_stmt|;
-comment|/* 					 * Length of match buffer passed 					 * in by the user. 					 */
+comment|/* match buffer length */
 name|u_int32_t
 name|num_matches
 decl_stmt|;
-comment|/* 					 * Number of matches returned by 					 * the kernel. 					 */
+comment|/* number of matches returned */
 name|struct
 name|pci_conf
 modifier|*
 name|matches
 decl_stmt|;
-comment|/* 					 * PCI device matches returned by 					 * the kernel. 					 */
+comment|/* match buffer */
 name|u_int32_t
 name|offset
 decl_stmt|;
-comment|/* 					 * Passed in by the user code to 					 * indicate where the kernel should 					 * start traversing the device list. 					 * The value passed out by the kernel 					 * points to the record immediately 					 * after the last one returned. 					 * i.e. this value may be passed back 					 * unchanged by the user for a 					 * subsequent call. 					 */
+comment|/* offset into device list */
 name|u_int32_t
 name|generation
 decl_stmt|;
-comment|/* 					 * PCI configuration generation. 					 * This only needs to be set if the 					 * offset is set.  The kernel will 					 * compare its current generation 					 * number to the generation passed  					 * in by the user to determine 					 * whether the PCI device list has  					 * changed since the user last 					 * called the GETCONF ioctl. 					 */
+comment|/* device list generation */
 name|pci_getconf_status
 name|status
 decl_stmt|;
-comment|/*  					 * Status passed back from the 					 * kernel. 					 */
+comment|/* request status */
 block|}
 struct|;
 end_struct
@@ -320,7 +319,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _PCI_IOCTL_H */
+comment|/* !_SYS_PCIIO_H_ */
 end_comment
 
 end_unit
