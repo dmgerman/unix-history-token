@@ -9283,6 +9283,7 @@ comment|/*  * Stop output on a line. called at spltty();  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|si_stop
 parameter_list|(

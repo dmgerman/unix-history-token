@@ -1965,6 +1965,7 @@ comment|/* Read the int status for an ISA controller. */
 end_comment
 
 begin_function
+specifier|static
 name|unsigned
 name|char
 name|rp_isa_ctlmask

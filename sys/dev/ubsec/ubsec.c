@@ -1033,6 +1033,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function
+specifier|static
 name|int
 name|ubsec_probe
 parameter_list|(
@@ -12596,6 +12597,7 @@ comment|/*  * Start computation of cr[C] = (cr[M] ^ cr[E]) mod cr[N] (hw normali
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ubsec_kprocess_modexp_hw
 parameter_list|(

@@ -1632,6 +1632,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|wihap_sta_timeout
 parameter_list|(

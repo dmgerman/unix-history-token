@@ -17674,6 +17674,7 @@ comment|/*  *  chip exception handler for selection timeout  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sym_int_sto
 parameter_list|(
@@ -17734,6 +17735,7 @@ comment|/*  *  chip exception handler for unexpected disconnect  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sym_int_udc
 parameter_list|(
@@ -24911,6 +24913,7 @@ comment|/*  *  chip exception handler for programmed interrupts.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sym_int_sir
 parameter_list|(
@@ -38735,6 +38738,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*  *  Allocate CAM resources and register a bus to CAM.  */
+specifier|static
 name|int
 name|sym_cam_attach
 parameter_list|(
@@ -39140,6 +39144,7 @@ literal|0
 return|;
 block|}
 comment|/*  *  Free everything that deals with CAM.  */
+specifier|static
 name|void
 name|sym_cam_free
 parameter_list|(
@@ -40387,6 +40392,7 @@ argument_list|)
 decl_stmt|;
 endif|#
 directive|endif
+specifier|static
 name|int
 name|sym_read_nvram
 parameter_list|(

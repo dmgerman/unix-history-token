@@ -2621,6 +2621,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|twed_dump
 parameter_list|(

@@ -2683,6 +2683,7 @@ function_decl|;
 end_function_decl
 
 begin_function
+specifier|static
 name|void
 name|mpt_ctlop
 parameter_list|(

@@ -735,6 +735,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mcd_release_resources
 parameter_list|(

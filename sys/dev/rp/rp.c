@@ -5107,6 +5107,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|rpopen
 parameter_list|(
@@ -6009,6 +6010,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|rpclose
 parameter_list|(
@@ -6651,6 +6653,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|rpioctl
 parameter_list|(

@@ -1310,6 +1310,7 @@ comment|/* Read the int status for a PCI controller. */
 end_comment
 
 begin_function
+specifier|static
 name|unsigned
 name|char
 name|rp_pci_ctlmask

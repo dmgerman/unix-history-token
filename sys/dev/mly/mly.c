@@ -1400,6 +1400,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|mly_attach
 parameter_list|(
@@ -3041,6 +3042,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|mly_free
 parameter_list|(
@@ -7028,6 +7030,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|mly_done
 parameter_list|(
@@ -7553,6 +7556,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|mly_alloc_command
 parameter_list|(
@@ -7614,6 +7618,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|mly_release_command
 parameter_list|(
@@ -8558,6 +8563,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|mly_cam_attach
 parameter_list|(
@@ -8881,6 +8887,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|mly_cam_detach
 parameter_list|(
@@ -11074,6 +11081,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|mly_name_device
 parameter_list|(
