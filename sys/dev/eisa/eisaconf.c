@@ -633,7 +633,7 @@ name|eisa_id
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * If there's no card in the first slot (the 			 * mainboard), then the system doesn't have EISA. 			 * We abort the probe early in this case since 			 * continuing on causes a hang on some systems. 			 * Interestingly enough, the inb has been seen to 			 * cause the hang.  However, aborting here causes 			 * the Adaptec 2842 probe to fail so that driver 			 * needs to be fixed separately. 			 */
+comment|/* 			 * If there's no card in the first slot (the 			 * mainboard), then the system doesn't have EISA. 			 * We abort the probe early in this case since 			 * continuing on causes a hang on some systems. 			 * Interestingly enough, the inb has been seen to 			 * cause the hang. 			 */
 if|if
 condition|(
 name|slot
