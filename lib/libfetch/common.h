@@ -146,6 +146,10 @@ decl_stmt|;
 comment|/* SSL method */
 endif|#
 directive|endif
+name|int
+name|ref
+decl_stmt|;
+comment|/* reference count */
 block|}
 struct|;
 end_struct
@@ -256,6 +260,17 @@ modifier|*
 name|_fetch_reopen
 parameter_list|(
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|conn_t
+modifier|*
+name|_fetch_ref
+parameter_list|(
+name|conn_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

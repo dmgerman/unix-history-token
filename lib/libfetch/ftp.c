@@ -4569,7 +4569,10 @@ argument_list|)
 expr_stmt|;
 name|cached_connection
 operator|=
+name|_fetch_ref
+argument_list|(
 name|conn
+argument_list|)
 expr_stmt|;
 name|memcpy
 argument_list|(
