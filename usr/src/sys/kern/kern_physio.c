@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_physio.c	4.27	82/03/26	*/
+comment|/*	kern_physio.c	4.28	82/03/31	*/
 end_comment
 
 begin_include
@@ -3713,7 +3713,7 @@ name|bp
 operator|->
 name|b_bcount
 operator|>
-literal|65
+literal|63
 operator|*
 literal|1024
 condition|)
@@ -3721,7 +3721,7 @@ name|bp
 operator|->
 name|b_bcount
 operator|=
-literal|65
+literal|63
 operator|*
 literal|1024
 expr_stmt|;
