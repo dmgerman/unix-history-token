@@ -1400,6 +1400,8 @@ name|sc
 operator|->
 name|bufsz
 argument_list|)
+operator|!=
+literal|0
 condition|)
 return|return
 name|NULL

@@ -2009,9 +2009,8 @@ name|sc
 operator|->
 name|bufsz
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -3641,9 +3640,8 @@ name|sc
 operator|->
 name|bufsz
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf

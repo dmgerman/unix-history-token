@@ -2103,9 +2103,8 @@ name|parent_dmat
 argument_list|,
 name|CS461x_BUFFSIZE
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|!=
+literal|0
 condition|)
 return|return
 name|NULL
