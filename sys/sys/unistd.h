@@ -566,7 +566,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|_POSIX_ACL_CAP_PRESENT
+name|_POSIX_CAP_PRESENT
 value|61
 end_define
 
