@@ -59,6 +59,12 @@ decl_stmt|;
 name|u_long
 name|uf_type
 decl_stmt|;
+name|u_long
+name|uf_state
+decl_stmt|;
+name|u_long
+name|uf_fsr
+decl_stmt|;
 block|}
 struct|;
 end_struct
