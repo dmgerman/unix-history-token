@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	6.1	83/07/29	*/
+comment|/*	if_en.c	6.2	84/04/12	*/
 end_comment
 
 begin_include
@@ -317,6 +317,10 @@ name|ifuba
 name|es_ifuba
 decl_stmt|;
 comment|/* UNIBUS resources */
+name|short
+name|es_host
+decl_stmt|;
+comment|/* hardware host number */
 name|short
 name|es_delay
 decl_stmt|;
@@ -998,6 +1002,12 @@ name|endevice
 modifier|*
 name|addr
 decl_stmt|;
+specifier|register
+name|struct
+name|en_header
+modifier|*
+name|en
+decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -1043,7 +1053,7 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
-name|dest
+name|en
 operator|=
 name|mtod
 argument_list|(
@@ -1053,8 +1063,20 @@ expr|struct
 name|en_header
 operator|*
 argument_list|)
+expr_stmt|;
+name|dest
+operator|=
+name|en
 operator|->
 name|en_dhost
+expr_stmt|;
+name|en
+operator|->
+name|en_shost
+operator|=
+name|es
+operator|->
+name|es_host
 expr_stmt|;
 name|es
 operator|->
@@ -1085,12 +1107,6 @@ operator|&
 name|ENF_SWABIPS
 condition|)
 block|{
-specifier|register
-name|struct
-name|en_header
-modifier|*
-name|en
-decl_stmt|;
 name|en
 operator|=
 operator|(
@@ -2755,17 +2771,7 @@ name|en_header
 operator|*
 argument_list|)
 expr_stmt|;
-name|en
-operator|->
-name|en_shost
-operator|=
-name|ifp
-operator|->
-name|if_host
-index|[
-literal|0
-index|]
-expr_stmt|;
+comment|/* add en_shost later */
 name|en
 operator|->
 name|en_dhost
@@ -3056,6 +3062,19 @@ name|endevice
 modifier|*
 name|enaddr
 decl_stmt|;
+comment|/* set address once for in_netof, so subnets will be recognized */
+name|ifp
+operator|->
+name|if_addr
+operator|=
+operator|*
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+name|sin
+expr_stmt|;
 name|ifp
 operator|->
 name|if_net
@@ -3083,12 +3102,16 @@ index|]
 operator|->
 name|ui_addr
 expr_stmt|;
+operator|(
+operator|(
+expr|struct
+name|en_softc
+operator|*
+operator|)
 name|ifp
+operator|)
 operator|->
-name|if_host
-index|[
-literal|0
-index|]
+name|es_host
 operator|=
 operator|(
 operator|~
@@ -3127,12 +3150,16 @@ name|ifp
 operator|->
 name|if_net
 argument_list|,
+operator|(
+operator|(
+expr|struct
+name|en_softc
+operator|*
+operator|)
 name|ifp
+operator|)
 operator|->
-name|if_host
-index|[
-literal|0
-index|]
+name|es_host
 argument_list|)
 expr_stmt|;
 name|sin
