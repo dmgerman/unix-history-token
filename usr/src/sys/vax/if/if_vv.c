@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_vv.c	4.15	83/05/01	*/
+comment|/*	if_vv.c	4.16	83/05/01	*/
 end_comment
 
 begin_include
@@ -2758,6 +2758,12 @@ operator|->
 name|vs_olen
 operator|>
 name|VVMTU
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|vvheader
+argument_list|)
 condition|)
 block|{
 name|printf
