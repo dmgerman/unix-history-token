@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	utboot.c	6.1	83/07/29	*/
+comment|/*	utboot.c	6.2	83/09/29	*/
 end_comment
 
 begin_comment
@@ -263,13 +263,14 @@ operator|.
 name|set
 name|UT_crdy
 operator|,
-literal|0x80
+literal|7
+comment|/* bit pos. */
 operator|.
 name|set
 name|UT_gapsd
 operator|,
-literal|0x2000
-comment|/* aka "positioning in progress" */
+literal|13
+comment|/* bit; aka "positioning in progress" */
 operator|.
 name|set
 name|UTDENS
