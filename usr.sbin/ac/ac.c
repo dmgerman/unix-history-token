@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ac.c,v 1.4 1995/10/26 23:10:10 ache Exp $"
+literal|"$Id: ac.c,v 1.4.2.1 1997/08/29 05:14:56 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -88,12 +95,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<locale.h>
 end_include
 
 begin_comment
