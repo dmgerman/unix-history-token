@@ -93,7 +93,7 @@ name|sockaddr
 name|route_dst
 init|=
 block|{
-literal|0
+literal|2
 block|,
 name|PF_ROUTE
 block|, }
@@ -106,7 +106,7 @@ name|sockaddr
 name|route_src
 init|=
 block|{
-literal|0
+literal|2
 block|,
 name|PF_ROUTE
 block|, }
@@ -3678,34 +3678,6 @@ block|,
 literal|0
 block|,
 name|route_usrreq
-block|,
-name|raw_init
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|, }
-block|,
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|raw_input
-block|,
-literal|0
-block|,
-name|raw_ctlinput
-block|,
-literal|0
-block|,
-name|raw_usrreq
 block|,
 name|raw_init
 block|,
