@@ -2305,27 +2305,14 @@ operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
-for|for
-control|(
-name|ifp
-operator|=
-name|TAILQ_FIRST
+name|TAILQ_FOREACH
 argument_list|(
-operator|&
-name|ifnet
-argument_list|)
-init|;
-name|ifp
-condition|;
-name|ifp
-operator|=
-name|TAILQ_NEXT
-argument_list|(
-name|ifp
+argument|ifp
 argument_list|,
-name|if_list
+argument|&ifnet
+argument_list|,
+argument|if_link
 argument_list|)
-control|)
 name|if_attachdomain1
 argument_list|(
 name|ifp
@@ -9167,6 +9154,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+comment|/* 		 * XXX We also need to store the lladdr in LLADDR(sdl), 		 * which is done below. This is a pain because we must 		 * remember to keep the info in sync. 		 */
 comment|/* FALLTHROUGH */
 case|case
 name|IFT_ARCNET
