@@ -551,7 +551,7 @@ begin_define
 define|#
 directive|define
 name|FD_SETSIZE
-value|256
+value|1024
 end_define
 
 begin_endif
