@@ -534,6 +534,33 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|PS_SIGWAIT
+case|:
+name|sprintf
+argument_list|(
+name|s
+argument_list|,
+literal|"sigmask 0x%08lx\n"
+argument_list|,
+name|pthread
+operator|->
+name|sigmask
+argument_list|)
+expr_stmt|;
+name|_thread_sys_write
+argument_list|(
+name|fd
+argument_list|,
+name|s
+argument_list|,
+name|strlen
+argument_list|(
+name|s
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
 comment|/* 			 * Trap other states that are not explicitly 			 * coded to dump information:  			 */
 default|default:
 comment|/* Nothing to do here. */
