@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)read.c	6.2 (Berkeley) %G%  Modified for Berkeley Unix by Donn Seeley, donn@okeeffe.berkeley.edu  */
+comment|/*	@(#)read.c	6.3 (Berkeley) %G%  Modified for Berkeley Unix by Donn Seeley, donn@okeeffe.berkeley.edu  */
 end_comment
 
 begin_comment
@@ -2297,12 +2297,6 @@ operator|==
 literal|':'
 condition|)
 block|{
-name|colon
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-comment|/* user-defined label */
 if|if
 condition|(
 name|flagseen
@@ -2310,12 +2304,18 @@ index|[
 literal|'g'
 index|]
 condition|)
-name|stabf
+comment|/* set line number for function definition */
+name|funcstab
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* set line number for function definition */
+name|colon
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+comment|/* user-defined label */
 operator|*
 name|input_line_pointer
 operator|++
@@ -6305,7 +6305,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  * stabs(file), stabf(func) and stabd(line) -- for the purpose of  * source file debugging of assembly files, generate file,  * function and line number stabs, respectively.  * stabs() and stabd() are normally called through a function linestab()  * in input-scrub.c which understands about logical line numbers.  */
+comment|/*  * stabs(file), stabf(func) and stabd(line) -- for the purpose of  * source file debugging of assembly files, generate file,  * function and line number stabs, respectively.  * These functions have corresponding functions named  * filestab(), funcstab() and linestab() in input-scrub.c,  * where logical files and logical line numbers are handled.  */
 end_comment
 
 begin_include
@@ -6313,13 +6313,6 @@ include|#
 directive|include
 file|<stab.h>
 end_include
-
-begin_decl_stmt
-specifier|static
-name|int
-name|stabs_done
-decl_stmt|;
-end_decl_stmt
 
 begin_macro
 name|stabs
@@ -6364,10 +6357,6 @@ argument_list|,
 name|frag_now
 argument_list|)
 expr_stmt|;
-name|stabs_done
-operator|=
-literal|1
-expr_stmt|;
 block|}
 end_block
 
@@ -6400,10 +6389,6 @@ decl_stmt|;
 comment|/* crudely filter uninteresting labels: require an initial '_' */
 if|if
 condition|(
-name|now_seg
-operator|!=
-name|SEG_TEXT
-operator|||
 operator|*
 name|func
 operator|++
@@ -6411,15 +6396,6 @@ operator|!=
 literal|'_'
 condition|)
 return|return;
-comment|/* don't emit a function stab until a file stab has been seen */
-if|if
-condition|(
-operator|!
-name|stabs_done
-condition|)
-name|linestab
-argument_list|()
-expr_stmt|;
 comment|/* assembly functions are assumed to have void type */
 if|if
 condition|(
