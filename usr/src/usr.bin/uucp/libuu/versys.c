@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)versys.c	5.5 (Berkeley) %G%"
+literal|"@(#)versys.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -119,6 +119,13 @@ expr_stmt|;
 comment|/* dereference */
 if|if
 condition|(
+name|name
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+operator|||
 name|strncmp
 argument_list|(
 name|name
@@ -217,6 +224,13 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|targs
+index|[
+name|F_PHONE
+index|]
+condition|)
 name|strncpy
 argument_list|(
 name|PhoneNumber
