@@ -86,7 +86,7 @@ comment|/* maximum path length for pax. MUST be */
 end_comment
 
 begin_comment
-comment|/* longer than the system MAXPATHLEN */
+comment|/* longer than the system PATH_MAX */
 end_comment
 
 begin_comment
