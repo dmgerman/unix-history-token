@@ -3764,25 +3764,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|cpu_coredump
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-parameter_list|,
-name|struct
-name|vnode
-modifier|*
-parameter_list|,
-name|struct
-name|ucred
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* New in KSE. */
 end_comment
