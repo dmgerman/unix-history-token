@@ -482,12 +482,6 @@ end_function_decl
 
 begin_typedef
 typedef|typedef
-name|size_t
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
 name|long
 name|fpos_t
 typedef|;
