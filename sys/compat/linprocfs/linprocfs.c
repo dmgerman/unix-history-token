@@ -923,11 +923,6 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
-name|long
-name|ip
-decl_stmt|,
-name|fp
-decl_stmt|;
 name|getmicrouptime
 argument_list|(
 operator|&
