@@ -5089,5 +5089,9 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* !MAC */
+end_comment
+
 end_unit
 
