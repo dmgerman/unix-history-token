@@ -20,8 +20,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_PATH_LCKFIFO
-value|"/var/run/lock"
+name|_PATH_NFSLCKDEV
+value|"nfslock"
 end_define
 
 begin_comment
@@ -53,7 +53,7 @@ begin_define
 define|#
 directive|define
 name|LOCKD_MSG_VERSION
-value|2
+value|3
 end_define
 
 begin_comment
@@ -65,6 +65,13 @@ typedef|typedef
 struct|struct
 name|__lock_msg
 block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|__lock_msg
+argument_list|)
+name|lm_link
+expr_stmt|;
+comment|/* internal linkage */
 name|int
 name|lm_version
 decl_stmt|;
@@ -165,23 +172,6 @@ name|struct
 name|vop_advlock_args
 modifier|*
 name|ap
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|nfslockdans
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|struct
-name|lockd_ans
-modifier|*
-name|ansp
 parameter_list|)
 function_decl|;
 end_function_decl

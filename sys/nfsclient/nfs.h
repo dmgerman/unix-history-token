@@ -459,17 +459,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Flags for nfsclnt() system call.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSCLNT_LOCKDANS
-value|0x200
-end_define
-
-begin_comment
 comment|/*  * vfs.nfs sysctl(3) identifiers  */
 end_comment
 
