@@ -141,6 +141,9 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
+name|uint32_t
+name|val
+decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
@@ -148,10 +151,8 @@ name|fd
 decl_stmt|,
 name|rval
 decl_stmt|;
-name|u_int32_t
+name|off_t
 name|len
-decl_stmt|,
-name|val
 decl_stmt|;
 name|char
 modifier|*
@@ -168,10 +169,10 @@ function_decl|)
 parameter_list|(
 name|int
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|off_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -186,7 +187,7 @@ modifier|*
 parameter_list|,
 name|u_int32_t
 parameter_list|,
-name|u_int32_t
+name|off_t
 parameter_list|)
 function_decl|;
 if|if

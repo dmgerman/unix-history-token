@@ -53,6 +53,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -65,7 +71,7 @@ end_include
 begin_decl_stmt
 specifier|static
 specifier|const
-name|u_int32_t
+name|uint32_t
 name|crctab
 index|[]
 init|=
@@ -590,7 +596,7 @@ comment|/*  * Compute a POSIX 1003.2 checksum.  This routine has been broken out
 end_comment
 
 begin_decl_stmt
-name|u_int32_t
+name|uint32_t
 name|crc_total
 init|=
 operator|~
@@ -609,26 +615,27 @@ parameter_list|(
 name|int
 name|fd
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|cval
 parameter_list|,
-name|u_int32_t
+name|off_t
 modifier|*
 name|clen
 parameter_list|)
 block|{
-name|u_char
-modifier|*
-name|p
+name|uint32_t
+name|lcrc
 decl_stmt|;
 name|int
 name|nr
 decl_stmt|;
-name|u_int32_t
-name|lcrc
-decl_stmt|,
+name|off_t
 name|len
+decl_stmt|;
+name|u_char
+modifier|*
+name|p
 decl_stmt|;
 name|u_char
 name|buf

@@ -59,6 +59,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"extern.h"
 end_include
 
@@ -70,10 +76,10 @@ name|char
 modifier|*
 name|fn
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|val
 parameter_list|,
-name|u_int32_t
+name|off_t
 name|len
 parameter_list|)
 block|{
@@ -82,7 +88,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%lu %lu"
+literal|"%lu %jd"
 argument_list|,
 operator|(
 name|u_long
@@ -90,7 +96,7 @@ operator|)
 name|val
 argument_list|,
 operator|(
-name|u_long
+name|intmax_t
 operator|)
 name|len
 argument_list|)
@@ -98,6 +104,8 @@ expr_stmt|;
 if|if
 condition|(
 name|fn
+operator|!=
+name|NULL
 condition|)
 operator|(
 name|void
@@ -128,10 +136,10 @@ name|char
 modifier|*
 name|fn
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|val
 parameter_list|,
-name|u_int32_t
+name|off_t
 name|len
 parameter_list|)
 block|{
@@ -140,7 +148,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%lu %lu"
+literal|"%lu %jd"
 argument_list|,
 operator|(
 name|u_long
@@ -148,7 +156,7 @@ operator|)
 name|val
 argument_list|,
 call|(
-name|u_long
+name|intmax_t
 call|)
 argument_list|(
 name|len
@@ -162,6 +170,8 @@ expr_stmt|;
 if|if
 condition|(
 name|fn
+operator|!=
+name|NULL
 condition|)
 operator|(
 name|void
@@ -192,10 +202,10 @@ name|char
 modifier|*
 name|fn
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|val
 parameter_list|,
-name|u_int32_t
+name|off_t
 name|len
 parameter_list|)
 block|{
@@ -204,7 +214,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%lu %lu"
+literal|"%lu %jd"
 argument_list|,
 operator|(
 name|u_long
@@ -212,7 +222,7 @@ operator|)
 name|val
 argument_list|,
 call|(
-name|u_long
+name|intmax_t
 call|)
 argument_list|(
 name|len
@@ -226,6 +236,8 @@ expr_stmt|;
 if|if
 condition|(
 name|fn
+operator|!=
+name|NULL
 condition|)
 operator|(
 name|void
