@@ -13757,6 +13757,9 @@ name|DEF_FSMTRIES
 argument_list|)
 expr_stmt|;
 break|break;
+ifndef|#
+directive|ifndef
+name|NOINET6
 case|case
 name|VAR_IPV6CPRETRY
 case|:
@@ -13829,6 +13832,8 @@ name|DEF_FSMTRIES
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|VAR_NBNS
 case|:
