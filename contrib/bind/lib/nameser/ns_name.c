@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_name.c,v 8.17 2001/10/03 14:34:32 marka Exp $"
+literal|"$Id: ns_name.c,v 8.18 2002/05/24 05:10:40 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3710,6 +3710,14 @@ case|case
 literal|0x5C
 case|:
 comment|/* '\\' */
+case|case
+literal|0x28
+case|:
+comment|/* '(' */
+case|case
+literal|0x29
+case|:
+comment|/* ')' */
 comment|/* Special modifiers in zone files. */
 case|case
 literal|0x40

@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1983, 1989  *    The Regents of the University of Calif
 end_comment
 
 begin_comment
-comment|/*  *      from nameser.h	8.1 (Berkeley) 6/2/93  *	$Id: nameser_compat.h,v 8.13 2001/09/24 02:20:25 marka Exp $  */
+comment|/*  *      from nameser.h	8.1 (Berkeley) 6/2/93  *	$Id: nameser_compat.h,v 8.14 2002/05/18 01:39:11 marka Exp $  */
 end_comment
 
 begin_ifndef
@@ -290,6 +290,11 @@ expr|\
 name|defined
 argument_list|(
 name|__hp3000s900
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__hpux
 argument_list|)
 operator|||
 name|defined

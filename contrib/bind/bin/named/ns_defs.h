@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_defs.h,v 8.118 2002/04/25 05:27:06 marka Exp $  */
+comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_defs.h,v 8.121 2002/06/26 03:27:19 marka Exp $  */
 end_comment
 
 begin_comment
@@ -456,14 +456,11 @@ comment|/* need to reap dead children. */
 name|main_need_noexpired
 block|,
 comment|/* ns_reconfig() needed w/ noexpired set. */
-name|main_need_num
-block|,
-comment|/* number of needs, used for array bound. */
-name|main_need_tick
-block|,
-comment|/* tick every second to poll for cleanup (NT) */
 name|main_need_tryxfer
+block|,
 comment|/* attemt to start a zone transfer. */
+name|main_need_num
+comment|/* MUST BE LAST. */
 block|}
 name|main_need
 typedef|;
@@ -1879,6 +1876,17 @@ end_define
 
 begin_comment
 comment|/* named-xfr received AXFR for IXFR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFER_REFUSED
+value|7
+end_define
+
+begin_comment
+comment|/* one master returned REFUSED */
 end_comment
 
 begin_define
@@ -3484,6 +3492,13 @@ define|#
 directive|define
 name|SERVER_INFO_SUPPORT_IXFR
 value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|SERVER_INFO_EDNS
+value|0x04
 end_define
 
 begin_typedef

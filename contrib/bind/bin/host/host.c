@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: host.c,v 8.52 2002/04/28 01:34:52 marka Exp $"
+literal|"$Id: host.c,v 8.53 2002/06/18 02:34:02 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3381,6 +3381,8 @@ name|int
 name|val1
 decl_stmt|,
 name|val2
+decl_stmt|,
+name|val3
 decl_stmt|;
 if|if
 condition|(
@@ -3436,6 +3438,19 @@ name|domain
 argument_list|,
 name|gettype
 operator|=
+name|ns_t_aaaa
+argument_list|)
+expr_stmt|;
+name|val3
+operator|=
+name|getinfo
+argument_list|(
+name|name
+argument_list|,
+name|domain
+argument_list|,
+name|gettype
+operator|=
 name|ns_t_mx
 argument_list|)
 expr_stmt|;
@@ -3444,6 +3459,8 @@ operator|(
 name|val1
 operator|||
 name|val2
+operator|||
+name|val3
 operator|)
 return|;
 block|}
@@ -7963,6 +7980,9 @@ condition|)
 block|{
 case|case
 name|ns_t_a
+case|:
+case|case
+name|ns_t_aaaa
 case|:
 return|return
 operator|(

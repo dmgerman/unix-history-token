@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: send.c,v 8.13 2002/04/09 05:55:23 marka Exp $"
+literal|"$Id: send.c,v 8.14 2002/05/10 04:35:09 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1061,7 +1061,6 @@ expr|struct
 name|sockaddr
 operator|*
 operator|)
-operator|&
 name|nsAddrPtr
 argument_list|,
 name|clen
