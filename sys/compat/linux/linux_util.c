@@ -306,6 +306,8 @@ name|len
 decl_stmt|,
 name|sz
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|buf
 operator|=
 operator|(
