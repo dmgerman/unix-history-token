@@ -78,6 +78,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|TRASHIT
+parameter_list|(
+name|x
+parameter_list|)
+value|do {(x) = (void *)-1} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|QMD_TRACE_HEAD
 parameter_list|(
 name|head
@@ -122,6 +132,15 @@ begin_define
 define|#
 directive|define
 name|TRACEBUF
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRASHIT
+parameter_list|(
+name|x
+parameter_list|)
 end_define
 
 begin_endif
@@ -908,7 +927,7 @@ name|elm
 parameter_list|,
 name|field
 parameter_list|)
-value|do {				\ 	if ((TAILQ_NEXT((elm), field)) != NULL)				\ 		TAILQ_NEXT((elm), field)->field.tqe_prev = 		\ 		    (elm)->field.tqe_prev;				\ 	else {								\ 		(head)->tqh_last = (elm)->field.tqe_prev;		\ 		QMD_TRACE_HEAD(head);					\ 	}								\ 	*(elm)->field.tqe_prev = TAILQ_NEXT((elm), field);		\ 	(elm)->field.tqe_next = (void *)-1;				\ 	QMD_TRACE_ELEM(&(elm)->field);					\ } while (0)
+value|do {				\ 	if ((TAILQ_NEXT((elm), field)) != NULL)				\ 		TAILQ_NEXT((elm), field)->field.tqe_prev = 		\ 		    (elm)->field.tqe_prev;				\ 	else {								\ 		(head)->tqh_last = (elm)->field.tqe_prev;		\ 		QMD_TRACE_HEAD(head);					\ 	}								\ 	*(elm)->field.tqe_prev = TAILQ_NEXT((elm), field);		\ 	TRASHIT((elm)->field.tqe_next);					\ 	TRASHIT((elm)->field.tqe_prev);					\ 	QMD_TRACE_ELEM(&(elm)->field);					\ } while (0)
 end_define
 
 begin_ifdef
