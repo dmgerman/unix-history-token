@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: cpu.h,v 1.3 1998/07/12 16:32:06 dfr Exp $ */
+comment|/* $Id: cpu.h,v 1.4 1998/10/06 08:40:17 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -105,6 +105,14 @@ directive|define
 name|need_resched
 parameter_list|()
 value|{ want_resched = 1; aston(); }
+end_define
+
+begin_define
+define|#
+directive|define
+name|resched_wanted
+parameter_list|()
+value|want_resched
 end_define
 
 begin_comment
