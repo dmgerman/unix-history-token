@@ -926,7 +926,7 @@ name|ump
 argument_list|,
 operator|(
 operator|(
-name|daddr_t
+name|ufs_daddr_t
 operator|*
 operator|)
 name|bp
@@ -939,7 +939,7 @@ index|]
 argument_list|,
 operator|(
 operator|(
-name|daddr_t
+name|ufs_daddr_t
 operator|*
 operator|)
 name|bp
