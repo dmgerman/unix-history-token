@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.2 (Berkeley) %G%"
+literal|"@(#)print.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,6 +127,7 @@ argument_list|(
 name|O_RDONLY
 argument_list|)
 expr_stmt|;
+comment|/* Read from an archive, write to stdout; pad on read. */
 name|SETCF
 argument_list|(
 name|afd
@@ -167,15 +168,9 @@ name|argv
 argument_list|)
 condition|)
 block|{
-name|SKIP
+name|skipobj
 argument_list|(
 name|afd
-argument_list|,
-name|chdr
-operator|.
-name|size
-argument_list|,
-name|archive
 argument_list|)
 expr_stmt|;
 continue|continue;
