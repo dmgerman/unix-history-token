@@ -5755,26 +5755,15 @@ name|pa
 operator|+=
 name|PAGE_SIZE
 control|)
-block|{
-name|pte
-operator|=
-name|vtopte
+name|pmap_kenter
 argument_list|(
-name|pa
-operator|+
 name|KERNBASE
+operator|+
+name|pa
+argument_list|,
+name|pa
 argument_list|)
 expr_stmt|;
-operator|*
-name|pte
-operator|=
-name|pa
-operator||
-name|PG_RW
-operator||
-name|PG_V
-expr_stmt|;
-block|}
 comment|/* 	 * if basemem != 640, map pages r/w into vm86 page table so  	 * that the bios can scribble on it. 	 */
 name|pte
 operator|=
@@ -5817,9 +5806,7 @@ operator||
 name|PG_U
 expr_stmt|;
 comment|/* 	 * map page 1 R/W into the kernel page table so we can use it 	 * as a buffer.  The kernel will unmap this page later. 	 */
-name|pte
-operator|=
-name|vtopte
+name|pmap_kenter
 argument_list|(
 name|KERNBASE
 operator|+
@@ -5828,20 +5815,9 @@ literal|1
 operator|<<
 name|PAGE_SHIFT
 operator|)
-argument_list|)
-expr_stmt|;
-operator|*
-name|pte
-operator|=
-operator|(
+argument_list|,
 literal|1
-operator|<<
-name|PAGE_SHIFT
-operator|)
-operator||
-name|PG_RW
-operator||
-name|PG_V
+argument_list|)
 expr_stmt|;
 comment|/* 	 * get memory map with INT 15:E820 	 */
 name|vmc
@@ -6624,18 +6600,10 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|pte = vtopte(KERNBASE);
-else|#
-directive|else
 name|pte
 operator|=
 name|CMAP1
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * physmap is in bytes, so when converting to page boundaries, 	 * round up the start address and round down the end address. 	 */
 for|for
 control|(
@@ -6711,12 +6679,6 @@ name|tmp
 decl_stmt|,
 name|page_bad
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|int *ptr = 0;
-else|#
-directive|else
 name|int
 modifier|*
 name|ptr
@@ -6727,8 +6689,6 @@ operator|*
 operator|)
 name|CADDR1
 decl_stmt|;
-endif|#
-directive|endif
 comment|/* 			 * block out kernel memory as not available. 			 */
 if|if
 condition|(
