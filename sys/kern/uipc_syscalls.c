@@ -7926,8 +7926,11 @@ name|hdr_iov
 init|=
 name|NULL
 decl_stmt|;
-name|NET_LOCK_GIANT
-argument_list|()
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 name|hdtr_size
 operator|=
@@ -9433,8 +9436,11 @@ argument_list|(
 name|m_header
 argument_list|)
 expr_stmt|;
-name|NET_UNLOCK_GIANT
-argument_list|()
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
