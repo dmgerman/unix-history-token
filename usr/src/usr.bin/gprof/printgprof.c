@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printgprof.c	5.7 (Berkeley) %G%"
+literal|"@(#)printgprof.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -789,7 +789,7 @@ literal|" %7d"
 argument_list|,
 name|np
 operator|->
-name|ncall
+name|npropcall
 argument_list|)
 expr_stmt|;
 if|if
@@ -1354,6 +1354,14 @@ operator|==
 name|parentp
 operator|||
 operator|(
+name|arcp
+operator|->
+name|arc_flags
+operator|&
+name|DEADARC
+operator|)
+operator|||
+operator|(
 name|childp
 operator|->
 name|cycleno
@@ -1430,7 +1438,7 @@ name|arc_count
 argument_list|,
 name|cycleheadp
 operator|->
-name|ncall
+name|npropcall
 argument_list|)
 expr_stmt|;
 name|printname
@@ -1513,6 +1521,14 @@ operator|==
 name|parentp
 operator|||
 operator|(
+name|arcp
+operator|->
+name|arc_flags
+operator|&
+name|DEADARC
+operator|)
+operator|||
+operator|(
 name|childp
 operator|->
 name|cycleno
@@ -1591,7 +1607,7 @@ name|childp
 operator|->
 name|cyclehead
 operator|->
-name|ncall
+name|npropcall
 argument_list|)
 expr_stmt|;
 name|printname
@@ -2088,7 +2104,7 @@ name|hz
 argument_list|,
 name|cyclep
 operator|->
-name|ncall
+name|npropcall
 argument_list|)
 expr_stmt|;
 if|if
@@ -2204,7 +2220,7 @@ name|hz
 argument_list|,
 name|memberp
 operator|->
-name|ncall
+name|npropcall
 argument_list|)
 expr_stmt|;
 if|if

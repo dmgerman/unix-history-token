@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gprof.c	5.8 (Berkeley) %G%"
+literal|"@(#)gprof.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -171,6 +171,23 @@ name|FALSE
 expr_stmt|;
 break|break;
 case|case
+literal|'C'
+case|:
+name|Cflag
+operator|=
+name|TRUE
+expr_stmt|;
+name|cyclethreshold
+operator|=
+name|atoi
+argument_list|(
+operator|*
+operator|++
+name|argv
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'c'
 case|:
 if|#
@@ -212,17 +229,12 @@ name|dflag
 operator|=
 name|TRUE
 expr_stmt|;
-operator|(
-operator|*
-name|argv
-operator|)
-operator|++
-expr_stmt|;
 name|debug
 operator||=
 name|atoi
 argument_list|(
 operator|*
+operator|++
 name|argv
 argument_list|)
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)gprof.h	5.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)gprof.h	5.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -233,7 +233,7 @@ comment|/* pointer to child's nl entry */
 name|long
 name|arc_count
 decl_stmt|;
-comment|/* how calls from parent to child */
+comment|/* num calls from parent to child */
 name|double
 name|arc_time
 decl_stmt|;
@@ -254,6 +254,22 @@ modifier|*
 name|arc_childlist
 decl_stmt|;
 comment|/* children-of-this-parent list */
+name|struct
+name|arcstruct
+modifier|*
+name|arc_next
+decl_stmt|;
+comment|/* list of arcs on cycle */
+name|unsigned
+name|short
+name|arc_cyclecnt
+decl_stmt|;
+comment|/* num cycles involved in */
+name|unsigned
+name|short
+name|arc_flags
+decl_stmt|;
+comment|/* see below */
 block|}
 struct|;
 end_struct
@@ -265,6 +281,32 @@ name|arcstruct
 name|arctype
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*      * arc flags      */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEADARC
+value|0x01
+end_define
+
+begin_comment
+comment|/* time should not propagate across the arc */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ONLIST
+value|0x02
+end_define
+
+begin_comment
+comment|/* arc is on list of arcs in cycles */
+end_comment
 
 begin_comment
 comment|/*      * The symbol table;      * for each external in the specified file we gather      * its address, the number of calls and compute its share of cpu time.      */
@@ -302,6 +344,10 @@ name|ncall
 decl_stmt|;
 comment|/* how many times called */
 name|long
+name|npropcall
+decl_stmt|;
+comment|/* times called by live arcs */
+name|long
 name|selfcalls
 decl_stmt|;
 comment|/* how many calls to self */
@@ -317,10 +363,14 @@ name|double
 name|propchild
 decl_stmt|;
 comment|/* how much child time propagates */
-name|bool
+name|short
 name|printflag
 decl_stmt|;
 comment|/* should this be printed? */
+name|short
+name|flags
+decl_stmt|;
+comment|/* see below */
 name|int
 name|index
 decl_stmt|;
@@ -333,6 +383,10 @@ name|int
 name|cycleno
 decl_stmt|;
 comment|/* internal number of cycle on */
+name|int
+name|parentcnt
+decl_stmt|;
+comment|/* number of live parent arcs */
 name|struct
 name|nl
 modifier|*
@@ -397,6 +451,121 @@ end_decl_stmt
 
 begin_comment
 comment|/* the number of function names */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASCYCLEXIT
+value|0x08
+end_define
+
+begin_comment
+comment|/* node has arc exiting from cycle */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CYCLEHEAD
+value|0x10
+end_define
+
+begin_comment
+comment|/* node marked as head of a cycle */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VISITED
+value|0x20
+end_define
+
+begin_comment
+comment|/* node visited during a cycle */
+end_comment
+
+begin_comment
+comment|/*      * The cycle list.      * for each subcycle within an identified cycle, we gather      * its size and the list of included arcs.      */
+end_comment
+
+begin_struct
+struct|struct
+name|cl
+block|{
+name|int
+name|size
+decl_stmt|;
+comment|/* length of cycle */
+name|struct
+name|cl
+modifier|*
+name|next
+decl_stmt|;
+comment|/* next member of list */
+name|arctype
+modifier|*
+name|list
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* list of arcs in cycle */
+comment|/* actually longer */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|cl
+name|cltype
+typedef|;
+end_typedef
+
+begin_decl_stmt
+name|arctype
+modifier|*
+name|archead
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the head of arcs in current cycle list */
+end_comment
+
+begin_decl_stmt
+name|cltype
+modifier|*
+name|cyclehead
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the head of the list */
+end_comment
+
+begin_decl_stmt
+name|int
+name|cyclecnt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the number of cycles found */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CYCLEMAX
+value|100
+end_define
+
+begin_comment
+comment|/* maximum cycles before cutting one of them */
 end_comment
 
 begin_comment
@@ -627,6 +796,16 @@ begin_comment
 comment|/* text space of a.out in core */
 end_comment
 
+begin_decl_stmt
+name|int
+name|cyclethreshold
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* with -C, minimum cycle size to ignore */
+end_comment
+
 begin_comment
 comment|/*      *	option flags, from a to z.      */
 end_comment
@@ -659,6 +838,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* discovered call graph, too */
+end_comment
+
+begin_decl_stmt
+name|bool
+name|Cflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* find cut-set to eliminate cycles */
 end_comment
 
 begin_decl_stmt
@@ -1065,8 +1254,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|ANYDEBUG
+name|BREAKCYCLE
 value|1024
+end_define
+
+begin_define
+define|#
+directive|define
+name|SUBCYCLELIST
+value|2048
+end_define
+
+begin_define
+define|#
+directive|define
+name|ANYDEBUG
+value|4096
 end_define
 
 end_unit

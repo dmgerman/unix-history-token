@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dfn.c	5.4 (Berkeley) %G%"
+literal|"@(#)dfn.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,18 +82,32 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|dfn_depth
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|dfn_counter
-init|=
-name|DFN_NAN
 decl_stmt|;
 end_decl_stmt
+
+begin_macro
+name|dfn_init
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|dfn_depth
+operator|=
+literal|0
+expr_stmt|;
+name|dfn_counter
+operator|=
+name|DFN_NAN
+expr_stmt|;
+block|}
+end_block
 
 begin_comment
 comment|/*      *	given this parent, depth first number its children.      */
@@ -199,6 +213,15 @@ operator|->
 name|arc_childlist
 control|)
 block|{
+if|if
+condition|(
+name|arcp
+operator|->
+name|arc_flags
+operator|&
+name|DEADARC
+condition|)
+continue|continue;
 name|dfn
 argument_list|(
 name|arcp
