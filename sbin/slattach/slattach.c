@@ -868,7 +868,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"cannot install SIGINT handler: %s: %m"
+literal|"cannot install SIGINT handler: %m"
 argument_list|)
 expr_stmt|;
 comment|/* upon TERM log a timestamp and exit.  */
@@ -890,7 +890,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"cannot install SIGTERM handler: %s: %m"
+literal|"cannot install SIGTERM handler: %m"
 argument_list|)
 expr_stmt|;
 comment|/* upon HUP redial and reconnect.  */
@@ -912,7 +912,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"cannot install SIGHUP handler: %s: %m"
+literal|"cannot install SIGHUP handler: %m"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1110,7 +1110,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"cannot install SIGHUP handler: %s: %m"
+literal|"cannot install SIGHUP handler: %m"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1216,7 +1216,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"ioctl(TIOCSCTTY) failed: %s: %m"
+literal|"ioctl(TIOCSCTTY) failed: %m"
 argument_list|)
 expr_stmt|;
 comment|/* Make us the foreground process group associated with the 	   slip line which is our controlling terminal. */
@@ -1236,7 +1236,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"tcsetpgrp failed: %s: %m"
+literal|"tcsetpgrp failed: %m"
 argument_list|)
 expr_stmt|;
 block|}
