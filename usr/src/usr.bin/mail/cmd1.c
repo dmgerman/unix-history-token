@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd1.c	5.13 (Berkeley) %G%"
+literal|"@(#)cmd1.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1633,6 +1633,9 @@ argument_list|,
 name|mesg
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|send
 argument_list|(
 name|mp
@@ -1644,6 +1647,8 @@ condition|?
 name|ignore
 else|:
 literal|0
+argument_list|,
+name|NOSTR
 argument_list|)
 expr_stmt|;
 block|}

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quit.c	5.9 (Berkeley) %G%"
+literal|"@(#)quit.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -977,6 +977,8 @@ argument_list|,
 name|obuf
 argument_list|,
 name|saveignore
+argument_list|,
+name|NOSTR
 argument_list|)
 operator|<
 literal|0
@@ -1397,7 +1399,14 @@ name|mp
 argument_list|,
 name|obuf
 argument_list|,
+operator|(
+expr|struct
+name|ignoretab
+operator|*
+operator|)
 literal|0
+argument_list|,
+name|NOSTR
 argument_list|)
 operator|<
 literal|0

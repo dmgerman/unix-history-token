@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)aux.c	5.13 (Berkeley) %G%"
+literal|"@(#)aux.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2710,6 +2710,15 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|ignore
+operator|==
+name|ignoreall
+condition|)
+return|return
+literal|1
+return|;
 comment|/* 	 * Lower-case the string, so that "Status" and "status" 	 * will hash to the same place. 	 */
 name|istrcpy
 argument_list|(

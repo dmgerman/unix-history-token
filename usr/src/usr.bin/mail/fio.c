@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fio.c	5.12 (Berkeley) %G%"
+literal|"@(#)fio.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1594,7 +1594,14 @@ name|mp
 argument_list|,
 name|obuf
 argument_list|,
-literal|0
+operator|(
+expr|struct
+name|ignoretab
+operator|*
+operator|)
+name|NULL
+argument_list|,
+name|NOSTR
 argument_list|)
 operator|<
 literal|0
