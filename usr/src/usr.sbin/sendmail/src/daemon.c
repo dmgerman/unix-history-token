@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|4.8
+literal|4.9
 operator|%
 name|G
 operator|%
@@ -87,7 +87,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|4.8
+literal|4.9
 operator|%
 name|G
 operator|%
@@ -151,8 +151,6 @@ begin_decl_stmt
 name|char
 modifier|*
 name|NetName
-init|=
-literal|"ARPA"
 decl_stmt|;
 end_decl_stmt
 
