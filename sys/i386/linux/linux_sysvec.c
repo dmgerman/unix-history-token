@@ -1272,7 +1272,7 @@ begin_decl_stmt
 specifier|extern
 name|unsigned
 name|long
-name|_linux_sznonrtsigcode
+name|linux_sznonrtsigcode
 decl_stmt|;
 end_decl_stmt
 
@@ -2088,7 +2088,7 @@ operator|->
 name|sv_szsigcode
 operator|)
 operator|+
-name|_linux_sznonrtsigcode
+name|linux_sznonrtsigcode
 expr_stmt|;
 name|regs
 operator|->

@@ -1794,14 +1794,14 @@ begin_define
 define|#
 directive|define
 name|IMASK_LOCK
-value|MTX_LOCK_SPIN(_imen_mtx, 0)
+value|MTX_LOCK_SPIN(imen_mtx, 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|IMASK_UNLOCK
-value|MTX_UNLOCK_SPIN(_imen_mtx)
+value|MTX_UNLOCK_SPIN(imen_mtx)
 end_define
 
 begin_else

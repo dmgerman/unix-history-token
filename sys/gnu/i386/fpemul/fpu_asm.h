@@ -31,7 +31,7 @@ begin_define
 define|#
 directive|define
 name|EXCEPTION
-value|_exception
+value|exception
 end_define
 
 begin_define

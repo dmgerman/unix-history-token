@@ -21,12 +21,6 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/asnames.h>
-end_include
-
 begin_comment
 comment|/* XXX too much duplication in various asm*.h's. */
 end_comment
