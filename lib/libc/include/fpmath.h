@@ -77,6 +77,20 @@ block|}
 union|;
 end_union
 
+begin_define
+define|#
+directive|define
+name|DBL_MANH_SIZE
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|DBL_MANL_SIZE
+value|32
+end_define
+
 begin_union
 union|union
 name|IEEEd2bits
