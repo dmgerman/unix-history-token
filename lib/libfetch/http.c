@@ -3630,6 +3630,34 @@ goto|;
 block|}
 block|}
 comment|/* other headers */
+if|if
+condition|(
+operator|(
+name|p
+operator|=
+name|getenv
+argument_list|(
+literal|"HTTP_USER_AGENT"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'\0'
+condition|)
+name|_http_cmd
+argument_list|(
+name|fd
+argument_list|,
+literal|"User-Agent: %s"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+else|else
 name|_http_cmd
 argument_list|(
 name|fd
