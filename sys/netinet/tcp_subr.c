@@ -530,7 +530,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_debug
+name|_net_inet_tcp
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -543,7 +543,7 @@ name|do_tcpdrain
 argument_list|,
 literal|0
 argument_list|,
-literal|"Enable non Net3 compliant tcp_drain"
+literal|"Enable tcp_drain routine for extra help when low on mbufs"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
