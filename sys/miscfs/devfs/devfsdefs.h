@@ -35,7 +35,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@DIALIX.oz.au)  *  * $Header: /home/ncvs/src/sys/miscfs/devfs/devfsdefs.h,v 1.5 1995/09/06 09:29:19 julian Exp $  */
+comment|/*  * Written by Julian Elischer (julian@DIALIX.oz.au)  *  * $Header: /home/ncvs/src/sys/miscfs/devfs/devfsdefs.h,v 1.6 1995/09/06 23:15:55 julian Exp $  */
 end_comment
 
 begin_comment
@@ -472,6 +472,10 @@ name|int
 name|len
 decl_stmt|;
 comment|/* of any associated info (e.g. dir data) */
+name|devnm_p
+name|last_lookup
+decl_stmt|;
+comment|/* name I was last looked up from */
 union|union
 name|typeinfo
 block|{
@@ -537,6 +541,7 @@ decl_stmt|;
 name|devnm_p
 name|myname
 decl_stmt|;
+comment|/* my entry in .. */
 name|int
 name|entrycount
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.12 1995/09/09 12:51:56 julian Exp $  *  * symlinks can wait 'til later.  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.13 1995/09/19 07:32:01 julian Exp $  *  * symlinks can wait 'til later.  */
 end_comment
 
 begin_include
@@ -627,6 +627,13 @@ name|new_nodename
 operator|->
 name|dnp
 expr_stmt|;
+name|new_node
+operator|->
+name|last_lookup
+operator|=
+name|new_nodename
+expr_stmt|;
+comment|/* for unlink */
 goto|goto
 name|found
 goto|;
@@ -2827,26 +2834,12 @@ condition|)
 goto|goto
 name|abortit
 goto|;
+comment|/* 	 * Assuming we are atomic, dev_lookup left this for us 	 */
 name|tnp
 operator|=
-name|dev_findname
-argument_list|(
-name|tdp
-argument_list|,
-name|cnp
+name|tp
 operator|->
-name|cn_nameptr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|tnp
-condition|)
-name|panic
-argument_list|(
-literal|"devfs_rename: target dissapeared"
-argument_list|)
+name|last_lookup
 expr_stmt|;
 comment|/* 	 * Check we are doing legal things WRT the new flags 	 */
 if|if
@@ -3473,24 +3466,9 @@ name|abortit
 goto|;
 name|fnp
 operator|=
-name|dev_findname
-argument_list|(
-name|fdp
-argument_list|,
-name|fcnp
+name|fp
 operator|->
-name|cn_nameptr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|fnp
-condition|)
-name|panic
-argument_list|(
-literal|"devfs_rename: source dissapeared"
-argument_list|)
+name|last_lookup
 expr_stmt|;
 if|if
 condition|(
@@ -3514,24 +3492,9 @@ name|abortit
 goto|;
 name|tnp
 operator|=
-name|dev_findname
-argument_list|(
-name|tdp
-argument_list|,
-name|tcnp
+name|tp
 operator|->
-name|cn_nameptr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|tnp
-condition|)
-name|panic
-argument_list|(
-literal|"devfs_rename: target dissapeared"
-argument_list|)
+name|last_lookup
 expr_stmt|;
 block|}
 else|else
@@ -4780,6 +4743,35 @@ argument_list|(
 operator|(
 literal|"abortop\n"
 operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ap
+operator|->
+name|a_cnp
+operator|->
+name|cn_flags
+operator|&
+operator|(
+name|HASBUF
+operator||
+name|SAVESTART
+operator|)
+operator|)
+operator|==
+name|HASBUF
+condition|)
+name|FREE
+argument_list|(
+name|ap
+operator|->
+name|a_cnp
+operator|->
+name|cn_pnbuf
+argument_list|,
+name|M_NAMEI
 argument_list|)
 expr_stmt|;
 return|return
