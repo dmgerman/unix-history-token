@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.7 (Berkeley) %G%"
+literal|"@(#)main.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -400,14 +400,14 @@ expr_stmt|;
 name|reset
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-name|ATTY
 if|if
 condition|(
 name|exception
 operator|==
 name|EXINT
+if|#
+directive|if
+name|ATTY
 operator|&&
 operator|(
 operator|!
@@ -422,19 +422,10 @@ argument_list|,
 literal|"emacs"
 argument_list|)
 operator|)
-condition|)
-block|{
-else|#
-directive|else
-if|if
-condition|(
-name|exception
-operator|==
-name|EXINT
-condition|)
-block|{
 endif|#
 directive|endif
+condition|)
+block|{
 name|out2c
 argument_list|(
 literal|'\n'
@@ -663,7 +654,13 @@ name|exitstatus
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Read and execute commands.  "Top" is nonzero for the top level command  * loop; it turns on prompting if the shell is interactive.  */
+end_comment
+
+begin_function
 name|void
 name|cmdloop
 parameter_list|(
@@ -845,7 +842,13 @@ argument_list|)
 expr_stmt|;
 comment|/* unnecessary */
 block|}
+end_function
+
+begin_comment
 comment|/*  * Read /etc/profile or .profile.  Return on error.  */
+end_comment
+
+begin_function
 name|STATIC
 name|void
 name|read_profile
@@ -902,7 +905,13 @@ name|popfile
 argument_list|()
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Read a file containing shell functions.  */
+end_comment
+
+begin_function
 name|void
 name|readcmdfile
 parameter_list|(
@@ -959,18 +968,30 @@ name|popfile
 argument_list|()
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Take commands from a file.  To be compatable we should do a path  * search for the file, but a path search doesn't make any sense.  */
+end_comment
+
+begin_macro
 name|dotcmd
 argument_list|(
 argument|argc
 argument_list|,
 argument|argv
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 name|exitstatus
 operator|=
@@ -1014,17 +1035,26 @@ return|return
 name|exitstatus
 return|;
 block|}
+end_block
+
+begin_macro
 name|exitcmd
 argument_list|(
 argument|argc
 argument_list|,
 argument|argv
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 if|if
 condition|(
@@ -1054,10 +1084,19 @@ name|exitstatus
 argument_list|)
 expr_stmt|;
 block|}
+end_block
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|notdef
+end_ifdef
+
+begin_comment
 comment|/*  * Should never be called.  */
+end_comment
+
+begin_function
 name|void
 name|exit
 parameter_list|(
