@@ -3089,6 +3089,11 @@ decl_stmt|;
 name|u_int32_t
 name|rxstat
 decl_stmt|;
+name|STE_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|=
 operator|&
@@ -3278,6 +3283,11 @@ operator|->
 name|if_ipackets
 operator|++
 expr_stmt|;
+name|STE_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|ifp
@@ -3288,6 +3298,11 @@ argument_list|(
 name|ifp
 argument_list|,
 name|m
+argument_list|)
+expr_stmt|;
+name|STE_LOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 name|cur_rx

@@ -2112,6 +2112,16 @@ parameter_list|)
 value|mtx_unlock(&(_sc)->an_mtx)
 end_define
 
+begin_define
+define|#
+directive|define
+name|AN_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->an_mtx, MA_OWNED)
+end_define
+
 begin_function_decl
 name|void
 name|an_release_resources

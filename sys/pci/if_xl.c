@@ -8930,6 +8930,11 @@ decl_stmt|;
 name|u_int32_t
 name|rxstat
 decl_stmt|;
+name|XL_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|=
 operator|&
@@ -9305,6 +9310,11 @@ literal|0xffff
 expr_stmt|;
 block|}
 block|}
+name|XL_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|ifp
@@ -9315,6 +9325,11 @@ argument_list|(
 name|ifp
 argument_list|,
 name|m
+argument_list|)
+expr_stmt|;
+name|XL_LOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}

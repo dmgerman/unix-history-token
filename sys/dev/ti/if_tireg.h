@@ -4225,6 +4225,16 @@ parameter_list|)
 value|mtx_unlock(&(_sc)->ti_mtx)
 end_define
 
+begin_define
+define|#
+directive|define
+name|TI_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->ti_mtx, MA_OWNED)
+end_define
+
 begin_comment
 comment|/*  * Microchip Technology 24Cxx EEPROM control bytes  */
 end_comment

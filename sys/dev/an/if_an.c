@@ -4317,6 +4317,11 @@ name|u_int8_t
 modifier|*
 name|buf
 decl_stmt|;
+name|AN_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|=
 operator|&
@@ -5001,6 +5006,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|AN_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|ifp
@@ -5011,6 +5021,11 @@ argument_list|(
 name|ifp
 argument_list|,
 name|m
+argument_list|)
+expr_stmt|;
+name|AN_LOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}

@@ -548,6 +548,15 @@ parameter_list|)
 value|splx(s)
 end_define
 
+begin_define
+define|#
+directive|define
+name|WI_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -573,6 +582,15 @@ parameter_list|(
 name|_sc
 parameter_list|,
 name|_s
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_LOCK_ASSERT
+parameter_list|(
+name|_sc
 parameter_list|)
 end_define
 

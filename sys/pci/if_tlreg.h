@@ -338,6 +338,16 @@ parameter_list|)
 value|mtx_unlock(&(_sc)->tl_mtx)
 end_define
 
+begin_define
+define|#
+directive|define
+name|TL_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->tl_mtx, MA_OWNED)
+end_define
+
 begin_comment
 comment|/*  * Transmit interrupt threshold.  */
 end_comment

@@ -12794,6 +12794,11 @@ decl_stmt|;
 name|u_int32_t
 name|rxstat
 decl_stmt|;
+name|DC_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|=
 operator|&
@@ -13222,6 +13227,11 @@ operator|->
 name|if_ipackets
 operator|++
 expr_stmt|;
+name|DC_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|ifp
@@ -13232,6 +13242,11 @@ argument_list|(
 name|ifp
 argument_list|,
 name|m
+argument_list|)
+expr_stmt|;
+name|DC_LOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -14283,6 +14298,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|DC_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|rxcycles
@@ -14364,7 +14384,14 @@ condition|(
 operator|!
 name|status
 condition|)
+block|{
+name|DC_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 comment|/* ack what we have */
 name|CSR_WRITE_4
 argument_list|(
@@ -14490,6 +14517,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|DC_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

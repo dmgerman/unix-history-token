@@ -398,6 +398,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|WL_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->wl_mtx, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
 name|WL_UNLOCK
 parameter_list|(
 name|_sc
@@ -4611,6 +4621,11 @@ name|bytes_in_mbuf
 decl_stmt|,
 name|bytes
 decl_stmt|;
+name|WL_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|WLDEBUG
@@ -5301,6 +5316,11 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/*      * received packet is now in a chain of mbuf's.  next step is      * to pass the packet upwards.      */
+name|WL_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|ifp
@@ -5311,6 +5331,11 @@ argument_list|(
 name|ifp
 argument_list|,
 name|m
+argument_list|)
+expr_stmt|;
+name|WL_LOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 return|return

@@ -6041,6 +6041,11 @@ name|rcvif
 operator|=
 name|ifp
 expr_stmt|;
+name|BFE_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|ifp
@@ -6051,6 +6056,11 @@ argument_list|(
 name|ifp
 argument_list|,
 name|m
+argument_list|)
+expr_stmt|;
+name|BFE_LOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 name|BFE_INC

@@ -6139,6 +6139,11 @@ name|arpcom
 operator|.
 name|ac_if
 expr_stmt|;
+name|TL_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|sc
@@ -6338,6 +6343,11 @@ name|m_len
 operator|=
 name|total_len
 expr_stmt|;
+name|TL_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|ifp
@@ -6348,6 +6358,11 @@ argument_list|(
 name|ifp
 argument_list|,
 name|m
+argument_list|)
+expr_stmt|;
+name|TL_LOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}

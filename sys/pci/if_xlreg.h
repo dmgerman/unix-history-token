@@ -3099,6 +3099,16 @@ parameter_list|)
 value|mtx_unlock(&(_sc)->xl_mtx)
 end_define
 
+begin_define
+define|#
+directive|define
+name|XL_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->xl_mtx, MA_OWNED)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -3118,6 +3128,16 @@ begin_define
 define|#
 directive|define
 name|XL_UNLOCK
+parameter_list|(
+name|x
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XL_LOCK_ASSERT
 parameter_list|(
 name|x
 parameter_list|)

@@ -7790,6 +7790,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|SK_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->sk_mtx, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SK_IF_LOCK
 parameter_list|(
 name|_sc

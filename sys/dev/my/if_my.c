@@ -6042,6 +6042,11 @@ block|}
 block|}
 endif|#
 directive|endif
+name|MY_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|ifp
@@ -6052,6 +6057,11 @@ argument_list|(
 name|ifp
 argument_list|,
 name|m
+argument_list|)
+expr_stmt|;
+name|MY_LOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}

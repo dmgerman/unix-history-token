@@ -4922,6 +4922,11 @@ literal|0
 decl_stmt|,
 name|max_bytes
 decl_stmt|;
+name|RL_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|=
 operator|&
@@ -5324,6 +5329,11 @@ operator|->
 name|if_ipackets
 operator|++
 expr_stmt|;
+name|RL_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|ifp
@@ -5334,6 +5344,11 @@ argument_list|(
 name|ifp
 argument_list|,
 name|m
+argument_list|)
+expr_stmt|;
+name|RL_LOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}

@@ -2395,6 +2395,11 @@ decl_stmt|;
 name|int
 name|id
 decl_stmt|;
+name|WI_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|=
 operator|&
@@ -3255,6 +3260,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|WI_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|ifp
@@ -3265,6 +3275,11 @@ argument_list|(
 name|ifp
 argument_list|,
 name|m
+argument_list|)
+expr_stmt|;
+name|WI_LOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}

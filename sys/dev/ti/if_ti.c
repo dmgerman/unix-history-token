@@ -10435,6 +10435,11 @@ name|struct
 name|ti_cmd_desc
 name|cmd
 decl_stmt|;
+name|TI_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|=
 operator|&
@@ -10999,6 +11004,11 @@ argument_list|,
 argument|continue
 argument_list|)
 empty_stmt|;
+name|TI_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|ifp
@@ -11009,6 +11019,11 @@ argument_list|(
 name|ifp
 argument_list|,
 name|m
+argument_list|)
+expr_stmt|;
+name|TI_LOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
