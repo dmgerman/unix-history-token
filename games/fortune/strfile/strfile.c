@@ -1468,11 +1468,8 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* static */
-end_comment
-
 begin_function
+specifier|static
 name|int
 name|collate_range_cmp
 parameter_list|(
