@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: file.c,v 1.10.4.7 1995/10/31 20:35:20 jkh Exp $"
+literal|"$Id: file.c,v 1.10.4.8 1995/11/10 06:44:51 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2006,7 +2006,24 @@ decl_stmt|,
 modifier|*
 name|cp
 decl_stmt|;
+name|args
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 comment|/*      * Figure out by a crude heuristic whether this or not this is probably      * compressed.      */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|pkg
+argument_list|,
+literal|"-"
+argument_list|)
+condition|)
+block|{
 name|cp
 operator|=
 name|rindex
@@ -2054,6 +2071,15 @@ literal|"-z"
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+else|else
+name|strcpy
+argument_list|(
+name|args
+argument_list|,
+literal|"z"
+argument_list|)
+expr_stmt|;
 name|strcat
 argument_list|(
 name|args
