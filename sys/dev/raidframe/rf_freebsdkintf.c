@@ -9892,15 +9892,19 @@ operator|!=
 name|FS_RAID
 condition|)
 continue|continue;
+if|#
+directive|if
+literal|0
+comment|/* GEOM */
+block|dev1 = dkmodpart(dev, i);
+else|#
+directive|else
 name|dev1
 operator|=
-name|dkmodpart
-argument_list|(
-name|dev
-argument_list|,
-name|i
-argument_list|)
+name|NULL
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|dev1
