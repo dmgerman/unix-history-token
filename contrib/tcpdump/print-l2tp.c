@@ -2482,7 +2482,30 @@ argument_list|)
 operator|&
 name|L2TP_AVP_HDR_LEN_MASK
 expr_stmt|;
-comment|/* If it is not long enough to decode the entire AVP, we'll  	   abandon. */
+comment|/* If it is not long enough to contain the header, we'll give up. */
+if|if
+condition|(
+name|len
+operator|<
+literal|6
+condition|)
+goto|goto
+name|trunc
+goto|;
+comment|/* If it goes past the end of the remaining length of the packet, 	   we'll give up. */
+if|if
+condition|(
+name|len
+operator|>
+operator|(
+name|u_int
+operator|)
+name|length
+condition|)
+goto|goto
+name|trunc
+goto|;
+comment|/* If it goes past the end of the remaining length of the captured 	   data, we'll give up. */
 name|TCHECK2
 argument_list|(
 operator|*
