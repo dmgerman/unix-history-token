@@ -3409,32 +3409,54 @@ argument_list|(
 name|cpumask
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX: Address this again later? 	 */
-name|critical_enter
-argument_list|()
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
+comment|/* 	 * XXX: Address this again later? 	 * NetBSD only change the segment registers on return to userland. 	 */
+if|#
+directive|if
 literal|0
-init|;
-name|i
-operator|<
-literal|16
-condition|;
-name|i
-operator|++
-control|)
-block|{
-asm|__asm __volatile("mtsr %0,%1" :: "r"(i), "r"(pm->pm_sr[i]));
-block|}
-asm|__asm __volatile("sync; isync");
-name|critical_exit
-argument_list|()
-expr_stmt|;
+block|critical_enter();  	for (i = 0; i< 16; i++) { 		__asm __volatile("mtsr %0,%1" :: "r"(i), "r"(pm->pm_sr[i])); 	} 	__asm __volatile("sync; isync");  	critical_exit();
+endif|#
+directive|endif
 block|}
 end_block
+
+begin_function
+name|void
+name|pmap_deactivate
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+block|{
+name|pmap_t
+name|pm
+decl_stmt|;
+name|pm
+operator|=
+operator|&
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_vmspace
+operator|->
+name|vm_pmap
+expr_stmt|;
+name|pm
+operator|->
+name|pm_active
+operator|&=
+operator|~
+operator|(
+name|PCPU_GET
+argument_list|(
+name|cpumask
+argument_list|)
+operator|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|vm_offset_t

@@ -160,6 +160,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|pmap_deactivate
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|vm_offset_t
 name|pmap_kextract
 parameter_list|(
