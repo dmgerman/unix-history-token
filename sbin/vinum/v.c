@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  
 end_comment
 
 begin_comment
-comment|/* $Id: v.c,v 1.1.1.1 1998/09/16 05:57:36 grog Exp $ */
+comment|/* $Id: v.c,v 1.2 1998/12/28 16:32:39 peter Exp $ */
 end_comment
 
 begin_include
@@ -190,7 +190,7 @@ end_comment
 begin_if
 if|#
 directive|if
-name|DEBUG
+name|VINUMDEBUG
 end_if
 
 begin_decl_stmt
@@ -668,7 +668,7 @@ argument_list|)
 block|,
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|VINUMDEBUG
 name|FUNKEY
 argument_list|(
 name|debug
@@ -970,7 +970,7 @@ condition|)
 block|{
 if|#
 directive|if
-name|DEBUG
+name|VINUMDEBUG
 case|case
 literal|'d'
 case|:
@@ -2677,7 +2677,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|DEBUG
+name|VINUMDEBUG
 if|if
 condition|(
 name|debug
@@ -2688,6 +2688,14 @@ literal|0
 expr_stmt|;
 comment|/* wander through into the "child" process */
 else|else
+name|pid
+operator|=
+name|fork
+argument_list|()
+expr_stmt|;
+comment|/* do this in the background */
+else|#
+directive|else
 name|pid
 operator|=
 name|fork
