@@ -3901,12 +3901,12 @@ name|index_initted
 operator|=
 name|TRUE
 expr_stmt|;
-block|}
 name|restorescr
 argument_list|(
 name|w
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|DITEM_SUCCESS
 return|;
