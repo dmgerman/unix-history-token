@@ -510,6 +510,7 @@ name|mt_erreg
 decl_stmt|;
 comment|/* ``error'' register */
 comment|/* end device-dependent registers */
+comment|/* 	 * Note that the residual count, while maintained, may be 	 * be nonsense because the size of the residual may (greatly) 	 * exceed 32 K-bytes. Use the MTIOCERRSTAT ioctl to get a 	 * more accurate count. 	 */
 name|short
 name|mt_resid
 decl_stmt|;
@@ -616,7 +617,7 @@ literal|32
 index|]
 decl_stmt|;
 comment|/* Last Sense Data For Data I/O */
-name|u_int32_t
+name|int32_t
 name|io_resid
 decl_stmt|;
 comment|/* residual count from last Data I/O */
@@ -634,7 +635,7 @@ literal|32
 index|]
 decl_stmt|;
 comment|/* Last Sense Data For Control I/O */
-name|u_int32_t
+name|int32_t
 name|ctl_resid
 decl_stmt|;
 comment|/* residual count from last Control I/O */
