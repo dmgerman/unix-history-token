@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)cpu.c	7.3 (Berkeley) %G%  *  * from: $Header: cpu.c,v 1.8 92/06/17 05:22:01 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)cpu.c	7.4 (Berkeley) %G%  *  * from: $Header: cpu.c,v 1.10 93/04/20 11:16:51 torek Exp $ (LBL)  */
 end_comment
 
 begin_include
@@ -32,6 +32,38 @@ include|#
 directive|include
 file|<machine/reg.h>
 end_include
+
+begin_comment
+comment|/* the following are used externally (sysctl_hw) */
+end_comment
+
+begin_decl_stmt
+name|char
+name|machine
+index|[]
+init|=
+literal|"sparc"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|cpu_model
+index|[
+literal|80
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|cpuspeed
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_function_decl
 specifier|static
@@ -84,17 +116,8 @@ block|{
 specifier|register
 name|int
 name|node
-init|=
-operator|(
-operator|(
-expr|struct
-name|romaux
-operator|*
-operator|)
-name|aux
-operator|)
-operator|->
-name|ra_node
+decl_stmt|,
+name|clk
 decl_stmt|;
 specifier|register
 name|u_int
@@ -102,45 +125,16 @@ name|psr
 decl_stmt|,
 name|fver
 decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|fpuname
+decl_stmt|;
 name|struct
 name|fpstate
 name|fpstate
 decl_stmt|;
-name|psr
-operator|=
-name|getpsr
-argument_list|()
-expr_stmt|;
-name|printf
-argument_list|(
-literal|": %s (%s @ %s MHz), "
-argument_list|,
-name|getpropstring
-argument_list|(
-name|node
-argument_list|,
-literal|"name"
-argument_list|)
-argument_list|,
-name|psrtoname
-argument_list|(
-name|psr
-argument_list|)
-argument_list|,
-name|clockfreq
-argument_list|(
-name|getpropint
-argument_list|(
-name|node
-argument_list|,
-literal|"clock-frequency"
-argument_list|,
-literal|0
-argument_list|)
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Get the FSR and clear any exceptions.  If we do not unload 	 * the queue here and it is left over from a previous crash, we 	 * will panic in the first loadfpstate(), due to a sequence error. 	 * 	 * If there is no FPU, trap.c will advance over all the stores. 	 */
+comment|/* 	 * Get the FSR and clear any exceptions.  If we do not unload 	 * the queue here and it is left over from a previous crash, we 	 * will panic in the first loadfpstate(), due to a sequence error, 	 * so we need to dump the whole state anyway. 	 * 	 * If there is no FPU, trap.c will advance over all the stores, 	 * so we initialize fs_fsr here. 	 */
 name|fpstate
 operator|.
 name|fs_fsr
@@ -149,6 +143,7 @@ literal|7
 operator|<<
 name|FSR_VER_SHIFT
 expr_stmt|;
+comment|/* 7 is reserved for "none" */
 name|savefpstate
 argument_list|(
 operator|&
@@ -171,36 +166,102 @@ operator|>>
 name|FSR_VER_SHIFT
 operator|)
 expr_stmt|;
+name|psr
+operator|=
+name|getpsr
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|fver
-operator|==
+operator|!=
 literal|7
 condition|)
-name|printf
-argument_list|(
-literal|"no FPU\n"
-argument_list|)
-expr_stmt|;
-else|else
 block|{
 name|foundfpu
 operator|=
 literal|1
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"fpu = %s\n"
-argument_list|,
+name|fpuname
+operator|=
 name|fsrtoname
 argument_list|(
 name|psr
 argument_list|,
 name|fver
 argument_list|)
-argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|fpuname
+operator|=
+literal|"no"
+expr_stmt|;
+comment|/* tell them what we have */
+name|node
+operator|=
+operator|(
+operator|(
+expr|struct
+name|romaux
+operator|*
+operator|)
+name|aux
+operator|)
+operator|->
+name|ra_node
+expr_stmt|;
+name|clk
+operator|=
+name|getpropint
+argument_list|(
+name|node
+argument_list|,
+literal|"clock-frequency"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"%s (%s @ %s MHz, %s FPU)"
+argument_list|,
+name|getpropstring
+argument_list|(
+name|node
+argument_list|,
+literal|"name"
+argument_list|)
+argument_list|,
+name|psrtoname
+argument_list|(
+name|psr
+argument_list|)
+argument_list|,
+name|clockfreq
+argument_list|(
+name|clk
+argument_list|)
+argument_list|,
+name|fpuname
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|": %s\n"
+argument_list|,
+name|cpu_model
+argument_list|)
+expr_stmt|;
+name|cpuspeed
+operator|=
+name|clk
+operator|/
+literal|1000000
+expr_stmt|;
+comment|/* XXX */
 block|}
 end_function
 
@@ -338,7 +399,7 @@ break|break;
 block|}
 return|return
 operator|(
-literal|"mystery cpu type"
+literal|"???"
 operator|)
 return|;
 block|}
@@ -492,7 +553,7 @@ return|;
 block|}
 return|return
 operator|(
-literal|"mystery fpu type"
+literal|"???"
 operator|)
 return|;
 block|}
