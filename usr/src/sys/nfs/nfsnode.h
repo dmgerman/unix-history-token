@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsnode.h	7.32 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsnode.h	7.33 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -145,13 +145,6 @@ name|struct
 name|timeval
 name|n_mtim
 decl_stmt|;
-name|long
-name|n_spare
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* Up to a power of 2 */
 block|}
 struct|;
 end_struct
