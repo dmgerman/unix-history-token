@@ -109,6 +109,11 @@ begin_comment
 comment|/* base device */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * General  *  */
 end_comment
