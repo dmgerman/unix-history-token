@@ -64,6 +64,8 @@ name|kw_help
 block|,
 name|kw_drive
 block|,
+name|kw_partition
+block|,
 name|kw_sd
 block|,
 name|kw_subdisk
@@ -89,6 +91,8 @@ block|,
 name|kw_concat
 block|,
 name|kw_striped
+block|,
+name|kw_raid4
 block|,
 name|kw_raid5
 block|,
