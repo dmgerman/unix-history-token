@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: grf.c 1.28 89/08/14$  *  *	@(#)grf.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: grf.c 1.31 91/01/21$  *  *	@(#)grf.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -437,11 +437,13 @@ control|)
 block|{
 if|if
 condition|(
+operator|!
+name|HW_ISDEV
+argument_list|(
 name|hw
-operator|->
-name|hw_type
-operator|!=
-name|BITMAP
+argument_list|,
+name|D_BITMAP
+argument_list|)
 condition|)
 continue|continue;
 comment|/* 		 * Found one, now match up with a logical unit number 		 */
@@ -453,7 +455,7 @@ name|addr
 operator|=
 name|hw
 operator|->
-name|hw_addr
+name|hw_kva
 expr_stmt|;
 for|for
 control|(
@@ -508,10 +510,7 @@ block|}
 comment|/* 			 * Not wildcarded. 			 * If exact match done searching, else keep looking. 			 */
 if|if
 condition|(
-operator|(
-name|caddr_t
-operator|)
-name|sctoaddr
+name|sctova
 argument_list|(
 name|hd
 operator|->
@@ -542,14 +541,12 @@ operator|->
 name|hp_unit
 argument_list|)
 condition|)
-block|{
 name|nhd
 operator|->
 name|hp_addr
 operator|=
 name|addr
 expr_stmt|;
-block|}
 block|}
 block|}
 end_block
@@ -1451,14 +1448,13 @@ name|GDB_LOCK
 condition|)
 name|printf
 argument_list|(
-literal|"  lock[0] %d lockslot %d lock[lockslot] %d\n"
+literal|" lockpslot %d lockslot %d lock[lockslot] %d\n"
 argument_list|,
 name|gp
 operator|->
-name|g_locks
-index|[
-literal|0
-index|]
+name|g_lock
+operator|->
+name|gl_lockslot
 argument_list|,
 name|gp
 operator|->
@@ -1466,7 +1462,9 @@ name|g_lockpslot
 argument_list|,
 name|gp
 operator|->
-name|g_locks
+name|g_lock
+operator|->
+name|gl_locks
 index|[
 name|gp
 operator|->
@@ -1478,10 +1476,9 @@ endif|#
 directive|endif
 name|gp
 operator|->
-name|g_locks
-index|[
-literal|0
-index|]
+name|g_lock
+operator|->
+name|gl_lockslot
 operator|=
 literal|0
 expr_stmt|;
@@ -1489,7 +1486,9 @@ if|if
 condition|(
 name|gp
 operator|->
-name|g_locks
+name|g_lock
+operator|->
+name|gl_locks
 index|[
 name|gp
 operator|->
@@ -1642,16 +1641,17 @@ name|g_lockpslot
 operator|=
 name|gp
 operator|->
-name|g_locks
-index|[
-literal|0
-index|]
+name|g_lock
+operator|->
+name|gl_lockslot
 operator|=
 name|slot
 expr_stmt|;
 name|gp
 operator|->
-name|g_locks
+name|g_lock
+operator|->
+name|gl_locks
 index|[
 name|slot
 index|]
@@ -1759,14 +1759,13 @@ name|GDB_LOCK
 condition|)
 name|printf
 argument_list|(
-literal|"  lock[0] %d lockslot %d lock[lockslot] %d\n"
+literal|" lockpslot %d lockslot %d lock[lockslot] %d\n"
 argument_list|,
 name|gp
 operator|->
-name|g_locks
-index|[
-literal|0
-index|]
+name|g_lock
+operator|->
+name|gl_lockslot
 argument_list|,
 name|gp
 operator|->
@@ -1774,7 +1773,9 @@ name|g_lockpslot
 argument_list|,
 name|gp
 operator|->
-name|g_locks
+name|g_lock
+operator|->
+name|gl_locks
 index|[
 name|gp
 operator|->
@@ -1786,18 +1787,13 @@ endif|#
 directive|endif
 name|gp
 operator|->
-name|g_locks
+name|g_lock
+operator|->
+name|gl_locks
 index|[
 name|gp
 operator|->
 name|g_lockpslot
-index|]
-operator|=
-name|gp
-operator|->
-name|g_locks
-index|[
-literal|0
 index|]
 operator|=
 literal|0
@@ -1805,6 +1801,12 @@ expr_stmt|;
 name|gp
 operator|->
 name|g_lockpslot
+operator|=
+name|gp
+operator|->
+name|g_lock
+operator|->
+name|gl_lockslot
 operator|=
 literal|0
 expr_stmt|;
@@ -2589,6 +2591,8 @@ index|]
 decl_stmt|;
 name|int
 name|newdev
+decl_stmt|,
+name|sc
 decl_stmt|;
 if|if
 condition|(
@@ -2635,23 +2639,29 @@ name|caddr_t
 operator|)
 name|GRFIADDR
 condition|)
-name|newdev
-operator||=
-operator|(
-operator|(
-name|u_int
-operator|)
+block|{
+name|sc
+operator|=
+name|patosc
+argument_list|(
 name|gp
 operator|->
 name|g_display
 operator|.
 name|gd_regaddr
-operator|-
-name|EXTIOBASE
+argument_list|)
+expr_stmt|;
+name|newdev
+operator||=
+operator|(
+name|sc
+operator|<<
+literal|16
 operator|)
 operator||
 literal|0x200
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|dev
