@@ -2455,6 +2455,9 @@ name|i
 operator|=
 literal|0
 init|;
+operator|*
+name|data
+operator|&&
 name|i
 operator|<
 name|length
