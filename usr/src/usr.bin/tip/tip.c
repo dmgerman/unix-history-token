@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tip.c	4.1	81/05/09	*/
+comment|/*	tip.c	4.2	81/05/10	*/
 end_comment
 
 begin_comment
@@ -258,6 +258,13 @@ literal|3
 argument_list|)
 expr_stmt|;
 block|}
+name|setbuf
+argument_list|(
+name|stdout
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|loginit
 argument_list|()
 expr_stmt|;
