@@ -10425,9 +10425,7 @@ name|size
 operator|+
 name|grow_amount
 operator|>
-name|curthread
-operator|->
-name|td_proc
+name|p
 operator|->
 name|p_rlimit
 index|[
