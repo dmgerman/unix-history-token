@@ -2432,7 +2432,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Retries exchausted:\t\t\t\t[ %d ]\n"
+literal|"Retries exhausted:\t\t\t\t[ %d ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2585,7 +2585,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Transmits defered due to protocol:\t\t[ %d ]\n"
+literal|"Transmits deferred due to protocol:\t\t[ %d ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2594,7 +2594,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Transmits defered due to energy detect:\t\t[ %d ]\n"
+literal|"Transmits deferred due to energy detect:\t\t[ %d ]\n"
 argument_list|,
 name|stats
 operator|->
