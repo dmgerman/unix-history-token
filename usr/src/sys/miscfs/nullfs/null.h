@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)null.h	8.2 (Berkeley) %G%  *  * $Id: lofs.h,v 1.8 1992/05/30 10:05:43 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)null.h	8.3 (Berkeley) %G%  *  * $Id: lofs.h,v 1.8 1992/05/30 10:05:43 jsp Exp jsp $  */
 end_comment
 
 begin_struct
@@ -49,17 +49,13 @@ begin_struct
 struct|struct
 name|null_node
 block|{
-name|struct
-name|null_node
-modifier|*
-name|null_forw
-decl_stmt|;
-comment|/* Hash chain */
-name|struct
-name|null_node
-modifier|*
-name|null_back
-decl_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|null_node
+argument_list|)
+name|null_hash
+expr_stmt|;
+comment|/* Hash list */
 name|struct
 name|vnode
 modifier|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)null_subr.c	8.5 (Berkeley) %G%  *  * $Id: lofs_subr.c,v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)null_subr.c	8.6 (Berkeley) %G%  *  * $Id: lofs_subr.c,v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  */
 end_comment
 
 begin_include
@@ -75,6 +75,10 @@ name|NNULLNODECACHE
 value|16
 end_define
 
+begin_comment
+comment|/*  * Null layer cache:  * Each cache entry holds a reference to the lower vnode  * along with a pointer to the alias vnode.  When an  * entry is added the lower vnode is VREF'd.  When the  * alias is removed the lower vnode is vrele'd.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -82,43 +86,25 @@ name|NULL_NHASH
 parameter_list|(
 name|vp
 parameter_list|)
-value|((((u_long)vp)>>LOG2_SIZEVNODE)& (NNULLNODECACHE-1))
+define|\
+value|(&null_node_hashtbl[(((u_long)vp)>>LOG2_SIZEVNODE)& null_node_hash])
 end_define
 
-begin_comment
-comment|/*  * Null layer cache:  * Each cache entry holds a reference to the lower vnode  * along with a pointer to the alias vnode.  When an  * entry is added the lower vnode is VREF'd.  When the  * alias is removed the lower vnode is vrele'd.  */
-end_comment
-
-begin_comment
-comment|/*  * Cache head  */
-end_comment
-
-begin_struct
-struct|struct
-name|null_node_cache
-block|{
-name|struct
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|null_node_hashhead
+argument_list|,
 name|null_node
-modifier|*
-name|ac_forw
-decl_stmt|;
-name|struct
-name|null_node
-modifier|*
-name|ac_back
-decl_stmt|;
-block|}
-struct|;
-end_struct
+argument_list|)
+operator|*
+name|null_node_hashtbl
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
-specifier|static
-name|struct
-name|null_node_cache
-name|null_node_cache
-index|[
-name|NNULLNODECACHE
-index|]
+name|u_long
+name|null_node_hash
 decl_stmt|;
 end_decl_stmt
 
@@ -133,11 +119,6 @@ end_macro
 
 begin_block
 block|{
-name|struct
-name|null_node_cache
-modifier|*
-name|ac
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|NULLFS_DIAGNOSTIC
@@ -149,72 +130,20 @@ expr_stmt|;
 comment|/* printed during system boot */
 endif|#
 directive|endif
-for|for
-control|(
-name|ac
+name|null_node_hashtbl
 operator|=
-name|null_node_cache
-init|;
-name|ac
-operator|<
-name|null_node_cache
-operator|+
+name|hashinit
+argument_list|(
 name|NNULLNODECACHE
-condition|;
-name|ac
-operator|++
-control|)
-name|ac
-operator|->
-name|ac_forw
-operator|=
-name|ac
-operator|->
-name|ac_back
-operator|=
-operator|(
-expr|struct
-name|null_node
-operator|*
-operator|)
-name|ac
+argument_list|,
+name|M_CACHE
+argument_list|,
+operator|&
+name|null_node_hash
+argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_comment
-comment|/*  * Compute hash list for given lower vnode  */
-end_comment
-
-begin_function
-specifier|static
-name|struct
-name|null_node_cache
-modifier|*
-name|null_node_hash
-parameter_list|(
-name|lowervp
-parameter_list|)
-name|struct
-name|vnode
-modifier|*
-name|lowervp
-decl_stmt|;
-block|{
-return|return
-operator|(
-operator|&
-name|null_node_cache
-index|[
-name|NULL_NHASH
-argument_list|(
-name|lowervp
-argument_list|)
-index|]
-operator|)
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/*  * Return a VREF'ed alias for lower vnode if already exists, else 0.  */
@@ -243,7 +172,7 @@ name|lowervp
 decl_stmt|;
 block|{
 name|struct
-name|null_node_cache
+name|null_node_hashhead
 modifier|*
 name|hd
 decl_stmt|;
@@ -260,7 +189,7 @@ decl_stmt|;
 comment|/* 	 * Find hash base, and then search the (two-way) linked 	 * list looking for a null_node structure which is referencing 	 * the lower vnode.  If found, the increment the null_node 	 * reference count (but NOT the lower vnode's VREF counter). 	 */
 name|hd
 operator|=
-name|null_node_hash
+name|NULL_NHASH
 argument_list|(
 name|lowervp
 argument_list|)
@@ -273,22 +202,19 @@ name|a
 operator|=
 name|hd
 operator|->
-name|ac_forw
+name|lh_first
 init|;
 name|a
 operator|!=
-operator|(
-expr|struct
-name|null_node
-operator|*
-operator|)
-name|hd
+literal|0
 condition|;
 name|a
 operator|=
 name|a
 operator|->
-name|null_forw
+name|null_hash
+operator|.
+name|le_next
 control|)
 block|{
 if|if
@@ -383,7 +309,7 @@ name|vpp
 decl_stmt|;
 block|{
 name|struct
-name|null_node_cache
+name|null_node_hashhead
 modifier|*
 name|hd
 decl_stmt|;
@@ -523,16 +449,18 @@ expr_stmt|;
 comment|/* Extra VREF will be vrele'd in null_node_create */
 name|hd
 operator|=
-name|null_node_hash
+name|NULL_NHASH
 argument_list|(
 name|lowervp
 argument_list|)
 expr_stmt|;
-name|insque
+name|LIST_INSERT_HEAD
 argument_list|(
+name|hd
+argument_list|,
 name|xp
 argument_list|,
-name|hd
+name|null_hash
 argument_list|)
 expr_stmt|;
 return|return
