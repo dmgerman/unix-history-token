@@ -32,6 +32,10 @@ name|char
 modifier|*
 name|port
 decl_stmt|;
+name|char
+modifier|*
+name|flags
+decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
@@ -47,6 +51,13 @@ operator|=
 name|variable_get
 argument_list|(
 name|VAR_MOUSED_PORT
+argument_list|)
+expr_stmt|;
+name|flags
+operator|=
+name|variable_get
+argument_list|(
+name|VAR_MOUSED_FLAGS
 argument_list|)
 expr_stmt|;
 if|if
@@ -126,11 +137,13 @@ argument_list|)
 expr_stmt|;
 name|vsystem
 argument_list|(
-literal|"moused -t %s -p %s"
+literal|"moused -t %s -p %s %s"
 argument_list|,
 name|type
 argument_list|,
 name|port
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 name|ret
@@ -244,6 +257,11 @@ argument_list|(
 name|VAR_MOUSED_PORT
 argument_list|)
 expr_stmt|;
+name|variable_unset
+argument_list|(
+name|VAR_MOUSED_FLAGS
+argument_list|)
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"The mouse daemon is disabled."
@@ -251,6 +269,51 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_SUCCESS
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|setMouseFlags
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|int
+name|ret
+decl_stmt|;
+name|ret
+operator|=
+name|variable_get_value
+argument_list|(
+name|VAR_MOUSED_FLAGS
+argument_list|,
+literal|"Please Specify the mouse daemon flags.  If you would like to\n"
+literal|"emulate 3 buttons, use -3 here.\n"
+argument_list|,
+literal|1
+argument_list|)
+condition|?
+name|DITEM_SUCCESS
+else|:
+name|DITEM_FAILURE
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+name|DITEM_SUCCESS
+condition|)
+name|variable_unset
+argument_list|(
+name|VAR_MOUSED_FLAGS
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
 return|;
 block|}
 end_function
