@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.40 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.41 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -397,6 +397,19 @@ name|X_HPDINIT
 value|(X_END)
 block|{
 literal|"_hp_dinit"
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|mips
+define|#
+directive|define
+name|X_SCSI_DINIT
+value|(X_END)
+block|{
+literal|"_scsi_dinit"
 block|}
 block|,
 endif|#
@@ -918,7 +931,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"vmstat: undefined symbols: "
+literal|"vmstat: undefined symbols:"
 argument_list|)
 expr_stmt|;
 for|for
@@ -956,8 +969,10 @@ name|n_type
 operator|==
 literal|0
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|" %s"
 argument_list|,
 name|namelist
