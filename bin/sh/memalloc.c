@@ -47,12 +47,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"shell.h"
 end_include
 
@@ -72,6 +66,12 @@ begin_include
 include|#
 directive|include
 file|"error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"machdep.h"
 end_include
 
 begin_include
@@ -388,28 +388,13 @@ name|stackp
 expr_stmt|;
 name|stacknxt
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|ALIGN
-argument_list|(
 name|sp
 operator|->
 name|space
-argument_list|)
 expr_stmt|;
 name|stacknleft
 operator|=
 name|blocksize
-operator|-
-operator|(
-name|stacknxt
-operator|-
-name|sp
-operator|->
-name|space
-operator|)
 expr_stmt|;
 name|stackp
 operator|=
