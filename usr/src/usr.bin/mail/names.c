@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)names.c	2.4 %G%"
+literal|"@(#)names.c	2.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1759,6 +1759,18 @@ condition|)
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+if|if
+condition|(
+operator|*
+name|name
+operator|==
+literal|'+'
+condition|)
+return|return
+operator|(
+literal|1
 operator|)
 return|;
 for|for
