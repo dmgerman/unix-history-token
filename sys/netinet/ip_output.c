@@ -4109,7 +4109,7 @@ name|bad
 label|:
 name|m_freem
 argument_list|(
-name|m0
+name|m
 argument_list|)
 expr_stmt|;
 goto|goto
