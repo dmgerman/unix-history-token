@@ -234,24 +234,11 @@ name|mii_attach_args
 modifier|*
 name|ma
 decl_stmt|;
-name|device_t
-name|parent
-decl_stmt|;
 name|ma
 operator|=
 name|device_get_ivars
 argument_list|(
 name|dev
-argument_list|)
-expr_stmt|;
-name|parent
-operator|=
-name|device_get_parent
-argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Intel 82553 A/B steppings */
