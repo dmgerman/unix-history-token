@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp.h 1.4 81/10/21 */
+comment|/* tcp.h 1.5 81/10/22 */
 end_comment
 
 begin_comment
@@ -367,6 +367,60 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Tcp machine predicates  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ack_ok
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+define|\
+value|(((y)->th_flags&TH_ACK)==0 || \       ((x)->iss< (y)->t_ackno&& (y)->t_ackno<= (x)->snd_hi))
+end_define
+
+begin_define
+define|#
+directive|define
+name|syn_ok
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+define|\
+value|((y)->th_flags&TH_SYN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ack_fin
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+define|\
+value|((x)->seq_fin> (x)->iss&& (y)->t_ackno> (x)->seq_fin)
+end_define
+
+begin_define
+define|#
+directive|define
+name|rcv_empty
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)->tc_flags&TC_USR_ABORT) || \       ((x)->t_ucb->uc_rbuf == NULL&& (x)->t_rcv_next == (x)->t_rcv_prev))
+end_define
+
 begin_define
 define|#
 directive|define
@@ -488,117 +542,122 @@ begin_comment
 comment|/* passive open */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCPDEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TDBSIZE
+value|50
+end_define
+
 begin_comment
 comment|/*  * Tcp debugging record.  */
 end_comment
 
 begin_struct
 struct|struct
-name|t_debug
+name|tcp_debug
 block|{
 name|long
-name|t_tod
+name|td_tod
 decl_stmt|;
 comment|/* time of day */
 name|struct
 name|tcb
 modifier|*
-name|t_tcb
+name|td_tcb
 decl_stmt|;
 comment|/* -> tcb */
 name|char
-name|t_old
+name|td_old
 decl_stmt|;
 comment|/* old state */
 name|char
-name|t_inp
+name|td_inp
 decl_stmt|;
 comment|/* input */
 name|char
-name|t_tim
+name|td_tim
 decl_stmt|;
 comment|/* timer id */
 name|char
-name|t_new
+name|td_new
 decl_stmt|;
 comment|/* new state */
 name|seq_t
-name|t_sno
+name|td_sno
 decl_stmt|;
 comment|/* seq_t number */
 name|seq_t
-name|t_ano
+name|td_ano
 decl_stmt|;
 comment|/* acknowledgement */
 name|u_short
-name|t_wno
+name|td_wno
 decl_stmt|;
 comment|/* window */
 name|u_short
-name|t_lno
+name|td_lno
 decl_stmt|;
 comment|/* length */
 name|u_char
-name|t_flg
+name|td_flg
 decl_stmt|;
 comment|/* message flags */
 block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|tcpconsdebug
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/*  * Tcp machine predicates  */
+comment|/* set to 1 traces on console */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ack_ok
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-define|\
-value|(((y)->th_flags&TH_ACK)==0 || \       ((x)->iss< (y)->t_ackno&& (y)->t_ackno<= (x)->snd_hi))
-end_define
+begin_decl_stmt
+name|struct
+name|tcp_debug
+name|tcp_debug
+index|[
+name|TDBSIZE
+index|]
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|syn_ok
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-define|\
-value|((y)->th_flags&TH_SYN)
-end_define
+begin_decl_stmt
+name|int
+name|tdbx
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|ack_fin
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-define|\
-value|((x)->seq_fin> (x)->iss&& (y)->t_ackno> (x)->seq_fin)
-end_define
+begin_comment
+comment|/* rotating index into tcp_debug */
+end_comment
 
-begin_define
-define|#
-directive|define
-name|rcv_empty
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|(((x)->tc_flags&TC_USR_ABORT) || \       ((x)->t_ucb->uc_rbuf == NULL&& (x)->t_rcv_next == (x)->t_rcv_prev))
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
