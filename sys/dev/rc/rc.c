@@ -4674,7 +4674,6 @@ name|tp
 operator|)
 expr_stmt|;
 block|}
-block|}
 if|if
 condition|(
 name|sc
@@ -4684,6 +4683,7 @@ operator|==
 literal|0
 condition|)
 break|break;
+block|}
 block|}
 do|while
 condition|(
