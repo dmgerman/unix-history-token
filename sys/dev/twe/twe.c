@@ -1383,7 +1383,7 @@ expr_stmt|;
 if|if
 condition|(
 name|status_reg
-operator|*
+operator|&
 name|TWE_STATUS_RESPONSE_INTERRUPT
 condition|)
 name|twe_done
