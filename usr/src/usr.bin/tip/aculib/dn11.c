@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dn11.c	4.8	81/08/24	*/
+comment|/*	dn11.c	4.9	81/09/21	*/
 end_comment
 
 begin_if
@@ -252,11 +252,31 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|printf
+argument_list|(
+literal|"child: sleep\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|sleep
 argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|printf
+argument_list|(
+literal|"child: write\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|nw
 operator|=
 name|write
@@ -273,6 +293,16 @@ name|num
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|printf
+argument_list|(
+literal|"child: write finished\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|exit
 argument_list|(
 name|nw
@@ -282,6 +312,18 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * open line - will return on carrier 	 */
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|printf
+argument_list|(
+literal|"parent: child %d, open begin\n"
+argument_list|,
+name|child
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -338,6 +380,21 @@ literal|0
 operator|)
 return|;
 block|}
+name|alarm
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|printf
+argument_list|(
+literal|"parent: open finished\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ioctl
 argument_list|(
 name|dn
@@ -354,6 +411,16 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|printf
+argument_list|(
+literal|"parent: wait for child\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 while|while
 condition|(
 operator|(
@@ -373,11 +440,17 @@ operator|!=
 operator|-
 literal|1
 condition|)
-empty_stmt|;
-name|alarm
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|printf
 argument_list|(
-literal|0
+literal|"wait finds child with pid %d\n"
+argument_list|,
+name|nw
 argument_list|)
+endif|#
+directive|endif
 expr_stmt|;
 name|fflush
 argument_list|(
