@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setterm.c	8.7 (Berkeley) %G%"
+literal|"@(#)setterm.c	8.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -661,9 +661,12 @@ name|BT
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * Test for cursor motion capbility. 	 * 	 * XXX 	 * This is truly stupid -- tgoto returns "OOPS" if it can't 	 * do cursor motions. 	 */
+comment|/* 	 * Test for cursor motion capbility. 	 * 	 * XXX 	 * This is truly stupid -- historically, tgoto returns "OOPS" if it 	 * can't do cursor motions.  Some systems have been fixed to return 	 * a NULL pointer. 	 */
 if|if
 condition|(
+operator|(
+name|p
+operator|=
 name|tgoto
 argument_list|(
 name|CM
@@ -672,9 +675,12 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
-index|[
-literal|0
-index|]
+operator|)
+operator|==
+name|NULL
+operator|||
+operator|*
+name|p
 operator|==
 literal|'O'
 condition|)
