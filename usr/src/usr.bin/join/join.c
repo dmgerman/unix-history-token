@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)join.c	5.5 (Berkeley) %G%"
+literal|"@(#)join.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,13 +61,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -79,13 +79,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<stdlib.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<string.h>
 end_include
 
 begin_comment
@@ -1485,6 +1485,8 @@ operator|->
 name|linealloc
 operator|<=
 name|len
+operator|+
+literal|1
 condition|)
 block|{
 name|lp
@@ -1534,9 +1536,40 @@ operator|->
 name|line
 argument_list|,
 name|len
-operator|+
-literal|1
 argument_list|)
+expr_stmt|;
+comment|/* Replace trailing newline, if it exists. */
+if|if
+condition|(
+name|bp
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|==
+literal|'\n'
+condition|)
+name|lp
+operator|->
+name|line
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+else|else
+name|lp
+operator|->
+name|line
+index|[
+name|len
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 name|bp
 operator|=
