@@ -1057,12 +1057,6 @@ name|P_SA
 condition|)
 block|{
 comment|/* 		 * Idle the other threads for a second. 		 * Since the user space is copied, it must remain stable. 		 * In addition, all threads (from the user perspective) 		 * need to either be suspended or in the kernel, 		 * where they will try restart in the parent and will 		 * be aborted in the child. 		 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p1
@@ -1082,12 +1076,6 @@ argument_list|(
 name|p1
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ERESTART
@@ -1097,12 +1085,6 @@ block|}
 name|PROC_UNLOCK
 argument_list|(
 name|p1
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 comment|/* 		 * All other activity in this process 		 * is now suspended at the user boundary, 		 * (or other safe places if we think of any). 		 */

@@ -316,7 +316,6 @@ name|p_flag
 operator|&
 name|P_SA
 condition|)
-block|{
 name|thread_userret
 argument_list|(
 name|td
@@ -324,7 +323,6 @@ argument_list|,
 name|frame
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Charge system time if profiling. 	 */
 if|if
 condition|(

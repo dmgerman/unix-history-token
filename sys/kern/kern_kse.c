@@ -5961,7 +5961,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Do any thread specific cleanups that may be needed in wait()  * called with Giant held, proc and schedlock not held.  */
+comment|/*  * Do any thread specific cleanups that may be needed in wait()  * called with Giant, proc and schedlock not held.  */
 end_comment
 
 begin_function
@@ -5979,6 +5979,14 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
@@ -8297,7 +8305,7 @@ argument_list|(
 operator|&
 name|Giant
 argument_list|,
-name|MA_OWNED
+name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
 name|PROC_LOCK_ASSERT
@@ -8535,9 +8543,6 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-name|DROP_GIANT
-argument_list|()
-expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
@@ -8553,9 +8558,6 @@ argument_list|(
 operator|&
 name|sched_lock
 argument_list|)
-expr_stmt|;
-name|PICKUP_GIANT
-argument_list|()
 expr_stmt|;
 name|PROC_LOCK
 argument_list|(
@@ -8640,6 +8642,14 @@ operator|=
 name|td
 operator|->
 name|td_proc
+expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
 expr_stmt|;
 name|PROC_LOCK_ASSERT
 argument_list|(
@@ -8735,20 +8745,6 @@ name|td
 operator|)
 condition|)
 block|{
-while|while
-condition|(
-name|mtx_owned
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-condition|)
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|p
@@ -8801,9 +8797,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|DROP_GIANT
-argument_list|()
-expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
@@ -8819,9 +8812,6 @@ argument_list|(
 operator|&
 name|sched_lock
 argument_list|)
-expr_stmt|;
-name|PICKUP_GIANT
-argument_list|()
 expr_stmt|;
 name|PROC_LOCK
 argument_list|(

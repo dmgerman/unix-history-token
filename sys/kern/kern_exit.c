@@ -437,12 +437,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * MUST abort all other threads before proceeding past here. 	 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -477,13 +471,11 @@ argument_list|(
 name|SINGLE_EXIT
 argument_list|)
 condition|)
-block|{
 name|panic
 argument_list|(
 literal|"Exit: Single threading fouled up"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 		 * All other activity in this process is now stopped. 		 * Remove excess KSEs and KSEGRPS. XXXKSE (when we have them) 		 * ... 		 * Turn off threading support. 		 */
 name|p
 operator|->
@@ -497,12 +489,6 @@ argument_list|()
 expr_stmt|;
 comment|/* Don't need this any more. */
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 comment|/* 	 * With this state set: 	 * Any thread entering the kernel from userspace will thread_exit() 	 * in trap().  Any thread attempting to sleep will return immediatly 	 * with EINTR or EWOULDBLOCK, which will hopefully force them 	 * to back out to userland, freeing resources as they go, and 	 * anything attempting to return to userland will thread_exit() 	 * from userret().  thread_exit() will do a wakeup on p->p_numthreads 	 * if it transitions to 1. 	 */
 name|p
 operator|->
@@ -2694,18 +2680,18 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 			 * do any thread-system specific cleanups 			 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|thread_wait
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Give vm and machine-dependent layer a chance 			 * to free anything that cpu_exit couldn't 			 * release while still running in process context. 			 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|vm_waitproc
 argument_list|(
 name|p
