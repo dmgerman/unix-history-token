@@ -244,9 +244,11 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+name|__restrict
 parameter_list|,
 name|wordexp_t
 modifier|*
+name|__restrict
 parameter_list|,
 name|int
 parameter_list|)
