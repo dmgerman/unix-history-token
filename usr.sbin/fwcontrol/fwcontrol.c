@@ -147,7 +147,7 @@ name|stderr
 argument_list|,
 literal|"fwcontrol [-u bus_num] [-rt] [-g gap_count] [-o node] "
 literal|"[-b pri_req] [-c node] [-d node] [-l file] "
-literal|"[-R file] [-S file]\n"
+literal|"[-R file] [-S file] [-m target]\n"
 literal|"\t-u: specify bus number\n"
 literal|"\t-g: broadcast gap_count by phy_config packet\n"
 literal|"\t-o: send link-on packet to the node\n"
@@ -160,6 +160,7 @@ literal|"\t-d: hex dump of configuration ROM\n"
 literal|"\t-l: load and parse hex dump file of configuration ROM\n"
 literal|"\t-R: Receive DV stream\n"
 literal|"\t-S: Send DV stream\n"
+literal|"\t-m: set fwmem target\n"
 argument_list|)
 expr_stmt|;
 name|exit
