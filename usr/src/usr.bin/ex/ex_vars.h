@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  sccs id  @(#)ex_vars.h	7.2	%G% */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ex_vars.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -97,197 +97,204 @@ end_define
 begin_define
 define|#
 directive|define
-name|NUMBER
+name|MODELINE
 value|13
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPEN
+name|NUMBER
 value|14
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPTIMIZE
+name|OPEN
 value|15
 end_define
 
 begin_define
 define|#
 directive|define
-name|PARAGRAPHS
+name|OPTIMIZE
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|PROMPT
+name|PARAGRAPHS
 value|17
 end_define
 
 begin_define
 define|#
 directive|define
-name|READONLY
+name|PROMPT
 value|18
 end_define
 
 begin_define
 define|#
 directive|define
-name|REDRAW
+name|READONLY
 value|19
 end_define
 
 begin_define
 define|#
 directive|define
-name|REMAP
+name|REDRAW
 value|20
 end_define
 
 begin_define
 define|#
 directive|define
-name|REPORT
+name|REMAP
 value|21
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCROLL
+name|REPORT
 value|22
 end_define
 
 begin_define
 define|#
 directive|define
-name|SECTIONS
+name|SCROLL
 value|23
 end_define
 
 begin_define
 define|#
 directive|define
-name|SHELL
+name|SECTIONS
 value|24
 end_define
 
 begin_define
 define|#
 directive|define
-name|SHIFTWIDTH
+name|SHELL
 value|25
 end_define
 
 begin_define
 define|#
 directive|define
-name|SHOWMATCH
+name|SHIFTWIDTH
 value|26
 end_define
 
 begin_define
 define|#
 directive|define
-name|SLOWOPEN
+name|SHOWMATCH
 value|27
 end_define
 
 begin_define
 define|#
 directive|define
-name|TABSTOP
+name|SLOWOPEN
 value|28
 end_define
 
 begin_define
 define|#
 directive|define
-name|TAGLENGTH
+name|TABSTOP
 value|29
 end_define
 
 begin_define
 define|#
 directive|define
-name|TAGS
+name|TAGLENGTH
 value|30
 end_define
 
 begin_define
 define|#
 directive|define
-name|TERM
+name|TAGS
 value|31
 end_define
 
 begin_define
 define|#
 directive|define
-name|TERSE
+name|TERM
 value|32
 end_define
 
 begin_define
 define|#
 directive|define
-name|TIMEOUT
+name|TERSE
 value|33
 end_define
 
 begin_define
 define|#
 directive|define
-name|TTYTYPE
+name|TIMEOUT
 value|34
 end_define
 
 begin_define
 define|#
 directive|define
-name|WARN
+name|TTYTYPE
 value|35
 end_define
 
 begin_define
 define|#
 directive|define
-name|WINDOW
+name|WARN
 value|36
 end_define
 
 begin_define
 define|#
 directive|define
-name|WRAPSCAN
+name|WINDOW
 value|37
 end_define
 
 begin_define
 define|#
 directive|define
-name|WRAPMARGIN
+name|WRAPSCAN
 value|38
 end_define
 
 begin_define
 define|#
 directive|define
-name|WRITEANY
+name|WRAPMARGIN
 value|39
 end_define
 
 begin_define
 define|#
 directive|define
-name|NOPTS
+name|WRITEANY
 value|40
+end_define
+
+begin_define
+define|#
+directive|define
+name|NOPTS
+value|41
 end_define
 
 end_unit
