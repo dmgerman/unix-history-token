@@ -112,7 +112,7 @@ decl_stmt|;
 name|int
 name|rv
 decl_stmt|;
-comment|/*      * If it looks like this is just a path and no      * device, go with the current device.      */
+comment|/* 	 * If it looks like this is just a path and no 	 * device, go with the current device. 	 */
 if|if
 condition|(
 operator|(
@@ -181,7 +181,7 @@ name|rv
 operator|)
 return|;
 block|}
-comment|/*      * Try to parse the device name off the beginning of the devspec      */
+comment|/* 	 * Try to parse the device name off the beginning of the devspec 	 */
 return|return
 operator|(
 name|efi_parsedev
