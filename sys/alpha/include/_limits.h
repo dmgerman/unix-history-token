@@ -359,11 +359,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* !_MACHINE__LIMITS_H_ */
 end_comment
