@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	5.17 (Berkeley) %G%"
+literal|"@(#)ftpd.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2483,17 +2483,17 @@ name|reply
 argument_list|(
 literal|150
 argument_list|,
-literal|"Opening data connection for %s (%s mode)%s."
-argument_list|,
-name|name
+literal|"Opening %s mode data connection for %s%s."
 argument_list|,
 name|type
 operator|==
 name|TYPE_A
 condition|?
-literal|"ascii"
+literal|"ASCII"
 else|:
-literal|"binary"
+literal|"BINARY"
+argument_list|,
+name|name
 argument_list|,
 name|sizebuf
 argument_list|)
@@ -2685,17 +2685,17 @@ name|reply
 argument_list|(
 literal|150
 argument_list|,
-literal|"Opening data connection for %s (%s mode)%s."
-argument_list|,
-name|name
+literal|"Opening %s mode data connection for %s%s."
 argument_list|,
 name|type
 operator|==
 name|TYPE_A
 condition|?
-literal|"ascii"
+literal|"ASCII"
 else|:
-literal|"binary"
+literal|"BINARY"
+argument_list|,
+name|name
 argument_list|,
 name|sizebuf
 argument_list|)
