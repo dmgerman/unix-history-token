@@ -35,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: sock.c,v 2.1 1999/08/04 17:31:16 darrenr Exp $"
+literal|"@(#)$Id: sock.c,v 2.1.4.1 2000/12/16 21:05:44 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

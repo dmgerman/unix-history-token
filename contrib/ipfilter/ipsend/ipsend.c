@@ -1652,6 +1652,25 @@ operator|->
 name|ip_len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ti
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"malloc failed\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
 name|bcopy
 argument_list|(
 operator|(

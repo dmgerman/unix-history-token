@@ -1840,6 +1840,16 @@ case|:
 ifdef|#
 directive|ifdef
 name|IPFILTER_LOG
+name|arg
+operator|=
+operator|(
+name|int
+operator|)
+name|iplused
+index|[
+name|IPL_LOGSTATE
+index|]
+expr_stmt|;
 name|error
 operator|=
 name|IWCOPY
@@ -1848,10 +1858,7 @@ operator|(
 name|caddr_t
 operator|)
 operator|&
-name|iplused
-index|[
-name|IPL_LOGSTATE
-index|]
+name|arg
 argument_list|,
 operator|(
 name|caddr_t
@@ -1860,10 +1867,7 @@ name|data
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|iplused
-index|[
-name|IPL_LOGSTATE
-index|]
+name|arg
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4417,23 +4421,6 @@ operator|.
 name|iss_hits
 argument_list|)
 expr_stmt|;
-name|is
-operator|->
-name|is_pkts
-operator|++
-expr_stmt|;
-name|is
-operator|->
-name|is_bytes
-operator|+=
-name|fin
-operator|->
-name|fin_dlen
-operator|+
-name|fin
-operator|->
-name|fin_hlen
-expr_stmt|;
 comment|/* 		 * Nearing end of connection, start timeout. 		 */
 comment|/* source ? 0 : 1 -> !source */
 name|fr_tcp_age
@@ -6381,7 +6368,6 @@ operator|.
 name|iss_hits
 operator|++
 expr_stmt|;
-comment|/* 			 * we must swap src and dst here because the icmp 			 * comes the other way around 			 */
 name|is
 operator|->
 name|is_pkts
@@ -7506,6 +7492,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Must always be called with fr_ipfstate held as a write lock.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -7616,12 +7606,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|ATOMIC_DEC32
-argument_list|(
 name|fr
 operator|->
 name|fr_ref
-argument_list|)
+operator|--
 expr_stmt|;
 if|if
 condition|(
@@ -7631,11 +7619,13 @@ name|fr_ref
 operator|==
 literal|0
 condition|)
+block|{
 name|KFREE
 argument_list|(
 name|fr
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 ifdef|#
 directive|ifdef
@@ -7846,17 +7836,6 @@ name|is
 operator|->
 name|is_next
 expr_stmt|;
-name|RWLOCK_EXIT
-argument_list|(
-operator|&
-name|ipf_state
-argument_list|)
-expr_stmt|;
-name|SPL_X
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|fr_state_doflush
@@ -7875,6 +7854,17 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|RWLOCK_EXIT
+argument_list|(
+operator|&
+name|ipf_state
+argument_list|)
+expr_stmt|;
+name|SPL_X
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

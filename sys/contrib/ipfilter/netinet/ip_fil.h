@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_fil.h,v 2.29.2.3 2000/06/05 13:12:42 darrenr Exp $  * $FreeBSD$  */
+comment|/*  * Copyright (C) 1993-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_fil.h,v 2.29.2.4 2000/11/12 11:54:53 darrenr Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -1745,6 +1745,10 @@ name|u_long
 name|fr_badsrc
 decl_stmt|;
 comment|/* source received doesn't match route */
+name|u_long
+name|fr_badttl
+decl_stmt|;
+comment|/* TTL in packet doesn't reach minimum */
 if|#
 directive|if
 name|SOLARIS
@@ -4325,6 +4329,20 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|fr_chksrc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|fr_minttl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|fr_minttllog
 decl_stmt|;
 end_decl_stmt
 

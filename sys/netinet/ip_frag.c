@@ -24,10 +24,6 @@ literal|"@(#)ip_frag.c	1.11 3/24/96 (C) 1993-1995 Darren Reed"
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*static const char rcsid[] = "@(#)$Id: ip_frag.c,v 2.10.2.4 2000/06/06 15:49:15 darrenr Exp $";*/
-end_comment
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -982,6 +978,14 @@ name|ip_dst
 operator|.
 name|s_addr
 expr_stmt|;
+name|frag
+operator|.
+name|ipfr_ifp
+operator|=
+name|fin
+operator|->
+name|fin_ifp
+expr_stmt|;
 name|idx
 operator|*=
 literal|127
@@ -1517,6 +1521,14 @@ name|ip_dst
 operator|.
 name|s_addr
 expr_stmt|;
+name|frag
+operator|.
+name|ipfr_ifp
+operator|=
+name|fin
+operator|->
+name|fin_ifp
+expr_stmt|;
 name|idx
 operator|*=
 literal|127
@@ -1791,18 +1803,7 @@ name|ipf
 operator|->
 name|ipfr_data
 expr_stmt|;
-if|if
-condition|(
-name|nat
-operator|->
-name|nat_ifp
-operator|==
-name|fin
-operator|->
-name|fin_ifp
-condition|)
-block|{
-comment|/* 			 * This is the last fragment for this packet. 			 */
+comment|/* 		 * This is the last fragment for this packet. 		 */
 if|if
 condition|(
 operator|(
@@ -1833,12 +1834,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-block|}
-else|else
-name|nat
-operator|=
-name|NULL
-expr_stmt|;
 block|}
 else|else
 name|nat
