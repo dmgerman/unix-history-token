@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.37 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.38 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.37 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.38 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2014,7 +2014,10 @@ name|sin
 operator|.
 name|sin_port
 operator|=
+name|htons
+argument_list|(
 literal|113
+argument_list|)
 expr_stmt|;
 name|s
 operator|=
