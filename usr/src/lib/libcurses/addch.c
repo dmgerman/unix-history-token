@@ -6,7 +6,7 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  *	This routine adds the character to the current position  *  * %G% (Berkeley) @(#)addch.c	1.1  */
+comment|/*  *	This routine adds the character to the current position  *  * %G% (Berkeley) @(#)addch.c	1.2  */
 end_comment
 
 begin_macro
@@ -108,9 +108,6 @@ name|reg
 name|int
 name|newx
 decl_stmt|;
-operator|--
-name|x
-expr_stmt|;
 for|for
 control|(
 name|newx
@@ -126,11 +123,9 @@ operator|&
 literal|07
 operator|)
 operator|)
-operator|+
-literal|1
 init|;
 name|x
-operator|<=
+operator|<
 name|newx
 condition|;
 name|x
