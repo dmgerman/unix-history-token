@@ -8792,8 +8792,6 @@ name|INLCR
 operator||
 name|ISTRIP
 operator||
-name|IXOFF
-operator||
 name|IXON
 operator|)
 operator|)
@@ -8854,8 +8852,6 @@ name|c_lflag
 operator|&
 operator|(
 name|ECHO
-operator||
-name|ECHONL
 operator||
 name|ICANON
 operator||
