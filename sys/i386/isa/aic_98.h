@@ -324,14 +324,14 @@ begin_define
 define|#
 directive|define
 name|STCNT1
-value|(iobase + aic->aicport[0x09)
+value|(iobase + aic->aicport[0x09])
 end_define
 
 begin_define
 define|#
 directive|define
 name|STCNT2
-value|(iobase + aic->aicport[0x0a)
+value|(iobase + aic->aicport[0x0a])
 end_define
 
 begin_define
@@ -547,7 +547,7 @@ begin_define
 define|#
 directive|define
 name|DMADATALONG
-value|(iobase + aic->aicport[0x18)
+value|(iobase + aic->aicport[0x18])
 end_define
 
 begin_define
