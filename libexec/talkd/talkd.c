@@ -179,6 +179,8 @@ name|char
 name|hostname
 index|[
 name|MAXHOSTNAMELEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -423,6 +425,21 @@ name|response
 argument_list|)
 expr_stmt|;
 comment|/* can block here, is this what I want? */
+name|mp
+operator|->
+name|ctl_addr
+operator|.
+name|sa_family
+operator|=
+name|htons
+argument_list|(
+name|mp
+operator|->
+name|ctl_addr
+operator|.
+name|sa_family
+argument_list|)
+expr_stmt|;
 name|cc
 operator|=
 name|sendto
