@@ -400,6 +400,12 @@ argument|&vm_object_list
 argument_list|,
 argument|object_list
 argument_list|)
+block|{
+name|vm_object_lock
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|vm_object_clear_flag
 argument_list|(
 name|object
@@ -407,6 +413,12 @@ argument_list|,
 name|OBJ_ACTIVE
 argument_list|)
 expr_stmt|;
+name|vm_object_unlock
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
+block|}
 name|mtx_unlock
 argument_list|(
 operator|&
