@@ -1028,6 +1028,10 @@ name|struct
 name|timeval
 name|aue_rx_notice
 decl_stmt|;
+name|struct
+name|usb_qdat
+name|aue_qdat
+decl_stmt|;
 block|}
 struct|;
 end_struct
