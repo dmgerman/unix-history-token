@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslogd.c,v 1.47 1999/04/30 12:51:20 des Exp $"
+literal|"$Id: syslogd.c,v 1.48 1999/05/02 12:47:09 dt Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3254,6 +3254,8 @@ argument_list|,
 name|p
 argument_list|,
 name|l
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
