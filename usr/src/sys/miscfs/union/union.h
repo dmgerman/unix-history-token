@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -182,6 +182,7 @@ name|int
 name|un_openl
 decl_stmt|;
 comment|/* # of opens on lowervp */
+name|unsigned
 name|int
 name|un_flags
 decl_stmt|;
@@ -231,6 +232,17 @@ end_define
 
 begin_comment
 comment|/* Keep upper node locked on vput */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UN_CACHED
+value|0x10
+end_define
+
+begin_comment
+comment|/* In union cache */
 end_comment
 
 begin_decl_stmt
