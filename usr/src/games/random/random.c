@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)random.c	8.4 (Berkeley) %G%"
+literal|"@(#)random.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -334,20 +334,19 @@ expr_stmt|;
 comment|/* 	 * Select whether to print the first line.  (Prime the pump.) 	 * We find a random number between 0 and denom - 1 and, if it's 	 * 0 (which has a 1 / denom chance of being true), we select the 	 * line. 	 */
 name|selected
 operator|=
-operator|!
 call|(
 name|int
 call|)
 argument_list|(
-operator|(
 name|denom
 operator|*
 name|random
 argument_list|()
-operator|)
 operator|/
 name|LONG_MAX
 argument_list|)
+operator|==
+literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -398,20 +397,19 @@ expr_stmt|;
 comment|/* Now see if the next line is to be printed. */
 name|selected
 operator|=
-operator|!
 call|(
 name|int
 call|)
 argument_list|(
-operator|(
 name|denom
 operator|*
 name|random
 argument_list|()
-operator|)
 operator|/
 name|LONG_MAX
 argument_list|)
+operator|==
+literal|0
 expr_stmt|;
 block|}
 block|}
