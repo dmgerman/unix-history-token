@@ -288,7 +288,7 @@ end_function
 begin_include
 include|#
 directive|include
-file|"crtbegin.c"
+file|"crtbrand.c"
 end_include
 
 end_unit
