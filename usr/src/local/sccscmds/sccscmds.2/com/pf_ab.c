@@ -11,7 +11,7 @@ name|char
 name|Sccsid
 index|[]
 init|=
-literal|"@(#)pf_ab.c	1.4	%G%"
+literal|"@(#)pf_ab.c	1.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,12 +67,17 @@ decl_stmt|;
 name|char
 modifier|*
 name|xp
+decl_stmt|,
+modifier|*
+name|buf
 decl_stmt|;
 name|xp
 operator|=
 name|p
 operator|=
-name|alloca
+name|buf
+operator|=
+name|alloc
 argument_list|(
 name|size
 argument_list|(
@@ -247,7 +252,14 @@ operator|!
 operator|*
 name|p
 condition|)
+block|{
+name|free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|p
 operator|+=
 literal|2
@@ -330,6 +342,11 @@ name|pf_elist
 operator|=
 operator|++
 name|p
+expr_stmt|;
+name|free
+argument_list|(
+name|buf
+argument_list|)
 expr_stmt|;
 block|}
 end_block

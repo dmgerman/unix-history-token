@@ -57,7 +57,7 @@ name|d
 decl_stmt|;
 name|d
 operator|=
-name|alloca
+name|alloc
 argument_list|(
 name|size
 argument_list|(
@@ -84,6 +84,11 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
+name|free
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|Error
@@ -99,6 +104,11 @@ name|Error
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
 name|unlink
 argument_list|(
 name|name

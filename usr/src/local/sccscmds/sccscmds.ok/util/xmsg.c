@@ -96,7 +96,7 @@ name|EACCES
 case|:
 name|str
 operator|=
-name|alloca
+name|malloc
 argument_list|(
 name|size
 argument_list|(
