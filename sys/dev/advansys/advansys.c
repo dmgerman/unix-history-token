@@ -3671,6 +3671,14 @@ expr_stmt|;
 case|case
 literal|1
 case|:
+if|if
+condition|(
+name|adv
+operator|->
+name|ccb_infos
+operator|!=
+name|NULL
+condition|)
 name|free
 argument_list|(
 name|adv
