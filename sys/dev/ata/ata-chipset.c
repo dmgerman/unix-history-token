@@ -6094,7 +6094,7 @@ literal|0
 block|,
 name|PRTX
 block|,
-literal|0x00
+name|PRTX4
 block|,
 name|ATA_UDMA5
 block|,
