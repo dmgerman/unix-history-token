@@ -53,7 +53,10 @@ argument_list|)
 name|mtx_contested
 expr_stmt|;
 comment|/* Next contested mtx. */
-comment|/* Fields used only if MUTEX_PROFILING is configured: */
+ifdef|#
+directive|ifdef
+name|MUTEX_PROFILING
+comment|/* 	 * This does not result in variant structure sizes because 	 * MUTEX_PROFILING is in opt_global.h 	 */
 name|u_int64_t
 name|mtx_acqtime
 decl_stmt|;
@@ -65,6 +68,8 @@ decl_stmt|;
 name|int
 name|mtx_lineno
 decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
