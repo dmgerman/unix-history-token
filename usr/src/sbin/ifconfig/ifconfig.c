@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ifconfig.c	4.3 (Berkeley) %G%"
+literal|"@(#)ifconfig.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -193,6 +193,23 @@ literal|"-arp"
 block|,
 operator|-
 name|IFF_NOARP
+block|,
+name|setifflags
+block|}
+block|,
+block|{
+literal|"debug"
+block|,
+name|IFF_DEBUG
+block|,
+name|setifflags
+block|}
+block|,
+block|{
+literal|"-debug"
+block|,
+operator|-
+name|IFF_DEBUG
 block|,
 name|setifflags
 block|}
