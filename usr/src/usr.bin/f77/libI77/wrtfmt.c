@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_wrtfmt[] = "@(#)wrtfmt.c	1.5";  *  * formatted write routines  */
+comment|/* char id_wrtfmt[] = "@(#)wrtfmt.c	1.6";  *  * formatted write routines  */
 end_comment
 
 begin_include
@@ -382,6 +382,22 @@ name|p
 operator|->
 name|p1
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|recpos
+operator|+
+name|cursor
+operator|)
+operator|<
+literal|0
+condition|)
+name|cursor
+operator|=
+operator|-
+name|recpos
+expr_stmt|;
+comment|/* ANSI req'd */
 name|tab
 operator|=
 name|YES
@@ -403,15 +419,10 @@ name|p
 operator|->
 name|p1
 expr_stmt|;
+comment|/* tab = (p->op == TR); this would implement destructive X */
 name|tab
 operator|=
-operator|(
-name|p
-operator|->
-name|op
-operator|==
-name|TR
-operator|)
+name|YES
 expr_stmt|;
 return|return
 operator|(
@@ -1194,12 +1205,47 @@ name|OK
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|scale
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* insane ANSI requirement */
+name|dd
+operator|=
+name|d
+operator|+
+literal|1
+expr_stmt|;
+name|d
+operator|=
+name|dd
+operator|-
+name|scale
+expr_stmt|;
+block|}
+else|else
 name|dd
 operator|=
 name|d
 operator|+
 name|scale
 expr_stmt|;
+if|if
+condition|(
+name|dd
+operator|<=
+literal|0
+operator|||
+name|d
+operator|<
+literal|0
+condition|)
+goto|goto
+name|E_badfield
+goto|;
 name|s
 operator|=
 name|ecvt
@@ -1275,6 +1321,8 @@ operator|<
 literal|0
 condition|)
 block|{
+name|E_badfield
+label|:
 for|for
 control|(
 name|i
