@@ -122,26 +122,12 @@ name|int
 name|t_line
 decl_stmt|;
 comment|/* Interface to device drivers. */
-union|union
-block|{
 name|struct
 name|cdev
 modifier|*
-name|t_kdev
+name|t_dev
 decl_stmt|;
 comment|/* Device. */
-name|dev_t
-name|t_udev
-decl_stmt|;
-comment|/* Userland (sysctl) instance. */
-name|void
-modifier|*
-name|t_devp
-decl_stmt|;
-comment|/* Keep user/kernel size in sync. */
-block|}
-name|ttyu
-union|;
 name|int
 name|t_state
 decl_stmt|;
@@ -311,13 +297,6 @@ define|#
 directive|define
 name|t_cflag
 value|t_termios.c_cflag
-end_define
-
-begin_define
-define|#
-directive|define
-name|t_dev
-value|ttyu.t_kdev
 end_define
 
 begin_define
