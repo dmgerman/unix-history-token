@@ -19,43 +19,37 @@ directive|define
 name|_MACHINE_SYSARCH_H_
 end_define
 
+begin_comment
+comment|/* Leave space for 0-127 for to avoid translating syscalls */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|AMD64_GET_FSBASE
-value|0
+value|128
 end_define
 
 begin_define
 define|#
 directive|define
 name|AMD64_SET_FSBASE
-value|1
+value|129
 end_define
 
 begin_define
 define|#
 directive|define
 name|AMD64_GET_GSBASE
-value|2
+value|130
 end_define
 
 begin_define
 define|#
 directive|define
 name|AMD64_SET_GSBASE
-value|3
+value|131
 end_define
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* these wrappers need to be implemented in libc first */
-end_comment
 
 begin_ifndef
 ifndef|#
@@ -69,11 +63,52 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_endif
-unit|__BEGIN_DECLS unsigned long amd64_get_fsbase(void); unsigned long amd64_set_fsbase(unsigned long); unsigned long amd64_get_gsbase(void); unsigned long amd64_set_gsbase(unsigned long); __END_DECLS
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+name|__BEGIN_DECLS
+name|unsigned
+name|long
+name|amd64_get_fsbase
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|unsigned
+name|long
+name|amd64_set_fsbase
+parameter_list|(
+name|unsigned
+name|long
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|unsigned
+name|long
+name|amd64_get_gsbase
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|unsigned
+name|long
+name|amd64_set_gsbase
+parameter_list|(
+name|unsigned
+name|long
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#
