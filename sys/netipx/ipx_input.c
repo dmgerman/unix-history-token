@@ -334,6 +334,13 @@ end_comment
 
 begin_decl_stmt
 name|struct
+name|mtx
+name|ipxpcb_list_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
 name|ipxpcbhead
 name|ipxpcb_list
 decl_stmt|;
@@ -455,6 +462,9 @@ argument_list|(
 operator|&
 name|ipxrawpcb_list
 argument_list|)
+expr_stmt|;
+name|IPX_LIST_LOCK_INIT
+argument_list|()
 expr_stmt|;
 name|ipx_netmask
 operator|.

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2004, Robert N. M. Watson  * Copyright (c) 1995, Mike Mitchell  * Copyright (c) 1984, 1985, 1986, 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ipx_pcb.h  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2004-2005 Robert N. M. Watson  * Copyright (c) 1995, Mike Mitchell  * Copyright (c) 1984, 1985, 1986, 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ipx_pcb.h  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -70,6 +70,10 @@ name|u_char
 name|ipxp_rpt
 decl_stmt|;
 comment|/* last received packet type by ipx_input() */
+name|struct
+name|mtx
+name|ipxp_mtx
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -103,6 +107,25 @@ name|ipxpcbhead
 name|ipxrawpcb_list
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|ipxpcb_list_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* possible flags */
@@ -363,6 +386,88 @@ name|nam
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|IPX_LIST_LOCK_INIT
+parameter_list|()
+value|mtx_init(&ipxpcb_list_mtx, "ipx_list_mtx", \ 				    NULL, MTX_DEF | MTX_RECURSE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPX_LIST_LOCK
+parameter_list|()
+value|mtx_lock(&ipxpcb_list_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPX_LIST_UNLOCK
+parameter_list|()
+value|mtx_unlock(&ipxpcb_list_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPX_LIST_LOCK_ASSERT
+parameter_list|()
+value|mtx_assert(&ipxpcb_list_mtx, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPX_LOCK_INIT
+parameter_list|(
+name|ipx
+parameter_list|)
+value|mtx_init(&(ipx)->ipxp_mtx, "ipx_mtx", NULL, \ 				    MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPX_LOCK_DESTROY
+parameter_list|(
+name|ipx
+parameter_list|)
+value|mtx_destroy(&(ipx)->ipxp_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPX_LOCK
+parameter_list|(
+name|ipx
+parameter_list|)
+value|mtx_lock(&(ipx)->ipxp_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPX_UNLOCK
+parameter_list|(
+name|ipx
+parameter_list|)
+value|mtx_unlock(&(ipx)->ipxp_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPX_LOCK_ASSERT
+parameter_list|(
+name|ipx
+parameter_list|)
+value|mtx_assert(&(ipx)->ipxp_mtx, MA_OWNED)
+end_define
 
 begin_endif
 endif|#
