@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dmesg.c	5.3 (Berkeley) %G%"
+literal|"@(#)dmesg.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -369,13 +369,13 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|omsgbuf
+name|omesg
 operator|.
 name|msg_bufx
 operator|>=
 name|MSG_BSIZE
 condition|)
-name|omsgbuf
+name|omesg
 operator|.
 name|msg_bufx
 operator|=

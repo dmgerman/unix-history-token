@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chgrp.c	5.3 (Berkeley) %G%"
+literal|"@(#)chgrp.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -232,7 +232,7 @@ name|fatal
 argument_list|(
 literal|255
 argument_list|,
-literal|"unknown option: %s"
+literal|"unknown option: %c"
 argument_list|,
 operator|*
 name|cp
