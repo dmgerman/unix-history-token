@@ -303,6 +303,17 @@ block|,
 name|ftdi_8u232am_b921600
 init|=
 literal|0x8003
+block|,
+name|ftdi_8u232am_b2000000
+init|=
+literal|0x0001
+block|,
+comment|/* special case for 2M baud */
+name|ftdi_8u232am_b3000000
+init|=
+literal|0x0000
+block|,
+comment|/* special case for 3M baud */
 block|}
 enum|;
 end_enum
