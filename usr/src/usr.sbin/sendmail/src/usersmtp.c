@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.12
+literal|3.12.1.1
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.12
+literal|3.12.1.1
 operator|%
 name|G
 operator|%
@@ -300,6 +300,7 @@ operator|(
 name|EX_TEMPFAIL
 operator|)
 return|;
+comment|/* 	**  Send the HOPS command. 	**	This is non-standard and may give an "unknown command". 	**		This is not an error. 	**	It can give a "bad hop count" error if the hop 	**		count is exceeded. 	*/
 comment|/* 	**  Send the MAIL command. 	**	Designates the sender. 	*/
 name|expand
 argument_list|(

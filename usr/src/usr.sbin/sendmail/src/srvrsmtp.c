@@ -21,7 +21,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.20
+literal|3.20.1.1
 operator|%
 name|G
 operator|%
@@ -49,7 +49,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.20
+literal|3.20.1.1
 operator|%
 name|G
 operator|%
@@ -124,6 +124,17 @@ end_define
 
 begin_comment
 comment|/* data -- send message text */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMDHOPS
+value|4
+end_define
+
+begin_comment
+comment|/* hops -- specify hop count */
 end_comment
 
 begin_define
@@ -303,6 +314,10 @@ block|,
 literal|"helo"
 block|,
 name|CMDHELO
+block|,
+literal|"hops"
+block|,
+name|CMDHOPS
 block|,
 ifdef|#
 directive|ifdef
@@ -1045,6 +1060,40 @@ literal|"Scheme unknown"
 argument_list|)
 expr_stmt|;
 block|}
+break|break;
+case|case
+name|CMDHOPS
+case|:
+comment|/* specify hop count */
+name|HopCount
+operator|=
+name|atoi
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|++
+name|HopCount
+operator|>
+name|MAXHOP
+condition|)
+name|message
+argument_list|(
+literal|"501"
+argument_list|,
+literal|"Hop count exceeded"
+argument_list|)
+expr_stmt|;
+else|else
+name|message
+argument_list|(
+literal|"200"
+argument_list|,
+literal|"Hop count ok"
+argument_list|)
+expr_stmt|;
 break|break;
 ifdef|#
 directive|ifdef
