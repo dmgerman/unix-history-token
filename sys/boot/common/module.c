@@ -181,7 +181,7 @@ name|char
 modifier|*
 name|default_searchpath
 init|=
-literal|"/boot/modules;/modules;/boot/kernel"
+literal|"/boot/kernel;/boot/modules;/modules"
 decl_stmt|;
 end_decl_stmt
 
