@@ -505,8 +505,9 @@ parameter_list|,
 name|u_int
 name|pin
 parameter_list|,
-name|char
-name|activehi
+name|enum
+name|intr_polarity
+name|pol
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -522,8 +523,9 @@ parameter_list|,
 name|u_int
 name|pin
 parameter_list|,
-name|char
-name|edgetrigger
+name|enum
+name|intr_trigger
+name|trigger
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -729,8 +731,9 @@ parameter_list|,
 name|u_int
 name|lvt
 parameter_list|,
-name|u_char
-name|activehi
+name|enum
+name|intr_polarity
+name|pol
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -745,8 +748,9 @@ parameter_list|,
 name|u_int
 name|lvt
 parameter_list|,
-name|u_char
-name|edgetrigger
+name|enum
+name|intr_trigger
+name|trigger
 parameter_list|)
 function_decl|;
 end_function_decl

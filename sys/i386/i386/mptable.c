@@ -120,32 +120,6 @@ file|<dev/pci/pcivar.h>
 end_include
 
 begin_comment
-comment|/* EISA Edge/Level trigger control registers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ELCR0
-value|0x4d0
-end_define
-
-begin_comment
-comment|/* eisa irq 0-7 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ELCR1
-value|0x4d1
-end_define
-
-begin_comment
-comment|/* eisa irq 8-15 */
-end_comment
-
-begin_comment
 comment|/* string defined by the Intel MP Spec as identifying the MP table */
 end_comment
 
@@ -685,18 +659,23 @@ end_expr_stmt
 
 begin_function_decl
 specifier|static
-name|u_char
+name|enum
+name|intr_polarity
 name|conforming_polarity
 parameter_list|(
 name|u_char
 name|src_bus
+parameter_list|,
+name|u_char
+name|src_bus_irq
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_char
+name|enum
+name|intr_trigger
 name|conforming_trigger
 parameter_list|(
 name|u_char
@@ -710,7 +689,8 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_char
+name|enum
+name|intr_polarity
 name|intentry_polarity
 parameter_list|(
 name|int_entry_ptr
@@ -721,7 +701,8 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_char
+name|enum
+name|intr_trigger
 name|intentry_trigger
 parameter_list|(
 name|int_entry_ptr
@@ -2594,11 +2575,15 @@ end_comment
 
 begin_function
 specifier|static
-name|u_char
+name|enum
+name|intr_polarity
 name|conforming_polarity
 parameter_list|(
 name|u_char
 name|src_bus
+parameter_list|,
+name|u_char
+name|src_bus_irq
 parameter_list|)
 block|{
 name|KASSERT
@@ -2627,22 +2612,53 @@ block|{
 case|case
 name|ISA
 case|:
-case|case
-name|EISA
-case|:
-comment|/* Active Hi */
 return|return
 operator|(
-literal|1
+name|INTR_POLARITY_HIGH
 operator|)
 return|;
 case|case
 name|PCI
 case|:
-comment|/* Active Lo */
 return|return
 operator|(
-literal|0
+name|INTR_POLARITY_LOW
+operator|)
+return|;
+case|case
+name|EISA
+case|:
+name|KASSERT
+argument_list|(
+name|src_bus_irq
+operator|<
+literal|16
+argument_list|,
+operator|(
+literal|"Invalid EISA IRQ %d"
+operator|,
+name|src_bus_irq
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|elcr_read_trigger
+argument_list|(
+name|src_bus_irq
+argument_list|)
+operator|==
+name|INTR_TRIGGER_LEVEL
+condition|)
+return|return
+operator|(
+name|INTR_POLARITY_LOW
+operator|)
+return|;
+else|else
+return|return
+operator|(
+name|INTR_POLARITY_HIGH
 operator|)
 return|;
 default|default:
@@ -2670,7 +2686,8 @@ end_comment
 
 begin_function
 specifier|static
-name|u_char
+name|enum
+name|intr_trigger
 name|conforming_trigger
 parameter_list|(
 name|u_char
@@ -2680,13 +2697,6 @@ name|u_char
 name|src_bus_irq
 parameter_list|)
 block|{
-specifier|static
-name|int
-name|eisa_int_control
-init|=
-operator|-
-literal|1
-decl_stmt|;
 name|KASSERT
 argument_list|(
 name|src_bus
@@ -2713,19 +2723,17 @@ block|{
 case|case
 name|ISA
 case|:
-comment|/* Edge Triggered */
 return|return
 operator|(
-literal|1
+name|INTR_TRIGGER_EDGE
 operator|)
 return|;
 case|case
 name|PCI
 case|:
-comment|/* Level Triggered */
 return|return
 operator|(
-literal|0
+name|INTR_TRIGGER_LEVEL
 operator|)
 return|;
 case|case
@@ -2744,48 +2752,12 @@ name|src_bus_irq
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|eisa_int_control
-operator|==
-operator|-
-literal|1
-condition|)
-name|eisa_int_control
-operator|=
-name|inb
-argument_list|(
-name|ELCR1
-argument_list|)
-operator|<<
-literal|8
-operator||
-name|inb
-argument_list|(
-name|ELCR0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|eisa_int_control
-operator|&
+return|return
 operator|(
-literal|1
-operator|<<
+name|elcr_read_trigger
+argument_list|(
 name|src_bus_irq
-operator|)
-condition|)
-comment|/* Level Triggered */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-else|else
-comment|/* Edge Triggered */
-return|return
-operator|(
-literal|1
+argument_list|)
 operator|)
 return|;
 default|default:
@@ -2809,7 +2781,8 @@ end_function
 
 begin_function
 specifier|static
-name|u_char
+name|enum
+name|intr_polarity
 name|intentry_polarity
 parameter_list|(
 name|int_entry_ptr
@@ -2835,6 +2808,10 @@ argument_list|(
 name|intr
 operator|->
 name|src_bus_id
+argument_list|,
+name|intr
+operator|->
+name|src_bus_irq
 argument_list|)
 operator|)
 return|;
@@ -2843,7 +2820,7 @@ name|INTENTRY_FLAGS_POLARITY_ACTIVEHI
 case|:
 return|return
 operator|(
-literal|1
+name|INTR_POLARITY_HIGH
 operator|)
 return|;
 case|case
@@ -2851,7 +2828,7 @@ name|INTENTRY_FLAGS_POLARITY_ACTIVELO
 case|:
 return|return
 operator|(
-literal|0
+name|INTR_POLARITY_LOW
 operator|)
 return|;
 default|default:
@@ -2866,7 +2843,8 @@ end_function
 
 begin_function
 specifier|static
-name|u_char
+name|enum
+name|intr_trigger
 name|intentry_trigger
 parameter_list|(
 name|int_entry_ptr
@@ -2904,7 +2882,7 @@ name|INTENTRY_FLAGS_TRIGGER_EDGE
 case|:
 return|return
 operator|(
-literal|1
+name|INTR_TRIGGER_EDGE
 operator|)
 return|;
 case|case
@@ -2912,7 +2890,7 @@ name|INTENTRY_FLAGS_TRIGGER_LEVEL
 case|:
 return|return
 operator|(
-literal|0
+name|INTR_TRIGGER_LEVEL
 operator|)
 return|;
 default|default:
