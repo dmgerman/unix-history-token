@@ -3,6 +3,10 @@ begin_comment
 comment|/* Support routines for GNU DIFF.    Copyright (C) 1988, 1989, 1992, 1993, 1994 Free Software Foundation, Inc.  This file is part of GNU DIFF.  GNU DIFF is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU DIFF is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU DIFF; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -1801,33 +1805,6 @@ argument_list|,
 name|flag_format
 argument_list|,
 name|line_flag
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-operator|!
-name|line_flag
-operator|||
-name|line_flag
-index|[
-literal|0
-index|]
-operator|)
-operator|&&
-name|limit
-index|[
-operator|-
-literal|1
-index|]
-operator|!=
-literal|'\n'
-condition|)
-name|fprintf
-argument_list|(
-name|out
-argument_list|,
-literal|"\n\\ No newline at end of file\n"
 argument_list|)
 expr_stmt|;
 block|}
