@@ -1053,8 +1053,6 @@ name|_C
 block|,
 comment|/*A0*/
 name|_R
-operator||
-name|_G
 block|,
 name|_P
 operator||
