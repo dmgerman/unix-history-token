@@ -47,17 +47,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -66,6 +55,20 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  *  syslogd -- log system messages  *  * This program implements a system log. It takes a series of lines.  * Each line may have a priority, signified as "<n>" as  * the first characters of the line.  If this is  * not present, a default priority is used.  *  * To kill syslogd, send a signal 15 (terminate).  A signal 1 (hup) will  * cause it to reread its configuration file.  *  * Defined Constants:  *  * MAXLINE -- the maximimum line length that can be handled.  * DEFUPRI -- the default priority for user messages  * DEFSPRI -- the default priority for kernel messages  *  * Author: Eric Allman  * extensive changes by Ralph Campbell  * more extensive changes by Eric Allman (again)  * Extension to log by program name as well as facility and priority  *   by Peter da Silva.  * -u and -v by Harlan Stenn.  * Priority comparison code by Harlan Stenn.  */
@@ -198,12 +201,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<paths.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in.h>
 end_include
 
@@ -241,6 +238,12 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_include
@@ -335,8 +338,6 @@ specifier|static
 specifier|const
 name|int
 name|withscopeid
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -941,6 +942,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|filed
 modifier|*
@@ -948,14 +950,24 @@ name|Files
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Log files that we write to */
+end_comment
+
 begin_decl_stmt
+specifier|static
 name|struct
 name|filed
 name|consfile
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Console */
+end_comment
+
 begin_decl_stmt
+specifier|static
 name|int
 name|Debug
 decl_stmt|;
@@ -966,6 +978,7 @@ comment|/* debug flag */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|resolve
 init|=
@@ -978,6 +991,7 @@ comment|/* resolve hostname */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|LocalHostName
 index|[
@@ -991,7 +1005,7 @@ comment|/* our hostname */
 end_comment
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|char
 modifier|*
 name|LocalDomain
@@ -1003,11 +1017,10 @@ comment|/* our local domain name */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 modifier|*
 name|finet
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -1016,6 +1029,7 @@ comment|/* Internet datagram socket */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|fklog
 init|=
@@ -1029,10 +1043,9 @@ comment|/* /dev/klog */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|Initialized
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1041,6 +1054,7 @@ comment|/* set when we have initialized ourselves */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|MarkInterval
 init|=
@@ -1055,10 +1069,9 @@ comment|/* interval between marks in seconds */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|MarkSeq
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1067,10 +1080,9 @@ comment|/* mark sequence number */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|SecureMode
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1085,6 +1097,7 @@ name|INET6
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|int
 name|family
 init|=
@@ -1102,6 +1115,7 @@ directive|else
 end_else
 
 begin_decl_stmt
+specifier|static
 name|int
 name|family
 init|=
@@ -1119,10 +1133,9 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|int
 name|send_to_all
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1131,10 +1144,9 @@ comment|/* send message to all IPv4/IPv6 addresses */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|use_bootfile
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1143,10 +1155,9 @@ comment|/* log entire bootfile for every kern msg */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|no_compress
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1155,6 +1166,7 @@ comment|/* don't compress messages (1=pipes, 2=all) */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|bootfile
 index|[
@@ -1177,23 +1189,25 @@ name|AllowedPeers
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* List of allowed peers */
+end_comment
+
 begin_decl_stmt
+specifier|static
 name|int
 name|NumAllowed
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* # of AllowedPeer entries */
+comment|/* Number of entries in AllowedPeers */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|UniquePriority
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1202,10 +1216,9 @@ comment|/* Only log specified priority? */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|LogFacPri
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1218,10 +1231,9 @@ comment|/* 0=no, 1=numeric, 2=names */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|KeepKernFac
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1239,6 +1251,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|int
 name|allowaddr
 parameter_list|(
@@ -1249,6 +1262,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|cfline
 parameter_list|(
@@ -1272,6 +1286,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1285,6 +1300,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|deadq_enter
 parameter_list|(
@@ -1298,6 +1314,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|deadq_remove
 parameter_list|(
@@ -1307,6 +1324,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|decode
 parameter_list|(
@@ -1321,6 +1339,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|die
 parameter_list|(
@@ -1330,6 +1349,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|dodie
 parameter_list|(
@@ -1339,6 +1359,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|domark
 parameter_list|(
@@ -1348,6 +1369,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|fprintlog
 parameter_list|(
@@ -1365,6 +1387,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 modifier|*
 name|socksetup
@@ -1379,6 +1402,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|init
 parameter_list|(
@@ -1388,6 +1412,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|logerror
 parameter_list|(
@@ -1399,6 +1424,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|logmsg
 parameter_list|(
@@ -1418,6 +1444,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|log_deadchild
 parameter_list|(
@@ -1433,6 +1460,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|markit
 parameter_list|(
@@ -1442,6 +1470,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|printline
 parameter_list|(
@@ -1456,6 +1485,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|printsys
 parameter_list|(
@@ -1466,6 +1496,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|p_open
 parameter_list|(
@@ -1480,6 +1511,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|readklog
 parameter_list|(
@@ -1489,6 +1521,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|reapchild
 parameter_list|(
@@ -1508,6 +1541,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|validate
 parameter_list|(
@@ -1535,6 +1569,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|wallmsg
 parameter_list|(
@@ -1550,6 +1585,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|waitdaemon
 parameter_list|(
@@ -1563,6 +1599,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|timedout
 parameter_list|(
@@ -1575,18 +1612,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|argv
 index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|ch
@@ -3184,13 +3217,11 @@ specifier|static
 name|void
 name|unmapped
 parameter_list|(
-name|sa
-parameter_list|)
 name|struct
 name|sockaddr
 modifier|*
 name|sa
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|sockaddr_in6
@@ -3334,7 +3365,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -3362,22 +3395,19 @@ comment|/*  * Take a raw input line, decode the message, and print the message  
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|printline
 parameter_list|(
-name|hname
-parameter_list|,
-name|msg
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|hname
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|msg
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|c
@@ -3644,9 +3674,12 @@ comment|/*  * Read /dev/klog while data are available, split into lines.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|readklog
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -3839,15 +3872,14 @@ comment|/*  * Take a raw input line from /dev/klog, format similar to syslog(). 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|printsys
 parameter_list|(
-name|p
-parameter_list|)
 name|char
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|pri
@@ -3964,6 +3996,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|time_t
 name|now
 decl_stmt|;
@@ -3974,37 +4007,26 @@ comment|/*  * Log a message to the appropriate log files, users, etc. based on  
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|logmsg
 parameter_list|(
-name|pri
-parameter_list|,
-name|msg
-parameter_list|,
-name|from
-parameter_list|,
-name|flags
-parameter_list|)
 name|int
 name|pri
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|msg
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 name|from
-decl_stmt|;
-end_function
-
-begin_decl_stmt
+parameter_list|,
 name|int
 name|flags
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|struct
 name|filed
@@ -4853,31 +4875,26 @@ name|omask
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
+specifier|static
 name|void
 name|fprintlog
 parameter_list|(
-name|f
-parameter_list|,
-name|flags
-parameter_list|,
-name|msg
-parameter_list|)
 name|struct
 name|filed
 modifier|*
 name|f
-decl_stmt|;
+parameter_list|,
 name|int
 name|flags
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|msg
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|iovec
@@ -6114,23 +6131,20 @@ comment|/*  *  WALLMSG -- Write a message to the world at large  *  *	Write the 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|wallmsg
 parameter_list|(
-name|f
-parameter_list|,
-name|iov
-parameter_list|)
 name|struct
 name|filed
 modifier|*
 name|f
-decl_stmt|;
+parameter_list|,
 name|struct
 name|iovec
 modifier|*
 name|iov
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|int
@@ -6399,15 +6413,14 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|reapchild
 parameter_list|(
-name|signo
-parameter_list|)
 name|int
 name|signo
 name|__unused
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|status
@@ -6545,18 +6558,17 @@ comment|/*  * Return a printable representation of a host address.  */
 end_comment
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
 name|cvthname
 parameter_list|(
-name|f
-parameter_list|)
 name|struct
 name|sockaddr
 modifier|*
 name|f
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|error
@@ -6784,14 +6796,13 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|dodie
 parameter_list|(
-name|signo
-parameter_list|)
 name|int
 name|signo
-decl_stmt|;
+parameter_list|)
 block|{
 name|WantDie
 operator|=
@@ -6801,15 +6812,14 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|domark
 parameter_list|(
-name|signo
-parameter_list|)
 name|int
 name|signo
 name|__unused
-decl_stmt|;
+parameter_list|)
 block|{
 name|MarkSet
 operator|=
@@ -6823,16 +6833,15 @@ comment|/*  * Print syslogd errors some place.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|logerror
 parameter_list|(
-name|type
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -6908,14 +6917,13 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|die
 parameter_list|(
-name|signo
-parameter_list|)
 name|int
 name|signo
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|filed
@@ -7094,14 +7102,13 @@ comment|/*  *  INIT -- Initialize syslogd from configuration table  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|init
 parameter_list|(
-name|signo
-parameter_list|)
 name|int
 name|signo
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -8350,37 +8357,30 @@ comment|/*  * Crack a configuration file line  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|cfline
 parameter_list|(
-name|line
-parameter_list|,
-name|f
-parameter_list|,
-name|prog
-parameter_list|,
-name|host
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|line
-decl_stmt|;
+parameter_list|,
 name|struct
 name|filed
 modifier|*
 name|f
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|prog
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|host
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|addrinfo
@@ -9526,22 +9526,19 @@ comment|/*  *  Decode a symbolic name to a numeric value  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|decode
 parameter_list|(
-name|name
-parameter_list|,
-name|codetab
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|CODE
 modifier|*
 name|codetab
-decl_stmt|;
+parameter_list|)
 block|{
 name|CODE
 modifier|*
@@ -9673,6 +9670,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|markit
 parameter_list|(
@@ -9913,22 +9911,19 @@ comment|/*  * fork off and become a daemon, but wait for the child to come onlin
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|waitdaemon
 parameter_list|(
-name|nochdir
-parameter_list|,
-name|noclose
-parameter_list|,
-name|maxwait
-parameter_list|)
 name|int
 name|nochdir
-decl_stmt|,
+parameter_list|,
+name|int
 name|noclose
-decl_stmt|,
+parameter_list|,
+name|int
 name|maxwait
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|fd
@@ -10170,15 +10165,14 @@ comment|/*  * We get a SIGALRM from the child when it's running and finished doi
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|timedout
 parameter_list|(
-name|sig
-parameter_list|)
 name|int
 name|sig
 name|__unused
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|left
@@ -10224,15 +10218,14 @@ comment|/*  * Add `s' to the list of allowable peer addresses to accept messages
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|allowaddr
 parameter_list|(
-name|s
-parameter_list|)
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -11278,23 +11271,20 @@ comment|/*  * Validate that the remote peer has permission to log to us.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|validate
 parameter_list|(
-name|sa
-parameter_list|,
-name|hname
-parameter_list|)
 name|struct
 name|sockaddr
 modifier|*
 name|sa
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|hname
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -11993,22 +11983,19 @@ comment|/*  * Fairly similar to popen(3), but returns an open descriptor, as  * 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|p_open
 parameter_list|(
-name|prog
-parameter_list|,
-name|pid
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|prog
-decl_stmt|;
+parameter_list|,
 name|pid_t
 modifier|*
 name|pid
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|pfd
@@ -12423,21 +12410,18 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|deadq_enter
 parameter_list|(
-name|pid
-parameter_list|,
-name|name
-parameter_list|)
 name|pid_t
 name|pid
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|dq_t
 name|p
@@ -12538,14 +12522,13 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|deadq_remove
 parameter_list|(
-name|pid
-parameter_list|)
 name|pid_t
 name|pid
-decl_stmt|;
+parameter_list|)
 block|{
 name|dq_t
 name|q
@@ -12608,26 +12591,21 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|log_deadchild
 parameter_list|(
-name|pid
-parameter_list|,
-name|status
-parameter_list|,
-name|name
-parameter_list|)
 name|pid_t
 name|pid
-decl_stmt|;
+parameter_list|,
 name|int
 name|status
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|code
@@ -12719,22 +12697,19 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 modifier|*
 name|socksetup
 parameter_list|(
-name|af
-parameter_list|,
-name|bindhostname
-parameter_list|)
 name|int
 name|af
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|bindhostname
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|addrinfo
