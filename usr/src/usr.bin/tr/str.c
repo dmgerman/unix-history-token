@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)str.c	5.6 (Berkeley) %G%"
+literal|"@(#)str.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1585,6 +1585,15 @@ break|break;
 block|}
 if|if
 condition|(
+name|cnt
+condition|)
+return|return
+operator|(
+name|val
+operator|)
+return|;
+if|if
+condition|(
 name|ch
 operator|!=
 literal|'\0'
@@ -1594,15 +1603,6 @@ name|s
 operator|->
 name|str
 expr_stmt|;
-if|if
-condition|(
-name|cnt
-condition|)
-return|return
-operator|(
-name|val
-operator|)
-return|;
 switch|switch
 condition|(
 name|ch
