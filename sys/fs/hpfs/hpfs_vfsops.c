@@ -446,7 +446,7 @@ parameter_list|,
 name|struct
 name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|u_int
@@ -624,7 +624,7 @@ name|args
 operator|.
 name|fspec
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|err
@@ -717,7 +717,7 @@ argument_list|,
 operator|&
 name|args
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -740,7 +740,7 @@ name|mp
 operator|->
 name|mnt_stat
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -782,7 +782,7 @@ name|mp
 parameter_list|,
 name|argsp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 specifier|register
 name|struct
@@ -803,7 +803,7 @@ decl_stmt|;
 name|struct
 name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|int
@@ -911,7 +911,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -922,13 +922,13 @@ name|devvp
 argument_list|,
 name|V_SAVE
 argument_list|,
-name|p
+name|td
 operator|->
 name|td_proc
 operator|->
 name|p_ucred
 argument_list|,
-name|p
+name|td
 argument_list|,
 literal|0
 argument_list|,
@@ -941,7 +941,7 @@ name|devvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -973,7 +973,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -992,7 +992,7 @@ name|FWRITE
 argument_list|,
 name|FSCRED
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -1001,7 +1001,7 @@ name|devvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1422,7 +1422,7 @@ name|FWRITE
 argument_list|,
 name|NOCRED
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -1449,7 +1449,7 @@ parameter_list|,
 name|struct
 name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -1559,7 +1559,7 @@ name|V_SAVE
 argument_list|,
 name|NOCRED
 argument_list|,
-name|p
+name|td
 argument_list|,
 literal|0
 argument_list|,
@@ -1584,7 +1584,7 @@ name|FWRITE
 argument_list|,
 name|NOCRED
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -1743,7 +1743,7 @@ parameter_list|,
 name|struct
 name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -2119,7 +2119,7 @@ decl_stmt|;
 name|struct
 name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|curthread
 decl_stmt|;
@@ -2163,7 +2163,7 @@ name|hpm_dev
 argument_list|,
 name|ino
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -2381,7 +2381,7 @@ name|vp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2416,7 +2416,7 @@ name|hpm_dev
 argument_list|,
 name|ino
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=

@@ -2552,7 +2552,7 @@ decl_stmt|;
 name|struct
 name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|ap
 operator|->
@@ -2783,7 +2783,7 @@ name|suser_xxx
 argument_list|(
 name|cred
 argument_list|,
-name|p
+name|td
 operator|->
 name|td_proc
 argument_list|,
@@ -2813,7 +2813,7 @@ name|VWRITE
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|)
@@ -2946,7 +2946,7 @@ name|vp
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|vap
 operator|->
