@@ -9,6 +9,12 @@ directive|include
 file|"opt_devfs.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NODEVFS
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -919,6 +925,11 @@ name|VFCF_SYNTHETIC
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

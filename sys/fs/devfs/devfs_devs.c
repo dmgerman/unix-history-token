@@ -16,6 +16,12 @@ directive|include
 file|"opt_devfs.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NODEVFS
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -2256,6 +2262,11 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
