@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	5.15 (Berkeley) %G%"
+literal|"@(#)collect.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -375,10 +375,21 @@ argument_list|)
 operator|!=
 name|NOSTR
 operator|&&
+operator|(
 name|value
 argument_list|(
 literal|"ask"
 argument_list|)
+operator|!=
+name|NOSTR
+operator|||
+name|value
+argument_list|(
+literal|"asksub"
+argument_list|)
+operator|!=
+name|NOSTR
+operator|)
 condition|)
 name|t
 operator|&=
