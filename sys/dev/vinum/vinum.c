@@ -103,7 +103,7 @@ name|vinumioctl
 block|,
 name|nostop
 block|,
-name|nullreset
+name|noreset
 block|,
 name|nodevtotty
 block|,
@@ -117,8 +117,7 @@ literal|"vinum"
 block|,
 name|NULL
 block|,
-operator|-
-literal|1
+name|CDEV_MAJOR
 block|,
 name|vinumdump
 block|,
@@ -128,8 +127,7 @@ name|D_DISK
 block|,
 literal|0
 block|,
-operator|-
-literal|1
+name|BDEV_MAJOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -243,16 +241,13 @@ name|dqend
 operator|=
 name|NULL
 expr_stmt|;
-name|cdevsw_add_generic
+name|cdevsw_add
 argument_list|(
-name|BDEV_MAJOR
-argument_list|,
-name|CDEV_MAJOR
-argument_list|,
 operator|&
 name|vinum_cdevsw
 argument_list|)
 expr_stmt|;
+comment|/* add the cdevsw entry */
 ifdef|#
 directive|ifdef
 name|DEVFS
@@ -1051,14 +1046,6 @@ block|}
 block|}
 endif|#
 directive|endif
-name|cdevsw
-index|[
-name|CDEV_MAJOR
-index|]
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* no cdevsw any more */
 name|log
 argument_list|(
 name|LOG_INFO
