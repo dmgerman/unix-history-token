@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1987,1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1987,1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -15,10 +15,14 @@ directive|include
 file|"systm.h"
 end_include
 
+begin_comment
+comment|/* #include "user.h" */
+end_comment
+
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|"syscontext.h"
 end_include
 
 begin_include
@@ -419,6 +423,22 @@ name|kdb_init
 argument_list|()
 expr_stmt|;
 comment|/* startup kernel debugger */
+operator|(
+name|void
+operator|)
+name|cnopen
+argument_list|(
+name|makedev
+argument_list|(
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* open console XXX */
 endif|#
 directive|endif
 comment|/* 	 * Good {morning,afternoon,evening,night}. 	 */
@@ -1904,15 +1924,11 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+name|RETURN
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
-return|return;
-block|}
 if|if
 condition|(
 operator|(
@@ -1949,20 +1965,10 @@ operator||
 name|PSL_CURMOD
 operator|)
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+name|RETURN
+argument_list|(
 name|EINVAL
-expr_stmt|;
-return|return;
-block|}
-name|u
-operator|.
-name|u_eosys
-operator|=
-name|JUSTRETURN
+argument_list|)
 expr_stmt|;
 name|u
 operator|.
@@ -2022,6 +2028,11 @@ operator|=
 name|scp
 operator|->
 name|sc_ps
+expr_stmt|;
+name|RETURN
+argument_list|(
+name|EJUSTRETURN
+argument_list|)
 expr_stmt|;
 block|}
 end_block
