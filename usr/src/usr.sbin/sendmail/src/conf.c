@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.92 (Berkeley) %G%"
+literal|"@(#)conf.c	8.93 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2298,7 +2298,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|IRIX
+name|NAMELISTMASK
 name|Nl
 index|[
 name|X_AVENRUN
@@ -2306,7 +2306,7 @@ index|]
 operator|.
 name|n_value
 operator|&=
-literal|0x7fffffff
+name|NAMELISTMASK
 expr_stmt|;
 endif|#
 directive|endif
