@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_node.c	8.6 (Berkeley) 5/22/95  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_node.c	8.6 (Berkeley) 5/22/95  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -90,19 +104,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfs/nfs.h>
+file|<nfsclient/nfs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<nfs/nfsnode.h>
+file|<nfsclient/nfsnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<nfs/nfsmount.h>
+file|<nfsclient/nfsmount.h>
 end_include
 
 begin_decl_stmt
@@ -132,6 +146,13 @@ name|nfsnodehash
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|nfs_node_hash_lock
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -146,10 +167,6 @@ name|FALSE
 value|0
 end_define
 
-begin_comment
-comment|/*  * Grab an atomic snapshot of the nfsnode hash chain lengths  */
-end_comment
-
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
@@ -157,6 +174,10 @@ name|_debug_hashstat
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Grab an atomic snapshot of the nfsnode hash chain lengths  */
+end_comment
 
 begin_function
 specifier|static
@@ -601,7 +622,9 @@ end_comment
 begin_function
 name|void
 name|nfs_nhinit
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|nfsnode_zone
 operator|=
@@ -641,44 +664,28 @@ begin_comment
 comment|/*  * Look up a vnode/nfsnode by file handle.  * Callers must check for mount points!!  * In all cases, a pointer to a  * nfsnode structure is returned.  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|int
-name|nfs_node_hash_lock
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|nfs_nget
 parameter_list|(
-name|mntp
-parameter_list|,
-name|fhp
-parameter_list|,
-name|fhsize
-parameter_list|,
-name|npp
-parameter_list|)
 name|struct
 name|mount
 modifier|*
 name|mntp
-decl_stmt|;
-specifier|register
+parameter_list|,
 name|nfsfh_t
 modifier|*
 name|fhp
-decl_stmt|;
+parameter_list|,
 name|int
 name|fhsize
-decl_stmt|;
+parameter_list|,
 name|struct
 name|nfsnode
 modifier|*
 modifier|*
 name|npp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|thread
@@ -701,7 +708,6 @@ name|nfsnodehashhead
 modifier|*
 name|nhpp
 decl_stmt|;
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -768,26 +774,14 @@ argument_list|)
 expr_stmt|;
 name|loop
 label|:
-for|for
-control|(
-name|np
-operator|=
-name|nhpp
-operator|->
-name|lh_first
-init|;
-name|np
-operator|!=
-literal|0
-condition|;
-name|np
-operator|=
-name|np
-operator|->
-name|n_hash
-operator|.
-name|le_next
-control|)
+name|LIST_FOREACH
+argument_list|(
+argument|np
+argument_list|,
+argument|nhpp
+argument_list|,
+argument|n_hash
+argument_list|)
 block|{
 if|if
 condition|(
@@ -983,26 +977,14 @@ operator|=
 name|vp
 expr_stmt|;
 comment|/* 	 * Insert the nfsnode in the hash queue for its new file handle 	 */
-for|for
-control|(
-name|np2
-operator|=
-name|nhpp
-operator|->
-name|lh_first
-init|;
-name|np2
-operator|!=
-literal|0
-condition|;
-name|np2
-operator|=
-name|np2
-operator|->
-name|n_hash
-operator|.
-name|le_next
-control|)
+name|LIST_FOREACH
+argument_list|(
+argument|np2
+argument_list|,
+argument|nhpp
+argument_list|,
+argument|n_hash
+argument_list|)
 block|{
 if|if
 condition|(
@@ -1216,22 +1198,17 @@ begin_function
 name|int
 name|nfs_inactive
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_inactive_args
-comment|/* { 		struct vnode *a_vp; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|struct
 name|nfsnode
 modifier|*
 name|np
 decl_stmt|;
-specifier|register
 name|struct
 name|sillyrename
 modifier|*
@@ -1440,12 +1417,6 @@ operator||
 name|NFLUSHINPROG
 operator||
 name|NFLUSHWANT
-operator||
-name|NQNFSEVICTED
-operator||
-name|NQNFSNONCACHE
-operator||
-name|NQNFSWRITE
 operator|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -1477,16 +1448,12 @@ begin_function
 name|int
 name|nfs_reclaim
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_reclaim_args
-comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -1496,7 +1463,6 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
-specifier|register
 name|struct
 name|nfsnode
 modifier|*
@@ -1507,20 +1473,6 @@ argument_list|(
 name|vp
 argument_list|)
 decl_stmt|;
-specifier|register
-name|struct
-name|nfsmount
-modifier|*
-name|nmp
-init|=
-name|VFSTONFS
-argument_list|(
-name|vp
-operator|->
-name|v_mount
-argument_list|)
-decl_stmt|;
-specifier|register
 name|struct
 name|nfsdmap
 modifier|*
@@ -1556,6 +1508,7 @@ name|le_prev
 operator|!=
 name|NULL
 condition|)
+comment|/* XXX beware */
 name|LIST_REMOVE
 argument_list|(
 name|np
@@ -1563,40 +1516,6 @@ argument_list|,
 name|n_hash
 argument_list|)
 expr_stmt|;
-comment|/* 	 * For nqnfs, take it off the timer queue as required. 	 */
-if|if
-condition|(
-operator|(
-name|nmp
-operator|->
-name|nm_flag
-operator|&
-name|NFSMNT_NQNFS
-operator|)
-operator|&&
-name|TAILQ_NEXT
-argument_list|(
-name|np
-argument_list|,
-name|n_timer
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|nmp
-operator|->
-name|nm_timerhead
-argument_list|,
-name|np
-argument_list|,
-name|n_timer
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Free up any directory cookie structures and 	 * large file handle structures that might be associated with 	 * this nfs node. 	 */
 if|if
 condition|(
@@ -1609,11 +1528,13 @@ condition|)
 block|{
 name|dp
 operator|=
+name|LIST_FIRST
+argument_list|(
+operator|&
 name|np
 operator|->
 name|n_cookies
-operator|.
-name|lh_first
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -1626,11 +1547,12 @@ name|dp
 expr_stmt|;
 name|dp
 operator|=
+name|LIST_NEXT
+argument_list|(
 name|dp
-operator|->
+argument_list|,
 name|ndm_list
-operator|.
-name|le_next
+argument_list|)
 expr_stmt|;
 name|FREE
 argument_list|(
@@ -1717,12 +1639,7 @@ comment|/*  * Lock an nfsnode  */
 end_comment
 
 begin_comment
-unit|int nfs_lock(ap) 	struct vop_lock_args
-comment|/* { 		struct vnode *a_vp; 	} */
-end_comment
-
-begin_comment
-unit|*ap; { 	register struct vnode *vp = ap->a_vp;
+unit|int nfs_lock(struct vop_lock_args *ap) { 	struct vnode *vp = ap->a_vp;
 comment|/* 	 * Ugh, another place where interruptible mounts will get hung. 	 * If you make this sleep interruptible, then you have to fix all 	 * the VOP_LOCK() calls to expect interruptibility. 	 */
 end_comment
 
@@ -1753,13 +1670,8 @@ unit|return (0); }
 comment|/*  * Unlock an nfsnode  */
 end_comment
 
-begin_comment
-unit|int nfs_unlock(ap) 	struct vop_unlock_args
-comment|/* { 		struct vnode *a_vp; 	} */
-end_comment
-
 begin_if
-unit|*ap; {
+unit|int nfs_unlock(struct vop_unlock_args *ap) {
 if|#
 directive|if
 literal|0
@@ -1776,13 +1688,8 @@ unit|return (0); }
 comment|/*  * Check for a locked nfsnode  */
 end_comment
 
-begin_comment
-unit|int nfs_islocked(ap) 	struct vop_islocked_args
-comment|/* { 		struct vnode *a_vp; 		struct thread *a_td; 	} */
-end_comment
-
 begin_endif
-unit|*ap; { 	return VTONFS(ap->a_vp)->n_flag& NLOCKED ? 1 : 0; }
+unit|int nfs_islocked(struct vop_islocked_args *ap) {  	return VTONFS(ap->a_vp)->n_flag& NLOCKED ? 1 : 0; }
 endif|#
 directive|endif
 end_endif

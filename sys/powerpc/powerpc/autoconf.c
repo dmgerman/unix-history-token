@@ -209,13 +209,6 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|nfs_diskless_valid
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|dev_t
 name|rootdev
 init|=

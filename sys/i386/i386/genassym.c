@@ -165,7 +165,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfs/nfsv2.h>
+file|<nfs/nfsproto.h>
 end_include
 
 begin_include
@@ -177,13 +177,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfs/nfs.h>
+file|<nfsclient/nfs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<nfs/nfsdiskless.h>
+file|<nfsclient/nfsdiskless.h>
 end_include
 
 begin_ifdef

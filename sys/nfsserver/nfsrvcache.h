@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_NFS_NFSRVCACHE_H_
+name|_NFSSERVER_NFSRVCACHE_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_NFS_NFSRVCACHE_H_
+name|_NFSSERVER_NFSRVCACHE_H_
 end_define
 
 begin_include
@@ -168,13 +168,6 @@ name|RC_DOIT
 value|2
 end_define
 
-begin_define
-define|#
-directive|define
-name|RC_CHECKIT
-value|3
-end_define
-
 begin_comment
 comment|/* Flag bits */
 end_comment
@@ -207,12 +200,9 @@ name|RC_REPMBUF
 value|0x08
 end_define
 
-begin_define
-define|#
-directive|define
-name|RC_NQNFS
-value|0x10
-end_define
+begin_comment
+comment|/* free 0x10 */
+end_comment
 
 begin_define
 define|#

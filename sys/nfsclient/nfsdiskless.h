@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_NFS_NFSDISKLESS_H_
+name|_NFSCLIENT_NFSDISKLESS_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_NFS_NFSDISKLESS_H_
+name|_NFSCLIENT_NFSDISKLESS_H_
 end_define
 
 begin_comment
@@ -286,6 +286,40 @@ comment|/* Client host name */
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|nfsv3_diskless
+name|nfsv3_diskless
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|nfs_diskless
+name|nfs_diskless
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nfs_diskless_valid
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -195,13 +195,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|nfs_diskless_valid
-decl_stmt|;
-end_decl_stmt
-
 begin_extern
 extern|extern	void	(*ovbcopy_vector
 end_extern

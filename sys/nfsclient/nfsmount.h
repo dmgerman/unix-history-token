@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_NFS_NFSMOUNT_H_
+name|_NFSCLIENT_NFSMOUNT_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_NFS_NFSMOUNT_H_
+name|_NFSCLIENT_NFSMOUNT_H_
 end_define
 
 begin_comment
@@ -130,10 +130,6 @@ name|nm_readahead
 decl_stmt|;
 comment|/* Num. of blocks to readahead */
 name|int
-name|nm_leaseterm
-decl_stmt|;
-comment|/* Term (sec) for NQNFS lease */
-name|int
 name|nm_acdirmin
 decl_stmt|;
 comment|/* Directory attr cache min lifetime */
@@ -149,46 +145,6 @@ name|int
 name|nm_acregmax
 decl_stmt|;
 comment|/* Reg file attr cache max lifetime */
-name|TAILQ_HEAD
-argument_list|(
-argument|timhd
-argument_list|,
-argument|nfsnode
-argument_list|)
-name|nm_timerhead
-expr_stmt|;
-comment|/* Head of lease timer queue */
-name|struct
-name|vnode
-modifier|*
-name|nm_inprog
-decl_stmt|;
-comment|/* Vnode in prog by nqnfs_clientd() */
-name|uid_t
-name|nm_authuid
-decl_stmt|;
-comment|/* Uid for authenticator */
-name|int
-name|nm_authtype
-decl_stmt|;
-comment|/* Authenticator type */
-name|int
-name|nm_authlen
-decl_stmt|;
-comment|/* and length */
-name|char
-modifier|*
-name|nm_authstr
-decl_stmt|;
-comment|/* Authenticator string */
-name|char
-modifier|*
-name|nm_verfstr
-decl_stmt|;
-comment|/* and the verifier */
-name|int
-name|nm_verflen
-decl_stmt|;
 name|u_char
 name|nm_verf
 index|[
@@ -196,32 +152,6 @@ name|NFSX_V3WRITEVERF
 index|]
 decl_stmt|;
 comment|/* V3 write verifier */
-name|NFSKERBKEY_T
-name|nm_key
-decl_stmt|;
-comment|/* and the session key */
-name|int
-name|nm_numuids
-decl_stmt|;
-comment|/* Number of nfsuid mappings */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|nfsuid
-argument_list|)
-name|nm_uidlruhead
-expr_stmt|;
-comment|/* Lists of nfsuid mappings */
-name|LIST_HEAD
-argument_list|(
-argument_list|,
-argument|nfsuid
-argument_list|)
-name|nm_uidhashtbl
-index|[
-name|NFS_MUIDHASHSIZ
-index|]
-expr_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,

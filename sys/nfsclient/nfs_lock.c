@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Berkeley Software Design, Inc. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Berkeley Software Design Inc's name may not be used to endorse or  *    promote products derived from this software without specific prior  *    written permission.  *  * THIS SOFTWARE IS PROVIDED BY BERKELEY SOFTWARE DESIGN INC ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL BERKELEY SOFTWARE DESIGN INC BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      from BSDI nfs_lock.c,v 2.4 1998/12/14 23:49:56 jch Exp  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997 Berkeley Software Design, Inc. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Berkeley Software Design Inc's name may not be used to endorse or  *    promote products derived from this software without specific prior  *    written permission.  *  * THIS SOFTWARE IS PROVIDED BY BERKELEY SOFTWARE DESIGN INC ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL BERKELEY SOFTWARE DESIGN INC BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      from BSDI nfs_lock.c,v 2.4 1998/12/14 23:49:56 jch Exp  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -138,31 +152,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfs/nfs.h>
+file|<nfsclient/nfs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<nfs/nfsmount.h>
+file|<nfsclient/nfsmount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<nfs/nfsnode.h>
+file|<nfsclient/nfsnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<nfs/nfs_lock.h>
+file|<nfsclient/nfs_lock.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<nfs/nlminfo.h>
+file|<nfsclient/nlminfo.h>
 end_include
 
 begin_define
@@ -201,7 +215,7 @@ value|(tbl)[(i) / NFSOWNER_2ND_LEVEL][(i) % NFSOWNER_2ND_LEVEL]
 end_define
 
 begin_comment
-comment|/*  * XXX  * We have to let the process know if the call succeeded.  I'm using an extra  * field in the p_nlminfo field in the proc structure, as it is already for   * lockd stuff.  */
+comment|/*  * XXX  * We have to let the process know if the call succeeded.  I'm using an extra  * field in the p_nlminfo field in the proc structure, as it is already for  * lockd stuff.  */
 end_comment
 
 begin_comment
@@ -212,14 +226,11 @@ begin_function
 name|int
 name|nfs_dolock
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_advlock_args
-comment|/* { 		struct vnode *a_vp; 		caddr_t a_id; 		int  a_op; 		struct flock *a_fl; 		int a_flags; 	} */
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 name|LOCKD_MSG
 name|msg
@@ -756,7 +767,7 @@ name|F_UNLCK
 condition|)
 comment|/* 			 * XXX this isn't exactly correct.  The client side 			 * needs to continue sending it's unlock until 			 * it gets a responce back. 			 */
 break|break;
-comment|/* 		 * retry after 20 seconds if we haven't gotten a responce yet. 		 * This number was picked out of thin air... but is longer 		 * then even a reasonably loaded system should take (at least 		 * on a local network).  XXX Probably should use a back-off  		 * scheme. 		 */
+comment|/* 		 * retry after 20 seconds if we haven't gotten a responce yet. 		 * This number was picked out of thin air... but is longer 		 * then even a reasonably loaded system should take (at least 		 * on a local network).  XXX Probably should use a back-off 		 * scheme. 		 */
 if|if
 condition|(
 operator|(
@@ -902,25 +913,21 @@ begin_function
 name|int
 name|nfslockdans
 parameter_list|(
-name|p
-parameter_list|,
-name|ansp
-parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|,
 name|struct
 name|lockd_ans
 modifier|*
 name|ansp
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|error
 decl_stmt|;
-comment|/* Let root, or someone who once was root (lockd generally 	 * switches to the daemon uid once it is done setting up) make  	 * this call. 	 * 	 * XXX This authorization check is probably not right. 	 */
+comment|/* Let root, or someone who once was root (lockd generally 	 * switches to the daemon uid once it is done setting up) make 	 * this call. 	 * 	 * XXX This authorization check is probably not right. 	 */
 if|if
 condition|(
 operator|(
@@ -984,7 +991,7 @@ operator|(
 name|ESRCH
 operator|)
 return|;
-comment|/* verify the pid hasn't been reused (if we can), and it isn't waiting  	 * for an answer from a more recent request.  We return an EPIPE if 	 * the match fails, because we've already used ESRCH above, and this 	 * is sort of like writing on a pipe after the reader has closed it. 	 */
+comment|/* verify the pid hasn't been reused (if we can), and it isn't waiting 	 * for an answer from a more recent request.  We return an EPIPE if 	 * the match fails, because we've already used ESRCH above, and this 	 * is sort of like writing on a pipe after the reader has closed it. 	 */
 if|if
 condition|(
 name|p

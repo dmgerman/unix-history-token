@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1998 Berkeley Software Design, Inc. All rights rese
 end_comment
 
 begin_comment
-comment|/*  * lockd uses the nfssvc system call to get the unique kernel services it needs.  * It passes in a request structure with a version number at the start.  * This prevents libc from needing to change if the information passed   * between lockd and the kernel needs to change.  *  * If a structure changes, you must bump the version number.  */
+comment|/*  * lockd uses the nfssvc system call to get the unique kernel services it needs.  * It passes in a request structure with a version number at the start.  * This prevents libc from needing to change if the information passed  * between lockd and the kernel needs to change.  *  * If a structure changes, you must bump the version number.  */
 end_comment
 
 begin_include
@@ -13,79 +13,8 @@ directive|include
 file|<nfs/nfsproto.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|LOCKD_REQ_VERSION
-value|1
-end_define
-
-begin_struct
-struct|struct
-name|lockd_req
-block|{
-name|int
-name|vers
-decl_stmt|;
-comment|/* keep in sync with kernel please */
-name|int
-name|op
-decl_stmt|;
-comment|/* F_GETLK | F_SETLK | F_UNLCK */
-name|int
-name|owner
-decl_stmt|;
-comment|/* owner of lock, -1 to allocate one */
-name|int
-name|owner_rel_ok
-decl_stmt|;
-comment|/* release owner if no locks left ? */
-name|int
-modifier|*
-name|owner_ret
-decl_stmt|;
-comment|/* owner alloc/free result target */
-name|void
-modifier|*
-name|fh
-decl_stmt|;
-comment|/* NFS file handle */
-name|size_t
-name|fh_len
-decl_stmt|;
-comment|/* NFS file handle length */
-name|u_quad_t
-name|offset
-decl_stmt|;
-comment|/* offset of where to start lock */
-name|u_quad_t
-name|len
-decl_stmt|;
-comment|/* length of range to lock */
-name|int
-name|type
-decl_stmt|;
-comment|/* F_RDLCK | F_WRLCK | F_UNLCK */
-name|struct
-name|ucred
-name|cred
-decl_stmt|;
-comment|/* user credentials to use for lock */
-name|struct
-name|sockaddr
-name|saddr
-decl_stmt|;
-comment|/* XXX how about non AF_INET ?? */
-name|int
-name|pid
-decl_stmt|;
-comment|/* pid of lock requester */
-block|}
-struct|;
-end_struct
-
 begin_comment
-comment|/*   * The fifo where the kernel writes requests for locks on remote NFS files,  * and where lockd reads these requests.  *  */
+comment|/*  * The fifo where the kernel writes requests for locks on remote NFS files,  * and where lockd reads these requests.  *  */
 end_comment
 
 begin_define
@@ -253,23 +182,6 @@ name|struct
 name|lockd_ans
 modifier|*
 name|ansp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|nfslockdreq
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|,
-name|struct
-name|lockd_req
-modifier|*
-name|reqp
 parameter_list|)
 function_decl|;
 end_function_decl

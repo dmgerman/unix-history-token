@@ -262,6 +262,10 @@ name|nfs_diskless_valid
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* XXX use include file */
+end_comment
+
 begin_decl_stmt
 name|dev_t
 name|rootdev
