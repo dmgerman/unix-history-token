@@ -1335,9 +1335,10 @@ name|strcpy
 argument_list|(
 name|cpu_model
 argument_list|,
-literal|"McKinley"
+literal|"Itanium 2"
 argument_list|)
 expr_stmt|;
+comment|/* McKinley */
 else|else
 name|snprintf
 argument_list|(
