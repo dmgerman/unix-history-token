@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso_chksum.c	7.5 (Berkeley) %G%  */
+end_comment
+
+begin_comment
 comment|/*********************************************************** 		Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its  documentation for any purpose and without fee is hereby granted,  provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in  supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.    IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
 end_comment
 
@@ -8,7 +12,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * $Header: iso_chksum.c,v 4.7 88/07/29 15:31:26 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/iso_chksum.c,v $  *	@(#)iso_chksum.c	7.4 (Berkeley) %G% *  *  * ISO CHECKSUM  *  * The checksum generation and check routines are here.  * The checksum is 2 bytes such that the sum of all the bytes b(i) == 0  * and the sum of i * b(i) == 0.  * The whole thing is complicated by the fact that the data are in mbuf  * chains.  * Furthermore, there is the possibility of wraparound in the running  * sums after adding up 4102 octets.  In order to avoid doing a mod  * operation after EACH add, we have restricted this implementation to   * negotiating a maximum of 4096-octets per TPDU (for the transport layer).  * The routine iso_check_csum doesn't need to know where the checksum  * octets are.  * The routine iso_gen_csum takes a pointer to an mbuf chain (logically  * a chunk of data), an offset into the chunk at which the 2 octets are to  * be stuffed, and the length of the chunk.  The 2 octets have to be  * logically adjacent, but may be physically located in separate mbufs.  */
+comment|/*   * $Header: iso_chksum.c,v 4.7 88/07/29 15:31:26 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/iso_chksum.c,v $  *  * ISO CHECKSUM  *  * The checksum generation and check routines are here.  * The checksum is 2 bytes such that the sum of all the bytes b(i) == 0  * and the sum of i * b(i) == 0.  * The whole thing is complicated by the fact that the data are in mbuf  * chains.  * Furthermore, there is the possibility of wraparound in the running  * sums after adding up 4102 octets.  In order to avoid doing a mod  * operation after EACH add, we have restricted this implementation to   * negotiating a maximum of 4096-octets per TPDU (for the transport layer).  * The routine iso_check_csum doesn't need to know where the checksum  * octets are.  * The routine iso_gen_csum takes a pointer to an mbuf chain (logically  * a chunk of data), an offset into the chunk at which the 2 octets are to  * be stuffed, and the length of the chunk.  The 2 octets have to be  * logically adjacent, but may be physically located in separate mbufs.  */
 end_comment
 
 begin_ifdef
@@ -16,27 +20,6 @@ ifdef|#
 directive|ifdef
 name|ISO
 end_ifdef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|rcsid
-init|=
-literal|"$Header: iso_chksum.c,v 4.7 88/07/29 15:31:26 nhall Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#

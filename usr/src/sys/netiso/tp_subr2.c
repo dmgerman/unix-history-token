@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_subr2.c	7.8 (Berkeley) %G%  */
+end_comment
+
+begin_comment
 comment|/*********************************************************** 		Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its  documentation for any purpose and without fee is hereby granted,  provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in  supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.    IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
 end_comment
 
@@ -8,30 +12,8 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_subr2.c,v 5.5 88/11/18 17:28:55 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_subr2.c,v $  *	@(#)tp_subr2.c	7.7 (Berkeley) %G%  *  * Some auxiliary routines:  * 		tp_protocol_error: required by xebec- called when a combo of state,  *			event, predicate isn't covered for by the transition file.  *		tp_indicate: gives indications(signals) to the user process  *		tp_getoptions: initializes variables that are affected by the options  *          chosen.  */
+comment|/*   * ARGO TP  *  * $Header: tp_subr2.c,v 5.5 88/11/18 17:28:55 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_subr2.c,v $  *  * Some auxiliary routines:  * 	tp_protocol_error: required by xebec- called when a combo of state,  *	    event, predicate isn't covered for by the transition file.  *	tp_indicate: gives indications(signals) to the user process  *	tp_getoptions: initializes variables that are affected by the options  *	    chosen.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|rcsid
-init|=
-literal|"$Header: tp_subr2.c,v 5.5 88/11/18 17:28:55 nhall Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-endif|lint
-end_endif
 
 begin_comment
 comment|/* this def'n is to cause the expansion of this macro in the  * routine tp_local_credit :  */
