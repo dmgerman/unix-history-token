@@ -238,15 +238,11 @@ name|NULL
 return|;
 name|COLS
 operator|=
-name|cur_term
-operator|->
-name|true_columns
+name|columns
 expr_stmt|;
 name|LINES
 operator|=
-name|cur_term
-operator|->
-name|true_lines
+name|lines
 expr_stmt|;
 else|#
 directive|else
