@@ -2677,6 +2677,8 @@ operator|+
 name|cio
 operator|->
 name|size
+operator|-
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -3472,6 +3474,8 @@ operator|+
 name|sio
 operator|->
 name|size
+operator|-
+literal|1
 expr_stmt|;
 if|if
 condition|(
