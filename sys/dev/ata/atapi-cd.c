@@ -10055,6 +10055,8 @@ name|struct
 name|dvd_miscauth
 modifier|*
 name|d
+init|=
+name|NULL
 decl_stmt|;
 name|u_int32_t
 name|lba
@@ -10241,6 +10243,11 @@ name|ai
 operator|->
 name|format
 expr_stmt|;
+if|if
+condition|(
+name|length
+condition|)
+block|{
 name|d
 operator|=
 name|malloc
@@ -10265,6 +10272,7 @@ operator|-
 literal|2
 argument_list|)
 expr_stmt|;
+block|}
 name|error
 operator|=
 name|ata_atapicmd
