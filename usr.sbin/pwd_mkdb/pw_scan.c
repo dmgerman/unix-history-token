@@ -272,6 +272,23 @@ name|pw_fields
 operator||=
 name|_PWF_UID
 expr_stmt|;
+else|else
+block|{
+name|warnx
+argument_list|(
+literal|"no uid for user %s"
+argument_list|,
+name|pw
+operator|->
+name|pw_name
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|id
 operator|=
 name|atol
