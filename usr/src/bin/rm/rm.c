@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)rm.c	4.6 (Berkeley) %G%"
+literal|"@(#)rm.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -287,7 +287,7 @@ name|d
 decl_stmt|;
 if|if
 condition|(
-name|stat
+name|lstat
 argument_list|(
 name|arg
 argument_list|,
