@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.19
+literal|3.20
 operator|%
 name|G
 operator|%
@@ -81,7 +81,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.19
+literal|3.20
 operator|%
 name|G
 operator|%
@@ -95,7 +95,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* **  DAEMON.C -- routines to use when running as a daemon. */
+comment|/* **  DAEMON.C -- routines to use when running as a daemon. ** **	This entire file is highly dependent on the 4.2 BSD **	interprocess communication primitives.  No attempt has **	been made to make this file portable to Version 7, **	Version 6, MPX files, etc.  If you should try such a **	thing yourself, I recommend chucking the entire file **	and starting from scratch.  Basic semantics are: ** **	getrequests() **		Opens a port and initiates a connection. **		Returns in a child.  Must set InChannel and **		OutChannel appropriately. **	makeconnection(host, port, outfile, infile) **		Make a connection to the named host on the given **		port.  Set *outfile and *infile to the files **		appropriate for communication.  Returns zero on **		success, else an exit status describing the **		error. ** **	The semantics of both of these should be clean. */
 end_comment
 
 begin_decl_stmt
@@ -292,6 +292,13 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|DEBUG
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+comment|/* get a socket for the SMTP connection */
 name|s
 operator|=
 name|socket
@@ -313,16 +320,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sleep
+comment|/* probably another daemon already */
+name|syserr
 argument_list|(
-literal|10
+literal|"getconnection: can't create socket"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|s
-operator|)
-return|;
+break|break;
 block|}
 ifdef|#
 directive|ifdef
@@ -341,6 +345,7 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|DEBUG
+comment|/* wait for a connection */
 if|if
 condition|(
 name|accept
@@ -350,13 +355,14 @@ argument_list|,
 operator|&
 name|otherend
 argument_list|)
-operator|<
+operator|>=
 literal|0
 condition|)
-block|{
+break|break;
+comment|/* probably innocuous -- retry */
 name|syserr
 argument_list|(
-literal|"accept"
+literal|"getconnection: accept"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -367,12 +373,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+name|sleep
+argument_list|(
+literal|20
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(

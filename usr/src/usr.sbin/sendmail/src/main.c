@@ -63,7 +63,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.90
+literal|3.91
 operator|%
 name|G
 operator|%
@@ -1666,6 +1666,17 @@ name|CurEnv
 argument_list|)
 expr_stmt|;
 name|getrequests
+argument_list|()
+expr_stmt|;
+comment|/* at this point we are in a child: reset state */
+name|FatalErrors
+operator|=
+name|FALSE
+expr_stmt|;
+name|openxscrpt
+argument_list|()
+expr_stmt|;
+name|initsys
 argument_list|()
 expr_stmt|;
 block|}
