@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.205 1999/08/05 10:32:09 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.206 1999/08/17 14:59:05 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -759,7 +759,7 @@ name|char
 name|VersionDate
 index|[]
 init|=
-literal|"$Date: 1999/08/05 10:32:09 $"
+literal|"$Date: 1999/08/17 14:59:05 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -10692,7 +10692,7 @@ name|arg
 operator|->
 name|argn
 operator|+
-literal|1
+literal|2
 condition|)
 name|err
 operator|=
@@ -10708,21 +10708,66 @@ operator|==
 name|arg
 operator|->
 name|argn
+condition|)
+name|err
+operator|=
+literal|"Too few idle timeout values\n"
+expr_stmt|;
+else|else
+block|{
+name|int
+name|timeout
+decl_stmt|,
+name|min
+decl_stmt|;
+name|timeout
+operator|=
+name|atoi
+argument_list|(
+name|argp
+argument_list|)
+expr_stmt|;
+name|min
+operator|=
+name|arg
+operator|->
+name|argc
+operator|==
+name|arg
+operator|->
+name|argn
+operator|+
+literal|2
+condition|?
+name|atoi
+argument_list|(
+name|arg
+operator|->
+name|argv
+index|[
+name|arg
+operator|->
+name|argn
 operator|+
 literal|1
-condition|)
+index|]
+argument_list|)
+else|:
+operator|-
+literal|1
+expr_stmt|;
 name|bundle_SetIdleTimer
 argument_list|(
 name|arg
 operator|->
 name|bundle
 argument_list|,
-name|atoi
-argument_list|(
-name|argp
-argument_list|)
+name|timeout
+argument_list|,
+name|min
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|err
