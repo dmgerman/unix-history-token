@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	$Id: isa.c,v 1.44 1995/04/06 13:55:56 ache Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	$Id: isa.c,v 1.45 1995/04/12 20:47:54 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -242,45 +242,6 @@ end_define
 begin_comment
 comment|/* clear first/last FF */
 end_comment
-
-begin_comment
-comment|/*  * Bits to specify the type and amount of conflict checking.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CC_ATTACH
-value|(1<< 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CC_DRQ
-value|(1<< 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CC_IOADDR
-value|(1<< 2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CC_IRQ
-value|(1<< 3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CC_MEMADDR
-value|(1<< 4)
-end_define
 
 begin_comment
 comment|/*  * XXX these defines should be in a central place.  */
@@ -735,25 +696,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
-name|haveseen_isadev
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|isa_device
-operator|*
-name|dvp
-operator|,
-name|u_int
-name|checkbits
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|inthand2_t
 name|isa_strayintr
 decl_stmt|;
@@ -1173,8 +1115,35 @@ begin_comment
 comment|/*  * Search through all the isa_devtab_* tables looking for anything that  * conflicts with the current device.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"eisa.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NEISA
+operator|>
+literal|0
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|isa_device
+name|isa_devtab_eisa
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
-specifier|static
 name|int
 name|haveseen_isadev
 parameter_list|(
@@ -1333,6 +1302,46 @@ return|return
 name|status
 return|;
 block|}
+if|#
+directive|if
+name|NEISA
+operator|>
+literal|0
+for|for
+control|(
+name|tmpdvp
+operator|=
+name|isa_devtab_eisa
+init|;
+name|tmpdvp
+operator|->
+name|id_driver
+condition|;
+name|tmpdvp
+operator|++
+control|)
+block|{
+name|status
+operator||=
+name|haveseen
+argument_list|(
+name|dvp
+argument_list|,
+name|tmpdvp
+argument_list|,
+name|checkbits
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|status
+condition|)
+return|return
+name|status
+return|;
+block|}
+endif|#
+directive|endif
 return|return
 operator|(
 name|status
