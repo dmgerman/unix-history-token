@@ -1167,19 +1167,6 @@ name|cdname
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* And finally, a /proc. */
-name|fprintf
-argument_list|(
-name|fstab
-argument_list|,
-literal|"proc\t\t\t/proc\t\tprocfs\trw\t\t0\t0\n"
-argument_list|)
-expr_stmt|;
-name|Mkdir
-argument_list|(
-literal|"/proc"
-argument_list|)
-expr_stmt|;
 name|fclose
 argument_list|(
 name|fstab
