@@ -369,7 +369,7 @@ name|vdp
 operator|==
 name|ndp
 operator|->
-name|ni_rdir
+name|ni_rootdir
 operator|&&
 name|ndp
 operator|->
