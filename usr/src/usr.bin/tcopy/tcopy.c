@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tcopy.c	8.1 (Berkeley) %G%"
+literal|"@(#)tcopy.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -160,6 +160,15 @@ decl_stmt|,
 name|size
 decl_stmt|,
 name|tsize
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|FILE
+modifier|*
+name|msg
+init|=
+name|stdout
 decl_stmt|;
 end_decl_stmt
 
@@ -304,7 +313,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cs:v"
+literal|"cs:vx"
 argument_list|)
 operator|)
 operator|!=
@@ -365,6 +374,14 @@ case|:
 name|op
 operator|=
 name|VERIFY
+expr_stmt|;
+break|break;
+case|case
+literal|'x'
+case|:
+name|msg
+operator|=
+name|stderr
 expr_stmt|;
 break|break;
 case|case
@@ -462,6 +479,12 @@ operator|==
 name|VERIFY
 condition|?
 name|O_RDONLY
+else|:
+name|op
+operator|==
+name|COPY
+condition|?
+name|O_WRONLY
 else|:
 name|O_RDWR
 argument_list|,
@@ -692,8 +715,10 @@ name|nread
 operator|==
 literal|0
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|msg
+argument_list|,
 literal|"%ld records\n"
 argument_list|,
 name|record
@@ -708,8 +733,10 @@ name|lastrec
 operator|>
 literal|1
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|msg
+argument_list|,
 literal|"records %ld to %ld\n"
 argument_list|,
 name|lastrec
@@ -718,8 +745,10 @@ name|record
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|fprintf
 argument_list|(
+name|msg
+argument_list|,
 literal|"record %ld\n"
 argument_list|,
 name|lastrec
@@ -732,8 +761,10 @@ name|nread
 operator|!=
 literal|0
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|msg
+argument_list|,
 literal|"file %d: block size %d: "
 argument_list|,
 name|filen
@@ -883,15 +914,19 @@ operator|!=
 name|NOCOUNT
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|msg
+argument_list|,
 literal|"eot\n"
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|printf
+name|fprintf
 argument_list|(
+name|msg
+argument_list|,
 literal|"file %d: eof after %ld records: %ld bytes\n"
 argument_list|,
 name|filen
@@ -930,8 +965,10 @@ operator|=
 name|nread
 expr_stmt|;
 block|}
-name|printf
+name|fprintf
 argument_list|(
+name|msg
+argument_list|,
 literal|"total length: %ld bytes\n"
 argument_list|,
 name|tsize
@@ -1215,9 +1252,13 @@ operator|!=
 name|outn
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"tcopy: tapes have different block sizes; %d != %d.\n"
+name|msg
+argument_list|,
+literal|"%s: tapes have different block sizes; %d != %d.\n"
+argument_list|,
+literal|"tcopy"
 argument_list|,
 name|inn
 argument_list|,
@@ -1238,8 +1279,10 @@ name|eot
 operator|++
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|msg
+argument_list|,
 literal|"tcopy: tapes are identical.\n"
 argument_list|)
 expr_stmt|;
@@ -1260,8 +1303,10 @@ name|inn
 argument_list|)
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|msg
+argument_list|,
 literal|"tcopy: tapes have different data.\n"
 argument_list|)
 expr_stmt|;
@@ -1303,8 +1348,10 @@ name|lastrec
 operator|>
 literal|1
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|msg
+argument_list|,
 literal|"records %ld to %ld\n"
 argument_list|,
 name|lastrec
@@ -1313,15 +1360,19 @@ name|record
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|fprintf
 argument_list|(
+name|msg
+argument_list|,
 literal|"record %ld\n"
 argument_list|,
 name|lastrec
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|msg
+argument_list|,
 literal|"interrupt at file %d: record %ld\n"
 argument_list|,
 name|filen
@@ -1329,8 +1380,10 @@ argument_list|,
 name|record
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|msg
+argument_list|,
 literal|"total length: %ld bytes\n"
 argument_list|,
 name|tsize
@@ -1474,7 +1527,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: tcopy [-cv] [-s maxblk] src [dest]\n"
+literal|"usage: tcopy [-cvx] [-s maxblk] src [dest]\n"
 argument_list|)
 expr_stmt|;
 name|exit
