@@ -4032,8 +4032,6 @@ operator|<
 name|link
 operator|->
 name|number_of_interrupts
-operator|-
-literal|1
 condition|;
 name|i
 operator|++
