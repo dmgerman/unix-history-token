@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_input.c 1.29 81/12/23 */
+comment|/*	ip_input.c	1.30	82/02/15	*/
 end_comment
 
 begin_include
@@ -1002,7 +1002,7 @@ name|t
 operator|=
 name|m_get
 argument_list|(
-literal|1
+name|M_WAIT
 argument_list|)
 operator|)
 operator|==
