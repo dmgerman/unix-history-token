@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.26
+literal|3.27
 operator|%
 name|G
 operator|%
@@ -81,7 +81,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.26
+literal|3.27
 operator|%
 name|G
 operator|%
@@ -304,6 +304,10 @@ for|for
 control|(
 init|;
 condition|;
+name|sleep
+argument_list|(
+literal|10
+argument_list|)
 control|)
 block|{
 comment|/* get a socket for the SMTP connection */
@@ -334,7 +338,12 @@ argument_list|(
 literal|"getconnection: can't create socket"
 argument_list|)
 expr_stmt|;
-break|break;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 ifdef|#
 directive|ifdef
@@ -359,6 +368,12 @@ endif|#
 directive|endif
 endif|DEBUG
 comment|/* wait for a connection */
+do|do
+block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|accept
@@ -371,7 +386,19 @@ argument_list|)
 operator|>=
 literal|0
 condition|)
-break|break;
+return|return
+operator|(
+name|s
+operator|)
+return|;
+block|}
+do|while
+condition|(
+name|errno
+operator|==
+name|EINTR
+condition|)
+do|;
 name|syserr
 argument_list|(
 literal|"getconnection: accept"
@@ -385,17 +412,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|sleep
-argument_list|(
-literal|10
-argument_list|)
-expr_stmt|;
 block|}
-return|return
-operator|(
-name|s
-operator|)
-return|;
 block|}
 end_block
 
