@@ -1542,7 +1542,11 @@ name|sc
 operator|->
 name|sc_scan_ch
 argument_list|,
+name|debug_mpsafenet
+condition|?
 name|CALLOUT_MPSAFE
+else|:
+literal|0
 argument_list|)
 expr_stmt|;
 name|callout_init
