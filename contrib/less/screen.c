@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  * Copyright (C) 1984-2000  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
@@ -1265,6 +1269,20 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|no_init
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|quit_at_eof
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|more_mode
 decl_stmt|;
 end_decl_stmt
 
@@ -4416,6 +4434,16 @@ name|sc_e_keypad
 operator|=
 literal|""
 expr_stmt|;
+comment|/* 	 * This loses for terminals with termcap entries with ti/te strings 	 * that switch to/from an alternate screen, and we're in quit_at_eof 	 * (eg, more(1)).  	 */
+if|if
+condition|(
+operator|!
+name|quit_at_eof
+operator|&&
+operator|!
+name|more_mode
+condition|)
+block|{
 name|sc_init
 operator|=
 name|ltgetstr
@@ -4426,16 +4454,6 @@ operator|&
 name|sp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc_init
-operator|==
-name|NULL
-condition|)
-name|sc_init
-operator|=
-literal|""
-expr_stmt|;
 name|sc_deinit
 operator|=
 name|ltgetstr
@@ -4445,6 +4463,17 @@ argument_list|,
 operator|&
 name|sp
 argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sc_init
+operator|==
+name|NULL
+condition|)
+name|sc_init
+operator|=
+literal|""
 expr_stmt|;
 if|if
 condition|(

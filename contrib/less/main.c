@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  * Copyright (C) 1984-2000  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
@@ -123,6 +127,15 @@ begin_decl_stmt
 name|public
 name|int
 name|dohelp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|public
+name|int
+name|more_mode
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -260,6 +273,11 @@ decl_stmt|;
 name|char
 modifier|*
 name|s
+decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|__progname
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -422,6 +440,21 @@ endif|#
 directive|endif
 comment|/* WIN32 */
 comment|/* 	 * Process command line arguments and LESS environment arguments. 	 * Command line arguments override environment arguments. 	 */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|__progname
+argument_list|,
+literal|"more"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|more_mode
+operator|=
+literal|1
+expr_stmt|;
 name|is_tty
 operator|=
 name|isatty
@@ -447,6 +480,41 @@ expr_stmt|;
 name|init_option
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|more_mode
+condition|)
+block|{
+name|scan_option
+argument_list|(
+literal|"-E"
+argument_list|)
+expr_stmt|;
+name|scan_option
+argument_list|(
+literal|"-m"
+argument_list|)
+expr_stmt|;
+name|scan_option
+argument_list|(
+literal|"-G"
+argument_list|)
+expr_stmt|;
+name|scan_option
+argument_list|(
+literal|"-f"
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|lgetenv
+argument_list|(
+literal|"MORE"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|s
 operator|=
 name|lgetenv
@@ -454,6 +522,7 @@ argument_list|(
 literal|"LESS"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|s
@@ -795,6 +864,9 @@ name|missing_cap
 operator|&&
 operator|!
 name|know_dumb
+operator|&&
+operator|!
+name|more_mode
 condition|)
 name|error
 argument_list|(

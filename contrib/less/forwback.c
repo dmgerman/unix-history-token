@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  * Copyright (C) 1984-2000  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
@@ -87,6 +91,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|quit_at_eof
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|more_mode
 decl_stmt|;
 end_decl_stmt
 
@@ -385,6 +396,13 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+name|more_mode
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 name|top_scroll
 operator|==
 name|OPT_ONPLUS
@@ -397,6 +415,7 @@ expr_stmt|;
 name|home
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
