@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_user.h	7.11 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_user.h	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -104,9 +104,9 @@ name|short
 name|p_inact_ticks
 decl_stmt|;
 name|short
-name|p_unused
+name|p_ptpdusize
 decl_stmt|;
-comment|/* was .. local credit fraction reported (>0) */
+comment|/* preferred tpdusize/128 */
 name|short
 name|p_winsize
 decl_stmt|;

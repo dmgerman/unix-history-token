@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_subr2.c	7.17 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_subr2.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1369,12 +1369,29 @@ decl_stmt|,
 name|ssthresh
 init|=
 literal|0
+decl_stmt|,
+name|rt_mss
 decl_stmt|;
 name|struct
 name|socket
 modifier|*
 name|so
 decl_stmt|;
+if|if
+condition|(
+name|tpcb
+operator|->
+name|tp_ptpdusize
+condition|)
+name|mss
+operator|=
+name|tpcb
+operator|->
+name|tp_ptpdusize
+operator|<<
+literal|7
+expr_stmt|;
+else|else
 name|mss
 operator|=
 literal|1
@@ -1498,7 +1515,7 @@ name|rt_rmx
 operator|.
 name|rmx_mtu
 condition|)
-name|mss
+name|rt_mss
 operator|=
 name|rt
 operator|->
@@ -1512,7 +1529,7 @@ else|else
 endif|#
 directive|endif
 comment|/* RTV_MTU */
-name|mss
+name|rt_mss
 operator|=
 operator|(
 name|ifp
@@ -1521,6 +1538,24 @@ name|if_mtu
 operator|-
 name|nhdr_size
 operator|)
+expr_stmt|;
+if|if
+condition|(
+name|tpcb
+operator|->
+name|tp_ptpdusize
+operator|==
+literal|0
+operator|||
+comment|/* assume application doesn't care */
+name|mss
+operator|>
+name|rt_mss
+comment|/* network won't support what was asked for */
+condition|)
+name|mss
+operator|=
+name|rt_mss
 expr_stmt|;
 comment|/* can propose mtu which are multiples of 128 */
 name|mss

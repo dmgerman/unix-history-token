@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.h	7.19 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.h	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -582,6 +582,10 @@ define|#
 directive|define
 name|tp_version
 value|_tp_param.p_version
+define|#
+directive|define
+name|tp_ptpdusize
+value|_tp_param.p_ptpdusize
 name|int
 name|tp_l_tpdusize
 decl_stmt|;
