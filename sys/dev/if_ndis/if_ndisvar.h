@@ -215,10 +215,12 @@ name|ndis_rescnt
 decl_stmt|;
 name|struct
 name|mtx
+modifier|*
 name|ndis_mtx
 decl_stmt|;
 name|struct
 name|mtx
+modifier|*
 name|ndis_intrmtx
 decl_stmt|;
 name|struct
@@ -347,7 +349,7 @@ name|NDIS_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_lock(&(_sc)->ndis_mtx)
+value|mtx_pool_lock(ndis_mtxpool, (_sc)->ndis_mtx)
 end_define
 
 begin_define
@@ -357,7 +359,7 @@ name|NDIS_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_unlock(&(_sc)->ndis_mtx)
+value|mtx_pool_unlock(ndis_mtxpool, (_sc)->ndis_mtx)
 end_define
 
 end_unit

@@ -370,6 +370,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx_pool
+modifier|*
+name|ndis_mtxpool
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|__stdcall
 specifier|static
@@ -873,8 +882,10 @@ decl_stmt|;
 asm|__asm__
 specifier|__volatile__
 asm|("" : "=c" (lock));
-name|mtx_lock
+name|mtx_pool_lock
 argument_list|(
+name|ndis_mtxpool
+argument_list|,
 operator|(
 expr|struct
 name|mtx
@@ -912,8 +923,10 @@ decl_stmt|;
 asm|__asm__
 specifier|__volatile__
 asm|("" : "=c" (lock), "=d" (newiqrl));
-name|mtx_unlock
+name|mtx_pool_unlock
 argument_list|(
+name|ndis_mtxpool
+argument_list|,
 operator|(
 expr|struct
 name|mtx

@@ -2237,7 +2237,7 @@ block|{
 name|uint32_t
 name|nblx_items
 decl_stmt|;
-name|ndis_wlan_bssid
+name|ndis_wlan_bssid_ex
 name|nblx_bssid
 index|[
 literal|1
