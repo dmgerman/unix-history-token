@@ -1127,6 +1127,13 @@ begin_comment
 comment|/*  * Initialize the vnode management data structures.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAX_SAFE_MAXVNODES
+value|100000
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -1174,6 +1181,31 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|desiredvnodes
+operator|>
+name|MAX_SAFE_MAXVNODES
+condition|)
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"Reducing kern.maxvnodes %d -> %d\n"
+argument_list|,
+name|desiredvnodes
+argument_list|,
+name|MAX_SAFE_MAXVNODES
+argument_list|)
+expr_stmt|;
+name|desiredvnodes
+operator|=
+name|MAX_SAFE_MAXVNODES
+expr_stmt|;
+block|}
 name|minvnodes
 operator|=
 name|desiredvnodes
