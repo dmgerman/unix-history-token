@@ -940,7 +940,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|"           MPPE:       %s\n"
+literal|"           MPPE:       %s"
 argument_list|,
 name|command_ShowNegval
 argument_list|(
@@ -961,7 +961,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|"Key Size = %d-bits\n"
+literal|" (Key Size = %d-bits)\n"
 argument_list|,
 name|ccp
 operator|->
