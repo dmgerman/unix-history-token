@@ -41,6 +41,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -2758,9 +2764,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
-literal|"ng_netflow: m_devget() failed, losing export dgram\n"
+name|LOG_CRIT
+argument_list|,
+literal|"ng_netflow: m_devget() failed, losing export "
+literal|"dgram\n"
 argument_list|)
 expr_stmt|;
 name|header
@@ -3237,8 +3246,10 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|printf
+name|log
 argument_list|(
+name|LOG_CRIT
+argument_list|,
 literal|"ng_netflow: export_add() failed: %u\n"
 argument_list|,
 name|error
@@ -3378,9 +3389,12 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|printf
+name|log
 argument_list|(
-literal|"ng_netflow: export_add() failed: %u\n"
+name|LOG_CRIT
+argument_list|,
+literal|"ng_netflow: export_add() "
+literal|"failed: %u\n"
 argument_list|,
 name|error
 argument_list|)
