@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.7 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -132,7 +132,7 @@ name|addentry
 argument_list|(
 name|name
 argument_list|,
-name|psearch
+name|pathsearch
 argument_list|(
 name|name
 argument_list|)
@@ -1483,7 +1483,7 @@ name|ino
 decl_stmt|;
 name|ino
 operator|=
-name|psearch
+name|pathsearch
 argument_list|(
 name|name
 argument_list|)
