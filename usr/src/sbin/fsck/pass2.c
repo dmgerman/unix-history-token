@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass2.c	8.3 (Berkeley) %G%"
+literal|"@(#)pass2.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2051,13 +2051,11 @@ name|d_ino
 operator|==
 name|WINO
 operator|&&
-operator|!
-name|DT_ISWHT
-argument_list|(
 name|dirp
 operator|->
 name|d_type
-argument_list|)
+operator|!=
+name|DT_WHT
 operator|)
 operator|||
 operator|(
@@ -2067,12 +2065,11 @@ name|d_ino
 operator|!=
 name|WINO
 operator|&&
-name|DT_ISWHT
-argument_list|(
 name|dirp
 operator|->
 name|d_type
-argument_list|)
+operator|==
+name|DT_WHT
 operator|)
 operator|)
 condition|)
