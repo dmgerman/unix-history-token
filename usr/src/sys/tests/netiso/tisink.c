@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tisink.c	7.3 (Berkeley) %G%"
+literal|"@(#)tisink.c	7.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -183,6 +183,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|char
+modifier|*
+modifier|*
+name|xenvp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|long
 name|size
 decl_stmt|,
@@ -215,6 +223,8 @@ decl_stmt|,
 name|intercept
 init|=
 literal|0
+decl_stmt|,
+name|isode_mode
 decl_stmt|;
 end_decl_stmt
 
@@ -249,6 +259,8 @@ parameter_list|(
 name|argc
 parameter_list|,
 name|argv
+parameter_list|,
+name|envp
 parameter_list|)
 name|int
 name|argc
@@ -256,6 +268,11 @@ decl_stmt|;
 name|char
 modifier|*
 name|argv
+index|[]
+decl_stmt|;
+name|char
+modifier|*
+name|envp
 index|[]
 decl_stmt|;
 block|{
@@ -277,6 +294,10 @@ name|iso_addr
 name|iso_addr
 parameter_list|()
 function_decl|;
+name|xenvp
+operator|=
+name|envp
+expr_stmt|;
 while|while
 condition|(
 operator|--
@@ -1092,6 +1113,61 @@ literal|10
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|ISODE_MODE
+if|if
+condition|(
+name|isode_mode
+condition|)
+block|{
+specifier|static
+name|char
+name|fdbuf
+index|[
+literal|10
+index|]
+decl_stmt|;
+specifier|static
+name|char
+modifier|*
+name|nargv
+index|[
+literal|4
+index|]
+init|=
+block|{
+literal|"/usr/sbin/isod.tsap"
+block|,
+name|fdbuf
+block|,
+literal|""
+block|,
+literal|0
+block|}
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|fdbuf
+argument_list|,
+literal|"Z%d"
+argument_list|,
+name|ns
+argument_list|)
+expr_stmt|;
+name|old_isod_main
+argument_list|(
+literal|3
+argument_list|,
+name|nargv
+argument_list|,
+name|xenvp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+endif|#
+directive|endif
 for|for
 control|(
 init|;
