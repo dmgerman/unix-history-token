@@ -21,69 +21,16 @@ directive|if
 name|__GNUC__
 end_if
 
-begin_warning
-warning|#
-directive|warning
+begin_error
+error|#
+directive|error
 literal|"this file includes<struct.h> which is deprecated, use<stddef.h> instead"
-end_warning
+end_error
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* Offset of the field in the structure. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|fldoff
-parameter_list|(
-name|name
-parameter_list|,
-name|field
-parameter_list|)
-define|\
-value|((int)&(((struct name *)0)->field))
-end_define
-
-begin_comment
-comment|/* Size of the field in the structure. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|fldsiz
-parameter_list|(
-name|name
-parameter_list|,
-name|field
-parameter_list|)
-define|\
-value|(sizeof(((struct name *)0)->field))
-end_define
-
-begin_comment
-comment|/* Address of the structure from a field. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|strbase
-parameter_list|(
-name|name
-parameter_list|,
-name|addr
-parameter_list|,
-name|field
-parameter_list|)
-define|\
-value|((struct name *)((char *)(addr) - fldoff(name, field)))
-end_define
 
 begin_endif
 endif|#
