@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prof.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prof.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -483,18 +483,6 @@ begin_comment
 comment|/*  * This routine is massaged so that it may be jsb'ed to on vax.  */
 end_comment
 
-begin_asm
-asm|asm(".text");
-end_asm
-
-begin_asm
-asm|asm("#the beginning of mcount()");
-end_asm
-
-begin_asm
-asm|asm(".data");
-end_asm
-
 begin_macro
 name|mcount
 argument_list|()
@@ -537,8 +525,6 @@ specifier|static
 name|int
 name|s
 decl_stmt|;
-asm|asm("	.text");
-comment|/* make sure we're in text space */
 comment|/* 	 * Check that we are profiling. 	 */
 if|if
 condition|(
