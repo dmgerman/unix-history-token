@@ -451,11 +451,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* Backslash to avoid trigraph '??)'. */
 name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"restarted (??)"
+literal|"restarted (?\?)"
 argument_list|)
 expr_stmt|;
 comment|/* BpfGetIntfName() returns safe names, using %m */
