@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	6.13 (Berkeley) %G%"
+literal|"@(#)err.c	6.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -446,7 +446,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MESSAGE -- print message (not necessarily an error) ** **	Parameters: **		num -- the default ARPANET error number (in ascii) **		msg -- the message (printf fmt) -- if it begins **			with a digit, this number overrides num. **		a, b, c, d, e -- printf arguments ** **	Returns: **		none ** **	Side Effects: **		none. */
+comment|/* **  MESSAGE -- print message (not necessarily an error) ** **	Parameters: **		msg -- the message (printf fmt) -- it can begin with **			an SMTP reply code.  If not, 050 is assumed. **		a, b, c, d, e -- printf arguments ** **	Returns: **		none ** **	Side Effects: **		none. */
 end_comment
 
 begin_comment
