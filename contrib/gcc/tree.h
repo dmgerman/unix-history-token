@@ -5493,6 +5493,8 @@ name|TI_PTR_TYPE
 block|,
 name|TI_CONST_PTR_TYPE
 block|,
+name|TI_SIZE_TYPE
+block|,
 name|TI_PTRDIFF_TYPE
 block|,
 name|TI_VA_LIST_TYPE
@@ -5766,6 +5768,17 @@ define|#
 directive|define
 name|const_ptr_type_node
 value|global_trees[TI_CONST_PTR_TYPE]
+end_define
+
+begin_comment
+comment|/* The C type `size_t'.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|size_type_node
+value|global_trees[TI_SIZE_TYPE]
 end_define
 
 begin_define
@@ -9518,6 +9531,8 @@ name|PARAMS
 argument_list|(
 operator|(
 name|tree
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

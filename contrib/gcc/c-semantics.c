@@ -1902,6 +1902,11 @@ argument_list|)
 operator|==
 name|current_function_decl
 operator|&&
+name|DECL_SAVED_INSNS
+argument_list|(
+name|fn
+argument_list|)
+operator|&&
 operator|!
 name|TREE_ASM_WRITTEN
 argument_list|(
@@ -2290,6 +2295,10 @@ condition|)
 name|expand_asm
 argument_list|(
 name|string
+argument_list|,
+name|cv_qualifier
+operator|!=
+name|NULL_TREE
 argument_list|)
 expr_stmt|;
 else|else

@@ -6777,6 +6777,13 @@ condition|)
 block|{
 if|if
 condition|(
+name|code
+operator|==
+name|PLUS_EXPR
+condition|)
+block|{
+if|if
+condition|(
 name|TREE_CODE
 argument_list|(
 name|t1
@@ -6848,7 +6855,7 @@ argument_list|)
 argument_list|)
 argument_list|)
 return|;
-else|else
+block|}
 return|return
 name|build
 argument_list|(
@@ -20934,8 +20941,9 @@ operator|(
 name|code
 operator|==
 name|MULT_EXPR
-comment|/* If not multiplication, we can only do this if either operand 		 is divisible by c.  */
+comment|/* If not multiplication, we can only do this if both operands 		 are divisible by c.  */
 operator|||
+operator|(
 name|multiple_of_p
 argument_list|(
 name|ctype
@@ -20944,7 +20952,7 @@ name|op0
 argument_list|,
 name|c
 argument_list|)
-operator|||
+operator|&&
 name|multiple_of_p
 argument_list|(
 name|ctype
@@ -20953,6 +20961,7 @@ name|op1
 argument_list|,
 name|c
 argument_list|)
+operator|)
 operator|)
 condition|)
 return|return

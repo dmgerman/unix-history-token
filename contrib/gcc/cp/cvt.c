@@ -1330,6 +1330,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|expr
+operator|==
+name|error_mark_node
+condition|)
+return|return
+name|error_mark_node
+return|;
 comment|/* Add any qualifier conversions. */
 if|if
 condition|(

@@ -6455,7 +6455,7 @@ name|build1
 argument_list|(
 name|NOP_EXPR
 argument_list|,
-name|c_size_type_node
+name|size_type_node
 argument_list|,
 name|size
 argument_list|)
@@ -6717,7 +6717,7 @@ name|build1
 argument_list|(
 name|NOP_EXPR
 argument_list|,
-name|c_size_type_node
+name|size_type_node
 argument_list|,
 name|size
 argument_list|)
@@ -25613,20 +25613,7 @@ argument_list|(
 name|rhs
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|coder
-operator|!=
-name|ARRAY_TYPE
-condition|)
-name|rhs
-operator|=
-name|decl_constant_value
-argument_list|(
-name|rhs
-argument_list|)
-expr_stmt|;
+comment|/* We do not use decl_constant_value here because of this case:         const char* const s = "s";        The conversion rules for a string literal are more lax than for a      variable; in particular, a string literal can be converted to a      "char *" but the variable "s" cannot be converted in the same      way.  If the conversion is allowed, the optimization should be      performed while creating the converted expression.  */
 comment|/* [expr.ass]       The expression is implicitly converted (clause _conv_) to the      cv-unqualified type of the left operand.       We allow bad conversions here because by the time we get to this point      we are committed to doing the conversion.  If we end up doing a bad      conversion, convert_like will complain.  */
 if|if
 condition|(

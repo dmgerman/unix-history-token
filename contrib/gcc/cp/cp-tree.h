@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for C++ parsing and type checking.    Copyright (C) 1987, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002 Free Software Foundation, Inc.    Contributed by Michael Tiemann (tiemann@cygnus.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for C++ parsing and type checking.    Copyright (C) 1987, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003 Free Software Foundation, Inc.    Contributed by Michael Tiemann (tiemann@cygnus.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -3511,6 +3511,9 @@ name|tree
 name|vfields
 decl_stmt|;
 name|tree
+name|typeinfo_var
+decl_stmt|;
+name|tree
 name|vbases
 decl_stmt|;
 name|tree
@@ -4931,6 +4934,21 @@ end_define
 
 begin_escape
 end_escape
+
+begin_comment
+comment|/* The std::type_info variable representing this class, or NULL if no    such variable has been created.  This field is only set for the    TYPE_MAIN_VARIANT of the class.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLASSTYPE_TYPEINFO_VAR
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(TYPE_LANG_SPECIFIC (NODE)->typeinfo_var)
+end_define
 
 begin_comment
 comment|/* Accessor macros for the vfield slots in structures.  */
@@ -17219,6 +17237,21 @@ operator|,
 name|tree
 operator|,
 name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|lookup_nested_field
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
 operator|,
 name|int
 operator|)

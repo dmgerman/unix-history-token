@@ -841,6 +841,22 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
+name|char
+modifier|*
+name|rs6000_output_load_multiple
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|store_multiple_operation
 name|PARAMS

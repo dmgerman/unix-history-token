@@ -997,12 +997,21 @@ directive|define
 name|NO_IMPLICIT_EXTERN_C
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|PROFILE_HOOK
+end_undef
+
 begin_define
 define|#
 directive|define
-name|SUBTARGET_PROLOGUE
+name|PROFILE_HOOK
+parameter_list|(
+name|LABEL
+parameter_list|)
 define|\
-value|if (current_function_profile						\&& MAIN_NAME_P (DECL_NAME (current_function_decl)))		\      {									\       emit_call_insn (gen_rtx (CALL, VOIDmode, 				\ 	gen_rtx_MEM (FUNCTION_MODE,					\ 		     gen_rtx_SYMBOL_REF (Pmode, "_monstartup")),	\ 	const0_rtx));							\      }
+value|if (MAIN_NAME_P (DECL_NAME (current_function_decl)))			\     {									\       emit_call_insn (gen_rtx (CALL, VOIDmode,				\ 	gen_rtx_MEM (FUNCTION_MODE,					\ 		     gen_rtx_SYMBOL_REF (Pmode, "_monstartup")),	\ 	const0_rtx));							\     }
 end_define
 
 begin_comment

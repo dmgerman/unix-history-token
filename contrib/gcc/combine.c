@@ -30977,6 +30977,19 @@ operator|)
 operator|%
 name|UNITS_PER_WORD
 expr_stmt|;
+comment|/* Avoid creating invalid subregs, for example when 		 simplifying (x>>32)&255. */
+if|if
+condition|(
+name|final_word
+operator|>=
+name|GET_MODE_SIZE
+argument_list|(
+name|inner_mode
+argument_list|)
+condition|)
+return|return
+name|NULL_RTX
+return|;
 name|new
 operator|=
 name|gen_rtx_SUBREG
@@ -35149,7 +35162,7 @@ name|next_select
 argument_list|)
 return|;
 block|}
-comment|/* Similarly, if C contains every bit in the mask, then we may 	 replace with (not Y).  */
+comment|/* Similarly, if C contains every bit in the fuller_mask, then we may 	 replace with (not Y).  */
 if|if
 condition|(
 name|GET_CODE
@@ -35179,7 +35192,7 @@ operator||
 operator|(
 name|HOST_WIDE_INT
 operator|)
-name|mask
+name|fuller_mask
 operator|)
 operator|==
 name|INTVAL
