@@ -2711,6 +2711,18 @@ name|VT_GETACTIVE
 value|_IOR('v', 7, int)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_VT_MODE_DECLARED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_VT_MODE_DECLARED
+end_define
+
 begin_struct
 struct|struct
 name|vt_mode
@@ -2754,6 +2766,15 @@ name|vtmode_t
 typedef|;
 end_typedef
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_VT_MODE_DECLARED */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2768,13 +2789,19 @@ name|NUM_STATES
 value|8
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KEYMAP_DECLARED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_KEYMAP_DECLARED
+end_define
+
 begin_struct
-struct|struct
-name|keymap
-block|{
-name|u_short
-name|n_keys
-decl_stmt|;
 struct|struct
 name|key_t
 block|{
@@ -2791,11 +2818,23 @@ name|u_char
 name|flgs
 decl_stmt|;
 block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|keymap
+block|{
+name|u_short
+name|n_keys
+decl_stmt|;
+name|struct
+name|key_t
 name|key
 index|[
 name|NUM_KEYS
 index|]
-struct|;
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2807,6 +2846,15 @@ name|keymap
 name|keymap_t
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_KEYMAP_DECLARED */
+end_comment
 
 begin_comment
 comment|/* end of USL VT compatibility stuff */

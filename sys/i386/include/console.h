@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: console.h,v 1.33 1997/12/07 08:08:49 yokota Exp $  */
+comment|/*-  * Copyright (c) 1991-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: console.h,v 1.34 1998/01/07 08:40:14 yokota Exp $  */
 end_comment
 
 begin_ifndef
@@ -42,42 +42,50 @@ begin_define
 define|#
 directive|define
 name|KDGKBMODE
-value|_IOR('K',  6, int)
+value|_IOR('K', 6, int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|KDSKBMODE
-value|_IO('K',  7)
+value|_IO('K', 7
+comment|/*, int */
+value|)
 end_define
 
 begin_define
 define|#
 directive|define
 name|KDMKTONE
-value|_IO('K',  8)
+value|_IO('K', 8
+comment|/*, int */
+value|)
 end_define
 
 begin_define
 define|#
 directive|define
 name|KDGETMODE
-value|_IOR('K',  9, int)
+value|_IOR('K', 9, int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|KDSETMODE
-value|_IO('K', 10)
+value|_IO('K', 10
+comment|/*, int */
+value|)
 end_define
 
 begin_define
 define|#
 directive|define
 name|KDSBORDER
-value|_IO('K', 13)
+value|_IO('K', 13
+comment|/*, int */
+value|)
 end_define
 
 begin_define
@@ -91,7 +99,9 @@ begin_define
 define|#
 directive|define
 name|KDSKBSTATE
-value|_IO('K', 20)
+value|_IO('K', 20
+comment|/*, int */
+value|)
 end_define
 
 begin_define
@@ -112,7 +122,9 @@ begin_define
 define|#
 directive|define
 name|KIOCSOUND
-value|_IO('K', 63)
+value|_IO('K', 63
+comment|/*, int */
+value|)
 end_define
 
 begin_define
@@ -133,14 +145,18 @@ begin_define
 define|#
 directive|define
 name|KDSETLED
-value|_IO('K', 66)
+value|_IO('K', 66
+comment|/*, int */
+value|)
 end_define
 
 begin_define
 define|#
 directive|define
 name|KDSETRAD
-value|_IO('K', 67)
+value|_IO('K', 67
+comment|/*, int */
+value|)
 end_define
 
 begin_define
@@ -386,21 +402,27 @@ begin_define
 define|#
 directive|define
 name|VT_RELDISP
-value|_IO('v', 4)
+value|_IO('v', 4
+comment|/*, int */
+value|)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VT_ACTIVATE
-value|_IO('v', 5)
+value|_IO('v', 5
+comment|/*, int */
+value|)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VT_WAITACTIVE
-value|_IO('v', 6)
+value|_IO('v', 6
+comment|/*, int */
+value|)
 end_define
 
 begin_define
@@ -464,6 +486,18 @@ begin_comment
 comment|/* switching controlled in kernel */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_VT_MODE_DECLARED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_VT_MODE_DECLARED
+end_define
+
 begin_struct
 struct|struct
 name|vt_mode
@@ -488,6 +522,23 @@ comment|/* not implemented yet	SOS	*/
 block|}
 struct|;
 end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|vt_mode
+name|vtmode_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_VT_MODE_DECLARED */
+end_comment
 
 begin_struct
 struct|struct
@@ -940,6 +991,18 @@ begin_comment
 comment|/* offset for altlock keys	*/
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KEYMAP_DECLARED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_KEYMAP_DECLARED
+end_define
+
 begin_struct
 struct|struct
 name|key_t
@@ -977,6 +1040,23 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|keymap
+name|keymap_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_KEYMAP_DECLARED */
+end_comment
 
 begin_define
 define|#
@@ -1171,14 +1251,6 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|keymap
-name|keymap_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|struct
 name|accentmap
 name|accentmap_t
 typedef|;
@@ -1205,14 +1277,6 @@ typedef|typedef
 name|struct
 name|vid_info
 name|vid_info_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|struct
-name|vt_mode
-name|vtmode_t
 typedef|;
 end_typedef
 
