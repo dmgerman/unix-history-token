@@ -1949,7 +1949,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 return|return
 operator|(
@@ -7537,7 +7539,9 @@ operator|>
 name|SOCK_MAXADDRLEN
 condition|)
 return|return
+operator|(
 name|ENAMETOOLONG
+operator|)
 return|;
 if|if
 condition|(
@@ -7645,7 +7649,9 @@ name|sa
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
