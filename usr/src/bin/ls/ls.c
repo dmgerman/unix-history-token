@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.53 (Berkeley) %G%"
+literal|"@(#)ls.c	5.54 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1238,6 +1238,12 @@ name|f_listdot
 operator|&&
 operator|!
 name|is_ddot
+operator|&&
+name|p
+operator|->
+name|fts_level
+operator|!=
+name|FTS_ROOTLEVEL
 condition|)
 break|break;
 name|display
@@ -1452,30 +1458,6 @@ name|FTS_D
 operator|&&
 operator|!
 name|f_listdir
-condition|)
-block|{
-name|cur
-operator|->
-name|fts_number
-operator|=
-name|NO_PRINT
-expr_stmt|;
-continue|continue;
-block|}
-comment|/* 			 * If file is dot file and no -a or -A is set, 			 * do not display. 			 */
-if|if
-condition|(
-name|cur
-operator|->
-name|fts_name
-index|[
-literal|0
-index|]
-operator|==
-literal|'.'
-operator|&&
-operator|!
-name|f_listdot
 condition|)
 block|{
 name|cur
