@@ -13,7 +13,7 @@ begin_define
 define|#
 directive|define
 name|FTP_VERSION
-value|"1.8.7 (December 11, 1994)"
+value|"1.9.0 (December 22, 1994)"
 end_define
 
 begin_comment
@@ -269,6 +269,22 @@ comment|/* service spec for tcp/ftp */
 end_comment
 
 begin_decl_stmt
+specifier|static
+name|char
+name|pad2a
+index|[
+literal|8
+index|]
+init|=
+literal|"Pad 2a"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* SunOS overwrites jmp_bufs... */
+end_comment
+
+begin_decl_stmt
 name|jmp_buf
 name|toplevel
 decl_stmt|;
@@ -277,6 +293,18 @@ end_decl_stmt
 begin_comment
 comment|/* non-local goto stuff for cmd scanner */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+name|pad2b
+index|[
+literal|8
+index|]
+init|=
+literal|"Pad 2b"
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -1936,6 +1964,9 @@ name|cmdscanner
 argument_list|(
 name|top
 argument_list|)
+operator|&&
+operator|!
+name|fromatty
 condition|)
 name|exit
 argument_list|(
