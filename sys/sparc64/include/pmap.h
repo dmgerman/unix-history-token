@@ -55,15 +55,19 @@ end_define
 begin_define
 define|#
 directive|define
-name|PMAP_CONTEXT_MAX
-value|8192
+name|DCACHE_OTHER_COLOR
+parameter_list|(
+name|color
+parameter_list|)
+define|\
+value|((color) ^ DCACHE_COLOR_BITS)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PG_UNCACHEABLE
-value|(1<<0)
+name|PMAP_CONTEXT_MAX
+value|8192
 end_define
 
 begin_define
