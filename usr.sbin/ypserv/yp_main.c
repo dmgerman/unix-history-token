@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yp_main.c,v 1.17 1998/02/11 19:15:32 wpaul Exp $"
+literal|"$Id: yp_main.c,v 1.18 1998/06/04 15:11:14 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -550,6 +550,7 @@ operator|&
 name|readfds
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|forked
@@ -559,12 +560,11 @@ operator|!=
 name|getpid
 argument_list|()
 condition|)
-name|exit
+name|_exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 end_function
