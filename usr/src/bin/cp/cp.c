@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cp.c	5.12 (Berkeley) %G%"
+literal|"@(#)cp.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -199,20 +199,15 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* stat function to use */
-end_comment
-
 begin_decl_stmt
 name|char
 modifier|*
 name|buf
+decl_stmt|,
+modifier|*
+name|pname
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* I/O; malloc for best alignment. */
-end_comment
 
 begin_decl_stmt
 name|char
@@ -274,9 +269,33 @@ modifier|*
 name|old_to
 decl_stmt|,
 modifier|*
+name|p
+decl_stmt|,
+modifier|*
 name|malloc
 argument_list|()
 decl_stmt|;
+comment|/* 	 * cp is used by mv(1) -- except for usage statements, print 	 * the "called as" program name. 	 */
+name|pname
+operator|=
+operator|(
+name|p
+operator|=
+name|rindex
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|'/'
+argument_list|)
+operator|)
+condition|?
+operator|++
+name|p
+else|:
+operator|*
+name|argv
+expr_stmt|;
 name|force_flag
 operator|=
 name|symfollow
@@ -417,7 +436,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"cp: out of space.\n"
+literal|"%s: out of space.\n"
+argument_list|,
+name|pname
 argument_list|)
 expr_stmt|;
 name|exit
@@ -744,7 +765,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"cp: %s and %s are identical (not copied).\n"
+literal|"%s: %s and %s are identical (not copied).\n"
+argument_list|,
+name|pname
 argument_list|,
 name|to
 operator|.
@@ -800,7 +823,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"cp: %s is a directory (not copied).\n"
+literal|"%s: %s is a directory (not copied).\n"
+argument_list|,
+name|pname
 argument_list|,
 name|from
 operator|.
@@ -865,7 +890,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"cp: %s: not a directory.\n"
+literal|"%s: %s: not a directory.\n"
+argument_list|,
+name|pname
 argument_list|,
 name|to
 operator|.
@@ -1479,7 +1506,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"cp: can't read directory %s.\n"
+literal|"%s: can't read directory %s.\n"
+argument_list|,
+name|pname
 argument_list|,
 name|from
 operator|.
@@ -2363,7 +2392,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"cp: %s\n"
+literal|"%s: %s\n"
+argument_list|,
+name|pname
 argument_list|,
 name|strerror
 argument_list|(
@@ -2441,7 +2472,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"cp: %s: %s\n"
+literal|"%s: %s: %s\n"
+argument_list|,
+name|pname
 argument_list|,
 name|s
 argument_list|,
@@ -2516,7 +2549,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"cp: %s: name too long.\n"
+literal|"%s: %s: name too long.\n"
+argument_list|,
+name|pname
 argument_list|,
 name|string
 argument_list|)
@@ -2677,7 +2712,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"cp: %s/%s: name too long.\n"
+literal|"%s: %s/%s: name too long.\n"
+argument_list|,
+name|pname
 argument_list|,
 name|p
 operator|->
