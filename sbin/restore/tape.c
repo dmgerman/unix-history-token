@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ufs/ufs/dinode.h>
 end_include
 
@@ -105,6 +111,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
 end_include
 
 begin_include
@@ -3872,11 +3884,6 @@ name|strerror
 argument_list|(
 name|errno
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|done
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
