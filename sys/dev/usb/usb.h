@@ -1423,46 +1423,96 @@ name|usb_port_status_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* Device class codes */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|UCLASS_UNSPEC
+name|UDCLASS_AUDIO
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|UDCLASS_COMM
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|UDCLASS_HID
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|UDCLASS_HUB
+value|0x09
+end_define
+
+begin_define
+define|#
+directive|define
+name|UDSUBCLASS_HUB
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|UCLASS_AUDIO
+name|UDCLASS_MASS
+value|0x00
+end_define
+
+begin_comment
+comment|/* Interface class codes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UICLASS_UNSPEC
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|UICLASS_AUDIO
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|UISUBCLASS_AUDIOCONTROL
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|USUBCLASS_AUDIOCONTROL
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|USUBCLASS_AUDIOSTREAM
+name|UISUBCLASS_AUDIOSTREAM
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|USUBCLASS_MIDISTREAM
+name|UISUBCLASS_MIDISTREAM
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|UCLASS_CDC
-value|2
+name|UICLASS_CDC
+value|0x02
 end_define
 
 begin_comment
@@ -1472,175 +1522,189 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USUBCLASS_DIRECT_LINE_CONTROL_MODEL
+name|UISUBCLASS_DIRECT_LINE_CONTROL_MODEL
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|USUBCLASS_ABSTRACT_CONTROL_MODEL
+name|UISUBCLASS_ABSTRACT_CONTROL_MODEL
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|USUBCLASS_TELEPHONE_CONTROL_MODEL
+name|UISUBCLASS_TELEPHONE_CONTROL_MODEL
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|USUBCLASS_MULTICHANNEL_CONTROL_MODEL
+name|UISUBCLASS_MULTICHANNEL_CONTROL_MODEL
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|USUBCLASS_CAPI_CONTROLMODEL
+name|UISUBCLASS_CAPI_CONTROLMODEL
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|USUBCLASS_ETHERNET_NETWORKING_CONTROL_MODEL
+name|UISUBCLASS_ETHERNET_NETWORKING_CONTROL_MODEL
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|USUBCLASS_ATM_NETWORKING_CONTROL_MODEL
+name|UISUBCLASS_ATM_NETWORKING_CONTROL_MODEL
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|UPROTO_CDC_AT
+name|UIPROTO_CDC_AT
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|UCLASS_HID
-value|3
+name|UICLASS_HID
+value|0x03
 end_define
 
 begin_define
 define|#
 directive|define
-name|USUBCLASS_BOOT
+name|UISUBCLASS_BOOT
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|UCLASS_PRINTER
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|USUBCLASS_PRINTER
+name|UIPROTO_BOOT_KEYBOARD
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|UPROTO_PRINTER_UNI
+name|UICLASS_PHYSICAL
+value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
+name|UICLASS_PRINTER
+value|0x07
+end_define
+
+begin_define
+define|#
+directive|define
+name|UISUBCLASS_PRINTER
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|UPROTO_PRINTER_BI
+name|UIPROTO_PRINTER_UNI
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|UIPROTO_PRINTER_BI
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|UCLASS_MASS
-value|8
+name|UICLASS_MASS
+value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
-name|USUBCLASS_RBC
+name|UISUBCLASS_RBC
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|USUBCLASS_SFF8020I
+name|UISUBCLASS_SFF8020I
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|USUBCLASS_QIC157
+name|UISUBCLASS_QIC157
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|USUBCLASS_UFI
+name|UISUBCLASS_UFI
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|USUBCLASS_SFF8070I
+name|UISUBCLASS_SFF8070I
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|USUBCLASS_SCSI
+name|UISUBCLASS_SCSI
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|UPROTO_MASS_CBI_I
+name|UIPROTO_MASS_CBI_I
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|UPROTO_MASS_CBI
+name|UIPROTO_MASS_CBI
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|UPROTO_MASS_BBB
+name|UIPROTO_MASS_BULK
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|UPROTO_MASS_BBB_P
+name|UIPROTO_MASS_BULK_P
 value|80
 end_define
 
@@ -1651,35 +1715,35 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UCLASS_HUB
-value|9
+name|UICLASS_HUB
+value|0x09
 end_define
 
 begin_define
 define|#
 directive|define
-name|USUBCLASS_HUB
+name|UISUBCLASS_HUB
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|UCLASS_DATA
-value|10
+name|UICLASS_CDC_DATA
+value|0x0a
 end_define
 
 begin_define
 define|#
 directive|define
-name|USUBCLASS_DATA
+name|UISUBCLASS_DATA
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|UPROTO_DATA_ISDNBRI
+name|UIPROTO_DATA_ISDNBRI
 value|0x30
 end_define
 
@@ -1690,7 +1754,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UPROTO_DATA_HDLC
+name|UIPROTO_DATA_HDLC
 value|0x31
 end_define
 
@@ -1701,7 +1765,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UPROTO_DATA_TRANSPARENT
+name|UIPROTO_DATA_TRANSPARENT
 value|0x32
 end_define
 
@@ -1712,7 +1776,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UPROTO_DATA_Q921M
+name|UIPROTO_DATA_Q921M
 value|0x50
 end_define
 
@@ -1723,7 +1787,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UPROTO_DATA_Q921
+name|UIPROTO_DATA_Q921
 value|0x51
 end_define
 
@@ -1734,7 +1798,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UPROTO_DATA_Q921TM
+name|UIPROTO_DATA_Q921TM
 value|0x52
 end_define
 
@@ -1745,7 +1809,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UPROTO_DATA_V42BIS
+name|UIPROTO_DATA_V42BIS
 value|0x90
 end_define
 
@@ -1756,7 +1820,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UPROTO_DATA_Q931
+name|UIPROTO_DATA_Q931
 value|0x91
 end_define
 
@@ -1767,7 +1831,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UPROTO_DATA_V120
+name|UIPROTO_DATA_V120
 value|0x92
 end_define
 
@@ -1778,7 +1842,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UPROTO_DATA_CAPI
+name|UIPROTO_DATA_CAPI
 value|0x93
 end_define
 
@@ -1789,7 +1853,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UPROTO_DATA_HOST_BASED
+name|UIPROTO_DATA_HOST_BASED
 value|0xfd
 end_define
 
@@ -1800,7 +1864,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UPROTO_DATA_PUF
+name|UIPROTO_DATA_PUF
 value|0xfe
 end_define
 
@@ -1811,7 +1875,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UPROTO_DATA_VENDOR
+name|UIPROTO_DATA_VENDOR
 value|0xff
 end_define
 
@@ -1822,24 +1886,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UCLASS_VENDOR_DA
-value|0xfe
+name|UICLASS_FIRM_UPD
+value|0x0c
 end_define
-
-begin_comment
-comment|/* Doug Ambrisko */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|USUBCLASS_DA
-value|0xda
+name|UICLASS_APPL_SPEC
+value|0xfe
 end_define
 
-begin_comment
-comment|/* Doug Ambrisko */
-end_comment
+begin_define
+define|#
+directive|define
+name|UICLASS_VENDOR
+value|0xff
+end_define
 
 begin_define
 define|#

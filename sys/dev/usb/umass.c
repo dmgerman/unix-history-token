@@ -2671,7 +2671,7 @@ name|id
 operator|->
 name|bInterfaceClass
 operator|!=
-name|UCLASS_MASS
+name|UICLASS_MASS
 condition|)
 return|return
 operator|(
@@ -2748,7 +2748,7 @@ name|bInterfaceSubClass
 condition|)
 block|{
 case|case
-name|USUBCLASS_SCSI
+name|UISUBCLASS_SCSI
 case|:
 name|sc
 operator|->
@@ -2758,7 +2758,7 @@ name|PROTO_SCSI
 expr_stmt|;
 break|break;
 case|case
-name|USUBCLASS_UFI
+name|UISUBCLASS_UFI
 case|:
 name|sc
 operator|->
@@ -2774,7 +2774,7 @@ name|PROTO_UFI
 expr_stmt|;
 break|break;
 case|case
-name|USUBCLASS_RBC
+name|UISUBCLASS_RBC
 case|:
 name|sc
 operator|->
@@ -2784,10 +2784,10 @@ name|PROTO_RBC
 expr_stmt|;
 break|break;
 case|case
-name|USUBCLASS_SFF8020I
+name|UISUBCLASS_SFF8020I
 case|:
 case|case
-name|USUBCLASS_SFF8070I
+name|UISUBCLASS_SFF8070I
 case|:
 name|sc
 operator|->
@@ -2831,7 +2831,7 @@ name|bInterfaceProtocol
 condition|)
 block|{
 case|case
-name|UPROTO_MASS_CBI
+name|UIPROTO_MASS_CBI
 case|:
 name|sc
 operator|->
@@ -2841,7 +2841,7 @@ name|PROTO_CBI
 expr_stmt|;
 break|break;
 case|case
-name|UPROTO_MASS_CBI_I
+name|UIPROTO_MASS_CBI_I
 case|:
 if|#
 directive|if
@@ -2864,7 +2864,7 @@ endif|#
 directive|endif
 break|break;
 case|case
-name|UPROTO_MASS_BBB
+name|UIPROTO_MASS_BULK
 case|:
 name|sc
 operator|->
@@ -2874,7 +2874,7 @@ name|PROTO_BBB
 expr_stmt|;
 break|break;
 case|case
-name|UPROTO_MASS_BBB_P
+name|UIPROTO_MASS_BULK_P
 case|:
 name|sc
 operator|->

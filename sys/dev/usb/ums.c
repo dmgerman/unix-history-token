@@ -641,7 +641,7 @@ name|id
 operator|->
 name|bInterfaceClass
 operator|!=
-name|UCLASS_HID
+name|UICLASS_HID
 condition|)
 return|return
 operator|(

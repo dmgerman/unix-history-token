@@ -13094,10 +13094,10 @@ literal|0x01
 block|}
 block|,
 comment|/* USB version */
-name|UCLASS_HUB
+name|UDCLASS_HUB
 block|,
 comment|/* class */
-name|USUBCLASS_HUB
+name|UDSUBCLASS_HUB
 block|,
 comment|/* subclass */
 literal|0
@@ -13180,9 +13180,9 @@ literal|0
 block|,
 literal|1
 block|,
-name|UCLASS_HUB
+name|UICLASS_HUB
 block|,
-name|USUBCLASS_HUB
+name|UISUBCLASS_HUB
 block|,
 literal|0
 block|,

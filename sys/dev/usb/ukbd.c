@@ -6878,13 +6878,13 @@ name|id
 operator|->
 name|bInterfaceClass
 operator|==
-name|UCLASS_HID
+name|UICLASS_HID
 operator|&&
 name|id
 operator|->
 name|bInterfaceSubClass
 operator|==
-name|USUBCLASS_BOOT
+name|UISUBCLASS_BOOT
 operator|&&
 name|id
 operator|->
