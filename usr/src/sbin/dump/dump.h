@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dump.h	5.22 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dump.h	5.23 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -287,6 +287,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|nonodump
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* if set, do not honor UF_NODUMP user flags */
+end_comment
+
+begin_decl_stmt
+name|int
 name|notify
 decl_stmt|;
 end_decl_stmt
@@ -375,6 +385,23 @@ end_decl_stmt
 begin_comment
 comment|/* log2(TP_BSIZE) */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__P
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* operator interface functions */
@@ -755,6 +782,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|__dead
 name|void
 name|Exit
 name|__P
@@ -1169,11 +1197,11 @@ begin_comment
 comment|/*  * Compatibility with old systems.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__STDC__
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT
+end_ifdef
 
 begin_include
 include|#
@@ -1181,18 +1209,15 @@ directive|include
 file|<sys/file.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|_PATH_FSTAB
-value|"/etc/fstab"
-end_define
-
 begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
 name|index
+argument_list|()
+decl_stmt|,
+modifier|*
+name|rindex
 argument_list|()
 decl_stmt|,
 modifier|*
@@ -1213,9 +1238,56 @@ end_function_decl
 begin_decl_stmt
 specifier|extern
 name|int
+name|read
+argument_list|()
+decl_stmt|,
+name|write
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|errno
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_UTMP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_UTMP
+value|"/etc/utmp"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_FSTAB
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_FSTAB
+value|"/etc/fstab"
+end_define
 
 begin_endif
 endif|#
@@ -1316,6 +1388,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|strerror
