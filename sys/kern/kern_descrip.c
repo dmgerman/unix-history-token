@@ -7139,11 +7139,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|FILEDESC_LOCK
-argument_list|(
-name|fdp
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|falloc
@@ -7155,11 +7150,6 @@ name|fp
 argument_list|,
 operator|&
 name|fd
-argument_list|)
-expr_stmt|;
-name|FILEDESC_UNLOCK
-argument_list|(
-name|fdp
 argument_list|)
 expr_stmt|;
 if|if
