@@ -1000,7 +1000,7 @@ name|ip
 operator|->
 name|st_size
 operator|=
-name|strtoul
+name|strtoq
 argument_list|(
 name|val
 argument_list|,
