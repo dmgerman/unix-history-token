@@ -137,6 +137,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|null_hashrem
+parameter_list|(
+name|struct
+name|null_node
+modifier|*
+name|xp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|null_bypass
 parameter_list|(
@@ -211,14 +223,6 @@ name|vop_t
 modifier|*
 modifier|*
 name|null_vnodeop_p
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|lock
-name|null_hashlock
 decl_stmt|;
 end_decl_stmt
 
