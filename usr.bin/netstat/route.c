@@ -2908,6 +2908,10 @@ decl_stmt|,
 modifier|*
 name|lastif
 decl_stmt|;
+name|struct
+name|rtentry
+name|parent
+decl_stmt|;
 specifier|static
 name|char
 name|name
@@ -2932,7 +2936,7 @@ name|addr
 decl_stmt|,
 name|mask
 decl_stmt|;
-comment|/* 	 * Don't print cloned routes unless -a. 	 */
+comment|/* 	 * Don't print protocol-cloned routes unless -a. 	 */
 if|if
 condition|(
 name|rt
@@ -2944,7 +2948,26 @@ operator|&&
 operator|!
 name|aflag
 condition|)
+block|{
+name|kget
+argument_list|(
+name|rt
+operator|->
+name|rt_parent
+argument_list|,
+name|parent
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|parent
+operator|.
+name|rt_flags
+operator|&
+name|RTF_PRCLONING
+condition|)
 return|return;
+block|}
 name|bzero
 argument_list|(
 operator|&
