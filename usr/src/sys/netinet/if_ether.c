@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ether.c	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ether.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * Ethernet address resolution protocol.  * TODO:  *	run at splnet (add ARP protocol intr.)  *	link entries onto hash chains, keep free list  *	add "inuse/lock" bit (or ref. count) along with valid bit  */
+comment|/*  * Ethernet address resolution protocol.  * TODO:  *	add "inuse/lock" bit (or ref. count) along with valid bit  */
 end_comment
 
 begin_include
@@ -528,6 +528,25 @@ case|:
 case|case
 name|RTM_RESOLVE
 case|:
+if|if
+condition|(
+operator|(
+name|rt
+operator|->
+name|rt_flags
+operator|&
+name|RTF_HOST
+operator|)
+operator|==
+literal|0
+condition|)
+comment|/* Route to IF? XXX*/
+name|rt
+operator|->
+name|rt_flags
+operator||=
+name|RTF_CLONING
+expr_stmt|;
 if|if
 condition|(
 name|rt
