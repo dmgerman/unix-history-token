@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* system.h: system-dependent declarations; include this first.    $Id: system.h,v 1.14 1999/07/17 21:11:34 karl Exp $     Copyright (C) 1997, 98, 99 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* system.h: system-dependent declarations; include this first.    $Id: system.h,v 1.22 2002/02/26 14:31:18 karl Exp $     Copyright (C) 1997, 98, 99, 00, 01, 02 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -70,6 +70,10 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_comment
+comment|/* All systems nowadays probably have these functions, but ... */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -120,7 +124,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<libintl.h>
+file|"gettext.h"
 end_include
 
 begin_define
@@ -142,6 +146,24 @@ name|String
 parameter_list|)
 value|(String)
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_LC_MESSAGES
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LC_MESSAGES
+value|(-1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -302,6 +324,59 @@ name|strerror
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LIMITS_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PATH_MAX
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_PATH_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_POSIX_PATH_MAX
+value|255
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|PATH_MAX
+value|_POSIX_PATH_MAX
+end_define
 
 begin_endif
 endif|#
@@ -510,7 +585,7 @@ comment|/* not O_RDONLY */
 end_comment
 
 begin_comment
-comment|/* MS-DOS and similar non-Posix systems have some peculiarities:     - they distinguish between binary and text files;     - they use both `/' and `\\' as directory separator in file names;     - they can have a drive letter X: prepended to a file name;     - they have a separate root directory on each drive;     - their filesystems are case-insensitive;     - directories in environment variables (like INFOPATH) are separated         by `;' rather than `:';     - text files can have their lines ended either with \n or with \r\n pairs;     These are all parameterized here except the last, which is    handled by the source code as appropriate (mostly, in info/).  */
+comment|/* MS-DOS and similar non-Posix systems have some peculiarities:     - they distinguish between binary and text files;     - they use both `/' and `\\' as directory separator in file names;     - they can have a drive letter X: prepended to a file name;     - they have a separate root directory on each drive;     - their filesystems are case-insensitive;     - directories in environment variables (like INFOPATH) are separated         by `;' rather than `:';     - text files can have their lines ended either with \n or with \r\n pairs;    These are all parameterized here except the last, which is    handled by the source code as appropriate (mostly, in info/).  */
 end_comment
 
 begin_ifndef
@@ -558,17 +633,166 @@ begin_comment
 comment|/* O_BINARY */
 end_comment
 
+begin_comment
+comment|/* We'd like to take advantage of _doprnt if it's around, a la error.c,    but then we'd have no VA_SPRINTF.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|HAVE_VPRINTF
+end_if
+
+begin_if
+if|#
+directive|if
+name|__STDC__
+end_if
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|VA_START
+parameter_list|(
+name|args
+parameter_list|,
+name|lastarg
+parameter_list|)
+value|va_start(args, lastarg)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<varargs.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|VA_START
+parameter_list|(
+name|args
+parameter_list|,
+name|lastarg
+parameter_list|)
+value|va_start(args)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|VA_FPRINTF
+parameter_list|(
+name|file
+parameter_list|,
+name|fmt
+parameter_list|,
+name|ap
+parameter_list|)
+value|vfprintf (file, fmt, ap)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VA_SPRINTF
+parameter_list|(
+name|str
+parameter_list|,
+name|fmt
+parameter_list|,
+name|ap
+parameter_list|)
+value|vsprintf (str, fmt, ap)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* not HAVE_VPRINTF */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VA_START
+parameter_list|(
+name|args
+parameter_list|,
+name|lastarg
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|va_alist
+value|a1, a2, a3, a4, a5, a6, a7, a8
+end_define
+
+begin_define
+define|#
+directive|define
+name|va_dcl
+value|char *a1, *a2, *a3, *a4, *a5, *a6, *a7, *a8;
+end_define
+
+begin_define
+define|#
+directive|define
+name|va_end
+parameter_list|(
+name|args
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
 name|O_BINARY
 end_if
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_IO_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<io.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -603,6 +827,13 @@ define|#
 directive|define
 name|NULL_DEVICE
 value|"/dev/null"
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_INFOPATH
+value|"c:/djgpp/info;/usr/local/info;/usr/info;."
 end_define
 
 begin_else
@@ -950,6 +1181,40 @@ end_endif
 begin_comment
 comment|/* not O_BINARY */
 end_comment
+
+begin_comment
+comment|/* DJGPP supports /dev/null, which is okay for Unix aficionados,    shell scripts and Makefiles, but interactive DOS die-hards    would probably want to have NUL as well.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__DJGPP__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ALSO_NULL_DEVICE
+value|"NUL"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ALSO_NULL_DEVICE
+value|""
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

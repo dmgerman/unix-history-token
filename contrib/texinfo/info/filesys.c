@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* filesys.c -- filesystem specific functions.    $Id: filesys.c,v 1.10 1998/12/06 21:58:30 karl Exp $     Copyright (C) 1993, 97, 98 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* filesys.c -- filesystem specific functions.    $Id: filesys.c,v 1.14 2002/03/02 15:05:04 karl Exp $     Copyright (C) 1993, 97, 98, 2000 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -600,6 +600,30 @@ name|statable
 decl_stmt|,
 name|dirname_index
 decl_stmt|;
+comment|/* Reject ridiculous cases up front, to prevent infinite recursion      later on.  E.g., someone might say "info '(.)foo'"...  */
+if|if
+condition|(
+operator|!
+operator|*
+name|filename
+operator|||
+name|STREQ
+argument_list|(
+name|filename
+argument_list|,
+literal|"."
+argument_list|)
+operator|||
+name|STREQ
+argument_list|(
+name|filename
+argument_list|,
+literal|".."
+argument_list|)
+condition|)
+return|return
+name|NULL
+return|;
 name|dirname_index
 operator|=
 literal|0
@@ -2251,7 +2275,7 @@ condition|(
 name|stream
 condition|)
 block|{
-name|int
+name|long
 name|offset
 decl_stmt|,
 name|size
@@ -2813,7 +2837,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Check for FILENAME eq "dir" first, then all the compression    suffixes.  */
+comment|/* Check for "dir" with all the possible info and compression suffixes,    in combination.  */
 end_comment
 
 begin_function
@@ -2830,13 +2854,54 @@ block|{
 name|unsigned
 name|i
 decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|info_suffixes
+index|[
+name|i
+index|]
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|unsigned
+name|c
+decl_stmt|;
+name|char
+name|trydir
+index|[
+literal|50
+index|]
+decl_stmt|;
+name|strcpy
+argument_list|(
+name|trydir
+argument_list|,
+literal|"dir"
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|trydir
+argument_list|,
+name|info_suffixes
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|strcasecmp
 argument_list|(
 name|filename
 argument_list|,
-literal|"dir"
+name|trydir
 argument_list|)
 operator|==
 literal|0
@@ -2846,18 +2911,18 @@ literal|1
 return|;
 for|for
 control|(
-name|i
+name|c
 operator|=
 literal|0
 init|;
 name|compress_suffixes
 index|[
-name|i
+name|c
 index|]
 operator|.
 name|suffix
 condition|;
-name|i
+name|c
 operator|++
 control|)
 block|{
@@ -2872,7 +2937,7 @@ name|strcpy
 argument_list|(
 name|dir_compressed
 argument_list|,
-literal|"dir"
+name|trydir
 argument_list|)
 expr_stmt|;
 name|strcat
@@ -2881,7 +2946,7 @@ name|dir_compressed
 argument_list|,
 name|compress_suffixes
 index|[
-name|i
+name|c
 index|]
 operator|.
 name|suffix
@@ -2901,6 +2966,7 @@ condition|)
 return|return
 literal|1
 return|;
+block|}
 block|}
 return|return
 literal|0

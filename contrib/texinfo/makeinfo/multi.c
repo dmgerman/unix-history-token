@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* multi.c -- multitable stuff for makeinfo.    $Id: multi.c,v 1.18 1999/08/17 21:06:56 karl Exp $     Copyright (C) 1996, 97, 98, 99 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* multi.c -- multitable stuff for makeinfo.    $Id: multi.c,v 1.23 2002/01/19 01:09:08 karl Exp $     Copyright (C) 1996, 97, 98, 99, 2000, 01, 02 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.        Written by phr@gnu.org (Paul Rubin).  */
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|"makeinfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xml.h"
 end_include
 
 begin_define
@@ -232,6 +238,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|xml
+condition|)
+return|return;
 for|for
 control|(
 name|s
@@ -350,6 +361,16 @@ name|close_single_paragraph
 argument_list|()
 expr_stmt|;
 comment|/* scan the current item function to get the field widths      and number of columns, and set up the output environment list      accordingly. */
+comment|/*  if (docbook)*/
+comment|/* 05-08 */
+if|if
+condition|(
+name|xml
+condition|)
+name|xml_no_para
+operator|=
+literal|1
+expr_stmt|;
 name|ncolumns
 operator|=
 name|setup_multitable_parameters
@@ -369,6 +390,71 @@ argument_list|(
 literal|"<p><table>"
 argument_list|)
 expr_stmt|;
+comment|/*  else if (docbook)*/
+comment|/* 05-08 */
+elseif|else
+if|if
+condition|(
+name|xml
+condition|)
+block|{
+name|int
+modifier|*
+name|widths
+init|=
+name|xmalloc
+argument_list|(
+name|ncolumns
+operator|*
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|)
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ncolumns
+condition|;
+name|i
+operator|++
+control|)
+name|widths
+index|[
+name|i
+index|]
+operator|=
+name|envs
+index|[
+name|i
+operator|+
+literal|1
+index|]
+operator|.
+name|fill_column
+expr_stmt|;
+name|xml_begin_multitable
+argument_list|(
+name|ncolumns
+argument_list|,
+name|widths
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|widths
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|hsep
@@ -468,6 +554,12 @@ operator|&&
 operator|(
 operator|*
 name|params
+operator|==
+name|start
+operator|||
+operator|(
+operator|*
+name|params
 operator|)
 index|[
 operator|-
@@ -475,6 +567,7 @@ literal|1
 index|]
 operator|!=
 literal|'@'
+operator|)
 condition|)
 name|brace_level
 operator|++
@@ -1162,20 +1255,43 @@ name|first_row
 condition|)
 name|add_word
 argument_list|(
-literal|"<br></tr>"
+literal|"<br></td></tr>"
 argument_list|)
 expr_stmt|;
 comment|/*<br> for non-tables browsers. */
 name|add_word
 argument_list|(
-literal|"<tr align=\"left\"><td>"
+literal|"<tr align=\"left\"><td valign=\"top\">"
 argument_list|)
 expr_stmt|;
 name|first_row
 operator|=
 literal|0
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
+block|}
+comment|/*  else if (docbook)*/
+comment|/* 05-08 */
+elseif|else
+if|if
+condition|(
+name|xml
+condition|)
+block|{
+name|xml_end_multitable_row
+argument_list|(
+name|first_row
+argument_list|)
+expr_stmt|;
+name|first_row
+operator|=
+literal|0
+expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 name|first_row
 operator|=
@@ -1673,8 +1789,18 @@ name|html
 condition|)
 name|add_word
 argument_list|(
-literal|"<td>"
+literal|"</td><td valign=\"top\">"
 argument_list|)
+expr_stmt|;
+comment|/*  else if (docbook)*/
+comment|/* 05-08 */
+elseif|else
+if|if
+condition|(
+name|xml
+condition|)
+name|xml_end_multitable_column
+argument_list|()
 expr_stmt|;
 else|else
 name|nselect_next_environment
@@ -1699,6 +1825,9 @@ if|if
 condition|(
 operator|!
 name|html
+operator|&&
+operator|!
+name|docbook
 condition|)
 name|output_multitable_row
 argument_list|()
@@ -1725,8 +1854,18 @@ name|html
 condition|)
 name|add_word
 argument_list|(
-literal|"<br></tr></table>\n"
+literal|"<br></td></tr></table>\n"
 argument_list|)
+expr_stmt|;
+comment|/*  else if (docbook)*/
+comment|/* 05-08 */
+elseif|else
+if|if
+condition|(
+name|xml
+condition|)
+name|xml_end_multitable
+argument_list|()
 expr_stmt|;
 if|#
 directive|if

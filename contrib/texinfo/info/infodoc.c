@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* infodoc.c -- Functions which build documentation nodes.    $Id: infodoc.c,v 1.23 1999/09/25 16:10:04 karl Exp $     Copyright (C) 1993, 97, 98, 99 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* infodoc.c -- Functions which build documentation nodes.    $Id: infodoc.c,v 1.28 2002/02/27 13:37:33 karl Exp $     Copyright (C) 1993, 97, 98, 99, 2001, 02 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"info.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"funs.h"
 end_include
 
 begin_comment
@@ -19,26 +25,6 @@ directive|define
 name|HELP_NODE_GETS_REGENERATED
 value|1
 end_define
-
-begin_comment
-comment|/* **************************************************************** */
-end_comment
-
-begin_comment
-comment|/*                                                                  */
-end_comment
-
-begin_comment
-comment|/*                        Info Help Windows                         */
-end_comment
-
-begin_comment
-comment|/*                                                                  */
-end_comment
-
-begin_comment
-comment|/* **************************************************************** */
-end_comment
 
 begin_comment
 comment|/* The name of the node used in the help window. */
@@ -91,7 +77,196 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The static text which appears in the internal info help node. */
+comment|/* The (more or less) static text which appears in the internal info    help node.  The actual key bindings are inserted.  Keep the     underlines (****, etc.) in the same N_ call as  the text lines they    refer to, so translations can make the number of *'s or -'s match.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INFOKEY
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|info_internal_help_text
+index|[]
+init|=
+block|{
+name|N_
+argument_list|(
+literal|"Basic Commands in Info Windows\n\ ******************************\n"
+argument_list|)
+block|,
+literal|"\n"
+block|,
+name|N_
+argument_list|(
+literal|"\\%-10[quit-help]  Quit this help.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"\\%-10[quit]  Quit Info altogether.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"\\%-10[get-info-help-node]  Invoke the Info tutorial.\n"
+argument_list|)
+block|,
+literal|"\n"
+block|,
+name|N_
+argument_list|(
+literal|"Selecting other nodes:\n\ ----------------------\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"\\%-10[next-node]  Move to the \"next\" node of this node.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"\\%-10[prev-node]  Move to the \"previous\" node of this node.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"\\%-10[up-node]  Move \"up\" from this node.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"\\%-10[menu-item]  Pick menu item specified by name.\n\               Picking a menu item causes another node to be selected.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"\\%-10[xref-item]  Follow a cross reference.  Reads name of reference.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"\\%-10[history-node]  Move to the last node seen in this window.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"\\%-10[move-to-next-xref]  Skip to next hypertext link within this node.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"\\%-10[move-to-prev-xref]  Skip to previous hypertext link within this node.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"\\%-10[select-reference-this-line]  Follow the hypertext link under cursor.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"\\%-10[dir-node]  Move to the `directory' node.  Equivalent to `\\[goto-node] (DIR)'.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"\\%-10[top-node]  Move to the Top node.  Equivalent to `\\[goto-node] Top'.\n"
+argument_list|)
+block|,
+literal|"\n"
+block|,
+name|N_
+argument_list|(
+literal|"Moving within a node:\n\ ---------------------\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"\\%-10[scroll-forward]  Scroll forward a page.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"\\%-10[scroll-backward]  Scroll backward a page.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"\\%-10[beginning-of-node]  Go to the beginning of this node.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"\\%-10[end-of-node]  Go to the end of this node.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"\\%-10[scroll-forward]  Scroll forward 1 line.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"\\%-10[scroll-backward]  Scroll backward 1 line.\n"
+argument_list|)
+block|,
+literal|"\n"
+block|,
+name|N_
+argument_list|(
+literal|"Other commands:\n\ ---------------\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"\\%-10[menu-digit]  Pick first ... ninth item in node's menu.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"\\%-10[last-menu-item]  Pick last item in node's menu.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"\\%-10[index-search]  Search for a specified string in the index entries of this Info\n\               file, and select the node referenced by the first entry found.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"\\%-10[goto-node]  Move to node specified by name.\n\               You may include a filename as well, as in (FILENAME)NODENAME.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"\\%-10[search]  Search forward for a specified string\n\               and select the node in which the next occurrence is found.\n"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"\\%-10[search-backward]  Search backward for a specified string\n\               and select the node in which the previous occurrence is found.\n"
+argument_list|)
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !INFOKEY */
 end_comment
 
 begin_decl_stmt
@@ -104,12 +279,7 @@ init|=
 block|{
 name|N_
 argument_list|(
-literal|"Basic Commands in Info Windows\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
-literal|"******************************\n"
+literal|"Basic Commands in Info Windows\n\ ******************************\n"
 argument_list|)
 block|,
 literal|"\n"
@@ -133,733 +303,417 @@ literal|"\n"
 block|,
 name|N_
 argument_list|(
-literal|"Moving within a node:\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
-literal|"---------------------\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
-literal|"  %-10s  Scroll forward a page.\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
-literal|"  %-10s  Scroll backward a page.\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
-literal|"  %-10s  Go to the beginning of this node.\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
-literal|"  %-10s  Go to the end of this node.\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
-literal|"  %-10s  Scroll forward 1 line.\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
-literal|"  %-10s  Scroll backward 1 line.\n"
-argument_list|)
-block|,
-literal|"\n"
-block|,
-name|N_
-argument_list|(
-literal|"Selecting other nodes:\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
-literal|"----------------------\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
+literal|"Selecting other nodes:\n\ ----------------------\n"
+argument_list|,
+argument|N_(
 literal|"  %-10s  Move to the `next' node of this node.\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
+argument|)
+argument_list|,
+argument|N_(
 literal|"  %-10s  Move to the `previous' node of this node.\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
+argument|)
+argument_list|,
+argument|N_(
 literal|"  %-10s  Move `up' from this node.\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
+argument|)
+argument_list|,
+argument|N_(
 literal|"  %-10s  Pick menu item specified by name.\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
+argument|)
+argument_list|,
+argument|N_(
 literal|"              Picking a menu item causes another node to be selected.\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
+argument|)
+argument_list|,
+argument|N_(
 literal|"  %-10s  Follow a cross reference.  Reads name of reference.\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
+argument|)
+argument_list|,
+argument|N_(
 literal|"  %-10s  Move to the last node seen in this window.\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
+argument|)
+argument_list|,
+argument|N_(
 literal|"  %-10s  Skip to next hypertext link within this node.\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
+argument|)
+argument_list|,
+argument|N_(
 literal|"  %-10s  Follow the hypertext link under cursor.\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
+argument|)
+argument_list|,
+argument|N_(
 literal|"  %-10s  Move to the `directory' node.  Equivalent to `g (DIR)'.\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
+argument|)
+argument_list|,
+argument|N_(
 literal|"  %-10s  Move to the Top node.  Equivalent to `g Top'.\n"
-argument_list|)
-block|,
+argument|)
+argument_list|,
 literal|"\n"
-block|,
-name|N_
-argument_list|(
-literal|"Other commands:\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
-literal|"---------------\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
+argument_list|,
+argument|N_(
+literal|"Moving within a node:\n\ ---------------------\n"
+argument|)
+argument_list|,
+argument|N_(
+literal|"  %-10s  Scroll forward a page.\n"
+argument|)
+argument_list|,
+argument|N_(
+literal|"  %-10s  Scroll backward a page.\n"
+argument|)
+argument_list|,
+argument|N_(
+literal|"  %-10s  Go to the beginning of this node.\n"
+argument|)
+argument_list|,
+argument|N_(
+literal|"  %-10s  Go to the end of this node.\n"
+argument|)
+argument_list|,
+argument|N_(
+literal|"  %-10s  Scroll forward 1 line.\n"
+argument|)
+argument_list|,
+argument|N_(
+literal|"  %-10s  Scroll backward 1 line.\n"
+argument|)
+argument_list|,
+literal|"\n"
+argument_list|,
+argument|N_(
+literal|"Other commands:\n\ ---------------\n"
+argument|)
+argument_list|,
+argument|N_(
 literal|"  %-10s  Pick first ... ninth item in node's menu.\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
+argument|)
+argument_list|,
+argument|N_(
 literal|"  %-10s  Pick last item in node's menu.\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
+argument|)
+argument_list|,
+argument|N_(
 literal|"  %-10s  Search for a specified string in the index entries of this Info\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
+argument|)
+argument_list|,
+argument|N_(
 literal|"              file, and select the node referenced by the first entry found.\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
+argument|)
+argument_list|,
+argument|N_(
 literal|"  %-10s  Move to node specified by name.\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
+argument|)
+argument_list|,
+argument|N_(
 literal|"              You may include a filename as well, as in (FILENAME)NODENAME.\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
-literal|"  %-10s  Search forward through this Info file for a specified string,\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
+argument|)
+argument_list|,
+argument|N_(
+literal|"  %-10s  Search forward for a specified string,\n"
+argument|)
+argument_list|,
+argument|N_(
 literal|"              and select the node in which the next occurrence is found.\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
-literal|"  %-10s  Search backward in this Info file for a specified string,\n"
-argument_list|)
-block|,
-name|N_
-argument_list|(
+argument|)
+argument_list|,
+argument|N_(
+literal|"  %-10s  Search backward for a specified string\n"
+argument|)
+argument_list|,
+argument|N_(
 literal|"              and select the node in which the next occurrence is found.\n"
-argument_list|)
-block|,
-name|NULL
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|info_help_keys_text
-index|[]
-index|[
+argument|)
+argument_list|,
+argument|NULL };  static char *info_help_keys_text[][
 literal|2
-index|]
-init|=
-block|{
-block|{
+argument|] = {   {
 literal|""
-block|,
+argument_list|,
 literal|""
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|""
-block|,
+argument_list|,
 literal|""
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|""
-block|,
+argument_list|,
 literal|""
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|"CTRL-x 0"
-block|,
+argument_list|,
 literal|"CTRL-x 0"
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|"q"
-block|,
+argument_list|,
 literal|"q"
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|"h"
-block|,
+argument_list|,
 literal|"ESC h"
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|""
-block|,
+argument_list|,
 literal|""
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|""
-block|,
+argument_list|,
 literal|""
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|""
-block|,
+argument_list|,
 literal|""
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|"SPC"
-block|,
+argument_list|,
 literal|"SPC"
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|"DEL"
-block|,
+argument_list|,
 literal|"b"
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|"b"
-block|,
+argument_list|,
 literal|"ESC b"
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|"e"
-block|,
+argument_list|,
 literal|"ESC e"
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|"ESC 1 SPC"
-block|,
+argument_list|,
 literal|"RET"
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|"ESC 1 DEL"
-block|,
+argument_list|,
 literal|"y"
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|""
-block|,
+argument_list|,
 literal|""
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|""
-block|,
+argument_list|,
 literal|""
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|""
-block|,
+argument_list|,
 literal|""
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|"n"
-block|,
+argument_list|,
 literal|"CTRL-x n"
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|"p"
-block|,
+argument_list|,
 literal|"CTRL-x p"
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|"u"
-block|,
+argument_list|,
 literal|"CTRL-x u"
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|"m"
-block|,
+argument_list|,
 literal|"ESC m"
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|""
-block|,
+argument_list|,
 literal|""
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|"f"
-block|,
+argument_list|,
 literal|"ESC f"
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|"l"
-block|,
+argument_list|,
 literal|"l"
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|"TAB"
-block|,
+argument_list|,
 literal|"TAB"
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|"RET"
-block|,
+argument_list|,
 literal|"CTRL-x RET"
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|"d"
-block|,
+argument_list|,
 literal|"ESC d"
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|"t"
-block|,
+argument_list|,
 literal|"ESC t"
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|""
-block|,
+argument_list|,
 literal|""
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|""
-block|,
+argument_list|,
 literal|""
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|""
-block|,
+argument_list|,
 literal|""
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|"1-9"
-block|,
+argument_list|,
 literal|"ESC 1-9"
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|"0"
-block|,
+argument_list|,
 literal|"ESC 0"
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|"i"
-block|,
+argument_list|,
 literal|"CTRL-x i"
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|""
-block|,
+argument_list|,
 literal|""
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|"g"
-block|,
+argument_list|,
 literal|"CTRL-x g"
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|""
-block|,
+argument_list|,
 literal|""
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|"s"
-block|,
+argument_list|,
 literal|"/"
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|""
-block|,
+argument_list|,
 literal|""
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|"ESC - s"
-block|,
+argument_list|,
 literal|"?"
-block|}
-block|,
-block|{
+argument|}
+argument_list|,
+argument|{
 literal|""
-block|,
+argument_list|,
 literal|""
-block|}
-block|,
-name|NULL
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|where_is
-argument_list|()
-decl_stmt|,
-modifier|*
-name|where_is_internal
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-name|void
-name|dump_map_to_message_buffer
-parameter_list|(
-name|prefix
-parameter_list|,
-name|map
-parameter_list|)
-name|char
-modifier|*
-name|prefix
-decl_stmt|;
-name|Keymap
-name|map
-decl_stmt|;
-block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
+argument|}
+argument_list|,
+argument|NULL };
+endif|#
+directive|endif
+comment|/* !INFOKEY */
+argument|static char *where_is_internal ();  void dump_map_to_message_buffer (prefix, map)      char *prefix;      Keymap map; {   register int i;   unsigned prefix_len = strlen (prefix);   char *new_prefix = (char *)xmalloc (prefix_len +
+literal|2
+argument|);    strncpy (new_prefix, prefix, prefix_len);   new_prefix[prefix_len +
+literal|1
+argument|] =
+literal|'\0'
+argument|;    for (i =
 literal|0
-init|;
-name|i
-operator|<
+argument|; i<
 literal|256
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|map
-index|[
-name|i
-index|]
-operator|.
-name|type
-operator|==
-name|ISKMAP
-condition|)
-block|{
-name|char
-modifier|*
-name|new_prefix
-decl_stmt|,
-modifier|*
-name|keyname
-decl_stmt|;
-name|keyname
-operator|=
-name|pretty_keyname
-argument_list|(
-name|i
-argument_list|)
-expr_stmt|;
-name|new_prefix
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|xmalloc
-argument_list|(
-literal|3
-operator|+
-name|strlen
-argument_list|(
-name|prefix
-argument_list|)
-operator|+
-name|strlen
-argument_list|(
-name|keyname
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|new_prefix
+argument|; i++)     {       new_prefix[prefix_len] = i;       if (map[i].type == ISKMAP)         {           dump_map_to_message_buffer (new_prefix, (Keymap)map[i].function);         }       else if (map[i].function)         {           register int last;           char *doc
 argument_list|,
-literal|"%s%s%s "
-argument_list|,
-name|prefix
-argument_list|,
-operator|*
-name|prefix
-condition|?
-literal|" "
-else|:
-literal|""
-argument_list|,
-name|keyname
-argument_list|)
-expr_stmt|;
-name|dump_map_to_message_buffer
-argument_list|(
-name|new_prefix
-argument_list|,
-operator|(
-name|Keymap
-operator|)
-name|map
-index|[
-name|i
-index|]
-operator|.
-name|function
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|new_prefix
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|map
-index|[
-name|i
-index|]
-operator|.
-name|function
-condition|)
-block|{
-specifier|register
-name|int
-name|last
-decl_stmt|;
-name|char
-modifier|*
-name|doc
-decl_stmt|,
-modifier|*
-name|name
-decl_stmt|;
-name|doc
-operator|=
-name|function_documentation
-argument_list|(
-name|map
-index|[
-name|i
-index|]
-operator|.
-name|function
-argument_list|)
-expr_stmt|;
-name|name
-operator|=
-name|function_name
-argument_list|(
-name|map
-index|[
-name|i
-index|]
-operator|.
-name|function
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|*
-name|doc
-condition|)
-continue|continue;
+argument|*name;            doc = function_documentation (map[i].function);           name = function_name (map[i].function);            if (!*doc)             continue;
 comment|/* Find out if there is a series of identical functions, as in              ea_insert (). */
-for|for
-control|(
-name|last
-operator|=
-name|i
-operator|+
+argument|for (last = i +
 literal|1
-init|;
-name|last
-operator|<
+argument|; last<
 literal|256
-condition|;
-name|last
-operator|++
-control|)
-if|if
-condition|(
-operator|(
-name|map
-index|[
-name|last
-index|]
-operator|.
-name|type
-operator|!=
-name|ISFUNC
-operator|)
-operator|||
-operator|(
-name|map
-index|[
-name|last
-index|]
-operator|.
-name|function
-operator|!=
-name|map
-index|[
-name|i
-index|]
-operator|.
-name|function
-operator|)
-condition|)
-break|break;
-if|if
-condition|(
-name|last
-operator|-
+argument|; last++)             if ((map[last].type != ISFUNC) ||                 (map[last].function != map[i].function))               break;            if (last -
 literal|1
-operator|!=
-name|i
-condition|)
-block|{
-name|printf_to_message_buffer
-argument_list|(
-literal|"%s%s .. "
-argument_list|,
-name|prefix
-argument_list|,
-name|pretty_keyname
-argument_list|(
-name|i
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf_to_message_buffer
-argument_list|(
-literal|"%s%s\t"
-argument_list|,
-name|prefix
-argument_list|,
-name|pretty_keyname
-argument_list|(
-name|last
-operator|-
+argument|!= i)             {               printf_to_message_buffer (
+literal|"%s .. "
+argument|, pretty_keyseq (new_prefix)); 	      new_prefix[prefix_len] = last -
 literal|1
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|i
-operator|=
-name|last
-operator|-
+argument|;               printf_to_message_buffer (
+literal|"%s\t"
+argument|, pretty_keyseq (new_prefix));               i = last -
 literal|1
-expr_stmt|;
-block|}
-else|else
-name|printf_to_message_buffer
-argument_list|(
-literal|"%s%s\t"
-argument_list|,
-name|prefix
-argument_list|,
-name|pretty_keyname
-argument_list|(
-name|i
-argument_list|)
-argument_list|)
-expr_stmt|;
+argument|;             }           else             printf_to_message_buffer (
+literal|"%s\t"
+argument|, pretty_keyseq (new_prefix));
 if|#
 directive|if
 name|defined
@@ -867,491 +721,119 @@ argument_list|(
 name|NAMED_FUNCTIONS
 argument_list|)
 comment|/* Print the name of the function, and some padding before the              documentation string is printed. */
-block|{
-name|int
-name|length_so_far
-decl_stmt|;
-name|int
-name|desired_doc_start
-init|=
+argument|{             int length_so_far;             int desired_doc_start =
 literal|40
-decl_stmt|;
+argument|;
 comment|/* Must be multiple of 8. */
-name|printf_to_message_buffer
-argument_list|(
+argument|printf_to_message_buffer (
 literal|"(%s)"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|length_so_far
-operator|=
-name|message_buffer_length_this_line
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|desired_doc_start
-operator|+
-name|strlen
-argument_list|(
-name|doc
-argument_list|)
-operator|)
-operator|>=
-name|the_screen
-operator|->
-name|width
-condition|)
-name|printf_to_message_buffer
-argument_list|(
+argument|, name);             length_so_far = message_buffer_length_this_line ();              if ((desired_doc_start + strlen (doc))>= the_screen->width)               printf_to_message_buffer (
 literal|"\n     "
-argument_list|)
-expr_stmt|;
-else|else
-block|{
-while|while
-condition|(
-name|length_so_far
-operator|<
-name|desired_doc_start
-condition|)
-block|{
-name|printf_to_message_buffer
-argument_list|(
+argument|);             else               {                 while (length_so_far< desired_doc_start)                   {                     printf_to_message_buffer (
 literal|"\t"
-argument_list|)
-expr_stmt|;
-name|length_so_far
-operator|+=
-name|character_width
-argument_list|(
+argument|);                     length_so_far += character_width (
 literal|'\t'
-argument_list|,
-name|length_so_far
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-block|}
+argument|, length_so_far);                   }               }           }
 endif|#
 directive|endif
 comment|/* NAMED_FUNCTIONS */
-name|printf_to_message_buffer
-argument_list|(
+argument|printf_to_message_buffer (
 literal|"%s\n"
-argument_list|,
-name|doc
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-block|}
-end_function
-
-begin_comment
+argument|, doc);         }     }   free (new_prefix); }
 comment|/* How to create internal_info_help_node.  HELP_IS_ONLY_WINDOW_P says    whether we're going to end up in a second (or more) window of our    own, or whether there's only one window and we're going to usurp it.    This determines how to quit the help window.  Maybe we should just    make q do the right thing in both cases.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|create_internal_info_help_node
-parameter_list|(
-name|help_is_only_window_p
-parameter_list|)
-name|int
-name|help_is_only_window_p
-decl_stmt|;
-block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
-name|NODE
-modifier|*
-name|node
-decl_stmt|;
-name|char
-modifier|*
-name|contents
-init|=
-name|NULL
-decl_stmt|;
+argument|static void create_internal_info_help_node (help_is_only_window_p)      int help_is_only_window_p; {   register int i;   NODE *node;   char *contents = NULL;   char *exec_keys;
 ifndef|#
 directive|ifndef
 name|HELP_NODE_GETS_REGENERATED
-if|if
-condition|(
-name|internal_info_help_node_contents
-condition|)
-name|contents
-operator|=
-name|internal_info_help_node_contents
-expr_stmt|;
+argument|if (internal_info_help_node_contents)     contents = internal_info_help_node_contents;
 endif|#
 directive|endif
 comment|/* !HELP_NODE_GETS_REGENERATED */
-if|if
-condition|(
-operator|!
-name|contents
-condition|)
-block|{
-name|int
-name|printed_one_mx
-init|=
+argument|if (!contents)     {       int printed_one_mx =
 literal|0
-decl_stmt|;
-name|initialize_message_buffer
-argument_list|()
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
+argument|;        initialize_message_buffer ();        for (i =
 literal|0
-init|;
-name|info_internal_help_text
-index|[
-name|i
-index|]
-condition|;
-name|i
-operator|++
-control|)
-block|{
+argument|; info_internal_help_text[i]; i++)         {
+ifdef|#
+directive|ifdef
+name|INFOKEY
+argument|printf_to_message_buffer (replace_in_documentation (            _(info_internal_help_text[i]), help_is_only_window_p));
+else|#
+directive|else
 comment|/* Don't translate blank lines, gettext outputs the po file              header in that case.  We want a blank line.  */
-name|char
-modifier|*
-name|msg
-init|=
-operator|*
-operator|(
-name|info_internal_help_text
-index|[
-name|i
-index|]
-operator|)
-condition|?
-name|_
-argument_list|(
-name|info_internal_help_text
-index|[
-name|i
-index|]
-argument_list|)
-else|:
-name|info_internal_help_text
-index|[
-name|i
-index|]
-decl_stmt|;
-name|char
-modifier|*
-name|key
-init|=
-name|info_help_keys_text
-index|[
-name|i
-index|]
-index|[
-name|vi_keys_p
-index|]
-decl_stmt|;
+argument|char *msg = *(info_internal_help_text[i])                       ? _(info_internal_help_text[i])                       : info_internal_help_text[i];           char *key = info_help_keys_text[i][vi_keys_p];
 comment|/* If we have only one window (because the window size was too              small to split it), CTRL-x 0 doesn't work to `quit' help.  */
-if|if
-condition|(
-name|STREQ
-argument_list|(
-name|key
-argument_list|,
+argument|if (STREQ (key,
 literal|"CTRL-x 0"
-argument_list|)
-operator|&&
-name|help_is_only_window_p
-condition|)
-name|key
-operator|=
+argument|)&& help_is_only_window_p)             key =
 literal|"l"
-expr_stmt|;
-name|printf_to_message_buffer
-argument_list|(
-name|msg
-argument_list|,
-name|key
-argument_list|)
-expr_stmt|;
-block|}
-name|printf_to_message_buffer
-argument_list|(
+argument|;            printf_to_message_buffer (msg, key);
+endif|#
+directive|endif
+comment|/* !INFOKEY */
+argument|}        printf_to_message_buffer (
 literal|"---------------------\n\n"
-argument_list|)
-expr_stmt|;
-name|printf_to_message_buffer
-argument_list|(
-name|_
-argument_list|(
+argument|);       printf_to_message_buffer (_(
 literal|"The current search path is:\n"
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf_to_message_buffer
-argument_list|(
+argument|));       printf_to_message_buffer (
 literal|"  %s\n"
-argument_list|,
-name|infopath
-argument_list|)
-expr_stmt|;
-name|printf_to_message_buffer
-argument_list|(
+argument|, infopath);       printf_to_message_buffer (
 literal|"---------------------\n\n"
-argument_list|)
-expr_stmt|;
-name|printf_to_message_buffer
-argument_list|(
-name|_
-argument_list|(
+argument|);       printf_to_message_buffer (_(
 literal|"Commands available in Info windows:\n\n"
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|dump_map_to_message_buffer
-argument_list|(
+argument|));       dump_map_to_message_buffer (
 literal|""
-argument_list|,
-name|info_keymap
-argument_list|)
-expr_stmt|;
-name|printf_to_message_buffer
-argument_list|(
+argument|, info_keymap);       printf_to_message_buffer (
 literal|"---------------------\n\n"
-argument_list|)
-expr_stmt|;
-name|printf_to_message_buffer
-argument_list|(
-name|_
-argument_list|(
+argument|);       printf_to_message_buffer (_(
 literal|"Commands available in the echo area:\n\n"
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|dump_map_to_message_buffer
-argument_list|(
+argument|));       dump_map_to_message_buffer (
 literal|""
-argument_list|,
-name|echo_area_keymap
-argument_list|)
-expr_stmt|;
+argument|, echo_area_keymap);
 if|#
 directive|if
 name|defined
 argument_list|(
 name|NAMED_FUNCTIONS
 argument_list|)
-comment|/* Get a list of the M-x commands which have no keystroke equivs. */
-for|for
-control|(
-name|i
-operator|=
+comment|/* Get a list of commands which have no keystroke equivs. */
+argument|exec_keys = where_is (info_keymap, InfoCmd(info_execute_command));       if (exec_keys)         exec_keys = xstrdup (exec_keys);       for (i =
 literal|0
-init|;
-name|function_doc_array
-index|[
-name|i
-index|]
-operator|.
-name|func
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|VFunction
-modifier|*
-name|func
-init|=
-name|function_doc_array
-index|[
-name|i
-index|]
-operator|.
-name|func
-decl_stmt|;
-if|if
-condition|(
-operator|(
-operator|!
-name|where_is_internal
-argument_list|(
-name|info_keymap
-argument_list|,
-name|func
-argument_list|)
-operator|)
-operator|&&
-operator|(
-operator|!
-name|where_is_internal
-argument_list|(
-name|echo_area_keymap
-argument_list|,
-name|func
-argument_list|)
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|printed_one_mx
-condition|)
-block|{
-name|printf_to_message_buffer
-argument_list|(
+argument|; function_doc_array[i].func; i++)         {           InfoCommand *cmd = DocInfoCmd(&function_doc_array[i]);            if (InfoFunction(cmd) != info_do_lowercase_version&& !where_is_internal (info_keymap, cmd)&& !where_is_internal (echo_area_keymap, cmd))             {               if (!printed_one_mx)                 {                   printf_to_message_buffer (
 literal|"---------------------\n\n"
-argument_list|)
-expr_stmt|;
-name|printf_to_message_buffer
-argument_list|(
-name|_
-argument_list|(
-literal|"The following commands can only be invoked via M-x:\n\n"
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printed_one_mx
-operator|=
-literal|1
-expr_stmt|;
-block|}
-name|printf_to_message_buffer
-argument_list|(
-literal|"M-x %s\n     %s\n"
-argument_list|,
-name|function_doc_array
-index|[
-name|i
-index|]
-operator|.
-name|func_name
-argument_list|,
-name|replace_in_documentation
-argument_list|(
-name|strlen
-argument_list|(
-name|function_doc_array
-index|[
-name|i
-index|]
-operator|.
-name|doc
-argument_list|)
-operator|==
+argument|); 		  if (exec_keys&& exec_keys[
 literal|0
-condition|?
-name|function_doc_array
-index|[
-name|i
-index|]
-operator|.
-name|doc
-else|:
-name|_
-argument_list|(
-name|function_doc_array
-index|[
-name|i
-index|]
-operator|.
-name|doc
-argument_list|)
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-if|if
-condition|(
-name|printed_one_mx
-condition|)
-name|printf_to_message_buffer
-argument_list|(
+argument|]) 		      printf_to_message_buffer 			(_(
+literal|"The following commands can only be invoked via %s:\n\n"
+argument|), exec_keys); 		  else 		      printf_to_message_buffer 			(_(
+literal|"The following commands cannot be invoked at all:\n\n"
+argument|));                   printed_one_mx =
+literal|1
+argument|;                 }                printf_to_message_buffer                 (
+literal|"%s %s\n     %s\n"
+argument|, 		 exec_keys,                  function_doc_array[i].func_name,                  replace_in_documentation (strlen (function_doc_array[i].doc) 					   ? _(function_doc_array[i].doc) 					   :
+literal|""
+argument|) 		);              }         }        if (printed_one_mx)         printf_to_message_buffer (
 literal|"\n"
-argument_list|)
-expr_stmt|;
+argument|);        maybe_free (exec_keys);
 endif|#
 directive|endif
 comment|/* NAMED_FUNCTIONS */
-name|printf_to_message_buffer
-argument_list|(
+argument|printf_to_message_buffer         (
 literal|"%s"
-argument_list|,
-name|replace_in_documentation
-argument_list|(
-name|_
-argument_list|(
+argument|, replace_in_documentation          (_(
 literal|"--- Use `\\[history-node]' or `\\[kill-node]' to exit ---\n"
-argument_list|)
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|node
-operator|=
-name|message_buffer_to_node
-argument_list|()
-expr_stmt|;
-name|internal_info_help_node_contents
-operator|=
-name|node
-operator|->
-name|contents
-expr_stmt|;
-block|}
-else|else
-block|{
+argument|)));       node = message_buffer_to_node ();       internal_info_help_node_contents = node->contents;     }   else     {
 comment|/* We already had the right contents, so simply use them. */
-name|node
-operator|=
-name|build_message_node
-argument_list|(
+argument|node = build_message_node (
 literal|""
-argument_list|,
+argument|,
 literal|0
-argument_list|,
+argument|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|node
-operator|->
-name|contents
-argument_list|)
-expr_stmt|;
-name|node
-operator|->
-name|contents
-operator|=
-name|contents
-expr_stmt|;
-name|node
-operator|->
-name|nodelen
-operator|=
+argument|);       free (node->contents);       node->contents = contents;       node->nodelen =
 literal|1
-operator|+
-name|strlen
-argument_list|(
-name|contents
-argument_list|)
-expr_stmt|;
-block|}
-name|internal_info_help_node
-operator|=
-name|node
-expr_stmt|;
+argument|+ strlen (contents);     }    internal_info_help_node = node;
 comment|/* Do not GC this node's contents.  It never changes, and we never need      to delete it once it is made.  If you change some things (such as      placing information about dynamic variables in the help text) then      you will need to allow the contents to be gc'd, and you will have to      arrange to always regenerate the help node. */
 if|#
 directive|if
@@ -1359,2162 +841,527 @@ name|defined
 argument_list|(
 name|HELP_NODE_GETS_REGENERATED
 argument_list|)
-name|add_gcable_pointer
-argument_list|(
-name|internal_info_help_node
-operator|->
-name|contents
-argument_list|)
-expr_stmt|;
+argument|add_gcable_pointer (internal_info_help_node->contents);
 endif|#
 directive|endif
-name|name_internal_node
-argument_list|(
-name|internal_info_help_node
-argument_list|,
-name|info_help_nodename
-argument_list|)
-expr_stmt|;
+argument|name_internal_node (internal_info_help_node, info_help_nodename);
 comment|/* Even though this is an internal node, we don't want the window      system to treat it specially.  So we turn off the internalness      of it here. */
-name|internal_info_help_node
-operator|->
-name|flags
-operator|&=
-operator|~
-name|N_IsInternal
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
+argument|internal_info_help_node->flags&= ~N_IsInternal; }
 comment|/* Return a window which is the window showing help in this Info. */
-end_comment
-
-begin_comment
 comment|/* If the eligible window's height is>= this, split it to make the help    window.  Otherwise display the help window in the current window.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|HELP_SPLIT_SIZE
 value|24
-end_define
-
-begin_function
-specifier|static
-name|WINDOW
-modifier|*
-name|info_find_or_create_help_window
-parameter_list|()
-block|{
-name|int
-name|help_is_only_window_p
-decl_stmt|;
-name|WINDOW
-modifier|*
-name|eligible
-init|=
-name|NULL
-decl_stmt|;
-name|WINDOW
-modifier|*
-name|help_window
-init|=
-name|get_window_of_node
-argument_list|(
-name|internal_info_help_node
-argument_list|)
-decl_stmt|;
+argument|static WINDOW * info_find_or_create_help_window () {   int help_is_only_window_p;   WINDOW *eligible = NULL;   WINDOW *help_window = get_window_of_node (internal_info_help_node);
 comment|/* If we couldn't find the help window, then make it. */
-if|if
-condition|(
-operator|!
-name|help_window
-condition|)
-block|{
-name|WINDOW
-modifier|*
-name|window
-decl_stmt|;
-name|int
-name|max
-init|=
+argument|if (!help_window)     {       WINDOW *window;       int max =
 literal|0
-decl_stmt|;
-for|for
-control|(
-name|window
-operator|=
-name|windows
-init|;
-name|window
-condition|;
-name|window
-operator|=
-name|window
-operator|->
-name|next
-control|)
-block|{
-if|if
-condition|(
-name|window
-operator|->
-name|height
-operator|>
-name|max
-condition|)
-block|{
-name|max
-operator|=
-name|window
-operator|->
-name|height
-expr_stmt|;
-name|eligible
-operator|=
-name|window
-expr_stmt|;
-block|}
-block|}
-if|if
-condition|(
-operator|!
-name|eligible
-condition|)
-return|return
-name|NULL
-return|;
-block|}
+argument|;        for (window = windows; window; window = window->next)         {           if (window->height> max)             {               max = window->height;               eligible = window;             }         }        if (!eligible)         return NULL;     }
 ifndef|#
 directive|ifndef
 name|HELP_NODE_GETS_REGENERATED
-else|else
+argument|else
 comment|/* help window is static, just return it.  */
-return|return
-name|help_window
-return|;
+argument|return help_window;
 endif|#
 directive|endif
 comment|/* not HELP_NODE_GETS_REGENERATED */
 comment|/* Make sure that we have a node containing the help text.  The      argument is false if help will be the only window (so l must be used      to quit help), true if help will be one of several visible windows      (so CTRL-x 0 must be used to quit help).  */
-name|help_is_only_window_p
-operator|=
-operator|(
-name|help_window
-operator|&&
-operator|!
-name|windows
-operator|->
-name|next
-operator|||
-operator|!
-name|help_window
-operator|&&
-name|eligible
-operator|->
-name|height
-operator|<
-name|HELP_SPLIT_SIZE
-operator|)
-expr_stmt|;
-name|create_internal_info_help_node
-argument_list|(
-name|help_is_only_window_p
-argument_list|)
-expr_stmt|;
+argument|help_is_only_window_p      = (help_window&& !windows->next         || !help_window&& eligible->height< HELP_SPLIT_SIZE);   create_internal_info_help_node (help_is_only_window_p);
 comment|/* Either use the existing window to display the help node, or create      a new window if there was no existing help window. */
-if|if
-condition|(
-operator|!
-name|help_window
-condition|)
-block|{
+argument|if (!help_window)     {
 comment|/* Split the largest window into 2 windows, and show the help text          in that window. */
-if|if
-condition|(
-name|eligible
-operator|->
-name|height
-operator|>=
-name|HELP_SPLIT_SIZE
-condition|)
-block|{
-name|active_window
-operator|=
-name|eligible
-expr_stmt|;
-name|help_window
-operator|=
-name|window_make_window
-argument_list|(
-name|internal_info_help_node
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|set_remembered_pagetop_and_point
-argument_list|(
-name|active_window
-argument_list|)
-expr_stmt|;
-name|window_set_node_of_window
-argument_list|(
-name|active_window
-argument_list|,
-name|internal_info_help_node
-argument_list|)
-expr_stmt|;
-name|help_window
-operator|=
-name|active_window
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
+argument|if (eligible->height>= HELP_SPLIT_SIZE)         {           active_window = eligible;           help_window = window_make_window (internal_info_help_node);         }       else         {           set_remembered_pagetop_and_point (active_window);           window_set_node_of_window (active_window, internal_info_help_node);           help_window = active_window;         }     }   else     {
 comment|/* Case where help node always gets regenerated, and we have an          existing window in which to place the node. */
-if|if
-condition|(
-name|active_window
-operator|!=
-name|help_window
-condition|)
-block|{
-name|set_remembered_pagetop_and_point
-argument_list|(
-name|active_window
-argument_list|)
-expr_stmt|;
-name|active_window
-operator|=
-name|help_window
-expr_stmt|;
-block|}
-name|window_set_node_of_window
-argument_list|(
-name|active_window
-argument_list|,
-name|internal_info_help_node
-argument_list|)
-expr_stmt|;
-block|}
-name|remember_window_and_node
-argument_list|(
-name|help_window
-argument_list|,
-name|help_window
-operator|->
-name|node
-argument_list|)
-expr_stmt|;
-return|return
-name|help_window
-return|;
-block|}
-end_function
-
-begin_comment
+argument|if (active_window != help_window)         {           set_remembered_pagetop_and_point (active_window);           active_window = help_window;         }       window_set_node_of_window (active_window, internal_info_help_node);     }   remember_window_and_node (help_window, help_window->node);   return help_window; }
 comment|/* Create or move to the help window. */
-end_comment
-
-begin_macro
-name|DECLARE_INFO_COMMAND
-argument_list|(
-argument|info_get_help_window
-argument_list|,
-argument|_(
+argument|DECLARE_INFO_COMMAND (info_get_help_window, _(
 literal|"Display help message"
-argument|)
-argument_list|)
-end_macro
-
-begin_block
-block|{
-name|WINDOW
-modifier|*
-name|help_window
-decl_stmt|;
-name|help_window
-operator|=
-name|info_find_or_create_help_window
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|help_window
-condition|)
-block|{
-name|active_window
-operator|=
-name|help_window
-expr_stmt|;
-name|active_window
-operator|->
-name|flags
-operator||=
-name|W_UpdateWindow
-expr_stmt|;
-block|}
-else|else
-block|{
-name|info_error
-argument_list|(
-name|msg_cant_make_help
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_block
-
-begin_comment
+argument|)) {   WINDOW *help_window;    help_window = info_find_or_create_help_window ();   if (help_window)     {       active_window = help_window;       active_window->flags |= W_UpdateWindow;     }   else     {       info_error (msg_cant_make_help);     } }
 comment|/* Show the Info help node.  This means that the "info" file is installed    where it can easily be found on your system. */
-end_comment
-
-begin_macro
-name|DECLARE_INFO_COMMAND
-argument_list|(
-argument|info_get_info_help_node
-argument_list|,
-argument|_(
+argument|DECLARE_INFO_COMMAND (info_get_info_help_node, _(
 literal|"Visit Info node `(info)Help'"
-argument|)
-argument_list|)
-end_macro
-
-begin_block
-block|{
-name|NODE
-modifier|*
-name|node
-decl_stmt|;
-name|char
-modifier|*
-name|nodename
-decl_stmt|;
+argument|)) {   NODE *node;   char *nodename;
 comment|/* If there is a window on the screen showing the node "(info)Help" or      the node "(info)Help-Small-Screen", simply select that window. */
-block|{
-name|WINDOW
-modifier|*
-name|win
-decl_stmt|;
-for|for
-control|(
-name|win
-operator|=
-name|windows
-init|;
-name|win
-condition|;
-name|win
-operator|=
-name|win
-operator|->
-name|next
-control|)
-block|{
-if|if
-condition|(
-name|win
-operator|->
-name|node
-operator|&&
-name|win
-operator|->
-name|node
-operator|->
-name|filename
-operator|&&
-operator|(
-name|strcasecmp
-argument_list|(
-name|filename_non_directory
-argument_list|(
-name|win
-operator|->
-name|node
-operator|->
-name|filename
-argument_list|)
-argument_list|,
+argument|{     WINDOW *win;      for (win = windows; win; win = win->next)       {         if (win->node&& win->node->filename&&             (strcasecmp              (filename_non_directory (win->node->filename),
 literal|"info"
-argument_list|)
-operator|==
+argument|) ==
 literal|0
-operator|)
-operator|&&
-operator|(
-operator|(
-name|strcmp
-argument_list|(
-name|win
-operator|->
-name|node
-operator|->
-name|nodename
-argument_list|,
+argument|)&&             ((strcmp (win->node->nodename,
 literal|"Help"
-argument_list|)
-operator|==
+argument|) ==
 literal|0
-operator|)
-operator|||
-operator|(
-name|strcmp
-argument_list|(
-name|win
-operator|->
-name|node
-operator|->
-name|nodename
-argument_list|,
+argument|) ||              (strcmp (win->node->nodename,
 literal|"Help-Small-Screen"
-argument_list|)
-operator|==
+argument|) ==
 literal|0
-operator|)
-operator|)
-condition|)
-block|{
-name|active_window
-operator|=
-name|win
-expr_stmt|;
-return|return;
-block|}
-block|}
-block|}
+argument|)))           {             active_window = win;             return;           }       }   }
 comment|/* If the current window is small, show the small screen help. */
-if|if
-condition|(
-name|active_window
-operator|->
-name|height
-operator|<
+argument|if (active_window->height<
 literal|24
-condition|)
-name|nodename
-operator|=
+argument|)     nodename =
 literal|"Help-Small-Screen"
-expr_stmt|;
-else|else
-name|nodename
-operator|=
+argument|;   else     nodename =
 literal|"Help"
-expr_stmt|;
+argument|;
 comment|/* Try to get the info file for Info. */
-name|node
-operator|=
-name|info_get_node
-argument_list|(
+argument|node = info_get_node (
 literal|"Info"
-argument_list|,
-name|nodename
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|node
-condition|)
-block|{
-if|if
-condition|(
-name|info_recent_file_error
-condition|)
-name|info_error
-argument_list|(
-name|info_recent_file_error
-argument_list|)
-expr_stmt|;
-else|else
-name|info_error
-argument_list|(
-name|msg_cant_file_node
-argument_list|,
+argument|, nodename);    if (!node)     {       if (info_recent_file_error)         info_error (info_recent_file_error);       else         info_error (msg_cant_file_node,
 literal|"Info"
-argument_list|,
-name|nodename
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
+argument|, nodename);     }   else     {
 comment|/* If the current window is very large (greater than 45 lines),          then split it and show the help node in another window.          Otherwise, use the current window. */
-if|if
-condition|(
-name|active_window
-operator|->
-name|height
-operator|>
+argument|if (active_window->height>
 literal|45
-condition|)
-name|active_window
-operator|=
-name|window_make_window
-argument_list|(
-name|node
-argument_list|)
-expr_stmt|;
-else|else
-block|{
-name|set_remembered_pagetop_and_point
-argument_list|(
-name|active_window
-argument_list|)
-expr_stmt|;
-name|window_set_node_of_window
-argument_list|(
-name|active_window
-argument_list|,
-name|node
-argument_list|)
-expr_stmt|;
-block|}
-name|remember_window_and_node
-argument_list|(
-name|active_window
-argument_list|,
-name|node
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_block
-
-begin_escape
-end_escape
-
-begin_comment
+argument|)         active_window = window_make_window (node);       else         {           set_remembered_pagetop_and_point (active_window);           window_set_node_of_window (active_window, node);         }        remember_window_and_node (active_window, node);     } }
 comment|/* **************************************************************** */
-end_comment
-
-begin_comment
 comment|/*                                                                  */
-end_comment
-
-begin_comment
 comment|/*                   Groveling Info Keymaps and Docs                */
-end_comment
-
-begin_comment
 comment|/*                                                                  */
-end_comment
-
-begin_comment
 comment|/* **************************************************************** */
-end_comment
-
-begin_comment
 comment|/* Return the documentation associated with the Info command FUNCTION. */
-end_comment
-
-begin_function
-name|char
-modifier|*
-name|function_documentation
-parameter_list|(
-name|function
-parameter_list|)
-name|VFunction
-modifier|*
-name|function
-decl_stmt|;
-block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|function_doc_array
-index|[
-name|i
-index|]
-operator|.
-name|func
-condition|;
-name|i
-operator|++
-control|)
-if|if
-condition|(
-name|function
-operator|==
-name|function_doc_array
-index|[
-name|i
-index|]
-operator|.
-name|func
-condition|)
-break|break;
-return|return
-name|replace_in_documentation
-argument_list|(
-operator|(
-name|strlen
-argument_list|(
-name|function_doc_array
-index|[
-name|i
-index|]
-operator|.
-name|doc
-argument_list|)
-operator|==
-literal|0
-operator|)
-condition|?
-name|function_doc_array
-index|[
-name|i
-index|]
-operator|.
-name|doc
-else|:
-name|_
-argument_list|(
-name|function_doc_array
-index|[
-name|i
-index|]
-operator|.
-name|doc
-argument_list|)
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_if
+argument|char * function_documentation (cmd)      InfoCommand *cmd; {   char *doc;
 if|#
 directive|if
 name|defined
 argument_list|(
-name|NAMED_FUNCTIONS
+name|INFOKEY
 argument_list|)
-end_if
-
-begin_comment
-comment|/* Return the user-visible name of the function associated with the    Info command FUNCTION. */
-end_comment
-
-begin_function
-name|char
-modifier|*
-name|function_name
-parameter_list|(
-name|function
-parameter_list|)
-name|VFunction
-modifier|*
-name|function
-decl_stmt|;
-block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|function_doc_array
-index|[
-name|i
-index|]
-operator|.
-name|func
-condition|;
-name|i
-operator|++
-control|)
-if|if
-condition|(
-name|function
-operator|==
-name|function_doc_array
-index|[
-name|i
-index|]
-operator|.
-name|func
-condition|)
-break|break;
-return|return
-operator|(
-name|function_doc_array
-index|[
-name|i
-index|]
-operator|.
-name|func_name
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Return a pointer to the function named NAME. */
-end_comment
-
-begin_function
-name|VFunction
-modifier|*
-name|named_function
-parameter_list|(
-name|name
-parameter_list|)
-name|char
-modifier|*
-name|name
-decl_stmt|;
-block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|function_doc_array
-index|[
-name|i
-index|]
-operator|.
-name|func
-condition|;
-name|i
-operator|++
-control|)
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|function_doc_array
-index|[
-name|i
-index|]
-operator|.
-name|func_name
-argument_list|,
-name|name
-argument_list|)
-operator|==
-literal|0
-condition|)
-break|break;
-return|return
-operator|(
-name|function_doc_array
-index|[
-name|i
-index|]
-operator|.
-name|func
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NAMED_FUNCTIONS */
-end_comment
-
-begin_comment
-comment|/* Return the documentation associated with KEY in MAP. */
-end_comment
-
-begin_function
-name|char
-modifier|*
-name|key_documentation
-parameter_list|(
-name|key
-parameter_list|,
-name|map
-parameter_list|)
-name|char
-name|key
-decl_stmt|;
-name|Keymap
-name|map
-decl_stmt|;
-block|{
-name|VFunction
-modifier|*
-name|function
-init|=
-name|map
-index|[
-name|key
-index|]
-operator|.
-name|function
-decl_stmt|;
-if|if
-condition|(
-name|function
-condition|)
-return|return
-operator|(
-name|function_documentation
-argument_list|(
-name|function
-argument_list|)
-operator|)
-return|;
-else|else
-return|return
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-operator|)
-return|;
-block|}
-end_function
-
-begin_macro
-name|DECLARE_INFO_COMMAND
-argument_list|(
-argument|describe_key
-argument_list|,
-argument|_(
-literal|"Print documentation for KEY"
-argument|)
-argument_list|)
-end_macro
-
-begin_block
-block|{
-name|char
-name|keyname
-index|[
-literal|50
-index|]
-decl_stmt|;
-name|int
-name|keyname_index
-init|=
-literal|0
-decl_stmt|;
-name|unsigned
-name|char
-name|keystroke
-decl_stmt|;
-name|char
-modifier|*
-name|rep
-decl_stmt|;
-name|Keymap
-name|map
-decl_stmt|;
-name|keyname
-index|[
-literal|0
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|map
-operator|=
-name|window
-operator|->
-name|keymap
-expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-name|message_in_echo_area
-argument_list|(
-name|_
-argument_list|(
-literal|"Describe key: %s"
-argument_list|)
-argument_list|,
-name|keyname
-argument_list|)
-expr_stmt|;
-name|keystroke
-operator|=
-name|info_get_input_char
-argument_list|()
-expr_stmt|;
-name|unmessage_in_echo_area
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|Meta_p
-argument_list|(
-name|keystroke
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|map
-index|[
-name|ESC
-index|]
-operator|.
-name|type
-operator|!=
-name|ISKMAP
-condition|)
-block|{
-name|window_message_in_echo_area
-argument_list|(
-name|_
-argument_list|(
-literal|"ESC %s is undefined."
-argument_list|)
-argument_list|,
-name|pretty_keyname
-argument_list|(
-name|UnMeta
-argument_list|(
-name|keystroke
-argument_list|)
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-name|strcpy
-argument_list|(
-name|keyname
-operator|+
-name|keyname_index
-argument_list|,
-literal|"ESC "
-argument_list|)
-expr_stmt|;
-name|keyname_index
-operator|=
-name|strlen
-argument_list|(
-name|keyname
-argument_list|)
-expr_stmt|;
-name|keystroke
-operator|=
-name|UnMeta
-argument_list|(
-name|keystroke
-argument_list|)
-expr_stmt|;
-name|map
-operator|=
-operator|(
-name|Keymap
-operator|)
-name|map
-index|[
-name|ESC
-index|]
-operator|.
-name|function
-expr_stmt|;
-block|}
-comment|/* Add the printed representation of KEYSTROKE to our keyname. */
-name|rep
-operator|=
-name|pretty_keyname
-argument_list|(
-name|keystroke
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|keyname
-operator|+
-name|keyname_index
-argument_list|,
-name|rep
-argument_list|)
-expr_stmt|;
-name|keyname_index
-operator|=
-name|strlen
-argument_list|(
-name|keyname
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|map
-index|[
-name|keystroke
-index|]
-operator|.
-name|function
-operator|==
-operator|(
-name|VFunction
-operator|*
-operator|)
-name|NULL
-condition|)
-block|{
-name|message_in_echo_area
-argument_list|(
-name|_
-argument_list|(
-literal|"%s is undefined."
-argument_list|)
-argument_list|,
-name|keyname
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-elseif|else
-if|if
-condition|(
-name|map
-index|[
-name|keystroke
-index|]
-operator|.
-name|type
-operator|==
-name|ISKMAP
-condition|)
-block|{
-name|map
-operator|=
-operator|(
-name|Keymap
-operator|)
-name|map
-index|[
-name|keystroke
-index|]
-operator|.
-name|function
-expr_stmt|;
-name|strcat
-argument_list|(
-name|keyname
-argument_list|,
-literal|" "
-argument_list|)
-expr_stmt|;
-name|keyname_index
-operator|=
-name|strlen
-argument_list|(
-name|keyname
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
-else|else
-block|{
-name|char
-modifier|*
-name|message
-decl_stmt|,
-modifier|*
-name|fundoc
-decl_stmt|,
-modifier|*
-name|funname
-init|=
-literal|""
-decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|NAMED_FUNCTIONS
-argument_list|)
-name|funname
-operator|=
-name|function_name
-argument_list|(
-name|map
-index|[
-name|keystroke
-index|]
-operator|.
-name|function
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* NAMED_FUNCTIONS */
-name|fundoc
-operator|=
-name|function_documentation
-argument_list|(
-name|map
-index|[
-name|keystroke
-index|]
-operator|.
-name|function
-argument_list|)
-expr_stmt|;
-name|message
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|xmalloc
-argument_list|(
-literal|10
-operator|+
-name|strlen
-argument_list|(
-name|keyname
-argument_list|)
-operator|+
-name|strlen
-argument_list|(
-name|fundoc
-argument_list|)
-operator|+
-name|strlen
-argument_list|(
-name|funname
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|NAMED_FUNCTIONS
-argument_list|)
-name|sprintf
-argument_list|(
-name|message
-argument_list|,
-literal|"%s (%s): %s."
-argument_list|,
-name|keyname
-argument_list|,
-name|funname
-argument_list|,
-name|fundoc
-argument_list|)
-expr_stmt|;
+argument|doc = cmd->doc;
 else|#
 directive|else
-name|sprintf
+comment|/* !INFOKEY */
+argument|register int i;    for (i =
+literal|0
+argument|; function_doc_array[i].func; i++)     if (InfoFunction(cmd) == function_doc_array[i].func)       break;    doc = function_doc_array[i].func ? function_doc_array[i].doc :
+literal|""
+argument|;
+endif|#
+directive|endif
+comment|/* !INFOKEY */
+argument|return replace_in_documentation ((strlen (doc) ==
+literal|0
+argument|) ? doc : _(doc)); }
+if|#
+directive|if
+name|defined
 argument_list|(
-name|message
+name|NAMED_FUNCTIONS
+argument_list|)
+comment|/* Return the user-visible name of the function associated with the    Info command FUNCTION. */
+argument|char * function_name (cmd)      InfoCommand *cmd; {
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INFOKEY
+argument_list|)
+argument|return cmd->func_name;
+else|#
+directive|else
+comment|/* !INFOKEY */
+argument|register int i;    for (i =
+literal|0
+argument|; function_doc_array[i].func; i++)     if (InfoFunction(cmd) == function_doc_array[i].func)       break;    return (function_doc_array[i].func_name);
+endif|#
+directive|endif
+comment|/* !INFOKEY */
+argument|}
+comment|/* Return a pointer to the info command for function NAME. */
+argument|InfoCommand * named_function (name)      char *name; {   register int i;    for (i =
+literal|0
+argument|; function_doc_array[i].func; i++)     if (strcmp (function_doc_array[i].func_name, name) ==
+literal|0
+argument|)       break;    return (DocInfoCmd(&function_doc_array[i])); }
+endif|#
+directive|endif
+comment|/* NAMED_FUNCTIONS */
+comment|/* Return the documentation associated with KEY in MAP. */
+argument|char * key_documentation (key, map)      char key;      Keymap map; {   InfoCommand *function = map[key].function;    if (function)     return (function_documentation (function));   else     return ((char *)NULL); }  DECLARE_INFO_COMMAND (describe_key, _(
+literal|"Print documentation for KEY"
+argument|)) {   char keys[
+literal|50
+argument|];   unsigned char keystroke;   char *k = keys;   Keymap map;    *k =
+literal|'\0'
+argument|;   map = window->keymap;    for (;;)     {       message_in_echo_area (_(
+literal|"Describe key: %s"
+argument|), pretty_keyseq (keys));       keystroke = info_get_input_char ();       unmessage_in_echo_area ();
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|INFOKEY
+argument_list|)
+argument|if (Meta_p (keystroke))         {           if (map[ESC].type != ISKMAP)             {               window_message_in_echo_area               (_(
+literal|"ESC %s is undefined."
+argument|), pretty_keyname (UnMeta (keystroke)));               return;             }  	  *k++ =
+literal|'\e'
+argument|;           keystroke = UnMeta (keystroke);           map = (Keymap)map[ESC].function;         }
+endif|#
+directive|endif
+comment|/* !INFOKEY */
+comment|/* Add the KEYSTROKE to our list. */
+argument|*k++ = keystroke;       *k =
+literal|'\0'
+argument|;        if (map[keystroke].function == (InfoCommand *)NULL)         {           message_in_echo_area (_(
+literal|"%s is undefined."
+argument|), pretty_keyseq (keys));           return;         }       else if (map[keystroke].type == ISKMAP)         {           map = (Keymap)map[keystroke].function;           continue;         }       else         {           char *keyname
 argument_list|,
-name|_
+argument|*message
+argument_list|,
+argument|*fundoc
+argument_list|,
+argument|*funname =
+literal|""
+argument|;
+if|#
+directive|if
+name|defined
 argument_list|(
+name|INFOKEY
+argument_list|)
+comment|/* If the key is bound to do-lowercase-version, but its 	     lower-case variant is undefined, say that this key is 	     also undefined.  This is especially important for unbound 	     edit keys that emit an escape sequence: it's terribly 	     confusing to see a message "Home (do-lowercase-version)" 	     or some such when Home is unbound.  */
+argument|if (InfoFunction(map[keystroke].function) == info_do_lowercase_version) 	    { 	      unsigned char lowerkey = Meta_p(keystroke) 				       ? Meta (tolower (UnMeta (keystroke))) 				       : tolower (keystroke);  	      if (map[lowerkey].function == (InfoCommand *)NULL) 		{ 		  message_in_echo_area (_(
+literal|"%s is undefined."
+argument|), 					pretty_keyseq (keys)); 		  return; 		} 	    }
+endif|#
+directive|endif
+argument|keyname = pretty_keyseq (keys);
+if|#
+directive|if
+name|defined
+argument_list|(
+name|NAMED_FUNCTIONS
+argument_list|)
+argument|funname = function_name (map[keystroke].function);
+endif|#
+directive|endif
+comment|/* NAMED_FUNCTIONS */
+argument|fundoc = function_documentation (map[keystroke].function);            message = (char *)xmalloc             (
+literal|10
+argument|+ strlen (keyname) + strlen (fundoc) + strlen (funname));
+if|#
+directive|if
+name|defined
+argument_list|(
+name|NAMED_FUNCTIONS
+argument_list|)
+argument|sprintf (message,
+literal|"%s (%s): %s."
+argument|, keyname, funname, fundoc);
+else|#
+directive|else
+argument|sprintf (message, _(
 literal|"%s is defined to %s."
-argument_list|)
-argument_list|,
-name|keyname
-argument_list|,
-name|fundoc
-argument_list|)
-expr_stmt|;
+argument|), keyname, fundoc);
 endif|#
 directive|endif
 comment|/* !NAMED_FUNCTIONS */
-name|window_message_in_echo_area
-argument_list|(
+argument|window_message_in_echo_area (
 literal|"%s"
-argument_list|,
-name|message
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|message
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-block|}
-block|}
-end_block
-
-begin_comment
-comment|/* How to get the pretty printable name of a character. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-name|rep_buffer
-index|[
+argument|, message);           free (message);           break;         }     } }
+comment|/* Return the pretty printable name of a single character. */
+argument|char * pretty_keyname (key)      unsigned char key; {   static char rep_buffer[
 literal|30
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-name|char
-modifier|*
-name|pretty_keyname
-parameter_list|(
-name|key
-parameter_list|)
-name|unsigned
-name|char
-name|key
-decl_stmt|;
-block|{
-name|char
-modifier|*
-name|rep
-decl_stmt|;
-if|if
-condition|(
-name|Meta_p
-argument_list|(
-name|key
-argument_list|)
-condition|)
-block|{
-name|char
-name|temp
-index|[
+argument|];   char *rep;    if (Meta_p (key))     {       char temp[
 literal|20
-index|]
-decl_stmt|;
-name|rep
-operator|=
-name|pretty_keyname
+argument|];        rep = pretty_keyname (UnMeta (key));
+if|#
+directive|if
+name|defined
 argument_list|(
-name|UnMeta
-argument_list|(
-name|key
+name|INFOKEY
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|temp
-argument_list|,
+argument|sprintf (temp,
+literal|"M-%s"
+argument|, rep);
+else|#
+directive|else
+comment|/* !INFOKEY */
+argument|sprintf (temp,
 literal|"ESC %s"
-argument_list|,
-name|rep
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|rep_buffer
-argument_list|,
-name|temp
-argument_list|)
-expr_stmt|;
-name|rep
-operator|=
-name|rep_buffer
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|Control_p
-argument_list|(
-name|key
-argument_list|)
-condition|)
-block|{
-switch|switch
-condition|(
-name|key
-condition|)
-block|{
-case|case
+argument|, rep);
+endif|#
+directive|endif
+comment|/* !INFOKEY */
+argument|strcpy (rep_buffer, temp);       rep = rep_buffer;     }   else if (Control_p (key))     {       switch (key)         {         case
 literal|'\n'
-case|:
-name|rep
-operator|=
+argument|: rep =
 literal|"LFD"
-expr_stmt|;
-break|break;
-case|case
+argument|; break;         case
 literal|'\t'
-case|:
-name|rep
-operator|=
+argument|: rep =
 literal|"TAB"
-expr_stmt|;
-break|break;
-case|case
+argument|; break;         case
 literal|'\r'
-case|:
-name|rep
-operator|=
+argument|: rep =
 literal|"RET"
-expr_stmt|;
-break|break;
-case|case
-name|ESC
-case|:
-name|rep
-operator|=
+argument|; break;         case ESC:  rep =
 literal|"ESC"
-expr_stmt|;
-break|break;
-default|default:
-name|sprintf
-argument_list|(
-name|rep_buffer
-argument_list|,
+argument|; break;          default:           sprintf (rep_buffer,
 literal|"C-%c"
-argument_list|,
-name|UnControl
-argument_list|(
-name|key
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|rep
-operator|=
-name|rep_buffer
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-switch|switch
-condition|(
-name|key
-condition|)
-block|{
-case|case
+argument|, UnControl (key));           rep = rep_buffer;         }     }   else     {       switch (key)         {         case
 literal|' '
-case|:
-name|rep
-operator|=
+argument|: rep =
 literal|"SPC"
-expr_stmt|;
-break|break;
-case|case
-name|DEL
-case|:
-name|rep
-operator|=
+argument|; break;         case DEL: rep =
 literal|"DEL"
-expr_stmt|;
-break|break;
-default|default:
-name|rep_buffer
-index|[
+argument|; break;         default:           rep_buffer[
 literal|0
-index|]
-operator|=
-name|key
-expr_stmt|;
-name|rep_buffer
-index|[
+argument|] = key;           rep_buffer[
 literal|1
-index|]
-operator|=
+argument|] =
 literal|'\0'
-expr_stmt|;
-name|rep
-operator|=
-name|rep_buffer
-expr_stmt|;
-block|}
-block|}
-return|return
-operator|(
-name|rep
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
+argument|;           rep = rep_buffer;         }     }   return (rep); }
+comment|/* Return the pretty printable string which represents KEYSEQ. */
+argument|static void pretty_keyseq_internal ();  char * pretty_keyseq (keyseq)      char *keyseq; {   static char keyseq_rep[
+literal|200
+argument|];    keyseq_rep[
+literal|0
+argument|] =
+literal|'\0'
+argument|;   if (*keyseq)     pretty_keyseq_internal (keyseq, keyseq_rep);   return (keyseq_rep); }  static void pretty_keyseq_internal (keyseq, rep)      char *keyseq
+argument_list|,
+argument|*rep; {   if (term_kP&& strncmp(keyseq, term_kP, strlen(term_kP)) ==
+literal|0
+argument|)     {       strcpy(rep,
+literal|"PgUp"
+argument|);       keyseq += strlen(term_kP);     }   else if (term_kN&& strncmp(keyseq, term_kN, strlen(term_kN)) ==
+literal|0
+argument|)     {       strcpy(rep,
+literal|"PgDn"
+argument|);       keyseq += strlen(term_kN);     }
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INFOKEY
+argument_list|)
+argument|else if (term_kh&& strncmp(keyseq, term_kh, strlen(term_kh)) ==
+literal|0
+argument|)     {       strcpy(rep,
+literal|"Home"
+argument|);       keyseq += strlen(term_kh);     }   else if (term_ke&& strncmp(keyseq, term_ke, strlen(term_ke)) ==
+literal|0
+argument|)     {       strcpy(rep,
+literal|"End"
+argument|);       keyseq += strlen(term_ke);     }   else if (term_ki&& strncmp(keyseq, term_ki, strlen(term_ki)) ==
+literal|0
+argument|)     {       strcpy(rep,
+literal|"INS"
+argument|);       keyseq += strlen(term_ki);     }   else if (term_kx&& strncmp(keyseq, term_kx, strlen(term_kx)) ==
+literal|0
+argument|)     {       strcpy(rep,
+literal|"DEL"
+argument|);       keyseq += strlen(term_kx);     }
+endif|#
+directive|endif
+comment|/* INFOKEY */
+argument|else if (term_ku&& strncmp(keyseq, term_ku, strlen(term_ku)) ==
+literal|0
+argument|)     {       strcpy(rep,
+literal|"Up"
+argument|);       keyseq += strlen(term_ku);     }   else if (term_kd&& strncmp(keyseq, term_kd, strlen(term_kd)) ==
+literal|0
+argument|)     {       strcpy(rep,
+literal|"Down"
+argument|);       keyseq += strlen(term_kd);     }   else if (term_kl&& strncmp(keyseq, term_kl, strlen(term_kl)) ==
+literal|0
+argument|)     {       strcpy(rep,
+literal|"Left"
+argument|);       keyseq += strlen(term_kl);     }   else if (term_kr&& strncmp(keyseq, term_kr, strlen(term_kr)) ==
+literal|0
+argument|)     {       strcpy(rep,
+literal|"Right"
+argument|);       keyseq += strlen(term_kr);     }   else     {       strcpy (rep, pretty_keyname (keyseq[
+literal|0
+argument|]));       keyseq++;     }   if (*keyseq)     {       strcat (rep,
+literal|" "
+argument|);       pretty_keyseq_internal (keyseq, rep + strlen(rep));     } }
+comment|/* Return a pointer to the last character in s that is found in f. */
+argument|static char * strrpbrk (s, f)      const char *s
+argument_list|,
+argument|*f; {   register const char *e = s + strlen(s);   register const char *t;    while (e-- != s)     {       for (t = f; *t; t++)         if (*e == *t) 	  return (char *)e;     }   return NULL; }
 comment|/* Replace the names of functions with the key that invokes them. */
-end_comment
-
-begin_function
-name|char
-modifier|*
-name|replace_in_documentation
-parameter_list|(
-name|string
-parameter_list|)
-name|char
-modifier|*
-name|string
-decl_stmt|;
-block|{
-specifier|register
-name|int
-name|i
-decl_stmt|,
-name|start
-decl_stmt|,
-name|next
-decl_stmt|;
-specifier|static
-name|char
-modifier|*
-name|result
-init|=
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-decl_stmt|;
-name|maybe_free
-argument_list|(
-name|result
-argument_list|)
-expr_stmt|;
-name|result
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|xmalloc
-argument_list|(
+argument|char * replace_in_documentation (string, help_is_only_window_p)      char *string;      int help_is_only_window_p; {   unsigned reslen = strlen (string);   register int i
+argument_list|,
+argument|start
+argument_list|,
+argument|next;   static char *result = (char *)NULL;    maybe_free (result);   result = (char *)xmalloc (
 literal|1
-operator|+
-name|strlen
-argument_list|(
-name|string
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|i
-operator|=
-name|next
-operator|=
-name|start
-operator|=
+argument|+ reslen);    i = next = start =
 literal|0
-expr_stmt|;
+argument|;
 comment|/* Skip to the beginning of a replaceable function. */
-for|for
-control|(
-name|i
-operator|=
-name|start
-init|;
-name|string
-index|[
-name|i
-index|]
-condition|;
-name|i
-operator|++
-control|)
-block|{
+argument|for (i = start; string[i]; i++)     {       int j = i +
+literal|1
+argument|;
 comment|/* Is this the start of a replaceable function name? */
-if|if
-condition|(
-name|string
-index|[
-name|i
-index|]
-operator|==
+argument|if (string[i] ==
 literal|'\\'
-operator|&&
-name|string
-index|[
-name|i
-operator|+
+argument|)       	{ 	  char *fmt = NULL; 	  unsigned min =
+literal|0
+argument|; 	  unsigned max =
+literal|0
+argument|;  	  if(string[j] ==
+literal|'%'
+argument|) 	    { 	      if (string[++j] ==
+literal|'-'
+argument|) 		j++; 	      if (isdigit(string[j])) 		{ 		  min = atoi(string + j); 		  while (isdigit(string[j])) 		    j++; 		  if (string[j] ==
+literal|'.'
+argument|&& isdigit(string[j +
 literal|1
-index|]
-operator|==
-literal|'['
-condition|)
-block|{
-name|char
-modifier|*
-name|fun_name
-decl_stmt|,
-modifier|*
-name|rep
-decl_stmt|;
-name|VFunction
-modifier|*
-name|function
-decl_stmt|;
-comment|/* Copy in the old text. */
-name|strncpy
-argument_list|(
-name|result
-operator|+
-name|next
-argument_list|,
-name|string
-operator|+
-name|start
-argument_list|,
-name|i
-operator|-
-name|start
-argument_list|)
-expr_stmt|;
-name|next
-operator|+=
-operator|(
-name|i
-operator|-
-name|start
-operator|)
-expr_stmt|;
-name|start
-operator|=
-name|i
-operator|+
+argument|])) 		    { 		      j +=
+literal|1
+argument|; 		      max = atoi(string + j); 		      while (isdigit(string[j])) 			j++; 		    } 		  fmt = (char *)xmalloc (j - i +
 literal|2
-expr_stmt|;
-comment|/* Move to the end of the function name. */
-for|for
-control|(
-name|i
-operator|=
-name|start
-init|;
-name|string
-index|[
-name|i
-index|]
-operator|&&
-operator|(
-name|string
-index|[
-name|i
-index|]
-operator|!=
-literal|']'
-operator|)
-condition|;
-name|i
-operator|++
-control|)
-empty_stmt|;
-name|fun_name
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|xmalloc
-argument_list|(
+argument|); 		  strncpy (fmt, string + i +
 literal|1
-operator|+
-name|i
-operator|-
-name|start
-argument_list|)
-expr_stmt|;
-name|strncpy
-argument_list|(
-name|fun_name
-argument_list|,
-name|string
-operator|+
-name|start
-argument_list|,
-name|i
-operator|-
-name|start
-argument_list|)
-expr_stmt|;
-name|fun_name
-index|[
-name|i
-operator|-
-name|start
-index|]
-operator|=
+argument|, j - i); 		  fmt[j - i -
+literal|1
+argument|] =
+literal|'s'
+argument|; 		  fmt[j - i] =
 literal|'\0'
-expr_stmt|;
+argument|; 		} 	      else 		j = i +
+literal|1
+argument|; 	    } 	  if (string[j] ==
+literal|'['
+argument|) 	    { 	      unsigned arg =
+literal|0
+argument|; 	      char *argstr = NULL; 	      char *rep_name
+argument_list|,
+argument|*fun_name
+argument_list|,
+argument|*rep; 	      InfoCommand *command; 	      char *repstr = NULL; 	      unsigned replen;
+comment|/* Copy in the old text. */
+argument|strncpy (result + next, string + start, i - start); 	      next += (i - start); 	      start = j +
+literal|1
+argument|;
+comment|/* Look for an optional numeric arg. */
+argument|i = start; 	      if (isdigit(string[i]) 		  || (string[i] ==
+literal|'-'
+argument|&& isdigit(string[i +
+literal|1
+argument|])) ) 		{ 		  arg = atoi(string + i); 		  if (string[i] ==
+literal|'-'
+argument|) 		    i++; 		  while (isdigit(string[i])) 		    i++; 		} 	      start = i;
+comment|/* Move to the end of the function name. */
+argument|for (i = start; string[i]&& (string[i] !=
+literal|']'
+argument|); i++);  	      rep_name = (char *)xmalloc (
+literal|1
+argument|+ i - start); 	      strncpy (rep_name, string + start, i - start); 	      rep_name[i - start] =
+literal|'\0'
+argument|;
+comment|/* If we have only one window (because the window size was too 	       small to split it), we have to quit help by going back one 	       noew in the history list, not deleting the window.  */
+argument|if (strcmp (rep_name,
+literal|"quit-help"
+argument|) ==
+literal|0
+argument|) 		fun_name = help_is_only_window_p ?
+literal|"history-node"
+argument|:
+literal|"delete-window"
+argument|; 	      else 	        fun_name = rep_name;
 comment|/* Find a key which invokes this function in the info_keymap. */
-name|function
-operator|=
-name|named_function
-argument_list|(
-name|fun_name
-argument_list|)
-expr_stmt|;
-comment|/* If the internal documentation string fails, there is a              serious problem with the associated command's documentation.              We croak so that it can be fixed immediately. */
-if|if
-condition|(
-operator|!
-name|function
-condition|)
-name|abort
-argument_list|()
-expr_stmt|;
-name|rep
-operator|=
-name|where_is
-argument_list|(
-name|info_keymap
+argument|command = named_function (fun_name);  	      free (rep_name);
+comment|/* If the internal documentation string fails, there is a 		 serious problem with the associated command's documentation. 		 We croak so that it can be fixed immediately. */
+argument|if (!command) 		abort ();  	      if (arg) 	      	{ 		  char *argrep
 argument_list|,
-name|function
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|result
-operator|+
-name|next
-argument_list|,
-name|rep
-argument_list|)
-expr_stmt|;
-name|next
-operator|=
-name|strlen
-argument_list|(
-name|result
-argument_list|)
-expr_stmt|;
-name|start
-operator|=
-name|i
-expr_stmt|;
-if|if
-condition|(
-name|string
-index|[
-name|i
-index|]
-condition|)
-name|start
-operator|++
-expr_stmt|;
-block|}
-block|}
-name|strcpy
-argument_list|(
-name|result
-operator|+
-name|next
-argument_list|,
-name|string
-operator|+
-name|start
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|result
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
+argument|*p;  		  argrep = where_is (info_keymap, InfoCmd(info_add_digit_to_numeric_arg)); 		  p = argrep ? strrpbrk (argrep,
+literal|"0123456789-"
+argument|) : NULL; 		  if (p) 		    { 		      argstr = (char *)xmalloc (p - argrep +
+literal|21
+argument|); 		      strncpy (argstr, argrep, p - argrep); 		      sprintf (argstr + (p - argrep),
+literal|"%d"
+argument|, arg); 		    } 		  else 		    command = NULL; 		} 	      rep = command ? where_is (info_keymap, command) : NULL; 	      if (!rep) 	        rep =
+literal|"N/A"
+argument|; 	      replen = (argstr ? strlen (argstr) +
+literal|1
+argument|:
+literal|0
+argument|) + strlen (rep); 	      repstr = (char *)xmalloc (replen); 	      repstr[
+literal|0
+argument|] =
+literal|'\0'
+argument|; 	      if (argstr) 		{ 		  strcat(repstr, argstr); 		  strcat(repstr,
+literal|" "
+argument|); 		  free (argstr); 		} 	      strcat(repstr, rep);  	      if (fmt) 		{ 		  if (replen> max) 		    replen = max; 		  if (replen< min) 		    replen = min; 		} 	      if (next + replen> reslen) 		{ 		  reslen = next + replen +
+literal|1
+argument|; 		  result = (char *)xrealloc (result, reslen +
+literal|1
+argument|); 		}  	      if (fmt) 		  sprintf (result + next, fmt, repstr); 	      else 		  strcpy (result + next, repstr);  	      next = strlen (result); 	      free (repstr);  	      start = i; 	      if (string[i]) 		start++; 	    }  	  maybe_free (fmt); 	}     }   strcpy (result + next, string + start);   return (result); }
 comment|/* Return a string of characters which could be typed from the keymap    MAP to invoke FUNCTION. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|where_is_rep
-init|=
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|where_is_rep_index
-init|=
+argument|static char *where_is_rep = (char *)NULL; static int where_is_rep_index =
 literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|where_is_rep_size
-init|=
+argument|; static int where_is_rep_size =
 literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-specifier|static
-name|char
-modifier|*
-name|where_is
-parameter_list|(
-name|map
-parameter_list|,
-name|function
-parameter_list|)
-name|Keymap
-name|map
-decl_stmt|;
-name|VFunction
-modifier|*
-name|function
-decl_stmt|;
-block|{
-name|char
-modifier|*
-name|rep
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|where_is_rep_size
-condition|)
-name|where_is_rep
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|xmalloc
-argument_list|(
-name|where_is_rep_size
-operator|=
+argument|;  char * where_is (map, cmd)      Keymap map;      InfoCommand *cmd; {   char *rep;    if (!where_is_rep_size)     where_is_rep = (char *)xmalloc (where_is_rep_size =
 literal|100
-argument_list|)
-expr_stmt|;
-name|where_is_rep_index
-operator|=
+argument|);   where_is_rep_index =
 literal|0
-expr_stmt|;
-name|rep
-operator|=
-name|where_is_internal
+argument|;    rep = where_is_internal (map, cmd);
+comment|/* If it couldn't be found, return "M-x Foo" (or equivalent). */
+argument|if (!rep)     {       char *name;        name = function_name (cmd);       if (!name)       	return NULL;
+comment|/* no such function */
+argument|rep = where_is_internal (map, InfoCmd(info_execute_command));       if (!rep)         return
+literal|""
+argument|;
+comment|/* function exists but can't be got to by user */
+argument|sprintf (where_is_rep,
+literal|"%s %s"
+argument|, rep, name);        rep = where_is_rep;     }   return (rep); }
+comment|/* Return the printed rep of the keystrokes that invoke FUNCTION,    as found in MAP, or NULL. */
+argument|static char * where_is_internal (map, cmd)      Keymap map;      InfoCommand *cmd; {
+if|#
+directive|if
+name|defined
 argument_list|(
-name|map
-argument_list|,
-name|function
+name|INFOKEY
 argument_list|)
-expr_stmt|;
-comment|/* If it couldn't be found, return "M-x Foo". */
-if|if
-condition|(
-operator|!
-name|rep
-condition|)
-block|{
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|name
-operator|=
-name|function_name
-argument_list|(
-name|function
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|name
-condition|)
-name|sprintf
-argument_list|(
-name|where_is_rep
-argument_list|,
-literal|"M-x %s"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|rep
-operator|=
-name|where_is_rep
-expr_stmt|;
-block|}
-return|return
-operator|(
-name|rep
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Return the printed rep of FUNCTION as found in MAP, or NULL. */
-end_comment
-
-begin_function
-specifier|static
-name|char
-modifier|*
-name|where_is_internal
-parameter_list|(
-name|map
-parameter_list|,
-name|function
-parameter_list|)
-name|Keymap
-name|map
-decl_stmt|;
-name|VFunction
-modifier|*
-name|function
-decl_stmt|;
-block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
+argument|register FUNCTION_KEYSEQ *k;    for (k = cmd->keys; k; k = k->next)     if (k->map == map)       return pretty_keyseq (k->keyseq);    return NULL;
+else|#
+directive|else
+comment|/* !INFOKEY */
+argument|register int i;
 comment|/* If the function is directly invokable in MAP, return the representation      of that keystroke. */
-for|for
-control|(
-name|i
-operator|=
+argument|for (i =
 literal|0
-init|;
-name|i
-operator|<
+argument|; i<
 literal|256
-condition|;
-name|i
-operator|++
-control|)
-if|if
-condition|(
-operator|(
-name|map
-index|[
-name|i
-index|]
-operator|.
-name|type
-operator|==
-name|ISFUNC
-operator|)
-operator|&&
-name|map
-index|[
-name|i
-index|]
-operator|.
-name|function
-operator|==
-name|function
-condition|)
-block|{
-name|sprintf
-argument_list|(
-name|where_is_rep
-operator|+
-name|where_is_rep_index
-argument_list|,
+argument|; i++)     if ((map[i].type == ISFUNC)&& map[i].function == cmd)       {         sprintf (where_is_rep + where_is_rep_index,
 literal|"%s"
-argument_list|,
-name|pretty_keyname
-argument_list|(
-name|i
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|where_is_rep
-operator|)
-return|;
-block|}
+argument|, pretty_keyname (i));         return (where_is_rep);       }
 comment|/* Okay, search subsequent maps for this function. */
-for|for
-control|(
-name|i
-operator|=
+argument|for (i =
 literal|0
-init|;
-name|i
-operator|<
+argument|; i<
 literal|256
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|map
-index|[
-name|i
-index|]
-operator|.
-name|type
-operator|==
-name|ISKMAP
-condition|)
-block|{
-name|int
-name|saved_index
-init|=
-name|where_is_rep_index
-decl_stmt|;
-name|char
-modifier|*
-name|rep
-decl_stmt|;
-name|sprintf
-argument_list|(
-name|where_is_rep
-operator|+
-name|where_is_rep_index
-argument_list|,
+argument|; i++)     {       if (map[i].type == ISKMAP)         {           int saved_index = where_is_rep_index;           char *rep;            sprintf (where_is_rep + where_is_rep_index,
 literal|"%s "
-argument_list|,
-name|pretty_keyname
-argument_list|(
-name|i
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|where_is_rep_index
-operator|=
-name|strlen
-argument_list|(
-name|where_is_rep
-argument_list|)
-expr_stmt|;
-name|rep
-operator|=
-name|where_is_internal
-argument_list|(
-operator|(
-name|Keymap
-operator|)
-name|map
-index|[
-name|i
-index|]
-operator|.
-name|function
-argument_list|,
-name|function
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rep
-condition|)
-return|return
-operator|(
-name|where_is_rep
-operator|)
-return|;
-name|where_is_rep_index
-operator|=
-name|saved_index
-expr_stmt|;
-block|}
-block|}
-return|return
-name|NULL
-return|;
-block|}
-end_function
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|read_function_name
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_macro
-name|DECLARE_INFO_COMMAND
-argument_list|(
-argument|info_where_is
-argument_list|,
-argument|_(
+argument|,                    pretty_keyname (i));            where_is_rep_index = strlen (where_is_rep);           rep = where_is_internal ((Keymap)map[i].function, cmd);            if (rep)             return (where_is_rep);            where_is_rep_index = saved_index;         }     }    return NULL;
+endif|#
+directive|endif
+comment|/* INFOKEY */
+argument|}  extern char *read_function_name ();  DECLARE_INFO_COMMAND (info_where_is,    _(
 literal|"Show what to type to execute a given command"
-argument|)
-argument_list|)
-end_macro
-
-begin_block
-block|{
-name|char
-modifier|*
-name|command_name
-decl_stmt|;
-name|command_name
-operator|=
-name|read_function_name
-argument_list|(
-name|_
-argument_list|(
+argument|)) {   char *command_name;    command_name = read_function_name (_(
 literal|"Where is command: "
-argument_list|)
-argument_list|,
-name|window
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|command_name
-condition|)
-block|{
-name|info_abort_key
-argument_list|(
-name|active_window
-argument_list|,
-name|count
-argument_list|,
-name|key
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-operator|*
-name|command_name
-condition|)
-block|{
-name|VFunction
-modifier|*
-name|function
-decl_stmt|;
-name|function
-operator|=
-name|named_function
-argument_list|(
-name|command_name
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|function
-condition|)
-block|{
-name|char
-modifier|*
-name|location
-decl_stmt|;
-name|location
-operator|=
-name|where_is
-argument_list|(
-name|active_window
-operator|->
-name|keymap
-argument_list|,
-name|function
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|location
-condition|)
-block|{
-name|info_error
-argument_list|(
-name|_
-argument_list|(
-literal|"`%s' is not on any keys"
-argument_list|)
-argument_list|,
-name|command_name
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|strncmp
-argument_list|(
-name|location
-argument_list|,
-literal|"M-x "
-argument_list|,
-literal|4
-argument_list|)
-operator|==
+argument|), window);    if (!command_name)     {       info_abort_key (active_window, count, key);       return;     }    if (*command_name)     {       InfoCommand *command;        command = named_function (command_name);        if (command)         {           char *location;            location = where_is (active_window->keymap, command);            if (!location || !location[
 literal|0
-condition|)
-name|window_message_in_echo_area
-argument_list|(
-name|_
-argument_list|(
+argument|])             {               info_error (_(
+literal|"`%s' is not on any keys"
+argument|), command_name);             }           else             {               if (strstr (location, function_name (command)))                 window_message_in_echo_area                   (_(
 literal|"%s can only be invoked via %s."
-argument_list|)
-argument_list|,
-name|command_name
-argument_list|,
-name|location
-argument_list|)
-expr_stmt|;
-else|else
-name|window_message_in_echo_area
-argument_list|(
-name|_
-argument_list|(
+argument|), command_name, location);               else                 window_message_in_echo_area                   (_(
 literal|"%s can be invoked via %s."
-argument_list|)
-argument_list|,
-name|command_name
-argument_list|,
-name|location
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-else|else
-name|info_error
-argument_list|(
-name|_
-argument_list|(
+argument|), command_name, location);             }         }       else         info_error (_(
 literal|"There is no function named `%s'"
-argument_list|)
-argument_list|,
-name|command_name
-argument_list|)
-expr_stmt|;
-block|}
-name|free
-argument_list|(
-name|command_name
-argument_list|)
-expr_stmt|;
-block|}
-end_block
+argument|), command_name);     }    free (command_name); }
+end_decl_stmt
 
 end_unit
 

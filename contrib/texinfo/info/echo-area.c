@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* echo-area.c -- how to read a line in the echo area.    $Id: echo-area.c,v 1.12 1999/03/03 22:22:14 karl Exp $     Copyright (C) 1993, 97, 98, 99 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* echo-area.c -- how to read a line in the echo area.    $Id: echo-area.c,v 1.15 2001/12/12 16:19:39 karl Exp $     Copyright (C) 1993, 97, 98, 99, 2001 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -3211,6 +3211,20 @@ operator|==
 name|completions_found_index
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|completions_found_index
+condition|)
+name|inform_in_echo_area
+argument_list|(
+name|_
+argument_list|(
+literal|"No completions"
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
 name|inform_in_echo_area
 argument_list|(
 name|_
@@ -4688,6 +4702,66 @@ operator|+
 name|shortest
 argument_list|)
 expr_stmt|;
+comment|/* Since both the sorting done inside remove_completion_duplicates        and all the comparisons above are case-insensitive, it's        possible that the completion we are going to return is        identical to what the user typed but for the letter-case.  This        is confusing, since the user could type FOOBAR<TAB> and get her        string change letter-case for no good reason.  So try to find a        possible completion whose letter-case is identical, and if so,        use that.  */
+if|if
+condition|(
+name|completions_found_index
+operator|>
+literal|1
+condition|)
+block|{
+name|int
+name|req_len
+init|=
+name|strlen
+argument_list|(
+name|request
+argument_list|)
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|completions_found_index
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|request
+argument_list|,
+name|completions_found
+index|[
+name|i
+index|]
+operator|->
+name|label
+argument_list|,
+name|req_len
+argument_list|)
+operator|==
+literal|0
+condition|)
+break|break;
+comment|/* If none of the candidates match exactly, use the first one.  */
+if|if
+condition|(
+name|i
+operator|>=
+name|completions_found_index
+condition|)
+name|i
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|strncpy
 argument_list|(
 name|LCD_reference
@@ -4696,7 +4770,7 @@ name|label
 argument_list|,
 name|completions_found
 index|[
-literal|0
+name|i
 index|]
 operator|->
 name|label
