@@ -7319,7 +7319,7 @@ name|ISA_HOLE_START
 operator|+
 name|KERNBASE
 expr_stmt|;
-comment|/*  	 *  This may be done better later if it gets more 	 * high level components in it. If so just link td->td_proc 	 * here. 	 */
+comment|/*  	 * This may be done better later if it gets more high level  	 * components in it. If so just link td->td_proc here. 	 */
 name|proc_linkup
 argument_list|(
 operator|&
