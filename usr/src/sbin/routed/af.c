@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)af.c	5.1 (Berkeley) %G%"
+literal|"@(#)af.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -522,6 +522,48 @@ literal|0xff000000
 operator|)
 operator|==
 literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+sizeof|sizeof
+argument_list|(
+name|sin
+operator|->
+name|sin_zero
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|sin
+operator|->
+name|sin_zero
+index|[
+literal|0
+index|]
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|sin
+operator|->
+name|sin_zero
+index|[
+name|i
+index|]
 condition|)
 return|return
 operator|(
