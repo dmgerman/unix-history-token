@@ -501,9 +501,11 @@ name|idx
 decl_stmt|;
 name|int
 name|dsize
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|int
 name|max
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|barray

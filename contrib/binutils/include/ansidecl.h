@@ -738,6 +738,29 @@ begin_comment
 comment|/* ATTRIBUTE_PRINTF */
 end_comment
 
+begin_comment
+comment|/* We use __extension__ in some places to suppress -pedantic warnings    about GCC extensions.  This feature didn't work properly before    gcc 2.8.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|GCC_VERSION
+operator|<
+literal|2008
+end_if
+
+begin_define
+define|#
+directive|define
+name|__extension__
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif

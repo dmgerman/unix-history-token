@@ -5955,19 +5955,9 @@ argument_list|)
 operator|!=
 name|Module_Beginning
 condition|)
-block|{
-name|abfd
-operator|->
-name|tdata
-operator|.
-name|ieee_ar_data
-operator|=
-name|save
-expr_stmt|;
 goto|goto
 name|got_wrong_format_error
 goto|;
-block|}
 name|next_byte
 argument_list|(
 operator|&
@@ -6001,27 +5991,10 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|bfd_release
-argument_list|(
-name|abfd
-argument_list|,
-name|ieee
-argument_list|)
-expr_stmt|;
-name|abfd
-operator|->
-name|tdata
-operator|.
-name|ieee_ar_data
-operator|=
-name|save
-expr_stmt|;
 goto|goto
 name|got_wrong_format_error
 goto|;
-block|}
-comment|/* Throw away the filename */
+comment|/* Throw away the filename.  */
 name|read_id
 argument_list|(
 operator|&
@@ -6054,7 +6027,7 @@ name|h
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Drop the ad part */
+comment|/* Drop the ad part.  */
 name|must_parse_int
 argument_list|(
 operator|&
@@ -6065,7 +6038,7 @@ name|h
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* And the two dummy numbers */
+comment|/* And the two dummy numbers.  */
 name|must_parse_int
 argument_list|(
 operator|&
@@ -6104,7 +6077,7 @@ condition|)
 goto|goto
 name|error_return
 goto|;
-comment|/* Read the index of the BB table */
+comment|/* Read the index of the BB table.  */
 while|while
 condition|(
 literal|1
@@ -6238,7 +6211,7 @@ operator|*
 operator|)
 name|NULL
 expr_stmt|;
-comment|/* Make sure that we don't go over the end of the buffer */
+comment|/* Make sure that we don't go over the end of the buffer.  */
 if|if
 condition|(
 operator|(
@@ -6257,7 +6230,7 @@ operator|/
 literal|2
 condition|)
 block|{
-comment|/* Past half way, reseek and reprime */
+comment|/* Past half way, reseek and reprime.  */
 name|buffer_offset
 operator|+=
 name|ieee_pos
@@ -6381,8 +6354,7 @@ name|elts
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Now scan the area again, and replace BB offsets with file */
-comment|/* offsets */
+comment|/* Now scan the area again, and replace BB offsets with file offsets.  */
 for|for
 control|(
 name|i
@@ -6466,7 +6438,7 @@ name|h
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Drop F8 */
+comment|/* Drop F8.  */
 name|next_byte
 argument_list|(
 operator|&
@@ -6477,7 +6449,7 @@ name|h
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Drop 14 */
+comment|/* Drop 14.  */
 name|must_parse_int
 argument_list|(
 operator|&
@@ -6488,7 +6460,7 @@ name|h
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Drop size of block */
+comment|/* Drop size of block.  */
 if|if
 condition|(
 name|must_parse_int
@@ -6503,8 +6475,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-comment|/* This object has been deleted */
+comment|/* This object has been deleted.  */
 name|ieee
 operator|->
 name|elements
@@ -6516,9 +6487,7 @@ name|file_offset
 operator|=
 literal|0
 expr_stmt|;
-block|}
 else|else
-block|{
 name|ieee
 operator|->
 name|elements
@@ -6539,7 +6508,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 comment|/*  abfd->has_armap = ;*/
 return|return
 name|abfd
@@ -6548,6 +6516,21 @@ name|xvec
 return|;
 name|got_wrong_format_error
 label|:
+name|bfd_release
+argument_list|(
+name|abfd
+argument_list|,
+name|ieee
+argument_list|)
+expr_stmt|;
+name|abfd
+operator|->
+name|tdata
+operator|.
+name|ieee_ar_data
+operator|=
+name|save
+expr_stmt|;
 name|bfd_set_error
 argument_list|(
 name|bfd_error_wrong_format
@@ -13705,7 +13688,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   During linking, we we told about the bfds which made up our   contents, we have a list of them. They will still be open, so go to   the debug info in each, and copy it out, relocating it as we go. */
+comment|/* Gather together all the debug information from each input BFD into    one place, relocating it and emitting it as we go.  */
 end_comment
 
 begin_function
@@ -16028,8 +16011,10 @@ operator|(
 name|ieee_symbol_type
 operator|*
 operator|)
-name|bfd_zmalloc
+name|bfd_zalloc
 argument_list|(
+name|abfd
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|ieee_symbol_type

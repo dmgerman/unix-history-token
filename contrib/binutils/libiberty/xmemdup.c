@@ -42,6 +42,23 @@ begin_comment
 comment|/* For size_t. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STRING_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|PTR
 name|xmemdup

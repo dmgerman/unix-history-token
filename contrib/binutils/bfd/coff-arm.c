@@ -836,7 +836,7 @@ value|"__%s_from_arm"
 end_define
 
 begin_comment
-comment|/* Used by the assembler. */
+comment|/* Used by the assembler.  */
 end_comment
 
 begin_function
@@ -2016,7 +2016,7 @@ name|COFF_WITH_PE
 end_ifdef
 
 begin_comment
-comment|/* Return true if this relocation should    appear in the output .reloc section. */
+comment|/* Return true if this relocation should    appear in the output .reloc section.  */
 end_comment
 
 begin_function
@@ -2181,7 +2181,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Used by the assembler. */
+comment|/* Used by the assembler.  */
 end_comment
 
 begin_function
@@ -2247,7 +2247,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Used by the assembler. */
+comment|/* Used by the assembler.  */
 end_comment
 
 begin_function
@@ -3415,6 +3415,13 @@ argument_list|)
 expr_stmt|;
 name|ASTD
 argument_list|(
+name|BFD_RELOC_ARM_PCREL_BLX
+argument_list|,
+name|ARM_26
+argument_list|)
+expr_stmt|;
+name|ASTD
+argument_list|(
 name|BFD_RELOC_8_PCREL
 argument_list|,
 name|ARM_DISP8
@@ -3557,7 +3564,7 @@ name|bfd
 modifier|*
 name|bfd_of_glue_owner
 decl_stmt|;
-comment|/* Support interworking with old, non-interworking aware ARM code. */
+comment|/* Support interworking with old, non-interworking aware ARM code.  */
 name|int
 name|support_old_code
 decl_stmt|;
@@ -3795,7 +3802,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* The thumb form of a long branch is a bit finicky, because the offset    encoding is split over two fields, each in it's own instruction. They    can occur in any order. So given a thumb form of long branch, and an     offset, insert the offset into the thumb branch and return finished    instruction.      It takes two thumb instructions to encode the target address. Each has     11 bits to invest. The upper 11 bits are stored in one (identifed by    H-0.. see below), the lower 11 bits are stored in the other (identified     by H-1).      Combine together and shifted left by 1 (it's a half word address) and     there you have it.       Op: 1111 = F,      H-0, upper address-0 = 000      Op: 1111 = F,      H-1, lower address-0 = 800     They can be ordered either way, but the arm tools I've seen always put     the lower one first. It probably doesn't matter. krk@cygnus.com     XXX:  Actually the order does matter.  The second instruction (H-1)    moves the computed address into the PC, so it must be the second one    in the sequence.  The problem, however is that whilst little endian code    stores the instructions in HI then LOW order, big endian code does the    reverse.  nickc@cygnus.com  */
+comment|/* The thumb form of a long branch is a bit finicky, because the offset    encoding is split over two fields, each in it's own instruction. They    can occur in any order. So given a thumb form of long branch, and an    offset, insert the offset into the thumb branch and return finished    instruction.     It takes two thumb instructions to encode the target address. Each has    11 bits to invest. The upper 11 bits are stored in one (identifed by    H-0.. see below), the lower 11 bits are stored in the other (identified    by H-1).     Combine together and shifted left by 1 (it's a half word address) and    there you have it.       Op: 1111 = F,      H-0, upper address-0 = 000      Op: 1111 = F,      H-1, lower address-0 = 800     They can be ordered either way, but the arm tools I've seen always put    the lower one first. It probably doesn't matter. krk@cygnus.com     XXX:  Actually the order does matter.  The second instruction (H-1)    moves the computed address into the PC, so it must be the second one    in the sequence.  The problem, however is that whilst little endian code    stores the instructions in HI then LOW order, big endian code does the    reverse.  nickc@cygnus.com  */
 end_comment
 
 begin_define
@@ -4226,7 +4233,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*    Thumb->ARM:				Thumb->(non-interworking aware) ARM     .thumb				.thumb    .align 2				.align 2       __func_from_thumb:		   __func_from_thumb: 	   bx pc				push {r6, lr} 	   nop					ldr  r6, __func_addr    .arm						mov  lr, pc       __func_change_to_arm:			bx   r6 	   b func   			.arm 					   __func_back_to_thumb:    		  				ldmia r13! {r6, lr}    					        bx    lr    					   __func_addr: 					        .word	func  */
+comment|/*    Thumb->ARM:				Thumb->(non-interworking aware) ARM     .thumb				.thumb    .align 2				.align 2       __func_from_thumb:		   __func_from_thumb: 	   bx pc				push {r6, lr} 	   nop					ldr  r6, __func_addr    .arm						mov  lr, pc       __func_change_to_arm:			bx   r6 	   b func   			.arm 					   __func_back_to_thumb:    		  				ldmia r13! {r6, lr}    					        bx    lr    					   __func_addr: 					        .word	func */
 end_comment
 
 begin_define
@@ -4331,7 +4338,7 @@ comment|/* TODO:      We should really create new local (static) symbols in dest
 end_comment
 
 begin_comment
-comment|/* The standard COFF backend linker does not cope with the special     Thumb BRANCH23 relocation.  The alternative would be to split the    BRANCH23 into seperate HI23 and LO23 relocations. However, it is a    bit simpler simply providing our own relocation driver. */
+comment|/* The standard COFF backend linker does not cope with the special    Thumb BRANCH23 relocation.  The alternative would be to split the    BRANCH23 into seperate HI23 and LO23 relocations. However, it is a    bit simpler simply providing our own relocation driver.  */
 end_comment
 
 begin_comment
@@ -4661,7 +4668,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|ARM_WINCE
-comment|/* MS ARM-CE makes the reloc relative to the opcode's pc, not 	 the next opcode's pc, so is off by one. */
+comment|/* MS ARM-CE makes the reloc relative to the opcode's pc, not 	 the next opcode's pc, so is off by one.  */
 if|if
 condition|(
 name|howto
@@ -4698,24 +4705,13 @@ operator|->
 name|relocateable
 condition|)
 continue|continue;
-if|if
-condition|(
-name|sym
-operator|!=
-name|NULL
-operator|&&
-name|sym
-operator|->
-name|n_scnum
-operator|!=
+if|#
+directive|if
 literal|0
-condition|)
-name|addend
-operator|+=
-name|sym
-operator|->
-name|n_value
-expr_stmt|;
+comment|/* We must not ignore the symbol value.  If the symbol is 	  within the same section, the relocation should have already 	  been fixed, but if it is not, we'll be handed a reloc into 	  the beginning of the symbol's section, so we must not cancel 	  out the symbol's value, otherwise we'll be adding it in 	  twice.  */
+block|if (sym != NULL&& sym->n_scnum != 0)             addend += sym->n_value;
+endif|#
+directive|endif
 block|}
 name|val
 operator|=
@@ -4788,7 +4784,7 @@ if|#
 directive|if
 literal|1
 comment|/* THUMBEXTENSION */
-comment|/* We don't output the stubs if we are generating a              relocatable output file, since we may as well leave the              stub generation to the final linker pass. If we fail to 	     verify that the name is defined, we'll try to build stubs 	     for an undefined name... */
+comment|/* We don't output the stubs if we are generating a              relocatable output file, since we may as well leave the              stub generation to the final linker pass. If we fail to 	     verify that the name is defined, we'll try to build stubs 	     for an undefined name...  */
 if|if
 condition|(
 operator|!
@@ -5191,7 +5187,7 @@ name|tmp
 operator|&
 literal|0xFF000000
 expr_stmt|;
-comment|/* Somehow these are both 4 too far, so subtract 8. */
+comment|/* Somehow these are both 4 too far, so subtract 8.  */
 name|ret_offset
 operator|=
 name|s
@@ -5817,7 +5813,7 @@ block|}
 endif|#
 directive|endif
 block|}
-comment|/* If the relocation type and destination symbol does not              fall into one of the above categories, then we can just              perform a direct link. */
+comment|/* If the relocation type and destination symbol does not              fall into one of the above categories, then we can just              perform a direct link.  */
 if|if
 condition|(
 name|done
@@ -5950,7 +5946,7 @@ operator|->
 name|base_file
 condition|)
 block|{
-comment|/* Emit a reloc if the backend thinks it needs it. */
+comment|/* Emit a reloc if the backend thinks it needs it.  */
 if|if
 condition|(
 name|sym
@@ -6143,7 +6139,7 @@ name|relocation
 operator|-=
 name|address
 expr_stmt|;
-comment|/* No need to negate the relocation with BRANCH23. */
+comment|/* No need to negate the relocation with BRANCH23.  */
 comment|/* howto->complain_on_overflow == complain_overflow_signed for BRANCH23.  */
 comment|/* howto->rightshift == 1 */
 comment|/* Drop unwanted bits from the value we are relocating to.  */
@@ -6473,7 +6469,7 @@ if|#
 directive|if
 literal|1
 comment|/* THUMBEXTENSION */
-comment|/* FIXME:  	 Is this the best way to fix up thumb addresses? krk@cygnus.com 	 Probably not, but it works, and if it works it don't need fixing!  nickc@cygnus.com */
+comment|/* FIXME: 	 Is this the best way to fix up thumb addresses? krk@cygnus.com 	 Probably not, but it works, and if it works it don't need fixing!  nickc@cygnus.com */
 comment|/* Only perform this fix during the final link, not a relocatable link.  nickc@cygnus.com  */
 if|if
 condition|(
@@ -7875,7 +7871,7 @@ literal|0
 condition|)
 continue|continue;
 comment|/* Load the relocs.  */
-comment|/* FIXME: there may be a storage leak here. */
+comment|/* FIXME: there may be a storage leak here.  */
 name|i
 operator|=
 name|_bfd_coff_read_internal_relocs
@@ -7940,7 +7936,7 @@ name|rel
 operator|->
 name|r_symndx
 expr_stmt|;
-comment|/* If the relocation is not against a symbol it cannot concern us. */
+comment|/* If the relocation is not against a symbol it cannot concern us.  */
 if|if
 condition|(
 name|symndx
@@ -9317,14 +9313,14 @@ block|}
 end_function
 
 begin_comment
-comment|/* Note:  the definitions here of LOCAL_LABEL_PREFIX and USER_LABEL_PREIFX  *must* match the definitions in gcc/config/arm/coff.h and semi.h */
+comment|/* Note:  the definitions here of LOCAL_LABEL_PREFIX and USER_LABEL_PREIFX    *must* match the definitions in gcc/config/arm/{coff|semi|aout}.h.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|LOCAL_LABEL_PREFIX
-value|"."
+value|""
 end_define
 
 begin_ifndef
@@ -9407,7 +9403,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|LOCAL_LABEL_PREFIX
-comment|/* If there is a prefix for local labels then look for this.      If the prefix exists, but it is empty, then ignore the test. */
+comment|/* If there is a prefix for local labels then look for this.      If the prefix exists, but it is empty, then ignore the test.  */
 if|if
 condition|(
 name|LOCAL_LABEL_PREFIX
@@ -9462,7 +9458,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This piece of machinery exists only to guarantee that the bfd that holds    the glue section is written last.      This does depend on bfd_make_section attaching a new section to the    end of the section list for the bfd.      krk@cygnus.com  */
+comment|/* This piece of machinery exists only to guarantee that the bfd that holds    the glue section is written last.     This does depend on bfd_make_section attaching a new section to the    end of the section list for the bfd.     krk@cygnus.com  */
 end_comment
 
 begin_function
@@ -9681,6 +9677,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|EXTRA_S_FLAGS
+end_ifndef
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -9705,6 +9707,11 @@ directive|define
 name|EXTRA_S_FLAGS
 value|0
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

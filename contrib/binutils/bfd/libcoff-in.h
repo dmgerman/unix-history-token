@@ -166,6 +166,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|obj_coff_strings_written
+parameter_list|(
+name|bfd
+parameter_list|)
+value|(coff_data (bfd)->strings_written)
+end_define
+
+begin_define
+define|#
+directive|define
 name|obj_coff_local_toc_table
 parameter_list|(
 name|bfd
@@ -252,6 +262,10 @@ comment|/* If this is true, the strings may not be freed.  */
 name|boolean
 name|keep_strings
 decl_stmt|;
+comment|/* If this is true, the strings have been written out already.  */
+name|boolean
+name|strings_written
+decl_stmt|;
 comment|/* is this a PE format coff file */
 name|int
 name|pe
@@ -276,6 +290,10 @@ decl_stmt|;
 comment|/* Used by coff_find_nearest_line.  */
 name|PTR
 name|line_info
+decl_stmt|;
+comment|/* A place to stash dwarf2 info for this bfd. */
+name|PTR
+name|dwarf2_find_line_info
 decl_stmt|;
 comment|/* The timestamp from the COFF file header.  */
 name|long
@@ -356,6 +374,10 @@ block|{
 comment|/* Basic COFF information.  */
 name|coff_data_type
 name|coff
+decl_stmt|;
+comment|/* True if this is an XCOFF64 file. */
+name|boolean
+name|xcoff64
 decl_stmt|;
 comment|/* True if a large a.out header should be generated.  */
 name|boolean

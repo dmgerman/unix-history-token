@@ -4,7 +4,7 @@ comment|/* Linker file opening and searching.    Copyright (C) 1991, 92, 93, 94,
 end_comment
 
 begin_comment
-comment|/*  ldfile.c   look after all the file stuff   */
+comment|/* ldfile.c:  look after all the file stuff.  */
 end_comment
 
 begin_include
@@ -216,7 +216,7 @@ comment|/* MPW */
 end_comment
 
 begin_comment
-comment|/* The MPW path char is a colon. */
+comment|/* The MPW path char is a colon.  */
 end_comment
 
 begin_decl_stmt
@@ -561,7 +561,7 @@ name|einfo
 argument_list|(
 name|_
 argument_list|(
-literal|"%P: skipping incompatible %s when searching for %s"
+literal|"%P: skipping incompatible %s when searching for %s\n"
 argument_list|)
 argument_list|,
 name|attempt
@@ -1282,7 +1282,7 @@ index|[
 literal|1000
 index|]
 decl_stmt|;
-comment|/* First try raw name */
+comment|/* First try raw name.  */
 name|result
 operator|=
 name|try_open
@@ -1303,7 +1303,7 @@ operator|)
 name|NULL
 condition|)
 block|{
-comment|/* Try now prefixes */
+comment|/* Try now prefixes.  */
 for|for
 control|(
 name|search
@@ -1548,9 +1548,7 @@ operator|->
 name|cmd_switch
 argument_list|)
 condition|)
-block|{
 break|break;
-block|}
 block|}
 if|if
 condition|(
@@ -1560,7 +1558,6 @@ name|cmd_switch
 operator|==
 name|NULL
 condition|)
-block|{
 name|einfo
 argument_list|(
 name|_
@@ -1571,7 +1568,6 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 name|tp
 operator|->
@@ -1801,7 +1797,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Set the output architecture */
+comment|/* Set the output architecture.  */
 end_comment
 
 begin_function

@@ -152,7 +152,8 @@ name|s
 parameter_list|,
 name|f
 parameter_list|)
-value|{as_fatal (_("sparc convert_frag\n"));}
+define|\
+value|as_fatal (_("sparc convert_frag\n"))
 end_define
 
 begin_define
@@ -165,7 +166,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|(as_fatal(_("estimate_size_before_relax called")),1)
+value|(as_fatal(_("estimate_size_before_relax called")), 1)
 end_define
 
 begin_define
@@ -181,25 +182,6 @@ name|int
 name|sparc_pic_code
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|md_do_align
-parameter_list|(
-name|n
-parameter_list|,
-name|fill
-parameter_list|,
-name|len
-parameter_list|,
-name|max
-parameter_list|,
-name|around
-parameter_list|)
-define|\
-value|if ((n)&& (n)<= 10&& !need_pass_2&& !(fill)				\&& subseg_text_p (now_seg))						\   {									\     char *p;								\     p = frag_var (rs_align_code, 1<< n, 1, (relax_substateT) 1024,	\                   (symbolS *) 0, (offsetT) (n), (char *) 0);		\     *p = 0x00;								\     goto around;							\   }
-end_define
 
 begin_comment
 comment|/* We require .word, et. al., to be aligned correctly.  */
@@ -252,6 +234,13 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|MAX_MEM_FOR_RS_ALIGN_CODE
+value|(3 + 4 + 4)
+end_define
 
 begin_if
 if|#
@@ -575,7 +564,7 @@ parameter_list|(
 name|X
 parameter_list|)
 define|\
-value|do						\      {						\        (X)->tc_fix_data = 0;			\      }						\   while(0)
+value|do						\      {						\        (X)->tc_fix_data = 0;			\      }						\   while (0)
 end_define
 
 begin_define
@@ -588,7 +577,14 @@ parameter_list|,
 name|FIXP
 parameter_list|)
 define|\
-value|do									\     {									\       fprintf((FILE), "addend2=%ld\n",   				\ 	      (unsigned long) (FIXP)->tc_fix_data);			\     }									\   while(0)
+value|do									\     {									\       fprintf ((FILE), "addend2=%ld\n",   				\ 	      (unsigned long) (FIXP)->tc_fix_data);			\     }									\   while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DWARF2_LINE_MIN_INSN_LENGTH
+value|4
 end_define
 
 begin_comment

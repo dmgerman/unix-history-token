@@ -114,6 +114,11 @@ name|enum
 name|bfd_endian
 name|endian
 decl_stmt|;
+comment|/* Some targets need information about the current section to accurately      display insns.  If this is NULL, the target disassembler function      will have to make its best guess.  */
+name|asection
+modifier|*
+name|section
+decl_stmt|;
 comment|/* An array of pointers to symbols either at the location being disassembled      or at the start of the function being disassembled.  The array is sorted      so that the first symbol is intended to be the one used.  The others are      present for any misc. purposes.  This is not set reliably, but if it is      not NULL, it is correct.  */
 name|asymbol
 modifier|*
@@ -354,7 +359,46 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|int
+name|print_insn_ia64
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd_vma
+operator|,
+name|disassemble_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
 name|print_insn_i370
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd_vma
+operator|,
+name|disassemble_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
+name|print_insn_m68hc11
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd_vma
+operator|,
+name|disassemble_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
+name|print_insn_m68hc12
 name|PARAMS
 argument_list|(
 operator|(
@@ -475,9 +519,8 @@ name|arc_get_disassembler
 name|PARAMS
 argument_list|(
 operator|(
-name|int
-operator|,
-name|int
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -536,6 +579,19 @@ decl_stmt|;
 specifier|extern
 name|int
 name|print_insn_little_a29k
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd_vma
+operator|,
+name|disassemble_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
+name|print_insn_i860
 name|PARAMS
 argument_list|(
 operator|(
@@ -742,6 +798,17 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
+name|disassembler_ftype
+name|cris_get_disassembler
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
 name|int
 name|print_insn_d10v
 name|PARAMS
@@ -796,6 +863,19 @@ decl_stmt|;
 specifier|extern
 name|int
 name|print_insn_vax
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd_vma
+operator|,
+name|disassemble_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
+name|print_insn_tic54x
 name|PARAMS
 argument_list|(
 operator|(
@@ -1019,7 +1099,7 @@ name|FPRINTF_FUNC
 parameter_list|)
 define|\
 value|(INFO).flavour = bfd_target_unknown_flavour, \   (INFO).arch = bfd_arch_unknown, \   (INFO).mach = 0, \   (INFO).endian = BFD_ENDIAN_UNKNOWN, \   (INFO).octets_per_byte = 1, \   INIT_DISASSEMBLE_INFO_NO_ARCH(INFO, STREAM, FPRINTF_FUNC)
-comment|/* Call this macro to initialize only the internal variables for the    disassembler.  Architecture dependent things such as byte order, or machine    variant are not touched by this macro.  This makes things much easier for    GDB which must initialize these things seperatly.  */
+comment|/* Call this macro to initialize only the internal variables for the    disassembler.  Architecture dependent things such as byte order, or machine    variant are not touched by this macro.  This makes things much easier for    GDB which must initialize these things separately.  */
 define|#
 directive|define
 name|INIT_DISASSEMBLE_INFO_NO_ARCH
@@ -1031,7 +1111,7 @@ parameter_list|,
 name|FPRINTF_FUNC
 parameter_list|)
 define|\
-value|(INFO).fprintf_func = (fprintf_ftype)(FPRINTF_FUNC), \   (INFO).stream = (PTR)(STREAM), \   (INFO).symbols = NULL, \   (INFO).num_symbols = 0, \   (INFO).buffer = NULL, \   (INFO).buffer_vma = 0, \   (INFO).buffer_length = 0, \   (INFO).read_memory_func = buffer_read_memory, \   (INFO).memory_error_func = perror_memory, \   (INFO).print_address_func = generic_print_address, \   (INFO).symbol_at_address_func = generic_symbol_at_address, \   (INFO).flags = 0, \   (INFO).bytes_per_line = 0, \   (INFO).bytes_per_chunk = 0, \   (INFO).display_endian = BFD_ENDIAN_UNKNOWN, \   (INFO).insn_info_valid = 0
+value|(INFO).fprintf_func = (fprintf_ftype)(FPRINTF_FUNC), \   (INFO).stream = (PTR)(STREAM), \   (INFO).section = NULL, \   (INFO).symbols = NULL, \   (INFO).num_symbols = 0, \   (INFO).private_data = NULL, \   (INFO).buffer = NULL, \   (INFO).buffer_vma = 0, \   (INFO).buffer_length = 0, \   (INFO).read_memory_func = buffer_read_memory, \   (INFO).memory_error_func = perror_memory, \   (INFO).print_address_func = generic_print_address, \   (INFO).symbol_at_address_func = generic_symbol_at_address, \   (INFO).flags = 0, \   (INFO).bytes_per_line = 0, \   (INFO).bytes_per_chunk = 0, \   (INFO).display_endian = BFD_ENDIAN_UNKNOWN, \   (INFO).insn_info_valid = 0
 ifdef|#
 directive|ifdef
 name|__cplusplus

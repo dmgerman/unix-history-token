@@ -438,7 +438,7 @@ name|name
 operator|=
 literal|".reg"
 expr_stmt|;
-comment|/* FIXME:  Need to worry about shared memory, library data, and library      text.  I don't think that any of these things are supported on the      system on which I am developing this for though. */
+comment|/* FIXME:  Need to worry about shared memory, library data, and library      text.  I don't think that any of these things are supported on the      system on which I am developing this for though.  */
 name|core_stacksec
 argument_list|(
 name|abfd
@@ -761,7 +761,7 @@ end_function
 
 begin_block
 block|{
-comment|/* FIXME: Use pt_timdat field of the ptrace_user structure to match       the date of the executable */
+comment|/* FIXME: Use pt_timdat field of the ptrace_user structure to match      the date of the executable */
 return|return
 name|true
 return|;

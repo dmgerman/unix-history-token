@@ -55,7 +55,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Print a big endian PowerPC instruction.  For convenience, also    disassemble instructions supported by the Motorola PowerPC 601.  */
+comment|/* Print a big endian PowerPC instruction.  For convenience, also    disassemble instructions supported by the Motorola PowerPC 601    and the Altivec vector unit.  */
 end_comment
 
 begin_function
@@ -87,13 +87,15 @@ argument_list|,
 name|PPC_OPCODE_PPC
 operator||
 name|PPC_OPCODE_601
+operator||
+name|PPC_OPCODE_ALTIVEC
 argument_list|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* Print a little endian PowerPC instruction.  For convenience, also    disassemble instructions supported by the Motorola PowerPC 601.  */
+comment|/* Print a little endian PowerPC instruction.  For convenience, also    disassemble instructions supported by the Motorola PowerPC 601    and the Altivec vector unit.  */
 end_comment
 
 begin_function
@@ -125,6 +127,8 @@ argument_list|,
 name|PPC_OPCODE_PPC
 operator||
 name|PPC_OPCODE_601
+operator||
+name|PPC_OPCODE_ALTIVEC
 argument_list|)
 return|;
 block|}
@@ -734,6 +738,35 @@ operator|->
 name|stream
 argument_list|,
 literal|"f%ld"
+argument_list|,
+name|value
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|operand
+operator|->
+name|flags
+operator|&
+name|PPC_OPERAND_VR
+operator|)
+operator|!=
+literal|0
+condition|)
+call|(
+modifier|*
+name|info
+operator|->
+name|fprintf_func
+call|)
+argument_list|(
+name|info
+operator|->
+name|stream
+argument_list|,
+literal|"v%ld"
 argument_list|,
 name|value
 argument_list|)

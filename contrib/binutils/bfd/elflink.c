@@ -125,9 +125,14 @@ literal|3
 expr_stmt|;
 break|break;
 default|default:
-name|abort
-argument_list|()
+name|bfd_set_error
+argument_list|(
+name|bfd_error_bad_value
+argument_list|)
 expr_stmt|;
+return|return
+name|false
+return|;
 block|}
 name|flags
 operator|=
@@ -412,9 +417,14 @@ literal|3
 expr_stmt|;
 break|break;
 default|default:
-name|abort
-argument_list|()
+name|bfd_set_error
+argument_list|(
+name|bfd_error_bad_value
+argument_list|)
 expr_stmt|;
+return|return
+name|false
+return|;
 block|}
 comment|/* We need to create .plt, .rel[a].plt, .got, .got.plt, .dynbss, and      .rel[a].bss sections.  */
 name|flags

@@ -96,12 +96,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ldemul.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ldlex.h"
 end_include
 
@@ -114,11 +108,17 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ldemul.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ldctor.h"
 end_include
 
 begin_comment
-comment|/* Somewhere above, sys/stat.h got included . . . . */
+comment|/* Somewhere above, sys/stat.h got included . . . .  */
 end_comment
 
 begin_if
@@ -251,7 +251,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The file that we're creating */
+comment|/* The file that we're creating.  */
 end_comment
 
 begin_decl_stmt
@@ -945,6 +945,26 @@ name|has_shared
 operator|=
 name|false
 expr_stmt|;
+name|config
+operator|.
+name|split_by_reloc
+operator|=
+operator|(
+name|unsigned
+operator|)
+operator|-
+literal|1
+expr_stmt|;
+name|config
+operator|.
+name|split_by_file
+operator|=
+operator|(
+name|bfd_size_type
+operator|)
+operator|-
+literal|1
+expr_stmt|;
 name|command_line
 operator|.
 name|force_common_definition
@@ -1000,6 +1020,12 @@ name|false
 expr_stmt|;
 name|link_info
 operator|.
+name|emitrelocations
+operator|=
+name|false
+expr_stmt|;
+name|link_info
+operator|.
 name|shared
 operator|=
 name|false
@@ -1031,6 +1057,12 @@ expr_stmt|;
 name|link_info
 operator|.
 name|no_undefined
+operator|=
+name|false
+expr_stmt|;
+name|link_info
+operator|.
+name|allow_shlib_undefined
 operator|=
 name|false
 expr_stmt|;
@@ -1113,6 +1145,30 @@ name|fini_function
 operator|=
 literal|"_fini"
 expr_stmt|;
+name|link_info
+operator|.
+name|new_dtags
+operator|=
+name|false
+expr_stmt|;
+name|link_info
+operator|.
+name|flags
+operator|=
+operator|(
+name|bfd_vma
+operator|)
+literal|0
+expr_stmt|;
+name|link_info
+operator|.
+name|flags_1
+operator|=
+operator|(
+name|bfd_vma
+operator|)
+literal|0
+expr_stmt|;
 name|ldfile_add_arch
 argument_list|(
 literal|""
@@ -1137,12 +1193,6 @@ expr_stmt|;
 name|config
 operator|.
 name|text_read_only
-operator|=
-name|true
-expr_stmt|;
-name|config
-operator|.
-name|make_executable
 operator|=
 name|true
 expr_stmt|;
@@ -1495,15 +1545,16 @@ block|}
 name|lang_process
 argument_list|()
 expr_stmt|;
-comment|/* Print error messages for any missing symbols, for any warning      symbols, and possibly multiple definitions */
+comment|/* Print error messages for any missing symbols, for any warning      symbols, and possibly multiple definitions.  */
 if|if
 condition|(
-name|config
+operator|!
+name|link_info
 operator|.
-name|text_read_only
+name|relocateable
 condition|)
 block|{
-comment|/* Look for a text section and mark the readonly attribute in it */
+comment|/* Look for a text section and switch the readonly attribute in it.  */
 name|asection
 modifier|*
 name|found
@@ -1526,10 +1577,24 @@ operator|)
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|config
+operator|.
+name|text_read_only
+condition|)
 name|found
 operator|->
 name|flags
 operator||=
+name|SEC_READONLY
+expr_stmt|;
+else|else
+name|found
+operator|->
+name|flags
+operator|&=
+operator|~
 name|SEC_READONLY
 expr_stmt|;
 block|}
@@ -1657,7 +1722,7 @@ argument_list|,
 name|output_bfd
 argument_list|)
 expr_stmt|;
-comment|/* If the --force-exe-suffix is enabled, and we're making an 	 executable file and it doesn't end in .exe, copy it to one which does. */
+comment|/* If the --force-exe-suffix is enabled, and we're making an 	 executable file and it doesn't end in .exe, copy it to one 	 which does.  */
 if|if
 condition|(
 operator|!
@@ -2361,8 +2426,8 @@ argument_list|(
 name|SCRIPTDIR
 argument_list|)
 condition|)
-return|return;
 comment|/* We've been installed normally.  */
+return|return;
 comment|/* Look for "ldscripts" in the dir where our binary is.  */
 name|end
 operator|=
@@ -2391,9 +2456,19 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
+name|end
+operator|==
+name|NULL
+operator|||
+operator|(
+name|bslash
+operator|!=
+name|NULL
+operator|&&
 name|bslash
 operator|>
 name|end
+operator|)
 condition|)
 name|end
 operator|=
@@ -2455,8 +2530,8 @@ argument_list|(
 name|dir
 argument_list|)
 condition|)
-return|return;
 comment|/* Don't free dir.  */
+return|return;
 comment|/* Look for "ldscripts" in<the dir where our binary is>/../lib.  */
 name|strcpy
 argument_list|(
@@ -2475,12 +2550,12 @@ name|dir
 argument_list|)
 condition|)
 return|return;
+comment|/* Well, we tried.  */
 name|free
 argument_list|(
 name|dir
 argument_list|)
 expr_stmt|;
-comment|/* Well, we tried.  */
 block|}
 end_function
 
@@ -2984,10 +3059,6 @@ begin_comment
 comment|/* This is called when BFD has decided to include an archive member in    a link.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 specifier|static
 name|boolean
@@ -3429,10 +3500,6 @@ begin_comment
 comment|/* This is called when BFD has discovered a symbol which is defined    multiple times.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 specifier|static
 name|boolean
@@ -3576,6 +3643,28 @@ argument_list|,
 name|oval
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|command_line
+operator|.
+name|relax
+condition|)
+block|{
+name|einfo
+argument_list|(
+name|_
+argument_list|(
+literal|"%P: Disabling relaxation: it will not work with multiple definitions\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|command_line
+operator|.
+name|relax
+operator|=
+literal|0
+expr_stmt|;
+block|}
 return|return
 name|true
 return|;
@@ -3584,10 +3673,6 @@ end_function
 
 begin_comment
 comment|/* This is called when there is a definition of a common symbol, or    when a common symbol is found for a symbol that is already defined,    or when two common symbols are found.  We only do something if    -warn-common was used.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
 end_comment
 
 begin_function
@@ -3884,10 +3969,6 @@ end_function
 
 begin_comment
 comment|/* This is called when BFD has discovered a set element.  H is the    entry in the linker hash table for the set.  SECTION and VALUE    represent a value which should be added to the set.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
 end_comment
 
 begin_function
@@ -4293,10 +4374,6 @@ end_struct
 
 begin_comment
 comment|/* This is called when there is a reference to a warning symbol.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
 end_comment
 
 begin_function
@@ -4863,10 +4940,6 @@ begin_comment
 comment|/* This is called when an undefined symbol is found.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 specifier|static
 name|boolean
@@ -4908,6 +4981,7 @@ name|address
 decl_stmt|;
 name|boolean
 name|fatal
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 specifier|static
@@ -5201,10 +5275,6 @@ begin_comment
 comment|/* This is called when a reloc overflows.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 specifier|static
 name|boolean
@@ -5325,10 +5395,6 @@ begin_comment
 comment|/* This is called when a dangerous relocation is made.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 specifier|static
 name|boolean
@@ -5415,10 +5481,6 @@ end_function
 
 begin_comment
 comment|/* This is called when a reloc is being generated attached to a symbol    that is not being output.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
 end_comment
 
 begin_function

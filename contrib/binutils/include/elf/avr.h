@@ -60,6 +60,13 @@ name|E_AVR_MACH_AVR4
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|E_AVR_MACH_AVR5
+value|5
+end_define
+
 begin_comment
 comment|/* Relocations.  */
 end_comment
@@ -243,14 +250,10 @@ argument_list|)
 end_macro
 
 begin_macro
-name|EMPTY_RELOC
+name|END_RELOC_NUMBERS
 argument_list|(
 argument|R_AVR_max
 argument_list|)
-end_macro
-
-begin_macro
-name|END_RELOC_NUMBERS
 end_macro
 
 begin_endif

@@ -9,7 +9,7 @@ begin_define
 define|#
 directive|define
 name|REPORT_BUGS_TO
-value|"bug-gnu-utils@gnu.org"
+value|"bug-binutils@gnu.org"
 end_define
 
 begin_endif

@@ -512,10 +512,6 @@ begin_comment
 comment|/* Add a symbol to the cref hash table.  This is called for every    symbol that is seen during the link.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 name|void
 name|add_cref
@@ -1478,10 +1474,6 @@ end_function
 
 begin_comment
 comment|/* Check one symbol to see if it is a prohibited cross reference.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
 end_comment
 
 begin_function

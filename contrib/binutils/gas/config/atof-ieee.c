@@ -70,7 +70,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Precision in LittleNums. */
+comment|/* Precision in LittleNums.  */
 end_comment
 
 begin_comment
@@ -113,7 +113,7 @@ value|(5)
 end_define
 
 begin_comment
-comment|/* Length in LittleNums of guard bits. */
+comment|/* Length in LittleNums of guard bits.  */
 end_comment
 
 begin_define
@@ -328,15 +328,13 @@ operator|)
 expr_stmt|;
 block|}
 return|return
-operator|(
 name|return_value
-operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* Num had better be less than LITTLENUM_NUMBER_OF_BITS */
+comment|/* Num had better be less than LITTLENUM_NUMBER_OF_BITS.  */
 end_comment
 
 begin_function
@@ -422,6 +420,7 @@ literal|"cannot create floating-point number"
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Zero the leftmost bit.  */
 name|words
 index|[
 literal|0
@@ -440,7 +439,6 @@ argument_list|)
 operator|>>
 literal|1
 expr_stmt|;
-comment|/* Zero the leftmost bit */
 name|words
 index|[
 literal|1
@@ -503,7 +501,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/************************************************************************\  *	Warning: this returns 16-bit LITTLENUMs. It is up to the caller	*  *	to figure out any alignment problems and to conspire for the	*  *	bytes/word to be emitted in the right order. Bigendians beware!	*  *									* \************************************************************************/
+comment|/* Warning: This returns 16-bit LITTLENUMs.  It is up to the caller to    figure out any alignment problems and to conspire for the    bytes/word to be emitted in the right order.  Bigendians beware!  */
 end_comment
 
 begin_comment
@@ -511,7 +509,7 @@ comment|/* Note that atof-ieee always has X and P precisions enabled.  it is up 
 end_comment
 
 begin_comment
-comment|/* Returns pointer past text consumed. */
+comment|/* Returns pointer past text consumed.  */
 end_comment
 
 begin_function
@@ -529,18 +527,18 @@ name|char
 modifier|*
 name|str
 decl_stmt|;
-comment|/* Text to convert to binary. */
+comment|/* Text to convert to binary.  */
 name|int
 name|what_kind
 decl_stmt|;
-comment|/* 'd', 'f', 'g', 'h' */
+comment|/* 'd', 'f', 'g', 'h'.  */
 name|LITTLENUM_TYPE
 modifier|*
 name|words
 decl_stmt|;
-comment|/* Build the binary here. */
+comment|/* Build the binary here.  */
 block|{
-comment|/* Extra bits for zeroed low-order bits.  The 1st MAX_PRECISION are      zeroed, the last contain flonum bits. */
+comment|/* Extra bits for zeroed low-order bits.      The 1st MAX_PRECISION are zeroed, the last contain flonum bits.  */
 specifier|static
 name|LITTLENUM_TYPE
 name|bits
@@ -556,7 +554,7 @@ name|char
 modifier|*
 name|return_value
 decl_stmt|;
-comment|/* Number of 16-bit words in the format. */
+comment|/* Number of 16-bit words in the format.  */
 name|int
 name|precision
 decl_stmt|;
@@ -607,7 +605,7 @@ name|sign
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* Use more LittleNums than seems necessary: the highest flonum may      have 15 leading 0 bits, so could be useless. */
+comment|/* Use more LittleNums than seems necessary: the highest flonum may      have 15 leading 0 bits, so could be useless.  */
 name|memset
 argument_list|(
 name|bits
@@ -867,7 +865,7 @@ operator|.
 name|leader
 condition|)
 block|{
-comment|/* 0.0e0 seen. */
+comment|/* 0.0e0 seen.  */
 if|if
 condition|(
 name|generic_floating_point_number
@@ -916,12 +914,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|return_value
-operator|)
 return|;
 block|}
-comment|/* NaN:  Do the right thing */
+comment|/* NaN:  Do the right thing.  */
 if|if
 condition|(
 name|generic_floating_point_number
@@ -1008,7 +1004,7 @@ literal|0xffff
 expr_stmt|;
 else|#
 directive|else
-comment|/* ! TC_M68K */
+comment|/* ! TC_M68K  */
 ifdef|#
 directive|ifdef
 name|TC_I386
@@ -1049,16 +1045,16 @@ literal|0
 expr_stmt|;
 else|#
 directive|else
-comment|/* ! TC_I386 */
+comment|/* ! TC_I386  */
 name|abort
 argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* ! TC_I386 */
+comment|/* ! TC_I386  */
 endif|#
 directive|endif
-comment|/* ! TC_M68K */
+comment|/* ! TC_M68K  */
 block|}
 else|else
 block|{
@@ -1105,7 +1101,7 @@ operator|==
 literal|'P'
 condition|)
 block|{
-comment|/* +INF:  Do the right thing */
+comment|/* +INF:  Do the right thing.  */
 if|if
 condition|(
 name|precision
@@ -1183,7 +1179,7 @@ literal|0
 expr_stmt|;
 else|#
 directive|else
-comment|/* ! TC_M68K */
+comment|/* ! TC_M68K  */
 ifdef|#
 directive|ifdef
 name|TC_I386
@@ -1224,16 +1220,16 @@ literal|0
 expr_stmt|;
 else|#
 directive|else
-comment|/* ! TC_I386 */
+comment|/* ! TC_I386  */
 name|abort
 argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* ! TC_I386 */
+comment|/* ! TC_I386  */
 endif|#
 directive|endif
-comment|/* ! TC_M68K */
+comment|/* ! TC_M68K  */
 block|}
 else|else
 block|{
@@ -1267,9 +1263,7 @@ literal|0
 expr_stmt|;
 block|}
 return|return
-operator|(
 name|return_value
-operator|)
 return|;
 block|}
 elseif|else
@@ -1282,7 +1276,7 @@ operator|==
 literal|'N'
 condition|)
 block|{
-comment|/* Negative INF */
+comment|/* Negative INF.  */
 if|if
 condition|(
 name|precision
@@ -1360,7 +1354,7 @@ literal|0
 expr_stmt|;
 else|#
 directive|else
-comment|/* ! TC_M68K */
+comment|/* ! TC_M68K  */
 ifdef|#
 directive|ifdef
 name|TC_I386
@@ -1401,16 +1395,16 @@ literal|0
 expr_stmt|;
 else|#
 directive|else
-comment|/* ! TC_I386 */
+comment|/* ! TC_I386  */
 name|abort
 argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* ! TC_I386 */
+comment|/* ! TC_I386  */
 endif|#
 directive|endif
-comment|/* ! TC_M68K */
+comment|/* ! TC_M68K  */
 block|}
 else|else
 block|{
@@ -1444,12 +1438,10 @@ literal|0x0
 expr_stmt|;
 block|}
 return|return
-operator|(
 name|return_value
-operator|)
 return|;
 block|}
-comment|/*    * The floating point formats we support have:    * Bit 15 is sign bit.    * Bits 14:n are excess-whatever exponent.    * Bits n-1:0 (if any) are most significant bits of fraction.    * Bits 15:0 of the next word(s) are the next most significant bits.    *    * So we need: number of bits of exponent, number of bits of    * mantissa.    */
+comment|/* The floating point formats we support have:      Bit 15 is sign bit.      Bits 14:n are excess-whatever exponent.      Bits n-1:0 (if any) are most significant bits of fraction.      Bits 15:0 of the next word(s) are the next most significant bits.       So we need: number of bits of exponent, number of bits of      mantissa.  */
 name|bits_left_in_littlenum
 operator|=
 name|LITTLENUM_NUMBER_OF_BITS
@@ -1474,7 +1466,7 @@ operator|.
 name|low
 operator|)
 expr_stmt|;
-comment|/* Seek (and forget) 1st significant bit */
+comment|/* Seek (and forget) 1st significant bit.  */
 for|for
 control|(
 name|exponent_skippage
@@ -1510,21 +1502,21 @@ operator|.
 name|low
 operator|)
 expr_stmt|;
-comment|/* Radix LITTLENUM_RADIX, point just higher than      generic_floating_point_number.leader. */
+comment|/* Radix LITTLENUM_RADIX, point just higher than      generic_floating_point_number.leader.  */
 name|exponent_2
 operator|=
 name|exponent_1
 operator|*
 name|LITTLENUM_NUMBER_OF_BITS
 expr_stmt|;
-comment|/* Radix 2. */
+comment|/* Radix 2.  */
 name|exponent_3
 operator|=
 name|exponent_2
 operator|-
 name|exponent_skippage
 expr_stmt|;
-comment|/* Forget leading zeros, forget 1st bit. */
+comment|/* Forget leading zeros, forget 1st bit.  */
 name|exponent_4
 operator|=
 name|exponent_3
@@ -1543,12 +1535,12 @@ operator|-
 literal|2
 operator|)
 expr_stmt|;
-comment|/* Offset exponent. */
+comment|/* Offset exponent.  */
 name|lp
 operator|=
 name|words
 expr_stmt|;
-comment|/* Word 1. Sign, exponent and perhaps high bits. */
+comment|/* Word 1.  Sign, exponent and perhaps high bits.  */
 name|word1
 operator|=
 operator|(
@@ -1573,7 +1565,7 @@ operator|)
 operator|)
 operator|)
 expr_stmt|;
-comment|/* Assume 2's complement integers. */
+comment|/* Assume 2's complement integers.  */
 if|if
 condition|(
 name|exponent_4
@@ -1646,7 +1638,7 @@ operator|-
 name|exponent_bits
 condition|)
 block|{
-comment|/* Bigger than one littlenum */
+comment|/* Bigger than one littlenum.  */
 name|num_bits
 operator|-=
 operator|(
@@ -1676,16 +1668,14 @@ operator|*
 name|LITTLENUM_NUMBER_OF_BITS
 condition|)
 block|{
-comment|/* Exponent overflow */
+comment|/* Exponent overflow.  */
 name|make_invalid_floating_point_number
 argument_list|(
 name|words
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|return_value
-operator|)
 return|;
 block|}
 ifdef|#
@@ -1829,7 +1819,7 @@ argument_list|(
 name|LITTLENUM_NUMBER_OF_BITS
 argument_list|)
 expr_stmt|;
-comment|/* Round the mantissa up, but don't change the number */
+comment|/* Round the mantissa up, but don't change the number.  */
 if|if
 condition|(
 name|next_bits
@@ -2113,8 +2103,8 @@ name|exponent_bits
 index|]
 condition|)
 block|{
-comment|/*        * Exponent overflow. Lose immediately.        */
-comment|/*        * We leave return_value alone: admit we read the        * number, but return a floating exception        * because we can't encode the number.        */
+comment|/* Exponent overflow.  Lose immediately.  */
+comment|/* We leave return_value alone: admit we read the 	 number, but return a floating exception 	 because we can't encode the number.  */
 name|make_invalid_floating_point_number
 argument_list|(
 name|words
@@ -2160,7 +2150,7 @@ operator|++
 operator|=
 name|word1
 expr_stmt|;
-comment|/* X_PRECISION is special: on the 68k, it has 16 bits of zero in the      middle.  Either way, it is then followed by a 1 bit. */
+comment|/* X_PRECISION is special: on the 68k, it has 16 bits of zero in the      middle.  Either way, it is then followed by a 1 bit.  */
 if|if
 condition|(
 name|exponent_bits
@@ -2205,7 +2195,7 @@ argument_list|)
 operator|)
 expr_stmt|;
 block|}
-comment|/* The rest of the words are just mantissa bits. */
+comment|/* The rest of the words are just mantissa bits.  */
 while|while
 condition|(
 name|lp
@@ -2233,7 +2223,7 @@ name|unsigned
 name|long
 name|carry
 decl_stmt|;
-comment|/*        * Since the NEXT bit is a 1, round UP the mantissa.        * The cunning design of these hidden-1 floats permits        * us to let the mantissa overflow into the exponent, and        * it 'does the right thing'. However, we lose if the        * highest-order bit of the lowest-order word flips.        * Is that clear?        */
+comment|/* Since the NEXT bit is a 1, round UP the mantissa. 	 The cunning design of these hidden-1 floats permits 	 us to let the mantissa overflow into the exponent, and 	 it 'does the right thing'. However, we lose if the 	 highest-order bit of the lowest-order word flips. 	 Is that clear?  */
 comment|/* #if (sizeof(carry))< ((sizeof(bits[0]) * BITS_PER_CHAR) + 2) 	 Please allow at least 1 more bit in carry than is in a LITTLENUM. 	 We need that extra bit to hold a carry during a LITTLENUM carry 	 propagation. Another extra bit (kept 0) will assure us that we 	 don't get a sticky sign bit after shifting right, and that 	 permits us to propagate the carry without any masking of bits. 	 #endif */
 for|for
 control|(
@@ -2296,7 +2286,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|TC_M68K
-comment|/* On the m68k there is a gap of 16 bits.  We must 		 explicitly propagate the carry into the exponent. */
+comment|/* On the m68k there is a gap of 16 bits.  We must 		 explicitly propagate the carry into the exponent.  */
 name|words
 index|[
 literal|0
@@ -2355,7 +2345,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* We leave return_value alone: admit we read the 	   * number, but return a floating exception 	   * because we can't encode the number. 	   */
+comment|/* We leave return_value alone: admit we read the number, 	     but return a floating exception because we can't encode 	     the number.  */
 operator|*
 name|words
 operator|&=
@@ -2370,14 +2360,16 @@ literal|1
 operator|)
 operator|)
 expr_stmt|;
-comment|/* make_invalid_floating_point_number (words); */
-comment|/* return return_value; */
+if|#
+directive|if
+literal|0
+block|make_invalid_floating_point_number (words); 	  return return_value;
+endif|#
+directive|endif
 block|}
 block|}
 return|return
-operator|(
 name|return_value
-operator|)
 return|;
 block|}
 end_function
@@ -2389,7 +2381,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/* unused */
+comment|/* Unused.  */
 end_comment
 
 begin_comment
@@ -2574,12 +2566,10 @@ if|if
 condition|(
 name|gen
 condition|)
-block|{
 name|generic_floating_point_number
 operator|=
 name|f
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|sbuf
@@ -2592,10 +2582,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* end of atof-ieee.c */
-end_comment
 
 end_unit
 

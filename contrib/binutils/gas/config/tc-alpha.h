@@ -298,6 +298,38 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|HANDLE_ALIGN
+parameter_list|(
+name|fragp
+parameter_list|)
+value|alpha_handle_align (fragp)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|alpha_handle_align
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|frag
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|MAX_MEM_FOR_RS_ALIGN_CODE
+value|(3 + 4 + 8)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -478,6 +510,13 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|DWARF2_LINE_MIN_INSN_LENGTH
+value|4
+end_define
 
 end_unit
 

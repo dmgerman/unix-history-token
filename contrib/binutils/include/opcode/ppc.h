@@ -182,6 +182,17 @@ value|(0400)
 end_define
 
 begin_comment
+comment|/* Opcode is supported by Altivec Vector Unit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPC_OPCODE_ALTIVEC
+value|(01000)
+end_define
+
+begin_comment
 comment|/* A macro to extract the major opcode from an instruction.  */
 end_comment
 
@@ -414,6 +425,17 @@ define|#
 directive|define
 name|PPC_OPERAND_NEGATIVE
 value|(04000)
+end_define
+
+begin_comment
+comment|/* This operand names a vector unit register.  The disassembler    prints these with a leading 'v'.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPC_OPERAND_VR
+value|(010000)
 end_define
 
 begin_escape

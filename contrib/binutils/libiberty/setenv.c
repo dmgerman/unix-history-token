@@ -230,6 +230,8 @@ name|char
 modifier|*
 modifier|*
 name|ep
+init|=
+literal|0
 decl_stmt|;
 specifier|register
 name|size_t
@@ -267,6 +269,7 @@ name|__environ
 operator|!=
 name|NULL
 condition|)
+block|{
 for|for
 control|(
 name|ep
@@ -309,6 +312,7 @@ else|else
 operator|++
 name|size
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|__environ

@@ -206,7 +206,7 @@ name|stab_excl_list
 modifier|*
 name|excls
 decl_stmt|;
-comment|/* This is used to map input stab offsets within their sections      to output stab offsets, to take into account stabs that have      been deleted.  If it is NULL, the output offsets are the same      as the input offsets, because no stabs have been deleted from      this section.  Otherwise the i'th entry is the number of      bytes of stabs that have been deleted prior to the i'th      stab. */
+comment|/* This is used to map input stab offsets within their sections      to output stab offsets, to take into account stabs that have      been deleted.  If it is NULL, the output offsets are the same      as the input offsets, because no stabs have been deleted from      this section.  Otherwise the i'th entry is the number of      bytes of stabs that have been deleted prior to the i'th      stab.  */
 name|bfd_size_type
 modifier|*
 name|cumulative_skips
@@ -1611,7 +1611,7 @@ operator|->
 name|strings
 argument_list|)
 expr_stmt|;
-comment|/* Calculate the `cumulative_skips' array now that stabs have been      deleted for this section. */
+comment|/* Calculate the `cumulative_skips' array now that stabs have been      deleted for this section.  */
 if|if
 condition|(
 name|skip

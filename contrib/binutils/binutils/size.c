@@ -349,7 +349,7 @@ name|stream
 argument_list|,
 name|_
 argument_list|(
-literal|"\ Usage: %s [-ABdoxV] [--format=berkeley|sysv] [--radix=8|10|16]\n\        [--target=bfdname] [--version] [--help] [file...]\n"
+literal|"\ Usage: %s [-A | --format=sysv | -B | --format=berkeley]\n\        [-o | --radix=8 | -d | --radix=10 | -h | --radix=16]\n\        [-V | --version] [--target=bfdname] [--help] [file...]\n"
 argument_list|)
 argument_list|,
 name|program_name
@@ -569,7 +569,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ABVdox"
+literal|"ABVdfox"
 argument_list|,
 name|long_options
 argument_list|,
@@ -774,6 +774,12 @@ name|radix
 operator|=
 name|octal
 expr_stmt|;
+break|break;
+case|case
+literal|'f'
+case|:
+comment|/* FIXME : For sysv68, `-f' means `full format', i.e. 		   `[fname:] M(.text) + N(.data) + O(.bss) + P(.comment) = Q' 		   where `fname: ' appears only if there are>= 2 input files, 		   and M, N, O, P, Q are expressed in decimal by default, 		   hexa or octal if requested by `-x' or `-o'. 		   Just to make things interesting, Solaris also accepts -f, 		   which prints out the size of each allocatable section, the 		   name of the section, and the total of the section sizes.  */
+comment|/* For the moment, accept `-f' silently, and ignore it.  */
 break|break;
 case|case
 literal|0

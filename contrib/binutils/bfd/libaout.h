@@ -795,6 +795,11 @@ comment|/*  M_SPARCLET_7 = 243	/ * 0xf3, reserved */
 name|M_SPARCLITE_LE
 init|=
 literal|243
+block|,
+name|M_CRIS
+init|=
+literal|255
+comment|/* Axis CRIS binary.  */
 block|}
 enum|;
 end_enum

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* objcopy.c -- copy object file from input to output, optionally massaging it.    Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* objcopy.c -- copy object file from input to output, optionally massaging it.    Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98, 99, 2000, 2001    Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_escape
@@ -1158,6 +1158,20 @@ name|OPTION_REDEFINE_SYM
 value|(OPTION_WEAKEN + 1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|OPTION_SREC_LEN
+value|(OPTION_REDEFINE_SYM + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION_SREC_FORCES3
+value|(OPTION_SREC_LEN + 1)
+end_define
+
 begin_comment
 comment|/* Options to handle if running as "strip".  */
 end_comment
@@ -1832,6 +1846,26 @@ name|OPTION_REDEFINE_SYM
 block|}
 block|,
 block|{
+literal|"srec-len"
+block|,
+name|required_argument
+block|,
+literal|0
+block|,
+name|OPTION_SREC_LEN
+block|}
+block|,
+block|{
+literal|"srec-forceS3"
+block|,
+name|no_argument
+block|,
+literal|0
+block|,
+name|OPTION_SREC_FORCES3
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|no_argument
@@ -1864,6 +1898,29 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|is_strip
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The maximum length of an S record.  This variable is declared in srec.c    and can be modified by the --srec-len parameter.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|int
+name|Chunk
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Restrict the generation of Srecords to type S3 only.    This variable is declare in bfd/srec.c and can be toggled    on by the --srec-forceS3 command line switch.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|boolean
+name|S3Forced
 decl_stmt|;
 end_decl_stmt
 
@@ -1912,7 +1969,7 @@ name|stream
 argument_list|,
 name|_
 argument_list|(
-literal|"\   -I --input-target<bfdname>      Assume input file is in format<bfdname>\n\   -O --output-target<bfdname>     Create an output file in format<bfdname>\n\   -F --target<bfdname>            Set both input and output format to<bfdname>\n\      --debugging                   Convert debugging information, if possible\n\   -p --preserve-dates              Copy modified/access timestamps to the output\n\   -j --only-section<name>         Only copy section<name> into the output\n\   -R --remove-section<name>       Remove section<name> from the output\n\   -S --strip-all                   Remove all symbol and relocation information\n\   -g --strip-debug                 Remove all debugging symbols\n\      --strip-unneeded              Remove all symbols not needed by relocations\n\   -N --strip-symbol<name>         Do not copy symbol<name>\n\   -K --keep-symbol<name>          Only copy symbol<name>\n\   -L --localize-symbol<name>      Force symbol<name> to be marked as a local\n\   -W --weaken-symbol<name>        Force symbol<name> to be marked as a weak\n\      --weaken                      Force all global symbols to be marked as weak\n\   -x --discard-all                 Remove all non-global symbols\n\   -X --discard-locals              Remove any compiler-generated symbols\n\   -i --interleave<number>         Only copy one out of every<number> bytes\n\   -b --byte<num>                  Select byte<num> in every interleaved block\n\      --gap-fill<val>              Fill gaps between sections with<val>\n\      --pad-to<addr>               Pad the last section up to address<addr>\n\      --set-start<addr>            Set the start address to<addr>\n\     {--change-start|--adjust-start}<incr>\n\                                    Add<incr> to the start address\n\     {--change-addresses|--adjust-vma}<incr>\n\                                    Add<incr> to LMA, VMA and start addresses\n\     {--change-section-address|--adjust-section-vma}<name>{=|+|-}<val>\n\                                    Change LMA and VMA of section<name> by<val>\n\      --change-section-lma<name>{=|+|-}<val>\n\                                    Change the LMA of section<name> by<val>\n\      --change-section-vma<name>{=|+|-}<val>\n\                                    Change the VMA of section<name> by<val>\n\     {--[no-]change-warnings|--[no-]adjust-warnings}\n\                                    Warn if a named section does not exist\n\      --set-section-flags<name>=<flags>\n\                                    Set section<name>'s properties to<flags>\n\      --add-section<name>=<file>   Add section<name> found in<file> to output\n\      --change-leading-char         Force output format's leading character style\n\      --remove-leading-char         Remove leading character from global symbols\n\      --redefine-sym<old>=<new>    Redefine symbol name<old> to<new>\n\   -v --verbose                     List all object files modified\n\   -V --version                     Display this program's version number\n\   -h --help                        Display this output\n\ "
+literal|"\   -I --input-target<bfdname>      Assume input file is in format<bfdname>\n\   -O --output-target<bfdname>     Create an output file in format<bfdname>\n\   -F --target<bfdname>            Set both input and output format to<bfdname>\n\      --debugging                   Convert debugging information, if possible\n\   -p --preserve-dates              Copy modified/access timestamps to the output\n\   -j --only-section<name>         Only copy section<name> into the output\n\   -R --remove-section<name>       Remove section<name> from the output\n\   -S --strip-all                   Remove all symbol and relocation information\n\   -g --strip-debug                 Remove all debugging symbols\n\      --strip-unneeded              Remove all symbols not needed by relocations\n\   -N --strip-symbol<name>         Do not copy symbol<name>\n\   -K --keep-symbol<name>          Only copy symbol<name>\n\   -L --localize-symbol<name>      Force symbol<name> to be marked as a local\n\   -W --weaken-symbol<name>        Force symbol<name> to be marked as a weak\n\      --weaken                      Force all global symbols to be marked as weak\n\   -x --discard-all                 Remove all non-global symbols\n\   -X --discard-locals              Remove any compiler-generated symbols\n\   -i --interleave<number>         Only copy one out of every<number> bytes\n\   -b --byte<num>                  Select byte<num> in every interleaved block\n\      --gap-fill<val>              Fill gaps between sections with<val>\n\      --pad-to<addr>               Pad the last section up to address<addr>\n\      --set-start<addr>            Set the start address to<addr>\n\     {--change-start|--adjust-start}<incr>\n\                                    Add<incr> to the start address\n\     {--change-addresses|--adjust-vma}<incr>\n\                                    Add<incr> to LMA, VMA and start addresses\n\     {--change-section-address|--adjust-section-vma}<name>{=|+|-}<val>\n\                                    Change LMA and VMA of section<name> by<val>\n\      --change-section-lma<name>{=|+|-}<val>\n\                                    Change the LMA of section<name> by<val>\n\      --change-section-vma<name>{=|+|-}<val>\n\                                    Change the VMA of section<name> by<val>\n\     {--[no-]change-warnings|--[no-]adjust-warnings}\n\                                    Warn if a named section does not exist\n\      --set-section-flags<name>=<flags>\n\                                    Set section<name>'s properties to<flags>\n\      --add-section<name>=<file>   Add section<name> found in<file> to output\n\      --change-leading-char         Force output format's leading character style\n\      --remove-leading-char         Remove leading character from global symbols\n\      --redefine-sym<old>=<new>    Redefine symbol name<old> to<new>\n\      --srec-len<number>           Restrict the length of generated Srecords\n\      --srec-forceS3                Restrict the type of generated Srecords to S3\n\   -v --verbose                     List all object files modified\n\   -V --version                     Display this program's version number\n\   -h --help                        Display this output\n\ "
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2753,6 +2810,25 @@ name|dst_count
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|relocatable
+init|=
+operator|(
+name|abfd
+operator|->
+name|flags
+operator|&
+operator|(
+name|HAS_RELOC
+operator||
+name|EXEC_P
+operator||
+name|DYNAMIC
+operator|)
+operator|)
+operator|==
+name|HAS_RELOC
+decl_stmt|;
 for|for
 control|(
 init|;
@@ -3065,6 +3141,28 @@ operator|)
 operator|!=
 literal|0
 operator|)
+condition|)
+name|keep
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|relocatable
+comment|/* Relocatable file. */
+operator|&&
+operator|(
+name|flags
+operator|&
+operator|(
+name|BSF_GLOBAL
+operator||
+name|BSF_WEAK
+operator|)
+operator|)
+operator|!=
+literal|0
 condition|)
 name|keep
 operator|=
@@ -3710,6 +3808,47 @@ decl_stmt|;
 name|PTR
 name|dhandle
 decl_stmt|;
+if|if
+condition|(
+name|ibfd
+operator|->
+name|xvec
+operator|->
+name|byteorder
+operator|!=
+name|obfd
+operator|->
+name|xvec
+operator|->
+name|byteorder
+operator|&&
+name|ibfd
+operator|->
+name|xvec
+operator|->
+name|byteorder
+operator|!=
+name|BFD_ENDIAN_UNKNOWN
+operator|&&
+name|obfd
+operator|->
+name|xvec
+operator|->
+name|byteorder
+operator|!=
+name|BFD_ENDIAN_UNKNOWN
+condition|)
+block|{
+name|fatal
+argument_list|(
+name|_
+argument_list|(
+literal|"Unable to change endianness of input file(s)"
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 operator|!
@@ -5951,6 +6090,7 @@ decl_stmt|;
 name|flagword
 name|flags
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|err
@@ -6069,7 +6209,10 @@ condition|)
 block|{
 name|err
 operator|=
+name|_
+argument_list|(
 literal|"making"
+argument_list|)
 expr_stmt|;
 goto|goto
 name|loser
@@ -6117,7 +6260,10 @@ condition|)
 block|{
 name|err
 operator|=
+name|_
+argument_list|(
 literal|"size"
+argument_list|)
 expr_stmt|;
 goto|goto
 name|loser
@@ -6189,7 +6335,10 @@ condition|)
 block|{
 name|err
 operator|=
+name|_
+argument_list|(
 literal|"vma"
+argument_list|)
 expr_stmt|;
 goto|goto
 name|loser
@@ -6283,7 +6432,10 @@ condition|)
 block|{
 name|err
 operator|=
+name|_
+argument_list|(
 literal|"alignment"
+argument_list|)
 expr_stmt|;
 goto|goto
 name|loser
@@ -6335,7 +6487,10 @@ condition|)
 block|{
 name|err
 operator|=
+name|_
+argument_list|(
 literal|"flags"
+argument_list|)
 expr_stmt|;
 goto|goto
 name|loser
@@ -6372,7 +6527,10 @@ condition|)
 block|{
 name|err
 operator|=
+name|_
+argument_list|(
 literal|"private data"
+argument_list|)
 expr_stmt|;
 goto|goto
 name|loser
@@ -7956,7 +8114,7 @@ case|:
 case|case
 literal|'d'
 case|:
-comment|/* NetBSD, historic BSD strip */
+comment|/* Historic BSD alias for -g.  Used by early NetBSD.  */
 name|strip_symbols
 operator|=
 name|STRIP_DEBUG
@@ -9623,6 +9781,27 @@ literal|"--set-start"
 argument_list|)
 expr_stmt|;
 name|set_start_set
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_SREC_LEN
+case|:
+name|Chunk
+operator|=
+name|parse_vma
+argument_list|(
+name|optarg
+argument_list|,
+literal|"--srec-len"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_SREC_FORCES3
+case|:
+name|S3Forced
 operator|=
 name|true
 expr_stmt|;

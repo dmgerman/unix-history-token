@@ -56,7 +56,7 @@ file|"aout/ar.h"
 end_include
 
 begin_comment
-comment|/* This is needed to reject a NewsOS file, e.g. in    gdb/testsuite/gdb.t10/crossload.exp.<kingdon@cygnus.com>    I needed to add M_UNKNOWN to recognize a 68000 object, so this will    probably no longer reject a NewsOS object.<ian@cygnus.com>. */
+comment|/* This is needed to reject a NewsOS file, e.g. in    gdb/testsuite/gdb.t10/crossload.exp.<kingdon@cygnus.com>    I needed to add M_UNKNOWN to recognize a 68000 object, so this will    probably no longer reject a NewsOS object.<ian@cygnus.com>.  */
 end_comment
 
 begin_ifndef
@@ -404,7 +404,7 @@ block|{
 case|case
 name|M_UNKNOWN
 case|:
-comment|/* Some Sun3s make magic numbers without cpu types in them, so 	 we'll default to the 68000. */
+comment|/* Some Sun3s make magic numbers without cpu types in them, so 	 we'll default to the 68000.  */
 name|arch
 operator|=
 name|bfd_arch_m68k
@@ -552,7 +552,7 @@ parameter_list|,
 name|EXEC
 parameter_list|)
 define|\
-value|NAME(sunos,set_arch_mach)(ABFD, N_MACHTYPE (EXEC)); \   choose_reloc_size(ABFD);
+value|NAME(sunos,set_arch_mach) (ABFD, N_MACHTYPE (EXEC)); \   choose_reloc_size(ABFD);
 end_define
 
 begin_comment
@@ -842,11 +842,11 @@ value|16
 end_define
 
 begin_comment
-comment|/* The core structure is taken from the Sun documentation.   Unfortunately, they don't document the FPA structure, or at least I   can't find it easily.  Fortunately the core header contains its own   length.  So this shouldn't cause problems, except for c_ucode, which   so far we don't use but is easy to find with a little arithmetic. */
+comment|/* The core structure is taken from the Sun documentation.   Unfortunately, they don't document the FPA structure, or at least I   can't find it easily.  Fortunately the core header contains its own   length.  So this shouldn't cause problems, except for c_ucode, which   so far we don't use but is easy to find with a little arithmetic.  */
 end_comment
 
 begin_comment
-comment|/* But the reg structure can be gotten from the SPARC processor handbook.   This really should be in a GNU include file though so that gdb can use   the same info. */
+comment|/* But the reg structure can be gotten from the SPARC processor handbook.   This really should be in a GNU include file though so that gdb can use   the same info.  */
 end_comment
 
 begin_struct
@@ -1572,7 +1572,7 @@ operator|->
 name|fp_stuff
 argument_list|)
 expr_stmt|;
-comment|/* FP stuff takes up whole rest of struct, except c_ucode. */
+comment|/* FP stuff takes up whole rest of struct, except c_ucode.  */
 name|intcore
 operator|->
 name|fp_stuff_size
@@ -1902,7 +1902,7 @@ operator|->
 name|fp_stuff
 argument_list|)
 expr_stmt|;
-comment|/* FP stuff takes up whole rest of struct, except c_ucode. */
+comment|/* FP stuff takes up whole rest of struct, except c_ucode.  */
 name|intcore
 operator|->
 name|fp_stuff_size
@@ -2290,7 +2290,7 @@ operator|->
 name|fp_stuff
 argument_list|)
 expr_stmt|;
-comment|/* FP stuff takes up whole rest of struct, except c_ucode. */
+comment|/* FP stuff takes up whole rest of struct, except c_ucode.  */
 name|intcore
 operator|->
 name|fp_stuff_size
@@ -3429,7 +3429,7 @@ return|return
 name|false
 return|;
 block|}
-comment|/* Solaris core files do not include an aouthdr. */
+comment|/* Solaris core files do not include an aouthdr.  */
 if|if
 condition|(
 operator|(

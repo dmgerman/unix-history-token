@@ -177,9 +177,7 @@ condition|)
 operator|++
 name|string
 expr_stmt|;
-comment|/* This is a hack for better error reporting on XCOFF, or the MS PE   */
-comment|/* format.  Xcoff has a single '.', while the NT PE for PPC has '..'. */
-comment|/* So we remove all of them.                                          */
+comment|/* This is a hack for better error reporting on XCOFF, or the MS PE      format.  Xcoff has a single '.', while the NT PE for PPC has      '..'.  So we remove all of them.  */
 while|while
 condition|(
 name|string
@@ -665,7 +663,7 @@ break|break;
 case|case
 literal|'F'
 case|:
-comment|/* error is fatal */
+comment|/* Error is fatal.  */
 name|fatal
 operator|=
 name|true
@@ -674,7 +672,7 @@ break|break;
 case|case
 literal|'P'
 case|:
-comment|/* print program name */
+comment|/* Print program name.  */
 name|fprintf
 argument_list|(
 name|fp
@@ -801,7 +799,7 @@ break|break;
 case|case
 literal|'S'
 case|:
-comment|/* print script file and linenumber */
+comment|/* Print script file and linenumber.  */
 if|if
 condition|(
 name|parsing_defsym
@@ -850,7 +848,7 @@ break|break;
 case|case
 literal|'R'
 case|:
-comment|/* Print all that's interesting about a relent */
+comment|/* Print all that's interesting about a relent.  */
 block|{
 name|arelent
 modifier|*
@@ -1598,7 +1596,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Format info message and print on stdout. */
+comment|/* Format info message and print on stdout.  */
 end_comment
 
 begin_comment
@@ -1686,7 +1684,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ('e' for error.) Format info message and print on stderr. */
+comment|/* ('e' for error.) Format info message and print on stderr.  */
 end_comment
 
 begin_function
@@ -1851,7 +1849,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ('m' for map) Format info message and print on map. */
+comment|/* ('m' for map) Format info message and print on map.  */
 end_comment
 
 begin_function

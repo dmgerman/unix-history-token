@@ -234,6 +234,9 @@ block|{
 name|symvalue
 name|diff
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|COFF_WITH_PE
 if|if
 condition|(
 name|output_bfd
@@ -247,6 +250,8 @@ condition|)
 return|return
 name|bfd_reloc_continue
 return|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|bfd_is_com_section
@@ -286,6 +291,66 @@ block|}
 else|else
 block|{
 comment|/* For some reason bfd_perform_relocation always effectively 	 ignores the addend for a COFF target when producing 	 relocateable output.  This seems to be always wrong for 386 	 COFF, so we handle the addend here instead.  */
+ifdef|#
+directive|ifdef
+name|COFF_WITH_PE
+if|if
+condition|(
+name|output_bfd
+operator|==
+operator|(
+name|bfd
+operator|*
+operator|)
+name|NULL
+condition|)
+block|{
+name|reloc_howto_type
+modifier|*
+name|howto
+init|=
+name|reloc_entry
+operator|->
+name|howto
+decl_stmt|;
+comment|/* Although PC relative relocations are very similar between 	     PE and non-PE formats, but they are off by 1<< howto->size 	     bytes. For the external relocation, PE is very different 	     from others. See md_apply_fix3 () in gas/config/tc-i386.c. 	     When we link PE and non-PE object files together to 	     generate a non-PE executable, we have to compensate it 	     here.  */
+if|if
+condition|(
+name|howto
+operator|->
+name|pc_relative
+operator|==
+name|true
+operator|&&
+name|howto
+operator|->
+name|pcrel_offset
+operator|==
+name|true
+condition|)
+name|diff
+operator|=
+operator|-
+operator|(
+literal|1
+operator|<<
+name|howto
+operator|->
+name|size
+operator|)
+expr_stmt|;
+else|else
+name|diff
+operator|=
+operator|-
+name|reloc_entry
+operator|->
+name|addend
+expr_stmt|;
+block|}
+else|else
+endif|#
+directive|endif
 name|diff
 operator|=
 name|reloc_entry
@@ -1823,7 +1888,7 @@ block|,
 name|bfd_putl16
 block|,
 comment|/* hdrs */
-comment|/* Note that we allow an object file to be treated as a core file as well. */
+comment|/* Note that we allow an object file to be treated as a core file as well.  */
 block|{
 name|_bfd_dummy_target
 block|,

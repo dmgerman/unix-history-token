@@ -79,81 +79,24 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__STDC__
+name|HAVE_STDLIB_H
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<stddef.h>
+file|<stdlib.h>
 end_include
-
-begin_function_decl
-specifier|extern
-name|void
-modifier|*
-name|malloc
-parameter_list|(
-name|size_t
-name|size
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* 4.10.3.3 */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-modifier|*
-name|memset
-parameter_list|(
-name|void
-modifier|*
-name|s
-parameter_list|,
-name|int
-name|c
-parameter_list|,
-name|size_t
-name|n
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* 4.11.6.1 */
-end_comment
 
 begin_else
 else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* !__STDC__ */
-end_comment
-
 begin_function_decl
 specifier|extern
-name|char
-modifier|*
+name|PTR
 name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Standard memory allocater */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|memset
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -163,9 +106,35 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* __STDC__ */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STRING_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+specifier|extern
+name|PTR
+name|memset
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#

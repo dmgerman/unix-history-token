@@ -457,17 +457,19 @@ if|if
 condition|(
 name|column
 operator|&&
+operator|(
 name|MAX_COLUMNS
 operator|-
 literal|1
-comment|/*spacer*/
+comment|/* spacer */
 operator|-
 literal|2
-comment|/*` \'*/
+comment|/* ` \'   */
 operator|<
 name|column
 operator|+
 name|len
+operator|)
 condition|)
 block|{
 name|fprintf

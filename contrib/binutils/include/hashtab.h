@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* An expandable hash tables datatype.      Copyright (C) 1999 Free Software Foundation, Inc.    Contributed by Vladimir Makarov (vmakarov@cygnus.com).  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* An expandable hash tables datatype.      Copyright (C) 1999, 2000 Free Software Foundation, Inc.    Contributed by Vladimir Makarov (vmakarov@cygnus.com).  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -35,14 +35,18 @@ comment|/* __cplusplus */
 include|#
 directive|include
 file|<ansidecl.h>
-comment|/* Callback function pointer types.  */
-comment|/* Calculate hash of a table entry.  */
+comment|/* The type for a hash code.  */
 typedef|typedef
 name|unsigned
 name|int
+name|hashval_t
+typedef|;
+comment|/* Callback function pointer types.  */
+comment|/* Calculate hash of a table entry.  */
+typedef|typedef
+name|hashval_t
 argument_list|(
-operator|*
-name|htab_hash
+argument|*htab_hash
 argument_list|)
 name|PARAMS
 argument_list|(
@@ -52,7 +56,7 @@ name|void
 operator|*
 operator|)
 argument_list|)
-typedef|;
+expr_stmt|;
 comment|/* Compare a table entry with a possible entry.  The entry already in    the table always comes first, so the second element can be of a    different type (but in this case htab_find and htab_find_slot    cannot be used; instead the variants that accept a hash value    must be used).  */
 typedef|typedef
 name|int
@@ -121,8 +125,7 @@ name|htab_del
 name|del_f
 decl_stmt|;
 comment|/* Table itself.  */
-name|void
-modifier|*
+name|PTR
 modifier|*
 name|entries
 decl_stmt|;
@@ -148,6 +151,10 @@ name|unsigned
 name|int
 name|collisions
 decl_stmt|;
+comment|/* This is non-zero if we are allowed to return NULL for function calls      that allocate memory.  */
+name|int
+name|return_allocation_failure
+decl_stmt|;
 block|}
 struct|;
 typedef|typedef
@@ -156,10 +163,36 @@ name|htab
 modifier|*
 name|htab_t
 typedef|;
+comment|/* An enum saying whether we insert into the hash table or not.  */
+enum|enum
+name|insert_option
+block|{
+name|NO_INSERT
+block|,
+name|INSERT
+block|}
+enum|;
 comment|/* The prototypes of the package functions. */
 specifier|extern
 name|htab_t
 name|htab_create
+name|PARAMS
+argument_list|(
+operator|(
+name|size_t
+operator|,
+name|htab_hash
+operator|,
+name|htab_eq
+operator|,
+name|htab_del
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* This function is like htab_create, but may return NULL if memory    allocation fails, and also signals that htab_find_slot_with_hash and    htab_find_slot are allowed to return NULL when inserting.  */
+specifier|extern
+name|htab_t
+name|htab_try_create
 name|PARAMS
 argument_list|(
 operator|(
@@ -194,8 +227,7 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|void
-modifier|*
+name|PTR
 name|htab_find
 name|PARAMS
 argument_list|(
@@ -209,8 +241,7 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|void
-modifier|*
+name|PTR
 modifier|*
 name|htab_find_slot
 name|PARAMS
@@ -222,13 +253,13 @@ specifier|const
 name|void
 operator|*
 operator|,
-name|int
+expr|enum
+name|insert_option
 operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|void
-modifier|*
+name|PTR
 name|htab_find_with_hash
 name|PARAMS
 argument_list|(
@@ -239,14 +270,12 @@ specifier|const
 name|void
 operator|*
 operator|,
-name|unsigned
-name|int
+name|hashval_t
 operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|void
-modifier|*
+name|PTR
 modifier|*
 name|htab_find_slot_with_hash
 name|PARAMS
@@ -258,10 +287,10 @@ specifier|const
 name|void
 operator|*
 operator|,
-name|unsigned
-name|int
+name|hashval_t
 operator|,
-name|int
+expr|enum
+name|insert_option
 operator|)
 argument_list|)
 decl_stmt|;
@@ -336,6 +365,16 @@ operator|(
 name|htab_t
 operator|)
 argument_list|)
+decl_stmt|;
+comment|/* A hash function for pointers.  */
+specifier|extern
+name|htab_hash
+name|htab_hash_pointer
+decl_stmt|;
+comment|/* An equality function for pointers.  */
+specifier|extern
+name|htab_eq
+name|htab_eq_pointer
 decl_stmt|;
 ifdef|#
 directive|ifdef

@@ -502,7 +502,7 @@ name|u_dsize
 operator|>
 literal|0x1000000
 condition|)
-comment|/* Remember, it's in pages... */
+comment|/* Remember, it's in pages...  */
 block|{
 name|bfd_set_error
 argument_list|(
@@ -1189,7 +1189,7 @@ condition|)
 return|return
 name|NULL
 return|;
-comment|/* This is tricky.  As the "register section", we give them 	     the entire upage and stack.  u.u_ar0 points to where 	     "register 0" is stored.  There are two tricks with this, 	     though.  One is that the rest of the registers might be 	     at positive or negative (or both) displacements from 	     *u_ar0.  The other is that u_ar0 is sometimes an absolute 	     address in kernel memory, and on other systems it is an 	     offset from the beginning of the `struct user'. 	 	     As a practical matter, we don't know where the registers 	     actually are, so we have to pass the whole area to GDB. 	     We encode the value of u_ar0 by setting the .regs section 	     up so that its virtual memory address 0 is at the place 	     pointed to by u_ar0 (by setting the vma of the start of 	     the section to -u_ar0).  GDB uses this info to locate the 	     regs, using minor trickery to get around the 	     offset-or-absolute-addr problem. */
+comment|/* This is tricky.  As the "register section", we give them 	     the entire upage and stack.  u.u_ar0 points to where 	     "register 0" is stored.  There are two tricks with this, 	     though.  One is that the rest of the registers might be 	     at positive or negative (or both) displacements from 	     *u_ar0.  The other is that u_ar0 is sometimes an absolute 	     address in kernel memory, and on other systems it is an 	     offset from the beginning of the `struct user'.  	     As a practical matter, we don't know where the registers 	     actually are, so we have to pass the whole area to GDB. 	     We encode the value of u_ar0 by setting the .regs section 	     up so that its virtual memory address 0 is at the place 	     pointed to by u_ar0 (by setting the vma of the start of 	     the section to -u_ar0).  GDB uses this info to locate the 	     regs, using minor trickery to get around the 	     offset-or-absolute-addr problem.  */
 name|chead
 operator|.
 name|cs_vaddr

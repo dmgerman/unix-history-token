@@ -22,7 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|"safe-ctype.h"
 end_include
 
 begin_ifndef
@@ -173,7 +173,7 @@ argument_list|)
 comment|/* Skip over the disk name in MSDOS pathnames. */
 if|if
 condition|(
-name|isalpha
+name|ISALPHA
 argument_list|(
 name|name
 index|[

@@ -660,7 +660,7 @@ name|bfd
 operator|*
 name|abfd
 operator|,
-name|CONST
+specifier|const
 name|char
 operator|*
 name|filename
@@ -683,7 +683,7 @@ name|bfd
 operator|*
 name|abfd
 operator|,
-name|CONST
+specifier|const
 name|char
 operator|*
 name|filename
@@ -706,7 +706,7 @@ name|bfd
 operator|*
 name|abfd
 operator|,
-name|CONST
+specifier|const
 name|char
 operator|*
 name|filename
@@ -1793,6 +1793,9 @@ operator|*
 operator|,
 name|unsigned
 name|int
+operator|,
+name|PTR
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
