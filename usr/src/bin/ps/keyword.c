@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)keyword.c	8.2 (Berkeley) %G%"
+literal|"@(#)keyword.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -97,7 +97,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SPPWAIT
+name|P_PPWAIT
 end_ifdef
 
 begin_define
@@ -1208,7 +1208,7 @@ literal|8
 block|,
 name|POFF
 argument_list|(
-name|p_rlink
+name|p_back
 argument_list|)
 block|,
 name|KPTR

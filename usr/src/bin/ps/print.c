@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	8.2 (Berkeley) %G%"
+literal|"@(#)print.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,7 +61,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SPPWAIT
+name|P_PPWAIT
 end_ifdef
 
 begin_define
@@ -643,7 +643,6 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* NEWVM */
 operator|(
 name|void
 operator|)
@@ -665,7 +664,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* NEWVM */
 block|}
 end_function
 
@@ -757,7 +755,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|SSINTR
+name|P_SINTR
 condition|)
 comment|/* interuptable (long) */
 operator|*
@@ -815,7 +813,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|SLOAD
+name|P_INMEM
 condition|)
 block|{
 ifndef|#
@@ -910,7 +908,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|STRC
+name|P_TRACED
 condition|)
 operator|*
 name|cp
@@ -922,7 +920,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|SWEXIT
+name|P_WEXIT
 operator|&&
 name|p
 operator|->
@@ -943,7 +941,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|SPPWAIT
+name|P_PPWAIT
 condition|)
 else|#
 directive|else
@@ -969,13 +967,11 @@ condition|(
 name|flag
 operator|&
 operator|(
-name|SSYS
+name|P_SYSTEM
 operator||
-name|SLOCK
+name|P_NOSWAP
 operator||
-name|SKEEP
-operator||
-name|SPHYSIO
+name|P_PHYSIO
 operator|)
 condition|)
 else|#
@@ -1026,7 +1022,7 @@ condition|(
 operator|(
 name|flag
 operator|&
-name|SCTTY
+name|P_CONTROLT
 operator|)
 operator|&&
 name|KI_EPROC
@@ -2181,7 +2177,6 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* NEWVM */
 name|pgtok
 argument_list|(
 name|KI_EPROC
@@ -2219,10 +2214,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* NEWVM */
-end_comment
 
 begin_macro
 unit|}  void
@@ -2314,7 +2305,6 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* NEWVM */
 comment|/* XXX don't have info about shared */
 operator|(
 name|void
@@ -2342,7 +2332,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* NEWVM */
 block|}
 end_block
 
@@ -2401,7 +2390,6 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* NEWVM */
 operator|(
 name|void
 operator|)
@@ -2428,7 +2416,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* NEWVM */
 block|}
 end_function
 
@@ -2724,7 +2711,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|SLOAD
+name|P_INMEM
 operator|)
 operator|==
 literal|0
@@ -2908,7 +2895,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|SLOAD
+name|P_INMEM
 operator|)
 operator|==
 literal|0
@@ -2991,7 +2978,6 @@ name|mempages
 expr_stmt|;
 else|#
 directive|else
-comment|/* NEWVM */
 comment|/* XXX want pmap ptpages, segtab, etc. (per architecture) */
 name|szptudot
 operator|=
@@ -3019,7 +3005,6 @@ name|mempages
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* NEWVM */
 return|return
 operator|(
 literal|100.0
@@ -3206,7 +3191,6 @@ expr_stmt|;
 else|else
 endif|#
 directive|endif
-comment|/* NEWVM */
 operator|(
 name|void
 operator|)
@@ -3278,7 +3262,6 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* NEWVM */
 operator|(
 name|void
 operator|)
@@ -3305,7 +3288,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* NEWVM */
 block|}
 end_function
 
@@ -3371,10 +3353,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* NEWVM */
-end_comment
 
 begin_comment
 comment|/*  * Generic output routines.  Print fields from various prototype  * structures.  */

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gcore.c	8.1 (Berkeley) %G%"
+literal|"@(#)gcore.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -540,7 +540,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|SWEXIT
+name|P_WEXIT
 condition|)
 name|err
 argument_list|(
@@ -555,7 +555,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|SSYS
+name|P_SYSTEM
 condition|)
 comment|/* Swapper or pagedaemon. */
 name|err

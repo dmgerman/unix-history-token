@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm_proc.c	8.2 (Berkeley) %G%"
+literal|"@(#)kvm_proc.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1135,7 +1135,7 @@ name|proc
 operator|.
 name|p_flag
 operator|&
-name|SCTTY
+name|P_CONTROLT
 operator|)
 operator|&&
 name|sess
@@ -1496,7 +1496,7 @@ name|proc
 operator|.
 name|p_flag
 operator|&
-name|SCTTY
+name|P_CONTROLT
 operator|)
 operator|==
 literal|0
@@ -1515,17 +1515,9 @@ break|break;
 block|}
 name|bcopy
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|proc
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|bp
 operator|->
@@ -1539,17 +1531,9 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|eproc
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|bp
 operator|->

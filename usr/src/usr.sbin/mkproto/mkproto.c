@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkproto.c	8.1 (Berkeley) %G%"
+literal|"@(#)mkproto.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -931,7 +931,7 @@ name|in
 expr_stmt|;
 name|i
 operator|=
-name|itod
+name|ino_to_fsba
 argument_list|(
 name|fs
 argument_list|,
@@ -2351,7 +2351,7 @@ name|fsbtodb
 argument_list|(
 name|fs
 argument_list|,
-name|itod
+name|ino_to_fsba
 argument_list|(
 name|fs
 argument_list|,
@@ -2379,7 +2379,7 @@ argument_list|)
 expr_stmt|;
 name|buf
 index|[
-name|itoo
+name|ino_to_fsbo
 argument_list|(
 name|fs
 argument_list|,
@@ -2850,7 +2850,7 @@ name|ino
 expr_stmt|;
 name|c
 operator|=
-name|itog
+name|ino_to_cg
 argument_list|(
 operator|&
 name|sblock

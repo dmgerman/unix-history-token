@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)proc_compare.c	8.1 (Berkeley) %G%"
+literal|"@(#)proc_compare.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,10 +26,6 @@ end_endif
 
 begin_comment
 comment|/* not lint */
-end_comment
-
-begin_comment
-comment|/*  * Returns 1 if p2 is more active than p1  *  * The algorithm for picking the "more active" process is thus:  *  *	1) Runnable processes are favored over anything  *	   else.  The runner with the highest cpu  *	   utilization is picked (p_cpu).  Ties are  *	   broken by picking the highest pid.  *	2) Next, the sleeper with the shortest sleep  *	   time is favored.  With ties, we pick out  *	   just short-term sleepers (p_pri<= PZERO).  *	   Further ties are broken by picking the highest  *	   pid.  *  *	NOTE - if you change this, be sure to consider making  *	   the change in the kernel too (^T in kern/tty.c).  *  *	TODO - consider whether pctcpu should be used  *  */
 end_comment
 
 begin_include
@@ -56,10 +52,14 @@ directive|include
 file|"extern.h"
 end_include
 
+begin_comment
+comment|/*  * Returns 1 if p2 is "better" than p1  *  * The algorithm for picking the "interesting" process is thus:  *  *	1) Only foreground processes are eligible - implied.  *	2) Runnable processes are favored over anything else.  The runner  *	   with the highest cpu utilization is picked (p_estcpu).  Ties are  *	   broken by picking the highest pid.  *	3) The sleeper with the shortest sleep time is next.  With ties,  *	   we pick out just "short-term" sleepers (P_SINTR == 0).  *	4) Further ties are broken by picking the highest pid.  *  * If you change this, be sure to consider making the change in the kernel  * too (^T in kern/tty.c).  *  * TODO - consider whether pctcpu should be used.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|isrun
+name|ISRUN
 parameter_list|(
 name|p
 parameter_list|)
@@ -136,12 +136,12 @@ switch|switch
 condition|(
 name|TESTAB
 argument_list|(
-name|isrun
+name|ISRUN
 argument_list|(
 name|p1
 argument_list|)
 argument_list|,
-name|isrun
+name|ISRUN
 argument_list|(
 name|p2
 argument_list|)
@@ -172,11 +172,11 @@ if|if
 condition|(
 name|p2
 operator|->
-name|p_cpu
+name|p_estcpu
 operator|>
 name|p1
 operator|->
-name|p_cpu
+name|p_estcpu
 condition|)
 return|return
 operator|(
@@ -187,11 +187,11 @@ if|if
 condition|(
 name|p1
 operator|->
-name|p_cpu
+name|p_estcpu
 operator|>
 name|p2
 operator|->
-name|p_cpu
+name|p_estcpu
 condition|)
 return|return
 operator|(
@@ -211,7 +211,7 @@ operator|)
 return|;
 comment|/* tie - return highest pid */
 block|}
-comment|/* 	 * weed out zombies 	 */
+comment|/*  	 * weed out zombies 	 */
 switch|switch
 condition|(
 name|TESTAB
@@ -262,7 +262,7 @@ operator|)
 return|;
 comment|/* tie - return highest pid */
 block|}
-comment|/*  	 * pick the one with the smallest sleep time 	 */
+comment|/* 	 * pick the one with the smallest sleep time 	 */
 if|if
 condition|(
 name|p2
@@ -300,14 +300,14 @@ name|p1
 operator|->
 name|p_flag
 operator|&
-name|SSINTR
+name|P_SINTR
 operator|&&
 operator|(
 name|p2
 operator|->
 name|p_flag
 operator|&
-name|SSINTR
+name|P_SINTR
 operator|)
 operator|==
 literal|0
@@ -323,14 +323,14 @@ name|p2
 operator|->
 name|p_flag
 operator|&
-name|SSINTR
+name|P_SINTR
 operator|&&
 operator|(
 name|p1
 operator|->
 name|p_flag
 operator|&
-name|SSINTR
+name|P_SINTR
 operator|)
 operator|==
 literal|0

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ps.c	8.1 (Berkeley) %G%"
+literal|"@(#)ps.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -176,7 +176,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SPPWAIT
+name|P_PPWAIT
 end_ifdef
 
 begin_define
@@ -1501,7 +1501,7 @@ argument_list|)
 operator|->
 name|p_flag
 operator|&
-name|SCTTY
+name|P_CONTROLT
 operator|)
 operator|==
 literal|0

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pigs.c	8.1 (Berkeley) %G%"
+literal|"@(#)pigs.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -855,11 +855,6 @@ condition|(
 operator|(
 name|pt
 operator|=
-operator|(
-expr|struct
-name|p_times
-operator|*
-operator|)
 name|malloc
 argument_list|(
 operator|(
@@ -947,7 +942,7 @@ name|time
 operator|=
 name|pp
 operator|->
-name|p_time
+name|p_swtime
 expr_stmt|;
 if|if
 condition|(
@@ -960,7 +955,7 @@ name|pp
 operator|->
 name|p_flag
 operator|&
-name|SLOAD
+name|P_INMEM
 operator|)
 operator|==
 literal|0

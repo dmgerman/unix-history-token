@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nlist.c	8.1 (Berkeley) %G%"
+literal|"@(#)nlist.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -97,7 +97,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SPPWAIT
+name|P_PPWAIT
 end_ifdef
 
 begin_define

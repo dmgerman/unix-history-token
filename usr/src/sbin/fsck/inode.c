@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inode.c	8.1 (Berkeley) %G%"
+literal|"@(#)inode.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1166,7 +1166,7 @@ condition|)
 block|{
 name|iblk
 operator|=
-name|itod
+name|ino_to_fsba
 argument_list|(
 operator|&
 name|sblock
@@ -1334,7 +1334,7 @@ argument_list|(
 operator|&
 name|sblock
 argument_list|,
-name|itod
+name|ino_to_fsba
 argument_list|(
 operator|&
 name|sblock

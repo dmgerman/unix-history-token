@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fsdb.c	8.1 (Berkeley) %G%"
+literal|"@(#)fsdb.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -461,7 +461,7 @@ name|itob
 parameter_list|(
 name|i
 parameter_list|)
-value|((itod(fs, (i))<< FRGSHIFT) + itoo(fs, (i)) * INODE)
+value|((ino_to_fsba(fs,				\ 			    (i))<< FRGSHIFT) + ino_to_fsbo(fs, (i)) * INODE)
 end_define
 
 begin_define

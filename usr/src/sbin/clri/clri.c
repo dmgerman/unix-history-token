@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clri.c	8.1 (Berkeley) %G%"
+literal|"@(#)clri.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -412,14 +412,14 @@ expr_stmt|;
 comment|/* read in the appropriate block. */
 name|offset
 operator|=
-name|itod
+name|ino_to_fsba
 argument_list|(
 name|sbp
 argument_list|,
 name|inonum
 argument_list|)
 expr_stmt|;
-comment|/* inode to fs block */
+comment|/* inode to fs blk */
 name|offset
 operator|=
 name|fsbtodb
@@ -429,12 +429,12 @@ argument_list|,
 name|offset
 argument_list|)
 expr_stmt|;
-comment|/* fs block to disk block */
+comment|/* fs blk disk blk */
 name|offset
 operator|*=
 name|DEV_BSIZE
 expr_stmt|;
-comment|/* disk block to disk bytes */
+comment|/* disk blk to bytes */
 comment|/* seek and read the block */
 if|if
 condition|(
@@ -486,7 +486,7 @@ operator|=
 operator|&
 name|ibuf
 index|[
-name|itoo
+name|ino_to_fsbo
 argument_list|(
 name|sbp
 argument_list|,

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)traverse.c	8.1 (Berkeley) %G%"
+literal|"@(#)traverse.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2462,7 +2462,7 @@ name|fsbtodb
 argument_list|(
 name|sblock
 argument_list|,
-name|itod
+name|ino_to_fsba
 argument_list|(
 name|sblock
 argument_list|,

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstat.c	8.1 (Berkeley) %G%"
+literal|"@(#)pstat.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1796,7 +1796,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|ILOCKED
+name|IN_LOCKED
 condition|)
 operator|*
 name|flags
@@ -1808,7 +1808,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|IWANT
+name|IN_WANTED
 condition|)
 operator|*
 name|flags
@@ -1820,7 +1820,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|IRENAME
+name|IN_RENAME
 condition|)
 operator|*
 name|flags
@@ -1832,7 +1832,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|IUPD
+name|IN_UPDATE
 condition|)
 operator|*
 name|flags
@@ -1844,7 +1844,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|IACC
+name|IN_ACCESS
 condition|)
 operator|*
 name|flags
@@ -1856,7 +1856,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|ICHG
+name|IN_CHANGE
 condition|)
 operator|*
 name|flags
@@ -1868,7 +1868,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|IMOD
+name|IN_MODIFIED
 condition|)
 operator|*
 name|flags
@@ -1880,7 +1880,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|ISHLOCK
+name|IN_SHLOCK
 condition|)
 operator|*
 name|flags
@@ -1892,7 +1892,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|IEXLOCK
+name|IN_EXLOCK
 condition|)
 operator|*
 name|flags
@@ -1904,7 +1904,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|ILWAIT
+name|IN_LWAIT
 condition|)
 operator|*
 name|flags
@@ -3497,7 +3497,7 @@ name|char
 name|hdr
 index|[]
 init|=
-literal|"  LINE RAW CAN OUT  HWT LWT     ADDR COL STATE  SESS  PGID DISC\n"
+literal|"  LINE RAW CAN OUT  HWT LWT     COL STATE  SESS  PGID DISC\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -4301,7 +4301,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%3d %4d %3d %8x %3d "
+literal|"%3d %4d %3d %3d "
 argument_list|,
 name|tp
 operator|->
@@ -4319,11 +4319,7 @@ name|t_lowat
 argument_list|,
 name|tp
 operator|->
-name|t_addr
-argument_list|,
-name|tp
-operator|->
-name|t_col
+name|t_column
 argument_list|)
 expr_stmt|;
 for|for
