@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)uda.c	6.3	(Berkeley) %G%"
+literal|"@(#)uda.c	6.4	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,11 +58,6 @@ directive|if
 name|NUDA
 operator|>
 literal|0
-operator|||
-name|defined
-argument_list|(
-name|BINARY
-argument_list|)
 end_if
 
 begin_comment
@@ -219,254 +214,6 @@ include|#
 directive|include
 file|"../vax/mscp.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BINARY
-end_ifdef
-
-begin_struct
-specifier|extern
-struct|struct
-name|uda_softc
-block|{
-name|short
-name|sc_state
-decl_stmt|;
-comment|/* state of controller */
-name|short
-name|sc_mapped
-decl_stmt|;
-comment|/* Unibus map allocated for uda struct? */
-name|int
-name|sc_ubainfo
-decl_stmt|;
-comment|/* Unibus mapping info */
-name|struct
-name|uda
-modifier|*
-name|sc_uda
-decl_stmt|;
-comment|/* Unibus address of uda struct */
-name|int
-name|sc_ivec
-decl_stmt|;
-comment|/* interrupt vector address */
-name|short
-name|sc_credits
-decl_stmt|;
-comment|/* transfer credits */
-name|short
-name|sc_lastcmd
-decl_stmt|;
-comment|/* pointer into command ring */
-name|short
-name|sc_lastrsp
-decl_stmt|;
-comment|/* pointer into response ring */
-block|}
-name|uda_softc
-index|[]
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|uda
-block|{
-name|struct
-name|udaca
-name|uda_ca
-decl_stmt|;
-comment|/* communications area */
-name|struct
-name|mscp
-name|uda_rsp
-index|[
-name|NRSP
-index|]
-decl_stmt|;
-comment|/* response packets */
-name|struct
-name|mscp
-name|uda_cmd
-index|[
-name|NCMD
-index|]
-decl_stmt|;
-comment|/* command packets */
-block|}
-name|uda
-index|[]
-struct|;
-end_struct
-
-begin_comment
-comment|/* THIS SHOULD BE READ OFF THE PACK, PER DRIVE */
-end_comment
-
-begin_struct
-specifier|extern
-struct|struct
-name|size
-block|{
-name|daddr_t
-name|nblocks
-decl_stmt|;
-name|daddr_t
-name|blkoff
-decl_stmt|;
-block|}
-name|ra25_sizes
-index|[]
-struct|,
-name|ra60_sizes
-index|[]
-struct|,
-name|ra80_sizes
-index|[]
-struct|,
-name|ra81_sizes
-index|[]
-struct|;
-end_struct
-
-begin_comment
-comment|/* END OF STUFF WHICH SHOULD BE READ IN PER DISK */
-end_comment
-
-begin_struct
-struct|struct
-name|ra_info
-block|{
-name|struct
-name|size
-modifier|*
-name|ra_sizes
-decl_stmt|;
-comment|/* Partion tables for drive */
-name|daddr_t
-name|radsize
-decl_stmt|;
-comment|/* Max user size form online pkt */
-name|unsigned
-name|ratype
-decl_stmt|;
-comment|/* Drive type int field  */
-name|unsigned
-name|rastatus
-decl_stmt|;
-comment|/* Command status from */
-comment|/* last onlin or GTUNT */
-block|}
-name|ra_info
-index|[]
-struct|;
-end_struct
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|uba_ctlr
-modifier|*
-name|udminfo
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|uba_device
-modifier|*
-name|uddinfo
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|uba_device
-modifier|*
-name|udip
-index|[]
-index|[
-literal|8
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 8 == max number of drives */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|buf
-name|rudbuf
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|buf
-name|udutab
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Drive queue */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|buf
-name|udwtab
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* I/O wait queue, per controller */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|udamicro
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* to store microcode level */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|nNRA
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|nNUDA
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_struct
 struct|struct
@@ -639,17 +386,17 @@ block|,
 literal|242606
 block|,
 comment|/* D=blk 242606 thru 258489 */
-literal|307200
-block|,
-literal|258490
-block|,
-comment|/* E=blk 258490 thru 565689 */
 operator|-
 literal|1
 block|,
-literal|565690
+literal|258490
 block|,
-comment|/* F=blk 565690 thru end */
+comment|/* E=blk 258490 thru end */
+literal|0
+block|,
+literal|0
+block|,
+comment|/* F=unused */
 operator|-
 literal|1
 block|,
@@ -685,28 +432,26 @@ block|,
 literal|0
 block|,
 comment|/* C=blk 0 thru end */
-literal|15884
+literal|0
 block|,
-literal|242606
+literal|0
 block|,
-comment|/* D=blk 242606 thru 258489 */
-literal|307200
+comment|/* D=unused */
+literal|0
 block|,
-literal|258490
+literal|0
 block|,
-comment|/* E=blk 258490 thru 565689 */
-operator|-
-literal|1
+comment|/* E=unused */
+literal|0
 block|,
-literal|565690
+literal|0
 block|,
-comment|/* F=blk 565690 thru end */
-operator|-
-literal|1
+comment|/* F=unused */
+literal|0
 block|,
-literal|242606
+literal|0
 block|,
-comment|/* G=blk 242606 thru end */
+comment|/* G=unused */
 literal|193282
 block|,
 literal|49324
@@ -904,11 +649,6 @@ end_decl_stmt
 begin_comment
 comment|/* to store microcode level */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Controller states  */
