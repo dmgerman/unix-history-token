@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: param.h,v 1.6 1998/07/30 08:12:14 dfr Exp $ */
+comment|/* $Id: param.h,v 1.7 1998/09/09 01:21:25 jdp Exp $ */
 end_comment
 
 begin_comment
@@ -580,6 +580,16 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((unsigned long)(x)<< PAGE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|pgtok
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) * (PAGE_SIZE / 1024))
 end_define
 
 begin_ifdef
