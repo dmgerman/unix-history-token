@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: plist.c,v 1.5 1993/09/18 03:39:50 jkh Exp $"
+literal|"$Id: plist.c,v 1.6 1994/05/25 06:27:24 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -887,8 +887,9 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|len
+operator|<=
+literal|0
 condition|)
 continue|continue;
 name|cp
