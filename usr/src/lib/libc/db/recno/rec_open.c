@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_open.c	5.2 (Berkeley) %G%"
+literal|"@(#)rec_open.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -356,7 +356,13 @@ name|bt_flags
 operator|=
 name|BTF_RECNO
 expr_stmt|;
-comment|/*  	 * In 4.4BSD stat(2) returns true for ISSOCK on pipes.  Until then, 	 * this is fairly close.  Pipes are read-only.  	 */
+name|t
+operator|->
+name|bt_reof
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 	 * In 4.4BSD stat(2) returns true for ISSOCK on pipes.  Until 	 * then, this is fairly close.  Pipes are read-only. 	 */
 if|if
 condition|(
 name|lseek
@@ -456,6 +462,23 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|sb
+operator|.
+name|st_size
+operator|>
+name|INT_MAX
+condition|)
+block|{
+name|errno
+operator|=
+name|EFBIG
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
+if|if
+condition|(
 operator|(
 name|t
 operator|->
@@ -465,6 +488,9 @@ name|mmap
 argument_list|(
 name|NULL
 argument_list|,
+operator|(
+name|int
+operator|)
 name|sb
 operator|.
 name|st_size
@@ -504,6 +530,12 @@ operator|->
 name|bt_rfd
 operator|=
 name|rfd
+expr_stmt|;
+name|t
+operator|->
+name|bt_rfp
+operator|=
+name|NULL
 expr_stmt|;
 name|t
 operator|->
