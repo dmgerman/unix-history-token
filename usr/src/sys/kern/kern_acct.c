@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_acct.c	6.6	84/12/12	*/
+comment|/*	kern_acct.c	6.7	85/05/21	*/
 end_comment
 
 begin_include
@@ -228,6 +228,28 @@ operator|.
 name|u_error
 operator|=
 name|EACCES
+expr_stmt|;
+name|iput
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|ip
+operator|->
+name|i_fs
+operator|->
+name|fs_ronly
+condition|)
+block|{
+name|u
+operator|.
+name|u_error
+operator|=
+name|EROFS
 expr_stmt|;
 name|iput
 argument_list|(
