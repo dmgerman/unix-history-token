@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.80 2003/12/31 04:19:50 kato Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.81 2004/01/21 16:02:20 ume Exp   */
 end_comment
 
 begin_comment
@@ -3802,6 +3802,27 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_STR_PANASONIC_KXLC005
+value|"Panasonic 16X CD-ROM Interface Card"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_PANASONIC_KXLC005_1
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_PANASONIC_KXLC005_1
+value|0x2904
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_PANASONIC_KXLC005_1
 value|"Panasonic 16X CD-ROM Interface Card"
 end_define
 
