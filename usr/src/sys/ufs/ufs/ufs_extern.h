@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_extern.h	7.8 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_extern.h	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_struct_decl
@@ -221,10 +221,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX */
-end_comment
-
 begin_decl_stmt
 name|int
 name|ufs_access
@@ -239,10 +235,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX */
-end_comment
-
 begin_decl_stmt
 name|int
 name|ufs_advlock
@@ -256,10 +248,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_decl_stmt
 name|void
@@ -358,10 +346,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -618,10 +602,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX */
-end_comment
-
 begin_decl_stmt
 name|void
 name|ufs_iunlock
@@ -650,10 +630,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX */
-end_comment
-
 begin_decl_stmt
 name|int
 name|ufs_lock
@@ -668,10 +644,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX */
-end_comment
-
 begin_decl_stmt
 name|int
 name|ufs_lookup
@@ -685,10 +657,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -758,10 +726,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX */
-end_comment
-
 begin_decl_stmt
 name|int
 name|ufs_mountedon
@@ -790,10 +754,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX */
-end_comment
-
 begin_decl_stmt
 name|int
 name|ufs_print
@@ -807,10 +767,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -826,10 +782,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX */
-end_comment
-
 begin_decl_stmt
 name|int
 name|ufs_readlink
@@ -843,10 +795,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -862,10 +810,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX */
-end_comment
-
 begin_decl_stmt
 name|int
 name|ufs_remove
@@ -879,10 +823,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -912,10 +852,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX */
-end_comment
-
 begin_decl_stmt
 name|int
 name|ufs_seek
@@ -929,10 +865,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -996,10 +928,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX */
-end_comment
-
 begin_decl_stmt
 name|int
 name|ufs_symlink
@@ -1027,10 +955,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -1093,10 +1017,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX */
-end_comment
-
 begin_decl_stmt
 name|int
 name|ufsspec_write
@@ -1110,10 +1030,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -1135,10 +1051,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX */
-end_comment
-
 begin_decl_stmt
 name|int
 name|ufsfifo_write
@@ -1153,10 +1065,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX */
-end_comment
-
 begin_decl_stmt
 name|int
 name|ufsfifo_close
@@ -1170,10 +1078,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_endif
 endif|#
