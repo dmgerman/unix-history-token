@@ -255,11 +255,11 @@ begin_comment
 comment|/*  * lnk_start  *	Creates the hard link table.  * Return:  *	0 if created, -1 if failure  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -311,7 +311,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -337,11 +337,11 @@ begin_comment
 comment|/*  * chk_lnk()  *	Looks up entry in hard link hash table. If found, it copies the name  *	of the file it is linked to (we already saw that file) into ln_name.  *	lnkcnt is decremented and if goes to 1 the node is deleted from the  *	database. (We have seen all the links to this file). If not found,  *	we add the file to the database if it has the potential for having  *	hard links to other files we may process (it has a link count> 1)  * Return:  *	if found returns 1; if not found returns 0; -1 on error  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -539,8 +539,13 @@ name|pt
 operator|->
 name|name
 argument_list|,
-name|PAXPATHLEN
-operator|+
+sizeof|sizeof
+argument_list|(
+name|arcn
+operator|->
+name|ln_name
+argument_list|)
+operator|-
 literal|1
 argument_list|)
 expr_stmt|;
@@ -548,7 +553,9 @@ name|arcn
 operator|->
 name|ln_name
 index|[
-name|PAXPATHLEN
+name|arcn
+operator|->
+name|ln_nlen
 index|]
 operator|=
 literal|'\0'
@@ -731,7 +738,7 @@ name|pt
 argument_list|)
 expr_stmt|;
 block|}
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -751,11 +758,11 @@ begin_comment
 comment|/*  * purg_lnk  *	remove reference for a file that we may have added to the data base as  *	a potential source for hard links. We ended up not using the file, so  *	we do not want to accidently point another file at it later on.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|void
@@ -986,11 +993,11 @@ begin_comment
 comment|/*  * lnk_end()  *	pull apart a existing link table so we can reuse it. We do this between  *	read and write phases of append with update. (The format may have  *	used the link table, and we need to start with a fresh table for the  *	write phase  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|void
@@ -1123,11 +1130,11 @@ begin_comment
 comment|/*  * ftime_start()  *	create the file time hash table and open for read/write the scratch  *	file. (after created it is unlinked, so when we exit we leave  *	no witnesses).  * Return:  *	0 if the table and file was created ok, -1 otherwise  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -1143,10 +1150,6 @@ argument_list|()
 endif|#
 directive|endif
 block|{
-name|char
-modifier|*
-name|pt
-decl_stmt|;
 if|if
 condition|(
 name|ftab
@@ -1183,7 +1186,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1198,41 +1201,16 @@ operator|)
 return|;
 block|}
 comment|/* 	 * get random name and create temporary scratch file, unlink name 	 * so it will get removed on exit 	 */
-if|if
-condition|(
-operator|(
-name|pt
-operator|=
-name|tempnam
+name|memcpy
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+name|tempbase
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-operator|(
-name|void
-operator|)
-name|unlink
+name|_TFILE_BASE
+argument_list|,
+sizeof|sizeof
 argument_list|(
-name|pt
+name|_TFILE_BASE
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1240,30 +1218,24 @@ condition|(
 operator|(
 name|ffd
 operator|=
-name|open
+name|mkstemp
 argument_list|(
-name|pt
-argument_list|,
-name|O_RDWR
-operator||
-name|O_CREAT
-argument_list|,
-name|S_IRWXU
+name|tempfile
 argument_list|)
 operator|)
 operator|<
 literal|0
 condition|)
 block|{
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,
 name|errno
 argument_list|,
-literal|"Unable to open temporary file: %s"
+literal|"Unable to create temporary file: %s"
 argument_list|,
-name|pt
+name|tempfile
 argument_list|)
 expr_stmt|;
 return|return
@@ -1278,7 +1250,7 @@ name|void
 operator|)
 name|unlink
 argument_list|(
-name|pt
+name|tempfile
 argument_list|)
 expr_stmt|;
 return|return
@@ -1293,11 +1265,11 @@ begin_comment
 comment|/*  * chk_ftime()  *	looks up entry in file time hash table. If not found, the file is  *	added to the hash table and the file named stored in the scratch file.  *	If a file with the same name is found, the file times are compared and  *	the most recent file time is retained. If the new file was younger (or  *	was not in the database) the new file is selected for storage.  * Return:  *	0 if file should be added to the archive, 1 if it should be skipped,  *	-1 on error  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -1432,7 +1404,7 @@ operator|->
 name|seek
 condition|)
 block|{
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1462,7 +1434,7 @@ operator|!=
 name|namelen
 condition|)
 block|{
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1649,7 +1621,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1660,7 +1632,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1671,7 +1643,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1713,11 +1685,11 @@ begin_comment
 comment|/*  * name_start()  *	create the interactive rename table  * Return:  *	0 if successful, -1 otherwise  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -1769,7 +1741,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1795,11 +1767,11 @@ begin_comment
 comment|/*  * add_name()  *	add the new name to old name mapping just created by the user.  *	If an old name mapping is found (there may be duplicate names on an  *	archive) only the most recent is kept.  * Return:  *	0 if added, -1 otherwise  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -1872,7 +1844,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * should never happen 		 */
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|0
 argument_list|,
@@ -1995,7 +1967,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2120,7 +2092,7 @@ name|pt
 argument_list|)
 expr_stmt|;
 block|}
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2140,11 +2112,11 @@ begin_comment
 comment|/*  * sub_name()  *	look up a link name to see if it points at a file that has been  *	remapped by the user. If found, the link is adjusted to contain the  *	new name (oname is the link to name)  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|void
@@ -2158,6 +2130,9 @@ argument_list|,
 name|int
 operator|*
 name|onamelen
+argument_list|,
+name|size_t
+name|onamesize
 argument_list|)
 else|#
 directive|else
@@ -2167,6 +2142,8 @@ argument_list|(
 name|oname
 argument_list|,
 name|onamelen
+argument_list|,
+name|onamesize
 argument_list|)
 decl|register
 name|char
@@ -2179,6 +2156,12 @@ begin_decl_stmt
 name|int
 modifier|*
 name|onamelen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|size_t
+name|onamesize
 decl_stmt|;
 end_decl_stmt
 
@@ -2239,7 +2222,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * walk down the hash cahin looking for a match 		 */
+comment|/* 		 * walk down the hash chain looking for a match 		 */
 if|if
 condition|(
 name|strcmp
@@ -2266,14 +2249,15 @@ name|pt
 operator|->
 name|nname
 argument_list|,
-name|PAXPATHLEN
-operator|+
+name|onamesize
+operator|-
 literal|1
 argument_list|)
 expr_stmt|;
 name|oname
 index|[
-name|PAXPATHLEN
+operator|*
+name|onamelen
 index|]
 operator|=
 literal|'\0'
@@ -2300,11 +2284,11 @@ begin_comment
 comment|/*  * dev_start()  *	create the device mapping table  * Return:  *	0 if successful, -1 otherwise  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -2356,7 +2340,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2382,11 +2366,11 @@ begin_comment
 comment|/*  * add_dev()  *	add a device number to the table. this will force the device to be  *	remapped to a new value if it be used during a write phase. This  *	function is called during the read phase of an append to prohibit the  *	use of any device number already in the archive.  * Return:  *	0 if added ok, -1 otherwise  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -2451,11 +2435,11 @@ begin_comment
 comment|/*  * chk_dev()  *	check for a device value in the device table. If not found and the add  *	flag is set, it is added. This does NOT assign any mapping values, just  *	adds the device number as one that need to be remapped. If this device  *	is already mapped, just return with a pointer to that entry.  * Return:  *	pointer to the entry for this device in the device map table. Null  *	if the add flag is not set and the device is not in the table (it is  *	not been seen yet). If add is set and the device cannot be added, null  *	is returned (indicates an error).  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 specifier|static
@@ -2601,7 +2585,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2654,11 +2638,11 @@ begin_comment
 comment|/*  * map_dev()  *	given an inode and device storage mask (the mask has a 1 for each bit  *	the archive format is able to store in a header), we check for inode  *	and device truncation and remap the device as required. Device mapping  *	can also occur when during the read phase of append a device number was  *	seen (and was marked as do not use during the write phase). WE ASSUME  *	that unsigned longs are the same size or bigger than the fields used  *	for ino_t and dev_t. If not the types will have to be changed.  * Return:  *	0 if all ok, -1 otherwise.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -3152,7 +3136,7 @@ operator|)
 return|;
 name|bad
 label|:
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -3163,7 +3147,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|0
 argument_list|,
@@ -3186,11 +3170,11 @@ begin_comment
 comment|/*  * atdir_start()  *	create the directory access time database for directories READ by pax.  * Return:  *	0 is created ok, -1 otherwise.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -3242,7 +3226,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -3268,11 +3252,11 @@ begin_comment
 comment|/*  * atdir_end()  *	walk through the directory access time table and reset the access time  *	of any directory who still has an entry left in the database. These  *	entries are for directories READ by pax  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|void
@@ -3372,11 +3356,11 @@ begin_comment
 comment|/*  * add_atdir()  *	add a directory to the directory access time table. Table is hashed  *	and chained by inode number. This is for directories READ by pax  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|void
@@ -3608,7 +3592,7 @@ name|pt
 argument_list|)
 expr_stmt|;
 block|}
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -3623,11 +3607,11 @@ begin_comment
 comment|/*  * get_atdir()  *	look up a directory by inode and device number to obtain the access  *	and modification time you want to set to. If found, the modification  *	and access time parameters are set and the entry is removed from the  *	table (as it is no longer needed). These are for directories READ by  *	pax  * Return:  *	0 if found, -1 if not found.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|int
@@ -3864,11 +3848,11 @@ begin_comment
 comment|/*  * dir_start()  *	set up the directory time and file mode storage for directories CREATED  *	by pax.  * Return:  *	0 if ok, -1 otherwise  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -3884,10 +3868,6 @@ argument_list|()
 endif|#
 directive|endif
 block|{
-name|char
-modifier|*
-name|pt
-decl_stmt|;
 if|if
 condition|(
 name|dirfd
@@ -3900,42 +3880,17 @@ operator|(
 literal|0
 operator|)
 return|;
-if|if
-condition|(
-operator|(
-name|pt
-operator|=
-name|tempnam
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
 comment|/* 	 * unlink the file so it goes away at termination by itself 	 */
-operator|(
-name|void
-operator|)
-name|unlink
+name|memcpy
 argument_list|(
-name|pt
+name|tempbase
+argument_list|,
+name|_TFILE_BASE
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|_TFILE_BASE
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3943,15 +3898,9 @@ condition|(
 operator|(
 name|dirfd
 operator|=
-name|open
+name|mkstemp
 argument_list|(
-name|pt
-argument_list|,
-name|O_RDWR
-operator||
-name|O_CREAT
-argument_list|,
-literal|0600
+name|tempfile
 argument_list|)
 operator|)
 operator|>=
@@ -3963,7 +3912,7 @@ name|void
 operator|)
 name|unlink
 argument_list|(
-name|pt
+name|tempfile
 argument_list|)
 expr_stmt|;
 return|return
@@ -3972,13 +3921,13 @@ literal|0
 operator|)
 return|;
 block|}
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
 literal|"Unable to create temporary file for directory times: %s"
 argument_list|,
-name|pt
+name|tempfile
 argument_list|)
 expr_stmt|;
 return|return
@@ -3994,11 +3943,11 @@ begin_comment
 comment|/*  * add_dir()  *	add the mode and times for a newly CREATED directory  *	name is name of the directory, psb the stat buffer with the data in it,  *	frc_mode is a flag that says whether to force the setting of the mode  *	(ignoring the user set values for preserving file mode). Frc_mode is  *	for the case where we created a file and found that the resulting  *	directory was not writeable and the user asked for file modes to NOT  *	be preserved. (we have to preserve what was created by default, so we  *	have to force the setting at the end. this is stated explicitly in the  *	pax spec)  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|void
@@ -4080,7 +4029,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -4181,7 +4130,7 @@ name|dircnt
 expr_stmt|;
 return|return;
 block|}
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -4198,11 +4147,11 @@ begin_comment
 comment|/*  * proc_dir()  *	process all file modes and times stored for directories CREATED  *	by pax  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|void
@@ -4412,7 +4361,7 @@ name|cnt
 operator|!=
 name|dircnt
 condition|)
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -4431,11 +4380,11 @@ begin_comment
 comment|/*  * st_hash()  *	hashes filenames to a u_int for hashing into a table. Looks at the tail  *	end of file, as this provides far better distribution than any other  *	part of the name. For performance reasons we only care about the last  *	MAXKEYLEN chars (should be at LEAST large enough to pick off the file  *	name). Was tested on 500,000 name file tree traversal from the root  *	and gave almost a perfectly uniform distribution of keys when used with  *	prime sized tables (MAXKEYLEN was 128 in test). Hashes (sizeof int)  *	chars at a time and pads with 0 for last addition.  * Return:  *	the hash value of the string MOD (%) the table size.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|u_int

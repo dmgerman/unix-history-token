@@ -94,13 +94,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_include
@@ -199,6 +217,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* match all EXCEPT pattern/file */
+end_comment
+
+begin_decl_stmt
+name|int
+name|cwdfd
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* starting cwd */
 end_comment
 
 begin_decl_stmt
@@ -377,6 +405,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|nodirs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* do not create directories as needed */
+end_comment
+
+begin_decl_stmt
+name|int
 name|pmode
 decl_stmt|;
 end_decl_stmt
@@ -393,6 +431,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* preserve file uid/gid */
+end_comment
+
+begin_decl_stmt
+name|int
+name|rmleadslash
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* remove leading '/' from pathnames */
 end_comment
 
 begin_decl_stmt
@@ -447,6 +497,41 @@ begin_comment
 comment|/* signal mask for cleanup critical sect */
 end_comment
 
+begin_decl_stmt
+name|FILE
+modifier|*
+name|listf
+init|=
+name|stderr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* file pointer to print file list to */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|tempfile
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* tempfile to use for mkstemp(3) */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|tempbase
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* basename of tempfile to use for mkstemp(3) */
+end_comment
+
 begin_comment
 comment|/*  *	PAX - Portable Archive Interchange  *  * 	A utility to read, write, and write lists of the members of archive  *	files and copy directory hierarchies. A variety of archive formats  *	are supported (some are described in POSIX 1003.1 10.1):  *  *		ustar - 10.1.1 extended tar interchange format  *		cpio  - 10.1.2 extended cpio interchange format  *		tar - old BSD 4.3 tar format  *		binary cpio - old cpio with binary header format  *		sysVR4 cpio -  with and without CRC  *  * This version is a superset of IEEE Std 1003.2b-d3  *  * Summary of Extensions to the IEEE Standard:  *  * 1	READ ENHANCEMENTS  * 1.1	Operations which read archives will continue to operate even when  *	processing archives which may be damaged, truncated, or fail to meet  *	format specs in several different ways. Damaged sections of archives  *	are detected and avoided if possible. Attempts will be made to resync  *	archive read operations even with badly damaged media.  * 1.2	Blocksize requirements are not strictly enforced on archive read.  *	Tapes which have variable sized records can be read without errors.  * 1.3	The user can specify via the non-standard option flag -E if error  *	resync operation should stop on a media error, try a specified number  *	of times to correct, or try to correct forever.  * 1.4	Sparse files (lseek holes) stored on the archive (but stored with blocks  *	of all zeros will be restored with holes appropriate for the target  *	filesystem  * 1.5	The user is notified whenever something is found during archive  *	read operations which violates spec (but the read will continue).  * 1.6	Multiple archive volumes can be read and may span over different  *	archive devices  * 1.7	Rigidly restores all file attributes exactly as they are stored on the  *	archive.  * 1.8	Modification change time ranges can be specified via multiple -T  *	options. These allow a user to select files whose modification time  *	lies within a specific time range.  * 1.9	Files can be selected based on owner (user name or uid) via one or more  *	-U options.  * 1.10	Files can be selected based on group (group name or gid) via one o  *	more -G options.  * 1.11	File modification time can be checked against existing file after  *	name modification (-Z)  *  * 2	WRITE ENHANCEMENTS  * 2.1	Write operation will stop instead of allowing a user to create a flawed  *	flawed archive (due to any problem).  * 2.2	Archives written by pax are forced to strictly conform to both the  *	archive and pax the specific format specifications.  * 2.3	Blocking size and format is rigidly enforced on writes.  * 2.4	Formats which may exhibit header overflow problems (they have fields  *	too small for large file systems, such as inode number storage), use  *	routines designed to repair this problem. These techniques still  *	conform to both pax and format specifications, but no longer truncate  *	these fields. This removes any restrictions on using these archive  *	formats on large file systems.  * 2.5	Multiple archive volumes can be written and may span over different  *	archive devices  * 2.6	A archive volume record limit allows the user to specify the number  *	of bytes stored on an archive volume. When reached the user is  *	prompted for the next archive volume. This is specified with the  *	non-standard -B flag. The limit is rounded up to the next blocksize.  * 2.7	All archive padding during write use zero filled sections. This makes  *	it much easier to pull data out of flawed archive during read  *	operations.  * 2.8	Access time reset with the -t applies to all file nodes (including  *	directories).  * 2.9	Symbolic links can be followed with -L (optional in the spec).  * 2.10	Modification or inode change time ranges can be specified via  *	multiple -T options. These allow a user to select files whose  *	modification or inode change time lies within a specific time range.  * 2.11	Files can be selected based on owner (user name or uid) via one or more  *	-U options.  * 2.12	Files can be selected based on group (group name or gid) via one o  *	more -G options.  * 2.13	Symlinks which appear on the command line can be followed (without  *	following other symlinks; -H flag)  *  * 3	COPY ENHANCEMENTS  * 3.1	Sparse files (lseek holes) can be copied without expanding the holes  *	into zero filled blocks. The file copy is created with holes which are  *	appropriate for the target filesystem  * 3.2	Access time as well as modification time on copied file trees can be  *	preserved with the appropriate -p options.  * 3.3	Access time reset with the -t applies to all file nodes (including  *	directories).  * 3.4	Symbolic links can be followed with -L (optional in the spec).  * 3.5	Modification or inode change time ranges can be specified via  *	multiple -T options. These allow a user to select files whose  *	modification or inode change time lies within a specific time range.  * 3.6	Files can be selected based on owner (user name or uid) via one or more  *	-U options.  * 3.7	Files can be selected based on group (group name or gid) via one o  *	more -G options.  * 3.8	Symlinks which appear on the command line can be followed (without  *	following other symlinks; -H flag)  * 3.9  File inode change time can be checked against existing file before  *	name modification (-D)  * 3.10 File inode change time can be checked against existing file after  *	name modification (-Y)  * 3.11	File modification time can be checked against existing file after  *	name modification (-Z)  *  * 4	GENERAL ENHANCEMENTS  * 4.1	Internal structure is designed to isolate format dependent and  *	independent functions. Formats are selected via a format driver table.  *	This encourages the addition of new archive formats by only having to  *	write those routines which id, read and write the archive header.  */
 end_comment
@@ -455,11 +540,11 @@ begin_comment
 comment|/*  * main()  *	parse options, set up and operate as specified by the user.  *	any operational flaw will set exit_val to non-zero  * Return: 0 if ok, 1 otherwise  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|int
@@ -492,6 +577,13 @@ decl_stmt|;
 endif|#
 directive|endif
 block|{
+name|char
+modifier|*
+name|tmpdir
+decl_stmt|;
+name|size_t
+name|tdlen
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -501,6 +593,145 @@ name|LC_ALL
 argument_list|,
 literal|""
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Keep a reference to cwd, so we can always come back home. 	 */
+name|cwdfd
+operator|=
+name|open
+argument_list|(
+literal|"."
+argument_list|,
+name|O_RDONLY
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cwdfd
+operator|<
+literal|0
+condition|)
+block|{
+name|syswarn
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"Can't open current working directory."
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|exit_val
+operator|)
+return|;
+block|}
+comment|/* 	 * Where should we put temporary files? 	 */
+if|if
+condition|(
+operator|(
+name|tmpdir
+operator|=
+name|getenv
+argument_list|(
+literal|"TMPDIR"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+operator|||
+operator|*
+name|tmpdir
+operator|==
+literal|'\0'
+condition|)
+name|tmpdir
+operator|=
+name|_PATH_TMP
+expr_stmt|;
+name|tdlen
+operator|=
+name|strlen
+argument_list|(
+name|tmpdir
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|tdlen
+operator|>
+literal|0
+operator|&&
+name|tmpdir
+index|[
+name|tdlen
+operator|-
+literal|1
+index|]
+operator|==
+literal|'/'
+condition|)
+name|tdlen
+operator|--
+expr_stmt|;
+name|tempfile
+operator|=
+name|malloc
+argument_list|(
+name|tdlen
+operator|+
+literal|1
+operator|+
+sizeof|sizeof
+argument_list|(
+name|_TFILE_BASE
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tempfile
+operator|==
+name|NULL
+condition|)
+block|{
+name|paxwarn
+argument_list|(
+literal|1
+argument_list|,
+literal|"Cannot allocate memory for temp file name."
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|exit_val
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|tdlen
+condition|)
+name|memcpy
+argument_list|(
+name|tempfile
+argument_list|,
+name|tmpdir
+argument_list|,
+name|tdlen
+argument_list|)
+expr_stmt|;
+name|tempbase
+operator|=
+name|tempfile
+operator|+
+name|tdlen
+expr_stmt|;
+operator|*
+name|tempbase
+operator|++
+operator|=
+literal|'/'
 expr_stmt|;
 comment|/* 	 * parse options, determine operational mode, general init 	 */
 name|options
@@ -554,6 +785,19 @@ break|break;
 case|case
 name|APPND
 case|:
+if|if
+condition|(
+name|gzip_program
+operator|!=
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"can not gzip while appending"
+argument_list|)
+expr_stmt|;
 name|append
 argument_list|()
 expr_stmt|;
@@ -586,11 +830,11 @@ begin_comment
 comment|/*  * sig_cleanup()  *	when interrupted we try to do whatever delayed processing we can.  *	This is not critical, but we really ought to limit our damage when we  *	are aborted by the user.  * Return:  *	never....  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|void
@@ -624,7 +868,7 @@ name|which_sig
 operator|==
 name|SIGXCPU
 condition|)
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|0
 argument_list|,
@@ -632,7 +876,7 @@ literal|"Cpu time limit reached, cleaning up."
 argument_list|)
 expr_stmt|;
 else|else
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|0
 argument_list|,
@@ -664,11 +908,11 @@ begin_comment
 comment|/*  * gen_init()  *	general setup routines. Not all are required, but they really help  *	when dealing with a medium to large sized archives.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -932,7 +1176,7 @@ literal|0
 operator|)
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -946,6 +1190,17 @@ literal|1
 operator|)
 return|;
 block|}
+name|memset
+argument_list|(
+operator|&
+name|n_hand
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+name|n_hand
+argument_list|)
+expr_stmt|;
 name|n_hand
 operator|.
 name|sa_mask
@@ -1227,7 +1482,7 @@ operator|)
 return|;
 name|out
 label|:
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,

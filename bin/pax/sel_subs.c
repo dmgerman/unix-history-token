@@ -248,11 +248,11 @@ begin_comment
 comment|/*  * sel_chk()  *	check if this file matches a specified uid, gid or time range  * Return:  *	0 if this archive member should be processed, 1 if it should be skipped  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -346,11 +346,11 @@ begin_comment
 comment|/*  * usr_add()  *	add a user match to the user match hash table  * Return:  *	0 if added ok, -1 otherwise;  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -456,7 +456,7 @@ name|NULL
 operator|)
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -519,7 +519,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -574,11 +574,6 @@ name|str
 operator|+
 literal|1
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|NULL
 argument_list|,
 literal|10
@@ -693,7 +688,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -713,11 +708,11 @@ begin_comment
 comment|/*  * usr_match()  *	check if this files uid matches a selected uid.  * Return:  *	0 if this archive member should be processed, 1 if it should be skipped  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -819,11 +814,11 @@ begin_comment
 comment|/*  * grp_add()  *	add a group match to the group match hash table  * Return:  *	0 if added ok, -1 otherwise;  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -929,7 +924,7 @@ name|NULL
 operator|)
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -992,7 +987,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1047,11 +1042,6 @@ name|str
 operator|+
 literal|1
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|NULL
 argument_list|,
 literal|10
@@ -1166,7 +1156,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1186,11 +1176,11 @@ begin_comment
 comment|/*  * grp_match()  *	check if this files gid matches a selected gid.  * Return:  *	0 if this archive member should be processed, 1 if it should be skipped  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -1296,11 +1286,11 @@ begin_comment
 comment|/*  * trng_add()  *	add a time range match to the time range list.  *	This is a non-standard pax option. Lower and upper ranges are in the  *	format: [yy[mm[dd[hh]]]]mm[.ss] and are comma separated.  *	Time ranges are based on current time, so 1234 would specify a time of  *	12:34 today.  * Return:  *	0 if the time range was added to the list, -1 otherwise  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -1377,7 +1367,7 @@ literal|'\0'
 operator|)
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1397,7 +1387,7 @@ condition|(
 operator|(
 name|flgpt
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|str
 argument_list|,
@@ -1499,7 +1489,7 @@ name|dot
 expr_stmt|;
 continue|continue;
 block|}
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1534,7 +1524,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1619,7 +1609,7 @@ name|CMPCTME
 expr_stmt|;
 break|break;
 default|default:
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1651,10 +1641,6 @@ name|high_time
 operator|=
 name|time
 argument_list|(
-operator|(
-name|time_t
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -1684,7 +1670,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1750,7 +1736,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1802,7 +1788,7 @@ operator|->
 name|high_time
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1876,7 +1862,7 @@ operator|)
 return|;
 name|out
 label|:
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1896,11 +1882,11 @@ begin_comment
 comment|/*  * trng_match()  *	check if this files mtime/ctime falls within any supplied time range.  * Return:  *	0 if this archive member should be processed, 1 if it should be skipped  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -2191,11 +2177,11 @@ begin_comment
 comment|/*  * str_sec()  *	Convert a time string in the format of [yy[mm[dd[hh]]]]mm[.ss] to gmt  *	seconds. Tval already has current time loaded into it at entry.  * Return:  *	0 if converted ok, -1 otherwise  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -2267,7 +2253,7 @@ condition|(
 operator|(
 name|dot
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|str
 argument_list|,

@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -249,11 +255,11 @@ begin_comment
 comment|/*  * wr_start()  *	set up the buffering system to operate in a write mode  * Return:  *	0 if ok, -1 if the user specified write block size violates pax spec  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -298,7 +304,7 @@ operator|>
 name|MAXBLK
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -323,7 +329,7 @@ operator|%
 name|BLKMULT
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -332,6 +338,31 @@ argument_list|,
 name|wrblksz
 argument_list|,
 name|BLKMULT
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|wrblksz
+operator|>
+name|MAXBLK_POSIX
+condition|)
+block|{
+name|paxwarn
+argument_list|(
+literal|0
+argument_list|,
+literal|"Write block size of %d larger than POSIX max %d, archive may not be portable"
+argument_list|,
+name|wrblksz
+argument_list|,
+name|MAXBLK_POSIX
 argument_list|)
 expr_stmt|;
 return|return
@@ -398,11 +429,11 @@ begin_comment
 comment|/*  * rd_start()  *	set up buffering system to read an archive  * Return:  *	0 if ok, -1 otherwise  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -447,7 +478,7 @@ operator|>
 name|MAXBLK
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -472,7 +503,7 @@ operator|%
 name|BLKMULT
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -542,11 +573,11 @@ begin_comment
 comment|/*  * cp_start()  *	set up buffer system for copying within the file system  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|void
@@ -585,11 +616,11 @@ begin_comment
 comment|/*  * appnd_start()  *	Set up the buffering system to append new members to an archive that  *	was just read. The last block(s) of an archive may contain a format  *	specific trailer. To append a new member, this trailer has to be  *	removed from the archive. The first byte of the trailer is replaced by  *	the start of the header of the first file added to the archive. The  *	format specific end read function tells us how many bytes to move  *	backwards in the archive to be positioned BEFORE the trailer. Two  *	different postions have to be adjusted, the O.S. file offset (e.g. the  *	position of the tape head) and the write point within the data we have  *	stored in the read (soon to become write) buffer. We may have to move  *	back several records (the number depends on the size of the archive  *	record and the size of the format trailer) to read up the record where  *	the first byte of the trailer is recorded. Trailers may span (and  *	overlap) record boundries.  *	We first calculate which record has the first byte of the trailer. We  *	move the OS file offset back to the start of this record and read it  *	up. We set the buffer write pointer to be at this byte (the byte where  *	the trailer starts). We then move the OS file pointer back to the  *	start of this record so a flush of this buffer will replace the record  *	in the archive.  *	A major problem is rewriting this last record. For archives stored  *	on disk files, this is trival. However, many devices are really picky  *	about the conditions under which they will allow a write to occur.  *	Often devices restrict the conditions where writes can be made writes,  *	so it may not be feasable to append archives stored on all types of  *	devices.  * Return:  *	0 for success, -1 for failure  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|int
@@ -624,7 +655,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|0
 argument_list|,
@@ -847,7 +878,7 @@ operator|)
 return|;
 name|out
 label|:
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -867,11 +898,11 @@ begin_comment
 comment|/*  * rd_sync()  *	A read error occurred on this archive volume. Resync the buffer and  *	try to reset the device (if possible) so we can continue to read. Keep  *	trying to do this until we get a valid read, or we reach the limit on  *	consecutive read faults (at which point we give up). The user can  *	adjust the read error limit through a command line option.  * Returns:  *	0 on success, and -1 on failure  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -917,7 +948,7 @@ operator|==
 name|APPND
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1018,7 +1049,7 @@ operator|>
 name|maxflt
 operator|)
 condition|)
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|0
 argument_list|,
@@ -1066,11 +1097,11 @@ begin_comment
 comment|/*  * pback()  *	push the data used during the archive id phase back into the I/O  *	buffer. This is required as we cannot be sure that the header does NOT  *	overlap a block boundry (as in the case we are trying to recover a  *	flawed archived). This was not designed to be used for any other  *	purpose. (What software engineering, HA!)  *	WARNING: do not even THINK of pback greater than BLKMULT, unless the  *	pback space is increased.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|void
@@ -1105,11 +1136,11 @@ name|bufpt
 operator|-=
 name|cnt
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|pt
-argument_list|,
 name|bufpt
+argument_list|,
+name|pt
 argument_list|,
 name|cnt
 argument_list|)
@@ -1122,11 +1153,11 @@ begin_comment
 comment|/*  * rd_skip()  *	skip foward in the archive during a archive read. Used to get quickly  *	past file data and padding for files the user did NOT select.  * Return:  *	0 if ok, -1 failure, and 1 when EOF on the archive volume was detected.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|int
@@ -1330,11 +1361,11 @@ begin_comment
 comment|/*  * wr_fin()  *	flush out any data (and pad if required) the last block. We always pad  *	with zero (even though we do not have to). Padding with 0 makes it a  *	lot easier to recover if the archive is damaged. zero paddding SHOULD  *	BE a requirement....  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|void
@@ -1357,9 +1388,11 @@ operator|>
 name|buf
 condition|)
 block|{
-name|bzero
+name|memset
 argument_list|(
 name|bufpt
+argument_list|,
+literal|0
 argument_list|,
 name|bufend
 operator|-
@@ -1386,11 +1419,11 @@ begin_comment
 comment|/*  * wr_rdbuf()  *	fill the write buffer from data passed to it in a buffer (usually used  *	by format specific write routines to pass a file header). On failure we  *	punt. We do not allow the user to continue to write flawed archives.  *	We assume these headers are not very large (the memory copy we use is  *	a bit expensive).  * Return:  *	0 if buffer was filled ok, -1 o.w. (buffer flush failure)  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -1490,11 +1523,11 @@ argument_list|,
 name|outcnt
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|out
-argument_list|,
 name|bufpt
+argument_list|,
+name|out
 argument_list|,
 name|cnt
 argument_list|)
@@ -1524,11 +1557,11 @@ begin_comment
 comment|/*  * rd_wrbuf()  *	copy from the read buffer into a supplied buffer a specified number of  *	bytes. If the read buffer is empty fill it and continue to copy.  *	usually used to obtain a file header for processing by a format  *	specific read routine.  * Return  *	number of bytes copied to the buffer, 0 indicates EOF on archive volume,  *	-1 is a read error  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -1655,11 +1688,11 @@ argument_list|,
 name|incnt
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|bufpt
-argument_list|,
 name|in
+argument_list|,
+name|bufpt
 argument_list|,
 name|cnt
 argument_list|)
@@ -1689,11 +1722,11 @@ begin_comment
 comment|/*  * wr_skip()  *	skip forward during a write. In other words add padding to the file.  *	we add zero filled padding as it makes flawed archives much easier to  *	recover from. the caller tells us how many bytes of padding to add  *	This routine was not designed to add HUGE amount of padding, just small  *	amounts (a few 512 byte blocks at most)  * Return:  *	0 if ok, -1 if there was a buf_flush failure  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|int
@@ -1768,9 +1801,11 @@ argument_list|,
 name|skcnt
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|bufpt
+argument_list|,
+literal|0
 argument_list|,
 name|cnt
 argument_list|)
@@ -1793,14 +1828,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * wr_rdfile()  *	fill write buffer with the contents of a file. We are passed an	open  *	file descriptor to the file an the archive structure that describes the  *	file we are storing. The variable "left" is modified to contain the  *	number of bytes of the file we were NOT able to write to the archive.  *	it is important that we always write EXACTLY the number of bytes that  *	the format specific write routine told us to. The file can also get  *	bigger, so reading to the end of file would create an improper archive,  *	we just detect this case and pax_warn the user. We never create a bad  *	archive if we can avoid it. Of course trying to archive files that are  *	active is asking for trouble. It we fail, we pass back how much we  *	could NOT copy and let the caller deal with it.  * Return:  *	0 ok, -1 if archive write failure. a short read of the file returns a  *	0, but "left" is set to be greater than zero.  */
+comment|/*  * wr_rdfile()  *	fill write buffer with the contents of a file. We are passed an	open  *	file descriptor to the file an the archive structure that describes the  *	file we are storing. The variable "left" is modified to contain the  *	number of bytes of the file we were NOT able to write to the archive.  *	it is important that we always write EXACTLY the number of bytes that  *	the format specific write routine told us to. The file can also get  *	bigger, so reading to the end of file would create an improper archive,  *	we just detect this case and warn the user. We never create a bad  *	archive if we can avoid it. Of course trying to archive files that are  *	active is asking for trouble. It we fail, we pass back how much we  *	could NOT copy and let the caller deal with it.  * Return:  *	0 ok, -1 if archive write failure. a short read of the file returns a  *	0, but "left" is set to be greater than zero.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|int
@@ -1956,7 +1991,7 @@ name|res
 operator|<
 literal|0
 condition|)
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1976,7 +2011,7 @@ name|size
 operator|!=
 literal|0L
 condition|)
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2000,7 +2035,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2026,7 +2061,7 @@ name|sb
 operator|.
 name|st_mtime
 condition|)
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2054,11 +2089,11 @@ begin_comment
 comment|/*  * rd_wrfile()  *	extract the contents of a file from the archive. If we are unable to  *	extract the entire file (due to failure to write the file) we return  *	the numbers of bytes we did NOT process. This way the caller knows how  *	many bytes to skip past to find the next archive header. If the failure  *	was due to an archive read, we will catch that when we try to skip. If  *	the format supplies a file data crc value, we calculate the actual crc  *	so that it can be compared to the value stored in the header  * NOTE:  *	We call a special function to write the file. This function attempts to  *	restore file holes (blocks of zeros) into the file. When files are  *	sparse this saves space, and is a LOT faster. For non sparse files  *	the performance hit is small. As of this writing, no archive supports  *	information on where the file holes are.  * Return:  *	0 ok, -1 if archive read failure. if we cannot write the entire file,  *	we return a 0 but "left" is set to be the amount unwritten  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|int
@@ -2185,7 +2220,7 @@ name|st_blksize
 expr_stmt|;
 block|}
 else|else
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|0
 argument_list|,
@@ -2385,7 +2420,7 @@ operator|!=
 name|crc
 operator|)
 condition|)
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2408,11 +2443,11 @@ begin_comment
 comment|/*  * cp_file()  *	copy the contents of one file to another. used during -rw phase of pax  *	just as in rd_wrfile() we use a special write function to write the  *	destination file so we can properly copy files with holes.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|void
@@ -2556,7 +2591,7 @@ name|st_blksize
 expr_stmt|;
 block|}
 else|else
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|0
 argument_list|,
@@ -2652,7 +2687,7 @@ name|res
 operator|<
 literal|0
 condition|)
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2680,7 +2715,7 @@ name|sb
 operator|.
 name|st_size
 condition|)
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2708,7 +2743,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2734,7 +2769,7 @@ name|sb
 operator|.
 name|st_mtime
 condition|)
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2784,11 +2819,11 @@ begin_comment
 comment|/*  * buf_fill()  *	fill the read buffer with the next record (or what we can get) from  *	the archive volume.  * Return:  *	Number of bytes of data in the read buffer, -1 for read error, and  *	0 when finished (user specified termination in ar_next()).  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -2914,11 +2949,11 @@ begin_comment
 comment|/*  * buf_flush()  *	force the write buffer to the archive. We are passed the number of  *	bytes in the buffer at the point of the flush. When we change archives  *	the record size might change. (either larger or smaller).  * Return:  *	0 if all is ok, -1 when a write error occurs.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -2980,7 +3015,7 @@ name|wrlimit
 operator|)
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|0
 argument_list|,
@@ -3086,11 +3121,11 @@ literal|0
 condition|)
 block|{
 comment|/* we have extra data to push to the front. 				 * check for more than 1 block of push, and if 				 * so we loop back to write again 				 */
-name|bcopy
+name|memcpy
 argument_list|(
-name|bufend
-argument_list|,
 name|buf
+argument_list|,
+name|bufend
 argument_list|,
 name|push
 argument_list|)
@@ -3134,7 +3169,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* 			 * Oh drat we got a partial write! 			 * if format doesnt care about alignment let it go, 			 * we pax_warned the user in ar_write().... but this means 			 * the last record on this volume violates pax spec.... 			 */
+comment|/* 			 * Oh drat we got a partial write! 			 * if format doesnt care about alignment let it go, 			 * we warned the user in ar_write().... but this means 			 * the last record on this volume violates pax spec.... 			 */
 name|totcnt
 operator|+=
 name|cnt
@@ -3155,11 +3190,11 @@ name|bufcnt
 operator|-
 name|cnt
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|bufpt
-argument_list|,
 name|buf
+argument_list|,
+name|bufpt
 argument_list|,
 name|cnt
 argument_list|)

@@ -198,11 +198,11 @@ begin_comment
 comment|/*  * list()  *	list the contents of an archive which match user supplied pattern(s)  *	(no pattern matches all).  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|void
@@ -298,10 +298,6 @@ name|now
 operator|=
 name|time
 argument_list|(
-operator|(
-name|time_t
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -386,6 +382,8 @@ argument_list|(
 name|arcn
 argument_list|,
 name|now
+argument_list|,
+name|stdout
 argument_list|)
 expr_stmt|;
 block|}
@@ -429,10 +427,6 @@ argument_list|,
 operator|&
 name|s_mask
 argument_list|,
-operator|(
-name|sigset_t
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -449,11 +443,11 @@ begin_comment
 comment|/*  * extract()  *	extract the member(s) of an archive as specified by user supplied  *	pattern(s) (no patterns extracts all members)  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|void
@@ -490,6 +484,9 @@ name|sb
 decl_stmt|;
 name|int
 name|fd
+decl_stmt|;
+name|time_t
+name|now
 decl_stmt|;
 name|arcn
 operator|=
@@ -551,6 +548,13 @@ literal|0
 operator|)
 condition|)
 return|return;
+name|now
+operator|=
+name|time
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* 	 * step through each entry on the archive until the format read routine 	 * says it is done 	 */
 while|while
 condition|(
@@ -960,6 +964,23 @@ condition|(
 name|vflag
 condition|)
 block|{
+if|if
+condition|(
+name|vflag
+operator|>
+literal|1
+condition|)
+name|ls_list
+argument_list|(
+name|arcn
+argument_list|,
+name|now
+argument_list|,
+name|listf
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 operator|(
 name|void
 operator|)
@@ -969,7 +990,7 @@ name|arcn
 operator|->
 name|name
 argument_list|,
-name|stderr
+name|listf
 argument_list|)
 expr_stmt|;
 name|vfpart
@@ -977,6 +998,56 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+block|}
+comment|/* 		 * if required, chdir around. 		 */
+if|if
+condition|(
+operator|(
+name|arcn
+operator|->
+name|pat
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
+name|arcn
+operator|->
+name|pat
+operator|->
+name|chdname
+operator|!=
+name|NULL
+operator|)
+condition|)
+if|if
+condition|(
+name|chdir
+argument_list|(
+name|arcn
+operator|->
+name|pat
+operator|->
+name|chdname
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|syswarn
+argument_list|(
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"Cannot chdir to %s"
+argument_list|,
+name|arcn
+operator|->
+name|pat
+operator|->
+name|chdname
+argument_list|)
+expr_stmt|;
 comment|/* 		 * all ok, extract this member based on type 		 */
 if|if
 condition|(
@@ -1070,7 +1141,7 @@ name|putc
 argument_list|(
 literal|'\n'
 argument_list|,
-name|stderr
+name|listf
 argument_list|)
 expr_stmt|;
 name|vfpart
@@ -1155,7 +1226,7 @@ name|putc
 argument_list|(
 literal|'\n'
 argument_list|,
-name|stderr
+name|listf
 argument_list|)
 expr_stmt|;
 name|vfpart
@@ -1178,6 +1249,45 @@ operator|+
 name|arcn
 operator|->
 name|pad
+argument_list|)
+expr_stmt|;
+comment|/* 		 * if required, chdir around. 		 */
+if|if
+condition|(
+operator|(
+name|arcn
+operator|->
+name|pat
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
+name|arcn
+operator|->
+name|pat
+operator|->
+name|chdname
+operator|!=
+name|NULL
+operator|)
+condition|)
+if|if
+condition|(
+name|fchdir
+argument_list|(
+name|cwdfd
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|syswarn
+argument_list|(
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"Can't fchdir to starting directory"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1203,10 +1313,6 @@ argument_list|,
 operator|&
 name|s_mask
 argument_list|,
-operator|(
-name|sigset_t
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -1226,11 +1332,11 @@ begin_comment
 comment|/*  * wr_archive()  *	Write an archive. used in both creating a new archive and appends on  *	previously written archive.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -1303,6 +1409,9 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
+name|time_t
+name|now
+decl_stmt|;
 comment|/* 	 * if this format supports hard link storage, start up the database 	 * that detects them. 	 */
 if|if
 condition|(
@@ -1372,6 +1481,13 @@ comment|/* 	 * if this not append, and there are no files, we do no write a trai
 name|wr_one
 operator|=
 name|is_app
+expr_stmt|;
+name|now
+operator|=
+name|time
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 comment|/* 	 * while there are files to archive, process them one at at time 	 */
 while|while
@@ -1496,7 +1612,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1593,6 +1709,23 @@ condition|(
 name|vflag
 condition|)
 block|{
+if|if
+condition|(
+name|vflag
+operator|>
+literal|1
+condition|)
+name|ls_list
+argument_list|(
+name|arcn
+argument_list|,
+name|now
+argument_list|,
+name|listf
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 operator|(
 name|void
 operator|)
@@ -1602,13 +1735,14 @@ name|arcn
 operator|->
 name|name
 argument_list|,
-name|stderr
+name|listf
 argument_list|)
 expr_stmt|;
 name|vfpart
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 operator|++
 name|flcnt
@@ -1667,7 +1801,7 @@ name|putc
 argument_list|(
 literal|'\n'
 argument_list|,
-name|stderr
+name|listf
 argument_list|)
 expr_stmt|;
 name|vfpart
@@ -1725,7 +1859,7 @@ name|putc
 argument_list|(
 literal|'\n'
 argument_list|,
-name|stderr
+name|listf
 argument_list|)
 expr_stmt|;
 name|vfpart
@@ -1811,10 +1945,6 @@ argument_list|,
 operator|&
 name|s_mask
 argument_list|,
-operator|(
-name|sigset_t
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -1838,11 +1968,11 @@ begin_comment
 comment|/*  * append()  *	Add file to previously written archive. Archive format specified by the  *	user must agree with archive. The archive is read first to collect  *	modification times (if -u) and locate the archive trailer. The archive  *	is positioned in front of the record with the trailer and wr_archive()  *	is called to add the new members.  *	PAX IMPLEMENTATION DETAIL NOTE:  *	-u is implemented by adding the new members to the end of the archive.  *	Care is taken so that these do not end up as links to the older  *	version of the same file already stored in the archive. It is expected  *	when extraction occurs these newer versions will over-write the older  *	ones stored "earlier" in the archive (this may be a bad assumption as  *	it depends on the implementation of the program doing the extraction).  *	It is really difficult to splice in members without either re-writing  *	the entire archive (from the point were the old version was), or having  *	assistance of the format specification in terms of a special update  *	header that invalidates a previous archive record. The POSIX spec left  *	the method used to implement -u unspecified. This pax is able to  *	over write existing files that it creates.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|void
@@ -1913,7 +2043,7 @@ name|frmt
 operator|)
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2001,7 +2131,7 @@ name|void
 operator|)
 name|fprintf
 argument_list|(
-name|stderr
+name|listf
 argument_list|,
 literal|"%s: Reading archive to position at the end..."
 argument_list|,
@@ -2172,7 +2302,7 @@ name|fputs
 argument_list|(
 literal|"done.\n"
 argument_list|,
-name|stderr
+name|listf
 argument_list|)
 expr_stmt|;
 name|vfpart
@@ -2195,11 +2325,11 @@ begin_comment
 comment|/*  * archive()  *	write a new archive  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|void
@@ -2268,11 +2398,11 @@ begin_comment
 comment|/*  * copy()  *	copy files from one part of the file system to another. this does not  *	use any archive storage. The EFFECT OF THE COPY IS THE SAME as if an  *	archive was written and then extracted in the destination directory  *	(except the files are forced to be under the destination directory).  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|void
@@ -2409,7 +2539,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2433,7 +2563,7 @@ name|st_mode
 argument_list|)
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2555,7 +2685,7 @@ operator|>
 name|drem
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2856,7 +2986,7 @@ name|arcn
 operator|->
 name|name
 argument_list|,
-name|stderr
+name|listf
 argument_list|)
 expr_stmt|;
 name|vfpart
@@ -2908,7 +3038,7 @@ name|putc
 argument_list|(
 literal|'\n'
 argument_list|,
-name|stderr
+name|listf
 argument_list|)
 expr_stmt|;
 name|vfpart
@@ -2997,7 +3127,7 @@ name|putc
 argument_list|(
 literal|'\n'
 argument_list|,
-name|stderr
+name|listf
 argument_list|)
 expr_stmt|;
 name|vfpart
@@ -3028,7 +3158,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,
@@ -3116,7 +3246,7 @@ name|putc
 argument_list|(
 literal|'\n'
 argument_list|,
-name|stderr
+name|listf
 argument_list|)
 expr_stmt|;
 name|vfpart
@@ -3136,10 +3266,6 @@ argument_list|,
 operator|&
 name|s_mask
 argument_list|,
-operator|(
-name|sigset_t
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -3159,11 +3285,11 @@ begin_comment
 comment|/*  * next_head()  *	try to find a valid header in the archive. Uses format specific  *	routines to extract the header and id the trailer. Trailers may be  *	located within a valid header or in an invalid header (the location  *	is format specific. The inhead field from the option table tells us  *	where to look for the trailer).  *	We keep reading (and resyncing) until we get enough contiguous data  *	to check for a header. If we cannot find one, we shift by a byte  *	add a new byte from the archive to the end of the buffer and try again.  *	If we get a read error, we throw out what we have (as we must have  *	contiguous data) and start over again.  *	ASSUMED: headers fit within a BLKMULT header.  * Return:  *	0 if we got a header, -1 if we are unable to ever find another one  *	(we reached the end of input, or we reached the limit on retries. see  *	the specs for rd_wrbuf() for more details)  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -3231,6 +3357,12 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* counter for trailer function */
+name|int
+name|first
+init|=
+literal|1
+decl_stmt|;
+comment|/* on 1st read, EOF isn't premature. */
 comment|/* 	 * set up initial conditions, we want a whole frmt->hsz block as we 	 * have no data yet. 	 */
 name|res
 operator|=
@@ -3279,6 +3411,25 @@ operator|==
 name|res
 condition|)
 break|break;
+comment|/* 			 * If we read 0 bytes (EOF) from an archive when we 			 * expect to find a header, we have stepped upon 			 * an archive without the customary block of zeroes 			 * end marker.  It's just stupid to error out on 			 * them, so exit gracefully. 			 */
+if|if
+condition|(
+name|first
+operator|&&
+name|ret
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+name|first
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 			 * some kind of archive read problem, try to resync the 			 * storage device, better give the user the bad news. 			 */
 if|if
 condition|(
@@ -3296,7 +3447,7 @@ literal|0
 operator|)
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -3323,7 +3474,7 @@ operator|==
 name|APPND
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -3337,7 +3488,7 @@ literal|1
 operator|)
 return|;
 block|}
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -3453,7 +3604,7 @@ operator|==
 name|APPND
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -3467,7 +3618,7 @@ literal|1
 operator|)
 return|;
 block|}
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -3478,13 +3629,13 @@ operator|++
 name|in_resync
 expr_stmt|;
 block|}
-name|bcopy
+name|memmove
 argument_list|(
+name|hdbuf
+argument_list|,
 name|hdbuf
 operator|+
 literal|1
-argument_list|,
-name|hdbuf
 argument_list|,
 name|shftsz
 argument_list|)
@@ -3548,11 +3699,11 @@ begin_comment
 comment|/*  * get_arc()  *	Figure out what format an archive is. Handles archive with flaws by  *	brute force searches for a legal header in any supported format. The  *	format id routines have to be careful to NOT mis-identify a format.  *	ASSUMED: headers fit within a BLKMULT header.  * Return:  *	0 if archive found -1 otherwise  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -3758,7 +3909,7 @@ operator|-
 literal|1
 operator|)
 return|;
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -3857,7 +4008,7 @@ operator|-
 literal|1
 operator|)
 return|;
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -3877,13 +4028,13 @@ operator|>
 literal|0
 condition|)
 block|{
-name|bcopy
+name|memmove
 argument_list|(
+name|hdbuf
+argument_list|,
 name|hdbuf
 operator|+
 literal|1
-argument_list|,
-name|hdbuf
 argument_list|,
 name|hdsz
 argument_list|)
@@ -3920,7 +4071,7 @@ block|}
 name|out
 label|:
 comment|/* 	 * we cannot find a header, bow, apologize and quit 	 */
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,

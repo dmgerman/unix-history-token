@@ -173,11 +173,11 @@ begin_comment
 comment|/*  * ls_list()  *	list the members of an archive in ls format  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|void
@@ -190,6 +190,10 @@ name|arcn
 argument_list|,
 name|time_t
 name|now
+argument_list|,
+name|FILE
+operator|*
+name|fp
 argument_list|)
 else|#
 directive|else
@@ -199,6 +203,8 @@ argument_list|(
 name|arcn
 argument_list|,
 name|now
+argument_list|,
+name|fp
 argument_list|)
 decl|register
 name|ARCHD
@@ -210,6 +216,13 @@ end_decl_stmt
 begin_decl_stmt
 name|time_t
 name|now
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|FILE
+modifier|*
+name|fp
 decl_stmt|;
 end_decl_stmt
 
@@ -252,8 +265,10 @@ block|{
 operator|(
 name|void
 operator|)
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|"%s\n"
 argument_list|,
 name|arcn
@@ -266,7 +281,7 @@ name|void
 operator|)
 name|fflush
 argument_list|(
-name|stdout
+name|fp
 argument_list|)
 expr_stmt|;
 return|return;
@@ -346,8 +361,10 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|"%s%2u %-*s %-*s "
 argument_list|,
 name|f_mode
@@ -404,8 +421,10 @@ name|NET2_STAT
 operator|(
 name|void
 operator|)
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|"%4u,%4u "
 argument_list|,
 name|MAJOR
@@ -428,8 +447,10 @@ directive|else
 operator|(
 name|void
 operator|)
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|"%4lu,%4lu "
 argument_list|,
 operator|(
@@ -465,8 +486,10 @@ name|NET2_STAT
 operator|(
 name|void
 operator|)
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|"%9lu "
 argument_list|,
 name|sbp
@@ -479,8 +502,10 @@ directive|else
 operator|(
 name|void
 operator|)
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|"%9qu "
 argument_list|,
 name|sbp
@@ -495,8 +520,10 @@ comment|/* 	 * print name and link info for hard and soft links 	 */
 operator|(
 name|void
 operator|)
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|"%s %s"
 argument_list|,
 name|f_date
@@ -527,8 +554,10 @@ condition|)
 operator|(
 name|void
 operator|)
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|" == %s\n"
 argument_list|,
 name|arcn
@@ -548,8 +577,10 @@ condition|)
 operator|(
 name|void
 operator|)
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|" => %s\n"
 argument_list|,
 name|arcn
@@ -561,9 +592,11 @@ else|else
 operator|(
 name|void
 operator|)
-name|putchar
+name|putc
 argument_list|(
 literal|'\n'
+argument_list|,
+name|fp
 argument_list|)
 expr_stmt|;
 operator|(
@@ -571,7 +604,7 @@ name|void
 operator|)
 name|fflush
 argument_list|(
-name|stdout
+name|fp
 argument_list|)
 expr_stmt|;
 return|return;
@@ -582,11 +615,11 @@ begin_comment
 comment|/*  * tty_ls()  * 	print a short summary of file to tty.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|void
@@ -726,130 +759,14 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * zf_strncpy()  *	copy src to dest up to len chars (stopping at first '\0'), when src is  *	shorter than len, pads to len with '\0'. big performance win (and  *	a lot easier to code) over strncpy(), then a strlen() then a  *	bzero(). (or doing the bzero() first).  */
+comment|/*  * l_strncpy()  *	copy src to dest up to len chars (stopping at first '\0').  *	when src is shorter than len, pads to len with '\0'.   * Return:  *	number of chars copied. (Note this is a real performance win over  *	doing a strncpy(), a strlen(), and then a possible memset())  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
-
-begin_decl_stmt
-name|void
-name|zf_strncpy
-argument_list|(
-specifier|register
-name|char
-operator|*
-name|dest
-argument_list|,
-specifier|register
-name|char
-operator|*
-name|src
-argument_list|,
-name|int
-name|len
-argument_list|)
-else|#
-directive|else
-name|void
-name|zf_strncpy
-argument_list|(
-name|dest
-argument_list|,
-name|src
-argument_list|,
-name|len
-argument_list|)
-decl|register
-name|char
-modifier|*
-name|dest
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|register
-name|char
-modifier|*
-name|src
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|len
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_block
-block|{
-specifier|register
-name|char
-modifier|*
-name|stop
-decl_stmt|;
-name|stop
-operator|=
-name|dest
-operator|+
-name|len
-expr_stmt|;
-while|while
-condition|(
-operator|(
-name|dest
-operator|<
-name|stop
-operator|)
-operator|&&
-operator|(
-operator|*
-name|src
-operator|!=
-literal|'\0'
-operator|)
-condition|)
-operator|*
-name|dest
-operator|++
-operator|=
-operator|*
-name|src
-operator|++
-expr_stmt|;
-while|while
-condition|(
-name|dest
-operator|<
-name|stop
-condition|)
-operator|*
-name|dest
-operator|++
-operator|=
-literal|'\0'
-expr_stmt|;
-return|return;
-block|}
-end_block
-
-begin_comment
-comment|/*  * l_strncpy()  *	copy src to dest up to len chars (stopping at first '\0')  * Return:  *	number of chars copied. (Note this is a real performance win over  *	doing a strncpy() then a strlen()  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -950,7 +867,13 @@ operator|*
 name|src
 operator|++
 expr_stmt|;
-if|if
+name|len
+operator|=
+name|dest
+operator|-
+name|start
+expr_stmt|;
+while|while
 condition|(
 name|dest
 operator|<
@@ -958,14 +881,13 @@ name|stop
 condition|)
 operator|*
 name|dest
+operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
 return|return
 operator|(
-name|dest
-operator|-
-name|start
+name|len
 operator|)
 return|;
 block|}
@@ -975,11 +897,11 @@ begin_comment
 comment|/*  * asc_ul()  *	convert hex/octal character string into a u_long. We do not have to  *	check for overflow! (the headers in all supported formats are not large  *	enough to create an overflow).  *	NOTE: strings passed to us are NOT TERMINATED.  * Return:  *	unsigned long value  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|u_long
@@ -1253,11 +1175,11 @@ begin_comment
 comment|/*  * ul_asc()  *	convert an unsigned long into an hex/oct ascii string. pads with LEADING  *	ascii 0's to fill string completely  *	NOTE: the string created is NOT TERMINATED.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|int
@@ -1493,11 +1415,11 @@ begin_comment
 comment|/*  * asc_uqd()  *	convert hex/octal character string into a u_quad_t. We do not have to  *	check for overflow! (the headers in all supported formats are not large  *	enough to create an overflow).  *	NOTE: strings passed to us are NOT TERMINATED.  * Return:  *	u_quad_t value  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|u_quad_t
@@ -1771,11 +1693,11 @@ begin_comment
 comment|/*  * uqd_asc()  *	convert an u_quad_t into a hex/oct ascii string. pads with LEADING  *	ascii 0's to fill string completely  *	NOTE: the string created is NOT TERMINATED.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|int

@@ -241,11 +241,11 @@ begin_comment
 comment|/*  * ftree_start()  *	initialize the options passed to fts_open() during this run of pax  *	options are based on the selection of pax options by the user  *	fts_start() also calls fts_arg() to open the first valid file arg. We  *	also attempt to reset directory access times when -t (tflag) is set.  * Return:  *	0 if there is at least one valid file arg to process, -1 otherwise  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -287,7 +287,7 @@ condition|)
 ifdef|#
 directive|ifdef
 name|NET2_FTS
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|0
 argument_list|,
@@ -337,7 +337,7 @@ name|NULL
 operator|)
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -393,11 +393,11 @@ begin_comment
 comment|/*  * ftree_add()  *	add the arg to the linked list of files to process. Each will be  *	processed by fts one at a time  * Return:  *	0 if added to the linked list, -1 if failed  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -407,6 +407,9 @@ specifier|register
 name|char
 operator|*
 name|str
+argument_list|,
+name|int
+name|chflg
 argument_list|)
 else|#
 directive|else
@@ -414,11 +417,19 @@ name|int
 name|ftree_add
 argument_list|(
 name|str
+argument_list|,
+name|chflg
 argument_list|)
 decl|register
 name|char
 modifier|*
 name|str
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|chflg
 decl_stmt|;
 end_decl_stmt
 
@@ -455,11 +466,11 @@ literal|'\0'
 operator|)
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|0
 argument_list|,
-literal|"Invalid file name arguement"
+literal|"Invalid file name argument"
 argument_list|)
 expr_stmt|;
 return|return
@@ -491,7 +502,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|0
 argument_list|,
@@ -552,6 +563,12 @@ literal|0
 expr_stmt|;
 name|ft
 operator|->
+name|chflg
+operator|=
+name|chflg
+expr_stmt|;
+name|ft
+operator|->
 name|fow
 operator|=
 name|NULL
@@ -597,11 +614,11 @@ begin_comment
 comment|/*  * ftree_sel()  *	this entry has been selected by pax. bump up reference count and handle  *	-n and -d processing.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|void
@@ -694,11 +711,11 @@ begin_comment
 comment|/*  * ftree_chk()  *	called at end on pax execution. Prints all those file args that did not  *	have a selected member (reference count still 0)  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|void
@@ -753,11 +770,17 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|ft
 operator|->
 name|refcnt
 operator|>
 literal|0
+operator|)
+operator|||
+name|ft
+operator|->
+name|chflg
 condition|)
 continue|continue;
 if|if
@@ -767,7 +790,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -800,11 +823,11 @@ begin_comment
 comment|/*  * ftree_arg()  *	Get the next file arg for fts to process. Can be from either the linked  *	list or read from stdin when the user did not them as args to pax. Each  *	arg is processed until the first successful fts_open().  * Return:  *	0 when the next arg is ready to go, -1 if out of file args (or EOF on  *	stdin).  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -913,7 +936,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * the user supplied the file args as arguements to pax 			 */
+comment|/* 			 * the user supplied the file args as arguments to pax 			 */
 if|if
 condition|(
 name|ftcur
@@ -943,6 +966,75 @@ operator|-
 literal|1
 operator|)
 return|;
+if|if
+condition|(
+name|ftcur
+operator|->
+name|chflg
+condition|)
+block|{
+comment|/* First fchdir() back... */
+if|if
+condition|(
+name|fchdir
+argument_list|(
+name|cwdfd
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|syswarn
+argument_list|(
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"Can't fchdir to starting directory"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|chdir
+argument_list|(
+name|ftcur
+operator|->
+name|fname
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|syswarn
+argument_list|(
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"Can't chdir to %s"
+argument_list|,
+name|ftcur
+operator|->
+name|fname
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+continue|continue;
+block|}
+else|else
 name|farray
 index|[
 literal|0
@@ -985,11 +1077,11 @@ begin_comment
 comment|/*  * next_file()  *	supplies the next file to process in the supplied archd structure.  * Return:  *	0 when contents of arcn have been set with the next file, -1 when done.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -1208,7 +1300,7 @@ case|case
 name|FTS_DC
 case|:
 comment|/* 			 * fts claims a file system cycle 			 */
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1226,7 +1318,7 @@ case|:
 ifdef|#
 directive|ifdef
 name|NET2_FTS
-name|sys_warn
+name|syswarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1234,7 +1326,7 @@ argument|errno
 argument_list|,
 else|#
 directive|else
-argument|sys_warn(
+argument|syswarn(
 literal|1
 argument|, ftent->fts_errno,
 endif|#
@@ -1244,12 +1336,12 @@ argument|, ftent->fts_path); 			continue; 		case FTS_ERR:
 ifdef|#
 directive|ifdef
 name|NET2_FTS
-argument|sys_warn(
+argument|syswarn(
 literal|1
 argument|, errno,
 else|#
 directive|else
-argument|sys_warn(
+argument|syswarn(
 literal|1
 argument|, ftent->fts_errno,
 endif|#
@@ -1259,12 +1351,12 @@ argument|); 			continue; 		case FTS_NS: 		case FTS_NSOK:
 ifdef|#
 directive|ifdef
 name|NET2_FTS
-argument|sys_warn(
+argument|syswarn(
 literal|1
 argument|, errno,
 else|#
 directive|else
-argument|sys_warn(
+argument|syswarn(
 literal|1
 argument|, ftent->fts_errno,
 endif|#
@@ -1301,7 +1393,7 @@ argument|if ((cnt = readlink(ftent->fts_path, arcn->ln_name, 			    PAXPATHLEN -
 literal|1
 argument|))<
 literal|0
-argument|) { 				sys_warn(
+argument|) { 				syswarn(
 literal|1
 argument|, errno,
 literal|"Unable to read symlink %s"
@@ -1313,7 +1405,7 @@ argument|; 			arcn->ln_nlen = cnt; 			break; 		case S_IFSOCK:
 comment|/* 			 * under BSD storing a socket is senseless but we will 			 * let the format specific write function make the 			 * decision of what to do with it. 			 */
 argument|arcn->type = PAX_SCK; 			break; 		case S_IFIFO: 			arcn->type = PAX_FIF; 			break; 		} 		break; 	}
 comment|/* 	 * copy file name, set file name length 	 */
-argument|arcn->nlen = l_strncpy(arcn->name, ftent->fts_path, PAXPATHLEN+
+argument|arcn->nlen = l_strncpy(arcn->name, ftent->fts_path, sizeof(arcn->name) -
 literal|1
 argument|); 	arcn->name[arcn->nlen] =
 literal|'\0'

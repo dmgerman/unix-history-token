@@ -201,11 +201,11 @@ begin_comment
 comment|/*  * uidtb_start  *	creates an an empty uidtb  * Return:  *	0 if ok, -1 otherwise  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -276,7 +276,7 @@ block|{
 operator|++
 name|fail
 expr_stmt|;
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -302,11 +302,11 @@ begin_comment
 comment|/*  * gidtb_start  *	creates an an empty gidtb  * Return:  *	0 if ok, -1 otherwise  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -377,7 +377,7 @@ block|{
 operator|++
 name|fail
 expr_stmt|;
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -403,11 +403,11 @@ begin_comment
 comment|/*  * usrtb_start  *	creates an an empty usrtb  * Return:  *	0 if ok, -1 otherwise  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -478,7 +478,7 @@ block|{
 operator|++
 name|fail
 expr_stmt|;
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -504,11 +504,11 @@ begin_comment
 comment|/*  * grptb_start  *	creates an an empty grptb  * Return:  *	0 if ok, -1 otherwise  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -579,7 +579,7 @@ block|{
 operator|++
 name|fail
 expr_stmt|;
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -605,11 +605,11 @@ begin_comment
 comment|/*  * name_uid()  *	caches the name (if any) for the uid. If frc set, we always return the  *	the stored name (if valid or invalid match). We use a simple hash table.  * Return  *	Pointer to stored name (or a empty string)  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|char
@@ -811,11 +811,18 @@ name|NET2_STAT
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|ptr
 operator|->
 name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ptr
+operator|->
+name|name
+argument_list|)
 argument_list|,
 literal|"%u"
 argument_list|,
@@ -827,16 +834,24 @@ directive|else
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|ptr
 operator|->
 name|name
 argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ptr
+operator|->
+name|name
+argument_list|)
+argument_list|,
 literal|"%lu"
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|uid
 argument_list|)
@@ -927,11 +942,11 @@ begin_comment
 comment|/*  * name_gid()  *	caches the name (if any) for the gid. If frc set, we always return the  *	the stored name (if valid or invalid match). We use a simple hash table.  * Return  *	Pointer to stored name (or a empty string)  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|char
@@ -1133,11 +1148,18 @@ name|NET2_STAT
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|ptr
 operator|->
 name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ptr
+operator|->
+name|name
+argument_list|)
 argument_list|,
 literal|"%u"
 argument_list|,
@@ -1149,16 +1171,24 @@ directive|else
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|ptr
 operator|->
 name|name
 argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ptr
+operator|->
+name|name
+argument_list|)
+argument_list|,
 literal|"%lu"
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|gid
 argument_list|)
@@ -1249,11 +1279,11 @@ begin_comment
 comment|/*  * uid_name()  *	caches the uid for a given user name. We use a simple hash table.  * Return  *	the uid (if any) for a user name, or a -1 if no match can be found  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|int
@@ -1445,6 +1475,18 @@ name|NULL
 condition|)
 name|ptr
 operator|=
+name|usrtb
+index|[
+name|st_hash
+argument_list|(
+name|name
+argument_list|,
+name|namelen
+argument_list|,
+name|UNM_SZ
+argument_list|)
+index|]
+operator|=
 operator|(
 name|UIDC
 operator|*
@@ -1580,11 +1622,11 @@ begin_comment
 comment|/*  * gid_name()  *	caches the gid for a given group name. We use a simple hash table.  * Return  *	the gid (if any) for a group name, or a -1 if no match can be found  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 name|int
@@ -1775,6 +1817,18 @@ operator|==
 name|NULL
 condition|)
 name|ptr
+operator|=
+name|grptb
+index|[
+name|st_hash
+argument_list|(
+name|name
+argument_list|,
+name|namelen
+argument_list|,
+name|GID_SZ
+argument_list|)
+index|]
 operator|=
 operator|(
 name|GIDC

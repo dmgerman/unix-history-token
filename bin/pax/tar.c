@@ -216,11 +216,11 @@ begin_comment
 comment|/*  * tar_endwr()  *	add the tar trailer of two null blocks  * Return:  *	0 if ok, -1 otherwise (what wr_skip returns)  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -258,11 +258,11 @@ begin_comment
 comment|/*  * tar_endrd()  *	no cleanup needed here, just return size of trailer (for append)  * Return:  *	size of trailer (2 * BLKMULT)  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|off_t
@@ -297,11 +297,11 @@ begin_comment
 comment|/*  * tar_trail()  *	Called to determine if a header block is a valid trailer. We are passed  *	the block, the in_sync flag (which tells us we are in resync mode;  *	looking for a valid header), and cnt (which starts at zero) which is  *	used to count the number of empty blocks we have seen so far.  * Return:  *	0 if a valid trailer, -1 if not a valid trailer, or 1 if the block  *	could never contain a header.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -432,14 +432,14 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * ul_oct()  *	convert an unsigned long to an octal string. many oddball field  *	termination characters are used by the various versions of tar in the  *	different fields. term selects which kind to use. str is BLANK padded  *	at the front to len. we are unable to use only one format as many old  *	tar readers are very cranky about this.  * Return:  *	0 if the number fit into the string, -1 otherwise  */
+comment|/*  * ul_oct()  *	convert an unsigned long to an octal string. many oddball field  *	termination characters are used by the various versions of tar in the  *	different fields. term selects which kind to use. str is '0' padded  *	at the front to len. we are unable to use only one format as many old  *	tar readers are very cranky about this.  * Return:  *	0 if the number fit into the string, -1 otherwise  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 specifier|static
@@ -614,7 +614,7 @@ operator|*
 name|pt
 operator|--
 operator|=
-literal|' '
+literal|'0'
 expr_stmt|;
 if|if
 condition|(
@@ -646,14 +646,14 @@ name|NET2_STAT
 end_ifndef
 
 begin_comment
-comment|/*  * uqd_oct()  *	convert an u_quad_t to an octal string. one of many oddball field  *	termination characters are used by the various versions of tar in the  *	different fields. term selects which kind to use. str is BLANK padded  *	at the front to len. we are unable to use only one format as many old  *	tar readers are very cranky about this.  * Return:  *	0 if the number fit into the string, -1 otherwise  */
+comment|/*  * uqd_oct()  *	convert an u_quad_t to an octal string. one of many oddball field  *	termination characters are used by the various versions of tar in the  *	different fields. term selects which kind to use. str is '0' padded  *	at the front to len. we are unable to use only one format as many old  *	tar readers are very cranky about this.  * Return:  *	0 if the number fit into the string, -1 otherwise  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function
 specifier|static
@@ -825,7 +825,7 @@ operator|*
 name|pt
 operator|--
 operator|=
-literal|' '
+literal|'0'
 expr_stmt|;
 if|if
 condition|(
@@ -859,11 +859,11 @@ begin_comment
 comment|/*  * tar_chksm()  *	calculate the checksum for a tar block counting the checksum field as  *	all blanks (BLNKSUM is that value pre-calculated, the sum of 8 blanks).  *	NOTE: we use len to short circuit summing 0's on write since we ALWAYS  *	pad headers with 0.  * Return:  *	unsigned long checksum  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -1002,11 +1002,11 @@ begin_comment
 comment|/*  * tar_id()  *	determine if a block given to us is a valid tar header (and not a USTAR  *	header). We have to be on the lookout for those pesky blocks of	all  *	zero's.  * Return:  *	0 if a tar header, -1 otherwise  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -1171,11 +1171,11 @@ begin_comment
 comment|/*  * tar_opt()  *	handle tar format specific -o options  * Return:  *	0 if ok -1 otherwise  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -1228,7 +1228,7 @@ name|TAR_NODIR
 argument_list|)
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1243,7 +1243,7 @@ operator|->
 name|value
 argument_list|)
 expr_stmt|;
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1277,7 +1277,7 @@ name|ARCHIVE
 operator|)
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1316,11 +1316,11 @@ begin_comment
 comment|/*  * tar_rd()  *	extract the values out of block already determined to be a tar header.  *	store the values in the ARCHD parameter.  * Return:  *	0  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -1442,10 +1442,12 @@ name|name
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|hd
+name|arcn
 operator|->
 name|name
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|arcn
@@ -1538,6 +1540,9 @@ argument_list|,
 name|OCT
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NET2_STAT
 name|arcn
 operator|->
 name|sb
@@ -1545,7 +1550,7 @@ operator|.
 name|st_size
 operator|=
 operator|(
-name|size_t
+name|off_t
 operator|)
 name|asc_ul
 argument_list|(
@@ -1563,6 +1568,35 @@ argument_list|,
 name|OCT
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|arcn
+operator|->
+name|sb
+operator|.
+name|st_size
+operator|=
+operator|(
+name|off_t
+operator|)
+name|asc_uqd
+argument_list|(
+name|hd
+operator|->
+name|size
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hd
+operator|->
+name|size
+argument_list|)
+argument_list|,
+name|OCT
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|arcn
 operator|->
 name|sb
@@ -1668,10 +1702,12 @@ name|linkname
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|hd
+name|arcn
 operator|->
-name|linkname
+name|ln_name
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|arcn
@@ -1728,10 +1764,12 @@ name|linkname
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|hd
+name|arcn
 operator|->
-name|linkname
+name|ln_name
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|arcn
@@ -1753,6 +1791,48 @@ operator|.
 name|st_mode
 operator||=
 name|S_IFREG
+expr_stmt|;
+break|break;
+case|case
+name|DIRTYPE
+case|:
+comment|/* 		 * It is a directory, set the mode for -v printing 		 */
+name|arcn
+operator|->
+name|type
+operator|=
+name|PAX_DIR
+expr_stmt|;
+name|arcn
+operator|->
+name|sb
+operator|.
+name|st_mode
+operator||=
+name|S_IFDIR
+expr_stmt|;
+name|arcn
+operator|->
+name|sb
+operator|.
+name|st_nlink
+operator|=
+literal|2
+expr_stmt|;
+name|arcn
+operator|->
+name|ln_name
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|arcn
+operator|->
+name|ln_nlen
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -1885,11 +1965,11 @@ begin_comment
 comment|/*  * tar_wr()  *	write a tar header for the file specified in the ARCHD to the archive.  *	Have to check for file types that cannot be stored and file names that  *	are too long. Be careful of the term (last arg) to ul_oct, each field  *	of tar has it own spec for the termination character(s).  *	ASSUMED: space after header in header block is zero filled  * Return:  *	0 if file has data to be written after the header, 1 if file has NO  *	data to write after the header, -1 if archive write failed  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -1963,7 +2043,7 @@ break|break;
 case|case
 name|PAX_CHR
 case|:
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -1982,7 +2062,7 @@ return|;
 case|case
 name|PAX_BLK
 case|:
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2001,7 +2081,7 @@ return|;
 case|case
 name|PAX_SCK
 case|:
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2020,7 +2100,7 @@ return|;
 case|case
 name|PAX_FIF
 case|:
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2059,7 +2139,7 @@ name|linkname
 argument_list|)
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2107,7 +2187,7 @@ expr_stmt|;
 if|if
 condition|(
 name|len
-operator|>
+operator|>=
 sizeof|sizeof
 argument_list|(
 name|hd
@@ -2116,7 +2196,7 @@ name|name
 argument_list|)
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2142,7 +2222,7 @@ operator|*
 operator|)
 name|hdblk
 expr_stmt|;
-name|zf_strncpy
+name|l_strncpy
 argument_list|(
 name|hd
 operator|->
@@ -2158,7 +2238,25 @@ name|hd
 operator|->
 name|name
 argument_list|)
+operator|-
+literal|1
 argument_list|)
+expr_stmt|;
+name|hd
+operator|->
+name|name
+index|[
+sizeof|sizeof
+argument_list|(
+name|hd
+operator|->
+name|name
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 name|arcn
 operator|->
@@ -2182,11 +2280,13 @@ name|linkflag
 operator|=
 name|AREGTYPE
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|hd
 operator|->
 name|linkname
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2251,7 +2351,7 @@ name|linkflag
 operator|=
 name|SYMTYPE
 expr_stmt|;
-name|zf_strncpy
+name|l_strncpy
 argument_list|(
 name|hd
 operator|->
@@ -2267,7 +2367,25 @@ name|hd
 operator|->
 name|linkname
 argument_list|)
+operator|-
+literal|1
 argument_list|)
+expr_stmt|;
+name|hd
+operator|->
+name|linkname
+index|[
+sizeof|sizeof
+argument_list|(
+name|hd
+operator|->
+name|linkname
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -2323,7 +2441,7 @@ name|linkflag
 operator|=
 name|LNKTYPE
 expr_stmt|;
-name|zf_strncpy
+name|l_strncpy
 argument_list|(
 name|hd
 operator|->
@@ -2339,7 +2457,25 @@ name|hd
 operator|->
 name|linkname
 argument_list|)
+operator|-
+literal|1
 argument_list|)
+expr_stmt|;
+name|hd
+operator|->
+name|linkname
+index|[
+sizeof|sizeof
+argument_list|(
+name|hd
+operator|->
+name|linkname
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -2377,11 +2513,13 @@ name|linkflag
 operator|=
 name|AREGTYPE
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|hd
 operator|->
 name|linkname
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2454,7 +2592,7 @@ condition|)
 block|{
 endif|#
 directive|endif
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2617,7 +2755,7 @@ operator|->
 name|chksum
 argument_list|)
 argument_list|,
-literal|2
+literal|3
 argument_list|)
 condition|)
 goto|goto
@@ -2699,7 +2837,7 @@ return|;
 name|out
 label|:
 comment|/* 	 * header field is out of range 	 */
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -2718,8 +2856,8 @@ return|;
 block|}
 comment|/*  * Routines for POSIX ustar  */
 comment|/*  * ustar_strd()  *	initialization for ustar read  * Return:  *	0 if ok, -1 otherwise  */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|int
 name|ustar_strd
@@ -2763,8 +2901,8 @@ operator|)
 return|;
 block|}
 comment|/*  * ustar_stwr()  *	initialization for ustar write  * Return:  *	0 if ok, -1 otherwise  */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|int
 name|ustar_stwr
@@ -2808,8 +2946,8 @@ operator|)
 return|;
 block|}
 comment|/*  * ustar_id()  *	determine if a block given to us is a valid ustar header. We have to  *	be on the lookout for those pesky blocks of all zero's  * Return:  *	0 if a ustar header, -1 otherwise  */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|int
 name|ustar_id
@@ -2943,8 +3081,8 @@ operator|)
 return|;
 block|}
 comment|/*  * ustar_rd()  *	extract the values out of block already determined to be a ustar header.  *	store the values in the ARCHD parameter.  * Return:  *	0  */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|int
 name|ustar_rd
@@ -3043,6 +3181,12 @@ name|pat
 operator|=
 name|NULL
 expr_stmt|;
+name|arcn
+operator|->
+name|nlen
+operator|=
+literal|0
+expr_stmt|;
 name|hd
 operator|=
 operator|(
@@ -3074,9 +3218,7 @@ name|cnt
 operator|=
 name|l_strncpy
 argument_list|(
-name|arcn
-operator|->
-name|name
+name|dest
 argument_list|,
 name|hd
 operator|->
@@ -3084,21 +3226,17 @@ name|prefix
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|hd
-operator|->
-name|prefix
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|dest
-operator|=
 name|arcn
 operator|->
 name|name
-operator|+
-name|arcn
-operator|->
-name|nlen
+argument_list|)
+operator|-
+literal|2
+argument_list|)
+expr_stmt|;
+name|dest
+operator|+=
+name|cnt
 expr_stmt|;
 operator|*
 name|dest
@@ -3106,11 +3244,16 @@ operator|++
 operator|=
 literal|'/'
 expr_stmt|;
+name|cnt
+operator|++
+expr_stmt|;
 block|}
 name|arcn
 operator|->
 name|nlen
 operator|=
+name|cnt
+operator|+
 name|l_strncpy
 argument_list|(
 name|dest
@@ -3121,17 +3264,13 @@ name|name
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|hd
+name|arcn
 operator|->
 name|name
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|arcn
-operator|->
-name|nlen
-operator|+=
+operator|-
 name|cnt
+argument_list|)
 expr_stmt|;
 name|arcn
 operator|->
@@ -3174,6 +3313,9 @@ operator|&
 literal|0xfff
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NET2_STAT
 name|arcn
 operator|->
 name|sb
@@ -3181,7 +3323,7 @@ operator|.
 name|st_size
 operator|=
 operator|(
-name|size_t
+name|off_t
 operator|)
 name|asc_ul
 argument_list|(
@@ -3199,6 +3341,35 @@ argument_list|,
 name|OCT
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|arcn
+operator|->
+name|sb
+operator|.
+name|st_size
+operator|=
+operator|(
+name|off_t
+operator|)
+name|asc_uqd
+argument_list|(
+name|hd
+operator|->
+name|size
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hd
+operator|->
+name|size
+argument_list|)
+argument_list|,
+name|OCT
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|arcn
 operator|->
 name|sb
@@ -3661,10 +3832,12 @@ name|linkname
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|hd
+name|arcn
 operator|->
-name|linkname
+name|ln_name
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|arcn
@@ -3736,8 +3909,8 @@ operator|)
 return|;
 block|}
 comment|/*  * ustar_wr()  *	write a ustar header for the file specified in the ARCHD to the archive  *	Have to check for file types that cannot be stored and file names that  *	are too long. Be careful of the term (last arg) to ul_oct, we only use  *	'\0' for the termination character (this is different than picky tar)  *	ASSUMED: space after header in header block is zero filled  * Return:  *	0 if file has data to be written after the header, 1 if file has NO  *	data to write after the header, -1 if archive write failed  */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|int
 name|ustar_wr
@@ -3791,7 +3964,7 @@ operator|==
 name|PAX_SCK
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -3851,7 +4024,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -3889,7 +4062,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -3936,7 +4109,7 @@ name|pt
 operator|=
 literal|'\0'
 expr_stmt|;
-name|zf_strncpy
+name|l_strncpy
 argument_list|(
 name|hd
 operator|->
@@ -3952,6 +4125,8 @@ name|hd
 operator|->
 name|prefix
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 operator|*
@@ -3962,11 +4137,13 @@ literal|'/'
 expr_stmt|;
 block|}
 else|else
-name|bzero
+name|memset
 argument_list|(
 name|hd
 operator|->
 name|prefix
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3977,7 +4154,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * copy the name part. this may be the whole path or the part after 	 * the prefix 	 */
-name|zf_strncpy
+name|l_strncpy
 argument_list|(
 name|hd
 operator|->
@@ -3991,7 +4168,25 @@ name|hd
 operator|->
 name|name
 argument_list|)
+operator|-
+literal|1
 argument_list|)
+expr_stmt|;
+name|hd
+operator|->
+name|name
+index|[
+sizeof|sizeof
+argument_list|(
+name|hd
+operator|->
+name|name
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 comment|/* 	 * set the fields in the header that are type dependent 	 */
 switch|switch
@@ -4010,11 +4205,13 @@ name|typeflag
 operator|=
 name|DIRTYPE
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|hd
 operator|->
 name|linkname
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4024,11 +4221,13 @@ name|linkname
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|hd
 operator|->
 name|devmajor
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4038,11 +4237,13 @@ name|devmajor
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|hd
 operator|->
 name|devminor
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4106,11 +4307,13 @@ name|typeflag
 operator|=
 name|BLKTYPE
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|hd
 operator|->
 name|linkname
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4212,11 +4415,13 @@ name|typeflag
 operator|=
 name|FIFOTYPE
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|hd
 operator|->
 name|linkname
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4226,11 +4431,13 @@ name|linkname
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|hd
 operator|->
 name|devmajor
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4240,11 +4447,13 @@ name|devmajor
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|hd
 operator|->
 name|devminor
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4311,7 +4520,7 @@ name|typeflag
 operator|=
 name|LNKTYPE
 expr_stmt|;
-name|zf_strncpy
+name|l_strncpy
 argument_list|(
 name|hd
 operator|->
@@ -4327,13 +4536,33 @@ name|hd
 operator|->
 name|linkname
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
-name|bzero
+name|hd
+operator|->
+name|linkname
+index|[
+sizeof|sizeof
+argument_list|(
+name|hd
+operator|->
+name|linkname
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|memset
 argument_list|(
 name|hd
 operator|->
 name|devmajor
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4343,11 +4572,13 @@ name|devmajor
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|hd
 operator|->
 name|devminor
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4413,11 +4644,13 @@ name|typeflag
 operator|=
 name|REGTYPE
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|hd
 operator|->
 name|linkname
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4427,11 +4660,13 @@ name|linkname
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|hd
 operator|->
 name|devmajor
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4441,11 +4676,13 @@ name|devmajor
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|hd
 operator|->
 name|devminor
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4531,7 +4768,7 @@ condition|)
 block|{
 endif|#
 directive|endif
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -4550,7 +4787,7 @@ return|;
 block|}
 break|break;
 block|}
-name|zf_strncpy
+name|l_strncpy
 argument_list|(
 name|hd
 operator|->
@@ -4561,7 +4798,7 @@ argument_list|,
 name|TMAGLEN
 argument_list|)
 expr_stmt|;
-name|zf_strncpy
+name|l_strncpy
 argument_list|(
 name|hd
 operator|->
@@ -4678,7 +4915,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-name|zf_strncpy
+name|l_strncpy
 argument_list|(
 name|hd
 operator|->
@@ -4703,7 +4940,7 @@ name|uname
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|zf_strncpy
+name|l_strncpy
 argument_list|(
 name|hd
 operator|->
@@ -4836,7 +5073,7 @@ return|;
 name|out
 label|:
 comment|/* 	 * header field is out of range 	 */
-name|pax_warn
+name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
@@ -4854,8 +5091,8 @@ operator|)
 return|;
 block|}
 comment|/*  * name_split()  *	see if the name has to be split for storage in a ustar header. We try  *	to fit the entire name in the name field without splitting if we can.  *	The split point is always at a /  * Return  *	character pointer to split point (always the / that is to be removed  *	if the split is not needed, the points is set to the start of the file  *	name (it would violate the spec to split there). A NULL is returned if  *	the file name is too long  */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 specifier|static
 name|char
@@ -4903,7 +5140,7 @@ comment|/* 	 * check to see if the file name is small enough to fit in the name 
 if|if
 condition|(
 name|len
-operator|<=
+operator|<
 name|TNMSZ
 condition|)
 return|return
