@@ -44,6 +44,9 @@ name|fd
 parameter_list|,
 name|daddr_t
 name|block
+parameter_list|,
+name|u_long
+name|sector_size
 parameter_list|)
 block|{
 name|struct
@@ -63,6 +66,8 @@ argument_list|(
 name|fd
 argument_list|,
 name|block
+argument_list|,
+name|sector_size
 argument_list|)
 expr_stmt|;
 if|if

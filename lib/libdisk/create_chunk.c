@@ -237,7 +237,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|Fixup_FreeBSD_Names
 parameter_list|(
 name|struct
@@ -274,7 +274,9 @@ argument_list|,
 literal|"X"
 argument_list|)
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 comment|/* reset all names to "X" */
 for|for
 control|(
@@ -317,13 +319,10 @@ name|c1
 operator|->
 name|name
 condition|)
-name|barfout
-argument_list|(
+return|return
+operator|-
 literal|1
-argument_list|,
-literal|"Malloc failed"
-argument_list|)
-expr_stmt|;
+return|;
 name|strcpy
 argument_list|(
 name|c1
@@ -529,6 +528,7 @@ argument_list|)
 expr_stmt|;
 name|newname
 label|:
+empty_stmt|;
 block|}
 comment|/* Allocate the rest sequentially */
 for|for
@@ -694,11 +694,14 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|Fixup_Extended_Names
 parameter_list|(
 name|struct
@@ -771,13 +774,10 @@ name|c1
 operator|->
 name|name
 condition|)
-name|barfout
-argument_list|(
+return|return
+operator|-
 literal|1
-argument_list|,
-literal|"malloc failed"
-argument_list|)
-expr_stmt|;
+return|;
 name|sprintf
 argument_list|(
 name|c1
@@ -804,19 +804,30 @@ name|type
 operator|==
 name|freebsd
 condition|)
+if|if
+condition|(
 name|Fixup_FreeBSD_Names
 argument_list|(
 name|d
 argument_list|,
 name|c1
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|Fixup_Names
 parameter_list|(
 name|struct
@@ -923,13 +934,10 @@ name|c2
 operator|->
 name|oname
 condition|)
-name|barfout
-argument_list|(
+return|return
+operator|-
 literal|1
-argument_list|,
-literal|"malloc failed"
-argument_list|)
-expr_stmt|;
+return|;
 for|for
 control|(
 name|j
@@ -1147,6 +1155,9 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -1554,13 +1565,7 @@ condition|)
 return|return
 name|c1
 return|;
-name|barfout
-argument_list|(
-literal|1
-argument_list|,
-literal|"Serious internal trouble"
-argument_list|)
-expr_stmt|;
+comment|/* barfout(1, "Serious internal trouble"); */
 return|return
 literal|0
 return|;

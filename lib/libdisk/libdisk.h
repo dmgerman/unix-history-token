@@ -3,67 +3,37 @@ begin_comment
 comment|/* * ---------------------------------------------------------------------------- * "THE BEER-WARE LICENSE" (Revision 42): *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you * can do whatever you want with this stuff. If we meet some day, and you think * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp * ---------------------------------------------------------------------------- * * $FreeBSD$ * */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__i386__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<err.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|barfout
-parameter_list|(
-name|n
-parameter_list|,
-name|errstr
-parameter_list|)
-value|err(n, errstr)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|barfout
-parameter_list|(
-name|n
-parameter_list|,
-name|errstr
-parameter_list|)
-value|fprintf(stderr, "\n\n\t***[ %s ]***\t\n\n", errstr)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
 name|MAX_NO_DISKS
-value|20
+value|32
 end_define
 
 begin_comment
 comment|/* Max # of disks Disk_Names() will return */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_SEC_SIZE
+value|2048
+end_define
+
+begin_comment
+comment|/* maximum sector size that is supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIN_SEC_SIZE
+value|512
+end_define
+
+begin_comment
+comment|/* the sector size to end sensing at */
 end_comment
 
 begin_typedef
@@ -166,6 +136,10 @@ name|chunk
 modifier|*
 name|chunks
 decl_stmt|;
+name|u_long
+name|sector_size
+decl_stmt|;
+comment|/* media sector size, a power of 2 */
 block|}
 struct|;
 end_struct
@@ -664,7 +638,7 @@ comment|/* Use this boot-manager on this disk.  Gets written when Write_Disk()  
 end_comment
 
 begin_function_decl
-name|void
+name|int
 name|Set_Boot_Blocks
 parameter_list|(
 name|struct
@@ -686,7 +660,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Use these boot-blocks on this disk.  Gets written when Write_Disk()  * is called  */
+comment|/* Use these boot-blocks on this disk.  Gets written when Write_Disk()  * is called. Returns nonzero upon failure.  */
 end_comment
 
 begin_function_decl
@@ -1043,23 +1017,24 @@ parameter_list|(
 name|int
 parameter_list|,
 name|daddr_t
+parameter_list|,
+name|u_long
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|write_block
 parameter_list|(
 name|int
-name|fd
 parameter_list|,
 name|daddr_t
-name|block
 parameter_list|,
 name|void
 modifier|*
-name|foo
+parameter_list|,
+name|u_long
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1073,6 +1048,8 @@ parameter_list|(
 name|int
 parameter_list|,
 name|daddr_t
+parameter_list|,
+name|u_long
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1114,7 +1091,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|Fixup_Names
 parameter_list|(
 name|struct
