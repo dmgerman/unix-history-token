@@ -3,6 +3,12 @@ begin_comment
 comment|/*-  * Copyright (c) 2002-2003  * 	Hidetoshi Shimokawa. All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *  *	This product includes software developed by Hidetoshi Shimokawa.  *  * 4. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -16,6 +22,11 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -112,6 +123,29 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__DragonFly__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"firewire.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"iec13213.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -123,6 +157,11 @@ include|#
 directive|include
 file|<dev/firewire/iec13213.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -174,11 +213,11 @@ condition|(
 name|hdr
 operator|->
 name|info_len
-operator|==
+operator|<=
 literal|1
 condition|)
 block|{
-comment|/* minimum ROM */
+comment|/* minimum or invalid ROM */
 name|cc
 operator|->
 name|depth
@@ -186,6 +225,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+return|return;
 block|}
 name|p
 operator|+=
@@ -1927,6 +1967,11 @@ condition|)
 block|{
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__DragonFly__
+argument_list|)
+operator|||
 name|__FreeBSD_version
 operator|<
 literal|500000
@@ -2884,6 +2929,49 @@ argument_list|,
 literal|0xacde48
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__DragonFly__
+name|crom_add_simple_text
+argument_list|(
+operator|&
+name|src
+argument_list|,
+operator|&
+name|root
+argument_list|,
+operator|&
+name|text1
+argument_list|,
+literal|"DragonFly"
+argument_list|)
+expr_stmt|;
+name|crom_add_entry
+argument_list|(
+operator|&
+name|root
+argument_list|,
+name|CSRKEY_HW
+argument_list|,
+name|__DragonFly_cc_version
+argument_list|)
+expr_stmt|;
+name|crom_add_simple_text
+argument_list|(
+operator|&
+name|src
+argument_list|,
+operator|&
+name|root
+argument_list|,
+operator|&
+name|text2
+argument_list|,
+literal|"DragonFly-1"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|crom_add_simple_text
 argument_list|(
 operator|&
@@ -2922,6 +3010,8 @@ argument_list|,
 literal|"FreeBSD-5"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* SBP unit directory */
 name|crom_add_chunk
 argument_list|(

@@ -48,6 +48,11 @@ end_include
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__DragonFly__
+argument_list|)
+operator|||
 name|__FreeBSD_version
 operator|<
 literal|500000
@@ -84,6 +89,47 @@ directive|include
 file|<machine/bus.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__DragonFly__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"firewire.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"firewirereg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"fwmem.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"iec13213.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"iec68113.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -113,6 +159,11 @@ include|#
 directive|include
 file|<dev/firewire/iec68113.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -1205,14 +1256,6 @@ return|return
 name|EINVAL
 return|;
 block|}
-name|microtime
-argument_list|(
-operator|&
-name|xfer
-operator|->
-name|tv
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|info
@@ -1431,6 +1474,14 @@ comment|/* XXX allow bus explore packets only after bus rest */
 block|if (fc->status< FWBUSEXPLORE) { 		xfer->resp = EAGAIN; 		xfer->state = FWXF_BUSY; 		if (xfer->act.hand != NULL) 			xfer->act.hand(xfer); 		return; 	}
 endif|#
 directive|endif
+name|microtime
+argument_list|(
+operator|&
+name|xfer
+operator|->
+name|tv
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|splfw
@@ -3235,6 +3286,34 @@ argument_list|,
 name|CSRVAL_VENDOR_PRIVATE
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__DragonFly__
+name|crom_add_simple_text
+argument_list|(
+name|src
+argument_list|,
+name|root
+argument_list|,
+operator|&
+name|buf
+operator|->
+name|vendor
+argument_list|,
+literal|"DragonFly Project"
+argument_list|)
+expr_stmt|;
+name|crom_add_entry
+argument_list|(
+name|root
+argument_list|,
+name|CSRKEY_HW
+argument_list|,
+name|__DragonFly_cc_version
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|crom_add_simple_text
 argument_list|(
 name|src
@@ -3258,6 +3337,8 @@ argument_list|,
 name|__FreeBSD_version
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|crom_add_simple_text
 argument_list|(
 name|src
@@ -4396,7 +4477,7 @@ name|printf
 argument_list|(
 literal|"%s: invalid range\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -4484,7 +4565,7 @@ name|printf
 argument_list|(
 literal|"%s: bind failed\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -4604,7 +4685,7 @@ name|printf
 argument_list|(
 literal|"%s: no such bind\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|splx
@@ -5341,7 +5422,7 @@ name|printf
 argument_list|(
 literal|"%s: xfer == NULL\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5434,7 +5515,7 @@ name|printf
 argument_list|(
 literal|"%s: xfer == NULL\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return;
@@ -7778,23 +7859,49 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"node%d: resp=%d addr=0x%x\n"
+name|fc
+operator|->
+name|bdev
+argument_list|,
+literal|"bus_explore node=%d addr=0x%x resp=%d retry=%d\n"
 argument_list|,
 name|fc
 operator|->
 name|ongonode
 argument_list|,
+name|fc
+operator|->
+name|ongoaddr
+argument_list|,
 name|xfer
 operator|->
 name|resp
 argument_list|,
-name|fc
+name|xfer
 operator|->
-name|ongoaddr
+name|retry
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|xfer
+operator|->
+name|retry
+operator|<
+name|fc
+operator|->
+name|max_asyretry
+condition|)
+block|{
+name|fw_asystart
+argument_list|(
+name|xfer
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 goto|goto
 name|errnode
 goto|;
@@ -8669,6 +8776,7 @@ name|ongodev
 operator|!=
 name|NULL
 condition|)
+block|{
 name|fc
 operator|->
 name|ongodev
@@ -8677,6 +8785,19 @@ name|status
 operator|=
 name|FWDEVINVAL
 expr_stmt|;
+comment|/* Invalidate ROM */
+name|fc
+operator|->
+name|ongodev
+operator|->
+name|csrrom
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|nextnode
 label|:
 name|fw_xfer_free
@@ -8994,9 +9115,13 @@ operator|>
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"probe failed for %d node\n"
+name|fc
+operator|->
+name|bdev
+argument_list|,
+literal|"bus_explore failed for %d nodes\n"
 argument_list|,
 name|fc
 operator|->
@@ -9999,14 +10124,19 @@ argument_list|(
 literal|"Unknown service addr 0x%04x:0x%08x %s(%x)"
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__DragonFly__
+argument_list|)
+operator|||
 name|__FreeBSD_version
-operator|>=
+operator|<
 literal|500000
-literal|" src=0x%x data=%x\n"
+literal|" src=0x%x data=%lx\n"
 argument_list|,
 else|#
 directive|else
-literal|" src=0x%x data=%lx\n"
+literal|" src=0x%x data=%x\n"
 argument_list|,
 endif|#
 directive|endif
@@ -10611,13 +10741,18 @@ comment|/* XXX */
 block|vec[0].iov_len); 		if (rb->xfer == NULL) goto err; 		fw_rcv_copy(rb) 		s = splfw(); 		xferq->queued++; 		STAILQ_INSERT_TAIL(&xferq->q, rb->xfer, link); 		splx(s); 		sc = device_get_softc(rb->fc->bdev);
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__DragonFly__
+argument_list|)
+operator|||
 name|__FreeBSD_version
-operator|>=
+operator|<
 literal|500000
-block|if (SEL_WAITING(&xferq->rsel))
+block|if (&xferq->rsel.si_pid != 0)
 else|#
 directive|else
-block|if (&xferq->rsel.si_pid != 0)
+block|if (SEL_WAITING(&xferq->rsel))
 endif|#
 directive|endif
 block|selwakeuppri(&xferq->rsel, FWPRI); 		if (xferq->flag& FWXFERQ_WAKEUP) { 			xferq->flag&= ~FWXFERQ_WAKEUP; 			wakeup((caddr_t)xferq); 		} 		if (xferq->flag& FWXFERQ_HANDLER) { 			xferq->hand(xferq); 		} 		return; 		break; 	}
@@ -12148,6 +12283,11 @@ literal|0
 decl_stmt|;
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
 name|__FreeBSD_version
 operator|>=
 literal|500000
@@ -12169,6 +12309,11 @@ name|MOD_LOAD
 case|:
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
 name|__FreeBSD_version
 operator|>=
 literal|500000
@@ -12193,6 +12338,11 @@ name|MOD_UNLOAD
 case|:
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
 name|__FreeBSD_version
 operator|>=
 literal|500000
@@ -12224,6 +12374,25 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__DragonFly__
+end_ifdef
+
+begin_expr_stmt
+name|DECLARE_DUMMY_MODULE
+argument_list|(
+name|firewire
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|DRIVER_MODULE

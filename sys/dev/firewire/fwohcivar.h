@@ -6,8 +6,13 @@ end_comment
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__DragonFly__
+argument_list|)
+operator|||
 name|__FreeBSD_version
-operator|>=
+operator|<
 literal|500000
 end_if
 
@@ -15,7 +20,7 @@ begin_define
 define|#
 directive|define
 name|FWOHCI_TASKQUEUE
-value|1
+value|0
 end_define
 
 begin_else
@@ -27,7 +32,7 @@ begin_define
 define|#
 directive|define
 name|FWOHCI_TASKQUEUE
-value|0
+value|1
 end_define
 
 begin_endif
@@ -73,6 +78,11 @@ name|ih
 decl_stmt|;
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__DragonFly__
+argument_list|)
+operator|||
 name|__FreeBSD_version
 operator|<
 literal|500000

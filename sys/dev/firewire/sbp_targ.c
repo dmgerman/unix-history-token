@@ -913,7 +913,7 @@ name|printf
 argument_list|(
 literal|"%s: login = NULL\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1046,7 +1046,7 @@ name|printf
 argument_list|(
 literal|"%s: login_id=%d expired\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|login
 operator|->
@@ -1065,7 +1065,7 @@ name|printf
 argument_list|(
 literal|"%s: login_id=%d not hold\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|login
 operator|->
@@ -1191,7 +1191,7 @@ name|printf
 argument_list|(
 literal|"%s: already freezed\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -2211,7 +2211,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|struct ccb_hdr *ccbh; 	struct ccb_immed_notify *inot;  	printf("%s: not implemented yet\n", __FUNCTION__);
+block|struct ccb_hdr *ccbh; 	struct ccb_immed_notify *inot;  	printf("%s: not implemented yet\n", __func__);
 endif|#
 directive|endif
 block|}
@@ -2306,7 +2306,7 @@ name|printf
 argument_list|(
 literal|"%s: no such login\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -2338,7 +2338,7 @@ name|printf
 argument_list|(
 literal|"%s: orb not found tag_id=0x%08x\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|tag_id
 argument_list|)
@@ -2390,7 +2390,7 @@ name|printf
 argument_list|(
 literal|"%s: status=%d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|orbi
 operator|->
@@ -2527,7 +2527,7 @@ name|printf
 argument_list|(
 literal|"%s: xfer->resp = %d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|xfer
 operator|->
@@ -2648,7 +2648,7 @@ name|printf
 argument_list|(
 literal|"%s: xfer == NULL\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -2730,7 +2730,7 @@ name|printf
 argument_list|(
 literal|"%s: STATUS_OK\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|sbp_status
@@ -2768,7 +2768,7 @@ name|printf
 argument_list|(
 literal|"%s: STATUS %d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|ccb
 operator|->
@@ -3031,7 +3031,7 @@ name|printf
 argument_list|(
 literal|"%s: unknown scsi status 0x%x\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|sbp_status
 operator|->
@@ -3121,7 +3121,7 @@ name|printf
 argument_list|(
 literal|"%s: resp=%d refcount=%d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|xfer
 operator|->
@@ -3145,7 +3145,7 @@ name|printf
 argument_list|(
 literal|"%s: xfer->resp = %d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|xfer
 operator|->
@@ -3227,7 +3227,7 @@ name|printf
 argument_list|(
 literal|"%s: orbi aborted\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|sbp_targ_remove_orb_info
@@ -3608,7 +3608,7 @@ name|printf
 argument_list|(
 literal|"%s: not found\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -3681,7 +3681,7 @@ name|printf
 argument_list|(
 literal|"%s: offset=%d size=%d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|offset
 argument_list|,
@@ -3825,7 +3825,7 @@ name|printf
 argument_list|(
 literal|"%s: xfer == NULL"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* XXX what should we do?? */
@@ -3915,7 +3915,7 @@ name|printf
 argument_list|(
 literal|"%s: orbi aborted\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|sbp_targ_remove_orb_info
@@ -3963,7 +3963,7 @@ name|printf
 argument_list|(
 literal|"%s: xfer->resp = %d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|xfer
 operator|->
@@ -4071,7 +4071,7 @@ name|printf
 argument_list|(
 literal|"%s: dxfer_len=%d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|res
 argument_list|)
@@ -4205,7 +4205,7 @@ name|printf
 argument_list|(
 literal|"%s: refcount == 0\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -4219,7 +4219,7 @@ name|printf
 argument_list|(
 literal|"%s: page table is too small(%d)\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|res
 argument_list|)
@@ -4257,7 +4257,7 @@ name|printf
 argument_list|(
 literal|"%s: page_table_size=%d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|orbi
 operator|->
@@ -4454,7 +4454,7 @@ name|printf
 argument_list|(
 literal|"%s: XPT_CONT_TARGET_IO\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -4539,7 +4539,7 @@ name|printf
 argument_list|(
 literal|"%s: ctio aborted\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|sbp_targ_remove_orb_info
@@ -4616,7 +4616,7 @@ name|printf
 argument_list|(
 literal|"%s: direction mismatch\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* check page table */
@@ -4641,7 +4641,7 @@ name|printf
 argument_list|(
 literal|"%s: page_table_present\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -4659,7 +4659,7 @@ name|printf
 argument_list|(
 literal|"%s: unsupported pagesize %d != 0\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|orbi
 operator|->
@@ -4713,7 +4713,7 @@ name|printf
 argument_list|(
 literal|"%s: data_size(%d) != dxfer_len(%d)\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|orbi
 operator|->
@@ -4887,7 +4887,7 @@ name|printf
 argument_list|(
 literal|"%s: new atio arrived\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|lstate
@@ -5241,7 +5241,7 @@ name|printf
 argument_list|(
 literal|"%s: aborting unknown function %d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|accb
 operator|->
@@ -5272,7 +5272,7 @@ name|printf
 argument_list|(
 literal|"%s: unknown function %d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|ccb
 operator|->
@@ -5421,7 +5421,7 @@ name|printf
 argument_list|(
 literal|"%s: xfer->resp = %d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|xfer
 operator|->
@@ -5522,7 +5522,7 @@ name|printf
 argument_list|(
 literal|"%s: aborted\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|sbp_targ_remove_orb_info
@@ -5611,7 +5611,7 @@ name|printf
 argument_list|(
 literal|"%s: rq_fmt(%d) != 0\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|orb4
 operator|->
@@ -5707,7 +5707,7 @@ name|printf
 argument_list|(
 literal|"%s: %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|bytes
 index|[
@@ -5881,7 +5881,7 @@ name|printf
 argument_list|(
 literal|"%s: fetch next orb\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|orbi
@@ -6081,7 +6081,7 @@ name|printf
 argument_list|(
 literal|"%s: increase MAX_LOGIN\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -6124,7 +6124,7 @@ name|printf
 argument_list|(
 literal|"%s: malloc failed\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -6263,7 +6263,7 @@ name|printf
 argument_list|(
 literal|"%s: xfer->resp = %d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|xfer
 operator|->
@@ -6407,7 +6407,7 @@ name|printf
 argument_list|(
 literal|"%s: %s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|orb_fun_name
 index|[
@@ -6568,7 +6568,7 @@ name|printf
 argument_list|(
 literal|"%s: sbp_targ_get_login failed\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|orbi
@@ -6788,7 +6788,7 @@ name|printf
 argument_list|(
 literal|"%s: reconnected id=%d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|login
 operator|->
@@ -6818,7 +6818,7 @@ name|printf
 argument_list|(
 literal|"%s: reconnection faild id=%d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|orb4
 operator|->
@@ -6858,7 +6858,7 @@ name|printf
 argument_list|(
 literal|"%s: wrong initiator\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6874,7 +6874,7 @@ name|printf
 argument_list|(
 literal|"%s: %s not implemented yet\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|orb_fun_name
 index|[
@@ -6966,7 +6966,7 @@ name|printf
 argument_list|(
 literal|"%s: xfer->resp = %d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|xfer
 operator|->
@@ -7020,7 +7020,7 @@ name|printf
 argument_list|(
 literal|"%s: invalid pointer\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -7116,7 +7116,7 @@ name|printf
 argument_list|(
 literal|"%s: fetch orb %04x:%08x\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|orb_hi
 argument_list|,
@@ -7151,7 +7151,7 @@ name|printf
 argument_list|(
 literal|"%s: malloc failed\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return;
@@ -7312,7 +7312,7 @@ name|printf
 argument_list|(
 literal|"%s: no free atio\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|login
@@ -7456,7 +7456,7 @@ name|printf
 argument_list|(
 literal|"%s: invalid mode %d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|mode
 argument_list|)
@@ -7492,7 +7492,7 @@ name|printf
 argument_list|(
 literal|"%s: xfer=%p\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|xfer
 argument_list|)
@@ -7672,7 +7672,7 @@ name|printf
 argument_list|(
 literal|"%s: ORB_POINTER\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -7747,7 +7747,7 @@ name|printf
 argument_list|(
 literal|"%s: AGENT RESET\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|login
@@ -7786,7 +7786,7 @@ name|printf
 argument_list|(
 literal|"%s: DOORBELL\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -7808,7 +7808,7 @@ name|printf
 argument_list|(
 literal|"%s: no previous pointer(DOORBELL)\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7865,7 +7865,7 @@ name|printf
 argument_list|(
 literal|"%s: AGENT_STATE (ignore)\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7877,7 +7877,7 @@ name|printf
 argument_list|(
 literal|"%s: UNSOLICITED_STATE_ENABLE (ignore)\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7886,7 +7886,7 @@ name|printf
 argument_list|(
 literal|"%s: invalid register %d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|reg
 argument_list|)
@@ -7967,7 +7967,7 @@ name|printf
 argument_list|(
 literal|"%s: tcode = %d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|fp
 operator|->
@@ -8121,7 +8121,7 @@ name|printf
 argument_list|(
 literal|"%s: cannot resolve nodeid=%d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|fp
 operator|->
@@ -8217,7 +8217,7 @@ name|printf
 argument_list|(
 literal|"%s: rtcode = %d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|rtcode
 argument_list|)
