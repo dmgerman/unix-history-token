@@ -276,7 +276,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"0x%02x,"
+literal|"0x%02lx,"
 argument_list|,
 operator|(
 literal|'\t'
@@ -352,7 +352,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"0x%02x,"
+literal|"0x%02lx,"
 argument_list|,
 operator|(
 name|c

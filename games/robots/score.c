@@ -802,10 +802,15 @@ name|scp
 operator|->
 name|s_score
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
+argument_list|(
 name|scp
 operator|->
 name|s_name
+argument_list|)
 argument_list|,
 name|scp
 operator|->

@@ -909,7 +909,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%u\n"
+literal|"%lu\n"
 argument_list|,
 name|factor
 argument_list|)
@@ -1262,7 +1262,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%u\n"
+literal|"%lu\n"
 argument_list|,
 name|start
 argument_list|)

@@ -1817,7 +1817,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%2d    %6d   %s: "
+literal|"%2d    %6ld   %s: "
 argument_list|,
 name|rank
 operator|+

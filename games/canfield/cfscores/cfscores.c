@@ -519,7 +519,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"| Hands       %8d |\n"
+literal|"| Hands       %8ld |\n"
 argument_list|,
 name|total
 operator|.
@@ -528,7 +528,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"| Inspections %8d |\n"
+literal|"| Inspections %8ld |\n"
 argument_list|,
 name|total
 operator|.
@@ -537,7 +537,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"| Games       %8d |\n"
+literal|"| Games       %8ld |\n"
 argument_list|,
 name|total
 operator|.
@@ -546,7 +546,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"| Runs        %8d |\n"
+literal|"| Runs        %8ld |\n"
 argument_list|,
 name|total
 operator|.
@@ -555,7 +555,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"| Information %8d |\n"
+literal|"| Information %8ld |\n"
 argument_list|,
 name|total
 operator|.
@@ -564,7 +564,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"| Think time  %8d |\n"
+literal|"| Think time  %8ld |\n"
 argument_list|,
 name|total
 operator|.
@@ -573,7 +573,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"|Total Costs  %8d |\n"
+literal|"|Total Costs  %8ld |\n"
 argument_list|,
 name|total
 operator|.
@@ -586,7 +586,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"|Winnings     %8d |\n"
+literal|"|Winnings     %8ld |\n"
 argument_list|,
 name|total
 operator|.
@@ -595,7 +595,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"|Net Worth    %8d |\n"
+literal|"|Net Worth    %8ld |\n"
 argument_list|,
 name|total
 operator|.

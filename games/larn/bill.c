@@ -315,7 +315,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"\n%d gold pieces back with you from your journey.  As the"
+literal|"\n%ld gold pieces back with you from your journey.  As the"
 argument_list|,
 operator|(
 name|long
@@ -355,7 +355,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"\nin preparing your tax bill.  You owe %d gold pieces as"
+literal|"\nin preparing your tax bill.  You owe %ld gold pieces as"
 argument_list|,
 operator|(
 name|long

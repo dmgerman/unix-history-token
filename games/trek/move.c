@@ -255,8 +255,12 @@ name|Trace
 condition|)
 name|printf
 argument_list|(
-literal|"E.ep = %u, ->evcode = %d, ->date = %.2f, evtime = %.2f\n"
+literal|"E.ep = %p, ->evcode = %d, ->date = %.2f, evtime = %.2f\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|Now
 operator|.
 name|eventptr
