@@ -251,6 +251,37 @@ operator|&
 name|kdh
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Check if we will have enough room to save the coredump. 	 * The partition size needed is the sum of: 	 * Memory to save + header + trailer + Room to leave untouched 	 * at partition head. (an arbitrary amount). 	 */
+if|if
+condition|(
+name|di
+operator|->
+name|mediasize
+operator|<
+name|Maxmem
+operator|*
+operator|(
+name|off_t
+operator|)
+name|PAGE_SIZE
+operator|+
+sizeof|sizeof
+name|kdh
+operator|*
+literal|2
+operator|+
+literal|64
+operator|*
+literal|1024
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\nDump failed. Partition too small.\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|dumplo
 operator|=
 name|di
