@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * mkmakefile.c	1.11	81/10/08  *	Functions in this file build the makefile from the files list  *	and the information in the config table  */
+comment|/*  * mkmakefile.c	1.12	81/10/12  *	Functions in this file build the makefile from the files list  *	and the information in the config table  */
 end_comment
 
 begin_include
@@ -824,7 +824,23 @@ block|}
 name|nreqs
 operator|++
 expr_stmt|;
-comment|/* tp->f_needs = ns(wd); */
+if|if
+condition|(
+name|tp
+operator|->
+name|f_needs
+operator|==
+name|NULL
+condition|)
+name|tp
+operator|->
+name|f_needs
+operator|=
+name|ns
+argument_list|(
+name|wd
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|dp
