@@ -379,6 +379,9 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 comment|/* For NIS+, root cannot get password for lesser user */
 if|if
 condition|(
@@ -430,6 +433,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|pw
