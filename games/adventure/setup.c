@@ -149,18 +149,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
+modifier|*
 name|argv
-index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -238,7 +234,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\nchar data_file[] =\n{"
+literal|"\n\nunsigned char data_file[] =\n{"
 argument_list|)
 expr_stmt|;
 name|srandom
