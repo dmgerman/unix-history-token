@@ -274,17 +274,6 @@ begin_comment
 comment|/* total size of pcb */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|UAREA_PAGES
-value|1
-end_define
-
-begin_comment
-comment|/* holds struct user WITHOUT PCB */
-end_comment
-
 begin_comment
 comment|/*  * Mach derived conversion macros  */
 end_comment

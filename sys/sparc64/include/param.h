@@ -403,17 +403,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UAREA_PAGES
-value|1
-end_define
-
-begin_comment
-comment|/* pages of user area */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PCPU_PAGES
 value|1
 end_define

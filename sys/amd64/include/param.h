@@ -470,17 +470,6 @@ begin_comment
 comment|/* pages of kstack guard; 0 disables */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|UAREA_PAGES
-value|1
-end_define
-
-begin_comment
-comment|/* holds struct user WITHOUT PCB (see def.) */
-end_comment
-
 begin_comment
 comment|/*  * Ceiling on amount of swblock kva space, can be changed via  * the kern.maxswzone /boot/loader.conf variable.  */
 end_comment
