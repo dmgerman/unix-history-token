@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readsym.c 1.1 %G%"
+literal|"@(#)readsym.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,6 +39,12 @@ begin_include
 include|#
 directive|include
 file|"object.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"objfmt.h"
 end_include
 
 begin_include
@@ -166,7 +172,7 @@ name|funcv
 operator|.
 name|codeloc
 operator|=
-name|BASEADDR
+name|HEADER_BYTES
 expr_stmt|;
 block|}
 endif|#
@@ -705,7 +711,7 @@ name|funcv
 operator|.
 name|codeloc
 operator|-=
-name|BASEADDR
+name|HEADER_BYTES
 expr_stmt|;
 name|findbeginning
 argument_list|(

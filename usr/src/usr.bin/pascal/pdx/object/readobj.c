@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readobj.c 1.1 %G%"
+literal|"@(#)readobj.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,6 +39,12 @@ begin_include
 include|#
 directive|include
 file|"object.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"objfmt.h"
 end_include
 
 begin_include
@@ -107,6 +113,10 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
+name|struct
+name|pxhdr
+name|hdr
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -135,20 +145,34 @@ name|fseek
 argument_list|(
 name|fp
 argument_list|,
-operator|(
+call|(
 name|long
-operator|)
-name|SIZELOC
+call|)
+argument_list|(
+name|HEADER_BYTES
+operator|-
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pxhdr
+argument_list|)
+argument_list|)
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|objsize
-operator|=
-name|getw
+name|get
 argument_list|(
 name|fp
+argument_list|,
+name|hdr
 argument_list|)
+expr_stmt|;
+name|objsize
+operator|=
+name|hdr
+operator|.
+name|objsize
 expr_stmt|;
 name|fseek
 argument_list|(
@@ -158,8 +182,6 @@ operator|(
 name|long
 operator|)
 name|objsize
-operator|+
-literal|4
 argument_list|,
 literal|1
 argument_list|)
