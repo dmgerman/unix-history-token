@@ -136,17 +136,12 @@ return|return
 literal|0
 return|;
 block|}
-name|fsp
-operator|->
-name|fsid
-operator|=
-name|dev2udev
-argument_list|(
-name|isonode
-operator|.
-name|i_dev
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|fsp->fsid = dev2udev(isonode.i_dev);
+endif|#
+directive|endif
 name|fsp
 operator|->
 name|mode
