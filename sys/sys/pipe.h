@@ -21,45 +21,11 @@ directive|ifndef
 name|_KERNEL
 end_ifndef
 
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_comment
-comment|/* for struct timespec */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/selinfo.h>
-end_include
-
-begin_comment
-comment|/* for struct selinfo */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
-end_include
-
-begin_comment
-comment|/* for vm_page_t */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/param.h>
-end_include
-
-begin_comment
-comment|/* for PAGE_SIZE */
-end_comment
+begin_error
+error|#
+directive|error
+literal|"no user-servicable parts inside"
+end_error
 
 begin_endif
 endif|#
