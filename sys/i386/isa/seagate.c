@@ -4,7 +4,7 @@ comment|/*  * (Free/Net/386)BSD ST01/02, Future Domain TMC-885, TMC-950 SCSI dri
 end_comment
 
 begin_comment
-comment|/*  *  * kentp  940307 alpha version based on newscsi-03 version of Julians SCSI-code  * kentp  940314 Added possibility to not use messages  * rknier 940331 Added fast transfer code   * rknier 940407 Added assembler coded data transfers   *  * $Id: seagate.c,v 1.1 1994/07/03 20:50:32 sos Exp $  */
+comment|/*  *  * kentp  940307 alpha version based on newscsi-03 version of Julians SCSI-code  * kentp  940314 Added possibility to not use messages  * rknier 940331 Added fast transfer code   * rknier 940407 Added assembler coded data transfers   *  * $Id: seagate.c,v 1.1 1994/10/24 22:14:34 sos Exp $  */
 end_comment
 
 begin_comment
@@ -2100,6 +2100,9 @@ operator|==
 name|NUM_SIGNATURES
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|SEADEBUG
 name|printf
 argument_list|(
 literal|"sea: Board type unknown at address 0x%lx\n"
@@ -2109,6 +2112,8 @@ operator|->
 name|basemaddr
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|seadata
 index|[
 name|unit
