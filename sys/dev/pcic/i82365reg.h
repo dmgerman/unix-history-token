@@ -1858,5 +1858,16 @@ begin_comment
 comment|/* NEC8091 PC-9801-102 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PCIC_NEC_PC9821RA_E01
+value|0x2181a3b8
+end_define
+
+begin_comment
+comment|/* NEC8121 PC-9821RA-E01 */
+end_comment
+
 end_unit
 
