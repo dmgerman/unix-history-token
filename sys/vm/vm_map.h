@@ -1319,16 +1319,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ENABLE_VFS_IOOPT
-end_ifdef
-
-begin_comment
-comment|/* Experimental support for zero-copy I/O */
-end_comment
-
 begin_function_decl
 name|int
 name|vm_uiomove
@@ -1348,11 +1338,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
