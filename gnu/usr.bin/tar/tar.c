@@ -1025,6 +1025,16 @@ literal|1
 block|}
 block|,
 block|{
+literal|"bzip"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|'y'
+block|}
+block|,
+block|{
 literal|"bzip2"
 block|,
 literal|0
@@ -1658,7 +1668,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-01234567Ab:BcC:df:F:g:GhikK:lL:mMnN:oOpPrRsStT:uvV:wWxX:yzZ"
+literal|"-01234567Ab:BcC:df:F:g:GhiIkK:lL:mMnN:oOpPrRsStT:uvV:wWxX:yzZ"
 argument_list|,
 name|long_options
 argument_list|,
@@ -2519,6 +2529,9 @@ name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'I'
+case|:
 case|case
 literal|'y'
 case|:
