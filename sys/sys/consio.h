@@ -136,7 +136,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|scr_size
+name|_scr_size
 block|{
 name|int
 name|scr_size
@@ -151,7 +151,7 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|scr_size
+name|_scr_size
 name|scr_size_t
 typedef|;
 end_typedef
@@ -169,7 +169,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|scrmap
+name|_scrmap
 block|{
 name|char
 name|scrmap
@@ -184,7 +184,7 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|scrmap
+name|_scrmap
 name|scrmap_t
 typedef|;
 end_typedef
