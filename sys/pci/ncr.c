@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncr.c,v 1.39 1995/07/07 12:30:39 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncr.c,v 1.40 1995/08/13 14:59:38 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_define
@@ -3029,7 +3029,7 @@ name|char
 name|ident
 index|[]
 init|=
-literal|"\n$Id: ncr.c,v 1.39 1995/07/07 12:30:39 se Exp $\n"
+literal|"\n$Id: ncr.c,v 1.40 1995/08/13 14:59:38 se Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -14372,9 +14372,16 @@ name|sist
 decl_stmt|;
 name|u_long
 name|dsp
+decl_stmt|,
+name|dsa
+decl_stmt|;
+name|ccb_p
+name|cp
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|script_ofs
 decl_stmt|;
 comment|/* 	**	interrupt on the fly ? 	*/
 while|while
@@ -14877,9 +14884,40 @@ expr_stmt|;
 block|}
 empty_stmt|;
 comment|/*========================================= 	**	log message for real hard errors 	**=========================================  	"ncr0 targ 0?: ERROR (ds:si) (so-si-sd) (sxfer/scntl3) @ (dsp:dbc)." 	"	      reg: r0 r1 r2 r3 r4 r5 r6 ..... rf."  	exception register: 		ds:	dstat 		si:	sist  	SCSI bus lines: 		so:	control lines as driver by NCR. 		si:	control lines as seen by NCR. 		sd:	scsi data lines as seen by NCR.  	wide/fastmode: 		sxfer:	(see the manual) 		scntl3:	(see the manual)  	current script command: 		dsp:	script adress (relative to start of script). 		dbc:	first word of script command.  	First 16 register of the chip: 		r0..rf  	============================================= 	*/
+name|dsp
+operator|=
+operator|(
+name|unsigned
+operator|)
+name|INL
+argument_list|(
+name|nc_dsp
+argument_list|)
+expr_stmt|;
+name|dsa
+operator|=
+operator|(
+name|unsigned
+operator|)
+name|INL
+argument_list|(
+name|nc_dsa
+argument_list|)
+expr_stmt|;
+name|script_ofs
+operator|=
+name|dsp
+operator|-
+operator|(
+name|unsigned
+operator|)
+name|np
+operator|->
+name|p_script
+operator|,
 name|printf
 argument_list|(
-literal|"%s targ %d?: ERROR (%x:%x) (%x-%x-%x) (%x/%x) @ (%x:%x).\n"
+literal|"%s targ %d?: ERROR (%x:%x) (%x-%x-%x) (%x/%x) @ (%x:%08x).\n"
 argument_list|,
 name|ncr_name
 argument_list|(
@@ -14922,26 +14960,7 @@ argument_list|(
 name|nc_scntl3
 argument_list|)
 argument_list|,
-operator|(
-call|(
-name|unsigned
-call|)
-argument_list|(
-name|dsp
-operator|=
-name|INL
-argument_list|(
-name|nc_dsp
-argument_list|)
-argument_list|)
-operator|)
-operator|-
-operator|(
-name|unsigned
-operator|)
-name|np
-operator|->
-name|p_script
+name|script_ofs
 argument_list|,
 operator|(
 name|unsigned
@@ -14954,7 +14973,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"	      reg:"
+literal|"\treg:\t"
 argument_list|)
 expr_stmt|;
 for|for
@@ -14993,6 +15012,123 @@ argument_list|(
 literal|".\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|script_ofs
+operator|<
+sizeof|sizeof
+argument_list|(
+operator|*
+name|np
+operator|->
+name|script
+argument_list|)
+condition|)
+block|{
+name|u_long
+name|vpci
+decl_stmt|;
+name|u_long
+name|vpc
+init|=
+operator|(
+operator|(
+name|u_long
+operator|)
+name|np
+operator|->
+name|script
+operator|)
+operator|+
+name|script_ofs
+decl_stmt|;
+for|for
+control|(
+name|vpci
+operator|=
+name|vpc
+init|;
+name|vpci
+operator|>=
+literal|4
+condition|;
+name|vpci
+operator|-=
+literal|4
+control|)
+empty_stmt|;
+while|while
+condition|(
+name|vpci
+operator|<=
+name|vpc
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\tvirt.addr: 0x%08x instr: 0x%08x\n"
+argument_list|,
+name|vpci
+argument_list|,
+operator|*
+operator|(
+name|ncrcmd
+operator|*
+operator|)
+operator|(
+name|vpci
+operator|)
+argument_list|)
+expr_stmt|;
+name|vpci
+operator|+=
+literal|4
+expr_stmt|;
+block|}
+block|}
+name|cp
+operator|=
+operator|&
+name|np
+operator|->
+name|ccb
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\tgather/scatter table:\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|MAX_SCATTER
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|printf
+argument_list|(
+literal|"\t%02d\t0x%08x\n"
+argument_list|,
+name|i
+argument_list|,
+name|cp
+operator|->
+name|phys
+operator|.
+name|data
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*---------------------------------------- 	**	clean up the dma fifo 	**---------------------------------------- 	*/
 if|if
 condition|(
@@ -17017,6 +17153,7 @@ name|DEBUG_FLAGS
 operator|&
 name|DEBUG_RESTART
 condition|)
+block|{
 name|PRINT_ADDR
 argument_list|(
 name|cp
@@ -17036,6 +17173,7 @@ operator|&
 literal|7
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 		**	Mark this job 		*/
 name|cp
 operator|->
@@ -17079,7 +17217,7 @@ operator|=
 name|SCR_INT
 expr_stmt|;
 break|break;
-comment|/*----------------------------------------------------------------------------- ** **	Was Sie schon immer ueber transfermode negotiation wissen wollten ... ** **	We try to negotiate sync and wide transfer only after **	a successfull inquire command. We look at byte 7 of the **	inquire data to determine the capabilities if the target. ** **	When we try to negotiate, we append the negotiation message **	to the identify and (maybe) simple tag message. **	The host status field is set to HS_NEGOTIATE to mark this **	situation. ** **	If the target doesn't answer this message immidiately **	(as required by the standard), the SIR_NEGO_FAIL interrupt **	will be raised eventually. **	The handler removes the HS_NEGOTIATE status, and sets the **	negotiated value to the default (async / nowide). ** **	If we receive a matching answer immediately, we check it **	for validity, and set the values. ** **	If we receive a Reject message immediately, we assume the **	negotiation has failed, and fall back to standard values. ** **	If we receive a negotiation message while not in HS_NEGOTIATE **	state, it's a target initiated negotiation. We prepare a **	(hopefully) valid answer, set our parameters, and send back  **	this answer to the target. ** **	If the target doesn't fetch the answer (no message out phase), **	we assume the negotiation has failed, and fall back to default **	settings. ** **	When we set the values, we adjust them in all ccbs belonging  **	to this target, in the controller's register, and in the "phys" **	field of the controller's struct ncb. ** **	Possible cases:	    hs  sir   msg_in value  send   goto **	We try try to negotiate: **	-> target doesnt't msgin   NEG FAIL  noop   defa.  -      dispatch **	-> target rejected our msg NEG FAIL  reject defa.  -      dispatch **	-> target answered  (ok)   NEG SYNC  sdtr   set    -      clrack **	-> target answered (!ok)   NEG SYNC  sdtr   defa.  REJ--->msg_bad **	-> target answered  (ok)   NEG WIDE  wdtr   set    -      clrack **	-> target answered (!ok)   NEG WIDE  wdtr   defa.  REJ--->msg_bad **	-> any other msgin	 NEG FAIL  noop   defa   -      dispatch ** **	Target tries to negotiate: **	-> incoming message	--- SYNC  sdtr   set    SDTR   - **	-> incoming message	--- WIDE  wdtr   set    WDTR   - **      We sent our answer: **	-> target doesn't msgout   --- PROTO ?      defa.  -      dispatch ** **----------------------------------------------------------------------------- */
+comment|/*----------------------------------------------------------------------------- ** **	Was Sie schon immer ueber transfermode negotiation wissen wollten ... ** **	We try to negotiate sync and wide transfer only after **	a successfull inquire command. We look at byte 7 of the **	inquire data to determine the capabilities if the target. ** **	When we try to negotiate, we append the negotiation message **	to the identify and (maybe) simple tag message. **	The host status field is set to HS_NEGOTIATE to mark this **	situation. ** **	If the target doesn't answer this message immidiately **	(as required by the standard), the SIR_NEGO_FAIL interrupt **	will be raised eventually. **	The handler removes the HS_NEGOTIATE status, and sets the **	negotiated value to the default (async / nowide). ** **	If we receive a matching answer immediately, we check it **	for validity, and set the values. ** **	If we receive a Reject message immediately, we assume the **	negotiation has failed, and fall back to standard values. ** **	If we receive a negotiation message while not in HS_NEGOTIATE **	state, it's a target initiated negotiation. We prepare a **	(hopefully) valid answer, set our parameters, and send back  **	this answer to the target. ** **	If the target doesn't fetch the answer (no message out phase), **	we assume the negotiation has failed, and fall back to default **	settings. ** **	When we set the values, we adjust them in all ccbs belonging  **	to this target, in the controller's register, and in the "phys" **	field of the controller's struct ncb. ** **	Possible cases:		   hs  sir   msg_in value  send   goto **	We try try to negotiate: **	-> target doesnt't msgin   NEG FAIL  noop   defa.  -      dispatch **	-> target rejected our msg NEG FAIL  reject defa.  -      dispatch **	-> target answered  (ok)   NEG SYNC  sdtr   set    -      clrack **	-> target answered (!ok)   NEG SYNC  sdtr   defa.  REJ--->msg_bad **	-> target answered  (ok)   NEG WIDE  wdtr   set    -      clrack **	-> target answered (!ok)   NEG WIDE  wdtr   defa.  REJ--->msg_bad **	-> any other msgin	   NEG FAIL  noop   defa.  -      dispatch ** **	Target tries to negotiate: **	-> incoming message	   --- SYNC  sdtr   set    SDTR   - **	-> incoming message	   --- WIDE  wdtr   set    WDTR   - **      We sent our answer: **	-> target doesn't msgout   --- PROTO ?      defa.  -      dispatch ** **----------------------------------------------------------------------------- */
 case|case
 name|SIR_NEGO_FAILED
 case|:
