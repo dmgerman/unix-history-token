@@ -2538,7 +2538,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* umass_cam_detach  */
+comment|/* umass_cam_detach  *	detach from the CAM layer  */
 end_comment
 
 begin_function
@@ -2551,7 +2551,17 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-comment|/* Detach from CAM layer 	 * XXX do we need to delete the device first? 	 */
+name|xpt_async
+argument_list|(
+name|AC_LOST_DEVICE
+argument_list|,
+name|sc
+operator|->
+name|path
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|xpt_free_path
 argument_list|(
 name|sc
@@ -2913,7 +2923,6 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* information copied from vpo driver. Needs to be checked */
 name|cpi
 operator|->
 name|version_num
