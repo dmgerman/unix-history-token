@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.12 1995/01/09 16:05:00 davidg Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.13 1995/03/19 14:28:57 davidg Exp $ */
 end_comment
 
 begin_comment
@@ -3637,7 +3637,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-return|return
 name|VOP_ABORTOP
 argument_list|(
 name|ap
@@ -3648,6 +3647,16 @@ name|ap
 operator|->
 name|a_cnp
 argument_list|)
+expr_stmt|;
+name|vput
+argument_list|(
+name|ap
+operator|->
+name|a_vp
+argument_list|)
+expr_stmt|;
+return|return
+name|EOPNOTSUPP
 return|;
 block|}
 end_function
