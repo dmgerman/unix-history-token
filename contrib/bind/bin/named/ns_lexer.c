@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_lexer.c,v 8.30 2002/04/25 05:27:08 marka Exp $"
+literal|"$Id: ns_lexer.c,v 8.31 2002/05/24 03:05:03 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1116,6 +1116,12 @@ block|{
 literal|"dynamic"
 block|,
 name|T_DYNAMIC
+block|}
+block|,
+block|{
+literal|"edns"
+block|,
+name|T_EDNS
 block|}
 block|,
 block|{

@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_ixfr.c,v 8.31 2002/01/02 05:15:20 marka Exp $"
+literal|"$Id: ns_ixfr.c,v 8.32 2002/05/18 01:02:57 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1183,7 +1183,7 @@ name|old_soadp
 operator|=
 name|memget
 argument_list|(
-name|DATASIZE
+name|BIND_DATASIZE
 argument_list|(
 name|soa_dp
 operator|->
@@ -1212,7 +1212,7 @@ name|old_soadp
 argument_list|,
 name|soa_dp
 argument_list|,
-name|DATASIZE
+name|BIND_DATASIZE
 argument_list|(
 name|soa_dp
 operator|->
@@ -2395,7 +2395,7 @@ name|memput
 argument_list|(
 name|old_soadp
 argument_list|,
-name|DATASIZE
+name|BIND_DATASIZE
 argument_list|(
 name|old_soadp
 operator|->

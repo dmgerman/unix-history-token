@@ -56,6 +56,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|INIT_LINK_TYPE
+parameter_list|(
+name|elt
+parameter_list|,
+name|link
+parameter_list|,
+name|type
+parameter_list|)
+define|\
+value|do { \ 		(elt)->link.prev = (type *)(-1); \ 		(elt)->link.next = (type *)(-1); \ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|INIT_LINK
 parameter_list|(
 name|elt
@@ -63,7 +78,7 @@ parameter_list|,
 name|link
 parameter_list|)
 define|\
-value|do { \ 		(elt)->link.prev = (void *)(-1); \ 		(elt)->link.next = (void *)(-1); \ 	} while (0)
+value|INIT_LINK_TYPE(elt, link, void)
 end_define
 
 begin_define
@@ -141,6 +156,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|UNLINK_TYPE
+parameter_list|(
+name|list
+parameter_list|,
+name|elt
+parameter_list|,
+name|link
+parameter_list|,
+name|type
+parameter_list|)
+define|\
+value|do { \ 		INSIST(LINKED(elt, link));\ 		if ((elt)->link.next != NULL) \ 			(elt)->link.next->link.prev = (elt)->link.prev; \ 		else \ 			(list).tail = (elt)->link.prev; \ 		if ((elt)->link.prev != NULL) \ 			(elt)->link.prev->link.next = (elt)->link.next; \ 		else \ 			(list).head = (elt)->link.next; \ 		INIT_LINK_TYPE(elt, link, type); \ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|UNLINK
 parameter_list|(
 name|list
@@ -150,7 +182,7 @@ parameter_list|,
 name|link
 parameter_list|)
 define|\
-value|do { \ 		INSIST(LINKED(elt, link));\ 		if ((elt)->link.next != NULL) \ 			(elt)->link.next->link.prev = (elt)->link.prev; \ 		else \ 			(list).tail = (elt)->link.prev; \ 		if ((elt)->link.prev != NULL) \ 			(elt)->link.prev->link.next = (elt)->link.next; \ 		else \ 			(list).head = (elt)->link.next; \ 		INIT_LINK(elt, link); \ 	} while (0)
+value|UNLINK_TYPE(list, elt, link, void)
 end_define
 
 begin_define
