@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	6.23 (Berkeley) %G%"
+literal|"@(#)readcf.c	6.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4445,6 +4445,21 @@ literal|0
 condition|)
 break|break;
 block|}
+if|if
+condition|(
+name|pv
+operator|->
+name|pv_name
+operator|==
+name|NULL
+condition|)
+name|syserr
+argument_list|(
+literal|"readcf: Op line: %s unrecognized"
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
 name|PrivacyFlags
 operator||=
 name|pv
