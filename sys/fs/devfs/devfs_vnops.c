@@ -2705,8 +2705,6 @@ name|de
 operator|->
 name|de_symlink
 argument_list|)
-operator|+
-literal|1
 argument_list|,
 name|ap
 operator|->
