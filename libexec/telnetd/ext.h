@@ -1329,12 +1329,35 @@ directive|ifndef
 name|CRAY
 end_ifndef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|DEFAULT_IM
 value|"\r\n\r\n4.3 BSD UNIX (%h) (%t)\r\n\r\r\n\r"
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_IM
+value|"\r\n\r\n%s (%%h) (%%t)\r\n\r\r\n\r"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
