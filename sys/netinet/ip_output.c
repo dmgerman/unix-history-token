@@ -768,16 +768,14 @@ name|NULL
 condition|)
 name|ia
 operator|=
-operator|(
-expr|struct
-name|in_ifaddr
-operator|*
-operator|)
+name|ifatoia
+argument_list|(
 name|ro
 operator|->
 name|ro_rt
 operator|->
 name|rt_ifa
+argument_list|)
 expr_stmt|;
 goto|goto
 name|sendit
@@ -1069,20 +1067,6 @@ name|ip_dst
 expr_stmt|;
 block|}
 comment|/* 	 * If routing to interface only, 	 * short circuit routing lookup. 	 */
-define|#
-directive|define
-name|ifatoia
-parameter_list|(
-name|ifa
-parameter_list|)
-value|((struct in_ifaddr *)(ifa))
-define|#
-directive|define
-name|sintosa
-parameter_list|(
-name|sin
-parameter_list|)
-value|((struct sockaddr *)(sin))
 if|if
 condition|(
 name|flags
@@ -1699,6 +1683,11 @@ block|{
 name|error
 operator|=
 name|ENOBUFS
+expr_stmt|;
+name|ipstat
+operator|.
+name|ips_odropped
+operator|++
 expr_stmt|;
 goto|goto
 name|bad
@@ -2663,13 +2652,13 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 			 * We need to figure out if we have been forwarded 			 * to a local socket. If so then we should somehow  			 * "loop back" to ip_input, and get directed to the 			 * PCB as if we had received this packet. This is 			 * because it may be dificult to identify the packets 			 * you want to forward until they are being output 			 * and have selected an interface. (e.g. locally 			 * initiated packets) If we used the loopback inteface, 			 * we would not be able to control what happens  			 * as the packet runs through ip_input() as 			 * it is done through a ISR. 			 */
-name|TAILQ_FOREACH
+name|LIST_FOREACH
 argument_list|(
 argument|ia
 argument_list|,
-argument|&in_ifaddrhead
+argument|INADDR_HASH(dst->sin_addr.s_addr)
 argument_list|,
-argument|ia_link
+argument|ia_hash
 argument_list|)
 block|{
 comment|/* 				 * If the addr to forward to is one 				 * of ours, we pretend to 				 * be the destination for this packet. 				 */
