@@ -546,6 +546,8 @@ name|uint64_t
 name|pgs
 decl_stmt|;
 name|size_t
+name|counter
+decl_stmt|,
 name|sz
 decl_stmt|;
 name|int
@@ -558,6 +560,11 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* catch case in which mdp->NumberOfPages is 0 */
+name|counter
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Update twiddle every 16MB */
 name|twiddle
 operator|=
 literal|0
@@ -579,7 +586,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  region %d: %ld pages "
+literal|"  chunk %d: %ld pages "
 argument_list|,
 name|seqnr
 argument_list|,
@@ -612,6 +619,17 @@ name|pgs
 operator|<<
 name|EFI_PAGE_SHIFT
 expr_stmt|;
+name|counter
+operator|+=
+name|sz
+expr_stmt|;
+if|if
+condition|(
+name|counter
+operator|>>
+literal|24
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"%c\b"
@@ -625,6 +643,17 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
+name|counter
+operator|&=
+operator|(
+literal|1
+operator|<<
+literal|24
+operator|)
+operator|-
+literal|1
+expr_stmt|;
+block|}
 name|error
 operator|=
 name|di
@@ -882,7 +911,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|foreach_region
+name|foreach_chunk
 parameter_list|(
 name|callback_t
 name|cb
@@ -1207,7 +1236,7 @@ name|ehdr
 operator|.
 name|e_phnum
 operator|=
-name|foreach_region
+name|foreach_chunk
 argument_list|(
 name|cb_size
 argument_list|,
@@ -1287,7 +1316,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Dumping %llu MB (%d regions)\n"
+literal|"Dumping %llu MB (%d chunks)\n"
 argument_list|,
 name|dumpsize
 operator|>>
@@ -1366,7 +1395,7 @@ goto|;
 comment|/* Dump program headers */
 name|error
 operator|=
-name|foreach_region
+name|foreach_chunk
 argument_list|(
 name|cb_dumphdr
 argument_list|,
@@ -1392,10 +1421,10 @@ name|dumplo
 operator|+=
 name|hdrgap
 expr_stmt|;
-comment|/* Dump region data (updates dumplo) */
+comment|/* Dump memory chunks (updates dumplo) */
 name|error
 operator|=
-name|foreach_region
+name|foreach_chunk
 argument_list|(
 name|cb_dumpdata
 argument_list|,
