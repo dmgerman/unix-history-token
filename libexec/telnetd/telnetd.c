@@ -3465,15 +3465,6 @@ name|char
 modifier|*
 name|lp
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|line
-decl_stmt|,
-modifier|*
-name|getpty
-argument_list|()
-decl_stmt|;
 if|if
 condition|(
 operator|(

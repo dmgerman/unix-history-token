@@ -400,8 +400,10 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|char
-modifier|*
 name|line
+index|[
+literal|16
+index|]
 decl_stmt|;
 end_decl_stmt
 

@@ -2447,18 +2447,18 @@ begin_comment
 comment|/*  * getpty()  *  * Allocate a pty.  As a side effect, the external character  * array "line" contains the name of the slave side.  *  * Returns the file descriptor of the opened pty.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__GNUC__
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CRAY
+end_ifdef
 
 begin_decl_stmt
 name|char
-modifier|*
-name|line
-init|=
-literal|"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
+name|myline
+index|[
+literal|16
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -2468,41 +2468,11 @@ directive|else
 end_else
 
 begin_decl_stmt
-specifier|static
 name|char
-name|Xline
-index|[]
-init|=
-literal|"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
 name|line
-init|=
-name|Xline
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CRAY
-end_ifdef
-
-begin_decl_stmt
-name|char
-modifier|*
-name|myline
-init|=
-literal|"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
+index|[
+literal|16
+index|]
 decl_stmt|;
 end_decl_stmt
 
