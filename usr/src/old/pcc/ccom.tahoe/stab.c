@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)stab.c	1.5 (Berkeley) %G%"
+literal|"@(#)stab.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -403,9 +403,6 @@ name|char
 modifier|*
 name|classname
 decl_stmt|;
-name|int
-name|offset
-decl_stmt|;
 name|Boolean
 name|ignore
 decl_stmt|;
@@ -459,15 +456,6 @@ name|p
 operator|=
 name|sym
 expr_stmt|;
-name|offset
-operator|=
-name|bytes
-argument_list|(
-name|p
-operator|->
-name|offset
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|p
@@ -481,12 +469,6 @@ case|:
 name|classname
 operator|=
 literal|"r"
-expr_stmt|;
-name|offset
-operator|=
-name|p
-operator|->
-name|offset
 expr_stmt|;
 break|break;
 comment|/* 	 * Locals are the default class. 	 */
@@ -602,6 +584,9 @@ case|:
 case|case
 name|STNAME
 case|:
+operator|(
+name|void
+operator|)
 name|entertype
 argument_list|(
 name|p
@@ -1363,6 +1348,11 @@ argument_list|)
 expr_stmt|;
 name|geninfo
 argument_list|(
+operator|(
+expr|struct
+name|symtab
+operator|*
+operator|)
 name|nil
 argument_list|)
 expr_stmt|;
@@ -1384,6 +1374,11 @@ argument_list|)
 expr_stmt|;
 name|geninfo
 argument_list|(
+operator|(
+expr|struct
+name|symtab
+operator|*
+operator|)
 name|nil
 argument_list|)
 expr_stmt|;
@@ -1440,6 +1435,11 @@ argument_list|)
 expr_stmt|;
 name|geninfo
 argument_list|(
+operator|(
+expr|struct
+name|symtab
+operator|*
+operator|)
 name|nil
 argument_list|)
 expr_stmt|;
@@ -2389,6 +2389,10 @@ begin_comment
 comment|/*  * Generate information for a newly-defined structure.  */
 end_comment
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|outstruct
 argument_list|(
@@ -2440,6 +2444,9 @@ condition|(
 name|gdebug
 condition|)
 block|{
+if|if
+condition|(
+operator|(
 name|i
 operator|=
 name|dimtab
@@ -2448,7 +2455,11 @@ name|szindex
 operator|+
 literal|3
 index|]
-expr_stmt|;
+operator|)
+operator|>=
+literal|0
+operator|&&
+operator|(
 name|p
 operator|=
 operator|&
@@ -2456,10 +2467,7 @@ name|stab
 index|[
 name|i
 index|]
-expr_stmt|;
-if|if
-condition|(
-name|p
+operator|)
 operator|->
 name|sname
 operator|!=
@@ -2591,6 +2599,9 @@ end_decl_stmt
 
 begin_block
 block|{
+ifndef|#
+directive|ifndef
+name|ASSTRINGS
 specifier|register
 name|int
 name|i
@@ -2599,6 +2610,8 @@ specifier|register
 name|char
 name|c
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -2791,6 +2804,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STABDOT
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -2800,6 +2819,11 @@ literal|8
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -3697,6 +3721,9 @@ name|int
 name|type
 decl_stmt|;
 block|{
+ifndef|#
+directive|ifndef
+name|ASSTRINGS
 specifier|register
 name|int
 name|i
@@ -3705,6 +3732,8 @@ specifier|register
 name|char
 name|c
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
