@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	3.16	%G%"
+literal|"@(#)parseaddr.c	3.17	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -563,6 +563,11 @@ name|delim
 condition|)
 block|{
 comment|/* chew up special characters */
+name|c
+operator|&=
+operator|~
+literal|0200
+expr_stmt|;
 operator|*
 name|q
 operator|=
@@ -596,6 +601,31 @@ name|TRUE
 expr_stmt|;
 continue|continue;
 block|}
+elseif|else
+if|if
+condition|(
+name|c
+operator|==
+literal|'"'
+condition|)
+block|{
+if|if
+condition|(
+name|state
+operator|==
+name|QSTRING
+condition|)
+name|state
+operator|=
+name|OPER
+expr_stmt|;
+else|else
+name|state
+operator|=
+name|QSTRING
+expr_stmt|;
+break|break;
+block|}
 name|nstate
 operator|=
 name|toktype
@@ -612,16 +642,6 @@ case|case
 name|QSTRING
 case|:
 comment|/* in quoted string */
-if|if
-condition|(
-name|c
-operator|==
-literal|'"'
-condition|)
-name|state
-operator|=
-name|OPER
-expr_stmt|;
 break|break;
 case|case
 name|ATOM
@@ -1272,6 +1292,19 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
+name|isascii
+argument_list|(
+name|c
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ATOM
+operator|)
+return|;
+if|if
+condition|(
 name|isspace
 argument_list|(
 name|c
@@ -1433,10 +1466,12 @@ parameter_list|()
 function_decl|;
 ifdef|#
 directive|ifdef
-name|DEBUGX
+name|DEBUG
 if|if
 condition|(
 name|Debug
+operator|>
+literal|10
 condition|)
 block|{
 name|printf
@@ -1452,7 +1487,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUGX
+endif|DEBUG
 comment|/* 	**  Run through the list of rewrite rules, applying 	**	any that match. 	*/
 for|for
 control|(
@@ -1471,10 +1506,12 @@ control|)
 block|{
 ifdef|#
 directive|ifdef
-name|DEBUGX
+name|DEBUG
 if|if
 condition|(
 name|Debug
+operator|>
+literal|10
 condition|)
 block|{
 name|printf
@@ -1492,7 +1529,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUGX
+endif|DEBUG
 comment|/* try to match on this rule */
 name|clrmatch
 argument_list|(
@@ -1642,6 +1679,8 @@ name|stab
 argument_list|(
 name|ap
 argument_list|,
+name|ST_CLASS
+argument_list|,
 name|ST_FIND
 argument_list|)
 expr_stmt|;
@@ -1789,10 +1828,12 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|DEBUGX
+name|DEBUG
 if|if
 condition|(
 name|Debug
+operator|>
+literal|10
 condition|)
 block|{
 name|printf
@@ -1810,7 +1851,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUGX
+endif|DEBUG
 comment|/* substitute */
 for|for
 control|(
@@ -2016,10 +2057,12 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|DEBUGX
+name|DEBUG
 if|if
 condition|(
 name|Debug
+operator|>
+literal|10
 condition|)
 name|printf
 argument_list|(
@@ -2028,7 +2071,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUGX
+endif|DEBUG
 name|rwr
 operator|=
 name|rwr

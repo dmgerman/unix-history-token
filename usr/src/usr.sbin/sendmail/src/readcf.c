@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)readcf.c	3.7	%G%"
+literal|"@(#)readcf.c	3.8	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -565,6 +565,8 @@ operator|=
 name|stab
 argument_list|(
 name|wd
+argument_list|,
+name|ST_CLASS
 argument_list|,
 name|ST_ENTER
 argument_list|)

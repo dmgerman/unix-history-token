@@ -11,12 +11,12 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)stab.c	3.4	%G%"
+literal|"@(#)stab.c	3.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  STAB -- manage the symbol table ** **	Parameters: **		name -- the name to be looked up or inserted. **		op -- what to do: **			ST_ENTER -- enter the name if not **				already present. **			ST_FIND -- find it only. ** **	Returns: **		pointer to a STAB entry for this name. **		NULL if not found and not entered. ** **	Side Effects: **		can update the symbol table. ** **	Notes: **		Obviously, this deserves a better algorithm.  But **		for the moment...... */
+comment|/* **  STAB -- manage the symbol table ** **	Parameters: **		name -- the name to be looked up or inserted. **		type -- the type of symbol. **		op -- what to do: **			ST_ENTER -- enter the name if not **				already present. **			ST_FIND -- find it only. ** **	Returns: **		pointer to a STAB entry for this name. **		NULL if not found and not entered. ** **	Side Effects: **		can update the symbol table. ** **	Notes: **		Obviously, this deserves a better algorithm.  But **		for the moment...... */
 end_comment
 
 begin_decl_stmt
@@ -34,11 +34,16 @@ name|stab
 parameter_list|(
 name|name
 parameter_list|,
+name|type
+parameter_list|,
 name|op
 parameter_list|)
 name|char
 modifier|*
 name|name
+decl_stmt|;
+name|int
+name|type
 decl_stmt|;
 name|int
 name|op
@@ -76,9 +81,11 @@ literal|4
 condition|)
 name|printf
 argument_list|(
-literal|"STAB: %s "
+literal|"STAB: %s %d "
 argument_list|,
 name|name
+argument_list|,
+name|type
 argument_list|)
 expr_stmt|;
 endif|#
@@ -99,6 +106,12 @@ name|s
 operator|->
 name|s_name
 argument_list|)
+operator|&&
+name|s
+operator|->
+name|s_type
+operator|!=
+name|type
 condition|)
 block|{
 name|ps
@@ -202,6 +215,19 @@ expr|*
 name|s
 argument_list|)
 expr_stmt|;
+name|clear
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|s
+argument_list|,
+sizeof|sizeof
+expr|*
+name|s
+argument_list|)
+expr_stmt|;
 name|s
 operator|->
 name|s_name
@@ -222,19 +248,7 @@ name|s
 operator|->
 name|s_type
 operator|=
-literal|0
-expr_stmt|;
-name|s
-operator|->
-name|s_class
-operator|=
-literal|0
-expr_stmt|;
-name|s
-operator|->
-name|s_next
-operator|=
-name|NULL
+name|type
 expr_stmt|;
 comment|/* and link it in */
 operator|*

@@ -53,12 +53,12 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.16	%G%"
+literal|"@(#)main.c	3.17	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  SENDMAIL -- Post mail to a set of destinations. ** **	This is the basic mail router.  All user mail programs should **	call this routine to actually deliver mail.  Sendmail in **	turn calls a bunch of mail servers that do the real work of **	delivering the mail. ** **	Sendmail is driven by tables defined in conf.c.  This **	file will be different from system to system, but the rest **	of the code will be the same.  This table could be read in, **	but it seemed nicer to have it compiled in, since deliver- **	mail will potentially be exercised a lot. ** **	Usage: **		/etc/sendmail [-f name] [-a] [-q] [-v] [-n] [-m] addr ... ** **	Positional Parameters: **		addr -- the address to deliver the mail to.  There **			can be several. ** **	Flags: **		-f name		The mail is from "name" -- used for **				the header in local mail, and to **				deliver reports of failures to. **		-r name		Same as -f; however, this flag is **				reserved to indicate special processing **				for remote mail delivery as needed **				in the future.  So, network servers **				should use -r. **		-Ffullname	Select what the full-name should be **				listed as. **		-a		This mail should be in ARPANET std **				format. **		-n		Don't do aliasing.  This might be used **				when delivering responses, for **				instance. **		-d		Run in debug mode. **		-em		Mail back a response if there was an **				error in processing.  This should be **				used when the origin of this message **				is another machine. **		-ew		Write back a response if the user is **				still logged in, otherwise, act like **				-em. **		-eq		Don't print any error message (just **				return exit status). **		-ep		(default)  Print error messages **				normally. **		-ee		Send BerkNet style errors.  This **				is equivalent to MailBack except **				that it has gives zero return code **				(unless there were errors during **				returning).  This used to be **				"EchoBack", but you know how the old **				software bounces. **		-m		In group expansion, send to the **				sender also (stands for the Mail metoo **				option. **		-i		Do not terminate mail on a line **				containing just dot. **		-s		Save UNIX-like "From" lines on the **				front of messages. **		-v		Give blow-by-blow description of **				everything that happens. **		-Cfilename	Use alternate configuration file. **		-DXvalue	Define macro X to have value. ** **	Return Codes: **		As defined in<sysexits.h>. ** **		These codes are actually returned from the auxiliary **		mailers; it is their responsibility to make them **		correct. ** **	Compilation Flags: **		LOG -- if set, everything is logged. ** **	Compilation Instructions: **		cc -c -O main.c conf.c deliver.c parse.c **		cc -n -s *.o -lS **		chown root a.out **		chmod 755 a.out **		mv a.out sendmail ** **	Deficiencies: **		It ought to collect together messages that are **			destined for a single host and send these **			to the auxiliary mail server together. **		It should take "user at host" as three separate **			parameters and combine them into one address. ** **	Author: **		Eric Allman, UCB/INGRES */
+comment|/* **  SENDMAIL -- Post mail to a set of destinations. ** **	This is the basic mail router.  All user mail programs should **	call this routine to actually deliver mail.  Sendmail in **	turn calls a bunch of mail servers that do the real work of **	delivering the mail. ** **	Sendmail is driven by tables defined in conf.c.  This **	file will be different from system to system, but the rest **	of the code will be the same.  This table could be read in, **	but it seemed nicer to have it compiled in, since deliver- **	mail will potentially be exercised a lot. ** **	Usage: **		/etc/sendmail [-f name] [-a] [-q] [-v] [-n] [-m] addr ... ** **	Positional Parameters: **		addr -- the address to deliver the mail to.  There **			can be several. ** **	Flags: **		-f name		The mail is from "name" -- used for **				the header in local mail, and to **				deliver reports of failures to. **		-r name		Same as -f; however, this flag is **				reserved to indicate special processing **				for remote mail delivery as needed **				in the future.  So, network servers **				should use -r. **		-Ffullname	Select what the full-name should be **				listed as. **		-a		This mail should be in ARPANET std **				format. **		-n		Don't do aliasing.  This might be used **				when delivering responses, for **				instance. **		-d		Run in debug mode. **		-em		Mail back a response if there was an **				error in processing.  This should be **				used when the origin of this message **				is another machine. **		-ew		Write back a response if the user is **				still logged in, otherwise, act like **				-em. **		-eq		Don't print any error message (just **				return exit status). **		-ep		(default)  Print error messages **				normally. **		-ee		Send BerkNet style errors.  This **				is equivalent to MailBack except **				that it has gives zero return code **				(unless there were errors during **				returning).  This used to be **				"EchoBack", but you know how the old **				software bounces. **		-m		In group expansion, send to the **				sender also (stands for the Mail metoo **				option. **		-i		Do not terminate mail on a line **				containing just dot. **		-s		Save UNIX-like "From" lines on the **				front of messages. **		-v		Give blow-by-blow description of **				everything that happens. **		-Cfilename	Use alternate configuration file. **		-Afilename	Use alternate alias file. **		-DXvalue	Define macro X to have value. ** **	Return Codes: **		As defined in<sysexits.h>. ** **		These codes are actually returned from the auxiliary **		mailers; it is their responsibility to make them **		correct. ** **	Compilation Flags: **		LOG -- if set, everything is logged. ** **	Compilation Instructions: **		cc -c -O main.c conf.c deliver.c parse.c **		cc -n -s *.o -lS **		chown root a.out **		chmod 755 a.out **		mv a.out sendmail ** **	Deficiencies: **		It ought to collect together messages that are **			destined for a single host and send these **			to the auxiliary mail server together. **		It should take "user at host" as three separate **			parameters and combine them into one address. ** **	Author: **		Eric Allman, UCB/INGRES */
 end_comment
 
 begin_decl_stmt
@@ -209,6 +209,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* count of errors */
+end_comment
+
+begin_decl_stmt
+name|int
+name|AliasLevel
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* current depth of aliasing */
 end_comment
 
 begin_decl_stmt
@@ -438,6 +448,10 @@ name|char
 modifier|*
 name|cfname
 decl_stmt|;
+name|char
+modifier|*
+name|aliasname
+decl_stmt|;
 specifier|register
 name|int
 name|i
@@ -606,6 +620,10 @@ expr_stmt|;
 name|cfname
 operator|=
 name|CONFFILE
+expr_stmt|;
+name|aliasname
+operator|=
+name|ALIASFILE
 expr_stmt|;
 comment|/* 	** Crack argv. 	*/
 while|while
@@ -930,6 +948,19 @@ index|]
 expr_stmt|;
 break|break;
 case|case
+literal|'A'
+case|:
+comment|/* select alias file */
+name|aliasname
+operator|=
+operator|&
+name|p
+index|[
+literal|2
+index|]
+expr_stmt|;
+break|break;
+case|case
 literal|'n'
 case|:
 comment|/* don't alias */
@@ -1190,6 +1221,11 @@ block|}
 endif|#
 directive|endif
 endif|V6
+name|initaliases
+argument_list|(
+name|aliasname
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1728,9 +1764,6 @@ expr_stmt|;
 name|To
 operator|=
 name|NULL
-expr_stmt|;
-name|alias
-argument_list|()
 expr_stmt|;
 comment|/* 	**  Actually send everything. 	*/
 for|for

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.22	%G% */
+comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.23	%G% */
 end_comment
 
 begin_include
@@ -238,6 +238,14 @@ block|}
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|mailer
+name|MAILER
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define
@@ -401,8 +409,7 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|mailer
+name|MAILER
 modifier|*
 name|Mailer
 index|[]
@@ -435,19 +442,8 @@ begin_comment
 comment|/* program mailer */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|M_PRIVATE
-value|2
-end_define
-
 begin_comment
-comment|/* user's private mailer */
-end_comment
-
-begin_comment
-comment|/* mailers from 3 on are arbitrary */
+comment|/* mailers from 2 on are arbitrary */
 end_comment
 
 begin_comment
@@ -732,17 +728,37 @@ comment|/* name to be entered */
 name|char
 name|s_type
 decl_stmt|;
-comment|/* general type (unused) */
-name|long
-name|s_class
-decl_stmt|;
-comment|/* bit-map of word classes */
+comment|/* general type (see below) */
 name|struct
 name|symtab
 modifier|*
 name|s_next
 decl_stmt|;
 comment|/* pointer to next in chain */
+union|union
+block|{
+name|long
+name|sv_class
+decl_stmt|;
+comment|/* bit-map of word classes */
+name|ADDRESS
+modifier|*
+name|sv_addr
+decl_stmt|;
+comment|/* pointer to address header */
+name|MAILER
+modifier|*
+name|sv_mailer
+decl_stmt|;
+comment|/* pointer to mailer */
+name|char
+modifier|*
+name|sv_alias
+decl_stmt|;
+comment|/* alias */
+block|}
+name|s_value
+union|;
 block|}
 struct|;
 end_struct
@@ -754,6 +770,93 @@ name|symtab
 name|STAB
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* symbol types */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ST_UNDEF
+value|0
+end_define
+
+begin_comment
+comment|/* undefined type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ST_CLASS
+value|1
+end_define
+
+begin_comment
+comment|/* class map */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ST_ADDRESS
+value|2
+end_define
+
+begin_comment
+comment|/* an address in parsed format */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ST_MAILER
+value|3
+end_define
+
+begin_comment
+comment|/* a mailer header */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ST_ALIAS
+value|4
+end_define
+
+begin_comment
+comment|/* an alias */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|s_class
+value|s_value.sv_class
+end_define
+
+begin_define
+define|#
+directive|define
+name|s_addr
+value|s_value.sv_addr
+end_define
+
+begin_define
+define|#
+directive|define
+name|s_mailer
+value|s_value.sv_mailer
+end_define
+
+begin_define
+define|#
+directive|define
+name|s_alias
+value|s_value.sv_alias
+end_define
 
 begin_function_decl
 specifier|extern
@@ -1027,6 +1130,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* a UNIX-style From line for this message */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|AliasLevel
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* depth of aliasing */
 end_comment
 
 begin_include

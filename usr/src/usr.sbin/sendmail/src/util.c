@@ -29,18 +29,20 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)util.c	3.6	%G%"
+literal|"@(#)util.c	3.7	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  STRIPQUOTES -- Strip quotes& quote bits from a string. ** **	Runs through a string and strips off unquoted quote **	characters and quote bits.  This is done in place. ** **	Parameters: **		s -- the string to strip. ** **	Returns: **		none. ** **	Side Effects: **		none. ** **	Called By: **		deliver */
+comment|/* **  STRIPQUOTES -- Strip quotes& quote bits from a string. ** **	Runs through a string and strips off unquoted quote **	characters and quote bits.  This is done in place. ** **	Parameters: **		s -- the string to strip. **		qf -- if set, remove actual `` " '' characters **			as well as the quote bits. ** **	Returns: **		none. ** **	Side Effects: **		none. ** **	Called By: **		deliver */
 end_comment
 
 begin_macro
 name|stripquotes
 argument_list|(
 argument|s
+argument_list|,
+argument|qf
 argument_list|)
 end_macro
 
@@ -48,6 +50,12 @@ begin_decl_stmt
 name|char
 modifier|*
 name|s
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|qf
 decl_stmt|;
 end_decl_stmt
 
@@ -67,6 +75,13 @@ specifier|register
 name|char
 name|c
 decl_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
+condition|)
+return|return;
 for|for
 control|(
 name|p
@@ -92,6 +107,9 @@ condition|(
 name|c
 operator|!=
 literal|'"'
+operator|||
+operator|!
+name|qf
 condition|)
 operator|*
 name|q
@@ -832,6 +850,52 @@ operator|(
 name|FALSE
 operator|)
 return|;
+block|}
+end_block
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  CLEAR -- clear a block of memory ** **	Parameters: **		p -- location to clear. **		l -- number of bytes to clear. ** **	Returns: **		none. ** **	Side Effects: **		none. */
+end_comment
+
+begin_expr_stmt
+name|clear
+argument_list|(
+name|p
+argument_list|,
+name|l
+argument_list|)
+specifier|register
+name|char
+operator|*
+name|p
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|register
+name|int
+name|l
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+while|while
+condition|(
+name|l
+operator|--
+operator|>
+literal|0
+condition|)
+operator|*
+name|p
+operator|++
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_block
 
