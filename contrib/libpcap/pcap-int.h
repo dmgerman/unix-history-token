@@ -511,23 +511,6 @@ name|PCAP_FDDIPAD
 value|3
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
-name|HAVE_STRLCPY
-define|#
-directive|define
-name|strlcpy
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|,
-name|z
-parameter_list|)
-define|\
-value|(strncpy((x), (y), (z)), \ 	 ((z)<= 0 ? 0 : ((x)[(z) - 1] = '\0')), \ 	 strlen((y)))
-endif|#
-directive|endif
 include|#
 directive|include
 file|<stdarg.h>
