@@ -6794,6 +6794,11 @@ operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
+name|SOCK_LOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -6829,6 +6834,11 @@ operator|)
 operator|)
 condition|)
 block|{
+name|SOCK_UNLOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -6904,6 +6914,11 @@ goto|goto
 name|done
 goto|;
 block|}
+name|SOCK_UNLOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s

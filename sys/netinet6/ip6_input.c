@@ -4310,6 +4310,13 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SO_TIMESTAMP
+name|SOCK_LOCK
+argument_list|(
+name|in6p
+operator|->
+name|in6p_socket
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4329,6 +4336,13 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
+name|SOCK_UNLOCK
+argument_list|(
+name|in6p
+operator|->
+name|in6p_socket
+argument_list|)
+expr_stmt|;
 name|microtime
 argument_list|(
 operator|&
@@ -4374,6 +4388,14 @@ name|m_next
 expr_stmt|;
 block|}
 block|}
+else|else
+name|SOCK_UNLOCK
+argument_list|(
+name|in6p
+operator|->
+name|in6p_socket
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* RFC 2292 sec. 5 */

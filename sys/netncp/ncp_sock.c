@@ -255,6 +255,11 @@ operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
+name|SOCK_LOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -275,7 +280,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|tsleep
+name|msleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -284,6 +289,11 @@ operator|&
 name|so
 operator|->
 name|so_timeo
+argument_list|,
+name|SOCK_MTX
+argument_list|(
+name|so
+argument_list|)
 argument_list|,
 name|PSOCK
 argument_list|,
@@ -319,6 +329,11 @@ operator|&=
 operator|~
 name|SS_ISCONNECTING
 expr_stmt|;
+name|SOCK_UNLOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -329,6 +344,11 @@ name|bad
 goto|;
 block|}
 block|}
+name|SOCK_UNLOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|so
