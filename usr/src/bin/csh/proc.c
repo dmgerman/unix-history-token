@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)proc.c	4.13 (Berkeley) 84/08/31"
+literal|"@(#)proc.c	4.14 (Berkeley) 84/11/21"
 decl_stmt|;
 end_decl_stmt
 
@@ -1045,19 +1045,6 @@ name|old
 function_decl|)
 parameter_list|()
 function_decl|;
-if|if
-condition|(
-name|setintr
-condition|)
-name|old
-operator|=
-name|signal
-argument_list|(
-name|SIGINT
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|pp
@@ -1375,17 +1362,6 @@ expr_stmt|;
 name|pflush
 argument_list|(
 name|pp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|setintr
-condition|)
-name|signal
-argument_list|(
-name|SIGINT
-argument_list|,
-name|old
 argument_list|)
 expr_stmt|;
 block|}
