@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	3.22 84/04/08"
+literal|"@(#)main.c	3.23 84/04/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"string.h"
 end_include
 
 begin_include
@@ -274,7 +280,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|shell
+name|p
 operator|=
 name|getenv
 argument_list|(
@@ -284,28 +290,58 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|shell
+name|p
 operator|=
 literal|"/bin/csh"
 expr_stmt|;
 if|if
 condition|(
-name|shellname
+operator|(
+name|shellfile
+operator|=
+name|str_cpy
+argument_list|(
+name|p
+argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+name|nomem
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|p
 operator|=
 name|rindex
 argument_list|(
-name|shell
+name|shellfile
 argument_list|,
 literal|'/'
 argument_list|)
 condition|)
-name|shellname
+name|p
 operator|++
 expr_stmt|;
 else|else
-name|shellname
+name|p
 operator|=
+name|shellfile
+expr_stmt|;
 name|shell
+index|[
+literal|0
+index|]
+operator|=
+name|p
+expr_stmt|;
+name|shell
+index|[
+literal|1
+index|]
+operator|=
+literal|0
 expr_stmt|;
 ifndef|#
 directive|ifndef
@@ -480,6 +516,12 @@ expr_stmt|;
 name|cmdwin
 operator|->
 name|ww_noupdate
+operator|=
+literal|1
+expr_stmt|;
+name|cmdwin
+operator|->
+name|ww_unctrl
 operator|=
 literal|1
 expr_stmt|;
@@ -698,7 +740,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"window: [-e escape-char] [-t] [-f] [-d]\n"
+literal|"Usage: window [-e escape-char] [-c command] [-t] [-f] [-d]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -710,6 +752,31 @@ return|return
 literal|0
 return|;
 comment|/* for lint */
+block|}
+end_block
+
+begin_macro
+name|nomem
+argument_list|()
+end_macro
+
+begin_block
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Out of memory.\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 

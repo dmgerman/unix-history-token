@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd2.c	3.28 84/04/08"
+literal|"@(#)cmd2.c	3.29 84/04/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -97,7 +97,9 @@ literal|":nline lines          Set the default number of lines"
 block|,
 literal|"                      in window text buffers."
 block|,
-literal|":source filename      Execute commands in ``filename''."
+literal|":shell string         Set default shell program to ``string.''"
+block|,
+literal|":source filename      Execute commands in ``filename.''"
 block|,
 literal|":terse [off]          Turn on (or off) terse mode."
 block|,
@@ -105,7 +107,7 @@ literal|":unset variable       Deallocate ``variable''."
 block|,
 literal|":variable             List all variables."
 block|,
-literal|":window row col nrow ncol [nline label]"
+literal|":window row col nrow ncol [nline label pty frame shell]"
 block|,
 literal|"                      Open a window at ``row'', ``col''"
 block|,

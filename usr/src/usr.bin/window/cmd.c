@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd.c	3.28 84/04/08"
+literal|"@(#)cmd.c	3.29 84/04/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -741,15 +741,8 @@ condition|(
 operator|!
 name|terse
 condition|)
-name|wwputc
-argument_list|(
-name|ctrl
-argument_list|(
-name|g
-argument_list|)
-argument_list|,
-name|cmdwin
-argument_list|)
+name|wwbell
+argument_list|()
 expr_stmt|;
 name|error
 argument_list|(
@@ -931,15 +924,8 @@ name|w
 operator|==
 literal|0
 condition|)
-name|wwputc
-argument_list|(
-name|ctrl
-argument_list|(
-name|g
-argument_list|)
-argument_list|,
-name|cmdwin
-argument_list|)
+name|wwbell
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

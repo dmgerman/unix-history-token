@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwclose.c	3.9 84/03/02"
+literal|"@(#)wwclose.c	3.10 84/04/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,6 +56,14 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|w
+operator|->
+name|ww_pty
+operator|>=
+literal|0
+condition|)
 operator|(
 name|void
 operator|)
@@ -64,6 +72,24 @@ argument_list|(
 name|w
 operator|->
 name|ww_pty
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|->
+name|ww_socket
+operator|>=
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|w
+operator|->
+name|ww_socket
 argument_list|)
 expr_stmt|;
 name|wwfree

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)defs.h	3.13 84/04/05	  */
+comment|/*  *	@(#)defs.h	3.14 84/04/08	  */
 end_comment
 
 begin_include
@@ -130,22 +130,25 @@ begin_decl_stmt
 name|char
 modifier|*
 name|shell
+index|[
+literal|128
+index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* the shell program */
+comment|/* the shell argv */
 end_comment
 
 begin_decl_stmt
 name|char
 modifier|*
-name|shellname
+name|shellfile
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* the shell program name (for argv[0]) */
+comment|/* the shell program */
 end_comment
 
 begin_decl_stmt

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwgets.c	3.5 84/04/08"
+literal|"@(#)wwgets.c	3.6 84/04/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,6 +78,19 @@ specifier|register
 name|char
 name|c
 decl_stmt|;
+name|char
+name|uc
+init|=
+name|w
+operator|->
+name|ww_unctrl
+decl_stmt|;
+name|w
+operator|->
+name|ww_unctrl
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -125,17 +138,6 @@ argument_list|(
 operator|*
 operator|--
 name|p
-argument_list|,
-name|w
-argument_list|)
-expr_stmt|;
-else|else
-name|wwputc
-argument_list|(
-name|ctrl
-argument_list|(
-name|g
-argument_list|)
 argument_list|,
 name|w
 argument_list|)
@@ -294,6 +296,12 @@ operator|*
 name|p
 operator|=
 literal|0
+expr_stmt|;
+name|w
+operator|->
+name|ww_unctrl
+operator|=
+name|uc
 expr_stmt|;
 block|}
 end_block

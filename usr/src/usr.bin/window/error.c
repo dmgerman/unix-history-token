@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)error.c	3.8 84/04/08"
+literal|"@(#)error.c	3.9 84/04/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -110,15 +110,8 @@ if|if
 condition|(
 name|terse
 condition|)
-name|wwputc
-argument_list|(
-name|ctrl
-argument_list|(
-name|g
-argument_list|)
-argument_list|,
-name|cmdwin
-argument_list|)
+name|wwbell
+argument_list|()
 expr_stmt|;
 else|else
 block|{

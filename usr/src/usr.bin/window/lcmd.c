@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lcmd.c	3.17 84/04/07"
+literal|"@(#)lcmd.c	3.18 84/04/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,6 +104,13 @@ end_function_decl
 begin_function_decl
 name|int
 name|l_select
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|l_shell
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -209,6 +216,14 @@ begin_decl_stmt
 name|struct
 name|lcmd_arg
 name|arg_select
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|lcmd_arg
+name|arg_shell
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -365,6 +380,14 @@ block|,
 name|l_select
 block|,
 name|arg_select
+block|,
+literal|"shell"
+block|,
+literal|2
+block|,
+name|l_shell
+block|,
+name|arg_shell
 block|,
 literal|"source"
 block|,

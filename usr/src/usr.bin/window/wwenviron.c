@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwenviron.c	3.9 84/03/23"
+literal|"@(#)wwenviron.c	3.10 84/04/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,7 +27,7 @@ file|"ww.h"
 end_include
 
 begin_comment
-comment|/*  * Set up the environment of this process to run in window 'wp'.  * Can't report errors in any intelligent way, because the parent  * hangs in vfork() until we die, but we can't die until output  * drains (i.e. deadlock).  So don't say anything.  */
+comment|/*  * Set up the environment of this process to run in window 'wp'.  */
 end_comment
 
 begin_expr_stmt
@@ -54,6 +54,9 @@ init|=
 name|getpid
 argument_list|()
 decl_stmt|;
+if|if
+condition|(
+operator|(
 name|i
 operator|=
 name|open
@@ -62,14 +65,13 @@ literal|"/dev/tty"
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|i
+operator|)
 operator|<
 literal|0
 condition|)
-return|return;
+goto|goto
+name|bad
+goto|;
 if|if
 condition|(
 name|ioctl
@@ -90,7 +92,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-return|return;
+goto|goto
+name|bad
+goto|;
 operator|(
 name|void
 operator|)
@@ -101,6 +105,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|i
+operator|=
+name|wp
+operator|->
+name|ww_socket
+operator|)
+operator|<
+literal|0
+operator|&&
 operator|(
 name|i
 operator|=
@@ -116,7 +130,9 @@ operator|)
 operator|<
 literal|0
 condition|)
-return|return;
+goto|goto
+name|bad
+goto|;
 operator|(
 name|void
 operator|)
@@ -170,8 +186,9 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 literal|0
@@ -188,10 +205,7 @@ operator|)
 operator|&
 name|pgrp
 argument_list|)
-operator|<
-literal|0
-condition|)
-return|return;
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -252,6 +266,19 @@ argument_list|,
 name|wwkeys
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
+name|bad
+label|:
+name|wwerrno
+operator|=
+name|WWE_SYS
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 end_block
 

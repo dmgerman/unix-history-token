@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwspawn.c	3.7 84/01/13"
+literal|"@(#)wwspawn.c	3.8 84/04/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,11 +33,7 @@ file|<signal.h>
 end_include
 
 begin_comment
-comment|/*  * There is a dead lock with vfork and closing of pseudo-ports.  * So we have to be sneaky.  */
-end_comment
-
-begin_comment
-comment|/*VARARGS3*/
+comment|/*  * There is a dead lock with vfork and closing of pseudo-ports.  * So we have to be sneaky about error reporting.  */
 end_comment
 
 begin_expr_stmt
@@ -47,7 +43,7 @@ name|wp
 argument_list|,
 name|file
 argument_list|,
-name|argv0
+name|argv
 argument_list|)
 specifier|register
 expr|struct
@@ -61,26 +57,29 @@ begin_decl_stmt
 name|char
 modifier|*
 name|file
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 modifier|*
-name|argv0
+modifier|*
+name|argv
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
 name|int
 name|pid
+decl_stmt|;
+name|int
+name|ret
+decl_stmt|;
+name|char
+name|erred
+init|=
+literal|0
 decl_stmt|;
 operator|(
 name|void
@@ -106,37 +105,34 @@ name|wwerrno
 operator|=
 name|WWE_SYS
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sigrelse
-argument_list|(
-name|SIGCHLD
-argument_list|)
-expr_stmt|;
-return|return
+name|ret
+operator|=
 operator|-
 literal|1
-return|;
+expr_stmt|;
+break|break;
 case|case
 literal|0
 case|:
+if|if
+condition|(
 name|wwenviron
 argument_list|(
 name|wp
 argument_list|)
-expr_stmt|;
-name|errno
-operator|=
+operator|>=
 literal|0
-expr_stmt|;
-name|execv
+condition|)
+name|execvp
 argument_list|(
 name|file
 argument_list|,
-operator|&
-name|argv0
+name|argv
 argument_list|)
+expr_stmt|;
+name|erred
+operator|=
+literal|1
 expr_stmt|;
 name|_exit
 argument_list|(
@@ -146,27 +142,18 @@ expr_stmt|;
 default|default:
 if|if
 condition|(
-name|errno
-operator|!=
-literal|0
+name|erred
 condition|)
 block|{
 name|wwerrno
 operator|=
 name|WWE_SYS
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sigrelse
-argument_list|(
-name|SIGCHLD
-argument_list|)
-expr_stmt|;
-return|return
+name|ret
+operator|=
 operator|-
 literal|1
-return|;
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -182,6 +169,12 @@ name|ww_state
 operator|=
 name|WWS_HASPROC
 expr_stmt|;
+name|ret
+operator|=
+name|pid
+expr_stmt|;
+block|}
+block|}
 operator|(
 name|void
 operator|)
@@ -190,11 +183,10 @@ argument_list|(
 name|SIGCHLD
 argument_list|)
 expr_stmt|;
+comment|/* 	if (wp->ww_socket>= 0) { 		(void) close(wp->ww_socket); 		wp->ww_socket = -1; 	} 	*/
 return|return
-name|pid
+name|ret
 return|;
-block|}
-block|}
 block|}
 end_block
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ww.h	3.28 84/04/08	  */
+comment|/*  *	@(#)ww.h	3.29 84/04/08	  */
 end_comment
 
 begin_include
@@ -194,10 +194,22 @@ name|ww_hasframe
 decl_stmt|;
 comment|/* frame it */
 comment|/* things for the window process and io */
+name|char
+name|ww_ispty
+decl_stmt|;
+comment|/* ww_pty is really a pty, not socket pair */
+name|char
+name|ww_stopped
+decl_stmt|;
+comment|/* output stopped */
 name|int
 name|ww_pty
 decl_stmt|;
-comment|/* file descriptor of pty */
+comment|/* file descriptor of pty or socket pair */
+name|int
+name|ww_socket
+decl_stmt|;
+comment|/* other end of socket pair */
 name|int
 name|ww_pid
 decl_stmt|;
@@ -223,15 +235,12 @@ name|char
 modifier|*
 name|ww_obp
 decl_stmt|;
-comment|/* current position in ww_ob */
-name|int
-name|ww_obc
-decl_stmt|;
-comment|/* character count */
+comment|/* current read position in ww_ob */
 name|char
-name|ww_stopped
+modifier|*
+name|ww_obq
 decl_stmt|;
-comment|/* output stopped */
+comment|/* current write position in ww_ob */
 comment|/* things for the user, they really don't belong here */
 name|char
 name|ww_center
@@ -534,8 +543,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|WWO_REVERSE
+name|WWO_SOCKET
 value|0x02
+end_define
+
+begin_comment
+comment|/* want socket pair */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WWO_REVERSE
+value|0x04
 end_define
 
 begin_comment
@@ -546,7 +566,7 @@ begin_define
 define|#
 directive|define
 name|WWO_GLASS
-value|0x04
+value|0x08
 end_define
 
 begin_comment
@@ -557,7 +577,7 @@ begin_define
 define|#
 directive|define
 name|WWO_FRAME
-value|0x08
+value|0x10
 end_define
 
 begin_comment
@@ -1042,6 +1062,14 @@ end_decl_stmt
 begin_comment
 comment|/* quicky macros */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|wwbell
+parameter_list|()
+value|write(1, "\7", 1)
+end_define
 
 begin_define
 define|#
