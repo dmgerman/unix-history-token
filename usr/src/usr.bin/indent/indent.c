@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)indent.c	5.10 (Berkeley) %G%"
+literal|"@(#)indent.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -160,11 +160,6 @@ comment|/* used to store type of stmt for if (...), 				 * for (...), etc */
 specifier|register
 name|int
 name|i
-decl_stmt|;
-comment|/* local loop counter */
-specifier|register
-name|int
-name|j
 decl_stmt|;
 comment|/* local loop counter */
 name|int
