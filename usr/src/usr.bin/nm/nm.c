@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nm.c 4.5 %G%"
+literal|"@(#)nm.c 4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -484,7 +484,9 @@ argument_list|,
 literal|"old archive"
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 if|if
 condition|(
@@ -522,7 +524,9 @@ argument_list|,
 literal|"bad format"
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 name|fseek
 argument_list|(
