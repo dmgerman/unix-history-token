@@ -2252,6 +2252,13 @@ break|break;
 case|case
 literal|0x690
 case|:
+name|strcpy
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"VIA C3 Nehemiah"
+argument_list|)
+expr_stmt|;
 name|do_cpuid
 argument_list|(
 literal|0xc0000000
@@ -2274,13 +2281,6 @@ argument_list|(
 literal|0xc0000001
 argument_list|,
 name|regs
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|cpu_model
-argument_list|,
-literal|"VIA C3 Nehemiah"
 argument_list|)
 expr_stmt|;
 if|if
