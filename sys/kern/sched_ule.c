@@ -5167,13 +5167,6 @@ block|{
 name|int
 name|rtick
 decl_stmt|;
-comment|/* Update to account for time potentially spent sleeping */
-name|ke
-operator|->
-name|ke_ltick
-operator|=
-name|ticks
-expr_stmt|;
 comment|/* 		 * Don't update more frequently than twice a second.  Allowing 		 * this causes the cpu usage to decay away too quickly due to 		 * rounding errors. 		 */
 if|if
 condition|(
