@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hys.c	4.1 (Berkeley) %G%"
+literal|"@(#)hys.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,7 +33,7 @@ name|HAYES
 end_ifdef
 
 begin_comment
-comment|/***  *	hyspopn(telno, flds, dev) connect to hayes smartmodem (pulse call)  *	hystopn(telno, flds, dev) connect to hayes smartmodem (tone call)  *	char *flds[], *dev[];  *  *	return codes:  *>0  -  file number  -  ok  *		CF_DIAL,CF_DEVICE  -  failed  */
+comment|/*  *	hyspopn(telno, flds, dev) connect to hayes smartmodem (pulse call)  *	hystopn(telno, flds, dev) connect to hayes smartmodem (tone call)  *	char *flds[], *dev[];  *  *	return codes:  *>0  -  file number  -  ok  *		CF_DIAL,CF_DEVICE  -  failed  */
 end_comment
 
 begin_macro
@@ -325,9 +325,9 @@ name|write
 argument_list|(
 name|dh
 argument_list|,
-literal|"ATH\r"
+literal|"ATV1H\r"
 argument_list|,
-literal|4
+literal|6
 argument_list|)
 expr_stmt|;
 if|if
@@ -636,38 +636,6 @@ name|write
 argument_list|(
 name|fd
 argument_list|,
-literal|"ATH\r"
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|expect
-argument_list|(
-literal|"ATH"
-argument_list|,
-name|fd
-argument_list|)
-operator|||
-name|expect
-argument_list|(
-literal|"OK\r\n"
-argument_list|,
-name|fd
-argument_list|)
-condition|)
-name|logent
-argument_list|(
-name|devSel
-argument_list|,
-literal|"HSM did not respond to ATH"
-argument_list|)
-expr_stmt|;
-name|write
-argument_list|(
-name|fd
-argument_list|,
 literal|"ATZ\r"
 argument_list|,
 literal|4
@@ -677,17 +645,12 @@ if|if
 condition|(
 name|expect
 argument_list|(
-literal|"ATZ"
+literal|"OK"
 argument_list|,
 name|fd
 argument_list|)
-operator|||
-name|expect
-argument_list|(
-literal|"OK\r\n"
-argument_list|,
-name|fd
-argument_list|)
+operator|!=
+literal|0
 condition|)
 name|logent
 argument_list|(
