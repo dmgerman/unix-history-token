@@ -53,6 +53,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -603,7 +609,6 @@ name|cval
 parameter_list|,
 name|clen
 parameter_list|)
-specifier|register
 name|int
 name|fd
 decl_stmt|;
@@ -618,18 +623,15 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|u_char
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|int
 name|nr
 decl_stmt|;
-specifier|register
 name|u_int32_t
-name|crc
+name|lcrc
 decl_stmt|,
 name|len
 decl_stmt|;
@@ -650,7 +652,7 @@ parameter_list|,
 name|ch
 parameter_list|)
 value|(var) = (var)<< 8 ^ crctab[(var)>> 24 ^ (ch)]
-name|crc
+name|lcrc
 operator|=
 name|len
 operator|=
@@ -700,7 +702,7 @@ control|)
 block|{
 name|COMPUTE
 argument_list|(
-name|crc
+name|lcrc
 argument_list|,
 operator|*
 name|p
@@ -746,7 +748,7 @@ control|)
 block|{
 name|COMPUTE
 argument_list|(
-name|crc
+name|lcrc
 argument_list|,
 name|len
 operator|&
@@ -767,7 +769,7 @@ operator|*
 name|cval
 operator|=
 operator|~
-name|crc
+name|lcrc
 expr_stmt|;
 name|crc_total
 operator|=

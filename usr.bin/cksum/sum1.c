@@ -53,6 +53,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
 begin_function
 name|int
 name|csum1
@@ -63,7 +69,6 @@ name|cval
 parameter_list|,
 name|clen
 parameter_list|)
-specifier|register
 name|int
 name|fd
 decl_stmt|;
@@ -78,19 +83,15 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|u_int32_t
 name|total
 decl_stmt|;
-specifier|register
 name|int
 name|nr
 decl_stmt|;
-specifier|register
 name|u_int
-name|crc
+name|lcrc
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|p
@@ -102,7 +103,7 @@ literal|8192
 index|]
 decl_stmt|;
 comment|/* 	 * 16-bit checksum, rotating right before each addition; 	 * overflow is discarded. 	 */
-name|crc
+name|lcrc
 operator|=
 name|total
 operator|=
@@ -147,19 +148,19 @@ control|)
 block|{
 if|if
 condition|(
-name|crc
+name|lcrc
 operator|&
 literal|1
 condition|)
-name|crc
+name|lcrc
 operator||=
 literal|0x10000
 expr_stmt|;
-name|crc
+name|lcrc
 operator|=
 operator|(
 operator|(
-name|crc
+name|lcrc
 operator|>>
 literal|1
 operator|)
@@ -185,7 +186,7 @@ return|;
 operator|*
 name|cval
 operator|=
-name|crc
+name|lcrc
 expr_stmt|;
 operator|*
 name|clen

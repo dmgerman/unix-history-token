@@ -53,6 +53,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
 begin_function
 name|int
 name|csum2
@@ -63,7 +69,6 @@ name|cval
 parameter_list|,
 name|clen
 parameter_list|)
-specifier|register
 name|int
 name|fd
 decl_stmt|;
@@ -78,17 +83,14 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|u_int32_t
-name|crc
+name|lcrc
 decl_stmt|,
 name|total
 decl_stmt|;
-specifier|register
 name|int
 name|nr
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|p
@@ -99,8 +101,8 @@ index|[
 literal|8192
 index|]
 decl_stmt|;
-comment|/* 	 * Draft 8 POSIX 1003.2: 	 * 	 *   s = sum of all bytes 	 *   r = s % 2^16 + (s % 2^32) / 2^16 	 * crc = (r % 2^16) + r / 2^16 	 */
-name|crc
+comment|/* 	 * Draft 8 POSIX 1003.2: 	 * 	 *   s = sum of all bytes 	 *   r = s % 2^16 + (s % 2^32) / 2^16 	 * lcrc = (r % 2^16) + r / 2^16 	 */
+name|lcrc
 operator|=
 name|total
 operator|=
@@ -142,7 +144,7 @@ condition|;
 operator|++
 name|p
 control|)
-name|crc
+name|lcrc
 operator|+=
 operator|*
 name|p
@@ -158,30 +160,30 @@ operator|(
 literal|1
 operator|)
 return|;
-name|crc
+name|lcrc
 operator|=
 operator|(
-name|crc
+name|lcrc
 operator|&
 literal|0xffff
 operator|)
 operator|+
 operator|(
-name|crc
+name|lcrc
 operator|>>
 literal|16
 operator|)
 expr_stmt|;
-name|crc
+name|lcrc
 operator|=
 operator|(
-name|crc
+name|lcrc
 operator|&
 literal|0xffff
 operator|)
 operator|+
 operator|(
-name|crc
+name|lcrc
 operator|>>
 literal|16
 operator|)
@@ -189,7 +191,7 @@ expr_stmt|;
 operator|*
 name|cval
 operator|=
-name|crc
+name|lcrc
 expr_stmt|;
 operator|*
 name|clen

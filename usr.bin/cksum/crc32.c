@@ -35,6 +35,12 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -612,7 +618,6 @@ name|cval
 parameter_list|,
 name|clen
 parameter_list|)
-specifier|register
 name|int
 name|fd
 decl_stmt|;
@@ -628,7 +633,7 @@ end_function
 begin_block
 block|{
 name|u_int32_t
-name|crc
+name|lcrc
 init|=
 operator|~
 literal|0
@@ -695,7 +700,7 @@ control|)
 block|{
 name|CRC
 argument_list|(
-name|crc
+name|lcrc
 argument_list|,
 operator|*
 name|p
@@ -728,7 +733,7 @@ operator|*
 name|cval
 operator|=
 operator|~
-name|crc
+name|lcrc
 expr_stmt|;
 name|crc32_total
 operator|=
