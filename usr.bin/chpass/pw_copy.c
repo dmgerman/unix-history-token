@@ -181,7 +181,7 @@ argument_list|(
 name|chgstr
 argument_list|)
 argument_list|,
-literal|"%lu"
+literal|"%ld"
 argument_list|,
 name|pw
 operator|->
@@ -197,7 +197,7 @@ argument_list|(
 name|expstr
 argument_list|)
 argument_list|,
-literal|"%lu"
+literal|"%ld"
 argument_list|,
 name|pw
 operator|->
@@ -412,7 +412,7 @@ name|fprintf
 argument_list|(
 name|to
 argument_list|,
-literal|"%s:%s:%s:%s:%s:%ld:%ld:%s:%s:%s\n"
+literal|"%s:%s:%s:%s:%s:%s:%s:%s:%s:%s\n"
 argument_list|,
 name|pw
 operator|->
@@ -541,7 +541,7 @@ name|fprintf
 argument_list|(
 name|to
 argument_list|,
-literal|"%s:%s:%s:%s:%s:%ld:%ld:%s:%s:%s\n"
+literal|"%s:%s:%s:%s:%s:%s:%s:%s:%s:%s\n"
 argument_list|,
 name|pw
 operator|->
