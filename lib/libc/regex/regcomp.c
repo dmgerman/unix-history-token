@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<runetype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<wchar.h>
 end_include
 
