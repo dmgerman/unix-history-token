@@ -370,6 +370,34 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|hw_clockrate
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|clockrate
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|hw_clockrate
+argument_list|,
+literal|0
+argument_list|,
+literal|"CPU instruction clock rate"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_if
 if|#
 directive|if
@@ -2307,6 +2335,16 @@ argument_list|)
 case|case
 name|CPUCLASS_586
 case|:
+name|hw_clockrate
+operator|=
+operator|(
+name|tsc_freq
+operator|+
+literal|5000
+operator|)
+operator|/
+literal|1000000
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%jd.%02d-MHz "
@@ -2355,6 +2393,16 @@ argument_list|)
 case|case
 name|CPUCLASS_686
 case|:
+name|hw_clockrate
+operator|=
+operator|(
+name|tsc_freq
+operator|+
+literal|5000
+operator|)
+operator|/
+literal|1000000
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%jd.%02d-MHz "
