@@ -154,7 +154,7 @@ parameter_list|,
 name|BWN
 parameter_list|)
 define|\
-value|NAME##_space_read_##BWN##, 				\ 	NAME##_space_read_multi_##BWN##, 			\ 	NAME##_space_read_region_##BWN##,			\ 	NAME##_space_write_##BWN##, 				\ 	NAME##_space_write_multi_##BWN##, 			\ 	NAME##_space_write_region_##BWN##,			\ 	NAME##_space_set_multi_##BWN##,				\ 	NAME##_space_set_region_##BWN##,			\ 	NAME##_space_copy_region_##BWN
+value|NAME##_space_read_##BWN, 				\ 	NAME##_space_read_multi_##BWN, 				\ 	NAME##_space_read_region_##BWN,				\ 	NAME##_space_write_##BWN, 				\ 	NAME##_space_write_multi_##BWN, 			\ 	NAME##_space_write_region_##BWN,			\ 	NAME##_space_set_multi_##BWN,				\ 	NAME##_space_set_region_##BWN,				\ 	NAME##_space_copy_region_##BWN
 end_define
 
 begin_define
@@ -184,7 +184,7 @@ parameter_list|,
 name|BWN
 parameter_list|)
 define|\
-value|TYPE (*##NAME##_read_##BWN) _PASCAL_CALL;		\ 	void (*##NAME##_read_multi_##BWN) _PASCAL_CALL;		\ 	void (*##NAME##_read_region_##BWN) _PASCAL_CALL;	\ 	void (*##NAME##_write_##BWN) _PASCAL_CALL;		\ 	void (*##NAME##_write_multi_##BWN) _PASCAL_CALL;	\ 	void (*##NAME##_write_region_##BWN) _PASCAL_CALL;	\ 	void (*##NAME##_set_multi_##BWN) _PASCAL_CALL;		\ 	void (*##NAME##_set_region_##BWN) _PASCAL_CALL;		\ 	void (*##NAME##_copy_region_##BWN) _PASCAL_CALL;
+value|TYPE (* NAME##_read_##BWN) _PASCAL_CALL;		\ 	void (* NAME##_read_multi_##BWN) _PASCAL_CALL;		\ 	void (* NAME##_read_region_##BWN) _PASCAL_CALL;		\ 	void (* NAME##_write_##BWN) _PASCAL_CALL;		\ 	void (* NAME##_write_multi_##BWN) _PASCAL_CALL;		\ 	void (* NAME##_write_region_##BWN) _PASCAL_CALL;	\ 	void (* NAME##_set_multi_##BWN) _PASCAL_CALL;		\ 	void (* NAME##_set_region_##BWN) _PASCAL_CALL;		\ 	void (* NAME##_copy_region_##BWN) _PASCAL_CALL;
 end_define
 
 begin_struct
@@ -568,7 +568,7 @@ parameter_list|,
 name|BWN
 parameter_list|)
 define|\
-value|static __inline TYPE						\ bus_space_read_##BWN##(tag, bsh, offset)			\ 	bus_space_tag_t tag;					\ 	bus_space_handle_t bsh;					\ 	bus_size_t offset;					\ {								\ 	register TYPE result;					\ 								\ 	__asm __volatile("call *%2"  				\ 			:"=a" (result),				\ 			 "=d" (offset)				\ 			:"o" (bsh->bsh_bam.bs_read_##BWN),	\ 			 "b" (bsh),				\ 			 "1" (offset)				\ 			);					\ 								\ 	return result;						\ }
+value|static __inline TYPE						\ bus_space_read_##BWN (tag, bsh, offset)				\ 	bus_space_tag_t tag;					\ 	bus_space_handle_t bsh;					\ 	bus_size_t offset;					\ {								\ 	register TYPE result;					\ 								\ 	__asm __volatile("call *%2"  				\ 			:"=a" (result),				\ 			 "=d" (offset)				\ 			:"o" (bsh->bsh_bam.bs_read_##BWN),	\ 			 "b" (bsh),				\ 			 "1" (offset)				\ 			);					\ 								\ 	return result;						\ }
 end_define
 
 begin_macro
@@ -612,7 +612,7 @@ parameter_list|,
 name|BWN
 parameter_list|)
 define|\
-value|static __inline void						\ bus_space_write_##BWN##(tag, bsh, offset, val)			\ 	bus_space_tag_t tag;					\ 	bus_space_handle_t bsh;					\ 	bus_size_t offset;					\ 	TYPE val;						\ {								\ 								\ 	__asm __volatile("call *%1"				\ 			:"=d" (offset)				\ 			:"o" (bsh->bsh_bam.bs_write_##BWN),	\ 			 "a" (val),				\ 			 "b" (bsh),				\ 			 "0" (offset)				\ 			);					\ }
+value|static __inline void						\ bus_space_write_##BWN (tag, bsh, offset, val)			\ 	bus_space_tag_t tag;					\ 	bus_space_handle_t bsh;					\ 	bus_size_t offset;					\ 	TYPE val;						\ {								\ 								\ 	__asm __volatile("call *%1"				\ 			:"=d" (offset)				\ 			:"o" (bsh->bsh_bam.bs_write_##BWN),	\ 			 "a" (val),				\ 			 "b" (bsh),				\ 			 "0" (offset)				\ 			);					\ }
 end_define
 
 begin_macro
@@ -656,7 +656,7 @@ parameter_list|,
 name|BWN
 parameter_list|)
 define|\
-value|static __inline void							\ bus_space_read_multi_##BWN##(tag, bsh, offset, buf, cnt) 		\ 	bus_space_tag_t tag;						\ 	bus_space_handle_t bsh;						\ 	bus_size_t offset;						\ 	TYPE *buf;							\ 	size_t cnt;							\ {									\ 									\ 	__asm __volatile("call *%3"					\ 			:"=c" (cnt),					\ 			 "=d" (offset),					\ 			 "=D" (buf)					\ 			:"o" (bsh->bsh_bam.bs_read_multi_##BWN),	\ 			 "b" (bsh),					\ 			 "0" (cnt),					\ 			 "1" (offset),					\ 			 "2" (buf)					\ 			:"memory");					\ }
+value|static __inline void							\ bus_space_read_multi_##BWN (tag, bsh, offset, buf, cnt) 		\ 	bus_space_tag_t tag;						\ 	bus_space_handle_t bsh;						\ 	bus_size_t offset;						\ 	TYPE *buf;							\ 	size_t cnt;							\ {									\ 									\ 	__asm __volatile("call *%3"					\ 			:"=c" (cnt),					\ 			 "=d" (offset),					\ 			 "=D" (buf)					\ 			:"o" (bsh->bsh_bam.bs_read_multi_##BWN),	\ 			 "b" (bsh),					\ 			 "0" (cnt),					\ 			 "1" (offset),					\ 			 "2" (buf)					\ 			:"memory");					\ }
 end_define
 
 begin_macro
@@ -700,7 +700,7 @@ parameter_list|,
 name|BWN
 parameter_list|)
 define|\
-value|static __inline void							\ bus_space_write_multi_##BWN##(tag, bsh, offset, buf, cnt) 		\ 	bus_space_tag_t tag;						\ 	bus_space_handle_t bsh;						\ 	bus_size_t offset;						\ 	const TYPE *buf;						\ 	size_t cnt;							\ {									\ 									\ 	__asm __volatile("call *%3"					\ 			:"=c" (cnt),					\ 			 "=d" (offset),					\ 			 "=S" (buf)					\ 			:"o" (bsh->bsh_bam.bs_write_multi_##BWN),	\ 			 "b" (bsh),					\ 			 "0" (cnt),					\ 			 "1" (offset),					\ 			 "2" (buf)					\ 			);						\ }
+value|static __inline void							\ bus_space_write_multi_##BWN (tag, bsh, offset, buf, cnt) 		\ 	bus_space_tag_t tag;						\ 	bus_space_handle_t bsh;						\ 	bus_size_t offset;						\ 	const TYPE *buf;						\ 	size_t cnt;							\ {									\ 									\ 	__asm __volatile("call *%3"					\ 			:"=c" (cnt),					\ 			 "=d" (offset),					\ 			 "=S" (buf)					\ 			:"o" (bsh->bsh_bam.bs_write_multi_##BWN),	\ 			 "b" (bsh),					\ 			 "0" (cnt),					\ 			 "1" (offset),					\ 			 "2" (buf)					\ 			);						\ }
 end_define
 
 begin_macro
@@ -744,7 +744,7 @@ parameter_list|,
 name|BWN
 parameter_list|)
 define|\
-value|static __inline void							\ bus_space_read_region_##BWN##(tag, bsh, offset, buf, cnt) 		\ 	bus_space_tag_t tag;						\ 	bus_space_handle_t bsh;						\ 	bus_size_t offset;						\ 	TYPE *buf;						\ 	size_t cnt;							\ {									\ 									\ 	__asm __volatile("call *%3"					\ 			:"=c" (cnt),					\ 			 "=d" (offset),					\ 			 "=D" (buf)					\ 			:"o" (bsh->bsh_bam.bs_read_region_##BWN),	\ 			 "b" (bsh),					\ 			 "0" (cnt),					\ 			 "1" (offset),					\ 			 "2" (buf)					\ 			:"memory");					\ }
+value|static __inline void							\ bus_space_read_region_##BWN (tag, bsh, offset, buf, cnt) 		\ 	bus_space_tag_t tag;						\ 	bus_space_handle_t bsh;						\ 	bus_size_t offset;						\ 	TYPE *buf;						\ 	size_t cnt;							\ {									\ 									\ 	__asm __volatile("call *%3"					\ 			:"=c" (cnt),					\ 			 "=d" (offset),					\ 			 "=D" (buf)					\ 			:"o" (bsh->bsh_bam.bs_read_region_##BWN),	\ 			 "b" (bsh),					\ 			 "0" (cnt),					\ 			 "1" (offset),					\ 			 "2" (buf)					\ 			:"memory");					\ }
 end_define
 
 begin_macro
@@ -788,7 +788,7 @@ parameter_list|,
 name|BWN
 parameter_list|)
 define|\
-value|static __inline void							\ bus_space_write_region_##BWN##(tag, bsh, offset, buf, cnt) 		\ 	bus_space_tag_t tag;						\ 	bus_space_handle_t bsh;						\ 	bus_size_t offset;						\ 	const TYPE *buf;						\ 	size_t cnt;							\ {									\ 									\ 	__asm __volatile("call *%3"					\ 			:"=c" (cnt),					\ 			 "=d" (offset),					\ 			 "=S" (buf)					\ 			:"o" (bsh->bsh_bam.bs_write_region_##BWN),	\ 			 "b" (bsh),					\ 			 "0" (cnt),					\ 			 "1" (offset),					\ 			 "2" (buf)					\ 			);						\ }
+value|static __inline void							\ bus_space_write_region_##BWN (tag, bsh, offset, buf, cnt) 		\ 	bus_space_tag_t tag;						\ 	bus_space_handle_t bsh;						\ 	bus_size_t offset;						\ 	const TYPE *buf;						\ 	size_t cnt;							\ {									\ 									\ 	__asm __volatile("call *%3"					\ 			:"=c" (cnt),					\ 			 "=d" (offset),					\ 			 "=S" (buf)					\ 			:"o" (bsh->bsh_bam.bs_write_region_##BWN),	\ 			 "b" (bsh),					\ 			 "0" (cnt),					\ 			 "1" (offset),					\ 			 "2" (buf)					\ 			);						\ }
 end_define
 
 begin_macro
@@ -832,7 +832,7 @@ parameter_list|,
 name|BWN
 parameter_list|)
 define|\
-value|static __inline void							\ bus_space_set_multi_##BWN##(tag, bsh, offset, val, cnt) 		\ 	bus_space_tag_t tag;						\ 	bus_space_handle_t bsh;						\ 	bus_size_t offset;						\ 	TYPE val;							\ 	size_t cnt;							\ {									\ 									\ 	__asm __volatile("call *%2"					\ 			:"=c" (cnt),					\ 			 "=d" (offset)					\ 			:"o" (bsh->bsh_bam.bs_set_multi_##BWN),		\ 			 "a" (val),					\ 			 "b" (bsh),					\ 			 "0" (cnt),					\ 			 "1" (offset)					\ 			);						\ }
+value|static __inline void							\ bus_space_set_multi_##BWN (tag, bsh, offset, val, cnt)	 		\ 	bus_space_tag_t tag;						\ 	bus_space_handle_t bsh;						\ 	bus_size_t offset;						\ 	TYPE val;							\ 	size_t cnt;							\ {									\ 									\ 	__asm __volatile("call *%2"					\ 			:"=c" (cnt),					\ 			 "=d" (offset)					\ 			:"o" (bsh->bsh_bam.bs_set_multi_##BWN),		\ 			 "a" (val),					\ 			 "b" (bsh),					\ 			 "0" (cnt),					\ 			 "1" (offset)					\ 			);						\ }
 end_define
 
 begin_macro
@@ -876,7 +876,7 @@ parameter_list|,
 name|BWN
 parameter_list|)
 define|\
-value|static __inline void							\ bus_space_set_region_##BWN##(tag, bsh, offset, val, cnt) 		\ 	bus_space_tag_t tag;						\ 	bus_space_handle_t bsh;						\ 	bus_size_t offset;						\ 	TYPE val;							\ 	size_t cnt;							\ {									\ 									\ 	__asm __volatile("call *%2"					\ 			:"=c" (cnt),					\ 			 "=d" (offset)					\ 			:"o" (bsh->bsh_bam.bs_set_region_##BWN),	\ 			 "a" (val),					\ 			 "b" (bsh),					\ 			 "0" (cnt),					\ 			 "1" (offset)					\ 			);						\ }
+value|static __inline void							\ bus_space_set_region_##BWN (tag, bsh, offset, val, cnt) 		\ 	bus_space_tag_t tag;						\ 	bus_space_handle_t bsh;						\ 	bus_size_t offset;						\ 	TYPE val;							\ 	size_t cnt;							\ {									\ 									\ 	__asm __volatile("call *%2"					\ 			:"=c" (cnt),					\ 			 "=d" (offset)					\ 			:"o" (bsh->bsh_bam.bs_set_region_##BWN),	\ 			 "a" (val),					\ 			 "b" (bsh),					\ 			 "0" (cnt),					\ 			 "1" (offset)					\ 			);						\ }
 end_define
 
 begin_macro
@@ -918,7 +918,7 @@ parameter_list|(
 name|BWN
 parameter_list|)
 define|\
-value|static __inline void							\ bus_space_copy_region_##BWN##(tag, sbsh, src, dbsh, dst, cnt)		\ 	bus_space_tag_t tag;						\ 	bus_space_handle_t sbsh;					\ 	bus_size_t src;							\ 	bus_space_handle_t dbsh;					\ 	bus_size_t dst;							\ 	size_t cnt;							\ {									\ 									\ 	if (dbsh->bsh_bam.bs_copy_region_1 != sbsh->bsh_bam.bs_copy_region_1) \ 		panic("bus_space_copy_region: funcs mismatch (ENOSUPPORT)");\ 									\ 	__asm __volatile("call *%3"					\ 			:"=c" (cnt),					\ 			 "=S" (src),					\ 			 "=D" (dst)					\ 			:"o" (dbsh->bsh_bam.bs_copy_region_##BWN),	\ 			 "a" (sbsh),					\ 			 "b" (dbsh),					\ 			 "0" (cnt),					\ 			 "1" (src),					\ 			 "2" (dst)					\ 			);						\ }
+value|static __inline void							\ bus_space_copy_region_##BWN (tag, sbsh, src, dbsh, dst, cnt)		\ 	bus_space_tag_t tag;						\ 	bus_space_handle_t sbsh;					\ 	bus_size_t src;							\ 	bus_space_handle_t dbsh;					\ 	bus_size_t dst;							\ 	size_t cnt;							\ {									\ 									\ 	if (dbsh->bsh_bam.bs_copy_region_1 != sbsh->bsh_bam.bs_copy_region_1) \ 		panic("bus_space_copy_region: funcs mismatch (ENOSUPPORT)");\ 									\ 	__asm __volatile("call *%3"					\ 			:"=c" (cnt),					\ 			 "=S" (src),					\ 			 "=D" (dst)					\ 			:"o" (dbsh->bsh_bam.bs_copy_region_##BWN),	\ 			 "a" (sbsh),					\ 			 "b" (dbsh),					\ 			 "0" (cnt),					\ 			 "1" (src),					\ 			 "2" (dst)					\ 			);						\ }
 end_define
 
 begin_macro
