@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|3.42
+literal|3.43
 operator|%
 name|G
 operator|%
@@ -2829,6 +2829,9 @@ endif|#
 directive|endif
 endif|DEBUG
 default|default:
+break|break;
+block|}
+return|return;
 name|syntax
 label|:
 name|syserr
@@ -2842,8 +2845,6 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
 block|}
 end_block
 
