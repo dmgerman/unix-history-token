@@ -184,6 +184,18 @@ name|pcibus_set
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|int
+name|pci_register_lkm
+parameter_list|(
+name|struct
+name|pci_device
+modifier|*
+name|dvp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
