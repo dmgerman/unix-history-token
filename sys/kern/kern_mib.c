@@ -2075,5 +2075,26 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_STRING
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|fallback_elf_brand
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|"kern.fallback_elf_brand is deprecated, use kern.elf32.fallback_brand or "
+literal|"kern.elf64.fallback_brand"
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 
