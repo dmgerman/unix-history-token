@@ -40,7 +40,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/fcntl.h>
+file|<fcntl.h>
 end_include
 
 begin_include
