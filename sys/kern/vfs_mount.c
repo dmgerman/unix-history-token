@@ -368,11 +368,9 @@ name|cdrom_rootdevnames
 index|[]
 init|=
 block|{
-literal|"cd9660:cd0a"
+literal|"cd9660:cd0"
 block|,
-literal|"cd9660:acd0a"
-block|,
-literal|"cd9660:wcd0a"
+literal|"cd9660:acd0"
 block|,
 name|NULL
 block|}
