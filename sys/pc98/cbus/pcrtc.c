@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clock.c	7.2 (Berkeley) 5/12/91  *	$Id: clock.c,v 1.47 1998/03/01 05:22:25 kato Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clock.c	7.2 (Berkeley) 5/12/91  *	$Id: clock.c,v 1.48 1998/03/07 15:43:43 kato Exp $  */
 end_comment
 
 begin_comment
@@ -265,6 +265,18 @@ parameter_list|()
 value|CLOCK_ENABLE_INTR()
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|APIC_IO
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/intr_machdep.h>
+end_include
+
 begin_comment
 comment|/* The interrupt triggered by the 8254 (timer) chip */
 end_comment
@@ -274,6 +286,38 @@ name|int
 name|apic_8254_intr
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_long
+name|read_intr_count
+name|__P
+argument_list|(
+operator|(
+name|int
+name|vec
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|setup_8254_mixed_mode
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -4897,7 +4941,7 @@ ifdef|#
 directive|ifdef
 name|APIC_IO
 name|int
-name|x
+name|apic_8254_trial
 decl_stmt|;
 endif|#
 directive|endif
@@ -4943,7 +4987,43 @@ comment|/* Finish initializing 8253 timer 0. */
 ifdef|#
 directive|ifdef
 name|APIC_IO
-comment|/* 1st look for ExtInt on pin 0 */
+name|apic_8254_intr
+operator|=
+name|isa_apic_pin
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|apic_8254_trial
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|apic_8254_intr
+operator|>=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|apic_int_type
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+literal|3
+condition|)
+name|apic_8254_trial
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* look for ExtInt on pin 0 */
 if|if
 condition|(
 name|apic_int_type
@@ -4956,120 +5036,25 @@ operator|==
 literal|3
 condition|)
 block|{
-comment|/* 		 * Allow 8254 timer to INTerrupt 8259: 		 *  re-initialize master 8259: 		 *   reset; prog 4 bytes, single ICU, edge triggered 		 */
-name|outb
-argument_list|(
-name|IO_ICU1
-argument_list|,
-literal|0x13
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|IO_ICU1
-operator|+
-literal|1
-argument_list|,
-name|NRSVIDT
-argument_list|)
-expr_stmt|;
-comment|/* start vector (unused) */
-name|outb
-argument_list|(
-name|IO_ICU1
-operator|+
-literal|1
-argument_list|,
-literal|0x00
-argument_list|)
-expr_stmt|;
-comment|/* ignore slave */
-name|outb
-argument_list|(
-name|IO_ICU1
-operator|+
-literal|1
-argument_list|,
-literal|0x03
-argument_list|)
-expr_stmt|;
-comment|/* auto EOI, 8086 */
-name|outb
-argument_list|(
-name|IO_ICU1
-operator|+
-literal|1
-argument_list|,
-literal|0xfe
-argument_list|)
-expr_stmt|;
-comment|/* unmask INT0 */
-comment|/* program IO APIC for type 3 INT on INT0 */
-if|if
-condition|(
-name|ext_int_setup
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"8254 redirect via APIC pin0 impossible!"
-argument_list|)
-expr_stmt|;
-name|x
+name|apic_8254_intr
 operator|=
 literal|0
 expr_stmt|;
-comment|/* XXX if (bootverbose) */
-name|printf
-argument_list|(
-literal|"APIC_IO: routing 8254 via 8259 on pin 0\n"
-argument_list|)
+name|setup_8254_mixed_mode
+argument_list|()
 expr_stmt|;
 block|}
-comment|/* failing that, look for 8254 on pin 2 */
-elseif|else
-if|if
-condition|(
-name|isa_apic_pin
-argument_list|(
-literal|0
-argument_list|)
-operator|==
-literal|2
-condition|)
-block|{
-name|x
-operator|=
-literal|2
-expr_stmt|;
-comment|/* XXX if (bootverbose) */
-name|printf
-argument_list|(
-literal|"APIC_IO: routing 8254 via pin 2\n"
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* better write that 8254 INT discover code... */
 else|else
 name|panic
 argument_list|(
-literal|"neither pin 0 or pin 2 works for 8254"
+literal|"APIC_IO: Cannot route 8254 interrupt to CPU"
 argument_list|)
 expr_stmt|;
-name|apic_8254_intr
-operator|=
-name|x
-expr_stmt|;
+block|}
 name|register_intr
 argument_list|(
 comment|/* irq */
-name|x
+name|apic_8254_intr
 argument_list|,
 comment|/* XXX id */
 literal|0
@@ -5095,7 +5080,7 @@ name|INTREN
 argument_list|(
 literal|1
 operator|<<
-name|x
+name|apic_8254_intr
 argument_list|)
 expr_stmt|;
 else|#
@@ -5253,8 +5238,296 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* !PC98 */
+ifdef|#
+directive|ifdef
+name|APIC_IO
+if|if
+condition|(
+name|apic_8254_trial
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"APIC_IO: Testing 8254 interrupt delivery\n"
+argument_list|)
+expr_stmt|;
+asm|__asm __volatile("sti" : : : "memory");
+while|while
+condition|(
+name|read_intr_count
+argument_list|(
+literal|8
+argument_list|)
+operator|<
+literal|6
+condition|)
+asm|__asm __volatile("sti" : : : "memory");
+if|if
+condition|(
+name|read_intr_count
+argument_list|(
+name|apic_8254_intr
+argument_list|)
+operator|<
+literal|3
+condition|)
+block|{
+comment|/*  			 * The MP table is broken. 			 * The 8254 was not connected to the specified pin 			 * on the IO APIC. 			 * Workaround: Limited variant of mixed mode. 			 */
+name|INTRDIS
+argument_list|(
+literal|1
+operator|<<
+name|apic_8254_intr
+argument_list|)
+expr_stmt|;
+name|unregister_intr
+argument_list|(
+name|apic_8254_intr
+argument_list|,
+comment|/* XXX */
+operator|(
+name|inthand2_t
+operator|*
+operator|)
+name|clkintr
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"APIC_IO: Broken MP table detected: "
+literal|"8254 is not connected to IO APIC int pin %d\n"
+argument_list|,
+name|apic_8254_intr
+argument_list|)
+expr_stmt|;
+name|apic_8254_intr
+operator|=
+literal|0
+expr_stmt|;
+name|setup_8254_mixed_mode
+argument_list|()
+expr_stmt|;
+name|register_intr
+argument_list|(
+comment|/* irq */
+name|apic_8254_intr
+argument_list|,
+comment|/* XXX id */
+literal|0
+argument_list|,
+comment|/* flags */
+literal|0
+argument_list|,
+comment|/* XXX */
+operator|(
+name|inthand2_t
+operator|*
+operator|)
+name|clkintr
+argument_list|,
+operator|&
+name|clk_imask
+argument_list|,
+comment|/* unit */
+literal|0
+argument_list|)
+expr_stmt|;
+name|INTREN
+argument_list|(
+literal|1
+operator|<<
+name|apic_8254_intr
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|apic_8254_intr
+condition|)
+name|printf
+argument_list|(
+literal|"APIC_IO: routing 8254 via pin %d\n"
+argument_list|,
+name|apic_8254_intr
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"APIC_IO: routing 8254 via 8259 on pin 0\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|APIC_IO
+end_ifdef
+
+begin_function
+specifier|static
+name|u_long
+name|read_intr_count
+parameter_list|(
+name|int
+name|vec
+parameter_list|)
+block|{
+name|u_long
+modifier|*
+name|up
+decl_stmt|;
+name|up
+operator|=
+name|intr_countp
+index|[
+name|vec
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|up
+condition|)
+return|return
+operator|*
+name|up
+return|;
+return|return
+literal|0UL
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|setup_8254_mixed_mode
+parameter_list|()
+block|{
+comment|/* 	 * Allow 8254 timer to INTerrupt 8259: 	 *  re-initialize master 8259: 	 *   reset; prog 4 bytes, single ICU, edge triggered 	 */
+name|outb
+argument_list|(
+name|IO_ICU1
+argument_list|,
+literal|0x13
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PC98
+name|outb
+argument_list|(
+name|IO_ICU1
+operator|+
+literal|2
+argument_list|,
+name|NRSVIDT
+argument_list|)
+expr_stmt|;
+comment|/* start vector (unused) */
+name|outb
+argument_list|(
+name|IO_ICU1
+operator|+
+literal|2
+argument_list|,
+literal|0x00
+argument_list|)
+expr_stmt|;
+comment|/* ignore slave */
+name|outb
+argument_list|(
+name|IO_ICU1
+operator|+
+literal|2
+argument_list|,
+literal|0x03
+argument_list|)
+expr_stmt|;
+comment|/* auto EOI, 8086 */
+name|outb
+argument_list|(
+name|IO_ICU1
+operator|+
+literal|2
+argument_list|,
+literal|0xfe
+argument_list|)
+expr_stmt|;
+comment|/* unmask INT0 */
+else|#
+directive|else
+name|outb
+argument_list|(
+name|IO_ICU1
+operator|+
+literal|1
+argument_list|,
+name|NRSVIDT
+argument_list|)
+expr_stmt|;
+comment|/* start vector (unused) */
+name|outb
+argument_list|(
+name|IO_ICU1
+operator|+
+literal|1
+argument_list|,
+literal|0x00
+argument_list|)
+expr_stmt|;
+comment|/* ignore slave */
+name|outb
+argument_list|(
+name|IO_ICU1
+operator|+
+literal|1
+argument_list|,
+literal|0x03
+argument_list|)
+expr_stmt|;
+comment|/* auto EOI, 8086 */
+name|outb
+argument_list|(
+name|IO_ICU1
+operator|+
+literal|1
+argument_list|,
+literal|0xfe
+argument_list|)
+expr_stmt|;
+comment|/* unmask INT0 */
+endif|#
+directive|endif
+comment|/* program IO APIC for type 3 INT on INT0 */
+if|if
+condition|(
+name|ext_int_setup
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"8254 redirect via APIC pin0 impossible!"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
