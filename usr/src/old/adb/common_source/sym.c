@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sym.c	5.1 (Berkeley) %G%"
+literal|"@(#)sym.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -181,7 +181,7 @@ condition|(
 name|space
 operator|!=
 name|SP_NONE
-operator|||
+operator|&&
 name|symtab
 operator|!=
 name|NULL
