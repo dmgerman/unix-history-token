@@ -1199,13 +1199,13 @@ literal|4
 index|]
 decl_stmt|;
 name|u_int8_t
-name|reserved
-decl_stmt|;
-name|u_int8_t
 name|length
 index|[
 literal|4
 index|]
+decl_stmt|;
+name|u_int8_t
+name|reserved
 decl_stmt|;
 name|u_int8_t
 name|control
