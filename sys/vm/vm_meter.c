@@ -2503,7 +2503,7 @@ literal|0
 end_if
 
 begin_endif
-unit|SYSCTL_INT(_vm_stats_misc, OID_AUTO, 	page_mask, CTLFLAG_RD,&page_mask, 0, ""); SYSCTL_INT(_vm_stats_misc, OID_AUTO, 	page_shift, CTLFLAG_RD,&page_shift, 0, ""); SYSCTL_INT(_vm_stats_misc, OID_AUTO, 	first_page, CTLFLAG_RD,&first_page, 0, ""); SYSCTL_INT(_vm_stats_misc, OID_AUTO, 	last_page, CTLFLAG_RD,&last_page, 0, ""); SYSCTL_INT(_vm_stats_misc, OID_AUTO, 	vm_page_bucket_count, CTLFLAG_RD,&vm_page_bucket_count, 0, ""); SYSCTL_INT(_vm_stats_misc, OID_AUTO, 	vm_page_hash_mask, CTLFLAG_RD,&vm_page_hash_mask, 0, "");
+unit|SYSCTL_INT(_vm_stats_misc, OID_AUTO, 	page_mask, CTLFLAG_RD,&page_mask, 0, ""); SYSCTL_INT(_vm_stats_misc, OID_AUTO, 	page_shift, CTLFLAG_RD,&page_shift, 0, ""); SYSCTL_INT(_vm_stats_misc, OID_AUTO, 	first_page, CTLFLAG_RD,&first_page, 0, ""); SYSCTL_INT(_vm_stats_misc, OID_AUTO, 	last_page, CTLFLAG_RD,&last_page, 0, "");
 endif|#
 directive|endif
 end_endif
