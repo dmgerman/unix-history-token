@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.37	81/04/28	*/
+comment|/*	tm.c	4.38	81/05/09	*/
 end_comment
 
 begin_include
@@ -864,7 +864,25 @@ name|TMER_SELR
 operator||
 name|TMER_TUR
 operator|)
-operator|||
+condition|)
+block|{
+name|uprintf
+argument_list|(
+literal|"te%d: not online\n"
+argument_list|,
+name|teunit
+argument_list|)
+expr_stmt|;
+name|u
+operator|.
+name|u_error
+operator|=
+name|EIO
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 operator|(
 name|flag
 operator|&
@@ -878,7 +896,25 @@ name|sc_erreg
 operator|&
 name|TMER_WRL
 operator|)
-operator|||
+condition|)
+block|{
+name|uprintf
+argument_list|(
+literal|"te%d: no write ring\n"
+argument_list|,
+name|teunit
+argument_list|)
+expr_stmt|;
+name|u
+operator|.
+name|u_error
+operator|=
+name|EIO
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 operator|(
 name|sc
 operator|->
@@ -902,7 +938,13 @@ operator|->
 name|sc_dens
 condition|)
 block|{
-comment|/* 		 * Not online or density switch in mid-tape or write locked. 		 */
+name|uprintf
+argument_list|(
+literal|"te%d: can't change density in mid-tape\n"
+argument_list|,
+name|teunit
+argument_list|)
+expr_stmt|;
 name|u
 operator|.
 name|u_error
