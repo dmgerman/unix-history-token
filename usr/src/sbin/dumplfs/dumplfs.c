@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumplfs.c	5.13 (Berkeley) %G%"
+literal|"@(#)dumplfs.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -922,7 +922,7 @@ if|if
 condition|(
 name|dip
 operator|->
-name|di_inum
+name|di_inumber
 operator|==
 name|LFS_IFILE_INUM
 condition|)
@@ -1854,7 +1854,7 @@ literal|"inum  %d\n"
 argument_list|,
 name|dip
 operator|->
-name|di_inum
+name|di_inumber
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2286,7 +2286,7 @@ index|[
 name|j
 index|]
 operator|.
-name|di_inum
+name|di_inumber
 argument_list|)
 expr_stmt|;
 block|}
