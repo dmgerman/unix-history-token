@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.5 (Berkeley) %G%"
+literal|"@(#)main.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -295,6 +295,11 @@ comment|/* swap config files */
 name|printf
 argument_list|(
 literal|"Don't forget to run \"make depend\"\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
