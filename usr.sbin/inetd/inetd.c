@@ -953,10 +953,6 @@ name|service
 init|=
 name|NULL
 decl_stmt|;
-name|char
-modifier|*
-name|pnm
-decl_stmt|;
 union|union
 block|{
 name|struct
@@ -1955,7 +1951,7 @@ argument_list|)
 condition|)
 block|{
 name|int
-name|n
+name|nsig
 decl_stmt|;
 if|if
 condition|(
@@ -1969,7 +1965,7 @@ argument_list|,
 name|FIONREAD
 argument_list|,
 operator|&
-name|n
+name|nsig
 argument_list|)
 operator|!=
 literal|0
@@ -1991,7 +1987,7 @@ block|}
 while|while
 condition|(
 operator|--
-name|n
+name|nsig
 operator|>=
 literal|0
 condition|)
@@ -2181,7 +2177,7 @@ operator|)
 literal|0
 argument_list|,
 operator|(
-name|int
+name|socklen_t
 operator|*
 operator|)
 literal|0
@@ -2332,12 +2328,13 @@ name|pname
 index|[
 name|INET6_ADDRSTRLEN
 index|]
-decl_stmt|;
-name|pnm
-operator|=
+init|=
 literal|"unknown"
-expr_stmt|;
-name|i
+decl_stmt|;
+name|socklen_t
+name|sl
+decl_stmt|;
+name|sl
 operator|=
 sizeof|sizeof
 name|peermax
@@ -2357,11 +2354,11 @@ operator|&
 name|peermax
 argument_list|,
 operator|&
-name|i
+name|sl
 argument_list|)
 condition|)
 block|{
-name|i
+name|sl
 operator|=
 sizeof|sizeof
 name|peermax
@@ -2390,7 +2387,7 @@ operator|&
 name|peermax
 argument_list|,
 operator|&
-name|i
+name|sl
 argument_list|)
 operator|>=
 literal|0
@@ -2426,10 +2423,6 @@ operator||
 name|NI_WITHSCOPEID
 argument_list|)
 expr_stmt|;
-name|pnm
-operator|=
-name|pname
-expr_stmt|;
 block|}
 block|}
 else|else
@@ -2464,10 +2457,6 @@ operator||
 name|NI_WITHSCOPEID
 argument_list|)
 expr_stmt|;
-name|pnm
-operator|=
-name|pname
-expr_stmt|;
 block|}
 name|syslog
 argument_list|(
@@ -2479,7 +2468,7 @@ name|sep
 operator|->
 name|se_service
 argument_list|,
-name|pnm
+name|pname
 argument_list|)
 expr_stmt|;
 block|}
@@ -5114,10 +5103,6 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|sep
 argument_list|)
 expr_stmt|;
@@ -5850,7 +5835,8 @@ condition|)
 block|{
 name|int
 name|i
-decl_stmt|,
+decl_stmt|;
+name|socklen_t
 name|len
 init|=
 name|sep
@@ -7377,9 +7363,6 @@ return|;
 comment|/* 	 * clear the static buffer, since some fields (se_ctrladdr, 	 * for example) don't get initialized here. 	 */
 name|memset
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|sep
 argument_list|,
 literal|0
@@ -9676,7 +9659,7 @@ name|int
 name|s
 decl_stmt|;
 block|{
-name|int
+name|socklen_t
 name|size
 decl_stmt|;
 name|struct
@@ -10216,7 +10199,7 @@ name|struct
 name|sockaddr_storage
 name|rss
 decl_stmt|;
-name|int
+name|socklen_t
 name|rssLen
 init|=
 sizeof|sizeof

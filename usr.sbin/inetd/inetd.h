@@ -239,7 +239,7 @@ define|#
 directive|define
 name|se_ctrladdr6
 value|se_un.se_un_ctrladdr6
-name|int
+name|socklen_t
 name|se_ctrladdr_size
 decl_stmt|;
 name|u_char
