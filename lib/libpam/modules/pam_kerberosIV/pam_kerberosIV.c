@@ -61,7 +61,7 @@ end_define
 begin_function_decl
 specifier|extern
 name|int
-name|_pam_klogin
+name|klogin
 parameter_list|(
 name|struct
 name|passwd
@@ -80,12 +80,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Globals used by _pam_klogin.c */
+comment|/* Globals used by klogin.c */
 end_comment
 
 begin_decl_stmt
 name|int
-name|_pam_notickets
+name|notickets
 init|=
 literal|1
 decl_stmt|;
@@ -93,7 +93,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|_pam_noticketsdontcomplain
+name|noticketsdontcomplain
 init|=
 literal|1
 decl_stmt|;
@@ -102,7 +102,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|_pam_krbtkfile_env
+name|krbtkfile_env
 decl_stmt|;
 end_decl_stmt
 
@@ -313,7 +313,7 @@ operator|)
 operator|!=
 name|NULL
 operator|&&
-name|_pam_klogin
+name|klogin
 argument_list|(
 name|pwd
 argument_list|,
@@ -340,10 +340,10 @@ operator|&
 name|PAM_SILENT
 operator|)
 operator|&&
-name|_pam_notickets
+name|notickets
 operator|&&
 operator|!
-name|_pam_noticketsdontcomplain
+name|noticketsdontcomplain
 condition|)
 name|pam_prompt
 argument_list|(
@@ -359,7 +359,7 @@ expr_stmt|;
 comment|/* 		 * XXX - I think the ticket file really isn't supposed to 		 * be even created until pam_sm_setcred() is called. 		 */
 if|if
 condition|(
-name|_pam_krbtkfile_env
+name|krbtkfile_env
 operator|!=
 name|NULL
 condition|)
@@ -367,7 +367,7 @@ name|setenv
 argument_list|(
 literal|"KRBTKFILE"
 argument_list|,
-name|_pam_krbtkfile_env
+name|krbtkfile_env
 argument_list|,
 literal|1
 argument_list|)
