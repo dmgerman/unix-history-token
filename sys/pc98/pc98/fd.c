@@ -1935,10 +1935,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * The open function is named fdopen() to avoid confusion with fdopen()  * in fd(4).  The difference is now only meaningful for debuggers.  */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|d_open_t
@@ -4655,29 +4651,6 @@ operator|->
 name|fdtype
 operator|=
 name|FDT_NONE
-expr_stmt|;
-if|if
-condition|(
-name|resource_int_value
-argument_list|(
-name|name
-argument_list|,
-name|unit
-argument_list|,
-literal|"flags"
-argument_list|,
-operator|&
-name|flags
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|device_set_flags
-argument_list|(
-name|child
-argument_list|,
-name|flags
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
