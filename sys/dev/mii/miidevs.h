@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/mii/miidevs,v 1.4.2.1 2000/04/27 14:42:26 wpaul Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/mii/miidevs,v 1.5 2000/04/22 01:54:55 wpaul Exp   */
 end_comment
 
 begin_comment
@@ -17,6 +17,17 @@ end_comment
 
 begin_comment
 comment|/*  * List of known MII OUIs.  * For a complete list see http://standards.ieee.org/regauth/oui/  *  * XXX Vendors do obviously not agree how OUIs (18 bit) are mapped  * to the 16 bits available in the id registers. The MII_OUI() macro  * in "mii.h" reflects the most obvious way. If a vendor uses a  * different mapping, an "xx" prefixed OUI is defined here which is  * mangled accordingly to compensate.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MII_OUI_ALTIMA
+value|0x0010a9
+end_define
+
+begin_comment
+comment|/* Altima Communications */
 end_comment
 
 begin_define
@@ -173,6 +184,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MII_OUI_xxALTIMA
+value|0x000895
+end_define
+
+begin_comment
+comment|/* Altima Communications */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MII_OUI_xxBROADCOM
 value|0x000818
 end_define
@@ -269,6 +291,24 @@ end_comment
 begin_comment
 comment|/*  * List of known models.  Grouped by oui.  */
 end_comment
+
+begin_comment
+comment|/* Altima Communications PHYs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MII_MODEL_xxALTIMA_AC101
+value|0x0021
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_STR_xxALTIMA_AC101
+value|"AC101 10/100 media interface"
+end_define
 
 begin_comment
 comment|/* Advanced Micro Devices PHYs */
