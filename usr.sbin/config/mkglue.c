@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mkglue.c,v 1.10.2.1 1997/09/16 06:57:09 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2034,6 +2034,16 @@ argument_list|(
 name|fp
 argument_list|,
 literal|"bio"
+argument_list|,
+operator|&
+name|dev_id
+argument_list|)
+expr_stmt|;
+name|vector_devtab
+argument_list|(
+name|fp
+argument_list|,
+literal|"cam"
 argument_list|,
 operator|&
 name|dev_id
