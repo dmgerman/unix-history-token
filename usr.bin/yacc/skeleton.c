@@ -86,11 +86,11 @@ name|banner
 index|[]
 init|=
 block|{
-literal|"#ifndef lint"
+literal|"#if 0"
 block|,
 literal|"static char const "
 block|,
-literal|"rcsid[] = \"$Id: skeleton.c,v 1.18 1999/07/29 09:59:06 obrien Exp $\";"
+literal|"rcsid[] = \"$Id: skeleton.c,v 1.19 1999/07/30 06:40:00 obrien Exp $\";"
 block|,
 literal|"#endif"
 block|,
