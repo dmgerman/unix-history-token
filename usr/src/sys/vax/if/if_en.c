@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.27	81/12/22	*/
+comment|/*	if_en.c	4.28	82/01/07	*/
 end_comment
 
 begin_define
@@ -1930,6 +1930,9 @@ name|m
 operator|->
 name|m_len
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|ENKLUDGE
 if|if
 condition|(
 name|off
@@ -1990,6 +1993,8 @@ goto|goto
 name|gottrailertype
 goto|;
 block|}
+endif|#
+directive|endif
 name|type
 operator|=
 name|ENPUP_IPTYPE
