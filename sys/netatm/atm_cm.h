@@ -1315,7 +1315,6 @@ name|void
 name|atm_cm_init
 parameter_list|(
 name|void
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -440,8 +440,6 @@ name|void
 name|atm_cm_init
 parameter_list|(
 name|void
-modifier|*
-name|arg
 parameter_list|)
 block|{
 name|atm_connection_zone
