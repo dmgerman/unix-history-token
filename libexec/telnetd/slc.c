@@ -627,10 +627,6 @@ specifier|register
 name|int
 name|len
 decl_stmt|;
-name|void
-name|netflush
-parameter_list|()
-function_decl|;
 comment|/* 	 * If a change has occured, store the new terminal control 	 * structures back to the terminal driver. 	 */
 if|if
 condition|(
