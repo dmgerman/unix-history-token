@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)create.c	5.10 (Berkeley) %G%"
+literal|"@(#)create.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -783,8 +783,7 @@ name|MAXMODE
 value|MBITS + 1
 end_define
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|statdir
 argument_list|(
 argument|t
@@ -799,11 +798,14 @@ argument|pmode
 argument_list|,
 argument|tabs
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|FTS
-operator|*
+modifier|*
 name|t
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|FTSENT
@@ -1153,24 +1155,26 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|dsort
 argument_list|(
 argument|p1
 argument_list|,
 argument|p2
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|FTSENT
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|p1
-operator|,
-operator|*
-operator|*
+decl_stmt|,
+modifier|*
+modifier|*
 name|p2
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{

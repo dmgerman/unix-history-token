@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)spec.c	5.10 (Berkeley) %G%"
+literal|"@(#)spec.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -534,7 +534,6 @@ block|}
 end_block
 
 begin_expr_stmt
-specifier|static
 name|set
 argument_list|(
 name|ip
@@ -942,7 +941,6 @@ block|}
 end_block
 
 begin_expr_stmt
-specifier|static
 name|unset
 argument_list|(
 name|ip
@@ -989,17 +987,19 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|key
 argument_list|(
 argument|p
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1201,7 +1201,6 @@ block|}
 end_block
 
 begin_function
-specifier|static
 name|uid_t
 name|getowner
 parameter_list|(
@@ -1302,7 +1301,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|gid_t
 name|getgroup
 parameter_list|(
@@ -1402,10 +1400,12 @@ comment|/* NOTREACHED */
 block|}
 end_function
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|noparent
 argument_list|()
+end_macro
+
+begin_block
 block|{
 operator|(
 name|void
@@ -1416,13 +1416,19 @@ name|stderr
 argument_list|,
 literal|"mtree: no parent node.\n"
 argument_list|)
-block|;
+expr_stmt|;
 name|specerr
 argument_list|()
-block|; }
-specifier|static
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
 name|specerr
 argument_list|()
+end_macro
+
+begin_block
 block|{
 operator|(
 name|void
@@ -1435,25 +1441,25 @@ literal|"mtree: line %d of the specification is incorrect.\n"
 argument_list|,
 name|lineno
 argument_list|)
-block|;
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
 argument_list|)
-block|; }
-specifier|static
+expr_stmt|;
+block|}
+end_block
+
+begin_function
 name|NODE
-operator|*
+modifier|*
 name|emalloc
-argument_list|(
-argument|size
-argument_list|)
+parameter_list|(
+name|size
+parameter_list|)
 name|int
 name|size
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|void
 modifier|*
@@ -1495,12 +1501,14 @@ name|p
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|nomem
 argument_list|()
+end_macro
+
+begin_block
 block|{
 operator|(
 name|void
@@ -1516,13 +1524,14 @@ argument_list|(
 name|ENOMEM
 argument_list|)
 argument_list|)
-block|;
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
 argument_list|)
-block|; }
-end_expr_stmt
+expr_stmt|;
+block|}
+end_block
 
 end_unit
 
