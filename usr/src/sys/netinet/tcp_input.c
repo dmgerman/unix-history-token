@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_input.c 1.8 81/10/30 */
+comment|/* tcp_input.c 1.9 81/10/30 */
 end_comment
 
 begin_include
@@ -93,15 +93,21 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|tcb
-modifier|*
-name|tp
-decl_stmt|;
-specifier|register
-name|struct
 name|th
 modifier|*
 name|n
+decl_stmt|;
+comment|/* known to be r10 */
+specifier|register
+name|int
+name|j
+decl_stmt|;
+comment|/* known to be r9 */
+specifier|register
+name|struct
+name|tcb
+modifier|*
+name|tp
 decl_stmt|;
 name|int
 name|nstate
@@ -120,8 +126,6 @@ name|int
 name|hlen
 decl_stmt|,
 name|tlen
-decl_stmt|,
-name|j
 decl_stmt|;
 name|u_short
 name|lport
@@ -262,10 +266,29 @@ name|t_sum
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|vax
 if|if
 condition|(
+name|tlen
+operator|==
+literal|20
+condition|)
+block|{
+asm|asm("addl3 $8,r10,r0; movl (r0)+,r1; addl2 (r0)+,r1");
+asm|asm("adwc (r0)+,r1; adwc (r0)+,r1; adwc (r0)+,r1");
+asm|asm("adwc (r0)+,r1; adwc (r0)+,r1; adwc (r0)+,r1");
+asm|asm("adwc $0,r1; ashl $-16,r1,r0; addw2 r0,r1");
+asm|asm("adwc $0,r1");
+comment|/* ### */
+asm|asm("mcoml r1,r1; movzwl r1,r1; subl2 r1,r9");
+block|}
+else|else
+endif|#
+directive|endif
 name|j
-operator|!=
+operator|-=
 name|cksum
 argument_list|(
 name|mp
@@ -278,6 +301,12 @@ argument_list|)
 operator|+
 name|tlen
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|j
+operator|!=
+literal|0
 condition|)
 block|{
 name|netstat
