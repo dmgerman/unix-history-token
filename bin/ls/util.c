@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: util.c,v 1.17 1998/04/25 00:12:32 ache Exp $"
+literal|"$Id: util.c,v 1.18 1998/10/13 12:19:31 des Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -495,7 +495,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ls [-ACFHLPRTWacdfgikloqrstu1]"
+literal|"usage: ls [-ACFHLPRTWacdfgiklnoqrstu1]"
 literal|" [file ...]\n"
 argument_list|)
 expr_stmt|;
