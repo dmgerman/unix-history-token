@@ -3774,40 +3774,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Dummy operations */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|pfs_badop
-parameter_list|(
-name|void
-modifier|*
-name|va
-parameter_list|)
-block|{
-return|return
-operator|(
-name|EOPNOTSUPP
-operator|)
-return|;
-block|}
-end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static int pfs_erofs(void *va)		{ return (EROFS); } static int pfs_null(void *va)		{ return (0); }
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * Vnode operations  */
 end_comment
 
@@ -3868,7 +3834,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|pfs_badop
+name|vop_eopnotsupp
 block|}
 block|,
 block|{
@@ -3912,7 +3878,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|pfs_badop
+name|vop_eopnotsupp
 block|}
 block|,
 block|{
@@ -3934,7 +3900,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|pfs_badop
+name|vop_eopnotsupp
 block|}
 block|,
 block|{
@@ -3945,7 +3911,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|pfs_badop
+name|vop_eopnotsupp
 block|}
 block|,
 block|{
@@ -4011,7 +3977,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|pfs_badop
+name|vop_eopnotsupp
 block|}
 block|,
 block|{
@@ -4022,7 +3988,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|pfs_badop
+name|vop_eopnotsupp
 block|}
 block|,
 block|{
@@ -4033,7 +3999,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|pfs_badop
+name|vop_eopnotsupp
 block|}
 block|,
 block|{
@@ -4055,7 +4021,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|pfs_badop
+name|vop_eopnotsupp
 block|}
 block|,
 block|{
@@ -4069,7 +4035,7 @@ operator|)
 name|pfs_write
 block|}
 block|,
-comment|/* XXX I've probably forgotten a few that need pfs_badop */
+comment|/* XXX I've probably forgotten a few that need vop_eopnotsupp */
 block|{
 name|NULL
 block|,
