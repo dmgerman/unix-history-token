@@ -368,11 +368,11 @@ init|=
 block|{
 block|{
 comment|/* user */
-literal|"V:C:qn:u:c:d:e:p:g:G:mk:s:oL:i:w:h:Db:NPy:Y"
+literal|"V:C:qn:u:c:d:e:p:g:G:mk:s:oL:i:w:h:H:Db:NPy:Y"
 block|,
 literal|"V:C:qn:u:rY"
 block|,
-literal|"V:C:qn:u:c:d:e:p:g:G:ml:k:s:w:L:h:FNPY"
+literal|"V:C:qn:u:c:d:e:p:g:G:ml:k:s:w:L:h:H:FNPY"
 block|,
 literal|"V:C:qn:u:FPa7"
 block|,
@@ -385,11 +385,11 @@ block|}
 block|,
 block|{
 comment|/* grp  */
-literal|"V:C:qn:g:h:M:pNPY"
+literal|"V:C:qn:g:h:H:M:pNPY"
 block|,
 literal|"V:C:qn:g:Y"
 block|,
-literal|"V:C:qn:g:l:h:FM:m:NPY"
+literal|"V:C:qn:g:l:h:H:FM:m:NPY"
 block|,
 literal|"V:C:qn:g:FPa"
 block|,
@@ -1358,6 +1358,7 @@ literal|"\t-s shell       name of login shell\n"
 literal|"\t-o             duplicate uid ok\n"
 literal|"\t-L class       user class\n"
 literal|"\t-h fd          read password on fd\n"
+literal|"\t-H fd          read encrypted password on fd\n"
 literal|"\t-Y             update NIS maps\n"
 literal|"\t-N             no update\n"
 literal|"  Setting defaults:\n"
@@ -1402,6 +1403,7 @@ literal|"\t-m [ -k dir ]  create and set up home\n"
 literal|"\t-s shell       name of login shell\n"
 literal|"\t-w method      set new password using method\n"
 literal|"\t-h fd          read password on fd\n"
+literal|"\t-H fd          read encrypted password on fd\n"
 literal|"\t-Y             update NIS maps\n"
 literal|"\t-N             no update\n"
 block|,
