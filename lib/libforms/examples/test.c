@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../forms.h"
 end_include
 
@@ -553,6 +559,30 @@ operator|&
 name|form
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|form
+operator|.
+name|window
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\nUnable to initialize forms library.\n"
+argument_list|)
+expr_stmt|;
+name|endwin
+argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|keypad
 argument_list|(
 name|form
