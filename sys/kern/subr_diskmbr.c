@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994 Bruce D. Evans.  * All rights reserved.  *  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ufs_disksubr.c	7.16 (Berkeley) 5/4/91  *	from: ufs_disksubr.c,v 1.8 1994/06/07 01:21:39 phk Exp $  *	$Id: diskslice_machdep.c,v 1.12 1995/05/01 00:45:33 phk Exp $  */
+comment|/*-  * Copyright (c) 1994 Bruce D. Evans.  * All rights reserved.  *  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ufs_disksubr.c	7.16 (Berkeley) 5/4/91  *	from: ufs_disksubr.c,v 1.8 1994/06/07 01:21:39 phk Exp $  *	$Id: diskslice_machdep.c,v 1.13 1995/05/07 07:06:36 bde Exp $  */
 end_comment
 
 begin_include
@@ -63,6 +63,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/cpu.h>
 end_include
 
 begin_define
@@ -630,6 +636,10 @@ literal|0
 else|:
 name|EINVAL
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"%s: type 0x%x, start %lu, end = %lu, size %lu %s\n"
@@ -660,6 +670,8 @@ condition|(
 name|ssector
 operator|!=
 name|ssector1
+operator|&&
+name|bootverbose
 condition|)
 name|printf
 argument_list|(
@@ -685,6 +697,8 @@ condition|(
 name|esector
 operator|!=
 name|esector1
+operator|&&
+name|bootverbose
 condition|)
 name|printf
 argument_list|(
@@ -1061,7 +1075,7 @@ operator|+
 name|DOSPARTOFF
 operator|)
 expr_stmt|;
-comment|/* Check for "OnTrack Diskmanager". */
+comment|/* Check for "Ontrack Diskmanager". */
 for|for
 control|(
 name|dospart
@@ -1092,9 +1106,13 @@ operator|==
 name|DOSPTYP_ONTRACK
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
-literal|"%s: Detected \"Ontrack Disk Manager\"\n"
+literal|"%s: Found \"Ontrack Disk Manager\" on this disk.\n"
 argument_list|,
 name|sname
 argument_list|)
@@ -1116,7 +1134,6 @@ name|mbr_offset
 operator|=
 literal|63
 expr_stmt|;
-comment|/* XXX this might be nsect instead */
 goto|goto
 name|reread_mbr
 goto|;
