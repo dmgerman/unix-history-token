@@ -34,7 +34,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<limits.h>
 end_include
 
 begin_if
@@ -1571,7 +1571,7 @@ begin_decl_stmt
 name|char
 name|fname
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1584,7 +1584,7 @@ begin_decl_stmt
 name|char
 name|copyname
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1897,7 +1897,7 @@ operator|,
 name|char
 operator|*
 operator|,
-name|int
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;

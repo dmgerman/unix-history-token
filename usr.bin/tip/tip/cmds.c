@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cmds.c,v 1.2.6.1 1997/08/20 07:06:26 charnier Exp $"
+literal|"$Id: cmds.c,v 1.2.6.2 1997/08/22 22:15:19 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3942,7 +3942,7 @@ block|{
 name|char
 name|dirname
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 specifier|register
