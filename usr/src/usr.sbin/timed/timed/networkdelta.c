@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)networkdelta.c	2.4 (Berkeley) %G%"
+literal|"@(#)networkdelta.c	2.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -293,7 +293,7 @@ expr_stmt|;
 if|if
 condition|(
 name|i
-operator|=
+operator|==
 name|j
 condition|)
 name|j
