@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwhod.c	4.15 (Berkeley) 83/06/12"
+literal|"@(#)rwhod.c	4.16 (Berkeley) 83/06/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,6 +42,12 @@ begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
 end_include
 
 begin_include
@@ -530,7 +536,7 @@ name|open
 argument_list|(
 literal|"/etc/utmp"
 argument_list|,
-literal|0
+name|O_RDONLY
 argument_list|)
 expr_stmt|;
 if|if
@@ -559,7 +565,7 @@ name|open
 argument_list|(
 literal|"/etc/utmp"
 argument_list|,
-literal|0
+name|O_RDONLY
 argument_list|)
 expr_stmt|;
 block|}
@@ -594,8 +600,6 @@ argument_list|(
 name|AF_INET
 argument_list|,
 name|SOCK_DGRAM
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -673,8 +677,6 @@ sizeof|sizeof
 argument_list|(
 name|sin
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 operator|<
 literal|0
@@ -953,7 +955,7 @@ operator|/
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|utmp
+name|whoent
 argument_list|)
 decl_stmt|;
 name|struct
@@ -1300,7 +1302,7 @@ name|long
 operator|)
 literal|0
 argument_list|,
-literal|0
+name|L_SET
 argument_list|)
 expr_stmt|;
 name|cc
@@ -1547,7 +1549,7 @@ index|]
 operator|.
 name|n_value
 argument_list|,
-literal|0
+name|L_SET
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1814,7 +1816,7 @@ name|open
 argument_list|(
 literal|"/dev/kmem"
 argument_list|,
-literal|0
+name|O_RDONLY
 argument_list|)
 expr_stmt|;
 if|if
@@ -1855,7 +1857,7 @@ index|]
 operator|.
 name|n_value
 argument_list|,
-literal|0
+name|L_SET
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1932,9 +1934,6 @@ decl_stmt|,
 modifier|*
 name|ifr
 decl_stmt|;
-name|int
-name|n
-decl_stmt|;
 name|struct
 name|sockaddr_in
 modifier|*
@@ -1945,6 +1944,9 @@ name|struct
 name|neighbor
 modifier|*
 name|np
+decl_stmt|;
+name|int
+name|n
 decl_stmt|;
 name|ifc
 operator|.
@@ -2547,13 +2549,19 @@ name|wd_hostname
 argument_list|,
 name|interval
 argument_list|(
+name|ntohl
+argument_list|(
 name|w
 operator|->
 name|wd_sendtime
+argument_list|)
 operator|-
+name|ntohl
+argument_list|(
 name|w
 operator|->
 name|wd_boottime
+argument_list|)
 argument_list|,
 literal|"  up"
 argument_list|)
@@ -2563,30 +2571,39 @@ name|printf
 argument_list|(
 literal|"load %4.2f, %4.2f, %4.2f\n"
 argument_list|,
+name|ntohl
+argument_list|(
 name|w
 operator|->
 name|wd_loadav
 index|[
 literal|0
 index|]
+argument_list|)
 operator|/
 literal|100.0
 argument_list|,
+name|ntohl
+argument_list|(
 name|w
 operator|->
 name|wd_loadav
 index|[
 literal|1
 index|]
+argument_list|)
 operator|/
 literal|100.0
 argument_list|,
+name|ntohl
+argument_list|(
 name|w
 operator|->
 name|wd_loadav
 index|[
 literal|2
 index|]
+argument_list|)
 operator|/
 literal|100.0
 argument_list|)
@@ -2622,6 +2639,18 @@ name|we
 operator|++
 control|)
 block|{
+name|time_t
+name|t
+init|=
+name|ntohl
+argument_list|(
+name|we
+operator|->
+name|we_utmp
+operator|.
+name|out_time
+argument_list|)
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"%-8.8s %s:%s %.12s"
@@ -2644,16 +2673,8 @@ name|out_line
 argument_list|,
 name|ctime
 argument_list|(
-operator|(
-name|time_t
-operator|*
-operator|)
 operator|&
-name|we
-operator|->
-name|we_utmp
-operator|.
-name|out_time
+name|t
 argument_list|)
 operator|+
 literal|4
@@ -2662,7 +2683,14 @@ expr_stmt|;
 name|we
 operator|->
 name|we_idle
-operator|/=
+operator|=
+name|ntohl
+argument_list|(
+name|we
+operator|->
+name|we_idle
+argument_list|)
+operator|/
 literal|60
 expr_stmt|;
 if|if
