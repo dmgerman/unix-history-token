@@ -14,7 +14,7 @@ comment|/*  * This file contains a high-performance replacement for the socket-b
 end_comment
 
 begin_comment
-comment|/*  * This code has two modes of operation, a small write mode and a large  * write mode.  The small write mode acts like conventional pipes with  * a kernel buffer.  If the buffer is less than PIPE_MINDIRECT, then the  * "normal" pipe buffering is done.  If the buffer is between PIPE_MINDIRECT  * and PIPE_SIZE in size, it is fully mapped and wired into the kernel, and  * the receiving process can copy it directly from the pages in the sending  * process.  *  * If the sending process receives a signal, it is possible that it will  * go away, and certainly it's address space can change, because control  * is returned back to the user-mode side.  In that case, the pipe code  * arranges to copy the buffer supplied by the user process, to a pageable  * kernel buffer, and the receiving process will grab the data from the  * pageable kernel buffer.  Since signals don't happen all that often,  * the copy operation is normally eliminated.  *  * The constant PIPE_MINDIRECT is chosen to make sure that buffering will  * happen for small transfers so that the system will not spend all of  * it's time context switching.  PIPE_SIZE is constrained by the  * amount of kernel virtual memory.  */
+comment|/*  * This code has two modes of operation, a small write mode and a large  * write mode.  The small write mode acts like conventional pipes with  * a kernel buffer.  If the buffer is less than PIPE_MINDIRECT, then the  * "normal" pipe buffering is done.  If the buffer is between PIPE_MINDIRECT  * and PIPE_SIZE in size, it is fully mapped and wired into the kernel, and  * the receiving process can copy it directly from the pages in the sending  * process.  *  * If the sending process receives a signal, it is possible that it will  * go away, and certainly its address space can change, because control  * is returned back to the user-mode side.  In that case, the pipe code  * arranges to copy the buffer supplied by the user process, to a pageable  * kernel buffer, and the receiving process will grab the data from the  * pageable kernel buffer.  Since signals don't happen all that often,  * the copy operation is normally eliminated.  *  * The constant PIPE_MINDIRECT is chosen to make sure that buffering will  * happen for small transfers so that the system will not spend all of  * its time context switching.  PIPE_SIZE is constrained by the  * amount of kernel virtual memory.  */
 end_comment
 
 begin_include
@@ -1030,6 +1030,9 @@ modifier|*
 name|cpipe
 decl_stmt|;
 block|{
+name|int
+name|s
+decl_stmt|;
 name|cpipe
 operator|->
 name|pipe_buffer
@@ -1089,6 +1092,11 @@ name|pipe_busy
 operator|=
 literal|0
 expr_stmt|;
+name|s
+operator|=
+name|splhigh
+argument_list|()
+expr_stmt|;
 name|cpipe
 operator|->
 name|pipe_ctime
@@ -1106,6 +1114,11 @@ operator|->
 name|pipe_mtime
 operator|=
 name|time
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -1530,12 +1543,6 @@ name|nread
 operator|+=
 name|size
 expr_stmt|;
-name|rpipe
-operator|->
-name|pipe_atime
-operator|=
-name|time
-expr_stmt|;
 comment|/* 		 * Direct copy, bypassing a kernel buffer. 		 */
 block|}
 elseif|else
@@ -1638,12 +1645,6 @@ name|size
 expr_stmt|;
 name|rpipe
 operator|->
-name|pipe_atime
-operator|=
-name|time
-expr_stmt|;
-name|rpipe
-operator|->
 name|pipe_map
 operator|.
 name|pos
@@ -1742,7 +1743,7 @@ name|EAGAIN
 expr_stmt|;
 break|break;
 block|}
-comment|/* 			 * If there is no more to read in the pipe, reset 			 * it's pointers to the beginning.  This improves 			 * cache hit stats. 			 */
+comment|/* 			 * If there is no more to read in the pipe, reset 			 * its pointers to the beginning.  This improves 			 * cache hit stats. 			 */
 if|if
 condition|(
 operator|(
@@ -1825,6 +1826,31 @@ break|break;
 block|}
 block|}
 block|}
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+block|{
+name|int
+name|s
+init|=
+name|splhigh
+argument_list|()
+decl_stmt|;
+name|rpipe
+operator|->
+name|pipe_atime
+operator|=
+name|time
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+block|}
 operator|--
 name|rpipe
 operator|->
@@ -1878,7 +1904,7 @@ operator|<
 name|MINPIPESIZE
 condition|)
 block|{
-comment|/* 		 * If there is no more to read in the pipe, reset 		 * it's pointers to the beginning.  This improves 		 * cache hit stats. 		 */
+comment|/* 		 * If there is no more to read in the pipe, reset 		 * its pointers to the beginning.  This improves 		 * cache hit stats. 		 */
 if|if
 condition|(
 operator|(
@@ -2906,6 +2932,9 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|orig_resid
+decl_stmt|;
 comment|/* 	 * detect loss of pipe read side, issue SIGPIPE if lost. 	 */
 if|if
 condition|(
@@ -2975,6 +3004,12 @@ operator|++
 name|wpipe
 operator|->
 name|pipe_busy
+expr_stmt|;
+name|orig_resid
+operator|=
+name|uio
+operator|->
+name|uio_resid
 expr_stmt|;
 while|while
 condition|(
@@ -3071,32 +3106,32 @@ name|pipe_buffer
 operator|.
 name|cnt
 expr_stmt|;
-comment|/* 		 * We must afford contiguous writes on buffers of size 		 * PIPE_BUF or less. 		 */
 if|if
 condition|(
 operator|(
 name|space
-operator|>
-literal|0
+operator|<
+name|uio
+operator|->
+name|uio_resid
 operator|)
 operator|&&
 operator|(
-operator|(
-name|uio
-operator|->
-name|uio_resid
-operator|>
+name|orig_resid
+operator|<=
 name|PIPE_BUF
 operator|)
-operator|||
-operator|(
-name|uio
-operator|->
-name|uio_resid
-operator|<=
+condition|)
 name|space
-operator|)
-operator|)
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 		 * We must afford contiguous writes on buffers of size 		 * PIPE_BUF or less. 		 */
+if|if
+condition|(
+name|space
+operator|>
+literal|0
 condition|)
 block|{
 name|int
@@ -3244,12 +3279,6 @@ operator|.
 name|cnt
 operator|+=
 name|size
-expr_stmt|;
-name|wpipe
-operator|->
-name|pipe_mtime
-operator|=
-name|time
 expr_stmt|;
 block|}
 else|else
@@ -3440,6 +3469,31 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|=
+literal|0
+condition|)
+block|{
+name|int
+name|s
+init|=
+name|splhigh
+argument_list|()
+decl_stmt|;
+name|wpipe
+operator|->
+name|pipe_mtime
+operator|=
+name|time
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|wpipe
@@ -3783,13 +3837,6 @@ name|pipe
 modifier|*
 name|wpipe
 decl_stmt|;
-specifier|register
-name|int
-name|s
-init|=
-name|splnet
-argument_list|()
-decl_stmt|;
 name|wpipe
 operator|=
 name|rpipe
@@ -3823,11 +3870,6 @@ name|PIPE_EOF
 operator|)
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -3889,11 +3931,6 @@ name|PIPE_BUF
 operator|)
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -3945,11 +3982,6 @@ name|PIPE_EOF
 operator|)
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -3974,11 +4006,6 @@ name|PIPE_SEL
 expr_stmt|;
 break|break;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
