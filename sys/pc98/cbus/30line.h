@@ -15,60 +15,12 @@ directive|define
 name|__PC98_PC98_30LINE_H__
 end_define
 
-begin_include
-include|#
-directive|include
-file|<pc98/pc98/module.h>
-end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LINE30_ROW
-end_ifndef
-
 begin_define
 define|#
 directive|define
 name|LINE30_ROW
 value|30
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|_CR
-value|80
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_VS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_VS
-value|2
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_HS
-end_ifndef
 
 begin_define
 define|#
@@ -77,16 +29,12 @@ name|_HS
 value|1 + 1
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_HFP
-end_ifndef
+begin_define
+define|#
+directive|define
+name|_VS
+value|2
+end_define
 
 begin_define
 define|#
@@ -95,34 +43,12 @@ name|_HFP
 value|3 + 1
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_HBP
-end_ifndef
-
 begin_define
 define|#
 directive|define
 name|_HBP
 value|14 + 1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_VFP
-end_ifndef
 
 begin_define
 define|#
@@ -131,17 +57,6 @@ name|_VFP
 value|11
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_VBP
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -149,10 +64,12 @@ name|_VBP
 value|44
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|_CR
+value|80
+end_define
 
 begin_define
 define|#
@@ -369,12 +286,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LINE30
-end_ifdef
-
 begin_function_decl
 specifier|static
 name|void
@@ -384,11 +295,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -410,12 +316,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LINE30
-end_ifdef
 
 begin_function_decl
 specifier|static
@@ -449,11 +349,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|static
 name|void
@@ -463,12 +358,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LINE30
-end_ifdef
 
 begin_function_decl
 specifier|static
@@ -488,11 +377,6 @@ init|=
 name|_25L
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -515,12 +399,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LINE30
-end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -1027,11 +905,6 @@ name|_LF
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
