@@ -141,6 +141,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cam/cam.h>
 end_include
 
@@ -266,7 +272,7 @@ name|SCSI_LOW_DEBUGGER
 parameter_list|(
 name|dev
 parameter_list|)
-value|Debugger((dev))
+value|kdb_enter(dev)
 end_define
 
 begin_define
