@@ -250,7 +250,9 @@ begin_comment
 comment|/*  * Get a new handle for a subregion of an already-mapped area of bus space.  */
 end_comment
 
-begin_function_decl
+begin_function
+specifier|static
+name|__inline
 name|int
 name|bus_space_subregion
 parameter_list|(
@@ -270,8 +272,21 @@ name|bus_space_handle_t
 modifier|*
 name|nbshp
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+operator|*
+name|nbshp
+operator|=
+name|bsh
+operator|+
+name|offset
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Allocate a region of memory that is accessible to devices in bus space.  */
