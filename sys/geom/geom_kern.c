@@ -147,10 +147,10 @@ name|thread
 modifier|*
 name|tp
 init|=
-operator|&
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|p
-operator|->
-name|p_xxthread
+argument_list|)
 decl_stmt|;
 name|curthread
 operator|->
@@ -244,10 +244,10 @@ name|thread
 modifier|*
 name|tp
 init|=
-operator|&
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|p
-operator|->
-name|p_xxthread
+argument_list|)
 decl_stmt|;
 name|curthread
 operator|->
