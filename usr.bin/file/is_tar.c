@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * is_tar() -- figure out whether file is a tar archive.  *  * Stolen (by the author!) from the public domain tar program:  * Pubic Domain version written 26 Aug 1985 John Gilmore (ihnp4!hoptoad!gnu).  *  * @(#)list.c 1.18 9/23/86 Public Domain - gnu  *  * Comments changed and some code/comments reformatted  * for file command by Ian Darwin.  */
+comment|/*  * is_tar() -- figure out whether file is a tar archive.  *  * Stolen (by the author!) from the public domain tar program:  * Pubic Domain version written 26 Aug 1985 John Gilmore (ihnp4!hoptoad!gnu).  *  * @(#)list.c 1.18 9/23/86 Public Domain - gnu  * is_tar.c,v 1.2 1993/06/10 00:38:12 jtc Exp  *  * Comments changed and some code/comments reformatted  * for file command by Ian Darwin.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_include
 include|#
@@ -31,16 +37,54 @@ parameter_list|)
 value|( ((c)>= '0')&& ((c)<= '7') )
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__STDC__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+end_if
+
 begin_function_decl
+specifier|static
 name|long
 name|from_oct
-parameter_list|()
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
 comment|/* Decode octal number */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+specifier|static
+name|long
+name|from_oct
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Return   *	0 if the checksum is bad (i.e., probably not a tar archive),   *	1 for old UNIX tar file,  *	2 for Unix Std (POSIX) tar file.  */
@@ -50,15 +94,27 @@ begin_function
 name|int
 name|is_tar
 parameter_list|(
-name|header
+name|buf
 parameter_list|)
+name|unsigned
+name|char
+modifier|*
+name|buf
+decl_stmt|;
+block|{
 specifier|register
 name|union
 name|record
 modifier|*
 name|header
+init|=
+operator|(
+expr|union
+name|record
+operator|*
+operator|)
+name|buf
 decl_stmt|;
-block|{
 specifier|register
 name|int
 name|i
@@ -103,8 +159,8 @@ name|i
 operator|=
 sizeof|sizeof
 argument_list|(
-operator|*
-name|header
+expr|union
+name|record
 argument_list|)
 init|;
 operator|--
@@ -209,6 +265,7 @@ comment|/*  * Quick and dirty octal conversion.  *  * Result is -1 if the field 
 end_comment
 
 begin_function
+specifier|static
 name|long
 name|from_oct
 parameter_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Header file for public domain tar (tape archive) program.  *  * @(#)tar.h 1.20 86/10/29	Public Domain.  *  * Created 25 August 1985 by John Gilmore, ihnp4!hoptoad!gnu.  */
+comment|/*  * Header file for public domain tar (tape archive) program.  *  * @(#)tar.h 1.20 86/10/29	Public Domain.  *  * Created 25 August 1985 by John Gilmore, ihnp4!hoptoad!gnu.  *  * tar.h,v 1.2 1993/06/10 00:38:20 jtc Exp # checkin only  */
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Names.h - names and types used by ascmagic in file(1).  * These tokens are here because they can appear anywhere in  * the first HOWMANY bytes, while tokens in /etc/magic must  * appear at fixed offsets into the file. Don't make HOWMANY  * too high unless you have a very fast CPU.  *  * Copyright (c) Ian F. Darwin, 1987.  * Written by Ian F. Darwin.  *  * This software is not subject to any license of the American Telephone  * and Telegraph Company or of the Regents of the University of California.  *  * Permission is granted to anyone to use this software for any purpose on  * any computer system, and to alter it and redistribute it freely, subject  * to the terms in the accompanying LEGAL.NOTICE file.  */
+comment|/*  * Names.h - names and types used by ascmagic in file(1).  * These tokens are here because they can appear anywhere in  * the first HOWMANY bytes, while tokens in /etc/magic must  * appear at fixed offsets into the file. Don't make HOWMANY  * too high unless you have a very fast CPU.  *  * Copyright (c) Ian F. Darwin, 1987.  * Written by Ian F. Darwin.  *  * See LEGAL.NOTICE  *  * names.h,v 1.2 1993/06/10 00:38:14 jtc Exp  */
 end_comment
 
 begin_comment
@@ -107,6 +107,7 @@ comment|/* Usenet Netnews */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|types
@@ -139,6 +140,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_struct
+specifier|static
 struct|struct
 name|names
 block|{
@@ -386,7 +388,9 @@ block|,
 name|L_NEWS
 block|}
 block|,
+block|{
 literal|0
+block|}
 block|}
 struct|;
 end_struct
