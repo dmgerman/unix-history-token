@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)arcs.c	1.3 (Berkeley) %G%"
+literal|"@(#)arcs.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,7 +66,7 @@ begin_block
 block|{
 name|arctype
 modifier|*
-name|malloc
+name|calloc
 parameter_list|()
 function_decl|;
 name|arctype
@@ -154,8 +154,10 @@ return|return;
 block|}
 name|arcp
 operator|=
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 expr|*
 name|arcp
