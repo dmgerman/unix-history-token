@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	systm.h	4.31	82/10/31	*/
+comment|/*	systm.h	4.32	82/11/15	*/
 end_comment
 
 begin_comment
@@ -18,6 +18,17 @@ comment|/* frequency of the clock */
 end_comment
 
 begin_decl_stmt
+name|int
+name|hand
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* current index into coremap used by daemon */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|char
 name|version
 index|[]
@@ -26,16 +37,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* system version */
-end_comment
-
-begin_decl_stmt
-name|int
-name|hand
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* current index into coremap used by daemon */
 end_comment
 
 begin_comment
@@ -419,17 +420,6 @@ struct|;
 end_struct
 
 begin_decl_stmt
-name|char
-name|vmmap
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* poor name! */
-end_comment
-
-begin_decl_stmt
 name|int
 name|noproc
 decl_stmt|;
@@ -467,6 +457,18 @@ name|int
 name|selwait
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|vmmap
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* poor name! */
+end_comment
 
 begin_comment
 comment|/* casts to keep lint happy */
