@@ -3876,15 +3876,12 @@ decl_stmt|;
 name|vm_object_t
 name|result
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|source
 operator|=
 operator|*
 name|object
-expr_stmt|;
-name|vm_object_lock
-argument_list|(
-name|source
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Don't create the new object if the old object isn't shared. 	 */
 if|if
@@ -3892,7 +3889,15 @@ condition|(
 name|source
 operator|!=
 name|NULL
-operator|&&
+condition|)
+block|{
+name|VM_OBJECT_LOCK
+argument_list|(
+name|source
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|source
 operator|->
 name|ref_count
@@ -3920,14 +3925,20 @@ name|OBJT_SWAP
 operator|)
 condition|)
 block|{
-name|vm_object_unlock
+name|VM_OBJECT_UNLOCK
 argument_list|(
 name|source
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Allocate a new object with the given length 	 */
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|source
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * Allocate a new object with the given length. 	 */
 name|result
 operator|=
 name|vm_object_allocate
@@ -3935,17 +3946,6 @@ argument_list|(
 name|OBJT_DEFAULT
 argument_list|,
 name|length
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|result
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"vm_object_shadow: no object for shadowing"
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The new object shadows the source object, adding a reference to it. 	 * Our caller changes his reference to point to the new object, 	 * removing a reference to the source object.  Net result: no change 	 * of reference count. 	 * 	 * Try to optimize the result object's page color when shadowing 	 * in order to maintain page coloring consistency in the combined  	 * shadowed object. 	 */
@@ -3958,8 +3958,15 @@ expr_stmt|;
 if|if
 condition|(
 name|source
+operator|!=
+name|NULL
 condition|)
 block|{
+name|VM_OBJECT_LOCK
+argument_list|(
+name|source
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -4038,6 +4045,11 @@ operator|)
 operator|&
 name|PQ_L2_MASK
 expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|source
+argument_list|)
+expr_stmt|;
 name|next_index
 operator|=
 operator|(
@@ -4073,11 +4085,6 @@ operator|*
 name|object
 operator|=
 name|result
-expr_stmt|;
-name|vm_object_unlock
-argument_list|(
-name|source
-argument_list|)
 expr_stmt|;
 block|}
 end_function
