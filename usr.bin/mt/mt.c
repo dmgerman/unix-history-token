@@ -358,7 +358,7 @@ name|ZERO_ALLOWED
 block|}
 block|,
 block|{
-literal|"retens"
+literal|"retension"
 block|,
 name|MTRETENS
 block|,
