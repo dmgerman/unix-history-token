@@ -831,6 +831,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|int
 name|ptrace
@@ -2107,6 +2111,12 @@ name|uio_td
 operator|=
 name|td
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|proc_rwmem
@@ -2115,6 +2125,12 @@ name|p
 argument_list|,
 operator|&
 name|uio
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 if|if
@@ -2281,6 +2297,12 @@ name|EINVAL
 operator|)
 return|;
 block|}
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|proc_rwmem
@@ -2289,6 +2311,12 @@ name|p
 argument_list|,
 operator|&
 name|uio
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 name|piod
