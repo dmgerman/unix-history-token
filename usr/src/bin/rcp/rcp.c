@@ -128,6 +128,12 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -944,7 +950,9 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"/usr/ucb/rsh %s -l %s -n %s %s '%s%s%s:%s'"
+literal|"%s %s -l %s -n %s %s '%s%s%s:%s'"
+argument_list|,
+name|_PATH_RSH
 argument_list|,
 name|host
 argument_list|,
@@ -980,7 +988,9 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"/usr/ucb/rsh %s -n %s %s '%s%s%s:%s'"
+literal|"%s %s -n %s %s '%s%s%s:%s'"
+argument_list|,
+name|_PATH_RSH
 argument_list|,
 name|argv
 index|[
@@ -1391,7 +1401,9 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"/bin/cp%s%s %s %s"
+literal|"%s%s%s %s %s"
+argument_list|,
+name|_PATH_CP
 argument_list|,
 name|iamrecursive
 condition|?
@@ -2098,7 +2110,7 @@ argument_list|)
 expr_stmt|;
 name|execl
 argument_list|(
-literal|"/bin/sh"
+name|_PATH_BSHELL
 argument_list|,
 literal|"sh"
 argument_list|,
