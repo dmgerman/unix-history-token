@@ -1935,7 +1935,19 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * vclean() may be called twice. The first time 		 * removes the primary reference to the object, 		 * the second time goes one further and is a 		 * special-case to terminate the object. 		 */
+comment|/* 		 * vclean() may be called twice. The first time 		 * removes the primary reference to the object, 		 * the second time goes one further and is a 		 * special-case to terminate the object. 		 * 		 * don't double-terminate the object 		 */
+if|if
+condition|(
+operator|(
+name|obj
+operator|->
+name|flags
+operator|&
+name|OBJ_DEAD
+operator|)
+operator|==
+literal|0
+condition|)
 name|vm_object_terminate
 argument_list|(
 name|obj
@@ -1958,6 +1970,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Return the underlying VM object.  This routine may be called with or  * without the vnode interlock held.  If called without, the returned  * object is not guarenteed to be valid.  The syncer typically gets the  * object without holding the interlock in order to quickly test whether  * it might be dirty before going heavy-weight.  vm_object's use zalloc  * and thus stable-storage, so this is safe.  */
+end_comment
 
 begin_function
 name|int
