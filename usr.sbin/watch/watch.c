@@ -1235,10 +1235,6 @@ name|b_size
 init|=
 name|MIN_SIZE
 decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 name|char
 name|ch
 decl_stmt|,
@@ -1924,6 +1920,11 @@ expr_stmt|;
 block|}
 block|}
 comment|/* While */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
