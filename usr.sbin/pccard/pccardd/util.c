@@ -459,6 +459,9 @@ name|int
 name|nbits
 parameter_list|,
 name|int
+name|min
+parameter_list|,
+name|int
 name|count
 parameter_list|,
 name|int
@@ -479,7 +482,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+name|min
 init|;
 name|i
 operator|<
@@ -561,6 +564,8 @@ argument_list|(
 name|mem_avail
 argument_list|,
 name|MEMBLKS
+argument_list|,
+literal|0
 argument_list|,
 name|size
 operator|/

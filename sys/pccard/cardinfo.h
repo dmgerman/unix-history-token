@@ -163,6 +163,17 @@ begin_comment
 comment|/* Select Beep */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PIOCSRESOURCE
+value|_IOWR('P', 12, struct pccard_resource)
+end_define
+
+begin_comment
+comment|/* get resource info */
+end_comment
+
 begin_comment
 comment|/*  *	Debug codes.  */
 end_comment
@@ -528,6 +539,33 @@ name|vcc
 decl_stmt|;
 name|int
 name|vpp
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  *	Th PC-Card resource IOC_GET_RESOURCE_RANGE  */
+end_comment
+
+begin_struct
+struct|struct
+name|pccard_resource
+block|{
+name|int
+name|type
+decl_stmt|;
+name|u_long
+name|size
+decl_stmt|;
+name|u_long
+name|min
+decl_stmt|;
+name|u_long
+name|max
+decl_stmt|;
+name|u_long
+name|resource_addr
 decl_stmt|;
 block|}
 struct|;
