@@ -2124,6 +2124,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|softc
+operator|->
+name|flags
+operator|&=
+operator|~
+name|DA_FLAG_OPEN
+expr_stmt|;
 name|cam_periph_release
 argument_list|(
 name|periph
