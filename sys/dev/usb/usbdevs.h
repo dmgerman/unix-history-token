@@ -4223,7 +4223,7 @@ value|0x6901
 end_define
 
 begin_comment
-comment|/* PhotoClip Camera */
+comment|/* PhotoClip USBMediaReader */
 end_comment
 
 begin_comment

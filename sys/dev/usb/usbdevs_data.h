@@ -1144,7 +1144,7 @@ literal|0
 block|,
 literal|"Daisy Technology"
 block|,
-literal|"PhotoClip Camera"
+literal|"PhotoClip USBMediaReader"
 block|, 	}
 block|,
 block|{
