@@ -4936,7 +4936,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|ent
+name|working
 operator|->
 name|flags
 operator|&
