@@ -176,7 +176,7 @@ name|PCMCHAN
 parameter_list|(
 name|x
 parameter_list|)
-value|((PCMMINOR(x)& 0x0000ff00)>> 16)
+value|((PCMMINOR(x)& 0x00ff0000)>> 16)
 end_define
 
 begin_define
