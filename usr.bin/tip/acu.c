@@ -423,6 +423,14 @@ operator|!=
 name|NOSTR
 condition|)
 block|{
+if|if
+condition|(
+operator|*
+name|string
+operator|==
+literal|'#'
+condition|)
+continue|continue;
 for|for
 control|(
 name|cp
