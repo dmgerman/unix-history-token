@@ -5841,11 +5841,9 @@ argument_list|)
 expr_stmt|;
 do|do
 block|{
-name|Buf_Discard
+name|Buf_Clear
 argument_list|(
 name|buf
-argument_list|,
-name|lineLength
 argument_list|)
 expr_stmt|;
 name|lastc

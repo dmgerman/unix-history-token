@@ -154,12 +154,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|Buf_Discard
+name|Buf_Clear
 parameter_list|(
 name|Buffer
 modifier|*
-parameter_list|,
-name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
