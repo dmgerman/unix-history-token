@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fingerd.c,v 1.11 1998/05/15 03:23:28 jb Exp $"
+literal|"$Id: fingerd.c,v 1.12 1999/04/06 23:05:56 brian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -241,8 +241,6 @@ name|char
 name|rhost
 index|[
 name|MAXHOSTNAMELEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 name|prog
@@ -552,6 +550,18 @@ name|sin
 operator|.
 name|sin_addr
 argument_list|)
+expr_stmt|;
+name|rhost
+index|[
+sizeof|sizeof
+argument_list|(
+name|rhost
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 name|syslog
 argument_list|(
