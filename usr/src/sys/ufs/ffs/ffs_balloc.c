@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_balloc.c	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_balloc.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -81,6 +81,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_bmap_args
+comment|/* { 		struct vnode *a_vp; 		daddr_t  a_bn; 		struct vnode **a_vpp; 		daddr_t *a_bnp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -92,6 +93,15 @@ init|=
 name|ap
 operator|->
 name|a_bn
+decl_stmt|;
+specifier|register
+name|daddr_t
+modifier|*
+name|bnp
+init|=
+name|ap
+operator|->
+name|a_bnp
 decl_stmt|;
 specifier|register
 name|struct
@@ -157,9 +167,7 @@ name|i_devvp
 expr_stmt|;
 if|if
 condition|(
-name|ap
-operator|->
-name|a_bnp
+name|bnp
 operator|==
 name|NULL
 condition|)
@@ -210,9 +218,7 @@ literal|0
 condition|)
 block|{
 operator|*
-name|ap
-operator|->
-name|a_bnp
+name|bnp
 operator|=
 operator|(
 name|daddr_t
@@ -227,9 +233,7 @@ operator|)
 return|;
 block|}
 operator|*
-name|ap
-operator|->
-name|a_bnp
+name|bnp
 operator|=
 name|fsbtodb
 argument_list|(
@@ -317,9 +321,7 @@ literal|0
 condition|)
 block|{
 operator|*
-name|ap
-operator|->
-name|a_bnp
+name|bnp
 operator|=
 operator|(
 name|daddr_t
@@ -429,9 +431,7 @@ literal|0
 condition|)
 block|{
 operator|*
-name|ap
-operator|->
-name|a_bnp
+name|bnp
 operator|=
 operator|(
 name|daddr_t
@@ -457,9 +457,7 @@ argument_list|)
 expr_stmt|;
 block|}
 operator|*
-name|ap
-operator|->
-name|a_bnp
+name|bnp
 operator|=
 name|fsbtodb
 argument_list|(
