@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount_kernfs.c	8.2 (Berkeley) %G%"
+literal|"@(#)mount_kernfs.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -187,6 +187,8 @@ name|mopts
 argument_list|,
 operator|&
 name|mntflags
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -219,7 +221,7 @@ if|if
 condition|(
 name|mount
 argument_list|(
-name|MOUNT_KERNFS
+literal|"kernfs"
 argument_list|,
 name|argv
 index|[
