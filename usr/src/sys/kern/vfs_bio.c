@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_bio.c	3.11	%G%	*/
+comment|/*	vfs_bio.c	3.12	%G%	*/
 end_comment
 
 begin_include
@@ -1558,6 +1558,12 @@ goto|goto
 name|done
 goto|;
 comment|/* INLINE EXPANSION OF bunhash(bp) */
+operator|(
+name|void
+operator|)
+name|spl6
+argument_list|()
+expr_stmt|;
 name|i
 operator|=
 name|BUFHASH
@@ -1659,6 +1665,12 @@ expr_stmt|;
 block|}
 name|done
 label|:
+operator|(
+name|void
+operator|)
+name|spl0
+argument_list|()
+expr_stmt|;
 comment|/* END INLINE EXPANSION */
 name|bp
 operator|->
@@ -1980,6 +1992,8 @@ name|int
 name|i
 decl_stmt|,
 name|x
+decl_stmt|,
+name|s
 decl_stmt|;
 if|if
 condition|(
@@ -1990,6 +2004,11 @@ operator|==
 name|NODEV
 condition|)
 return|return;
+name|s
+operator|=
+name|spl6
+argument_list|()
+expr_stmt|;
 name|i
 operator|=
 name|BUFHASH
@@ -2027,7 +2046,9 @@ name|bp
 operator|->
 name|b_hlink
 expr_stmt|;
-return|return;
+goto|goto
+name|ret
+goto|;
 block|}
 for|for
 control|(
@@ -2078,11 +2099,20 @@ name|bp
 operator|->
 name|b_hlink
 expr_stmt|;
-return|return;
+goto|goto
+name|ret
+goto|;
 block|}
 name|panic
 argument_list|(
 literal|"bunhash"
+argument_list|)
+expr_stmt|;
+name|ret
+label|:
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 block|}
