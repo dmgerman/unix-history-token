@@ -2132,7 +2132,7 @@ comment|/* Get link number */
 name|linkNum
 operator|=
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|NG_HOOK_PRIVATE
 argument_list|(
@@ -3222,7 +3222,7 @@ comment|/* Get link number */
 name|linkNum
 operator|=
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|NG_HOOK_PRIVATE
 argument_list|(

@@ -1979,6 +1979,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|hookIndex
 argument_list|)
 expr_stmt|;
@@ -2676,7 +2679,7 @@ name|int
 name|index
 init|=
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|NG_HOOK_PRIVATE
 argument_list|(
@@ -3757,7 +3760,7 @@ name|int
 name|index
 init|=
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|NG_HOOK_PRIVATE
 argument_list|(

@@ -1611,7 +1611,7 @@ expr_stmt|;
 switch|switch
 condition|(
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|type
 operator|->
@@ -2057,7 +2057,7 @@ expr_stmt|;
 switch|switch
 condition|(
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|type
 operator|->
@@ -2504,7 +2504,7 @@ expr_stmt|;
 switch|switch
 condition|(
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|type
 operator|->
@@ -2937,7 +2937,7 @@ expr_stmt|;
 switch|switch
 condition|(
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|type
 operator|->
