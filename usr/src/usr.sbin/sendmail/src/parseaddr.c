@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	3.19	%G%"
+literal|"@(#)parseaddr.c	3.19.1.1	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1098,52 +1098,6 @@ literal|1
 expr_stmt|;
 continue|continue;
 block|}
-block|}
-comment|/* 		**  Turn "at" into "@", 		**	but only if "at" is a word. 		*/
-if|if
-condition|(
-name|lower
-argument_list|(
-name|tok
-index|[
-literal|0
-index|]
-argument_list|)
-operator|==
-literal|'a'
-operator|&&
-name|lower
-argument_list|(
-name|tok
-index|[
-literal|1
-index|]
-argument_list|)
-operator|==
-literal|'t'
-operator|&&
-name|tok
-index|[
-literal|2
-index|]
-operator|==
-literal|'\0'
-condition|)
-block|{
-name|tok
-index|[
-literal|0
-index|]
-operator|=
-literal|'@'
-expr_stmt|;
-name|tok
-index|[
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
 block|}
 block|}
 operator|*
