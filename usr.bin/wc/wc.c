@@ -729,7 +729,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 		 * If all we need is the number of characters and it's a 		 * regular or linked file, just stat the puppy. 		 */
+comment|/* 		 * If all we need is the number of characters and it's a 		 * regular file, just stat the puppy. 		 */
 if|if
 condition|(
 name|dochar
@@ -772,13 +772,6 @@ block|}
 if|if
 condition|(
 name|S_ISREG
-argument_list|(
-name|sb
-operator|.
-name|st_mode
-argument_list|)
-operator|||
-name|S_ISLNK
 argument_list|(
 name|sb
 operator|.
