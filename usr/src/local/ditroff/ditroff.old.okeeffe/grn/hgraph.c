@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hgraph.c	1.9	(Berkeley) 83/10/13  *  *     This file contains the graphics routines for converting gremlin  * pictures to troff input.  */
+comment|/*	hgraph.c	1.10	(Berkeley) 83/11/02  *  *     This file contains the graphics routines for converting gremlin  * pictures to troff input.  */
 end_comment
 
 begin_include
@@ -73,8 +73,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|char
-modifier|*
+name|int
 name|tsize
 index|[]
 decl_stmt|;
@@ -83,20 +82,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|double
-name|scale
+name|troffscale
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* imports from main.c */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|double
-name|troffscale
-decl_stmt|;
-end_decl_stmt
 
 begin_extern
 extern|extern point(
@@ -945,7 +937,7 @@ begin_block
 block|{
 name|printf
 argument_list|(
-literal|".ft %s\n.ps %s\n"
+literal|".ft %s\n.ps %d\n"
 argument_list|,
 name|tfont
 index|[
