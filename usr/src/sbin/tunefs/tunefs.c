@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tunefs.c	4.1 (Berkeley) %G%"
+literal|"@(#)tunefs.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1095,7 +1095,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"newfs: "
+literal|"tunefs: "
 argument_list|)
 expr_stmt|;
 name|fprintf
