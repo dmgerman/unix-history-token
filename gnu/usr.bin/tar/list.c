@@ -1056,6 +1056,8 @@ operator|.
 name|chksum
 argument_list|)
 expr_stmt|;
+name|signed_sum
+operator|=
 name|sum
 operator|=
 literal|0
@@ -1879,6 +1881,7 @@ name|int
 name|digs
 decl_stmt|;
 specifier|register
+name|unsigned
 name|char
 modifier|*
 name|where

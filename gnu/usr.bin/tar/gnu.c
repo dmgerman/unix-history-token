@@ -399,6 +399,7 @@ decl_stmt|;
 name|int
 name|ino
 decl_stmt|;
+name|unsigned
 name|char
 modifier|*
 name|strp
@@ -407,6 +408,7 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
+name|unsigned
 name|char
 name|buf
 index|[
