@@ -2950,6 +2950,15 @@ index|[
 literal|255
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|PCCARD_ARCH
+name|char
+modifier|*
+name|pccard
+decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|ipv4_enable
 init|=
