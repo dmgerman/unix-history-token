@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)makemap.c	8.2 (Berkeley) %G%"
+literal|"@(#)makemap.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -222,6 +222,10 @@ decl_stmt|;
 name|char
 modifier|*
 name|mapname
+decl_stmt|;
+name|char
+modifier|*
+name|ext
 decl_stmt|;
 name|int
 name|lineno
