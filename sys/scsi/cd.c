@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *      $Id: cd.c,v 1.59 1996/01/30 16:12:18 ache Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *      $Id: cd.c,v 1.60 1996/01/30 16:38:30 ache Exp $  */
 end_comment
 
 begin_include
@@ -3995,43 +3995,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-block|}
-if|if
-condition|(
-name|te
-operator|->
-name|address_format
-operator|==
-name|CD_LBA_FORMAT
-condition|)
-block|{
-for|for
-control|(
-name|idx
-operator|=
-literal|0
-init|;
-name|idx
-operator|<
-name|num
-condition|;
-name|idx
-operator|++
-control|)
-name|NTOHL
-argument_list|(
-name|data
-operator|.
-name|entries
-index|[
-name|idx
-index|]
-operator|.
-name|addr
-operator|.
-name|lba
-argument_list|)
-expr_stmt|;
 block|}
 name|error
 operator|=
