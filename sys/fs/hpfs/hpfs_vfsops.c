@@ -2308,13 +2308,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|VREF
-argument_list|(
-name|hp
-operator|->
-name|h_devvp
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|bread

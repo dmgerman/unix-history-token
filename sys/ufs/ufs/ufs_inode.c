@@ -576,13 +576,6 @@ name|vp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Purge old data structures associated with the inode. 	 */
-name|vrele
-argument_list|(
-name|ip
-operator|->
-name|i_devvp
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|QUOTA

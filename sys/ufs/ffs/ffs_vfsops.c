@@ -6545,13 +6545,6 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Finish inode initialization. 	 */
-name|VREF
-argument_list|(
-name|ip
-operator|->
-name|i_devvp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Set up a generation number for this inode if it does not 	 * already have one. This should only happen on old filesystems. 	 */
 if|if
 condition|(
