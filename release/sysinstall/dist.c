@@ -843,6 +843,9 @@ block|,
 name|NULL
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|__i386__
 block|{
 literal|"Xlk98"
 block|,
@@ -856,6 +859,8 @@ block|,
 name|NULL
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"Xlkit"
 block|,
@@ -921,6 +926,9 @@ block|,
 name|NULL
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|__i386__
 block|{
 literal|"X9set"
 block|,
@@ -934,6 +942,8 @@ block|,
 name|NULL
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 name|NULL
 block|}
