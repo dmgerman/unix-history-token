@@ -4461,6 +4461,7 @@ name|fmsg
 operator|=
 literal|"Port not available"
 expr_stmt|;
+comment|/*FALLTHROUGH*/
 case|case
 name|CT_PORTCHANGED
 case|:
@@ -4474,6 +4475,7 @@ name|fmsg
 operator|=
 literal|"Port Changed"
 expr_stmt|;
+comment|/*FALLTHROUGH*/
 case|case
 name|CT_NOACK
 case|:
