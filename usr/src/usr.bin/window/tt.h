@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)tt.h	3.4 83/08/17  */
+comment|/*  *	@(#)tt.h	3.5 83/08/17  */
 end_comment
 
 begin_struct
@@ -158,6 +158,90 @@ name|tt_tab
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * nicer interface to termcap routines  */
+end_comment
+
+begin_decl_stmt
+name|char
+name|tt_strings
+index|[
+literal|1024
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* string buffer */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|tt_strp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* pointer for it */
+end_comment
+
+begin_function_decl
+name|int
+name|tt_pc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* just putchar() */
+end_comment
+
+begin_function_decl
+name|int
+name|tt_sc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* *tt_strp++ = c */
+end_comment
+
+begin_function_decl
+name|char
+modifier|*
+name|tt_xgetstr
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* tgetstr() and expand delays */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|tt_tgetstr
+parameter_list|(
+name|s
+parameter_list|)
+value|tgetstr((s),&tt_strp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|tt_tputs
+parameter_list|(
+name|s
+parameter_list|,
+name|n
+parameter_list|)
+value|tputs((s), (n), tt_pc)
+end_define
 
 end_unit
 

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tth19.c	3.5 83/08/17"
+literal|"@(#)tth19.c	3.6 83/08/17"
 decl_stmt|;
 end_decl_stmt
 
@@ -142,6 +142,20 @@ end_decl_stmt
 begin_decl_stmt
 name|short
 name|h19_msp10c
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|h19_VS
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|h19_VE
 decl_stmt|;
 end_decl_stmt
 
@@ -796,25 +810,15 @@ end_macro
 
 begin_block
 block|{
-name|esc
-argument_list|()
-expr_stmt|;
-name|pc
+if|if
+condition|(
+name|h19_VS
+condition|)
+name|fputs
 argument_list|(
-name|x
-argument_list|)
-expr_stmt|;
-name|pc
-argument_list|(
-literal|4
-argument_list|)
-expr_stmt|;
-name|esc
-argument_list|()
-expr_stmt|;
-name|pc
-argument_list|(
-name|E
+name|h19_VS
+argument_list|,
+name|stdout
 argument_list|)
 expr_stmt|;
 name|esc
@@ -823,6 +827,14 @@ expr_stmt|;
 name|pc
 argument_list|(
 name|w
+argument_list|)
+expr_stmt|;
+name|esc
+argument_list|()
+expr_stmt|;
+name|pc
+argument_list|(
+name|E
 argument_list|)
 expr_stmt|;
 name|h19_col
@@ -868,17 +880,15 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|esc
-argument_list|()
-expr_stmt|;
-name|pc
+if|if
+condition|(
+name|h19_VE
+condition|)
+name|fputs
 argument_list|(
-name|y
-argument_list|)
-expr_stmt|;
-name|pc
-argument_list|(
-literal|4
+name|h19_VE
+argument_list|,
+name|stdout
 argument_list|)
 expr_stmt|;
 name|esc
@@ -989,6 +999,20 @@ operator|/
 name|cpms
 expr_stmt|;
 comment|/* ms per 10 char */
+name|h19_VS
+operator|=
+name|tt_xgetstr
+argument_list|(
+literal|"vs"
+argument_list|)
+expr_stmt|;
+name|h19_VE
+operator|=
+name|tt_xgetstr
+argument_list|(
+literal|"ve"
+argument_list|)
+expr_stmt|;
 name|tt
 operator|.
 name|tt_setinsert
