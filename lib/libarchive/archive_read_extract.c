@@ -1605,6 +1605,7 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+comment|/* Always restore permissions for regular files. */
 name|set_perm
 argument_list|(
 name|a
@@ -1617,6 +1618,8 @@ name|entry
 argument_list|)
 argument_list|,
 name|flags
+operator||
+name|ARCHIVE_EXTRACT_PERM
 argument_list|)
 expr_stmt|;
 name|set_extended_perm
