@@ -576,6 +576,8 @@ name|d_flags
 operator||=
 name|DISKFLAG_WANTED
 expr_stmt|;
+name|error
+operator|=
 name|tsleep
 argument_list|(
 name|dp
@@ -589,6 +591,15 @@ argument_list|,
 name|hz
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 name|dp
 operator|->
