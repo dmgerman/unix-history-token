@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.61 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.62 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1452,6 +1452,12 @@ operator|=
 name|mci
 operator|->
 name|mci_exitstat
+expr_stmt|;
+name|errno
+operator|=
+name|mci
+operator|->
+name|mci_errno
 expr_stmt|;
 if|if
 condition|(

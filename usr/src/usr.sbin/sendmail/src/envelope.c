@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	5.28 (Berkeley) %G%"
+literal|"@(#)envelope.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1665,59 +1665,53 @@ name|NULL
 condition|)
 block|{
 comment|/* log garbage addresses for traceback */
-if|if
-condition|(
-name|from
-operator|!=
-name|NULL
-condition|)
-block|{
 ifdef|#
 directive|ifdef
 name|LOG
 if|if
 condition|(
+name|from
+operator|!=
+name|NULL
+operator|&&
 name|LogLevel
 operator|>=
 literal|1
 condition|)
+block|{
+name|char
+modifier|*
+name|host
+init|=
+name|RealHostName
+decl_stmt|;
 if|if
 condition|(
-name|realname
+name|host
 operator|==
-name|from
-operator|&&
-name|RealHostName
-operator|!=
 name|NULL
 condition|)
+name|host
+operator|=
+name|MyHostName
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"from=%s unparseable, received from %s"
+literal|"from=%s unparseable, received from %s@%s"
 argument_list|,
 name|from
-argument_list|,
-name|RealHostName
-argument_list|)
-expr_stmt|;
-else|else
-name|syslog
-argument_list|(
-name|LOG_NOTICE
-argument_list|,
-literal|"Unparseable username %s wants from=%s"
 argument_list|,
 name|realname
 argument_list|,
-name|from
+name|host
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 endif|LOG
-block|}
 name|from
 operator|=
 name|newstr

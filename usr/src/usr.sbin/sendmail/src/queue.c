@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.44 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	5.45 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.44 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	5.45 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3228,7 +3228,7 @@ if|if
 condition|(
 name|LogLevel
 operator|>
-literal|9
+literal|10
 condition|)
 name|syslog
 argument_list|(
