@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ioctl.h>
 end_include
 
@@ -291,6 +297,9 @@ operator|-
 literal|1
 condition|)
 block|{
+name|int
+name|i
+decl_stmt|;
 name|DebugFD
 operator|=
 name|open
@@ -300,6 +309,8 @@ argument_list|,
 name|O_WRONLY
 argument_list|)
 expr_stmt|;
+name|i
+operator|=
 name|ioctl
 argument_list|(
 name|DebugFD
@@ -311,6 +322,25 @@ name|char
 operator|*
 operator|)
 name|NULL
+argument_list|)
+expr_stmt|;
+name|msgDebug
+argument_list|(
+literal|"ioctl(%d, TIOCCONS, NULL) = %d (%s)"
+argument_list|,
+name|DebugFD
+argument_list|,
+name|i
+argument_list|,
+operator|!
+name|i
+condition|?
+literal|"success"
+else|:
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

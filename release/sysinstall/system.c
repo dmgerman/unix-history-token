@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.33 1995/05/25 01:52:03 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.34 1995/05/25 18:48:31 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -183,15 +183,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|RootFD
-operator|=
-name|open
-argument_list|(
-literal|"/floppies/root.flp"
-argument_list|,
-name|O_RDONLY
-argument_list|)
-expr_stmt|;
 name|OnCDROM
 operator|=
 name|TRUE
@@ -247,6 +238,8 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+name|i
+operator|=
 name|ioctl
 argument_list|(
 literal|0
@@ -269,7 +262,7 @@ name|setenv
 argument_list|(
 literal|"PATH"
 argument_list|,
-literal|"/stand:/mnt/bin:/mnt/sbin:/mnt/usr/sbin:/mnt/usr/bin"
+literal|"/stand:/bin:/sbin:/usr/sbin:/mnt/bin:/mnt/sbin:/mnt/usr/sbin:/mnt/usr/bin"
 argument_list|,
 literal|1
 argument_list|)
