@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.116 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.117 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6738,6 +6738,19 @@ operator|=
 name|curtime
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|CurHostName
+operator|!=
+name|NULL
+operator|&&
+name|CurHostName
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
 name|q
 operator|->
 name|q_statmta
