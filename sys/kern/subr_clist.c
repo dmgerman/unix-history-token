@@ -94,6 +94,10 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* XXX: use<sys/queue.h> */
+end_comment
+
 begin_decl_stmt
 name|int
 name|cfreecount

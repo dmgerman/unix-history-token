@@ -849,6 +849,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Buffer remaining input */
+comment|/*lint -e{669} */
 name|memcpy
 argument_list|(
 operator|(

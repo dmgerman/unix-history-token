@@ -2619,7 +2619,6 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
 name|void
 modifier|*
 name|mb_alloc
@@ -3590,7 +3589,6 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
 name|void
 name|mb_free
 parameter_list|(
