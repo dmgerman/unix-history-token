@@ -1093,6 +1093,10 @@ condition|(
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -1239,6 +1243,10 @@ condition|(
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -2698,6 +2706,10 @@ name|NULL
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|arg
 operator|->
@@ -4984,6 +4996,10 @@ operator|&&
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|a_gid
 operator|->
@@ -6468,7 +6484,7 @@ if|if
 condition|(
 name|isatty
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|)
 condition|)
 name|printf
@@ -6880,6 +6896,10 @@ name|char
 operator|)
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -6917,7 +6937,7 @@ argument_list|,
 sizeof|sizeof
 name|acexpire
 argument_list|,
-literal|"%e-%b-%Y %T"
+literal|"%Ef %Y %X"
 argument_list|,
 name|tptr
 argument_list|)
@@ -6931,7 +6951,7 @@ operator|>
 operator|(
 name|time_t
 operator|)
-literal|9
+literal|0
 operator|&&
 operator|(
 name|tptr
@@ -6954,7 +6974,7 @@ argument_list|,
 sizeof|sizeof
 name|pwexpire
 argument_list|,
-literal|"%e-%b-%Y %T"
+literal|"%Ef %Y %X"
 argument_list|,
 name|tptr
 argument_list|)
@@ -7102,7 +7122,7 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s\n"
+literal|"%s"
 argument_list|,
 name|j
 condition|?
