@@ -2108,20 +2108,6 @@ argument_list|(
 name|pager
 argument_list|)
 expr_stmt|;
-comment|/* 		 * The object of unnamed anonymous regions was just created 		 * find it for pager_cache. 		 */
-if|if
-condition|(
-name|handle
-operator|==
-name|NULL
-condition|)
-name|object
-operator|=
-name|vm_object_lookup
-argument_list|(
-name|pager
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Don't cache anonymous objects. 		 * Loses the reference gained by vm_pager_allocate. 		 */
 operator|(
 name|void
