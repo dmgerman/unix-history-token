@@ -12,7 +12,7 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|_SYS__WATCHDOG_H
+name|_SYS_WATCHDOG_H
 end_define
 
 begin_include
