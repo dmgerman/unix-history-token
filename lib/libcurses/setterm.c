@@ -68,19 +68,6 @@ directive|include
 file|"curses.h"
 end_include
 
-begin_undef
-undef|#
-directive|undef
-name|ospeed
-end_undef
-
-begin_decl_stmt
-specifier|extern
-name|short
-name|ospeed
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 specifier|static
 name|void
@@ -719,15 +706,6 @@ literal|0
 index|]
 else|:
 literal|0
-expr_stmt|;
-name|_set_ospeed
-argument_list|(
-name|cfgetospeed
-argument_list|(
-operator|&
-name|__baset
-argument_list|)
-argument_list|)
 expr_stmt|;
 name|aoftspace
 operator|=
