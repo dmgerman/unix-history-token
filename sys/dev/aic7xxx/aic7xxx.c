@@ -17580,12 +17580,6 @@ decl_stmt|;
 name|u_int32_t
 name|physaddr
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|printf("SBLKCTL = 0x%x\n", ahc_inb(ahc, SBLKCTL)); 	printf("SSTAT0 = 0x%x\n", ahc_inb(ahc, SSTAT0)); 	printf("SFUNCT = 0x%x\n", ahc_inb(ahc, SFUNCT));
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|AHC_PRINT_SRAM
