@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.41 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.42 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -75,15 +75,8 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * This defines the maximum size of the private data area for any file system  * type.  A defined constant is used rather than a union structure to reduce  * the number of header files that must be included.  */
+comment|/*  * Each underlying filesystem allocates its own private area and hangs  * it from v_data. If non-null, this area is free in getnewvnode().  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|VN_MAXPRIVATE
-value|188
-end_define
 
 begin_struct
 struct|struct
@@ -205,16 +198,21 @@ comment|/* fifo (VFIFO) */
 block|}
 name|v_un
 union|;
+name|long
+name|v_spare
+index|[
+literal|14
+index|]
+decl_stmt|;
+comment|/* round to 128 bytes */
 name|enum
 name|vtagtype
 name|v_tag
 decl_stmt|;
 comment|/* type of underlying data */
-name|char
+name|void
+modifier|*
 name|v_data
-index|[
-name|VN_MAXPRIVATE
-index|]
 decl_stmt|;
 comment|/* private data for fs */
 block|}
@@ -409,6 +407,10 @@ name|dev_t
 name|va_rdev
 decl_stmt|;
 comment|/* device the special file represents */
+name|short
+name|va_pad
+decl_stmt|;
+comment|/* pad out to long */
 name|u_quad
 name|va_qbytes
 decl_stmt|;
