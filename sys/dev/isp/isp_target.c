@@ -1835,7 +1835,7 @@ expr_stmt|;
 block|}
 name|cto
 operator|->
-name|ct_reserved
+name|ct_syshandle
 operator|=
 name|hdl
 expr_stmt|;
@@ -1951,7 +1951,7 @@ name|sts
 expr_stmt|;
 name|cto
 operator|->
-name|ct_reserved
+name|ct_syshandle
 operator|=
 name|hdl
 expr_stmt|;
@@ -3528,7 +3528,7 @@ modifier|*
 name|ct
 decl_stmt|;
 block|{
-name|XS_T
+name|void
 modifier|*
 name|xs
 decl_stmt|;
@@ -3547,7 +3547,7 @@ if|if
 condition|(
 name|ct
 operator|->
-name|ct_reserved
+name|ct_syshandle
 condition|)
 block|{
 name|xs
@@ -3558,7 +3558,7 @@ name|isp
 argument_list|,
 name|ct
 operator|->
-name|ct_reserved
+name|ct_syshandle
 argument_list|)
 expr_stmt|;
 if|if
@@ -3863,7 +3863,7 @@ if|if
 condition|(
 name|ct
 operator|->
-name|ct_reserved
+name|ct_syshandle
 operator|==
 literal|0
 condition|)
@@ -3916,7 +3916,7 @@ literal|"NO xs for CTIO (handle 0x%x) status 0x%x"
 argument_list|,
 name|ct
 operator|->
-name|ct_reserved
+name|ct_syshandle
 argument_list|,
 name|ct
 operator|->
@@ -3970,7 +3970,7 @@ name|xs
 argument_list|,
 name|ct
 operator|->
-name|ct_reserved
+name|ct_syshandle
 argument_list|)
 expr_stmt|;
 block|}
@@ -4029,7 +4029,7 @@ if|if
 condition|(
 name|ct
 operator|->
-name|ct_reserved
+name|ct_syshandle
 condition|)
 block|{
 name|xs
@@ -4040,7 +4040,7 @@ name|isp
 argument_list|,
 name|ct
 operator|->
-name|ct_reserved
+name|ct_syshandle
 argument_list|)
 expr_stmt|;
 if|if
@@ -4342,7 +4342,7 @@ if|if
 condition|(
 name|ct
 operator|->
-name|ct_reserved
+name|ct_syshandle
 operator|==
 literal|0
 condition|)
@@ -4395,7 +4395,7 @@ literal|"NO xs for CTIO (handle 0x%x) status 0x%x"
 argument_list|,
 name|ct
 operator|->
-name|ct_reserved
+name|ct_syshandle
 argument_list|,
 name|ct
 operator|->
@@ -4449,7 +4449,7 @@ name|xs
 argument_list|,
 name|ct
 operator|->
-name|ct_reserved
+name|ct_syshandle
 argument_list|)
 expr_stmt|;
 block|}
