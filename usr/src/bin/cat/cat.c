@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|Sccsid
 init|=
-literal|"@(#)cat.c	4.2 (Berkeley) %G%"
+literal|"@(#)cat.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -218,6 +218,8 @@ continue|continue;
 block|}
 break|break;
 block|}
+if|if
+condition|(
 name|fstat
 argument_list|(
 name|fileno
@@ -228,7 +230,10 @@ argument_list|,
 operator|&
 name|statb
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+block|{
 name|statb
 operator|.
 name|st_mode
@@ -262,6 +267,7 @@ name|statb
 operator|.
 name|st_ino
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -347,6 +353,8 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
+if|if
+condition|(
 name|fstat
 argument_list|(
 name|fileno
@@ -357,7 +365,10 @@ argument_list|,
 operator|&
 name|statb
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 name|statb
@@ -393,6 +404,7 @@ name|fi
 argument_list|)
 expr_stmt|;
 continue|continue;
+block|}
 block|}
 if|if
 condition|(
