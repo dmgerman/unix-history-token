@@ -322,13 +322,29 @@ name|witness_spin_check
 value|GLOBAL_RVALUE(witness_spin_check, int)
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !(SMP || KLD_MODULE) */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|astpending
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/*UP kernel*/
+comment|/* SMP || KLD_MODULE */
 end_comment
 
 begin_macro
