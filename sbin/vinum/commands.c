@@ -579,9 +579,6 @@ name|arg0
 index|[]
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
 name|char
 name|buffer
 index|[
@@ -675,7 +672,6 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
 comment|/* error in config */
 name|fprintf
 argument_list|(
@@ -695,31 +691,7 @@ name|error
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-name|perror
-argument_list|(
-literal|"Can't save Vinum config"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-name|perror
-argument_list|(
-literal|"Can't save Vinum config"
-argument_list|)
-expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|no_devfs
@@ -727,7 +699,6 @@ condition|)
 name|make_devices
 argument_list|()
 expr_stmt|;
-block|}
 name|checkupdates
 argument_list|()
 expr_stmt|;
