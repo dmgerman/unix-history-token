@@ -2767,18 +2767,10 @@ label|:
 continue|continue;
 if|if
 condition|(
-ifdef|#
-directive|ifdef
-name|INET6
-comment|/* XXX: for maching gif tunnel dst as routing entry gateway */
-name|addr
-operator|->
-name|sa_family
-operator|!=
-name|AF_INET6
+name|af
+operator|==
+name|AF_INET
 operator|&&
-endif|#
-directive|endif
 name|ifp
 operator|->
 name|if_flags
