@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)fsck.h	5.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)fsck.h	5.12 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -29,11 +29,22 @@ begin_define
 define|#
 directive|define
 name|MAXBUFSPACE
-value|128*1024
+value|40*1024
 end_define
 
 begin_comment
 comment|/* maximum space to allocate to buffers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INOBUFSIZE
+value|56*1024
+end_define
+
+begin_comment
+comment|/* size of buffer to read inodes in pass1 */
 end_comment
 
 begin_ifndef
@@ -474,6 +485,68 @@ begin_comment
 comment|/* head of zero link count list */
 end_comment
 
+begin_comment
+comment|/*  * Inode cache data structures.  */
+end_comment
+
+begin_struct
+struct|struct
+name|inoinfo
+block|{
+name|struct
+name|inoinfo
+modifier|*
+name|i_nexthash
+decl_stmt|;
+comment|/* next entry in hash chain */
+name|ino_t
+name|i_number
+decl_stmt|;
+comment|/* inode number of this entry */
+name|ino_t
+name|i_parent
+decl_stmt|;
+comment|/* inode number of parent */
+name|ino_t
+name|i_dotdot
+decl_stmt|;
+comment|/* inode number of `..' */
+name|size_t
+name|i_isize
+decl_stmt|;
+comment|/* size of inode */
+name|u_int
+name|i_numblks
+decl_stmt|;
+comment|/* size of block array in bytes */
+name|daddr_t
+name|i_blks
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* actually longer */
+block|}
+modifier|*
+modifier|*
+name|inphead
+struct|,
+modifier|*
+modifier|*
+name|inpsort
+struct|;
+end_struct
+
+begin_decl_stmt
+name|long
+name|numdirs
+decl_stmt|,
+name|listmax
+decl_stmt|,
+name|inplast
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -864,9 +937,9 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|dinode
+name|inoinfo
 modifier|*
-name|getcacheino
+name|getinoinfo
 parameter_list|()
 function_decl|;
 end_function_decl
