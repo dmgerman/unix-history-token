@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_var.h	6.2	84/08/29	*/
+comment|/*	ip_var.h	6.3	85/05/23	*/
 end_comment
 
 begin_comment
@@ -175,6 +175,14 @@ name|int
 name|ips_badlen
 decl_stmt|;
 comment|/* ip length< ip header length */
+name|long
+name|ips_forward
+decl_stmt|;
+comment|/* packets forwarded */
+name|long
+name|ips_cantforward
+decl_stmt|;
+comment|/* packets rcvd for unreachable dest */
 block|}
 struct|;
 end_struct
