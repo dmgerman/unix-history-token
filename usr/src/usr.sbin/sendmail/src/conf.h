@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.80 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.81 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2044,14 +2044,27 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  4.3 BSD -- this is for very old systems ** **	You'll also have to install a new resolver library. **	I don't guarantee that support for this environment is complete. */
+comment|/* **  4.3 BSD -- this is for very old systems ** **	Should work for mt Xinu MORE/BSD and Mips UMIPS-BSD 2.1. ** **	You'll also have to install a new resolver library. **	I don't guarantee that support for this environment is complete. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|oldBSD43
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|MORE_BSD
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|umipsbsd
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -2340,7 +2353,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  ConvexOS 11.0 and later */
+comment|/* **  ConvexOS 11.0 and later ** **	"Todd C. Miller"<millert@mroe.cs.colorado.edu> claims this **	works on 9.1 as well. */
 end_comment
 
 begin_ifdef
@@ -2410,6 +2423,77 @@ end_define
 begin_comment
 comment|/* use<sys/vfs.h> statfs() implementation */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILCF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILCF
+value|"/usr/lib/sendmail.cf"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|S_IREAD
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|S_IREAD
+value|_S_IREAD
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_IWRITE
+value|_S_IWRITE
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_IEXEC
+value|_S_IEXEC
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_IFMT
+value|_S_IFMT
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_IFCHR
+value|_S_IFCHR
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_IFBLK
+value|_S_IFBLK
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
