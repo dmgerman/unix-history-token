@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vcat.c	4.3	83/04/29	*/
+comment|/*	vcat.c	4.4	83/05/16	*/
 end_comment
 
 begin_comment
@@ -130,63 +130,23 @@ end_define
 begin_define
 define|#
 directive|define
-name|VA_RASTER_LENGTH
-value|2112
-end_define
-
-begin_define
-define|#
-directive|define
-name|VP_RASTER_LENGTH
-value|7040
-end_define
-
-begin_define
-define|#
-directive|define
-name|VA_BYTES_PER_LINE
-value|(VA_RASTER_LENGTH/8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VP_BYTES_PER_LINE
-value|(VP_RASTER_LENGTH/8)
-end_define
-
-begin_define
-define|#
-directive|define
 name|NLINES
 value|110
-end_define
-
-begin_define
-define|#
-directive|define
-name|VA_BUFFER_SIZE
-value|(NLINES*VA_BYTES_PER_LINE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VP_BUFFER_SIZE
-value|(NLINES*VP_BYTES_PER_LINE)
 end_define
 
 begin_decl_stmt
 name|char
 name|buffer
 index|[
-name|VP_BUFFER_SIZE
+name|NLINES
+operator|*
+literal|880
 index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Big line buffers  */
+comment|/* Big enough for versatec */
 end_comment
 
 begin_decl_stmt
@@ -203,7 +163,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Zero origin in circular buffer  */
+comment|/* Zero origin in circular buffer */
 end_comment
 
 begin_function_decl
@@ -362,27 +322,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|VA_FFLINES
-value|2200
-end_define
-
-begin_define
-define|#
-directive|define
-name|VP_FFLINES
-value|650
-end_define
-
-begin_define
-define|#
-directive|define
-name|VP_EOTLINES
-value|1400
-end_define
-
 begin_decl_stmt
 name|int
 name|lines
@@ -418,7 +357,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* VA_BYTES_PER_LINE or VP_BYTES_PER_LINE. */
+comment|/* number of bytes per raster line. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|PAGE_LINES
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of raster lines per page. */
 end_comment
 
 begin_decl_stmt
@@ -428,7 +377,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* VA_BUFFER_SIZE or VP_BUFFER_SIZE. */
+comment|/* buffer size. */
 end_comment
 
 begin_decl_stmt
@@ -1310,54 +1259,6 @@ name|acctfile
 init|=
 name|NULL
 decl_stmt|;
-name|varian
-operator|=
-literal|1
-expr_stmt|;
-comment|/* Default is the varian */
-name|BYTES_PER_LINE
-operator|=
-name|VA_BYTES_PER_LINE
-expr_stmt|;
-name|BUFFER_SIZE
-operator|=
-name|VA_BUFFER_SIZE
-expr_stmt|;
-if|if
-condition|(
-name|argv
-index|[
-literal|0
-index|]
-index|[
-name|strlen
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|==
-literal|'W'
-condition|)
-block|{
-comment|/* Wide: the versatec. */
-name|varian
-operator|=
-literal|0
-expr_stmt|;
-name|BYTES_PER_LINE
-operator|=
-name|VP_BYTES_PER_LINE
-expr_stmt|;
-name|BUFFER_SIZE
-operator|=
-name|VP_BUFFER_SIZE
-expr_stmt|;
-block|}
 while|while
 condition|(
 operator|--
@@ -1386,6 +1287,56 @@ literal|1
 index|]
 condition|)
 block|{
+case|case
+literal|'x'
+case|:
+name|BYTES_PER_LINE
+operator|=
+name|atoi
+argument_list|(
+operator|&
+name|argv
+index|[
+literal|0
+index|]
+index|[
+literal|2
+index|]
+argument_list|)
+operator|/
+literal|8
+expr_stmt|;
+name|BUFFER_SIZE
+operator|=
+name|NLINES
+operator|*
+name|BYTES_PER_LINE
+expr_stmt|;
+name|varian
+operator|=
+name|BYTES_PER_LINE
+operator|==
+literal|264
+expr_stmt|;
+break|break;
+case|case
+literal|'y'
+case|:
+name|PAGE_LINES
+operator|=
+name|atoi
+argument_list|(
+operator|&
+name|argv
+index|[
+literal|0
+index|]
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 literal|'n'
 case|:
@@ -1428,19 +1379,6 @@ name|argv
 expr_stmt|;
 block|}
 break|break;
-default|default:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: vcat[W] [-n name] [-h host] [accounting file]\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 name|acctfile
@@ -2313,13 +2251,7 @@ operator|/
 literal|200.0
 operator|)
 operator|/
-operator|(
-name|varian
-condition|?
-literal|8.5
-else|:
-literal|12.0
-operator|)
+name|PAGE_LINES
 argument_list|)
 expr_stmt|;
 if|if
