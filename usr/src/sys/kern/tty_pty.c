@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_pty.c	6.10	85/04/17	*/
+comment|/*	tty_pty.c	6.11	85/06/07	*/
 end_comment
 
 begin_comment
@@ -2076,38 +2076,22 @@ operator|)
 operator|&&
 operator|(
 operator|(
-operator|(
 name|pti
 operator|->
 name|pt_flags
 operator|&
 name|PF_REMOTE
 operator|)
-operator|&&
-name|tp
-operator|->
-name|t_canq
-operator|.
-name|c_cc
-operator|)
+operator|==
+literal|0
 operator|||
-operator|(
-name|tp
-operator|->
-name|t_rawq
-operator|.
-name|c_cc
-operator|+
 name|tp
 operator|->
 name|t_canq
 operator|.
 name|c_cc
-operator|<
-name|TTYHOG
-operator|-
-literal|2
-operator|)
+operator|==
+literal|0
 operator|)
 condition|)
 block|{
