@@ -82,21 +82,19 @@ ifdef|#
 directive|ifdef
 name|Solaris
 comment|/* not predefined. */
+ifndef|#
+directive|ifndef
+name|SYSV
 define|#
 directive|define
 name|SYSV
 value|1
+endif|#
+directive|endif
 define|#
 directive|define
 name|System
 value|"Solaris"
-undef|#
-directive|undef
-name|__STDC__
-define|#
-directive|define
-name|__STDC__
-value|0
 else|#
 directive|else
 define|#
@@ -1262,13 +1260,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|SIG_PARAMS
-value|(int sig, ...)
-end_define
 
 begin_define
 define|#

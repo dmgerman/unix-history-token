@@ -1,15 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_expr_stmt
 name|v1
-literal|.8.5
+literal|.8.6
 operator|-
-name|September
-literal|20
+name|October
+literal|30
+operator|,
+literal|1994.
+name|Tweaks
+end_expr_stmt
+
+begin_for
+for|for Solaris in sys.h.  v1.8.5 - September 20
 operator|,
 literal|1994.
 name|Better
+argument_list|(
+argument|?
+argument_list|)
 name|support
-end_expr_stmt
+end_for
 
 begin_for
 for|for term.  v1.8.4 - September 19
