@@ -240,20 +240,6 @@ directive|include
 file|<netatalk/at_extern.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|llc_snap_org_code
-value|llc_un.type_snap.org_code
-end_define
-
-begin_define
-define|#
-directive|define
-name|llc_snap_ether_type
-value|llc_un.type_snap.ether_type
-end_define
-
 begin_decl_stmt
 specifier|extern
 name|u_char
@@ -303,28 +289,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * This really should be defined in if_llc.h but in case it isn't.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|llc_snap
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|llc_snap
-value|llc_un.type_snap
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -902,7 +866,9 @@ name|at_org_code
 argument_list|,
 name|llc
 operator|.
-name|llc_snap_org_code
+name|llc_snap
+operator|.
+name|org_code
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -912,7 +878,9 @@ argument_list|)
 expr_stmt|;
 name|llc
 operator|.
-name|llc_snap_ether_type
+name|llc_snap
+operator|.
+name|ether_type
 operator|=
 name|htons
 argument_list|(
@@ -1989,7 +1957,9 @@ operator|&
 operator|(
 name|l
 operator|->
-name|llc_snap_org_code
+name|llc_snap
+operator|.
+name|org_code
 operator|)
 index|[
 literal|0
@@ -2009,7 +1979,9 @@ name|ntohs
 argument_list|(
 name|l
 operator|->
-name|llc_snap_ether_type
+name|llc_snap
+operator|.
+name|ether_type
 argument_list|)
 operator|==
 name|ETHERTYPE_AT
@@ -2046,7 +2018,9 @@ operator|&
 operator|(
 name|l
 operator|->
-name|llc_snap_org_code
+name|llc_snap
+operator|.
+name|org_code
 operator|)
 index|[
 literal|0
@@ -2066,7 +2040,9 @@ name|ntohs
 argument_list|(
 name|l
 operator|->
-name|llc_snap_ether_type
+name|llc_snap
+operator|.
+name|ether_type
 argument_list|)
 operator|==
 name|ETHERTYPE_AARP
