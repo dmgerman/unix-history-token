@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: pfkey.c,v 1.39 2001/03/05 18:22:17 thorpej Exp $	*/
+comment|/*	$KAME: pfkey.c,v 1.46 2003/08/26 03:37:06 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -85,12 +85,6 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
 end_include
 
 begin_include
@@ -2932,7 +2926,11 @@ operator|-
 literal|1
 decl_stmt|;
 comment|/* receive message */
-do|do
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 if|if
 condition|(
@@ -2951,22 +2949,27 @@ return|return
 operator|-
 literal|1
 return|;
-block|}
-do|while
+if|if
 condition|(
 name|newmsg
 operator|->
 name|sadb_msg_type
-operator|!=
+operator|==
 name|SADB_REGISTER
-operator|||
+operator|&&
 name|newmsg
 operator|->
 name|sadb_msg_pid
-operator|!=
+operator|==
 name|pid
 condition|)
-do|;
+break|break;
+name|free
+argument_list|(
+name|newmsg
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* check and fix */
 name|newmsg
 operator|->
@@ -6464,7 +6467,7 @@ name|xpl
 operator|.
 name|sadb_x_policy_len
 operator|=
-name|PFKEY_UNUNIT64
+name|PFKEY_UNIT64
 argument_list|(
 sizeof|sizeof
 argument_list|(
