@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	5.1 (Berkeley) %G%"
+literal|"@(#)setup.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -658,6 +658,14 @@ operator|=
 name|sblock
 operator|.
 name|fs_minfree
+expr_stmt|;
+name|altsblock
+operator|.
+name|fs_optim
+operator|=
+name|sblock
+operator|.
+name|fs_optim
 expr_stmt|;
 name|altsblock
 operator|.
