@@ -667,20 +667,13 @@ argument_list|)
 condition|)
 block|{
 comment|/* Get the current time of day. */
-name|gettimeofday
-argument_list|(
-operator|(
-expr|struct
-name|timeval
-operator|*
-operator|)
-operator|&
-name|_sched_tod
-argument_list|,
-name|NULL
-argument_list|)
+name|ts
+operator|=
+name|km
+operator|->
+name|km_timeofday
 expr_stmt|;
-name|TIMEVAL_TO_TIMESPEC
+name|TIMESPEC_TO_TIMEVAL
 argument_list|(
 operator|&
 name|_sched_tod
