@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*	fs.h	1.16	%G%	*/
+comment|/*	fs.h	1.17	%G%	*/
 end_comment
 
 begin_comment
@@ -15,7 +15,7 @@ begin_define
 define|#
 directive|define
 name|BBSIZE
-value|1024
+value|8192
 end_define
 
 begin_define
