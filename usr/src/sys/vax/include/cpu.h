@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cpu.h	4.6	81/04/03	*/
+comment|/*	cpu.h	4.7	82/05/26	*/
 end_comment
 
 begin_ifndef
@@ -86,7 +86,7 @@ comment|/* VAX_750 */
 block|}
 name|cpu750
 struct|;
-comment|/* need structure for 7ZZ */
+comment|/* need structure for 730 */
 block|}
 union|;
 end_union
@@ -113,7 +113,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|VAX_7ZZ
+name|VAX_730
 value|3
 end_define
 

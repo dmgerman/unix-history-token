@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.44	82/05/19	*/
+comment|/*	uba.c	4.45	82/05/26	*/
 end_comment
 
 begin_include
@@ -531,12 +531,12 @@ name|ubinfo
 decl_stmt|;
 if|#
 directive|if
-name|VAX7ZZ
+name|VAX730
 if|if
 condition|(
 name|cpu
 operator|==
-name|VAX_7ZZ
+name|VAX_730
 condition|)
 name|flags
 operator|&=
@@ -1522,9 +1522,9 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|VAX7ZZ
+name|VAX730
 case|case
-name|VAX_7ZZ
+name|VAX_730
 case|:
 break|break;
 endif|#
@@ -1785,9 +1785,9 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|VAX7ZZ
+name|VAX730
 case|case
-name|VAX_7ZZ
+name|VAX_730
 case|:
 endif|#
 directive|endif
@@ -1800,7 +1800,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|VAX7ZZ
+name|VAX730
 argument_list|)
 name|mtpr
 argument_list|(

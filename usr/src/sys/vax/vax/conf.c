@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.50	82/05/04	*/
+comment|/*	conf.c	4.51	82/05/26	*/
 end_comment
 
 begin_include
@@ -973,7 +973,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|VAX7ZZ
+name|VAX730
 argument_list|)
 end_if
 

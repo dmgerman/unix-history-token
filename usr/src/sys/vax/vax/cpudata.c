@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cpudata.c	4.5	81/04/13	*/
+comment|/*	cpudata.c	4.6	82/05/26	*/
 end_comment
 
 begin_include
@@ -136,12 +136,12 @@ end_endif
 begin_if
 if|#
 directive|if
-name|VAX7ZZ
+name|VAX730
 end_if
 
 begin_decl_stmt
 name|caddr_t
-name|umaddr7ZZ
+name|umaddr730
 index|[
 literal|1
 index|]
@@ -150,7 +150,7 @@ block|{
 operator|(
 name|caddr_t
 operator|)
-name|UMEM7ZZ
+name|UMEM730
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -221,14 +221,14 @@ end_endif
 begin_if
 if|#
 directive|if
-name|VAX7ZZ
+name|VAX730
 end_if
 
 begin_decl_stmt
 name|short
-name|nexty7ZZ
+name|nexty730
 index|[
-name|NNEX7ZZ
+name|NNEX730
 index|]
 init|=
 block|{
@@ -303,20 +303,20 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|VAX7ZZ
-name|VAX_7ZZ
+name|VAX730
+name|VAX_730
 block|,
-name|NNEX7ZZ
+name|NNEX730
 block|,
-name|NEX7ZZ
+name|NEX730
 block|,
-name|umaddr7ZZ
+name|umaddr730
 block|,
-name|NBDP7ZZ
+name|NBDP730
 block|,
 literal|0
 block|,
-name|nexty7ZZ
+name|nexty730
 block|,
 endif|#
 directive|endif

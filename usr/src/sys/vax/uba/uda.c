@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uda.c	4.3	82/03/14	*/
+comment|/*	uda.c	4.4	82/05/26	*/
 end_comment
 
 begin_include
@@ -1947,7 +1947,7 @@ name|UBA_CANTWAIT
 expr_stmt|;
 break|break;
 case|case
-name|VAX_7ZZ
+name|VAX_730
 case|:
 name|i
 operator|=
