@@ -2304,6 +2304,12 @@ block|}
 name|nprocs
 operator|=
 name|size
+operator|==
+literal|0
+condition|?
+literal|0
+else|:
+name|size
 operator|/
 name|kd
 operator|->
