@@ -13567,20 +13567,12 @@ block|,
 name|configSecurityProfile
 block|}
 block|,
-block|{
-literal|" LOMAC"
-block|,
-literal|"Use Low Watermark Mandatory Access Control at boot"
-block|,
-name|dmenuVarCheck
-block|,
-name|dmenuToggleVariable
-block|,
-name|NULL
-block|,
-literal|"lomac_enable=YES"
-block|}
-block|,
+if|#
+directive|if
+literal|0
+block|{ " LOMAC",         "Use Low Watermark Mandatory Access Control at boot", 	dmenuVarCheck,  dmenuToggleVariable, NULL, "lomac_enable=YES" },
+endif|#
+directive|endif
 block|{
 literal|" NFS port"
 block|,
