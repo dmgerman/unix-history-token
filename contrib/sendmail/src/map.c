@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: map.c,v 8.414.4.54 2001/06/01 08:23:24 gshapiro Exp $"
+literal|"@(#)$Id: map.c,v 8.414.4.55 2001/08/15 22:08:58 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -22948,6 +22948,12 @@ name|EX_UNAVAILABLE
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|hp
+operator|!=
+name|NULL
+condition|)
 name|hesiod_free_list
 argument_list|(
 name|HesiodContext

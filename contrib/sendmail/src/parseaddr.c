@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: parseaddr.c,v 8.234.4.12 2001/05/03 17:24:11 gshapiro Exp $"
+literal|"@(#)$Id: parseaddr.c,v 8.234.4.13 2001/08/14 23:08:13 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3956,17 +3956,6 @@ comment|/* pointer to pattern */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|MAXMATCH
-value|9
-end_define
-
-begin_comment
-comment|/* max params per rewrite */
-end_comment
 
 begin_function
 name|int

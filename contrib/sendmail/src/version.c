@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: version.c,v 8.43.4.37 2001/07/31 22:34:20 gshapiro Exp $"
+literal|"@(#)$Id: version.c,v 8.43.4.39 2001/08/20 14:45:34 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,7 +33,7 @@ name|char
 name|Version
 index|[]
 init|=
-literal|"8.11.5"
+literal|"8.11.6"
 decl_stmt|;
 end_decl_stmt
 

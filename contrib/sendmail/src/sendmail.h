@@ -44,7 +44,7 @@ name|char
 name|SmailId
 index|[]
 init|=
-literal|"@(#)$Id: sendmail.h,v 8.517.4.69 2001/07/20 18:46:01 gshapiro Exp $"
+literal|"@(#)$Id: sendmail.h,v 8.517.4.70 2001/08/14 23:08:12 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4304,6 +4304,17 @@ directive|define
 name|MATCHZERO
 value|CANONHOST
 end_define
+
+begin_define
+define|#
+directive|define
+name|MAXMATCH
+value|9
+end_define
+
+begin_comment
+comment|/* max params per rewrite */
+end_comment
 
 begin_comment
 comment|/* external<==> internal mapping table */
