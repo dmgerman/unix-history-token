@@ -16,20 +16,13 @@ comment|/*  *  * Card configuration  * ==================  *  * This card is unu
 end_comment
 
 begin_comment
-comment|/*  * TODO  *  * _stop - mostly done  *	would be nice to understand shutdown/or power save to prevent RX  * _reset - done  * 	just needs calling in the right places  *	converted panics to resets - when tx packets are the wrong length  *	may be needed in a couple of other places when I do more commands  * havenet - mostly done  *	i think i've got all the places to set it right, but not so sure  *	we reset it in all the right places  * _unload - done  *	recreated most of stop but as card is unplugged don't try and  *	access it  * TX bpf - done  * RX bpf - done  *	I would much prefer to have the complete 802.11 packet dropped to  *	the bpf tap and then have a user land program parse the headers  *	as needed. This way, tcpdump -w can be used to grab the raw data. If  *	needed the 802.11 aware program can "translate" the .11 to ethernet  *	for tcpdump -r  *  * XXX use std timeout code for download? should only be a move to ccs_done  *     when checked can remove some of the stuff in download_timo as it  *     duplicates check_ccs and ccs_done  * XXX and changing mode etc.  * XXX add the start_join_net - i needed it anyway - what about the update  *  * promisoius  * multicast  * shutdown  * ifp->if_hdr length  * antennas and rxlevel  *  * apm  *  * more commands  * ioctls - translation, BSS_ID, countrycode  * faster TX routine  * more translations  * infrastructure mode - maybe need some of the old stuff for checking?  * differeniate between parameters set in attach and init  * start_join_done needs a restart in download_done  * spinning in ray_issue_cmd  * fix the XXX code in start_join_done  *  * command tracking - really needed? if not remove SCP_ stuff  * 	will simplify ray_issue_cmd away  *  * callout handles need rationalising. can probably remove timerh and  * use ccs_timerh for download and sj_timerh  *  * ray_update_params_done needs work  *  * make RAY_DEBUG a knob somehow - either sysctl or IFF_DEBUG  *  * might need the mode changing and update stuff  */
+comment|/*  * TODO  *  * _stop - mostly done  *	would be nice to understand shutdown/or power save to prevent RX  * _reset - done  * 	just needs calling in the right places  *	converted panics to resets - when tx packets are the wrong length  *	may be needed in a couple of other places when I do more commands  * havenet - mostly done  *	i think i've got all the places to set it right, but not so sure  *	we reset it in all the right places  * _unload - done  *	recreated most of stop but as card is unplugged don't try and  *	access it to turn it off  * TX bpf - done  * RX bpf - done  *	I would much prefer to have the complete 802.11 packet dropped to  *	the bpf tap and then have a user land program parse the headers  *	as needed. This way, tcpdump -w can be used to grab the raw data. If  *	needed the 802.11 aware program can "translate" the .11 to ethernet  *	for tcpdump -r  * use std timeout code for download - done  *	was mainly moving a call and removing a load of stuff in  *	download_done as it duplicates check_ccs and ccs_done  * promisoius - done  *  * XXX add the start_join_net - i needed it anyway - what about the update  *	can remove startccs and startcmd as those were used for the timeout  * XXX and changing mode etc.  *  * multicast  * shutdown  * ifp->if_hdr length  * antennas and rxlevel  * _reset  *  * apm  *  * more commands  * ioctls - translation, BSS_ID, countrycode  * faster TX routine  * more translations  * infrastructure mode - maybe need some of the old stuff for checking?  * differeniate between parameters set in attach and init  * start_join_done needs a restart in download_done  * spinning in ray_issue_cmd  * fix the XXX code in start_join_done  *  * callout handles need rationalising. can probably remove timerh and  * use ccs_timerh for download and sj_timerh  *  * ray_update_params_done needs work  *  * make RAY_DEBUG a knob somehow - either sysctl or IFF_DEBUG  *  * might need the mode changing and update stuff  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|XXX
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|XXX_DOWNLOAD_STD_TIMEOUT
 value|0
 end_define
 
@@ -93,17 +86,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|RAY_DOWNLOAD_TIMEOUT
-value|(hz/2)
-end_define
-
-begin_comment
-comment|/* Timeout for downloading startup parameters */
-end_comment
 
 begin_define
 define|#
@@ -1115,12 +1097,6 @@ name|SCP_UPD_FIRST
 value|0x0100
 end_define
 
-begin_if
-if|#
-directive|if
-name|XXX_DOWNLOAD_STD_TIMEOUT
-end_if
-
 begin_define
 define|#
 directive|define
@@ -1134,34 +1110,6 @@ directive|define
 name|SCP_UPD_STARTJOIN
 value|0x0200
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SCP_UPD_STARTUP
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCP_UPD_STARTJOIN
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* XXX_DOWNLOAD_STD_TIMEOUT */
-end_comment
 
 begin_define
 define|#
@@ -1437,7 +1385,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|ray_download_params
+name|ray_download_done
 name|__P
 argument_list|(
 operator|(
@@ -1453,13 +1401,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|ray_download_timo
+name|ray_download_params
 name|__P
 argument_list|(
 operator|(
-name|void
+expr|struct
+name|ray_softc
 operator|*
-name|xsc
+name|sc
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2582,24 +2531,6 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|RAY_DOWNLOAD_TIMEOUT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|RAY_DOWNLOAD_TIMEOUT
-value|(hz / 2)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|RAY_RESET_TIMEOUT
 end_ifndef
 
@@ -3391,17 +3322,6 @@ argument_list|,
 name|sc
 operator|->
 name|ccs_timerh
-argument_list|)
-expr_stmt|;
-name|untimeout
-argument_list|(
-name|ray_download_timo
-argument_list|,
-name|sc
-argument_list|,
-name|sc
-operator|->
-name|timerh
 argument_list|)
 expr_stmt|;
 name|untimeout
@@ -4217,7 +4137,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Network initialisation.  *  * Start up flow is as follows.  * The kernel calls ray_init when the interface is assigned an address.  *   * ray_init does a bit of house keeping before calling ray_download_params.  *  * ray_download_params fills the startup parameter structure out and  * sends it to the card. The download command simply completes so we  * use schedule a timeout function call to ray_download_timo instead  * of spin locking. We pass the ccs in use via sc->sc_startcss.  *  * ray_download_timo checks the ccs for command completion and/or  * errors. Then it tells the card to start an adhoc network or join a  * managed network. This should complete via the interrupt mechanism,  * but the NetBSD driver includes a timeout for some buggy stuff  * somewhere - I've left the hooks in but don't use them. The interrupt  * handler passes control to ray_start_join_done - the ccs is handled  * by the interrupt mechanism.  *  * Once ray_start_join_done has checked the ccs and uploaded/updated  * the network parameters we are ready to process packets. It is then  * safe to call ray_start which is done by the interrupt handler.  */
+comment|/*  * Network initialisation.  *  * Start up flow is as follows.  * The kernel calls ray_init when the interface is assigned an address.  *   * ray_init does a bit of house keeping before calling ray_download_params.  *  * ray_download_params fills the startup parameter structure out and  * sends it to the card. The download command simply completes, so we  * use the timeout code in ray_check_ccs instead of spin locking. The  * passes flow to the standard ccs handler and we eventually end up in  * ray_download_done.  *  * ray_download_done tells the card to start an adhoc network or join  * a managed network. This should complete via the interrupt  * mechanism, but the NetBSD driver includes a timeout for some buggy  * stuff somewhere - I've left the hooks in but don't use them. The  * interrupt handler passes control to ray_start_join_done - the ccs  * is handled by the interrupt mechanism.  *  * Once ray_start_join_done has checked the ccs and uploaded/updated  * the network parameters we are ready to process packets. It is then  * safe to call ray_start which is done by the interrupt handler.  */
 end_comment
 
 begin_function
@@ -4700,15 +4620,45 @@ operator|.
 name|ac_if
 expr_stmt|;
 comment|/*      * Clear out timers and sort out driver state      */
+if|#
+directive|if
+name|RAY_USE_CALLOUT_STOP
+name|callout_stop
+argument_list|(
+name|sc
+operator|->
+name|ccs_timerh
+argument_list|)
+expr_stmt|;
+name|callout_stop
+argument_list|(
+name|sc
+operator|->
+name|timerh
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|untimeout
 argument_list|(
-name|ray_download_timo
+name|ray_check_ccs
 argument_list|,
 name|sc
 argument_list|,
 name|sc
 operator|->
-name|timerh
+name|ccs_timerh
+argument_list|)
+expr_stmt|;
+name|untimeout
+argument_list|(
+name|ray_check_scheduled
+argument_list|,
+name|sc
+argument_list|,
+name|sc
+operator|->
+name|ccs_timerh
 argument_list|)
 expr_stmt|;
 name|untimeout
@@ -4722,6 +4672,9 @@ operator|->
 name|timerh
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* RAY_USE_CALLOUT_STOP */
 if|#
 directive|if
 name|RAY_NEED_STARTJOIN_TIMO
@@ -9155,46 +9108,24 @@ block|{
 case|case
 name|RAY_CMD_START_PARAMS
 case|:
-if|#
-directive|if
-name|XXX_DOWNLOAD_STD_TIMEOUT
 name|RAY_DPRINTFN
 argument_list|(
 literal|20
 argument_list|,
-literal|"ray%d: ray_ccs_done got START_PARAMS - why?\n"
-argument_list|,
+operator|(
+literal|"ray%d: ray_ccs_done got START_PARAMS\n"
+operator|,
 name|sc
 operator|->
 name|unit
+operator|)
 argument_list|)
 expr_stmt|;
-name|ray_cmd_done
-argument_list|(
-name|sc
-argument_list|,
-name|SCP_UPD_STARTUP
-argument_list|)
-expr_stmt|;
-name|ray_download_timo
+name|ray_download_done
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|printf
-argument_list|(
-literal|"ray%d: ray_ccs_done got START_PARAMS - why?\n"
-argument_list|,
-name|sc
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* XXX_DOWNLOAD_STD_TIMEOUT */
 break|break;
 case|case
 name|RAY_CMD_UPDATE_PARAMS
@@ -11735,9 +11666,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|XXX_DOWNLOAD_STD_TIMEOUT
 name|ray_cmd_cancel
 argument_list|(
 name|sc
@@ -11745,12 +11673,6 @@ argument_list|,
 name|SCP_UPD_STARTUP
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-comment|/* XXX cancel timeouts ? */
-endif|#
-directive|endif
-comment|/* XXX_DOWNLOAD_STD_TIMEOUT */
 define|#
 directive|define
 name|MIB4
@@ -12547,10 +12469,6 @@ name|ray_mib_5_default
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Get a free command ccs and issue the command - there is nothing      * to fill in for a START_PARAMS command. The start parameters      * command just gets serviced, so we use a timeout to complete the      * sequence.      */
-if|#
-directive|if
-name|XXX_DOWNLOAD_STD_TIMEOUT
 if|if
 condition|(
 operator|!
@@ -12572,97 +12490,12 @@ operator|->
 name|unit
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-comment|/* XXX do we go back to using the std. timeout code? */
-comment|/* XXX use ray_simple_cmd */
-if|if
-condition|(
-operator|!
-name|ray_alloc_ccs
-argument_list|(
-name|sc
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|sc_startccs
-argument_list|,
-name|RAY_CMD_START_PARAMS
-argument_list|,
-name|SCP_UPD_STARTUP
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ray%d: ray_download_params can't get a CCS\n"
-argument_list|,
-name|sc
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
-name|ray_reset
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|!
-name|ray_issue_cmd
-argument_list|(
-name|sc
-argument_list|,
-name|sc
-operator|->
-name|sc_startccs
-argument_list|,
-name|SCP_UPD_STARTUP
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ray%d: ray_download_params can't issue command\n"
-argument_list|,
-name|sc
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
-name|ray_reset
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* XXX use ray_simple_cmd */
-comment|/* XXX do we go back to using the std. timeout code? */
-name|sc
-operator|->
-name|timerh
-operator|=
-name|timeout
-argument_list|(
-name|ray_download_timo
-argument_list|,
-name|sc
-argument_list|,
-name|RAY_DOWNLOAD_TIMEOUT
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* XXX_DOWNLOAD_STD_TIMEOUT */
 name|RAY_DPRINTFN
 argument_list|(
 literal|15
 argument_list|,
 operator|(
-literal|"ray%d: Download now awaiting timeout\n"
+literal|"ray%d: Download now awaiting completion\n"
 operator|,
 name|sc
 operator|->
@@ -12675,34 +12508,26 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Download timeout routine.  *  * Part of ray_init, download, start_join control flow.  */
+comment|/*  * Download completion routine.  *  * Part of ray_init, download, start_join control flow.  *  * As START_PARAMS is an update command ray_check_ccs has checked the  * ccs status and re-scheduled timeouts if needed.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|ray_download_timo
+name|ray_download_done
 parameter_list|(
-name|xsc
+name|sc
 parameter_list|)
-name|void
-modifier|*
-name|xsc
-decl_stmt|;
-block|{
 name|struct
 name|ray_softc
 modifier|*
 name|sc
-init|=
-name|xsc
 decl_stmt|;
+block|{
 name|size_t
 name|ccs
 decl_stmt|;
-name|u_int8_t
-name|status
-decl_stmt|,
+name|int
 name|cmd
 decl_stmt|;
 name|RAY_DPRINTFN
@@ -12710,7 +12535,7 @@ argument_list|(
 literal|5
 argument_list|,
 operator|(
-literal|"ray%d: ray_download_timo\n"
+literal|"ray%d: ray_download_done\n"
 operator|,
 name|sc
 operator|->
@@ -12723,163 +12548,68 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|status
+name|ray_cmd_done
+argument_list|(
+name|sc
+argument_list|,
+name|SCP_UPD_STARTUP
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|XXX_NETBSD
+comment|/* start network */
+name|ray_cmd_done
+argument_list|(
+name|sc
+argument_list|,
+name|SCP_UPD_STARTUP
+argument_list|)
+expr_stmt|;
+comment|/* ok to start queueing packets */
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_flags
+operator|&=
+operator|~
+name|IFF_OACTIVE
+expr_stmt|;
+name|sc
+operator|->
+name|sc_omode
 operator|=
-name|SRAM_READ_FIELD_1
+name|sc
+operator|->
+name|sc_mode
+expr_stmt|;
+name|memcpy
 argument_list|(
 name|sc
+operator|->
+name|sc_cnwid
 argument_list|,
 name|sc
 operator|->
-name|sc_startccs
+name|sc_dnwid
 argument_list|,
-name|ray_cmd
-argument_list|,
-name|c_status
+sizeof|sizeof
+argument_list|(
+name|sc
+operator|->
+name|sc_cnwid
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|cmd
+name|rcmd
 operator|=
-name|SRAM_READ_FIELD_1
-argument_list|(
-name|sc
-argument_list|,
-name|sc
-operator|->
-name|sc_startccs
-argument_list|,
-name|ray_cmd
-argument_list|,
-name|c_cmd
-argument_list|)
+name|ray_start_join_net
 expr_stmt|;
-name|RAY_DPRINTFN
-argument_list|(
-literal|20
-argument_list|,
-operator|(
-literal|"ray%d: check rayidx %d ccs 0x%x cmd 0x%x status %d\n"
-operator|,
-name|sc
-operator|->
-name|unit
-operator|,
-name|RAY_CCS_INDEX
-argument_list|(
-name|sc
-operator|->
-name|sc_startccs
-argument_list|)
-operator|,
-name|sc
-operator|->
-name|sc_startccs
-operator|,
-name|cmd
-operator|,
-name|status
-operator|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|cmd
-operator|!=
-name|RAY_CMD_START_PARAMS
-operator|)
-operator|||
-operator|(
-operator|(
-name|status
-operator|!=
-name|RAY_CCS_STATUS_FREE
-operator|)
-operator|&&
-operator|(
-name|status
-operator|!=
-name|RAY_CCS_STATUS_BUSY
-operator|)
-operator|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ray%d: Download ccs odd cmd = 0x%02x, status = 0x%02x\n"
-argument_list|,
-name|sc
-operator|->
-name|unit
-argument_list|,
-name|cmd
-argument_list|,
-name|status
-argument_list|)
-expr_stmt|;
-name|ray_init
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*      * If the card is still busy, re-schedule ourself      */
-if|if
-condition|(
-name|status
-operator|==
-name|RAY_CCS_STATUS_BUSY
-condition|)
-block|{
-name|RAY_DPRINTFN
-argument_list|(
-literal|1
-argument_list|,
-operator|(
-literal|"ray%d: ray_download_timo still busy, re-schedule\n"
-operator|,
-name|sc
-operator|->
-name|unit
-operator|)
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|timerh
-operator|=
-name|timeout
-argument_list|(
-name|ray_download_timo
-argument_list|,
-name|sc
-argument_list|,
-name|RAY_DOWNLOAD_TIMEOUT
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-comment|/* Clear the ccs */
-operator|(
-name|void
-operator|)
-name|ray_free_ccs
-argument_list|(
-name|sc
-argument_list|,
-name|sc
-operator|->
-name|sc_startccs
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|sc_startccs
-operator|=
-name|RAY_CCS_LAST
-operator|+
-literal|1
-expr_stmt|;
+endif|#
+directive|endif
+comment|/* XXX_NETBSD */
+comment|/* XXX use start_join_net when included? */
 comment|/*      * Grab a ccs and don't bother updating the network parameters.      * Issue the start/join command and we get interrupted back.      */
 if|if
 condition|(
@@ -12916,7 +12646,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ray%d: ray_download_timo can't get a CCS to start/join net\n"
+literal|"ray%d: ray_download_done can't get a CCS to start/join net\n"
 argument_list|,
 name|sc
 operator|->
@@ -12929,19 +12659,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-name|SRAM_WRITE_FIELD_1
-argument_list|(
-name|sc
-argument_list|,
-name|ccs
-argument_list|,
-name|ray_cmd_net
-argument_list|,
-name|c_upd_param
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -12957,7 +12674,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ray%d: ray_download_timo can't issue start/join\n"
+literal|"ray%d: ray_download_done can't issue start/join\n"
 argument_list|,
 name|sc
 operator|->
@@ -12970,6 +12687,19 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
+name|RAY_DPRINTFN
+argument_list|(
+literal|15
+argument_list|,
+operator|(
+literal|"ray%d: Start-join awaiting interrupt\n"
+operator|,
+name|sc
+operator|->
+name|unit
+operator|)
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|RAY_NEED_STARTJOIN_TIMO
@@ -12989,19 +12719,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* RAY_NEED_STARTJOIN_TIMO */
-name|RAY_DPRINTFN
-argument_list|(
-literal|15
-argument_list|,
-operator|(
-literal|"ray%d: Start-join awaiting interrupt/timeout\n"
-operator|,
-name|sc
-operator|->
-name|unit
-operator|)
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 end_function
@@ -13451,9 +13168,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* RAY_NEED_STARTJOIN_TIMO */
-if|#
-directive|if
-name|XXX_DOWNLOAD_STD_TIMEOUT
 name|ray_cmd_done
 argument_list|(
 name|sc
@@ -13461,12 +13175,6 @@ argument_list|,
 name|SCP_UPD_STARTJOIN
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-comment|/* XXX cancel timeouts ? */
-endif|#
-directive|endif
-comment|/* XXX_DOWNLOAD_STD_TIMEOUT */
 comment|/*      * XXX This switch and the following test are badly done. I      * XXX need to take remedial action in each case branch and      * XXX return from there. Then remove the test.      * XXX FAIL comment       * XXX    if we fired the start command we successfully set the card up      * XXX    so just restart ray_start_join sequence and dont reset the card      * XXX    may need to split download_done for this      * XXX FREE      * XXX    not sure      * XXX BUSY      * XXX    maybe timeout but why would we get an interrupt when      * XXX    the card is not finished?       */
 switch|switch
 condition|(
@@ -13654,7 +13362,7 @@ name|may
 name|need
 name|to
 name|split
-name|download_timo
+name|download_done
 for|for this
 endif|#
 directive|endif
