@@ -2850,23 +2850,31 @@ name|ia_link
 operator|.
 name|tqe_next
 control|)
+block|{
+comment|/* 		 * For a bridge, we want to check the address irrespective 		 * of the receive interface. (This will change slightly 		 * when we have clusters of interfaces). 		 */
 ifdef|#
 directive|ifdef
 name|BRIDGE
-comment|/* 		 * For a bridge, we want to check the address irrespective 		 * of the receive interface. (This will change slightly 		 * when we have clusters of interfaces). 		 */
-if|if
-condition|(
-operator|!
-name|do_bridge
-condition|)
-block|{
+define|#
+directive|define
+name|BRIDGE_TEST
+value|(do_bridge)
 else|#
 directive|else
-block|{
+define|#
+directive|define
+name|BRIDGE_TEST
+value|(0)
+comment|/* cc will optimise the test away */
 endif|#
 directive|endif
 if|if
 condition|(
+operator|(
+name|BRIDGE_TEST
+operator|)
+operator|||
+operator|(
 name|ia
 operator|->
 name|ia_ifp
@@ -2875,6 +2883,7 @@ operator|&
 name|ac
 operator|->
 name|ac_if
+operator|)
 condition|)
 block|{
 name|maybe_ia
@@ -2911,7 +2920,9 @@ operator|.
 name|s_addr
 operator|)
 condition|)
+block|{
 break|break;
+block|}
 block|}
 block|}
 if|if
