@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mem.h	4.11	82/05/26	*/
+comment|/*	mem.h	4.12	82/11/15	*/
 end_comment
 
 begin_comment
@@ -214,7 +214,7 @@ name|M750_INH
 parameter_list|(
 name|mcr
 parameter_list|)
-value|((mcr)->mc_reg[1] = M750_ICRD)
+value|((mcr)->mc_reg[1] = 0)
 end_define
 
 begin_define
@@ -224,7 +224,7 @@ name|M750_ENA
 parameter_list|(
 name|mcr
 parameter_list|)
-value|((mcr)->mc_reg[0] = (M750_UNCORR|M750_CORERR), \ 			    (mcr)->mc_reg[1] = 0)
+value|((mcr)->mc_reg[0] = (M750_UNCORR|M750_CORERR), \ 			    (mcr)->mc_reg[1] = M750_ICRD)
 end_define
 
 begin_define
