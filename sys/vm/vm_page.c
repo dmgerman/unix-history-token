@@ -2729,6 +2729,13 @@ argument_list|,
 name|pindex
 argument_list|)
 expr_stmt|;
+else|else
+name|m
+operator|->
+name|pindex
+operator|=
+name|pindex
+expr_stmt|;
 comment|/* 	 * Don't wakeup too often - wakeup the pageout daemon when 	 * we would be nearly out of memory. 	 */
 if|if
 condition|(
