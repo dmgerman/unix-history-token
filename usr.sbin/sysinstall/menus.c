@@ -8329,6 +8329,9 @@ literal|'X'
 block|,
 literal|']'
 block|,
+operator|(
+name|uintptr_t
+operator|)
 literal|"ntpdate_enable=YES"
 block|}
 block|,
