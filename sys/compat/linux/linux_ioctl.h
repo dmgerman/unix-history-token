@@ -851,6 +851,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LINUX_SOUND_MIXER_WRITE_RECSRC
+value|0x4dff
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUX_SNDCTL_DSP_RESET
 value|0x5000
 end_define
