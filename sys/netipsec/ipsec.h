@@ -783,6 +783,12 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+name|u_quad_t
+name|spdcachelookup
+decl_stmt|;
+name|u_quad_t
+name|spdcachemiss
+decl_stmt|;
 block|}
 struct|;
 end_struct
