@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: dist.c,v 1.73.2.13 1997/01/15 07:31:21 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: dist.c,v 1.73.2.14 1997/01/19 09:59:26 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1982,11 +1982,6 @@ argument_list|(
 literal|"User generated interrupt.\n"
 argument_list|)
 expr_stmt|;
-name|alarm
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -2010,6 +2005,8 @@ decl_stmt|,
 name|status
 decl_stmt|,
 name|total
+decl_stmt|,
+name|resid
 decl_stmt|;
 name|int
 name|cpid
@@ -2091,6 +2088,36 @@ argument_list|,
 name|me
 operator|->
 name|my_name
+argument_list|)
+expr_stmt|;
+comment|/* Make ^C fake a sudden timeout */
+name|new
+operator|.
+name|sa_handler
+operator|=
+name|media_timeout
+expr_stmt|;
+name|new
+operator|.
+name|sa_flags
+operator|=
+literal|0
+expr_stmt|;
+name|new
+operator|.
+name|sa_mask
+operator|=
+literal|0
+expr_stmt|;
+name|sigaction
+argument_list|(
+name|SIGINT
+argument_list|,
+operator|&
+name|new
+argument_list|,
+operator|&
+name|old
 argument_list|)
 expr_stmt|;
 comment|/* Loop through to see if we're in our parent's plans */
@@ -2264,6 +2291,16 @@ argument_list|,
 name|dist
 argument_list|)
 expr_stmt|;
+name|getinfo
+label|:
+name|alarm_set
+argument_list|(
+name|mediaTimeout
+argument_list|()
+argument_list|,
+name|media_timeout
+argument_list|)
+expr_stmt|;
 name|fp
 operator|=
 name|mediaDevice
@@ -2276,6 +2313,11 @@ name|buf
 argument_list|,
 name|TRUE
 argument_list|)
+expr_stmt|;
+name|resid
+operator|=
+name|alarm_clear
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2311,36 +2353,6 @@ operator|*
 name|MAX_ATTRIBS
 argument_list|)
 expr_stmt|;
-comment|/* Make ^C fake a sudden timeout */
-name|new
-operator|.
-name|sa_handler
-operator|=
-name|media_timeout
-expr_stmt|;
-name|new
-operator|.
-name|sa_flags
-operator|=
-literal|0
-expr_stmt|;
-name|new
-operator|.
-name|sa_mask
-operator|=
-literal|0
-expr_stmt|;
-name|sigaction
-argument_list|(
-name|SIGINT
-argument_list|,
-operator|&
-name|new
-argument_list|,
-operator|&
-name|old
-argument_list|)
-expr_stmt|;
 name|alarm_set
 argument_list|(
 name|mediaTimeout
@@ -2358,22 +2370,15 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-name|sigaction
-argument_list|(
-name|SIGINT
-argument_list|,
-operator|&
-name|old
-argument_list|,
-name|NULL
-argument_list|)
+name|resid
+operator|=
+name|alarm_clear
+argument_list|()
 expr_stmt|;
-comment|/* Restore signal handler */
 if|if
 condition|(
 operator|!
-name|alarm_clear
-argument_list|()
+name|resid
 operator|||
 name|DITEM_STATUS
 argument_list|(
@@ -2384,10 +2389,16 @@ name|DITEM_FAILURE
 condition|)
 name|msgConfirm
 argument_list|(
-literal|"Cannot parse information file for the %s distribution!\n"
+literal|"Cannot parse information file for the %s distribution: %s\n"
 literal|"Please verify that your media is valid and try again."
 argument_list|,
 name|dist
+argument_list|,
+name|resid
+condition|?
+literal|"I/O error"
+else|:
+literal|"Timeout or user interrupt"
 argument_list|)
 expr_stmt|;
 else|else
@@ -2439,9 +2450,25 @@ name|FILE
 operator|*
 operator|)
 name|IO_ERROR
+operator|||
+operator|!
+name|resid
 condition|)
 block|{
 comment|/* Hard error, can't continue */
+name|msgConfirm
+argument_list|(
+literal|"Unable to open %s: %s.\nReinitializing media."
+argument_list|,
+name|buf
+argument_list|,
+name|resid
+condition|?
+literal|"I/O error."
+else|:
+literal|"Timeout or user interrupt."
+argument_list|)
+expr_stmt|;
 name|mediaDevice
 operator|->
 name|shutdown
@@ -2449,12 +2476,28 @@ argument_list|(
 name|mediaDevice
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|mediaDevice
+operator|->
+name|init
+argument_list|(
+name|mediaDevice
+argument_list|)
+condition|)
+block|{
 name|status
 operator|=
 name|FALSE
 expr_stmt|;
 goto|goto
 name|done
+goto|;
+block|}
+else|else
+goto|goto
+name|getinfo
 goto|;
 block|}
 else|else
@@ -2475,6 +2518,16 @@ name|dist
 argument_list|)
 expr_stmt|;
 comment|/* 	     * Passing TRUE as 3rd parm to get routine makes this a "probing" get, for which errors 	     * are not considered too significant. 	     */
+name|getsingle
+label|:
+name|alarm_set
+argument_list|(
+name|mediaTimeout
+argument_list|()
+argument_list|,
+name|media_timeout
+argument_list|)
+expr_stmt|;
 name|fp
 operator|=
 name|mediaDevice
@@ -2487,6 +2540,11 @@ name|buf
 argument_list|,
 name|TRUE
 argument_list|)
+expr_stmt|;
+name|resid
+operator|=
+name|alarm_clear
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2548,9 +2606,33 @@ name|FILE
 operator|*
 operator|)
 name|IO_ERROR
+operator|||
+operator|!
+name|resid
 condition|)
 block|{
 comment|/* Hard error, can't continue */
+if|if
+condition|(
+operator|!
+name|resid
+condition|)
+comment|/* result of a timeout */
+name|msgConfirm
+argument_list|(
+literal|"Unable to open %s: Timeout or user interrupt"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+else|else
+name|msgConfirm
+argument_list|(
+literal|"Unable to open %s: I/O error"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
 name|mediaDevice
 operator|->
 name|shutdown
@@ -2558,12 +2640,28 @@ argument_list|(
 name|mediaDevice
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|mediaDevice
+operator|->
+name|init
+argument_list|(
+name|mediaDevice
+argument_list|)
+condition|)
+block|{
 name|status
 operator|=
 name|FALSE
 expr_stmt|;
 goto|goto
 name|done
+goto|;
+block|}
+else|else
+goto|goto
+name|getsingle
 goto|;
 block|}
 else|else
@@ -2634,36 +2732,6 @@ operator|&
 name|cpid
 argument_list|)
 expr_stmt|;
-comment|/* Make ^C fake a sudden timeout */
-name|new
-operator|.
-name|sa_handler
-operator|=
-name|media_timeout
-expr_stmt|;
-name|new
-operator|.
-name|sa_flags
-operator|=
-literal|0
-expr_stmt|;
-name|new
-operator|.
-name|sa_mask
-operator|=
-literal|0
-expr_stmt|;
-name|sigaction
-argument_list|(
-name|SIGINT
-argument_list|,
-operator|&
-name|new
-argument_list|,
-operator|&
-name|old
-argument_list|)
-expr_stmt|;
 comment|/* And go for all the chunks */
 for|for
 control|(
@@ -2696,6 +2764,8 @@ name|last_msg
 operator|=
 literal|0
 expr_stmt|;
+name|getchunk
+label|:
 name|snprintf
 argument_list|(
 name|buf
@@ -2744,6 +2814,14 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+name|alarm_set
+argument_list|(
+name|mediaTimeout
+argument_list|()
+argument_list|,
+name|media_timeout
+argument_list|)
+expr_stmt|;
 name|fp
 operator|=
 name|mediaDevice
@@ -2757,6 +2835,11 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+name|resid
+operator|=
+name|alarm_clear
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|fp
@@ -2766,18 +2849,66 @@ name|FILE
 operator|*
 operator|)
 literal|0
+operator|||
+operator|!
+name|resid
 condition|)
 block|{
+if|if
+condition|(
+name|fp
+operator|==
+operator|(
+name|FILE
+operator|*
+operator|)
+literal|0
+condition|)
 name|msgConfirm
 argument_list|(
-literal|"failed to retreive piece file %s!\n"
-literal|"Aborting the transfer"
+literal|"Failed to find %s on this media.  Reinitializing media."
 argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+else|else
+name|msgConfirm
+argument_list|(
+literal|"failed to retreive piece file %s.\n"
+literal|"%s: Reinitializing media."
+argument_list|,
+name|buf
+argument_list|,
+name|resid
+condition|?
+literal|"I/O error"
+else|:
+literal|"Timeout or user interrupt"
+argument_list|)
+expr_stmt|;
+name|mediaDevice
+operator|->
+name|shutdown
+argument_list|(
+name|mediaDevice
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|mediaDevice
+operator|->
+name|init
+argument_list|(
+name|mediaDevice
+argument_list|)
+condition|)
 goto|goto
 name|punt
+goto|;
+else|else
+goto|goto
+name|getchunk
 goto|;
 block|}
 name|snprintf
@@ -2873,10 +3004,17 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Media read error:  Timeout or user abort."
+literal|"Media read error: Timeout or user abort."
 argument_list|)
 expr_stmt|;
-break|break;
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+goto|goto
+name|punt
+goto|;
 block|}
 elseif|else
 if|if
@@ -3054,17 +3192,6 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
-name|sigaction
-argument_list|(
-name|SIGINT
-argument_list|,
-operator|&
-name|old
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-comment|/* Restore signal handler */
 name|close
 argument_list|(
 name|fd2
@@ -3206,6 +3333,17 @@ expr_stmt|;
 else|else
 continue|continue;
 block|}
+name|sigaction
+argument_list|(
+name|SIGINT
+argument_list|,
+operator|&
+name|old
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* Restore signal handler */
 name|restorescr
 argument_list|(
 name|w

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: tape.c,v 1.13.2.1 1996/12/12 11:18:28 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: tape.c,v 1.13.2.2 1997/01/19 09:59:41 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -68,16 +68,49 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
+comment|/* This is REALLY gross, but we need to do the init later in get due to the fact      * that media is initialized BEFORE a filesystem is mounted now.      */
+return|return
+name|TRUE
+return|;
+block|}
+end_function
+
+begin_function
+name|FILE
+modifier|*
+name|mediaGetTape
+parameter_list|(
+name|Device
+modifier|*
+name|dev
+parameter_list|,
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|Boolean
+name|probe
+parameter_list|)
+block|{
+name|char
+name|buf
+index|[
+name|PATH_MAX
+index|]
+decl_stmt|;
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|tapeInitted
 condition|)
-return|return
-name|TRUE
-return|;
+block|{
 name|msgDebug
 argument_list|(
 literal|"Tape init routine called for %s (private dir is %s)\n"
@@ -111,7 +144,7 @@ block|{
 name|msgConfirm
 argument_list|(
 literal|"Unable to CD to %s before extracting tape!\n"
-literal|"Tape media not selected."
+literal|"Tape media is not selected and thus cannot be installed from."
 argument_list|,
 name|dev
 operator|->
@@ -119,13 +152,17 @@ name|private
 argument_list|)
 expr_stmt|;
 return|return
-name|FALSE
+operator|(
+name|FILE
+operator|*
+operator|)
+name|IO_ERROR
 return|;
 block|}
 comment|/* We know the tape is already in the drive, so go for it */
 name|msgNotify
 argument_list|(
-literal|"Attempting to extract from %s..."
+literal|"First extracting distributions from %s..."
 argument_list|,
 name|dev
 operator|->
@@ -190,11 +227,9 @@ argument_list|(
 literal|"Tape initialized successfully.\n"
 argument_list|)
 expr_stmt|;
-return|return
-name|TRUE
-return|;
 block|}
 else|else
+block|{
 name|msgConfirm
 argument_list|(
 literal|"Tape extract command failed with status %d!\n"
@@ -204,38 +239,14 @@ name|i
 argument_list|)
 expr_stmt|;
 return|return
-name|FALSE
+operator|(
+name|FILE
+operator|*
+operator|)
+name|IO_ERROR
 return|;
 block|}
-end_function
-
-begin_function
-name|FILE
-modifier|*
-name|mediaGetTape
-parameter_list|(
-name|Device
-modifier|*
-name|dev
-parameter_list|,
-name|char
-modifier|*
-name|file
-parameter_list|,
-name|Boolean
-name|probe
-parameter_list|)
-block|{
-name|char
-name|buf
-index|[
-name|PATH_MAX
-index|]
-decl_stmt|;
-name|FILE
-modifier|*
-name|fp
-decl_stmt|;
+block|}
 name|sprintf
 argument_list|(
 name|buf
@@ -343,15 +354,6 @@ operator|!
 name|tapeInitted
 condition|)
 return|return;
-name|msgDebug
-argument_list|(
-literal|"Shutdown of tape device - %s will be cleaned\n"
-argument_list|,
-name|dev
-operator|->
-name|private
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|file_readable
@@ -364,7 +366,11 @@ condition|)
 block|{
 name|msgNotify
 argument_list|(
-literal|"Cleaning up results of tape extract.."
+literal|"Cleaning up results of tape extract in %s.."
+argument_list|,
+name|dev
+operator|->
+name|private
 argument_list|)
 expr_stmt|;
 operator|(
