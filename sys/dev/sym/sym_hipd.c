@@ -11,7 +11,7 @@ begin_define
 define|#
 directive|define
 name|SYM_DRIVER_NAME
-value|"sym-1.5.3-20000506"
+value|"sym-1.6.2-20000614"
 end_define
 
 begin_comment
@@ -41,7 +41,7 @@ file|<sys/param.h>
 end_include
 
 begin_comment
-comment|/*  *  Only use the BUS stuff for PCI under FreeBSD 4 and later versions.  *  Note that the old BUS stuff also works for FreeBSD 4 and spares   *  about 1.5KB for the driver object file.  */
+comment|/*  *  Only use the BUS stuff for PCI under FreeBSD 4 and later versions.  *  Note that the old BUS stuff also works for FreeBSD 4 and spares   *  about 1 KB for the driver object file.  */
 end_comment
 
 begin_if
@@ -55,14 +55,57 @@ end_if
 begin_define
 define|#
 directive|define
+name|FreeBSD_Bus_Dma_Abstraction
+end_define
+
+begin_define
+define|#
+directive|define
 name|FreeBSD_Bus_Io_Abstraction
 end_define
 
 begin_define
 define|#
 directive|define
-name|FreeBSD_Bus_Dma_Abstraction
+name|FreeBSD_Bus_Space_Abstraction
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  *  Driver configuration options.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"opt_sym.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/sym/sym_conf.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FreeBSD_Bus_Io_Abstraction
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|"ncr.h"
+end_include
+
+begin_comment
+comment|/* To know if the ncr has been configured */
+end_comment
 
 begin_endif
 endif|#
@@ -128,17 +171,43 @@ directive|include
 file|<pci/pcivar.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FreeBSD_Bus_Space_Abstraction
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<machine/bus_memio.h>
 end_include
 
+begin_comment
+comment|/*  *  Only include bus_pio if needed.  *  This avoids bus space primitives to be uselessly bloated   *  by out-of-age PIO operations.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYM_CONF_IOMAPPED
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<machine/bus_pio.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -235,35 +304,6 @@ directive|include
 file|<vm/pmap.h>
 end_include
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_extern.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Short and quite clear integer types */
 end_comment
@@ -311,26 +351,8 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Driver configuration and definitions */
+comment|/*  *  Driver definitions.  */
 end_comment
-
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
-begin_include
-include|#
-directive|include
-file|"opt_sym.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/sym/sym_conf.h>
-end_include
 
 begin_include
 include|#
@@ -344,70 +366,16 @@ directive|include
 file|<dev/sym/sym_fw.h>
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|"ncr.h"
-end_include
-
 begin_comment
-comment|/* To know if the ncr has been configured */
+comment|/*  *  IA32 architecture does not reorder STORES and prevents  *  LOADS from passing STORES. It is called `program order'   *  by Intel and allows device drivers to deal with memory   *  ordering by only ensuring that the code is not reordered    *  by the compiler when ordering is required.  *  Other architectures implement a weaker ordering that   *  requires memory barriers (and also IO barriers when they   *  make sense) to be used.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<pci/sym_conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pci/sym_defs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pci/sym_fw.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  *  On x86 architecture, write buffers management does not   *  reorder writes to memory. So, preventing compiler from    *  optimizing the code is enough to guarantee some ordering   *  when the CPU is writing data accessed by the PCI chip.  *  On Alpha architecture, explicit barriers are to be used.  *  By the way, the *BSD semantic associates the barrier   *  with some window on the BUS and the corresponding verbs   *  are for now unused. What a strangeness. The driver must   *  ensure that accesses from the CPU to the start and done   *  queues are not reordered by either the compiler or the   *  CPU and uses 'volatile' for this purpose.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__alpha__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|MEMORY_BARRIER
-parameter_list|()
-value|alpha_mb()
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/*__i386__*/
-end_comment
+begin_if
+if|#
+directive|if
+name|defined
+name|__i386__
+end_if
 
 begin_define
 define|#
@@ -417,10 +385,301 @@ parameter_list|()
 value|do { ; } while(0)
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+name|__alpha__
+end_elif
+
+begin_define
+define|#
+directive|define
+name|MEMORY_BARRIER
+parameter_list|()
+value|alpha_mb()
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+name|__powerpc__
+end_elif
+
+begin_define
+define|#
+directive|define
+name|MEMORY_BARRIER
+parameter_list|()
+value|__asm__ volatile("eieio; sync" : : : "memory")
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+name|__ia64__
+end_elif
+
+begin_define
+define|#
+directive|define
+name|MEMORY_BARRIER
+parameter_list|()
+value|__asm__ volatile("mf.a; mf" : : : "memory")
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+name|__sparc64__
+end_elif
+
+begin_error
+error|#
+directive|error
+literal|"Sorry, but maintainer is ignorant about sparc64 :)"
+end_error
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_error
+error|#
+directive|error
+literal|"Not supported platform"
+end_error
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  *  Portable but silly implemented byte order primitives.  *  We define the primitives we need, since FreeBSD doesn't   *  seem to have them yet.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+end_if
+
+begin_define
+define|#
+directive|define
+name|__revb16
+parameter_list|(
+name|x
+parameter_list|)
+value|(	(((u16)(x)& (u16)0x00ffU)<< 8) | \ 			(((u16)(x)& (u16)0xff00U)>> 8) 	)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__revb32
+parameter_list|(
+name|x
+parameter_list|)
+value|(	(((u32)(x)& 0x000000ffU)<< 24) | \ 			(((u32)(x)& 0x0000ff00U)<<  8) | \ 			(((u32)(x)& 0x00ff0000U)>>  8) | \ 			(((u32)(x)& 0xff000000U)>> 24)	)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__htole16
+parameter_list|(
+name|v
+parameter_list|)
+value|__revb16(v)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__htole32
+parameter_list|(
+name|v
+parameter_list|)
+value|__revb32(v)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__le16toh
+parameter_list|(
+name|v
+parameter_list|)
+value|__htole16(v)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__le32toh
+parameter_list|(
+name|v
+parameter_list|)
+value|__htole32(v)
+end_define
+
+begin_function
+specifier|static
+name|__inline__
+name|u16
+name|_htole16
+parameter_list|(
+name|u16
+name|v
+parameter_list|)
+block|{
+return|return
+name|__htole16
+argument_list|(
+name|v
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|u32
+name|_htole32
+parameter_list|(
+name|u32
+name|v
+parameter_list|)
+block|{
+return|return
+name|__htole32
+argument_list|(
+name|v
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_define
+define|#
+directive|define
+name|_le16toh
+value|_htole16
+end_define
+
+begin_define
+define|#
+directive|define
+name|_le32toh
+value|_htole32
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* LITTLE ENDIAN */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__htole16
+parameter_list|(
+name|v
+parameter_list|)
+value|(v)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__htole32
+parameter_list|(
+name|v
+parameter_list|)
+value|(v)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__le16toh
+parameter_list|(
+name|v
+parameter_list|)
+value|(v)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__le32toh
+parameter_list|(
+name|v
+parameter_list|)
+value|(v)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_htole16
+parameter_list|(
+name|v
+parameter_list|)
+value|(v)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_htole32
+parameter_list|(
+name|v
+parameter_list|)
+value|(v)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_le16toh
+parameter_list|(
+name|v
+parameter_list|)
+value|(v)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_le32toh
+parameter_list|(
+name|v
+parameter_list|)
+value|(v)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* BYTE_ORDER */
+end_comment
 
 begin_comment
 comment|/*  *  A la VMS/CAM-3 queue management.  */
@@ -710,7 +969,7 @@ parameter_list|,
 name|member
 parameter_list|)
 define|\
-value|((type *)((char *)(ptr)-(unsigned long)(&((type *)0)->member)))
+value|((type *)((char *)(ptr)-(unsigned int)(&((type *)0)->member)))
 end_define
 
 begin_define
@@ -1347,58 +1606,6 @@ value|(np->verbose)
 end_define
 
 begin_comment
-comment|/*  *  Copy from main memory to PCI memory space.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__alpha__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|memcpy_to_pci
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|,
-name|n
-parameter_list|)
-value|memcpy_toio((u32)(d), (void *)(s), (n))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/*__i386__*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|memcpy_to_pci
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|,
-name|n
-parameter_list|)
-value|bcopy((s), (void *)(d), (n))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  *  Insert a delay in micro-seconds and milli-seconds.  */
 end_comment
 
@@ -1407,7 +1614,7 @@ specifier|static
 name|void
 name|UDELAY
 parameter_list|(
-name|long
+name|int
 name|us
 parameter_list|)
 block|{
@@ -1424,7 +1631,7 @@ specifier|static
 name|void
 name|MDELAY
 parameter_list|(
-name|long
+name|int
 name|ms
 parameter_list|)
 block|{
@@ -3905,7 +4112,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Some poor sync table that refers to Tekram NVRAM layout.  */
+comment|/*  *  Some poor and bogus sync table that refers to Tekram NVRAM layout.  */
 end_comment
 
 begin_ifdef
@@ -4028,7 +4235,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  *  Some provision for a possible big endian support.  *  By the way some Symbios chips also may support some kind   *  of big endian byte ordering.  *  For now, this stuff does not deserve any comments. :)  */
+comment|/*  *  Some provision for a possible big endian mode supported by   *  Symbios chips (never seen, by the way).  *  For now, this stuff does not deserve any comments. :)  */
 end_comment
 
 begin_define
@@ -4051,6 +4258,43 @@ parameter_list|)
 value|(o)
 end_define
 
+begin_comment
+comment|/*  *  Some provision for support for BIG ENDIAN CPU.  *  Btw, FreeBSD does not seem to be ready yet for big endian.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+end_if
+
+begin_define
+define|#
+directive|define
+name|cpu_to_scr
+parameter_list|(
+name|dw
+parameter_list|)
+value|_htole32(dw)
+end_define
+
+begin_define
+define|#
+directive|define
+name|scr_to_cpu
+parameter_list|(
+name|dw
+parameter_list|)
+value|_le32toh(dw)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -4071,12 +4315,229 @@ parameter_list|)
 value|(dw)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  *  Access to the controller chip.  *  *  If SYM_CONF_IOMAPPED is defined, the driver will use   *  normal IOs instead of the MEMORY MAPPED IO method    *  recommended by PCI specifications.  */
+comment|/*  *  Access to the chip IO registers and on-chip RAM.  *  We use the `bus space' interface under FreeBSD-4 and   *  later kernel versions.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FreeBSD_Bus_Space_Abstraction
+end_ifdef
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SYM_CONF_IOMAPPED
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|INB_OFF
+parameter_list|(
+name|o
+parameter_list|)
+value|bus_space_read_1(np->io_tag, np->io_bsh, o)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INW_OFF
+parameter_list|(
+name|o
+parameter_list|)
+value|bus_space_read_2(np->io_tag, np->io_bsh, o)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INL_OFF
+parameter_list|(
+name|o
+parameter_list|)
+value|bus_space_read_4(np->io_tag, np->io_bsh, o)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OUTB_OFF
+parameter_list|(
+name|o
+parameter_list|,
+name|v
+parameter_list|)
+value|bus_space_write_1(np->io_tag, np->io_bsh, o, (v))
+end_define
+
+begin_define
+define|#
+directive|define
+name|OUTW_OFF
+parameter_list|(
+name|o
+parameter_list|,
+name|v
+parameter_list|)
+value|bus_space_write_2(np->io_tag, np->io_bsh, o, (v))
+end_define
+
+begin_define
+define|#
+directive|define
+name|OUTL_OFF
+parameter_list|(
+name|o
+parameter_list|,
+name|v
+parameter_list|)
+value|bus_space_write_4(np->io_tag, np->io_bsh, o, (v))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* Memory mapped IO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INB_OFF
+parameter_list|(
+name|o
+parameter_list|)
+value|bus_space_read_1(np->mmio_tag, np->mmio_bsh, o)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INW_OFF
+parameter_list|(
+name|o
+parameter_list|)
+value|bus_space_read_2(np->mmio_tag, np->mmio_bsh, o)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INL_OFF
+parameter_list|(
+name|o
+parameter_list|)
+value|bus_space_read_4(np->mmio_tag, np->mmio_bsh, o)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OUTB_OFF
+parameter_list|(
+name|o
+parameter_list|,
+name|v
+parameter_list|)
+value|bus_space_write_1(np->mmio_tag, np->mmio_bsh, o, (v))
+end_define
+
+begin_define
+define|#
+directive|define
+name|OUTW_OFF
+parameter_list|(
+name|o
+parameter_list|,
+name|v
+parameter_list|)
+value|bus_space_write_2(np->mmio_tag, np->mmio_bsh, o, (v))
+end_define
+
+begin_define
+define|#
+directive|define
+name|OUTL_OFF
+parameter_list|(
+name|o
+parameter_list|,
+name|v
+parameter_list|)
+value|bus_space_write_4(np->mmio_tag, np->mmio_bsh, o, (v))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SYM_CONF_IOMAPPED */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OUTRAM_OFF
+parameter_list|(
+name|o
+parameter_list|,
+name|a
+parameter_list|,
+name|l
+parameter_list|)
+define|\
+value|bus_space_write_region_1(np->ram_tag, np->ram_bsh, o, (a), (l))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* not defined FreeBSD_Bus_Space_Abstraction */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"BIG ENDIAN support requires bus space kernel interface"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  *  Access to the chip IO registers and on-chip RAM.  *  We use legacy MMIO and IO interface for FreeBSD 3.X versions.  */
 end_comment
 
 begin_comment
-comment|/*  *  Define some understable verbs so we will not suffer of   *  having to deal with the stupid PC tokens for IO.  */
+comment|/*  *  Define some understable verbs for IO and MMIO.  */
 end_comment
 
 begin_define
@@ -4217,6 +4678,20 @@ parameter_list|)
 value|writel(a, b)
 end_define
 
+begin_define
+define|#
+directive|define
+name|memcpy_to_pci
+parameter_list|(
+name|d
+parameter_list|,
+name|s
+parameter_list|,
+name|n
+parameter_list|)
+value|memcpy_toio((u32)(d), (void *)(s), (n))
+end_define
+
 begin_else
 else|#
 directive|else
@@ -4290,6 +4765,20 @@ parameter_list|,
 name|b
 parameter_list|)
 value|(*(volatile unsigned int *) (a)) = cpu_to_scr(b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|memcpy_to_pci
+parameter_list|(
+name|d
+parameter_list|,
+name|s
+parameter_list|,
+name|n
+parameter_list|)
+value|bcopy((s), (void *)(d), (n))
 end_define
 
 begin_endif
@@ -4456,8 +4945,31 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|OUTRAM_OFF
+parameter_list|(
+name|o
+parameter_list|,
+name|a
+parameter_list|,
+name|l
+parameter_list|)
+value|memcpy_to_pci(np->ram_va + (o), (a), (l))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  *  Common to both normal IO and MMIO.  */
+comment|/* FreeBSD_Bus_Space_Abstraction */
+end_comment
+
+begin_comment
+comment|/*  *  Common definitions for both bus space and legacy IO methods.  */
 end_comment
 
 begin_define
@@ -4596,6 +5108,30 @@ parameter_list|,
 name|m
 parameter_list|)
 value|OUTL(r, INL(r)& ~(m))
+end_define
+
+begin_comment
+comment|/*  *  We normally want the chip to have a consistent view  *  of driver internal data structures when we restart it.  *  Thus these macros.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OUTL_DSP
+parameter_list|(
+name|v
+parameter_list|)
+define|\
+value|do {					\ 		MEMORY_BARRIER();		\ 		OUTL (nc_dsp, (v));		\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OUTONB_STD
+parameter_list|()
+define|\
+value|do {					\ 		MEMORY_BARRIER();		\ 		OUTONB (nc_dcntl, (STD|NOCOM));	\ 	} while (0)
 end_define
 
 begin_comment
@@ -5876,7 +6412,7 @@ value|2
 endif|#
 directive|endif
 comment|/* 	 *  Other fields. 	 */
-name|u_long
+name|u32
 name|ccb_ba
 decl_stmt|;
 comment|/* BUS address of this CCB	*/
@@ -6330,10 +6866,14 @@ name|u_char
 name|clock_divn
 decl_stmt|;
 comment|/* Number of clock divisors	*/
-name|u_long
+name|u32
 name|clock_khz
 decl_stmt|;
 comment|/* SCSI clock frequency in KHz	*/
+name|u32
+name|pciclk_khz
+decl_stmt|;
+comment|/* Estimated PCI clock  in KHz	*/
 comment|/* 	 *  Start queue management. 	 *  It is filled up by the host processor and accessed by the  	 *  SCRIPTS processor in order to start SCSI commands. 	 */
 specifier|volatile
 comment|/* Prevent code optimizations	*/
@@ -7136,22 +7676,22 @@ block|}
 comment|/* 	 *  Remove a couple of work-arounds specific to C1010 if  	 *  they are not desirable. See `sym_fw2.h' for more details. 	 */
 if|if
 condition|(
+operator|!
 operator|(
 name|np
 operator|->
-name|features
-operator|&
-operator|(
-name|FE_C10
-operator||
-name|FE_PCI66
-operator|)
-operator|)
-operator|!=
-operator|(
-name|FE_C10
-operator||
-name|FE_PCI66
+name|device_id
+operator|==
+name|PCI_ID_LSI53C1010_2
+operator|&&
+comment|/* np->revision_id< 0xff */
+literal|1
+operator|&&
+name|np
+operator|->
+name|pciclk_khz
+operator|<
+literal|60000
 operator|)
 condition|)
 block|{
@@ -7182,19 +7722,17 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
 operator|(
 name|np
 operator|->
-name|features
-operator|&
-operator|(
-name|FE_C10
-operator||
-name|FE_PCI66
+name|device_id
+operator|==
+name|PCI_ID_LSI53C1010
+operator|&&
+comment|/* np->revision_id< 0xff */
+literal|1
 operator|)
-operator|)
-operator|!=
-name|FE_C10
 condition|)
 block|{
 name|scripta0
@@ -9050,7 +9588,7 @@ parameter_list|(
 name|hcb_p
 name|np
 parameter_list|,
-name|u_long
+name|u32
 name|dsa
 parameter_list|)
 function_decl|;
@@ -10139,7 +10677,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|u32
 name|div_10M
 index|[]
 init|=
@@ -10590,7 +11128,7 @@ block|{
 name|u_char
 name|burst_max
 decl_stmt|;
-name|u_long
+name|u32
 name|period
 decl_stmt|;
 name|int
@@ -11037,11 +11575,8 @@ name|device_id
 operator|==
 name|PCI_ID_LSI53C1010
 operator|&&
-name|np
-operator|->
-name|revision_id
-operator|<
-literal|0x45
+comment|/* np->revision_id< 0xff */
+literal|1
 condition|)
 name|np
 operator|->
@@ -11649,7 +12184,16 @@ argument_list|,
 name|nvram
 argument_list|)
 expr_stmt|;
-comment|/* 		 *  For now, guess PPR support from the period. 		 */
+comment|/* 		 *  For now, guess PPR/DT support from the period  		 *  and BUS width. 		 */
+if|if
+condition|(
+name|np
+operator|->
+name|features
+operator|&
+name|FE_ULTRA3
+condition|)
+block|{
 if|if
 condition|(
 name|tp
@@ -11661,6 +12205,16 @@ operator|.
 name|period
 operator|<=
 literal|9
+operator|&&
+name|tp
+operator|->
+name|tinfo
+operator|.
+name|user
+operator|.
+name|width
+operator|==
+name|BUS_16_BIT
 condition|)
 block|{
 name|tp
@@ -11685,6 +12239,7 @@ name|np
 operator|->
 name|maxoffs_dt
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -12979,7 +13534,7 @@ name|i
 decl_stmt|,
 name|n
 decl_stmt|;
-name|u_long
+name|u32
 name|dsa
 decl_stmt|;
 name|n
@@ -13070,13 +13625,16 @@ block|}
 else|else
 name|printf
 argument_list|(
-literal|"%s: bad DSA (%lx) in done queue.\n"
+literal|"%s: bad DSA (%x) in done queue.\n"
 argument_list|,
 name|sym_name
 argument_list|(
 name|np
 argument_list|)
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|dsa
 argument_list|)
 expr_stmt|;
@@ -13160,7 +13718,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|u_long
+name|u32
 name|phys
 decl_stmt|;
 comment|/* 	 *  Reset chip if asked, otherwise just clear fifos.  	 */
@@ -13548,6 +14106,22 @@ literal|0x0c
 argument_list|)
 expr_stmt|;
 comment|/* HTH disabled  STO 0.25 sec */
+comment|/* 	 *  For now, disable AIP generation on C1010-66. 	 */
+if|if
+condition|(
+name|np
+operator|->
+name|device_id
+operator|==
+name|PCI_ID_LSI53C1010_2
+condition|)
+name|OUTB
+argument_list|(
+name|nc_aipcntl1
+argument_list|,
+name|DISAIP
+argument_list|)
+expr_stmt|;
 comment|/* 	 *  C10101 Errata. 	 *  Errant SGE's when in narrow. Write bits 4& 5 of 	 *  STEST1 register to disable SGE. We probably should do  	 *  that from SCRIPTS for each selection/reselection, but  	 *  I just don't want. :) 	 */
 if|if
 condition|(
@@ -13557,11 +14131,8 @@ name|device_id
 operator|==
 name|PCI_ID_LSI53C1010
 operator|&&
-name|np
-operator|->
-name|revision_id
-operator|<
-literal|0x45
+comment|/* np->revision_id< 0xff */
+literal|1
 condition|)
 name|OUTB
 argument_list|(
@@ -13940,12 +14511,8 @@ operator|==
 literal|8192
 condition|)
 block|{
-name|memcpy_to_pci
+name|OUTRAM_OFF
 argument_list|(
-name|np
-operator|->
-name|ram_va
-operator|+
 literal|4096
 argument_list|,
 name|np
@@ -14004,11 +14571,9 @@ argument_list|,
 name|init
 argument_list|)
 expr_stmt|;
-name|memcpy_to_pci
+name|OUTRAM_OFF
 argument_list|(
-name|np
-operator|->
-name|ram_va
+literal|0
 argument_list|,
 name|np
 operator|->
@@ -14036,9 +14601,6 @@ name|istat_sem
 operator|=
 literal|0
 expr_stmt|;
-name|MEMORY_BARRIER
-argument_list|()
-expr_stmt|;
 name|OUTL
 argument_list|(
 name|nc_dsa
@@ -14048,10 +14610,8 @@ operator|->
 name|hcb_ba
 argument_list|)
 expr_stmt|;
-name|OUTL
+name|OUTL_DSP
 argument_list|(
-name|nc_dsp
-argument_list|,
 name|phys
 argument_list|)
 expr_stmt|;
@@ -15364,7 +15924,11 @@ operator|=
 name|uval
 operator|&
 operator|~
+operator|(
 name|U3EN
+operator||
+name|AIPCKEN
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -16342,16 +16906,8 @@ name|dstat
 operator|&
 name|SSI
 condition|)
-name|OUTONB
-argument_list|(
-name|nc_dcntl
-argument_list|,
-operator|(
-name|STD
-operator||
-name|NOCOM
-operator|)
-argument_list|)
+name|OUTONB_STD
+argument_list|()
 expr_stmt|;
 else|else
 goto|goto
@@ -16812,10 +17368,8 @@ name|host_status
 operator|=
 name|hsts
 expr_stmt|;
-name|OUTL
+name|OUTL_DSP
 argument_list|(
-name|nc_dsp
-argument_list|,
 name|SCRIPTA_BA
 argument_list|(
 name|np
@@ -16835,10 +17389,8 @@ argument_list|,
 literal|0xffffff
 argument_list|)
 expr_stmt|;
-name|OUTL
+name|OUTL_DSP
 argument_list|(
-name|nc_dsp
-argument_list|,
 name|SCRIPTA_BA
 argument_list|(
 name|np
@@ -17221,10 +17773,8 @@ argument_list|,
 name|pm_handle
 argument_list|)
 condition|)
-name|OUTL
+name|OUTL_DSP
 argument_list|(
-name|nc_dsp
-argument_list|,
 name|dsp
 argument_list|)
 expr_stmt|;
@@ -17251,10 +17801,8 @@ argument_list|,
 name|dsp
 argument_list|)
 expr_stmt|;
-name|OUTL
+name|OUTL_DSP
 argument_list|(
-name|nc_dsp
-argument_list|,
 name|SCRIPTA_BA
 argument_list|(
 name|np
@@ -17266,10 +17814,8 @@ expr_stmt|;
 block|}
 block|}
 else|else
-name|OUTL
+name|OUTL_DSP
 argument_list|(
-name|nc_dsp
-argument_list|,
 name|SCRIPTA_BA
 argument_list|(
 name|np
@@ -18475,10 +19021,8 @@ argument_list|,
 name|newcmd
 argument_list|)
 expr_stmt|;
-name|OUTL
+name|OUTL_DSP
 argument_list|(
-name|nc_dsp
-argument_list|,
 name|nxtdsp
 argument_list|)
 expr_stmt|;
@@ -18651,10 +19195,8 @@ condition|(
 name|nxtdsp
 condition|)
 block|{
-name|OUTL
+name|OUTL_DSP
 argument_list|(
-name|nc_dsp
-argument_list|,
 name|nxtdsp
 argument_list|)
 expr_stmt|;
@@ -19240,10 +19782,8 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|OUTL
+name|OUTL_DSP
 argument_list|(
-name|nc_dsp
-argument_list|,
 name|SCRIPTA_BA
 argument_list|(
 name|np
@@ -20164,10 +20704,8 @@ operator|->
 name|hcb_ba
 argument_list|)
 expr_stmt|;
-name|OUTL
+name|OUTL_DSP
 argument_list|(
-name|nc_dsp
-argument_list|,
 name|SCRIPTB_BA
 argument_list|(
 name|np
@@ -21058,16 +21596,8 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 *  Let the SCRIPTS processor continue. 	 */
-name|OUTONB
-argument_list|(
-name|nc_dcntl
-argument_list|,
-operator|(
-name|STD
-operator||
-name|NOCOM
-operator|)
-argument_list|)
+name|OUTONB_STD
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -21774,10 +22304,8 @@ argument_list|,
 name|dp_scr
 argument_list|)
 expr_stmt|;
-name|OUTL
+name|OUTL_DSP
 argument_list|(
-name|nc_dsp
-argument_list|,
 name|SCRIPTA_BA
 argument_list|(
 name|np
@@ -21789,10 +22317,8 @@ expr_stmt|;
 return|return;
 name|out_reject
 label|:
-name|OUTL
+name|OUTL_DSP
 argument_list|(
-name|nc_dsp
-argument_list|,
 name|SCRIPTB_BA
 argument_list|(
 name|np
@@ -22001,7 +22527,7 @@ operator|++
 name|dp_sg
 control|)
 block|{
-name|u_long
+name|u_int
 name|tmp
 init|=
 name|scr_to_cpu
@@ -22531,10 +23057,8 @@ argument_list|,
 name|fak
 argument_list|)
 expr_stmt|;
-name|OUTL
+name|OUTL_DSP
 argument_list|(
-name|nc_dsp
-argument_list|,
 name|SCRIPTA_BA
 argument_list|(
 name|np
@@ -22640,10 +23164,8 @@ index|]
 operator|=
 name|M_NOOP
 expr_stmt|;
-name|OUTL
+name|OUTL_DSP
 argument_list|(
-name|nc_dsp
-argument_list|,
 name|SCRIPTB_BA
 argument_list|(
 name|np
@@ -22670,10 +23192,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|OUTL
+name|OUTL_DSP
 argument_list|(
-name|nc_dsp
-argument_list|,
 name|SCRIPTB_BA
 argument_list|(
 name|np
@@ -23208,10 +23728,8 @@ argument_list|,
 name|fak
 argument_list|)
 expr_stmt|;
-name|OUTL
+name|OUTL_DSP
 argument_list|(
-name|nc_dsp
-argument_list|,
 name|SCRIPTA_BA
 argument_list|(
 name|np
@@ -23348,10 +23866,8 @@ index|]
 operator|=
 name|M_NOOP
 expr_stmt|;
-name|OUTL
+name|OUTL_DSP
 argument_list|(
-name|nc_dsp
-argument_list|,
 name|SCRIPTB_BA
 argument_list|(
 name|np
@@ -23382,10 +23898,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|OUTL
+name|OUTL_DSP
 argument_list|(
-name|nc_dsp
-argument_list|,
 name|SCRIPTB_BA
 argument_list|(
 name|np
@@ -23702,10 +24216,8 @@ argument_list|,
 name|HS_NEGOTIATE
 argument_list|)
 expr_stmt|;
-name|OUTL
+name|OUTL_DSP
 argument_list|(
-name|nc_dsp
-argument_list|,
 name|SCRIPTB_BA
 argument_list|(
 name|np
@@ -23716,10 +24228,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|OUTL
+name|OUTL_DSP
 argument_list|(
-name|nc_dsp
-argument_list|,
 name|SCRIPTA_BA
 argument_list|(
 name|np
@@ -23811,10 +24321,8 @@ name|msgout
 argument_list|)
 expr_stmt|;
 block|}
-name|OUTL
+name|OUTL_DSP
 argument_list|(
-name|nc_dsp
-argument_list|,
 name|SCRIPTB_BA
 argument_list|(
 name|np
@@ -23826,10 +24334,8 @@ expr_stmt|;
 return|return;
 name|reject_it
 label|:
-name|OUTL
+name|OUTL_DSP
 argument_list|(
-name|nc_dsp
-argument_list|,
 name|SCRIPTB_BA
 argument_list|(
 name|np
@@ -24010,7 +24516,7 @@ argument_list|(
 name|nc_dsps
 argument_list|)
 decl_stmt|;
-name|u_long
+name|u32
 name|dsa
 init|=
 name|INL
@@ -24745,10 +25251,8 @@ operator|->
 name|msgin
 argument_list|)
 expr_stmt|;
-name|OUTL
+name|OUTL_DSP
 argument_list|(
-name|nc_dsp
-argument_list|,
 name|SCRIPTB_BA
 argument_list|(
 name|np
@@ -24789,24 +25293,14 @@ block|}
 empty_stmt|;
 name|out
 label|:
-name|OUTONB
-argument_list|(
-name|nc_dcntl
-argument_list|,
-operator|(
-name|STD
-operator||
-name|NOCOM
-operator|)
-argument_list|)
+name|OUTONB_STD
+argument_list|()
 expr_stmt|;
 return|return;
 name|out_reject
 label|:
-name|OUTL
+name|OUTL_DSP
 argument_list|(
-name|nc_dsp
-argument_list|,
 name|SCRIPTB_BA
 argument_list|(
 name|np
@@ -24818,10 +25312,8 @@ expr_stmt|;
 return|return;
 name|out_clrack
 label|:
-name|OUTL
+name|OUTL_DSP
 argument_list|(
-name|nc_dsp
-argument_list|,
 name|SCRIPTA_BA
 argument_list|(
 name|np
@@ -25898,7 +26390,7 @@ parameter_list|(
 name|hcb_p
 name|np
 parameter_list|,
-name|u_long
+name|u32
 name|dsa
 parameter_list|)
 block|{
@@ -26758,10 +27250,8 @@ operator|->
 name|hcb_ba
 argument_list|)
 expr_stmt|;
-name|OUTL
+name|OUTL_DSP
 argument_list|(
-name|nc_dsp
-argument_list|,
 name|pc
 argument_list|)
 expr_stmt|;
@@ -27670,18 +28160,14 @@ name|hcb_p
 name|np
 parameter_list|)
 block|{
-specifier|static
 name|int
 name|f
 init|=
 literal|0
 decl_stmt|;
-comment|/* For the C10, this will not work */
+comment|/* 	 *  For the C1010-33, this doesn't work. 	 *  For the C1010-66, this will be tested when I'll have  	 *  such a beast to play with. 	 */
 if|if
 condition|(
-operator|!
-name|f
-operator|&&
 operator|!
 operator|(
 name|np
@@ -27718,6 +28204,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|np
+operator|->
+name|pciclk_khz
+operator|=
+name|f
+expr_stmt|;
 return|return
 name|f
 return|;
@@ -28358,10 +28850,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 	 *  Restart the SCRIPTS processor. 	 */
-name|OUTL
+name|OUTL_DSP
 argument_list|(
-name|nc_dsp
-argument_list|,
 name|SCRIPTA_BA
 argument_list|(
 name|np
@@ -37949,6 +38439,7 @@ ifdef|#
 directive|ifdef
 name|SYM_CONF_DEBUG_NVRAM
 comment|/*  *  Dump Symbios format NVRAM for debugging purpose.  */
+specifier|static
 name|void
 name|sym_display_Symbios_nvram
 parameter_list|(
@@ -38163,7 +38654,6 @@ name|Tekram_boot_delay
 index|[
 literal|7
 index|]
-name|__initdata
 init|=
 block|{
 literal|3
@@ -38181,6 +38671,7 @@ block|,
 literal|120
 block|}
 decl_stmt|;
+specifier|static
 name|void
 name|sym_display_Tekram_nvram
 parameter_list|(
@@ -38595,12 +39086,31 @@ operator|.
 name|Symbios
 argument_list|)
 condition|)
+block|{
 name|nvp
 operator|->
 name|type
 operator|=
 name|SYM_SYMBIOS_NVRAM
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SYM_CONF_DEBUG_NVRAM
+name|sym_display_Symbios_nvram
+argument_list|(
+name|np
+argument_list|,
+operator|&
+name|nvp
+operator|->
+name|data
+operator|.
+name|Symbios
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 elseif|else
 if|if
 condition|(
@@ -38619,12 +39129,31 @@ operator|.
 name|Tekram
 argument_list|)
 condition|)
+block|{
 name|nvp
 operator|->
 name|type
 operator|=
 name|SYM_TEKRAM_NVRAM
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SYM_CONF_DEBUG_NVRAM
+name|sym_display_Tekram_nvram
+argument_list|(
+name|np
+argument_list|,
+operator|&
+name|nvp
+operator|->
+name|data
+operator|.
+name|Tekram
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 else|else
 name|nvp
 operator|->
