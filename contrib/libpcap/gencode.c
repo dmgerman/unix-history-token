@@ -2960,6 +2960,19 @@ expr_stmt|;
 comment|/* XXX in reality, variable! */
 return|return;
 case|case
+name|DLT_IEEE802_11
+case|:
+name|off_linktype
+operator|=
+literal|30
+expr_stmt|;
+comment|/* XXX variable */
+name|off_nl
+operator|=
+literal|32
+expr_stmt|;
+return|return;
+case|case
 name|DLT_EN10MB
 case|:
 name|off_linktype
@@ -3104,6 +3117,9 @@ operator|=
 literal|22
 expr_stmt|;
 return|return;
+ifdef|#
+directive|ifdef
+name|notdef
 case|case
 name|DLT_IEEE802_11
 case|:
@@ -3117,6 +3133,8 @@ operator|=
 literal|30
 expr_stmt|;
 return|return;
+endif|#
+directive|endif
 case|case
 name|DLT_PRISM_HEADER
 case|:

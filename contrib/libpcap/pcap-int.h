@@ -185,6 +185,13 @@ index|[
 name|PCAP_ERRBUF_SIZE
 index|]
 decl_stmt|;
+name|int
+name|dlt_count
+decl_stmt|;
+name|int
+modifier|*
+name|dlt_list
+decl_stmt|;
 block|}
 struct|;
 comment|/*  * This is a timeval as stored in disk in a dumpfile.  * It has to use the same types everywhere, independent of the actual  * `struct timeval'  */
