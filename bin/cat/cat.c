@@ -276,9 +276,6 @@ name|path
 operator|,
 name|int
 name|flags
-operator|,
-name|int
-name|modes
 operator|)
 argument_list|)
 decl_stmt|;
@@ -590,8 +587,6 @@ argument_list|(
 name|path
 argument_list|,
 name|O_RDONLY
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1248,8 +1243,6 @@ parameter_list|(
 name|path
 parameter_list|,
 name|flags
-parameter_list|,
-name|modes
 parameter_list|)
 specifier|const
 name|char
@@ -1258,9 +1251,6 @@ name|path
 decl_stmt|;
 name|int
 name|flags
-decl_stmt|;
-name|int
-name|modes
 decl_stmt|;
 block|{
 name|struct
