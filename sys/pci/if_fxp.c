@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Modifications to support NetBSD and media selection:  * Copyright (c) 1997 Jason R. Thorpe.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_fxp.c,v 1.43 1997/09/30 11:28:24 davidg Exp $  */
+comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Modifications to support NetBSD and media selection:  * Copyright (c) 1997 Jason R. Thorpe.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_fxp.c,v 1.44 1997/10/17 06:27:44 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -1728,6 +1728,15 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Let the system queue as many packets as we have TX descriptors. 	 */
+name|ifp
+operator|->
+name|if_snd
+operator|.
+name|ifq_maxlen
+operator|=
+name|FXP_NTXCB
+expr_stmt|;
 name|ether_ifattach
 argument_list|(
 name|ifp
@@ -2413,6 +2422,15 @@ name|if_attach
 argument_list|(
 name|ifp
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Let the system queue as many packets as we have TX descriptors. 	 */
+name|ifp
+operator|->
+name|if_snd
+operator|.
+name|ifq_maxlen
+operator|=
+name|FXP_NTXCB
 expr_stmt|;
 name|ether_ifattach
 argument_list|(
@@ -3371,6 +3389,36 @@ name|fxp_cb_tx
 modifier|*
 name|txp
 decl_stmt|;
+comment|/* 	 * See if we need to suspend xmit until the multicast filter 	 * has been reprogrammed (which can only be done at the head 	 * of the command chain). 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|need_mcsetup
+condition|)
+return|return;
+name|txp
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* 	 * We're finished if there is nothing more to add to the list or if 	 * we're all filled up with buffers to transmit. 	 */
+while|while
+condition|(
+name|ifp
+operator|->
+name|if_snd
+operator|.
+name|ifq_head
+operator|!=
+name|NULL
+operator|&&
+name|sc
+operator|->
+name|tx_queued
+operator|<
+name|FXP_NTXCB
+condition|)
+block|{
 name|struct
 name|mbuf
 modifier|*
@@ -3381,28 +3429,8 @@ name|mb_head
 decl_stmt|;
 name|int
 name|segment
-decl_stmt|,
-name|first
-init|=
-literal|1
 decl_stmt|;
-name|txloop
-label|:
-comment|/* 	 * See if we're all filled up with buffers to transmit, or 	 * if we need to suspend xmit until the multicast filter 	 * has been reprogrammed (which can only be done at the 	 * head of the command chain). 	 */
-if|if
-condition|(
-name|sc
-operator|->
-name|tx_queued
-operator|>=
-name|FXP_NTXCB
-operator|||
-name|sc
-operator|->
-name|need_mcsetup
-condition|)
-return|return;
-comment|/* 	 * Grab a packet to transmit. 	 */
+comment|/* 		 * Grab a packet to transmit. 		 */
 name|IF_DEQUEUE
 argument_list|(
 operator|&
@@ -3413,17 +3441,7 @@ argument_list|,
 name|mb_head
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mb_head
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* 		 * No more packets to send. 		 */
-return|return;
-block|}
-comment|/* 	 * Get pointer to next available (unused) descriptor. 	 */
+comment|/* 		 * Get pointer to next available tx desc. 		 */
 name|txp
 operator|=
 name|sc
@@ -3432,7 +3450,7 @@ name|cbl_last
 operator|->
 name|next
 expr_stmt|;
-comment|/* 	 * Go through each of the mbufs in the chain and initialize 	 * the transmit buffers descriptors with the physical address 	 * and size of the mbuf. 	 */
+comment|/* 		 * Go through each of the mbufs in the chain and initialize 		 * the transmit buffer descriptors with the physical address 		 * and size of the mbuf. 		 */
 name|tbdinit
 label|:
 for|for
@@ -3521,7 +3539,7 @@ name|mbuf
 modifier|*
 name|mn
 decl_stmt|;
-comment|/* 		 * We ran out of segments. We have to recopy this mbuf 		 * chain first. 		 */
+comment|/* 			 * We ran out of segments. We have to recopy this mbuf 			 * chain first. Bail out if we can't get the new buffers. 			 */
 name|MGETHDR
 argument_list|(
 name|mn
@@ -3543,7 +3561,7 @@ argument_list|(
 name|mb_head
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 block|}
 if|if
 condition|(
@@ -3586,7 +3604,7 @@ argument_list|(
 name|mb_head
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 block|}
 block|}
 name|m_copydata
@@ -3650,7 +3668,6 @@ name|mb_head
 operator|=
 name|mb_head
 expr_stmt|;
-comment|/* 	 * Finish the initialization of this TxCB. 	 */
 name|txp
 operator|->
 name|cb_status
@@ -3673,7 +3690,7 @@ name|tx_threshold
 operator|=
 name|tx_threshold
 expr_stmt|;
-comment|/* 	 * Advance the end-of-list forward. 	 */
+comment|/* 		 * Advance the end of list forward. 		 */
 name|sc
 operator|->
 name|cbl_last
@@ -3689,7 +3706,7 @@ name|cbl_last
 operator|=
 name|txp
 expr_stmt|;
-comment|/* 	 * Advance the beginning of the list forward if there are 	 * no other packets queued (when nothing is queued, cbl_first 	 * sits on the last TxCB that was sent out).. 	 */
+comment|/* 		 * Advance the beginning of the list forward if there are 		 * no other packets queued (when nothing is queued, cbl_first 		 * sits on the last TxCB that was sent out). 		 */
 if|if
 condition|(
 name|sc
@@ -3709,37 +3726,12 @@ operator|->
 name|tx_queued
 operator|++
 expr_stmt|;
-comment|/* 	 * Only need to wait prior to the first resume command. 	 */
-if|if
-condition|(
-name|first
-condition|)
-block|{
-name|first
-operator|--
-expr_stmt|;
-name|fxp_scb_wait
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* 	 * Resume transmission if suspended. 	 */
-name|CSR_WRITE_1
-argument_list|(
-name|sc
-argument_list|,
-name|FXP_CSR_SCB_COMMAND
-argument_list|,
-name|FXP_SCB_COMMAND_CU_RESUME
-argument_list|)
-expr_stmt|;
 if|#
 directive|if
 name|NBPFILTER
 operator|>
 literal|0
-comment|/* 	 * Pass packet to bpf if there is a listener. 	 */
+comment|/* 		 * Pass packet to bpf if there is a listener. 		 */
 if|if
 condition|(
 name|ifp
@@ -3758,16 +3750,37 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Set a 5 second timer just in case we don't hear from the 	 * card again. 	 */
+block|}
+comment|/* 	 * We're finished. If we added to the list, issue a RESUME to get DMA 	 * going again if suspended. 	 */
+if|if
+condition|(
+name|txp
+operator|!=
+name|NULL
+condition|)
+block|{
+name|fxp_scb_wait
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|CSR_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|FXP_CSR_SCB_COMMAND
+argument_list|,
+name|FXP_SCB_COMMAND_CU_RESUME
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Set a 5 second timer just in case we don't hear from the 		 * card again. 		 */
 name|ifp
 operator|->
 name|if_timer
 operator|=
 literal|5
 expr_stmt|;
-goto|goto
-name|txloop
-goto|;
+block|}
 block|}
 end_function
 
