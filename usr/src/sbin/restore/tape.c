@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.30 (Berkeley) %G%"
+literal|"@(#)tape.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -238,6 +238,16 @@ name|int
 name|pathlen
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|oldinofmt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* old inode format conversion required */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -2952,7 +2962,7 @@ name|curblk
 init|=
 literal|0
 decl_stmt|;
-name|off_t
+name|long
 name|size
 init|=
 name|spcl
@@ -5205,45 +5215,6 @@ operator|=
 name|i
 expr_stmt|;
 block|}
-comment|/* 	 * If we are restoring a filesystem with old format inodes,  	 * copy the uid/gid to the new location. 	 */
-if|if
-condition|(
-operator|(
-name|buf
-operator|->
-name|c_flags
-operator|&
-name|DR_NEWINODEFMT
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|buf
-operator|->
-name|c_dinode
-operator|.
-name|di_uid
-operator|=
-name|buf
-operator|->
-name|c_dinode
-operator|.
-name|di_ouid
-expr_stmt|;
-name|buf
-operator|->
-name|c_dinode
-operator|.
-name|di_gid
-operator|=
-name|buf
-operator|->
-name|c_dinode
-operator|.
-name|di_ogid
-expr_stmt|;
-block|}
 switch|switch
 condition|(
 name|buf
@@ -5303,6 +5274,23 @@ break|break;
 case|case
 name|TS_TAPE
 case|:
+if|if
+condition|(
+operator|(
+name|buf
+operator|->
+name|c_flags
+operator|&
+name|DR_NEWINODEFMT
+operator|)
+operator|==
+literal|0
+condition|)
+name|oldinofmt
+operator|=
+literal|1
+expr_stmt|;
+comment|/* fall through */
 case|case
 name|TS_END
 case|:
@@ -5331,6 +5319,37 @@ name|c_type
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
+comment|/* 	 * If we are restoring a filesystem with old format inodes,  	 * copy the uid/gid to the new location. 	 */
+if|if
+condition|(
+name|oldinofmt
+condition|)
+block|{
+name|buf
+operator|->
+name|c_dinode
+operator|.
+name|di_uid
+operator|=
+name|buf
+operator|->
+name|c_dinode
+operator|.
+name|di_ouid
+expr_stmt|;
+name|buf
+operator|->
+name|c_dinode
+operator|.
+name|di_gid
+operator|=
+name|buf
+operator|->
+name|c_dinode
+operator|.
+name|di_ogid
+expr_stmt|;
 block|}
 if|if
 condition|(
