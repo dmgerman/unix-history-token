@@ -14276,7 +14276,7 @@ index|[]
 init|=
 block|{
 block|{
-name|ATA_VIA8237
+name|ATA_VIA8237_1
 block|,
 literal|0x00
 block|,
@@ -14332,10 +14332,8 @@ name|dev
 argument_list|,
 name|ids
 argument_list|,
-name|pci_get_slot
-argument_list|(
-name|dev
-argument_list|)
+operator|-
+literal|99
 argument_list|)
 operator|)
 condition|)
