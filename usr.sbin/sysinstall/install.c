@@ -436,6 +436,9 @@ operator|->
 name|next
 control|)
 block|{
+ifndef|#
+directive|ifndef
+name|__ia64__
 if|if
 condition|(
 name|c1
@@ -462,6 +465,14 @@ operator|->
 name|next
 control|)
 block|{
+else|#
+directive|else
+name|c2
+operator|=
+name|c1
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|c2
@@ -786,8 +797,13 @@ expr_stmt|;
 block|}
 block|}
 block|}
+ifndef|#
+directive|ifndef
+name|__ia64__
 block|}
 block|}
+endif|#
+directive|endif
 block|}
 block|}
 comment|/* Now check for swap devices */
@@ -874,6 +890,9 @@ operator|->
 name|next
 control|)
 block|{
+ifndef|#
+directive|ifndef
+name|__ia64__
 if|if
 condition|(
 name|c1
@@ -900,6 +919,14 @@ operator|->
 name|next
 control|)
 block|{
+else|#
+directive|else
+name|c2
+operator|=
+name|c1
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|c2
@@ -938,8 +965,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+ifndef|#
+directive|ifndef
+name|__ia64__
 block|}
 block|}
+endif|#
+directive|endif
 block|}
 block|}
 comment|/* Copy our values over */
