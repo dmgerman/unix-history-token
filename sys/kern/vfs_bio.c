@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.35 1995/03/07 19:53:27 davidg Exp $  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.36 1995/03/16 18:12:47 bde Exp $  */
 end_comment
 
 begin_comment
@@ -2010,9 +2010,6 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|1
 elseif|else
 if|if
 condition|(
@@ -2052,8 +2049,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 elseif|else
 if|if
 condition|(
@@ -3013,8 +3008,6 @@ argument_list|(
 name|bp
 argument_list|,
 literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3897,8 +3890,6 @@ argument_list|(
 name|bp
 argument_list|,
 name|size
-argument_list|,
-literal|1
 argument_list|)
 condition|)
 block|{
@@ -3962,8 +3953,6 @@ argument_list|(
 name|bp
 argument_list|,
 name|size
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|bp
@@ -3995,9 +3984,6 @@ name|bp
 parameter_list|,
 name|int
 name|size
-parameter_list|,
-name|int
-name|vmio
 parameter_list|)
 block|{
 name|int
@@ -4011,8 +3997,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-if|if
-condition|(
+name|int
+name|vmio
+init|=
 operator|(
 name|bp
 operator|->
@@ -4020,8 +4007,13 @@ name|b_flags
 operator|&
 name|B_VMIO
 operator|)
-operator|==
+operator|!=
 literal|0
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|vmio
 condition|)
 block|{
 comment|/* 		 * Just get anonymous memory from the kernel 		 */
