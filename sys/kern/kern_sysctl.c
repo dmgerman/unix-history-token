@@ -4318,7 +4318,7 @@ name|lock
 operator|==
 name|REQ_WIRED
 condition|)
-name|kern_munlock
+name|vsunlock
 argument_list|(
 name|req
 operator|.
@@ -4867,7 +4867,7 @@ condition|)
 block|{
 name|ret
 operator|=
-name|kern_mlock
+name|vslock
 argument_list|(
 name|req
 operator|->
@@ -5925,7 +5925,7 @@ name|lock
 operator|==
 name|REQ_WIRED
 condition|)
-name|kern_munlock
+name|vsunlock
 argument_list|(
 name|req
 operator|.
