@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_input.c	8.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_input.c	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -4221,7 +4221,7 @@ name|tp
 operator|->
 name|t_rxtcur
 expr_stmt|;
-comment|/* 		 * When new data is acked, open the congestion window. 		 * If the window gives us less than ssthresh packets 		 * in flight, open exponentially (maxseg per packet). 		 * Otherwise open linearly: maxseg per window 		 * (maxseg^2 / cwnd per packet), plus a constant 		 * fraction of a packet (maxseg/8) to help larger windows 		 * open quickly enough. 		 */
+comment|/* 		 * When new data is acked, open the congestion window. 		 * If the window gives us less than ssthresh packets 		 * in flight, open exponentially (maxseg per packet). 		 * Otherwise open linearly: maxseg per window 		 * (maxseg * (maxseg / cwnd) per packet). 		 */
 block|{
 specifier|register
 name|u_int
@@ -4254,10 +4254,6 @@ operator|*
 name|incr
 operator|/
 name|cw
-operator|+
-name|incr
-operator|/
-literal|8
 expr_stmt|;
 name|tp
 operator|->
