@@ -128,6 +128,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|symbol_prefix
@@ -135,6 +136,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|file_prefix
@@ -145,8 +147,8 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-modifier|*
 name|temp_form
+index|[]
 init|=
 literal|"yacc.XXXXXXXXXXX"
 decl_stmt|;
@@ -186,6 +188,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|input_file_name
@@ -598,6 +601,7 @@ name|signo
 parameter_list|)
 name|int
 name|signo
+name|__unused
 decl_stmt|;
 block|{
 name|done
@@ -729,11 +733,9 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|s
@@ -1050,7 +1052,6 @@ name|unsigned
 name|n
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -1101,6 +1102,7 @@ name|i
 decl_stmt|,
 name|len
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|tmpdir

@@ -80,6 +80,7 @@ comment|/*  are conditional.							*/
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|banner
@@ -128,6 +129,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|tables
@@ -166,6 +168,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|header
@@ -232,6 +235,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|body
@@ -360,11 +364,11 @@ literal|"    YYPARSE_PARAM_DECL"
 block|,
 literal|"{"
 block|,
-literal|"    register int yym, yyn, yystate;"
+literal|"    int yym, yyn, yystate;"
 block|,
 literal|"#if YYDEBUG"
 block|,
-literal|"    register const char *yys;"
+literal|"    const char *yys;"
 block|,
 literal|""
 block|,
@@ -632,6 +636,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|trailer
@@ -761,26 +766,24 @@ name|write_section
 parameter_list|(
 name|section
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|section
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
+specifier|const
 name|char
 modifier|*
 name|s
 decl_stmt|;
-specifier|register
 name|FILE
 modifier|*
 name|f

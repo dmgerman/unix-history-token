@@ -74,6 +74,7 @@ name|fatal
 parameter_list|(
 name|msg
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -118,6 +119,7 @@ name|open_error
 parameter_list|(
 name|filename
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|filename
@@ -178,7 +180,6 @@ modifier|*
 name|st_cptr
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|s

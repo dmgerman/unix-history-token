@@ -834,6 +834,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|symbol_prefix
@@ -880,6 +881,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|banner
@@ -889,6 +891,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|tables
@@ -898,6 +901,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|header
@@ -907,6 +911,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|body
@@ -916,6 +921,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|trailer
@@ -949,6 +955,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|input_file_name
@@ -1509,6 +1516,7 @@ name|fatal
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|msg
@@ -1641,6 +1649,7 @@ name|make_bucket
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1690,6 +1699,7 @@ name|open_error
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -2078,6 +2088,7 @@ name|write_section
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|*
