@@ -147,7 +147,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/linux/linux_util.h>
+file|<compat/linux/linux_util.h>
 end_include
 
 begin_expr_stmt

@@ -6,19 +6,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<i386/linux/linux.h>
+file|<machine/../linux/linux.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/linux/linux_proto.h>
+file|<machine/../linux/linux_proto.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/linux/linux_ioctl.h>
+file|<compat/linux/linux_ioctl.h>
 end_include
 
 begin_comment
