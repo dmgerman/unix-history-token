@@ -295,7 +295,7 @@ name|PCMCIA_CARD
 argument_list|(
 name|FUJITSU
 argument_list|,
-name|NE200
+name|NE200T
 argument_list|,
 literal|0
 argument_list|)
