@@ -5591,7 +5591,6 @@ return|return
 operator|-
 literal|1
 return|;
-comment|/* XXX how about the SG NX Pro, iomap = sgnxpro_mix */
 block|}
 comment|/* Change left channel */
 name|regoffs

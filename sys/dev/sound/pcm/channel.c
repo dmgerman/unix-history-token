@@ -1167,7 +1167,7 @@ argument_list|)
 operator|&
 name|DMA_ALIGN_MASK
 expr_stmt|;
-comment|/* 	 	* check if we need to reprogram the DMA on the sound card. 	 	* This happens if the size has changed from zero 	 	* 	 	*/
+comment|/* 	 	 * check if we need to reprogram the DMA on the sound card. 	 	 * This happens if the size has changed from zero 	 	 */
 if|if
 condition|(
 name|b
