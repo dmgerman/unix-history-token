@@ -2889,7 +2889,7 @@ name|g_malloc
 argument_list|(
 name|BBSIZE
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|p
