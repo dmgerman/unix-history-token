@@ -2214,6 +2214,25 @@ name|PR_ALLOW
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Decide how to end... 	 */
+if|if
+condition|(
+operator|(
+name|softc
+operator|->
+name|flags
+operator|&
+name|SA_FLAG_TAPE_MOUNTED
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|closedbits
+operator||=
+name|SA_FLAG_TAPE_FROZEN
+expr_stmt|;
+block|}
+else|else
 switch|switch
 condition|(
 name|mode
@@ -4202,20 +4221,15 @@ argument_list|(
 name|periph
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Be sure to allow media removal before 			 * attempting the eject. And clear flags 			 * anyway. 			 */
+comment|/* clear the frozen flag anyway */
 name|softc
 operator|->
 name|flags
 operator|&=
 operator|~
-operator|(
-name|SA_FLAG_TAPE_LOCKED
-operator||
 name|SA_FLAG_TAPE_FROZEN
-operator||
-name|SA_FLAG_TAPE_MOUNTED
-operator|)
 expr_stmt|;
+comment|/* 			 * Be sure to allow media removal before ejecting. 			 */
 name|saprevent
 argument_list|(
 name|periph
@@ -4229,6 +4243,7 @@ name|error
 operator|==
 literal|0
 condition|)
+block|{
 name|error
 operator|=
 name|saloadunload
@@ -4238,6 +4253,22 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+block|{
+name|softc
+operator|->
+name|flags
+operator|&=
+operator|~
+name|SA_FLAG_TAPE_MOUNTED
+expr_stmt|;
+block|}
+block|}
 break|break;
 case|case
 name|MTNOP
@@ -6933,7 +6964,7 @@ name|buf
 modifier|*
 name|q_bp
 decl_stmt|;
-comment|/* 			 * Catastrophic error. Mark the tape as not mounted. 			 * Return all queued I/O with EIO, and unfreeze 			 * our queue so that future transactions that 			 * attempt to fix this problem can get to the 			 * device. 			 * 			 */
+comment|/* 			 * Catastrophic error. Mark the tape as frozen 			 * (we no longer know tape position). 			 * 			 * Return all queued I/O with EIO, and unfreeze 			 * our queue so that future transactions that 			 * attempt to fix this problem can get to the 			 * device. 			 * 			 */
 name|s
 operator|=
 name|splbio
@@ -6942,9 +6973,8 @@ expr_stmt|;
 name|softc
 operator|->
 name|flags
-operator|&=
-operator|~
-name|SA_FLAG_TAPE_MOUNTED
+operator||=
+name|SA_FLAG_TAPE_FROZEN
 expr_stmt|;
 while|while
 condition|(
@@ -12114,35 +12144,9 @@ operator|->
 name|device_stats
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|&
-name|CAM_DEV_QFRZN
-operator|)
-operator|!=
-literal|0
-condition|)
-name|cam_release_devq
+name|QFRLS
 argument_list|(
 name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|path
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
