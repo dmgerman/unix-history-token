@@ -98,12 +98,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_prot.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/lock.h>
 end_include
 
@@ -135,12 +129,6 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_pager.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_inherit.h>
 end_include
 
 begin_ifndef

@@ -75,12 +75,6 @@ directive|ifdef
 name|SPARSE_MAPPING
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|<vm/vm_prot.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
