@@ -4260,7 +4260,7 @@ literal|0
 index|]
 argument_list|)
 decl_stmt|;
-comment|/* could be wrong */
+comment|/* could still be wrong, but it seems to help */
 name|bus_space_write_1
 argument_list|(
 name|btag
@@ -4269,7 +4269,7 @@ name|bhandle
 argument_list|,
 name|STAT0_OFFSET
 argument_list|,
-literal|0x07
+literal|0x00
 argument_list|)
 expr_stmt|;
 block|}
