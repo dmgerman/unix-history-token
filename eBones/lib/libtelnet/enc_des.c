@@ -2771,7 +2771,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * DES 64 bit Cipher Feedback  *  *     key --->+-----+  *          +->| DES |--+  *          |  +-----+  |  *	    |           v  *  INPUT --(--------->(+)+---> DATA  *          |             |  *	    +-------------+  *           *  * Given:  *	iV: Initial vector, 64 bits (8 bytes) long.  *	Dn: the nth chunk of 64 bits (8 bytes) of data to encrypt (decrypt).  *	On: the nth chunk of 64 bits (8 bytes) of encrypted (decrypted) output.  *  *	V0 = DES(iV, key)  *	On = Dn ^ Vn  *	V(n+1) = DES(On, key)  */
+comment|/*  * DES 64 bit Cipher Feedback  *  *     key --->+-----+  *          +->| DES |--+  *          |  +-----+  |  *	    |           v  *  INPUT --(--------->(+)+---> DATA  *          |             |  *	    +-------------+  *  *  * Given:  *	iV: Initial vector, 64 bits (8 bytes) long.  *	Dn: the nth chunk of 64 bits (8 bytes) of data to encrypt (decrypt).  *	On: the nth chunk of 64 bits (8 bytes) of encrypted (decrypted) output.  *  *	V0 = DES(iV, key)  *	On = Dn ^ Vn  *	V(n+1) = DES(On, key)  */
 end_comment
 
 begin_function

@@ -1497,7 +1497,7 @@ name|f
 operator|++
 control|)
 block|{
-comment|/* 		 * Drain the results, but unlike EOT we DO (or should) care  		 * what the return values were, since if we detect EOT after  		 * we think we've written the last blocks to the tape anyway,  		 * we have to replay those blocks with rollforward. 		 * 		 * fixme: punt for now.   		 */
+comment|/* 		 * Drain the results, but unlike EOT we DO (or should) care 		 * what the return values were, since if we detect EOT after 		 * we think we've written the last blocks to the tape anyway, 		 * we have to replay those blocks with rollforward. 		 * 		 * fixme: punt for now. 		 */
 if|if
 condition|(
 name|slaves
@@ -1817,7 +1817,7 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-comment|/* 	 * Each of the N slaves should have requests that need to  	 * be replayed on the next tape.  Use the extra slave buffers  	 * (slaves[SLAVES]) to construct request lists to be sent to  	 * each slave in turn. 	 */
+comment|/* 	 * Each of the N slaves should have requests that need to 	 * be replayed on the next tape.  Use the extra slave buffers 	 * (slaves[SLAVES]) to construct request lists to be sent to 	 * each slave in turn. 	 */
 for|for
 control|(
 name|i
@@ -1853,7 +1853,7 @@ name|slp
 operator|->
 name|tblock
 expr_stmt|;
-comment|/* 		 * For each request in the current slave, copy it to tslp.  		 */
+comment|/* 		 * For each request in the current slave, copy it to tslp. 		 */
 name|prev
 operator|=
 name|NULL
@@ -2110,7 +2110,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 			 * If the last one was a disk block, make the  			 * first of this one be the last bit of that disk  			 * block... 			 */
+comment|/* 			 * If the last one was a disk block, make the 			 * first of this one be the last bit of that disk 			 * block... 			 */
 name|q
 operator|->
 name|dblk
@@ -2143,7 +2143,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * It wasn't a disk block.  Copy the data to its  			 * new location in the buffer. 			 */
+comment|/* 			 * It wasn't a disk block.  Copy the data to its 			 * new location in the buffer. 			 */
 name|q
 operator|->
 name|dblk

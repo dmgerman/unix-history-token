@@ -1305,7 +1305,7 @@ operator|.
 name|b_dirty
 condition|)
 block|{
-comment|/*  		 * Write out the duplicate super blocks 		 */
+comment|/* 		 * Write out the duplicate super blocks 		 */
 for|for
 control|(
 name|cylno

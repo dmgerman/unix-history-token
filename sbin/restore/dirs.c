@@ -914,7 +914,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	Recursively find names and inumbers of all files in subtree   *	pname and pass them off to be processed.  */
+comment|/*  *	Recursively find names and inumbers of all files in subtree  *	pname and pass them off to be processed.  */
 end_comment
 
 begin_function_decl

@@ -643,7 +643,7 @@ name|type
 argument_list|)
 condition|)
 continue|continue;
-comment|/*  		 * We want to unmount the file systems in the reverse order 		 * that they were mounted.  So, we save off the file name 		 * in some allocated memory, and then call recursively. 		 */
+comment|/* 		 * We want to unmount the file systems in the reverse order 		 * that they were mounted.  So, we save off the file name 		 * in some allocated memory, and then call recursively. 		 */
 if|if
 condition|(
 operator|(

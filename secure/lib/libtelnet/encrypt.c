@@ -2937,7 +2937,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called when ENCRYPT REQUEST-START is received.  If we receive  * this before a type is picked, then that indicates that the  * other side wants us to start encrypting data as soon as we  * can.   */
+comment|/*  * Called when ENCRYPT REQUEST-START is received.  If we receive  * this before a type is picked, then that indicates that the  * other side wants us to start encrypting data as soon as we  * can.  */
 end_comment
 
 begin_function

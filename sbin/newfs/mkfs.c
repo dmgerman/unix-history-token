@@ -2373,7 +2373,7 @@ literal|23
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  	 * Calculate the number of cylinders per group 	 */
+comment|/* 	 * Calculate the number of cylinders per group 	 */
 name|sblock
 operator|.
 name|fs_cpg
@@ -4091,7 +4091,7 @@ operator|+
 name|i
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Write out the duplicate super blocks 	 */
+comment|/* 	 * Write out the duplicate super blocks 	 */
 for|for
 control|(
 name|cylno

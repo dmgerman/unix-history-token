@@ -1095,7 +1095,7 @@ name|lfsp
 operator|->
 name|lfs_bshift
 expr_stmt|;
-comment|/*  	 * The number of free blocks is set from the number of segments times 	 * the segment size - 2 (that we never write because we need to make 	 * sure the cleaner can run).  Then we'll subtract off the room for the 	 * superblocks ifile entries and segment usage table. 	 */
+comment|/* 	 * The number of free blocks is set from the number of segments times 	 * the segment size - 2 (that we never write because we need to make 	 * sure the cleaner can run).  Then we'll subtract off the room for the 	 * superblocks ifile entries and segment usage table. 	 */
 name|lfsp
 operator|->
 name|lfs_dsize
@@ -1321,7 +1321,7 @@ name|lfsp
 operator|->
 name|lfs_lastseg
 expr_stmt|;
-comment|/* 	 * Initialize the segment usage table.  The first segment will 	 * contain the superblock, the cleanerinfo (cleansz), the segusage  	 * table * (segtabsz), 1 block's worth of IFILE entries, the root  	 * directory, the lost+found directory and one block's worth of  	 * inodes (containing the ifile, root, and l+f inodes). 	 */
+comment|/* 	 * Initialize the segment usage table.  The first segment will 	 * contain the superblock, the cleanerinfo (cleansz), the segusage 	 * table * (segtabsz), 1 block's worth of IFILE entries, the root 	 * directory, the lost+found directory and one block's worth of 	 * inodes (containing the ifile, root, and l+f inodes). 	 */
 if|if
 condition|(
 operator|!
@@ -1495,7 +1495,7 @@ operator|+
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Now figure out the address of the ifile inode. The inode block 	 * appears immediately after the segment summary. 	 */
+comment|/* 	 * Now figure out the address of the ifile inode. The inode block 	 * appears immediately after the segment summary. 	 */
 name|lfsp
 operator|->
 name|lfs_idaddr
@@ -1599,7 +1599,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/*  	 * Initialize dynamic accounting.  The blocks available for 	 * writing are the bfree blocks minus 1 segment summary for 	 * each segment since you can't write any new data without 	 * creating a segment summary - 2 segments that the cleaner 	 * needs. 	 */
+comment|/* 	 * Initialize dynamic accounting.  The blocks available for 	 * writing are the bfree blocks minus 1 segment summary for 	 * each segment since you can't write any new data without 	 * creating a segment summary - 2 segments that the cleaner 	 * needs. 	 */
 name|lfsp
 operator|->
 name|lfs_avail
@@ -1629,7 +1629,7 @@ name|lfs_uinodes
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Ready to start writing segments.  The first segment is different 	 * because it contains the segment usage table and the ifile inode 	 * as well as a superblock.  For the rest of the segments, set the  	 * time stamp to be 0 so that the first segment is the most recent. 	 * For each segment that is supposed to contain a copy of the super 	 * block, initialize its first few blocks and its segment summary  	 * to indicate this. 	 */
+comment|/* 	 * Ready to start writing segments.  The first segment is different 	 * because it contains the segment usage table and the ifile inode 	 * as well as a superblock.  For the rest of the segments, set the 	 * time stamp to be 0 so that the first segment is the most recent. 	 * For each segment that is supposed to contain a copy of the super 	 * block, initialize its first few blocks and its segment summary 	 * to indicate this. 	 */
 name|lfsp
 operator|->
 name|lfs_nfiles
@@ -1736,7 +1736,7 @@ operator|*
 operator|)
 name|ipagep
 expr_stmt|;
-comment|/*  	 * Initialize IFILE.  It is the next block following the 	 * block of inodes (whose address has been calculated in 	 * lfsp->lfs_idaddr; 	 */
+comment|/* 	 * Initialize IFILE.  It is the next block following the 	 * block of inodes (whose address has been calculated in 	 * lfsp->lfs_idaddr; 	 */
 name|sb_addr
 operator|=
 name|lfsp
@@ -2279,7 +2279,7 @@ name|lfsp
 operator|->
 name|lfs_bsize
 expr_stmt|;
-comment|/* 	 * use ipagep for space for writing out other stuff.  It used to  	 * contain the ifile, but we're done with it. 	 */
+comment|/* 	 * use ipagep for space for writing out other stuff.  It used to 	 * contain the ifile, but we're done with it. 	 */
 comment|/* Write out the root and lost and found directories */
 name|bzero
 argument_list|(
@@ -2429,7 +2429,7 @@ name|lfs
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Finally, calculate all the fields for the summary structure 	 * and write it. 	 */
+comment|/* 	 * Finally, calculate all the fields for the summary structure 	 * and write it. 	 */
 name|summary
 operator|.
 name|ss_next
@@ -3423,7 +3423,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Construct a set of directory entries in "bufp".  We assume that all the  * entries in protodir fir in the first DIRBLKSIZ.    */
+comment|/*  * Construct a set of directory entries in "bufp".  We assume that all the  * entries in protodir fir in the first DIRBLKSIZ.  */
 end_comment
 
 begin_function

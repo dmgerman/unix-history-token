@@ -1661,7 +1661,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Table of unused string entries, sorted by length.  *   * Entries are allocated in STRTBLINCR sized pieces so that names  * of similar lengths can use the same entry. The value of STRTBLINCR  * is chosen so that every entry has at least enough space to hold  * a "struct strtbl" header. Thus every entry can be linked onto an  * apprpriate free list.  *  * NB. The macro "allocsize" below assumes that "struct strhdr"  *     has a size that is a power of two.  */
+comment|/*  * Table of unused string entries, sorted by length.  *  * Entries are allocated in STRTBLINCR sized pieces so that names  * of similar lengths can use the same entry. The value of STRTBLINCR  * is chosen so that every entry has at least enough space to hold  * a "struct strtbl" header. Thus every entry can be linked onto an  * apprpriate free list.  *  * NB. The macro "allocsize" below assumes that "struct strhdr"  *     has a size that is a power of two.  */
 end_comment
 
 begin_struct

@@ -2820,7 +2820,7 @@ operator|==
 name|SIGKILL
 condition|)
 block|{
-comment|/*  			 *  reboot(8) killed shell?  			 */
+comment|/* 			 *  reboot(8) killed shell? 			 */
 name|warning
 argument_list|(
 literal|"single user shell terminated."
@@ -5197,7 +5197,7 @@ name|requested_transition
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * If the administrator has not set the security level to -1 	 * to indicate that the kernel should not run multiuser in secure 	 * mode, and the run script has not set a higher level of security  	 * than level 1, then put the kernel into secure mode. 	 */
+comment|/* 	 * If the administrator has not set the security level to -1 	 * to indicate that the kernel should not run multiuser in secure 	 * mode, and the run script has not set a higher level of security 	 * than level 1, then put the kernel into secure mode. 	 */
 if|if
 condition|(
 name|getsecuritylevel

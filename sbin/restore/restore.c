@@ -457,7 +457,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * The following four routines implement the incremental  * restore algorithm. The first removes old entries, the second  * does renames and calculates the extraction list, the third  * cleans up link names missed by the first two, and the final  * one deletes old directories.  *  * Directories cannot be immediately deleted, as they may have  * other files in them which need to be moved out first. As  * directories to be deleted are found, they are put on the   * following deletion list. After all deletions and renames  * are done, this list is actually deleted.  */
+comment|/*  * The following four routines implement the incremental  * restore algorithm. The first removes old entries, the second  * does renames and calculates the extraction list, the third  * cleans up link names missed by the first two, and the final  * one deletes old directories.  *  * Directories cannot be immediately deleted, as they may have  * other files in them which need to be moved out first. As  * directories to be deleted are found, they are put on the  * following deletion list. After all deletions and renames  * are done, this list is actually deleted.  */
 end_comment
 
 begin_decl_stmt
@@ -684,7 +684,7 @@ directive|define
 name|MODECHG
 value|0x8
 comment|/* mode of inode changed */
-comment|/* 	 * This routine is called once for each element in the  	 * directory hierarchy, with a full path name. 	 * The "type" value is incorrectly specified as LEAF for 	 * directories that are not on the dump tape. 	 * 	 * Check to see if the file is on the tape. 	 */
+comment|/* 	 * This routine is called once for each element in the 	 * directory hierarchy, with a full path name. 	 * The "type" value is incorrectly specified as LEAF for 	 * directories that are not on the dump tape. 	 * 	 * Check to see if the file is on the tape. 	 */
 if|if
 condition|(
 name|TSTINO
@@ -1326,7 +1326,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 	 * An inode is being reused in a completely different way. 	 * Normally an extract can simply do an "unlink" followed 	 * by a "creat". Here we must do effectively the same 	 * thing. The complications arise because we cannot really 	 * delete a directory since it may still contain files 	 * that we need to rename, so we delete it from the symbol 	 * table, and put it on the list to be deleted eventually. 	 * Conversely if a directory is to be created, it must be 	 * done immediately, rather than waiting until the  	 * extraction phase. 	 */
+comment|/* 	 * An inode is being reused in a completely different way. 	 * Normally an extract can simply do an "unlink" followed 	 * by a "creat". Here we must do effectively the same 	 * thing. The complications arise because we cannot really 	 * delete a directory since it may still contain files 	 * that we need to rename, so we delete it from the symbol 	 * table, and put it on the list to be deleted eventually. 	 * Conversely if a directory is to be created, it must be 	 * done immediately, rather than waiting until the 	 * extraction phase. 	 */
 case|case
 name|ONTAPE
 operator||
@@ -2183,7 +2183,7 @@ name|first
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * If we find files on the tape that have no corresponding 		 * directory entries, then we must have found a file that 		 * was created while the dump was in progress. Since we have  		 * no name for it, we discard it knowing that it will be 		 * on the next incremental tape. 		 */
+comment|/* 		 * If we find files on the tape that have no corresponding 		 * directory entries, then we must have found a file that 		 * was created while the dump was in progress. Since we have 		 * no name for it, we discard it knowing that it will be 		 * on the next incremental tape. 		 */
 if|if
 condition|(
 name|first

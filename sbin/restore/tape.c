@@ -5519,7 +5519,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * If we are restoring a filesystem with old format inodes,  	 * copy the uid/gid to the new location. 	 */
+comment|/* 	 * If we are restoring a filesystem with old format inodes, 	 * copy the uid/gid to the new location. 	 */
 if|if
 condition|(
 name|oldinofmt

@@ -2894,7 +2894,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 * This is in case mask we  		 * want to set IP only 		 */
+comment|/* 		 * This is in case mask we 		 * want to set IP only 		 */
 if|if
 condition|(
 operator|!
@@ -3508,7 +3508,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 	 * Try first to set interface name  		 * from arguments.set_entry_ip() will exit on 		 * wrong argument. 		 */
+comment|/* 	 	 * Try first to set interface name 		 * from arguments.set_entry_ip() will exit on 		 * wrong argument. 		 */
 if|if
 condition|(
 name|set_entry_ifname

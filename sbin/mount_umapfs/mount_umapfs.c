@@ -131,7 +131,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * This routine provides the user interface to mounting a umap layer.  * It takes 4 mandatory parameters.  The mandatory arguments are the place   * where the next lower level is mounted, the place where the umap layer is to  * be mounted, the name of the user mapfile, and the name of the group  * mapfile.  The routine checks the ownerships and permissions on the  * mapfiles, then opens and reads them.  Then it calls mount(), which  * will, in turn, call the umap version of mount.   */
+comment|/*  * This routine provides the user interface to mounting a umap layer.  * It takes 4 mandatory parameters.  The mandatory arguments are the place  * where the next lower level is mounted, the place where the umap layer is to  * be mounted, the name of the user mapfile, and the name of the group  * mapfile.  The routine checks the ownerships and permissions on the  * mapfiles, then opens and reads them.  Then it calls mount(), which  * will, in turn, call the umap version of mount.  */
 end_comment
 
 begin_decl_stmt
@@ -393,7 +393,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAPSECURITY
-comment|/* 	 * Check that group and other don't have write permissions on 	 * this mapfile, and that the mapfile belongs to root.  	 */
+comment|/* 	 * Check that group and other don't have write permissions on 	 * this mapfile, and that the mapfile belongs to root. 	 */
 if|if
 condition|(
 name|fstat
@@ -668,7 +668,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAPSECURITY
-comment|/* 	 * Check that group and other don't have write permissions on 	 * this group mapfile, and that the file belongs to root.  	 */
+comment|/* 	 * Check that group and other don't have write permissions on 	 * this group mapfile, and that the file belongs to root. 	 */
 if|if
 condition|(
 name|fstat

@@ -1034,7 +1034,7 @@ operator||=
 name|ALTERED
 expr_stmt|;
 block|}
-comment|/*  	 * check for "." 	 */
+comment|/* 	 * check for "." 	 */
 if|if
 condition|(
 name|idesc

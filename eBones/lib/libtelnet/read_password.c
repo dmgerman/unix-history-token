@@ -29,7 +29,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * $Source: /home/ncvs/src/lib/libtelnet/read_password.c,v $  * $Author: rgrimes $  *  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  *  * For copying and distribution information, please see the file  *<mit-copyright.h>.  *  * This routine prints the supplied string to standard  * output as a prompt, and reads a password string without  * echoing.  */
+comment|/*  * $Source: /home/ncvs/src/secure/lib/libtelnet/read_password.c,v $  * $Author: csgr $  *  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  *  * For copying and distribution information, please see the file  *<mit-copyright.h>.  *  * This routine prints the supplied string to standard  * output as a prompt, and reads a password string without  * echoing.  */
 end_comment
 
 begin_if

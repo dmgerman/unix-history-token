@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	$Source: /home/ncvs/src/lib/libtelnet/kerberos5.c,v $  *	$Author: rgrimes $  *	$Id: kerberos5.c,v 1.1.1.1 1994/05/27 05:00:20 rgrimes Exp $  */
+comment|/*  *	$Source: /home/ncvs/src/secure/lib/libtelnet/kerberos5.c,v $  *	$Author: csgr $  *	$Id: kerberos5.c,v 1.1.1.1 1994/08/12 22:02:59 csgr Exp $  */
 end_comment
 
 begin_if
@@ -31,7 +31,7 @@ name|char
 name|rcsid_kerberos5_c
 index|[]
 init|=
-literal|"$Id: kerberos5.c,v 1.1.1.1 1994/05/27 05:00:20 rgrimes Exp $"
+literal|"$Id: kerberos5.c,v 1.1.1.1 1994/08/12 22:02:59 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 

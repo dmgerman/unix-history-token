@@ -3555,7 +3555,7 @@ name|defined
 argument_list|(
 name|_SC_CRAY_SECURE_SYS
 argument_list|)
-comment|/* 	 *	set ttyp line security label  	 */
+comment|/* 	 *	set ttyp line security label 	 */
 if|if
 condition|(
 name|secflag
