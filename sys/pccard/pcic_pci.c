@@ -2702,6 +2702,9 @@ name|pcic_intr_way
 name|way
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|THIS_BRAEKS_THINGS
 name|device_t
 name|dev
 init|=
@@ -2752,6 +2755,8 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|pcic_pci_gen_func
