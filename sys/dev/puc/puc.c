@@ -484,6 +484,7 @@ name|desc
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|pci_read_config
 argument_list|(
 name|dev
@@ -492,6 +493,9 @@ name|PCIR_HEADERTYPE
 argument_list|,
 literal|1
 argument_list|)
+operator|&
+literal|0x7f
+operator|)
 operator|!=
 literal|0
 condition|)
