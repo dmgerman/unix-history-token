@@ -299,22 +299,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|bus_space_tag_t
-name|uninorth_alloc_bus_tag
-parameter_list|(
-name|struct
-name|uninorth_softc
-modifier|*
-name|sc
-parameter_list|,
-name|int
-name|type
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Local routines.  */
 end_comment
@@ -1097,12 +1081,6 @@ operator|)
 return|;
 block|}
 block|}
-if|#
-directive|if
-literal|0
-block|sc->sc_iot = uninorth_alloc_bus_tag(sc, PCI_IO_BUS_SPACE); 	sc->sc_memt = uninorth_alloc_bus_tag(sc, PCI_MEMORY_BUS_SPACE);
-endif|#
-directive|endif
 name|device_add_child
 argument_list|(
 name|dev
@@ -1848,31 +1826,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_if
-unit|static bus_space_tag_t uninorth_alloc_bus_tag(struct uninorth_softc *sc, int type) { 	bus_space_tag_t	bt;  	bt = (bus_space_tag_t)malloc(sizeof(struct bus_space_tag), M_DEVBUF, 	    M_NOWAIT | M_ZERO); 	if (bt == NULL) 		panic("uninorth_alloc_bus_tag: out of memory");  	bzero(bt, sizeof(struct bus_space_tag)); 	bt->cookie = sc;
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|bt->parent = sc->sc_bustag;
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-unit|bt->type = type;  	return (bt); }
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
