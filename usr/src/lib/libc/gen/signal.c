@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	signal.c	4.1	84/05/16	*/
+comment|/*	signal.c	4.2	85/01/15	*/
 end_comment
 
 begin_comment
@@ -23,6 +23,8 @@ begin_macro
 name|ENTRY
 argument_list|(
 argument|signal
+argument_list|,
+literal|0
 argument_list|)
 end_macro
 
