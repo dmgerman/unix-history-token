@@ -7488,11 +7488,6 @@ return|;
 block|}
 block|}
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|ki
 operator|->
 name|kaio_flags
@@ -7512,6 +7507,11 @@ argument_list|,
 literal|"aiospn"
 argument_list|,
 name|timo
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 if|if
