@@ -1580,6 +1580,10 @@ name|sa
 expr_stmt|;
 if|if
 condition|(
+name|m
+operator|!=
+name|NULL
+operator|&&
 name|IN6_IS_ADDR_LINKLOCAL
 argument_list|(
 operator|&
