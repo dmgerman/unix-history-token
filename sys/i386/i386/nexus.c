@@ -1015,9 +1015,11 @@ condition|)
 block|{
 name|child
 operator|=
-name|device_add_child
+name|BUS_ADD_CHILD
 argument_list|(
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"eisa"
 argument_list|,
@@ -1062,9 +1064,11 @@ condition|)
 block|{
 name|child
 operator|=
-name|device_add_child
+name|BUS_ADD_CHILD
 argument_list|(
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"mca"
 argument_list|,
@@ -1075,7 +1079,7 @@ if|if
 condition|(
 name|child
 operator|==
-literal|0
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -1106,9 +1110,11 @@ condition|)
 block|{
 name|child
 operator|=
-name|device_add_child
+name|BUS_ADD_CHILD
 argument_list|(
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|"isa"
 argument_list|,
