@@ -275,11 +275,9 @@ else|#
 directive|else
 end_else
 
-begin_warning
-warning|#
-directive|warning
-warning|... must complete these for the alpha etc.
-end_warning
+begin_comment
+comment|/* Unaligned access versions. */
+end_comment
 
 begin_define
 define|#
@@ -291,6 +289,16 @@ parameter_list|,
 name|b
 parameter_list|)
 value|(!bcmp(a, b, ETHER_ADDR_LEN) )
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_ETHER_BROADCAST
+parameter_list|(
+name|a
+parameter_list|)
+value|(!bcmp(a, "\377\377\377\377\377\377", 6))
 end_define
 
 begin_endif
@@ -429,7 +437,7 @@ name|ifp
 parameter_list|,
 name|type
 parameter_list|)
-value|bdg_stats.s[ifp->if_index].p_in[(int)type]++
+value|bdg_stats.s[ifp->if_index].p_in[(long)type]++
 end_define
 
 begin_ifdef
