@@ -1300,13 +1300,11 @@ name|disklabel
 modifier|*
 name|label
 decl_stmt|;
-name|atapi_wait_ready
+name|atapi_test_ready
 argument_list|(
 name|fdp
 operator|->
 name|atp
-argument_list|,
-literal|10
 argument_list|)
 expr_stmt|;
 name|afd_prevent_allow
