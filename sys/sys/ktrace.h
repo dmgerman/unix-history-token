@@ -489,10 +489,8 @@ expr|enum
 name|uio_rw
 operator|,
 expr|struct
-name|iovec
+name|uio
 operator|*
-operator|,
-name|int
 operator|,
 name|int
 operator|)
