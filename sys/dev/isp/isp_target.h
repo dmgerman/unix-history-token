@@ -1521,6 +1521,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CT_DATA_OVER
+value|0x09
+end_define
+
+begin_comment
+comment|/* (FC only) Data Overrun */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CT_RSELTMO
 value|0x0A
 end_define
@@ -1565,6 +1576,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CT_BUS_ERROR
+value|0x10
+end_define
+
+begin_comment
+comment|/* (FC Only) DMA PCI Error */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CT_PANIC
 value|0x13
 end_define
@@ -1593,6 +1615,17 @@ end_define
 
 begin_comment
 comment|/* Bus Device Reset msg received */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CT_DATA_UNDER
+value|0x15
+end_define
+
+begin_comment
+comment|/* (FC only) Data Underrun */
 end_comment
 
 begin_define
@@ -2385,25 +2418,21 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Enable/Disable/Modify a logical unit.  */
+comment|/*  * Enable/Disable/Modify a logical unit.  * (softc, cmd, bus, tgt, lun, cmd_cnt, inotify_cnt, opaque)  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DFLT_CMD_CNT
+name|DFLT_CMND_CNT
 value|32
 end_define
 
-begin_comment
-comment|/* XX */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|DFLT_INOTIFY
-value|(4)
+name|DFLT_INOT_CNT
+value|4
 end_define
 
 begin_function_decl
@@ -2413,6 +2442,10 @@ parameter_list|(
 name|struct
 name|ispsoftc
 modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|,

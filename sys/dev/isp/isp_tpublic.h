@@ -317,12 +317,12 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|CDFL_BUSY
+name|CDFL_SNSVALID
 value|0x01
 end_define
 
 begin_comment
-comment|/* this command is not on a free list */
+comment|/* sense data (from f/w) valid */
 end_comment
 
 begin_define
@@ -367,6 +367,17 @@ end_define
 
 begin_comment
 comment|/* last action ended in error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CDFL_BUSY
+value|0x40
+end_define
+
+begin_comment
+comment|/* this command is not on a free list */
 end_comment
 
 begin_define

@@ -825,6 +825,12 @@ parameter_list|,
 name|int
 name|lun
 parameter_list|,
+name|int
+name|cmd_cnt
+parameter_list|,
+name|int
+name|inot_cnt
+parameter_list|,
 name|u_int32_t
 name|opaque
 parameter_list|)
@@ -877,13 +883,13 @@ name|el
 operator|.
 name|le_cmd_count
 operator|=
-name|DFLT_CMD_CNT
+name|cmd_cnt
 expr_stmt|;
 name|el
 operator|.
 name|le_in_count
 operator|=
-name|DFLT_INOTIFY
+name|inot_cnt
 expr_stmt|;
 if|if
 condition|(
@@ -1715,7 +1721,11 @@ name|at_datalen
 expr_stmt|;
 name|cto
 operator|->
-name|ct_flags
+name|rsp
+operator|.
+name|m1
+operator|.
+name|ct_scsi_status
 operator||=
 name|CT2_DATA_UNDER
 expr_stmt|;
@@ -1832,7 +1842,11 @@ literal|16
 expr_stmt|;
 name|cto
 operator|->
-name|ct_flags
+name|rsp
+operator|.
+name|m1
+operator|.
+name|ct_scsi_status
 operator||=
 name|CT2_SNSLEN_VALID
 expr_stmt|;
@@ -3803,12 +3817,6 @@ argument_list|,
 name|fmsg
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (status& SENSEVALID) { 				bcopy((caddr_t) (cep + CTIO_SENSE_OFFSET), 				    (caddr_t)&cdp->cd_sensedata, 				    sizeof(scsi_sense_t)); 				cdp->cd_flags |= CDF_SENSEVALID; 			}
-endif|#
-directive|endif
 break|break;
 default|default:
 name|isp_prt
@@ -3908,14 +3916,18 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 			 * Final CTIO completed. Release DMA resources and 			 * notify platform dependent layers. 			 */
+comment|/* 		 * Final CTIO completed. Release DMA resources and 		 * notify platform dependent layers. 		 */
 if|if
 condition|(
+operator|(
 name|ct
 operator|->
 name|ct_flags
 operator|&
 name|CT_DATAMASK
+operator|)
+operator|!=
+name|CT_NO_DATA
 condition|)
 block|{
 name|ISP_DMAFREE
@@ -4033,6 +4045,25 @@ name|QLTM_SVALID
 condition|)
 block|{
 case|case
+name|CT_BUS_ERROR
+case|:
+name|isp_prt
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"PCI DMA Bus Error"
+argument_list|)
+expr_stmt|;
+comment|/* FALL Through */
+case|case
+name|CT_DATA_OVER
+case|:
+case|case
+name|CT_DATA_UNDER
+case|:
+case|case
 name|CT_OK
 case|:
 comment|/* 		 * There are generally 2 possibilities as to why we'd get 		 * this condition: 		 * 	We sent or received data. 		 * 	We sent status& command complete. 		 */
@@ -4040,10 +4071,10 @@ break|break;
 case|case
 name|CT_BDR_MSG
 case|:
-comment|/* 		 * Bus Device Reset message received or the SCSI Bus has 		 * been Reset; the firmware has gone to Bus Free. 		 * 		 * The firmware generates an async mailbox interupt to 		 * notify us of this and returns outstanding CTIOs with this 		 * status. These CTIOs are handled in that same way as 		 * CT_ABORTED ones, so just fall through here. 		 */
+comment|/* 		 * Target Reset function received. 		 * 		 * The firmware generates an async mailbox interupt to 		 * notify us of this and returns outstanding CTIOs with this 		 * status. These CTIOs are handled in that same way as 		 * CT_ABORTED ones, so just fall through here. 		 */
 name|fmsg
 operator|=
-literal|"Bus Device Reset"
+literal|"TARGET RESET Task Management Function Received"
 expr_stmt|;
 comment|/*FALLTHROUGH*/
 case|case
@@ -4057,7 +4088,7 @@ name|NULL
 condition|)
 name|fmsg
 operator|=
-literal|"Bus Reset"
+literal|"LIP Reset"
 expr_stmt|;
 comment|/*FALLTHROUGH*/
 case|case
@@ -4072,7 +4103,7 @@ name|NULL
 condition|)
 name|fmsg
 operator|=
-literal|"ABORT TASK sent by Initiator"
+literal|"ABORT Task Management Function Received"
 expr_stmt|;
 name|isp_prt
 argument_list|(
@@ -4101,33 +4132,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|CT_NOPATH
-case|:
-comment|/* 		 * CTIO rejected by the firmware due "no path for the 		 * nondisconnecting nexus specified". This means that 		 * we tried to access the bus while a non-disconnecting 		 * command is in process. 		 */
-name|isp_prt
-argument_list|(
-name|isp
-argument_list|,
-name|ISP_LOGERR
-argument_list|,
-literal|"Firmware rejected CTIO2 for bad nexus %d->%d"
-argument_list|,
-name|ct
-operator|->
-name|ct_iid
-argument_list|,
-name|ct
-operator|->
-name|ct_lun
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 name|CT_RSELTMO
 case|:
 name|fmsg
 operator|=
-literal|"Reselection"
+literal|"failure to reconnect to initiator"
 expr_stmt|;
 comment|/*FALLTHROUGH*/
 case|case
@@ -4141,7 +4150,7 @@ name|NULL
 condition|)
 name|fmsg
 operator|=
-literal|"Command"
+literal|"command"
 expr_stmt|;
 name|isp_prt
 argument_list|(
@@ -4161,35 +4170,6 @@ case|:
 name|fmsg
 operator|=
 literal|"Completed with Error"
-expr_stmt|;
-comment|/*FALLTHROUGH*/
-case|case
-name|CT_PHASE_ERROR
-case|:
-comment|/* Bus phase sequence error */
-if|if
-condition|(
-name|fmsg
-operator|==
-name|NULL
-condition|)
-name|fmsg
-operator|=
-literal|"Phase Sequence Error"
-expr_stmt|;
-comment|/*FALLTHROUGH*/
-case|case
-name|CT_TERMINATED
-case|:
-if|if
-condition|(
-name|fmsg
-operator|==
-name|NULL
-condition|)
-name|fmsg
-operator|=
-literal|"terminated by TERMINATE TRANSFER"
 expr_stmt|;
 comment|/*FALLTHROUGH*/
 case|case
@@ -4220,6 +4200,19 @@ operator|=
 literal|"Port not available"
 expr_stmt|;
 case|case
+name|CT_PORTCHANGED
+case|:
+if|if
+condition|(
+name|fmsg
+operator|==
+name|NULL
+condition|)
+name|fmsg
+operator|=
+literal|"Port Changed"
+expr_stmt|;
+case|case
 name|CT_NOACK
 case|:
 if|if
@@ -4243,12 +4236,6 @@ argument_list|,
 name|fmsg
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (status& SENSEVALID) { 				bcopy((caddr_t) (cep + CTIO_SENSE_OFFSET), 				    (caddr_t)&cdp->cd_sensedata, 				    sizeof(scsi_sense_t)); 				cdp->cd_flags |= CDF_SENSEVALID; 			}
-endif|#
-directive|endif
 break|break;
 case|case
 name|CT_INVRXID
@@ -4368,6 +4355,31 @@ else|else
 block|{
 if|if
 condition|(
+operator|(
+name|ct
+operator|->
+name|ct_flags
+operator|&
+name|CT2_DATAMASK
+operator|)
+operator|!=
+name|CT2_NO_DATA
+condition|)
+block|{
+name|ISP_DMAFREE
+argument_list|(
+name|isp
+argument_list|,
+name|xs
+argument_list|,
+name|ct
+operator|->
+name|ct_syshandle
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|ct
 operator|->
 name|ct_flags
@@ -4396,17 +4408,6 @@ argument_list|,
 name|pl
 argument_list|,
 literal|"data CTIO complete"
-argument_list|)
-expr_stmt|;
-name|ISP_DMAFREE
-argument_list|(
-name|isp
-argument_list|,
-name|xs
-argument_list|,
-name|ct
-operator|->
-name|ct_syshandle
 argument_list|)
 expr_stmt|;
 block|}
