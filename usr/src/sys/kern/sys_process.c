@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)sys_process.c	7.23 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)sys_process.c	7.24 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -513,11 +513,15 @@ name|u_kproc
 operator|.
 name|kp_proc
 operator|.
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 operator|=
 name|p
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 expr_stmt|;
 comment|/* u.u_ar0 */
 name|i
@@ -982,7 +986,9 @@ operator|==
 operator|&
 name|p
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 index|[
 name|ipcreg
 index|[
@@ -1000,7 +1006,9 @@ operator|==
 operator|&
 name|p
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 index|[
 name|PS
 index|]
@@ -1139,7 +1147,9 @@ literal|1
 condition|)
 name|p
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 index|[
 name|PC
 index|]
@@ -1186,7 +1196,9 @@ name|PT_STEP
 condition|)
 name|p
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 index|[
 name|PS
 index|]
