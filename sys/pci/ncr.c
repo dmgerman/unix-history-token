@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncr.c,v 1.41 1995/08/15 20:19:14 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncr.c,v 1.42 1995/08/23 23:03:25 gibbs Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_define
@@ -1518,7 +1518,7 @@ begin_struct
 struct|struct
 name|lcb
 block|{
-comment|/* 	**	during reselection the ncr jumps to this point 	**	with SFBR set to the "Identify" message. 	**	if it's not this lun, jump to the next. 	** 	**	JUMP  IF (SFBR == #lun#) 	**	@(next lcb of this target) 	*/
+comment|/* 	**	during reselection the ncr jumps to this point 	**	with SFBR set to the "Identify" message. 	**	if it's not this lun, jump to the next. 	** 	**	JUMP  IF (SFBR != #lun#) 	**	@(next lcb of this target) 	*/
 name|struct
 name|link
 name|jump_lcb
@@ -1604,7 +1604,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* **	The status bytes are used by the host and the script processor. ** **	The first four byte are copied to the scratchb register **	(declared as scr0..scr3 in ncr_reg.h) just after the select/reselect, **	and copied back just after disconnecting. **	Inside the script the XX_REG are used. ** **	The last four bytes are used inside the script by "COPY" commands. **	Because source and destination must have the same alignment **	in a longword, the fields HAVE to be on the selected offsets. **		xerr_st	(4)	0	(0x34)	scratcha **		sync_st	(5)	1	(0x05)	sxfer **		wide_st	(7)	3	(0x03)	scntl3 */
+comment|/* **	The status bytes are used by the host and the script processor. ** **	The first four byte are copied to the scratchb register **	(declared as scr0..scr3 in ncr_reg.h) just after the select/reselect, **	and copied back just after disconnecting. **	Inside the script the XX_REG are used. ** **	The last four bytes are used inside the script by "COPY" commands. **	Because source and destination must have the same alignment **	in a longword, the fields HAVE to be at the choosen offsets. **		xerr_st	(4)	0	(0x34)	scratcha **		sync_st	(5)	1	(0x05)	sxfer **		wide_st	(7)	3	(0x03)	scntl3 */
 end_comment
 
 begin_comment
@@ -2742,11 +2742,6 @@ specifier|static
 name|void
 name|ncr_script_copy_and_bind
 parameter_list|(
-name|struct
-name|script
-modifier|*
-name|script
-parameter_list|,
 name|ncb_p
 name|np
 parameter_list|)
@@ -3029,7 +3024,7 @@ name|char
 name|ident
 index|[]
 init|=
-literal|"\n$Id: ncr.c,v 1.41 1995/08/15 20:19:14 se Exp $\n"
+literal|"\n$Id: ncr.c,v 1.42 1995/08/23 23:03:25 gibbs Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -3127,7 +3122,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* to be alligned _NOT_ static */
+comment|/* to be aligned _NOT_ static */
 end_comment
 
 begin_comment
@@ -3528,7 +3523,7 @@ block|}
 comment|/*-------------------------< TRYSEL>----------------------*/
 block|,
 block|{
-comment|/* 	**	Now: 	**	DSA: Address of a Data Structure 	**	or   Address of the IDLE-Label. 	** 	**	TEMP:	Address of a script, which tries to 	**		start the NEXT entry. 	** 	**	Save the TEMP register into the SCRATCHA register. 	**	Then copy the DSA to TEMP and RETURN. 	**	This is kind of an indirect jump. 	**	(The script processor has NO stack, so the 	**	CALL is actually a jump and link, and the 	**	RETURN is an indirect jump.) 	** 	**	If the slot was empty, DSA contains the address 	**	of the IDLE part of this script. The processor 	**	jumps to IDLE and waits for a reselect. 	**	It will wake up and try the same slot again 	**	after the SIGP bit becomes set by the host. 	** 	**	If the slot was not empty, DSA contains 	**	the address of the phys-part of a ccb. 	**	The processor jumps to this address. 	**	phys starts with head, 	**	head starts with launch, 	**	so actually the processor jumps to 	**	the lauch part. 	**	If the entry is scheduled to be executed, 	**	then launch contains a jump to SELECT. 	**	If it's not scheduled, it contains a jump to IDLE. 	*/
+comment|/* 	**	Now: 	**	DSA: Address of a Data Structure 	**	or   Address of the IDLE-Label. 	** 	**	TEMP:	Address of a script, which tries to 	**		start the NEXT entry. 	** 	**	Save the TEMP register into the SCRATCHA register. 	**	Then copy the DSA to TEMP and RETURN. 	**	This is kind of an indirect jump. 	**	(The script processor has NO stack, so the 	**	CALL is actually a jump and link, and the 	**	RETURN is an indirect jump.) 	** 	**	If the slot was empty, DSA contains the address 	**	of the IDLE part of this script. The processor 	**	jumps to IDLE and waits for a reselect. 	**	It will wake up and try the same slot again 	**	after the SIGP bit becomes set by the host. 	** 	**	If the slot was not empty, DSA contains 	**	the address of the phys-part of a ccb. 	**	The processor jumps to this address. 	**	phys starts with head, 	**	head starts with launch, 	**	so actually the processor jumps to 	**	the lauch part. 	**	If the entry is scheduled for execution, 	**	then launch contains a jump to SELECT. 	**	If it's not scheduled, it contains a jump to IDLE. 	*/
 name|SCR_COPY
 argument_list|(
 literal|4
@@ -3634,7 +3629,7 @@ block|,  }
 comment|/*-------------------------< SELECT>----------------------*/
 block|,
 block|{
-comment|/* 	**	DSA	contains the address of a scheduled 	**		data structure. 	** 	**	SCRATCHA contains the address of the script, 	**		which starts the next entry. 	** 	**	Set Initiator mode. 	** 	**	(Target mode is left as an exercise for the student) 	*/
+comment|/* 	**	DSA	contains the address of a scheduled 	**		data structure. 	** 	**	SCRATCHA contains the address of the script, 	**		which starts the next entry. 	** 	**	Set Initiator mode. 	** 	**	(Target mode is left as an exercise for the reader) 	*/
 name|SCR_CLR
 argument_list|(
 name|SCR_TRG
@@ -6054,7 +6049,7 @@ name|savep
 argument_list|)
 block|,
 comment|/*>>>*/
-comment|/* 	**	Check if temp==savep or temp==goalp: 	**	if not, log a missing save pointer message. 	**	In fact, it's a comparation mod 256. 	** 	**	Hmmm, I hadn't thought that I would be urged to 	**	write this kind of ugly self modifying code. 	** 	**	It's unbelievable, but the ncr53c8xx isn't able 	**	to subtract one register from another. 	*/
+comment|/* 	**	Check if temp==savep or temp==goalp: 	**	if not, log a missing save pointer message. 	**	In fact, it's a comparison mod 256. 	** 	**	Hmmm, I hadn't thought that I would be urged to 	**	write this kind of ugly self modifying code. 	** 	**	It's unbelievable, but the ncr53c8xx isn't able 	**	to subtract one register from another. 	*/
 name|SCR_FROM_REG
 argument_list|(
 name|temp
@@ -6062,7 +6057,7 @@ argument_list|)
 block|,
 literal|0
 block|,
-comment|/* 	**	You are not expected to understand this .. 	*/
+comment|/* 	**	You are not expected to understand this .. 	** 	**	CAUTION: only little endian architectures supported! XXX 	*/
 name|SCR_COPY
 argument_list|(
 literal|1
@@ -7770,16 +7765,26 @@ begin_comment
 comment|/*========================================================== ** ** **	Copy and rebind a script. ** ** **========================================================== */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|ncrcmd
+modifier|*
+name|src
+init|=
+operator|(
+name|ncrcmd
+operator|*
+operator|)
+operator|&
+name|script0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
 name|ncr_script_copy_and_bind
 parameter_list|(
-name|struct
-name|script
-modifier|*
-name|script
-parameter_list|,
 name|ncb_p
 name|np
 parameter_list|)
@@ -7793,9 +7798,6 @@ name|old
 decl_stmt|;
 name|ncrcmd
 modifier|*
-name|src
-decl_stmt|,
-modifier|*
 name|dst
 decl_stmt|,
 modifier|*
@@ -7807,10 +7809,59 @@ decl_stmt|;
 name|int
 name|relocs
 decl_stmt|;
-name|np
-operator|->
+name|u_long
+name|p_script
+decl_stmt|;
+comment|/*  	 * Test whether last byte of script is at the right  	 * PHYSICAL address, since the NCR uses phys. addresses only. 	 * Assumes that the script fits into two 4KB pages ... 	 */
+name|assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
 name|script
+argument_list|)
+operator|<=
+literal|8192
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|p_script
 operator|=
+name|vtophys
+argument_list|(
+name|src
+argument_list|)
+operator|)
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|script
+argument_list|)
+operator|!=
+name|vtophys
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|src
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|script
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|struct
+name|script
+modifier|*
+name|newsrc
+init|=
 operator|(
 expr|struct
 name|script
@@ -7828,32 +7879,90 @@ name|M_DEVBUF
 argument_list|,
 name|M_WAITOK
 argument_list|)
+decl_stmt|;
+name|memcpy
+argument_list|(
+name|newsrc
+argument_list|,
+name|src
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|script
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|src
+operator|=
+operator|(
+name|ncrcmd
+operator|*
+operator|)
+name|newsrc
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s: NCR script not physically contigous, retrying\n"
+argument_list|,
+name|ncr_name
+argument_list|(
+name|np
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|np
+operator|->
+name|script
+operator|=
+operator|(
+expr|struct
+name|script
+operator|*
+operator|)
+name|src
 expr_stmt|;
 name|np
 operator|->
 name|p_script
 operator|=
-name|vtophys
-argument_list|(
-name|np
-operator|->
-name|script
-argument_list|)
-expr_stmt|;
-name|src
-operator|=
-name|script
-operator|->
-name|start
+name|p_script
 expr_stmt|;
 name|dst
 operator|=
-name|np
-operator|->
+operator|(
+name|ncrcmd
+operator|*
+operator|)
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
 name|script
-operator|->
-name|start
+argument_list|)
+argument_list|,
+name|M_DEVBUF
+argument_list|,
+name|M_WAITOK
+argument_list|)
 expr_stmt|;
+comment|/* 	 * Copy the script to keep an unmodified version  	 * to bind for another NCR chip, if present. 	 */
+name|memcpy
+argument_list|(
+name|dst
+argument_list|,
+name|src
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|script
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/*  	 * Patch the "src" of the memcpy to become the script to execute. 	 * The copy in the malloc()ed memory at "dst" will be the src of  	 * the script for the next NCR, if there are multiple chips. 	 */
 name|start
 operator|=
 name|src
@@ -7879,10 +7988,6 @@ operator|<
 name|end
 condition|)
 block|{
-operator|*
-name|dst
-operator|++
-operator|=
 name|opcode
 operator|=
 operator|*
@@ -8071,7 +8176,6 @@ name|old
 operator|=
 operator|*
 name|src
-operator|++
 expr_stmt|;
 switch|switch
 condition|(
@@ -8164,7 +8268,7 @@ expr_stmt|;
 break|break;
 block|}
 operator|*
-name|dst
+name|src
 operator|++
 operator|=
 name|new
@@ -8172,16 +8276,16 @@ expr_stmt|;
 block|}
 block|}
 else|else
-operator|*
-name|dst
-operator|++
-operator|=
-operator|*
 name|src
 operator|++
 expr_stmt|;
 block|}
 empty_stmt|;
+comment|/* 	 * next time use the (unmodified) copy of the script as "src" 	 */
+name|src
+operator|=
+name|dst
+expr_stmt|;
 block|}
 end_function
 
@@ -8396,7 +8500,7 @@ return|;
 block|}
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
@@ -8775,9 +8879,6 @@ argument_list|)
 expr_stmt|;
 name|ncr_script_copy_and_bind
 argument_list|(
-operator|&
-name|script0
-argument_list|,
 name|np
 argument_list|)
 expr_stmt|;
@@ -9407,6 +9508,11 @@ argument_list|(
 name|nc_scntl1
 argument_list|,
 name|CRST
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1000
 argument_list|)
 expr_stmt|;
 return|return
@@ -10088,13 +10194,6 @@ name|tag
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 		** @GENSCSI@	Bug in "/sys/scsi/cd.c" 		** 		**	/sys/scsi/cd.c initializes opennings with 2. 		**	Our info value of 1 is not respected. 		*/
-block|if (xp->sc_link&& xp->sc_link->opennings) { 			PRINT_ADDR(xp); 			printf ("opennings set to 0.\n"); 			xp->sc_link->opennings = 0; 		};
-endif|#
-directive|endif
 block|}
 empty_stmt|;
 comment|/*---------------------------------------------------- 	** 	**	Build the identify / tag / sdtr message 	** 	**---------------------------------------------------- 	*/
@@ -14432,9 +14531,6 @@ name|dsp
 decl_stmt|,
 name|dsa
 decl_stmt|;
-name|ccb_p
-name|cp
-decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -15123,7 +15219,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\tvirt.addr: 0x%08x instr: 0x%08x\n"
+literal|"\tvirt.addr: 0x%08lx instr: 0x%08lx\n"
 argument_list|,
 name|vpci
 argument_list|,
@@ -15142,49 +15238,6 @@ operator|+=
 literal|4
 expr_stmt|;
 block|}
-block|}
-name|cp
-operator|=
-operator|&
-name|np
-operator|->
-name|ccb
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\tgather/scatter table:\n"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|MAX_SCATTER
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|printf
-argument_list|(
-literal|"\t%02d\t0x%08x\n"
-argument_list|,
-name|i
-argument_list|,
-name|cp
-operator|->
-name|phys
-operator|.
-name|data
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
 block|}
 comment|/*---------------------------------------- 	**	clean up the dma fifo 	**---------------------------------------- 	*/
 if|if
@@ -15524,7 +15577,7 @@ expr_stmt|;
 return|return;
 block|}
 empty_stmt|;
-comment|/* **	@RECOVER@ HTH, SGE, ABRT. ** **	We should try to recover from these interrupts. **	They may occur if there are problems with synch transfers, **	or if targets are powerswitched while the driver is running. */
+comment|/* **	@RECOVER@ HTH, SGE, ABRT. ** **	We should try to recover from these interrupts. **	They may occur if there are problems with synch transfers, or  **	if targets are switched on or off while the driver is running. */
 if|if
 condition|(
 name|sist
@@ -16133,13 +16186,16 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: SCSI phase error fixup: CCB already dequeued (0x%08x)\n"
+literal|"%s: SCSI phase error fixup: CCB already dequeued (0x%08lx)\n"
 argument_list|,
 name|ncr_name
 argument_list|(
 name|np
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|np
 operator|->
 name|header
@@ -16162,15 +16218,21 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: SCSI phase error fixup: CCB address mismatch (0x%08x != 0x%08x)\n"
+literal|"%s: SCSI phase error fixup: CCB address mismatch (0x%08lx != 0x%08lx)\n"
 argument_list|,
 name|ncr_name
 argument_list|(
 name|np
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|cp
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|np
 operator|->
 name|header
@@ -16487,10 +16549,10 @@ expr_stmt|;
 block|}
 empty_stmt|;
 comment|/* 	**	if old phase not dataphase, leave here. 	*/
-name|assert
-argument_list|(
+if|if
+condition|(
 name|cmd
-operator|==
+operator|!=
 operator|(
 name|vdsp
 index|[
@@ -16499,8 +16561,31 @@ index|]
 operator|>>
 literal|24
 operator|)
+condition|)
+block|{
+name|PRINT_ADDR
+argument_list|(
+name|cp
+operator|->
+name|xfer
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"internal error: cmd=%02x != %02x=(vdsp[0]>> 24)\n"
+argument_list|,
+name|cmd
+argument_list|,
+name|vdsp
+index|[
+literal|0
+index|]
+operator|>>
+literal|24
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|cmd
@@ -18494,13 +18579,14 @@ if|if
 condition|(
 name|lp
 condition|)
+block|{
 name|cp
 operator|=
 name|lp
 operator|->
 name|next_ccb
 expr_stmt|;
-comment|/* 	**	Look for free CCB 	*/
+comment|/* 		**	Look for free CCB 		*/
 while|while
 condition|(
 name|cp
@@ -18515,6 +18601,7 @@ name|cp
 operator|->
 name|next_ccb
 expr_stmt|;
+block|}
 comment|/* 	**	if nothing available, take the default. 	*/
 if|if
 condition|(
@@ -18605,12 +18692,13 @@ name|flags
 parameter_list|)
 block|{
 comment|/* 	**    sanity 	*/
-if|if
-condition|(
-operator|!
+name|assert
+argument_list|(
 name|cp
-condition|)
-return|return;
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|cp
 operator|->
 name|host_status
@@ -18670,18 +18758,20 @@ decl_stmt|;
 name|u_long
 name|lun
 decl_stmt|;
-if|if
-condition|(
-operator|!
+name|assert
+argument_list|(
 name|np
-condition|)
-return|return;
-if|if
-condition|(
-operator|!
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
 name|xp
-condition|)
-return|return;
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|target
 operator|=
 name|xp
@@ -19608,7 +19698,7 @@ argument_list|(
 name|vaddr
 argument_list|)
 expr_stmt|;
-comment|/* 	**	insert extra break points at a distance of chunk. 	**	We try to reduce the number of interrupts due to 	**	unexpected phase changes due to disconnects. 	**	A typical harddisk may disconnect before ANY block. 	**	If we want to avoid unexpected phase changes at all 	**	we have to use a break point every 512 bytes. 	**	Of course the number of scatter/gather blocks is 	**	limited. 	*/
+comment|/* 	**	insert extra break points at a distance of chunk. 	**	We try to reduce the number of interrupts caused 	**	by unexpected phase changes due to disconnects. 	**	A typical harddisk may disconnect before ANY block. 	**	If we wanted to avoid unexpected phase changes at all 	**	we had to use a break point every 512 bytes. 	**	Of course the number of scatter/gather blocks is 	**	limited. 	*/
 name|free
 operator|=
 name|MAX_SCATTER
