@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Aic7xxx SCSI host adapter firmware asssembler  *  * Copyright (c) 1997, 1998, 2000, 2001 Justin T. Gibbs.  * Copyright (c) 2001 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aicasm/aicasm.c#14 $  *  * $FreeBSD$  */
+comment|/*  * Aic7xxx SCSI host adapter firmware asssembler  *  * Copyright (c) 1997, 1998, 2000, 2001 Justin T. Gibbs.  * Copyright (c) 2001, 2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aicasm/aicasm.c#22 $  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -265,6 +265,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|char
+modifier|*
+name|stock_include_file
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|FILE
 modifier|*
 name|ofile
@@ -303,6 +310,20 @@ begin_decl_stmt
 name|FILE
 modifier|*
 name|listfile
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|regdiagfilename
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|FILE
+modifier|*
+name|regdiagfile
 decl_stmt|;
 end_decl_stmt
 
@@ -548,7 +569,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"d:l:n:o:r:I:O:"
+literal|"d:i:l:n:o:p:r:I:"
 argument_list|)
 operator|)
 operator|!=
@@ -638,6 +659,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+break|break;
+case|case
+literal|'i'
+case|:
+name|stock_include_file
+operator|=
+name|optarg
+expr_stmt|;
 break|break;
 case|case
 literal|'l'
@@ -743,6 +772,44 @@ argument_list|)
 expr_stmt|;
 block|}
 name|ofilename
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+comment|/* Create Register Diagnostic "printing" Functions */
+if|if
+condition|(
+operator|(
+name|regdiagfile
+operator|=
+name|fopen
+argument_list|(
+name|optarg
+argument_list|,
+literal|"w"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|perror
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+name|stop
+argument_list|(
+name|NULL
+argument_list|,
+name|EX_CANTCREAT
+argument_list|)
+expr_stmt|;
+block|}
+name|regdiagfilename
 operator|=
 name|optarg
 expr_stmt|;
@@ -982,6 +1049,37 @@ argument_list|()
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
+if|if
+condition|(
+name|regdiagfile
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|regfile
+operator|==
+name|NULL
+operator|||
+name|stock_include_file
+operator|==
+name|NULL
+operator|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: The -p option requires the -r and -i options.\n"
+argument_list|,
+name|appname
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
 name|symtable_open
 argument_list|()
 expr_stmt|;
@@ -1080,13 +1178,13 @@ name|regfile
 operator|!=
 name|NULL
 condition|)
-block|{
 name|symtable_dump
 argument_list|(
 name|regfile
+argument_list|,
+name|regdiagfile
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|listfile
@@ -1128,7 +1226,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %-16s [-nostdinc] [-I-] [-I directory] [-o output_file] 			[-r register_output_file] [-l program_list_file] 			input_file\n"
+literal|"usage: %-16s [-nostdinc] [-I-] [-I directory] [-o output_file]\n"
+literal|"	[-r register_output_file [-p register_diag_file -i includefile]]\n"
+literal|"	[-l program_list_file]\n"
+literal|"	input_file\n"
 argument_list|,
 name|appname
 argument_list|)
@@ -1309,7 +1410,11 @@ name|fprintf
 argument_list|(
 name|ofile
 argument_list|,
-literal|"/*  * DO NOT EDIT - This file is automatically generated  *		 from the following source files:  * %s */\n"
+literal|"/*\n"
+literal|" * DO NOT EDIT - This file is automatically generated\n"
+literal|" *		 from the following source files:\n"
+literal|" *\n"
+literal|"%s */\n"
 argument_list|,
 name|versions
 argument_list|)
@@ -1482,6 +1587,20 @@ begin_comment
 comment|/* 	 *  Output patch information.  Patch functions first. 	 */
 end_comment
 
+begin_expr_stmt
+name|fprintf
+argument_list|(
+name|ofile
+argument_list|,
+literal|"typedef int %spatch_func_t (%s);\n"
+argument_list|,
+name|prefix
+argument_list|,
+name|patch_arg_list
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_for
 for|for
 control|(
@@ -1511,7 +1630,17 @@ name|fprintf
 argument_list|(
 name|ofile
 argument_list|,
-literal|"static int aic_patch%d_func(%s);  static int aic_patch%d_func(%s) { 	return (%s); }\n\n"
+literal|"static %spatch_func_t %spatch%d_func;\n"
+literal|"\n"
+literal|"static int\n"
+literal|"%spatch%d_func(%s)\n"
+literal|"{\n"
+literal|"	return (%s);\n"
+literal|"}\n\n"
+argument_list|,
+name|prefix
+argument_list|,
+name|prefix
 argument_list|,
 name|cur_node
 operator|->
@@ -1523,7 +1652,7 @@ name|condinfo
 operator|->
 name|func_num
 argument_list|,
-name|patch_arg_list
+name|prefix
 argument_list|,
 name|cur_node
 operator|->
@@ -1552,9 +1681,14 @@ name|fprintf
 argument_list|(
 name|ofile
 argument_list|,
-literal|"typedef int patch_func_t (%s); static struct patch { 	patch_func_t	*patch_func; 	uint32_t	begin	   :10, 			skip_instr :10, 			skip_patch :12; } patches[] = {\n"
+literal|"static struct patch {\n"
+literal|"	%spatch_func_t		*patch_func;\n"
+literal|"	uint32_t		 begin		:10,\n"
+literal|"				 skip_instr	:10,\n"
+literal|"				 skip_patch	:12;\n"
+literal|"} patches[] = {\n"
 argument_list|,
-name|patch_arg_list
+name|prefix
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1588,7 +1722,7 @@ name|fprintf
 argument_list|(
 name|ofile
 argument_list|,
-literal|"%s\t{ aic_patch%d_func, %d, %d, %d }"
+literal|"%s\t{ %spatch%d_func, %d, %d, %d }"
 argument_list|,
 name|cur_patch
 operator|==
@@ -1601,6 +1735,8 @@ condition|?
 literal|""
 else|:
 literal|",\n"
+argument_list|,
+name|prefix
 argument_list|,
 name|cur_patch
 operator|->
@@ -1627,7 +1763,7 @@ name|fprintf
 argument_list|(
 name|ofile
 argument_list|,
-literal|"\n};\n"
+literal|"\n};\n\n"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1637,7 +1773,10 @@ name|fprintf
 argument_list|(
 name|ofile
 argument_list|,
-literal|"static struct cs { 	u_int16_t	begin; 	u_int16_t	end; } critical_sections[] = {\n"
+literal|"static struct cs {\n"
+literal|"	uint16_t	begin;\n"
+literal|"	uint16_t	end;\n"
+literal|"} critical_sections[] = {\n"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1702,7 +1841,7 @@ name|fprintf
 argument_list|(
 name|ofile
 argument_list|,
-literal|"\n};\n"
+literal|"\n};\n\n"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1712,7 +1851,8 @@ name|fprintf
 argument_list|(
 name|ofile
 argument_list|,
-literal|"static const int num_critical_sections = sizeof(critical_sections) 				       / sizeof(*critical_sections);\n"
+literal|"static const int num_critical_sections = sizeof(critical_sections)\n"
+literal|"				       / sizeof(*critical_sections);\n"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
