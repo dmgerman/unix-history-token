@@ -8,7 +8,7 @@ comment|/*  *  dptpci.c:  PCI Bus Attachment for DPT SCSI HBAs  */
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_pci.c,v 1.7 1998/08/05 00:54:37 eivind Exp $"
+empty|#ident "$Id: dpt_pci.c,v 1.8 1998/09/15 08:33:38 gibbs Exp $"
 end_empty
 
 begin_include
@@ -385,7 +385,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 endif|#
 directive|endif
 if|if
