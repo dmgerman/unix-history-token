@@ -37,6 +37,20 @@ directive|include
 file|<machine/clock.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|_COMPONENT
+value|OS_DEPENDENT
+end_define
+
+begin_macro
+name|MODULE_NAME
+argument_list|(
+literal|"SCHEDULE"
+argument_list|)
+end_macro
+
 begin_comment
 comment|/*  * This is a little complicated due to the fact that we need to build and then  * free a 'struct task' for each task we enqueue.  *  * We use the default taskqueue_swi queue, since it really doesn't matter what  * else we're queued along with.  */
 end_comment
@@ -107,17 +121,22 @@ name|acpi_task
 modifier|*
 name|at
 decl_stmt|;
+name|FUNCTION_TRACE
+argument_list|(
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|Function
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_BAD_PARAMETER
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 name|at
 operator|=
 name|malloc
@@ -140,11 +159,11 @@ name|at
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_NO_MEMORY
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 name|at
@@ -245,11 +264,11 @@ argument_list|,
 name|M_ACPITASK
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_BAD_PARAMETER
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 name|taskqueue_enqueue
 argument_list|(
@@ -263,11 +282,11 @@ operator|)
 name|at
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -303,6 +322,11 @@ name|void
 modifier|*
 name|Context
 decl_stmt|;
+name|FUNCTION_TRACE
+argument_list|(
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
 name|Function
 operator|=
 operator|(
@@ -330,6 +354,8 @@ argument_list|(
 name|Context
 argument_list|)
 expr_stmt|;
+name|return_VOID
+expr_stmt|;
 block|}
 end_function
 
@@ -351,6 +377,11 @@ block|{
 name|int
 name|timo
 decl_stmt|;
+name|FUNCTION_TRACE
+argument_list|(
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
 name|timo
 operator|=
 operator|(
@@ -388,6 +419,8 @@ argument_list|,
 name|timo
 argument_list|)
 expr_stmt|;
+name|return_VOID
+expr_stmt|;
 block|}
 end_function
 
@@ -399,6 +432,11 @@ name|UINT32
 name|Microseconds
 parameter_list|)
 block|{
+name|FUNCTION_TRACE
+argument_list|(
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|Microseconds
@@ -425,6 +463,8 @@ name|Microseconds
 argument_list|)
 expr_stmt|;
 block|}
+name|return_VOID
+expr_stmt|;
 block|}
 end_function
 
