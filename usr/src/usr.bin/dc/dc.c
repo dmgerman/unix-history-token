@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dc.c	4.1	(Berkeley)	%G%"
+literal|"@(#)dc.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5407,6 +5407,8 @@ operator|&
 name|symlst
 index|[
 name|TBLSZ
+operator|-
+literal|1
 index|]
 condition|)
 block|{
