@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.26.2.2 1995/10/09 11:16:19 jkh Exp $"
+literal|"$Id: perform.c,v 1.26.2.3 1995/10/14 19:11:02 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -261,9 +261,8 @@ expr_stmt|;
 comment|/* Are we coming in for a second pass, everything already extracted? */
 if|if
 condition|(
-name|AddMode
-operator|==
-name|SLAVE
+operator|!
+name|pkg
 condition|)
 block|{
 name|char
@@ -327,6 +326,7 @@ block|}
 comment|/* Nope - do it now */
 else|else
 block|{
+comment|/* Is it an ftp://foo.bar.baz/file.tgz specification? */
 if|if
 condition|(
 name|isURL
@@ -361,6 +361,10 @@ return|return
 literal|1
 return|;
 block|}
+name|where_to
+operator|=
+name|Home
+expr_stmt|;
 name|strcpy
 argument_list|(
 name|pkg_fullname
@@ -535,7 +539,7 @@ argument_list|)
 expr_stmt|;
 name|where_to
 operator|=
-name|playpen
+name|Home
 expr_stmt|;
 name|sprintf
 argument_list|(
@@ -805,18 +809,18 @@ goto|goto
 name|bomb
 goto|;
 block|}
+block|}
 comment|/* Check for sanity and dependencies */
 if|if
 condition|(
 name|sanity_check
 argument_list|(
-name|pkg_fullname
+name|pkg
 argument_list|)
 condition|)
 goto|goto
 name|bomb
 goto|;
-block|}
 comment|/* If we're running in MASTER mode, just output the plist and return */
 if|if
 condition|(
@@ -1007,9 +1011,9 @@ name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|"Package `%s' depends on `%s'\n"
+literal|"Package `%s' depends on `%s'.\n"
 argument_list|,
-name|pkg
+name|PkgName
 argument_list|,
 name|p
 operator|->
@@ -1042,15 +1046,6 @@ name|cp
 init|=
 name|NULL
 decl_stmt|;
-if|if
-condition|(
-name|Verbose
-condition|)
-name|printf
-argument_list|(
-literal|"which is not currently loaded.\n"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1157,8 +1152,14 @@ name|Fake
 operator|&&
 name|vsystem
 argument_list|(
-literal|"(pwd; cat +CONTENTS) | pkg_add -S"
+literal|"(pwd; cat +CONTENTS) | pkg_add %s-S"
 argument_list|)
+operator|,
+name|Verbose
+condition|?
+literal|"-v "
+else|:
+literal|""
 condition|)
 block|{
 name|whinge

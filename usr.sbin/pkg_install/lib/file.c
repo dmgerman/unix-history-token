@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: file.c,v 1.10.4.4 1995/10/09 11:54:27 jkh Exp $"
+literal|"$Id: file.c,v 1.10.4.5 1995/10/14 19:11:44 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -358,6 +358,14 @@ name|fname
 parameter_list|)
 block|{
 comment|/*      * I'm sure there are other types of URL specifications that I could      * also be looking for here, but for now I'll just be happy to get ftp      * working.      */
+if|if
+condition|(
+operator|!
+name|fname
+condition|)
+return|return
+name|FALSE
+return|;
 while|while
 condition|(
 name|isspace

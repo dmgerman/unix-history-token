@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: pen.c,v 1.13.4.3 1995/10/14 19:11:46 jkh Exp $"
+literal|"$Id: pen.c,v 1.13.4.4 1995/10/15 04:39:56 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,6 +57,16 @@ begin_decl_stmt
 specifier|static
 name|char
 name|Current
+index|[
+name|FILENAME_MAX
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|Previous
 index|[
 name|FILENAME_MAX
 index|]
@@ -350,13 +360,6 @@ name|char
 modifier|*
 name|tmp
 decl_stmt|;
-specifier|static
-name|char
-name|Previous
-index|[
-name|FILENAME_MAX
-index|]
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -472,6 +475,21 @@ return|;
 block|}
 if|if
 condition|(
+name|Current
+index|[
+literal|0
+index|]
+condition|)
+name|strcpy
+argument_list|(
+name|Previous
+argument_list|,
+name|Current
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 operator|!
 name|getcwd
 argument_list|(
@@ -529,7 +547,7 @@ name|leave_playpen
 parameter_list|(
 name|char
 modifier|*
-name|to
+name|save
 parameter_list|)
 block|{
 name|void
@@ -553,11 +571,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|to
-operator|&&
 name|chdir
 argument_list|(
-name|to
+name|Previous
 argument_list|)
 operator|==
 name|FAIL
@@ -566,7 +582,7 @@ name|barf
 argument_list|(
 literal|"Can't chdir back to '%s'."
 argument_list|,
-name|to
+name|Previous
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -587,34 +603,27 @@ argument_list|,
 name|Current
 argument_list|)
 condition|)
-name|fprintf
+name|whinge
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Couldn't remove temporary dir '%s'\n"
+literal|"Couldn't remove temporary dir '%s'"
 argument_list|,
 name|Current
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|to
-condition|)
 name|strcpy
 argument_list|(
 name|Current
 argument_list|,
-name|to
+name|Previous
 argument_list|)
 expr_stmt|;
-else|else
-name|Current
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
+block|}
+name|strcpy
+argument_list|(
+name|Previous
+argument_list|,
+name|save
+argument_list|)
 expr_stmt|;
 name|signal
 argument_list|(
