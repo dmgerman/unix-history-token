@@ -1373,8 +1373,6 @@ block|{
 name|m_mballoc_wid
 operator|++
 expr_stmt|;
-if|if
-condition|(
 name|msleep
 argument_list|(
 operator|&
@@ -1391,9 +1389,7 @@ literal|"mballc"
 argument_list|,
 name|mbuf_wait
 argument_list|)
-operator|==
-name|EWOULDBLOCK
-condition|)
+expr_stmt|;
 name|m_mballoc_wid
 operator|--
 expr_stmt|;
@@ -1727,8 +1723,6 @@ decl_stmt|;
 name|m_clalloc_wid
 operator|++
 expr_stmt|;
-if|if
-condition|(
 name|msleep
 argument_list|(
 operator|&
@@ -1745,9 +1739,7 @@ literal|"mclalc"
 argument_list|,
 name|mbuf_wait
 argument_list|)
-operator|==
-name|EWOULDBLOCK
-condition|)
+expr_stmt|;
 name|m_clalloc_wid
 operator|--
 expr_stmt|;

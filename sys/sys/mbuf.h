@@ -1139,7 +1139,7 @@ name|MBWAKEUP
 parameter_list|(
 name|m_wid
 parameter_list|)
-value|do {						\ 	if ((m_wid)) {							\ 		m_wid--;						\ 		wakeup_one(&(m_wid)); 					\ 	}								\ } while (0)
+value|do {						\ 	if ((m_wid))							\ 		wakeup_one(&(m_wid)); 					\ } while (0)
 end_define
 
 begin_comment
