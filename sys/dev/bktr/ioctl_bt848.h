@@ -998,6 +998,68 @@ value|_IOR('x', 68, int)
 end_define
 
 begin_comment
+comment|/* set capture area */
+end_comment
+
+begin_comment
+comment|/* The capture area is the area of the video image which is grabbed */
+end_comment
+
+begin_comment
+comment|/* Usually the capture area is 640x480 (768x576 PAL) pixels */
+end_comment
+
+begin_comment
+comment|/* This area is then scaled to the dimensions the user requires */
+end_comment
+
+begin_comment
+comment|/* using the METEORGEO ioctl */
+end_comment
+
+begin_comment
+comment|/* However, the capture area could be 400x300 pixels from the top right */
+end_comment
+
+begin_comment
+comment|/* corner of the video image */
+end_comment
+
+begin_struct
+struct|struct
+name|bktr_capture_area
+block|{
+name|int
+name|x_offset
+decl_stmt|;
+name|int
+name|y_offset
+decl_stmt|;
+name|int
+name|x_size
+decl_stmt|;
+name|int
+name|y_size
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|BT848SCAPAREA
+value|_IOW('x', 69, struct bktr_capture_area)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BT848GCAPAREA
+value|_IOR('x', 69, struct bktr_capture_area)
+end_define
+
+begin_comment
 comment|/* Read/Write the BT848's I2C bus directly  * b7-b0:    data (read/write)  * b15-b8:   internal peripheral register (write)     * b23-b16:  i2c addr (write)  * b31-b24:  1 = write, 0 = read   */
 end_comment
 

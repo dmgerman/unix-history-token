@@ -1529,11 +1529,11 @@ name|hdelay
 decl_stmt|,
 name|hactive
 decl_stmt|;
-comment|/* visible active horizontal and vertical : 480 640 for NTSC */
+comment|/* Scaled horizontal image pixels, Total Scaled horizontal pixels */
 name|int
-name|horizontal
+name|scaled_hactive
 decl_stmt|,
-name|vertical
+name|scaled_htotal
 decl_stmt|;
 comment|/* frame rate . for ntsc is 30 frames per second */
 name|int
@@ -1670,6 +1670,26 @@ name|short
 name|cols
 decl_stmt|;
 comment|/* number of columns in a frame */
+name|int
+name|capture_area_x_offset
+decl_stmt|;
+comment|/* Usually the full 640x480(NTSC) image is */
+name|int
+name|capture_area_y_offset
+decl_stmt|;
+comment|/* captured. The capture area allows for */
+name|int
+name|capture_area_x_size
+decl_stmt|;
+comment|/* example 320x200 pixels from the centre */
+name|int
+name|capture_area_y_size
+decl_stmt|;
+comment|/* of the video image to be captured. */
+name|char
+name|capture_area_enabled
+decl_stmt|;
+comment|/* When TRUE use user's capture area. */
 name|int
 name|pixfmt
 decl_stmt|;
