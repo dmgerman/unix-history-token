@@ -1203,7 +1203,7 @@ literal|0
 condition|)
 name|ret
 operator|=
-literal|65536
+literal|64000
 expr_stmt|;
 return|return
 name|ret
