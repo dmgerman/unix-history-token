@@ -29,8 +29,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ilogb(double x)  * return the binary exponent of non-zero x  * ilogb(0) = 0x80000001  * ilogb(inf/NaN) = 0x7fffffff (no signal is raised)  */
+comment|/* ilogb(double x)  * return the binary exponent of non-zero x  * ilogb(0) = FP_ILOGB0  * ilogb(NaN) = FP_ILOGBNAN (no signal is raised)  * ilogb(inf) = INT_MAX (no signal is raised)  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
 
 begin_include
 include|#
@@ -90,9 +96,8 @@ operator|==
 literal|0
 condition|)
 return|return
-literal|0x80000001
+name|FP_ILOGB0
 return|;
-comment|/* ilogb(0) = 0x80000001 */
 elseif|else
 comment|/* subnormal x */
 if|if
@@ -168,9 +173,23 @@ operator|)
 operator|-
 literal|1023
 return|;
+elseif|else
+if|if
+condition|(
+name|hx
+operator|>
+literal|0x7ff00000
+operator|||
+name|lx
+operator|!=
+literal|0
+condition|)
+return|return
+name|FP_ILOGBNAN
+return|;
 else|else
 return|return
-literal|0x7fffffff
+name|INT_MAX
 return|;
 block|}
 end_function
