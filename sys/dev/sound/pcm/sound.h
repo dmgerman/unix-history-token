@@ -311,6 +311,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/sound/pcm/feeder.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/sound/pcm/mixer.h>
 end_include
 
@@ -450,10 +456,6 @@ parameter_list|)
 value|(var) = \ 	(((var)<(low))? (low) : ((var)>(high))? (high) : (var))
 end_define
 
-begin_comment
-comment|/* #define DSP_BUFFSIZE (65536 - 256) */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -462,12 +464,15 @@ value|(8192)
 end_define
 
 begin_comment
-comment|/* the last 256 bytes are room for buggy soundcard to overflow. */
-end_comment
-
-begin_comment
 comment|/* make figuring out what a format is easier. got AFMT_STEREO already */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|AFMT_32BIT
+value|(AFMT_S32_LE | AFMT_S32_BE | AFMT_U32_LE | AFMT_U32_BE)
+end_define
 
 begin_define
 define|#
@@ -738,6 +743,16 @@ name|numplay
 parameter_list|,
 name|int
 name|numrec
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pcm_unregister
+parameter_list|(
+name|device_t
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -341,6 +341,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ac97_destroy
+parameter_list|(
+name|struct
+name|ac97_info
+modifier|*
+name|codec
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ac97_setrate
 parameter_list|(
