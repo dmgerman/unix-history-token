@@ -2363,6 +2363,10 @@ name|base
 operator|=
 name|editor
 expr_stmt|;
+else|else
+name|base
+operator|++
+expr_stmt|;
 comment|/* emacs also accepts vi-style +nnnn */
 if|if
 condition|(
