@@ -1054,11 +1054,20 @@ directive|ifdef
 name|PCI_COMPAT
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_KERNEL
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|KLD_MODULE
+argument_list|)
+end_if
 
 begin_include
 include|#
