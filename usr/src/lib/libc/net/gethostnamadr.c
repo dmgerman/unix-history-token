@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	6.24 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	6.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2112,25 +2112,21 @@ condition|(
 operator|!
 operator|*
 name|C1
-operator|||
-operator|*
-name|C1
-operator|==
-literal|'\n'
 condition|)
 break|break;
+operator|*
+name|C1
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 operator|!
-name|strncasecmp
+name|strcasecmp
 argument_list|(
 name|buf
 argument_list|,
 name|name
-argument_list|,
-name|C1
-operator|-
-name|buf
 argument_list|)
 condition|)
 block|{
