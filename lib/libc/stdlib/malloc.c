@@ -24,13 +24,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MALLOC_MALLOC_EXTRA_SANITY
+name|MALLOC_EXTRA_SANITY
 end_ifndef
 
 begin_undef
 undef|#
 directive|undef
-name|MALLOC_MALLOC_EXTRA_SANITY
+name|MALLOC_EXTRA_SANITY
 end_undef
 
 begin_endif
@@ -960,6 +960,15 @@ name|malloc_realloc
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MADV_FREE
+argument_list|)
+end_if
+
 begin_comment
 comment|/* pass the kernel a hint on free pages ?  */
 end_comment
@@ -972,6 +981,11 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* xmalloc behaviour ?  */
@@ -1175,7 +1189,7 @@ parameter_list|(
 name|size
 parameter_list|)
 define|\
-value|mmap(0, (size), PROT_READ|PROT_WRITE, MAP_ANON|MAP_PRIVATE, \ 	    MMAP_FD, 0);
+value|mmap(NULL, (size), PROT_READ|PROT_WRITE, MAP_ANON|MAP_PRIVATE, \ 	    MMAP_FD, (off_t)0);
 end_define
 
 begin_comment
@@ -1478,7 +1492,7 @@ directive|ifdef
 name|MALLOC_EXTRA_SANITY
 name|wrterror
 argument_list|(
-literal|"(ES): map_pages fails.\n"
+literal|"(ES): map_pages fails\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1672,7 +1686,9 @@ begin_function
 specifier|static
 name|void
 name|malloc_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -1691,11 +1707,10 @@ decl_stmt|,
 name|j
 decl_stmt|;
 name|int
-name|errnosave
+name|save_errno
+init|=
+name|errno
 decl_stmt|;
-name|INIT_MMAP
-argument_list|()
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__ia64__
@@ -1719,6 +1734,9 @@ operator|++
 expr_stmt|;
 endif|#
 directive|endif
+name|INIT_MMAP
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MALLOC_EXTRA_SANITY
@@ -1750,10 +1768,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|errnosave
-operator|=
-name|errno
-expr_stmt|;
 name|j
 operator|=
 name|readlink
@@ -1767,10 +1781,6 @@ name|b
 operator|-
 literal|1
 argument_list|)
-expr_stmt|;
-name|errno
-operator|=
-name|errnosave
 expr_stmt|;
 if|if
 condition|(
@@ -1797,6 +1807,11 @@ condition|(
 name|i
 operator|==
 literal|1
+operator|&&
+name|issetugid
+argument_list|()
+operator|==
+literal|0
 condition|)
 block|{
 name|p
@@ -1806,6 +1821,16 @@ argument_list|(
 literal|"MALLOC_OPTIONS"
 argument_list|)
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|i
+operator|==
+literal|1
+condition|)
+block|{
+continue|continue;
 block|}
 else|else
 block|{
@@ -1868,6 +1893,12 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MADV_FREE
+argument_list|)
 case|case
 literal|'h'
 case|:
@@ -1884,6 +1915,8 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 literal|'r'
 case|:
@@ -1996,7 +2029,7 @@ literal|0
 expr_stmt|;
 name|wrtwarning
 argument_list|(
-literal|"unknown char in MALLOC_OPTIONS.\n"
+literal|"unknown char in MALLOC_OPTIONS\n"
 argument_list|)
 expr_stmt|;
 name|malloc_abort
@@ -2045,15 +2078,6 @@ name|malloc_junk
 operator|=
 literal|1
 expr_stmt|;
-comment|/*      * If we run with junk (or implicitly from above: zero), we want to      * force realloc() to get new storage, so we can DTRT with it.      */
-if|if
-condition|(
-name|malloc_junk
-condition|)
-name|malloc_realloc
-operator|=
-literal|1
-expr_stmt|;
 comment|/* Allocate one page for the page directory */
 name|page_dir
 operator|=
@@ -2072,18 +2096,11 @@ if|if
 condition|(
 name|page_dir
 operator|==
-operator|(
-expr|struct
-name|pginfo
-operator|*
-operator|*
-operator|)
-operator|-
-literal|1
+name|MAP_FAILED
 condition|)
 name|wrterror
 argument_list|(
-literal|"mmap(2) failed, check limits.\n"
+literal|"mmap(2) failed, check limits\n"
 argument_list|)
 expr_stmt|;
 comment|/*      * We need a maximum of malloc_pageshift buckets, steal these from the      * front of the page_directory;      */
@@ -2150,6 +2167,10 @@ sizeof|sizeof
 expr|*
 name|px
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|save_errno
 expr_stmt|;
 block|}
 end_function
@@ -2230,7 +2251,7 @@ name|malloc_pagemask
 condition|)
 name|wrterror
 argument_list|(
-literal|"(ES): junk length entry on free_list.\n"
+literal|"(ES): junk length entry on free_list\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2242,7 +2263,7 @@ name|size
 condition|)
 name|wrterror
 argument_list|(
-literal|"(ES): zero length entry on free_list.\n"
+literal|"(ES): zero length entry on free_list\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2257,7 +2278,7 @@ name|end
 condition|)
 name|wrterror
 argument_list|(
-literal|"(ES): zero entry on free_list.\n"
+literal|"(ES): zero entry on free_list\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2272,7 +2293,7 @@ name|end
 condition|)
 name|wrterror
 argument_list|(
-literal|"(ES): sick entry on free_list.\n"
+literal|"(ES): sick entry on free_list\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2296,7 +2317,7 @@ argument_list|)
 condition|)
 name|wrterror
 argument_list|(
-literal|"(ES): entry on free_list past brk.\n"
+literal|"(ES): entry on free_list past brk\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2315,7 +2336,7 @@ name|MALLOC_FREE
 condition|)
 name|wrterror
 argument_list|(
-literal|"(ES): non-free first page on free-list.\n"
+literal|"(ES): non-free first page on free-list\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2336,7 +2357,7 @@ name|MALLOC_FREE
 condition|)
 name|wrterror
 argument_list|(
-literal|"(ES): non-free last page on free-list.\n"
+literal|"(ES): non-free last page on free-list\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2449,7 +2470,7 @@ name|MALLOC_FREE
 condition|)
 name|wrterror
 argument_list|(
-literal|"(ES): allocated non-free page on free-list.\n"
+literal|"(ES): allocated non-free page on free-list\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3233,7 +3254,7 @@ name|NULL
 condition|)
 name|wrterror
 argument_list|(
-literal|"allocation failed.\n"
+literal|"allocation failed\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3312,7 +3333,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"malloc() has never been called.\n"
+literal|"malloc() has never been called\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3337,7 +3358,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"junk pointer, too low to make sense.\n"
+literal|"junk pointer, too low to make sense\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3355,7 +3376,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"junk pointer, too high to make sense.\n"
+literal|"junk pointer, too high to make sense\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3394,7 +3415,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"modified (page-) pointer.\n"
+literal|"modified (page-) pointer\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3507,7 +3528,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"modified (chunk-) pointer.\n"
+literal|"modified (chunk-) pointer\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3563,7 +3584,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"chunk is already free.\n"
+literal|"chunk is already free\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3640,7 +3661,7 @@ else|else
 block|{
 name|wrtwarning
 argument_list|(
-literal|"pointer to wrong page.\n"
+literal|"pointer to wrong page\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3766,7 +3787,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"page is already free.\n"
+literal|"page is already free\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3780,7 +3801,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"pointer to wrong page.\n"
+literal|"pointer to wrong page\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3797,7 +3818,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"modified (page-) pointer.\n"
+literal|"modified (page-) pointer\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3856,6 +3877,12 @@ argument_list|,
 name|l
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MADV_FREE
+argument_list|)
 if|if
 condition|(
 name|malloc_hint
@@ -3869,6 +3896,8 @@ argument_list|,
 name|MADV_FREE
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|tail
 operator|=
 operator|(
@@ -4207,7 +4236,7 @@ else|else
 block|{
 name|wrterror
 argument_list|(
-literal|"freelist is destroyed.\n"
+literal|"freelist is destroyed\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4401,7 +4430,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"modified (chunk-) pointer.\n"
+literal|"modified (chunk-) pointer\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4430,7 +4459,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"chunk is already free.\n"
+literal|"chunk is already free\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4591,7 +4620,7 @@ name|mp
 condition|)
 name|wrterror
 argument_list|(
-literal|"(ES): Not on queue.\n"
+literal|"(ES): Not on queue\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4682,7 +4711,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"malloc() has never been called.\n"
+literal|"malloc() has never been called\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4709,7 +4738,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"junk pointer, too low to make sense.\n"
+literal|"junk pointer, too low to make sense\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4723,7 +4752,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"junk pointer, too high to make sense.\n"
+literal|"junk pointer, too high to make sense\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4796,7 +4825,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"recursive call.\n"
+literal|"recursive call\n"
 argument_list|)
 expr_stmt|;
 name|malloc_active
@@ -4869,7 +4898,7 @@ name|NULL
 condition|)
 name|wrterror
 argument_list|(
-literal|"out of memory.\n"
+literal|"out of memory\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4914,7 +4943,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"recursive call.\n"
+literal|"recursive call\n"
 argument_list|)
 expr_stmt|;
 name|malloc_active
@@ -4996,7 +5025,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"recursive call.\n"
+literal|"recursive call\n"
 argument_list|)
 expr_stmt|;
 name|malloc_active
@@ -5127,7 +5156,7 @@ name|err
 condition|)
 name|wrterror
 argument_list|(
-literal|"out of memory.\n"
+literal|"out of memory\n"
 argument_list|)
 expr_stmt|;
 if|if
