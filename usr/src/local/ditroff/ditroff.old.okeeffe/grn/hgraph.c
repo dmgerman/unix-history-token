@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hgraph.c	1.1	(Berkeley) 83/07/21  *  *     This file contains the graphics routines for converting gremlin  * pictures to troff input.  */
+comment|/*	hgraph.c	1.2	(Berkeley) 83/07/24  *  *     This file contains the graphics routines for converting gremlin  * pictures to troff input.  */
 end_comment
 
 begin_include
@@ -16,9 +16,31 @@ name|MAXVECT
 value|50
 end_define
 
-begin_comment
-comment|/* line and character styles */
-end_comment
+begin_define
+define|#
+directive|define
+name|pi
+value|3.14159265358979324
+end_define
+
+begin_define
+define|#
+directive|define
+name|twopi
+value|(2.0 * pi)
+end_define
+
+begin_define
+define|#
+directive|define
+name|len
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|sqrt((b.x-a.x) * (b.x-a.x) + (b.y-a.y) * (b.y-a.y))
+end_define
 
 begin_decl_stmt
 specifier|extern
@@ -27,6 +49,10 @@ name|style
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* line and character styles */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -54,36 +80,16 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* variables used to print from font file */
-end_comment
-
-begin_extern
-extern|extern cfont;
-end_extern
-
-begin_extern
-extern|extern csize;
-end_extern
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|devdir
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* imports from main.c */
-end_comment
-
 begin_decl_stmt
 specifier|extern
 name|double
 name|scale
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* imports from main.c */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -207,6 +213,13 @@ name|element
 argument_list|)
 condition|)
 block|{
+name|p1
+operator|=
+name|element
+operator|->
+name|ptlist
+expr_stmt|;
+comment|/* p1 always has first point */
 if|if
 condition|(
 name|TEXT
@@ -235,11 +248,7 @@ operator|->
 name|type
 argument_list|,
 operator|*
-operator|(
-name|element
-operator|->
-name|ptlist
-operator|)
+name|p1
 argument_list|,
 name|element
 operator|->
@@ -249,16 +258,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|tmove
-argument_list|(
-name|p1
-operator|=
-name|element
-operator|->
-name|ptlist
-argument_list|)
-expr_stmt|;
-comment|/* always move to start first */
 name|HGSetBrush
 argument_list|(
 name|element
@@ -266,7 +265,7 @@ operator|->
 name|brushf
 argument_list|)
 expr_stmt|;
-comment|/* p1 always has first point */
+comment|/* graphics need brush set */
 switch|switch
 condition|(
 name|element
@@ -284,21 +283,28 @@ argument_list|(
 name|p1
 argument_list|)
 expr_stmt|;
-name|printf
+name|doarc
 argument_list|(
-literal|"\\D'a"
-argument_list|)
-expr_stmt|;
-comment|/* stuff... */
-name|printf
-argument_list|(
-literal|" 0 0 0 0'"
+operator|*
+name|p1
+argument_list|,
+operator|*
+name|p2
+argument_list|,
+name|element
+operator|->
+name|size
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|CURVE
 case|:
+name|tmove
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\\D'g"
@@ -357,6 +363,11 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* keep track of line length */
+name|tmove
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
 comment|/* so single lines don't get long */
 while|while
 condition|(
@@ -424,11 +435,9 @@ expr_stmt|;
 block|}
 block|}
 comment|/* end while */
-empty_stmt|;
 break|break;
 block|}
 comment|/* end switch */
-empty_stmt|;
 block|}
 comment|/* end else Text */
 block|}
@@ -441,7 +450,7 @@ comment|/* end PrintElt */
 end_comment
 
 begin_comment
-comment|/*----------------------------------------------------------------------------*  | Routine:	HGPutText (justification, position_point, string)  |  | Results:	  |  | Side Efct:	  |  | Bugs:	  *----------------------------------------------------------------------------*/
+comment|/*----------------------------------------------------------------------------*  | Routine:	HGPutText (justification, position_point, string)  |  | Results:	given the justification, a point to position with, and a  |		string to put, HGPutText first sends the string into a  |		diversion, moves to the positioning point, then outputs local  |		vertical and horizontal motions as needed to justify the text.  |		After all motions are done, the diversion is printed out.  *----------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -474,59 +483,107 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* This routine is used to calculate the proper starting position for a  * text string (based on justification, size and font), and prints it   * character by character.  */
-end_comment
-
 begin_block
 block|{
+name|printf
+argument_list|(
+literal|".di gt\n\\&%s\n.di"
+argument_list|,
+name|string
+argument_list|)
+expr_stmt|;
+comment|/* divert the text. */
+name|tmove
+argument_list|(
+operator|&
+name|pnt
+argument_list|)
+expr_stmt|;
+comment|/* move to positioning point */
 switch|switch
 condition|(
 name|justify
 condition|)
 block|{
-case|case
-name|BOTLEFT
-case|:
-break|break;
-case|case
-name|BOTCENT
-case|:
-break|break;
-case|case
-name|BOTRIGHT
-case|:
-break|break;
+comment|/* local vertical motions */
 case|case
 name|CENTLEFT
 case|:
-break|break;
 case|case
 name|CENTCENT
 case|:
-break|break;
 case|case
 name|CENTRIGHT
 case|:
+name|printf
+argument_list|(
+literal|"\\v'\\n(dnu/2u'"
+argument_list|)
+expr_stmt|;
+comment|/* down half */
 break|break;
 case|case
 name|TOPLEFT
 case|:
-break|break;
 case|case
 name|TOPCENT
 case|:
-break|break;
 case|case
 name|TOPRIGHT
 case|:
-break|break;
-block|}
-name|HGplotch
+name|printf
 argument_list|(
-name|string
+literal|"\\v'\\n(dnu'"
 argument_list|)
 expr_stmt|;
+comment|/* down whole */
+block|}
+switch|switch
+condition|(
+name|justify
+condition|)
+block|{
+comment|/* local horizontal motions */
+case|case
+name|BOTCENT
+case|:
+case|case
+name|CENTCENT
+case|:
+case|case
+name|TOPCENT
+case|:
+name|printf
+argument_list|(
+literal|"\\h'-\\n(dlu/2u'"
+argument_list|)
+expr_stmt|;
+comment|/* back half */
+break|break;
+case|case
+name|BOTRIGHT
+case|:
+case|case
+name|CENTRIGHT
+case|:
+case|case
+name|TOPRIGHT
+case|:
+name|printf
+argument_list|(
+literal|"\\h'-\\n(dlu'"
+argument_list|)
+expr_stmt|;
+comment|/* back whole */
+block|}
+comment|/* now print the text.  The (cr) at the end */
+name|printf
+argument_list|(
+literal|"\\c\n.gt\n"
+argument_list|)
+expr_stmt|;
+comment|/* results in a blank line in the output.  It */
+comment|/* is necessary to break the "\c" directive. */
 block|}
 end_block
 
@@ -534,9 +591,235 @@ begin_comment
 comment|/* end HGPutText */
 end_comment
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_comment
+comment|/*----------------------------------------------------------------------------*  | Routine:	doarc (center_point, start_point, angle)  |  | Results:	produces either drawarc command or a drawcircle command  |		depending on the angle needed to draw through.  *----------------------------------------------------------------------------*/
+end_comment
+
+begin_macro
+name|doarc
+argument_list|(
+argument|cp
+argument_list|,
+argument|sp
+argument_list|,
+argument|angle
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|POINT
+name|cp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|POINT
+name|sp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|angle
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|double
+name|radius
+init|=
+name|len
+argument_list|(
+name|cp
+argument_list|,
+name|sp
+argument_list|)
+decl_stmt|;
+name|double
+name|radians
+decl_stmt|;
+if|if
+condition|(
+name|angle
+condition|)
+block|{
+comment|/* arc with angle */
+name|tmove
+argument_list|(
+operator|&
+name|sp
+argument_list|)
+expr_stmt|;
+comment|/* starting point first */
+name|printf
+argument_list|(
+literal|"\\D'a"
+argument_list|)
+expr_stmt|;
+name|dx
+argument_list|(
+operator|(
+name|double
+operator|)
+name|cp
+operator|.
+name|x
+argument_list|)
+expr_stmt|;
+comment|/* move to center */
+name|dy
+argument_list|(
+operator|(
+name|double
+operator|)
+name|cp
+operator|.
+name|y
+argument_list|)
+expr_stmt|;
+name|radians
+operator|=
+name|acos
+argument_list|(
+operator|(
+name|sp
+operator|.
+name|x
+operator|-
+name|cp
+operator|.
+name|x
+operator|)
+operator|/
+name|radius
+argument_list|)
+expr_stmt|;
+comment|/* angle of ending */
+if|if
+condition|(
+name|cp
+operator|.
+name|y
+operator|-
+name|sp
+operator|.
+name|y
+operator|<
+literal|0.0
+condition|)
+comment|/* point calculated */
+name|radians
+operator|=
+name|twopi
+operator|-
+name|radians
+expr_stmt|;
+comment|/* from start point */
+name|radians
+operator|+=
+operator|(
+operator|(
+name|double
+operator|)
+name|angle
+operator|)
+operator|*
+operator|(
+name|pi
+operator|/
+literal|180.0
+operator|)
+expr_stmt|;
+comment|/* and arc's angle */
+if|if
+condition|(
+name|radians
+operator|>
+name|twopi
+condition|)
+name|radians
+operator|-=
+name|twopi
+expr_stmt|;
+name|dx
+argument_list|(
+name|cp
+operator|.
+name|x
+operator|+
+name|cos
+argument_list|(
+name|radians
+argument_list|)
+operator|*
+name|radius
+argument_list|)
+expr_stmt|;
+comment|/* move to ending point */
+name|dy
+argument_list|(
+name|cp
+operator|.
+name|y
+operator|-
+name|sin
+argument_list|(
+name|radians
+argument_list|)
+operator|*
+name|radius
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* a full circle (angle == 0) */
+name|cp
+operator|.
+name|x
+operator|-=
+name|radius
+expr_stmt|;
+name|tmove
+argument_list|(
+operator|&
+name|cp
+argument_list|)
+expr_stmt|;
+comment|/* move to the left point first */
+comment|/* draw circle with given diameter */
+name|printf
+argument_list|(
+literal|"\\D'c %du"
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+operator|(
+name|radius
+operator|+
+name|radius
+operator|)
+operator|*
+name|troffscale
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|putchar
+argument_list|(
+literal|'\''
+argument_list|)
+expr_stmt|;
+comment|/* finish the command */
+block|}
+end_block
+
+begin_comment
+comment|/*----------------------------------------------------------------------------*  | Routine:	HGSetFont (font_number, Point_size)  |  | Results:	ALWAYS outputs a .ft and .ps directive to troff.  This is  |		done because someone may change stuff inside a text string.  *----------------------------------------------------------------------------*/
+end_comment
 
 begin_macro
 name|HGSetFont
@@ -557,38 +840,28 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|i
-decl_stmt|;
-name|char
-name|c
-decl_stmt|,
-name|string
+name|cr
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|".ft %s\n.ps %s\n"
+argument_list|,
+name|tfont
 index|[
-literal|100
+name|font
+operator|-
+literal|1
 index|]
-decl_stmt|;
-if|if
-condition|(
-name|font
-operator|!=
-name|cfont
-condition|)
-name|cfont
-operator|=
-name|font
-expr_stmt|;
-if|if
-condition|(
+argument_list|,
+name|tsize
+index|[
 name|size
-operator|!=
-name|csize
-condition|)
-name|csize
-operator|=
-name|size
+operator|-
+literal|1
+index|]
+argument_list|)
 expr_stmt|;
-comment|/* and whatever... */
 block|}
 end_block
 
@@ -659,24 +932,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
-
-begin_macro
-name|HGplotch
-argument_list|(
-argument|string
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|string
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{ }
 end_block
 
 begin_comment
@@ -876,7 +1131,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*----------------------------------------------------------------------------*  | Routine:	cr  |  | Results:	breaks the output line up to not overrun troff with lines that  |		are too long.  Outputs a ".sp -1" also to keep the vertical  |		spacing correct.  |  | Side Efct:	sets "lastx" to "leftpoint" for troff's return to left margin  *----------------------------------------------------------------------------*/
+comment|/*----------------------------------------------------------------------------*  | Routine:	cr  |  | Results:	breaks the output line up to not overrun troff with lines that  |		are too long.  |  | Side Efct:	sets "lastx" to "leftpoint" for troff's return to left margin  *----------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
