@@ -6782,7 +6782,7 @@ block|}
 name|ddprintf
 argument_list|(
 operator|(
-literal|"ntfs_writentvattr_plain: data in run: %d chains\n"
+literal|"ntfs_writentvattr_plain: data in run: %ld chains\n"
 operator|,
 name|vap
 operator|->
@@ -7302,7 +7302,7 @@ decl_stmt|;
 name|ddprintf
 argument_list|(
 operator|(
-literal|"ntfs_readntvattr_plain: data in run: %d chains\n"
+literal|"ntfs_readntvattr_plain: data in run: %ld chains\n"
 operator|,
 name|vap
 operator|->
