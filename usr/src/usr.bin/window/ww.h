@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ww.h	3.25 84/01/16	  */
+comment|/*  *	@(#)ww.h	3.26 84/03/03	  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sgtty.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sgtty.h>
+file|<setjmp.h>
 end_include
 
 begin_define
@@ -134,6 +134,12 @@ literal|1
 decl_stmt|;
 comment|/* frame it */
 name|char
+name|ww_nointr
+range|:
+literal|1
+decl_stmt|;
+comment|/* wwwrite() not interruptable */
+name|char
 name|ww_index
 decl_stmt|;
 comment|/* the index, for wwindex[] */
@@ -187,7 +193,7 @@ modifier|*
 name|ww_nvis
 decl_stmt|;
 comment|/* how many ww_buf chars are visible per row */
-comment|/* things for the window process */
+comment|/* things for the window process and io */
 name|int
 name|ww_pty
 decl_stmt|;
@@ -225,12 +231,10 @@ comment|/* character count */
 name|char
 name|ww_stopped
 decl_stmt|;
-comment|/* flow control */
+comment|/* output stopped */
 comment|/* things for the user, they really don't belong here */
 name|char
 name|ww_center
-range|:
-literal|1
 decl_stmt|;
 comment|/* center the label */
 name|int
@@ -276,6 +280,9 @@ name|ww_lmode
 decl_stmt|;
 name|int
 name|ww_ldisc
+decl_stmt|;
+name|int
+name|ww_fflags
 decl_stmt|;
 block|}
 struct|;
@@ -945,9 +952,25 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|wwnwrite
+name|wwnflush
 decl_stmt|,
-name|wwnwritec
+name|wwnwr
+decl_stmt|,
+name|wwnwre
+decl_stmt|,
+name|wwnwrz
+decl_stmt|,
+name|wwnwrc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|wwnwwr
+decl_stmt|,
+name|wwnwwra
+decl_stmt|,
+name|wwnwwrc
 decl_stmt|;
 end_decl_stmt
 
@@ -1032,14 +1055,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|wwbell
-parameter_list|()
-value|putchar(CTRL(g))
-end_define
-
-begin_define
-define|#
-directive|define
 name|wwunbox
 parameter_list|(
 name|w
@@ -1071,8 +1086,59 @@ parameter_list|)
 value|wwredrawwin1((w), (w)->ww_i.t, (w)->ww_i.b, 0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|wwupdate
+parameter_list|()
+value|wwupdate1(0, wwnrow);
+end_define
+
 begin_comment
 comment|/* things for handling input */
+end_comment
+
+begin_function_decl
+name|int
+name|wwrint
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* interrupt handler */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|ww
+modifier|*
+name|wwcurwin
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* window to copy input into */
+end_comment
+
+begin_decl_stmt
+name|char
+name|wwsetjmp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* want a longjmp() from wwrint() */
+end_comment
+
+begin_decl_stmt
+name|jmp_buf
+name|wwjmpbuf
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* jmpbuf for above */
 end_comment
 
 begin_decl_stmt
@@ -1105,17 +1171,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* current position in buffer */
+comment|/* current read position in buffer */
 end_comment
 
 begin_decl_stmt
-name|int
-name|wwibc
+name|char
+modifier|*
+name|wwibq
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* character count */
+comment|/* current write position in buffer */
 end_comment
 
 begin_define
@@ -1123,7 +1190,7 @@ define|#
 directive|define
 name|wwgetc
 parameter_list|()
-value|(wwibc ? wwibc--, *wwibp++&0x7f : -1)
+value|(wwibp< wwibq ? *wwibp++& 0x7f : -1)
 end_define
 
 begin_define
@@ -1131,7 +1198,7 @@ define|#
 directive|define
 name|wwpeekc
 parameter_list|()
-value|(wwibc ? *wwibp&0x7f : -1)
+value|(wwibp< wwibq ? *wwibp& 0x7f : -1)
 end_define
 
 begin_define
@@ -1141,7 +1208,15 @@ name|wwungetc
 parameter_list|(
 name|c
 parameter_list|)
-value|(wwibp> wwib ? wwibc++, *--wwibp = (c) : -1)
+value|(wwibp> wwib ? *--wwibp = (c) : -1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|wwinterrupt
+parameter_list|()
+value|(wwibp< wwibq)
 end_define
 
 begin_comment
@@ -1304,6 +1379,14 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|char
+modifier|*
+name|sprintf
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_undef
 undef|#
 directive|undef
@@ -1370,7 +1453,7 @@ name|ISCTRL
 parameter_list|(
 name|c
 parameter_list|)
-value|((c)< ' ' || (c)>= DEL)
+value|((c)< ' '& (c) != '\t' || (c)>= DEL)
 end_define
 
 begin_if

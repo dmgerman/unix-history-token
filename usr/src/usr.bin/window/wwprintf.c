@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwprintf.c	3.1 83/08/11"
+literal|"@(#)wwprintf.c	3.2 84/03/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,6 +58,9 @@ end_decl_stmt
 
 begin_block
 block|{
+include|#
+directive|include
+file|<stdio.h>
 name|struct
 name|_iobuf
 name|_wwbuf
@@ -114,7 +117,9 @@ operator|&
 name|_wwbuf
 argument_list|)
 expr_stmt|;
-return|return
+operator|(
+name|void
+operator|)
 name|wwwrite
 argument_list|(
 name|w
@@ -127,7 +132,7 @@ name|_ptr
 operator|-
 name|buf
 argument_list|)
-return|;
+expr_stmt|;
 block|}
 end_block
 

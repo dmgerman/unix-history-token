@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwgets.c	3.3 84/01/16"
+literal|"@(#)wwgets.c	3.4 84/03/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -124,8 +124,15 @@ name|w
 argument_list|)
 expr_stmt|;
 else|else
-name|wwbell
-argument_list|()
+name|wwputc
+argument_list|(
+name|CTRL
+argument_list|(
+name|g
+argument_list|)
+argument_list|,
+name|w
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -250,13 +257,17 @@ name|n
 operator|-
 literal|1
 condition|)
-name|wwbell
-argument_list|()
+name|wwputc
+argument_list|(
+name|CTRL
+argument_list|(
+name|g
+argument_list|)
+argument_list|,
+name|w
+argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
 name|wwputs
 argument_list|(
 name|unctrl
@@ -319,9 +330,6 @@ operator|>=
 literal|0
 condition|;
 control|)
-operator|(
-name|void
-operator|)
 name|wwputs
 argument_list|(
 literal|"\b \b"

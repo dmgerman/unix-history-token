@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)win.c	3.2 84/01/16"
+literal|"@(#)win.c	3.3 84/03/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -489,6 +489,12 @@ literal|1
 expr_stmt|;
 name|w
 operator|->
+name|ww_nointr
+operator|=
+literal|1
+expr_stmt|;
+name|w
+operator|->
 name|ww_id
 operator|=
 operator|-
@@ -518,6 +524,9 @@ name|framewin
 argument_list|)
 expr_stmt|;
 name|reframe
+argument_list|()
+expr_stmt|;
+name|wwupdate
 argument_list|()
 expr_stmt|;
 return|return
@@ -593,7 +602,7 @@ name|more
 argument_list|(
 name|w
 argument_list|,
-name|alway
+name|always
 argument_list|)
 specifier|register
 expr|struct
@@ -605,7 +614,7 @@ end_expr_stmt
 
 begin_decl_stmt
 name|char
-name|alway
+name|always
 decl_stmt|;
 end_decl_stmt
 
@@ -617,7 +626,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|alway
+name|always
 operator|&&
 name|w
 operator|->
@@ -645,9 +654,6 @@ argument_list|,
 literal|"[Type escape to abort, any other key to continue]"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|wwputs
 argument_list|(
 literal|"\033E"
@@ -701,9 +707,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|wwprintf
 argument_list|(
 name|w

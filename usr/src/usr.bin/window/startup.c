@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)startup.c	3.8 84/01/11"
+literal|"@(#)startup.c	3.9 84/03/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -186,9 +186,6 @@ condition|)
 goto|goto
 name|bad
 goto|;
-operator|(
-name|void
-operator|)
 name|wwprintf
 argument_list|(
 name|w
@@ -209,9 +206,6 @@ expr_stmt|;
 return|return;
 name|bad
 label|:
-operator|(
-name|void
-operator|)
 name|wwputs
 argument_list|(
 literal|"Can't open default windows.  "

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)tt.h	3.9 83/12/17  */
+comment|/*  *	@(#)tt.h	3.10 84/03/03  */
 end_comment
 
 begin_comment
@@ -193,7 +193,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Clean interface to termcap routines.  */
+comment|/*  * Clean interface to termcap routines.  * Too may t's.  */
 end_comment
 
 begin_decl_stmt
@@ -220,32 +220,20 @@ begin_comment
 comment|/* pointer for it */
 end_comment
 
-begin_function_decl
-name|int
-name|tt_pc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* just putchar() */
-end_comment
-
-begin_function_decl
-name|int
-name|tt_sc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* *tt_strp++ = c */
-end_comment
+begin_define
+define|#
+directive|define
+name|tttgetstr
+parameter_list|(
+name|s
+parameter_list|)
+value|tgetstr((s),&tt_strp)
+end_define
 
 begin_function_decl
 name|char
 modifier|*
-name|tt_xgetstr
+name|ttxgetstr
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -254,26 +242,60 @@ begin_comment
 comment|/* tgetstr() and expand delays */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|tt_tgetstr
-parameter_list|(
-name|s
-parameter_list|)
-value|tgetstr((s),&tt_strp)
-end_define
+begin_function_decl
+name|int
+name|tttputc
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
 directive|define
-name|tt_tputs
+name|tttputs
 parameter_list|(
 name|s
 parameter_list|,
 name|n
 parameter_list|)
-value|tputs((s), (n), tt_pc)
+value|tputs((s), (n), tttputc)
+end_define
+
+begin_comment
+comment|/*  * Buffered output without stdio.  * These variables have different meanings from the ww_ob* variabels.  * But I'm too lazy to think up different names.  */
+end_comment
+
+begin_decl_stmt
+name|char
+name|tt_ob
+index|[
+literal|512
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|tt_obp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|tt_obe
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|ttputc
+parameter_list|(
+name|c
+parameter_list|)
+value|(tt_obp< tt_obe ? *tt_obp++ = (c) \ 				: (ttflush(), *tt_obp++ = (c)))
 end_define
 
 end_unit

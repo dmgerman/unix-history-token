@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ttinit.c	3.7 83/12/17"
+literal|"@(#)ttinit.c	3.8 84/03/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,6 +58,25 @@ name|char
 modifier|*
 name|t
 decl_stmt|;
+comment|/* 	 * Set output buffer size to about 1 second of output time. 	 */
+name|tt_obp
+operator|=
+name|tt_ob
+expr_stmt|;
+name|tt_obe
+operator|=
+name|tt_ob
+operator|+
+name|MIN
+argument_list|(
+name|wwbaud
+operator|/
+literal|10
+argument_list|,
+sizeof|sizeof
+name|tt_ob
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Use the standard name of the terminal (i.e. the second 	 * name in termcap). 	 */
 for|for
 control|(

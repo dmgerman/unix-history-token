@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tttermcap.c	3.2 83/12/17"
+literal|"@(#)tttermcap.c	3.3 84/03/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,12 +19,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|"ww.h"
-end_include
 
 begin_include
 include|#
@@ -41,7 +35,7 @@ function_decl|;
 end_function_decl
 
 begin_macro
-name|tt_pc
+name|tttputc
 argument_list|(
 argument|c
 argument_list|)
@@ -49,7 +43,7 @@ end_macro
 
 begin_block
 block|{
-name|putchar
+name|ttputc
 argument_list|(
 name|c
 argument_list|)
@@ -58,7 +52,7 @@ block|}
 end_block
 
 begin_macro
-name|tt_sc
+name|ttxputc
 argument_list|(
 argument|c
 argument_list|)
@@ -78,7 +72,7 @@ end_block
 begin_function
 name|char
 modifier|*
-name|tt_xgetstr
+name|ttxgetstr
 parameter_list|(
 name|str
 parameter_list|)
@@ -128,10 +122,10 @@ name|buf
 argument_list|,
 literal|1
 argument_list|,
-name|tt_sc
+name|ttxputc
 argument_list|)
 expr_stmt|;
-name|tt_sc
+name|ttxputc
 argument_list|(
 literal|0
 argument_list|)

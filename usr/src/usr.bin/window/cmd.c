@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd.c	3.20 84/01/16"
+literal|"@(#)cmd.c	3.21 84/03/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -92,9 +92,6 @@ condition|(
 operator|!
 name|terse
 condition|)
-operator|(
-name|void
-operator|)
 name|wwputs
 argument_list|(
 literal|"\r\n"
@@ -272,9 +269,9 @@ argument_list|)
 operator|>=
 literal|0
 condition|)
-name|incmd
+name|wwcurwin
 operator|=
-literal|0
+name|selwin
 expr_stmt|;
 break|break;
 case|case
@@ -324,9 +321,9 @@ argument_list|)
 operator|>=
 literal|0
 condition|)
-name|incmd
+name|wwcurwin
 operator|=
-literal|0
+name|selwin
 expr_stmt|;
 block|}
 else|else
@@ -712,9 +709,9 @@ argument_list|)
 operator|>=
 literal|0
 operator|)
-name|incmd
+name|wwcurwin
 operator|=
-literal|0
+name|selwin
 empty_stmt|;
 break|break;
 case|case
@@ -812,9 +809,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|incmd
+name|wwcurwin
 operator|=
-literal|0
+name|selwin
 expr_stmt|;
 block|}
 block|}
@@ -825,8 +822,15 @@ condition|(
 operator|!
 name|terse
 condition|)
-name|wwbell
-argument_list|()
+name|wwputc
+argument_list|(
+name|CTRL
+argument_list|(
+name|g
+argument_list|)
+argument_list|,
+name|cmdwin
+argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
@@ -838,8 +842,9 @@ block|}
 block|}
 if|if
 condition|(
-operator|!
-name|incmd
+name|wwcurwin
+operator|!=
+literal|0
 operator|||
 name|quit
 condition|)
@@ -857,9 +862,6 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-operator|(
-name|void
-operator|)
 name|wwputs
 argument_list|(
 literal|"Command: "
@@ -939,9 +941,6 @@ condition|(
 operator|!
 name|terse
 condition|)
-operator|(
-name|void
-operator|)
 name|wwputs
 argument_list|(
 literal|"Which window? "
@@ -1034,17 +1033,21 @@ name|w
 operator|==
 literal|0
 condition|)
-name|wwbell
-argument_list|()
+name|wwputc
+argument_list|(
+name|CTRL
+argument_list|(
+name|g
+argument_list|)
+argument_list|,
+name|cmdwin
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
 name|terse
 condition|)
-operator|(
-name|void
-operator|)
 name|wwputs
 argument_list|(
 literal|"\r\n"

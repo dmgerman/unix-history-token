@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwdata.c	3.8 83/12/17"
+literal|"@(#)wwdata.c	3.9 84/03/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -106,6 +106,8 @@ block|,
 operator|-
 literal|1
 block|}
+block|,
+literal|0
 block|,
 literal|0
 block|,

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)error.c	3.6 84/01/13"
+literal|"@(#)error.c	3.7 84/03/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,14 +104,18 @@ if|if
 condition|(
 name|terse
 condition|)
-name|wwbell
-argument_list|()
+name|wwputc
+argument_list|(
+name|CTRL
+argument_list|(
+name|g
+argument_list|)
+argument_list|,
+name|cmdwin
+argument_list|)
 expr_stmt|;
 else|else
 block|{
-operator|(
-name|void
-operator|)
 name|wwprintf
 argument_list|(
 name|cmdwin
@@ -135,9 +139,6 @@ argument_list|,
 name|h
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|wwputs
 argument_list|(
 literal|"  "
@@ -208,9 +209,6 @@ operator|==
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|wwputs
 argument_list|(
 literal|"Can't open error window.  "
@@ -247,9 +245,6 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
-operator|(
-name|void
-operator|)
 name|wwprintf
 argument_list|(
 name|w
@@ -261,9 +256,6 @@ operator|.
 name|x_lineno
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|wwprintf
 argument_list|(
 name|w
@@ -287,9 +279,6 @@ argument_list|,
 name|h
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|wwputc
 argument_list|(
 literal|'\n'

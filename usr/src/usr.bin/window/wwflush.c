@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwflush.c	3.4 83/09/14"
+literal|"@(#)wwflush.c	3.5 84/03/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,13 +82,8 @@ argument_list|,
 name|wwcursorcol
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
+name|ttflush
+argument_list|()
 expr_stmt|;
 block|}
 end_block

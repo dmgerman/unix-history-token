@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd3.c	3.9 84/01/13"
+literal|"@(#)cmd3.c	3.10 84/03/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,9 +157,6 @@ return|return
 operator|-
 literal|1
 return|;
-operator|(
-name|void
-operator|)
 name|wwprintf
 argument_list|(
 name|w
@@ -183,9 +180,6 @@ block|{
 case|case
 name|V_STR
 case|:
-operator|(
-name|void
-operator|)
 name|wwprintf
 argument_list|(
 name|w
@@ -203,9 +197,6 @@ break|break;
 case|case
 name|V_NUM
 case|:
-operator|(
-name|void
-operator|)
 name|wwprintf
 argument_list|(
 name|w
@@ -223,9 +214,6 @@ break|break;
 case|case
 name|V_ERR
 case|:
-operator|(
-name|void
-operator|)
 name|wwprintf
 argument_list|(
 name|w

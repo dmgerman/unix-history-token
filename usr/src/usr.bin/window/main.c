@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	3.14 83/12/06"
+literal|"@(#)main.c	3.15 84/03/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,16 +26,17 @@ directive|include
 file|"defs.h"
 end_include
 
-begin_decl_stmt
-name|char
-name|escapec
-init|=
-name|CTRL
-argument_list|(
-name|p
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
 
 begin_decl_stmt
 name|int
@@ -48,6 +49,17 @@ end_decl_stmt
 begin_comment
 comment|/* compatible */
 end_comment
+
+begin_decl_stmt
+name|char
+name|escapec
+init|=
+name|CTRL
+argument_list|(
+name|p
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -96,15 +108,6 @@ name|xflag
 init|=
 literal|0
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|O_4_1A
-name|struct
-name|timezone
-name|timezone
-decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|p
@@ -274,8 +277,12 @@ argument_list|(
 operator|&
 name|starttime
 argument_list|,
-operator|&
+operator|(
+expr|struct
 name|timezone
+operator|*
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -288,14 +295,6 @@ operator|<
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -425,6 +424,12 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|cmdwin
+operator|->
+name|ww_nointr
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -552,9 +557,9 @@ if|if
 condition|(
 name|fflag
 condition|)
-name|incmd
+name|wwcurwin
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 else|else
 block|{
@@ -590,9 +595,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|incmd
+name|wwcurwin
 operator|=
-literal|0
+name|selwin
 expr_stmt|;
 name|wwcursor
 argument_list|(

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd4.c	3.7 84/01/16"
+literal|"@(#)cmd4.c	3.8 84/03/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -175,8 +175,15 @@ argument_list|()
 expr_stmt|;
 continue|continue;
 default|default:
-name|wwbell
-argument_list|()
+name|wwputc
+argument_list|(
+name|CTRL
+argument_list|(
+name|g
+argument_list|)
+argument_list|,
+name|cmdwin
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -184,9 +191,6 @@ operator|!
 name|terse
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|wwputs
 argument_list|(
 literal|"\rType return to continue, escape to select."
@@ -248,9 +252,6 @@ operator|&
 name|wwhead
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|wwputs
 argument_list|(
 literal|"\r\n"
@@ -288,9 +289,6 @@ operator|&
 name|wwhead
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|wwputc
 argument_list|(
 literal|':'
@@ -309,9 +307,6 @@ argument_list|,
 name|cmdwin
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|wwputs
 argument_list|(
 literal|"\r\n"

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tth19.c	3.11 83/12/17"
+literal|"@(#)tth19.c	3.12 84/03/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -159,7 +159,7 @@ name|pc
 parameter_list|(
 name|c
 parameter_list|)
-value|putchar('c')
+value|ttputc('c')
 end_define
 
 begin_define
@@ -391,7 +391,7 @@ operator|.
 name|tt_ninsert
 argument_list|)
 expr_stmt|;
-name|putchar
+name|ttputc
 argument_list|(
 name|c
 argument_list|)
@@ -496,7 +496,7 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|putchar
+name|ttputc
 argument_list|(
 operator|*
 name|p
@@ -528,7 +528,7 @@ name|n
 operator|>=
 literal|0
 condition|)
-name|putchar
+name|ttputc
 argument_list|(
 operator|*
 name|p
@@ -722,14 +722,14 @@ argument_list|(
 name|Y
 argument_list|)
 expr_stmt|;
-name|putchar
+name|ttputc
 argument_list|(
 literal|' '
 operator|+
 name|row
 argument_list|)
 expr_stmt|;
-name|putchar
+name|ttputc
 argument_list|(
 literal|' '
 operator|+
@@ -764,11 +764,9 @@ if|if
 condition|(
 name|gen_VS
 condition|)
-name|fputs
+name|ttputs
 argument_list|(
 name|gen_VS
-argument_list|,
-name|stdout
 argument_list|)
 expr_stmt|;
 name|esc
@@ -841,11 +839,9 @@ if|if
 condition|(
 name|gen_VE
 condition|)
-name|fputs
+name|ttputs
 argument_list|(
 name|gen_VE
-argument_list|,
-name|stdout
 argument_list|)
 expr_stmt|;
 name|esc
@@ -958,14 +954,14 @@ expr_stmt|;
 comment|/* ms per 10 char */
 name|gen_VS
 operator|=
-name|tt_xgetstr
+name|ttxgetstr
 argument_list|(
 literal|"vs"
 argument_list|)
 expr_stmt|;
 name|gen_VE
 operator|=
-name|tt_xgetstr
+name|ttxgetstr
 argument_list|(
 literal|"ve"
 argument_list|)

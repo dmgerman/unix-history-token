@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwtty.c	3.5 83/12/17"
+literal|"@(#)wwtty.c	3.6 84/03/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ begin_include
 include|#
 directive|include
 file|"ww.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_expr_stmt
@@ -167,6 +173,28 @@ name|t
 operator|->
 name|ww_ldisc
 argument_list|)
+operator|<
+literal|0
+condition|)
+goto|goto
+name|bad
+goto|;
+if|if
+condition|(
+operator|(
+name|t
+operator|->
+name|ww_fflags
+operator|=
+name|fcntl
+argument_list|(
+name|d
+argument_list|,
+name|F_GETFL
+argument_list|,
+literal|0
+argument_list|)
+operator|)
 operator|<
 literal|0
 condition|)
@@ -329,6 +357,24 @@ operator|&
 name|t
 operator|->
 name|ww_ldisc
+argument_list|)
+operator|<
+literal|0
+condition|)
+goto|goto
+name|bad
+goto|;
+if|if
+condition|(
+name|fcntl
+argument_list|(
+name|d
+argument_list|,
+name|F_SETFL
+argument_list|,
+name|t
+operator|->
+name|ww_fflags
 argument_list|)
 operator|<
 literal|0

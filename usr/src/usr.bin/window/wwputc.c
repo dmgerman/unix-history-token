@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwputc.c	3.1 83/08/11"
+literal|"@(#)wwputc.c	3.2 84/03/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,7 +51,9 @@ end_decl_stmt
 
 begin_block
 block|{
-return|return
+operator|(
+name|void
+operator|)
 name|wwwrite
 argument_list|(
 name|w
@@ -62,7 +64,7 @@ argument_list|,
 sizeof|sizeof
 name|c
 argument_list|)
-return|;
+expr_stmt|;
 block|}
 end_block
 

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd6.c	3.7 84/01/16"
+literal|"@(#)cmd6.c	3.8 84/03/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,9 +54,6 @@ condition|(
 operator|!
 name|terse
 condition|)
-operator|(
-name|void
-operator|)
 name|wwputs
 argument_list|(
 literal|"[m(smap) n(ns) o(os) s(string) v(nvis) w(win)]? "
@@ -84,9 +81,6 @@ condition|(
 operator|!
 name|terse
 condition|)
-operator|(
-name|void
-operator|)
 name|wwputs
 argument_list|(
 literal|"\r\n"
@@ -169,8 +163,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|wwbell
-argument_list|()
+name|wwputc
+argument_list|(
+name|CTRL
+argument_list|(
+name|g
+argument_list|)
+argument_list|,
+name|cmdwin
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -262,9 +263,6 @@ condition|)
 goto|goto
 name|out
 goto|;
-operator|(
-name|void
-operator|)
 name|wwprintf
 argument_list|(
 name|w

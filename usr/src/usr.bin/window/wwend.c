@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwend.c	3.3 83/08/15"
+literal|"@(#)wwend.c	3.4 84/03/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,13 +63,8 @@ name|tt_end
 call|)
 argument_list|()
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
+name|ttflush
+argument_list|()
 expr_stmt|;
 operator|(
 name|void

@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)context.h	3.3 84/01/13  */
+comment|/*  *	@(#)context.h	3.4 84/03/03  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
 
 begin_struct
 struct|struct

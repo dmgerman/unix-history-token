@@ -1,18 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)defs.h	3.8 84/01/16	  */
+comment|/*  *	@(#)defs.h	3.9 84/03/03	  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"ww.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_ifndef
@@ -167,7 +161,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* number of lines in the buffer */
+comment|/* default buffer size for new windows */
+end_comment
+
+begin_decl_stmt
+name|char
+name|escapec
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the escape character */
 end_comment
 
 begin_comment
@@ -180,11 +184,19 @@ name|quit
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* quit command issued */
+end_comment
+
 begin_decl_stmt
 name|char
 name|terse
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* terse mode */
+end_comment
 
 begin_decl_stmt
 name|char
@@ -192,24 +204,8 @@ name|debug
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|char
-name|incmd
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* in command mode */
-end_comment
-
-begin_decl_stmt
-name|char
-name|escapec
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* escape character */
+comment|/* debug mode */
 end_comment
 
 begin_function_decl

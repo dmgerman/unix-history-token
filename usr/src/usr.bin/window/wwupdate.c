@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwupdate.c	3.11 84/01/06"
+literal|"@(#)wwupdate.c	3.12 84/03/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,8 +33,12 @@ file|"tt.h"
 end_include
 
 begin_macro
-name|wwupdate
-argument_list|()
+name|wwupdate1
+argument_list|(
+argument|top
+argument_list|,
+argument|bot
+argument_list|)
 end_macro
 
 begin_block
@@ -68,15 +72,23 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+name|top
 operator|,
 name|touched
 operator|=
+operator|&
 name|wwtouched
+index|[
+name|i
+index|]
 init|;
 name|i
 operator|<
-name|wwnrow
+name|bot
+operator|&&
+operator|!
+name|wwinterrupt
+argument_list|()
 condition|;
 name|i
 operator|++
