@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Data structures and definitions for CAM Control Blocks (CCBs).  *  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: cam_ccb.h,v 1.6 1999/05/22 21:58:45 gibbs Exp $  */
+comment|/*  * Data structures and definitions for CAM Control Blocks (CCBs).  *  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: cam_ccb.h,v 1.7 1999/05/23 18:57:28 gibbs Exp $  */
 end_comment
 
 begin_ifndef
@@ -370,6 +370,13 @@ init|=
 literal|0x400
 block|,
 comment|/* Only for the transport layer device */
+name|XPT_FC_DEV_QUEUED
+init|=
+literal|0x800
+operator||
+name|XPT_FC_QUEUED
+block|,
+comment|/* Passes through the device queues */
 comment|/* Common function commands: 0x00->0x0F */
 name|XPT_NOOP
 init|=
@@ -380,7 +387,7 @@ name|XPT_SCSI_IO
 init|=
 literal|0x01
 operator||
-name|XPT_FC_QUEUED
+name|XPT_FC_DEV_QUEUED
 block|,
 comment|/* Execute the requested I/O operation */
 name|XPT_GDEV_TYPE
@@ -462,6 +469,8 @@ comment|/* Reset the specified SCSI bus */
 name|XPT_RESET_DEV
 init|=
 literal|0x12
+operator||
+name|XPT_FC_DEV_QUEUED
 block|,
 comment|/* Bus Device Reset the specified SCSI device */
 name|XPT_TERM_IO
@@ -507,7 +516,7 @@ name|XPT_ENG_EXEC
 init|=
 literal|0x21
 operator||
-name|XPT_FC_QUEUED
+name|XPT_FC_DEV_QUEUED
 operator||
 name|XPT_FC_XPT_ONLY
 block|,
@@ -522,7 +531,7 @@ name|XPT_TARGET_IO
 init|=
 literal|0x31
 operator||
-name|XPT_FC_QUEUED
+name|XPT_FC_DEV_QUEUED
 block|,
 comment|/* Execute target I/O request */
 name|XPT_ACCEPT_TARGET_IO
@@ -538,7 +547,7 @@ name|XPT_CONT_TARGET_IO
 init|=
 literal|0x33
 operator||
-name|XPT_FC_QUEUED
+name|XPT_FC_DEV_QUEUED
 block|,
 comment|/* Continue Host Target I/O Connection */
 name|XPT_IMMED_NOTIFY
@@ -614,6 +623,28 @@ define|#
 directive|define
 name|XPT_FC_GROUP_VENDOR_UNIQUE
 value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|XPT_FC_IS_DEV_QUEUED
+parameter_list|(
+name|ccb
+parameter_list|)
+define|\
+value|(((ccb)->ccb_h.func_code& XPT_FC_DEV_QUEUED) == XPT_FC_DEV_QUEUED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XPT_FC_IS_QUEUED
+parameter_list|(
+name|ccb
+parameter_list|)
+define|\
+value|(((ccb)->ccb_h.func_code& XPT_FC_QUEUED) != 0)
 end_define
 
 begin_typedef
@@ -1873,11 +1904,11 @@ define|#
 directive|define
 name|CAM_TAG_ACTION_NONE
 value|0x00
-name|u_int8_t
+name|u_int
 name|tag_id
 decl_stmt|;
 comment|/* tag id from initator (target mode) */
-name|u_int8_t
+name|u_int
 name|init_id
 decl_stmt|;
 comment|/* initiator id of who selected */
@@ -2364,14 +2395,6 @@ name|u_int8_t
 name|initiator_id
 decl_stmt|;
 comment|/* Id of initiator that selected */
-name|u_int16_t
-name|seq_id
-decl_stmt|;
-comment|/* Sequence Identifier */
-name|u_int8_t
-name|message_code
-decl_stmt|;
-comment|/* Message Code */
 name|u_int8_t
 name|message_args
 index|[
