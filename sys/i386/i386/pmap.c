@@ -6378,6 +6378,19 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|curthread
+operator|->
+name|td_pinned
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"curthread not pinned"
+operator|)
+argument_list|)
+expr_stmt|;
 name|PMAP_LOCK_ASSERT
 argument_list|(
 name|pmap
@@ -6476,6 +6489,9 @@ literal|0
 condition|)
 return|return;
 name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
+name|sched_pin
 argument_list|()
 expr_stmt|;
 name|PMAP_LOCK
@@ -6700,6 +6716,9 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
+name|sched_unpin
+argument_list|()
+expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
