@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993, 1994 The Regents of the University of California.  * Copyright (c) 1992, 1993, 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vnops.c	8.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993, 1994 The Regents of the University of California.  * Copyright (c) 1992, 1993, 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vnops.c	8.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -513,6 +513,8 @@ comment|/* 	 * do the lookup in the upper level. 	 * if that level comsumes addi
 if|if
 condition|(
 name|upperdvp
+operator|!=
+name|NULLVP
 condition|)
 block|{
 name|FIXUP
@@ -584,6 +586,8 @@ comment|/* 	 * in a similar way to the upper layer, do the lookup 	 * in the low
 if|if
 condition|(
 name|lowerdvp
+operator|!=
+name|NULLVP
 condition|)
 block|{
 name|int
@@ -691,6 +695,8 @@ block|{
 if|if
 condition|(
 name|uppervp
+operator|!=
+name|NULLVP
 condition|)
 block|{
 if|if
@@ -854,6 +860,8 @@ block|{
 if|if
 condition|(
 name|lowervp
+operator|!=
+name|NULLVP
 condition|)
 block|{
 name|vput
@@ -877,6 +885,8 @@ block|}
 if|if
 condition|(
 name|lowervp
+operator|!=
+name|NULLVP
 condition|)
 name|VOP_UNLOCK
 argument_list|(
@@ -914,6 +924,8 @@ block|{
 if|if
 condition|(
 name|uppervp
+operator|!=
+name|NULLVP
 condition|)
 name|vput
 argument_list|(
@@ -923,6 +935,8 @@ expr_stmt|;
 if|if
 condition|(
 name|lowervp
+operator|!=
+name|NULLVP
 condition|)
 name|vrele
 argument_list|(
@@ -1006,6 +1020,8 @@ decl_stmt|;
 if|if
 condition|(
 name|dvp
+operator|!=
+name|NULLVP
 condition|)
 block|{
 name|int
@@ -1162,6 +1178,8 @@ decl_stmt|;
 if|if
 condition|(
 name|dvp
+operator|!=
+name|NULLVP
 condition|)
 block|{
 name|int
@@ -1225,6 +1243,8 @@ return|;
 if|if
 condition|(
 name|vp
+operator|!=
+name|NULLVP
 condition|)
 block|{
 name|error
@@ -1739,6 +1759,8 @@ condition|(
 name|un
 operator|->
 name|un_uppervp
+operator|!=
+name|NULLVP
 condition|)
 block|{
 name|vp
@@ -1844,11 +1866,15 @@ name|vp
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|vp
 operator|=
 name|un
 operator|->
 name|un_uppervp
+operator|)
+operator|!=
+name|NULLVP
 condition|)
 block|{
 name|FIXUP
@@ -1879,11 +1905,15 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
 name|vp
 operator|=
 name|un
 operator|->
 name|un_lowervp
+operator|)
+operator|!=
+name|NULLVP
 condition|)
 block|{
 name|VOP_LOCK
@@ -2780,6 +2810,8 @@ decl_stmt|;
 if|if
 condition|(
 name|targetvp
+operator|!=
+name|NULLVP
 condition|)
 block|{
 name|int
@@ -2939,10 +2971,14 @@ condition|(
 name|dun
 operator|->
 name|un_uppervp
+operator|!=
+name|NULLVP
 operator|&&
 name|un
 operator|->
 name|un_uppervp
+operator|!=
+name|NULLVP
 condition|)
 block|{
 name|struct
@@ -3109,10 +3145,14 @@ condition|(
 name|dun
 operator|->
 name|un_uppervp
+operator|!=
+name|NULLVP
 operator|&&
 name|un
 operator|->
 name|un_uppervp
+operator|!=
+name|NULLVP
 condition|)
 block|{
 name|struct
@@ -3189,7 +3229,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * XXX: need to copy to upper layer 		 * and do the link there. 		 */
+comment|/* 		 * XXX: perhaps could copy to upper layer 		 * and do the link there. 		 */
 name|vput
 argument_list|(
 name|ap
@@ -3306,11 +3346,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|FIXUP
-argument_list|(
-name|un
-argument_list|)
-expr_stmt|;
 name|fdvp
 operator|=
 name|un
@@ -3367,11 +3402,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|FIXUP
-argument_list|(
-name|un
-argument_list|)
-expr_stmt|;
 name|fvp
 operator|=
 name|un
@@ -3419,6 +3449,7 @@ operator|==
 name|NULLVP
 condition|)
 block|{
+comment|/* 			 * this should never happen in normal 			 * operation but might if there was 			 * a problem creating the top-level shadow 			 * directory. 			 */
 name|error
 operator|=
 name|EROFS
@@ -3455,6 +3486,8 @@ block|}
 if|if
 condition|(
 name|tvp
+operator|!=
+name|NULLVP
 operator|&&
 name|tvp
 operator|->
@@ -3473,29 +3506,19 @@ argument_list|(
 name|tvp
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
-name|un
-operator|->
-name|un_uppervp
-operator|==
-name|NULLVP
-condition|)
-block|{
-name|error
-operator|=
-name|EROFS
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
 name|tvp
 operator|=
 name|un
 operator|->
 name|un_uppervp
 expr_stmt|;
+if|if
+condition|(
+name|tvp
+operator|!=
+name|NULLVP
+condition|)
+block|{
 name|VREF
 argument_list|(
 name|tvp
@@ -3507,6 +3530,7 @@ name|un_flags
 operator||=
 name|UN_KLOCK
 expr_stmt|;
+block|}
 name|vput
 argument_list|(
 name|ap
@@ -3557,6 +3581,8 @@ expr_stmt|;
 if|if
 condition|(
 name|tvp
+operator|!=
+name|NULLVP
 condition|)
 name|vput
 argument_list|(
@@ -3608,6 +3634,8 @@ decl_stmt|;
 if|if
 condition|(
 name|dvp
+operator|!=
+name|NULLVP
 condition|)
 block|{
 name|int
@@ -3772,10 +3800,14 @@ condition|(
 name|dun
 operator|->
 name|un_uppervp
+operator|!=
+name|NULLVP
 operator|&&
 name|un
 operator|->
 name|un_uppervp
+operator|!=
+name|NULLVP
 condition|)
 block|{
 name|struct
@@ -3934,6 +3966,8 @@ decl_stmt|;
 if|if
 condition|(
 name|dvp
+operator|!=
+name|NULLVP
 condition|)
 block|{
 name|int
@@ -4067,6 +4101,8 @@ condition|(
 name|un
 operator|->
 name|un_uppervp
+operator|!=
+name|NULLVP
 condition|)
 block|{
 name|FIXUP
@@ -4491,6 +4527,8 @@ condition|(
 name|un
 operator|->
 name|un_uppervp
+operator|!=
+name|NULLVP
 condition|)
 block|{
 if|if
