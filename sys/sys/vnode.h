@@ -465,6 +465,14 @@ decl_stmt|;
 comment|/* Line number doing locking */
 endif|#
 directive|endif
+name|udev_t
+name|v_cachedfs
+decl_stmt|;
+comment|/* cached fs id */
+name|ino_t
+name|v_cachedid
+decl_stmt|;
+comment|/* cached file id */
 block|}
 struct|;
 end_struct
@@ -502,6 +510,127 @@ define|#
 directive|define
 name|v_fifoinfo
 value|v_un.vu_fifoinfo
+end_define
+
+begin_comment
+comment|/*  * Userland version of struct vnode, for sysctl.  */
+end_comment
+
+begin_struct
+struct|struct
+name|xvnode
+block|{
+name|size_t
+name|xv_size
+decl_stmt|;
+comment|/* sizeof(struct xvnode) */
+name|void
+modifier|*
+name|xv_vnode
+decl_stmt|;
+comment|/* address of real vnode */
+name|u_long
+name|xv_flag
+decl_stmt|;
+comment|/* vnode flags */
+name|int
+name|xv_usecount
+decl_stmt|;
+comment|/* reference count of users */
+name|int
+name|xv_writecount
+decl_stmt|;
+comment|/* reference count of writers */
+name|int
+name|xv_holdcnt
+decl_stmt|;
+comment|/* page& buffer references */
+name|u_long
+name|xv_id
+decl_stmt|;
+comment|/* capability identifier */
+name|void
+modifier|*
+name|xv_mount
+decl_stmt|;
+comment|/* address of parent mount */
+name|long
+name|xv_numoutput
+decl_stmt|;
+comment|/* num of writes in progress */
+name|enum
+name|vtype
+name|xv_type
+decl_stmt|;
+comment|/* vnode type */
+union|union
+block|{
+name|void
+modifier|*
+name|xvu_socket
+decl_stmt|;
+comment|/* socket, if VSOCK */
+name|void
+modifier|*
+name|xvu_fifo
+decl_stmt|;
+comment|/* fifo, if VFIFO */
+name|udev_t
+name|xvu_rdev
+decl_stmt|;
+comment|/* maj/min, if VBLK/VCHR */
+struct|struct
+block|{
+name|udev_t
+name|xvu_dev
+decl_stmt|;
+comment|/* device, if VDIR/VREG/VLNK */
+name|ino_t
+name|xvu_ino
+decl_stmt|;
+comment|/* id, if VDIR/VREG/VLNK */
+block|}
+struct|;
+block|}
+name|xv_un
+union|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|xv_socket
+value|xv_un.xvu_socket
+end_define
+
+begin_define
+define|#
+directive|define
+name|xv_fifo
+value|xv_un.xvu_fifo
+end_define
+
+begin_define
+define|#
+directive|define
+name|xv_rdev
+value|xv_un.xvu_rdev
+end_define
+
+begin_define
+define|#
+directive|define
+name|xv_dev
+value|xv_un.xvu_dev
+end_define
+
+begin_define
+define|#
+directive|define
+name|xv_ino
+value|xv_un.xvu_ino
 end_define
 
 begin_define
