@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alloc.c	5.11 (Berkeley) %G%"
+literal|"@(#)alloc.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -166,7 +166,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ALIGN
+name|MEMALIGN
 parameter_list|(
 name|a
 parameter_list|)
@@ -427,9 +427,9 @@ decl_stmt|;
 comment|/*      * Convert amount of memory requested into closest block size stored in      * hash buckets which satisfies request.  Account for space used per block      * for accounting.      */
 name|nbytes
 operator|=
-name|ALIGN
+name|MEMALIGN
 argument_list|(
-name|ALIGN
+name|MEMALIGN
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -632,7 +632,7 @@ operator|)
 name|p
 operator|)
 operator|+
-name|ALIGN
+name|MEMALIGN
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1075,7 +1075,7 @@ operator|)
 name|cp
 operator|)
 operator|-
-name|ALIGN
+name|MEMALIGN
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1394,7 +1394,7 @@ operator|)
 name|cp
 operator|)
 operator|-
-name|ALIGN
+name|MEMALIGN
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1424,7 +1424,7 @@ name|ov_index
 expr_stmt|;
 block|}
 elseif|else
-comment|/* 	 * Already free, doing "compaction". 	 *  	 * Search for the old block of memory on the free list.  First, check the 	 * most common case (last element free'd), then (this failing) the last 	 * ``realloc_srchlen'' items free'd. If all lookups fail, then assume 	 * the size of the memory block being realloc'd is the smallest 	 * possible. 	 */
+comment|/* 	 * Already free, doing "compaction". 	 *  	 * Search for the old block of memory on the free list.  First, check  	 * the most common case (last element free'd), then (this failing)  	 * the last ``realloc_srchlen'' items free'd. If all lookups fail,  	 * then assume the size of the memory block being realloc'd is the  	 * smallest possible. 	 */
 if|if
 condition|(
 operator|(
@@ -1459,11 +1459,11 @@ literal|0
 expr_stmt|;
 name|onb
 operator|=
-name|ALIGN
+name|MEMALIGN
 argument_list|(
 name|nbytes
 operator|+
-name|ALIGN
+name|MEMALIGN
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1543,16 +1543,47 @@ name|cp
 operator|!=
 name|res
 condition|)
+block|{
 comment|/* common optimization */
+name|onb
+operator|=
+operator|(
+literal|1
+operator|<<
+operator|(
+name|i
+operator|+
+literal|3
+operator|)
+operator|)
+operator|-
+name|MEMALIGN
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|union
+name|overhead
+argument_list|)
+argument_list|)
+operator|-
+name|RSLOP
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|cp
 argument_list|,
 name|res
 argument_list|,
+name|onb
+operator|<
+name|nbytes
+condition|?
+name|onb
+else|:
 name|nbytes
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|was_alloced
