@@ -47,12 +47,6 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"../conf/portability.h"
-end_include
-
 begin_decl_stmt
 specifier|extern
 name|int
