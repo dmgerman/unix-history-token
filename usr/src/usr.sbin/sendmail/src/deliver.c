@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.40	%G%"
+literal|"@(#)deliver.c	3.41	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1490,6 +1490,12 @@ name|m_flags
 argument_list|)
 condition|)
 block|{
+specifier|extern
+name|int
+name|DefUid
+decl_stmt|,
+name|DefGid
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -1510,6 +1516,25 @@ operator|->
 name|q_gid
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|getruid
+argument_list|()
+operator|==
+literal|0
+condition|)
+block|{
+name|setuid
+argument_list|(
+name|DefUid
+argument_list|)
+expr_stmt|;
+name|setgid
+argument_list|(
+name|DefGid
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 ifndef|#
 directive|ifndef

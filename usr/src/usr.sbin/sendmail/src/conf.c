@@ -21,7 +21,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	3.30	%G%"
+literal|"@(#)conf.c	3.31	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -382,6 +382,34 @@ end_decl_stmt
 
 begin_comment
 comment|/* statistics summary */
+end_comment
+
+begin_comment
+comment|/* **  Other configuration. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|DefUid
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the uid to execute mailers as */
+end_comment
+
+begin_decl_stmt
+name|int
+name|DefGid
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ditto for gid */
 end_comment
 
 begin_comment
