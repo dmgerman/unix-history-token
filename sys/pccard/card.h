@@ -488,64 +488,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  *	Beep parameters  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCCARD_BEEP_PITCH0
-value|1600
-end_define
-
-begin_comment
-comment|/* inserted/removed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCCARD_BEEP_DURATION0
-value|20
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCCARD_BEEP_PITCH1
-value|1200
-end_define
-
-begin_comment
-comment|/* successed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCCARD_BEEP_DURATION1
-value|40
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCCARD_BEEP_PITCH2
-value|3200
-end_define
-
-begin_comment
-comment|/* failed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCCARD_BEEP_DURATION2
-value|40
-end_define
-
-begin_comment
 comment|/*  *	Other system limits  */
 end_comment
 
