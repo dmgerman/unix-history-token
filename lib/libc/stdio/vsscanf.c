@@ -119,9 +119,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|ret
-decl_stmt|;
 name|FILE
 name|f
 decl_stmt|;
