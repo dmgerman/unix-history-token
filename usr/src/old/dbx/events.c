@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)events.c	5.1 (Berkeley) %G%"
+literal|"@(#)events.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2061,10 +2061,6 @@ argument_list|(
 literal|"new bp at 0x%x for event ??\n"
 argument_list|,
 name|addr
-argument_list|,
-name|e
-operator|->
-name|id
 argument_list|)
 expr_stmt|;
 block|}

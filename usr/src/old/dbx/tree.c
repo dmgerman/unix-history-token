@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tree.c	5.1 (Berkeley) %G%"
+literal|"@(#)tree.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1679,7 +1679,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|" }"
+literal|"%s }"
 argument_list|,
 name|opinfo
 index|[

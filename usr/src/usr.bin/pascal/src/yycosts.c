@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yycosts.c	5.1 (Berkeley) %G%"
+literal|"@(#)yycosts.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -717,7 +717,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%s%s\n"
+literal|"\t%s\n"
 argument_list|,
 name|charname
 argument_list|(

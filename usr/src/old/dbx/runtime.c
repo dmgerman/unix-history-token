@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)runtime.c	5.2 (Berkeley) %G%"
+literal|"@(#)runtime.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3884,7 +3884,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" returns successfully\n"
+literal|"%s returns successfully\n"
 argument_list|,
 name|symname
 argument_list|(

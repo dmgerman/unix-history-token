@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec.c	5.1 (Berkeley) %G%"
+literal|"@(#)rec.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1707,7 +1707,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"[rec_offsets] tag %s origin\n"
+literal|"[rec_offsets] tag %s origin %d\n"
 argument_list|,
 name|fieldnlp
 operator|->

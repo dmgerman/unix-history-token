@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printgprof.c	5.1 (Berkeley) %G%"
+literal|"@(#)printgprof.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -642,8 +642,6 @@ argument_list|,
 literal|"total"
 argument_list|,
 literal|"parents"
-argument_list|,
-literal|""
 argument_list|)
 expr_stmt|;
 name|printf
@@ -684,8 +682,6 @@ argument_list|,
 literal|"total"
 argument_list|,
 literal|"children"
-argument_list|,
-literal|""
 argument_list|)
 expr_stmt|;
 name|printf

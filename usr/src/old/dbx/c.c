@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c.c	5.4 (Berkeley) %G%"
+literal|"@(#)c.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1297,7 +1297,7 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|"{\n"
+literal|"%s {\n"
 argument_list|,
 name|t
 operator|->
