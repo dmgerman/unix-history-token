@@ -1,22 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)npx.h	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)npx.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * 287/387 Floating Point Data Structures and Constants  * W. Jolitz 1/90  */
+comment|/*  * 287/387 NPX Coprocessor Data Structures and Constants  * W. Jolitz 1/90  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|___FPU87___
+name|___NPX87___
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|___FPU87___
+name|___NPX87___
 end_define
 
 begin_comment
@@ -120,10 +120,34 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Cyrix EMC memory - mapped coprocessor context switch information */
+end_comment
+
+begin_struct
+struct|struct
+name|emcsts
+block|{
+name|long
+name|em_msw
+decl_stmt|;
+comment|/* memory mapped status register when swtched */
+name|long
+name|em_tar
+decl_stmt|;
+comment|/* memory mapped temp A register when swtched */
+name|long
+name|em_dl
+decl_stmt|;
+comment|/* memory mapped D low register when swtched */
+block|}
+struct|;
+end_struct
+
 begin_endif
 endif|#
 directive|endif
-endif|___FPU87___
+endif|___NPX87___
 end_endif
 
 end_unit
