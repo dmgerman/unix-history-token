@@ -1969,8 +1969,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|,
 name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 block|}
