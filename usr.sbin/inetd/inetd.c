@@ -1092,9 +1092,9 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|no_v4bind
+name|v4bind_ok
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1114,9 +1114,9 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|no_v6bind
+name|v6bind_ok
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1750,9 +1750,7 @@ name|AF_INET
 case|:
 if|if
 condition|(
-name|no_v4bind
-operator|==
-literal|0
+name|v4bind_ok
 condition|)
 continue|continue;
 name|bind_sa4
@@ -1773,9 +1771,9 @@ name|sin_port
 operator|=
 literal|0
 expr_stmt|;
-name|no_v4bind
+name|v4bind_ok
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 continue|continue;
 ifdef|#
@@ -1786,9 +1784,7 @@ name|AF_INET6
 case|:
 if|if
 condition|(
-name|no_v6bind
-operator|==
-literal|0
+name|v6bind_ok
 condition|)
 continue|continue;
 name|bind_sa6
@@ -1809,9 +1805,9 @@ name|sin6_port
 operator|=
 literal|0
 expr_stmt|;
-name|no_v6bind
+name|v6bind_ok
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 continue|continue;
 endif|#
@@ -1819,16 +1815,12 @@ directive|endif
 block|}
 if|if
 condition|(
-name|no_v4bind
-operator|==
-literal|0
+name|v4bind_ok
 ifdef|#
 directive|ifdef
 name|INET6
 operator|&&
-name|no_v6bind
-operator|==
-literal|0
+name|v6bind_ok
 endif|#
 directive|endif
 condition|)
@@ -1849,16 +1841,14 @@ condition|)
 do|;
 if|if
 condition|(
-name|no_v4bind
-operator|!=
-literal|0
+operator|!
+name|v4bind_ok
 ifdef|#
 directive|ifdef
 name|INET6
 operator|&&
-name|no_v6bind
-operator|!=
-literal|0
+operator|!
+name|v6bind_ok
 endif|#
 directive|endif
 condition|)
@@ -2059,8 +2049,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|no_v4bind
+name|v4bind_ok
 condition|)
 block|{
 name|udpconf
@@ -2107,8 +2096,7 @@ directive|ifdef
 name|INET6
 if|if
 condition|(
-operator|!
-name|no_v6bind
+name|v6bind_ok
 condition|)
 block|{
 name|udp6conf
@@ -5386,9 +5374,8 @@ name|AF_INET
 case|:
 if|if
 condition|(
-name|no_v4bind
-operator|!=
-literal|0
+operator|!
+name|v4bind_ok
 condition|)
 block|{
 name|sep
@@ -5409,9 +5396,8 @@ name|AF_INET6
 case|:
 if|if
 condition|(
-name|no_v6bind
-operator|!=
-literal|0
+operator|!
+name|v6bind_ok
 condition|)
 block|{
 name|sep
@@ -9437,12 +9423,9 @@ name|INET6
 if|if
 condition|(
 name|v6bind
-operator|!=
-literal|0
 operator|&&
-name|no_v6bind
-operator|!=
-literal|0
+operator|!
+name|v6bind_ok
 condition|)
 block|{
 name|syslog
@@ -9460,9 +9443,7 @@ if|if
 condition|(
 name|v4bind
 operator|&&
-name|no_v4bind
-operator|==
-literal|0
+name|v4bind_ok
 condition|)
 name|v6bind
 operator|=
@@ -9483,8 +9464,6 @@ block|}
 if|if
 condition|(
 name|v6bind
-operator|!=
-literal|0
 condition|)
 block|{
 name|sep
@@ -9495,13 +9474,11 @@ name|AF_INET6
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|v4bind
-operator|==
-literal|0
 operator|||
-name|no_v4bind
-operator|!=
-literal|0
+operator|!
+name|v4bind_ok
 condition|)
 name|sep
 operator|->
@@ -9517,9 +9494,8 @@ block|{
 comment|/* default to v4 bind if not v6 bind */
 if|if
 condition|(
-name|no_v4bind
-operator|!=
-literal|0
+operator|!
+name|v4bind_ok
 condition|)
 block|{
 name|syslog
