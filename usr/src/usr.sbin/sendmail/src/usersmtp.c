@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.21 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	6.22 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.21 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	6.22 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -245,9 +245,10 @@ specifier|register
 name|int
 name|r
 decl_stmt|;
-name|EVENT
+specifier|register
+name|char
 modifier|*
-name|gte
+name|p
 decl_stmt|;
 specifier|extern
 name|STAB
@@ -501,6 +502,69 @@ condition|)
 goto|goto
 name|tempfail1
 goto|;
+comment|/* 	**  Check to see if we actually ended up talking to ourself. 	**  This means we didn't know about an alias or MX, or we managed 	**  to connect to an echo server. 	*/
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|SmtpReplyBuffer
+argument_list|,
+literal|' '
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|p
+operator|==
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|SmtpReplyBuffer
+argument_list|,
+name|MyHostName
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"553 %s config error: mail loops back to myself"
+argument_list|,
+name|MyHostName
+argument_list|)
+expr_stmt|;
+name|mci
+operator|->
+name|mci_exitstat
+operator|=
+name|EX_CONFIG
+expr_stmt|;
+name|mci
+operator|->
+name|mci_errno
+operator|=
+literal|0
+expr_stmt|;
+name|smtpquit
+argument_list|(
+name|m
+argument_list|,
+name|mci
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* 	**  If this is expected to be another sendmail, send some internal 	**  commands. 	*/
 if|if
 condition|(
@@ -1967,6 +2031,18 @@ end_decl_stmt
 
 begin_block
 block|{
+name|char
+modifier|*
+name|bufp
+init|=
+name|SmtpReplyBuffer
+decl_stmt|;
+name|char
+name|junkbuf
+index|[
+name|MAXLINE
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|mci
@@ -2004,6 +2080,9 @@ for|for
 control|(
 init|;
 condition|;
+name|bufp
+operator|=
+name|junkbuf
 control|)
 block|{
 specifier|register
@@ -2074,10 +2153,9 @@ name|p
 operator|=
 name|sfgets
 argument_list|(
-name|SmtpReplyBuffer
+name|bufp
 argument_list|,
-sizeof|sizeof
-name|SmtpReplyBuffer
+name|MAXLINE
 argument_list|,
 name|mci
 operator|->
@@ -2225,7 +2303,7 @@ return|;
 block|}
 name|fixcrlf
 argument_list|(
-name|SmtpReplyBuffer
+name|bufp
 argument_list|,
 name|TRUE
 argument_list|)
@@ -2254,7 +2332,7 @@ block|{
 comment|/* serious error -- log the previous command */
 if|if
 condition|(
-name|SmtpMsgBuffer
+name|bufp
 index|[
 literal|0
 index|]
@@ -2269,10 +2347,10 @@ name|e_xfp
 argument_list|,
 literal|">>> %s\n"
 argument_list|,
-name|SmtpMsgBuffer
+name|bufp
 argument_list|)
 expr_stmt|;
-name|SmtpMsgBuffer
+name|bufp
 index|[
 literal|0
 index|]
@@ -2288,7 +2366,7 @@ name|e_xfp
 argument_list|,
 literal|"<<< %s\n"
 argument_list|,
-name|SmtpReplyBuffer
+name|bufp
 argument_list|)
 expr_stmt|;
 block|}
@@ -2301,13 +2379,13 @@ name|nmessage
 argument_list|(
 literal|"%s"
 argument_list|,
-name|SmtpReplyBuffer
+name|bufp
 argument_list|)
 expr_stmt|;
 comment|/* if continuation is required, we can go on */
 if|if
 condition|(
-name|SmtpReplyBuffer
+name|bufp
 index|[
 literal|3
 index|]
@@ -2318,7 +2396,7 @@ operator|!
 operator|(
 name|isascii
 argument_list|(
-name|SmtpReplyBuffer
+name|bufp
 index|[
 literal|0
 index|]
@@ -2326,7 +2404,7 @@ argument_list|)
 operator|&&
 name|isdigit
 argument_list|(
-name|SmtpReplyBuffer
+name|bufp
 index|[
 literal|0
 index|]

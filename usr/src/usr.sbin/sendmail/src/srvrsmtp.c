@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.38 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.39 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.38 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.39 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -537,10 +537,6 @@ name|SmtpPhase
 operator|=
 literal|"startup"
 expr_stmt|;
-name|sendinghost
-operator|=
-name|NULL
-expr_stmt|;
 name|protocol
 operator|=
 name|NULL
@@ -888,60 +884,16 @@ argument_list|,
 name|inp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|strcasecmp
+name|define
+argument_list|(
+literal|'s'
+argument_list|,
+name|newstr
 argument_list|(
 name|p
-argument_list|,
-name|MyHostName
 argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* 				**  Didn't know about alias or MX, 				**  or connected to an echo server 				*/
-name|message
-argument_list|(
-literal|"553 %s config error: mail loops back to myself"
 argument_list|,
-name|MyHostName
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|hostbuf
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|hostbuf
-argument_list|,
-literal|" ("
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|hostbuf
-argument_list|,
-name|anynet_ntoa
-argument_list|(
-operator|&
-name|RealHostAddr
-argument_list|)
+name|e
 argument_list|)
 expr_stmt|;
 if|if
@@ -967,42 +919,29 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|hostbuf
-argument_list|,
-literal|"; "
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|hostbuf
-argument_list|,
-name|RealHostName
-argument_list|)
-expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|strcat
+name|p
+operator|=
+name|macvalue
 argument_list|(
-name|hostbuf
+literal|'_'
 argument_list|,
-literal|")"
+name|e
 argument_list|)
 expr_stmt|;
-name|sendinghost
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+name|p
 operator|=
-name|newstr
+name|macvalue
 argument_list|(
-name|hostbuf
+literal|'s'
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 name|message
@@ -1025,13 +964,16 @@ name|SmtpPhase
 operator|=
 literal|"MAIL"
 expr_stmt|;
-comment|/* force a sending host even if no HELO given */
+comment|/* check for validity of this command */
 if|if
 condition|(
-name|sendinghost
-operator|==
-name|NULL
-operator|&&
+operator|!
+name|gothello
+condition|)
+block|{
+comment|/* set sending host to our known value */
+if|if
+condition|(
 name|macvalue
 argument_list|(
 literal|'s'
@@ -1041,17 +983,15 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-name|sendinghost
-operator|=
+name|define
+argument_list|(
+literal|'s'
+argument_list|,
 name|RealHostName
+argument_list|,
+name|e
+argument_list|)
 expr_stmt|;
-comment|/* check for validity of this command */
-if|if
-condition|(
-operator|!
-name|gothello
-condition|)
-block|{
 if|if
 condition|(
 name|bitset
@@ -1127,21 +1067,6 @@ operator|>
 literal|0
 condition|)
 break|break;
-if|if
-condition|(
-name|sendinghost
-operator|!=
-name|NULL
-condition|)
-name|define
-argument_list|(
-literal|'s'
-argument_list|,
-name|sendinghost
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|protocol

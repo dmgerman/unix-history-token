@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.52 (Berkeley) %G%"
+literal|"@(#)main.c	6.53 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4059,6 +4059,29 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|macvalue
+argument_list|(
+literal|'s'
+argument_list|,
+name|CurEnv
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|define
+argument_list|(
+literal|'s'
+argument_list|,
+name|RealHostName
+argument_list|,
+name|CurEnv
+argument_list|)
+expr_stmt|;
+end_if
 
 begin_if
 if|if

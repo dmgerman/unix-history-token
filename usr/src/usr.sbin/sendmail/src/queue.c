@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.45 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.46 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.45 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.46 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -710,7 +710,7 @@ expr_stmt|;
 end_if
 
 begin_comment
-comment|/* $r and $s macro values */
+comment|/* $r and $s and $_ macro values */
 end_comment
 
 begin_if
@@ -761,6 +761,33 @@ argument_list|(
 name|tfp
 argument_list|,
 literal|"$s%s\n"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+end_if
+
+begin_if
+if|if
+condition|(
+operator|(
+name|p
+operator|=
+name|macvalue
+argument_list|(
+literal|'_'
+argument_list|,
+name|e
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+name|fprintf
+argument_list|(
+name|tfp
+argument_list|,
+literal|"$_%s\n"
 argument_list|,
 name|p
 argument_list|)

@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.32 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.33 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.32 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.33 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1798,7 +1798,7 @@ if|if
 condition|(
 name|tTd
 argument_list|(
-literal|29
+literal|9
 argument_list|,
 literal|1
 argument_list|)
@@ -2067,9 +2067,9 @@ if|if
 condition|(
 name|tTd
 argument_list|(
-literal|29
+literal|9
 argument_list|,
-literal|1
+literal|10
 argument_list|)
 condition|)
 name|printf
@@ -2167,9 +2167,9 @@ if|if
 condition|(
 name|tTd
 argument_list|(
-literal|29
+literal|9
 argument_list|,
-literal|1
+literal|3
 argument_list|)
 condition|)
 name|printf
@@ -2293,9 +2293,23 @@ goto|goto
 name|noident
 goto|;
 block|}
-name|p
+comment|/* 1413 says don't do this -- but it's broken otherwise */
+while|while
+condition|(
+name|isascii
+argument_list|(
+operator|*
 operator|++
-expr_stmt|;
+name|p
+argument_list|)
+operator|&&
+name|isspace
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|)
+continue|continue;
 comment|/* p now points to the authenticated name */
 operator|(
 name|void
@@ -2311,6 +2325,26 @@ argument_list|,
 name|RealHostName
 argument_list|)
 expr_stmt|;
+goto|goto
+name|finish
+goto|;
+endif|#
+directive|endif
+comment|/* IDENTPROTO */
+name|noident
+label|:
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|hbuf
+argument_list|,
+name|RealHostName
+argument_list|)
+expr_stmt|;
+name|finish
+label|:
 if|if
 condition|(
 name|RealHostName
@@ -2353,7 +2387,7 @@ if|if
 condition|(
 name|tTd
 argument_list|(
-literal|29
+literal|9
 argument_list|,
 literal|1
 argument_list|)
@@ -2367,14 +2401,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|hbuf
-return|;
-endif|#
-directive|endif
-comment|/* IDENTPROTO */
-name|noident
-label|:
-return|return
-name|NULL
 return|;
 block|}
 end_block
