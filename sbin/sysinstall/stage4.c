@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage4.c,v 1.5 1994/11/02 07:15:55 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage4.c,v 1.6 1994/11/17 14:12:37 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -408,11 +408,12 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* bininst MUST be the last file on the floppy */
 if|if
 condition|(
 name|access
 argument_list|(
-literal|"/stand/cpio_floppy_done"
+literal|"/stand/bininst"
 argument_list|,
 name|R_OK
 argument_list|)
@@ -435,11 +436,6 @@ expr_stmt|;
 name|unlink
 argument_list|(
 literal|"/stand/need_cpio_floppy"
-argument_list|)
-expr_stmt|;
-name|unlink
-argument_list|(
-literal|"/stand/cpio_floppy_done"
 argument_list|)
 expr_stmt|;
 block|}
