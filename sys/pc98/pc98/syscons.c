@@ -388,6 +388,19 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|int
+name|enable_bell
+init|=
+name|TRUE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* enable beeper */
+end_comment
+
+begin_decl_stmt
+specifier|static
 name|long
 name|scrn_blank_time
 init|=
@@ -516,6 +529,27 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"screen saver interrupted by input only"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_syscons
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|bell
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|enable_bell
+argument_list|,
+literal|0
+argument_list|,
+literal|"enable bell"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -19060,6 +19094,9 @@ condition|(
 name|cold
 operator|||
 name|shutdown_in_progress
+operator|||
+operator|!
+name|enable_bell
 condition|)
 return|return;
 if|if
