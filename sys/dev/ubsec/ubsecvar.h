@@ -744,6 +744,10 @@ argument_list|)
 name|sc_qchip
 expr_stmt|;
 comment|/* on chip, mcr1 */
+name|int
+name|sc_nqchip
+decl_stmt|;
+comment|/* count on chip, mcr1 */
 name|SIMPLEQ_HEAD
 argument_list|(
 argument_list|,
@@ -887,6 +891,23 @@ decl_stmt|;
 name|u_int32_t
 name|hst_invalid
 decl_stmt|;
+comment|/* invalid argument */
+name|u_int32_t
+name|hst_badsession
+decl_stmt|;
+comment|/* invalid session id */
+name|u_int32_t
+name|hst_badflags
+decl_stmt|;
+comment|/* flags indicate !(mbuf | uio) */
+name|u_int32_t
+name|hst_nodesc
+decl_stmt|;
+comment|/* op submitted w/o descriptors */
+name|u_int32_t
+name|hst_badalg
+decl_stmt|;
+comment|/* unsupported algorithm */
 name|u_int32_t
 name|hst_nomem
 decl_stmt|;
@@ -946,6 +967,18 @@ name|u_int32_t
 name|hst_maxbatch
 decl_stmt|;
 comment|/* max ops submitted together */
+name|u_int32_t
+name|hst_maxqueue
+decl_stmt|;
+comment|/* max ops queued for submission */
+name|u_int32_t
+name|hst_maxqchip
+decl_stmt|;
+comment|/* max mcr1 ops out for processing */
+name|u_int32_t
+name|hst_mcr1full
+decl_stmt|;
+comment|/* MCR1 too busy to take ops */
 name|u_int32_t
 name|hst_rng
 decl_stmt|;
