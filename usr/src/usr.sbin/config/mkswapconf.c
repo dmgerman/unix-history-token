@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkswapconf.c	5.9 (Berkeley) %G%"
+literal|"@(#)mkswapconf.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -294,27 +294,6 @@ argument_list|(
 name|fl
 operator|->
 name|f_rootdev
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"dev_t\targdev  = makedev(%d, %d);\n"
-argument_list|,
-name|major
-argument_list|(
-name|fl
-operator|->
-name|f_argdev
-argument_list|)
-argument_list|,
-name|minor
-argument_list|(
-name|fl
-operator|->
-name|f_argdev
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkheaders.c	5.6 (Berkeley) %G%"
+literal|"@(#)mkheaders.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -598,6 +598,17 @@ expr|*
 name|fl
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+name|fl
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|fl
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|fl
 operator|->
 name|f_fn
@@ -683,6 +694,17 @@ argument_list|(
 sizeof|sizeof
 expr|*
 name|fl
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|fl
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|fl
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)config.h	5.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)config.h	5.14 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -54,10 +54,11 @@ name|u_char
 name|f_flags
 decl_stmt|;
 comment|/* see below */
-name|short
+name|char
+modifier|*
 name|f_special
 decl_stmt|;
-comment|/* requires special make rule */
+comment|/* special make rule if present */
 name|char
 modifier|*
 name|f_needs
@@ -84,9 +85,6 @@ name|dev_t
 name|fus_rootdev
 decl_stmt|;
 name|dev_t
-name|fus_argdev
-decl_stmt|;
-name|dev_t
 name|fus_dumpdev
 decl_stmt|;
 block|}
@@ -107,10 +105,6 @@ define|#
 directive|define
 name|f_rootdev
 value|fun.fus.fus_rootdev
-define|#
-directive|define
-name|f_argdev
-value|fun.fus.fus_argdev
 define|#
 directive|define
 name|f_dumpdev
@@ -459,6 +453,14 @@ begin_function_decl
 name|char
 modifier|*
 name|get_word
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|get_quoted_word
 parameter_list|()
 function_decl|;
 end_function_decl
