@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All
 end_comment
 
 begin_comment
-comment|/*  *  devDC7085.c --  *  * %sccs.include.redist.c%  *  *	@(#)dc.c	7.5 (Berkeley) %G%  *  * devDC7085.c --  *  *     	This file contains machine-dependent routines that handle the  *	output queue for the serial lines.  *  *	Copyright (C) 1989 Digital Equipment Corporation.  *	Permission to use, copy, modify, and distribute this software and  *	its documentation for any purpose and without fee is hereby granted,  *	provided that the above copyright notice appears in all copies.  *	Digital Equipment Corporation makes no representations about the  *	suitability of this software for any purpose.  It is provided "as is"  *	without express or implied warranty.  *  * from: $Header: /sprite/src/kernel/dev/ds3100.md/RCS/devDC7085.c,  *	v 1.4 89/08/29 11:55:30 nelson Exp $ SPRITE (DECWRL)";  */
+comment|/*  *  devDC7085.c --  *  * %sccs.include.redist.c%  *  *	@(#)dc.c	7.6 (Berkeley) %G%  *  * devDC7085.c --  *  *     	This file contains machine-dependent routines that handle the  *	output queue for the serial lines.  *  *	Copyright (C) 1989 Digital Equipment Corporation.  *	Permission to use, copy, modify, and distribute this software and  *	its documentation for any purpose and without fee is hereby granted,  *	provided that the above copyright notice appears in all copies.  *	Digital Equipment Corporation makes no representations about the  *	suitability of this software for any purpose.  It is provided "as is"  *	without express or implied warranty.  *  * from: $Header: /sprite/src/kernel/dev/ds3100.md/RCS/devDC7085.c,  *	v 1.4 89/08/29 11:55:30 nelson Exp $ SPRITE (DECWRL)";  */
 end_comment
 
 begin_include
@@ -159,29 +159,50 @@ name|NDCLINE
 value|(NDC*4)
 end_define
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|dcstart
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|tty
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|dcxint
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|tty
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
-name|int
+name|void
 name|ttrstrt
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|tty
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -259,6 +280,58 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|static
+name|void
+name|dcscan
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|dcMapChar
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|dcKBDReset
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|MouseInit
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Software copy of brk register since it isn't readable  */
@@ -2108,31 +2181,6 @@ specifier|register
 name|int
 name|cntr
 decl_stmt|;
-extern|extern dcscan(
-block|)
-end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
-specifier|extern
-name|void
-name|dcKBDReset
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|MouseInit
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_if
 if|if
 condition|(
 name|cp
@@ -2146,9 +2194,6 @@ operator|(
 literal|0
 operator|)
 return|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|badaddr
@@ -2165,13 +2210,7 @@ operator|(
 literal|0
 operator|)
 return|;
-end_if
-
-begin_comment
 comment|/* reset chip */
-end_comment
-
-begin_expr_stmt
 name|dcaddr
 operator|=
 operator|(
@@ -2182,24 +2221,15 @@ name|cp
 operator|->
 name|pmax_addr
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|dcaddr
 operator|->
 name|dc_csr
 operator|=
 name|CSR_CLR
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|MachEmptyWriteBuffer
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_while
 while|while
 condition|(
 name|dcaddr
@@ -2209,9 +2239,6 @@ operator|&
 name|CSR_CLR
 condition|)
 empty_stmt|;
-end_while
-
-begin_expr_stmt
 name|dcaddr
 operator|->
 name|dc_csr
@@ -2222,13 +2249,7 @@ name|CSR_TIE
 operator||
 name|CSR_RIE
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* init pseudo DMA structures */
-end_comment
-
-begin_expr_stmt
 name|pdp
 operator|=
 operator|&
@@ -2241,9 +2262,6 @@ operator|*
 literal|4
 index|]
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|tp
 operator|=
 operator|&
@@ -2256,9 +2274,6 @@ operator|*
 literal|4
 index|]
 expr_stmt|;
-end_expr_stmt
-
-begin_for
 for|for
 control|(
 name|cntr
@@ -2310,9 +2325,6 @@ name|tp
 operator|++
 expr_stmt|;
 block|}
-end_for
-
-begin_expr_stmt
 name|dcsoftCAR
 index|[
 name|cp
@@ -2326,9 +2338,6 @@ name|pmax_flags
 operator||
 literal|0xB
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|dc_timer
@@ -2353,9 +2362,6 @@ name|hz
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
 name|printf
 argument_list|(
 literal|"dc%d at nexus0 csr 0x%x priority %d\n"
@@ -2373,9 +2379,6 @@ operator|->
 name|pmax_pri
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|cp
@@ -2436,27 +2439,48 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_return
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-end_return
+block|}
+end_block
 
-begin_expr_stmt
-unit|}  dcopen
-operator|(
-name|dev
-operator|,
-name|flag
-operator|)
+begin_macro
+name|dcopen
+argument_list|(
+argument|dev
+argument_list|,
+argument|flag
+argument_list|,
+argument|mode
+argument_list|,
+argument|p
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|dev_t
 name|dev
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flag
+decl_stmt|,
+name|mode
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -2802,12 +2826,32 @@ argument_list|(
 argument|dev
 argument_list|,
 argument|flag
+argument_list|,
+argument|mode
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|dev_t
 name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flag
+decl_stmt|,
+name|mode
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -2897,6 +2941,8 @@ name|l_close
 operator|)
 operator|(
 name|tp
+operator|,
+name|flag
 operator|)
 expr_stmt|;
 if|if
@@ -3101,6 +3147,8 @@ argument_list|,
 argument|data
 argument_list|,
 argument|flag
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -3113,6 +3161,20 @@ end_decl_stmt
 begin_decl_stmt
 name|caddr_t
 name|data
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -3173,6 +3235,8 @@ operator|,
 name|data
 operator|,
 name|flag
+operator|,
+name|p
 operator|)
 expr_stmt|;
 if|if
@@ -5294,12 +5358,11 @@ begin_comment
 comment|/*  * This is called by timeout() periodically.  * Check to see if modem status bits have changed.  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|dcscan
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|dcregs
@@ -5469,7 +5532,7 @@ name|hz
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * ----------------------------------------------------------------------------  *  * dcKBDPutc --  *  *	Put a character out to the keyboard.  *  * Results:  *	None.  *  * Side effects:  *	A character is written to the keyboard.  *  * ----------------------------------------------------------------------------  */
@@ -5810,6 +5873,9 @@ specifier|register
 name|int
 name|c
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|dcaddr
 operator|=
 name|dcpdma
@@ -5829,6 +5895,11 @@ operator|(
 literal|0
 operator|)
 return|;
+name|s
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|c
@@ -5882,6 +5953,11 @@ literal|0
 expr_stmt|;
 block|}
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|c
