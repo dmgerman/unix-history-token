@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printcap.c	5.6 (Berkeley) %G%"
+literal|"@(#)printcap.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +27,24 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
 
 begin_ifndef
 ifndef|#
@@ -56,24 +74,6 @@ end_define
 begin_comment
 comment|/* max number of tc= indirections */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pathnames.h"
-end_include
 
 begin_comment
 comment|/*  * termcap - routines for dealing with the terminal capability data base  *  * BUG:		Should use a "last" pointer in tbuf, so that searching  *		for capabilities alphabetically would not be a n**2/2  *		process when large numbers of capabilities are given.  * Note:	If we add a last pointer now we will screw up the  *		tc capability. We really should compile termcap.  *  * Essentially all the work here is scanning and decoding escapes  * in string capabilities.  We don't use stdio because the editor  * doesn't, and because living w/o it is not hard.  */
