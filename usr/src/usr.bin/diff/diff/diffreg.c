@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diffreg.c 4.19 %G%"
+literal|"@(#)diffreg.c 4.20 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|"diff.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment
@@ -2192,7 +2198,7 @@ name|char
 modifier|*
 name|tempfile
 init|=
-literal|"/tmp/dXXXXX"
+name|_PATH_TMP
 decl_stmt|;
 end_decl_stmt
 
@@ -4999,9 +5005,6 @@ end_macro
 begin_block
 block|{
 name|int
-name|ch
-decl_stmt|;
-name|int
 name|lowa
 decl_stmt|,
 name|upb
@@ -5130,33 +5133,6 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|a
-operator|<=
-name|b
-operator|&&
-name|c
-operator|<=
-name|d
-condition|)
-name|ch
-operator|=
-literal|'c'
-expr_stmt|;
-else|else
-name|ch
-operator|=
-operator|(
-name|a
-operator|<=
-name|b
-operator|)
-condition|?
-literal|'d'
-else|:
-literal|'a'
-expr_stmt|;
 if|if
 condition|(
 name|opt
