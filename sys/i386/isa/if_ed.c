@@ -4,11 +4,11 @@ comment|/*  * Device driver for National Semiconductor DS8390 based ethernet  * 
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ed.c,v 1.29 93/09/12 04:43:31 davidg Exp Locker: davidg $  */
+comment|/*  * $Id: if_ed.c,v 1.30 93/09/24 18:43:31 davidg Exp Locker: davidg $  */
 end_comment
 
 begin_comment
-comment|/*  * Modification history  *  * Revision 1.29  93/09/12  04:43:31  davidg  * cleaned-up probe routine to make it easier to add future board types  *   * Revision 1.28  93/09/11  19:17:56  davidg  * rewrote interrupt code; leaner and meaner.  *   * Revision 1.27  93/09/10  19:15:09  davidg  * changed probe/attach so that the type code is printed if the board  * type isn't unknown  *   * Revision 1.26  93/09/09  02:12:08  davidg  * cleaned up header comments a little  *   * Revision 1.25  93/09/08  23:04:25  davidg  * fixed problem where 3c503 boards lock up if the cable is   * disconnected at boot time. Added printing of irq number if  * the kernel config and board don't match  *   * Revision 1.24  93/09/07  12:08:36  davidg  * ED_FLAGS_NO_DOUBLE_BUFFERING was being checked against wrong variable  *   * Revision 1.23  93/09/07  10:32:53  davidg  * split wd and 3Com probe code into seperate routines  *   * Revision 1.22  93/09/06  20:28:22  davidg  * change references to LAAR to use shadow/prototype rather than the  * real thing because 8013EBT asic regs are write-only.  *   * Revision 1.21  93/08/25  20:38:02  davidg  * added recognition for WD8013WC (10BaseT) card type  *   * Revision 1.20  93/08/14  20:07:35  davidg  * one more stab at getting the 8013EBT working  *   * Revision 1.19  93/08/02  02:57:53  davidg  * Fixed problem where some rev 8013EBT boards want the DCR_LS flag  * set in order to work in 16bit mode. Also improves performance on  * all types of boards.  *  *...(part of log nuked for brevity)  *   * Revision 1.12  93/07/07  06:27:44  davidg  * moved call to bpfattach to after this drivers attach printf -  * improves readability of startup messages.  *   *...(part of log nuked for brevity)  *   * Revision 1.1  93/06/14  22:21:24  davidg  * Beta release of device driver for SMC/WD80x3 and 3C503 ethernet boards.  *   *   */
+comment|/*  * Modification history  *  * Revision 1.30  93/09/24  18:43:31  davidg  * fix bug where Compex boards ident themselves as 8003E's and the  * 16bit override wasn't working  *   * Revision 1.29  93/09/12  04:43:31  davidg  * cleaned-up probe routine to make it easier to add future board types  *   * Revision 1.28  93/09/11  19:17:56  davidg  * rewrote interrupt code; leaner and meaner.  *   * Revision 1.27  93/09/10  19:15:09  davidg  * changed probe/attach so that the type code is printed if the board  * type isn't unknown  *   * Revision 1.26  93/09/09  02:12:08  davidg  * cleaned up header comments a little  *   * Revision 1.25  93/09/08  23:04:25  davidg  * fixed problem where 3c503 boards lock up if the cable is   * disconnected at boot time. Added printing of irq number if  * the kernel config and board don't match  *   * Revision 1.24  93/09/07  12:08:36  davidg  * ED_FLAGS_NO_DOUBLE_BUFFERING was being checked against wrong variable  *   * Revision 1.23  93/09/07  10:32:53  davidg  * split wd and 3Com probe code into seperate routines  *   * Revision 1.22  93/09/06  20:28:22  davidg  * change references to LAAR to use shadow/prototype rather than the  * real thing because 8013EBT asic regs are write-only.  *   * Revision 1.21  93/08/25  20:38:02  davidg  * added recognition for WD8013WC (10BaseT) card type  *   * Revision 1.20  93/08/14  20:07:35  davidg  * one more stab at getting the 8013EBT working  *   * Revision 1.19  93/08/02  02:57:53  davidg  * Fixed problem where some rev 8013EBT boards want the DCR_LS flag  * set in order to work in 16bit mode. Also improves performance on  * all types of boards.  *  *...(part of log nuked for brevity)  *   * Revision 1.12  93/07/07  06:27:44  davidg  * moved call to bpfattach to after this drivers attach printf -  * improves readability of startup messages.  *   *...(part of log nuked for brevity)  *   * Revision 1.1  93/06/14  22:21:24  davidg  * Beta release of device driver for SMC/WD80x3 and 3C503 ethernet boards.  *   *   */
 end_comment
 
 begin_include
@@ -1347,25 +1347,6 @@ expr_stmt|;
 comment|/* 	 * Set upper address bits and 8/16 bit access to shared memory 	 */
 if|if
 condition|(
-operator|(
-name|sc
-operator|->
-name|type
-operator|&
-name|ED_WD_SOFTCONFIG
-operator|)
-operator|||
-operator|(
-name|sc
-operator|->
-name|type
-operator|==
-name|ED_TYPE_WD8013EBT
-operator|)
-condition|)
-block|{
-if|if
-condition|(
 name|isa16bit
 condition|)
 block|{
@@ -1436,7 +1417,6 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* 	 * Now zero memory and verify that it is clear 	 */
 name|bzero
