@@ -1045,7 +1045,7 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"kernel: id=%u io=%X irq=%u drq=%X maddr=%X flags=%X enabled=%X \n"
+literal|"kernel: id=%u io=%X irq=%d drq=%d maddr=%X msize=%d flags=%X enabled=%X \n"
 argument_list|,
 name|buf1
 operator|.
@@ -1066,6 +1066,10 @@ argument_list|,
 name|buf1
 operator|.
 name|id_maddr
+argument_list|,
+name|buf1
+operator|.
+name|id_msize
 argument_list|,
 name|buf1
 operator|.
@@ -1090,7 +1094,7 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"file: id=%u io=%X irq=%u drq=%X maddr=%X flags=%X enabled=%X \n"
+literal|"file: id=%u io=%X irq=%d drq=%d maddr=%X msize=%d flags=%X enabled=%X \n"
 argument_list|,
 name|buf
 operator|.
@@ -1111,6 +1115,10 @@ argument_list|,
 name|buf
 operator|.
 name|id_maddr
+argument_list|,
+name|buf
+operator|.
+name|id_msize
 argument_list|,
 name|buf
 operator|.
@@ -1286,6 +1294,39 @@ operator|=
 name|buf1
 operator|.
 name|id_maddr
+expr_stmt|;
+name|modified
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|buf
+operator|.
+name|id_msize
+operator|!=
+name|buf1
+operator|.
+name|id_msize
+condition|)
+block|{
+if|if
+condition|(
+name|verbose
+condition|)
+name|printf
+argument_list|(
+literal|"Setting msize\n"
+argument_list|)
+expr_stmt|;
+name|buf
+operator|.
+name|id_msize
+operator|=
+name|buf1
+operator|.
+name|id_msize
 expr_stmt|;
 name|modified
 operator|=
