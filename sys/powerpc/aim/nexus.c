@@ -815,34 +815,6 @@ argument_list|,
 literal|"OpenFirmware Nexus device"
 argument_list|)
 expr_stmt|;
-block|{
-name|u_int
-modifier|*
-name|foo
-init|=
-literal|0xf8000020
-decl_stmt|;
-name|pmap_kenter
-argument_list|(
-literal|0xf8000000
-argument_list|,
-literal|0xf8000000
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|">>> uni_n_clock_ctl = %08x\n"
-argument_list|,
-operator|*
-name|foo
-argument_list|)
-expr_stmt|;
-name|pmap_kremove
-argument_list|(
-literal|0xf8000000
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
