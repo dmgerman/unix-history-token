@@ -950,9 +950,29 @@ operator|*
 operator|)
 name|cp
 expr_stmt|;
+name|p
+operator|->
+name|histcounter_type
+operator|=
+name|FUNCTION_ALIGNMENT
+operator|/
+name|HISTFRACTION
+operator|*
+name|NBBY
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|GUPROF
+comment|/* Signed counters. */
+name|p
+operator|->
+name|histcounter_type
+operator|=
+operator|-
+name|p
+operator|->
+name|histcounter_type
+expr_stmt|;
 comment|/* Initialize pointers to overhead counters. */
 name|p
 operator|->
