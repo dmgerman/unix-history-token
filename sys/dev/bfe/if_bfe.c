@@ -2428,6 +2428,11 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>
+literal|500000
 name|KASSERT
 argument_list|(
 name|mtx_initialized
@@ -2443,6 +2448,8 @@ literal|"bfe mutex not initialized"
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|BFE_LOCK
 argument_list|(
 name|scp
