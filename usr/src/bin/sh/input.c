@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input.c	5.3 (Berkeley) %G%"
+literal|"@(#)input.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -596,13 +596,13 @@ literal|0
 operator|&&
 name|flags
 operator|&
-name|FNDELAY
+name|O_NONBLOCK
 condition|)
 block|{
 name|flags
 operator|&=
 operator|~
-name|FNDELAY
+name|O_NONBLOCK
 expr_stmt|;
 if|if
 condition|(
