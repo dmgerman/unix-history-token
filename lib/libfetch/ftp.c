@@ -1273,10 +1273,12 @@ init|;
 operator|*
 name|p
 operator|&&
+operator|!
+name|isdigit
+argument_list|(
 operator|*
 name|p
-operator|!=
-literal|'('
+argument_list|)
 condition|;
 name|p
 operator|++
@@ -1298,9 +1300,6 @@ goto|goto
 name|ouch
 goto|;
 block|}
-name|p
-operator|++
-expr_stmt|;
 switch|switch
 condition|(
 name|e
