@@ -1216,6 +1216,8 @@ argument_list|(
 expr|struct
 name|sigframe
 argument_list|)
+operator|-
+literal|128
 expr_stmt|;
 comment|/* Align to 16 bytes. */
 name|sfp
