@@ -232,7 +232,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|class_list_head
-name|g_classs
+name|g_classes
 decl_stmt|;
 end_decl_stmt
 

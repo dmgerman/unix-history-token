@@ -148,11 +148,11 @@ end_include
 begin_decl_stmt
 name|struct
 name|class_list_head
-name|g_classs
+name|g_classes
 init|=
 name|LIST_HEAD_INITIALIZER
 argument_list|(
-name|g_classs
+name|g_classes
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -248,7 +248,7 @@ expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
-name|g_classs
+name|g_classes
 argument_list|,
 name|mp
 argument_list|,
@@ -2701,7 +2701,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|mp
 argument_list|,
-argument|&g_classs
+argument|&g_classes
 argument_list|,
 argument|class
 argument_list|)

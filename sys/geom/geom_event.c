@@ -570,7 +570,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|mp
 argument_list|,
-argument|&g_classs
+argument|&g_classes
 argument_list|,
 argument|class
 argument_list|)
@@ -640,7 +640,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|mp
 argument_list|,
-argument|&g_classs
+argument|&g_classes
 argument_list|,
 argument|class
 argument_list|)
