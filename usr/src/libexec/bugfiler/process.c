@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c	5.3 (Berkeley) 87/04/11"
+literal|"@(#)process.c	5.4 (Berkeley) 87/04/23"
 decl_stmt|;
 end_decl_stmt
 
@@ -299,7 +299,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n%s\t\t%s\t%s\t%s\tOwner: Bugs Bunny\n\tComment: Received\n"
+literal|"\n%s\t\t%s\t%s\t%s\tOwner: Bugs Bunny\n\tStatus: Received\n"
 argument_list|,
 name|pfile
 argument_list|,
