@@ -672,6 +672,12 @@ modifier|*
 name|p_blocked
 decl_stmt|;
 comment|/* Mutex process is blocked on */
+specifier|const
+name|char
+modifier|*
+name|p_mtxname
+decl_stmt|;
+comment|/* Name of mutex blocked on */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -713,7 +719,7 @@ comment|/* User-priority based on p_cpu and p_nice. */
 name|u_char
 name|p_nativepri
 decl_stmt|;
-comment|/* Priority before propogation. */
+comment|/* Priority before propagation. */
 name|char
 name|p_nice
 decl_stmt|;

@@ -252,6 +252,19 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* wchan message */
+define|#
+directive|define
+name|MTXNAMELEN
+value|7
+name|char
+name|e_mtxname
+index|[
+name|MTXNAMELEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* blocked mutex */
 name|segsz_t
 name|e_xsize
 decl_stmt|;
