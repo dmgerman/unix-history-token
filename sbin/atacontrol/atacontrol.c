@@ -478,6 +478,72 @@ modifier|*
 name|parm
 parameter_list|)
 block|{
+name|u_int32_t
+name|lbasize
+init|=
+operator|(
+name|u_int32_t
+operator|)
+name|parm
+operator|->
+name|lba_size_1
+operator||
+operator|(
+operator|(
+name|u_int32_t
+operator|)
+name|parm
+operator|->
+name|lba_size_2
+operator|<<
+literal|16
+operator|)
+decl_stmt|;
+name|u_int64_t
+name|lbasize48
+init|=
+operator|(
+operator|(
+name|u_int64_t
+operator|)
+name|parm
+operator|->
+name|lba_size48_1
+operator|)
+operator||
+operator|(
+operator|(
+name|u_int64_t
+operator|)
+name|parm
+operator|->
+name|lba_size48_2
+operator|<<
+literal|16
+operator|)
+operator||
+operator|(
+operator|(
+name|u_int64_t
+operator|)
+name|parm
+operator|->
+name|lba_size48_3
+operator|<<
+literal|32
+operator|)
+operator||
+operator|(
+operator|(
+name|u_int64_t
+operator|)
+name|parm
+operator|->
+name|lba_size48_4
+operator|<<
+literal|48
+operator|)
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"\n"
@@ -555,17 +621,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|parm
-operator|->
-name|lba_size
+name|lbasize
 condition|)
 name|printf
 argument_list|(
 literal|"%d sectors\n"
 argument_list|,
-name|parm
-operator|->
-name|lba_size
+name|lbasize
 argument_list|)
 expr_stmt|;
 else|else
@@ -591,17 +653,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|parm
-operator|->
-name|lba_size48
+name|lbasize48
 condition|)
 name|printf
 argument_list|(
 literal|"%lld sectors\n"
 argument_list|,
-name|parm
-operator|->
-name|lba_size48
+name|lbasize48
 argument_list|)
 expr_stmt|;
 else|else
@@ -638,7 +696,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nFeature                      Support  Enable    Value   Vendor\n"
+literal|"\nFeature                      "
+literal|"Support  Enable    Value   Vendor\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -859,7 +918,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"automatic acoustic management  %s	%s	%d/%02X	%d/%02X\n"
+literal|"automatic acoustic management  %s	%s	"
+literal|"%d/%02X	%d/%02X\n"
 argument_list|,
 name|parm
 operator|->
