@@ -4,13 +4,13 @@ comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All
 end_comment
 
 begin_comment
-comment|/*	@(#)timedc.h	1.1	(Berkeley)	%G%	*/
+comment|/*	@(#)timedc.h	1.2	(Berkeley)	%G%	*/
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -61,6 +61,20 @@ name|int
 name|errno
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|ON
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|OFF
+value|0
+end_define
 
 begin_define
 define|#
