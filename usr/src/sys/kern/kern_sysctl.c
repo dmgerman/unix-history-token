@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sysctl.c	7.29 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sysctl.c	7.30 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3212,6 +3212,10 @@ name|size
 decl_stmt|;
 if|if
 condition|(
+name|uap
+operator|->
+name|size
+operator|&&
 name|error
 operator|=
 name|copyin
@@ -3563,8 +3567,14 @@ name|retval
 operator|=
 name|size
 expr_stmt|;
-return|return
-operator|(
+if|if
+condition|(
+name|uap
+operator|->
+name|size
+condition|)
+name|error
+operator|=
 name|copyout
 argument_list|(
 operator|(
@@ -3585,6 +3595,10 @@ argument_list|(
 name|size
 argument_list|)
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
