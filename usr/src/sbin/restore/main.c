@@ -8,7 +8,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)main.c 1.1 %G%"
+literal|"@(#)main.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,7 +17,7 @@ comment|/*	Modified to include h option (recursively extract all files within  *
 end_comment
 
 begin_comment
-comment|/* static char *sccsid = "@(#)restor.c	4.1 (Berkeley) 10/1/80"; */
+comment|/* static char *sccsid = "@(#)restor.c	4.3 (Berkeley) 6/3/81"; */
 end_comment
 
 begin_define
@@ -880,6 +880,9 @@ name|xtrfile
 argument_list|()
 decl_stmt|,
 name|skip
+argument_list|()
+decl_stmt|,
+name|null
 argument_list|()
 decl_stmt|;
 endif|#
@@ -1796,10 +1799,19 @@ name|done
 goto|;
 block|}
 block|}
-name|gethead
+name|getfile
 argument_list|(
-operator|&
+name|d
+argument_list|,
+name|null
+argument_list|,
+name|null
+argument_list|,
 name|spcl
+operator|.
+name|c_dinode
+operator|.
+name|di_size
 argument_list|)
 expr_stmt|;
 name|done
