@@ -441,6 +441,10 @@ if|if
 condition|(
 name|isalpha
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|cp
 index|[
 literal|0
