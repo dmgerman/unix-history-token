@@ -136,12 +136,10 @@ name|char
 modifier|*
 name|blockcheck
 parameter_list|(
-name|origname
-parameter_list|)
 name|char
 modifier|*
 name|origname
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|stat

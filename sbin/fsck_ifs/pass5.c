@@ -80,7 +80,9 @@ end_include
 begin_function
 name|void
 name|pass5
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|c

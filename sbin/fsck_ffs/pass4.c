@@ -80,7 +80,9 @@ end_include
 begin_function
 name|void
 name|pass4
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ino_t
 name|inumber
@@ -421,13 +423,11 @@ begin_function
 name|int
 name|pass4check
 parameter_list|(
-name|idesc
-parameter_list|)
 name|struct
 name|inodesc
 modifier|*
 name|idesc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|dups

@@ -142,12 +142,10 @@ name|char
 modifier|*
 name|blockcheck
 parameter_list|(
-name|origname
-parameter_list|)
 name|char
 modifier|*
 name|origname
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|stat
@@ -381,11 +379,9 @@ begin_function
 name|void
 name|infohandler
 parameter_list|(
-name|sig
-parameter_list|)
 name|int
 name|sig
-decl_stmt|;
+parameter_list|)
 block|{
 name|got_siginfo
 operator|=
