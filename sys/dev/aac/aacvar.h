@@ -796,7 +796,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AAC_LOCK_AQUIRE
+name|AAC_LOCK_ACQUIRE
 parameter_list|(
 name|l
 parameter_list|)
@@ -841,7 +841,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AAC_LOCK_AQUIRE
+name|AAC_LOCK_ACQUIRE
 parameter_list|(
 name|l
 parameter_list|)
