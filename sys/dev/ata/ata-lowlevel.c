@@ -1360,6 +1360,12 @@ block|}
 comment|/* request finish here */
 if|if
 condition|(
+name|request
+operator|->
+name|flags
+operator|&
+name|ATA_R_DMA
+operator|&&
 name|ch
 operator|->
 name|dma
