@@ -7718,7 +7718,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" time=%g ms"
+literal|" time=%.3f ms"
 argument_list|,
 name|triptime
 argument_list|)
