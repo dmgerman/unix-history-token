@@ -252,6 +252,7 @@ directive|define
 name|SB_MAX
 value|(256*1024)
 comment|/* default for max chars in sockbuf */
+comment|/*  * Constants for sb_flags field of struct sockbuf.  */
 define|#
 directive|define
 name|SB_LOCK
