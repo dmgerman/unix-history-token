@@ -8774,6 +8774,13 @@ name|char
 modifier|*
 name|magicrev
 decl_stmt|;
+name|fixbranch
+argument_list|(
+name|rcsfile
+argument_list|,
+name|sbranch
+argument_list|)
+expr_stmt|;
 name|head
 operator|=
 name|RCS_getversion
