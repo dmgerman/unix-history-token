@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/_limits.h>
 end_include
 
@@ -30,10 +36,6 @@ end_define
 
 begin_comment
 comment|/* number of bits in a char */
-end_comment
-
-begin_comment
-comment|/*  * According to ANSI (section 2.2.4.2), the values below must be usable by  * #if preprocessing directives.  Additionally, the expression must have the  * same type as would an expression that is an object of the corresponding  * type converted according to the integral promotions.  The subtraction for  * INT_MIN, etc., is so the value is not unsigned; e.g., 0x80000000 is an  * unsigned int for 32-bit two's complement ANSI compilers (section 3.1.3.2).  * These numbers are for the default configuration of gcc.  They work for  * some other compilers as well, but this should not be depended on.  */
 end_comment
 
 begin_define
@@ -109,20 +111,12 @@ name|CHAR_MAX
 value|SCHAR_MAX
 end_define
 
-begin_comment
-comment|/* max value for a char */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|CHAR_MIN
 value|SCHAR_MIN
 end_define
-
-begin_comment
-comment|/* min value for a char */
-end_comment
 
 begin_endif
 endif|#
@@ -228,13 +222,11 @@ begin_comment
 comment|/* min for a long */
 end_comment
 
-begin_comment
-comment|/* Long longs and longs are the same size on the alpha. */
-end_comment
-
-begin_comment
-comment|/* max for an unsigned long long */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__LONG_LONG_SUPPORTED
+end_ifdef
 
 begin_define
 define|#
@@ -242,6 +234,10 @@ directive|define
 name|ULLONG_MAX
 value|__ULLONG_MAX
 end_define
+
+begin_comment
+comment|/* max for an unsigned long long */
+end_comment
 
 begin_define
 define|#
@@ -264,6 +260,11 @@ end_define
 begin_comment
 comment|/* min for a long long */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -335,10 +336,6 @@ begin_comment
 comment|/* min value for a off_t */
 end_comment
 
-begin_comment
-comment|/* Quads and longs are the same on the alpha.  Ensure they stay in sync. */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -393,23 +390,14 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|(
-operator|!
 name|defined
 argument_list|(
-name|_ANSI_SOURCE
+name|__BSD_VISIBLE
 argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_POSIX_SOURCE
-argument_list|)
-operator|)
 operator|||
 name|defined
 argument_list|(
-name|_XOPEN_SOURCE
+name|__XSI_VISIBLE
 argument_list|)
 end_if
 
@@ -425,48 +413,6 @@ define|#
 directive|define
 name|WORD_BIT
 value|__WORD_BIT
-end_define
-
-begin_define
-define|#
-directive|define
-name|DBL_DIG
-value|__DBL_DIG
-end_define
-
-begin_define
-define|#
-directive|define
-name|DBL_MAX
-value|__DBL_MAX
-end_define
-
-begin_define
-define|#
-directive|define
-name|DBL_MIN
-value|__DBL_MIN
-end_define
-
-begin_define
-define|#
-directive|define
-name|FLT_DIG
-value|__FLT_DIG
-end_define
-
-begin_define
-define|#
-directive|define
-name|FLT_MAX
-value|__FLT_MAX
-end_define
-
-begin_define
-define|#
-directive|define
-name|FLT_MIN
-value|__FLT_MIN
 end_define
 
 begin_endif
