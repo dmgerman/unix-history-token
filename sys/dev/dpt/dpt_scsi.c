@@ -8,7 +8,7 @@ comment|/*  * dpt_scsi.c: SCSI dependant code for the DPT driver  *  * credits:	
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_scsi.c,v 1.17 1998/10/02 03:40:53 gibbs Exp $"
+empty|#ident "$Id: dpt_scsi.c,v 1.18 1998/10/09 21:42:19 gibbs Exp $"
 end_empty
 
 begin_define
@@ -3725,6 +3725,12 @@ name|CAM_TAG_ACTION_VALID
 operator|)
 operator|!=
 literal|0
+operator|&&
+name|csio
+operator|->
+name|tag_action
+operator|!=
+name|CAM_TAG_ACTION_NONE
 condition|)
 block|{
 name|eccb

@@ -656,7 +656,7 @@ name|XS_CANTAG
 parameter_list|(
 name|ccb
 parameter_list|)
-value|((ccb)->ccb_h.flags& CAM_TAG_ACTION_VALID)
+value|(((ccb)->ccb_h.flags& CAM_TAG_ACTION_VALID) \&& (ccb)->tag_action != CAM_TAG_ACTION_NONE)
 end_define
 
 begin_comment
