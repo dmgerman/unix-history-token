@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)edquota.c	5.7 (Berkeley) %G%"
+literal|"@(#)edquota.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,12 +116,11 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|DEFEDITOR
-value|"/usr/ucb/vi"
-end_define
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
 
 begin_decl_stmt
 name|struct
@@ -700,7 +699,7 @@ literal|0
 condition|)
 name|ed
 operator|=
-name|DEFEDITOR
+name|_PATH_EDITOR
 expr_stmt|;
 name|execlp
 argument_list|(

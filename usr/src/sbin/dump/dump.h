@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dump.h	5.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dump.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -635,28 +635,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NINCREM
-value|"/etc/dumpdates"
-end_define
-
-begin_comment
-comment|/*new format incremental info*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TEMP
-value|"/etc/dtmp"
-end_define
-
-begin_comment
-comment|/*output temp file*/
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TAPE
 value|"/dev/rmt8"
 end_define
@@ -712,7 +690,7 @@ comment|/* search in fs_file and fs_spec */
 end_comment
 
 begin_comment
-comment|/*  *	The contents of the file NINCREM is maintained both on  *	a linked list, and then (eventually) arrayified.  */
+comment|/*  *	The contents of the file _PATH_DUMPDATES is maintained both on  *	a linked list, and then (eventually) arrayified.  */
 end_comment
 
 begin_struct

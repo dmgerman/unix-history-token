@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.6 (Berkeley) %G%"
+literal|"@(#)main.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|"dump.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -208,11 +214,11 @@ name|DISK
 expr_stmt|;
 name|increm
 operator|=
-name|NINCREM
+name|_PATH_DUMPDATES
 expr_stmt|;
 name|temp
 operator|=
-name|TEMP
+name|_PATH_DTMP
 expr_stmt|;
 if|if
 condition|(
