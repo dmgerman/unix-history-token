@@ -3317,7 +3317,7 @@ argument_list|,
 argument|fle1
 argument_list|)
 block|{
-comment|/* 		 * When cache size has not reached CACHELOWAT yet, we keep both 		 * inactive and active flows in cache. Doing this, we reduce number 		 * of exports, since many inactive flows may wake up and continue 		 * their life. However, we make an exclusion for scans. It is very 		 * rare situation that inactive 1-packet flow will wake up. 		 * When cache has reached CACHELOWAT, we expire all inactive flows, 		 * until cache gets of sane size. 		 */
+comment|/* 		 * When cache size has not reached CACHELOWAT yet, we keep 		 * both inactive and active flows in cache. Doing this, we 		 * reduce number of exports, since many inactive flows may 		 * wake up and continue their life. However, we make an 		 * exclusion for scans. It is very rare situation that 		 * inactive 1-packet flow will wake up. 		 * When cache has reached CACHELOWAT, we expire all inactive 		 * flows, until cache gets to a sane size. 		 */
 if|if
 condition|(
 name|used
@@ -3381,7 +3381,7 @@ argument_list|,
 name|fle_work
 argument_list|)
 expr_stmt|;
-comment|/* 			 * While we are sending to collector, unlock cache. 			 * XXX: it can happen, however with a small probability, 			 * that item, we are holding now, can be moved to the top 			 * of flow cache by node thread. In this case our expire 			 * thread stops checking. Since this is not fatal we will 			 * just ignore it now. 			 */
+comment|/* 			 * While we are sending to collector, unlock cache. 			 * XXX: it can happen, however with a small probability, 			 * that item, we are holding now, can be moved to the 			 * top of flow cache by node thread. In this case our 			 * expire thread stops checking. Since this is not 			 * fatal we will just ignore it now. 			 */
 name|mtx_unlock
 argument_list|(
 operator|&
