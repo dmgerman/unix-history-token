@@ -9,14 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static const char sccsid[] = "@(#)utility.c	8.4 (Berkeley) 5/30/95";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)utility.c	8.4 (Berkeley) 5/30/95"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -158,7 +170,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"ttloop:  read: %m\n"
+literal|"ttloop:  read: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -179,7 +191,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"ttloop:  peer died: %m\n"
+literal|"ttloop:  peer died: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1303,11 +1315,6 @@ name|res
 init|=
 name|editedhost
 decl_stmt|;
-name|char
-modifier|*
-name|strncpy
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 operator|!
@@ -1876,12 +1883,8 @@ block|{
 specifier|register
 name|int
 name|i
-decl_stmt|;
-name|char
-name|buf
-index|[
-literal|512
-index|]
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -4623,6 +4626,13 @@ argument_list|(
 name|nfrontp
 argument_list|)
 expr_stmt|;
+block|{
+name|char
+name|buf
+index|[
+literal|512
+index|]
+decl_stmt|;
 name|auth_printsub
 argument_list|(
 operator|&
@@ -4652,6 +4662,7 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+block|}
 name|nfrontp
 operator|+=
 name|strlen
@@ -5116,6 +5127,13 @@ argument_list|(
 name|nfrontp
 argument_list|)
 expr_stmt|;
+block|{
+name|char
+name|buf
+index|[
+literal|512
+index|]
+decl_stmt|;
 name|encrypt_printsub
 argument_list|(
 operator|&
@@ -5145,6 +5163,7 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+block|}
 name|nfrontp
 operator|+=
 name|strlen

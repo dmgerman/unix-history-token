@@ -9,14 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static const char sccsid[] = "@(#)authenc.c	8.2 (Berkeley) 5/30/95";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)authenc.c	8.2 (Berkeley) 5/30/95"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -205,12 +217,6 @@ modifier|*
 name|val
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
 return|return
 operator|(
 name|getenv

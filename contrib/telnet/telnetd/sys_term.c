@@ -9,14 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static const char sccsid[] = "@(#)sys_term.c	8.4+1 (Berkeley) 5/30/95";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)sys_term.c	8.4+1 (Berkeley) 5/30/95"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -989,6 +1001,43 @@ end_endif
 begin_comment
 comment|/* USE_TERMIO */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
+end_include
+
+begin_decl_stmt
+name|int
+name|cleanopen
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|scrub_env
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * init_termbuf()  * copy_termbuf(cp)  * set_termbuf()  *  * These three routines are used to get and set the "termbuf" structure  * to and from the kernel.  init_termbuf() gets the current settings.  * copy_termbuf() hands in a new "termbuf" to write to the kernel, and  * set_termbuf() writes the structure into the kernel.  */
@@ -4608,7 +4657,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DECODE_BUAD */
+comment|/* DECODE_BAUD */
 end_comment
 
 begin_function
@@ -4682,7 +4731,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* DECODE_BUAD */
+comment|/* DECODE_BAUD */
 name|cfsetospeed
 argument_list|(
 operator|&
@@ -4693,7 +4742,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DECODE_BUAD */
+comment|/* DECODE_BAUD */
 block|}
 end_function
 
@@ -4998,7 +5047,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * getptyslave()  *  * Open the slave side of the pty, and do any initialization  * that is necessary.  The return value is a file descriptor  * for the slave side.  */
+comment|/*  * getptyslave()  *  * Open the slave side of the pty, and do any initialization  * that is necessary.  */
 end_comment
 
 begin_function
@@ -8143,7 +8192,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: %m\n"
+literal|"%s: %m"
 argument_list|,
 name|altlogin
 argument_list|)
@@ -9351,7 +9400,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't get /etc/utmp entry to clean TMPDIR"
+literal|"can't get /etc/utmp entry to clean TMPDIR"
 argument_list|)
 expr_stmt|;
 return|return
@@ -9721,7 +9770,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"TMPDIR cleanup(%s): fork() failed: %m\n"
+literal|"TMPDIR cleanup(%s): fork() failed: %m"
 argument_list|,
 name|tpath
 argument_list|)
@@ -9747,7 +9796,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"TMPDIR cleanup(%s): execl(%s) failed: %m\n"
+literal|"TMPDIR cleanup(%s): execl(%s) failed: %m"
 argument_list|,
 name|tpath
 argument_list|,
