@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vdreg.h	1.6	86/10/28	*/
+comment|/*	vdreg.h	1.7	87/01/11	*/
 end_comment
 
 begin_comment
@@ -544,44 +544,6 @@ comment|/* Programmer error */
 end_comment
 
 begin_comment
-comment|/* hard error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HTYPES
-define|\
-value|(HCRCERR|HCMPERR|WPTERR|CTLRERR|DSEEKERR|UCDATERR|NOTCYLERR|DRVNRDY|\      INVDADR|DNEMEM|PARERR|DCOMPERR)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ERRS
-value|0x3FFF
-end_define
-
-begin_comment
-comment|/* retryable errors */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CANRETRY
-define|\
-value|(CTLRERR|DSEEKERR|NOTCYLERR|DCOMPERR|UCDATERR|PARERR|DNEMEM|HCRCERR|HCMPERR)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ERRBITS
-value|"\20\1HCRC\2HCMP\3WPT\4CTLR\5DSEEK\6UCDATA\7NOTCYL\10DRVNRDY\ \11ALTACC\12SEEKSTRT\13INVDADR\14DNEMEM\15PAR\16DCOMP\17DDIRDY\20OPABRT\ \21DSERLY\22DSLATE\23TOPLUS\24TOPMNUS\25CPDCRT\26HRDERR\27SFTERR\30ANYERR\ \31INVCMD"
-end_define
-
-begin_comment
 comment|/*  * DCB status codes.  */
 end_comment
 
@@ -628,6 +590,44 @@ end_define
 begin_comment
 comment|/* DCB Started */
 end_comment
+
+begin_comment
+comment|/* hard error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HTYPES
+define|\
+value|(HCRCERR|HCMPERR|WPTERR|CTLRERR|DSEEKERR|UCDATERR|NOTCYLERR|DRVNRDY|\      INVDADR|DNEMEM|PARERR|DCOMPERR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ERRS
+value|0x3FFF
+end_define
+
+begin_comment
+comment|/* retryable errors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CANRETRY
+define|\
+value|(CTLRERR|DSEEKERR|NOTCYLERR|DCOMPERR|UCDATERR|PARERR|DNEMEM|HCRCERR|HCMPERR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ERRBITS
+value|"\20\1HCRC\2HCMP\3WPT\4CTLR\5DSEEK\6UCDATA\7NOTCYL\10DRVNRDY\ \11ALTACC\12SEEKSTRT\13INVDADR\14DNEMEM\15PAR\16DCOMP\17DDIRDY\20OPABRT\ \21DSERLY\22DSLATE\23TOPLUS\24TOPMNUS\25CPDCRT\26HRDERR\27SFTERR\30ANYERR\ \31INVCMD\35ABORTED\36FAIL\37COMPLETE\40STARTED"
+end_define
 
 begin_comment
 comment|/*  * MDCB status codes.  */
@@ -2085,32 +2085,24 @@ name|vddcaddr
 index|[]
 init|=
 block|{
-literal|0xf2000
+literal|0xffff2000
 block|,
-literal|0xf2100
+literal|0xffff2100
 block|,
-literal|0xf2200
+literal|0xffff2200
 block|,
-literal|0xf2300
+literal|0xffff2300
 block|,
-literal|0xf2400
+literal|0xffff2400
 block|,
-literal|0xf2500
+literal|0xffff2500
 block|,
-literal|0xf2600
+literal|0xffff2600
 block|,
-literal|0xf2700
+literal|0xffff2700
 block|,
 literal|0
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|long
-name|vdtimeout
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -2763,10 +2755,10 @@ literal|3600
 block|,
 literal|20160
 block|,
-literal|"CDC fsd"
+literal|"fsd"
 block|,
 comment|/* 160 Mb FSD */
-literal|"160 Mb Control Data Winchester drive"
+literal|"160 Mb Winchester drive"
 block|,
 block|{
 literal|0x0d9b366c
@@ -2898,13 +2890,6 @@ specifier|extern
 name|long
 name|vddcaddr
 index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|long
-name|vdtimeout
 decl_stmt|;
 end_decl_stmt
 

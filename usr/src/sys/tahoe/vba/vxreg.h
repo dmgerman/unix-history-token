@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vxreg.h	1.4	86/01/23	*/
+comment|/*	vxreg.h	1.5	87/01/11	*/
 end_comment
 
 begin_comment
@@ -351,6 +351,65 @@ comment|/* bisync flag indicator for bscport */
 end_comment
 
 begin_comment
+comment|/* connector panel types (per port) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VXT_NONE
+value|0
+end_define
+
+begin_comment
+comment|/* no connector panel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VXT_8PORT
+value|1
+end_define
+
+begin_comment
+comment|/* 8 port RS-232C */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VXT_RS422
+value|2
+end_define
+
+begin_comment
+comment|/* 8 port RS-422 (nonexistent) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VXT_4PORT
+value|3
+end_define
+
+begin_comment
+comment|/* 4 port RS-232 (with DSR/RING) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VXT_PARALLEL
+value|4
+end_define
+
+begin_comment
+comment|/* 4 port panel parallel port */
+end_comment
+
+begin_comment
 comment|/* v_fault status values */
 end_comment
 
@@ -363,6 +422,120 @@ end_define
 
 begin_comment
 comment|/* no err in vioc self-initializaton */
+end_comment
+
+begin_comment
+comment|/* line parameters, set with VXC_LPARAX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BITS5
+value|0x00
+end_define
+
+begin_comment
+comment|/* 5 bits per character */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BITS6
+value|0x80
+end_define
+
+begin_comment
+comment|/* 6 bits per character */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BITS7
+value|0x40
+end_define
+
+begin_comment
+comment|/* 7 bits per character */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BITS8
+value|0xc0
+end_define
+
+begin_comment
+comment|/* 8 bits per character */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VNOPARITY
+value|0x00
+end_define
+
+begin_comment
+comment|/* no parity bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VODDP
+value|0x01
+end_define
+
+begin_comment
+comment|/* odd parity bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VEVENP
+value|0x03
+end_define
+
+begin_comment
+comment|/* even parity bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VSTOP1
+value|0x04
+end_define
+
+begin_comment
+comment|/* 1 stop bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VSTOP2
+value|0x0c
+end_define
+
+begin_comment
+comment|/* 2 stop bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|V19200
+value|0x13
+end_define
+
+begin_comment
+comment|/* 19.2 kbaud */
 end_comment
 
 begin_comment
@@ -386,23 +559,56 @@ end_define
 begin_define
 define|#
 directive|define
-name|V_ENAB
-value|0002
+name|V_AUTO
+value|0x00
 end_define
 
 begin_comment
-comment|/* auto + DTR */
+comment|/* auto control of RTS, uses CTS */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|V_DISAB
-value|0000
+name|V_MANUAL
+value|0x80
 end_define
 
 begin_comment
-comment|/* auto + disable DTR */
+comment|/* manual control of RTS, ignore CTS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|V_DTR_ON
+value|0x02
+end_define
+
+begin_comment
+comment|/* set DTR output */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|V_DTR_OFF
+value|0x00
+end_define
+
+begin_comment
+comment|/* drop DTR output */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|V_RTS
+value|0x01
+end_define
+
+begin_comment
+comment|/* set RTS output (manual only) */
 end_comment
 
 begin_define

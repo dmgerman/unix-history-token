@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cyreg.h	7.2	86/01/26	*/
+comment|/*	cyreg.h	7.3	87/01/11	*/
 end_comment
 
 begin_comment
@@ -36,6 +36,76 @@ value|b_resid
 end_define
 
 begin_comment
+comment|/*  * System configuration pointer.  * Memory address is jumpered on controller.  */
+end_comment
+
+begin_struct
+struct|struct
+name|cyscp
+block|{
+name|char
+name|csp_buswidth
+decl_stmt|;
+comment|/* system bus width */
+define|#
+directive|define
+name|CSP_16BITS
+value|1
+comment|/* 16-bit system bus */
+define|#
+directive|define
+name|CSP_8BITS
+value|0
+comment|/* 8-bit system bus */
+name|char
+name|csp_unused
+decl_stmt|;
+name|u_char
+name|csp_scb
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* point to system config block */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * System configuration block  */
+end_comment
+
+begin_struct
+struct|struct
+name|cyscb
+block|{
+name|char
+name|csb_fixed
+decl_stmt|;
+comment|/* fixed value code (must be 3) */
+name|char
+name|csb_unused
+decl_stmt|;
+comment|/* unused */
+name|u_char
+name|csb_ccb
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* pointer to channel control block */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|CSB_FIXED
+value|0x3
+end_define
+
+begin_comment
 comment|/*  * Channel control block definitions  */
 end_comment
 
@@ -51,10 +121,10 @@ name|char
 name|cbgate
 decl_stmt|;
 comment|/* tpb access gate */
-name|short
+name|u_char
 name|cbtpb
 index|[
-literal|2
+literal|4
 index|]
 decl_stmt|;
 comment|/* first tape parameter block */
@@ -154,10 +224,10 @@ name|short
 name|tprec
 decl_stmt|;
 comment|/* records/overrun */
-name|short
+name|u_char
 name|tpdata
 index|[
-literal|2
+literal|4
 index|]
 decl_stmt|;
 comment|/* pointer to source/dest */
@@ -165,10 +235,10 @@ name|short
 name|tpstatus
 decl_stmt|;
 comment|/* status */
-name|short
+name|u_char
 name|tplink
 index|[
-literal|2
+literal|4
 index|]
 decl_stmt|;
 comment|/* pointer to next parameter block */
@@ -314,6 +384,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CY_SETPAGE
+value|(0x08<<24)
+end_define
+
+begin_comment
+comment|/* set page (addr bits 20-23) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CY_SENSE
 value|(0x28<<24)
 end_define
@@ -389,7 +470,29 @@ value|(CY_SFORW|CYCW_REV)
 end_define
 
 begin_comment
-comment|/* space record backwords */
+comment|/* space record backwards */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CY_FSF
+value|(0x44<<24)
+end_define
+
+begin_comment
+comment|/* space file forward */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CY_BSF
+value|(CY_FSF|CYCW_REV)
+end_define
+
+begin_comment
+comment|/* space file backwards */
 end_comment
 
 begin_define
@@ -853,6 +956,8 @@ name|cyerror
 index|[]
 init|=
 block|{
+literal|"no error"
+block|,
 literal|"timeout"
 block|,
 literal|"timeout1"
@@ -863,7 +968,7 @@ literal|"timeout3"
 block|,
 literal|"timeout4"
 block|,
-literal|"non-existant memory"
+literal|"non-existent memory"
 block|,
 literal|"blank tape"
 block|,
@@ -875,7 +980,7 @@ literal|"retry unsuccessful"
 block|,
 literal|"fifo over/under-flow"
 block|,
-literal|"#12"
+literal|"#0xc"
 block|,
 literal|"drive to controller parity error"
 block|,
@@ -887,7 +992,7 @@ literal|"tape not ready"
 block|,
 literal|"write protected"
 block|,
-literal|"#18"
+literal|"#0x12"
 block|,
 literal|"missing diagnostic jumper"
 block|,
@@ -895,7 +1000,9 @@ literal|"invalid link pointer"
 block|,
 literal|"unexpected file mark"
 block|,
-literal|"invalid byte count"
+literal|"invalid byte count/parameter"
+block|,
+literal|"#0x17"
 block|,
 literal|"unidentified hardware error"
 block|,
@@ -945,69 +1052,6 @@ directive|define
 name|CYER_SOFT
 value|(CYMASK(FIFO)|CYMASK(NOTRDY)|CYMASK(PARITY))
 end_define
-
-begin_comment
-comment|/*  * System configuration block  */
-end_comment
-
-begin_struct
-struct|struct
-name|cyscb
-block|{
-name|char
-name|csb_fixed
-decl_stmt|;
-comment|/* fixed value code (must be 3) */
-name|char
-name|csb_unused
-decl_stmt|;
-comment|/* unused */
-name|short
-name|csb_ccb
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* pointer to channel control block */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * System configuration pointer  */
-end_comment
-
-begin_struct
-struct|struct
-name|cyscp
-block|{
-name|char
-name|csp_buswidth
-decl_stmt|;
-comment|/* system bus width */
-define|#
-directive|define
-name|CSP_16BITS
-value|1
-comment|/* 16-bit system bus */
-define|#
-directive|define
-name|CSP_8BITS
-value|0
-comment|/* 8-bit system bus */
-name|char
-name|csp_unused
-decl_stmt|;
-name|short
-name|csp_scb
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* point to system config block */
-block|}
-struct|;
-end_struct
 
 end_unit
 
