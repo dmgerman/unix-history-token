@@ -2915,9 +2915,13 @@ comment|/*  * simulate the old "probe" routine.  In the new world order, the dri
 end_comment
 
 begin_function
+specifier|static
 name|int
-name|pccard_compat_probe
+name|pccard_compat_do_probe
 parameter_list|(
+name|device_t
+name|bus
+parameter_list|,
 name|device_t
 name|dev
 parameter_list|)
@@ -2934,9 +2938,13 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
-name|pccard_compat_attach
+name|pccard_compat_do_attach
 parameter_list|(
+name|device_t
+name|bus
+parameter_list|,
 name|device_t
 name|dev
 parameter_list|)
@@ -5231,6 +5239,20 @@ argument_list|(
 name|card_detach_card
 argument_list|,
 name|pccard_detach_card
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|card_compat_do_probe
+argument_list|,
+name|pccard_compat_do_probe
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|card_compat_do_attach
+argument_list|,
+name|pccard_compat_do_attach
 argument_list|)
 block|,
 block|{

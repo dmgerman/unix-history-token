@@ -29,6 +29,12 @@ directive|include
 file|<machine/bus.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"card_if.h"
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -1089,25 +1095,57 @@ begin_comment
 comment|/* compat layer */
 end_comment
 
-begin_function_decl
+begin_function
+specifier|static
+name|__inline
 name|int
 name|pccard_compat_probe
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+return|return
+operator|(
+name|CARD_COMPAT_DO_PROBE
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
 
-begin_function_decl
+begin_function
+specifier|static
+name|__inline
 name|int
 name|pccard_compat_attach
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+return|return
+operator|(
+name|CARD_COMPAT_DO_ATTACH
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/* ivar interface */
