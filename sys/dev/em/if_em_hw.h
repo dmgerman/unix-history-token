@@ -73,11 +73,19 @@ name|em_82540
 block|,
 name|em_82545
 block|,
+name|em_82545_rev_3
+block|,
 name|em_82546
+block|,
+name|em_82546_rev_3
 block|,
 name|em_82541
 block|,
+name|em_82541_rev_2
+block|,
 name|em_82547
+block|,
+name|em_82547_rev_2
 block|,
 name|em_num_macs
 block|}
@@ -118,6 +126,10 @@ block|,
 name|em_media_type_fiber
 init|=
 literal|1
+block|,
+name|em_media_type_internal_serdes
+init|=
+literal|2
 block|,
 name|em_num_media_types
 block|}
@@ -196,6 +208,8 @@ block|,
 name|em_bus_type_pci
 block|,
 name|em_bus_type_pcix
+block|,
+name|em_bus_type_reserved
 block|}
 name|em_bus_type
 typedef|;
@@ -244,6 +258,8 @@ block|,
 name|em_bus_width_32
 block|,
 name|em_bus_width_64
+block|,
+name|em_bus_width_reserved
 block|}
 name|em_bus_width
 typedef|;
@@ -487,6 +503,60 @@ name|em_phy_type
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|em_ms_hw_default
+init|=
+literal|0
+block|,
+name|em_ms_force_master
+block|,
+name|em_ms_force_slave
+block|,
+name|em_ms_auto
+block|}
+name|em_ms_type
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|em_ffe_config_enabled
+init|=
+literal|0
+block|,
+name|em_ffe_config_active
+block|,
+name|em_ffe_config_blocked
+block|}
+name|em_ffe_config
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|em_dsp_config_disabled
+init|=
+literal|0
+block|,
+name|em_dsp_config_enabled
+block|,
+name|em_dsp_config_activated
+block|,
+name|em_dsp_config_undefined
+init|=
+literal|0xFF
+block|}
+name|em_dsp_config
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|em_phy_info
@@ -621,7 +691,7 @@ comment|/* Initialization */
 end_comment
 
 begin_function_decl
-name|void
+name|int32_t
 name|em_reset_hw
 parameter_list|(
 name|struct
@@ -647,6 +717,18 @@ end_function_decl
 begin_function_decl
 name|int32_t
 name|em_set_mac_type
+parameter_list|(
+name|struct
+name|em_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|em_set_media_type
 parameter_list|(
 name|struct
 name|em_hw
@@ -721,7 +803,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int32_t
 name|em_get_speed_and_duplex
 parameter_list|(
 name|struct
@@ -743,6 +825,18 @@ end_function_decl
 begin_function_decl
 name|int32_t
 name|em_wait_autoneg
+parameter_list|(
+name|struct
+name|em_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int32_t
+name|em_force_mac_fc
 parameter_list|(
 name|struct
 name|em_hw
@@ -1434,6 +1528,48 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int32_t
+name|em_config_dsp_after_link_change
+parameter_list|(
+name|struct
+name|em_hw
+modifier|*
+name|hw
+parameter_list|,
+name|boolean_t
+name|link_up
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int32_t
+name|em_set_d3_lplu_state
+parameter_list|(
+name|struct
+name|em_hw
+modifier|*
+name|hw
+parameter_list|,
+name|boolean_t
+name|active
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int32_t
+name|em_igp_ttl_workaround
+parameter_list|(
+name|struct
+name|em_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -1567,6 +1703,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_DEV_ID_82545GM_COPPER
+value|0x1026
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_82545GM_FIBER
+value|0x1027
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_82545GM_SERDES
+value|0x1028
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_DEV_ID_82546EB_COPPER
 value|0x1010
 end_define
@@ -1595,8 +1752,57 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_DEV_ID_82541EP
+name|E1000_DEV_ID_82541EI_MOBILE
 value|0x1018
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_82541ER
+value|0x1078
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_82547GI
+value|0x1075
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_82541GI
+value|0x1076
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_82541GI_MOBILE
+value|0x1077
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_82546GB_COPPER
+value|0x1079
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_82546GB_FIBER
+value|0x107A
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_82546GB_SERDES
+value|0x107B
 end_define
 
 begin_define
@@ -1604,13 +1810,6 @@ define|#
 directive|define
 name|E1000_DEV_ID_82547EI
 value|0x1019
-end_define
-
-begin_define
-define|#
-directive|define
-name|NUM_DEV_IDS
-value|20
 end_define
 
 begin_define
@@ -1850,7 +2049,7 @@ value|( \     E1000_IMS_RXT0   |    \     E1000_IMS_TXDW   |    \     E1000_IMS_
 end_define
 
 begin_comment
-comment|/* The number of high/low register pairs in the RAR. The RAR (Receive Address  * Registers) holds the directed and multicast addresses that we monitor. We  * reserve one of these spots for our directed address, allowing us room for  * E1000_RAR_ENTRIES - 1 multicast addresses.  */
+comment|/* Number of high/low register pairs in the RAR. The RAR (Receive Address  * Registers) holds the directed and multicast addresses that we monitor. We  * reserve one of these spots for our directed address, allowing us room for  * E1000_RAR_ENTRIES - 1 multicast addresses.  */
 end_comment
 
 begin_define
@@ -2639,7 +2838,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* The number of entries in the Multicast Table Array (MTA). */
+comment|/* Number of entries in the Multicast Table Array (MTA). */
 end_comment
 
 begin_define
@@ -2833,6 +3032,17 @@ end_define
 
 begin_comment
 comment|/* Device Control - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_CTRL_DUP
+value|0x00004
+end_define
+
+begin_comment
+comment|/* Device Control Duplicate (Shadow) - RW */
 end_comment
 
 begin_define
@@ -5333,6 +5543,15 @@ name|struct
 name|em_eeprom_info
 name|eeprom
 decl_stmt|;
+name|em_ms_type
+name|master_slave
+decl_stmt|;
+name|em_ms_type
+name|original_master_slave
+decl_stmt|;
+name|em_ffe_config
+name|ffe_config_state
+decl_stmt|;
 name|uint32_t
 name|io_base
 decl_stmt|;
@@ -5380,6 +5599,12 @@ name|ledctl_mode1
 decl_stmt|;
 name|uint32_t
 name|ledctl_mode2
+decl_stmt|;
+name|uint16_t
+name|phy_spd_default
+decl_stmt|;
+name|uint16_t
+name|dsp_reset_counter
 decl_stmt|;
 name|uint16_t
 name|autoneg_advertised
@@ -5460,6 +5685,12 @@ name|boolean_t
 name|speed_downgraded
 decl_stmt|;
 name|boolean_t
+name|ttl_wa_activation
+decl_stmt|;
+name|em_dsp_config
+name|dsp_config_state
+decl_stmt|;
+name|boolean_t
 name|get_link_status
 decl_stmt|;
 name|boolean_t
@@ -5469,7 +5700,13 @@ name|boolean_t
 name|tbi_compatibility_on
 decl_stmt|;
 name|boolean_t
+name|phy_reset_disable
+decl_stmt|;
+name|boolean_t
 name|fc_send_xon
+decl_stmt|;
+name|boolean_t
+name|fc_strict_ieee
 decl_stmt|;
 name|boolean_t
 name|report_tx_early
@@ -6207,7 +6444,7 @@ value|0x00000400
 end_define
 
 begin_comment
-comment|/* EEPROM Addressing bits based on type 					 * (0-small, 1-large) */
+comment|/* EEPROM Addressing bits based on type                                          * (0-small, 1-large) */
 end_comment
 
 begin_define
@@ -9380,6 +9617,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|EEPROM_SERDES_AMPLITUDE
+value|0x0006
+end_define
+
+begin_comment
+comment|/* For SERDES output amplitude adjustment. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EEPROM_INIT_CONTROL1_REG
 value|0x000A
 end_define
@@ -9389,6 +9637,20 @@ define|#
 directive|define
 name|EEPROM_INIT_CONTROL2_REG
 value|0x000F
+end_define
+
+begin_define
+define|#
+directive|define
+name|EEPROM_INIT_CONTROL3_PORT_B
+value|0x0014
+end_define
+
+begin_define
+define|#
+directive|define
+name|EEPROM_INIT_CONTROL3_PORT_A
+value|0x0024
 end_define
 
 begin_define
@@ -9522,6 +9784,17 @@ value|0x07000000
 end_define
 
 begin_comment
+comment|/* Mask bits for SERDES amplitude adjustment in Word 6 of the EEPROM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEPROM_SERDES_AMPLITUDE_MASK
+value|0x000F
+end_define
+
+begin_comment
 comment|/* Mask bits for fields in Word 0x0a of the EEPROM */
 end_comment
 
@@ -9628,6 +9901,13 @@ name|EEPROM_PBA_BYTE_1
 value|8
 end_define
 
+begin_define
+define|#
+directive|define
+name|EEPROM_RESERVED_WORD
+value|0xFFFF
+end_define
+
 begin_comment
 comment|/* EEPROM Map Sizes (Byte Counts) */
 end_comment
@@ -9686,7 +9966,7 @@ value|12
 end_define
 
 begin_comment
-comment|/* The number of Transmit and Receive Descriptors must be a multiple of 8 */
+comment|/* Number of Transmit and Receive Descriptors must be a multiple of 8 */
 end_comment
 
 begin_define
@@ -10063,7 +10343,7 @@ value|0x2
 end_define
 
 begin_comment
-comment|/* The number of bits that we need to shift right to move the "pause"  * bits from the EEPROM (bits 13:12) to the "pause" (bits 8:7) field  * in the TXCW register  */
+comment|/* Number of bits required to shift right the "pause" bits from the  * EEPROM (bits 13:12) to the "pause" (bits 8:7) field in the TXCW register.  */
 end_comment
 
 begin_define
@@ -10074,7 +10354,7 @@ value|5
 end_define
 
 begin_comment
-comment|/* The number of bits that we need to shift left to move the "SWDPIO"  * bits from the EEPROM (bits 8:5) to the "SWDPIO" (bits 25:22) field  * in the CTRL register  */
+comment|/* Number of bits required to shift left the "SWDPIO" bits from the  * EEPROM (bits 8:5) to the "SWDPIO" (bits 25:22) field in the CTRL register.  */
 end_comment
 
 begin_define
@@ -10085,7 +10365,7 @@ value|17
 end_define
 
 begin_comment
-comment|/* The number of bits that we need to shift left to move the "SWDPIO_EXT"  * bits from the EEPROM word F (bits 7:4) to the bits 11:8 of The  * Extended CTRL register.  * in the CTRL register  */
+comment|/* Number of bits required to shift left the "SWDPIO_EXT" bits from the  * EEPROM word F (bits 7:4) to the bits 11:8 of The Extended CTRL register.  */
 end_comment
 
 begin_define
@@ -10096,7 +10376,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* The number of bits that we need to shift left to move the "ILOS"  * bit from the EEPROM (bit 4) to the "ILOS" (bit 7) field  * in the CTRL register  */
+comment|/* Number of bits required to shift left the "ILOS" bit from the EEPROM  * (bit 4) to the "ILOS" (bit 7) field in the CTRL register.  */
 end_comment
 
 begin_define
@@ -10114,7 +10394,7 @@ value|(256)
 end_define
 
 begin_comment
-comment|/* The number of milliseconds we wait for auto-negotiation to complete */
+comment|/* Number of milliseconds we wait for auto-negotiation to complete */
 end_comment
 
 begin_define
@@ -10439,6 +10719,82 @@ begin_comment
 comment|/* Receive Error Counter */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|M88E1000_PHY_EXT_CTRL
+value|0x1A
+end_define
+
+begin_comment
+comment|/* PHY extend control register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M88E1000_PHY_PAGE_SELECT
+value|0x1D
+end_define
+
+begin_comment
+comment|/* Reg 29 for page number setting */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M88E1000_PHY_GEN_CONTROL
+value|0x1E
+end_define
+
+begin_comment
+comment|/* Its meaning depends on reg 29 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M88E1000_PHY_VCO_REG_BIT8
+value|0x100
+end_define
+
+begin_comment
+comment|/* Bits 8& 11 are adjusted for */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M88E1000_PHY_VCO_REG_BIT11
+value|0x800
+end_define
+
+begin_comment
+comment|/* improved BER performance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_IEEE_REGS_PAGE
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_IEEE_RESTART_AUTONEG
+value|0x3300
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_IEEE_FORCE_GIGA
+value|0x0140
+end_define
+
 begin_comment
 comment|/* IGP01E1000 Specific Registers */
 end_comment
@@ -10553,14 +10909,112 @@ value|0x1872
 end_define
 
 begin_comment
-comment|/* Number of AGC registers */
+comment|/* IGP01E1000 DSP Reset Register */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IGP01E1000_PHY_AGC_NUM
+name|IGP01E1000_PHY_DSP_RESET
+value|0x1F33
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PHY_DSP_SET
+value|0x1F71
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PHY_DSP_FFE
+value|0x1F35
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PHY_CHANNEL_NUM
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PHY_AGC_PARAM_A
+value|0x1171
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PHY_AGC_PARAM_B
+value|0x1271
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PHY_AGC_PARAM_C
+value|0x1471
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PHY_AGC_PARAM_D
+value|0x1871
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PHY_EDAC_MU_INDEX
+value|0xC000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PHY_EDAC_SIGN_EXT_9_BITS
+value|0x8000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PHY_ANALOG_TX_STATE
+value|0x2890
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PHY_ANALOG_CLASS_A
+value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PHY_FORCE_ANALOG_ENABLE
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PHY_DSP_FFE_CM_CP
+value|0x0069
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PHY_DSP_FFE_DEFAULT
+value|0x002A
 end_define
 
 begin_comment
@@ -10577,12 +11031,37 @@ end_define
 begin_define
 define|#
 directive|define
+name|IGP01E1000_PHY_PCS_CTRL_REG
+value|0x00B5
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_ANALOG_REGS_PAGE
+value|0x20C0
+end_define
+
+begin_define
+define|#
+directive|define
 name|MAX_PHY_REG_ADDRESS
 value|0x1F
 end_define
 
 begin_comment
 comment|/* 5 bit address bus (0-0x1F) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_PHY_MULTI_PAGE_REG
+value|0xF
+end_define
+
+begin_comment
+comment|/*Registers that are equal on all pages*/
 end_comment
 
 begin_comment
@@ -11538,6 +12017,27 @@ name|SR_1000T_LOCAL_RX_STATUS_SHIFT
 value|13
 end_define
 
+begin_define
+define|#
+directive|define
+name|SR_1000T_PHY_EXCESSIVE_IDLE_ERR_COUNT
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|FFE_IDLE_ERR_COUNT_TIMEOUT_20
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|FFE_IDLE_ERR_COUNT_TIMEOUT_100
+value|100
+end_define
+
 begin_comment
 comment|/* Extended Status Register */
 end_comment
@@ -12440,6 +12940,31 @@ value|0xF000
 end_define
 
 begin_comment
+comment|/* IGP01E1000 DSP reset macros */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DSP_RESET_ENABLE
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSP_RESET_DISABLE
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_MAX_DSP_RESETS
+value|10
+end_define
+
+begin_comment
 comment|/* IGP01E1000 AGC Registers */
 end_comment
 
@@ -12475,279 +13000,6 @@ directive|define
 name|IGP01E1000_AGC_RANGE
 value|10
 end_define
-
-begin_comment
-comment|/* IGP cable length table */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|uint16_t
-name|em_igp_cable_length_table
-index|[
-name|IGP01E1000_AGC_LENGTH_TABLE_SIZE
-index|]
-init|=
-block|{
-literal|5
-block|,
-literal|5
-block|,
-literal|5
-block|,
-literal|5
-block|,
-literal|5
-block|,
-literal|5
-block|,
-literal|5
-block|,
-literal|5
-block|,
-literal|5
-block|,
-literal|5
-block|,
-literal|5
-block|,
-literal|5
-block|,
-literal|5
-block|,
-literal|5
-block|,
-literal|5
-block|,
-literal|5
-block|,
-literal|5
-block|,
-literal|10
-block|,
-literal|10
-block|,
-literal|10
-block|,
-literal|10
-block|,
-literal|10
-block|,
-literal|10
-block|,
-literal|10
-block|,
-literal|20
-block|,
-literal|20
-block|,
-literal|20
-block|,
-literal|20
-block|,
-literal|20
-block|,
-literal|25
-block|,
-literal|25
-block|,
-literal|25
-block|,
-literal|25
-block|,
-literal|25
-block|,
-literal|25
-block|,
-literal|25
-block|,
-literal|30
-block|,
-literal|30
-block|,
-literal|30
-block|,
-literal|30
-block|,
-literal|40
-block|,
-literal|40
-block|,
-literal|40
-block|,
-literal|40
-block|,
-literal|40
-block|,
-literal|40
-block|,
-literal|40
-block|,
-literal|40
-block|,
-literal|40
-block|,
-literal|50
-block|,
-literal|50
-block|,
-literal|50
-block|,
-literal|50
-block|,
-literal|50
-block|,
-literal|50
-block|,
-literal|50
-block|,
-literal|60
-block|,
-literal|60
-block|,
-literal|60
-block|,
-literal|60
-block|,
-literal|60
-block|,
-literal|60
-block|,
-literal|60
-block|,
-literal|60
-block|,
-literal|60
-block|,
-literal|70
-block|,
-literal|70
-block|,
-literal|70
-block|,
-literal|70
-block|,
-literal|70
-block|,
-literal|70
-block|,
-literal|80
-block|,
-literal|80
-block|,
-literal|80
-block|,
-literal|80
-block|,
-literal|80
-block|,
-literal|80
-block|,
-literal|90
-block|,
-literal|90
-block|,
-literal|90
-block|,
-literal|90
-block|,
-literal|90
-block|,
-literal|90
-block|,
-literal|90
-block|,
-literal|90
-block|,
-literal|90
-block|,
-literal|100
-block|,
-literal|100
-block|,
-literal|100
-block|,
-literal|100
-block|,
-literal|100
-block|,
-literal|100
-block|,
-literal|100
-block|,
-literal|100
-block|,
-literal|100
-block|,
-literal|100
-block|,
-literal|100
-block|,
-literal|100
-block|,
-literal|100
-block|,
-literal|100
-block|,
-literal|110
-block|,
-literal|110
-block|,
-literal|110
-block|,
-literal|110
-block|,
-literal|110
-block|,
-literal|110
-block|,
-literal|110
-block|,
-literal|110
-block|,
-literal|110
-block|,
-literal|110
-block|,
-literal|110
-block|,
-literal|110
-block|,
-literal|110
-block|,
-literal|110
-block|,
-literal|110
-block|,
-literal|110
-block|,
-literal|110
-block|,
-literal|110
-block|,
-literal|120
-block|,
-literal|120
-block|,
-literal|120
-block|,
-literal|120
-block|,
-literal|120
-block|,
-literal|120
-block|,
-literal|120
-block|,
-literal|120
-block|,
-literal|120
-block|,
-literal|120
-block|}
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* IGP01E1000 PCS Initialization register */
@@ -12789,6 +13041,101 @@ end_define
 begin_comment
 comment|/* Enable SPD */
 end_comment
+
+begin_comment
+comment|/* IGP01E1000 Analog Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_ANALOG_SPARE_FUSE_STATUS
+value|0x20D1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_ANALOG_FUSE_STATUS
+value|0x20D0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_ANALOG_FUSE_CONTROL
+value|0x20DC
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_ANALOG_FUSE_BYPASS
+value|0x20DE
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_ANALOG_FUSE_POLY_MASK
+value|0xF000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_ANALOG_FUSE_FINE_MASK
+value|0x0F80
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_ANALOG_FUSE_COARSE_MASK
+value|0x0070
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_ANALOG_SPARE_FUSE_ENABLED
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_ANALOG_FUSE_ENABLE_SW_CONTROL
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_ANALOG_FUSE_COARSE_THRESH
+value|0x0040
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_ANALOG_FUSE_COARSE_10
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_ANALOG_FUSE_FINE_1
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_ANALOG_FUSE_FINE_10
+value|0x0500
+end_define
 
 begin_comment
 comment|/* Bit definitions for valid PHY IDs. */
@@ -13023,6 +13370,38 @@ end_define
 begin_comment
 comment|/* Everything but 1000-Half */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|AUTONEG_ADVERTISE_10_100_ALL
+value|0x000F
+end_define
+
+begin_comment
+comment|/* All 10/100 speeds*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUTONEG_ADVERTISE_10_ALL
+value|0x0003
+end_define
+
+begin_comment
+comment|/* 10Mbps Full& Half speeds*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TANAX_TTL_WA_RESET
+parameter_list|(
+name|hw
+parameter_list|)
+value|{                                       \     if((hw)->dsp_reset_counter) {                                      \         em_write_phy_reg((hw), IGP01E1000_PHY_DSP_RESET, 0x0000);   \         (hw)->dsp_reset_counter = 0;                                   \     }                                                                  \ }
+end_define
 
 begin_endif
 endif|#

@@ -228,7 +228,7 @@ comment|/* Tunables */
 end_comment
 
 begin_comment
-comment|/*  * TxDescriptors  * Valid Range: 80-256 for 82542 and 82543-based adapters  *              80-4096 for others  * Default Value: 256  *   This value is the number of transmit descriptors allocated by the driver.  *   Increasing this value allows the driver to queue more transmits. Each  *   descriptor is 16 bytes.  */
+comment|/*  * EM_MAX_TXD: Maximum number of Transmit Descriptors  * Valid Range: 80-256 for 82542 and 82543-based adapters  *              80-4096 for others  * Default Value: 256  *   This value is the number of transmit descriptors allocated by the driver.  *   Increasing this value allows the driver to queue more transmits. Each  *   descriptor is 16 bytes.  */
 end_comment
 
 begin_define
@@ -239,7 +239,7 @@ value|256
 end_define
 
 begin_comment
-comment|/*  * RxDescriptors  * Valid Range: 80-256 for 82542 and 82543-based adapters  *              80-4096 for others  * Default Value: 256  *   This value is the number of receive descriptors allocated by the driver.  *   Increasing this value allows the driver to buffer more incoming packets.  *   Each descriptor is 16 bytes.  A receive buffer is also allocated for each  *   descriptor. The maximum MTU size is 16110.  *  */
+comment|/*  * EM_MAX_RXD - Maximum number of receive Descriptors  * Valid Range: 80-256 for 82542 and 82543-based adapters  *              80-4096 for others  * Default Value: 256  *   This value is the number of receive descriptors allocated by the driver.  *   Increasing this value allows the driver to buffer more incoming packets.  *   Each descriptor is 16 bytes.  A receive buffer is also allocated for each  *   descriptor. The maximum MTU size is 16110.  *  */
 end_comment
 
 begin_define
@@ -250,7 +250,7 @@ value|256
 end_define
 
 begin_comment
-comment|/*  * TxIntDelay  * Valid Range: 0-65535 (0=off)  * Default Value: 64  *   This value delays the generation of transmit interrupts in units of  *   1.024 microseconds. Transmit interrupt reduction can improve CPU  *   efficiency if properly tuned for specific network traffic. If the  *   system is reporting dropped transmits, this value may be set too high  *   causing the driver to run out of available transmit descriptors.  */
+comment|/*  * EM_TIDV - Transmit Interrupt Delay Value   * Valid Range: 0-65535 (0=off)  * Default Value: 64  *   This value delays the generation of transmit interrupts in units of  *   1.024 microseconds. Transmit interrupt reduction can improve CPU  *   efficiency if properly tuned for specific network traffic. If the  *   system is reporting dropped transmits, this value may be set too high  *   causing the driver to run out of available transmit descriptors.  */
 end_comment
 
 begin_define
@@ -261,7 +261,7 @@ value|64
 end_define
 
 begin_comment
-comment|/*  * TxAbsIntDelay (Not valid for 82542/82543/82544)  * Valid Range: 0-65535 (0=off)  * Default Value: 64  *   This value, in units of 1.024 microseconds, limits the delay in which a  *   transmit interrupt is generated. Useful only if TxIntDelay is non-zero,  *   this value ensures that an interrupt is generated after the initial  *   packet is sent on the wire within the set amount of time.  Proper tuning,  *   along with TxIntDelay, may improve traffic throughput in specific  *   network conditions.  */
+comment|/*  * EM_TADV - Transmit Absolute Interrupt Delay Value (Not valid for 82542/82543/82544)  * Valid Range: 0-65535 (0=off)  * Default Value: 64  *   This value, in units of 1.024 microseconds, limits the delay in which a  *   transmit interrupt is generated. Useful only if EM_TIDV is non-zero,  *   this value ensures that an interrupt is generated after the initial  *   packet is sent on the wire within the set amount of time.  Proper tuning,  *   along with EM_TIDV, may improve traffic throughput in specific  *   network conditions.  */
 end_comment
 
 begin_define
@@ -272,7 +272,7 @@ value|64
 end_define
 
 begin_comment
-comment|/*  * RxIntDelay  * Valid Range: 0-65535 (0=off)  * Default Value: 0  *   This value delays the generation of receive interrupts in units of 1.024  *   microseconds.  Receive interrupt reduction can improve CPU efficiency if  *   properly tuned for specific network traffic. Increasing this value adds  *   extra latency to frame reception and can end up decreasing the throughput  *   of TCP traffic. If the system is reporting dropped receives, this value  *   may be set too high, causing the driver to run out of available receive  *   descriptors.  *  *   CAUTION: When setting RxIntDelay to a value other than 0, adapters  *            may hang (stop transmitting) under certain network conditions.  *            If this occurs a WATCHDOG message is logged in the system event log.  *            In addition, the controller is automatically reset, restoring the  *            network connection. To eliminate the potential for the hang  *            ensure that RxIntDelay is set to 0.  */
+comment|/*  * EM_RDTR - Receive Interrupt Delay Timer (Packet Timer)   * Valid Range: 0-65535 (0=off)  * Default Value: 0  *   This value delays the generation of receive interrupts in units of 1.024  *   microseconds.  Receive interrupt reduction can improve CPU efficiency if  *   properly tuned for specific network traffic. Increasing this value adds  *   extra latency to frame reception and can end up decreasing the throughput  *   of TCP traffic. If the system is reporting dropped receives, this value  *   may be set too high, causing the driver to run out of available receive  *   descriptors.  *  *   CAUTION: When setting EM_RDTR to a value other than 0, adapters  *            may hang (stop transmitting) under certain network conditions.  *            If this occurs a WATCHDOG message is logged in the system event log.  *            In addition, the controller is automatically reset, restoring the  *            network connection. To eliminate the potential for the hang  *            ensure that EM_RDTR is set to 0.  */
 end_comment
 
 begin_define
@@ -283,7 +283,7 @@ value|0
 end_define
 
 begin_comment
-comment|/*  * RxAbsIntDelay (Not valid for 82542/82543/82544)  * Valid Range: 0-65535 (0=off)  * Default Value: 64  *   This value, in units of 1.024 microseconds, limits the delay in which a  *   receive interrupt is generated. Useful only if RxIntDelay is non-zero,  *   this value ensures that an interrupt is generated after the initial  *   packet is received within the set amount of time.  Proper tuning,  *   along with RxIntDelay, may improve traffic throughput in specific network  *   conditions.  */
+comment|/*  * Receive Interrupt Absolute Delay Timer (Not valid for 82542/82543/82544)  * Valid Range: 0-65535 (0=off)  * Default Value: 64  *   This value, in units of 1.024 microseconds, limits the delay in which a  *   receive interrupt is generated. Useful only if EM_RDTR is non-zero,  *   this value ensures that an interrupt is generated after the initial  *   packet is received within the set amount of time.  Proper tuning,  *   along with EM_RDTR, may improve traffic throughput in specific network  *   conditions.  */
 end_comment
 
 begin_define
@@ -360,8 +360,16 @@ begin_define
 define|#
 directive|define
 name|WAIT_FOR_AUTO_NEG_DEFAULT
-value|1
+value|0
 end_define
+
+begin_comment
+comment|/*  * EM_MASTER_SLAVE is only defined to enable a workaround for a known compatibility issue  * with 82541/82547 devices and some switches.  See the "Known Limitations" section of   * the README file for a complete description and a list of affected switches.  *       *              0 = Hardware default  *              1 = Master mode  *              2 = Slave mode  *              3 = Auto master/slave  */
+end_comment
+
+begin_comment
+comment|/* #define EM_MASTER_SLAVE	2 */
+end_comment
 
 begin_comment
 comment|/* Tunables -- End */
@@ -712,6 +720,51 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* For 82544 PCIX  Workaround */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_ADDRESS_LENGTH_PAIR
+block|{
+name|u_int64_t
+name|address
+decl_stmt|;
+name|u_int32_t
+name|length
+decl_stmt|;
+block|}
+name|ADDRESS_LENGTH_PAIR
+operator|,
+typedef|*
+name|PADDRESS_LENGTH_PAIR
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_DESCRIPTOR_PAIR
+block|{
+name|ADDRESS_LENGTH_PAIR
+name|descriptor
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|u_int32_t
+name|elements
+decl_stmt|;
+block|}
+name|DESC_ARRAY
+operator|,
+typedef|*
+name|PDESC_ARRAY
+typedef|;
+end_typedef
+
+begin_comment
 comment|/* Our adapter structure */
 end_comment
 
@@ -911,6 +964,10 @@ name|tx_fifo_reset
 decl_stmt|;
 name|u_int64_t
 name|tx_fifo_wrk
+decl_stmt|;
+comment|/* For 82544 PCIX Workaround */
+name|boolean_t
+name|pcix_82544
 decl_stmt|;
 ifdef|#
 directive|ifdef
