@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 1994, David Greenman  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)trap.c	7.4 (Berkeley) 5/13/91  *	$Id: trap.c,v 1.32 1994/08/28 16:16:33 bde Exp $  */
+comment|/*-  * Copyright (C) 1994, David Greenman  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)trap.c	7.4 (Berkeley) 5/13/91  *	$Id: trap.c,v 1.33 1994/09/08 11:48:52 bde Exp $  */
 end_comment
 
 begin_comment
@@ -1136,6 +1136,8 @@ name|struct
 name|vmspace
 modifier|*
 name|vm
+init|=
+name|NULL
 decl_stmt|;
 name|vm_map_t
 name|map
@@ -1181,41 +1183,21 @@ operator|)
 name|eva
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Don't allow user-mode faults in kernel address space 	 */
+if|if
+condition|(
+name|va
+operator|>=
+name|KERNBASE
+condition|)
+block|{
+comment|/* 		 * Don't allow user-mode faults in kernel address space. 		 */
 if|if
 condition|(
 name|usermode
-operator|&&
-operator|(
-name|va
-operator|>=
-name|KERNBASE
-operator|)
 condition|)
-block|{
 goto|goto
 name|nogo
 goto|;
-block|}
-if|if
-condition|(
-operator|(
-name|p
-operator|==
-literal|0
-operator|)
-operator|||
-operator|(
-name|va
-operator|>=
-name|KERNBASE
-operator|)
-condition|)
-block|{
-name|vm
-operator|=
-literal|0
-expr_stmt|;
 name|map
 operator|=
 name|kernel_map
@@ -1223,12 +1205,28 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 		 * This is a fault on non-kernel virtual memory. 		 * vm is initialized above to NULL. If curproc is NULL 		 * or curproc->p_vmspace is NULL the fault is fatal. 		 */
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
 name|vm
 operator|=
 name|p
 operator|->
 name|p_vmspace
 expr_stmt|;
+if|if
+condition|(
+name|vm
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|nogo
+goto|;
 name|map
 operator|=
 operator|&
@@ -1475,6 +1473,8 @@ condition|)
 block|{
 if|if
 condition|(
+name|curpcb
+operator|&&
 name|curpcb
 operator|->
 name|pcb_onfault
