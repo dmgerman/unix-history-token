@@ -51,7 +51,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.21 (Berkeley) %G%	(no queueing)"
+literal|"@(#)queue.c	5.22 (Berkeley) %G%	(no queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.21 (Berkeley) %G%"
+literal|"@(#)queue.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1413,9 +1413,15 @@ expr_stmt|;
 block|}
 end_while
 
+begin_comment
+comment|/* exit without the usual cleanup */
+end_comment
+
 begin_expr_stmt
-name|finis
-argument_list|()
+name|exit
+argument_list|(
+name|ExitStat
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
