@@ -26,7 +26,7 @@ comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reser
 end_comment
 
 begin_comment
-comment|/*  * HID spec: http://www.usb.org/developers/data/usbhid10.pdf  */
+comment|/*  * HID spec: http://www.usb.org/developers/devclass_docs/HID1_11.pdf  */
 end_comment
 
 begin_include
