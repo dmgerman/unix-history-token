@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"	save.c	4.1	82/05/11	"
+literal|"	save.c	4.2	86/11/17	"
 decl_stmt|;
 end_decl_stmt
 
@@ -276,6 +276,24 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|vax
+operator|(
+name|header
+operator|.
+name|a_text
+comment|/* starts after text            */
+operator|&
+literal|037777776000
+operator|)
+comment|/* on an 1K boundary            */
+operator|+
+literal|02000
+expr_stmt|;
+comment|/* i.e. the next one up         */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|tahoe
 operator|(
 name|header
 operator|.
