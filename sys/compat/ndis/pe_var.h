@@ -1624,6 +1624,20 @@ directive|define
 name|__stdcall
 end_define
 
+begin_define
+define|#
+directive|define
+name|NDIS_BUS_SPACE_IO
+value|AMD64_BUS_SPACE_IO
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_BUS_SPACE_MEM
+value|AMD64_BUS_SPACE_MEM
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1634,6 +1648,20 @@ define|#
 directive|define
 name|__stdcall
 value|__attribute__((__stdcall__))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_BUS_SPACE_IO
+value|I386_BUS_SPACE_IO
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_BUS_SPACE_MEM
+value|I386_BUS_SPACE_MEM
 end_define
 
 begin_endif
