@@ -138,6 +138,14 @@ name|key
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* if r == 0 || -1, just use what was on the stack */
+if|if
+condition|(
+name|r
+operator|>
+literal|0
+condition|)
+block|{
 for|for
 control|(
 name|n
@@ -166,6 +174,7 @@ operator|%
 name|r
 index|]
 expr_stmt|;
+block|}
 for|for
 control|(
 name|n
