@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)klogin.c	5.7 (Berkeley) %G%"
+literal|"@(#)klogin.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,20 +73,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|PRINCIPAL_NAME
-value|pw->pw_name
-end_define
-
-begin_define
-define|#
-directive|define
-name|PRINCIPAL_INST
-value|(rootlogin ? "root" : "")
-end_define
-
-begin_define
-define|#
-directive|define
 name|INITIAL_TICKET
 value|"krbtgt"
 end_define
@@ -105,13 +91,6 @@ name|notickets
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|rootlogin
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Attempt to log the user in using Kerberos authentication  *  * return 0 on success (will be logged in)  *	  1 if Kerberos failed (try local password in login)  */
 end_comment
@@ -120,6 +99,8 @@ begin_macro
 name|klogin
 argument_list|(
 argument|pw
+argument_list|,
+argument|instance
 argument_list|,
 argument|localhost
 argument_list|,
@@ -137,6 +118,9 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+modifier|*
+name|instance
+decl_stmt|,
 modifier|*
 name|localhost
 decl_stmt|,
@@ -182,9 +166,20 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
-comment|/* 	 * If we aren't Kerberos-authenticated, try the normal pw file 	 * for a password.  If that's ok, log the user in without issueing 	 * any tickets. 	 */
+comment|/* 	 * Root logins don't use Kerberos. 	 * If we have a realm, try getting a ticket-granting ticket 	 * and using it to authenticate.  Otherwise, return 	 * failure so that we can try the normal passwd file 	 * for a password.  If that's ok, log the user in 	 * without issuing any tickets. 	 */
 if|if
 condition|(
+name|strcmp
+argument_list|(
+name|pw
+operator|->
+name|pw_name
+argument_list|,
+literal|"root"
+argument_list|)
+operator|==
+literal|0
+operator|||
 name|krb_get_lrealm
 argument_list|(
 name|realm
@@ -194,21 +189,12 @@ argument_list|)
 operator|!=
 name|KSUCCESS
 condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"couldn't get local Kerberos realm"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-block|}
-comment|/* 	 * get TGT for local realm 	 * tickets are stored in a file determined by calling tkt_string() 	 */
+comment|/* 	 * get TGT for local realm 	 * tickets are stored in a file named TKT_ROOT plus uid 	 */
 operator|(
 name|void
 operator|)
@@ -237,9 +223,11 @@ name|kerror
 operator|=
 name|krb_get_pw_in_tkt
 argument_list|(
-name|PRINCIPAL_NAME
+name|pw
+operator|->
+name|pw_name
 argument_list|,
-name|PRINCIPAL_INST
+name|instance
 argument_list|,
 name|realm
 argument_list|,
@@ -269,10 +257,6 @@ operator|&&
 name|kerror
 operator|!=
 name|KDC_PR_UNKNOWN
-operator|&&
-name|kerror
-operator|!=
-name|KFAILURE
 condition|)
 block|{
 name|syslog
@@ -381,12 +365,16 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"warning: TGT not verified (%s)"
+literal|"warning: TGT not verified (%s); %s.%s not registered, or srvtab is wrong?"
 argument_list|,
 name|krb_err_txt
 index|[
 name|kerror
 index|]
+argument_list|,
+name|VERIFY_SERVICE
+argument_list|,
+name|savehost
 argument_list|)
 expr_stmt|;
 name|notickets
