@@ -159,6 +159,9 @@ end_decl_stmt
 
 begin_function
 name|__END_DECLS
+ifdef|#
+directive|ifdef
+name|__GNUC__
 specifier|static
 name|__inline
 name|uint32_t
@@ -264,12 +267,6 @@ begin_comment
 comment|/*  * Macros for network/external number representation conversion.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUC__
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -302,6 +299,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* __GNUC__ */
+end_comment
 
 begin_define
 define|#
