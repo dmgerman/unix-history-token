@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)genassym.c	1.6 (Berkeley) %G%"
+literal|"@(#)genassym.c	1.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -878,6 +878,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"#endif\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
