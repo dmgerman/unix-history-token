@@ -317,6 +317,11 @@ directive|define
 name|TF_WASFRECOVERY
 value|0x200000
 comment|/* was in NewReno Fast Recovery */
+define|#
+directive|define
+name|TF_SIGNATURE
+value|0x400000
+comment|/* require MD5 digests (RFC2385) */
 name|int
 name|t_force
 decl_stmt|;
@@ -582,6 +587,69 @@ parameter_list|)
 value|tp->t_flags&= ~TF_FASTRECOVERY
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCP_SIGNATURE
+end_ifdef
+
+begin_comment
+comment|/*  * Defines which are needed by the xform_tcp module and tcp_[in|out]put  * for SADB verification and lookup.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_SIGLEN
+value|16
+end_define
+
+begin_comment
+comment|/* length of computed digest in bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_KEYLEN_MIN
+value|1
+end_define
+
+begin_comment
+comment|/* minimum length of TCP-MD5 key */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_KEYLEN_MAX
+value|80
+end_define
+
+begin_comment
+comment|/* maximum length of TCP-MD5 key */
+end_comment
+
+begin_comment
+comment|/*  * Only a single SA per host may be specified at this time. An SPI is  * needed in order for the KEY_ALLOCSA() lookup to work.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_SIG_SPI
+value|0x1000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* TCP_SIGNATURE */
+end_comment
+
 begin_comment
 comment|/*  * Structure to hold TCP options that are only used during segment  * processing (in tcp_input), but not held in the tcpcb.  * It's basically used to reduce the number of parameters  * to tcp_dooptions.  */
 end_comment
@@ -620,6 +688,16 @@ define|#
 directive|define
 name|TOF_SCALE
 value|0x0020
+define|#
+directive|define
+name|TOF_SIGNATURE
+value|0x0040
+comment|/* signature option present */
+define|#
+directive|define
+name|TOF_SIGLEN
+value|0x0080
+comment|/* sigature length valid (RFC2385) */
 name|u_int32_t
 name|to_tsval
 decl_stmt|;
@@ -742,6 +820,11 @@ directive|define
 name|SCF_UNREACH
 value|0x10
 comment|/* icmp unreachable received */
+define|#
+directive|define
+name|SCF_SIGNATURE
+value|0x20
+comment|/* send MD5 digests */
 name|TAILQ_ENTRY
 argument_list|(
 argument|syncache
@@ -2332,6 +2415,68 @@ directive|define
 name|TCP_HC_TAO_MSSOPT
 value|0x3
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCP_SIGNATURE
+end_ifdef
+
+begin_function_decl
+name|int
+name|tcpsignature_apply
+parameter_list|(
+name|void
+modifier|*
+name|fstate
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|unsigned
+name|int
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|tcpsignature_compute
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|int
+name|off0
+parameter_list|,
+name|int
+name|len
+parameter_list|,
+name|int
+name|tcpoptlen
+parameter_list|,
+name|u_char
+modifier|*
+name|buf
+parameter_list|,
+name|u_int
+name|direction
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* TCP_SIGNATURE */
+end_comment
 
 begin_decl_stmt
 specifier|extern

@@ -820,6 +820,41 @@ begin_comment
 comment|/* default maximum segment size */
 end_comment
 
+begin_comment
+comment|/*  * This is the real IPv4 pseudo header, used for computing the TCP and UDP  * checksums. For the Internet checksum, struct ipovly can be used instead.  * For stronger checksums, the real thing must be used.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ippseudo
+block|{
+name|struct
+name|in_addr
+name|ippseudo_src
+decl_stmt|;
+comment|/* source internet address */
+name|struct
+name|in_addr
+name|ippseudo_dst
+decl_stmt|;
+comment|/* destination internet address */
+name|u_int8_t
+name|ippseudo_pad
+decl_stmt|;
+comment|/* pad, must be zero */
+name|u_int8_t
+name|ippseudo_p
+decl_stmt|;
+comment|/* protocol */
+name|u_int16_t
+name|ippseudo_len
+decl_stmt|;
+comment|/* protocol length */
+block|}
+name|__packed
+struct|;
+end_struct
+
 begin_endif
 endif|#
 directive|endif

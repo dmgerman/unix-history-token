@@ -2016,6 +2016,9 @@ case|:
 case|case
 name|IPSEC_POLICY_NONE
 case|:
+case|case
+name|IPSEC_POLICY_TCP
+case|:
 comment|/* no need to do IPsec. */
 goto|goto
 name|skip_ipsec

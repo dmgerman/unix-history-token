@@ -919,8 +919,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SADB_SATYPE_MAX
+name|SADB_X_SATYPE_TCPSIGNATURE
 value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|SADB_SATYPE_MAX
+value|12
 end_define
 
 begin_define
@@ -994,7 +1001,7 @@ begin_define
 define|#
 directive|define
 name|SADB_AALG_MAX
-value|251
+value|252
 end_define
 
 begin_comment
@@ -1075,6 +1082,17 @@ end_define
 
 begin_comment
 comment|/* null authentication */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SADB_X_AALG_TCP_MD5
+value|252
+end_define
+
+begin_comment
+comment|/* Keyed TCP-MD5 (RFC2385) */
 end_comment
 
 begin_comment
