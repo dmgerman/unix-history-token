@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)redist.c	5.5 (Berkeley) 87/11/23"
+literal|"@(#)redist.c	5.5 (Berkeley) 87/12/12"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* !lint */
+end_comment
 
 begin_include
 include|#
@@ -35,6 +38,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_include
@@ -74,11 +83,6 @@ decl_stmt|,
 modifier|*
 name|C2
 decl_stmt|;
-specifier|register
-name|int
-name|first
-decl_stmt|;
-comment|/* if first blank line */
 name|FILE
 modifier|*
 name|pf
@@ -87,11 +91,17 @@ modifier|*
 name|popen
 argument_list|()
 decl_stmt|;
+name|int
+name|group
+decl_stmt|;
 name|char
 modifier|*
 name|index
 parameter_list|()
 function_decl|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|bfr
@@ -118,20 +128,21 @@ condition|)
 return|return;
 for|for
 control|(
+name|pf
+operator|=
+name|NULL
+operator|,
+name|group
+operator|=
+literal|0
 init|;
-condition|;
-control|)
-block|{
-comment|/* get first part of entry */
-if|if
-condition|(
-operator|!
 name|gets
 argument_list|(
 name|bfr
 argument_list|)
-condition|)
-return|return;
+condition|;
+control|)
+block|{
 if|if
 condition|(
 operator|*
@@ -139,15 +150,11 @@ name|bfr
 operator|==
 name|COMMENT
 operator|||
+name|isspace
+argument_list|(
 operator|*
 name|bfr
-operator|==
-literal|' '
-operator|||
-operator|*
-name|bfr
-operator|==
-literal|'\t'
+argument_list|)
 operator|||
 operator|!
 operator|(
@@ -176,9 +183,16 @@ name|bfr
 argument_list|,
 name|folder
 argument_list|)
+operator|||
+operator|!
+name|strcmp
+argument_list|(
+name|bfr
+argument_list|,
+literal|"all"
+argument_list|)
 condition|)
-break|break;
-block|}
+block|{
 for|for
 control|(
 operator|++
@@ -209,8 +223,14 @@ operator|!
 operator|*
 name|C1
 condition|)
-comment|/* if empty */
-return|return;
+comment|/* if empty list */
+continue|continue;
+if|if
+condition|(
+operator|!
+name|pf
+condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -265,14 +285,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|mailhead
 index|[
 name|TO_TAG
 index|]
 operator|.
 name|line
-operator|==
-literal|0
 operator|&&
 name|mailhead
 index|[
@@ -280,8 +299,6 @@ name|APPAR_TO_TAG
 index|]
 operator|.
 name|line
-operator|!=
-literal|0
 condition|)
 name|fprintf
 argument_list|(
@@ -309,7 +326,20 @@ argument_list|,
 name|pf
 argument_list|)
 expr_stmt|;
-comment|/* 	 * write out first entry, then succeeding entries 	 * backward compatible, handles back slashes at end of line 	 */
+block|}
+comment|/* 			 * write out first entry, then succeeding entries 			 * backward compatible, handles back slashes at end 			 * of line 			 */
+if|if
+condition|(
+name|group
+operator|++
+condition|)
+name|fputs
+argument_list|(
+literal|", "
+argument_list|,
+name|pf
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -347,7 +377,6 @@ argument_list|(
 name|bfr
 argument_list|)
 operator|||
-operator|(
 operator|*
 name|bfr
 operator|!=
@@ -357,7 +386,6 @@ operator|*
 name|bfr
 operator|!=
 literal|'\t'
-operator|)
 condition|)
 break|break;
 for|for
@@ -386,6 +414,14 @@ name|C1
 control|)
 empty_stmt|;
 block|}
+block|}
+block|}
+if|if
+condition|(
+operator|!
+name|pf
+condition|)
+return|return;
 name|putc
 argument_list|(
 literal|'\n'
@@ -398,12 +434,9 @@ argument_list|(
 name|dfp
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|first
-operator|=
-name|YES
-init|;
+comment|/* add Reference header and copy bug report out */
+while|while
+condition|(
 name|fgets
 argument_list|(
 name|bfr
@@ -415,27 +448,24 @@ argument_list|)
 argument_list|,
 name|dfp
 argument_list|)
-condition|;
-control|)
-if|if
-condition|(
+operator|&&
 operator|*
 name|bfr
-operator|==
+operator|!=
 literal|'\n'
-operator|&&
-name|first
 condition|)
-block|{
-name|first
-operator|=
-name|NO
+name|fputs
+argument_list|(
+name|bfr
+argument_list|,
+name|pf
+argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|pf
 argument_list|,
-literal|"\n%sReference: %s\n"
+literal|"\n%sReference: %s\n\n"
 argument_list|,
 name|mailhead
 index|[
@@ -447,8 +477,20 @@ argument_list|,
 name|pfile
 argument_list|)
 expr_stmt|;
-block|}
-else|else
+while|while
+condition|(
+name|fgets
+argument_list|(
+name|bfr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|bfr
+argument_list|)
+argument_list|,
+name|dfp
+argument_list|)
+condition|)
 name|fputs
 argument_list|(
 name|bfr
