@@ -1697,6 +1697,12 @@ modifier|*
 name|p_fd
 decl_stmt|;
 comment|/* (b) Ptr to open files structure. */
+name|struct
+name|filedesc_to_leader
+modifier|*
+name|p_fdtol
+decl_stmt|;
+comment|/* (b) Ptr to tracking node */
 comment|/* Accumulated stats for all KSEs? */
 name|struct
 name|pstats

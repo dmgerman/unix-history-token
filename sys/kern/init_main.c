@@ -1527,6 +1527,12 @@ name|fdp
 operator|->
 name|fd_fd
 expr_stmt|;
+name|p
+operator|->
+name|p_fdtol
+operator|=
+name|NULL
+expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
