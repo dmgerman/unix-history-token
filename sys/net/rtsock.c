@@ -4214,6 +4214,16 @@ name|ifma
 operator|->
 name|ifma_addr
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|&&
+name|ifp
+operator|->
+name|if_addrhead
+operator|.
+name|tqh_first
+condition|)
 name|ifpaddr
 operator|=
 name|ifp
@@ -4223,6 +4233,11 @@ operator|.
 name|tqh_first
 operator|->
 name|ifa_addr
+expr_stmt|;
+else|else
+name|ifpaddr
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* 	 * If a link-layer address is present, present it as a ``gateway'' 	 * (similarly to how ARP entries, e.g., are presented). 	 */
 name|gate
