@@ -245,27 +245,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|static
-name|hkey_fn_t
-name|hkey_lcd_brightness_max
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|hkey_fn_t
-name|hkey_lcd_brightness
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|hkey_fn_t
-name|hkey_sound_mute
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|int
@@ -322,6 +301,36 @@ name|context
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|static
+name|hkey_fn_t
+name|hkey_lcd_brightness_max
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|hkey_fn_t
+name|hkey_lcd_brightness
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|hkey_fn_t
+name|hkey_sound_mute
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|lcd_brightness_max
+init|=
+literal|255
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Table of sysctl names and HKEY functions to call. */
@@ -468,15 +477,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|lcd_brightness_max
-init|=
-literal|255
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 specifier|static
@@ -1792,7 +1792,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"unknown Notify: 0x%x\n"
+literal|"unknown notify: %#x\n"
 argument_list|,
 name|notify
 argument_list|)
