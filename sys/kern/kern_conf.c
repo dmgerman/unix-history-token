@@ -1063,6 +1063,7 @@ parameter_list|,
 name|int
 name|perms
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -1269,6 +1270,7 @@ parameter_list|(
 name|dev_t
 name|pdev
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt

@@ -1372,6 +1372,7 @@ operator|,
 name|int
 name|perms
 operator|,
+specifier|const
 name|char
 operator|*
 name|fmt
@@ -1397,6 +1398,7 @@ operator|(
 name|dev_t
 name|pdev
 operator|,
+specifier|const
 name|char
 operator|*
 name|fmt
