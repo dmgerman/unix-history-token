@@ -362,10 +362,6 @@ name|dsinit
 name|__P
 argument_list|(
 operator|(
-name|char
-operator|*
-name|dname
-operator|,
 name|dev_t
 name|dev
 operator|,
@@ -390,10 +386,6 @@ name|dsioctl
 name|__P
 argument_list|(
 operator|(
-name|char
-operator|*
-name|dname
-operator|,
 name|dev_t
 name|dev
 operator|,
@@ -458,9 +450,8 @@ name|dsname
 name|__P
 argument_list|(
 operator|(
-name|char
-operator|*
-name|dname
+name|dev_t
+name|dev
 operator|,
 name|int
 name|unit
@@ -485,10 +476,6 @@ name|dsopen
 name|__P
 argument_list|(
 operator|(
-name|char
-operator|*
-name|dname
-operator|,
 name|dev_t
 name|dev
 operator|,

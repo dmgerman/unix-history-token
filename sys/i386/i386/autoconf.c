@@ -1473,12 +1473,7 @@ name|sname
 operator|=
 name|dsname
 argument_list|(
-name|devsw
-argument_list|(
 name|newrootdev
-argument_list|)
-operator|->
-name|d_name
 argument_list|,
 name|unit
 argument_list|,
@@ -1550,12 +1545,7 @@ name|sname
 operator|=
 name|dsname
 argument_list|(
-name|devsw
-argument_list|(
 name|newrootdev
-argument_list|)
-operator|->
-name|d_name
 argument_list|,
 name|unit
 argument_list|,

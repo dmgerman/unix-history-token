@@ -1280,7 +1280,7 @@ name|sname
 operator|=
 name|dsname
 argument_list|(
-name|dname
+name|dev
 argument_list|,
 name|dkunit
 argument_list|(
@@ -1385,7 +1385,7 @@ name|sname
 operator|=
 name|dsname
 argument_list|(
-name|dname
+name|dev
 argument_list|,
 name|dkunit
 argument_list|(
@@ -1561,7 +1561,7 @@ name|sname
 operator|=
 name|dsname
 argument_list|(
-name|dname
+name|dev
 argument_list|,
 name|dkunit
 argument_list|(
@@ -2081,7 +2081,7 @@ name|sname
 operator|=
 name|dsname
 argument_list|(
-name|dname
+name|dev
 argument_list|,
 name|dkunit
 argument_list|(
@@ -2157,7 +2157,7 @@ name|sname
 operator|=
 name|dsname
 argument_list|(
-name|dname
+name|dev
 argument_list|,
 name|dkunit
 argument_list|(
@@ -2799,7 +2799,7 @@ name|sname
 operator|=
 name|dsname
 argument_list|(
-name|dname
+name|dev
 argument_list|,
 name|dkunit
 argument_list|(
@@ -2985,7 +2985,7 @@ name|sname
 operator|=
 name|dsname
 argument_list|(
-name|dname
+name|dev
 argument_list|,
 name|dkunit
 argument_list|(
@@ -3129,7 +3129,7 @@ name|sname
 operator|=
 name|dsname
 argument_list|(
-name|dname
+name|dev
 argument_list|,
 name|dkunit
 argument_list|(

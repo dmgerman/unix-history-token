@@ -3824,8 +3824,6 @@ name|error
 operator|=
 name|dsopen
 argument_list|(
-literal|"cd"
-argument_list|,
 name|dev
 argument_list|,
 name|fmt
@@ -10428,8 +10426,6 @@ name|error
 operator|=
 name|dsioctl
 argument_list|(
-literal|"cd"
-argument_list|,
 name|dev
 argument_list|,
 name|cmd

@@ -940,8 +940,6 @@ return|return
 operator|(
 name|dsopen
 argument_list|(
-literal|"vn"
-argument_list|,
 name|dev
 argument_list|,
 name|mode
@@ -1666,8 +1664,6 @@ name|error
 operator|=
 name|dsioctl
 argument_list|(
-literal|"vn"
-argument_list|,
 name|dev
 argument_list|,
 name|cmd

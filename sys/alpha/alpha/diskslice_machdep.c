@@ -226,14 +226,10 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|extended
+name|mbr_extended
 name|__P
 argument_list|(
 operator|(
-name|char
-operator|*
-name|dname
-operator|,
 name|dev_t
 name|dev
 operator|,
@@ -747,18 +743,12 @@ begin_function
 name|int
 name|dsinit
 parameter_list|(
-name|dname
-parameter_list|,
 name|dev
 parameter_list|,
 name|lp
 parameter_list|,
 name|sspp
 parameter_list|)
-name|char
-modifier|*
-name|dname
-decl_stmt|;
 name|dev_t
 name|dev
 decl_stmt|;
@@ -917,7 +907,12 @@ name|diskerr
 argument_list|(
 name|bp
 argument_list|,
-name|dname
+name|devtoname
+argument_list|(
+name|bp
+operator|->
+name|b_dev
+argument_list|)
 argument_list|,
 literal|"error reading primary partition table"
 argument_list|,
@@ -957,7 +952,7 @@ name|sname
 operator|=
 name|dsname
 argument_list|(
-name|dname
+name|dev
 argument_list|,
 name|dkunit
 argument_list|(
@@ -1300,7 +1295,7 @@ name|sname
 operator|=
 name|dsname
 argument_list|(
-name|dname
+name|dev
 argument_list|,
 name|dkunit
 argument_list|(
@@ -1545,10 +1540,8 @@ name|ds_type
 operator|==
 name|DOSPTYP_EXTENDEDX
 condition|)
-name|extended
+name|mbr_extended
 argument_list|(
-name|dname
-argument_list|,
 name|bp
 operator|->
 name|b_dev
@@ -1611,10 +1604,8 @@ end_function
 
 begin_function
 name|void
-name|extended
+name|mbr_extended
 parameter_list|(
-name|dname
-parameter_list|,
 name|dev
 parameter_list|,
 name|lp
@@ -1633,10 +1624,6 @@ name|ntracks
 parameter_list|,
 name|mbr_offset
 parameter_list|)
-name|char
-modifier|*
-name|dname
-decl_stmt|;
 name|dev_t
 name|dev
 decl_stmt|;
@@ -1788,7 +1775,12 @@ name|diskerr
 argument_list|(
 name|bp
 argument_list|,
-name|dname
+name|devtoname
+argument_list|(
+name|bp
+operator|->
+name|b_dev
+argument_list|)
 argument_list|,
 literal|"error reading extended partition table"
 argument_list|,
@@ -1841,7 +1833,7 @@ name|sname
 operator|=
 name|dsname
 argument_list|(
-name|dname
+name|dev
 argument_list|,
 name|dkunit
 argument_list|(
@@ -1998,7 +1990,7 @@ name|sname
 operator|=
 name|dsname
 argument_list|(
-name|dname
+name|dev
 argument_list|,
 name|dkunit
 argument_list|(
@@ -2087,7 +2079,7 @@ name|sname
 operator|=
 name|dsname
 argument_list|(
-name|dname
+name|dev
 argument_list|,
 name|dkunit
 argument_list|(
@@ -2197,10 +2189,8 @@ index|]
 operator|!=
 literal|0
 condition|)
-name|extended
+name|mbr_extended
 argument_list|(
-name|dname
-argument_list|,
 name|dev
 argument_list|,
 name|lp

@@ -338,12 +338,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|void
@@ -351,10 +345,6 @@ name|set_ds_labeldevs
 name|__P
 argument_list|(
 operator|(
-name|char
-operator|*
-name|dname
-operator|,
 name|dev_t
 name|dev
 operator|,
@@ -374,10 +364,6 @@ name|set_ds_labeldevs_unaliased
 name|__P
 argument_list|(
 operator|(
-name|char
-operator|*
-name|dname
-operator|,
 name|dev_t
 name|dev
 operator|,
@@ -389,11 +375,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1805,8 +1786,6 @@ begin_function
 name|int
 name|dsioctl
 parameter_list|(
-name|dname
-parameter_list|,
 name|dev
 parameter_list|,
 name|cmd
@@ -1817,10 +1796,6 @@ name|flags
 parameter_list|,
 name|sspp
 parameter_list|)
-name|char
-modifier|*
-name|dname
-decl_stmt|;
 name|dev_t
 name|dev
 decl_stmt|;
@@ -2402,20 +2377,13 @@ argument_list|,
 name|lp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
 name|set_ds_labeldevs
 argument_list|(
-name|dname
-argument_list|,
 name|dev
 argument_list|,
 name|ssp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -2540,8 +2508,6 @@ name|error
 operator|=
 name|dsopen
 argument_list|(
-name|dname
-argument_list|,
 name|dev
 argument_list|,
 name|ssp
@@ -2655,8 +2621,6 @@ name|error
 operator|=
 name|dsopen
 argument_list|(
-name|dname
-argument_list|,
 name|dkmodslice
 argument_list|(
 name|dkmodpart
@@ -2749,8 +2713,6 @@ name|error
 operator|=
 name|dsopen
 argument_list|(
-name|dname
-argument_list|,
 name|dkmodslice
 argument_list|(
 name|dkmodpart
@@ -2829,8 +2791,6 @@ name|error
 operator|=
 name|dsioctl
 argument_list|(
-name|dname
-argument_list|,
 name|dev
 argument_list|,
 name|DIOCSDINFO
@@ -3366,7 +3326,7 @@ name|char
 modifier|*
 name|dsname
 parameter_list|(
-name|dname
+name|dev
 parameter_list|,
 name|unit
 parameter_list|,
@@ -3376,9 +3336,8 @@ name|part
 parameter_list|,
 name|partname
 parameter_list|)
-name|char
-modifier|*
-name|dname
+name|dev_t
+name|dev
 decl_stmt|;
 name|int
 name|unit
@@ -3401,6 +3360,19 @@ index|[
 literal|32
 index|]
 decl_stmt|;
+name|char
+modifier|*
+name|dname
+decl_stmt|;
+name|dname
+operator|=
+name|devsw
+argument_list|(
+name|dev
+argument_list|)
+operator|->
+name|d_name
+expr_stmt|;
 if|if
 condition|(
 name|strlen
@@ -3513,8 +3485,6 @@ begin_function
 name|int
 name|dsopen
 parameter_list|(
-name|dname
-parameter_list|,
 name|dev
 parameter_list|,
 name|mode
@@ -3525,10 +3495,6 @@ name|sspp
 parameter_list|,
 name|lp
 parameter_list|)
-name|char
-modifier|*
-name|dname
-decl_stmt|;
 name|dev_t
 name|dev
 decl_stmt|;
@@ -3649,11 +3615,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%d: invalid sector size %lu\n"
+literal|"%s: invalid sector size %lu\n"
 argument_list|,
-name|dname
-argument_list|,
-name|unit
+name|devtoname
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 operator|(
 name|u_long
@@ -3733,8 +3700,6 @@ name|error
 operator|=
 name|dsinit
 argument_list|(
-name|dname
-argument_list|,
 name|dev
 argument_list|,
 name|lp
@@ -3968,7 +3933,7 @@ name|sname
 operator|=
 name|dsname
 argument_list|(
-name|dname
+name|dev
 argument_list|,
 name|unit
 argument_list|,
@@ -4304,20 +4269,13 @@ argument_list|,
 name|lp1
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
 name|set_ds_labeldevs
 argument_list|(
-name|dname
-argument_list|,
 name|dev1
 argument_list|,
 name|ssp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|set_ds_wlabel
 argument_list|(
 name|ssp
@@ -5634,27 +5592,15 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
 begin_function
 specifier|static
 name|void
 name|set_ds_labeldevs
 parameter_list|(
-name|dname
-parameter_list|,
 name|dev
 parameter_list|,
 name|ssp
 parameter_list|)
-name|char
-modifier|*
-name|dname
-decl_stmt|;
 name|dev_t
 name|dev
 decl_stmt|;
@@ -5664,13 +5610,14 @@ modifier|*
 name|ssp
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|DEVFS
 name|int
 name|slice
 decl_stmt|;
 name|set_ds_labeldevs_unaliased
 argument_list|(
-name|dname
-argument_list|,
 name|dev
 argument_list|,
 name|ssp
@@ -5700,8 +5647,6 @@ name|COMPATIBILITY_SLICE
 condition|)
 name|set_ds_labeldevs_unaliased
 argument_list|(
-name|dname
-argument_list|,
 name|dkmodslice
 argument_list|(
 name|dev
@@ -5725,8 +5670,6 @@ name|dss_first_bsd_slice
 condition|)
 name|set_ds_labeldevs_unaliased
 argument_list|(
-name|dname
-argument_list|,
 name|dkmodslice
 argument_list|(
 name|dev
@@ -5737,6 +5680,9 @@ argument_list|,
 name|ssp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEVFS */
 block|}
 end_function
 
@@ -5745,16 +5691,10 @@ specifier|static
 name|void
 name|set_ds_labeldevs_unaliased
 parameter_list|(
-name|dname
-parameter_list|,
 name|dev
 parameter_list|,
 name|ssp
 parameter_list|)
-name|char
-modifier|*
-name|dname
-decl_stmt|;
 name|dev_t
 name|dev
 decl_stmt|;
@@ -5764,6 +5704,9 @@ modifier|*
 name|ssp
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|DEVFS
 name|struct
 name|disklabel
 modifier|*
@@ -5869,7 +5812,7 @@ name|sname
 operator|=
 name|dsname
 argument_list|(
-name|dname
+name|dev
 argument_list|,
 name|dkunit
 argument_list|(
@@ -6015,17 +5958,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* DEVFS */
-end_comment
+block|}
+end_function
 
 begin_function
 specifier|static

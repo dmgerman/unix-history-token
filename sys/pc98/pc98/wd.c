@@ -4053,9 +4053,7 @@ directive|if
 literal|1
 argument|wdsleep(du->dk_ctrlr,
 literal|"wdopn1"
-argument|); 	du->dk_flags |= DKFL_LABELLING; 	du->dk_state = WANTOPEN; 	{ 	struct disklabel label;  	bzero(&label, sizeof label); 	label.d_secsize = du->dk_dd.d_secsize; 	label.d_nsectors = du->dk_dd.d_nsectors; 	label.d_ntracks = du->dk_dd.d_ntracks; 	label.d_ncylinders = du->dk_dd.d_ncylinders; 	label.d_secpercyl = du->dk_dd.d_secpercyl; 	label.d_secperunit = du->dk_dd.d_secperunit; 	error = dsopen(
-literal|"wd"
-argument|, dev, fmt,
+argument|); 	du->dk_flags |= DKFL_LABELLING; 	du->dk_state = WANTOPEN; 	{ 	struct disklabel label;  	bzero(&label, sizeof label); 	label.d_secsize = du->dk_dd.d_secsize; 	label.d_nsectors = du->dk_dd.d_nsectors; 	label.d_ntracks = du->dk_dd.d_ntracks; 	label.d_ncylinders = du->dk_dd.d_ncylinders; 	label.d_secpercyl = du->dk_dd.d_secpercyl; 	label.d_secperunit = du->dk_dd.d_secperunit; 	error = dsopen(dev, fmt,
 literal|0
 argument|,&du->dk_slices,&label); 	} 	du->dk_flags&= ~DKFL_LABELLING; 	wdsleep(du->dk_ctrlr,
 literal|"wdopn2"
@@ -4661,9 +4659,7 @@ endif|#
 directive|endif
 argument|du = wddrives[lunit]; 	wdsleep(du->dk_ctrlr,
 literal|"wdioct"
-argument|); 	error = dsioctl(
-literal|"wd"
-argument|, dev, cmd, addr, flags,&du->dk_slices); 	if (error != ENOIOCTL) 		return (error);
+argument|); 	error = dsioctl(dev, cmd, addr, flags,&du->dk_slices); 	if (error != ENOIOCTL) 		return (error);
 ifdef|#
 directive|ifdef
 name|PC98

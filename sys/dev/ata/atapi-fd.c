@@ -1355,8 +1355,6 @@ comment|/* initialize slice tables. */
 return|return
 name|dsopen
 argument_list|(
-literal|"afd"
-argument_list|,
 name|dev
 argument_list|,
 name|fmt
@@ -1525,8 +1523,6 @@ name|error
 operator|=
 name|dsioctl
 argument_list|(
-literal|"sd"
-argument_list|,
 name|dev
 argument_list|,
 name|cmd
