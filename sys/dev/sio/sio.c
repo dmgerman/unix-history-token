@@ -14177,9 +14177,19 @@ name|struct
 name|siocnstate
 name|sp
 decl_stmt|;
+name|int
+name|unit
+init|=
+literal|0
+decl_stmt|;
+comment|/* XXX random value! */
 name|siocniobase
 operator|=
 name|port
+expr_stmt|;
+name|siocnunit
+operator|=
+name|unit
 expr_stmt|;
 name|comdefaultrate
 operator|=
@@ -14199,7 +14209,7 @@ name|makedev
 argument_list|(
 name|CDEV_MAJOR
 argument_list|,
-literal|0
+name|unit
 argument_list|)
 expr_stmt|;
 name|s
@@ -14330,7 +14340,7 @@ name|unit
 init|=
 literal|1
 decl_stmt|;
-comment|/* XXX !!! */
+comment|/* XXX random value! */
 name|siogdbiobase
 operator|=
 name|port
