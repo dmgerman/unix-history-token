@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interactive.c	5.4 (Berkeley) %G%"
+literal|"@(#)interactive.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1845,6 +1845,11 @@ name|struct
 name|afile
 name|single
 decl_stmt|;
+name|struct
+name|entry
+modifier|*
+name|ep
+decl_stmt|;
 name|int
 name|size
 decl_stmt|;
@@ -1881,16 +1886,24 @@ operator|==
 literal|0
 condition|)
 block|{
-name|single
-operator|.
-name|fnum
+name|ep
 operator|=
 name|lookupname
 argument_list|(
 name|arg
 argument_list|)
+expr_stmt|;
+name|single
+operator|.
+name|fnum
+operator|=
+name|ep
+condition|?
+name|ep
 operator|->
 name|e_ino
+else|:
+literal|0
 expr_stmt|;
 name|single
 operator|.
