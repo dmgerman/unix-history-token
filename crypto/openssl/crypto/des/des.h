@@ -919,7 +919,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|prompt
+name|_prompt
 parameter_list|,
 name|int
 name|verify
@@ -939,7 +939,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|prompt
+name|_prompt
 parameter_list|,
 name|int
 name|verify
@@ -958,7 +958,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|prompt
+name|_prompt
 parameter_list|,
 name|int
 name|verify
@@ -1141,7 +1141,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|prompt
+name|_prompt
 parameter_list|,
 name|int
 name|verify
