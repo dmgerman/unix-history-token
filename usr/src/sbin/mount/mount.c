@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	8.17 (Berkeley) %G%"
+literal|"@(#)mount.c	8.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -738,16 +738,6 @@ else|else
 block|{
 if|if
 condition|(
-name|verbose
-condition|)
-block|{
-name|usage
-argument_list|()
-expr_stmt|;
-comment|/* NOTREACHED */
-block|}
-if|if
-condition|(
 operator|(
 name|mntsize
 operator|=
@@ -838,12 +828,9 @@ name|vfslist
 operator|!=
 name|NULL
 condition|)
-block|{
 name|usage
 argument_list|()
 expr_stmt|;
-comment|/* NOTREACHED */
-block|}
 if|if
 condition|(
 name|init_flags
@@ -899,6 +886,13 @@ argument_list|,
 operator|*
 name|argv
 argument_list|)
+expr_stmt|;
+comment|/* If it's an update, ignore the fstab file options. */
+name|fs
+operator|->
+name|fs_mntops
+operator|=
+name|NULL
 expr_stmt|;
 name|mntonname
 operator|=
@@ -1005,31 +999,17 @@ name|vfslist
 operator|==
 name|NULL
 operator|&&
-operator|(
-name|strchr
+name|strpbrk
 argument_list|(
 name|argv
 index|[
 literal|0
 index|]
 argument_list|,
-literal|':'
+literal|":@"
 argument_list|)
 operator|!=
 name|NULL
-operator|||
-name|strchr
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|,
-literal|'@'
-argument_list|)
-operator|!=
-name|NULL
-operator|)
 condition|)
 name|vfstype
 operator|=
@@ -1274,17 +1254,19 @@ if|if
 condition|(
 name|options
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
 condition|(
-operator|!
 name|mntopts
+operator|==
+name|NULL
 operator|||
-operator|!
 operator|*
 name|mntopts
+operator|==
+literal|'\0'
 condition|)
 name|options
 operator|=
