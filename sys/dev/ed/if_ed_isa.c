@@ -585,13 +585,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|devclass_t
-name|ed_isa_devclass
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
@@ -601,7 +594,7 @@ name|isa
 argument_list|,
 name|ed_isa_driver
 argument_list|,
-name|ed_isa_devclass
+name|ed_devclass
 argument_list|,
 literal|0
 argument_list|,

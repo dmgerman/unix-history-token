@@ -145,6 +145,12 @@ file|<dev/ed/if_edvar.h>
 end_include
 
 begin_decl_stmt
+name|devclass_t
+name|ed_devclass
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|ed_init
