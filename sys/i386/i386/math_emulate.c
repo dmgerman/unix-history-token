@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id: math_emulate.c,v 1.11 1995/05/11 19:26:09 rgrimes Exp $  */
+comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id: math_emulate.c,v 1.12 1995/05/30 07:59:35 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -448,7 +448,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"math_emulate: %04x:%08lx\n\r"
+literal|"math_emulate: %04x:%08lx\n"
 argument_list|,
 operator|(
 name|u_short
@@ -649,7 +649,7 @@ case|:
 comment|/* fxam */
 name|printf
 argument_list|(
-literal|"fxam not implemented\n\r"
+literal|"fxam not implemented\n"
 argument_list|)
 expr_stmt|;
 name|math_abort
@@ -1828,7 +1828,7 @@ case|:
 comment|/* ffree */
 name|printf
 argument_list|(
-literal|"ffree not implemented\n\r"
+literal|"ffree not implemented\n"
 argument_list|)
 expr_stmt|;
 name|math_abort
@@ -2284,7 +2284,7 @@ case|:
 comment|/* fild 16-bit mem ???? ATS */
 name|printf
 argument_list|(
-literal|"ffree not implemented\n\r"
+literal|"ffree not implemented\n"
 argument_list|)
 expr_stmt|;
 name|math_abort
@@ -3430,7 +3430,7 @@ return|;
 block|}
 name|printf
 argument_list|(
-literal|"Unknown math-insns: %04x:%08x %04x\n\r"
+literal|"Unknown math-insns: %04x:%08x %04x\n"
 argument_list|,
 operator|(
 name|u_short
