@@ -1,7 +1,39 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)endian.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)endian.h	7.8 (Berkeley) %G%  */
 end_comment
+
+begin_comment
+comment|/*  * Define _NOQUAD if the compiler does NOT support 64-bit integers.  */
+end_comment
+
+begin_comment
+comment|/* #define _NOQUAD */
+end_comment
+
+begin_comment
+comment|/*  * Define the order of 32-bit words in 64-bit words.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_QUAD_HIGHWORD
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|_QUAD_LOWWORD
+value|1
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
 
 begin_comment
 comment|/*  * Definitions for byte order, according to byte significance from low  * address to high.  */
@@ -47,22 +79,11 @@ name|BYTE_ORDER
 value|BIG_ENDIAN
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|KERNEL
-end_ifndef
-
 begin_include
 include|#
 directive|include
 file|<sys/cdefs.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|__BEGIN_DECLS
@@ -272,6 +293,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_POSIX_SOURCE */
+end_comment
 
 end_unit
 
