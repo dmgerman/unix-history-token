@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_uba.h	4.2	81/11/26	*/
+comment|/*	if_uba.h	4.3	81/12/03	*/
 end_comment
 
 begin_comment
@@ -10,8 +10,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IF_NUBAMR
-value|6
+name|IF_MAXNUBAMR
+value|10
 end_define
 
 begin_comment
@@ -26,6 +26,10 @@ name|short
 name|ifu_uban
 decl_stmt|;
 comment|/* uba number */
+name|short
+name|ifu_hlen
+decl_stmt|;
+comment|/* local net header length */
 name|struct
 name|uba_regs
 modifier|*
@@ -66,28 +70,20 @@ name|struct
 name|pte
 name|ifu_wmap
 index|[
-name|IF_NUBAMR
+name|IF_MAXNUBAMR
 index|]
 decl_stmt|;
 comment|/* base pages for output */
 name|short
-name|ifu_hlen
-decl_stmt|;
-comment|/* ifu_xswapd is set when we have swapped write pte's to do direct output */
-comment|/* bit i of ifu_xswapd */
-name|short
 name|ifu_xswapd
 decl_stmt|;
-comment|/* bit map of pages swapped */
-name|int
-name|ifu_ierrors
+comment|/* mask of clusters swapped */
+name|struct
+name|mbuf
+modifier|*
+name|ifu_xtofree
 decl_stmt|;
-name|int
-name|ifu_oerrors
-decl_stmt|;
-name|int
-name|ifu_collisions
-decl_stmt|;
+comment|/* pages being dma'd out */
 block|}
 struct|;
 end_struct

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.h	4.5	81/12/02	*/
+comment|/*	if.h	4.6	81/12/03	*/
 end_comment
 
 begin_comment
@@ -15,6 +15,11 @@ begin_struct
 struct|struct
 name|ifnet
 block|{
+name|char
+modifier|*
+name|if_name
+decl_stmt|;
+comment|/* name, e.g. ``en'' or ``lo'' */
 name|short
 name|if_unit
 decl_stmt|;
@@ -83,17 +88,25 @@ function_decl|;
 comment|/* uba reset routine */
 comment|/* generic interface statistics */
 name|int
-name|if_collisions
+name|if_ipackets
 decl_stmt|;
-comment|/* collisions on csma interfaces */
+comment|/* packets received on interface */
 name|int
 name|if_ierrors
 decl_stmt|;
-comment|/* input errors */
+comment|/* input errors on interface */
+name|int
+name|if_opackets
+decl_stmt|;
+comment|/* packets sent on interface */
 name|int
 name|if_oerrors
 decl_stmt|;
-comment|/* output errors */
+comment|/* output errors on interface */
+name|int
+name|if_collisions
+decl_stmt|;
+comment|/* collisions on csma interfaces */
 comment|/* end statistics */
 name|struct
 name|ifnet

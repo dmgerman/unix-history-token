@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket2.c	4.12	81/12/02	*/
+comment|/*	uipc_socket2.c	4.13	81/12/03	*/
 end_comment
 
 begin_include
@@ -242,12 +242,12 @@ operator|->
 name|so_timeo
 argument_list|)
 expr_stmt|;
-name|sorwakeup
+name|sowwakeup
 argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|sowwakeup
+name|sorwakeup
 argument_list|(
 name|so
 argument_list|)
@@ -677,7 +677,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Socket buffer (struct sockbuf) utility routines.  *  * Each socket contains two socket buffers: one for sending data and  * one for receiving data.  Each buffer contains a queue of mbufs,  * information about the number of mbufs and amount of data in the  * queue, and other fields allowing select() statements and notification  * on data availability to be implemented.  *  * Before using a new socket structure it is first necessary to reserve  * buffer space to the socket, by calling sbreserve.  This commits  * some of the available buffer space in the system buffer pool for the  * socket.  The space should be released by calling sbrelease when the  * socket is destroyed.  *  * The routine sbappend() is normally called to append new mbufs  * to a socket buffer, after checking that adequate space is available  * comparing the function spspace() with the amount of data to be added.  * Data is normally removed from a socket buffer in a protocol by  * first calling m_copy on the socket buffer mbuf chain and sending this  * to a peer, and then removing the data from the socket buffer with  * sbdrop when the data is acknowledged by the peer (or immediately  * in the case of unreliable protocols.  *  * Protocols which do not require connections place both source address  * and data information in socket buffer queues.  The source addresses  * are stored in single mbufs after each data item, and are easily found  * as the data items are all marked with end of record markers.  The  * sbappendaddr() routine stores a datum and associated address in  * a socket buffer.  Note that, unlike sbappend(), this routine checks  * for the caller that there will be enough space to store the data.  * It fails if there is not enough space, or if it cannot find  * a mbuf to store the address in.  *  * The higher-level routines sosend and soreceive (in socket.c)  * also add data to, and remove data from socket buffers.  */
+comment|/*  * Socket buffer (struct sockbuf) utility routines.  *  * Each socket contains two socket buffers: one for sending data and  * one for receiving data.  Each buffer contains a queue of mbufs,  * information about the number of mbufs and amount of data in the  * queue, and other fields allowing select() statements and notification  * on data availability to be implemented.  *  * Before using a new socket structure it is first necessary to reserve  * buffer space to the socket, by calling sbreserve.  This commits  * some of the available buffer space in the system buffer pool for the  * socket.  The space should be released by calling sbrelease when the  * socket is destroyed.  *  * The routine sbappend() is normally called to append new mbufs  * to a socket buffer, after checking that adequate space is available  * comparing the function spspace() with the amount of data to be added.  * Data is normally removed from a socket buffer in a protocol by  * first calling m_copy on the socket buffer mbuf chain and sending this  * to a peer, and then removing the data from the socket buffer with  * sbdrop when the data is acknowledged by the peer (or immediately  * in the case of unreliable protocols.)  *  * Protocols which do not require connections place both source address  * and data information in socket buffer queues.  The source addresses  * are stored in single mbufs after each data item, and are easily found  * as the data items are all marked with end of record markers.  The  * sbappendaddr() routine stores a datum and associated address in  * a socket buffer.  Note that, unlike sbappend(), this routine checks  * for the caller that there will be enough space to store the data.  * It fails if there is not enough space, or if it cannot find  * a mbuf to store the address in.  *  * The higher-level routines sosend and soreceive (in socket.c)  * also add data to, and remove data from socket buffers repectively.  */
 end_comment
 
 begin_comment

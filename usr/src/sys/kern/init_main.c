@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.22	81/11/18	*/
+comment|/*	init_main.c	4.23	81/12/03	*/
 end_comment
 
 begin_include
@@ -346,6 +346,19 @@ ifdef|#
 directive|ifdef
 name|INET
 name|pfinit
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+include|#
+directive|include
+file|"lo.h"
+if|#
+directive|if
+name|NLOOP
+operator|>
+literal|0
+name|loattach
 argument_list|()
 expr_stmt|;
 endif|#

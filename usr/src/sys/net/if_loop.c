@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_loop.c	4.2	81/12/02	*/
+comment|/*	if_loop.c	4.3	81/12/03	*/
 end_comment
 
 begin_comment
@@ -113,6 +113,12 @@ name|loif
 decl_stmt|;
 name|ifp
 operator|->
+name|if_name
+operator|=
+literal|"lo"
+expr_stmt|;
+name|ifp
+operator|->
 name|if_mtu
 operator|=
 name|LOMTU
@@ -125,15 +131,22 @@ name|LONET
 expr_stmt|;
 name|ifp
 operator|->
-name|if_output
+name|if_addr
 operator|=
-name|looutput
+name|if_makeaddr
+argument_list|(
+name|ifp
+operator|->
+name|if_net
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
-name|if_next
+name|if_output
 operator|=
-name|ifnet
+name|looutput
 expr_stmt|;
 name|if_attach
 argument_list|(
@@ -184,6 +197,11 @@ init|=
 name|splimp
 argument_list|()
 decl_stmt|;
+name|ifp
+operator|->
+name|if_opackets
+operator|++
+expr_stmt|;
 switch|switch
 condition|(
 name|pf
@@ -237,6 +255,11 @@ literal|0
 operator|)
 return|;
 block|}
+name|ifp
+operator|->
+name|if_ipackets
+operator|++
+expr_stmt|;
 name|splx
 argument_list|(
 name|s

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_usrreq.c	4.2	81/12/02	*/
+comment|/*	raw_usrreq.c	4.3	81/12/03	*/
 end_comment
 
 begin_include
@@ -237,7 +237,6 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
-comment|/*###45 [cc] rawintrq undefined %%%*/
 name|IF_DEQUEUE
 argument_list|(
 operator|&

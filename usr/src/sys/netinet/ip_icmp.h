@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_icmp.h 4.2 81/11/18 */
+comment|/* ip_icmp.h 4.3 81/12/03 */
 end_comment
 
 begin_comment
@@ -376,6 +376,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ICMP_PARAMPROB
+value|12
+end_define
+
+begin_comment
+comment|/* ip header bad */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ICMP_TSTAMP
 value|13
 end_define
@@ -415,17 +426,6 @@ end_define
 
 begin_comment
 comment|/* information reply */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ICMP_PARAMPROB
-value|12
-end_define
-
-begin_comment
-comment|/* ip header bad */
 end_comment
 
 end_unit

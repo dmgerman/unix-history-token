@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_fsm.h	4.9	81/11/26	*/
+comment|/*	tcp_fsm.h	4.10	81/12/03	*/
 end_comment
 
 begin_comment
@@ -184,7 +184,7 @@ name|TCPOUTFLAGS
 end_ifdef
 
 begin_comment
-comment|/*  * Flags used when sending segments in tcp_output.  * Basic flags (TH_RST,TH_ACK,TH_SYN,TH_FIN) are totally  * determined by state.  */
+comment|/*  * Flags used when sending segments in tcp_output.  * Basic flags (TH_RST,TH_ACK,TH_SYN,TH_FIN) are totally  * determined by state, with the proviso that TH_FIN is sent only  * if all data queued for output is included in the segment.  */
 end_comment
 
 begin_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubareg.h	4.25	81/12/02	*/
+comment|/*	ubareg.h	4.26	81/12/03	*/
 end_comment
 
 begin_comment
@@ -717,10 +717,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_break
-break|break;
-end_break
 
 begin_endif
 unit|\ 	} \ }

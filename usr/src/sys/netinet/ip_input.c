@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_input.c 1.21 81/12/02 */
+comment|/* ip_input.c 1.22 81/12/03 */
 end_comment
 
 begin_include
@@ -95,7 +95,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Ip initialization: fill in IP protocol switch table.  * All protocols not implemented in kernel go to raw IP protocol handler.  */
+comment|/*  * IP initialization: fill in IP protocol switch table.  * All protocols not implemented in kernel go to raw IP protocol handler.  */
 end_comment
 
 begin_macro

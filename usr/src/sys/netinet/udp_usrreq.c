@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	4.13	81/12/02	*/
+comment|/*	udp_usrreq.c	4.14	81/12/03	*/
 end_comment
 
 begin_include
@@ -1224,45 +1224,6 @@ block|}
 return|return
 operator|(
 literal|0
-operator|)
-return|;
-block|}
-end_block
-
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
-begin_macro
-name|udp_sense
-argument_list|(
-argument|m
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|COUNT
-argument_list|(
-name|UDP_SENSE
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"udp_sense\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EOPNOTSUPP
 operator|)
 return|;
 block|}

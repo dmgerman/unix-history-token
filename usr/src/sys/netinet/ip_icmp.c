@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_icmp.c	4.9	81/11/29	*/
+comment|/*	ip_icmp.c	4.10	81/12/03	*/
 end_comment
 
 begin_include
@@ -285,6 +285,7 @@ argument_list|(
 name|nip
 argument_list|)
 expr_stmt|;
+return|return;
 comment|/* 	 * Discard mbufs of original datagram 	 */
 name|free
 label|:
@@ -361,6 +362,11 @@ name|hlen
 decl_stmt|;
 name|int
 name|i
+decl_stmt|;
+specifier|extern
+name|u_char
+name|ip_protox
+index|[]
 decl_stmt|;
 name|COUNT
 argument_list|(
@@ -467,10 +473,23 @@ condition|)
 goto|goto
 name|free
 goto|;
-name|icmp_ctlinput
-argument_list|(
+operator|(
+operator|*
+name|protosw
+index|[
+name|ip_protox
+index|[
 name|ip
-argument_list|)
+operator|->
+name|ip_p
+index|]
+index|]
+operator|.
+name|pr_ctlinput
+operator|)
+operator|(
+name|m
+operator|)
 expr_stmt|;
 goto|goto
 name|free
@@ -730,55 +749,32 @@ expr_stmt|;
 block|}
 end_block
 
-begin_comment
-comment|/*  * Advise a higher level protocol of a problem reported by  * a gateway or another host.  */
-end_comment
-
 begin_macro
 name|icmp_ctlinput
 argument_list|(
-argument|ip
+argument|m
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|struct
-name|ip
+name|mbuf
 modifier|*
-name|ip
+name|m
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
-specifier|extern
-name|u_char
-name|ip_protox
-index|[]
-decl_stmt|;
-comment|/* XXX */
 name|COUNT
 argument_list|(
 name|ICMP_CTLINPUT
 argument_list|)
 expr_stmt|;
-operator|(
-operator|*
-name|protosw
-index|[
-name|ip_protox
-index|[
-name|ip
-operator|->
-name|ip_p
-index|]
-index|]
-operator|.
-name|pr_ctlinput
-operator|)
-operator|(
-name|ip
-operator|)
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 block|}
 end_block

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_pcb.h	4.1	81/11/20	*/
+comment|/*	in_pcb.h	4.2	81/12/03	*/
 end_comment
 
 begin_comment
@@ -20,6 +20,12 @@ modifier|*
 name|inp_prev
 decl_stmt|;
 comment|/* pointers to other pcb's */
+name|struct
+name|inpcb
+modifier|*
+name|inp_head
+decl_stmt|;
+comment|/* pointer back to chain of inpcb's 					   for this protocol */
 name|struct
 name|in_addr
 name|inp_faddr
