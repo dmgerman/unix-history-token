@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_inode.c	4.14	82/06/30	*/
+comment|/*	ufs_inode.c	4.15	82/07/01	*/
 end_comment
 
 begin_include
@@ -1429,29 +1429,6 @@ name|fs
 modifier|*
 name|fs
 decl_stmt|;
-name|i
-operator|=
-name|ip
-operator|->
-name|i_mode
-operator|&
-name|IFMT
-expr_stmt|;
-if|if
-condition|(
-name|i
-operator|!=
-name|IFREG
-operator|&&
-name|i
-operator|!=
-name|IFDIR
-operator|&&
-name|i
-operator|!=
-name|IFLNK
-condition|)
-return|return;
 comment|/* 	 * Clean inode on disk before freeing blocks 	 * to insure no duplicates if system crashes. 	 */
 name|itmp
 operator|=
@@ -1543,6 +1520,30 @@ operator||
 name|ICHG
 operator|)
 expr_stmt|;
+comment|/* 	 * Only plain files, directories and symbolic 	 * links contain blocks. 	 */
+name|i
+operator|=
+name|ip
+operator|->
+name|i_mode
+operator|&
+name|IFMT
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|!=
+name|IFREG
+operator|&&
+name|i
+operator|!=
+name|IFDIR
+operator|&&
+name|i
+operator|!=
+name|IFLNK
+condition|)
+return|return;
 comment|/* 	 * Now return blocks to free list... if machine 	 * crashes, they will be harmless MISSING blocks. 	 */
 name|dev
 operator|=
