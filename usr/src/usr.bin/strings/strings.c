@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1980, 1987 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -14,15 +14,18 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1980 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1980, 1987 The Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -36,15 +39,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strings.c	5.3 (Berkeley) %G%"
+literal|"@(#)strings.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
@@ -85,72 +91,6 @@ end_define
 
 begin_comment
 comment|/* default minimum string length */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EOS
-value|(char)NULL
-end_define
-
-begin_comment
-comment|/* end of string */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ERR
-value|-1
-end_define
-
-begin_comment
-comment|/* general error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ERREXIT
-value|1
-end_define
-
-begin_comment
-comment|/* error exit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NO
-value|0
-end_define
-
-begin_comment
-comment|/* false/no */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OK
-value|0
-end_define
-
-begin_comment
-comment|/* ok exit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|YES
-value|1
-end_define
-
-begin_comment
-comment|/* true/yes */
 end_comment
 
 begin_define
@@ -236,107 +176,190 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
+specifier|extern
+name|char
+modifier|*
+name|optarg
+decl_stmt|;
+specifier|extern
+name|int
+name|optind
+decl_stmt|;
 specifier|register
 name|int
 name|ch
 decl_stmt|,
-comment|/* character */
 name|cnt
 decl_stmt|;
-comment|/* general counter */
 specifier|register
 name|u_char
 modifier|*
 name|C
 decl_stmt|;
-comment|/* bfr pointer */
 name|EXEC
 modifier|*
 name|head
 decl_stmt|;
-comment|/* exec header pointer */
 name|int
 name|minlen
-init|=
-name|DEF_LEN
 decl_stmt|;
-comment|/* minimum string length */
 name|short
 name|asdata
-init|=
-name|NO
 decl_stmt|,
-comment|/* look in everything */
 name|oflg
 decl_stmt|;
-comment|/* print octal location */
 name|u_char
 modifier|*
 name|bfr
 decl_stmt|;
-comment|/* collection buffer */
 name|char
 modifier|*
 name|file
 decl_stmt|,
-comment|/* file name for error */
+modifier|*
+name|p
+decl_stmt|,
 modifier|*
 name|malloc
 argument_list|()
 decl_stmt|;
 comment|/* 	 * for backward compatibility, allow '-' to specify 'a' flag; no 	 * longer documented in the man page or usage string. 	 */
-for|for
-control|(
-operator|++
-name|argv
-init|;
-operator|*
-name|argv
-operator|&&
-operator|*
-operator|*
-name|argv
-operator|==
-literal|'-'
-condition|;
-operator|++
-name|argv
-control|)
-block|{
-for|for
-control|(
-name|cnt
+name|asdata
 operator|=
+literal|0
+expr_stmt|;
+name|minlen
+operator|=
+operator|-
 literal|1
-init|;
+expr_stmt|;
+while|while
+condition|(
 operator|(
-operator|*
+name|ch
+operator|=
+name|getopt
+argument_list|(
+name|argc
+argument_list|,
 name|argv
+argument_list|,
+literal|"-0123456789ao"
+argument_list|)
 operator|)
-index|[
-name|cnt
-index|]
-condition|;
-operator|++
-name|cnt
-control|)
+operator|!=
+name|EOF
+condition|)
 switch|switch
 condition|(
 operator|(
-operator|*
-name|argv
+name|char
 operator|)
-index|[
-name|cnt
-index|]
+name|ch
 condition|)
 block|{
+case|case
+literal|'0'
+case|:
+case|case
+literal|'1'
+case|:
+case|case
+literal|'2'
+case|:
+case|case
+literal|'3'
+case|:
+case|case
+literal|'4'
+case|:
+case|case
+literal|'5'
+case|:
+case|case
+literal|'6'
+case|:
+case|case
+literal|'7'
+case|:
+case|case
+literal|'8'
+case|:
+case|case
+literal|'9'
+case|:
+comment|/* 			 * kludge: strings was originally designed to take 			 * a number after a dash. 			 */
+if|if
+condition|(
+name|minlen
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|p
+operator|=
+name|argv
+index|[
+name|optind
+operator|-
+literal|1
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|p
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+operator|&&
+name|p
+index|[
+literal|1
+index|]
+operator|==
+name|ch
+operator|&&
+operator|!
+name|p
+index|[
+literal|2
+index|]
+condition|)
+name|minlen
+operator|=
+name|atoi
+argument_list|(
+operator|++
+name|p
+argument_list|)
+expr_stmt|;
+else|else
+name|minlen
+operator|=
+name|atoi
+argument_list|(
+name|argv
+index|[
+name|optind
+index|]
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|'-'
+case|:
 case|case
 literal|'a'
 case|:
 name|asdata
 operator|=
-name|YES
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -344,70 +367,45 @@ literal|'o'
 case|:
 name|oflg
 operator|=
-name|YES
+literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'?'
+case|:
 default|default:
-comment|/* getopt message compatible */
-if|if
-condition|(
-operator|!
-name|isdigit
-argument_list|(
-operator|(
-operator|*
-name|argv
-operator|)
-index|[
-name|cnt
-index|]
-argument_list|)
-condition|)
-block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"strings: illegal option -- %c\nusage: strings [-ao] [-#] [file ... ]\n"
-argument_list|,
-operator|(
-operator|*
-name|argv
-operator|)
-index|[
-name|cnt
-index|]
+literal|"usage: strings [-ao] [-#] [file ... ]\n"
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|ERREXIT
-argument_list|)
-expr_stmt|;
-block|}
-name|minlen
-operator|=
-name|atoi
-argument_list|(
-operator|*
-name|argv
-operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
+name|argc
+operator|-=
+name|optind
+expr_stmt|;
+name|argv
+operator|+=
+name|optind
+expr_stmt|;
 if|if
 condition|(
-name|cnt
+name|minlen
 operator|==
+operator|-
 literal|1
 condition|)
-name|asdata
+name|minlen
 operator|=
-name|YES
+name|DEF_LEN
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -430,14 +428,14 @@ condition|)
 block|{
 name|fputs
 argument_list|(
-literal|"strings: unable to allocate space.\n"
+literal|"strings: no space.\n"
 argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|ERREXIT
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -446,7 +444,7 @@ index|[
 name|minlen
 index|]
 operator|=
-name|EOS
+literal|'\0'
 expr_stmt|;
 name|file
 operator|=
@@ -482,7 +480,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|ERREXIT
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -499,7 +497,8 @@ literal|0
 expr_stmt|;
 name|read_len
 operator|=
-name|ERR
+operator|-
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -544,7 +543,8 @@ argument_list|)
 argument_list|)
 operator|)
 operator|==
-name|ERR
+operator|-
+literal|1
 condition|)
 block|{
 name|perror
@@ -554,7 +554,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|ERREXIT
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -598,7 +598,8 @@ argument_list|,
 name|L_SET
 argument_list|)
 operator|==
-name|ERR
+operator|-
+literal|1
 condition|)
 block|{
 name|perror
@@ -608,7 +609,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|ERREXIT
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -689,6 +690,10 @@ name|foff
 operator|-
 name|minlen
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|bfr
 argument_list|)
 expr_stmt|;
@@ -748,7 +753,7 @@ condition|)
 do|;
 name|exit
 argument_list|(
-name|OK
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -758,14 +763,16 @@ begin_comment
 comment|/*  * getch --  *	get next character from wherever  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|getch
 argument_list|()
+end_macro
+
+begin_block
 block|{
 operator|++
 name|foff
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|head_len
@@ -794,14 +801,12 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|read_len
 operator|==
-name|ERR
+operator|-
+literal|1
 operator|||
 name|read_len
 operator|--
@@ -814,16 +819,13 @@ name|getchar
 argument_list|()
 operator|)
 return|;
-end_if
-
-begin_return
 return|return
 operator|(
 name|EOF
 operator|)
 return|;
-end_return
+block|}
+end_block
 
-unit|}
 end_unit
 
