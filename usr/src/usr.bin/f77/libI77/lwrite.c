@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_lwrite[] = "@(#)lwrite.c	1.5";  *  * list directed write  */
+comment|/* char id_lwrite[] = "@(#)lwrite.c	1.6";  *  * list directed write  */
 end_comment
 
 begin_include
@@ -403,13 +403,33 @@ break|break;
 case|case
 name|TYLOGICAL
 case|:
+if|if
+condition|(
+name|len
+operator|==
+sizeof|sizeof
+argument_list|(
+name|short
+argument_list|)
+condition|)
+name|x
+operator|=
+name|ptr
+operator|->
+name|flshort
+expr_stmt|;
+else|else
+name|x
+operator|=
+name|ptr
+operator|->
+name|flint
+expr_stmt|;
 name|ERR
 argument_list|(
 name|lwrt_L
 argument_list|(
-name|ptr
-operator|->
-name|flint
+name|x
 argument_list|)
 argument_list|)
 expr_stmt|;
