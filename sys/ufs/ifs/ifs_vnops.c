@@ -132,7 +132,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
+file|<vm/uma.h>
 end_include
 
 begin_include
@@ -1262,7 +1262,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|zfree
+name|uma_zfree
 argument_list|(
 name|namei_zone
 argument_list|,

@@ -100,7 +100,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
+file|<vm/uma.h>
 end_include
 
 begin_include
@@ -449,7 +449,7 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
-name|vm_zone_t
+name|uma_zone_t
 name|ufsdirhash_zone
 decl_stmt|;
 end_decl_stmt
@@ -954,9 +954,11 @@ index|[
 name|i
 index|]
 operator|=
-name|zalloc
+name|uma_zalloc
 argument_list|(
 name|ufsdirhash_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 operator|)
 operator|==
@@ -1406,7 +1408,7 @@ index|]
 operator|!=
 name|NULL
 condition|)
-name|zfree
+name|uma_zfree
 argument_list|(
 name|ufsdirhash_zone
 argument_list|,
@@ -1597,7 +1599,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|zfree
+name|uma_zfree
 argument_list|(
 name|ufsdirhash_zone
 argument_list|,
@@ -5256,7 +5258,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|zfree
+name|uma_zfree
 argument_list|(
 name|ufsdirhash_zone
 argument_list|,
@@ -5309,7 +5311,7 @@ parameter_list|()
 block|{
 name|ufsdirhash_zone
 operator|=
-name|zinit
+name|uma_zcreate
 argument_list|(
 literal|"DIRHASH"
 argument_list|,
@@ -5320,11 +5322,17 @@ argument_list|(
 name|daddr_t
 argument_list|)
 argument_list|,
-literal|0
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
 argument_list|,
 literal|0
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|mtx_init
