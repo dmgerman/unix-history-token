@@ -6607,7 +6607,21 @@ case|:
 case|case
 name|SYS_RES_MEMORY
 case|:
-comment|/* 			 * Enable the I/O mode.  We should also be allocating 			 * resources too. XXX 			 */
+if|if
+condition|(
+operator|*
+name|rid
+operator|<
+name|PCIR_MAPS
+operator|+
+literal|4
+operator|*
+name|cfg
+operator|->
+name|nummaps
+condition|)
+block|{
+comment|/* 				 * Enable the I/O mode.  We should 				 * also be allocating resources 				 * too. XXX 				 */
 if|if
 condition|(
 name|PCI_ENABLE_IO
@@ -6624,6 +6638,7 @@ operator|(
 name|NULL
 operator|)
 return|;
+block|}
 break|break;
 block|}
 block|}
