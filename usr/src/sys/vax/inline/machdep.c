@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)machdep.c	1.1	(Berkeley)	%G%"
+literal|"@(#)machdep.c	1.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -577,6 +577,39 @@ argument_list|,
 name|argv
 index|[
 literal|2
+index|]
+argument_list|,
+name|target
+argument_list|)
+expr_stmt|;
+return|return;
+case|case
+literal|5
+case|:
+name|sprintf
+argument_list|(
+name|instbuf
+argument_list|,
+literal|"\t%s\t%s,%s,%s,r%d\n"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+name|argv
+index|[
+literal|2
+index|]
+argument_list|,
+name|argv
+index|[
+literal|3
 index|]
 argument_list|,
 name|target
