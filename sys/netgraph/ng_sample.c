@@ -1391,8 +1391,6 @@ argument_list|)
 expr_stmt|;
 name|NG_NODE_UNREF
 argument_list|(
-name|privdata
-operator|->
 name|node
 argument_list|)
 expr_stmt|;
