@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ac.c	4.1 (Berkeley) %G%"
+literal|"@(#)ac.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -359,15 +359,14 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|isdigit
+name|isprint
 argument_list|(
 name|c
 argument_list|)
-operator|||
-name|isalpha
-argument_list|(
+operator|&&
 name|c
-argument_list|)
+operator|!=
+literal|' '
 condition|)
 block|{
 if|if
@@ -1211,6 +1210,12 @@ name|p
 operator|++
 operator|==
 literal|'\0'
+operator|||
+name|k
+operator|==
+name|NMAX
+operator|-
+literal|1
 condition|)
 return|return
 operator|(
