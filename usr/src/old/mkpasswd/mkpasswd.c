@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1980, 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -14,15 +14,18 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1980 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1980, 1983 Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -36,15 +39,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkpasswd.c	5.1 (Berkeley) %G%"
+literal|"@(#)mkpasswd.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
@@ -70,24 +76,6 @@ directive|include
 file|<ndbm.h>
 end_include
 
-begin_decl_stmt
-name|char
-name|buf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|struct
-name|passwd
-modifier|*
-name|fgetpwent
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_function
 name|main
 parameter_list|(
@@ -95,6 +83,9 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 name|argv
@@ -136,6 +127,12 @@ decl_stmt|,
 name|maxlen
 init|=
 literal|0
+decl_stmt|;
+name|char
+name|buf
+index|[
+name|BUFSIZ
+index|]
 decl_stmt|;
 if|if
 condition|(
@@ -222,6 +219,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|umask
 argument_list|(
 literal|0
@@ -299,17 +299,15 @@ name|COMPACT
 parameter_list|(
 name|e
 parameter_list|)
-value|tp = pwd->pw_
-comment|/**/
-value|e; while (*cp++ = *tp++);
+value|tp = pwd->e; while (*cp++ = *tp++);
 name|COMPACT
 argument_list|(
-name|name
+name|pw_name
 argument_list|)
 expr_stmt|;
 name|COMPACT
 argument_list|(
-name|passwd
+name|pw_passwd
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -392,22 +390,22 @@ argument_list|)
 expr_stmt|;
 name|COMPACT
 argument_list|(
-name|comment
+name|pw_comment
 argument_list|)
 expr_stmt|;
 name|COMPACT
 argument_list|(
-name|gecos
+name|pw_gecos
 argument_list|)
 expr_stmt|;
 name|COMPACT
 argument_list|(
-name|dir
+name|pw_dir
 argument_list|)
 expr_stmt|;
 name|COMPACT
 argument_list|(
-name|shell
+name|pw_shell
 argument_list|)
 expr_stmt|;
 name|content
