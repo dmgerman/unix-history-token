@@ -8803,9 +8803,11 @@ operator|)
 return|;
 return|return
 operator|(
-name|kn
+name|so
 operator|->
-name|kn_data
+name|so_rcv
+operator|.
+name|sb_cc
 operator|>=
 name|so
 operator|->
