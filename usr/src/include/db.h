@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)db.h	8.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)db.h	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -62,7 +62,7 @@ begin_define
 define|#
 directive|define
 name|MAX_PAGE_NUMBER
-value|ULONG_MAX
+value|0xffffffff
 end_define
 
 begin_comment
@@ -71,7 +71,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|u_long
+name|u_int32_t
 name|pgno_t
 typedef|;
 end_typedef
@@ -80,7 +80,7 @@ begin_define
 define|#
 directive|define
 name|MAX_PAGE_OFFSET
-value|USHRT_MAX
+value|65535
 end_define
 
 begin_comment
@@ -89,7 +89,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|u_short
+name|u_int16_t
 name|indx_t
 typedef|;
 end_typedef
@@ -98,7 +98,7 @@ begin_define
 define|#
 directive|define
 name|MAX_REC_NUMBER
-value|ULONG_MAX
+value|0xffffffff
 end_define
 
 begin_comment
@@ -107,7 +107,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|u_long
+name|u_int32_t
 name|recno_t
 typedef|;
 end_typedef
@@ -327,7 +327,7 @@ begin_define
 define|#
 directive|define
 name|DB_LOCK
-value|0x00002000
+value|0x2000
 end_define
 
 begin_comment
@@ -338,7 +338,7 @@ begin_define
 define|#
 directive|define
 name|DB_SHMEM
-value|0x00004000
+value|0x4000
 end_define
 
 begin_comment
@@ -349,7 +349,7 @@ begin_define
 define|#
 directive|define
 name|DB_TXN
-value|0x00008000
+value|0x8000
 end_define
 
 begin_comment
@@ -545,7 +545,7 @@ comment|/* duplicate keys */
 name|u_long
 name|flags
 decl_stmt|;
-name|int
+name|u_int
 name|cachesize
 decl_stmt|;
 comment|/* bytes to cache */
@@ -557,15 +557,15 @@ name|int
 name|minkeypage
 decl_stmt|;
 comment|/* minimum keys per page */
-name|int
+name|u_int
 name|psize
 decl_stmt|;
 comment|/* page size */
-comment|/* comparison, prefix functions */
 name|int
 argument_list|(
 argument|*compare
 argument_list|)
+comment|/* comparison function */
 name|__P
 argument_list|(
 operator|(
@@ -579,10 +579,11 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
-name|int
+name|size_t
 argument_list|(
 argument|*prefix
 argument_list|)
+comment|/* prefix function */
 name|__P
 argument_list|(
 operator|(
@@ -627,24 +628,24 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|int
+name|u_int
 name|bsize
 decl_stmt|;
 comment|/* bucket size */
-name|int
+name|u_int
 name|ffactor
 decl_stmt|;
 comment|/* fill factor */
-name|int
+name|u_int
 name|nelem
 decl_stmt|;
 comment|/* number of elements */
-name|int
+name|u_int
 name|cachesize
 decl_stmt|;
 comment|/* bytes to cache */
+name|u_int32_t
 comment|/* hash function */
-name|int
 argument_list|(
 argument|*hash
 argument_list|)
@@ -694,11 +695,11 @@ comment|/* snapshot the input */
 name|u_long
 name|flags
 decl_stmt|;
-name|int
+name|u_int
 name|cachesize
 decl_stmt|;
 comment|/* bytes to cache */
-name|int
+name|u_int
 name|psize
 decl_stmt|;
 comment|/* page size */
@@ -724,34 +725,40 @@ name|RECNOINFO
 typedef|;
 end_typedef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__DBINTERFACE_PRIVATE
+end_ifdef
+
 begin_comment
-comment|/*  * Little endian<==> big endian long swap macros.  *	BLSWAP		swap a memory location  *	BLPSWAP		swap a referenced memory location  *	BLSWAP_COPY	swap from one location to another  */
+comment|/*  * Little endian<==> big endian 32-bit swap macros.  *	M_32_SWAP	swap a memory location  *	P_32_SWAP	swap a referenced memory location  *	P_32_COPY	swap from one location to another  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|BLSWAP
+name|M_32_SWAP
 parameter_list|(
 name|a
 parameter_list|)
-value|{							\ 	u_long _tmp = a;						\ 	((char *)&a)[0] = ((char *)&_tmp)[3];				\ 	((char *)&a)[1] = ((char *)&_tmp)[2];				\ 	((char *)&a)[2] = ((char *)&_tmp)[1];				\ 	((char *)&a)[3] = ((char *)&_tmp)[0];				\ }
+value|{							\ 	u_int32_t _tmp = a;						\ 	((char *)&a)[0] = ((char *)&_tmp)[3];				\ 	((char *)&a)[1] = ((char *)&_tmp)[2];				\ 	((char *)&a)[2] = ((char *)&_tmp)[1];				\ 	((char *)&a)[3] = ((char *)&_tmp)[0];				\ }
 end_define
 
 begin_define
 define|#
 directive|define
-name|BLPSWAP
+name|P_32_SWAP
 parameter_list|(
 name|a
 parameter_list|)
-value|{							\ 	u_long _tmp = *(u_long *)a;					\ 	((char *)a)[0] = ((char *)&_tmp)[3];				\ 	((char *)a)[1] = ((char *)&_tmp)[2];				\ 	((char *)a)[2] = ((char *)&_tmp)[1];				\ 	((char *)a)[3] = ((char *)&_tmp)[0];				\ }
+value|{							\ 	u_int32_t _tmp = *(u_int32_t *)a;				\ 	((char *)a)[0] = ((char *)&_tmp)[3];				\ 	((char *)a)[1] = ((char *)&_tmp)[2];				\ 	((char *)a)[2] = ((char *)&_tmp)[1];				\ 	((char *)a)[3] = ((char *)&_tmp)[0];				\ }
 end_define
 
 begin_define
 define|#
 directive|define
-name|BLSWAP_COPY
+name|P_32_COPY
 parameter_list|(
 name|a
 parameter_list|,
@@ -761,33 +768,33 @@ value|{						\ 	((char *)&(b))[0] = ((char *)&(a))[3];				\ 	((char *)&(b))[1] =
 end_define
 
 begin_comment
-comment|/*  * Little endian<==> big endian short swap macros.  *	BSSWAP		swap a memory location  *	BSPSWAP		swap a referenced memory location  *	BSSWAP_COPY	swap from one location to another  */
+comment|/*  * Little endian<==> big endian 16-bit swap macros.  *	M_16_SWAP	swap a memory location  *	P_16_SWAP	swap a referenced memory location  *	P_16_COPY	swap from one location to another  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|BSSWAP
+name|M_16_SWAP
 parameter_list|(
 name|a
 parameter_list|)
-value|{							\ 	u_short _tmp = a;						\ 	((char *)&a)[0] = ((char *)&_tmp)[1];				\ 	((char *)&a)[1] = ((char *)&_tmp)[0];				\ }
+value|{							\ 	u_int16_t _tmp = a;						\ 	((char *)&a)[0] = ((char *)&_tmp)[1];				\ 	((char *)&a)[1] = ((char *)&_tmp)[0];				\ }
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSPSWAP
+name|P_16_SWAP
 parameter_list|(
 name|a
 parameter_list|)
-value|{							\ 	u_short _tmp = *(u_short *)a;					\ 	((char *)a)[0] = ((char *)&_tmp)[1];				\ 	((char *)a)[1] = ((char *)&_tmp)[0];				\ }
+value|{							\ 	u_int16_t _tmp = *(u_int16_t *)a;				\ 	((char *)a)[0] = ((char *)&_tmp)[1];				\ 	((char *)a)[1] = ((char *)&_tmp)[0];				\ }
 end_define
 
 begin_define
 define|#
 directive|define
-name|BSSWAP_COPY
+name|P_16_COPY
 parameter_list|(
 name|a
 parameter_list|,
@@ -795,6 +802,11 @@ name|b
 parameter_list|)
 value|{						\ 	((char *)&(b))[0] = ((char *)&(a))[1];				\ 	((char *)&(b))[1] = ((char *)&(a))[0];				\ }
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|__BEGIN_DECLS
