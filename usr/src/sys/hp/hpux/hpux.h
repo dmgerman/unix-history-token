@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux.h 1.30 93/06/28$  *  *	@(#)hpux.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux.h 1.33 93/08/05$  *  *	@(#)hpux.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -192,6 +192,20 @@ define|#
 directive|define
 name|HPUXTIOCCONS
 value|_IO('t', 104)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HPUXTIOCSWINSZ
+value|_IOW('t', 106, struct winsize)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HPUXTIOCGWINSZ
+value|_IOR('t', 107, struct winsize)
 end_define
 
 begin_comment
@@ -512,6 +526,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|HPUXNDELAY
+value|00000004
+end_define
+
+begin_define
+define|#
+directive|define
 name|HPUXFCREAT
 value|00000400
 end_define
@@ -576,6 +597,98 @@ end_define
 begin_comment
 comment|/* Unlock segment */
 end_comment
+
+begin_comment
+comment|/* SHM stuff reflecting POSIX types */
+end_comment
+
+begin_struct
+struct|struct
+name|hpuxipc_perm
+block|{
+name|long
+name|uid
+decl_stmt|;
+comment|/* owner's user id */
+name|long
+name|gid
+decl_stmt|;
+comment|/* owner's group id */
+name|long
+name|cuid
+decl_stmt|;
+comment|/* creator's user id */
+name|long
+name|cgid
+decl_stmt|;
+comment|/* creator's group id */
+name|u_short
+name|mode
+decl_stmt|;
+comment|/* access modes */
+name|u_short
+name|seq
+decl_stmt|;
+comment|/* slot usage sequence number */
+name|long
+name|key
+decl_stmt|;
+comment|/* key */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|hpuxshmid_ds
+block|{
+name|struct
+name|hpuxipc_perm
+name|shm_perm
+decl_stmt|;
+comment|/* operation permission struct */
+name|int
+name|shm_segsz
+decl_stmt|;
+comment|/* segment size (bytes) */
+name|struct
+name|pte
+modifier|*
+name|shm_ptbl
+decl_stmt|;
+comment|/* ptr to associated page table */
+name|long
+name|shm_lpid
+decl_stmt|;
+comment|/* pid of last shmop */
+name|long
+name|shm_cpid
+decl_stmt|;
+comment|/* pid of creator */
+name|u_short
+name|shm_nattch
+decl_stmt|;
+comment|/* current # attached */
+name|u_short
+name|shm_cnattch
+decl_stmt|;
+comment|/* in memory # attached */
+name|time_t
+name|shm_atime
+decl_stmt|;
+comment|/* last shmat time */
+name|time_t
+name|shm_dtime
+decl_stmt|;
+comment|/* last shmdt time */
+name|time_t
+name|shm_ctime
+decl_stmt|;
+comment|/* last change time */
+comment|/* actually longer */
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/* HP-UX rtprio values */
@@ -869,6 +982,17 @@ define|#
 directive|define
 name|HPUXRLIMIT_NOFILE
 value|6
+end_define
+
+begin_comment
+comment|/*  * In BSD EAGAIN and EWOULDBLOCK are the same error code.  * However, for HP-UX we must split them out to seperate codes.  * The easiest way to do this was to check the return value of  * BSD routines which are known to return EAGAIN (but never  * EWOULDBLOCK) and change it to the pseudo-code OEAGAIN when  * we see it.  The error translation table will them map that  * code to the HP-UX EAGAIN value.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OEAGAIN
+value|82
 end_define
 
 end_unit
