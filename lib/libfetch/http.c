@@ -184,6 +184,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HTTP_BAD_RANGE
+value|416
+end_define
+
+begin_define
+define|#
+directive|define
 name|HTTP_PROTOCOL_ERROR
 value|999
 end_define
@@ -2243,15 +2250,36 @@ operator|-
 literal|1
 operator|)
 return|;
+name|p
+operator|+=
+literal|6
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'*'
+condition|)
+block|{
+name|first
+operator|=
+name|last
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+operator|++
+name|p
+expr_stmt|;
+block|}
+else|else
+block|{
 for|for
 control|(
 name|first
 operator|=
 literal|0
-operator|,
-name|p
-operator|+=
-literal|6
 init|;
 operator|*
 name|p
@@ -2321,6 +2349,7 @@ name|p
 operator|-
 literal|'0'
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|first
@@ -2389,6 +2418,38 @@ operator|-
 literal|1
 operator|)
 return|;
+if|if
+condition|(
+name|first
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|DEBUG
+argument_list|(
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"content range: [*/%lld]\n"
+argument_list|,
+operator|(
+name|long
+name|long
+operator|)
+name|len
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|*
+name|length
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
 name|DEBUG
 argument_list|(
 name|fprintf
@@ -2418,11 +2479,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 operator|*
-name|offset
-operator|=
-name|first
-expr_stmt|;
-operator|*
 name|length
 operator|=
 name|last
@@ -2430,6 +2486,12 @@ operator|-
 name|first
 operator|+
 literal|1
+expr_stmt|;
+block|}
+operator|*
+name|offset
+operator|=
+name|first
 expr_stmt|;
 operator|*
 name|size
@@ -4559,7 +4621,7 @@ case|:
 case|case
 name|HTTP_SEE_OTHER
 case|:
-comment|/* 			 * Not so fine, but we still have to read the headers to 			 * get the new location. 			 */
+comment|/* 			 * Not so fine, but we still have to read the 			 * headers to get the new location. 			 */
 break|break;
 case|case
 name|HTTP_NEED_AUTH
@@ -4569,7 +4631,7 @@ condition|(
 name|need_auth
 condition|)
 block|{
-comment|/* 				 * We already sent out authorization code, so there's 				 * nothing more we can do. 				 */
+comment|/* 				 * We already sent out authorization code, 				 * so there's nothing more we can do. 				 */
 name|_http_seterr
 argument_list|(
 name|conn
@@ -4595,7 +4657,7 @@ break|break;
 case|case
 name|HTTP_NEED_PROXY_AUTH
 case|:
-comment|/* 			 * If we're talking to a proxy, we already sent our proxy 			 * authorization code, so there's nothing more we can do. 			 */
+comment|/* 			 * If we're talking to a proxy, we already sent 			 * our proxy authorization code, so there's 			 * nothing more we can do. 			 */
 name|_http_seterr
 argument_list|(
 name|conn
@@ -4606,6 +4668,11 @@ expr_stmt|;
 goto|goto
 name|ouch
 goto|;
+case|case
+name|HTTP_BAD_RANGE
+case|:
+comment|/* 			 * This can happen if we ask for 0 bytes because 			 * we already have the whole file.  Consider this 			 * a success for now, and check sizes later. 			 */
+break|break;
 case|case
 name|HTTP_PROTOCOL_ERROR
 case|:
@@ -4956,6 +5023,60 @@ operator|=
 name|NULL
 expr_stmt|;
 continue|continue;
+block|}
+comment|/* requested range not satisfiable */
+if|if
+condition|(
+name|conn
+operator|->
+name|err
+operator|==
+name|HTTP_BAD_RANGE
+condition|)
+block|{
+if|if
+condition|(
+name|url
+operator|->
+name|offset
+operator|==
+name|size
+operator|&&
+name|url
+operator|->
+name|length
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* asked for 0 bytes; fake it */
+name|offset
+operator|=
+name|url
+operator|->
+name|offset
+expr_stmt|;
+name|conn
+operator|->
+name|err
+operator|=
+name|HTTP_OK
+expr_stmt|;
+break|break;
+block|}
+else|else
+block|{
+name|_http_seterr
+argument_list|(
+name|conn
+operator|->
+name|err
+argument_list|)
+expr_stmt|;
+goto|goto
+name|ouch
+goto|;
+block|}
 block|}
 comment|/* we have a hit or an error */
 if|if
