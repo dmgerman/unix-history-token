@@ -156,10 +156,16 @@ name|f
 operator|->
 name|f_offset
 operator|+=
+operator|(
+name|bcount
+operator|-
 name|resid
+operator|)
 expr_stmt|;
 return|return
 operator|(
+name|bcount
+operator|-
 name|resid
 operator|)
 return|;
