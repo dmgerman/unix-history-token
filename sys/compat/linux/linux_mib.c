@@ -944,7 +944,6 @@ name|DEBUG
 end_ifdef
 
 begin_decl_stmt
-specifier|static
 name|u_char
 name|linux_debug_map
 index|[
