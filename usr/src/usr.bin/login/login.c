@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)login.c	4.15 82/03/27"
+literal|"@(#)login.c	4.16 82/04/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -783,12 +783,18 @@ goto|;
 block|}
 name|hostf
 operator|=
+name|pwd
+operator|->
+name|pw_uid
+condition|?
 name|fopen
 argument_list|(
 literal|"/etc/hosts.equiv"
 argument_list|,
 literal|"r"
 argument_list|)
+else|:
+literal|0
 expr_stmt|;
 name|again
 label|:
@@ -2370,10 +2376,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_comment
-comment|/*  * return true if OK for root to login on this terminal  */
-end_comment
-
 begin_macro
 name|rootterm
 argument_list|(
@@ -2401,6 +2403,15 @@ index|[
 literal|100
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|rflag
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 if|if
 condition|(
 operator|(
