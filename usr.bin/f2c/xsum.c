@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**************************************************************** Copyright 1990, 1993 by AT&T Bell Laboratories and Bellcore.  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that the copyright notice and this permission notice and warranty disclaimer appear in supporting documentation, and that the names of AT&T Bell Laboratories or Bellcore or any of their entities not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  AT&T and Bellcore disclaim all warranties with regard to this software, including all implied warranties of merchantability and fitness.  In no event shall AT&T or Bellcore be liable for any special, indirect or consequential damages or any damages whatsoever resulting from loss of use, data or profits, whether in an action of contract, negligence or other tortious action, arising out of or in connection with the use or performance of this software. ****************************************************************/
+comment|/**************************************************************** Copyright 1990, 1993, 1994 by AT&T Bell Laboratories and Bellcore.  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that the copyright notice and this permission notice and warranty disclaimer appear in supporting documentation, and that the names of AT&T Bell Laboratories or Bellcore or any of their entities not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  AT&T and Bellcore disclaim all warranties with regard to this software, including all implied warranties of merchantability and fitness.  In no event shall AT&T or Bellcore be liable for any special, indirect or consequential damages or any damages whatsoever resulting from loss of use, data or profits, whether in an action of contract, negligence or other tortious action, arising out of or in connection with the use or performance of this software. ****************************************************************/
 end_comment
+
+begin_define
+define|#
+directive|define
+name|_POSIX_SOURCE
+end_define
 
 begin_include
 include|#
@@ -24,11 +30,27 @@ end_include
 begin_include
 include|#
 directive|include
+file|"sys/types.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"fcntl.h"
 end_include
 
 begin_comment
 comment|/* for declaration of open, O_RDONLY */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"unistd.h"
+end_include
+
+begin_comment
+comment|/* for read, close */
 end_comment
 
 begin_endif
@@ -1203,6 +1225,11 @@ operator|=
 operator|*
 name|argv
 expr_stmt|;
+name|argc
+operator|=
+name|argc
+expr_stmt|;
+comment|/* turn off "not used" warning */
 name|s
 operator|=
 operator|*

@@ -202,6 +202,7 @@ end_else
 begin_typedef
 typedef|typedef
 name|long
+name|int
 name|flag
 typedef|;
 end_typedef
@@ -209,6 +210,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|long
+name|int
 name|ftnlen
 typedef|;
 end_typedef
@@ -216,6 +218,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|long
+name|int
 name|ftnint
 typedef|;
 end_typedef
@@ -527,12 +530,9 @@ name|Multitype
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|long
-name|Long
-typedef|;
-end_typedef
+begin_comment
+comment|/*typedef long int Long;*/
+end_comment
 
 begin_comment
 comment|/* No longer used; formerly in Namelist */

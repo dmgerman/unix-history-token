@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**************************************************************** Copyright 1990, 1992, 1993 by AT&T Bell Laboratories and Bellcore.  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that the copyright notice and this permission notice and warranty disclaimer appear in supporting documentation, and that the names of AT&T Bell Laboratories or Bellcore or any of their entities not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  AT&T and Bellcore disclaim all warranties with regard to this software, including all implied warranties of merchantability and fitness.  In no event shall AT&T or Bellcore be liable for any special, indirect or consequential damages or any damages whatsoever resulting from loss of use, data or profits, whether in an action of contract, negligence or other tortious action, arising out of or in connection with the use or performance of this software. ****************************************************************/
+comment|/**************************************************************** Copyright 1990, 1992 - 1995 by AT&T Bell Laboratories and Bellcore.  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that the copyright notice and this permission notice and warranty disclaimer appear in supporting documentation, and that the names of AT&T Bell Laboratories or Bellcore or any of their entities not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  AT&T and Bellcore disclaim all warranties with regard to this software, including all implied warranties of merchantability and fitness.  In no event shall AT&T or Bellcore be liable for any special, indirect or consequential damages or any damages whatsoever resulting from loss of use, data or profits, whether in an action of contract, negligence or other tortious action, arising out of or in connection with the use or performance of this software. ****************************************************************/
 end_comment
 
 begin_include
@@ -184,17 +184,15 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+modifier|*
 name|token
-index|[
-name|MAXTOKENLEN
-operator|+
-literal|2
-index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|maxtoklen
+decl_stmt|,
 name|toklen
 decl_stmt|;
 end_decl_stmt
@@ -744,7 +742,7 @@ literal|"(doublecomplex *)0"
 block|,
 literal|"(logical1 *)0"
 block|,
-literal|"(shortlogical *)0)"
+literal|"(shortlogical *)0"
 block|,
 literal|"(logical *)0"
 block|,
@@ -1548,12 +1546,12 @@ parameter_list|)
 value|(struct x *) ckalloc((n)*sizeof(struct x))
 end_define
 
-begin_macro
+begin_function
+name|void
 name|fileinit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|Void
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -1565,17 +1563,6 @@ name|int
 name|i
 decl_stmt|,
 name|j
-decl_stmt|;
-specifier|extern
-name|void
-name|fmt_init
-argument_list|()
-decl_stmt|,
-name|mem_init
-argument_list|()
-decl_stmt|,
-name|np_init
-argument_list|()
 decl_stmt|;
 name|lastiolabno
 operator|=
@@ -1600,6 +1587,23 @@ expr_stmt|;
 name|infile
 operator|=
 name|stdin
+expr_stmt|;
+name|maxtoklen
+operator|=
+literal|502
+expr_stmt|;
+name|token
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|ckalloc
+argument_list|(
+name|maxtoklen
+operator|+
+literal|2
+argument_list|)
 expr_stmt|;
 name|memset
 argument_list|(
@@ -1872,18 +1876,15 @@ name|out_init
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|hashclear
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|(
+name|Void
+parameter_list|)
 comment|/* clear hash table */
-end_comment
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2050,14 +2051,14 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|procinit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|Void
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -2099,11 +2100,6 @@ decl_stmt|,
 modifier|*
 name|mem0_last
 decl_stmt|;
-specifier|extern
-name|void
-name|frexchain
-parameter_list|()
-function_decl|;
 name|curmemblock
 operator|=
 name|firstmemblock
@@ -2528,46 +2524,54 @@ literal|'z'
 argument_list|)
 expr_stmt|;
 comment|/* set class */
-name|setlog
-argument_list|()
-expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
+ifdef|#
+directive|ifdef
+name|KR_headers
 name|setimpl
-argument_list|(
-argument|type
-argument_list|,
-argument|length
-argument_list|,
-argument|c1
-argument_list|,
-argument|c2
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|type
+parameter_list|,
+name|length
+parameter_list|,
+name|c1
+parameter_list|,
+name|c2
+parameter_list|)
 name|int
 name|type
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ftnint
 name|length
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|c1
-decl_stmt|,
+decl_stmt|;
+name|int
 name|c2
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+else|#
+directive|else
+function|setimpl
+parameter_list|(
+name|int
+name|type
+parameter_list|,
+name|ftnint
+name|length
+parameter_list|,
+name|int
+name|c1
+parameter_list|,
+name|int
+name|c2
+parameter_list|)
+endif|#
+directive|endif
 block|{
 name|int
 name|i
@@ -2735,7 +2739,7 @@ block|}
 block|}
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

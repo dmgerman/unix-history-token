@@ -1679,21 +1679,5 @@ parameter_list|)
 value|if(noextflag) errext(s)
 end_define
 
-begin_comment
-comment|/* round a up to the nearest multiple of b:     a = b * floor ( (a + (b - 1)) / b )*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|roundup
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|( b * ( (a+b-1)/b) )
-end_define
-
 end_unit
 
