@@ -3664,6 +3664,7 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|rp_pciprobe
@@ -5025,6 +5026,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|rp_pciprobe

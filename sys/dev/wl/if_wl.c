@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: if_wl.c,v 1.18 1998/12/07 21:58:21 archie Exp $ */
+comment|/* $Id: if_wl.c,v 1.19 1998/12/09 03:30:51 eivind Exp $ */
 end_comment
 
 begin_comment
@@ -11818,7 +11818,10 @@ name|struct
 name|ip
 modifier|*
 name|ip
+init|=
+name|NULL
 decl_stmt|;
+comment|/* Avoid GCC warning */
 name|int
 name|i
 decl_stmt|;
