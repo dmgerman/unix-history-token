@@ -96,7 +96,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/soundcard.h>
+file|<sys/soundcard.h>
 end_include
 
 begin_include
