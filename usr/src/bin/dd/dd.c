@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dd.c	4.7 (Berkeley) %G%"
+literal|"@(#)dd.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2449,6 +2449,19 @@ condition|(
 name|conv
 operator|==
 name|null
+operator|&&
+operator|(
+name|cflag
+operator|&
+operator|~
+operator|(
+name|SYNC
+operator||
+name|NERR
+operator|)
+operator|)
+operator|==
+literal|0
 condition|)
 name|fflag
 operator|++
