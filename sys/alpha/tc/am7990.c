@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: am7990.c,v 1.1 1998/08/20 08:27:10 dfr Exp $ */
+comment|/* $Id: am7990.c,v 1.2 1998/12/04 22:54:42 archie Exp $ */
 end_comment
 
 begin_comment
@@ -5460,9 +5460,9 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|register
+name|int
 name|i
-expr_stmt|;
+decl_stmt|;
 specifier|static
 name|char
 name|etherbuf
