@@ -937,6 +937,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TDF_THRWAKEUP
+value|0x100000
+end_define
+
+begin_comment
+comment|/* Libthr thread must not suspend itself. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TDF_DEADLKTREAT
 value|0x800000
 end_define
