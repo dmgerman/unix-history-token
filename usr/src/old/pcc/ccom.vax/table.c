@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)table.c	1.32 (Berkeley) %G%"
+literal|"@(#)table.c	1.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1534,7 +1534,7 @@ name|NTEMP
 block|,
 name|RESC1
 block|,
-literal|"	movZF	AR,A1\n"
+literal|"	movZR	AR,A1\n"
 block|,
 name|REG
 block|,
