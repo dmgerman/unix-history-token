@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mime.c	8.24 (Berkeley) %G%"
+literal|"@(#)mime.c	8.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1600,6 +1600,24 @@ condition|)
 name|putline
 argument_list|(
 literal|"+++after putheader"
+argument_list|,
+name|mci
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hvalue
+argument_list|(
+literal|"MIME-Version"
+argument_list|,
+name|hdr
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|putline
+argument_list|(
+literal|"MIME-Version: 1.0"
 argument_list|,
 name|mci
 argument_list|)
