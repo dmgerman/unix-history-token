@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	route.h	4.6	82/03/30	*/
+comment|/*	route.h	4.7	82/03/31	*/
 end_comment
 
 begin_comment
-comment|/*  * Structure of kernel resident routing  * data base.  Assumption is user routing  * daemon maintains this data base based  * on routing information it gleans from  * gateway protocols it listens to (e.g. GGP).  *  * TO ADD:  *	more statistics -- smooth usage figures  */
+comment|/*  * Kernel resident routing tables.  *   * Each interface makes an entry at boot time so that  * correspondents directly addressible can be found.  * User programs can update this data base from information  * stored in the file system or information gleaned from  * routing protocol interactions with gateways.  *  * TODO:  *	keep statistics  *	smooth usage figures  */
 end_comment
 
 begin_struct
@@ -104,6 +104,17 @@ end_define
 begin_comment
 comment|/* host entry (net otherwise) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RTFREE
+parameter_list|(
+name|rt
+parameter_list|)
+define|\
+value|if ((rt)->rt_refcnt == 1) \ 		rtfree(rt); \ 	else \ 		(rt)->rt_refcnt--;
+end_define
 
 begin_ifdef
 ifdef|#

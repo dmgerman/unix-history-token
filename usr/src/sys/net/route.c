@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	route.c	4.5	82/03/30	*/
+comment|/*	route.c	4.6	82/03/31	*/
 end_comment
 
 begin_include
@@ -383,6 +383,15 @@ name|ro_rt
 operator|=
 name|rtmin
 expr_stmt|;
+if|if
+condition|(
+name|rtmin
+condition|)
+name|rtmin
+operator|->
+name|rt_refcnt
+operator|++
+expr_stmt|;
 block|}
 end_block
 
@@ -401,11 +410,6 @@ end_expr_stmt
 
 begin_block
 block|{
-name|COUNT
-argument_list|(
-name|FREEROUTE
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|rt
@@ -520,6 +524,12 @@ decl_stmt|;
 name|struct
 name|afhash
 name|h
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+name|oldmprev
 decl_stmt|;
 name|int
 name|af
@@ -733,6 +743,10 @@ name|h
 operator|.
 name|afh_nethash
 expr_stmt|;
+name|oldmprev
+operator|=
+name|mprev
+expr_stmt|;
 name|mprev
 operator|=
 operator|&
@@ -899,11 +913,6 @@ expr|struct
 name|rtentry
 argument_list|)
 expr_stmt|;
-operator|*
-name|mprev
-operator|=
-name|m
-expr_stmt|;
 name|rt
 operator|=
 name|mtod
@@ -921,24 +930,45 @@ operator|=
 operator|*
 name|new
 expr_stmt|;
-name|rt
-operator|->
-name|rt_hash
-operator|=
+if|if
+condition|(
 name|new
 operator|->
 name|rt_flags
 operator|&
 name|RTF_HOST
-condition|?
+condition|)
+block|{
+name|rt
+operator|->
+name|rt_hash
+operator|=
 name|h
 operator|.
 name|afh_hosthash
-else|:
+expr_stmt|;
+operator|*
+name|oldmprev
+operator|=
+name|m
+expr_stmt|;
+block|}
+else|else
+block|{
+name|rt
+operator|->
+name|rt_hash
+operator|=
 name|h
 operator|.
 name|afh_nethash
 expr_stmt|;
+operator|*
+name|mprev
+operator|=
+name|m
+expr_stmt|;
+block|}
 name|rt
 operator|->
 name|rt_use

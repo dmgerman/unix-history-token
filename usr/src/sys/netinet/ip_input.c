@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	1.37	82/03/30	*/
+comment|/*	ip_input.c	1.38	82/03/31	*/
 end_comment
 
 begin_include
@@ -277,6 +277,14 @@ end_function_decl
 begin_decl_stmt
 name|int
 name|ipforwarding
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ipprintfs
 init|=
 literal|0
 decl_stmt|;
@@ -738,6 +746,10 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|ipprintfs
+condition|)
 name|printf
 argument_list|(
 literal|"forward: src %x dst %x ttl %x\n"

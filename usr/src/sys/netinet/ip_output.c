@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_output.c	1.30	82/03/30	*/
+comment|/*	ip_output.c	1.31	82/03/31	*/
 end_comment
 
 begin_include
@@ -275,20 +275,6 @@ argument_list|(
 name|ro
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ro
-operator|!=
-operator|&
-name|iproute
-condition|)
-name|ro
-operator|->
-name|ro_rt
-operator|->
-name|rt_refcnt
-operator|++
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -313,13 +299,23 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"no route to %x\n"
+literal|"no route to %x (from %x, len %d)\n"
 argument_list|,
 name|ip
 operator|->
 name|ip_dst
 operator|.
 name|s_addr
+argument_list|,
+name|ip
+operator|->
+name|ip_src
+operator|.
+name|s_addr
+argument_list|,
+name|ip
+operator|->
+name|ip_len
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -352,6 +348,20 @@ operator|->
 name|ro_rt
 operator|->
 name|rt_gateway
+expr_stmt|;
+if|if
+condition|(
+name|ro
+operator|==
+operator|&
+name|iproute
+condition|)
+name|RTFREE
+argument_list|(
+name|ro
+operator|->
+name|ro_rt
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
