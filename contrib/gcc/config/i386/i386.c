@@ -42877,9 +42877,9 @@ name|label
 init|=
 name|ix86_expand_aligntest
 argument_list|(
-name|destreg
+name|countreg
 argument_list|,
-literal|2
+literal|4
 argument_list|)
 decl_stmt|;
 name|emit_insn
@@ -42961,7 +42961,7 @@ name|label
 init|=
 name|ix86_expand_aligntest
 argument_list|(
-name|destreg
+name|countreg
 argument_list|,
 literal|2
 argument_list|)
@@ -43045,7 +43045,7 @@ name|label
 init|=
 name|ix86_expand_aligntest
 argument_list|(
-name|destreg
+name|countreg
 argument_list|,
 literal|1
 argument_list|)
