@@ -6365,13 +6365,6 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
-name|PROC_LOCK
-argument_list|(
-name|td
-operator|->
-name|td_proc
-argument_list|)
-expr_stmt|;
 name|td
 operator|->
 name|td_proc
@@ -6379,13 +6372,6 @@ operator|->
 name|p_fd
 operator|=
 name|NULL
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|td
-operator|->
-name|td_proc
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
