@@ -625,6 +625,12 @@ block|}
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SCHED_4BSD
+end_ifdef
+
 begin_comment
 comment|/*  * Remove a thread from its KSEGRP's run queue.  * This in turn may remove it from a KSE if it was already assigned  * to one, possibly causing a new thread to be assigned to the KSE  * and the KSE getting a new priority.  */
 end_comment
@@ -831,6 +837,11 @@ comment|/* will replace it with another */
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Change the priority of a thread that is on the run queue.  */
