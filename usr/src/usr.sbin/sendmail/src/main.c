@@ -36,7 +36,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	5.11 (Berkeley) %G%"
+literal|"@(#)main.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -444,8 +444,40 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 	**  Be sure we have enough file descriptors. 	*/
+comment|/* 	**  Be sure we have enough file descriptors. 	**	But also be sure that 0, 1,& 2 are open. 	*/
 end_comment
+
+begin_expr_stmt
+name|i
+operator|=
+name|open
+argument_list|(
+literal|"/dev/null"
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_while
+while|while
+condition|(
+name|i
+operator|>=
+literal|0
+operator|&&
+name|i
+operator|<
+literal|2
+condition|)
+name|i
+operator|=
+name|dup
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+end_while
 
 begin_for
 for|for
