@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -920,7 +926,7 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-name|Debugger
+name|kdb_enter
 argument_list|(
 literal|"root vnode is locked.\n"
 argument_list|)

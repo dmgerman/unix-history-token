@@ -953,16 +953,10 @@ directive|ifdef
 name|DIAGNOSTIC
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|"opt_ddb.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DDB
+name|KDB
 end_ifdef
 
 begin_define
