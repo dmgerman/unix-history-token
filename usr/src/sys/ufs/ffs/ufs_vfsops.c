@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vfsops.c	7.62 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vfsops.c	7.63 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1321,7 +1321,7 @@ name|ufs_check_export
 parameter_list|(
 name|mp
 parameter_list|,
-name|fhp
+name|ufhp
 parameter_list|,
 name|nam
 parameter_list|,
@@ -1338,9 +1338,9 @@ modifier|*
 name|mp
 decl_stmt|;
 name|struct
-name|fid
+name|ufid
 modifier|*
-name|fhp
+name|ufhp
 decl_stmt|;
 name|struct
 name|mbuf
@@ -1364,12 +1364,6 @@ modifier|*
 name|credanonp
 decl_stmt|;
 block|{
-specifier|register
-name|struct
-name|ufid
-modifier|*
-name|ufhp
-decl_stmt|;
 specifier|register
 name|struct
 name|inode

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.84 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.85 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2610,7 +2610,7 @@ name|ufs_check_export
 argument_list|(
 name|mp
 argument_list|,
-name|fhp
+name|ufhp
 argument_list|,
 name|nam
 argument_list|,
