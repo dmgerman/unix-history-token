@@ -1819,19 +1819,6 @@ operator|*
 literal|3600
 condition|)
 block|{
-comment|/* I *hate* SCCS... */
-specifier|static
-name|char
-name|fmt
-index|[]
-init|=
-name|__CONCAT
-argument_list|(
-literal|"%l:%"
-argument_list|,
-literal|"M%p"
-argument_list|)
-decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -1846,7 +1833,7 @@ argument_list|)
 operator|-
 literal|1
 argument_list|,
-name|fmt
+literal|"%l:%M%p"
 argument_list|,
 name|tp
 argument_list|)
@@ -1870,19 +1857,6 @@ operator|*
 literal|86400
 condition|)
 block|{
-comment|/* I *hate* SCCS... */
-specifier|static
-name|char
-name|fmt
-index|[]
-init|=
-name|__CONCAT
-argument_list|(
-literal|"%a%"
-argument_list|,
-literal|"I%p"
-argument_list|)
-decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -1897,7 +1871,7 @@ argument_list|)
 operator|-
 literal|1
 argument_list|,
-name|fmt
+literal|"%a%I%p"
 argument_list|,
 name|tp
 argument_list|)
