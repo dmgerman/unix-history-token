@@ -8823,8 +8823,6 @@ name|ifp
 operator|->
 name|if_capenable
 operator||=
-name|IFCAP_VLAN_HWTAGGING
-operator||
 name|IFCAP_VLAN_MTU
 expr_stmt|;
 endif|#
