@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)arff.c	4.1 (Berkeley) %G%"
+literal|"@(#)arff.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -640,7 +640,7 @@ decl_stmt|;
 name|char
 name|response
 index|[
-literal|2
+literal|128
 index|]
 decl_stmt|;
 name|tty
@@ -670,7 +670,7 @@ name|tty
 argument_list|,
 name|response
 argument_list|,
-literal|2
+literal|128
 argument_list|)
 expr_stmt|;
 if|if
