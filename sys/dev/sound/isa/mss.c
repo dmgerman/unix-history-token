@@ -6944,10 +6944,10 @@ comment|/* OPT9250 XXX guess */
 block|{
 literal|0x1022b839
 block|,
-name|NULL
+literal|"Neomagic 256AV (non-ac97)"
 block|}
 block|,
-comment|/* NMX2210 - non-ac97 neomagic 256av */
+comment|/* NMX2210 */
 if|#
 directive|if
 literal|0
@@ -7185,6 +7185,7 @@ break|break;
 case|case
 literal|0x1022b839
 case|:
+comment|/* NMX2210 */
 name|mss
 operator|->
 name|io_rid
