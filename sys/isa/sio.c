@@ -3344,6 +3344,13 @@ block|}
 block|,
 comment|/* RSS0250 - 5614Jx3(G) Internal Modem */
 block|{
+literal|0x6202734a
+block|,
+name|NULL
+block|}
+block|,
+comment|/* RSS0262 - 5614Jx3[G] V90+K56Flex Modem */
+block|{
 literal|0xc100ad4d
 block|,
 name|NULL
