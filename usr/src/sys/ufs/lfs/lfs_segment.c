@@ -1,144 +1,132 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	5.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	5.6 (Berkeley) %G%  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LOGFS
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"namei.h"
+file|<sys/namei.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"resourcevar.h"
+file|<sys/resourcevar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"file.h"
+file|<sys/file.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"stat.h"
+file|<sys/stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"conf.h"
+file|<sys/conf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vnode.h"
+file|<sys/vnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"specdev.h"
+file|<sys/specdev.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"fifo.h"
+file|<sys/fifo.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"malloc.h"
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mount.h"
+file|<sys/mount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../ufs/lockf.h"
+file|<ufs/quota.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../ufs/quota.h"
+file|<ufs/inode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../ufs/inode.h"
+file|<ufs/dir.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../ufs/dir.h"
+file|<ufs/ufsmount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../ufs/ufsmount.h"
+file|<lfs/lfs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lfs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lfs_extern.h"
+file|<lfs/lfs_extern.h>
 end_include
 
 begin_comment
@@ -4400,6 +4388,7 @@ comment|/*  * Logical block number match routines used when traversing the dirty
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|match_data
 parameter_list|(
@@ -4423,6 +4412,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|match_dindir
 parameter_list|(
@@ -4450,6 +4440,7 @@ comment|/*  * These are single indirect blocks.  There are three types:  *  * th
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|match_indir
 parameter_list|(
@@ -4786,15 +4777,6 @@ else|else
 break|break;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* LOGFS */
-end_comment
 
 end_unit
 
