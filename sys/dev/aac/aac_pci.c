@@ -465,7 +465,7 @@ literal|0x0365
 block|,
 name|AAC_HWIF_STRONGARM
 block|,
-name|AAC_QUIRK_CAM_NORESET
+name|AAC_QUIRK_NOCAM
 block|,
 literal|"Adaptec SCSI RAID 5400S"
 block|}
@@ -499,7 +499,7 @@ literal|0x10c2
 block|,
 name|AAC_HWIF_STRONGARM
 block|,
-name|AAC_QUIRK_CAM_NORESET
+name|AAC_QUIRK_NOCAM
 block|,
 literal|"HP NetRaid-4M"
 block|}
