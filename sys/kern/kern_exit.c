@@ -1217,31 +1217,6 @@ operator|->
 name|p_pptr
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|tahoe
-argument_list|)
-comment|/* move this to cpu_exit */
-name|p
-operator|->
-name|p_addr
-operator|->
-name|u_pcb
-operator|.
-name|pcb_savacc
-operator|.
-name|faddr
-operator|=
-operator|(
-name|float
-operator|*
-operator|)
-name|NULL
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Clear curproc after we've done all operations 	 * that could block, and before tearing down the rest 	 * of the process state that might be used from clock, etc. 	 * Also, can't clear curproc while we're still runnable, 	 * as we're not on a run queue (we are current, just not 	 * a proper proc any longer!). 	 * 	 * Other substructures are freed from wait(). 	 */
 if|if
 condition|(
