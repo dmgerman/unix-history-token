@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	6.3	84/05/22	*/
+comment|/*	init_main.c	6.4	84/07/08	*/
 end_comment
 
 begin_include
@@ -272,6 +272,33 @@ operator|.
 name|u_procp
 operator|=
 name|p
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|vax
+comment|/* 	 * This assumes that the u. area is always mapped  	 * to the same physical address. Otherwise must be 	 * handled when copying the u. area in newproc(). 	 */
+name|u
+operator|.
+name|u_nd
+operator|.
+name|ni_iov
+operator|=
+operator|&
+name|u
+operator|.
+name|u_nd
+operator|.
+name|ni_iovec
+expr_stmt|;
+endif|#
+directive|endif
+name|u
+operator|.
+name|u_nd
+operator|.
+name|ni_iovcnt
+operator|=
+literal|1
 expr_stmt|;
 name|u
 operator|.
