@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)machdep.c	5.1 (Berkeley) %G%"
+literal|"@(#)machdep.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,6 +60,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
 end_include
 
 begin_ifdef
@@ -872,23 +878,42 @@ modifier|*
 name|md_gln
 parameter_list|()
 block|{
-name|char
+name|struct
+name|passwd
 modifier|*
-name|getlogin
-parameter_list|()
-function_decl|;
-name|char
+name|p
+decl_stmt|,
 modifier|*
-name|t
-decl_stmt|;
-name|t
-operator|=
-name|getlogin
+name|getpwuid
 argument_list|()
-expr_stmt|;
+decl_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|p
+operator|=
+name|getpwuid
+argument_list|(
+name|getuid
+argument_list|()
+argument_list|)
+operator|)
+condition|)
 return|return
 operator|(
-name|t
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+operator|)
+return|;
+return|return
+operator|(
+name|p
+operator|->
+name|pw_name
 operator|)
 return|;
 block|}
