@@ -160,12 +160,12 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|0
+name|ENXIO
 operator|)
 return|;
 return|return
 operator|(
-name|ENXIO
+literal|0
 operator|)
 return|;
 block|}
