@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fend.c 1.6 %G%"
+literal|"@(#)fend.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -217,6 +217,12 @@ argument_list|()
 decl_stmt|;
 name|int
 name|botlabel
+init|=
+name|getlab
+argument_list|()
+decl_stmt|;
+name|int
+name|proflabel
 init|=
 name|getlab
 argument_list|()
@@ -900,7 +906,25 @@ block|{
 comment|/* 		 *	call mcount for profiling 		 */
 name|putprintf
 argument_list|(
-literal|"	moval	1f,r0"
+literal|"	moval	"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+name|PREFIXFORMAT
+argument_list|,
+literal|1
+argument_list|,
+name|LABELPREFIX
+argument_list|,
+name|proflabel
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+literal|",r0"
 argument_list|,
 literal|0
 argument_list|)
@@ -926,11 +950,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|putprintf
+name|putlab
 argument_list|(
-literal|"1:"
-argument_list|,
-literal|0
+name|proflabel
 argument_list|)
 expr_stmt|;
 name|putprintf
