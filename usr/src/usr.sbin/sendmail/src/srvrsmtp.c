@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.24 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.25 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.24 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.25 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1003,50 +1003,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|strcasecmp
-argument_list|(
-name|p
-argument_list|,
-name|RealHostName
-argument_list|)
-operator|!=
-literal|0
-operator|&&
-operator|(
-name|strcasecmp
-argument_list|(
-name|RealHostName
-argument_list|,
-literal|"localhost"
-argument_list|)
-operator|!=
-literal|0
-operator|||
-name|strcasecmp
-argument_list|(
-name|p
-argument_list|,
-name|MyHostName
-argument_list|)
-operator|!=
-literal|0
-operator|)
-condition|)
-block|{
-name|auth_warning
-argument_list|(
-name|e
-argument_list|,
-literal|"Host %s claimed to be %s"
-argument_list|,
-name|RealHostName
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-block|}
 name|message
 argument_list|(
 literal|"250"
@@ -1168,6 +1124,50 @@ argument_list|,
 literal|"Host %s didn't use HELO protocol"
 argument_list|,
 name|RealHostName
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|sendinghost
+argument_list|,
+name|RealHostName
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|strcasecmp
+argument_list|(
+name|RealHostName
+argument_list|,
+literal|"localhost"
+argument_list|)
+operator|!=
+literal|0
+operator|||
+name|strcasecmp
+argument_list|(
+name|sendinghost
+argument_list|,
+name|MyHostName
+argument_list|)
+operator|!=
+literal|0
+operator|)
+condition|)
+block|{
+name|auth_warning
+argument_list|(
+name|e
+argument_list|,
+literal|"Host %s claimed to be %s"
+argument_list|,
+name|RealHostName
+argument_list|,
+name|sendinghost
 argument_list|)
 expr_stmt|;
 block|}
