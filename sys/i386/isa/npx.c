@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_isa.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_math_emulate.h"
 end_include
 
@@ -267,11 +273,22 @@ directive|include
 file|<i386/isa/intr_machdep.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_ISA
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<isa/isavar.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * 387 and 287 Numeric Coprocessor Extension (NPX) Driver.  */
@@ -3222,6 +3239,12 @@ name|npx_devclass
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_ISA
+end_ifdef
+
 begin_comment
 comment|/*  * We prefer to attach to the root nexus so that the usual case (exception 16)  * doesn't describe the processor as being `on isa'.  */
 end_comment
@@ -3463,6 +3486,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DEV_ISA */
+end_comment
 
 end_unit
 

@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_isa.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -85,6 +91,12 @@ directive|include
 file|<machine/pc/bios.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_ISA
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -102,6 +114,11 @@ include|#
 directive|include
 file|<isa/pnpvar.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1962,6 +1979,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_ISA
+end_ifdef
+
 begin_comment
 comment|/*  * PnP BIOS interface; enumerate devices only known to the system  * BIOS and save information about them for later use.  */
 end_comment
@@ -2936,6 +2959,15 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DEV_ISA */
+end_comment
 
 end_unit
 

@@ -20,6 +20,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_isa.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_mca.h"
 end_include
 
@@ -212,11 +218,22 @@ directive|include
 file|<isa/rtc.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_ISA
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<isa/isavar.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -4723,6 +4740,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_ISA
+end_ifdef
+
 begin_comment
 comment|/*  * Attach to the ISA PnP descriptors for the timer and realtime clock.  */
 end_comment
@@ -4938,6 +4961,15 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DEV_ISA */
+end_comment
 
 end_unit
 

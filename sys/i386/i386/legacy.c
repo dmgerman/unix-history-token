@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_isa.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -120,6 +126,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_ISA
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -148,6 +160,11 @@ include|#
 directive|include
 file|<i386/isa/isa.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -2921,6 +2938,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_ISA
+end_ifdef
+
 begin_comment
 comment|/*  * Placeholder which claims PnP 'devices' which describe system   * resources.  */
 end_comment
@@ -3118,6 +3141,15 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DEV_ISA */
+end_comment
 
 end_unit
 

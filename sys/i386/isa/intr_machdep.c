@@ -881,6 +881,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_ISA
+end_ifdef
+
 begin_comment
 comment|/*  * Bus attachment for the ISA PIC.  */
 end_comment
@@ -1147,6 +1153,15 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DEV_ISA */
+end_comment
 
 begin_comment
 comment|/*  * Handle a NMI, possibly a machine check.  * return true to panic system, false to ignore.  */
