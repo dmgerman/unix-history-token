@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_open.c	5.5 (Berkeley) %G%"
+literal|"@(#)rec_open.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -508,7 +508,8 @@ literal|0
 argument_list|)
 operator|)
 operator|==
-name|NULL
+operator|-
+literal|1
 condition|)
 goto|goto
 name|err
