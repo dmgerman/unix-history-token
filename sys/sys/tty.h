@@ -371,7 +371,7 @@ comment|/* Sleep priority for tty writes. */
 end_comment
 
 begin_comment
-comment|/*  * Userland version of struct tty, for sysctl  */
+comment|/*  * Userland version of struct tty, for sysctl.  */
 end_comment
 
 begin_struct
@@ -381,7 +381,7 @@ block|{
 name|size_t
 name|xt_size
 decl_stmt|;
-comment|/* Structure size */
+comment|/* Structure size. */
 name|long
 name|xt_rawcc
 decl_stmt|;
@@ -413,15 +413,15 @@ comment|/* Tty flags. */
 name|int
 name|xt_timeout
 decl_stmt|;
-comment|/* Timeout for ttywait() */
+comment|/* Timeout for ttywait(). */
 name|pid_t
 name|xt_pgid
 decl_stmt|;
-comment|/* Process group ID */
+comment|/* Process group ID. */
 name|pid_t
 name|xt_sid
 decl_stmt|;
-comment|/* Session ID */
+comment|/* Session ID. */
 name|struct
 name|termios
 name|xt_termios
