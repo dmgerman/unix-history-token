@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)driver.c	4.2 (Berkeley) %G%"
+literal|"@(#)driver.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -350,7 +350,7 @@ break|break;
 case|case
 literal|'t'
 case|:
-name|gets
+name|getstr
 argument_list|(
 name|s
 argument_list|,
@@ -561,7 +561,7 @@ break|break;
 case|case
 literal|'f'
 case|:
-name|gets
+name|getstr
 argument_list|(
 name|s
 argument_list|,
@@ -725,7 +725,7 @@ block|}
 end_block
 
 begin_macro
-name|gets
+name|getstr
 argument_list|(
 argument|s
 argument_list|,
@@ -776,7 +776,6 @@ name|s
 operator|=
 literal|'\0'
 expr_stmt|;
-return|return;
 block|}
 end_block
 
