@@ -1364,7 +1364,7 @@ condition|)
 block|{
 name|yp_error
 argument_list|(
-literal|"unable to register (MASTER_YPPASSWDPROG, 		    MASTER_YPPASSWDVERS, unix)."
+literal|"unable to register (MASTER_YPPASSWDPROG, \ 		    MASTER_YPPASSWDVERS, unix)."
 argument_list|)
 expr_stmt|;
 name|exit
