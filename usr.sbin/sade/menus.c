@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.26 1995/05/24 01:27:12 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.27 1995/05/24 09:00:51 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -45,10 +45,6 @@ block|,
 comment|/* U */
 name|DMENU_DISPLAY_FILE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"usage.hlp"
 block|,
 literal|0
@@ -64,10 +60,6 @@ block|,
 comment|/* D */
 name|DMENU_SUBMENU
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|MenuDocumentation
 block|,
@@ -84,10 +76,6 @@ block|,
 comment|/* L */
 name|DMENU_SUBMENU
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|MenuOptionsLanguage
 block|,
@@ -104,10 +92,6 @@ block|,
 comment|/* O */
 name|DMENU_SUBMENU
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|MenuOptions
 block|,
@@ -124,10 +108,6 @@ block|,
 comment|/* P */
 name|DMENU_SUBMENU
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|MenuInstall
 block|,
@@ -189,10 +169,6 @@ block|,
 comment|/* R */
 name|DMENU_DISPLAY_FILE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"README"
 block|,
 literal|0
@@ -208,10 +184,6 @@ block|,
 comment|/* H */
 name|DMENU_DISPLAY_FILE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"hardware.hlp"
 block|,
 literal|0
@@ -227,10 +199,6 @@ block|,
 comment|/* I */
 name|DMENU_DISPLAY_FILE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"install.hlp"
 block|,
 literal|0
@@ -246,10 +214,6 @@ block|,
 comment|/* C */
 name|DMENU_DISPLAY_FILE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"COPYRIGHT"
 block|,
 literal|0
@@ -265,10 +229,6 @@ block|,
 comment|/* R */
 name|DMENU_DISPLAY_FILE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"RELNOTES"
 block|,
 literal|0
@@ -284,10 +244,6 @@ block|,
 comment|/* F */
 name|DMENU_DISPLAY_FILE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"faq.hlp"
 block|,
 literal|0
@@ -337,10 +293,6 @@ block|,
 comment|/* D */
 name|DMENU_CALL
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 name|lang_set_Danish
 block|,
 literal|0
@@ -356,10 +308,6 @@ block|,
 comment|/* D */
 name|DMENU_CALL
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 name|lang_set_Dutch
 block|,
 literal|0
@@ -375,10 +323,6 @@ block|,
 comment|/* E */
 name|DMENU_CALL
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 name|lang_set_English
 block|,
 literal|0
@@ -394,10 +338,6 @@ block|,
 comment|/* F */
 name|DMENU_CALL
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 name|lang_set_French
 block|,
 literal|0
@@ -413,10 +353,6 @@ block|,
 comment|/* G */
 name|DMENU_CALL
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 name|lang_set_German
 block|,
 literal|0
@@ -432,10 +368,6 @@ block|,
 comment|/* I */
 name|DMENU_CALL
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 name|lang_set_Italian
 block|,
 literal|0
@@ -451,10 +383,6 @@ block|,
 comment|/* J */
 name|DMENU_CALL
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 name|lang_set_Japanese
 block|,
 literal|0
@@ -470,10 +398,6 @@ block|,
 comment|/* N */
 name|DMENU_CALL
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 name|lang_set_Norwegian
 block|,
 literal|0
@@ -489,10 +413,6 @@ block|,
 comment|/* R */
 name|DMENU_CALL
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 name|lang_set_Russian
 block|,
 literal|0
@@ -508,10 +428,6 @@ block|,
 comment|/* S */
 name|DMENU_CALL
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 name|lang_set_Spanish
 block|,
 literal|0
@@ -527,10 +443,6 @@ block|,
 comment|/* S */
 name|DMENU_CALL
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 name|lang_set_Swedish
 block|,
 literal|0
@@ -583,11 +495,11 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Choose a Floppy drive"
 block|,
-literal|"FreeBSD can be installed from floppy disk media, though\n\ not without some pain.  You should have prepared your floppy\n\ distribution media using the DOS floppy install-set construction\n\ procedure (available on the FreeBSD CDROM or the net under the\n\ tools/dos directory) or have otherwise prepared a set of diskettes\n\ for each distribution that properly contains all the components of\n\ the distribution plus the extraction and checksumming scripts."
+literal|"You have more than one floppy drive.  Please chose the floppy\n\ drive you'd like to use for this operation"
 block|,
-literal|"Press F1 to read the installation guide"
+name|NULL
 block|,
-literal|"install.hlp"
+name|NULL
 block|,
 block|{
 block|{
@@ -649,10 +561,6 @@ literal|"ftp.freebsd.org"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftp=ftp://ftp.freebsd.org/pub/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
@@ -667,10 +575,6 @@ literal|"freefall.cdrom.com"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftp=ftp://freefall.cdrom.com/pub/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
@@ -685,10 +589,6 @@ literal|"Specify some other ftp site by URL"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftp=other"
 block|,
 literal|0
@@ -703,10 +603,6 @@ literal|"ftp.physics.usyd.edu.au"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftp=ftp://ftp.physics.usyd.edu.au/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
@@ -721,10 +617,6 @@ literal|"nic.funet.fi"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftp=ftp://nic.funet.fi/pub/unix/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
@@ -739,10 +631,6 @@ literal|"ftp.ibp.fr"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftp=ftp://ftp.ibp.fr/pub/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
@@ -757,10 +645,6 @@ literal|"ftp.uni-duisburg.de"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftp=ftp://ftp.uni-duisburg.de/pub/unix/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
@@ -773,10 +657,6 @@ literal|"orgchem.weizmann.ac.il"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftp=ftp://orgchem.weizmann.ac.il/pub/FreeBSD-2.0.5-ALPHA"
 block|,
 literal|0
@@ -791,10 +671,6 @@ literal|"ftp.sra.co.jp"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftp=ftp://ftp.sra.co.jp/pub/os/FreeBSD/distribution/2.0.5-ALPHA"
 block|,
 literal|0
@@ -809,10 +685,6 @@ literal|"ftp.mei.co.jp"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftp=ftp://ftp.mei.co.jp/free/PC-UNIX/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
@@ -827,10 +699,6 @@ literal|"ftp.waseda.ac.jp"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftp=ftp://ftp.waseda.ac.jp/pub/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
@@ -845,10 +713,6 @@ literal|"ftp.pu-toyama.ac.jp"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftp=ftp://ftp.pu-toyama.ac.jp/pub/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
@@ -863,10 +727,6 @@ literal|"ftpsv1.u-aizu.ac.jp"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftp=ftp://ftpsv1.u-aizu.ac.jp/pub/os/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
@@ -881,10 +741,6 @@ literal|"tutserver.tutcc.tut.ac.jp"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftp=ftp://tutserver.tutcc.tut.ac.jp/FreeBSD/FreeBSD-2.0.5-ALPHA"
 block|,
 literal|0
@@ -899,10 +755,6 @@ literal|"ftp.ee.uec.ac.jp"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftp=ftp://ftp.ee.uec.ac.jp/pub/os/FreeBSD.other/FreeBSD-2.0.5-ALPHA"
 block|,
 literal|0
@@ -917,10 +769,6 @@ literal|"ftp.cau.ac.kr"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftp=ftp://ftp.cau.ac.kr/pub/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
@@ -935,10 +783,6 @@ literal|"ftp.nl.net"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftp=ftp://ftp.nl.net/pub/os/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
@@ -953,10 +797,6 @@ literal|"ftp.kiae.su"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftp=ftp://ftp.kiae.su/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
@@ -971,10 +811,6 @@ literal|"ftp.luth.se"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftp=ftp://ftp.luth.se/pub/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
@@ -989,10 +825,6 @@ literal|"netbsd.csie.nctu.edu.tw"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftp=ftp://netbsd.csie.nctu.edu.tw/pub/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
@@ -1007,10 +839,6 @@ literal|"ftp.nectec.or.th"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftp=ftp://ftp.nectec.or.th/pub/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
@@ -1025,10 +853,6 @@ literal|"ftp.demon.co.uk"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftp=ftp://ftp.demon.co.uk/pub/BSD/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
@@ -1043,10 +867,6 @@ literal|"src.doc.ic.ac.uk"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftp=ftp://src.doc.ic.ac.uk/packages/unix/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
@@ -1061,10 +881,6 @@ literal|"unix.hensa.ac.uk"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftp=ftp://unix.hensa.ac.uk/pub/walnut.creek/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
@@ -1079,10 +895,6 @@ literal|"ref.tfs.com"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftp=ftp://ref.tfs.com/pub/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
@@ -1097,10 +909,6 @@ literal|"ftp.dataplex.net"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftp=ftp://ftp.dataplex.net/pub/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
@@ -1115,10 +923,6 @@ literal|"kryten.atinc.com"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftp=ftp://kryten.atinc.com/pub/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
@@ -1133,10 +937,6 @@ literal|"ftp.neosoft.com"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftp=ftp://ftp.neosoft.com/systems/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
@@ -1189,11 +989,11 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Choose a network interface type"
 block|,
-literal|"FreeBSD can be installed directly over a network, using NFS or FTP.\n If you're using an ethernet card to talk to the world then setup is\n\ pretty straight-forward.  If you are using PPP over a serial device\n\ (cuaa0 or cuaa1) then you may need to dial your service provider using\n\ a special PPP utility we provide for that purpose.  You can also install\n\ over your parallel port using a special \"laplink\" cable, though this\n\ only works if you have another FreeBSD machine running a fairly recent\n\ (2.0R or later) release to talk to.\n\n\ To use PPP, select one of the serial devices, otherwise select lp0 for\n\ the parallel port or one of the ethernet controllers (if you have one)\n\ for an ethernet installation."
+literal|"FreeBSD can be installed directly over a network, using NFS or FTP.\n If you are using PPP over a serial device (cuaa0 or cuaa1) as opposed\n\ to a direct ethernet connection, then you may need to first dial your\n\ service provider using a special utility we provide for that purpose.\n\ You can also install over a parallel port using a special \"laplink\"\n\ cable, though this only works if you have another FreeBSD machine running\n\ a fairly recent (2.0R or later) release to talk to.\n\n\ To use PPP, select one of the serial devices, otherwise select lp0 for\n\ the parallel port or one of the ethernet controllers (if you have one)\n\ for an ethernet installation."
 block|,
-literal|"Press F1 to read PPP user manual"
+literal|"Press F1 to read network configuration manual"
 block|,
-literal|"ppp.0"
+literal|"network_device.hlp"
 block|,
 block|{
 block|{
@@ -1233,10 +1033,6 @@ literal|"Install from a FreeBSD CDROM"
 block|,
 name|DMENU_CALL
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 name|mediaSetCDROM
 block|,
 literal|0
@@ -1251,10 +1047,6 @@ literal|"Install from a DOS partition"
 block|,
 name|DMENU_CALL
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 name|mediaSetDOS
 block|,
 literal|0
@@ -1269,10 +1061,6 @@ literal|"Install from a UFS or NFS mounted distribution"
 block|,
 name|DMENU_CALL
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 name|mediaSetFS
 block|,
 literal|0
@@ -1287,10 +1075,6 @@ literal|"Install from a floppy disk set"
 block|,
 name|DMENU_CALL
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 name|mediaSetFloppy
 block|,
 literal|0
@@ -1305,10 +1089,6 @@ literal|"Install from an Internet FTP server"
 block|,
 name|DMENU_CALL
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 name|mediaSetFTP
 block|,
 literal|0
@@ -1323,10 +1103,6 @@ literal|"Install from SCSI or QIC tape"
 block|,
 name|DMENU_CALL
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 name|mediaSetTape
 block|,
 literal|0
@@ -1371,10 +1147,6 @@ literal|"Full sources, binaries and doc but no games [171MB]"
 block|,
 name|DMENU_CALL
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 name|distSetDeveloper
 block|,
 literal|0
@@ -1389,10 +1161,6 @@ literal|"Same as above, but includes XFree86 [196MB]"
 block|,
 name|DMENU_CALL
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 name|distSetXDeveloper
 block|,
 literal|0
@@ -1407,10 +1175,6 @@ literal|"Average user - binaries and doc but no sources [19MB]"
 block|,
 name|DMENU_CALL
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 name|distSetUser
 block|,
 literal|0
@@ -1425,10 +1189,6 @@ literal|"Same as above, but includes XFree86 [45MB]"
 block|,
 name|DMENU_CALL
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 name|distSetXUser
 block|,
 literal|0
@@ -1443,10 +1203,6 @@ literal|"The smallest configuration possible [15MB]"
 block|,
 name|DMENU_CALL
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 name|distSetMinimum
 block|,
 literal|0
@@ -1461,10 +1217,6 @@ literal|"All sources, binaries and XFree86 binaries [203MB]"
 block|,
 name|DMENU_CALL
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 name|distSetEverything
 block|,
 literal|0
@@ -1479,10 +1231,6 @@ literal|"Specify your own distribution set [?]"
 block|,
 name|DMENU_SUBMENU
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|MenuDistributions
 block|,
@@ -1524,10 +1272,6 @@ literal|"Binary base distribution (required) [36MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|Dists
 block|,
@@ -1543,10 +1287,6 @@ literal|"Commercial demos and shareware [10MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|Dists
 block|,
@@ -1562,10 +1302,6 @@ literal|"FreeBSD 1.x binary compatability package [2MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|Dists
 block|,
@@ -1581,10 +1317,6 @@ literal|"FreeBSD 2.0 binary compatability package [2MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|Dists
 block|,
@@ -1600,10 +1332,6 @@ literal|"DES encryption code and sources [.3MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|Dists
 block|,
@@ -1619,10 +1347,6 @@ literal|"Spelling checker disctionary files [4.2MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|Dists
 block|,
@@ -1638,10 +1362,6 @@ literal|"Games and other amusements (non-commercial) [6.4MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|Dists
 block|,
@@ -1657,10 +1377,6 @@ literal|"GNU info files [4.1MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|Dists
 block|,
@@ -1676,10 +1392,6 @@ literal|"System manual pages - strongly recommended [3.3MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|Dists
 block|,
@@ -1695,10 +1407,6 @@ literal|"Profiled versions of the libraries [3.3MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|Dists
 block|,
@@ -1714,10 +1422,6 @@ literal|"Sources for everything but DES [120MB]"
 block|,
 name|DMENU_CALL
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 name|distSetSrc
 block|,
 literal|0
@@ -1730,10 +1434,6 @@ literal|"The XFree86 3.1.1L distribution [?]"
 block|,
 name|DMENU_SUBMENU
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|MenuXF86Select
 block|,
@@ -1773,10 +1473,6 @@ literal|"top-level files in /usr/src [300K]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|SrcDists
 block|,
@@ -1792,10 +1488,6 @@ literal|"/usr/src/gnu (software from the GNU Project) [42MB]]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|SrcDists
 block|,
@@ -1811,10 +1503,6 @@ literal|"/usr/src/etc (miscellaneous system files) [460K]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|SrcDists
 block|,
@@ -1830,10 +1518,6 @@ literal|"/usr/src/games (diversions) [7.8MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|SrcDists
 block|,
@@ -1849,10 +1533,6 @@ literal|"/usr/src/include (header files) [467K]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|SrcDists
 block|,
@@ -1868,10 +1548,6 @@ literal|"/usr/src/lib (system libraries) [9.2MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|SrcDists
 block|,
@@ -1887,10 +1563,6 @@ literal|"/usr/src/libexec (system programs) [1.2MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|SrcDists
 block|,
@@ -1906,10 +1578,6 @@ literal|"/usr/src/lkm (Loadable Kernel Modules) [193K]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|SrcDists
 block|,
@@ -1925,10 +1593,6 @@ literal|"/usr/src/release (release-generation tools) [533K]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|SrcDists
 block|,
@@ -1944,10 +1608,6 @@ literal|"/usr/src/sbin (system binaries) [1.3MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|SrcDists
 block|,
@@ -1963,10 +1623,6 @@ literal|"/usr/src/share (documents and shared files) [10MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|SrcDists
 block|,
@@ -1982,10 +1638,6 @@ literal|"/usr/src/sys (FreeBSD kernel) [13MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|SrcDists
 block|,
@@ -2001,10 +1653,6 @@ literal|"/usr/src/usr.bin (user binaries) [13MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|SrcDists
 block|,
@@ -2020,10 +1668,6 @@ literal|"/usr/src/usr.sbin (aux system binaries) [14MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|SrcDists
 block|,
@@ -2039,10 +1683,6 @@ literal|"XFree86 3.1.1L source + contrib distribution [200MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|SrcDists
 block|,
@@ -2153,10 +1793,6 @@ literal|"X client applications and shared libs [4MB]."
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|XF86Dists
 block|,
@@ -2172,10 +1808,6 @@ literal|"Data files needed at runtime [600K]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|XF86Dists
 block|,
@@ -2191,10 +1823,6 @@ literal|"Customizable xinit runtime configuration file [100K]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|XF86Dists
 block|,
@@ -2210,10 +1838,6 @@ literal|"Customizable xdm runtime configuration file [100K]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|XF86Dists
 block|,
@@ -2229,10 +1853,6 @@ literal|"READMEs and XFree86 specific man pages [500K]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|XF86Dists
 block|,
@@ -2248,10 +1868,6 @@ literal|"Man pages (except XFree86 specific ones) [1.2MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|XF86Dists
 block|,
@@ -2267,10 +1883,6 @@ literal|"Programmer's header and library files [4MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|XF86Dists
 block|,
@@ -2286,10 +1898,6 @@ literal|"X Server reconfiguration kit [7.8MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|XF86Dists
 block|,
@@ -2305,10 +1913,6 @@ literal|"PEX fonts and libs needed by PEX apps [500K]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|XF86Dists
 block|,
@@ -2350,10 +1954,6 @@ literal|"Standard 75 DPI and miscellaneous fonts [3.6MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|XF86FontDists
 block|,
@@ -2369,10 +1969,6 @@ literal|"100 DPI fonts [1.8MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|XF86FontDists
 block|,
@@ -2388,10 +1984,6 @@ literal|"Speedo and Type scalable fonts [1.6MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|XF86FontDists
 block|,
@@ -2407,10 +1999,6 @@ literal|"Japanese, Chinese and other non-english fonts [3.3MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|XF86FontDists
 block|,
@@ -2426,10 +2014,6 @@ literal|"Font server [0.3MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|XF86FontDists
 block|,
@@ -2471,10 +2055,6 @@ literal|"Standard VGA or Super VGA display [1MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|XF86ServerDists
 block|,
@@ -2490,10 +2070,6 @@ literal|"Standard 16 color VGA display [1MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|XF86ServerDists
 block|,
@@ -2509,10 +2085,6 @@ literal|"Standard Monochrome display [1MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|XF86ServerDists
 block|,
@@ -2528,10 +2100,6 @@ literal|"8-bit (256 color) IBM 8514 or compatible card [1MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|XF86ServerDists
 block|,
@@ -2547,10 +2115,6 @@ literal|"8-bit AGX card [1MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|XF86ServerDists
 block|,
@@ -2566,10 +2130,6 @@ literal|"8 and 16-bit (65K color) for ATI Mach32 card [1MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|XF86ServerDists
 block|,
@@ -2585,10 +2145,6 @@ literal|"8-bit ATI Mach8 card [1MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|XF86ServerDists
 block|,
@@ -2604,10 +2160,6 @@ literal|"8, 16, and 24-bit color for Weitek P9000 based boards [1MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|XF86ServerDists
 block|,
@@ -2623,10 +2175,6 @@ literal|"8, 16 and 24-bit color for S3 based boards [1MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|XF86ServerDists
 block|,
@@ -2642,10 +2190,6 @@ literal|"8-bit Color for ET4000/W32, /W32i and /W32p cards [1MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|XF86ServerDists
 block|,
@@ -2661,10 +2205,6 @@ literal|"A nested server for testing purposes [1MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|XF86ServerDists
 block|,
@@ -2720,7 +2260,7 @@ name|DMENU_NORMAL_TYPE
 block|,
 literal|"Choose Installation Options"
 block|,
-literal|"This menu controls how the FreeBSD installation will deal with various\n\ error conditions (should they arise), the default language used for\n\ documentation, etc.\n\n\ When you're done setting options, please select Cancel."
+literal|"The following options control how this utility will deal\n\ with various possible error conditions and how verbose it will\n\ be at various stages.\n\n\ When you're done setting options, select Cancel"
 block|,
 name|NULL
 block|,
@@ -2734,10 +2274,6 @@ literal|"Ftp options menu"
 block|,
 name|DMENU_SUBMENU
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|MenuOptionsFTP
 block|,
@@ -2753,10 +2289,6 @@ literal|"NFS server talks only on a secure port"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"nfsServerSecure=yes"
 block|,
 literal|0
@@ -2771,10 +2303,6 @@ literal|"User is using a slow PC or ethernet card"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"nfsSlowPC=yes"
 block|,
 literal|0
@@ -2789,10 +2317,6 @@ literal|"Toggle the extra debugging flag"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"debug=yes"
 block|,
 literal|0
@@ -2807,10 +2331,6 @@ literal|"Turn the extra debugging flag off"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"debug=no"
 block|,
 literal|0
@@ -2851,10 +2371,6 @@ literal|"On transfer failure, retry same host"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftpRetryType=loop"
 block|,
 literal|0
@@ -2869,10 +2385,6 @@ literal|"On transfer failure, ask for another host"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftpRetryType=reselect"
 block|,
 literal|0
@@ -2887,10 +2399,6 @@ literal|"On transfer failure, abort installation"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftpRetryType=abort"
 block|,
 literal|0
@@ -2905,10 +2413,6 @@ literal|"Use \"passive mode\" for firewalled FTP"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"ftpPassive=yes"
 block|,
 literal|0
@@ -2938,7 +2442,7 @@ block|,
 literal|"Choose Installation Options"
 block|,
 comment|/* title */
-literal|"Before installation can continue, you need to specify a few\n\ details on the type of distribution you wish to have, where you wish\n\ to install it from, and how you wish to allocate disk storage to FreeBSD\n\ None of the items in this menu will actually modify the contents of\n\ your disk until you select the \"GO!\" menu item (and even then, only\n\ after a final confirmation).  If you do not wish to install FreeBSD\n\ at this time then select Cancel to leave this menu."
+literal|"Before installation can continue, you need to specify a few\n\ details on the type of distribution you wish to have, where you wish\n\ to install it from, and how you wish to allocate disk storage to FreeBSD\n\ None of the items in this menu will actually modify the contents of\n\ your disk until you select the \"Write\" menu item (and even then, only\n\ after a final confirmation).  If you do not wish to install FreeBSD\n\ at this time then select Cancel to leave this menu."
 block|,
 literal|"Press F1 to read the installation guide"
 block|,
@@ -2953,10 +2457,6 @@ block|,
 comment|/* T */
 name|DMENU_SUBMENU
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|MenuInstallType
 block|,
@@ -2973,10 +2473,6 @@ block|,
 comment|/* M */
 name|DMENU_SUBMENU
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|MenuMedia
 block|,
@@ -2993,10 +2489,6 @@ block|,
 comment|/* P */
 name|DMENU_CALL
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 name|diskPartitionEditor
 block|,
 literal|0
@@ -3012,10 +2504,6 @@ block|,
 comment|/* L */
 name|DMENU_CALL
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 name|diskLabelEditor
 block|,
 literal|0
@@ -3026,15 +2514,11 @@ block|,
 block|{
 literal|"Networking"
 block|,
-literal|"Configure any network interfaces"
+literal|"Configure this host on a network"
 block|,
 comment|/* N */
 name|DMENU_CALL
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 name|tcpOpenDialog
 block|,
 literal|0
@@ -3043,18 +2527,30 @@ literal|0
 block|}
 block|,
 block|{
-literal|"GO!"
+literal|"Write"
 block|,
-literal|"Start the whole show and go out for coffee!"
+literal|"Install FreeBSD onto your hard disk(s)"
 block|,
-comment|/* P */
+comment|/* W */
 name|DMENU_CALL
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 name|installCommit
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Configure"
+block|,
+literal|"Do post-install configuration of FreeBSD"
+block|,
+comment|/* C */
+name|DMENU_SUBMENU
+block|,
+operator|&
+name|MenuConfigure
 block|,
 literal|0
 block|,
@@ -3085,7 +2581,7 @@ block|,
 literal|"Chose boot manager type"
 block|,
 comment|/* title */
-literal|"FreeBSD comes with a boot selector that allows you to easily\n\ select between FreeBSD and other operating systems on your machine\n\ at boot time.  If you have more than one drive and wish to boot\n\ from other than the first, the boot selector will also allow you\n\ to do so (limitations in the PC boot-BIOS usually prevent this\n\ otherwise).  If you do not want a boot selector, or wish to replace\n\ an existing one, select \"standard\".  If you would prefer your master\n\ boot record to be untouched, then select \"none\"."
+literal|"FreeBSD comes with a boot selector that allows you to easily\n\ select between FreeBSD and other operating systems on your machine\n\ at boot time.  If you have more than one drive and wish to boot\n\ from other than the first, the boot selector will also allow you\n\ to do so (limitations in the PC BIOS usually prevent this otherwise).\n\ If you do not want a boot selector, or wish to replace an existing\n\ one, select \"standard\".  If you would prefer your Master Boot\n\ Record to remain untouched, then select \"none\"."
 block|,
 literal|"Press F1 to read the installation guide"
 block|,
@@ -3100,10 +2596,6 @@ block|,
 comment|/* B */
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"bootManager=bteasy"
 block|,
 literal|0
@@ -3119,10 +2611,6 @@ block|,
 comment|/* S */
 name|DMENU_SET_VARIABLE
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 literal|"bootManager=mbr"
 block|,
 literal|0
@@ -3138,10 +2626,6 @@ block|,
 comment|/* N */
 name|DMENU_CALL
 block|,
-operator|(
-name|void
-operator|*
-operator|)
 name|diskPartitionEditor
 block|,
 literal|0
@@ -3171,7 +2655,7 @@ block|,
 literal|"FreeBSD Configuration Menu"
 block|,
 comment|/* title */
-literal|"Congradulations!  If you're seeing this menu, FreeBSD is now\n\ installed on your hard disk and just about ready to boot.  There\n\ are a last few things you may wish to set up at this point to make\n\ your FreeBSD system more generally usable and which may be selected\n\ from the menu below.  When you're done, select Cancel."
+literal|"If you've already installed FreeBSD, you may use this menu to\n\ customize it somewhat to suit your particular configuration.  Most\n\ importantly, you can use the Packages utility to load extra \"3rd party\"\n\ software not provided in the base distributions.\n\n\ When you're done, select Cancel"
 block|,
 literal|"Press F1 for more information on these options"
 block|,
@@ -3186,6 +2670,20 @@ block|,
 name|DMENU_SYSTEM_COMMAND
 block|,
 literal|"adduser"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Networking"
+block|,
+literal|"Configure network"
+block|,
+name|DMENU_CALL
+block|,
+name|tcpOpenDialog
 block|,
 literal|0
 block|,
