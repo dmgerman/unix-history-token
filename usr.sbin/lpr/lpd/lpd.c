@@ -2637,7 +2637,7 @@ name|pp
 operator|->
 name|printer
 else|:
-literal|"<???>"
+literal|"<noname?>"
 argument_list|)
 expr_stmt|;
 block|}
