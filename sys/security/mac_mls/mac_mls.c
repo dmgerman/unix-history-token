@@ -3165,7 +3165,7 @@ name|NULL
 operator|)
 argument_list|,
 operator|(
-literal|"mac_biba_internalize_label: range mismatch"
+literal|"mac_mls_internalize_label: range mismatch"
 operator|)
 argument_list|)
 expr_stmt|;
