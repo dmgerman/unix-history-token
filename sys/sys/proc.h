@@ -2042,20 +2042,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|wakeup_one
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-name|chan
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
 name|cpu_exit
 name|__P
 argument_list|(
