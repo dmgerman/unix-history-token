@@ -429,13 +429,13 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|NO_PROFILE_DATA
+name|NO_PROFILE_COUNTERS
 end_undef
 
 begin_define
 define|#
 directive|define
-name|NO_PROFILE_DATA
+name|NO_PROFILE_COUNTERS
 end_define
 
 begin_comment
