@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) UNIX System Laboratories, Inc.  All or some portions
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)conf.c	5.8 (Berkeley) 5/12/91  *	$Id: conf.c,v 1.27 1994/08/18 22:34:39 wollman Exp $  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)conf.c	5.8 (Berkeley) 5/12/91  *	$Id: conf.c,v 1.28 1994/08/19 11:45:13 davidg Exp $  */
 end_comment
 
 begin_include
@@ -1487,10 +1487,27 @@ block|}
 block|,
 endif|#
 directive|endif
+comment|/* block device 14 is reserved for local use */
 block|{
+name|noopen
+block|,
+name|noclose
+block|,
+name|nostrategy
+block|,
+name|noioctl
+block|,
+comment|/*14*/
+name|nodump
+block|,
+operator|(
+name|p_size_t
+operator|*
+operator|)
 literal|0
-block|, }
-comment|/* block major 14 is reserved for local use */
+block|,
+name|NULL
+block|}
 comment|/*  * If you need a bdev major number, please contact the FreeBSD team  * by sending mail to "FreeBSD-hackers@freefall.cdrom.com".  * If you assign one yourself it may conflict with someone else.  */
 block|}
 decl_stmt|;
@@ -1803,138 +1820,6 @@ define|#
 directive|define
 name|ptsstop
 value|(d_stop_t *)nullop
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|"com.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NCOM
-operator|>
-literal|0
-end_if
-
-begin_decl_stmt
-name|d_open_t
-name|comopen
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|d_close_t
-name|comclose
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|d_rdwr_t
-name|comread
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|d_rdwr_t
-name|comwrite
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|d_ioctl_t
-name|comioctl
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|d_select_t
-name|comselect
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|comreset
-value|(d_reset_t *)enxio
-end_define
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|tty
-name|com_tty
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|comopen
-value|(d_open_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|comclose
-value|(d_close_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|comread
-value|(d_rdwr_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|comwrite
-value|(d_rdwr_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|comioctl
-value|(d_ioctl_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|comreset
-value|(d_reset_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|comselect
-value|(d_select_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|com_tty
-value|NULL
 end_define
 
 begin_endif
@@ -2530,82 +2415,6 @@ begin_define
 define|#
 directive|define
 name|bpfioctl
-value|(d_ioctl_t *)enxio
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|"lpa.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NLPA
-operator|>
-literal|0
-end_if
-
-begin_decl_stmt
-name|d_open_t
-name|lpaopen
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|d_close_t
-name|lpaclose
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|d_rdwr_t
-name|lpawrite
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|d_ioctl_t
-name|lpaioctl
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|lpaopen
-value|(d_open_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|lpaclose
-value|(d_close_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|lpawrite
-value|(d_rdwr_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|lpaioctl
 value|(d_ioctl_t *)enxio
 end_define
 
@@ -3923,29 +3732,29 @@ name|NULL
 block|}
 block|,
 block|{
-name|lpaopen
+name|noopen
 block|,
-name|lpaclose
+name|noclose
 block|,
 name|noread
 block|,
-name|lpawrite
+name|nowrite
 block|,
 comment|/*25*/
-name|lpaioctl
+name|noioctl
 block|,
-name|nullstop
+name|nostop
 block|,
-name|nullreset
+name|noreset
 block|,
 name|NULL
 block|,
-comment|/* lpa */
-name|seltrue
+comment|/* unused */
+name|noselect
 block|,
 name|nommap
 block|,
-name|NULL
+name|nostrat
 block|}
 block|,
 block|{
@@ -4280,10 +4089,31 @@ block|,
 name|NULL
 block|}
 block|,
+comment|/* character device 39 is reserved for local use */
 block|{
-literal|0
-block|, }
-comment|/* character device 32 is reserved for local use */
+name|noopen
+block|,
+name|noclose
+block|,
+name|noread
+block|,
+name|nowrite
+block|,
+comment|/*39*/
+name|noioctl
+block|,
+name|nostop
+block|,
+name|noreset
+block|,
+name|NULL
+block|,
+name|noselect
+block|,
+name|nommap
+block|,
+name|nostrat
+block|}
 comment|/*  * If you need a cdev major number, please contact the FreeBSD team  * by sending mail to `freebsd-hackers@freefall.cdrom.com'.  * If you assign one yourself it may then conflict with someone else.  */
 block|}
 decl_stmt|;
