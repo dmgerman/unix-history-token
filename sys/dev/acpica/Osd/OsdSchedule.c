@@ -538,6 +538,8 @@ name|acpi_kthread_proc
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 literal|"acpi_task%d"
 argument_list|,
 name|i

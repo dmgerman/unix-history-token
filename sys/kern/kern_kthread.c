@@ -128,6 +128,8 @@ name|global_procpp
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 literal|"%s"
 argument_list|,
 name|kp
@@ -184,6 +186,9 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
+name|int
+name|pages
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -237,6 +242,8 @@ operator||
 name|RFSTOPPED
 operator||
 name|flags
+argument_list|,
+name|pages
 argument_list|,
 operator|&
 name|p2

@@ -1345,6 +1345,8 @@ name|random_kthread_proc
 argument_list|,
 name|RFHIGHPID
 argument_list|,
+literal|0
+argument_list|,
 literal|"random"
 argument_list|)
 expr_stmt|;

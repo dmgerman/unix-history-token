@@ -556,6 +556,8 @@ expr_stmt|;
 name|pmap_new_thread
 argument_list|(
 name|td
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|mtx_unlock

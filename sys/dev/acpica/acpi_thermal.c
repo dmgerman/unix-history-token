@@ -1217,6 +1217,8 @@ name|acpi_tz_proc
 argument_list|,
 name|RFHIGHPID
 argument_list|,
+literal|0
+argument_list|,
 literal|"acpi_thermal"
 argument_list|)
 expr_stmt|;

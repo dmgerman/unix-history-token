@@ -2934,6 +2934,8 @@ name|RFPROC
 operator||
 name|RFSTOPPED
 argument_list|,
+literal|0
+argument_list|,
 operator|&
 name|initproc
 argument_list|)

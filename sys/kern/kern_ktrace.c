@@ -671,6 +671,8 @@ name|NULL
 argument_list|,
 name|RFHIGHPID
 argument_list|,
+literal|0
+argument_list|,
 literal|"ktrace"
 argument_list|)
 expr_stmt|;

@@ -369,6 +369,8 @@ name|RFFDG
 operator||
 name|RFPROC
 argument_list|,
+literal|0
+argument_list|,
 operator|&
 name|p2
 argument_list|)
@@ -467,6 +469,8 @@ operator||
 name|RFPPWAIT
 operator||
 name|RFMEM
+argument_list|,
+literal|0
 argument_list|,
 operator|&
 name|p2
@@ -576,6 +580,8 @@ argument_list|,
 name|uap
 operator|->
 name|flags
+argument_list|,
+literal|0
 argument_list|,
 operator|&
 name|p2
@@ -835,6 +841,8 @@ name|td
 parameter_list|,
 name|flags
 parameter_list|,
+name|pages
+parameter_list|,
 name|procp
 parameter_list|)
 name|struct
@@ -845,6 +853,9 @@ decl_stmt|;
 comment|/* parent proc */
 name|int
 name|flags
+decl_stmt|;
+name|int
+name|pages
 decl_stmt|;
 name|struct
 name|proc
@@ -1815,6 +1826,20 @@ operator|=
 name|FIRST_KSE_IN_KSEGRP
 argument_list|(
 name|kg2
+argument_list|)
+expr_stmt|;
+comment|/* Allocate and switch to an alternate kstack if specified */
+if|if
+condition|(
+name|pages
+operator|!=
+literal|0
+condition|)
+name|pmap_new_altkstack
+argument_list|(
+name|td2
+argument_list|,
+name|pages
 argument_list|)
 expr_stmt|;
 define|#

@@ -207,6 +207,8 @@ name|RFSTOPPED
 operator||
 name|RFHIGHPID
 argument_list|,
+literal|0
+argument_list|,
 literal|"idle: cpu%d"
 argument_list|,
 name|pc
@@ -265,6 +267,8 @@ argument_list|,
 name|RFSTOPPED
 operator||
 name|RFHIGHPID
+argument_list|,
+literal|0
 argument_list|,
 literal|"idle"
 argument_list|)

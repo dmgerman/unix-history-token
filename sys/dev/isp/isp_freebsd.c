@@ -610,6 +610,8 @@ name|kproc
 argument_list|,
 name|RFHIGHPID
 argument_list|,
+literal|0
+argument_list|,
 literal|"%s: fc_thrd"
 argument_list|,
 name|device_get_nameunit

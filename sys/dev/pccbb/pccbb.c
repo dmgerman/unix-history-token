@@ -3328,6 +3328,8 @@ name|event_thread
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 literal|"%s%d"
 argument_list|,
 name|device_get_name

@@ -652,6 +652,24 @@ name|vm_offset_t
 name|td_kstack
 decl_stmt|;
 comment|/* Kernel VA of kstack. */
+name|int
+name|td_kstack_pages
+decl_stmt|;
+comment|/* Size of the kstack */
+name|struct
+name|vm_object
+modifier|*
+name|td_altkstack_obj
+decl_stmt|;
+comment|/* (a) Alternate kstack object. */
+name|vm_offset_t
+name|td_altkstack
+decl_stmt|;
+comment|/* Kernel VA of alternate kstack. */
+name|int
+name|td_altkstack_pages
+decl_stmt|;
+comment|/* Size of the alternate kstack */
 block|}
 struct|;
 end_struct
@@ -3583,6 +3601,8 @@ parameter_list|(
 name|struct
 name|thread
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|,

@@ -102,6 +102,9 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
+name|int
+name|pages
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -110,9 +113,9 @@ modifier|...
 parameter_list|)
 function_decl|__printflike
 parameter_list|(
-function_decl|5
-operator|,
 function_decl|6
+operator|,
+function_decl|7
 end_function_decl
 
 begin_empty_stmt

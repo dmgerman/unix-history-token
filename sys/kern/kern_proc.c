@@ -840,6 +840,34 @@ literal|"proc_dtor: bad ke pointer"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Dispose of an alternate kstack, if it exists. 	 * XXX What if there are more than one thread in the proc? 	 *     The first thread in the proc is special and not 	 *     freed, so you gotta do this here. 	 */
+if|if
+condition|(
+operator|(
+operator|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_KTHREAD
+operator|)
+operator|!=
+literal|0
+operator|)
+operator|&&
+operator|(
+name|td
+operator|->
+name|td_altkstack
+operator|!=
+literal|0
+operator|)
+condition|)
+name|pmap_dispose_altkstack
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 comment|/* 	 * We want to make sure we know the initial linkages. 	 * so for now tear them down and remake them. 	 * This is probably un-needed as we can probably rely 	 * on the state coming in here from wait4(). 	 */
 name|proc_linkup
 argument_list|(
