@@ -213,19 +213,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|sched_switchin
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|sched_switchout
+name|sched_switch
 parameter_list|(
 name|struct
 name|thread
