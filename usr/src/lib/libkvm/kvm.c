@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm.c	5.17 (Berkeley) %G%"
+literal|"@(#)kvm.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4267,6 +4267,7 @@ name|db
 decl_stmt|;
 endif|#
 directive|endif
+specifier|const
 name|char
 modifier|*
 name|file
