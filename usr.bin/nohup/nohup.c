@@ -320,6 +320,10 @@ define|#
 directive|define
 name|FILENAME
 value|"nohup.out"
+name|p
+operator|=
+name|FILENAME
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -327,7 +331,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|FILENAME
+name|p
 argument_list|,
 name|O_RDWR
 operator||
