@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkboot.c	7.4 (Berkeley) %G%"
+literal|"@(#)mkboot.c	7.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,17 +75,6 @@ include|#
 directive|include
 file|<pmax/stand/dec_boot.h>
 end_include
-
-begin_comment
-comment|/* this is the size of the standard ULTRIX boot */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXBOOTSIZE
-value|(15 * DEV_BSIZE)
-end_define
 
 begin_decl_stmt
 name|struct
@@ -310,30 +299,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|length
-operator|>
-name|MAXBOOTSIZE
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"boot program is too big (%d> %d)\n"
-argument_list|,
-name|length
-argument_list|,
-name|MAXBOOTSIZE
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Write the boot information block. 	 */
 name|decBootInfo
 operator|.
@@ -436,6 +401,19 @@ condition|)
 goto|goto
 name|xxboot_err
 goto|;
+name|printf
+argument_list|(
+literal|"load %x, start %x, len %d, nsectors %d\n"
+argument_list|,
+name|loadAddr
+argument_list|,
+name|execAddr
+argument_list|,
+name|length
+argument_list|,
+name|nsectors
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Write the boot code to the bootxx file. 	 */
 for|for
 control|(
@@ -564,19 +542,17 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t\"bootprog\" is a -N format file< %d bytes long\n"
-argument_list|,
-name|MAXBOOTSIZE
+literal|"\t\"bootprog\" is a -N format file\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t\"xxboot\" is the name of the first boot block\n"
+literal|"\t\"xxboot\" is the file name for the first boot block\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t\"bootxx\" is the name of the remaining boot blocks.\n"
+literal|"\t\"bootxx\" is the file name for the remaining boot blocks.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -780,20 +756,6 @@ block|}
 name|printf
 argument_list|(
 literal|"Input file is COFF format\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"load %x, start %x, len %d\n"
-argument_list|,
-operator|*
-name|loadAddr
-argument_list|,
-operator|*
-name|execAddr
-argument_list|,
-operator|*
-name|length
 argument_list|)
 expr_stmt|;
 return|return
