@@ -296,6 +296,12 @@ name|struct
 name|vnode
 modifier|*
 name|vp
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+modifier|*
+name|vnmpp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3443,7 +3449,7 @@ comment|/*  * Routines having to do with the management of the vnode table.  */
 end_comment
 
 begin_comment
-comment|/*  * Check to see if a free vnode can be recycled.  If it can, return it locked  * with the vn lock, but not interlock.  Otherwise indicate the error.  */
+comment|/*  * Check to see if a free vnode can be recycled. If it can,  * return it locked with the vn lock, but not interlock. Also  * get the vn_start_write lock. Otherwise indicate the error.  */
 end_comment
 
 begin_function
@@ -3455,6 +3461,12 @@ name|struct
 name|vnode
 modifier|*
 name|vp
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+modifier|*
+name|vnmpp
 parameter_list|)
 block|{
 name|struct
@@ -3501,11 +3513,50 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|VOP_ISLOCKED
+argument_list|(
+name|vp
+argument_list|,
+name|td
+argument_list|)
+condition|)
+name|panic
+argument_list|(
+literal|"vcanrecycle: locked vnode"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EWOULDBLOCK
 operator|)
 return|;
+block|}
+comment|/* 	 * Don't recycle if its filesystem is being suspended. 	 */
+if|if
+condition|(
+name|vn_start_write
+argument_list|(
+name|vp
+argument_list|,
+name|vnmpp
+argument_list|,
+name|V_NOWAIT
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|error
+operator|=
+name|EBUSY
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
 comment|/* 	 * Don't recycle if we still have cached pages. 	 */
 if|if
 condition|(
@@ -3795,30 +3846,10 @@ operator|=
 name|vcanrecycle
 argument_list|(
 name|vp
-argument_list|)
-expr_stmt|;
-comment|/* 			 * Skip over it if its filesystem is being suspended. 			 */
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-operator|&&
-name|vn_start_write
-argument_list|(
-name|vp
 argument_list|,
 operator|&
 name|vnmp
-argument_list|,
-name|V_NOWAIT
 argument_list|)
-operator|!=
-literal|0
-condition|)
-name|error
-operator|=
-name|EBUSY
 expr_stmt|;
 name|mtx_lock
 argument_list|(
