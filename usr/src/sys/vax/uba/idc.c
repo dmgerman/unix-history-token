@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	idc.c	6.2	84/08/29	*/
+comment|/*	idc.c	6.3	84/12/20	*/
 end_comment
 
 begin_include
@@ -844,7 +844,6 @@ literal|16
 operator|)
 operator|)
 expr_stmt|;
-comment|/* read header to synchronize microcode */
 operator|(
 name|void
 operator|)
@@ -855,6 +854,16 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|idcaddr
+operator|->
+name|idccsr
+operator|&
+name|IDC_R80
+condition|)
+block|{
+comment|/* read header to synchronize microcode */
 name|idcaddr
 operator|->
 name|idccsr
@@ -915,20 +924,28 @@ name|i
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|idcaddr
-operator|->
-name|idccsr
-operator|&
-name|IDC_R80
-condition|)
 name|ui
 operator|->
 name|ui_type
 operator|=
 literal|1
 expr_stmt|;
+block|}
+elseif|else
+comment|/* 		 * RB02 may not have pack spun up, just look for drive error. 		 */
+if|if
+condition|(
+name|idcaddr
+operator|->
+name|idccsr
+operator|&
+name|IDC_DE
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 return|return
 operator|(
 literal|1
