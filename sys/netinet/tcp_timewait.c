@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tcp_subr.c	8.2 (Berkeley) 5/24/95  *	$Id: tcp_subr.c,v 1.48 1998/11/15 21:35:09 guido Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tcp_subr.c	8.2 (Berkeley) 5/24/95  *	$Id: tcp_subr.c,v 1.49 1998/12/07 21:58:42 archie Exp $  */
 end_comment
 
 begin_include
@@ -357,7 +357,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Target size of TCP PCB hash tables. Must be a power of two.  */
+comment|/*  * Target size of TCP PCB hash tables. Must be a power of two.  *  * Note that this can be overridden by the kernel environment  * variable net.inet.tcp.tcbhashsize  */
 end_comment
 
 begin_ifndef
@@ -455,6 +455,9 @@ name|void
 name|tcp_init
 parameter_list|()
 block|{
+name|int
+name|hashsize
+decl_stmt|;
 name|tcp_iss
 operator|=
 name|random
@@ -481,13 +484,55 @@ operator|=
 operator|&
 name|tcb
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|getenv_int
+argument_list|(
+literal|"net.inet.tcp.tcbhashsize"
+argument_list|,
+operator|&
+name|hashsize
+argument_list|)
+operator|)
+condition|)
+name|hashsize
+operator|=
+name|TCBHASHSIZE
+expr_stmt|;
+if|if
+condition|(
+operator|(
+literal|1
+operator|<<
+name|ffs
+argument_list|(
+name|hashsize
+argument_list|)
+operator|)
+operator|!=
+name|hashsize
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"WARNING: TCB hash size not a power of 2\n"
+argument_list|)
+expr_stmt|;
+name|hashsize
+operator|=
+literal|512
+expr_stmt|;
+comment|/* safe default */
+block|}
 name|tcbinfo
 operator|.
 name|hashbase
 operator|=
 name|hashinit
 argument_list|(
-name|TCBHASHSIZE
+name|hashsize
 argument_list|,
 name|M_PCB
 argument_list|,
@@ -503,7 +548,7 @@ name|porthashbase
 operator|=
 name|hashinit
 argument_list|(
-name|TCBHASHSIZE
+name|hashsize
 argument_list|,
 name|M_PCB
 argument_list|,
