@@ -1060,6 +1060,12 @@ name|request
 operator|->
 name|status
 operator|&
+operator|(
+name|ATA_S_CORR
+operator||
+name|ATA_S_ERROR
+operator|)
+operator|==
 name|ATA_S_CORR
 condition|)
 name|ata_prtdev
@@ -1068,7 +1074,7 @@ name|request
 operator|->
 name|device
 argument_list|,
-literal|"WARNING - %s soft error (ECC corrected)"
+literal|"WARNING - %s soft error (ECC corrected)\n"
 argument_list|,
 name|ata_cmd2str
 argument_list|(
