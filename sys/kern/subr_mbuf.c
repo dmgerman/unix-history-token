@@ -2752,8 +2752,6 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"All mbufs exhausted, please see tuning(7).\n"
-argument_list|,
-name|type
 argument_list|)
 expr_stmt|;
 comment|/* XXX: Actually could be clusters, but it gets the point across. */
