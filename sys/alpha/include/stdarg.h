@@ -6,14 +6,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_ALPHA_STDARG_H_
+name|_MACHINE_STDARG_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_ALPHA_STDARG_H_
+name|_MACHINE_STDARG_H_
 end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_include
 include|#
@@ -21,12 +27,29 @@ directive|include
 file|<sys/_types.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_VA_LIST_DECLARED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_VA_LIST_DECLARED
+end_define
+
 begin_typedef
 typedef|typedef
 name|__va_list
 name|va_list
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -77,6 +100,14 @@ define|\
 value|__builtin_va_arg((ap), type)
 end_define
 
+begin_if
+if|#
+directive|if
+name|__ISO_C_VISIBLE
+operator|>=
+literal|1999
+end_if
+
 begin_define
 define|#
 directive|define
@@ -89,6 +120,11 @@ parameter_list|)
 define|\
 value|__builtin_va_copy((dest), (src))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -221,7 +257,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_ALPHA_STDARG_H_ */
+comment|/* !_MACHINE_STDARG_H_ */
 end_comment
 
 end_unit
