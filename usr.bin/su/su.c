@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: su.c,v 1.18 1997/02/24 20:32:24 guido Exp $"
+literal|"$Id: su.c,v 1.19 1997/03/29 04:32:40 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -925,7 +925,7 @@ directive|ifdef
 name|LOGIN_CAP
 name|lc
 operator|=
-name|login_getclass
+name|login_getpwclass
 argument_list|(
 name|pwd
 argument_list|)

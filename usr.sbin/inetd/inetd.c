@@ -56,7 +56,7 @@ name|unused
 operator|)
 argument_list|)
 init|=
-literal|"$Id: inetd.c,v 1.22 1997/03/31 05:10:10 imp Exp $"
+literal|"$Id: inetd.c,v 1.23 1997/04/28 13:55:07 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -216,16 +216,6 @@ ifdef|#
 directive|ifdef
 name|LOGIN_CAP
 end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|AUTH_NONE
-end_undef
-
-begin_comment
-comment|/* conflicts with rpc stuff */
-end_comment
 
 begin_include
 include|#
@@ -2539,7 +2529,7 @@ name|LOGIN_CAP
 comment|/* 				 * Establish the class now, falls back to 				 * the "default" if unavailable. 				 */
 name|lc
 operator|=
-name|login_getclass
+name|login_getpwclass
 argument_list|(
 name|pwd
 argument_list|)
