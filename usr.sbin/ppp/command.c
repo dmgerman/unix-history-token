@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.32 1997/02/22 16:10:08 peter Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.33 1997/03/10 06:21:00 ache Exp $  *  */
 end_comment
 
 begin_include
@@ -263,6 +263,12 @@ begin_decl_stmt
 name|struct
 name|in_addr
 name|ifnetmask
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|randinit
 decl_stmt|;
 end_decl_stmt
 
@@ -3337,14 +3343,33 @@ argument_list|(
 literal|"Using random redial timeout.\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|randinit
+condition|)
+block|{
 name|srandom
+argument_list|(
+call|(
+name|unsigned
+call|)
 argument_list|(
 name|time
 argument_list|(
-literal|0
+name|NULL
+argument_list|)
+operator|^
+name|getpid
+argument_list|()
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|randinit
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
