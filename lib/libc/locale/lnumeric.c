@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lnumeric.h"
 end_include
 
@@ -22,6 +28,20 @@ name|__nlocale_changed
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|__fix_locale_grouping_str
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -35,7 +55,11 @@ name|char
 name|numempty
 index|[]
 init|=
-literal|"-1"
+block|{
+name|CHAR_MAX
+block|,
+literal|'\0'
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -95,6 +119,10 @@ block|{
 name|int
 name|ret
 decl_stmt|;
+name|__nlocale_changed
+operator|=
+literal|1
+expr_stmt|;
 name|ret
 operator|=
 name|__part_load_locale
@@ -125,9 +153,16 @@ condition|(
 operator|!
 name|ret
 condition|)
-name|__nlocale_changed
+name|_numeric_locale
+operator|.
+name|grouping
 operator|=
-literal|1
+name|__fix_locale_grouping_str
+argument_list|(
+name|_numeric_locale
+operator|.
+name|grouping
+argument_list|)
 expr_stmt|;
 return|return
 name|ret

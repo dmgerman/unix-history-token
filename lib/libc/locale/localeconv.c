@@ -99,28 +99,6 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX: FIXME! */
-end_comment
-
-begin_comment
-comment|/* Numbers separated by ";" must be parsed into byte array. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-name|nogrouping
-index|[]
-init|=
-block|{
-name|CHAR_MAX
-block|,
-literal|'\0'
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|char
@@ -229,13 +207,10 @@ argument_list|(
 name|mon_thousands_sep
 argument_list|)
 expr_stmt|;
-comment|/* XXX: FIXME! */
-comment|/* Numbers separated by ";" must be parsed into byte array. */
-name|ret
-operator|.
+name|M_ASSIGN_STR
+argument_list|(
 name|mon_grouping
-operator|=
-name|nogrouping
+argument_list|)
 expr_stmt|;
 name|M_ASSIGN_STR
 argument_list|(
@@ -325,13 +300,10 @@ argument_list|(
 name|thousands_sep
 argument_list|)
 expr_stmt|;
-comment|/* XXX: FIXME! */
-comment|/* Numbers separated by ";" must be parsed into byte array. */
-name|ret
-operator|.
+name|N_ASSIGN_STR
+argument_list|(
 name|grouping
-operator|=
-name|nogrouping
+argument_list|)
 expr_stmt|;
 name|__nlocale_changed
 operator|=
