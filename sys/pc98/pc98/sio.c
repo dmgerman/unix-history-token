@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.71 1998/12/30 08:09:11 kato Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.72 1999/01/03 05:03:47 kato Exp $  */
 end_comment
 
 begin_include
@@ -433,6 +433,23 @@ directive|include
 file|<i386/isa/ic/ns16550.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/ic/rsa.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -790,11 +807,27 @@ parameter_list|)
 value|(((dev)->id_flags& 0xff000000)>> 24)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|PC98
-end_ifndef
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|com_emr
+value|com_msr
+end_define
+
+begin_comment
+comment|/* Extension mode register for RSB-2000/3000 */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -811,10 +844,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* !PC98 */
-end_comment
 
 begin_comment
 comment|/*  * Input buffer watermarks.  * The external device is asked to stop sending when the buffer exactly reaches  * high water, or when the high level requests it.  * The high level is notified immediately (rather than at a later clock tick)  * when this watermark is reached.  * The buffer size is chosen so the watermark should almost never be reached.  * The low watermark is invisibly 0 since the buffer is always emptied all at  * once.  */
@@ -3941,15 +3970,15 @@ directive|ifdef
 name|COM_ESP
 end_ifdef
 
-begin_comment
-comment|/* XXX configure this properly. */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|PC98
 end_ifdef
+
+begin_comment
+comment|/* XXX configure this properly. */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -3983,10 +4012,46 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|ESP98_CMD1
+value|(ESP_CMD1 * 0x100)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ESP98_CMD2
+value|(ESP_CMD2 * 0x100)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ESP98_STATUS1
+value|(ESP_STATUS1 * 0x100)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ESP98_STATUS2
+value|(ESP_STATUS2 * 0x100)
+end_define
+
 begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* PC98 */
+end_comment
+
+begin_comment
+comment|/* XXX configure this properly. */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -7065,6 +7130,29 @@ return|;
 block|}
 comment|/* 	 * We've got something that claims to be a Hayes ESP card. 	 * Let's hope so. 	 */
 comment|/* Get the dip-switch configuration */
+ifdef|#
+directive|ifdef
+name|PC98
+name|outb
+argument_list|(
+name|esp_port
+operator|+
+name|ESP98_CMD1
+argument_list|,
+name|ESP_GETDIPS
+argument_list|)
+expr_stmt|;
+name|dips
+operator|=
+name|inb
+argument_list|(
+name|esp_port
+operator|+
+name|ESP98_STATUS1
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|outb
 argument_list|(
 name|esp_port
@@ -7083,6 +7171,8 @@ operator|+
 name|ESP_STATUS1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Bits 0,1 of dips say which COM port we are. 	 */
 ifdef|#
 directive|ifdef
@@ -7144,6 +7234,39 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Check for ESP version 2.0 or later:  bits 4,5,6 = 010. 	 */
+ifdef|#
+directive|ifdef
+name|PC98
+name|outb
+argument_list|(
+name|esp_port
+operator|+
+name|ESP98_CMD1
+argument_list|,
+name|ESP_GETTEST
+argument_list|)
+expr_stmt|;
+name|val
+operator|=
+name|inb
+argument_list|(
+name|esp_port
+operator|+
+name|ESP98_STATUS1
+argument_list|)
+expr_stmt|;
+comment|/* clear reg 1 */
+name|val
+operator|=
+name|inb
+argument_list|(
+name|esp_port
+operator|+
+name|ESP98_STATUS2
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|outb
 argument_list|(
 name|esp_port
@@ -7172,6 +7295,8 @@ operator|+
 name|ESP_STATUS2
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -8613,6 +8738,35 @@ name|esp
 condition|)
 block|{
 comment|/* 		 * Set 16550 compatibility mode. 		 * We don't use the ESP_MODE_SCALE bit to increase the 		 * fifo trigger levels because we can't handle large 		 * bursts of input. 		 * XXX flow control should be set in comparam(), not here. 		 */
+ifdef|#
+directive|ifdef
+name|PC98
+name|outb
+argument_list|(
+name|com
+operator|->
+name|esp_port
+operator|+
+name|ESP98_CMD1
+argument_list|,
+name|ESP_SETMODE
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|com
+operator|->
+name|esp_port
+operator|+
+name|ESP98_CMD2
+argument_list|,
+name|ESP_MODE_RTS
+operator||
+name|ESP_MODE_FIFO
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|outb
 argument_list|(
 name|com
@@ -8637,7 +8791,47 @@ operator||
 name|ESP_MODE_FIFO
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Set RTS/CTS flow control. */
+ifdef|#
+directive|ifdef
+name|PC98
+name|outb
+argument_list|(
+name|com
+operator|->
+name|esp_port
+operator|+
+name|ESP98_CMD1
+argument_list|,
+name|ESP_SETFLOWTYPE
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|com
+operator|->
+name|esp_port
+operator|+
+name|ESP98_CMD2
+argument_list|,
+name|ESP_FLOW_RTS
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|com
+operator|->
+name|esp_port
+operator|+
+name|ESP98_CMD2
+argument_list|,
+name|ESP_FLOW_CTS
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|outb
 argument_list|(
 name|com
@@ -8671,7 +8865,81 @@ argument_list|,
 name|ESP_FLOW_CTS
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Set flow-control levels. */
+ifdef|#
+directive|ifdef
+name|PC98
+name|outb
+argument_list|(
+name|com
+operator|->
+name|esp_port
+operator|+
+name|ESP98_CMD1
+argument_list|,
+name|ESP_SETRXFLOW
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|com
+operator|->
+name|esp_port
+operator|+
+name|ESP98_CMD2
+argument_list|,
+name|HIBYTE
+argument_list|(
+literal|768
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|com
+operator|->
+name|esp_port
+operator|+
+name|ESP98_CMD2
+argument_list|,
+name|LOBYTE
+argument_list|(
+literal|768
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|com
+operator|->
+name|esp_port
+operator|+
+name|ESP98_CMD2
+argument_list|,
+name|HIBYTE
+argument_list|(
+literal|512
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|com
+operator|->
+name|esp_port
+operator|+
+name|ESP98_CMD2
+argument_list|,
+name|LOBYTE
+argument_list|(
+literal|512
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|outb
 argument_list|(
 name|com
@@ -8739,6 +9007,8 @@ literal|512
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|PC98
@@ -8749,7 +9019,7 @@ name|com
 operator|->
 name|esp_port
 operator|+
-name|ESP_CMD1
+name|ESP98_CMD1
 argument_list|,
 name|ESP_SETCLOCK
 argument_list|)
@@ -8760,7 +9030,7 @@ name|com
 operator|->
 name|esp_port
 operator|+
-name|ESP_CMD2
+name|ESP98_CMD2
 argument_list|,
 literal|2
 argument_list|)
