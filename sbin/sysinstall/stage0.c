@@ -56,25 +56,28 @@ init|=
 block|{
 literal|"1. README"
 block|,
-literal|"Read the `READ ME FIRST' File ."
+literal|"READ THIS FIRST."
 block|,
 literal|"2. Release Notes"
 block|,
 literal|"Read the 2.0 Release Notes (recommended)."
 block|,
-literal|"3. COPYRIGHT"
+literal|"3. Troubleshooting"
+block|,
+literal|"Read this if you're having trouble getting installed."
+literal|"4. COPYRIGHT"
 block|,
 literal|"Read FreeBSD Copyright Information."
 block|,
-literal|"4. Proceed"
+literal|"5. Install"
 block|,
-literal|"Proceed with installation."
+literal|"Proceed with full installation."
 block|,
-literal|"5. Fixit"
+literal|"6. Fixit"
 block|,
 literal|"Repair existing installation (`fixit' mode)."
 block|,
-literal|"6. Quit"
+literal|"7. Quit"
 block|,
 literal|"Don't do anything, just reboot."
 block|, }
@@ -153,6 +156,21 @@ break|break;
 case|case
 literal|3
 case|:
+comment|/* View the troubleshooting file */
+name|ShowFile
+argument_list|(
+name|TROUBLE_FILE
+argument_list|,
+literal|"Troubleshooting"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|evil_goto
+goto|;
+break|break;
+case|case
+literal|4
+case|:
 comment|/* View copyrights */
 name|ShowFile
 argument_list|(
@@ -166,18 +184,18 @@ name|evil_goto
 goto|;
 break|break;
 case|case
-literal|4
+literal|5
 case|:
 comment|/* Proceed (do nothing special, really) */
 break|break;
 case|case
-literal|5
+literal|6
 case|:
 name|dialog_msgbox
 argument_list|(
 literal|"Sorry!"
 argument_list|,
-literal|"This feature not currently implemented."
+literal|"This feature is not currently implemented."
 argument_list|,
 literal|6
 argument_list|,

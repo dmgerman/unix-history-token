@@ -204,6 +204,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|TROUBLE_FILE
+value|"/TROUBLESHOOTING"
+end_define
+
+begin_define
+define|#
+directive|define
 name|RELNOTES_FILE
 value|"/RELNOTES.FreeBSD"
 end_define
