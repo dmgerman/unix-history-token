@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ps.c	5.32 (Berkeley) %G%"
+literal|"@(#)ps.c	5.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -299,7 +299,7 @@ define|#
 directive|define
 name|VFMT
 define|\
-value|"pid tt state time sl re pagein vsz rss lim tsiz trs %cpu %mem command"
+value|"pid state time sl re pagein vsz rss lim tsiz trs %cpu %mem command"
 end_define
 
 begin_function
