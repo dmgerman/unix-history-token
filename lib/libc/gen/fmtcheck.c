@@ -79,10 +79,15 @@ name|FMTCHECK_PTRDIFFTPOINTER
 block|,
 name|FMTCHECK_SIZETPOINTER
 block|,
+ifndef|#
+directive|ifndef
+name|NO_FLOATING_POINT
 name|FMTCHECK_DOUBLE
 block|,
 name|FMTCHECK_LONGDOUBLE
 block|,
+endif|#
+directive|endif
 name|FMTCHECK_STRING
 block|,
 name|FMTCHECK_WIDTH
@@ -520,6 +525,9 @@ name|FMTCHECK_LONG
 argument_list|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|NO_FLOATING_POINT
 if|if
 condition|(
 name|strchr
@@ -575,6 +583,8 @@ name|FMTCHECK_DOUBLE
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 operator|*
