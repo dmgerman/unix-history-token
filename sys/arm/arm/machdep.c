@@ -156,13 +156,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/pmap.h>
+file|<vm/vm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vm/vm.h>
+file|<vm/pmap.h>
 end_include
 
 begin_include
