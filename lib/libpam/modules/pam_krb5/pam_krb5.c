@@ -135,13 +135,6 @@ begin_comment
 comment|/* #define	COMPAT_MIT */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|krb5_cc_ops
-name|krb5_mcc_ops
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|int
