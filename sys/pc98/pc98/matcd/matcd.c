@@ -36,7 +36,7 @@ comment|/*	The proceeding strings may not be changed*/
 end_comment
 
 begin_comment
-comment|/* $Id: matcd.c,v 1.1.1.1 1996/06/14 10:04:51 asami Exp $ */
+comment|/* $Id: matcd.c,v 1.2 1996/07/30 18:56:16 asami Exp $ */
 end_comment
 
 begin_comment
@@ -918,58 +918,6 @@ begin_comment
 comment|/*--------------------------------------------------------------------------- 	Entry points and other connections to/from kernel - see also conf.h            --- not any more :) ---------------------------------------------------------------------------*/
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_function_decl
-specifier|static
-name|int
-name|matcd_probe
-parameter_list|(
-name|struct
-name|pc98_device
-modifier|*
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|matcd_attach
-parameter_list|(
-name|struct
-name|pc98_device
-modifier|*
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-name|struct
-name|pc98_driver
-name|matcddriver
-init|=
-block|{
-name|matcd_probe
-block|,
-name|matcd_attach
-block|,
-literal|"matcdc"
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_function_decl
 specifier|static
 name|int
@@ -1010,11 +958,6 @@ literal|"matcdc"
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -4337,27 +4280,13 @@ end_comment
 begin_function
 specifier|static
 name|int
-ifdef|#
-directive|ifdef
-name|PC98
 name|matcd_probe
-parameter_list|(
-name|struct
-name|pc98_device
-modifier|*
-name|dev
-parameter_list|)
-else|#
-directive|else
-function|matcd_probe
 parameter_list|(
 name|struct
 name|isa_device
 modifier|*
 name|dev
 parameter_list|)
-endif|#
-directive|endif
 block|{
 name|int
 name|i
@@ -5066,36 +4995,17 @@ begin_comment
 comment|/*---------------------------------------------------------------------------<12>	matcd_register - Something to handle dynamic driver loading. 		Sorry for the lousy description but no one could point 		me to anything that explained what it is for either. 		Added in Edit 12. ---------------------------------------------------------------------------*/
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_decl_stmt
+begin_function
 specifier|static
 specifier|inline
 name|void
 name|matcd_register
-argument_list|(
-expr|struct
-name|pc98_device
-operator|*
-name|id
-argument_list|)
-else|#
-directive|else
-decl|static
-specifier|inline
-namespace|void
-name|matcd_register
-namespace|(struct
+parameter_list|(
+name|struct
 name|isa_device
 modifier|*
 name|id
-decl_stmt|)
-endif|#
-directive|endif
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -5172,7 +5082,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- 	matcd_attach - Locates drives on the adapters that were located. 		If we got here, we located an interface and at least one 		drive.  Now we figure out how many drives are under that 		interface.  The Panasonic interface is too simple to call 		it a controller, but in the existing PDP model, that is 		what it would be. ---------------------------------------------------------------------------*/
@@ -5181,27 +5091,13 @@ end_comment
 begin_function
 specifier|static
 name|int
-ifdef|#
-directive|ifdef
-name|PC98
 name|matcd_attach
-parameter_list|(
-name|struct
-name|pc98_device
-modifier|*
-name|dev
-parameter_list|)
-else|#
-directive|else
-function|matcd_attach
 parameter_list|(
 name|struct
 name|isa_device
 modifier|*
 name|dev
 parameter_list|)
-endif|#
-directive|endif
 block|{
 name|int
 name|i

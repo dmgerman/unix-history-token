@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	$Id: pc98.c,v 1.1.1.1 1996/06/14 10:04:45 asami Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	$Id: pc98.c,v 1.2 1996/07/23 07:46:28 asami Exp $  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * code to manage AT bus  *  * 92/08/18  Frank P. MacLachlan (fpm@cra
 end_comment
 
 begin_comment
-comment|/*  * modified for PC9801 by A.Kojima F.Ukai M.Ishii   *			Kyoto University Microcomputer Club (KMC)  *	$Id: pc98.c,v 1.1.1.1 1996/06/14 10:04:45 asami Exp $  */
+comment|/*  * modified for PC9801 by A.Kojima F.Ukai M.Ishii   *			Kyoto University Microcomputer Club (KMC)  *	$Id: pc98.c,v 1.2 1996/07/23 07:46:28 asami Exp $  */
 end_comment
 
 begin_include
@@ -731,7 +731,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|pc98_device
+name|isa_device
 operator|*
 name|isdp
 operator|,
@@ -751,7 +751,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|pc98_device
+name|isa_device
 operator|*
 name|isdp
 operator|,
@@ -774,12 +774,12 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|pc98_device
+name|isa_device
 operator|*
 name|dvp
 operator|,
 expr|struct
-name|pc98_device
+name|isa_device
 operator|*
 name|tmpdvp
 operator|,
@@ -813,12 +813,12 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|pc98_device
+name|isa_device
 operator|*
 name|dvp
 operator|,
 expr|struct
-name|pc98_device
+name|isa_device
 operator|*
 name|tmpdvp
 operator|,
@@ -853,25 +853,6 @@ begin_decl_stmt
 specifier|static
 name|inthand2_t
 name|pc98_strayintr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|register_imask
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|pc98_device
-operator|*
-name|dvp
-operator|,
-name|u_int
-name|mask
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -1013,6 +994,11 @@ name|isa_strayintr
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -1031,11 +1017,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * print a conflict message  */
@@ -1058,21 +1039,6 @@ name|reason
 parameter_list|,
 name|format
 parameter_list|)
-ifdef|#
-directive|ifdef
-name|PC98
-name|struct
-name|pc98_device
-modifier|*
-name|dvp
-decl_stmt|;
-name|struct
-name|pc98_device
-modifier|*
-name|tmpdvp
-decl_stmt|;
-else|#
-directive|else
 name|struct
 name|isa_device
 modifier|*
@@ -1083,8 +1049,6 @@ name|isa_device
 modifier|*
 name|tmpdvp
 decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|item
 decl_stmt|;
@@ -1164,12 +1128,12 @@ parameter_list|,
 name|checkbits
 parameter_list|)
 name|struct
-name|pc98_device
+name|isa_device
 modifier|*
 name|dvp
 decl_stmt|;
 name|struct
-name|pc98_device
+name|isa_device
 modifier|*
 name|tmpdvp
 decl_stmt|;
@@ -1463,7 +1427,7 @@ parameter_list|,
 name|checkbits
 parameter_list|)
 name|struct
-name|pc98_device
+name|isa_device
 modifier|*
 name|dvp
 decl_stmt|;
@@ -1472,7 +1436,7 @@ name|checkbits
 decl_stmt|;
 block|{
 name|struct
-name|pc98_device
+name|isa_device
 modifier|*
 name|tmpdvp
 decl_stmt|;
@@ -1631,7 +1595,7 @@ name|pc98_configure
 parameter_list|()
 block|{
 name|struct
-name|pc98_device
+name|isa_device
 modifier|*
 name|dvp
 decl_stmt|;
@@ -2041,7 +2005,7 @@ parameter_list|,
 name|mp
 parameter_list|)
 name|struct
-name|pc98_device
+name|isa_device
 modifier|*
 name|isdp
 decl_stmt|;
@@ -2071,7 +2035,7 @@ parameter_list|,
 name|mp
 parameter_list|)
 name|struct
-name|pc98_device
+name|isa_device
 modifier|*
 name|isdp
 decl_stmt|;
@@ -2104,7 +2068,7 @@ parameter_list|,
 name|reconfig
 parameter_list|)
 name|struct
-name|pc98_device
+name|isa_device
 modifier|*
 name|isdp
 decl_stmt|;
@@ -2126,7 +2090,7 @@ name|int
 name|last_alive
 decl_stmt|;
 name|struct
-name|pc98_driver
+name|isa_driver
 modifier|*
 name|dp
 init|=
@@ -2717,7 +2681,7 @@ name|int
 name|pc98_externalize
 parameter_list|(
 name|struct
-name|pc98_device
+name|isa_device
 modifier|*
 name|id
 parameter_list|,
@@ -2753,7 +2717,7 @@ name|int
 name|pc98_internalize
 parameter_list|(
 name|struct
-name|pc98_device
+name|isa_device
 modifier|*
 name|id
 parameter_list|,
@@ -2764,7 +2728,7 @@ name|req
 parameter_list|)
 block|{
 name|struct
-name|pc98_device
+name|isa_device
 name|myid
 decl_stmt|;
 name|int
@@ -4887,23 +4851,10 @@ begin_comment
 comment|/*  * Find the highest priority enabled display device.  Since we can't  * distinguish display devices from ttys, depend on display devices  * being sensitive and before sensitive non-display devices (if any)  * in isa_devtab_tty.  *  * XXX we should add capability flags IAMDISPLAY and ISUPPORTCONSOLES.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
 begin_function
-unit|struct
-name|pc98_device
-modifier|*
-else|#
-directive|else
-type|struct
+name|struct
 name|isa_device
 modifier|*
-endif|#
-directive|endif
 name|find_display
 parameter_list|()
 block|{
@@ -4911,7 +4862,7 @@ ifdef|#
 directive|ifdef
 name|PC98
 name|struct
-name|pc98_device
+name|isa_device
 modifier|*
 name|dvp
 decl_stmt|;
@@ -4985,7 +4936,7 @@ end_comment
 
 begin_function
 name|struct
-name|pc98_device
+name|isa_device
 modifier|*
 name|find_pc98dev
 parameter_list|(
@@ -4996,12 +4947,12 @@ parameter_list|,
 name|unit
 parameter_list|)
 name|struct
-name|pc98_device
+name|isa_device
 modifier|*
 name|table
 decl_stmt|;
 name|struct
-name|pc98_driver
+name|isa_driver
 modifier|*
 name|driverp
 decl_stmt|;
@@ -5070,7 +5021,7 @@ parameter_list|(
 name|dvp
 parameter_list|)
 name|struct
-name|pc98_device
+name|isa_device
 modifier|*
 name|dvp
 decl_stmt|;
@@ -5544,7 +5495,7 @@ parameter_list|,
 name|mask
 parameter_list|)
 name|struct
-name|pc98_device
+name|isa_device
 modifier|*
 name|dvp
 decl_stmt|;

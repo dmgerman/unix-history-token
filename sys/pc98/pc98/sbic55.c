@@ -641,7 +641,7 @@ name|int
 name|sbicprobe
 parameter_list|(
 name|struct
-name|pc98_device
+name|isa_device
 modifier|*
 parameter_list|)
 function_decl|;
@@ -669,7 +669,7 @@ name|int
 name|sbicattach
 parameter_list|(
 name|struct
-name|pc98_device
+name|isa_device
 modifier|*
 parameter_list|)
 function_decl|;
@@ -914,7 +914,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|pc98_driver
+name|isa_driver
 name|sbicdriver
 init|=
 block|{
@@ -991,7 +991,7 @@ name|void
 name|sbic_registerdev
 parameter_list|(
 name|struct
-name|pc98_device
+name|isa_device
 modifier|*
 name|id
 parameter_list|)
@@ -1071,7 +1071,7 @@ name|int
 name|sbicprobe
 parameter_list|(
 name|struct
-name|pc98_device
+name|isa_device
 modifier|*
 name|dev
 parameter_list|)
@@ -1396,7 +1396,7 @@ name|int
 name|sbicattach
 parameter_list|(
 name|struct
-name|pc98_device
+name|isa_device
 modifier|*
 name|dev
 parameter_list|)

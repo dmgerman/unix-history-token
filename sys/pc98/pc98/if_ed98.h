@@ -48,7 +48,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|pc98_device
+name|isa_device
 operator|*
 name|dev
 operator|,
@@ -1483,7 +1483,7 @@ name|void
 name|pc98_set_register
 parameter_list|(
 name|struct
-name|pc98_device
+name|isa_device
 modifier|*
 name|dev
 parameter_list|,

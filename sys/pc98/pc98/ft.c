@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1993, 1994 Steve Gerakines  *  *  This is freely redistributable software.  You may do anything you  *  wish with it, so long as the above notice stays intact.  *  *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS  *  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  *  DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT,  *  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  *  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  *  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  *  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  *  IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  *  POSSIBILITY OF SUCH DAMAGE.  *  *  ft.c - QIC-40/80 floppy tape driver  *  $Id: ft.c,v 1.1.1.1 1996/06/14 10:04:43 asami Exp $  *  *  01/19/95 ++sg  *  Cleaned up recalibrate/seek code at attach time for FreeBSD 2.x.  *  *  06/07/94 v0.9 ++sg  *  Tape stuck on segment problem should be gone.  Re-wrote buffering  *  scheme.  Added support for drives that do not automatically perform  *  seek load point.  Can handle more wakeup types now and should correctly  *  report most manufacturer names.  Fixed places where unit 0 was being  *  sent to the fdc instead of the actual unit number.  Added ioctl support  *  for an in-core badmap.  *  *  01/26/94 v0.3b - Jim Babb  *  Got rid of the hard coded device selection.  Moved (some of) the  *  static variables into a structure for support of multiple devices.  *  ( still has a way to go for 2 controllers - but closer )  *  Changed the interface with fd.c so we no longer 'steal' it's  *  driver routine vectors.  *  *  10/30/93 v0.3  *  Fixed a couple more bugs.  Reading was sometimes looping when an  *  an error such as address-mark-missing was encountered.  Both  *  reading and writing was having more backup-and-retries than was  *  necessary.  Added support to get hardware info.  Updated for use  *  with FreeBSD.  *  *  09/15/93 v0.2 pl01  *  Fixed a bunch of bugs:  extra isa_dmadone() in async_write() (shouldn't  *  matter), fixed double buffering in async_req(), changed tape_end() in  *  set_fdcmode() to reduce unexpected interrupts, changed end of track  *  processing in async_req(), protected more of ftreq_rw() with an  *  splbio().  Changed some of the ftreq_*() functions so that they wait  *  for inactivity and then go, instead of aborting immediately.  *  *  08/07/93 v0.2 release  *  Shifted from ftstrat to ioctl support for I/O.  Streaming is now much  *  more reliable.  Added internal support for error correction, QIC-40,  *  and variable length tapes.  Random access of segments greatly  *  improved.  Formatting and verification support is close but still  *  incomplete.  *  *  06/03/93 v0.1 Alpha release  *  Hopefully the last re-write.  Many bugs fixed, many remain.  */
+comment|/*  *  Copyright (c) 1993, 1994 Steve Gerakines  *  *  This is freely redistributable software.  You may do anything you  *  wish with it, so long as the above notice stays intact.  *  *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS  *  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  *  DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT,  *  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  *  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  *  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  *  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  *  IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  *  POSSIBILITY OF SUCH DAMAGE.  *  *  ft.c - QIC-40/80 floppy tape driver  *  $Id: ft.c,v 1.2 1996/07/23 07:46:13 asami Exp $  *  *  01/19/95 ++sg  *  Cleaned up recalibrate/seek code at attach time for FreeBSD 2.x.  *  *  06/07/94 v0.9 ++sg  *  Tape stuck on segment problem should be gone.  Re-wrote buffering  *  scheme.  Added support for drives that do not automatically perform  *  seek load point.  Can handle more wakeup types now and should correctly  *  report most manufacturer names.  Fixed places where unit 0 was being  *  sent to the fdc instead of the actual unit number.  Added ioctl support  *  for an in-core badmap.  *  *  01/26/94 v0.3b - Jim Babb  *  Got rid of the hard coded device selection.  Moved (some of) the  *  static variables into a structure for support of multiple devices.  *  ( still has a way to go for 2 controllers - but closer )  *  Changed the interface with fd.c so we no longer 'steal' it's  *  driver routine vectors.  *  *  10/30/93 v0.3  *  Fixed a couple more bugs.  Reading was sometimes looping when an  *  an error such as address-mark-missing was encountered.  Both  *  reading and writing was having more backup-and-retries than was  *  necessary.  Added support to get hardware info.  Updated for use  *  with FreeBSD.  *  *  09/15/93 v0.2 pl01  *  Fixed a bunch of bugs:  extra isa_dmadone() in async_write() (shouldn't  *  matter), fixed double buffering in async_req(), changed tape_end() in  *  set_fdcmode() to reduce unexpected interrupts, changed end of track  *  processing in async_req(), protected more of ftreq_rw() with an  *  splbio().  Changed some of the ftreq_*() functions so that they wait  *  for inactivity and then go, instead of aborting immediately.  *  *  08/07/93 v0.2 release  *  Shifted from ftstrat to ioctl support for I/O.  Streaming is now much  *  more reliable.  Added internal support for error correction, QIC-40,  *  and variable length tapes.  Random access of segments greatly  *  improved.  Formatting and verification support is close but still  *  incomplete.  *  *  06/03/93 v0.1 Alpha release  *  Hopefully the last re-write.  Many bugs fixed, many remain.  */
 end_comment
 
 begin_include
@@ -1385,34 +1385,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_function_decl
-name|int
-name|ftattach
-parameter_list|(
-name|struct
-name|pc98_device
-modifier|*
-parameter_list|,
-name|struct
-name|pc98_device
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_function_decl
 name|int
 name|ftattach
@@ -1429,11 +1401,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -2208,11 +2175,8 @@ name|fdup
 parameter_list|,
 name|unithasfd
 parameter_list|)
-ifdef|#
-directive|ifdef
-name|PC98
 name|struct
-name|pc98_device
+name|isa_device
 modifier|*
 name|isadev
 decl_stmt|,
@@ -2220,27 +2184,6 @@ decl|*
 name|fdup
 decl_stmt|;
 end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|struct
-name|isa_device
-modifier|*
-name|isadev
-decl_stmt|,
-modifier|*
-name|fdup
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|int

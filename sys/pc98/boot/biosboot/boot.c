@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.1.1.1 1996/06/14 10:04:37 asami Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.2 1996/07/23 07:45:35 asami Exp $  */
 end_comment
 
 begin_comment
@@ -448,7 +448,7 @@ comment|/* If we have looped, use the previous entries as defaults */
 name|printf
 argument_list|(
 literal|"\n>> FreeBSD BOOT @ 0x%x: %d/%d k of memory\n"
-literal|"Usage: [[[%d:][%s](%d,a)]%s][-abcCdhrsv]\n"
+literal|"Usage: [[[%d:][%s](%d,a)]%s][-abcCdghrsv]\n"
 literal|"Use 1:sd(0,a)kernel to boot sd0 if it is BIOS drive 1\n"
 literal|"Use ? for file list or press Enter for defaults\n\nBoot: "
 argument_list|,
@@ -1006,100 +1006,6 @@ name|bi_esymtab
 operator|=
 name|addr
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
-ifdef|#
-directive|ifdef
-name|PC98
-comment|/* 	 * MO boot support by KATO Takenori (Nov 27, 1995) 	 * 	 * Major device number should be cahnged into 20 (od) from 	 * 4 (sd) when you boot from MO. 	 */
-if|if
-condition|(
-name|maj
-operator|==
-literal|4
-condition|)
-block|{
-comment|/* SCSI device*/
-if|if
-condition|(
-operator|(
-operator|(
-operator|*
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-literal|0x11482
-operator|)
-operator|&
-operator|(
-literal|1
-operator|<<
-name|unit
-operator|)
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* 			 * XXX 			 * Boot device is not HDD 			 */
-name|int
-name|scsi_id
-decl_stmt|;
-name|unit
-operator|=
-literal|0
-expr_stmt|;
-comment|/* 			 * XXX 			 * If you want to boot from MO, its ID should be below 			 * than that of other SCSI devices except for HDD becaus 			 * they seem to be a MO in following code. 			 */
-for|for
-control|(
-name|scsi_id
-operator|=
-literal|0
-init|;
-name|scsi_id
-operator|<
-name|unit
-condition|;
-name|scsi_id
-operator|++
-control|)
-if|if
-condition|(
-operator|(
-operator|*
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-literal|0x11482
-operator|)
-operator|&
-operator|(
-literal|1
-operator|<<
-name|scsi_id
-operator|)
-operator|==
-literal|0
-condition|)
-name|unit
-operator|++
-expr_stmt|;
-block|}
-name|maj
-operator|=
-literal|20
-expr_stmt|;
-comment|/* od */
-block|}
-endif|#
-directive|endif
-endif|#
-directive|endif
 comment|/* 	 * For backwards compatibility, use the previously-unused adaptor 	 * and controller bitfields to hold the slice number. 	 */
 name|bootdev
 operator|=
@@ -1366,6 +1272,17 @@ name|init_serial
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|c
+operator|==
+literal|'g'
+condition|)
+operator|*
+name|howto
+operator||=
+name|RB_GDB
+expr_stmt|;
 if|if
 condition|(
 name|c

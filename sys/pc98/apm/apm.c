@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.1.1.1 1996/06/14 10:04:36 asami Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.2 1996/07/23 07:45:29 asami Exp $  */
 end_comment
 
 begin_include
@@ -112,7 +112,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"pc98/pc98/pc98_device.h"
+file|<pc98/pc98/pc98_device.h>
 end_include
 
 begin_else
@@ -123,7 +123,7 @@ end_else
 begin_include
 include|#
 directive|include
-file|"i386/isa/isa_device.h"
+file|<i386/isa/isa_device.h>
 end_include
 
 begin_endif
@@ -182,7 +182,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"apm_setup.h"
+file|<i386/apm/apm_setup.h>
 end_include
 
 begin_decl_stmt
@@ -2457,19 +2457,13 @@ begin_comment
 comment|/* device driver definitions */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
 begin_function_decl
 specifier|static
 name|int
 name|apmprobe
 parameter_list|(
 name|struct
-name|pc98_device
+name|isa_device
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2481,7 +2475,7 @@ name|int
 name|apmattach
 parameter_list|(
 name|struct
-name|pc98_device
+name|isa_device
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2489,61 +2483,33 @@ end_function_decl
 
 begin_decl_stmt
 name|struct
-name|pc98_driver
+name|isa_driver
 name|apmdriver
 init|=
 block|{
-else|#
-directive|else
-specifier|static
-name|int
-name|apmprobe
-argument_list|(
-expr|struct
-name|isa_device
-operator|*
-argument_list|)
-block|;
-specifier|static
-name|int
-name|apmattach
-argument_list|(
-expr|struct
-name|isa_device
-operator|*
-argument_list|)
-block|; struct
-name|isa_driver
-name|apmdriver
-operator|=
-block|{
-endif|#
-directive|endif
 name|apmprobe
 block|,
 name|apmattach
 block|,
 literal|"apm"
 block|}
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * probe APM (dummy):  *  * APM probing routine is placed on locore.s and apm_init.S because  * this process forces the CPU to turn to real mode or V86 mode.  * Current version uses real mode, but on future version, we want  * to use V86 mode in APM initialization.  */
+end_comment
+
+begin_function
 specifier|static
 name|int
-ifdef|#
-directive|ifdef
-name|PC98
 name|apmprobe
-argument_list|(
-argument|struct pc98_device *dvp
-argument_list|)
-else|#
-directive|else
-name|apmprobe
-argument_list|(
-argument|struct isa_device *dvp
-argument_list|)
-endif|#
-directive|endif
+parameter_list|(
+name|struct
+name|isa_device
+modifier|*
+name|dvp
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2617,7 +2583,7 @@ operator|-
 literal|1
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/* Process APM event */
@@ -2801,27 +2767,13 @@ end_comment
 begin_function
 specifier|static
 name|int
-ifdef|#
-directive|ifdef
-name|PC98
 name|apmattach
-parameter_list|(
-name|struct
-name|pc98_device
-modifier|*
-name|dvp
-parameter_list|)
-else|#
-directive|else
-function|apmattach
 parameter_list|(
 name|struct
 name|isa_device
 modifier|*
 name|dvp
 parameter_list|)
-endif|#
-directive|endif
 block|{
 define|#
 directive|define
