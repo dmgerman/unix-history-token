@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	4.2	%G%	*/
+comment|/*	tty.c	4.3	%G%	*/
 end_comment
 
 begin_comment
@@ -1091,13 +1091,11 @@ end_comment
 begin_expr_stmt
 name|ttioctl
 argument_list|(
-name|com
-argument_list|,
 name|tp
 argument_list|,
-name|addr
+name|com
 argument_list|,
-name|dev
+name|addr
 argument_list|,
 name|flag
 argument_list|)
@@ -1117,6 +1115,9 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|dev
+decl_stmt|;
 name|unsigned
 name|t
 decl_stmt|;
@@ -1164,6 +1165,12 @@ literal|1
 operator|)
 return|;
 block|}
+name|dev
+operator|=
+name|tp
+operator|->
+name|t_dev
+expr_stmt|;
 comment|/* 	 * If the ioctl involves modification, 	 * insist on being able to write the device, 	 * and hang if in the background. 	 */
 switch|switch
 condition|(
@@ -1870,41 +1877,6 @@ name|FREAD
 operator||
 name|FWRITE
 argument_list|)
-expr_stmt|;
-break|break;
-comment|/* 	 * Ioctl entries to line discipline 	 */
-case|case
-name|DIOCSETP
-case|:
-case|case
-name|DIOCGETP
-case|:
-if|if
-condition|(
-operator|(
-operator|*
-name|linesw
-index|[
-name|tp
-operator|->
-name|t_line
-index|]
-operator|.
-name|l_ioctl
-operator|)
-operator|(
-name|com
-operator|,
-name|tp
-operator|,
-name|addr
-operator|)
-condition|)
-name|u
-operator|.
-name|u_error
-operator|=
-name|ENOTTY
 expr_stmt|;
 break|break;
 comment|/* 	 * Set and fetch special characters 	 */
