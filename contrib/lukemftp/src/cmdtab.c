@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: cmdtab.c,v 1.39 2000/11/15 00:10:59 lukem Exp $	*/
+comment|/*	$NetBSD: cmdtab.c,v 1.40 2002/07/29 04:24:47 lukem Exp $	*/
 end_comment
 
 begin_comment
@@ -14,7 +14,53 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lukemftp.h"
+file|<sys/cdefs.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "@(#)cmdtab.c	8.4 (Berkeley) 10/9/94";
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$NetBSD: cmdtab.c,v 1.40 2002/07/29 04:24:47 lukem Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -438,7 +484,7 @@ name|char
 name|passivehelp
 index|[]
 init|=
-literal|"enter passive transfer mode"
+literal|"toggle use of passive transfer mode"
 decl_stmt|;
 end_decl_stmt
 
