@@ -125,16 +125,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pathnames.h"
+file|<unistd.h>
 end_include
 
-begin_function_decl
-specifier|extern
-name|off_t
-name|lseek
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
 
 begin_comment
 comment|/*  * Disklabel: read and write disklabels.  * The label is usually placed on one of the first sectors of the disk.  * Many machines (VAX 11/750) also place a bootstrap in the same area,  * in which case the label is embedded in the bootstrap.  * The bootstrap source must leave space at the proper offset  * for the label on such machines.  *  * On 386BSD, the disklabel may either be at the start of the disk, or, at  * the start of an MS/DOS partition. In this way, it can be used either  * in concert with other operating systems sharing a disk, or with the  * disk dedicated to 386BSD. In shared mode, the DOS disk geometry must be  * identical to that which disklabel uses, and the disklabel must solely  * describe the space within the partition selected. Otherwise, the disk  * must be dedicated to 386BSD. -wfj  */
