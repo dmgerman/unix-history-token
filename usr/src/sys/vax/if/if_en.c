@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.40	82/03/15	*/
+comment|/*	if_en.c	4.41	82/03/15	*/
 end_comment
 
 begin_include
@@ -1258,9 +1258,21 @@ operator|.
 name|if_oerrors
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|es
+operator|->
+name|es_if
+operator|.
+name|if_oerrors
+operator|%
+literal|100
+operator|==
+literal|0
+condition|)
 name|printf
 argument_list|(
-literal|"en%d: output error\n"
+literal|"en%d: += 100 output errors\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -1428,12 +1440,6 @@ block|}
 end_block
 
 begin_decl_stmt
-name|int
-name|enprintierrors
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|sockaddr_pup
 name|pupsrc
@@ -1585,11 +1591,19 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|enprintierrors
+name|es
+operator|->
+name|es_if
+operator|.
+name|if_ierrors
+operator|%
+literal|100
+operator|==
+literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"en%d: input error\n"
+literal|"en%d: += 100 input errors\n"
 argument_list|,
 name|unit
 argument_list|)
