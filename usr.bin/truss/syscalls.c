@@ -2439,6 +2439,21 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|timespecsubt
+parameter_list|(
+name|tvp
+parameter_list|,
+name|uvp
+parameter_list|,
+name|vvp
+parameter_list|)
+define|\
+value|do {								\ 		(vvp)->tv_sec = (tvp)->tv_sec - (uvp)->tv_sec;		\ 		(vvp)->tv_nsec = (tvp)->tv_nsec - (uvp)->tv_nsec;	\ 		if ((vvp)->tv_nsec< 0) {				\ 			(vvp)->tv_sec--;				\ 			(vvp)->tv_nsec += 1000000000;			\ 		}							\ 	} while (0)
+end_define
+
 begin_comment
 comment|/*  * print_syscall  * Print (to outfile) the system call and its arguments.  Note that  * nargs is the number of arguments (not the number of words; this is  * potentially confusing, I know).  */
 end_comment
@@ -2475,7 +2490,7 @@ init|=
 literal|0
 decl_stmt|;
 name|struct
-name|timeval
+name|timespec
 name|timediff
 decl_stmt|;
 if|if
@@ -2520,19 +2535,14 @@ literal|"exit"
 argument_list|)
 condition|)
 block|{
-name|gettimeofday
+name|clock_gettime
 argument_list|(
+name|CLOCK_REALTIME
+argument_list|,
 operator|&
 name|trussinfo
 operator|->
 name|after
-argument_list|,
-operator|(
-expr|struct
-name|timezone
-operator|*
-operator|)
-name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -2545,7 +2555,7 @@ operator|&
 name|ABSOLUTETIMESTAMPS
 condition|)
 block|{
-name|timersub
+name|timespecsubt
 argument_list|(
 operator|&
 name|trussinfo
@@ -2569,7 +2579,7 @@ name|trussinfo
 operator|->
 name|outfile
 argument_list|,
-literal|"%d.%0.7d "
+literal|"%d.%0.9d "
 argument_list|,
 name|timediff
 operator|.
@@ -2577,7 +2587,7 @@ name|tv_sec
 argument_list|,
 name|timediff
 operator|.
-name|tv_usec
+name|tv_nsec
 argument_list|)
 expr_stmt|;
 block|}
@@ -2590,7 +2600,7 @@ operator|&
 name|RELATIVETIMESTAMPS
 condition|)
 block|{
-name|timersub
+name|timespecsubt
 argument_list|(
 operator|&
 name|trussinfo
@@ -2614,7 +2624,7 @@ name|trussinfo
 operator|->
 name|outfile
 argument_list|,
-literal|"%d.%0.7d "
+literal|"%d.%0.9d "
 argument_list|,
 name|timediff
 operator|.
@@ -2622,7 +2632,7 @@ name|tv_sec
 argument_list|,
 name|timediff
 operator|.
-name|tv_usec
+name|tv_nsec
 argument_list|)
 expr_stmt|;
 block|}
