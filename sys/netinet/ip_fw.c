@@ -481,7 +481,7 @@ name|fw_one_pass
 argument_list|,
 literal|0
 argument_list|,
-literal|"Only do a single pass through ipfw when using divert(4)/dummynet(4)"
+literal|"Only do a single pass through ipfw when using dummynet(4)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
