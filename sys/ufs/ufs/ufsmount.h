@@ -131,6 +131,17 @@ name|um_dev
 decl_stmt|;
 comment|/* device mounted */
 name|struct
+name|g_consumer
+modifier|*
+name|um_cp
+decl_stmt|;
+name|struct
+name|bufobj
+modifier|*
+name|um_bo
+decl_stmt|;
+comment|/* Buffer cache object */
+name|struct
 name|vnode
 modifier|*
 name|um_devvp

@@ -329,6 +329,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|i_umbufobj
+value|i_ump->um_bo
+end_define
+
+begin_define
+define|#
+directive|define
 name|i_dirhash
 value|i_un.dirhash
 end_define

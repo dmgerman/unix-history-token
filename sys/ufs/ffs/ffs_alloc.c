@@ -9371,27 +9371,6 @@ directive|ifdef
 name|DIAGNOSTIC
 if|if
 condition|(
-name|dev
-operator|->
-name|si_mountpoint
-operator|&&
-operator|(
-name|dev
-operator|->
-name|si_mountpoint
-operator|->
-name|mnt_kern_flag
-operator|&
-name|MNTK_SUSPENDED
-operator|)
-condition|)
-name|panic
-argument_list|(
-literal|"ffs_blkfree: deallocation on suspended filesystem"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 operator|(
 name|u_int
 operator|)

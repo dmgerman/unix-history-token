@@ -826,50 +826,6 @@ operator|==
 name|MNT_WAIT
 operator|)
 expr_stmt|;
-if|if
-condition|(
-name|vn_isdisk
-argument_list|(
-name|vp
-argument_list|,
-name|NULL
-argument_list|)
-condition|)
-block|{
-name|lbn
-operator|=
-name|INT_MAX
-expr_stmt|;
-if|if
-condition|(
-name|vp
-operator|->
-name|v_rdev
-operator|->
-name|si_mountpoint
-operator|!=
-name|NULL
-operator|&&
-operator|(
-name|vp
-operator|->
-name|v_rdev
-operator|->
-name|si_mountpoint
-operator|->
-name|mnt_flag
-operator|&
-name|MNT_SOFTDEP
-operator|)
-condition|)
-name|softdep_fsync_mountdev
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 name|lbn
 operator|=
 name|lblkno
@@ -893,7 +849,6 @@ literal|1
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Flush all dirty buffers associated with a vnode. 	 */
 name|passes
 operator|=
@@ -1066,19 +1021,6 @@ condition|)
 name|panic
 argument_list|(
 literal|"ffs_fsync: not dirty"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|vp
-operator|!=
-name|bp
-operator|->
-name|b_vp
-condition|)
-name|panic
-argument_list|(
-literal|"ffs_fsync: vp != vp->b_vp"
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If this is a synchronous flush request, or it is not a 		 * file or device, start the write on this buffer immediatly. 		 */
@@ -5458,7 +5400,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Vnode extattr strategy routine for special devices and fifos.  *  * We need to check for a read or write of the external attributes.  * Otherwise we just fall through and do the usual thing.  */
+comment|/*  * Vnode extattr strategy routine for fifos.  *  * We need to check for a read or write of the external attributes.  * Otherwise we just fall through and do the usual thing.  */
 end_comment
 
 begin_function

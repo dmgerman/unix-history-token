@@ -1004,11 +1004,6 @@ name|int
 name|softdep_disk_prewrite
 parameter_list|(
 name|struct
-name|vnode
-modifier|*
-name|vp
-parameter_list|,
-name|struct
 name|buf
 modifier|*
 name|bp
