@@ -430,14 +430,6 @@ end_comment
 
 begin_function_decl
 specifier|extern
-name|long
-name|time
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|char
 modifier|*
 name|getlogin
