@@ -2616,7 +2616,7 @@ literal|"Extract: %p -x [options] [<patterns>]\n"
 block|,
 literal|"<patterns>  If specified, extract only entries that match\n"
 block|,
-literal|"  -k  	 Keep (don't overwrite) existing files\n"
+literal|"  -k    Keep (don't overwrite) existing files\n"
 block|,
 literal|"  -m    Don't restore modification times\n"
 block|,
