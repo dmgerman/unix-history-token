@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dmesg.c	5.15 (Berkeley) %G%"
+literal|"@(#)dmesg.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -219,7 +219,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-name|_POSIX2_LINE_MAX
+literal|5
 index|]
 decl_stmt|;
 name|memf
@@ -300,13 +300,9 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 comment|/* Read in kernel message buffer, do sanity checks. */
-name|buf
-index|[
-literal|0
-index|]
-operator|=
-literal|0
-expr_stmt|;
+if|if
+condition|(
+operator|(
 name|kd
 operator|=
 name|kvm_open
@@ -319,22 +315,15 @@ name|NULL
 argument_list|,
 name|O_RDONLY
 argument_list|,
-name|buf
+literal|"dmesg"
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|kd
+operator|)
 operator|==
 name|NULL
 condition|)
-name|errx
+name|exit
 argument_list|(
 literal|1
-argument_list|,
-literal|"kvm_open: %s"
-argument_list|,
-name|buf
 argument_list|)
 expr_stmt|;
 if|if
