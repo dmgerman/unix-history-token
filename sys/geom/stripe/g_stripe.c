@@ -401,7 +401,7 @@ name|g_stripe_maxmem
 init|=
 name|MAX_IO_SIZE
 operator|*
-literal|10
+literal|50
 decl_stmt|;
 end_decl_stmt
 
