@@ -698,6 +698,22 @@ case|case
 literal|'D'
 case|:
 break|break;
+case|case
+literal|'p'
+case|:
+if|if
+condition|(
+name|cp
+index|[
+literal|1
+index|]
+condition|)
+block|{
+name|cp
+operator|++
+expr_stmt|;
+break|break;
+block|}
 default|default:
 comment|/* 				 * hpux has lot's of them, but we complain 				 */
 name|warnx
