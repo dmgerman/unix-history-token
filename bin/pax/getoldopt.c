@@ -8,7 +8,7 @@ comment|/*	$NetBSD: getoldopt.c,v 1.3 1995/03/21 09:07:28 cgd Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Plug-compatible replacement for getopt() for parsing tar-like  * arguments.  If the first argument begins with "-", it uses getopt;  * otherwise, it uses the old rules used by tar, dump, and ps.  *  * Written 25 August 1985 by John Gilmore (ihnp4!hoptoad!gnu) and placed  * in the Pubic Domain for your edification and enjoyment.  */
+comment|/*-  * Plug-compatible replacement for getopt() for parsing tar-like  * arguments.  If the first argument begins with "-", it uses getopt;  * otherwise, it uses the old rules used by tar, dump, and ps.  *  * Written 25 August 1985 by John Gilmore (ihnp4!hoptoad!gnu) and placed  * in the Pubic Domain for your edification and enjoyment.  */
 end_comment
 
 begin_include

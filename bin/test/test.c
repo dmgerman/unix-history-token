@@ -4,7 +4,7 @@ comment|/*	$NetBSD: test.c,v 1.21 1999/04/05 09:48:38 kleink Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * test(1); version 7-like  --  author Erik Baalbergen  * modified by Eric Gisin to be used as built-in.  * modified by Arnold Robbins to add SVR3 compatibility  * (-x -c -b -p -u -g -k) plus Korn's -L -nt -ot -ef and new -S (socket).  * modified by J.T. Conklin for NetBSD.  *  * This program is in the Public Domain.  */
+comment|/*-  * test(1); version 7-like  --  author Erik Baalbergen  * modified by Eric Gisin to be used as built-in.  * modified by Arnold Robbins to add SVR3 compatibility  * (-x -c -b -p -u -g -k) plus Korn's -L -nt -ot -ef and new -S (socket).  * modified by J.T. Conklin for NetBSD.  *  * This program is in the Public Domain.  */
 end_comment
 
 begin_include
