@@ -44,20 +44,6 @@ name|nsdispatch
 value|_nsdispatch
 end_define
 
-begin_define
-define|#
-directive|define
-name|strlcat
-value|_strlcat
-end_define
-
-begin_define
-define|#
-directive|define
-name|strlcpy
-value|_strlcpy
-end_define
-
 begin_comment
 comment|/*  * Prototypes for syscalls/functions that need to be overridden  * in libc_r/libpthread.  */
 end_comment

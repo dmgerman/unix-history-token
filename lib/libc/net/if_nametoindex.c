@@ -146,7 +146,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|_strlcpy
+name|strlcpy
 argument_list|(
 name|ifr
 operator|.

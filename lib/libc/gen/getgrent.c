@@ -3200,7 +3200,7 @@ argument_list|)
 expr_stmt|;
 name|linesize
 operator|=
-name|_strlcpy
+name|strlcpy
 argument_list|(
 name|buffer
 argument_list|,
@@ -3729,7 +3729,7 @@ name|nss_lt_name
 case|:
 if|if
 condition|(
-name|_strlcpy
+name|strlcpy
 argument_list|(
 name|buffer
 argument_list|,

@@ -737,18 +737,6 @@ directive|undef
 name|nsdispatch
 end_undef
 
-begin_undef
-undef|#
-directive|undef
-name|strlcat
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|strlcpy
-end_undef
-
 begin_endif
 endif|#
 directive|endif

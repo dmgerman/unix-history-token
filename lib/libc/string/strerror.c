@@ -54,12 +54,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"namespace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -73,12 +67,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"un-namespace.h"
 end_include
 
 begin_define
@@ -194,7 +182,7 @@ name|t
 operator|=
 literal|'-'
 expr_stmt|;
-name|_strlcpy
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
@@ -203,7 +191,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|_strlcat
+name|strlcat
 argument_list|(
 name|buf
 argument_list|,
@@ -258,7 +246,7 @@ return|;
 block|}
 if|if
 condition|(
-name|_strlcpy
+name|strlcpy
 argument_list|(
 name|strerrbuf
 argument_list|,

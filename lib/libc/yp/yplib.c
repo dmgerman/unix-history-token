@@ -2396,7 +2396,7 @@ name|dom_vers
 operator|=
 name|YPVERS
 expr_stmt|;
-name|_strlcpy
+name|strlcpy
 argument_list|(
 name|ysd
 operator|->

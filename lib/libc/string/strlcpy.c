@@ -59,12 +59,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"namespace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -74,29 +68,13 @@ directive|include
 file|<string.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"un-namespace.h"
-end_include
-
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|_strlcpy
-argument_list|,
-name|strlcpy
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*  * Copy src to string dst of size siz.  At most siz-1 characters  * will be copied.  Always NUL terminates (unless siz == 0).  * Returns strlen(src); if retval>= siz, truncation occurred.  */
 end_comment
 
 begin_function
 name|size_t
-name|_strlcpy
+name|strlcpy
 parameter_list|(
 name|dst
 parameter_list|,

@@ -54,12 +54,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"namespace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -109,12 +103,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"un-namespace.h"
 end_include
 
 begin_include
@@ -806,7 +794,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|_strlcpy
+name|strlcpy
 argument_list|(
 name|new_categories
 index|[

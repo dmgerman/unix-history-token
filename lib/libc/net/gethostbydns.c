@@ -64,12 +64,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"namespace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -167,12 +161,6 @@ begin_include
 include|#
 directive|include
 file|<nsswitch.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"un-namespace.h"
 end_include
 
 begin_include
@@ -3234,7 +3222,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|_strlcat
+name|strlcat
 argument_list|(
 name|qbuf
 argument_list|,
@@ -3318,7 +3306,7 @@ name|qp
 operator|=
 literal|'\0'
 expr_stmt|;
-name|_strlcat
+name|strlcat
 argument_list|(
 name|qbuf
 argument_list|,

@@ -3196,7 +3196,7 @@ case|:
 comment|/* MAXLOGNAME includes NUL byte, but we do not 			 * include the NUL byte in the key. 			 */
 name|namesize
 operator|=
-name|_strlcpy
+name|strlcpy
 argument_list|(
 operator|&
 name|keybuf
@@ -4888,7 +4888,7 @@ continue|continue;
 block|}
 name|linesize
 operator|=
-name|_strlcpy
+name|strlcpy
 argument_list|(
 name|buffer
 argument_list|,
@@ -5783,7 +5783,7 @@ name|nss_lt_name
 case|:
 if|if
 condition|(
-name|_strlcpy
+name|strlcpy
 argument_list|(
 name|buffer
 argument_list|,
@@ -6746,7 +6746,7 @@ name|COPY
 parameter_list|(
 name|field
 parameter_list|)
-value|do {				\ 	if (pwd->field == NULL)				\ 		hold.field = NULL;			\ 	else {						\ 		hold.field = p;				\ 		p += _strlcpy(p, pwd->field, eob-p) + 1; \ 	}						\ } while (0)
+value|do {				\ 	if (pwd->field == NULL)				\ 		hold.field = NULL;			\ 	else {						\ 		hold.field = p;				\ 		p += strlcpy(p, pwd->field, eob-p) + 1;	\ 	}						\ } while (0)
 name|COPY
 argument_list|(
 name|pw_name
@@ -6800,7 +6800,7 @@ name|field
 parameter_list|,
 name|flag
 parameter_list|)
-value|do {						 \ 	q = (template->pw_fields& flag) ? template->field : hold.field; \ 	if (q == NULL)							 \ 		pwd->field = NULL;					 \ 	else {								 \ 		pwd->field = p;						 \ 		if ((n = _strlcpy(p, q, eob-p))>= eob-p) {		 \ 			free(copy);					 \ 			return (ERANGE);				 \ 		}							 \ 		p += n + 1;						 \ 	}								 \ } while (0)
+value|do {						 \ 	q = (template->pw_fields& flag) ? template->field : hold.field; \ 	if (q == NULL)							 \ 		pwd->field = NULL;					 \ 	else {								 \ 		pwd->field = p;						 \ 		if ((n = strlcpy(p, q, eob-p))>= eob-p) {		 \ 			free(copy);					 \ 			return (ERANGE);				 \ 		}							 \ 		p += n + 1;						 \ 	}								 \ } while (0)
 name|COPY
 argument_list|(
 name|pw_name

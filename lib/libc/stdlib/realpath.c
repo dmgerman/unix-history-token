@@ -215,7 +215,7 @@ literal|1
 expr_stmt|;
 name|left_len
 operator|=
-name|_strlcpy
+name|strlcpy
 argument_list|(
 name|left
 argument_list|,
@@ -244,7 +244,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|_strlcpy
+name|strlcpy
 argument_list|(
 name|resolved
 argument_list|,
@@ -268,7 +268,7 @@ argument_list|)
 expr_stmt|;
 name|left_len
 operator|=
-name|_strlcpy
+name|strlcpy
 argument_list|(
 name|left
 argument_list|,
@@ -526,7 +526,7 @@ block|}
 comment|/* 		 * Append the next path component and lstat() it. If 		 * lstat() fails we still can return successfully if 		 * there are no more path components left. 		 */
 name|resolved_len
 operator|=
-name|_strlcat
+name|strlcat
 argument_list|(
 name|resolved
 argument_list|,
@@ -776,7 +776,7 @@ expr_stmt|;
 block|}
 name|left_len
 operator|=
-name|_strlcat
+name|strlcat
 argument_list|(
 name|symlink
 argument_list|,
@@ -811,7 +811,7 @@ block|}
 block|}
 name|left_len
 operator|=
-name|_strlcpy
+name|strlcpy
 argument_list|(
 name|left
 argument_list|,

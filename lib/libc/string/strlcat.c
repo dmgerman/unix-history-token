@@ -59,12 +59,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"namespace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -74,29 +68,13 @@ directive|include
 file|<string.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"un-namespace.h"
-end_include
-
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|_strlcat
-argument_list|,
-name|strlcat
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*  * Appends src to string dst of size siz (unlike strncat, siz is the  * full size of dst, not space left).  At most siz-1 characters  * will be copied.  Always NUL terminates (unless siz<= strlen(dst)).  * Returns strlen(src) + MIN(siz, strlen(initial dst)).  * If retval>= siz, truncation occurred.  */
 end_comment
 
 begin_function
 name|size_t
-name|_strlcat
+name|strlcat
 parameter_list|(
 name|dst
 parameter_list|,
