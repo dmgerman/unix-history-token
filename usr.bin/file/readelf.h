@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * readelf.h   * @(#)$Id: readelf.h,v 1.4 1997/01/15 17:23:24 christos Exp $  *  * Provide elf data structures for non-elf machines, allowing file  * non-elf hosts to determine if an elf binary is stripped.  * Note: cobbled from the linux header file, with modifications  */
+comment|/*  * readelf.h   * @(#)$Id: readelf.h,v 1.1.1.1 1997/03/18 17:58:55 mpp Exp $  *  * Provide elf data structures for non-elf machines, allowing file  * non-elf hosts to determine if an elf binary is stripped.  * Note: cobbled from the linux header file, with modifications  */
 end_comment
 
 begin_ifndef
@@ -61,12 +61,8 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|int
+name|u_quad_t
 name|Elf64_Addr
-index|[
-literal|2
-index|]
 typedef|;
 end_typedef
 
@@ -80,12 +76,8 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|int
+name|u_quad_t
 name|Elf64_Off
-index|[
-literal|2
-index|]
 typedef|;
 end_typedef
 
