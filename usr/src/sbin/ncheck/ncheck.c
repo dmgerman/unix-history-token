@@ -1,13 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ncheck.c	2.2 (Berkeley) %G%"
+literal|"@(#)ncheck.c	2.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * ncheck -- obtain file names from reading filesystem  */
@@ -34,12 +45,6 @@ name|MAXNINDIR
 value|(MAXBSIZE / sizeof (daddr_t))
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SIMFS
-end_ifndef
-
 begin_include
 include|#
 directive|include
@@ -58,44 +63,16 @@ directive|include
 file|<sys/fs.h>
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|<sys/dir.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/inode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/fs.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dir.h>
 end_include
 
 begin_decl_stmt
