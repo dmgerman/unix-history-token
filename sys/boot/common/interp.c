@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: interp.c,v 1.10 1999/01/04 18:38:23 peter Exp $  */
+comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: interp.c,v 1.11 1999/01/13 21:59:58 abial Exp $  */
 end_comment
 
 begin_comment
@@ -278,9 +278,18 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/*      * Read our default configuration      */
+if|if
+condition|(
 name|source
 argument_list|(
 literal|"/boot/loader.rc"
+argument_list|)
+operator|!=
+name|CMD_OK
+condition|)
+name|source
+argument_list|(
+literal|"/boot/boot.conf"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -434,19 +443,36 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|int
+name|res
+decl_stmt|;
+name|res
+operator|=
+name|CMD_OK
+expr_stmt|;
 for|for
 control|(
 name|i
 operator|=
 literal|1
 init|;
+operator|(
 name|i
 operator|<
 name|argc
+operator|)
+operator|&&
+operator|(
+name|res
+operator|==
+name|CMD_OK
+operator|)
 condition|;
 name|i
 operator|++
 control|)
+name|res
+operator|=
 name|source
 argument_list|(
 name|argv
@@ -455,11 +481,11 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|RETURN
-argument_list|(
-name|CMD_OK
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+name|res
+operator|)
+return|;
 block|}
 end_function
 
@@ -495,7 +521,7 @@ struct|;
 end_struct
 
 begin_function
-name|void
+name|int
 name|source
 parameter_list|(
 name|char
@@ -523,6 +549,8 @@ decl_stmt|;
 comment|/* big enough? */
 name|int
 name|argc
+decl_stmt|,
+name|res
 decl_stmt|;
 name|char
 modifier|*
@@ -558,8 +586,10 @@ literal|1
 operator|)
 condition|)
 block|{
-name|printf
+name|sprintf
 argument_list|(
+name|command_errbuf
+argument_list|,
 literal|"can't open '%s': %s\n"
 argument_list|,
 name|filename
@@ -570,7 +600,11 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|CMD_ERROR
+operator|)
+return|;
 block|}
 comment|/*      * Read the script into memory.      */
 name|script
@@ -758,6 +792,10 @@ name|argv
 operator|=
 name|NULL
 expr_stmt|;
+name|res
+operator|=
+name|CMD_OK
+expr_stmt|;
 for|for
 control|(
 name|sp
@@ -863,7 +901,13 @@ operator|&
 name|SL_IGNOREERR
 operator|)
 condition|)
+block|{
+name|res
+operator|=
+name|CMD_ERROR
+expr_stmt|;
 break|break;
+block|}
 block|}
 name|free
 argument_list|(
@@ -887,6 +931,10 @@ name|sp
 operator|->
 name|line
 argument_list|)
+expr_stmt|;
+name|res
+operator|=
+name|CMD_ERROR
 expr_stmt|;
 break|break;
 block|}
@@ -925,6 +973,11 @@ name|se
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|res
+operator|)
+return|;
 block|}
 end_function
 
