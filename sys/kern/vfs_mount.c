@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<geom/geom.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/stdarg.h>
 end_include
 
@@ -6822,6 +6828,9 @@ name|i
 decl_stmt|,
 name|error
 decl_stmt|;
+name|g_waitidle
+argument_list|()
+expr_stmt|;
 comment|/*  	 * The root filesystem information is compiled in, and we are 	 * booted with instructions to use it. 	 */
 ifdef|#
 directive|ifdef
@@ -7012,15 +7021,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function_decl
-name|void
-name|g_waitidle
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Mount (mountfrom) as the root filesystem.  */
 end_comment
@@ -7079,9 +7079,6 @@ expr_stmt|;
 name|error
 operator|=
 name|EINVAL
-expr_stmt|;
-name|g_waitidle
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -7566,6 +7563,13 @@ operator|==
 literal|'?'
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|g_dev_print
+argument_list|()
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"Possibly valid devices for 'ufs' root:\n"
@@ -7615,6 +7619,7 @@ operator|->
 name|d_name
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|printf
 argument_list|(
