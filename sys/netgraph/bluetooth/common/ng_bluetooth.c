@@ -36,7 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ng_bluetooth.h"
+file|<netgraph/bluetooth/include/ng_bluetooth.h>
 end_include
 
 begin_comment

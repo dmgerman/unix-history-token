@@ -132,25 +132,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ng_bluetooth.h>
+file|<netgraph/bluetooth/include/ng_bluetooth.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ng_hci.h>
+file|<netgraph/bluetooth/include/ng_hci.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ng_bt3c.h"
+file|<netgraph/bluetooth/include/ng_bt3c.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ng_bt3c_var.h"
+file|<netgraph/bluetooth/drivers/bt3c/ng_bt3c_var.h>
 end_include
 
 begin_comment

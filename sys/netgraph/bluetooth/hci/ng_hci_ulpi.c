@@ -60,43 +60,43 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ng_bluetooth.h"
+file|<netgraph/bluetooth/include/ng_bluetooth.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ng_hci.h"
+file|<netgraph/bluetooth/include/ng_hci.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ng_hci_var.h"
+file|<netgraph/bluetooth/hci/ng_hci_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ng_hci_cmds.h"
+file|<netgraph/bluetooth/hci/ng_hci_cmds.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ng_hci_evnt.h"
+file|<netgraph/bluetooth/hci/ng_hci_evnt.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ng_hci_ulpi.h"
+file|<netgraph/bluetooth/hci/ng_hci_ulpi.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ng_hci_misc.h"
+file|<netgraph/bluetooth/hci/ng_hci_misc.h>
 end_include
 
 begin_comment

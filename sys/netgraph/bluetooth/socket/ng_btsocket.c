@@ -96,43 +96,43 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ng_bluetooth.h"
+file|<netgraph/bluetooth/include/ng_bluetooth.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ng_hci.h"
+file|<netgraph/bluetooth/include/ng_hci.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ng_l2cap.h"
+file|<netgraph/bluetooth/include/ng_l2cap.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ng_btsocket.h"
+file|<netgraph/bluetooth/include/ng_btsocket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ng_btsocket_hci_raw.h"
+file|<netgraph/bluetooth/include/ng_btsocket_hci_raw.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ng_btsocket_l2cap.h"
+file|<netgraph/bluetooth/include/ng_btsocket_l2cap.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ng_btsocket_rfcomm.h"
+file|<netgraph/bluetooth/include/ng_btsocket_rfcomm.h>
 end_include
 
 begin_function_decl

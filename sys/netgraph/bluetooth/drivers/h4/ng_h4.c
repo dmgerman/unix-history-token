@@ -96,31 +96,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ng_bluetooth.h>
+file|<netgraph/bluetooth/include/ng_bluetooth.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ng_hci.h>
+file|<netgraph/bluetooth/include/ng_hci.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ng_h4.h"
+file|<netgraph/bluetooth/include/ng_h4.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ng_h4_var.h"
+file|<netgraph/bluetooth/drivers/h4/ng_h4_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ng_h4_prse.h"
+file|<netgraph/bluetooth/drivers/h4/ng_h4_prse.h>
 end_include
 
 begin_comment

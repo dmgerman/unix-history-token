@@ -60,61 +60,61 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ng_bluetooth.h"
+file|<netgraph/bluetooth/include/ng_bluetooth.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ng_hci.h"
+file|<netgraph/bluetooth/include/ng_hci.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ng_l2cap.h"
+file|<netgraph/bluetooth/include/ng_l2cap.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ng_l2cap_var.h"
+file|<netgraph/bluetooth/l2cap/ng_l2cap_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ng_l2cap_cmds.h"
+file|<netgraph/bluetooth/l2cap/ng_l2cap_cmds.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ng_l2cap_evnt.h"
+file|<netgraph/bluetooth/l2cap/ng_l2cap_evnt.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ng_l2cap_llpi.h"
+file|<netgraph/bluetooth/l2cap/ng_l2cap_llpi.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ng_l2cap_ulpi.h"
+file|<netgraph/bluetooth/l2cap/ng_l2cap_ulpi.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ng_l2cap_misc.h"
+file|<netgraph/bluetooth/l2cap/ng_l2cap_misc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ng_l2cap_prse.h"
+file|<netgraph/bluetooth/l2cap/ng_l2cap_prse.h>
 end_include
 
 begin_comment
