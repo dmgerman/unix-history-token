@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.52 (Berkeley) %G%"
+literal|"@(#)conf.c	8.53 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2790,14 +2790,43 @@ name|LA_MACH
 end_if
 
 begin_comment
-comment|/* **  This has been tested on NeXT release 2.1. */
+comment|/* **  This has been tested on NEXTSTEP release 2.1/3.X. */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|NX_CURRENT_COMPILER_RELEASE
+argument_list|)
+operator|&&
+name|NX_CURRENT_COMPILER_RELEASE
+operator|>
+name|NX_COMPILER_RELEASE_3_0
+end_if
+
+begin_include
+include|#
+directive|include
+file|<mach/mach.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
 directive|include
 file|<mach.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|getla
