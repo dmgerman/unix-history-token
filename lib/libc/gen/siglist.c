@@ -167,7 +167,6 @@ literal|"usr1"
 block|,
 comment|/* SIGUSR1 */
 literal|"usr2"
-block|,
 comment|/* SIGUSR2 */
 block|}
 decl_stmt|;
