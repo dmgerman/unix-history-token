@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.9 (Berkeley) %G%"
+literal|"@(#)main.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -190,6 +190,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -288,32 +289,9 @@ name|argc
 operator|<
 literal|2
 condition|)
-block|{
 name|usage
-label|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Usage:\n%s%s%s%s%s"
-argument_list|,
-literal|"\trestore tfhsvy [file file ...]\n"
-argument_list|,
-literal|"\trestore xfhmsvy [file file ...]\n"
-argument_list|,
-literal|"\trestore ifhmsvy\n"
-argument_list|,
-literal|"\trestore rfsvy\n"
-argument_list|,
-literal|"\trestore Rfsvy\n"
-argument_list|)
+argument_list|()
 expr_stmt|;
-name|done
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|argv
 operator|++
 expr_stmt|;
@@ -585,9 +563,9 @@ argument_list|,
 name|command
 argument_list|)
 expr_stmt|;
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 block|}
 name|command
 operator|=
@@ -606,9 +584,9 @@ operator|*
 name|cp
 argument_list|)
 expr_stmt|;
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 if|if
@@ -625,9 +603,9 @@ argument_list|,
 literal|"must specify i, t, r, R, or x\n"
 argument_list|)
 expr_stmt|;
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 block|}
 name|setinput
 argument_list|(
@@ -1044,6 +1022,41 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_macro
+name|usage
+argument_list|()
+end_macro
+
+begin_block
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage:\n%s%s%s%s%s"
+argument_list|,
+literal|"\trestore tfhsvy [file file ...]\n"
+argument_list|,
+literal|"\trestore xfhmsvy [file file ...]\n"
+argument_list|,
+literal|"\trestore ifhmsvy\n"
+argument_list|,
+literal|"\trestore rfsvy\n"
+argument_list|,
+literal|"\trestore Rfsvy\n"
+argument_list|)
+expr_stmt|;
+name|done
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_block
 
 end_unit
 
