@@ -1965,10 +1965,6 @@ name|int
 name|sig
 parameter_list|)
 block|{
-name|AlarmWentOff
-operator|=
-name|TRUE
-expr_stmt|;
 if|if
 condition|(
 name|sig
@@ -1984,6 +1980,11 @@ else|else
 name|msgDebug
 argument_list|(
 literal|"User generated interrupt.\n"
+argument_list|)
+expr_stmt|;
+name|alarm
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2357,9 +2358,6 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-name|alarm_clear
-argument_list|()
-expr_stmt|;
 name|sigaction
 argument_list|(
 name|SIGINT
@@ -2373,6 +2371,10 @@ expr_stmt|;
 comment|/* Restore signal handler */
 if|if
 condition|(
+operator|!
+name|alarm_clear
+argument_list|()
+operator|||
 name|DITEM_STATUS
 argument_list|(
 name|status
@@ -2609,7 +2611,7 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* We have one or more chunks, go pick them up */
+comment|/* We have one or more chunks, initialize unpackers... */
 name|mediaExtractDistBegin
 argument_list|(
 name|root_bias
@@ -2632,6 +2634,37 @@ operator|&
 name|cpid
 argument_list|)
 expr_stmt|;
+comment|/* Make ^C fake a sudden timeout */
+name|new
+operator|.
+name|sa_handler
+operator|=
+name|media_timeout
+expr_stmt|;
+name|new
+operator|.
+name|sa_flags
+operator|=
+literal|0
+expr_stmt|;
+name|new
+operator|.
+name|sa_mask
+operator|=
+literal|0
+expr_stmt|;
+name|sigaction
+argument_list|(
+name|SIGINT
+argument_list|,
+operator|&
+name|new
+argument_list|,
+operator|&
+name|old
+argument_list|)
+expr_stmt|;
+comment|/* And go for all the chunks */
 for|for
 control|(
 name|chunk
@@ -2802,36 +2835,6 @@ literal|100
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Make ^C fake a sudden timeout */
-name|new
-operator|.
-name|sa_handler
-operator|=
-name|media_timeout
-expr_stmt|;
-name|new
-operator|.
-name|sa_flags
-operator|=
-literal|0
-expr_stmt|;
-name|new
-operator|.
-name|sa_mask
-operator|=
-literal|0
-expr_stmt|;
-name|sigaction
-argument_list|(
-name|SIGINT
-argument_list|,
-operator|&
-name|new
-argument_list|,
-operator|&
-name|old
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 literal|1
@@ -2861,25 +2864,28 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|alarm_clear
 argument_list|()
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Media read error:  Timeout or user abort."
+argument_list|)
 expr_stmt|;
+break|break;
+block|}
+elseif|else
 if|if
 condition|(
 name|n
 operator|<=
 literal|0
-operator|||
-name|AlarmWentOff
 condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"Read error on media (timeout or user abort).\n"
-argument_list|)
-expr_stmt|;
 break|break;
-block|}
 name|total
 operator|+=
 name|n
@@ -3042,6 +3048,12 @@ name|punt
 goto|;
 block|}
 block|}
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+block|}
 name|sigaction
 argument_list|(
 name|SIGINT
@@ -3053,12 +3065,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Restore signal handler */
-name|fclose
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
-block|}
 name|close
 argument_list|(
 name|fd2
@@ -3166,6 +3172,9 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 block|}
@@ -3194,6 +3203,8 @@ operator|.
 name|my_bit
 operator|)
 expr_stmt|;
+else|else
+continue|continue;
 block|}
 name|restorescr
 argument_list|(

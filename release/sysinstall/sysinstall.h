@@ -1377,17 +1377,6 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|Boolean
-name|AlarmWentOff
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Convenience variable for alarm_foo() stuff	*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
 name|int
 name|DebugFD
 decl_stmt|;
@@ -4876,7 +4865,7 @@ end_comment
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|alarm_clear
 parameter_list|(
 name|void

@@ -114,16 +114,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Public variable for ease of use - handler should set it if interested */
-end_comment
-
-begin_decl_stmt
-name|Boolean
-name|AlarmWentOff
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Simple alarm interface */
 end_comment
 
@@ -177,10 +167,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|AlarmWentOff
-operator|=
-name|FALSE
-expr_stmt|;
 name|alarm
 argument_list|(
 name|delay
@@ -190,7 +176,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|alarm_clear
 parameter_list|(
 name|void
@@ -200,11 +186,14 @@ name|struct
 name|sigaction
 name|act
 decl_stmt|;
+name|int
+name|i
+init|=
 name|alarm
 argument_list|(
 literal|0
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|act
 operator|.
 name|sa_handler
@@ -233,6 +222,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+return|return
+name|i
+return|;
 block|}
 end_function
 
