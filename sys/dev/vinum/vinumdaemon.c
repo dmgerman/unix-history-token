@@ -4,7 +4,7 @@ comment|/* daemon.c: kernel part of Vinum daemon */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumdaemon.c,v 1.7 1999/10/12 09:39:48 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -53,6 +53,28 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+name|int
+name|daemon_options
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* options */
+end_comment
+
+begin_decl_stmt
+name|int
+name|daemonpid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* PID of daemon */
+end_comment
+
+begin_decl_stmt
 name|struct
 name|daemonq
 modifier|*
@@ -76,26 +98,41 @@ begin_comment
 comment|/* and the end of the queue */
 end_comment
 
+begin_comment
+comment|/*  * We normally call Malloc to get a queue element.  In interrupt  * context, we can't guarantee that we'll get one, since we're not  * allowed to wait.  If malloc fails, use one of these elements.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTQSIZE
+value|4
+end_define
+
 begin_decl_stmt
-name|int
-name|daemon_options
-init|=
-literal|0
+name|struct
+name|daemonq
+name|intq
+index|[
+name|INTQSIZE
+index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* options */
+comment|/* queue elements for interrupt context */
 end_comment
 
 begin_decl_stmt
-name|int
-name|daemonpid
+name|struct
+name|daemonq
+modifier|*
+name|intqp
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* PID of daemon */
+comment|/* and pointer in it */
 end_comment
 
 begin_function
@@ -105,13 +142,13 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|int
+name|s
+decl_stmt|;
 name|struct
 name|daemonq
 modifier|*
 name|request
-decl_stmt|;
-name|int
-name|s
 decl_stmt|;
 name|daemon_save_config
 argument_list|()
@@ -500,12 +537,27 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|request
+operator|->
+name|privateinuse
+condition|)
+comment|/* one of ours, */
+name|request
+operator|->
+name|privateinuse
+operator|=
+literal|0
+expr_stmt|;
+comment|/* no longer in use */
+else|else
 name|Free
 argument_list|(
 name|request
 argument_list|)
 expr_stmt|;
-comment|/* done with the request */
+comment|/* return it */
 block|}
 block|}
 block|}
@@ -582,6 +634,60 @@ name|daemonq
 argument_list|)
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|qelt
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* malloc failed, we're prepared for that */
+comment|/* 	 * Take one of our spares.  Give up if it's still in use; the only 	 * message we're likely to get here is a 'drive failed' message, 	 * and that'll come by again if we miss it. 	 */
+if|if
+condition|(
+name|intqp
+operator|->
+name|privateinuse
+condition|)
+comment|/* still in use? */
+return|return;
+comment|/* yes, give up */
+name|qelt
+operator|=
+name|intqp
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|intqp
+operator|==
+operator|&
+name|intq
+index|[
+name|INTQSIZE
+index|]
+condition|)
+comment|/* got to the end, */
+name|intqp
+operator|=
+name|intq
+expr_stmt|;
+comment|/* wrap around */
+name|qelt
+operator|->
+name|privateinuse
+operator|=
+literal|1
+expr_stmt|;
+comment|/* it's ours, and it's in use */
+block|}
+else|else
+name|qelt
+operator|->
+name|privateinuse
+operator|=
+literal|0
+expr_stmt|;
 name|qelt
 operator|->
 name|next
