@@ -3353,7 +3353,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|FXP_NRFABUFS
+name|FXP_NTXCB
 condition|;
 name|i
 operator|++
@@ -9896,7 +9896,7 @@ name|rxp
 operator|->
 name|rx_map
 argument_list|,
-name|BUS_DMASYNC_PREREAD
+name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If there are other buffers already on the list, attach this 	 * one to the end by fixing up the tail to point to this one. 	 */
@@ -9977,7 +9977,7 @@ name|p_rx
 operator|->
 name|rx_map
 argument_list|,
-name|BUS_DMASYNC_PREREAD
+name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 block|}
