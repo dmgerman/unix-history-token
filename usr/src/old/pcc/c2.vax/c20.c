@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c20.c 4.2 %G%"
+literal|"@(#)c20.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -160,14 +160,6 @@ argument_list|)
 operator|-
 literal|1
 operator|)
-expr_stmt|;
-name|n
-operator|++
-expr_stmt|;
-name|n
-operator|&=
-operator|~
-literal|01
 expr_stmt|;
 if|if
 condition|(
