@@ -7,14 +7,6 @@ begin_comment
 comment|/*  * Parts of the ISA bus implementation common to all architectures.  *  * Drivers must not depend on information in this file as it can change  * without notice.  */
 end_comment
 
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_ISADEV
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*  * PNP configurations are kept in a tailq.  */
 end_comment
