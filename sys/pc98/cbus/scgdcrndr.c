@@ -60,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/md_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/fb/fbreg.h>
 end_include
 
@@ -192,6 +186,14 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
+name|struct
+name|linker_set
+name|gdc_set
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|sc_rndr_sw_t
 name|txtrndrsw
 init|=
@@ -231,6 +233,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|txtrndrsw
+argument_list|,
+name|gdc_set
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -302,6 +306,8 @@ argument_list|,
 name|GRAPHICS_MODE
 argument_list|,
 name|grrndrsw
+argument_list|,
+name|gdc_set
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -314,6 +320,16 @@ end_endif
 begin_comment
 comment|/* SC_NO_MODE_CHANGE */
 end_comment
+
+begin_expr_stmt
+name|RENDERER_MODULE
+argument_list|(
+name|gdc
+argument_list|,
+name|gdc_set
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static
