@@ -61,7 +61,7 @@ name|dd_pnpinfo
 index|[
 name|DEVINFO_STRLEN
 operator|*
-literal|2
+literal|4
 index|]
 decl_stmt|;
 name|char
@@ -69,7 +69,7 @@ name|dd_location
 index|[
 name|DEVINFO_STRLEN
 operator|*
-literal|2
+literal|4
 index|]
 decl_stmt|;
 name|uint32_t
