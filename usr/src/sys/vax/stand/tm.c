@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tm.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tm.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -55,10 +55,23 @@ directive|include
 file|"savax.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|MAXCTLR
+value|1
+end_define
+
+begin_comment
+comment|/* all addresses must be specified */
+end_comment
+
 begin_decl_stmt
 name|u_short
 name|tmstd
-index|[]
+index|[
+name|MAXCTLR
+index|]
 init|=
 block|{
 literal|0172520
@@ -82,8 +95,25 @@ end_expr_stmt
 begin_block
 block|{
 specifier|register
+name|int
 name|skip
-expr_stmt|;
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|u_int
+operator|)
+name|io
+operator|->
+name|i_ctlr
+operator|>=
+name|MAXCTLR
+condition|)
+return|return
+operator|(
+name|ECTLR
+operator|)
+return|;
 if|if
 condition|(
 name|badaddr
@@ -96,11 +126,13 @@ name|ubamem
 argument_list|(
 name|io
 operator|->
-name|i_unit
+name|i_adapt
 argument_list|,
 name|tmstd
 index|[
-literal|0
+name|io
+operator|->
+name|i_ctlr
 index|]
 argument_list|)
 argument_list|,
@@ -113,7 +145,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"nonexistent device\n"
+literal|"tm: nonexistent device\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -129,17 +161,18 @@ argument_list|,
 name|TM_REW
 argument_list|)
 expr_stmt|;
+for|for
+control|(
 name|skip
 operator|=
 name|io
 operator|->
-name|i_boff
-expr_stmt|;
-while|while
-condition|(
+name|i_part
+init|;
 name|skip
 operator|--
-condition|)
+condition|;
+control|)
 block|{
 name|io
 operator|->
@@ -209,8 +242,6 @@ specifier|register
 name|int
 name|com
 decl_stmt|,
-name|unit
-decl_stmt|,
 name|errcnt
 decl_stmt|;
 specifier|register
@@ -218,7 +249,14 @@ name|struct
 name|tmdevice
 modifier|*
 name|tmaddr
-init|=
+decl_stmt|;
+name|int
+name|word
+decl_stmt|,
+name|info
+decl_stmt|;
+name|tmaddr
+operator|=
 operator|(
 expr|struct
 name|tmdevice
@@ -228,24 +266,15 @@ name|ubamem
 argument_list|(
 name|io
 operator|->
-name|i_unit
+name|i_adapt
 argument_list|,
 name|tmstd
 index|[
-literal|0
-index|]
-argument_list|)
-decl_stmt|;
-name|int
-name|word
-decl_stmt|,
-name|info
-decl_stmt|;
-name|unit
-operator|=
 name|io
 operator|->
-name|i_unit
+name|i_ctlr
+index|]
+argument_list|)
 expr_stmt|;
 name|errcnt
 operator|=
@@ -257,14 +286,6 @@ name|tmquiet
 argument_list|(
 name|tmaddr
 argument_list|)
-expr_stmt|;
-name|com
-operator|=
-operator|(
-name|unit
-operator|<<
-literal|8
-operator|)
 expr_stmt|;
 name|info
 operator|=
@@ -290,6 +311,18 @@ name|tmba
 operator|=
 name|info
 expr_stmt|;
+name|com
+operator|=
+operator|(
+name|io
+operator|->
+name|i_unit
+operator|<<
+literal|8
+operator|)
+operator||
+name|TM_GO
+expr_stmt|;
 if|if
 condition|(
 name|func
@@ -303,8 +336,6 @@ operator|=
 name|com
 operator||
 name|TM_RCOM
-operator||
-name|TM_GO
 expr_stmt|;
 elseif|else
 if|if
@@ -320,8 +351,6 @@ operator|=
 name|com
 operator||
 name|TM_WCOM
-operator||
-name|TM_GO
 expr_stmt|;
 elseif|else
 if|if
@@ -345,8 +374,6 @@ operator|=
 name|com
 operator||
 name|TM_SREV
-operator||
-name|TM_GO
 expr_stmt|;
 return|return
 operator|(
@@ -362,8 +389,6 @@ operator|=
 name|com
 operator||
 name|func
-operator||
-name|TM_GO
 expr_stmt|;
 for|for
 control|(
@@ -432,15 +457,9 @@ operator|(
 literal|0
 operator|)
 return|;
-if|if
-condition|(
-name|errcnt
-operator|==
-literal|0
-condition|)
 name|printf
 argument_list|(
-literal|"te error: er=%b"
+literal|"tm tape error: er=%b\n"
 argument_list|,
 name|word
 argument_list|,
@@ -450,13 +469,14 @@ expr_stmt|;
 if|if
 condition|(
 name|errcnt
+operator|++
 operator|==
 literal|10
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\n"
+literal|"tm: unrecovered error\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -466,9 +486,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|errcnt
-operator|++
-expr_stmt|;
 name|tmstrategy
 argument_list|(
 name|io
@@ -486,7 +503,7 @@ name|errcnt
 condition|)
 name|printf
 argument_list|(
-literal|" recovered by retry\n"
+literal|"tm: recovered by retry\n"
 argument_list|)
 expr_stmt|;
 if|if

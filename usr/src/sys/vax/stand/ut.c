@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ut.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ut.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -65,10 +65,23 @@ parameter_list|)
 value|((reg)&0xffff)
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAXCTLR
+value|1
+end_define
+
+begin_comment
+comment|/* all addresses must be specified */
+end_comment
+
 begin_decl_stmt
 name|u_short
 name|utstd
-index|[]
+index|[
+name|MAXCTLR
+index|]
 init|=
 block|{
 literal|0172440
@@ -95,9 +108,26 @@ end_expr_stmt
 
 begin_block
 block|{
+specifier|register
 name|int
 name|skip
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|u_int
+operator|)
+name|io
+operator|->
+name|i_ctlr
+operator|>=
+name|MAXCTLR
+condition|)
+return|return
+operator|(
+name|ECTLR
+operator|)
+return|;
 if|if
 condition|(
 name|badaddr
@@ -114,7 +144,9 @@ name|i_unit
 argument_list|,
 name|utstd
 index|[
-literal|0
+name|io
+operator|->
+name|i_ctlr
 index|]
 argument_list|)
 argument_list|,
@@ -127,7 +159,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"nonexistent device\n"
+literal|"ut: nonexistent device\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -143,19 +175,18 @@ argument_list|,
 name|UT_REW
 argument_list|)
 expr_stmt|;
+for|for
+control|(
 name|skip
 operator|=
 name|io
 operator|->
-name|i_boff
-expr_stmt|;
-while|while
-condition|(
+name|i_part
+init|;
 name|skip
 operator|--
-operator|>
-literal|0
-condition|)
+condition|;
+control|)
 name|utstrategy
 argument_list|(
 name|io
@@ -199,11 +230,11 @@ end_block
 begin_define
 define|#
 directive|define
-name|utwait
+name|UTWAIT
 parameter_list|(
 name|addr
 parameter_list|)
-value|{do word=addr->utcs1; while((word&UT_RDY)==0);}
+value|{ \ 	do \ 		word = addr->utcs1; \ 	while((word&UT_RDY) == 0); \ }
 end_define
 
 begin_expr_stmt
@@ -224,6 +255,12 @@ end_expr_stmt
 begin_block
 block|{
 specifier|register
+name|struct
+name|utdevice
+modifier|*
+name|addr
+decl_stmt|;
+specifier|register
 name|u_short
 name|word
 decl_stmt|;
@@ -231,12 +268,16 @@ specifier|register
 name|int
 name|errcnt
 decl_stmt|;
-specifier|register
-name|struct
-name|utdevice
-modifier|*
+name|int
+name|info
+decl_stmt|,
+name|resid
+decl_stmt|;
+name|u_short
+name|dens
+decl_stmt|;
 name|addr
-init|=
+operator|=
 operator|(
 expr|struct
 name|utdevice
@@ -250,27 +291,17 @@ name|i_unit
 argument_list|,
 name|utstd
 index|[
-literal|0
+name|io
+operator|->
+name|i_ctlr
 index|]
 argument_list|)
-decl_stmt|;
-name|int
-name|info
-decl_stmt|,
-name|resid
-decl_stmt|;
-name|u_short
-name|dens
-decl_stmt|;
+expr_stmt|;
 name|dens
 operator|=
-operator|(
 name|io
 operator|->
 name|i_unit
-operator|&
-literal|07
-operator|)
 operator||
 name|PDP11FMT
 operator||
@@ -424,7 +455,7 @@ name|func
 operator||
 name|UT_GO
 expr_stmt|;
-name|utwait
+name|UTWAIT
 argument_list|(
 name|addr
 argument_list|)
@@ -482,15 +513,9 @@ name|UT_TRE
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-name|errcnt
-operator|==
-literal|0
-condition|)
 name|printf
 argument_list|(
-literal|"tj error: cs1=%b er=%b cs2=%b ds=%b"
+literal|"ut error: cs1=%b er=%b cs2=%b ds=%b"
 argument_list|,
 name|addr
 operator|->
@@ -518,13 +543,14 @@ expr_stmt|;
 if|if
 condition|(
 name|errcnt
+operator|++
 operator|==
 literal|10
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\n"
+literal|"ut: unrecovered error\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -534,9 +560,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|errcnt
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|addr
@@ -586,7 +609,7 @@ name|UT_ERASE
 operator||
 name|UT_GO
 expr_stmt|;
-name|utwait
+name|UTWAIT
 argument_list|(
 name|addr
 argument_list|)
@@ -602,7 +625,7 @@ name|errcnt
 condition|)
 name|printf
 argument_list|(
-literal|" recovered by retry\n"
+literal|"ut: recovered by retry\n"
 argument_list|)
 expr_stmt|;
 name|done
@@ -669,6 +692,7 @@ block|}
 end_block
 
 begin_expr_stmt
+specifier|static
 name|utquiet
 argument_list|(
 name|addr
@@ -687,7 +711,7 @@ specifier|register
 name|u_short
 name|word
 decl_stmt|;
-name|utwait
+name|UTWAIT
 argument_list|(
 name|addr
 argument_list|)

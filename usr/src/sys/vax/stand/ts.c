@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ts.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ts.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -55,10 +55,23 @@ directive|include
 file|"savax.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|MAXCTLR
+value|1
+end_define
+
+begin_comment
+comment|/* all addresses must be specified */
+end_comment
+
 begin_decl_stmt
 name|u_short
 name|tsstd
-index|[]
+index|[
+name|MAXCTLR
+index|]
 init|=
 block|{
 literal|0772520
@@ -82,16 +95,6 @@ end_decl_stmt
 begin_comment
 comment|/* Unibus address of ts structure */
 end_comment
-
-begin_decl_stmt
-name|struct
-name|tsdevice
-modifier|*
-name|tsaddr
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
 
 begin_struct
 struct|struct
@@ -135,6 +138,12 @@ name|ts
 modifier|*
 name|ts_ubaddr
 decl_stmt|;
+specifier|register
+name|struct
+name|tsdevice
+modifier|*
+name|tsaddr
+decl_stmt|;
 name|long
 name|i
 init|=
@@ -142,10 +151,35 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-name|tsaddr
-operator|==
-literal|0
+operator|(
+name|u_int
+operator|)
+name|io
+operator|->
+name|i_ctlr
+operator|>=
+name|MAXCTLR
 condition|)
+return|return
+operator|(
+name|ECTLR
+operator|)
+return|;
+comment|/* TS11 only supports one transport per formatter */
+if|if
+condition|(
+operator|(
+name|u_int
+operator|)
+name|io
+operator|->
+name|i_unit
+condition|)
+return|return
+operator|(
+name|EUNIT
+operator|)
+return|;
 name|tsaddr
 operator|=
 operator|(
@@ -157,11 +191,13 @@ name|ubamem
 argument_list|(
 name|io
 operator|->
-name|i_unit
+name|i_adapt
 argument_list|,
 name|tsstd
 index|[
-literal|0
+name|io
+operator|->
+name|i_ctlr
 index|]
 argument_list|)
 expr_stmt|;
@@ -181,18 +217,11 @@ name|short
 argument_list|)
 argument_list|)
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"nonexistent device\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 name|tsaddr
 operator|->
 name|tssr
@@ -232,7 +261,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EUNIT
+name|ENXIO
 operator|)
 return|;
 block|}
@@ -253,7 +282,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EUNIT
+name|ENXIO
 operator|)
 return|;
 block|}
@@ -446,7 +475,7 @@ name|i_cc
 operator|=
 name|io
 operator|->
-name|i_boff
+name|i_part
 condition|)
 name|tsstrategy
 argument_list|(
@@ -506,14 +535,41 @@ end_expr_stmt
 begin_block
 block|{
 specifier|register
+name|struct
+name|tsdevice
+modifier|*
+name|tsaddr
+decl_stmt|;
+specifier|register
 name|int
 name|errcnt
 decl_stmt|,
 name|info
-init|=
-literal|0
 decl_stmt|;
+name|tsaddr
+operator|=
+operator|(
+expr|struct
+name|tsdevice
+operator|*
+operator|)
+name|ubamem
+argument_list|(
+name|io
+operator|->
+name|i_adapt
+argument_list|,
+name|tsstd
+index|[
+name|io
+operator|->
+name|i_ctlr
+index|]
+argument_list|)
+expr_stmt|;
 name|errcnt
+operator|=
+name|info
 operator|=
 literal|0
 expr_stmt|;
@@ -599,7 +655,6 @@ operator|)
 operator|&
 literal|3
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|func
@@ -621,6 +676,7 @@ name|func
 operator|=
 name|TS_WCOM
 expr_stmt|;
+block|}
 name|ts
 operator|.
 name|ts_cmd
@@ -721,6 +777,7 @@ expr_stmt|;
 if|if
 condition|(
 name|errcnt
+operator|++
 operator|==
 literal|10
 condition|)
@@ -737,9 +794,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|errcnt
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|func

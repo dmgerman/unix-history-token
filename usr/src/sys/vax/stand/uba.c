@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uba.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uba.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -88,6 +88,7 @@ name|int
 name|npf
 decl_stmt|;
 name|unsigned
+name|int
 name|v
 decl_stmt|;
 specifier|register
@@ -176,7 +177,7 @@ name|ubauba
 argument_list|(
 name|io
 operator|->
-name|i_unit
+name|i_adapt
 argument_list|)
 operator|->
 name|uba_map
@@ -326,7 +327,7 @@ name|ubauba
 argument_list|(
 name|io
 operator|->
-name|i_unit
+name|i_adapt
 argument_list|)
 argument_list|,
 name|bdp
@@ -345,7 +346,7 @@ name|ubauba
 argument_list|(
 name|io
 operator|->
-name|i_unit
+name|i_adapt
 argument_list|)
 operator|->
 name|uba_dpr
@@ -363,7 +364,7 @@ name|ubauba
 argument_list|(
 name|io
 operator|->
-name|i_unit
+name|i_adapt
 argument_list|)
 operator|->
 name|uba_dpr
