@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_pcb.c	4.38	83/01/04	*/
+comment|/*	in_pcb.c	4.39	83/01/22	*/
 end_comment
 
 begin_include
@@ -419,6 +419,16 @@ operator|->
 name|pr_flags
 operator|&
 name|PR_CONNREQUIRED
+operator|)
+operator|==
+literal|0
+operator|||
+operator|(
+name|so
+operator|->
+name|so_options
+operator|&
+name|SO_ACCEPTCONN
 operator|)
 operator|==
 literal|0
