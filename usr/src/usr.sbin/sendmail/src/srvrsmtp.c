@@ -27,7 +27,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.40
+literal|3.41
 operator|%
 name|G
 operator|%
@@ -55,7 +55,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.40
+literal|3.41
 operator|%
 name|G
 operator|%
@@ -649,13 +649,17 @@ expr_stmt|;
 comment|/* echo command to transcript */
 if|if
 condition|(
-name|Xscript
+name|CurEnv
+operator|->
+name|e_xfp
 operator|!=
 name|NULL
 condition|)
 name|fprintf
 argument_list|(
-name|Xscript
+name|CurEnv
+operator|->
+name|e_xfp
 argument_list|,
 literal|"<<< %s\n"
 argument_list|,
@@ -2015,6 +2019,11 @@ comment|/* child */
 name|InChild
 operator|=
 name|TRUE
+expr_stmt|;
+name|clearenvelope
+argument_list|(
+name|CurEnv
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

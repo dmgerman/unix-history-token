@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|3.50
+literal|3.51
 operator|%
 name|G
 operator|%
@@ -320,7 +320,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|Xscript
+name|e
+operator|->
+name|e_xfp
 operator|!=
 name|NULL
 condition|)
@@ -330,7 +332,9 @@ name|void
 operator|)
 name|fflush
 argument_list|(
-name|Xscript
+name|e
+operator|->
+name|e_xfp
 argument_list|)
 expr_stmt|;
 name|xfile
@@ -556,7 +560,9 @@ name|p
 operator|!=
 name|NULL
 operator|&&
-name|TempFile
+name|e
+operator|->
+name|e_dfp
 operator|!=
 name|NULL
 condition|)
@@ -932,14 +938,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-operator|(
-name|void
-operator|)
-name|queuename
+name|openxscript
 argument_list|(
 name|ee
-argument_list|,
-literal|'\0'
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1154,7 +1155,7 @@ unit|}
 end_escape
 
 begin_comment
-comment|/* **  ERRBODY -- output the body of an error message. ** **	Typically this is a copy of the transcript plus a copy of the **	original offending message. ** **	Parameters: **		xfile -- the transcript file. **		fp -- the output file. **		xdot -- if set, use the SMTP hidden dot algorithm. ** **	Returns: **		none ** **	Side Effects: **		Outputs the body of an error message. */
+comment|/* **  ERRBODY -- output the body of an error message. ** **	Typically this is a copy of the transcript plus a copy of the **	original offending message. ** **	Parameters: **		xfile -- the transcript file. **		fp -- the output file. **		xdot -- if set, use the SMTP hidden dot algorithm. **		e -- the envelope we are working in. ** **	Returns: **		none ** **	Side Effects: **		Outputs the body of an error message. */
 end_comment
 
 begin_expr_stmt
@@ -1165,6 +1166,8 @@ operator|,
 name|m
 operator|,
 name|xdot
+operator|,
+name|e
 operator|)
 specifier|register
 name|FILE
@@ -1185,6 +1188,14 @@ end_decl_stmt
 begin_decl_stmt
 name|bool
 name|xdot
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 end_decl_stmt
 
@@ -1230,7 +1241,7 @@ name|p
 operator|=
 name|queuename
 argument_list|(
-name|CurEnv
+name|e
 operator|->
 name|e_parent
 argument_list|,
@@ -1279,7 +1290,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|Xscript
+name|e
+operator|->
+name|e_xfp
 operator|!=
 name|NULL
 condition|)
@@ -1288,7 +1301,9 @@ name|void
 operator|)
 name|fflush
 argument_list|(
-name|Xscript
+name|e
+operator|->
+name|e_xfp
 argument_list|)
 expr_stmt|;
 while|while
@@ -1342,7 +1357,11 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|TempFile
+name|e
+operator|->
+name|e_parent
+operator|->
+name|e_dfp
 operator|!=
 name|NULL
 condition|)
@@ -1373,7 +1392,7 @@ name|fp
 argument_list|,
 name|m
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_parent
 argument_list|)
@@ -1392,6 +1411,10 @@ argument_list|,
 name|m
 argument_list|,
 name|xdot
+argument_list|,
+name|e
+operator|->
+name|e_parent
 argument_list|)
 expr_stmt|;
 block|}
@@ -1418,7 +1441,7 @@ name|fp
 argument_list|,
 name|m
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_parent
 argument_list|)

@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.29
+literal|3.30
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.29
+literal|3.30
 operator|%
 name|G
 operator|%
@@ -825,6 +825,8 @@ argument_list|,
 name|m
 argument_list|,
 name|TRUE
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 name|smtpmessage
@@ -1051,7 +1053,9 @@ decl_stmt|;
 comment|/* actually do the read */
 if|if
 condition|(
-name|Xscript
+name|CurEnv
+operator|->
+name|e_xfp
 operator|!=
 name|NULL
 condition|)
@@ -1060,7 +1064,9 @@ name|void
 operator|)
 name|fflush
 argument_list|(
-name|Xscript
+name|CurEnv
+operator|->
+name|e_xfp
 argument_list|)
 expr_stmt|;
 comment|/* for debugging */
@@ -1121,13 +1127,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|Xscript
+name|CurEnv
+operator|->
+name|e_xfp
 operator|!=
 name|NULL
 condition|)
 name|fprintf
 argument_list|(
-name|Xscript
+name|CurEnv
+operator|->
+name|e_xfp
 argument_list|,
 literal|"%s\n"
 argument_list|,
@@ -1282,13 +1292,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|Xscript
+name|CurEnv
+operator|->
+name|e_xfp
 operator|!=
 name|NULL
 condition|)
 name|fprintf
 argument_list|(
-name|Xscript
+name|CurEnv
+operator|->
+name|e_xfp
 argument_list|,
 literal|">>> %s\n"
 argument_list|,

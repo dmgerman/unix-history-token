@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.135
+literal|3.136
 operator|%
 name|G
 operator|%
@@ -1744,6 +1744,8 @@ argument_list|,
 name|m
 argument_list|,
 name|FALSE
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2253,7 +2255,9 @@ endif|SMTP
 comment|/* 	**  Actually fork the mailer process. 	**	DOFORK is clever about retrying. 	*/
 if|if
 condition|(
-name|Xscript
+name|CurEnv
+operator|->
+name|e_xfp
 operator|!=
 name|NULL
 condition|)
@@ -2262,7 +2266,9 @@ name|void
 operator|)
 name|fflush
 argument_list|(
-name|Xscript
+name|CurEnv
+operator|->
+name|e_xfp
 argument_list|)
 expr_stmt|;
 comment|/* for debugging */
@@ -2470,7 +2476,9 @@ name|dup
 argument_list|(
 name|fileno
 argument_list|(
-name|Xscript
+name|CurEnv
+operator|->
+name|e_xfp
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3181,7 +3189,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PUTBODY -- put the body of a message. ** **	Parameters: **		fp -- file to output onto. **		m -- a mailer descriptor. **		xdot -- if set, use SMTP hidden dot algorithm. ** **	Returns: **		none. ** **	Side Effects: **		The message is written onto fp. */
+comment|/* **  PUTBODY -- put the body of a message. ** **	Parameters: **		fp -- file to output onto. **		m -- a mailer descriptor. **		xdot -- if set, use SMTP hidden dot algorithm. **		e -- the envelope to put out. ** **	Returns: **		none. ** **	Side Effects: **		The message is written onto fp. */
 end_comment
 
 begin_macro
@@ -3192,6 +3200,8 @@ argument_list|,
 argument|m
 argument_list|,
 argument|xdot
+argument_list|,
+argument|e
 argument_list|)
 end_macro
 
@@ -3212,6 +3222,14 @@ end_decl_stmt
 begin_decl_stmt
 name|bool
 name|xdot
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 end_decl_stmt
 
@@ -3240,14 +3258,78 @@ decl_stmt|;
 comment|/* 	**  Output the body of the message 	*/
 if|if
 condition|(
-name|TempFile
+name|e
+operator|->
+name|e_dfp
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|e
+operator|->
+name|e_df
+operator|!=
+name|NULL
+condition|)
+block|{
+name|e
+operator|->
+name|e_dfp
+operator|=
+name|fopen
+argument_list|(
+name|e
+operator|->
+name|e_df
+argument_list|,
+literal|"r"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|e
+operator|->
+name|e_dfp
+operator|==
+name|NULL
+condition|)
+name|syserr
+argument_list|(
+literal|"Cannot open %s"
+argument_list|,
+name|e
+operator|->
+name|e_df
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|putline
+argument_list|(
+literal|"<<< No Message Collected>>>"
+argument_list|,
+name|fp
+argument_list|,
+name|fullsmtp
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|e
+operator|->
+name|e_dfp
 operator|!=
 name|NULL
 condition|)
 block|{
 name|rewind
 argument_list|(
-name|TempFile
+name|e
+operator|->
+name|e_dfp
 argument_list|)
 expr_stmt|;
 name|buf
@@ -3278,11 +3360,14 @@ name|buf
 operator|-
 literal|1
 argument_list|,
-name|TempFile
+name|e
+operator|->
+name|e_dfp
 argument_list|)
 operator|!=
 name|NULL
 condition|)
+block|{
 name|putline
 argument_list|(
 operator|(
@@ -3309,11 +3394,14 @@ argument_list|,
 name|fullsmtp
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ferror
 argument_list|(
-name|TempFile
+name|e
+operator|->
+name|e_dfp
 argument_list|)
 condition|)
 block|{
@@ -3678,6 +3766,8 @@ argument_list|,
 name|ProgMailer
 argument_list|,
 name|FALSE
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 name|fputs
@@ -3977,7 +4067,9 @@ name|SM_FORK
 case|:
 if|if
 condition|(
-name|Xscript
+name|e
+operator|->
+name|e_xfp
 operator|!=
 name|NULL
 condition|)
@@ -3986,7 +4078,9 @@ name|void
 operator|)
 name|fflush
 argument_list|(
-name|Xscript
+name|e
+operator|->
+name|e_xfp
 argument_list|)
 expr_stmt|;
 name|pid

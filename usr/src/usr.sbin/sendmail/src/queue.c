@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.56
+literal|3.57
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.56
+literal|3.57
 operator|%
 name|G
 operator|%
@@ -356,6 +356,8 @@ argument_list|,
 name|ProgMailer
 argument_list|,
 name|FALSE
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1950,10 +1952,6 @@ name|EX_OK
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* create ourselves a transcript file */
-name|openxscrpt
-argument_list|()
-expr_stmt|;
 comment|/* do basic system initialization */
 name|initsys
 argument_list|()
@@ -2272,7 +2270,9 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|TempFile
+name|e
+operator|->
+name|e_dfp
 operator|=
 name|fopen
 argument_list|(
@@ -2285,7 +2285,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|TempFile
+name|e
+operator|->
+name|e_dfp
 operator|==
 name|NULL
 condition|)

@@ -15,7 +15,7 @@ operator|)
 name|err
 operator|.
 name|c
-literal|3.37
+literal|3.38
 operator|%
 name|G
 operator|%
@@ -535,13 +535,17 @@ block|{
 comment|/* output to transcript */
 if|if
 condition|(
-name|Xscript
+name|CurEnv
+operator|->
+name|e_xfp
 operator|!=
 name|NULL
 condition|)
 name|fprintf
 argument_list|(
-name|Xscript
+name|CurEnv
+operator|->
+name|e_xfp
 argument_list|,
 literal|"%s\n"
 argument_list|,

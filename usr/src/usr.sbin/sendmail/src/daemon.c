@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.34
+literal|3.35
 operator|%
 name|G
 operator|%
@@ -81,7 +81,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.34
+literal|3.35
 operator|%
 name|G
 operator|%
@@ -860,7 +860,9 @@ name|void
 operator|)
 name|fflush
 argument_list|(
-name|Xscript
+name|CurEnv
+operator|->
+name|e_xfp
 argument_list|)
 expr_stmt|;
 comment|/* for debugging */

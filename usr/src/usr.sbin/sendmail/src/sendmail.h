@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.102		%G%"
+literal|"@(#)sendmail.h	3.103		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -864,11 +864,21 @@ modifier|*
 name|e_df
 decl_stmt|;
 comment|/* location of temp file */
+name|FILE
+modifier|*
+name|e_dfp
+decl_stmt|;
+comment|/* temporary file */
 name|char
 modifier|*
 name|e_id
 decl_stmt|;
 comment|/* code for this entry in queue */
+name|FILE
+modifier|*
+name|e_xfp
+decl_stmt|;
+comment|/* transcript file */
 name|char
 modifier|*
 name|e_macro
@@ -1964,30 +1974,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* output connection */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|FILE
-modifier|*
-name|TempFile
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* mail temp file */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|FILE
-modifier|*
-name|Xscript
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* mail transcript file */
 end_comment
 
 begin_decl_stmt
