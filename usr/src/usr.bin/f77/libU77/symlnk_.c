@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_symlnk[] = "@(#)symlnk_.c	1.1";  *  * make a symbolic link to a file  *  * calling sequence:  *	ierror = symlnk(name1, name2)  * where:  *	name1 is the pathname of an existing file  *	name2 is a pathname that will become a symbolic link to name1  *	ierror will be 0 if successful; a system error code otherwise.  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)symlnk_.c	5.1	%G%  */
+end_comment
+
+begin_comment
+comment|/*  * make a symbolic link to a file  *  * calling sequence:  *	ierror = symlnk(name1, name2)  * where:  *	name1 is the pathname of an existing file  *	name2 is a pathname that will become a symbolic link to name1  *	ierror will be 0 if successful; a system error code otherwise.  */
 end_comment
 
 begin_include

@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_fdate[] = "@(#)fdate_.c	1.1";  *  * Return date and time in an ASCII string.  *  * calling sequence:  *	character*24 string  * 	call fdate(string)  * where:  *	the 24 character string will be filled with the date& time in  *	ascii form as described under ctime(3).  *	No 'newline' or NULL will be included.  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)fdate_.c	5.1	%G%  */
+end_comment
+
+begin_comment
+comment|/*  * Return date and time in an ASCII string.  *  * calling sequence:  *	character*24 string  * 	call fdate(string)  * where:  *	the 24 character string will be filled with the date& time in  *	ascii form as described under ctime(3).  *	No 'newline' or NULL will be included.  */
 end_comment
 
 begin_macro

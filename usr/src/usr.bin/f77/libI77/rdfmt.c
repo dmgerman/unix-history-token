@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_rdfmt[] = "@(#)rdfmt.c	1.12";  *  * formatted read routines  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)rdfmt.c	5.1	%G%  */
+end_comment
+
+begin_comment
+comment|/*  * formatted read routines  */
 end_comment
 
 begin_include

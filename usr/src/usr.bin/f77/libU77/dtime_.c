@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_dtime[] = "@(#)dtime_.c	1.1";  *  * Returns the delta time since the last call to dtime.  *  * calling sequence:  * 	real time(2)  * 	call dtime(time)  * where:  * 	the 2 element array time will receive the user and system  * 	elapsed time since the last call to dtime, or since the start  * 	of execution.  *  * This routine can be called as function, and returns the sum of  * user and system times. The time_array argument must always be given.  *  * The resolution for all timing is 1/60 second.  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dtime_.c	5.1	%G%  */
+end_comment
+
+begin_comment
+comment|/*  * Returns the delta time since the last call to dtime.  *  * calling sequence:  * 	real time(2)  * 	call dtime(time)  * where:  * 	the 2 element array time will receive the user and system  * 	elapsed time since the last call to dtime, or since the start  * 	of execution.  *  * This routine can be called as function, and returns the sum of  * user and system times. The time_array argument must always be given.  *  * The resolution for all timing is 1/60 second.  */
 end_comment
 
 begin_include

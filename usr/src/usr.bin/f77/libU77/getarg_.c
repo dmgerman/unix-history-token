@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_getarg[] = "@(#)getarg_.c	1.1";  *  * return a specified command line argument  *  * calling sequence:  *	character*20 arg  *	call getarg(k, arg)  * where:  *	arg will receive the kth unix command argument */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)getarg_.c	5.1	%G%  */
+end_comment
+
+begin_comment
+comment|/*  * return a specified command line argument  *  * calling sequence:  *	character*20 arg  *	call getarg(k, arg)  * where:  *	arg will receive the kth unix command argument */
 end_comment
 
 begin_macro

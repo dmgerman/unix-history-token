@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_isatty[] = "@(#)isatty_.c	1.1";  *  * determine if stream is associated with a tty (async port)  *  * calling sequence:  *	logical	isatty, val  *	val = isatty (lunit)  * where:  *	val will be .TRUE. if lunit is associated with a 'tty'  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)isatty_.c	5.1	%G%  */
+end_comment
+
+begin_comment
+comment|/*  * determine if stream is associated with a tty (async port)  *  * calling sequence:  *	logical	isatty, val  *	val = isatty (lunit)  * where:  *	val will be .TRUE. if lunit is associated with a 'tty'  */
 end_comment
 
 begin_include

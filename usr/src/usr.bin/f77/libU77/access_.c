@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_access[] = "@(#)access_.c	1.3";  *  * determine accessability of a file  *  * calling format:  *	integer access  *	ierror = access(filename, mode)  * where:  *	ierror will be 0 for successful access; an error number otherwise.  *	filename is a character string  *	mode is a character string which may include any combination of  *	'r', 'w', 'x', ' '. (' ' => test for existence)  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)access_.c	5.1	%G%  */
+end_comment
+
+begin_comment
+comment|/*  * determine accessability of a file  *  * calling format:  *	integer access  *	ierror = access(filename, mode)  * where:  *	ierror will be 0 for successful access; an error number otherwise.  *	filename is a character string  *	mode is a character string which may include any combination of  *	'r', 'w', 'x', ' '. (' ' => test for existence)  */
 end_comment
 
 begin_include

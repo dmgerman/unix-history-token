@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_getcwd[] = "@(#)getcwd_.c	1.5";  * Get pathname of current working directory.  *  * calling sequence:  *	character*128 path  *	ierr = getcwd(path)  * where:  *	path will receive the pathname of the current working directory.  *	ierr will be 0 if successful, a system error code otherwise.  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)getcwd_.c	5.1	%G%  */
+end_comment
+
+begin_comment
+comment|/*  * Get pathname of current working directory.  *  * calling sequence:  *	character*128 path  *	ierr = getcwd(path)  * where:  *	path will receive the pathname of the current working directory.  *	ierr will be 0 if successful, a system error code otherwise.  */
 end_comment
 
 begin_include

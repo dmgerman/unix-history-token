@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+end_comment
+
+begin_comment
 comment|/*  *  mkindx.c - utility to format a nice index to source files, etc.  *  *  usage:  mkindx "title string" [file_name] [filename] .....  */
 end_comment
 
@@ -14,7 +18,7 @@ name|char
 name|id_mkindx
 index|[]
 init|=
-literal|"@(#)mkindx.c	1.1"
+literal|"@(#)mkindx.c	5.1 %G%"
 decl_stmt|;
 end_decl_stmt
 

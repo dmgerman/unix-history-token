@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_stat[] = "@(#)lstat_.c	1.2";  *  * get file status  *  * calling sequence:  *	integer lstat, statb(12)  *	external lstat  *	ierr = lstat (name, statb)  * where:  *	'statb' will receive the stat structure for file 'name'.  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)lstat_.c	5.1	%G%  */
+end_comment
+
+begin_comment
+comment|/*  * get file status  *  * calling sequence:  *	integer lstat, statb(12)  *	external lstat  *	ierr = lstat (name, statb)  * where:  *	'statb' will receive the stat structure for file 'name'.  */
 end_comment
 
 begin_include

@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_f_errno[] = "@(#)f_errno.h	1.8";  *  * f77 I/O error definitions  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)f_errno.h	5.1 (Berkeley) %G%  */
+end_comment
+
+begin_comment
+comment|/*  * f77 I/O error definitions  */
 end_comment
 
 begin_include

@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_system[] = "@(#)system_.c	1.5";  *  * execute a unix command  *  * calling sequence:  *	iexit = system(command)  * where:  *	iexit will return the exit status of the command  *	command is a character string containing the command to be executed  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)system_.c	5.1	%G%  */
+end_comment
+
+begin_comment
+comment|/*  * execute a unix command  *  * calling sequence:  *	iexit = system(command)  * where:  *	iexit will return the exit status of the command  *	command is a character string containing the command to be executed  */
 end_comment
 
 begin_include

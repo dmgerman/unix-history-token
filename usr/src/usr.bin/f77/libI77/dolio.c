@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_dolio[] = "@(#)dolio.c	1.2";  *  * list directed i/o common routines  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dolio.c	5.1	%G%  */
+end_comment
+
+begin_comment
+comment|/*  * list directed i/o common routines  */
 end_comment
 
 begin_include

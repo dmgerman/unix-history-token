@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_chdir[] = "@(#)chdir_.c	1.3";  *  * change default directory  *  * calling sequence:  *	integer chdir  *	ierror = chdir(dirname)  * where:  *	ierror will receive a returned status (0 == OK)  *	dirname is the directory name  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)chdir_.c	5.1	%G%  */
+end_comment
+
+begin_comment
+comment|/*  * change default directory  *  * calling sequence:  *	integer chdir  *	ierror = chdir(dirname)  * where:  *	ierror will receive a returned status (0 == OK)  *	dirname is the directory name  */
 end_comment
 
 begin_include

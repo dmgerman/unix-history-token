@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_loc[] = "@(#)loc_.c	1.1";  *  * Return the address of the argument.  *  * calling sequence:  *	iloc = loc (arg)  * where:  *	iloc will receive the address of arg  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)loc_.c	5.1	%G%  */
+end_comment
+
+begin_comment
+comment|/*  * Return the address of the argument.  *  * calling sequence:  *	iloc = loc (arg)  * where:  *	iloc will receive the address of arg  */
 end_comment
 
 begin_function

@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_gerror[] = "@(#)gerror_.c	1.1";  *  * Return a standard error message in a character string.  *  * calling sequence:  *	call gerror (string)  * or  *	character*20 gerror, string  *	string = gerror()  * where:  *	'string' will receive the standard error message  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)gerror_.c	5.1	%G%  */
+end_comment
+
+begin_comment
+comment|/*  * Return a standard error message in a character string.  *  * calling sequence:  *	call gerror (string)  * or  *	character*20 gerror, string  *	string = gerror()  * where:  *	'string' will receive the standard error message  */
 end_comment
 
 begin_include

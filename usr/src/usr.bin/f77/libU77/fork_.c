@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_fork[] = "@(#)fork_.c	1.1";  *  * fork a copy of this process  *  * calling sequence:  *	integer fork  *	ierror = fork()  * where:  *	ierror will be	- child pid if parent and successful  *			- 0 if child  *			- -errno if unsuccessful  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)fork_.c	5.1	%G%  */
+end_comment
+
+begin_comment
+comment|/*  * fork a copy of this process  *  * calling sequence:  *	integer fork  *	ierror = fork()  * where:  *	ierror will be	- child pid if parent and successful  *			- 0 if child  *			- -errno if unsuccessful  */
 end_comment
 
 begin_include

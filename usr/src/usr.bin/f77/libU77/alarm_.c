@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_alarm[] = "@(#)alarm_.c	1.1";  *  * set an alarm time, arrange for user specified action, and return.  *  * calling sequence:  *	integer	flag  *	external alfunc  *	lastiv = alarm (intval, alfunc)  * where:  *	intval	= the alarm interval in seconds; 0 turns off the alarm.  *	alfunc	= the function to be called after the alarm interval,  *  *	The returned value will be the time remaining on the last alarm.  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)alarm_.c	5.1	%G%  */
+end_comment
+
+begin_comment
+comment|/*  * set an alarm time, arrange for user specified action, and return.  *  * calling sequence:  *	integer	flag  *	external alfunc  *	lastiv = alarm (intval, alfunc)  * where:  *	intval	= the alarm interval in seconds; 0 turns off the alarm.  *	alfunc	= the function to be called after the alarm interval,  *  *	The returned value will be the time remaining on the last alarm.  */
 end_comment
 
 begin_include

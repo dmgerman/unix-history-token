@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_kill[] = "@(#)kill_.c	1.1";  *  * send a signal to a process  *  * calling sequence:  *	ierror = kill(pid, signum)  * where:  *	pid must be the process id of one of the user's processes  *	signum must be a valid signal number (see signal(2))  *	ierror will be 0 if successful; an error code otherwise.  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kill_.c	5.1	%G%  */
+end_comment
+
+begin_comment
+comment|/*  * send a signal to a process  *  * calling sequence:  *	ierror = kill(pid, signum)  * where:  *	pid must be the process id of one of the user's processes  *	signum must be a valid signal number (see signal(2))  *	ierror will be 0 if successful; an error code otherwise.  */
 end_comment
 
 begin_include

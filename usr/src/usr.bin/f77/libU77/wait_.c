@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_wait[] = "@(#)wait_.c	1.1";  *  * wait for a child to die  *  * calling sequence:  *	integer wait, status, chilid  *	chilid = wait(status)  * where:  *	chilid will be	->0 if child process id  *			-<0 if (negative of) system error code  *	status will contain the exit status of the child  *		(see wait(2))  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)wait_.c	5.1	%G%  */
+end_comment
+
+begin_comment
+comment|/*  * wait for a child to die  *  * calling sequence:  *	integer wait, status, chilid  *	chilid = wait(status)  * where:  *	chilid will be	->0 if child process id  *			-<0 if (negative of) system error code  *	status will contain the exit status of the child  *		(see wait(2))  */
 end_comment
 
 begin_decl_stmt

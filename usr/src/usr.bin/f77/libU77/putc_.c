@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_putc[] = "@(#)putc_.c	1.3";  *  * write a character to the standard output  *  * calling sequence:  *	integer putc  *	ierror =  putc (char)  * where:  *	char will be sent to the standard output, usually the terminal  *	ierror will be 0 if successful; a system error code otherwise.  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)putc_.c	5.1	%G%  */
+end_comment
+
+begin_comment
+comment|/*  * write a character to the standard output  *  * calling sequence:  *	integer putc  *	ierror =  putc (char)  * where:  *	char will be sent to the standard output, usually the terminal  *	ierror will be 0 if successful; a system error code otherwise.  */
 end_comment
 
 begin_include

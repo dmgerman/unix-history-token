@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_idate[] = "@(#)idate_.c	1.2";  *  * return date in numerical form  *  * calling sequence:  *	integer iarray(3)  *	call idate(iarray)  * where:  *	iarray will receive the current date; day, mon, year.  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)idate_.c	5.1	%G%  */
+end_comment
+
+begin_comment
+comment|/*  * return date in numerical form  *  * calling sequence:  *	integer iarray(3)  *	call idate(iarray)  * where:  *	iarray will receive the current date; day, mon, year.  */
 end_comment
 
 begin_include
