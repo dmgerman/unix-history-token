@@ -7,49 +7,49 @@ begin_define
 define|#
 directive|define
 name|SCORENAME
-value|".lscore12.0"
+value|"lscore12.0"
 end_define
 
 begin_define
 define|#
 directive|define
 name|LOGFNAME
-value|".llog12.0"
+value|"llog12.0"
 end_define
 
 begin_define
 define|#
 directive|define
 name|HELPNAME
-value|".larn.help"
+value|"larn.help"
 end_define
 
 begin_define
 define|#
 directive|define
 name|LEVELSNAME
-value|".larnmaze"
+value|"larnmaze"
 end_define
 
 begin_define
 define|#
 directive|define
 name|FORTSNAME
-value|".lfortune"
+value|"lfortune"
 end_define
 
 begin_define
 define|#
 directive|define
 name|PLAYERIDS
-value|".playerids"
+value|"playerids"
 end_define
 
 begin_define
 define|#
 directive|define
 name|HOLIFILE
-value|".holidays"
+value|"holidays"
 end_define
 
 begin_define
