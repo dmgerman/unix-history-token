@@ -55,6 +55,7 @@ name|s
 argument_list|,
 name|sp
 argument_list|,
+operator|&
 name|result
 argument_list|)
 expr_stmt|;
