@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vfsops.c	8.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vfsops.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -283,6 +283,14 @@ name|mnt_flag
 operator|=
 name|MNT_RDONLY
 expr_stmt|;
+name|LIST_INIT
+argument_list|(
+operator|&
+name|mp
+operator|->
+name|mnt_vnodelist
+argument_list|)
+expr_stmt|;
 name|args
 operator|.
 name|flags
@@ -490,18 +498,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_comment
-comment|/*  * Flag to allow forcible unmounting.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|iso_doforce
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * VFS Operations.  *  * mount system call  */
@@ -1927,10 +1923,14 @@ operator|&
 name|MNT_FORCE
 condition|)
 block|{
+specifier|extern
+name|int
+name|doforce
+decl_stmt|;
 if|if
 condition|(
 operator|!
-name|iso_doforce
+name|doforce
 operator|||
 operator|(
 name|mp
