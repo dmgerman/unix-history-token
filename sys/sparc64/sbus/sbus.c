@@ -3502,9 +3502,22 @@ name|intrclrptr
 operator|=
 name|SBR_SLOT0_INT_CLR
 operator|+
-name|inr
+operator|(
+name|slot
 operator|*
 literal|8
+operator|*
+literal|8
+operator|)
+operator|+
+operator|(
+name|INTPRI
+argument_list|(
+name|vec
+argument_list|)
+operator|*
+literal|8
+operator|)
 expr_stmt|;
 comment|/* Enable the interrupt, insert IGN. */
 name|intrmap
