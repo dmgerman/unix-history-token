@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)passwd.c	4.31 (Berkeley) %G%"
+literal|"@(#)passwd.c	4.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1585,6 +1585,7 @@ literal|"Please enter a longer password."
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 for|for
 control|(
 name|pw
@@ -1615,6 +1616,7 @@ argument_list|(
 literal|"Please don't use an all-lower case password.\nUnusual capitalization, control characters or digits are suggested."
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
