@@ -7263,8 +7263,6 @@ operator|->
 name|n_vattr
 operator|.
 name|va_mtime
-operator|.
-name|tv_sec
 expr_stmt|;
 name|error
 operator|=
@@ -10101,6 +10099,8 @@ operator|&&
 name|np
 operator|->
 name|n_mtime
+operator|.
+name|tv_sec
 operator|==
 name|vattr
 operator|.

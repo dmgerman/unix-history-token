@@ -192,7 +192,8 @@ name|time_t
 name|n_modestamp
 decl_stmt|;
 comment|/* mode cache timestamp */
-name|time_t
+name|struct
+name|timespec
 name|n_mtime
 decl_stmt|;
 comment|/* Prev modify time. */
@@ -486,6 +487,18 @@ parameter_list|(
 name|np
 parameter_list|)
 value|((struct vnode *)(np)->n_vnode)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFS_TIMESPEC_COMPARE
+parameter_list|(
+name|T1
+parameter_list|,
+name|T2
+parameter_list|)
+value|(((T1)->tv_sec != (T2)->tv_sec) || ((T1)->tv_nsec != (T2)->tv_nsec))
 end_define
 
 begin_comment

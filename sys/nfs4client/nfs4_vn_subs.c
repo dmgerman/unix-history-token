@@ -367,6 +367,8 @@ operator|||
 name|np
 operator|->
 name|n_mtime
+operator|.
+name|tv_sec
 operator|==
 literal|0
 condition|)
@@ -389,6 +391,8 @@ expr_stmt|;
 name|np
 operator|->
 name|n_mtime
+operator|.
+name|tv_sec
 operator|=
 name|mtime
 operator|.
