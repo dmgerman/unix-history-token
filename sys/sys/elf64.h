@@ -76,6 +76,40 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * Types of dynamic symbol hash table bucket and chain elements.  *  * This is inconsistent among 64 bit architectures, so a machine dependent  * typedef is required.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__alpha__
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|Elf64_Off
+name|Elf64_Hashelt
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|Elf64_Half
+name|Elf64_Hashelt
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * ELF header.  */
 end_comment
 

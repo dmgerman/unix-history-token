@@ -183,6 +183,14 @@ end_expr_stmt
 begin_expr_stmt
 name|__ElfType
 argument_list|(
+name|Hashelt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__ElfType
+argument_list|(
 name|Ehdr
 argument_list|)
 expr_stmt|;

@@ -68,6 +68,13 @@ name|Elf32_Size
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|Elf32_Off
+name|Elf32_Hashelt
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*  * ELF header.  */
 end_comment
