@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001-2003  *	Fraunhofer Institute for Open Communication Systems (FhG Fokus).  *	All rights reserved.  *  * Author: Harti Brandt<harti@freebsd.org>  *         Kendy Kutzner  *  * Redistribution of this software and documentation and use in source and  * binary forms, with or without modification, are permitted provided that  * the following conditions are met:  *  * 1. Redistributions of source code or documentation must retain the above  *    copyright notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE AND DOCUMENTATION IS PROVIDED BY FRAUNHOFER FOKUS  * AND ITS CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL  * FRAUNHOFER FOKUS OR ITS CONTRIBUTORS  BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Begemot: bsnmp/lib/snmpclient.c,v 1.27 2003/12/08 17:11:58 hbb Exp $  *  * Support functions for SNMP clients.  */
+comment|/*  * Copyright (c) 2001-2003  *	Fraunhofer Institute for Open Communication Systems (FhG Fokus).  *	All rights reserved.  *  * Author: Harti Brandt<harti@freebsd.org>  *         Kendy Kutzner  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Begemot: bsnmp/lib/snmpclient.c,v 1.29 2004/08/06 08:46:57 brandt Exp $  *  * Support functions for SNMP clients.  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -84,8 +90,20 @@ end_include
 begin_include
 include|#
 directive|include
-file|<inttypes.h>
+file|<stdint.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_ERR_H
+end_ifdef
 
 begin_include
 include|#
@@ -93,10 +111,15 @@ directive|include
 file|<err.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
-file|<limits.h>
+file|"support.h"
 end_include
 
 begin_include
@@ -210,7 +233,7 @@ argument|entry
 argument_list|)
 name|link
 expr_stmt|;
-name|u_int64_t
+name|uint64_t
 name|found
 decl_stmt|;
 block|}
@@ -282,7 +305,7 @@ name|struct
 name|worklist
 name|worklist
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|last_change
 decl_stmt|;
 name|int
@@ -504,7 +527,7 @@ name|found
 operator|&
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 literal|1
 operator|<<
@@ -1374,7 +1397,7 @@ goto|;
 block|}
 operator|*
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|(
@@ -1439,7 +1462,7 @@ operator|->
 name|found
 operator||=
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 literal|1
 operator|<<
@@ -1610,7 +1633,7 @@ name|found
 operator|&
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 literal|1
 operator|<<
@@ -2074,7 +2097,7 @@ name|SNMP_SYNTAX_TIMETICKS
 case|:
 operator|*
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|(
@@ -2110,7 +2133,7 @@ name|SNMP_SYNTAX_COUNTER64
 case|:
 operator|*
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|*
 operator|)
 operator|(
@@ -2162,7 +2185,7 @@ operator|->
 name|found
 operator||=
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 literal|1
 operator|<<
@@ -2966,11 +2989,6 @@ name|resp
 argument_list|)
 condition|)
 block|{
-name|seterr
-argument_list|(
-literal|"SNMP error: no response"
-argument_list|)
-expr_stmt|;
 name|table_free
 argument_list|(
 operator|&
@@ -6687,9 +6705,19 @@ decl_stmt|;
 name|int32_t
 name|ip
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|bsdi
+name|int
+name|optlen
+decl_stmt|;
+else|#
+directive|else
 name|socklen_t
 name|optlen
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -7129,9 +7157,29 @@ name|ret
 operator|==
 literal|0
 condition|)
-name|abort
-argument_list|()
+block|{
+comment|/* this happens when we have a streaming socket and the 		 * remote side has closed it */
+name|free
+argument_list|(
+name|buf
+argument_list|)
 expr_stmt|;
+name|seterr
+argument_list|(
+literal|"recv: socket closed by peer"
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|EPIPE
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 name|abuf
 operator|.
 name|asn_ptr
@@ -8425,8 +8473,29 @@ name|resp
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ret
+operator|<
+literal|0
+operator|&&
+name|errno
+operator|==
+name|EPIPE
+condition|)
+comment|/* stream closed */
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 block|}
+name|errno
+operator|=
+name|ETIMEDOUT
+expr_stmt|;
 name|seterr
 argument_list|(
 literal|"retry count exceeded"
