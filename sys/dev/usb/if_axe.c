@@ -3768,13 +3768,6 @@ name|sc
 operator|->
 name|axe_cdata
 argument_list|,
-name|USBDEVNAME
-argument_list|(
-name|sc
-operator|->
-name|axe_dev
-argument_list|)
-argument_list|,
 name|sc
 operator|->
 name|axe_udev
@@ -3810,13 +3803,6 @@ operator|&
 name|sc
 operator|->
 name|axe_cdata
-argument_list|,
-name|USBDEVNAME
-argument_list|(
-name|sc
-operator|->
-name|axe_dev
-argument_list|)
 argument_list|,
 name|sc
 operator|->
@@ -4633,9 +4619,6 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|AXE_LOCK
 argument_list|(

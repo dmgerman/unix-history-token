@@ -1998,9 +1998,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 name|CDCE_LOCK
 argument_list|(
 name|sc
@@ -2449,13 +2446,6 @@ name|sc
 operator|->
 name|cdce_cdata
 argument_list|,
-name|USBDEVNAME
-argument_list|(
-name|sc
-operator|->
-name|cdce_dev
-argument_list|)
-argument_list|,
 name|sc
 operator|->
 name|cdce_udev
@@ -2493,13 +2483,6 @@ operator|&
 name|sc
 operator|->
 name|cdce_cdata
-argument_list|,
-name|USBDEVNAME
-argument_list|(
-name|sc
-operator|->
-name|cdce_dev
-argument_list|)
 argument_list|,
 name|sc
 operator|->

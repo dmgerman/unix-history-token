@@ -3485,13 +3485,6 @@ name|sc
 operator|->
 name|kue_cdata
 argument_list|,
-name|USBDEVNAME
-argument_list|(
-name|sc
-operator|->
-name|kue_dev
-argument_list|)
-argument_list|,
 name|sc
 operator|->
 name|kue_udev
@@ -3527,13 +3520,6 @@ operator|&
 name|sc
 operator|->
 name|kue_cdata
-argument_list|,
-name|USBDEVNAME
-argument_list|(
-name|sc
-operator|->
-name|kue_dev
-argument_list|)
 argument_list|,
 name|sc
 operator|->
@@ -4124,9 +4110,6 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|KUE_LOCK
 argument_list|(

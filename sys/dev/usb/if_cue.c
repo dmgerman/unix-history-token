@@ -3868,13 +3868,6 @@ name|sc
 operator|->
 name|cue_cdata
 argument_list|,
-name|USBDEVNAME
-argument_list|(
-name|sc
-operator|->
-name|cue_dev
-argument_list|)
-argument_list|,
 name|sc
 operator|->
 name|cue_udev
@@ -3910,13 +3903,6 @@ operator|&
 name|sc
 operator|->
 name|cue_cdata
-argument_list|,
-name|USBDEVNAME
-argument_list|(
-name|sc
-operator|->
-name|cue_dev
-argument_list|)
 argument_list|,
 name|sc
 operator|->
@@ -4555,9 +4541,6 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|CUE_LOCK
 argument_list|(

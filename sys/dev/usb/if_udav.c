@@ -3908,13 +3908,6 @@ name|sc
 operator|->
 name|sc_cdata
 argument_list|,
-name|USBDEVNAME
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|)
-argument_list|,
 name|sc
 operator|->
 name|sc_udev
@@ -3977,13 +3970,6 @@ operator|&
 name|sc
 operator|->
 name|sc_cdata
-argument_list|,
-name|USBDEVNAME
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|)
 argument_list|,
 name|sc
 operator|->
@@ -7195,9 +7181,6 @@ name|if_softc
 decl_stmt|;
 name|usbd_status
 name|err
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|DPRINTF
 argument_list|(
