@@ -53,7 +53,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|ACPI_THERMAL_ZONE
+value|ACPI_THERMAL
 end_define
 
 begin_macro
@@ -250,6 +250,19 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|acpi_tz_monitor
+parameter_list|(
+name|struct
+name|acpi_tz_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|acpi_tz_all_off
 parameter_list|(
 name|struct
@@ -430,6 +443,11 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|int
+name|result
+decl_stmt|;
+name|ACPI_LOCK
+expr_stmt|;
 comment|/* no FUNCTION_TRACE - too noisy */
 if|if
 condition|(
@@ -456,16 +474,24 @@ argument_list|,
 literal|"thermal zone"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|result
+operator|=
 operator|-
 literal|10
-operator|)
-return|;
+expr_stmt|;
 block|}
+else|else
+block|{
+name|result
+operator|=
+name|ENXIO
+expr_stmt|;
+block|}
+name|ACPI_UNLOCK
+expr_stmt|;
 return|return
 operator|(
-name|ENXIO
+name|result
 operator|)
 return|;
 block|}
@@ -496,6 +522,8 @@ name|FUNCTION_TRACE
 argument_list|(
 name|__func__
 argument_list|)
+expr_stmt|;
+name|ACPI_LOCK
 expr_stmt|;
 name|sc
 operator|=
@@ -533,11 +561,9 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|return_VALUE
-argument_list|(
-name|error
-argument_list|)
-expr_stmt|;
+goto|goto
+name|out
+goto|;
 comment|/*      * Register for any Notify events sent to this zone.      */
 name|AcpiInstallNotifyHandler
 argument_list|(
@@ -549,13 +575,17 @@ name|ACPI_DEVICE_NOTIFY
 argument_list|,
 name|acpi_tz_notify_handler
 argument_list|,
-name|dev
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/*      * Don't bother evaluating/printing the temperature at this point;      * on many systems it'll be bogus until the EC is running.      */
+name|out
+label|:
+name|ACPI_UNLOCK
+expr_stmt|;
 name|return_VALUE
 argument_list|(
-literal|0
+name|error
 argument_list|)
 expr_stmt|;
 block|}
@@ -593,6 +623,8 @@ name|FUNCTION_TRACE
 argument_list|(
 name|__func__
 argument_list|)
+expr_stmt|;
+name|ACPI_ASSERTLOCK
 expr_stmt|;
 comment|/*      * Power everything off and erase any existing state.      */
 name|acpi_tz_all_off
@@ -1002,6 +1034,8 @@ argument_list|(
 name|__func__
 argument_list|)
 expr_stmt|;
+name|ACPI_ASSERTLOCK
+expr_stmt|;
 comment|/*      * Get the current temperature.      */
 if|if
 condition|(
@@ -1035,6 +1069,20 @@ comment|/* XXX disable zone? go to max cooling? */
 name|return_VOID
 expr_stmt|;
 block|}
+name|DEBUG_PRINT
+argument_list|(
+name|TRACE_VALUES
+argument_list|,
+operator|(
+literal|"got %d.%dC\n"
+operator|,
+name|TZ_KELVTOC
+argument_list|(
+name|temp
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/*      * Work out what we ought to be doing right now.      */
 name|new
 operator|=
@@ -1351,6 +1399,8 @@ argument_list|(
 name|__func__
 argument_list|)
 expr_stmt|;
+name|ACPI_ASSERTLOCK
+expr_stmt|;
 comment|/*      * Scan all the _AL objects, and turn them all off.      */
 for|for
 control|(
@@ -1454,6 +1504,8 @@ name|FUNCTION_TRACE
 argument_list|(
 name|__func__
 argument_list|)
+expr_stmt|;
+name|ACPI_ASSERTLOCK
 expr_stmt|;
 switch|switch
 condition|(
@@ -1560,13 +1612,13 @@ name|arg
 decl_stmt|;
 name|ACPI_HANDLE
 name|cooler
-decl_stmt|,
-name|parent
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
 name|__func__
 argument_list|)
+expr_stmt|;
+name|ACPI_ASSERTLOCK
 expr_stmt|;
 switch|switch
 condition|(
@@ -1593,20 +1645,18 @@ name|Pointer
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* find the handle for the device and turn it off */
+comment|/* 	 * Find the handle for the device and turn it off. 	 * The String object here seems to contain a fully-qualified path, so we 	 * don't have to search for it in our parents. 	 * 	 * XXX This may not always be the case. 	 */
 if|if
 condition|(
-name|acpi_GetHandleInScope
+name|AcpiGetHandle
 argument_list|(
-name|sc
-operator|->
-name|tz_handle
-argument_list|,
 name|obj
 operator|->
 name|String
 operator|.
 name|Pointer
+argument_list|,
+name|NULL
 argument_list|,
 operator|&
 name|cooler
@@ -1670,6 +1720,8 @@ name|FUNCTION_TRACE
 argument_list|(
 name|__func__
 argument_list|)
+expr_stmt|;
+name|ACPI_ASSERTLOCK
 expr_stmt|;
 if|if
 condition|(
@@ -1760,6 +1812,8 @@ argument_list|(
 name|__func__
 argument_list|)
 expr_stmt|;
+name|ACPI_ASSERTLOCK
+expr_stmt|;
 switch|switch
 condition|(
 name|notify
@@ -1768,12 +1822,19 @@ block|{
 case|case
 name|TZ_NOTIFY_TEMPERATURE
 case|:
-name|acpi_tz_monitor
+comment|/* temperature change occurred */
+name|AcpiOsQueueForExecution
 argument_list|(
+name|OSD_PRIORITY_HIGH
+argument_list|,
+operator|(
+name|OSD_EXECUTION_CALLBACK
+operator|)
+name|acpi_tz_monitor
+argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* temperature change occurred */
 break|break;
 case|case
 name|TZ_NOTIFY_DEVICES
@@ -1781,12 +1842,19 @@ case|:
 case|case
 name|TZ_NOTIFY_LEVELS
 case|:
-name|acpi_tz_establish
+comment|/* zone devices/setpoints changed */
+name|AcpiOsQueueForExecution
 argument_list|(
+name|OSD_PRIORITY_HIGH
+argument_list|,
+operator|(
+name|OSD_EXECUTION_CALLBACK
+operator|)
+name|acpi_tz_establish
+argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* zone devices/setpoints changed */
 break|break;
 default|default:
 name|device_printf
@@ -1833,9 +1901,18 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
+name|ACPI_LOCK
+expr_stmt|;
 comment|/* check temperature, take action */
-name|acpi_tz_monitor
+name|AcpiOsQueueForExecution
 argument_list|(
+name|OSD_PRIORITY_HIGH
+argument_list|,
+operator|(
+name|OSD_EXECUTION_CALLBACK
+operator|)
+name|acpi_tz_monitor
+argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
@@ -1853,6 +1930,8 @@ name|sc
 argument_list|,
 name|TZ_POLLRATE
 argument_list|)
+expr_stmt|;
+name|ACPI_UNLOCK
 expr_stmt|;
 block|}
 end_function
