@@ -28,7 +28,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: ftell.c,v 1.15 1994/01/27 06:09:35 proven Exp $"
+literal|"$Id: ftell.c,v 1.1 1994/01/30 04:25:01 proven Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,6 +113,8 @@ operator|=
 name|lseek
 argument_list|(
 name|fp
+operator|->
+name|_file
 argument_list|,
 operator|(
 name|fpos_t
