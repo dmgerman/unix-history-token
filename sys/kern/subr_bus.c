@@ -7158,6 +7158,10 @@ block|{
 return|return
 operator|(
 name|dev
+operator|!=
+name|NULL
+operator|&&
+name|dev
 operator|->
 name|state
 operator|>=
@@ -7177,6 +7181,10 @@ parameter_list|)
 block|{
 return|return
 operator|(
+name|dev
+operator|!=
+name|NULL
+operator|&&
 name|dev
 operator|->
 name|state
