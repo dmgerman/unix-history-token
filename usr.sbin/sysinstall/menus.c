@@ -3849,6 +3849,13 @@ name|dmenuSetVariable
 block|,
 name|NULL
 block|,
+name|VAR_FTP_PATH
+name|_AP
+argument_list|(
+literal|"=ftp://ftp.sk.freebsd.org"
+argument_list|)
+block|}
+block|,
 block|{
 literal|"Slovenia"
 block|,
@@ -4322,10 +4329,13 @@ name|NULL
 block|}
 block|}
 block|}
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuMediaTape
-operator|=
+init|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -4350,10 +4360,13 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuNetworkDevice
-operator|=
+init|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -4380,11 +4393,17 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* The media selection menu */
+end_comment
+
+begin_decl_stmt
 name|DMenu
 name|MenuMedia
-operator|=
+init|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -4508,11 +4527,17 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* The distributions menu */
+end_comment
+
+begin_decl_stmt
 name|DMenu
 name|MenuDistributions
-operator|=
+init|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -4689,10 +4714,13 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuSubDistributions
-operator|=
+init|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -5184,11 +5212,11 @@ block|{
 name|NULL
 block|}
 block|}
-block|, }
-decl_stmt|;
+decl_stmt|,
 end_decl_stmt
 
 begin_decl_stmt
+unit|};
 name|DMenu
 name|MenuCRYPTODistributions
 init|=
