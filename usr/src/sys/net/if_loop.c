@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_loop.c	4.9	82/03/30	*/
+comment|/*	if_loop.c	4.10	82/04/13	*/
 end_comment
 
 begin_comment
@@ -308,7 +308,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|ENOBUFS
 operator|)
 return|;
 block|}
@@ -353,7 +353,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|EAFNOSUPPORT
 operator|)
 return|;
 block|}
@@ -369,7 +369,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}
