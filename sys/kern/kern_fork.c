@@ -1140,9 +1140,13 @@ name|maxproc
 operator|-
 literal|10
 operator|&&
-name|suser
+name|suser_cred
 argument_list|(
 name|td
+operator|->
+name|td_ucred
+argument_list|,
+name|SUSER_RUID
 argument_list|)
 operator|!=
 literal|0
