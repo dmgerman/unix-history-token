@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.17 1996/06/17 05:15:01 dyson Exp $  */
+comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.18 1996/07/04 04:36:56 dyson Exp $  */
 end_comment
 
 begin_ifndef
@@ -382,6 +382,7 @@ value|(16*1024*1024)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|amountpipekva
 decl_stmt|;
@@ -1056,6 +1057,7 @@ name|buffer
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* cpipe->pipe_buffer.object = invalid */
 name|cpipe
 operator|->
 name|pipe_state
@@ -1115,6 +1117,12 @@ operator|->
 name|pipe_sel
 argument_list|)
 expr_stmt|;
+name|cpipe
+operator|->
+name|pipe_pgid
+operator|=
+name|NO_PID
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|PIPE_NODIRECT
@@ -1151,6 +1159,7 @@ name|npages
 operator|=
 literal|0
 expr_stmt|;
+comment|/* cpipe->pipe_map.ms[] = invalid */
 endif|#
 directive|endif
 block|}
@@ -1285,7 +1294,6 @@ name|cpipe
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3915,7 +3923,9 @@ operator|)
 return|;
 block|}
 return|return
-name|ENOSYS
+operator|(
+name|ENOTTY
+operator|)
 return|;
 block|}
 end_function
@@ -4202,7 +4212,7 @@ name|ub
 operator|->
 name|st_mode
 operator|=
-name|S_IFSOCK
+name|S_IFIFO
 expr_stmt|;
 name|ub
 operator|->
@@ -4283,6 +4293,7 @@ operator|->
 name|st_ctimespec
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Left as 0: st_dev, st_ino, st_nlink, st_uid, st_gid, st_rdev, 	 * st_flags, st_gen. 	 * XXX (st_dev, st_ino) should be unique. 	 */
 return|return
 literal|0
 return|;
