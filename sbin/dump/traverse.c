@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: traverse.c,v 1.7 1998/06/15 06:58:12 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2266,7 +2266,7 @@ name|ino
 decl_stmt|;
 block|{
 specifier|register
-name|long
+name|int32_t
 name|sum
 decl_stmt|,
 name|cnt
@@ -2295,7 +2295,7 @@ expr_stmt|;
 name|lp
 operator|=
 operator|(
-name|long
+name|int32_t
 operator|*
 operator|)
 operator|&
@@ -2318,7 +2318,7 @@ literal|4
 operator|*
 sizeof|sizeof
 argument_list|(
-name|long
+name|int32_t
 argument_list|)
 operator|)
 expr_stmt|;

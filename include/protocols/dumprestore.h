@@ -95,7 +95,7 @@ decl_stmt|;
 struct|struct
 name|s_spcl
 block|{
-name|long
+name|int32_t
 name|c_type
 decl_stmt|;
 comment|/* record type (see below) */
@@ -107,7 +107,7 @@ name|time_t
 name|c_ddate
 decl_stmt|;
 comment|/* date of previous dump */
-name|long
+name|int32_t
 name|c_volume
 decl_stmt|;
 comment|/* dump volume number */
@@ -119,11 +119,11 @@ name|ino_t
 name|c_inumber
 decl_stmt|;
 comment|/* number of inode */
-name|long
+name|int32_t
 name|c_magic
 decl_stmt|;
 comment|/* magic number (see above) */
-name|long
+name|int32_t
 name|c_checksum
 decl_stmt|;
 comment|/* record checksum */
@@ -132,7 +132,7 @@ name|dinode
 name|c_dinode
 decl_stmt|;
 comment|/* ownership and mode of inode */
-name|long
+name|int32_t
 name|c_count
 decl_stmt|;
 comment|/* number of valid c_addr entries */
@@ -150,7 +150,7 @@ name|LBLSIZE
 index|]
 decl_stmt|;
 comment|/* dump label */
-name|long
+name|int32_t
 name|c_level
 decl_stmt|;
 comment|/* level of this dump */
@@ -175,15 +175,15 @@ name|NAMELEN
 index|]
 decl_stmt|;
 comment|/* name of dumpped host */
-name|long
+name|int32_t
 name|c_flags
 decl_stmt|;
 comment|/* additional information */
-name|long
+name|int32_t
 name|c_firstrec
 decl_stmt|;
 comment|/* first record on volume */
-name|long
+name|int32_t
 name|c_spare
 index|[
 literal|32
