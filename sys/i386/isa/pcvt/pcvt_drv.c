@@ -2877,7 +2877,7 @@ parameter_list|(
 name|Dev_t
 name|dev
 parameter_list|,
-name|int
+name|vm_offset_t
 name|offset
 parameter_list|,
 name|int

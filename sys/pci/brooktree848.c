@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: brooktree848.c,v 1.57 1998/10/31 11:26:38 nsouch Exp $ */
+comment|/* $Id: brooktree848.c,v 1.58 1998/11/07 14:30:48 nsouch Exp $ */
 end_comment
 
 begin_comment
@@ -12451,7 +12451,7 @@ parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
-name|int
+name|vm_offset_t
 name|offset
 parameter_list|,
 name|int
