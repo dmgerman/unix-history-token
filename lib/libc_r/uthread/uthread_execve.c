@@ -312,7 +312,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Execute the process: */
+comment|/* Set the signal mask: */
 name|_thread_sys_sigprocmask
 argument_list|(
 name|SIG_SETMASK
