@@ -1882,7 +1882,8 @@ name|p
 argument_list|)
 condition|)
 name|digit
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 operator|*
 name|q
@@ -3246,7 +3247,8 @@ name|c
 argument_list|)
 condition|)
 name|digit
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
