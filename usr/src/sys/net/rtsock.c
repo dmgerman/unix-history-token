@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)rtsock.c	7.26 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)rtsock.c	7.27 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -749,11 +749,17 @@ argument_list|)
 operator|->
 name|rtm_msglen
 condition|)
+block|{
+name|dst
+operator|=
+literal|0
+expr_stmt|;
 name|senderr
 argument_list|(
 name|EINVAL
 argument_list|)
 expr_stmt|;
+block|}
 name|R_Malloc
 argument_list|(
 name|rtm
@@ -771,11 +777,17 @@ name|rtm
 operator|==
 literal|0
 condition|)
+block|{
+name|dst
+operator|=
+literal|0
+expr_stmt|;
 name|senderr
 argument_list|(
 name|ENOBUFS
 argument_list|)
 expr_stmt|;
+block|}
 name|m_copydata
 argument_list|(
 name|m
@@ -798,11 +810,17 @@ name|rtm_version
 operator|!=
 name|RTM_VERSION
 condition|)
+block|{
+name|dst
+operator|=
+literal|0
+expr_stmt|;
 name|senderr
 argument_list|(
 name|EPROTONOSUPPORT
 argument_list|)
 expr_stmt|;
+block|}
 name|rtm
 operator|->
 name|rtm_pid
