@@ -71,7 +71,7 @@ define|#
 directive|define
 name|MCOUNT
 define|\
-value|.set noat;				\ 	jsr	at_reg,_mcount;			\ 	.set at
+value|br.call.sptk.many b7=_mcount
 end_define
 
 begin_endif
