@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * $FreeBSD$  * $Source: /home/ncvs/src/eBones/libexec/rkinitd/util.c,v $  * $Author: gibbs $  *  * This file contains general rkinit server utilities.  */
+comment|/*   * $Id$  * $Source: /home/ncvs/src/eBones/libexec/rkinitd/util.c,v $  * $Author: jkh $  *  * This file contains general rkinit server utilities.  */
 end_comment
 
 begin_if
@@ -36,7 +36,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$FreeBSD$"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * $FreeBSD$  * $Source: /home/ncvs/src/eBones/lib/librkinit/rk_krb.c,v $  * $Author: gibbs $  *  * This file contains the kerberos parts of the rkinit library.  * See the comment at the top of rk_lib.c for a description of the naming  * conventions used within the rkinit library.  */
+comment|/*   * $Id$  * $Source: /home/ncvs/src/eBones/lib/librkinit/rk_krb.c,v $  * $Author: jkh $  *  * This file contains the kerberos parts of the rkinit library.  * See the comment at the top of rk_lib.c for a description of the naming  * conventions used within the rkinit library.  */
 end_comment
 
 begin_if
@@ -36,7 +36,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$FreeBSD$"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 

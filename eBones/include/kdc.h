@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Include file for the Kerberos Key Distribution Center.  *  *	from: kdc.h,v 4.1 89/01/24 17:54:04 jon Exp $  *	$FreeBSD$  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Include file for the Kerberos Key Distribution Center.  *  *	from: kdc.h,v 4.1 89/01/24 17:54:04 jon Exp $  *	$Id$  */
 end_comment
 
 begin_ifndef

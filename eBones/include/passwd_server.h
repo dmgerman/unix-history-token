@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Include file for password server  *  *	from: passwd_server.h,v 4.6 89/01/11 15:12:22 steiner Exp $  *	$FreeBSD$  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Include file for password server  *  *	from: passwd_server.h,v 4.6 89/01/11 15:12:22 steiner Exp $  *	$Id$  */
 end_comment
 
 begin_ifndef

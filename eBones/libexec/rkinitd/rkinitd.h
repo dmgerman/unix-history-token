@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * $FreeBSD$  * $Source: /home/ncvs/src/eBones/libexec/rkinitd/rkinitd.h,v $  * $Author: gibbs $  *  * This header file contains function declarations for use for rkinitd  */
+comment|/*   * $Id$  * $Source: /home/ncvs/src/eBones/libexec/rkinitd/rkinitd.h,v $  * $Author: jkh $  *  * This header file contains function declarations for use for rkinitd  */
 end_comment
 
 begin_ifndef
@@ -48,7 +48,7 @@ name|char
 modifier|*
 name|rcsid_rkinitd_h
 init|=
-literal|"$FreeBSD$"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 

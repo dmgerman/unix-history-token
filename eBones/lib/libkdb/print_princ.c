@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: $Header: /home/ncvs/src/eBones/lib/libkdb/print_princ.c,v 1.4 1995/09/07 21:37:13 markm Exp $  *	$FreeBSD$  */
+comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: $Header: /home/ncvs/src/eBones/lib/libkdb/print_princ.c,v 1.5 1997/01/14 05:40:32 jkh Exp $  *	$Id$  */
 end_comment
 
 begin_if
@@ -16,7 +16,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|static char rcsid[] = "$FreeBSD$";
+unit|static char rcsid[] = "$Id$";
 endif|#
 directive|endif
 endif|lint

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This file defines the types of log messages logged by klog.  Each  * type of message may be selectively turned on or off.  *  *	from: klog.h,v 4.7 89/01/24 17:55:07 jon Exp $  *	$FreeBSD$  */
+comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This file defines the types of log messages logged by klog.  Each  * type of message may be selectively turned on or off.  *  *	from: klog.h,v 4.7 89/01/24 17:55:07 jon Exp $  *	$Id$  */
 end_comment
 
 begin_ifndef

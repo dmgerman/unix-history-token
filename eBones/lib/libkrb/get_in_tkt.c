@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: get_in_tkt.c,v 4.12 89/07/18 16:32:56 jtkohl Exp $  *	$FreeBSD$  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: get_in_tkt.c,v 4.12 89/07/18 16:32:56 jtkohl Exp $  *	$Id$  */
 end_comment
 
 begin_if
@@ -16,7 +16,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|static char rcsid[] = "$FreeBSD$";
+unit|static char rcsid[] = "$Id$";
 endif|#
 directive|endif
 end_endif
@@ -250,7 +250,7 @@ name|NOENCRYPTION
 end_ifdef
 
 begin_comment
-comment|/*  * $Source: /home/ncvs/src/eBones/lib/libkrb/get_in_tkt.c,v $  * $Author: markm $  *  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  *  * For copying and distribution information, please see the file  *<mit-copyright.h>.  *  * This routine prints the supplied string to standard  * output as a prompt, and reads a password string without  * echoing.  */
+comment|/*  * $Source: /home/ncvs/src/eBones/lib/libkrb/get_in_tkt.c,v $  * $Author: jkh $  *  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  *  * For copying and distribution information, please see the file  *<mit-copyright.h>.  *  * This routine prints the supplied string to standard  * output as a prompt, and reads a password string without  * echoing.  */
 end_comment
 
 begin_include

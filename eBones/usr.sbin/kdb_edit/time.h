@@ -4,7 +4,7 @@ comment|/* Structure for use by time manipulating subroutines.  * The following 
 end_comment
 
 begin_comment
-comment|/*  *	from: time.h,v 1.1 82/05/06 11:34:29 wft Exp $  *	$FreeBSD$  */
+comment|/*  *	from: time.h,v 1.1 82/05/06 11:34:29 wft Exp $  *	$Id$  */
 end_comment
 
 begin_struct
