@@ -1056,6 +1056,9 @@ name|sockaddr_in
 modifier|*
 name|to
 decl_stmt|;
+name|double
+name|t
+decl_stmt|;
 name|u_char
 modifier|*
 name|datap
@@ -1361,10 +1364,8 @@ case|case
 literal|'i'
 case|:
 comment|/* wait between sending packets */
-block|{
-name|double
 name|t
-init|=
+operator|=
 name|strtod
 argument_list|(
 name|optarg
@@ -1374,7 +1375,7 @@ name|ep
 argument_list|)
 operator|*
 literal|1000.0
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -1391,7 +1392,6 @@ name|double
 operator|)
 name|INT_MAX
 condition|)
-block|{
 name|errx
 argument_list|(
 name|EX_USAGE
@@ -1401,7 +1401,6 @@ argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
-block|}
 name|options
 operator||=
 name|F_INTERVAL
@@ -1433,7 +1432,6 @@ argument_list|,
 literal|"-i interval too short"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 break|break;
 case|case
@@ -4678,6 +4676,9 @@ operator|*
 name|cp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\ncp:"
@@ -4744,6 +4745,9 @@ name|cp
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\ndp:"
@@ -4811,7 +4815,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 * We've got something other than an ECHOREPLY. 		 * See if it's a reply to something that we sent. 		 * We can compare IP destination, protocol, 		 * and ICMP type and ID. 		 * 		 * Only print all the error messages if we are running 		 * as root to avoid leaking information not normally  		 * available to those not running as root. 		 */
+comment|/* 		 * We've got something other than an ECHOREPLY. 		 * See if it's a reply to something that we sent. 		 * We can compare IP destination, protocol, 		 * and ICMP type and ID. 		 * 		 * Only print all the error messages if we are running 		 * as root to avoid leaking information not normally 		 * available to those not running as root. 		 */
 ifndef|#
 directive|ifndef
 name|icmp_data
@@ -5081,6 +5085,9 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\t0.0.0.0"
@@ -5102,6 +5109,9 @@ argument_list|(
 name|l
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\t%s"
@@ -5353,6 +5363,9 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\t0.0.0.0"
@@ -5374,6 +5387,9 @@ argument_list|(
 name|l
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\t%s"
@@ -5971,10 +5987,12 @@ name|avg
 operator|*
 name|avg
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|"round-trip min/avg/max/stddev = "
-literal|"%.3f/%.3f/%.3f/%.3f ms\n"
+literal|"round-trip min/avg/max/stddev = %.3f/%.3f/%.3f/%.3f ms\n"
 argument_list|,
 name|tmin
 argument_list|,
@@ -7444,6 +7462,9 @@ name|void
 name|usage
 parameter_list|()
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
