@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lprint.c	5.12 (Berkeley) %G%"
+literal|"@(#)lprint.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -608,7 +608,7 @@ name|cpr
 operator|=
 name|printf
 argument_list|(
-literal|"On since %16.16s (%s) on %s"
+literal|"On since %.16s (%s) on %s"
 argument_list|,
 name|t
 argument_list|,
@@ -807,7 +807,7 @@ name|cpr
 operator|=
 name|printf
 argument_list|(
-literal|"Last login %10.10s (%s), %4.4s on %s"
+literal|"Last login %.16s %.4s (%s) on %s"
 argument_list|,
 name|t
 argument_list|,
@@ -827,7 +827,7 @@ name|cpr
 operator|=
 name|printf
 argument_list|(
-literal|"Last login %16.16s (%s) on %s"
+literal|"Last login %.16s (%s) on %s"
 argument_list|,
 name|t
 argument_list|,
