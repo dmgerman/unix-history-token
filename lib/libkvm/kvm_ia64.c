@@ -218,7 +218,7 @@ name|kd
 operator|->
 name|pmfd
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
