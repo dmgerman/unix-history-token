@@ -77,9 +77,9 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 operator|&&
-name|__FreeBSD__
+name|__FreeBSD_version
 operator|>=
-literal|4
+literal|400000
 end_if
 
 begin_include
@@ -749,14 +749,14 @@ directive|ifdef
 name|__FreeBSD__
 if|#
 directive|if
-name|__FreeBSD__
-operator|>=
-literal|5
+name|__FreeBSD_version
+operator|<
+literal|500028
 name|suerr
 operator|=
 name|suser
 argument_list|(
-name|curthread
+name|curproc
 argument_list|)
 expr_stmt|;
 else|#
@@ -765,7 +765,7 @@ name|suerr
 operator|=
 name|suser
 argument_list|(
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 endif|#
