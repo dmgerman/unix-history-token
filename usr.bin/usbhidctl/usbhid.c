@@ -158,6 +158,7 @@ begin_function_decl
 name|void
 name|dumpitem
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|label
@@ -400,6 +401,7 @@ begin_function
 name|void
 name|dumpitem
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|label
@@ -1297,7 +1299,7 @@ name|report_desc_t
 name|r
 decl_stmt|;
 name|char
-name|devname
+name|devnam
 index|[
 literal|100
 index|]
@@ -1473,11 +1475,11 @@ argument_list|)
 condition|)
 name|snprintf
 argument_list|(
-name|devname
+name|devnam
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|devname
+name|devnam
 argument_list|)
 argument_list|,
 literal|"/dev/uhid%s"
@@ -1488,11 +1490,11 @@ expr_stmt|;
 else|else
 name|snprintf
 argument_list|(
-name|devname
+name|devnam
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|devname
+name|devnam
 argument_list|)
 argument_list|,
 literal|"/dev/%s"
@@ -1502,7 +1504,7 @@ argument_list|)
 expr_stmt|;
 name|dev
 operator|=
-name|devname
+name|devnam
 expr_stmt|;
 block|}
 name|hid_init
