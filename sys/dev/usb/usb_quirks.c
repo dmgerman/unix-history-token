@@ -429,6 +429,13 @@ operator|->
 name|idProduct
 argument_list|)
 operator|&&
+operator|(
+name|t
+operator|->
+name|bcdDevice
+operator|==
+name|ANY
+operator|||
 name|t
 operator|->
 name|bcdDevice
@@ -439,6 +446,7 @@ name|d
 operator|->
 name|bcdDevice
 argument_list|)
+operator|)
 condition|)
 break|break;
 block|}
