@@ -4433,7 +4433,7 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"revoke_apiq_irq: inconsistent table"
+literal|"revoke_apic_irq: inconsistent table"
 argument_list|)
 expr_stmt|;
 name|oldapic
