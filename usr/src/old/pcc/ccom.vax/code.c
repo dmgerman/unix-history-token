@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)code.c	1.8 (Berkeley) %G%"
+literal|"@(#)code.c	1.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -397,7 +397,6 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|deflab
 end_endif
 
 begin_decl_stmt
@@ -598,25 +597,28 @@ if|if
 condition|(
 name|sz
 operator|%
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
+operator|(
+name|SZINT
+operator|/
+name|SZCHAR
+operator|)
 condition|)
 name|sz
 operator|+=
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
+operator|(
+name|SZINT
+operator|/
+name|SZCHAR
+operator|)
 operator|-
 operator|(
 name|sz
 operator|%
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
+operator|(
+name|SZINT
+operator|/
+name|SZCHAR
+operator|)
 operator|)
 expr_stmt|;
 name|printf
@@ -889,11 +891,16 @@ decl_stmt|;
 name|int
 name|off
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|TRUST_REG_CHAR_AND_REG_SHORT
 name|char
 modifier|*
 name|toreg
 parameter_list|()
 function_decl|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|nerrors
@@ -1107,6 +1114,10 @@ operator|&
 name|off
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TRUST_REG_CHAR_AND_REG_SHORT
+comment|/* and reg double */
 comment|/*tbl*/
 name|printf
 argument_list|(
@@ -1128,6 +1139,24 @@ argument_list|,
 name|temp
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/*tbl*/
+name|printf
+argument_list|(
+literal|"	movl	%d(ap),r%d\n"
+argument_list|,
+name|p
+operator|->
+name|offset
+operator|/
+name|SZCHAR
+argument_list|,
+name|temp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|p
 operator|->
 name|offset
@@ -1849,6 +1878,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TRUST_REG_CHAR_AND_REG_SHORT
+end_ifdef
+
 begin_comment
 comment|/* tbl - toreg() returns a pointer to a char string 		  which is the correct  "register move" for the passed type   */
 end_comment
@@ -1871,6 +1906,18 @@ name|toreg_strs
 index|[]
 init|=
 block|{
+name|INT
+block|,
+literal|"movl"
+block|,
+name|UNSIGNED
+block|,
+literal|"movl"
+block|,
+name|DOUBLE
+block|,
+literal|"movq"
+block|,
 name|CHAR
 block|,
 literal|"cvtbl"
@@ -1879,22 +1926,6 @@ name|SHORT
 block|,
 literal|"cvtwl"
 block|,
-name|INT
-block|,
-literal|"movl"
-block|,
-name|LONG
-block|,
-literal|"movl"
-block|,
-name|FLOAT
-block|,
-literal|"movf"
-block|,
-name|DOUBLE
-block|,
-literal|"movd"
-block|,
 name|UCHAR
 block|,
 literal|"movzbl"
@@ -1902,14 +1933,6 @@ block|,
 name|USHORT
 block|,
 literal|"movzwl"
-block|,
-name|UNSIGNED
-block|,
-literal|"movl"
-block|,
-name|ULONG
-block|,
-literal|"movl"
 block|,
 literal|0
 block|,
@@ -1976,6 +1999,11 @@ end_function
 begin_comment
 comment|/* tbl */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|main
