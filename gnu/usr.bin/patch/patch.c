@@ -1482,7 +1482,7 @@ name|char
 modifier|*
 name|shortopts
 init|=
-literal|"-b:B:cCd:D:eEfF:IlnNo:p::r:RsStuvV:x:"
+literal|"-b:B:cCd:D:eEfF:i:IlnNo:p::r:RsStuvV:x:"
 decl_stmt|;
 end_decl_stmt
 
@@ -2024,6 +2024,20 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'i'
+case|:
+name|filearg
+index|[
+literal|1
+index|]
+operator|=
+name|savestr
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'I'
 case|:
 name|index_first
@@ -2201,7 +2215,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\ Options:\n\        [-cCeEflnNRsStuv] [-b backup-ext] [-B backup-prefix] [-d directory]\n\        [-D symbol] [-F max-fuzz] [-o out-file] [-p[strip-count]]\n\        [-r rej-name] [-V {numbered,existing,simple}] [--check] [--context]\n\        [--prefix=backup-prefix] [--suffix=backup-ext] [--ifdef=symbol]\n\        [--directory=directory] [--ed] [--fuzz=max-fuzz] [--force] [--batch]\n\        [--ignore-whitespace] [--forward] [--reverse] [--output=out-file]\n"
+literal|"\ Options:\n\        [-cCeEflnNRsStuv] [-b backup-ext] [-B backup-prefix] [-d directory]\n\        [-D symbol] [-F max-fuzz] [-i patchfile] [-o out-file] [-p[strip-count]]\n\        [-r rej-name] [-V {numbered,existing,simple}] [--check] [--context]\n\        [--prefix=backup-prefix] [--suffix=backup-ext] [--ifdef=symbol]\n\        [--directory=directory] [--ed] [--fuzz=max-fuzz] [--force] [--batch]\n\        [--ignore-whitespace] [--forward] [--reverse] [--output=out-file]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
