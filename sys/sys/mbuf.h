@@ -15,11 +15,31 @@ directive|define
 name|_SYS_MBUF_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/condvar.h>
+end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<sys/lock.h>
 end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_include
 include|#
@@ -27,11 +47,18 @@ directive|include
 file|<sys/mutex.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/condvar.h>
-end_include
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_comment
 comment|/*  * Mbufs are of a single size, MSIZE (machine/param.h), which  * includes overhead.  An mbuf may add a single "mbuf cluster" of size  * MCLBYTES (also in machine/param.h), which has no additional overhead  * and is used instead of the internal data area; this is done when  * at least MINCLSIZE of data must be stored.  */
@@ -92,8 +119,14 @@ name|EXT_COUNTERS
 value|(nmbclusters + nsfbufs)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_comment
-comment|/*  * Macros for type conversion  * mtod(m, t) -	convert mbuf pointer to data pointer of correct type  * dtom(x) -	convert data pointer within mbuf to mbuf pointer (XXX)  */
+comment|/*  * Macros for type conversion  * mtod(m, t)	- convert mbuf pointer to data pointer of correct type  * dtom(x)	- convert data pointer within mbuf to mbuf pointer (XXX)  */
 end_comment
 
 begin_define
@@ -117,6 +150,15 @@ name|x
 parameter_list|)
 value|((struct mbuf *)((intptr_t)(x)& ~(MSIZE-1)))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_comment
 comment|/* header at beginning of each mbuf: */
@@ -1079,8 +1121,14 @@ block|}
 union|;
 end_union
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_comment
-comment|/*  * free list header definitions: mbffree_lst, mclfree_lst, mcntfree_lst  */
+comment|/*  * The freelists for mbufs and mbuf clusters include condition variables  * that are used in cases of depletion/starvation.  * The counter freelist does not require a condition variable as we never  * expect to consume more than the reserved address space for counters.  * All are presently protected by the mbuf_mtx lock.  */
 end_comment
 
 begin_struct
@@ -1551,12 +1599,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
 name|u_long
@@ -1582,6 +1624,28 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|max_datalen
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MHLEN - max_hdr */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|max_hdr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* largest link+protocol header */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|max_linkhdr
 decl_stmt|;
 end_decl_stmt
@@ -1599,28 +1663,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* largest protocol header */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|max_hdr
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* largest link+protocol header */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|max_datalen
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* MHLEN - max_hdr */
 end_comment
 
 begin_decl_stmt
@@ -1659,6 +1701,14 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|struct
+name|mtx
+name|mbuf_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
 name|mbuf
 modifier|*
 name|mbutl
@@ -1680,14 +1730,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|mbffree_lst
-name|mmbfree
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
 name|mcntfree_lst
 name|mcntfree
 decl_stmt|;
@@ -1696,8 +1738,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|mtx
-name|mbuf_mtx
+name|mbffree_lst
+name|mmbfree
 decl_stmt|;
 end_decl_stmt
 
