@@ -7,6 +7,60 @@ begin_comment
 comment|/*  * Machine dependent constants for vax.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ENDIAN
+end_ifndef
+
+begin_comment
+comment|/*  * Definitions for byte order,  * according to byte significance from low address to high.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LITTLE
+value|1234
+end_define
+
+begin_comment
+comment|/* least-significant byte first (vax) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIG
+value|4321
+end_define
+
+begin_comment
+comment|/* most-significant byte first */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PDP
+value|3412
+end_define
+
+begin_comment
+comment|/* LSB first in word, MSW first in long (pdp) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENDIAN
+value|LITTLE
+end_define
+
+begin_comment
+comment|/* byte order on vax */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -219,11 +273,6 @@ name|cpuspeed
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -233,6 +282,11 @@ name|n
 parameter_list|)
 value|{ register int N = cpuspeed * (n); while (--N> 0); }
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -254,6 +308,11 @@ begin_endif
 endif|#
 directive|endif
 endif|KERNEL
+end_endif
+
+begin_endif
+endif|#
+directive|endif
 end_endif
 
 end_unit
