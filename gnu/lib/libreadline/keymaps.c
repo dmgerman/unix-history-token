@@ -51,7 +51,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"keymaps.h"
+file|<readline/keymaps.h>
 end_include
 
 begin_include
