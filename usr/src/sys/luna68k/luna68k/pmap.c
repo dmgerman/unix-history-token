@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	OMRON: $Id: pmap.c,v 1.2 92/06/14 06:19:40 moti Exp $  *  * from: hp300/hp300/pmap.c	7.11 (Berkeley) 7/12/92  *  *	@(#)pmap.c	7.3 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	OMRON: $Id: pmap.c,v 1.2 92/06/14 06:19:40 moti Exp $  *  * from: hp300/hp300/pmap.c	7.11 (Berkeley) 7/12/92  *  *	@(#)pmap.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -7525,7 +7525,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|notdef
 name|PHYS_TO_VM_PAGE
 argument_list|(
 name|ptpa
