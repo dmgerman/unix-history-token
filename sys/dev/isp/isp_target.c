@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Machine and OS Independent Target Mode Code for the Qlogic SCSI/FC adapters.  *  * Copyright (c) 1999, 2000 by Matthew Jacob  * All rights reserved.  * mjacob@feral.com  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Machine and OS Independent Target Mode Code for the Qlogic SCSI/FC adapters.  *  * Copyright (c) 1999, 2000, 2001 by Matthew Jacob  * All rights reserved.  * mjacob@feral.com  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -224,7 +224,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * The Qlogic driver gets an interrupt to look at response queue entries.  * Some of these are status completions for initiatior mode commands, but  * if target mode is enabled, we get a whole wad of response queue entries  * to be handled here.  *  * Basically the split into 3 main groups: Lun Enable/Modification responses,  * SCSI Command processing, and Immediate Notification events.  *  * You start by writing a request queue entry to enable target mode (and  * establish some resource limitations which you can modify later).  * The f/w responds with a LUN ENABLE or LUN MODIFY response with  * the status of this action. If the enable was successful, you can expect...  *  * Response queue entries with SCSI commands encapsulate show up in an ATIO  * (Accept Target IO) type- sometimes with enough info to stop the command at  * this level. Ultimately the driver has to feed back to the f/w's request  * queue a sequence of CTIOs (continue target I/O) that describe data to  * be moved and/or status to be sent) and finally finishing with sending  * to the f/w's response queue an ATIO which then completes the handshake  * with the f/w for that command. There's a lot of variations on this theme,  * including flags you can set in the CTIO for the Qlogic 2X00 fibre channel  * cards that 'auto-replenish' the f/w's ATIO count, but this is the basic  * gist of it.  *  * The third group that can show up in the response queue are Immediate  * Notification events. These include things like notifications of SCSI bus  * resets, or Bus Device Reset messages or other messages received. This  * a classic oddbins area. It can get  a little wierd because you then turn  * around and acknowledge the Immediate Notify by writing an entry onto the  * request queue and then the f/w turns around and gives you an acknowledgement  * to *your* acknowledgement on the response queue (the idea being to let  * the f/w tell you when the event is *really* over I guess).  *  */
+comment|/*  * The Qlogic driver gets an interrupt to look at response queue entries.  * Some of these are status completions for initiatior mode commands, but  * if target mode is enabled, we get a whole wad of response queue entries  * to be handled here.  *  * Basically the split into 3 main groups: Lun Enable/Modification responses,  * SCSI Command processing, and Immediate Notification events.  *  * You start by writing a request queue entry to enable target mode (and  * establish some resource limitations which you can modify later).  * The f/w responds with a LUN ENABLE or LUN MODIFY response with  * the status of this action. If the enable was successful, you can expect...  *  * Response queue entries with SCSI commands encapsulate show up in an ATIO  * (Accept Target IO) type- sometimes with enough info to stop the command at  * this level. Ultimately the driver has to feed back to the f/w's request  * queue a sequence of CTIOs (continue target I/O) that describe data to  * be moved and/or status to be sent) and finally finishing with sending  * to the f/w's response queue an ATIO which then completes the handshake  * with the f/w for that command. There's a lot of variations on this theme,  * including flags you can set in the CTIO for the Qlogic 2X00 fibre channel  * cards that 'auto-replenish' the f/w's ATIO count, but this is the basic  * gist of it.  *  * The third group that can show up in the response queue are Immediate  * Notification events. These include things like notifications of SCSI bus  * resets, or Bus Device Reset messages or other messages received. This  * a classic oddbins area. It can get  a little weird because you then turn  * around and acknowledge the Immediate Notify by writing an entry onto the  * request queue and then the f/w turns around and gives you an acknowledgement  * to *your* acknowledgement on the response queue (the idea being to let  * the f/w tell you when the event is *really* over I guess).  *  */
 end_comment
 
 begin_comment
@@ -1552,7 +1552,7 @@ parameter_list|,
 name|u_int32_t
 name|code
 parameter_list|,
-name|u_int32_t
+name|u_int16_t
 name|hdl
 parameter_list|)
 block|{
@@ -1872,6 +1872,14 @@ operator|.
 name|rqs_entry_count
 operator|=
 literal|1
+expr_stmt|;
+name|cto
+operator|->
+name|ct_fwhandle
+operator|=
+name|aep
+operator|->
+name|at_handle
 expr_stmt|;
 name|cto
 operator|->
