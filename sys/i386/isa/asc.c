@@ -226,18 +226,12 @@ directive|include
 file|<sys/devfsext.h>
 end_include
 
-begin_function_decl
-name|int
+begin_decl_stmt
+specifier|extern
+name|d_open_t
 name|ascopen
-parameter_list|(
-name|dev_t
-name|dev
-parameter_list|,
-name|int
-name|flag
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -2329,7 +2323,15 @@ name|dev_t
 name|dev
 parameter_list|,
 name|int
-name|flag
+name|flags
+parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 block|{
 name|int
@@ -2689,7 +2691,15 @@ name|dev_t
 name|dev
 parameter_list|,
 name|int
-name|flag
+name|flags
+parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 block|{
 name|int
@@ -3052,6 +3062,9 @@ name|struct
 name|uio
 modifier|*
 name|uio
+parameter_list|,
+name|int
+name|ioflag
 parameter_list|)
 block|{
 name|int
@@ -3676,7 +3689,7 @@ name|caddr_t
 name|data
 parameter_list|,
 name|int
-name|flag
+name|flags
 parameter_list|,
 name|struct
 name|proc
