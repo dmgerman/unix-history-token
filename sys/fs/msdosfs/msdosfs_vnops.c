@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.6 1994/10/23 00:41:17 martin Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.7 1994/10/27 18:44:31 pst Exp $ */
 end_comment
 
 begin_comment
@@ -6033,6 +6033,12 @@ operator|<=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|ap
+operator|->
+name|a_eofflag
+condition|)
 operator|*
 name|ap
 operator|->
