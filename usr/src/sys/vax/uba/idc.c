@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)idc.c	6.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)idc.c	6.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4948,7 +4948,14 @@ condition|(
 name|dumplo
 operator|<
 literal|0
-operator|||
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+if|if
+condition|(
 name|dumplo
 operator|+
 name|maxfree
@@ -4965,11 +4972,22 @@ index|]
 operator|.
 name|nblocks
 condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
+name|num
+operator|=
+name|sizes
+index|[
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+operator|&
+literal|07
+index|]
+operator|.
+name|nblocks
+operator|-
+name|dumplo
+expr_stmt|;
 name|nspg
 operator|=
 name|NBPG
@@ -4980,7 +4998,7 @@ name|nbps
 expr_stmt|;
 name|num
 operator|=
-name|maxfree
+name|num
 operator|*
 name|nspg
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)uda.c	6.8 (Berkeley) %G%  */
+comment|/*  *	@(#)uda.c	6.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -7455,18 +7455,26 @@ condition|(
 name|dumplo
 operator|<
 literal|0
-operator|||
-name|dumplo
-operator|+
-name|num
-operator|>=
-name|maxsz
 condition|)
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+if|if
+condition|(
+name|dumplo
+operator|+
+name|num
+operator|>=
+name|maxsz
+condition|)
+name|num
+operator|=
+name|maxsz
+operator|-
+name|dumplo
+expr_stmt|;
 name|blkoff
 operator|+=
 name|dumplo
