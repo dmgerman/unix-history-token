@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/mbuf.h>
 end_include
 
@@ -283,11 +277,13 @@ argument_list|(
 name|ENETDOWN
 argument_list|)
 expr_stmt|;
+name|gettime
+argument_list|(
+operator|&
 name|ifp
 operator|->
 name|if_lastchange
-operator|=
-name|time
+argument_list|)
 expr_stmt|;
 comment|/* 	 * check route 	 */
 if|if
@@ -991,11 +987,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|gettime
+argument_list|(
+operator|&
 name|ifp
 operator|->
 name|if_lastchange
-operator|=
-name|time
+argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
