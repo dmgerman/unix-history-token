@@ -415,6 +415,11 @@ name|defined
 argument_list|(
 name|NFS_ROOT
 argument_list|)
+name|int
+name|order
+init|=
+literal|0
+decl_stmt|;
 if|#
 directive|if
 operator|!
