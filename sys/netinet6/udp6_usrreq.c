@@ -2751,6 +2751,13 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* just to be sure */
+comment|/* 	 * XXX: ugly!! 	 * IPv4 TTL initialization is necessary for an IPv6 socket as well, 	 * because the socket may be bound to an IPv6 wildcard address, 	 * which may match an IPv4-mapped IPv6 address. 	 */
+name|inp
+operator|->
+name|inp_ip_ttl
+operator|=
+name|ip_defttl
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|IPSEC
