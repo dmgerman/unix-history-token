@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.62 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.63 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -278,6 +278,27 @@ comment|/* islocked */
 name|nfs_advlock
 block|,
 comment|/* advlock */
+name|nfs_blkatoff
+block|,
+comment|/* blkatoff */
+name|nfs_vget
+block|,
+comment|/* vget */
+name|nfs_valloc
+block|,
+comment|/* valloc */
+name|nfs_vfree
+block|,
+comment|/* vfree */
+name|nfs_truncate
+block|,
+comment|/* truncate */
+name|nfs_update
+block|,
+comment|/* update */
+name|bwrite
+block|,
+comment|/* bwrite */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -391,6 +412,27 @@ comment|/* islocked */
 name|spec_advlock
 block|,
 comment|/* advlock */
+name|spec_blkatoff
+block|,
+comment|/* blkatoff */
+name|spec_vget
+block|,
+comment|/* vget */
+name|spec_valloc
+block|,
+comment|/* valloc */
+name|spec_vfree
+block|,
+comment|/* vfree */
+name|spec_truncate
+block|,
+comment|/* truncate */
+name|nfs_update
+block|,
+comment|/* update */
+name|bwrite
+block|,
+comment|/* bwrite */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -506,6 +548,27 @@ comment|/* islocked */
 name|fifo_advlock
 block|,
 comment|/* advlock */
+name|fifo_blkatoff
+block|,
+comment|/* blkatoff */
+name|fifo_vget
+block|,
+comment|/* vget */
+name|fifo_valloc
+block|,
+comment|/* valloc */
+name|fifo_vfree
+block|,
+comment|/* vfree */
+name|fifo_truncate
+block|,
+comment|/* truncate */
+name|nfs_update
+block|,
+comment|/* update */
+name|bwrite
+block|,
+comment|/* bwrite */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -9316,6 +9379,314 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * NFS directory offset lookup.  * Currently unsupported.  */
+end_comment
+
+begin_macro
+name|nfs_blkatoff
+argument_list|(
+argument|vp
+argument_list|,
+argument|offset
+argument_list|,
+argument|res
+argument_list|,
+argument|bpp
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|off_t
+name|offset
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+modifier|*
+name|res
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|buf
+modifier|*
+modifier|*
+name|bpp
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * NFS flat namespace lookup.  * Currently unsupported.  */
+end_comment
+
+begin_macro
+name|nfs_vget
+argument_list|(
+argument|mp
+argument_list|,
+argument|ino
+argument_list|,
+argument|vpp
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|mount
+modifier|*
+name|mp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ino_t
+name|ino
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|vpp
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * NFS flat namespace allocation.  * Currently unsupported.  */
+end_comment
+
+begin_macro
+name|nfs_valloc
+argument_list|(
+argument|pvp
+argument_list|,
+argument|mode
+argument_list|,
+argument|cred
+argument_list|,
+argument|vpp
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|vnode
+modifier|*
+name|pvp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|mode
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ucred
+modifier|*
+name|cred
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|vpp
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * NFS flat namespace free.  * Currently unsupported.  */
+end_comment
+
+begin_function
+name|void
+name|nfs_vfree
+parameter_list|(
+name|pvp
+parameter_list|,
+name|ino
+parameter_list|,
+name|mode
+parameter_list|)
+name|struct
+name|vnode
+modifier|*
+name|pvp
+decl_stmt|;
+name|ino_t
+name|ino
+decl_stmt|;
+name|int
+name|mode
+decl_stmt|;
+block|{
+return|return;
+block|}
+end_function
+
+begin_comment
+comment|/*  * NFS file truncation.  */
+end_comment
+
+begin_macro
+name|nfs_truncate
+argument_list|(
+argument|vp
+argument_list|,
+argument|length
+argument_list|,
+argument|flags
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_long
+name|length
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flags
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+comment|/* Use nfs_setattr */
+name|printf
+argument_list|(
+literal|"nfs_truncate: need to implement!!"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * NFS update.  */
+end_comment
+
+begin_macro
+name|nfs_update
+argument_list|(
+argument|vp
+argument_list|,
+argument|ta
+argument_list|,
+argument|tm
+argument_list|,
+argument|waitfor
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|timeval
+modifier|*
+name|ta
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|timeval
+modifier|*
+name|tm
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|waitfor
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+comment|/* Use nfs_setattr */
+name|printf
+argument_list|(
+literal|"nfs_update: need to implement!!"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 block|}
 end_block
 
