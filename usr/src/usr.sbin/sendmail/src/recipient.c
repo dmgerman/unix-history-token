@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	5.5 (Berkeley) %G%"
+literal|"@(#)recipient.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1656,7 +1656,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|ischar
+name|isascii
 argument_list|(
 operator|*
 name|p
