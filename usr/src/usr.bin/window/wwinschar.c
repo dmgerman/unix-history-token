@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwinschar.c	3.8 83/09/15"
+literal|"@(#)wwinschar.c	3.9 83/09/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -415,9 +415,7 @@ if|if
 condition|(
 name|tt
 operator|.
-name|tt_setinsert
-operator|!=
-literal|0
+name|tt_hasinsert
 operator|&&
 name|nvis
 operator|>
@@ -439,15 +437,23 @@ decl_stmt|,
 modifier|*
 name|q
 decl_stmt|;
-call|(
-modifier|*
 name|tt
 operator|.
-name|tt_setinsert
-call|)
-argument_list|(
+name|tt_ninsert
+operator|=
 literal|1
-argument_list|)
+expr_stmt|;
+name|tt
+operator|.
+name|tt_nmodes
+operator|=
+name|c
+operator|>>
+name|WWC_MSHIFT
+operator|&
+name|tt
+operator|.
+name|tt_availmodes
 expr_stmt|;
 call|(
 modifier|*
@@ -465,18 +471,6 @@ call|(
 modifier|*
 name|tt
 operator|.
-name|tt_setmodes
-call|)
-argument_list|(
-name|c
-operator|>>
-name|WWC_MSHIFT
-argument_list|)
-expr_stmt|;
-call|(
-modifier|*
-name|tt
-operator|.
 name|tt_putc
 call|)
 argument_list|(
@@ -485,15 +479,11 @@ operator|&
 name|WWC_CMASK
 argument_list|)
 expr_stmt|;
-call|(
-modifier|*
 name|tt
 operator|.
-name|tt_setinsert
-call|)
-argument_list|(
+name|tt_ninsert
+operator|=
 literal|0
-argument_list|)
 expr_stmt|;
 name|p
 operator|=

@@ -1,12 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)tt.h	3.7 83/08/24  */
+comment|/*  *	@(#)tt.h	3.8 83/09/15  */
+end_comment
+
+begin_comment
+comment|/*  * Interface structure for the terminal drivers.  */
 end_comment
 
 begin_struct
 struct|struct
 name|tt
 block|{
+comment|/* startup and cleanup */
 name|int
 function_decl|(
 modifier|*
@@ -21,20 +26,7 @@ name|tt_end
 function_decl|)
 parameter_list|()
 function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|tt_setinsert
-function_decl|)
-parameter_list|()
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|tt_setmodes
-function_decl|)
-parameter_list|()
-function_decl|;
+comment|/* terminal functions */
 name|int
 function_decl|(
 modifier|*
@@ -70,6 +62,7 @@ name|tt_write
 function_decl|)
 parameter_list|()
 function_decl|;
+comment|/* write a whole block */
 name|int
 function_decl|(
 modifier|*
@@ -77,13 +70,7 @@ name|tt_putc
 function_decl|)
 parameter_list|()
 function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|tt_blank
-function_decl|)
-parameter_list|()
-function_decl|;
+comment|/* write one character */
 name|int
 function_decl|(
 modifier|*
@@ -105,15 +92,48 @@ name|tt_clear
 function_decl|)
 parameter_list|()
 function_decl|;
+comment|/* internal variables */
+name|char
+name|tt_modes
+decl_stmt|;
+comment|/* the current display modes */
+name|char
+name|tt_nmodes
+decl_stmt|;
+comment|/* the new modes for next write */
+name|char
+name|tt_insert
+decl_stmt|;
+comment|/* currently in insert mode */
+name|char
+name|tt_ninsert
+decl_stmt|;
+comment|/* insert mode on next write */
+name|int
+name|tt_row
+decl_stmt|;
+comment|/* cursor row */
+name|int
+name|tt_col
+decl_stmt|;
+comment|/* cursor column */
+comment|/* terminal info */
 name|int
 name|tt_nrow
 decl_stmt|;
+comment|/* number of display rows */
 name|int
 name|tt_ncol
 decl_stmt|;
+comment|/* number of display columns */
+name|char
+name|tt_hasinsert
+decl_stmt|;
+comment|/* has insert character */
 name|char
 name|tt_availmodes
 decl_stmt|;
+comment|/* the display modes supported */
 name|char
 name|tt_wrap
 decl_stmt|;
@@ -122,6 +142,7 @@ name|char
 name|tt_retain
 decl_stmt|;
 comment|/* can retain below (db flag) */
+comment|/* the frame characters */
 name|char
 modifier|*
 name|tt_frame
@@ -136,6 +157,10 @@ name|tt
 name|tt
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * List of terminal drivers.  */
+end_comment
 
 begin_struct
 struct|struct
@@ -168,7 +193,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * nicer interface to termcap routines  */
+comment|/*  * Clean interface to termcap routines.  */
 end_comment
 
 begin_decl_stmt
