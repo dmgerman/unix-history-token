@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.52 1997/09/16 23:15:14 brian Exp $  *  *  TODO:  */
+comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.53 1997/09/18 00:15:25 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -1656,89 +1656,27 @@ operator|&
 name|MODE_DIRECT
 condition|)
 block|{
-if|if
-condition|(
+name|LogPrintf
+argument_list|(
+name|LogDEBUG
+argument_list|,
+literal|"OpenModem(direct): Modem is %sa tty\n"
+argument_list|,
 name|isatty
 argument_list|(
 literal|0
 argument_list|)
-condition|)
-block|{
-name|char
-modifier|*
-name|dev
-decl_stmt|;
-name|modem
-operator|=
-name|open
-argument_list|(
-name|dev
-operator|=
-name|ctermid
-argument_list|(
-name|NULL
-argument_list|)
-argument_list|,
-name|O_RDWR
-operator||
-name|O_NONBLOCK
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|modem
-operator|<
-literal|0
-condition|)
-block|{
-name|LogPrintf
-argument_list|(
-name|LogERROR
-argument_list|,
-literal|"OpenModem(direct) failed: %s: %s\n"
-argument_list|,
-name|dev
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
-name|LogPrintf
-argument_list|(
-name|LogDEBUG
-argument_list|,
-literal|"OpenModem(direct): Modem is a tty\n"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* must be a tcp connection */
-name|LogPrintf
-argument_list|(
-name|LogDEBUG
-argument_list|,
-literal|"OpenModem(direct): Modem is not a tty\n"
+condition|?
+literal|""
+else|:
+literal|"not "
 argument_list|)
 expr_stmt|;
 return|return
 name|modem
 operator|=
-name|dup
-argument_list|(
 literal|0
-argument_list|)
 return|;
-block|}
 block|}
 else|else
 block|{
