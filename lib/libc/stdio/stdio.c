@@ -628,6 +628,29 @@ name|errno
 operator|=
 name|serrno
 expr_stmt|;
+if|if
+condition|(
+name|errret
+operator|==
+literal|0
+operator|&&
+operator|(
+name|offset
+operator|!=
+literal|0
+operator|||
+name|whence
+operator|!=
+name|SEEK_CUR
+operator|)
+condition|)
+comment|/* Disallow fseek() optimization inside read buffer */
+name|fp
+operator|->
+name|_flags
+operator||=
+name|__SMOD
+expr_stmt|;
 comment|/* 	 * Disallow negative seeks per POSIX. 	 * It is needed here to help upper level caller 	 * in the cases it can't detect. 	 */
 if|if
 condition|(
