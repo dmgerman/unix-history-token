@@ -319,7 +319,7 @@ begin_define
 define|#
 directive|define
 name|TPL_BAR_REG_AS
-value|0x08
+value|0x10
 end_define
 
 begin_comment
