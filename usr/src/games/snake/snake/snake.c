@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)snake.c	4.1 (Berkeley) %G%"
+literal|"@(#)snake.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2426,7 +2426,7 @@ end_block
 begin_macro
 name|post
 argument_list|(
-argument|score
+argument|iscore
 argument_list|,
 argument|flag
 argument_list|)
@@ -2434,7 +2434,7 @@ end_macro
 
 begin_decl_stmt
 name|int
-name|score
+name|iscore
 decl_stmt|,
 name|flag
 decl_stmt|;
@@ -2442,14 +2442,16 @@ end_decl_stmt
 
 begin_block
 block|{
+name|short
+name|score
+init|=
+name|iscore
+decl_stmt|;
 name|int
 name|rawscores
 decl_stmt|;
 name|short
 name|uid
-init|=
-name|getuid
-argument_list|()
 decl_stmt|;
 name|short
 name|oldbest
