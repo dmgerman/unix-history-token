@@ -27,7 +27,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inflate.c,v 1.3 1993/10/14 00:32:55 nate Exp $"
+literal|"$Id: inflate.c,v 1.4 1995/05/30 05:00:37 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3302,6 +3302,16 @@ name|i
 return|;
 comment|/* incomplete code set */
 block|}
+if|if
+condition|(
+name|tl
+operator|==
+name|NULL
+condition|)
+comment|/* Grrrhhh */
+return|return
+literal|2
+return|;
 comment|/* read in literal and distance code lengths */
 name|n
 operator|=
