@@ -1295,6 +1295,20 @@ operator|*
 name|URL
 operator|==
 literal|'/'
+operator|||
+operator|*
+name|URL
+operator|==
+literal|'.'
+operator|||
+name|strchr
+argument_list|(
+name|URL
+argument_list|,
+literal|'/'
+argument_list|)
+operator|==
+name|NULL
 condition|)
 goto|goto
 name|nohost
@@ -1419,10 +1433,12 @@ operator|++
 expr_stmt|;
 block|}
 else|else
+block|{
 name|p
 operator|=
 name|URL
 expr_stmt|;
+block|}
 comment|/* hostname */
 ifdef|#
 directive|ifdef
