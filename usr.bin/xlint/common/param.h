@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: param.h,v 1.1 2002/01/18 20:39:24 thorpej Exp $	*/
+comment|/*	$NetBSD: param.h,v 1.2 2002/02/05 03:04:26 thorpej Exp $	*/
 end_comment
 
 begin_comment
@@ -76,7 +76,7 @@ value|INT
 end_define
 
 begin_comment
-comment|/*  * long double only in ANSI C.  *  * And the sparc64 long double code generation is broken.  */
+comment|/*  * And the sparc64 long double code generation is broken.  */
 end_comment
 
 begin_if
@@ -86,11 +86,6 @@ operator|!
 name|defined
 argument_list|(
 name|__sparc64__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__STDC__
 argument_list|)
 end_if
 
@@ -123,12 +118,6 @@ begin_comment
 comment|/*  * Some traditional compilers are not able to assign structures.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -140,28 +129,6 @@ name|src
 parameter_list|)
 value|(dest) = (src)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|STRUCT_ASSIGN
-parameter_list|(
-name|dest
-parameter_list|,
-name|src
-parameter_list|)
-value|(void)memcpy(&(dest),&(src), \ 						     sizeof (dest));
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
