@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nextaddr.c 1.3 %G%"
+literal|"@(#)nextaddr.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1575,6 +1575,46 @@ argument_list|)
 operator|)
 return|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Determine whether or not the given address corresponds to the  * end of a procedure.  */
+end_comment
+
+begin_function
+name|BOOLEAN
+name|isendofproc
+parameter_list|(
+name|addr
+parameter_list|)
+name|ADDRESS
+name|addr
+decl_stmt|;
+block|{
+name|PXOP
+name|op
+decl_stmt|;
+name|iread
+argument_list|(
+operator|&
+name|op
+argument_list|,
+name|addr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|op
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|op
+operator|==
+name|O_END
+operator|)
+return|;
 block|}
 end_function
 
