@@ -349,8 +349,8 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
+modifier|*
 name|environ
-index|[]
 decl_stmt|;
 end_decl_stmt
 
