@@ -778,6 +778,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MD_AD1816
+value|0x93
+end_define
+
+begin_define
+define|#
+directive|define
 name|MD_CS4248
 value|0xA1
 end_define
