@@ -902,6 +902,15 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|info
+operator|==
+name|NULL
+condition|)
+return|return
+name|ENOMEM
+return|;
 name|info
 operator|->
 name|src
