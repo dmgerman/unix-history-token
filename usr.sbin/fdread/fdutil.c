@@ -349,6 +349,391 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|fd_type
+name|fd_types_12m
+index|[]
+init|=
+block|{
+block|{
+literal|15
+block|,
+literal|2
+block|,
+literal|0xFF
+block|,
+literal|0x1B
+block|,
+literal|80
+block|,
+literal|2400
+block|,
+literal|0
+block|,
+literal|2
+block|,
+literal|0x54
+block|,
+literal|1
+block|,
+literal|0
+block|,
+name|FL_MFM
+block|}
+block|,
+comment|/* 1.2M */
+if|#
+directive|if
+literal|0
+block|{ 10,2,0xFF,0x10,82,1640,1,2,0x30,1,0,FL_MFM },
+comment|/* 820K */
+block|{ 10,2,0xFF,0x10,80,1600,1,2,0x30,1,0,FL_MFM },
+comment|/* 800K */
+endif|#
+directive|endif
+block|{
+literal|9
+block|,
+literal|2
+block|,
+literal|0xFF
+block|,
+literal|0x20
+block|,
+literal|80
+block|,
+literal|1440
+block|,
+literal|1
+block|,
+literal|2
+block|,
+literal|0x50
+block|,
+literal|1
+block|,
+literal|0
+block|,
+name|FL_MFM
+block|}
+block|,
+comment|/* 720K */
+block|{
+literal|9
+block|,
+literal|2
+block|,
+literal|0xFF
+block|,
+literal|0x20
+block|,
+literal|40
+block|,
+literal|720
+block|,
+literal|1
+block|,
+literal|2
+block|,
+literal|0x50
+block|,
+literal|1
+block|,
+literal|0
+block|,
+name|FL_MFM
+operator||
+name|FL_2STEP
+block|}
+block|,
+comment|/* 360K */
+block|{
+literal|8
+block|,
+literal|2
+block|,
+literal|0xFF
+block|,
+literal|0x2A
+block|,
+literal|80
+block|,
+literal|1280
+block|,
+literal|1
+block|,
+literal|2
+block|,
+literal|0x50
+block|,
+literal|1
+block|,
+literal|0
+block|,
+name|FL_MFM
+block|}
+block|,
+comment|/* 640K */
+block|{
+literal|8
+block|,
+literal|3
+block|,
+literal|0xFF
+block|,
+literal|0x35
+block|,
+literal|77
+block|,
+literal|1232
+block|,
+literal|0
+block|,
+literal|2
+block|,
+literal|0x74
+block|,
+literal|1
+block|,
+literal|0
+block|,
+name|FL_MFM
+block|}
+block|,
+comment|/* 1.23M 1024/sec */
+if|#
+directive|if
+literal|0
+block|{  8,3,0xFF,0x35,80,1280,0,2,0x74,1,0,FL_MFM },
+comment|/* 1.28M 1024/sec */
+endif|#
+directive|endif
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|fd_type
+name|fd_types_144m
+index|[]
+init|=
+block|{
+if|#
+directive|if
+literal|0
+block|{ 21,2,0xFF,0x04,82,3444,2,2,0x0C,2,0,FL_MFM },
+comment|/* 1.72M in 3mode */
+block|{ 18,2,0xFF,0x1B,82,2952,2,2,0x54,1,0,FL_MFM },
+comment|/* 1.48M in 3mode */
+endif|#
+directive|endif
+block|{
+literal|18
+block|,
+literal|2
+block|,
+literal|0xFF
+block|,
+literal|0x1B
+block|,
+literal|80
+block|,
+literal|2880
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|0x54
+block|,
+literal|1
+block|,
+literal|0
+block|,
+name|FL_MFM
+block|}
+block|,
+comment|/* 1.44M in 3mode */
+block|{
+literal|15
+block|,
+literal|2
+block|,
+literal|0xFF
+block|,
+literal|0x1B
+block|,
+literal|80
+block|,
+literal|2400
+block|,
+literal|0
+block|,
+literal|2
+block|,
+literal|0x54
+block|,
+literal|1
+block|,
+literal|0
+block|,
+name|FL_MFM
+block|}
+block|,
+comment|/* 1.2M */
+if|#
+directive|if
+literal|0
+block|{ 10,2,0xFF,0x10,82,1640,1,2,0x30,1,0,FL_MFM },
+comment|/* 820K */
+block|{ 10,2,0xFF,0x10,80,1600,1,2,0x30,1,0,FL_MFM },
+comment|/* 800K */
+endif|#
+directive|endif
+block|{
+literal|9
+block|,
+literal|2
+block|,
+literal|0xFF
+block|,
+literal|0x20
+block|,
+literal|80
+block|,
+literal|1440
+block|,
+literal|1
+block|,
+literal|2
+block|,
+literal|0x50
+block|,
+literal|1
+block|,
+literal|0
+block|,
+name|FL_MFM
+block|}
+block|,
+comment|/* 720K */
+block|{
+literal|9
+block|,
+literal|2
+block|,
+literal|0xFF
+block|,
+literal|0x20
+block|,
+literal|40
+block|,
+literal|720
+block|,
+literal|1
+block|,
+literal|2
+block|,
+literal|0x50
+block|,
+literal|1
+block|,
+literal|0
+block|,
+name|FL_MFM
+operator||
+name|FL_2STEP
+block|}
+block|,
+comment|/* 360K */
+block|{
+literal|8
+block|,
+literal|2
+block|,
+literal|0xFF
+block|,
+literal|0x2A
+block|,
+literal|80
+block|,
+literal|1280
+block|,
+literal|1
+block|,
+literal|2
+block|,
+literal|0x50
+block|,
+literal|1
+block|,
+literal|0
+block|,
+name|FL_MFM
+block|}
+block|,
+comment|/* 640K */
+block|{
+literal|8
+block|,
+literal|3
+block|,
+literal|0xFF
+block|,
+literal|0x35
+block|,
+literal|77
+block|,
+literal|1232
+block|,
+literal|0
+block|,
+literal|2
+block|,
+literal|0x74
+block|,
+literal|1
+block|,
+literal|0
+block|,
+name|FL_MFM
+block|}
+block|,
+comment|/* 1.23M 1024/sec */
+if|#
+directive|if
+literal|0
+block|{  8,3,0xFF,0x35,80,1280,0,2,0x74,1,0,FL_MFM },
+comment|/* 1.28M 1024/sec */
+block|{  9,3,0xFF,0x35,82,1476,0,2,0x47,1,0,FL_MFM },
+comment|/* 1.48M 1024/sec 9sec */
+block|{ 10,3,0xFF,0x1B,82,1640,2,2,0x54,1,0,FL_MFM },
+comment|/* 1.64M in 3mode - Reserve */
+endif|#
+directive|endif
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* PC98 */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -1093,6 +1478,15 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PC98 */
+end_comment
+
 begin_comment
 comment|/*  * Parse a format string, and fill in the parameter pointed to by `out'.  *  * sectrac,secsize,datalen,gap,ncyls,speed,heads,f_gap,f_inter,offs2,flags[...]  *  * sectrac = sectors per track  * secsize = sector size in bytes  * datalen = length of sector if secsize == 128  * gap     = gap length when reading  * ncyls   = number of cylinders  * speed   = transfer speed 250/300/500/1000 KB/s  * heads   = number of heads  * f_gap   = gap length when formatting  * f_inter = sector interleave when formatting  * offs2   = offset of sectors on side 2  * flags   = +/-mfm | +/-2step | +/-perpend  *             mfm - use MFM recording  *             2step - use 2 steps between cylinders  *             perpend - user perpendicular (vertical) recording  *  * Any omitted value will be passed on from parameter `in'.  */
 end_comment
@@ -1525,6 +1919,9 @@ name|abort
 argument_list|()
 expr_stmt|;
 comment|/* paranoia */
+ifndef|#
+directive|ifndef
+name|PC98
 case|case
 name|FDT_360K
 case|:
@@ -1544,9 +1941,6 @@ operator|=
 name|FDC_250KBPS
 expr_stmt|;
 else|else
-block|{
-name|badspeed
-label|:
 name|errx
 argument_list|(
 name|EX_USAGE
@@ -1556,8 +1950,9 @@ argument_list|,
 name|j
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
+endif|#
+directive|endif
 case|case
 name|FDT_12M
 case|:
@@ -1587,10 +1982,19 @@ operator|=
 name|FDC_500KBPS
 expr_stmt|;
 else|else
-goto|goto
-name|badspeed
-goto|;
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"bad speed %d"
+argument_list|,
+name|j
+argument_list|)
+expr_stmt|;
 break|break;
+ifndef|#
+directive|ifndef
+name|PC98
 case|case
 name|FDT_288M
 case|:
@@ -1607,6 +2011,8 @@ operator|=
 name|FDC_1MBPS
 expr_stmt|;
 comment|/* FALLTHROUGH */
+endif|#
+directive|endif
 case|case
 name|FDT_144M
 case|:
@@ -1636,9 +2042,15 @@ operator|=
 name|FDC_500KBPS
 expr_stmt|;
 else|else
-goto|goto
-name|badspeed
-goto|;
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"bad speed %d"
+argument_list|,
+name|j
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 break|break;
@@ -2119,6 +2531,9 @@ operator|(
 literal|0
 operator|)
 return|;
+ifndef|#
+directive|ifndef
+name|PC98
 case|case
 name|FDT_360K
 case|:
@@ -2157,6 +2572,8 @@ name|fd_type
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|FDT_12M
 case|:
@@ -2195,6 +2612,9 @@ name|fd_type
 argument_list|)
 expr_stmt|;
 break|break;
+ifndef|#
+directive|ifndef
+name|PC98
 case|case
 name|FDT_288M
 case|:
@@ -2214,6 +2634,8 @@ name|fd_type
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -2241,6 +2663,36 @@ operator|,
 name|fdtp
 operator|++
 control|)
+ifdef|#
+directive|ifdef
+name|PC98
+if|if
+condition|(
+operator|(
+operator|(
+literal|128
+operator|<<
+name|fdtp
+operator|->
+name|secsize
+operator|)
+operator|*
+name|fdtp
+operator|->
+name|size
+operator|/
+literal|1024
+operator|)
+operator|==
+name|size
+condition|)
+return|return
+operator|(
+name|fdtp
+operator|)
+return|;
+else|#
+directive|else
 if|if
 condition|(
 name|fdtp
@@ -2256,6 +2708,8 @@ operator|(
 name|fdtp
 operator|)
 return|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -2373,6 +2827,9 @@ operator|=
 literal|"unknown drive type"
 expr_stmt|;
 break|break;
+ifndef|#
+directive|ifndef
+name|PC98
 case|case
 name|FDT_360K
 case|:
@@ -2387,6 +2844,8 @@ operator|=
 literal|"5.25\" double-density"
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|FDT_12M
 case|:
@@ -2401,6 +2860,9 @@ operator|=
 literal|"5.25\" high-density"
 expr_stmt|;
 break|break;
+ifndef|#
+directive|ifndef
+name|PC98
 case|case
 name|FDT_720K
 case|:
@@ -2415,6 +2877,8 @@ operator|=
 literal|"3.5\" double-density"
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|FDT_144M
 case|:
@@ -2429,6 +2893,9 @@ operator|=
 literal|"3.5\" high-density"
 expr_stmt|;
 break|break;
+ifndef|#
+directive|ifndef
+name|PC98
 case|case
 name|FDT_288M
 case|:
@@ -2443,6 +2910,8 @@ operator|=
 literal|"3.5\" extra-density"
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 block|}
 block|}
 end_function
