@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)update.c	5.2 (Berkeley) %G%"
+literal|"@(#)update.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1001,6 +1001,11 @@ decl_stmt|,
 modifier|*
 name|comm_start
 decl_stmt|;
+name|char
+modifier|*
+name|index
+parameter_list|()
+function_decl|;
 name|buf
 index|[
 literal|0
