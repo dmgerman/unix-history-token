@@ -308,22 +308,11 @@ directive|include
 file|<netipsec/ipsec.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<netipsec/ipsec6.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -2635,9 +2624,6 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|FAST_IPSEC
-ifdef|#
-directive|ifdef
-name|INET6
 if|if
 condition|(
 name|isipv6
@@ -2663,8 +2649,6 @@ goto|;
 block|}
 block|}
 elseif|else
-endif|#
-directive|endif
 if|if
 condition|(
 name|inp
