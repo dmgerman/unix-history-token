@@ -2219,6 +2219,17 @@ name|i
 operator|++
 control|)
 block|{
+operator|(
+name|void
+operator|)
+name|unlink
+argument_list|(
+name|funixn
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
