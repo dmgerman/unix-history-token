@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.16	81/02/17	*/
+comment|/*	dh.c	4.17	81/02/18	*/
 end_comment
 
 begin_include
@@ -28,7 +28,7 @@ value|{ register int j = i; while (--j> 0); }
 end_define
 
 begin_comment
-comment|/*  * DH-11 driver  */
+comment|/*  * DH-11/DM-11 driver  */
 end_comment
 
 begin_include
@@ -109,20 +109,8 @@ directive|include
 file|"../h/file.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|UBACVT
-parameter_list|(
-name|x
-parameter_list|,
-name|uban
-parameter_list|)
-value|(cbase[uban] + ((x)-(char *)cfree))
-end_define
-
 begin_comment
-comment|/*  * Definition of the controller for the auto-configuration program.  */
+comment|/*  * Definition of the driver for the auto-configuration program.  * There is one definition for the dh and one for the dm.  */
 end_comment
 
 begin_decl_stmt
@@ -179,7 +167,7 @@ literal|0
 block|,
 name|dhstd
 block|,
-literal|"dh"
+literal|"dh11"
 block|,
 name|dhinfo
 block|}
@@ -187,121 +175,111 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|dmcntrlr
+argument_list|()
+decl_stmt|,
+name|dmslave
+argument_list|()
+decl_stmt|,
+name|dmintr
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
-name|tty
-name|dh11
+name|uba_dinfo
+modifier|*
+name|dminfo
 index|[
 name|NDH11
-operator|*
-literal|16
 index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|dhact
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|ndh11
+name|u_short
+name|dmstd
+index|[]
 init|=
-name|NDH11
-operator|*
-literal|16
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|int
-name|dhstart
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ttrstrt
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-name|int
-name|dh_ubinfo
-index|[
-name|MAXNUBA
-index|]
+block|{
+literal|0
+block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|cbase
-index|[
-name|MAXNUBA
-index|]
+name|struct
+name|uba_driver
+name|dmdriver
+init|=
+block|{
+name|dmcntrlr
+block|,
+name|dmslave
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|dmstd
+block|,
+literal|"dm11"
+block|,
+name|dminfo
+block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Bits in dhlpr */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BITS6
-value|01
-end_define
-
-begin_define
-define|#
-directive|define
-name|BITS7
-value|02
-end_define
-
-begin_define
-define|#
-directive|define
-name|BITS8
-value|03
-end_define
-
-begin_define
-define|#
-directive|define
-name|TWOSB
-value|04
-end_define
-
-begin_define
-define|#
-directive|define
-name|PENABLE
-value|020
-end_define
-
-begin_comment
-comment|/* DEC manuals incorrectly say this bit causes generation of even parity. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OPAR
-value|040
-end_define
-
-begin_define
-define|#
-directive|define
-name|HDUPLX
-value|040000
-end_define
+begin_struct
+struct|struct
+name|dhdevice
+block|{
+union|union
+block|{
+name|short
+name|dhcsr
+decl_stmt|;
+comment|/* control-status register */
+name|char
+name|dhcsrl
+decl_stmt|;
+comment|/* low byte for line select */
+block|}
+name|un
+union|;
+name|short
+name|dhrcr
+decl_stmt|;
+comment|/* receive character register */
+name|short
+name|dhlpr
+decl_stmt|;
+comment|/* line parameter register */
+name|u_short
+name|dhcar
+decl_stmt|;
+comment|/* current address register */
+name|short
+name|dhbcr
+decl_stmt|;
+comment|/* byte count register */
+name|u_short
+name|dhbar
+decl_stmt|;
+comment|/* buffer active register */
+name|short
+name|dhbreak
+decl_stmt|;
+comment|/* break control register */
+name|short
+name|dhsilo
+decl_stmt|;
+comment|/* silo status register */
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/* Bits in dhcsr */
@@ -417,6 +395,63 @@ begin_comment
 comment|/* receiver interrupt enable */
 end_comment
 
+begin_comment
+comment|/* Bits in dhlpr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BITS6
+value|01
+end_define
+
+begin_define
+define|#
+directive|define
+name|BITS7
+value|02
+end_define
+
+begin_define
+define|#
+directive|define
+name|BITS8
+value|03
+end_define
+
+begin_define
+define|#
+directive|define
+name|TWOSB
+value|04
+end_define
+
+begin_define
+define|#
+directive|define
+name|PENABLE
+value|020
+end_define
+
+begin_comment
+comment|/* DEC manuals incorrectly say this bit causes generation of even parity. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPAR
+value|040
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDUPLX
+value|040000
+end_define
+
 begin_define
 define|#
 directive|define
@@ -432,7 +467,7 @@ begin_define
 define|#
 directive|define
 name|DH_PE
-value|010000
+value|0010000
 end_define
 
 begin_comment
@@ -443,7 +478,7 @@ begin_define
 define|#
 directive|define
 name|DH_FE
-value|020000
+value|0020000
 end_define
 
 begin_comment
@@ -454,44 +489,246 @@ begin_define
 define|#
 directive|define
 name|DH_DO
-value|040000
+value|0040000
 end_define
 
 begin_comment
 comment|/* data overrun */
 end_comment
 
+begin_struct
+struct|struct
+name|dmdevice
+block|{
+name|short
+name|dmcsr
+decl_stmt|;
+comment|/* control status register */
+name|short
+name|dmlstat
+decl_stmt|;
+comment|/* line status register */
+name|short
+name|dmpad1
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
-comment|/*  * DM control bits  */
+comment|/* bits in dm csr */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DM_ON
-value|03
+name|DM_RF
+value|0100000
 end_define
 
 begin_comment
-comment|/* CD lead + line enable */
+comment|/* ring flag */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DM_OFF
-value|01
+name|DM_CF
+value|0040000
 end_define
 
 begin_comment
-comment|/* line enable */
+comment|/* carrier flag */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DM_DTR
-value|02
+name|DM_CTS
+value|0020000
+end_define
+
+begin_comment
+comment|/* clear to send */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DM_SRF
+value|0010000
+end_define
+
+begin_comment
+comment|/* secondary receive flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DM_CS
+value|0004000
+end_define
+
+begin_comment
+comment|/* clear scan */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DM_CM
+value|0002000
+end_define
+
+begin_comment
+comment|/* clear multiplexor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DM_MM
+value|0001000
+end_define
+
+begin_comment
+comment|/* maintenance mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DM_STP
+value|0000400
+end_define
+
+begin_comment
+comment|/* step */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DM_DONE
+value|0000200
+end_define
+
+begin_comment
+comment|/* scanner is done */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DM_IE
+value|0000100
+end_define
+
+begin_comment
+comment|/* interrupt enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DM_SE
+value|0000040
+end_define
+
+begin_comment
+comment|/* scan enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DM_BUSY
+value|0000020
+end_define
+
+begin_comment
+comment|/* scan busy */
+end_comment
+
+begin_comment
+comment|/* bits in dm lsr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DML_RNG
+value|0000200
+end_define
+
+begin_comment
+comment|/* ring */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DML_CAR
+value|0000100
+end_define
+
+begin_comment
+comment|/* carrier detect */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DML_CTS
+value|0000040
+end_define
+
+begin_comment
+comment|/* clear to send */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DML_SR
+value|0000020
+end_define
+
+begin_comment
+comment|/* secondary receive */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DML_ST
+value|0000010
+end_define
+
+begin_comment
+comment|/* secondary transmit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DML_RTS
+value|0000004
+end_define
+
+begin_comment
+comment|/* request to send */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DML_DTR
+value|0000002
 end_define
 
 begin_comment
@@ -501,16 +738,30 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DM_RQS
-value|04
+name|DML_LE
+value|0000001
 end_define
 
 begin_comment
-comment|/* request to send */
+comment|/* line enable */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DML_ON
+value|(DML_DTR|DML_LE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DML_OFF
+value|(DML_LE)
+end_define
+
 begin_comment
-comment|/* Software copy of last dhbar */
+comment|/*  * Local variables for the driver  */
 end_comment
 
 begin_decl_stmt
@@ -522,54 +773,93 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|device
-block|{
-union|union
-block|{
-name|short
-name|dhcsr
+begin_comment
+comment|/* software copy of last bar */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|tty
+name|dh11
+index|[
+name|NDH11
+operator|*
+literal|16
+index|]
 decl_stmt|;
-comment|/* control-status register */
-name|char
-name|dhcsrl
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ndh11
+init|=
+name|NDH11
+operator|*
+literal|16
 decl_stmt|;
-comment|/* low byte for line select */
-block|}
-name|un
-union|;
-name|short
-name|dhrcr
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|dhact
 decl_stmt|;
-comment|/* receive character register */
-name|short
-name|dhlpr
+end_decl_stmt
+
+begin_comment
+comment|/* mask of active dh's */
+end_comment
+
+begin_decl_stmt
+name|int
+name|dhstart
+argument_list|()
+decl_stmt|,
+name|ttrstrt
+argument_list|()
 decl_stmt|;
-comment|/* line parameter register */
-name|u_short
-name|dhcar
+end_decl_stmt
+
+begin_comment
+comment|/*  * The clist space is mapped by the driver onto each UNIBUS.  * The UBACVT macro converts a clist space address for unibus uban  * into an i/o space address for the DMA routine.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|dh_ubinfo
+index|[
+name|MAXNUBA
+index|]
 decl_stmt|;
-comment|/* current address register */
-name|short
-name|dhbcr
+end_decl_stmt
+
+begin_comment
+comment|/* info about allocated unibus map */
+end_comment
+
+begin_decl_stmt
+name|int
+name|cbase
+index|[
+name|MAXNUBA
+index|]
 decl_stmt|;
-comment|/* byte count register */
-name|u_short
-name|dhbar
-decl_stmt|;
-comment|/* buffer active register */
-name|short
-name|dhbreak
-decl_stmt|;
-comment|/* break control register */
-name|short
-name|dhsilo
-decl_stmt|;
-comment|/* silo status register */
-block|}
-struct|;
-end_struct
+end_decl_stmt
+
+begin_comment
+comment|/* base address in unibus map */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UBACVT
+parameter_list|(
+name|x
+parameter_list|,
+name|uban
+parameter_list|)
+value|(cbase[uban] + ((x)-(char *)cfree))
+end_define
 
 begin_comment
 comment|/*  * Routine for configuration to force a dh to interrupt.  * Set to transmit at 9600 baud, and cause a transmitter interrupt.  */
@@ -613,13 +903,13 @@ decl_stmt|;
 comment|/* these are ``value-result'' */
 specifier|register
 name|struct
-name|device
+name|dhdevice
 modifier|*
 name|dhaddr
 init|=
 operator|(
 expr|struct
-name|device
+name|dhdevice
 operator|*
 operator|)
 name|reg
@@ -750,6 +1040,114 @@ block|}
 end_block
 
 begin_comment
+comment|/*  * Configuration routine to cause a dm to interrupt.  */
+end_comment
+
+begin_macro
+name|dmcntrlr
+argument_list|(
+argument|um
+argument_list|,
+argument|addr
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|uba_minfo
+modifier|*
+name|um
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|caddr_t
+name|addr
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|int
+name|br
+decl_stmt|,
+name|vec
+decl_stmt|;
+comment|/* value-result */
+specifier|register
+name|struct
+name|dmdevice
+modifier|*
+name|dmaddr
+init|=
+operator|(
+expr|struct
+name|dmdevice
+operator|*
+operator|)
+name|addr
+decl_stmt|;
+name|dmaddr
+operator|->
+name|dmcsr
+operator|=
+name|DM_DONE
+operator||
+name|DM_IE
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|20
+argument_list|)
+expr_stmt|;
+name|dmaddr
+operator|->
+name|dmcsr
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|dmslave
+argument_list|(
+argument|ui
+argument_list|,
+argument|addr
+argument_list|,
+argument|slave
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|uba_dinfo
+modifier|*
+name|ui
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|caddr_t
+name|addr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|slave
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+comment|/* no local state to set up */
+block|}
+end_block
+
+begin_comment
 comment|/*  * Open a DH11 line, mapping the clist onto the uba if this  * is the first dh on this uba.  Turn on this dh if this is  * the first use of it.  Also do a dmopen to wait for carrier.  */
 end_comment
 
@@ -788,7 +1186,7 @@ name|dh
 decl_stmt|;
 specifier|register
 name|struct
-name|device
+name|dhdevice
 modifier|*
 name|addr
 decl_stmt|;
@@ -883,7 +1281,7 @@ name|addr
 operator|=
 operator|(
 expr|struct
-name|device
+name|dhdevice
 operator|*
 operator|)
 name|ui
@@ -1188,7 +1586,7 @@ expr_stmt|;
 operator|(
 operator|(
 expr|struct
-name|device
+name|dhdevice
 operator|*
 operator|)
 operator|(
@@ -1233,7 +1631,7 @@ name|dmctl
 argument_list|(
 name|unit
 argument_list|,
-name|DM_OFF
+name|DML_OFF
 argument_list|,
 name|DMSET
 argument_list|)
@@ -1376,7 +1774,7 @@ name|c
 expr_stmt|;
 specifier|register
 name|struct
-name|device
+name|dhdevice
 modifier|*
 name|addr
 decl_stmt|;
@@ -1402,11 +1800,24 @@ index|[
 name|dh
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|ui
+operator|==
+literal|0
+operator|||
+name|ui
+operator|->
+name|ui_alive
+operator|==
+literal|0
+condition|)
+return|return;
 name|addr
 operator|=
 operator|(
 expr|struct
-name|device
+name|dhdevice
 operator|*
 operator|)
 name|ui
@@ -1712,7 +2123,7 @@ case|:
 operator|(
 operator|(
 expr|struct
-name|device
+name|dhdevice
 operator|*
 operator|)
 operator|(
@@ -1739,7 +2150,7 @@ case|:
 operator|(
 operator|(
 expr|struct
-name|device
+name|dhdevice
 operator|*
 operator|)
 operator|(
@@ -1770,9 +2181,9 @@ name|dmctl
 argument_list|(
 name|unit
 argument_list|,
-name|DM_DTR
+name|DML_DTR
 operator||
-name|DM_RQS
+name|DML_RTS
 argument_list|,
 name|DMBIS
 argument_list|)
@@ -1785,9 +2196,9 @@ name|dmctl
 argument_list|(
 name|unit
 argument_list|,
-name|DM_DTR
+name|DML_DTR
 operator||
-name|DM_RQS
+name|DML_RTS
 argument_list|,
 name|DMBIC
 argument_list|)
@@ -1829,7 +2240,7 @@ name|tp
 decl_stmt|;
 specifier|register
 name|struct
-name|device
+name|dhdevice
 modifier|*
 name|addr
 decl_stmt|;
@@ -1852,7 +2263,7 @@ name|addr
 operator|=
 operator|(
 expr|struct
-name|device
+name|dhdevice
 operator|*
 operator|)
 name|tp
@@ -1900,7 +2311,7 @@ name|dmctl
 argument_list|(
 name|unit
 argument_list|,
-name|DM_OFF
+name|DML_OFF
 argument_list|,
 name|DMSET
 argument_list|)
@@ -2048,7 +2459,7 @@ name|tp
 decl_stmt|;
 specifier|register
 name|struct
-name|device
+name|dhdevice
 modifier|*
 name|addr
 decl_stmt|;
@@ -2087,7 +2498,7 @@ name|addr
 operator|=
 operator|(
 expr|struct
-name|device
+name|dhdevice
 operator|*
 operator|)
 name|ui
@@ -2332,7 +2743,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|device
+name|dhdevice
 modifier|*
 name|addr
 decl_stmt|;
@@ -2372,7 +2783,7 @@ name|addr
 operator|=
 operator|(
 expr|struct
-name|device
+name|dhdevice
 operator|*
 operator|)
 name|tp
@@ -2687,7 +3098,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|device
+name|dhdevice
 modifier|*
 name|addr
 decl_stmt|;
@@ -2701,7 +3112,7 @@ name|addr
 operator|=
 operator|(
 expr|struct
-name|device
+name|dhdevice
 operator|*
 operator|)
 name|tp
@@ -2938,7 +3349,7 @@ continue|continue;
 operator|(
 operator|(
 expr|struct
-name|device
+name|dhdevice
 operator|*
 operator|)
 name|ui
@@ -2960,7 +3371,7 @@ expr_stmt|;
 operator|(
 operator|(
 expr|struct
-name|device
+name|dhdevice
 operator|*
 operator|)
 name|ui
@@ -3022,7 +3433,7 @@ name|dmctl
 argument_list|(
 name|unit
 argument_list|,
-name|DM_ON
+name|DML_ON
 argument_list|,
 name|DMSET
 argument_list|)
@@ -3088,195 +3499,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * DM-11 driver.  */
-end_comment
-
-begin_comment
-comment|/*  * Definition of the controller for the auto-configuration program.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|dmcntrlr
-argument_list|()
-decl_stmt|,
-name|dmslave
-argument_list|()
-decl_stmt|,
-name|dmintr
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|uba_dinfo
-modifier|*
-name|dminfo
-index|[
-name|NDH11
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|u_short
-name|dmstd
-index|[]
-init|=
-block|{
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|uba_driver
-name|dmdriver
-init|=
-block|{
-name|dmcntrlr
-block|,
-name|dmslave
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|dmstd
-block|,
-literal|"dm"
-block|,
-name|dminfo
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* hardware bits */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DM_CARRTRANS
-value|040000
-end_define
-
-begin_comment
-comment|/* carrier transition */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DM_CLSCAN
-value|004000
-end_define
-
-begin_comment
-comment|/* clear scan */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DM_DONE
-value|000200
-end_define
-
-begin_define
-define|#
-directive|define
-name|DM_CARRON
-value|000100
-end_define
-
-begin_comment
-comment|/* carrier on */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DM_SCENABLE
-value|000040
-end_define
-
-begin_comment
-comment|/* scan enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DM_SCBUSY
-value|000020
-end_define
-
-begin_comment
-comment|/* scan busy */
-end_comment
-
-begin_struct
-struct|struct
-name|dmdevice
-block|{
-name|short
-name|dmcsr
-decl_stmt|;
-name|short
-name|dmlstat
-decl_stmt|;
-name|short
-name|dmpad1
-index|[
-literal|2
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_macro
-name|dmcntrlr
-argument_list|(
-argument|um
-argument_list|,
-argument|addr
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|uba_minfo
-modifier|*
-name|um
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|caddr_t
-name|addr
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{  }
-end_block
-
-begin_macro
-name|dmslave
-argument_list|()
-end_macro
-
-begin_block
-block|{  }
-end_block
-
-begin_comment
-comment|/*  * Turn on the line associated with the dh device dev.  */
+comment|/*  * Turn on the line associated with dh dev.  */
 end_comment
 
 begin_macro
@@ -3331,7 +3554,7 @@ name|dm
 operator|=
 name|unit
 operator|>>
-literal|8
+literal|4
 expr_stmt|;
 name|tp
 operator|=
@@ -3392,7 +3615,7 @@ operator|->
 name|dmcsr
 operator|&=
 operator|~
-name|DM_SCENABLE
+name|DM_SE
 expr_stmt|;
 while|while
 condition|(
@@ -3400,7 +3623,7 @@ name|addr
 operator|->
 name|dmcsr
 operator|&
-name|DM_SCBUSY
+name|DM_BUSY
 condition|)
 empty_stmt|;
 name|addr
@@ -3415,7 +3638,7 @@ name|addr
 operator|->
 name|dmlstat
 operator|=
-name|DM_ON
+name|DML_ON
 expr_stmt|;
 if|if
 condition|(
@@ -3423,7 +3646,7 @@ name|addr
 operator|->
 name|dmlstat
 operator|&
-name|DM_CARRON
+name|DML_CAR
 condition|)
 name|tp
 operator|->
@@ -3437,7 +3660,7 @@ name|dmcsr
 operator|=
 name|DH_IE
 operator||
-name|DM_SCENABLE
+name|DM_SE
 expr_stmt|;
 while|while
 condition|(
@@ -3576,7 +3799,7 @@ operator|->
 name|dmcsr
 operator|&=
 operator|~
-name|DM_SCENABLE
+name|DM_SE
 expr_stmt|;
 while|while
 condition|(
@@ -3584,7 +3807,7 @@ name|addr
 operator|->
 name|dmcsr
 operator|&
-name|DM_SCBUSY
+name|DM_BUSY
 condition|)
 empty_stmt|;
 name|addr
@@ -3638,7 +3861,7 @@ name|dmcsr
 operator|=
 name|DH_IE
 operator||
-name|DM_SCENABLE
+name|DM_SE
 expr_stmt|;
 name|splx
 argument_list|(
@@ -3690,6 +3913,13 @@ index|[
 name|dm
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|ui
+operator|==
+literal|0
+condition|)
+return|return;
 name|addr
 operator|=
 operator|(
@@ -3713,7 +3943,7 @@ name|addr
 operator|->
 name|dmcsr
 operator|&
-name|DM_CARRTRANS
+name|DM_CF
 condition|)
 block|{
 name|tp
@@ -3774,7 +4004,7 @@ name|addr
 operator|->
 name|dmlstat
 operator|&
-name|DM_CARRON
+name|DML_CAR
 condition|)
 block|{
 name|tp
@@ -3827,7 +4057,7 @@ name|addr
 operator|->
 name|dmlstat
 operator|&
-name|DM_CARRON
+name|DML_CAR
 operator|)
 operator|==
 literal|0
@@ -3911,7 +4141,7 @@ name|dmcsr
 operator|=
 name|DH_IE
 operator||
-name|DM_SCENABLE
+name|DM_SE
 expr_stmt|;
 block|}
 block|}
