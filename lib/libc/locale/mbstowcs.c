@@ -156,6 +156,11 @@ literal|1
 operator|)
 return|;
 block|}
+return|return
+operator|(
+name|cnt
+operator|)
+return|;
 block|}
 comment|/* Convert, store and count characters. */
 name|cnt
