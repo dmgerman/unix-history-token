@@ -8974,7 +8974,11 @@ else|else
 block|{
 name|str
 operator|=
+name|err
+condition|?
 name|var_Error
+else|:
+name|varNoError
 expr_stmt|;
 block|}
 block|}
