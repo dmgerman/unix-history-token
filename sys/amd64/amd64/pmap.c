@@ -10360,13 +10360,10 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|pte_store
+name|atomic_clear_long
 argument_list|(
 name|pte
 argument_list|,
-name|v
-operator|&
-operator|~
 name|PG_A
 argument_list|)
 expr_stmt|;
