@@ -4773,7 +4773,7 @@ condition|)
 name|bufcountwakeup
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Something we can maybe free. 	 */
+comment|/* 	 * Something we can maybe free or reuse 	 */
 if|if
 condition|(
 name|bp
@@ -5073,7 +5073,7 @@ name|bufcountwakeup
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* 	 * Something we can maybe wakeup 	 */
+comment|/* 	 * Something we can maybe free or reuse. 	 */
 if|if
 condition|(
 name|bp
@@ -5989,7 +5989,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Nada.  If we are allowed to allocate an EMPTY  		 * buffer, go get one. 		 */
+comment|/* 		 * If we could not find or were not allowed to reuse a 		 * CLEAN buffer, check to see if it is ok to use an EMPTY 		 * buffer.  We can only use an EMPTY buffer if allocating 		 * its KVA would not otherwise run us out of buffer space. 		 */
 if|if
 condition|(
 name|nbp
@@ -6001,6 +6001,8 @@ operator|==
 literal|0
 operator|&&
 name|bufspace
+operator|+
+name|maxsize
 operator|<
 name|hibufspace
 condition|)
@@ -6473,6 +6475,7 @@ goto|goto
 name|restart
 goto|;
 block|}
+comment|/* 		 * If we are overcomitted then recover the buffer and its 		 * KVM space.  This occurs in rare situations when multiple 		 * processes are blocked in getnewbuf() or allocbuf(). 		 */
 if|if
 condition|(
 name|bufspace

@@ -1635,13 +1635,20 @@ name|end
 operator|=
 name|end
 expr_stmt|;
+name|vm_map_simplify_entry
+argument_list|(
+name|map
+argument_list|,
+name|prev_entry
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|KERN_SUCCESS
 operator|)
 return|;
 block|}
-comment|/* 		 * If we can extend the object but cannot extend the 		 * map entry, we have to create a new map entry.  We 		 * must bump the ref count on the extended object to 		 * account for it. 		 */
+comment|/* 		 * If we can extend the object but cannot extend the 		 * map entry, we have to create a new map entry.  We 		 * must bump the ref count on the extended object to 		 * account for it.  object may be NULL. 		 */
 name|object
 operator|=
 name|prev_entry
@@ -1794,6 +1801,14 @@ operator|=
 name|new_entry
 expr_stmt|;
 block|}
+comment|/* 	 * It may be possible to simplify the entry 	 */
+name|vm_map_simplify_entry
+argument_list|(
+name|map
+argument_list|,
+name|new_entry
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cow
@@ -2255,7 +2270,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_map_simplify_entry:  *  *	Simplify the given map entry by merging with either neighbor.  */
+comment|/*  *	vm_map_simplify_entry:  *  *	Simplify the given map entry by merging with either neighbor.  This  *	routine also has the ability to merge with both neighbors.  *  *	The map must be locked.  *  *	This routine guarentees that the passed entry remains valid (though  *	possibly extended).  When merging, this routine may delete one or  *	both neighbors.  */
 end_comment
 
 begin_function
@@ -2754,6 +2769,11 @@ operator|.
 name|vm_object
 operator|==
 name|NULL
+operator|&&
+operator|!
+name|map
+operator|->
+name|system_map
 condition|)
 block|{
 name|vm_object_t
@@ -2923,6 +2943,11 @@ operator|.
 name|vm_object
 operator|==
 name|NULL
+operator|&&
+operator|!
+name|map
+operator|->
+name|system_map
 condition|)
 block|{
 name|vm_object_t
@@ -4505,6 +4530,11 @@ operator|.
 name|vm_object
 operator|==
 name|NULL
+operator|&&
+operator|!
+name|map
+operator|->
+name|system_map
 condition|)
 block|{
 name|entry
@@ -5109,6 +5139,11 @@ operator|.
 name|vm_object
 operator|==
 name|NULL
+operator|&&
+operator|!
+name|map
+operator|->
+name|system_map
 condition|)
 block|{
 name|entry
@@ -9149,6 +9184,11 @@ operator|.
 name|vm_object
 operator|==
 name|NULL
+operator|&&
+operator|!
+name|map
+operator|->
+name|system_map
 condition|)
 block|{
 if|if
