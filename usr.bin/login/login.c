@@ -1705,12 +1705,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|pwd
-operator|->
-name|pw_dir
-operator|=
-literal|"/"
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1725,6 +1719,12 @@ name|printf
 argument_list|(
 literal|"No home directory.\nLogging in with home = \"/\".\n"
 argument_list|)
+expr_stmt|;
+name|pwd
+operator|->
+name|pw_dir
+operator|=
+literal|"/"
 expr_stmt|;
 block|}
 operator|(
