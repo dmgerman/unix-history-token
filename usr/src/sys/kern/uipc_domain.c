@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_domain.c	5.3	82/09/04	*/
+comment|/*	uipc_domain.c	5.4	82/10/10	*/
 end_comment
 
 begin_include
@@ -43,12 +43,6 @@ begin_include
 include|#
 directive|include
 file|"../h/proc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/mtpr.h"
 end_include
 
 begin_include

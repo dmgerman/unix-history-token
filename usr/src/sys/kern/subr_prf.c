@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_prf.c	4.21	82/01/16	*/
+comment|/*	subr_prf.c	4.22	82/10/10	*/
 end_comment
 
 begin_include
@@ -31,12 +31,6 @@ begin_include
 include|#
 directive|include
 file|"../h/conf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/mtpr.h"
 end_include
 
 begin_include
@@ -909,6 +903,10 @@ expr_stmt|;
 block|}
 return|return;
 block|}
+include|#
+directive|include
+file|"../vax/mtpr.h"
+comment|/* XXX */
 if|if
 condition|(
 name|c

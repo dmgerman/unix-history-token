@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_rmap.c	4.5	82/04/11	*/
+comment|/*	subr_rmap.c	4.6	82/10/10	*/
 end_comment
 
 begin_include
@@ -37,12 +37,6 @@ begin_include
 include|#
 directive|include
 file|"../h/proc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/mtpr.h"
 end_include
 
 begin_include
