@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dns_ho.c,v 1.26 1999/10/15 19:49:09 vixie Exp $"
+literal|"$Id: dns_ho.c,v 1.28 2000/04/20 07:47:54 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2147,6 +2147,10 @@ specifier|const
 name|char
 modifier|*
 name|tname
+decl_stmt|,
+modifier|*
+modifier|*
+name|tap
 decl_stmt|;
 name|char
 modifier|*
@@ -3147,6 +3151,7 @@ operator|-=
 name|nn
 expr_stmt|;
 block|}
+comment|/* Ensure alignment. */
 name|bp
 operator|+=
 sizeof|sizeof
@@ -3166,6 +3171,7 @@ name|align
 argument_list|)
 operator|)
 expr_stmt|;
+comment|/* Avoid overflows. */
 if|if
 condition|(
 name|bp
@@ -3210,6 +3216,59 @@ name|n
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* Suppress duplicates. */
+for|for
+control|(
+name|tap
+operator|=
+operator|(
+specifier|const
+name|char
+operator|*
+operator|*
+operator|)
+name|pvt
+operator|->
+name|h_addr_ptrs
+init|;
+operator|*
+name|tap
+operator|!=
+name|NULL
+condition|;
+name|tap
+operator|++
+control|)
+if|if
+condition|(
+name|memcmp
+argument_list|(
+operator|*
+name|tap
+argument_list|,
+name|cp
+argument_list|,
+name|n
+argument_list|)
+operator|==
+literal|0
+condition|)
+break|break;
+if|if
+condition|(
+operator|*
+name|tap
+operator|!=
+name|NULL
+condition|)
+block|{
+name|cp
+operator|+=
+name|n
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* Store address. */
 name|memcpy
 argument_list|(
 operator|*
@@ -3222,6 +3281,11 @@ name|cp
 argument_list|,
 name|n
 argument_list|)
+expr_stmt|;
+operator|*
+name|hap
+operator|=
+name|NULL
 expr_stmt|;
 name|bp
 operator|+=
@@ -3253,11 +3317,6 @@ condition|)
 block|{
 operator|*
 name|ap
-operator|=
-name|NULL
-expr_stmt|;
-operator|*
-name|hap
 operator|=
 name|NULL
 expr_stmt|;

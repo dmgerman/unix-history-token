@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_init.c,v 8.63 1999/10/15 19:49:04 vixie Exp $"
+literal|"$Id: ns_init.c,v 8.68 2000/04/21 06:54:07 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,7 @@ comment|/*  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *  
 end_comment
 
 begin_comment
-comment|/*  * Portions Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Portions Copyright (c) 1996-2000 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_include
@@ -862,7 +862,11 @@ operator|->
 name|z_flags
 operator|&=
 operator|~
+operator|(
 name|Z_NEED_RELOAD
+operator||
+name|Z_EXPIRED
+operator|)
 expr_stmt|;
 name|ns_refreshtime
 argument_list|(
@@ -998,6 +1002,11 @@ operator|)
 condition|)
 return|return;
 comment|/* 	 * Clean up any leftover data. 	 */
+name|ns_stopxfrs
+argument_list|(
+name|zp
+argument_list|)
+expr_stmt|;
 name|purge_zone
 argument_list|(
 name|domain
@@ -1159,6 +1168,67 @@ modifier|*
 name|zp
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|BIND_UPDATE
+comment|/* 	 * A dynamic zone might have changed, so we 	 * need to dump it before removing it. 	 */
+if|if
+condition|(
+name|zp
+operator|->
+name|z_type
+operator|==
+name|Z_PRIMARY
+operator|&&
+operator|(
+name|zp
+operator|->
+name|z_flags
+operator|&
+name|Z_DYNAMIC
+operator|)
+operator|!=
+literal|0
+operator|&&
+operator|(
+operator|(
+name|zp
+operator|->
+name|z_flags
+operator|&
+name|Z_NEED_SOAUPDATE
+operator|)
+operator|!=
+literal|0
+operator|||
+operator|(
+name|zp
+operator|->
+name|z_flags
+operator|&
+name|Z_NEED_DUMP
+operator|)
+operator|!=
+literal|0
+operator|)
+condition|)
+operator|(
+name|void
+operator|)
+name|zonedump
+argument_list|(
+name|zp
+argument_list|,
+name|ISNOTIXFR
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|ns_stopxfrs
+argument_list|(
+name|zp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|zp

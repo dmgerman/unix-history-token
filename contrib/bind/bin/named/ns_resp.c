@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_resp.c,v 8.133 1999/11/05 04:40:57 vixie Exp $"
+literal|"$Id: ns_resp.c,v 8.143 2000/05/09 07:38:38 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ comment|/*  * Portions Copyright (c) 1995 by International Business Machines, In
 end_comment
 
 begin_comment
-comment|/*  * Portions Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Portions Copyright (c) 1996-2000 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_include
@@ -307,6 +307,11 @@ name|danglingCname
 index|[]
 init|=
 literal|"dangling CNAME pointer"
+decl_stmt|,
+name|nonRecursiveForwarder
+index|[]
+init|=
+literal|"non-recursive forwarder"
 decl_stmt|;
 end_decl_stmt
 
@@ -2119,6 +2124,8 @@ name|ina_equal
 argument_list|(
 name|fwd
 operator|->
+name|fwddata
+operator|->
 name|fwdaddr
 operator|.
 name|sin_addr
@@ -2129,14 +2136,7 @@ name|sin_addr
 argument_list|)
 condition|)
 break|break;
-comment|/* 	 * XXX:	note bad ambiguity here.  if one of our forwarders is also 	 *	a delegated server for some domain, then we will not update 	 *	the RTT information on any replies we get from those servers. 	 *	Workaround: disable recursion on authoritative servers so that 	 *	the ambiguity does not arise. 	 */
-comment|/* 	 * If we weren't using a forwarder, find the qinfo pointer and update 	 * the rtt and fact that we have called on this server before. 	 */
-if|if
-condition|(
-name|fwd
-operator|==
-name|NULL
-condition|)
+comment|/* 	/* 	 * find the qinfo pointer and update 	 * the rtt and fact that we have called on this server before. 	 */
 block|{
 name|struct
 name|timeval
@@ -3253,6 +3253,11 @@ operator|&&
 operator|!
 name|hp
 operator|->
+name|tc
+operator|&&
+operator|!
+name|hp
+operator|->
 name|aa
 operator|&&
 name|ancount
@@ -3283,6 +3288,13 @@ name|int
 name|type
 decl_stmt|,
 name|class
+decl_stmt|,
+name|dlen
+decl_stmt|;
+name|int
+name|foundns
+decl_stmt|,
+name|foundsoa
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -3315,6 +3327,26 @@ name|tp
 operator|=
 name|cp
 expr_stmt|;
+name|foundns
+operator|=
+name|foundsoa
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|aucount
+condition|;
+name|i
+operator|++
+control|)
+block|{
 name|n
 operator|=
 name|dn_expand
@@ -3354,9 +3386,11 @@ if|if
 condition|(
 name|tp
 operator|+
-literal|2
+literal|3
 operator|*
 name|INT16SZ
+operator|+
+name|INT32SZ
 operator|>
 name|eom
 condition|)
@@ -3379,6 +3413,18 @@ expr_stmt|;
 name|GETSHORT
 argument_list|(
 name|class
+argument_list|,
+name|tp
+argument_list|)
+expr_stmt|;
+name|tp
+operator|+=
+name|INT32SZ
+expr_stmt|;
+comment|/* ttl */
+name|GETSHORT
+argument_list|(
+name|dlen
 argument_list|,
 name|tp
 argument_list|)
@@ -3421,12 +3467,65 @@ goto|goto
 name|refused
 goto|;
 block|}
-comment|/* 		 * If the answer delegates us either to the same level in 		 * the hierarchy or closer to the root, we consider this 		 * server lame.  Note that for now we only log the message 		 * if the T_NS was C_IN, which is technically wrong (NS is 		 * visible in all classes) but necessary anyway (non-IN 		 * classes tend to not have good strong delegation graphs). 		 */
+comment|/* skip rest of record */
+if|if
+condition|(
+name|tp
+operator|+
+name|dlen
+operator|>
+name|eom
+condition|)
+block|{
+name|formerrmsg
+operator|=
+name|outofDataAuth
+expr_stmt|;
+goto|goto
+name|formerr
+goto|;
+block|}
+name|tp
+operator|+=
+name|dlen
+expr_stmt|;
 if|if
 condition|(
 name|type
 operator|==
 name|T_NS
+condition|)
+block|{
+name|strcpy
+argument_list|(
+name|aname
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|foundns
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|type
+operator|==
+name|T_SOA
+condition|)
+name|foundsoa
+operator|=
+literal|1
+expr_stmt|;
+block|}
+comment|/* 		 * If the answer delegates us either to the same level in 		 * the hierarchy or closer to the root, we consider this 		 * server lame.  Note that for now we only log the message 		 * if the T_NS was C_IN, which is technically wrong (NS is 		 * visible in all classes) but necessary anyway (non-IN 		 * classes tend to not have good strong delegation graphs). 		 */
+if|if
+condition|(
+name|foundns
+operator|&&
+operator|!
+name|foundsoa
 operator|&&
 name|ns_samedomain
 argument_list|(
@@ -3434,8 +3533,15 @@ name|qp
 operator|->
 name|q_domain
 argument_list|,
-name|name
+name|aname
 argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|fwd
+operator|==
+name|NULL
 condition|)
 block|{
 name|nameserIncr
@@ -3454,6 +3560,7 @@ argument_list|,
 name|from
 argument_list|)
 expr_stmt|;
+block|}
 name|mark_bad
 argument_list|(
 name|qp
@@ -3466,6 +3573,10 @@ condition|(
 name|class
 operator|==
 name|C_IN
+operator|&&
+name|fwd
+operator|==
+name|NULL
 operator|&&
 operator|!
 name|haveComplained
@@ -3538,6 +3649,47 @@ name|learnt_from
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|fwd
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|haveComplained
+argument_list|(
+name|ina_ulong
+argument_list|(
+name|from
+operator|.
+name|sin_addr
+argument_list|)
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|nonRecursiveForwarder
+argument_list|)
+condition|)
+name|ns_warning
+argument_list|(
+name|ns_log_default
+argument_list|,
+literal|"%s: %s"
+argument_list|,
+name|nonRecursiveForwarder
+argument_list|,
+name|sin_ntoa
+argument_list|(
+name|from
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 name|fast_retry
 argument_list|(
 name|qp
@@ -3582,6 +3734,11 @@ operator|!
 name|hp
 operator|->
 name|aa
+operator|&&
+operator|!
+name|hp
+operator|->
+name|tc
 operator|&&
 name|hp
 operator|->
@@ -4466,7 +4623,7 @@ name|ns_info
 argument_list|(
 name|ns_log_resp_checks
 argument_list|,
-literal|"bad referral (%s !< %s)"
+literal|"bad referral (%s !< %s) from %s"
 argument_list|,
 name|aname
 index|[
@@ -4485,6 +4642,11 @@ condition|?
 name|name
 else|:
 literal|"."
+argument_list|,
+name|sin_ntoa
+argument_list|(
+name|from
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|db_freedata
@@ -4497,6 +4659,10 @@ block|}
 elseif|else
 if|if
 condition|(
+name|fwd
+operator|==
+name|NULL
+operator|&&
 operator|!
 name|ns_samedomain
 argument_list|(
@@ -4517,7 +4683,7 @@ name|ns_info
 argument_list|(
 name|ns_log_resp_checks
 argument_list|,
-literal|"bad referral (%s !< %s)"
+literal|"bad referral (%s !< %s) from %s"
 argument_list|,
 name|name
 index|[
@@ -4540,6 +4706,11 @@ operator|->
 name|q_domain
 else|:
 literal|"."
+argument_list|,
+name|sin_ntoa
+argument_list|(
+name|from
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|db_freedata
@@ -5233,32 +5404,14 @@ name|dname
 operator|=
 name|name
 expr_stmt|;
-comment|/* 	 * If restart==0 and ancount> 0, we should 	 * have some valid data because because the data in the answer 	 * section is owned by the query name and that passes the 	 * validation test by definition 	 * 	 * XXX - the restart stuff doesn't work if any of the answer RRs 	 * is not cacheable (TTL==0 or unknown RR type), since all of the 	 * answer must pass through the cache and be re-assembled. 	 */
+comment|/* 	 * XXX - the restart stuff doesn't work if any of the answer RRs 	 * is not cacheable (TTL==0 or unknown RR type), since all of the 	 * answer must pass through the cache and be re-assembled. 	 */
 if|if
 condition|(
-operator|(
-name|forcecmsg
-operator|&&
 name|qp
 operator|->
 name|q_cmsglen
-operator|)
-operator|||
-operator|(
-operator|(
-operator|!
-name|restart
-operator|||
-operator|!
-name|cname
-operator|)
-operator|&&
-name|qp
-operator|->
-name|q_cmsglen
-operator|&&
-name|ancount
-operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|ns_debug
@@ -6669,8 +6822,11 @@ name|nsid_next
 argument_list|()
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|hp
+operator|->
+name|rd
+operator|=
+operator|(
 name|qp
 operator|->
 name|q_addr
@@ -6679,12 +6835,11 @@ literal|0
 index|]
 operator|.
 name|forwarder
-condition|)
-name|hp
-operator|->
-name|rd
-operator|=
+condition|?
 literal|1
+else|:
+literal|0
+operator|)
 expr_stmt|;
 name|unsched
 argument_list|(
@@ -7304,6 +7459,54 @@ operator|.
 name|sin_addr
 argument_list|,
 name|nssSentFwdR
+argument_list|)
+expr_stmt|;
+name|nameserIncr
+argument_list|(
+name|qp
+operator|->
+name|q_from
+operator|.
+name|sin_addr
+argument_list|,
+name|nssSentAns
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|hp
+operator|->
+name|aa
+condition|)
+name|nameserIncr
+argument_list|(
+name|qp
+operator|->
+name|q_from
+operator|.
+name|sin_addr
+argument_list|,
+name|nssSentNaAns
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hp
+operator|->
+name|rcode
+operator|==
+name|NXDOMAIN
+condition|)
+name|nameserIncr
+argument_list|(
+name|qp
+operator|->
+name|q_from
+operator|.
+name|sin_addr
+argument_list|,
+name|nssSentNXD
 argument_list|)
 expr_stmt|;
 comment|/* The "standard" return code */
@@ -10024,6 +10227,10 @@ name|cp
 operator|+=
 name|n2
 expr_stmt|;
+name|cp1
+operator|+=
+name|n2
+expr_stmt|;
 comment|/* compute size of data */
 name|n
 operator|=
@@ -11079,6 +11286,20 @@ argument_list|,
 name|class
 argument_list|,
 name|type
+argument_list|,
+operator|(
+name|nss
+operator|!=
+name|NULL
+operator|&&
+name|nsc
+operator|!=
+literal|0
+operator|)
+condition|?
+literal|0
+else|:
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -15229,6 +15450,12 @@ case|case
 name|cyclic_order
 case|:
 comment|/* first we do the non-SIG records */
+if|if
+condition|(
+name|non_sig_count
+operator|>
+literal|0
+condition|)
 name|choice
 operator|=
 operator|(
@@ -15242,6 +15469,11 @@ literal|3
 operator|)
 operator|%
 name|non_sig_count
+expr_stmt|;
+else|else
+name|choice
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(

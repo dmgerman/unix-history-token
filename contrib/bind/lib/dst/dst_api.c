@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /proj/cvs/isc/bind/src/lib/dst/dst_api.c,v 1.13 1999/10/13 16:39:22 vixie Exp $"
+literal|"$Header: /proj/cvs/isc/bind/src/lib/dst/dst_api.c,v 1.14 2000/02/28 07:51:50 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1073,7 +1073,7 @@ if|if
 condition|(
 operator|(
 name|type
-operator|&&
+operator|&
 operator|(
 name|DST_PUBLIC
 operator||

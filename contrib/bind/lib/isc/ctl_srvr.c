@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ctl_srvr.c,v 8.21 1999/10/17 08:41:57 cyarnell Exp $"
+literal|"$Id: ctl_srvr.c,v 8.23 2000/02/04 08:28:33 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -285,10 +285,15 @@ name|struct
 name|sockaddr_in
 name|in
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_SOCKADDR_UN
 name|struct
 name|sockaddr_un
 name|un
 decl_stmt|;
+endif|#
+directive|endif
 block|}
 union|;
 end_union
@@ -1189,6 +1194,12 @@ operator|<
 literal|0
 condition|)
 block|{
+name|char
+name|tmp
+index|[
+name|MAX_NTOP
+index|]
+decl_stmt|;
 name|save_errno
 operator|=
 name|errno
@@ -1202,13 +1213,32 @@ call|)
 argument_list|(
 name|ctl_error
 argument_list|,
-literal|"%s: bind: %s"
+literal|"%s: bind: %s: %s"
 argument_list|,
 name|me
 argument_list|,
+name|ctl_sa_ntop
+argument_list|(
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+name|sap
+argument_list|,
+name|tmp
+argument_list|,
+sizeof|sizeof
+name|tmp
+argument_list|,
+name|ctx
+operator|->
+name|logger
+argument_list|)
+argument_list|,
 name|strerror
 argument_list|(
-name|errno
+name|save_errno
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3561,6 +3591,12 @@ operator|->
 name|inbuf
 operator|.
 name|text
+operator|+
+name|sess
+operator|->
+name|inbuf
+operator|.
+name|used
 argument_list|,
 name|MAX_LINELEN
 operator|-

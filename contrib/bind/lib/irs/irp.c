@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: irp.c,v 8.5 1999/10/13 17:11:18 vixie Exp $"
+literal|"$Id: irp.c,v 8.6 2000/02/04 08:28:33 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -538,10 +538,15 @@ name|struct
 name|sockaddr_in
 name|iaddr
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_SOCKADDR_UN
 name|struct
 name|sockaddr_un
 name|uaddr
 decl_stmt|;
+endif|#
+directive|endif
 name|long
 name|ipaddr
 decl_stmt|;
@@ -586,6 +591,9 @@ literal|1
 operator|)
 return|;
 block|}
+ifndef|#
+directive|ifndef
+name|NO_SOCKADDR_UN
 name|memset
 argument_list|(
 operator|&
@@ -597,6 +605,8 @@ sizeof|sizeof
 name|uaddr
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|memset
 argument_list|(
 operator|&
@@ -627,6 +637,9 @@ operator|=
 literal|"127.0.0.1"
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|NO_SOCKADDR_UN
 if|if
 condition|(
 name|irphost
@@ -688,6 +701,8 @@ endif|#
 directive|endif
 block|}
 else|else
+endif|#
+directive|endif
 block|{
 if|if
 condition|(

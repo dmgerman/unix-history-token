@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: host.c,v 8.34 1999/11/11 19:39:10 cyarnell Exp $"
+literal|"$Id: host.c,v 8.36 2000/01/25 00:20:21 cyarnell Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -553,6 +553,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|gettype
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1082,9 +1084,15 @@ block|}
 block|}
 if|if
 condition|(
+operator|(
 name|gettype
 operator|==
 literal|0
+operator|)
+operator|&&
+operator|(
+name|sigchase
+operator|)
 condition|)
 block|{
 if|if

@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_stats.c,v 8.27 1999/10/13 16:39:12 vixie Exp $"
+literal|"$Id: ns_stats.c,v 8.30 2000/04/23 02:18:59 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,7 @@ comment|/*  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *  
 end_comment
 
 begin_comment
-comment|/*  * Portions Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Portions Copyright (c) 1996-2000 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_include
@@ -291,6 +291,21 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+operator|(
+name|void
+operator|)
+name|fchown
+argument_list|(
+name|fileno
+argument_list|(
+name|f
+argument_list|)
+argument_list|,
+name|user_id
+argument_list|,
+name|group_id
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|f
@@ -452,6 +467,21 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+operator|(
+name|void
+operator|)
+name|fchown
+argument_list|(
+name|fileno
+argument_list|(
+name|f
+argument_list|)
+argument_list|,
+name|user_id
+argument_list|,
+name|group_id
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|f
@@ -700,6 +730,18 @@ comment|/* sent them a non autoritative answer */
 literal|"SNXD"
 block|,
 comment|/* sent them a negative response */
+literal|"RUQ"
+block|,
+comment|/* sent us an unapproved query */
+literal|"RURQ"
+block|,
+comment|/* sent us an unapproved recursive query */
+literal|"RUXFR"
+block|,
+comment|/* sent us an unapproved AXFR or IXFR */
+literal|"RUUpd"
+block|,
+comment|/* sent us an unapproved update */
 block|}
 decl_stmt|;
 end_decl_stmt

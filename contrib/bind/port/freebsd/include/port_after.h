@@ -14,12 +14,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|CAN_RECONNECT
-end_define
-
-begin_define
-define|#
-directive|define
 name|USE_POSIX
 end_define
 
