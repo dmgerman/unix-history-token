@@ -248,14 +248,6 @@ name|vinum_cdevsw
 argument_list|)
 expr_stmt|;
 comment|/* add the cdevsw entry */
-ifdef|#
-directive|ifdef
-name|DEVFS
-error|#
-directive|error
-error|DEVFS not finished yet
-endif|#
-directive|endif
 comment|/* allocate space: drives... */
 name|DRIVE
 operator|=

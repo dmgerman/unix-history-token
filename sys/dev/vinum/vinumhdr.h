@@ -46,33 +46,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
-begin_error
-error|#
-directive|error
-literal|"DEVFS code not complete yet"
-end_error
-
-begin_include
-include|#
-directive|include
-file|<sys/devfsext.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*DEVFS */
-end_comment
-
 begin_include
 include|#
 directive|include
