@@ -2614,14 +2614,13 @@ argument_list|,
 operator|(
 name|cp
 operator|&&
-operator|!
-name|strncmp
+name|strncasecmp
 argument_list|(
 name|cp
 argument_list|,
-literal|"YES"
+literal|"no"
 argument_list|,
-literal|3
+literal|2
 argument_list|)
 operator|)
 argument_list|)
