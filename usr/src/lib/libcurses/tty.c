@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tty.c	5.5 (Berkeley) %G%"
+literal|"@(#)tty.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -648,6 +648,25 @@ argument_list|,
 literal|0
 argument_list|,
 name|__cputchar
+argument_list|)
+expr_stmt|;
+name|mvcur
+argument_list|(
+name|curscr
+operator|->
+name|cury
+argument_list|,
+name|curscr
+operator|->
+name|cury
+argument_list|,
+name|curscr
+operator|->
+name|maxy
+operator|-
+literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 operator|(
