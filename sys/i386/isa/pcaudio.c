@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"i386/isa/isa.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"i386/isa/isa_device.h"
 end_include
 
@@ -341,7 +347,7 @@ end_decl_stmt
 begin_function
 specifier|inline
 name|void
-name|translate_bytes
+name|conv
 parameter_list|(
 specifier|const
 name|void
@@ -357,7 +363,7 @@ name|long
 name|n
 parameter_list|)
 block|{
-asm|__asm__("cld\n"           "1:\tlodsb\n\t"           "xlatb\n\t"           "stosb\n\t"           "loop 1b\n\t"           :           :"b" ((long)table), "c" (n), "D" ((long)buff), "S" ((long)buff)           :"bx","cx","di","si","ax");
+asm|__asm__("1:\tmovb (%2), %3\n"           "\txlatb\n"           "\tmovb %3, (%2)\n" 	  "\tinc %2\n" 	  "\tdec %1\n" 	  "\tjnz 1b\n"           :           :"b" ((long)table), "c" (n), "D" ((long)buff), "a" ((char)n)           :"bx","cx","di","ax");
 block|}
 end_function
 
@@ -400,8 +406,8 @@ operator|)
 operator|*
 name|volume
 operator|)
-operator|>>
-literal|8
+operator|/
+literal|100
 expr_stmt|;
 if|if
 condition|(
@@ -633,7 +639,7 @@ name|oldval
 operator|=
 name|inb
 argument_list|(
-literal|0x61
+name|IO_PPI
 argument_list|)
 operator||
 literal|0x03
@@ -789,7 +795,7 @@ name|oldval
 operator|=
 name|inb
 argument_list|(
-literal|0x61
+name|IO_PPI
 argument_list|)
 operator||
 literal|0x03
@@ -831,14 +837,14 @@ name|pca_status
 operator|.
 name|in_use
 index|[
-literal|1
+literal|0
 index|]
 operator|||
 name|pca_status
 operator|.
 name|in_use
 index|[
-literal|2
+literal|1
 index|]
 condition|)
 block|{
@@ -898,7 +904,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|" internal speaker audio driver\n"
+literal|" PCM audio driver\n"
 argument_list|,
 name|dvp
 operator|->
@@ -1196,7 +1202,7 @@ block|{
 case|case
 name|AUDIO_ENCODING_ULAW
 case|:
-name|translate_bytes
+name|conv
 argument_list|(
 name|ulaw_dsp
 argument_list|,
@@ -1654,17 +1660,64 @@ name|current
 index|]
 condition|)
 block|{
+if|#
+directive|if
+literal|1
+name|disable_intr
+argument_list|()
+expr_stmt|;
+asm|__asm__("outb %0,$0x61\n" 			"andb $0xFE,%0\n" 			"outb %0,$0x61" 			: : "a" ((char)pca_status.oldval) );
+asm|__asm__("xlatb\n" 			"outb %0,$0x42" 			: : "a" ((char)pca_status.buffer[pca_status.index]), 			    "b" ((long)volume_table) );
+name|enable_intr
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
+name|disable_intr
+argument_list|()
+expr_stmt|;
 name|outb
 argument_list|(
-literal|0x61
+name|IO_PPI
 argument_list|,
 name|pca_status
 operator|.
 name|oldval
 argument_list|)
 expr_stmt|;
-asm|__asm__("xorb $1,%0\n\t" 			"outb %0,$97" 			: : "a" ((char)pca_status.oldval) );
-asm|__asm__("xlatb\n\t" 			"outb %0,$66" 			: : "a" ((char)pca_status.buffer[pca_status.index]), 			    "b" ((long)volume_table) );
+name|outb
+argument_list|(
+name|IO_PPI
+argument_list|,
+name|pca_status
+operator|.
+name|oldval
+operator|&
+literal|0xFE
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|TIMER_CNTR2
+argument_list|,
+name|volume_table
+index|[
+name|pca_status
+operator|.
+name|buffer
+index|[
+name|pca_status
+operator|.
+name|index
+index|]
+index|]
+argument_list|)
+expr_stmt|;
+name|enable_intr
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|pca_status
 operator|.
 name|counter
