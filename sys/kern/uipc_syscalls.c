@@ -7620,7 +7620,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Detatch mapped page and release resources back to the system.  */
+comment|/*  * Detach mapped page and release resources back to the system.  */
 end_comment
 
 begin_function
