@@ -92,9 +92,6 @@ name|int
 name|tm_sticks
 decl_stmt|;
 name|int
-name|tm_slices
-decl_stmt|;
-name|int
 name|tm_spare
 index|[
 literal|8
@@ -157,6 +154,10 @@ name|km_timeofday
 decl_stmt|;
 comment|/* Time of day */
 name|int
+name|km_quantum
+decl_stmt|;
+comment|/* Upcall quantum in msecs */
+name|int
 name|km_spare
 index|[
 literal|8
@@ -171,6 +172,13 @@ define|#
 directive|define
 name|KSE_VER_0
 value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|KSE_VERSION
+value|KSE_VER_0
 end_define
 
 begin_ifndef

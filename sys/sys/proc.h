@@ -1610,6 +1610,14 @@ modifier|*
 name|kg_completed
 decl_stmt|;
 comment|/* (c) completed thread mboxes */
+name|int
+name|kg_nextupcall
+decl_stmt|;
+comment|/* next upcall time */
+name|int
+name|kg_upquantum
+decl_stmt|;
+comment|/* quantum to schedule an upcall */
 define|#
 directive|define
 name|kg_endzero
@@ -4880,6 +4888,19 @@ parameter_list|(
 name|struct
 name|proc
 modifier|*
+name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|thread_switchout
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
