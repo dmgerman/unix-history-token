@@ -6128,7 +6128,7 @@ argument|ifp
 argument_list|,
 argument|m
 argument_list|,
-argument|extsts& NGE_RXEXTSTS_VTCI
+argument|ntohs(extsts& NGE_RXEXTSTS_VTCI)
 argument_list|,
 argument|continue
 argument_list|)
@@ -7469,9 +7469,12 @@ operator||=
 operator|(
 name|NGE_TXEXTSTS_VLANPKT
 operator||
+name|htons
+argument_list|(
 name|VLAN_TAG_VALUE
 argument_list|(
 name|mtag
+argument_list|)
 argument_list|)
 operator|)
 expr_stmt|;
