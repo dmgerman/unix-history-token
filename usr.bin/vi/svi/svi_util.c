@@ -73,7 +73,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../vi/vcmd.h"
+file|"vcmd.h"
 end_include
 
 begin_include
