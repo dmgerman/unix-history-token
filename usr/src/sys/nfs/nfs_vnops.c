@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_vnops.c	7.37 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_vnops.c	7.38 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -7822,19 +7822,6 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|pte
-modifier|*
-name|pte
-decl_stmt|,
-modifier|*
-name|ppte
-decl_stmt|;
-specifier|register
-name|caddr_t
-name|vaddr
-decl_stmt|;
-specifier|register
-name|struct
 name|uio
 modifier|*
 name|uiop
@@ -7855,28 +7842,12 @@ name|ucred
 modifier|*
 name|cr
 decl_stmt|;
-name|int
-name|npf
-decl_stmt|,
-name|npf2
-decl_stmt|;
-name|int
-name|reg
-decl_stmt|;
-name|caddr_t
-name|vbase
-decl_stmt|;
-name|unsigned
-name|v
-decl_stmt|;
 name|struct
 name|proc
 modifier|*
 name|rp
 decl_stmt|;
 name|int
-name|o
-decl_stmt|,
 name|error
 decl_stmt|;
 name|struct
@@ -7887,6 +7858,44 @@ name|struct
 name|iovec
 name|io
 decl_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|hp300
+argument_list|)
+specifier|register
+name|struct
+name|pte
+modifier|*
+name|pte
+decl_stmt|,
+modifier|*
+name|ppte
+decl_stmt|;
+specifier|register
+name|caddr_t
+name|vaddr
+decl_stmt|;
+name|int
+name|npf
+decl_stmt|,
+name|npf2
+decl_stmt|;
+name|int
+name|reg
+decl_stmt|,
+name|o
+decl_stmt|;
+name|caddr_t
+name|vbase
+decl_stmt|;
+name|unsigned
+name|v
+decl_stmt|;
+endif|#
+directive|endif
 name|vp
 operator|=
 name|bp
@@ -7990,6 +7999,25 @@ name|cr_ngroups
 operator|=
 literal|1
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|hp300
+argument_list|)
+comment|/* mapping was already done by vmapbuf */
+name|io
+operator|.
+name|iov_base
+operator|=
+name|bp
+operator|->
+name|b_un
+operator|.
+name|b_addr
+expr_stmt|;
+else|#
+directive|else
 name|o
 operator|=
 operator|(
@@ -8226,10 +8254,6 @@ expr_stmt|;
 block|}
 end_while
 
-begin_comment
-comment|/* 		 * And do the i/o rpc 		 */
-end_comment
-
 begin_expr_stmt
 name|io
 operator|.
@@ -8240,6 +8264,19 @@ operator|+
 name|o
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined(hp300) */
+end_comment
+
+begin_comment
+comment|/* 		 * And do the i/o rpc 		 */
+end_comment
 
 begin_expr_stmt
 name|io
@@ -8385,6 +8422,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|hp300
+argument_list|)
+end_if
+
 begin_expr_stmt
 name|rmfree
 argument_list|(
@@ -8425,6 +8472,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_if
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_block
 unit|} else
