@@ -178,6 +178,11 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
+name|PAM_LOG
+argument_list|(
+literal|"Options processed"
+argument_list|)
+expr_stmt|;
 name|retval
 operator|=
 name|pam_get_user
@@ -196,9 +201,18 @@ name|retval
 operator|!=
 name|PAM_SUCCESS
 condition|)
-return|return
+name|PAM_RETURN
+argument_list|(
 name|retval
-return|;
+argument_list|)
+expr_stmt|;
+name|PAM_LOG
+argument_list|(
+literal|"Got user: %s"
+argument_list|,
+name|user
+argument_list|)
+expr_stmt|;
 name|retval
 operator|=
 name|pam_get_pass
@@ -220,9 +234,16 @@ name|retval
 operator|!=
 name|PAM_SUCCESS
 condition|)
-return|return
+name|PAM_RETURN
+argument_list|(
 name|retval
-return|;
+argument_list|)
+expr_stmt|;
+name|PAM_LOG
+argument_list|(
+literal|"Got password"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|gethostname
@@ -238,9 +259,18 @@ operator|==
 operator|-
 literal|1
 condition|)
-return|return
+name|PAM_RETURN
+argument_list|(
 name|PAM_SYSTEM_ERR
-return|;
+argument_list|)
+expr_stmt|;
+name|PAM_LOG
+argument_list|(
+literal|"Got localhost: %s"
+argument_list|,
+name|localhost
+argument_list|)
+expr_stmt|;
 name|principal
 operator|=
 name|strdup
@@ -254,9 +284,11 @@ name|principal
 operator|==
 name|NULL
 condition|)
-return|return
+name|PAM_RETURN
+argument_list|(
 name|PAM_BUF_ERR
-return|;
+argument_list|)
+expr_stmt|;
 name|instance
 operator|=
 name|strchr
@@ -282,6 +314,15 @@ else|else
 name|instance
 operator|=
 literal|""
+expr_stmt|;
+name|PAM_LOG
+argument_list|(
+literal|"Got principal.instance: %s.%s"
+argument_list|,
+name|principal
+argument_list|,
+name|instance
+argument_list|)
 expr_stmt|;
 name|retval
 operator|=
@@ -367,6 +408,11 @@ operator|=
 name|PAM_SUCCESS
 expr_stmt|;
 block|}
+name|PAM_LOG
+argument_list|(
+literal|"Done klogin()"
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * The PAM infrastructure will obliterate the cleartext 	 * password before returning to the application. 	 */
 name|free
@@ -374,9 +420,11 @@ argument_list|(
 name|principal
 argument_list|)
 expr_stmt|;
-return|return
+name|PAM_RETURN
+argument_list|(
 name|retval
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -402,9 +450,32 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-return|return
+name|struct
+name|options
+name|options
+decl_stmt|;
+name|pam_std_option
+argument_list|(
+operator|&
+name|options
+argument_list|,
+name|NULL
+argument_list|,
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+expr_stmt|;
+name|PAM_LOG
+argument_list|(
+literal|"Options processed"
+argument_list|)
+expr_stmt|;
+name|PAM_RETURN
+argument_list|(
 name|PAM_SUCCESS
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
