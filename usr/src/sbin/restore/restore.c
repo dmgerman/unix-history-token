@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)restore.c	3.18	(Berkeley)	83/12/30"
+literal|"@(#)restore.c	3.19	(Berkeley)	84/03/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -2504,6 +2504,15 @@ name|e_flags
 operator|&=
 operator|~
 name|NEW
+expr_stmt|;
+if|if
+condition|(
+name|volno
+operator|!=
+name|curvol
+condition|)
+name|skipmaps
+argument_list|()
 expr_stmt|;
 block|}
 block|}
