@@ -440,7 +440,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KPTDI_FIRST
+name|KPTDI
 value|(RSVDPTDI-NKPDE)
 end_define
 
@@ -452,7 +452,7 @@ begin_define
 define|#
 directive|define
 name|PTDPTDI
-value|(KPTDI_FIRST-1)
+value|(KPTDI-1)
 end_define
 
 begin_comment
