@@ -15,23 +15,6 @@ directive|define
 name|_SYS_SOCKET_H_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_NO_NAMESPACE_POLLUTION
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/param.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -49,11 +32,6 @@ undef|#
 directive|undef
 name|_NO_NAMESPACE_POLLUTION
 end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Definitions related to sockets: types, address families, options.  */
