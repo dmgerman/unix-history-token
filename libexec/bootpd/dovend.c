@@ -244,6 +244,7 @@ init|=
 name|buf
 decl_stmt|;
 specifier|static
+specifier|const
 name|char
 name|noroom
 index|[]

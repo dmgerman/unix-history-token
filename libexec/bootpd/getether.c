@@ -718,6 +718,7 @@ argument_list|,
 literal|"getether: SIOCGIFCONF: %s"
 argument_list|,
 name|get_errmsg
+argument_list|()
 argument_list|)
 expr_stmt|;
 goto|goto
