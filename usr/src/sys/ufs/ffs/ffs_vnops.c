@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	7.99 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	7.100 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1964,6 +1964,29 @@ name|ip
 operator|->
 name|i_size
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ip
+operator|->
+name|i_flags
+operator|&
+name|APPEND
+operator|)
+operator|&&
+name|uio
+operator|->
+name|uio_offset
+operator|!=
+name|ip
+operator|->
+name|i_size
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
 comment|/* fall through */
 case|case
 name|VLNK
