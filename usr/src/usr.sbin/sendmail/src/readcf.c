@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.92 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.93 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3596,7 +3596,7 @@ break|break;
 case|case
 literal|'T'
 case|:
-comment|/* MTA Type */
+comment|/* MTA-Name/Address/Diagnostic types */
 name|m
 operator|->
 name|m_mtatype
