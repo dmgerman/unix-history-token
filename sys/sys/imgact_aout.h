@@ -515,7 +515,6 @@ struct_decl|;
 end_struct_decl
 
 begin_decl_stmt
-name|__BEGIN_DECLS
 name|int
 name|aout_coredump
 name|__P
@@ -524,20 +523,19 @@ operator|(
 expr|struct
 name|proc
 operator|*
+name|p
 operator|,
 expr|struct
 name|vnode
 operator|*
+name|vp
 operator|,
 name|off_t
+name|limit
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_macro
-name|__END_DECLS
-end_macro
 
 begin_endif
 endif|#
