@@ -495,6 +495,13 @@ argument_list|(
 name|prev_history
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|prev_history
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 block|}
 name|scp
 operator|->
