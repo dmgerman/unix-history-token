@@ -350,7 +350,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|sum
 operator|^=
 operator|(
@@ -371,7 +370,6 @@ name|i
 index|]
 operator|)
 expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|ED_DEBUG
@@ -398,13 +396,11 @@ name|sum
 operator|!=
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 if|if
 condition|(
 operator|(
@@ -438,13 +434,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 name|sc
 operator|->
 name|vendor
