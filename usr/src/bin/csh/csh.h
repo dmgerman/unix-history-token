@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)csh.h	5.16 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)csh.h	5.17 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -917,7 +917,7 @@ comment|/* Parents terminate catch */
 end_comment
 
 begin_comment
-comment|/*  * Lexical definitions.  *  * All lexical space is allocated dynamically.  * The eighth/sizteenth bit of characters is used to prevent recognition,  * and eventually stripped.  */
+comment|/*  * Lexical definitions.  *  * All lexical space is allocated dynamically.  * The eighth/sixteenth bit of characters is used to prevent recognition,  * and eventually stripped.  */
 end_comment
 
 begin_define
@@ -2131,7 +2131,7 @@ name|short2str
 parameter_list|(
 name|a
 parameter_list|)
-value|trim(a)
+value|strip(a)
 end_define
 
 begin_else
