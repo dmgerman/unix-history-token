@@ -789,13 +789,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|msgtail
-argument_list|(
-literal|"Connection to %s established.\n"
-argument_list|,
-name|rmtpeer
-argument_list|)
-expr_stmt|;
 name|size
 operator|=
 name|ntrec
