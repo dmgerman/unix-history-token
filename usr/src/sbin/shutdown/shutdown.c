@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)shutdown.c	4.9 (Berkeley) 81/06/11"
+literal|"@(#)shutdown.c	4.10 (Berkeley) 81/06/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,7 +46,7 @@ file|<sys/types.h>
 end_include
 
 begin_comment
-comment|/*  *	/etc/shutdown when [messages]  *  *	allow super users to tell users and remind users  *	of iminent shutdown of unix  *	and shut it down automatically  *	and even reboot or halt the machine if they desire  *  *		Ian Johnstone, Sydney, 1977  *		Robert Elz, Melbourne, 1978  *		Peter Lamb, Melbourne, 1980  *		William Joy, Berkeley, 1981  *		Michael Toy, Berkeley, 1981  */
+comment|/*  *	/etc/shutdown when [messages]  *  *	allow super users to tell users and remind users  *	of iminent shutdown of unix  *	and shut it down automatically  *	and even reboot or halt the machine if they desire  *  *		Ian Johnstone, Sydney, 1977  *		Robert Elz, Melbourne, 1978  *		Peter Lamb, Melbourne, 1980  *		William Joy, Berkeley, 1981  *		Michael Toy, Berkeley, 1981  *		Dave Presotto, Berkeley, 1981  */
 end_comment
 
 begin_ifdef
@@ -136,6 +136,13 @@ define|#
 directive|define
 name|NOLOGTIME
 value|5 MINUTES
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGNOREUSER
+value|"sleeper"
 end_define
 
 begin_function_decl
@@ -932,6 +939,22 @@ name|ut_name
 index|[
 literal|0
 index|]
+operator|&&
+name|strncmp
+argument_list|(
+name|utmp
+operator|.
+name|ut_name
+argument_list|,
+name|IGNOREUSER
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|utmp
+operator|.
+name|ut_name
+argument_list|)
+argument_list|)
 condition|)
 block|{
 name|strcpy
