@@ -254,11 +254,7 @@ operator|)
 name|NULL
 argument_list|,
 comment|/* credentials not used */
-operator|(
-name|bit_64
-operator|*
-operator|)
-name|NULL
+literal|0
 argument_list|,
 comment|/* key schedule not used */
 operator|(
