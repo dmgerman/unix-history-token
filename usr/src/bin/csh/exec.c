@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)exec.c 4.6 %G%"
+literal|"@(#)exec.c 4.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -353,19 +353,24 @@ argument_list|()
 expr_stmt|;
 comment|/* Close random fd's */
 comment|/* 	 * We must do this AFTER any possible forking (like `foo` 	 * in glob) so that this shell can still do subprocesses. 	 */
-name|signal
+ifdef|#
+directive|ifdef
+name|notdef
+name|sigsys
 argument_list|(
 name|SIGCHLD
 argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+comment|/* sigsys for vforks sake */
+endif|#
+directive|endif
 name|sigsetmask
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* sanity */
 comment|/* 	 * If no path, no words in path, or a / in the filename 	 * then restrict the command search. 	 */
 if|if
 condition|(

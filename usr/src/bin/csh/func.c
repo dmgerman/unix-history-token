@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)func.c 4.9 83/06/10"
+literal|"@(#)func.c 4.10 83/06/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -433,19 +433,13 @@ if|if
 condition|(
 name|setintr
 condition|)
-operator|(
-name|void
-operator|)
-name|sigblock
-argument_list|(
-name|mask
+name|sighold
 argument_list|(
 name|SIGINT
 argument_list|)
-argument_list|)
 expr_stmt|;
 else|else
-name|signal
+name|sigset
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -475,7 +469,7 @@ literal|"-"
 argument_list|)
 condition|)
 block|{
-name|signal
+name|sigset
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -496,7 +490,7 @@ argument_list|(
 name|vv
 argument_list|)
 expr_stmt|;
-name|signal
+name|sigset
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -1833,15 +1827,9 @@ if|if
 condition|(
 name|setintr
 condition|)
-operator|(
-name|void
-operator|)
 name|sigrelse
 argument_list|(
-name|mask
-argument_list|(
 name|SIGINT
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|search
@@ -1855,12 +1843,9 @@ if|if
 condition|(
 name|setintr
 condition|)
-name|sigblock
-argument_list|(
-name|mask
+name|sighold
 argument_list|(
 name|SIGINT
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|whyles
@@ -2040,15 +2025,9 @@ if|if
 condition|(
 name|setintr
 condition|)
-operator|(
-name|void
-operator|)
-name|sigblock
-argument_list|(
-name|mask
+name|sighold
 argument_list|(
 name|SIGINT
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|lshift
@@ -2069,15 +2048,9 @@ if|if
 condition|(
 name|setintr
 condition|)
-operator|(
-name|void
-operator|)
 name|sigrelse
 argument_list|(
-name|mask
-argument_list|(
 name|SIGINT
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|reexecute
@@ -2096,15 +2069,9 @@ if|if
 condition|(
 name|setintr
 condition|)
-operator|(
-name|void
-operator|)
 name|sigrelse
 argument_list|(
-name|mask
-argument_list|(
 name|SIGINT
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3194,15 +3161,9 @@ if|if
 condition|(
 name|setintr
 condition|)
-operator|(
-name|void
-operator|)
 name|sigrelse
 argument_list|(
-name|mask
-argument_list|(
 name|SIGINT
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|v
@@ -3342,15 +3303,9 @@ if|if
 condition|(
 name|setintr
 condition|)
-operator|(
-name|void
-operator|)
-name|sigblock
-argument_list|(
-name|mask
+name|sighold
 argument_list|(
 name|SIGINT
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4840,7 +4795,7 @@ argument_list|()
 expr_stmt|;
 name|old
 operator|=
-name|signal
+name|sigsys
 argument_list|(
 name|SIGTSTP
 argument_list|,
@@ -4855,7 +4810,7 @@ name|SIGTSTP
 argument_list|)
 expr_stmt|;
 comment|/* the shell stops here */
-name|signal
+name|sigsys
 argument_list|(
 name|SIGTSTP
 argument_list|,
@@ -4891,7 +4846,7 @@ condition|)
 block|{
 name|old
 operator|=
-name|signal
+name|sigsys
 argument_list|(
 name|SIGTTIN
 argument_list|,
@@ -4905,7 +4860,7 @@ argument_list|,
 name|SIGTTIN
 argument_list|)
 expr_stmt|;
-name|signal
+name|sigsys
 argument_list|(
 name|SIGTTIN
 argument_list|,

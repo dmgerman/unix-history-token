@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)csh.c 4.11 %G%"
+literal|"@(#)csh.c 4.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -541,7 +541,7 @@ name|SIG_IGN
 argument_list|)
 expr_stmt|;
 comment|/* parents interruptibility */
-name|signal
+name|sigset
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -1002,19 +1002,16 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-name|sigblock
-argument_list|(
-name|mask
-argument_list|(
-name|SIGINT
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|signal
+name|sigset
 argument_list|(
 name|SIGINT
 argument_list|,
 name|pintr
+argument_list|)
+expr_stmt|;
+name|sighold
+argument_list|(
+name|SIGINT
 argument_list|)
 expr_stmt|;
 name|signal
@@ -1137,7 +1134,7 @@ name|old
 function_decl|)
 parameter_list|()
 init|=
-name|signal
+name|sigsys
 argument_list|(
 name|SIGTTIN
 argument_list|,
@@ -1151,7 +1148,7 @@ argument_list|,
 name|SIGTTIN
 argument_list|)
 expr_stmt|;
-name|signal
+name|sigsys
 argument_list|(
 name|SIGTTIN
 argument_list|,
@@ -1295,7 +1292,7 @@ condition|)
 name|setintr
 operator|++
 expr_stmt|;
-name|signal
+name|sigset
 argument_list|(
 name|SIGCHLD
 argument_list|,
@@ -1963,15 +1960,9 @@ if|if
 condition|(
 name|setintr
 condition|)
-operator|(
-name|void
-operator|)
-name|sigblock
-argument_list|(
-name|mask
+name|sighold
 argument_list|(
 name|SIGINT
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|setexit
@@ -2081,15 +2072,9 @@ if|if
 condition|(
 name|setintr
 condition|)
-operator|(
-name|void
-operator|)
 name|sigrelse
 argument_list|(
-name|mask
-argument_list|(
 name|SIGINT
-argument_list|)
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2111,15 +2096,9 @@ if|if
 condition|(
 name|setintr
 condition|)
-operator|(
-name|void
-operator|)
 name|sigrelse
 argument_list|(
-name|mask
-argument_list|(
 name|SIGINT
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2412,7 +2391,7 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-name|signal
+name|sigset
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -2566,15 +2545,9 @@ condition|(
 name|setintr
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|sigrelse
 argument_list|(
-name|mask
-argument_list|(
 name|SIGINT
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2607,20 +2580,14 @@ if|if
 condition|(
 name|setintr
 condition|)
-name|sigblock
-argument_list|(
-name|mask
+name|sighold
 argument_list|(
 name|SIGINT
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|sigrelse
 argument_list|(
-name|mask
-argument_list|(
 name|SIGCHLD
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|draino
@@ -2780,15 +2747,9 @@ if|if
 condition|(
 name|setintr
 condition|)
-operator|(
-name|void
-operator|)
 name|sigrelse
 argument_list|(
-name|mask
-argument_list|(
 name|SIGINT
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * For the sake of reset() 		 */
@@ -3005,12 +2966,9 @@ if|if
 condition|(
 name|setintr
 condition|)
-name|sigblock
-argument_list|(
-name|mask
+name|sighold
 argument_list|(
 name|SIGINT
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Save input text on the history list if  		 * reading in old history, or it 		 * is from the terminal at the top level and not 		 * in a loop. 		 */

@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)hist.c 4.5 %G%"
+literal|"@(#)hist.c 4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -403,15 +403,9 @@ if|if
 condition|(
 name|setintr
 condition|)
-operator|(
-name|void
-operator|)
 name|sigrelse
 argument_list|(
-name|mask
-argument_list|(
 name|SIGINT
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|vp

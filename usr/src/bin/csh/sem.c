@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sem.c 4.2 %G%"
+literal|"@(#)sem.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -599,15 +599,9 @@ name|oOLDSTD
 decl_stmt|,
 name|otpgrp
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|sigblock
-argument_list|(
-name|mask
+name|sighold
 argument_list|(
 name|SIGCHLD
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|ochild
@@ -672,15 +666,9 @@ operator|<
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|sigrelse
 argument_list|(
-name|mask
-argument_list|(
 name|SIGCHLD
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|error
@@ -772,15 +760,9 @@ argument_list|,
 name|t
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|sigrelse
 argument_list|(
-name|mask
-argument_list|(
 name|SIGCHLD
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -851,7 +833,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|notdef
-name|signal
+name|sigsys
 argument_list|(
 name|SIGCHLD
 argument_list|,
@@ -860,7 +842,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|signal
+name|sigsys
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -871,7 +853,7 @@ else|:
 name|vffree
 argument_list|)
 expr_stmt|;
-name|signal
+name|sigsys
 argument_list|(
 name|SIGQUIT
 argument_list|,
@@ -889,21 +871,21 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|signal
+name|sigsys
 argument_list|(
 name|SIGTSTP
 argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-name|signal
+name|sigsys
 argument_list|(
 name|SIGTTIN
 argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-name|signal
+name|sigsys
 argument_list|(
 name|SIGTTOU
 argument_list|,
@@ -911,7 +893,7 @@ name|SIG_DFL
 argument_list|)
 expr_stmt|;
 block|}
-name|signal
+name|sigsys
 argument_list|(
 name|SIGTERM
 argument_list|,
@@ -936,14 +918,14 @@ name|FINT
 operator|)
 condition|)
 block|{
-name|signal
+name|sigsys
 argument_list|(
 name|SIGINT
 argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-name|signal
+name|sigsys
 argument_list|(
 name|SIGQUIT
 argument_list|,
@@ -1002,7 +984,7 @@ name|t_dflg
 operator|&
 name|FNOHUP
 condition|)
-name|signal
+name|sigsys
 argument_list|(
 name|SIGHUP
 argument_list|,
