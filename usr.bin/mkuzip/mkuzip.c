@@ -120,17 +120,6 @@ literal|"mount_cd9660 /dev/`mdconfig -af $0`.uzip $1\nexit $?\n"
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * Maximum allowed valid block size (to prevent foot-shooting)   */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAX_BLKSZ
-value|(MAXPHYS - MAXPHYS / 1000 - 12)
-end_define
-
 begin_function_decl
 specifier|static
 name|char
@@ -387,18 +376,19 @@ comment|/* Not reached */
 block|}
 if|if
 condition|(
+name|compressBound
+argument_list|(
 name|tmp
+argument_list|)
 operator|>
-name|MAX_BLKSZ
+name|MAXPHYS
 condition|)
 block|{
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"cluster size can't be more than %d"
-argument_list|,
-name|MAX_BLKSZ
+literal|"cluster size is too large"
 argument_list|)
 expr_stmt|;
 comment|/* Not reached */
@@ -573,6 +563,18 @@ argument_list|)
 expr_stmt|;
 comment|/* Not reached */
 block|}
+name|hdr
+operator|.
+name|nblocks
+operator|=
+name|sb
+operator|.
+name|st_size
+operator|/
+name|hdr
+operator|.
+name|blksz
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -588,33 +590,30 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|errx
+if|if
+condition|(
+name|verbose
+operator|!=
+literal|0
+condition|)
+name|fprintf
 argument_list|(
-literal|1
+name|stderr
 argument_list|,
-literal|"%s: incorrect image: file size is not multiple of %d"
-argument_list|,
-name|iname
+literal|"file size is not multiple "
+literal|"of %d, padding data\n"
 argument_list|,
 name|hdr
 operator|.
 name|blksz
 argument_list|)
 expr_stmt|;
-comment|/* Not reached */
-block|}
 name|hdr
 operator|.
 name|nblocks
-operator|=
-name|sb
-operator|.
-name|st_size
-operator|/
-name|hdr
-operator|.
-name|blksz
+operator|++
 expr_stmt|;
+block|}
 name|toc
 operator|=
 name|safe_malloc
@@ -801,41 +800,23 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Data size: %ld bytes, number of clusters: "
-literal|"%ld, index lengh: %ld bytes\n"
+literal|"data size %llu bytes, number of clusters "
+literal|"%u, index lengh %u bytes\n"
 argument_list|,
-operator|(
-name|long
-operator|)
 name|sb
 operator|.
 name|st_size
 argument_list|,
-call|(
-name|long
-call|)
-argument_list|(
 name|hdr
 operator|.
 name|nblocks
-argument_list|)
 argument_list|,
-operator|(
-operator|(
-name|long
-operator|)
-name|hdr
-operator|.
-name|nblocks
-operator|+
+name|iov
+index|[
 literal|1
-operator|)
-operator|*
-sizeof|sizeof
-argument_list|(
-operator|*
-name|toc
-argument_list|)
+index|]
+operator|.
+name|iov_len
 argument_list|)
 expr_stmt|;
 for|for
@@ -885,15 +866,6 @@ operator|.
 name|blksz
 argument_list|)
 expr_stmt|;
-name|memset
-argument_list|(
-name|obuf
-argument_list|,
-literal|0
-argument_list|,
-name|destlen
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|compress2
@@ -919,18 +891,34 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"can't compress data: compress2() failed"
+literal|"can't compress data: compress2() "
+literal|"failed"
 argument_list|)
 expr_stmt|;
 comment|/* Not reached */
 block|}
-if|#
-directive|if
+if|if
+condition|(
+name|verbose
+operator|!=
 literal|0
-comment|/* 			 * We don't really need those two leading bytes. Moreover, they 			 * confuse oldest decompression routine presented in the 			 * FreeBSD kernel, so they should be omitted. 			 */
-block|destlen -= 2;
-endif|#
-directive|endif
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"cluster #%d, in %u bytes, "
+literal|"out %lu bytes\n"
+argument_list|,
+name|i
+argument_list|,
+name|hdr
+operator|.
+name|blksz
+argument_list|,
+name|destlen
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -951,6 +939,24 @@ argument_list|,
 literal|0
 argument_list|,
 name|destlen
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|verbose
+operator|!=
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"padding data with %lu bytes so "
+literal|"that file size is multiple of %d\n"
+argument_list|,
+name|destlen
+argument_list|,
+name|DEV_BSIZE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1009,9 +1015,43 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"compressed data to %llu bytes.\n"
+literal|"compressed data to %llu bytes, saved %lld "
+literal|"bytes, %.2f%% decrease.\n"
 argument_list|,
 name|offset
+argument_list|,
+call|(
+name|long
+name|long
+call|)
+argument_list|(
+name|sb
+operator|.
+name|st_size
+operator|-
+name|offset
+argument_list|)
+argument_list|,
+literal|100.0
+operator|*
+call|(
+name|long
+name|long
+call|)
+argument_list|(
+name|sb
+operator|.
+name|st_size
+operator|-
+name|offset
+argument_list|)
+operator|/
+operator|(
+name|float
+operator|)
+name|sb
+operator|.
+name|st_size
 argument_list|)
 expr_stmt|;
 comment|/* Convert to big endian */
