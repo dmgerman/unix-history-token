@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	5.23 (Berkeley) %G%"
+literal|"@(#)conf.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,6 +50,12 @@ begin_include
 include|#
 directive|include
 file|"sendmail.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment
@@ -265,7 +271,7 @@ name|char
 modifier|*
 name|ConfFile
 init|=
-literal|"/etc/sendmail.cf"
+name|_PATH_SENDMAILCF
 decl_stmt|;
 end_decl_stmt
 
@@ -278,7 +284,7 @@ name|char
 modifier|*
 name|FreezeFile
 init|=
-literal|"/etc/sendmail.fc"
+name|_PATH_SENDMAILFC
 decl_stmt|;
 end_decl_stmt
 
