@@ -462,6 +462,16 @@ parameter_list|)
 value|__asm __volatile("fxsave %0" : "=m" (*(addr)))
 end_define
 
+begin_define
+define|#
+directive|define
+name|ldmxcsr
+parameter_list|(
+name|__csr
+parameter_list|)
+value|__asm __volatile("ldmxcsr %0" : : "m" (__csr))
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -2541,6 +2551,14 @@ decl_stmt|;
 name|register_t
 name|s
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
+name|int
+name|mxcsr
+decl_stmt|;
+endif|#
+directive|endif
 name|u_short
 name|control
 decl_stmt|;
@@ -2674,6 +2692,26 @@ operator|&
 name|control
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
+if|if
+condition|(
+name|cpu_fxsr
+condition|)
+block|{
+name|mxcsr
+operator|=
+name|__INITIAL_MXCSR__
+expr_stmt|;
+name|ldmxcsr
+argument_list|(
+name|mxcsr
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|pcb
 operator|->
 name|pcb_flags
