@@ -1,13 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)w.c	4.10 (Berkeley) %G%"
+literal|"@(#)w.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * w - print system status (who and what)  *  * This program is similar to the systat command on Tenex/Tops 10/20  * It needs read permission on /dev/mem, /dev/kmem, and /dev/drum.  */
@@ -244,6 +255,22 @@ directive|define
 name|X_NPROC
 value|7
 block|{
+literal|"_dmmin"
+block|}
+block|,
+define|#
+directive|define
+name|X_DMMIN
+value|8
+block|{
+literal|"_dmmax"
+block|}
+block|,
+define|#
+directive|define
+name|X_DMMAX
+value|9
+block|{
 literal|""
 block|}
 block|, }
@@ -300,6 +327,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|dmmin
+decl_stmt|,
+name|dmmax
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|dev_t
 name|tty
 decl_stmt|;
@@ -352,7 +387,7 @@ name|DIV60
 parameter_list|(
 name|t
 parameter_list|)
-value|((t + 30) / 60)
+value|((t+30)/60)
 end_define
 
 begin_comment
@@ -2405,7 +2440,7 @@ name|n_value
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Find base of swap 	 */
+comment|/* 	 * Find base of and parameters of swap 	 */
 name|lseek
 argument_list|(
 name|kmem
@@ -2433,6 +2468,66 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 name|nswap
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|lseek
+argument_list|(
+name|kmem
+argument_list|,
+operator|(
+name|long
+operator|)
+name|nl
+index|[
+name|X_DMMIN
+index|]
+operator|.
+name|n_value
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|read
+argument_list|(
+name|kmem
+argument_list|,
+operator|&
+name|dmmin
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dmmin
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|lseek
+argument_list|(
+name|kmem
+argument_list|,
+operator|(
+name|long
+operator|)
+name|nl
+index|[
+name|X_DMMAX
+index|]
+operator|.
+name|n_value
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|read
+argument_list|(
+name|kmem
+argument_list|,
+operator|&
+name|dmmax
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dmmax
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3775,7 +3870,7 @@ specifier|register
 name|int
 name|blk
 init|=
-name|DMMIN
+name|dmmin
 decl_stmt|;
 specifier|register
 name|swblk_t
@@ -3834,7 +3929,7 @@ if|if
 condition|(
 name|blk
 operator|<
-name|DMMAX
+name|dmmax
 condition|)
 name|blk
 operator|*=

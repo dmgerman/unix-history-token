@@ -1,7 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/* Copyright (c) 1982 Regents of the University of California */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_decl_stmt
 specifier|static
@@ -9,9 +11,14 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gcore.c	4.2	(Berkeley)	%G%"
+literal|"@(#)gcore.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * gcore - get core images of running processes  *  * Author: Eric Cooper  * Written: Fall 1981.  *  * Inspired by a version 6 program by Len Levin, 1978.  * Several pieces of code lifted from Bill Joy's 4BSD ps.  *  * Permission to copy or modify this program in whole or in part is hereby  * granted, provided that the above credits are preserved.  *  * This code performs a simple simulation of the virtual memory system in user  * code.  If the virtual memory system changes, this program must be modified  * accordingly.  It must also be recompiled whenever system data structures  * change.  */
@@ -177,6 +184,22 @@ directive|define
 name|X_NPROC
 value|4
 block|{
+literal|"_dmmin"
+block|}
+block|,
+define|#
+directive|define
+name|X_DMMIN
+value|5
+block|{
+literal|"_dmmax"
+block|}
+block|,
+define|#
+directive|define
+name|X_DMMAX
+value|6
+block|{
 literal|0
 block|}
 block|, }
@@ -280,6 +303,14 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|nswap
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|dmmin
+decl_stmt|,
+name|dmmax
 decl_stmt|;
 end_decl_stmt
 
@@ -422,6 +453,30 @@ argument_list|(
 name|nl
 index|[
 name|X_NSWAP
+index|]
+operator|.
+name|n_value
+argument_list|)
+expr_stmt|;
+name|dmmin
+operator|=
+name|getw
+argument_list|(
+name|nl
+index|[
+name|X_DMMIN
+index|]
+operator|.
+name|n_value
+argument_list|)
+expr_stmt|;
+name|dmmax
+operator|=
+name|getw
+argument_list|(
+name|nl
+index|[
+name|X_DMMAX
 index|]
 operator|.
 name|n_value
@@ -1848,7 +1903,7 @@ specifier|register
 name|int
 name|blk
 init|=
-name|DMMIN
+name|dmmin
 decl_stmt|;
 specifier|register
 name|swblk_t
@@ -1893,7 +1948,7 @@ if|if
 condition|(
 name|blk
 operator|<
-name|DMMAX
+name|dmmax
 condition|)
 name|blk
 operator|*=
