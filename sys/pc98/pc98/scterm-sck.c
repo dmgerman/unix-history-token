@@ -746,22 +746,12 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|tcp
-operator|->
-name|std_color
-operator|=
-name|tcp
-operator|->
-name|dflt_std_color
-expr_stmt|;
-name|tcp
-operator|->
-name|rev_color
-operator|=
-name|tcp
-operator|->
-name|dflt_rev_color
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|tcp->std_color = tcp->dflt_std_color; 		tcp->rev_color = tcp->dflt_rev_color;
+endif|#
+directive|endif
 name|tcp
 operator|->
 name|cur_color
@@ -2872,6 +2862,11 @@ case|case
 literal|'C'
 case|:
 comment|/* set cursor type& shape */
+name|i
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -3021,11 +3016,6 @@ name|cur_scp
 argument_list|)
 condition|)
 block|{
-name|i
-operator|=
-name|spltty
-argument_list|()
-expr_stmt|;
 name|sc_set_cursor_image
 argument_list|(
 name|sc
@@ -3040,12 +3030,12 @@ operator|->
 name|cur_scp
 argument_list|)
 expr_stmt|;
+block|}
 name|splx
 argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'F'
