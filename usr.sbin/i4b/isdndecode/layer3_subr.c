@@ -2190,6 +2190,13 @@ name|i
 operator|+
 name|j
 index|]
+argument_list|,
+name|buf
+index|[
+name|i
+operator|+
+name|j
+index|]
 argument_list|)
 expr_stmt|;
 name|i

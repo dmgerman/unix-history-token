@@ -2061,6 +2061,8 @@ name|LL_DBG
 argument_list|,
 literal|"entry %d: budget-callbacksfile = %s"
 argument_list|,
+name|entrycount
+argument_list|,
 name|yylval
 operator|.
 name|str

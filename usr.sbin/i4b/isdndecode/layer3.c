@@ -1606,6 +1606,15 @@ index|]
 operator|&
 literal|0x7f
 operator|)
+argument_list|,
+operator|(
+name|buf
+index|[
+name|i
+index|]
+operator|&
+literal|0x7f
+operator|)
 argument_list|)
 expr_stmt|;
 name|i
@@ -1636,6 +1645,13 @@ argument_list|,
 literal|0xff
 argument_list|,
 literal|"Call reference = %d = %02x"
+argument_list|,
+operator|(
+name|buf
+index|[
+name|i
+index|]
+operator|)
 argument_list|,
 operator|(
 name|buf
