@@ -844,11 +844,12 @@ name|ndp
 decl_stmt|;
 if|if
 condition|(
-name|path
-operator|==
-name|NULL
+name|mp
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_ROOTFS
 condition|)
-comment|/* We are doing the initial root mount */
 return|return
 operator|(
 name|iso_mountroot
