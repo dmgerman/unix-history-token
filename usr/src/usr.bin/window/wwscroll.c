@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwscroll.c	1.1 83/08/11"
+literal|"@(#)wwscroll.c	1.2 83/08/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,9 +72,6 @@ block|{
 specifier|register
 name|i
 expr_stmt|;
-name|int
-name|j
-decl_stmt|;
 name|int
 name|startrow
 decl_stmt|,
