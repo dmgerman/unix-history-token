@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: su.c,v 1.28 1998/09/21 07:44:25 roberto Exp $"
+literal|"$Id: su.c,v 1.29 1998/10/09 20:14:48 markm Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1245,6 +1245,7 @@ literal|0
 condition|)
 break|break;
 else|else
+block|{
 name|errx
 argument_list|(
 literal|1
@@ -1254,6 +1255,7 @@ argument_list|,
 name|user
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|strcmp
