@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1983, 1993, 1994  *	The Regents of the University of
 end_comment
 
 begin_comment
-comment|/* $Id: ruptime.c,v 1.9 1997/02/22 19:56:50 peter Exp $ */
+comment|/* $Id: ruptime.c,v 1.10 1997/03/29 04:32:02 imp Exp $ */
 end_comment
 
 begin_ifndef
@@ -1138,7 +1138,7 @@ argument_list|(
 name|resbuf
 argument_list|)
 argument_list|,
-literal|"%s %2d+%02d:%02d"
+literal|"%s %3d+%02d:%02d"
 argument_list|,
 name|updown
 argument_list|,
@@ -1162,7 +1162,7 @@ argument_list|(
 name|resbuf
 argument_list|)
 argument_list|,
-literal|"%s    %2d:%02d"
+literal|"%s     %2d:%02d"
 argument_list|,
 name|updown
 argument_list|,
