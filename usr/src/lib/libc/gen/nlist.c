@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nlist.c	5.3 (Berkeley) %G%"
+literal|"@(#)nlist.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -147,8 +147,6 @@ name|NLIST
 name|nbuf
 decl_stmt|;
 name|off_t
-name|curoff
-decl_stmt|,
 name|strings_offset
 decl_stmt|,
 name|symbol_offset
@@ -261,11 +259,6 @@ condition|)
 goto|goto
 name|done1
 goto|;
-comment|/* 	 * some versions of stdio do lseek's on every fseek call relative 	 * to the beginning of the file.  For this reason, all string seeks 	 * are made relative to the beginning of the symbol table. 	 */
-name|curoff
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -282,20 +275,6 @@ operator|)
 condition|)
 goto|goto
 name|done1
-goto|;
-if|if
-condition|(
-name|fseek
-argument_list|(
-name|fstr
-argument_list|,
-name|strings_offset
-argument_list|,
-name|SEEK_SET
-argument_list|)
-condition|)
-goto|goto
-name|done2
 goto|;
 comment|/* 	 * clean out any left-over information for all valid entries. 	 * Type and value defined to be 0 if not found; historical 	 * versions cleared other and desc as well.  Also figure out 	 * the largest string length so don't read any more of the 	 * string table than we have to. 	 */
 for|for
@@ -454,24 +433,21 @@ name|fseek
 argument_list|(
 name|fstr
 argument_list|,
+name|strings_offset
+operator|+
 name|s
 operator|->
 name|_strx
-operator|-
-name|curoff
 argument_list|,
-name|SEEK_CUR
+name|SEEK_SET
 argument_list|)
 condition|)
 goto|goto
 name|done2
 goto|;
-name|curoff
-operator|=
-name|s
-operator|->
-name|_strx
-operator|+
+operator|(
+name|void
+operator|)
 name|fread
 argument_list|(
 name|sbuf
