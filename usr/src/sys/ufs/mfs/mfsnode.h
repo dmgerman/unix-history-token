@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfsnode.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfsnode.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -217,21 +217,21 @@ begin_define
 define|#
 directive|define
 name|mfs_lock
-value|((int (*) __P((struct  vop_lock_args *)))nullop)
+value|((int (*) __P((struct  vop_lock_args *)))vop_nolock)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_unlock
-value|((int (*) __P((struct  vop_unlock_args *)))nullop)
+value|((int (*) __P((struct  vop_unlock_args *)))vop_nounlock)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_islocked
-value|((int (*) __P((struct  vop_islocked_args *)))nullop)
+value|((int(*) __P((struct vop_islocked_args *)))vop_noislocked)
 end_define
 
 begin_define
