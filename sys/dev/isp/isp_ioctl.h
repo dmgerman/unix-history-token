@@ -279,5 +279,162 @@ name|ISP_FORCE_CRASH_DUMP
 value|_IO(ISP_IOC, 11)
 end_define
 
+begin_comment
+comment|/*  * Get information about this Host Adapter, including current connection  * topology and capabilities.  */
+end_comment
+
+begin_struct
+struct|struct
+name|isp_hba_device
+block|{
+name|u_int32_t
+label|:
+literal|8
+operator|,
+operator|:
+literal|4
+operator|,
+name|fc_speed
+operator|:
+literal|4
+operator|,
+comment|/* Gbps */
+operator|:
+literal|2
+operator|,
+name|fc_class2
+operator|:
+literal|1
+operator|,
+name|fc_ip_supported
+operator|:
+literal|1
+operator|,
+name|fc_scsi_supported
+operator|:
+literal|1
+operator|,
+name|fc_topology
+operator|:
+literal|3
+operator|,
+name|fc_loopid
+operator|:
+literal|8
+expr_stmt|;
+name|u_int64_t
+name|nvram_node_wwn
+decl_stmt|;
+name|u_int64_t
+name|nvram_port_wwn
+decl_stmt|;
+name|u_int64_t
+name|active_node_wwn
+decl_stmt|;
+name|u_int64_t
+name|active_port_wwn
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|ISP_TOPO_UNKNOWN
+value|0
+end_define
+
+begin_comment
+comment|/* connection topology unknown */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_TOPO_FCAL
+value|1
+end_define
+
+begin_comment
+comment|/* private or PL_DA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_TOPO_LPORT
+value|2
+end_define
+
+begin_comment
+comment|/* public loop */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_TOPO_NPORT
+value|3
+end_define
+
+begin_comment
+comment|/* N-port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_TOPO_FPORT
+value|4
+end_define
+
+begin_comment
+comment|/* F-port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_FC_GETHINFO
+value|_IOR(ISP_IOC, 12, struct isp_hba_device)
+end_define
+
+begin_comment
+comment|/*  * Set some internal parameters. This doesn't take effect until  * the chip is reset.  *  * Each parameter is generalized to be a name string with an integer value.  *  * Known parameters are:  *  *	Name				Value Range  *	  *	"framelength"			512,1024,2048  *	"exec_throttle"			16..255  *	"fullduplex"			0,1  *	"loopid"			0..125  */
+end_comment
+
+begin_struct
+struct|struct
+name|isp_fc_param
+block|{
+name|char
+name|param_name
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* null terminated */
+name|u_int32_t
+name|parameter
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|ISP_GET_FC_PARAM
+value|_IOWR(ISP_IOC, 98, struct isp_fc_param)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_SET_FC_PARAM
+value|_IOWR(ISP_IOC, 99, struct isp_fc_param)
+end_define
+
 end_unit
 
