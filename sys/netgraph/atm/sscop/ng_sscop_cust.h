@@ -266,7 +266,7 @@ end_comment
 begin_typedef
 typedef|typedef
 name|struct
-name|callout_handle
+name|callout
 name|sscop_timer_t
 typedef|;
 end_typedef
@@ -280,7 +280,7 @@ name|S
 parameter_list|,
 name|T
 parameter_list|)
-value|callout_handle_init(&(S)->t_##T)
+value|ng_callout_init(&(S)->t_##T)
 end_define
 
 begin_define
@@ -292,7 +292,7 @@ name|S
 parameter_list|,
 name|T
 parameter_list|)
-value|do {						\ 	ng_untimeout((S)->t_##T, (S)->aarg);				\ 	callout_handle_init(&(S)->t_##T);				\     } while (0)
+value|do {						\ 	ng_untimeout(&(S)->t_##T, (S)->aarg);				\     } while (0)
 end_define
 
 begin_define
@@ -304,7 +304,7 @@ name|S
 parameter_list|,
 name|T
 parameter_list|)
-value|do {					\ 	TIMER_STOP(S, T);						\ 	(S)->t_##T = ng_timeout((S)->aarg, NULL,			\ 	    hz * (S)->timer##T / 1000, T##_func, (S), 0);		\     } while (0)
+value|do {					\ 	ng_timeout(&(S)->t_##T, (S)->aarg, NULL,			\ 	    hz * (S)->timer##T / 1000, T##_func, (S), 0);		\     } while (0)
 end_define
 
 begin_define
@@ -316,7 +316,7 @@ name|S
 parameter_list|,
 name|T
 parameter_list|)
-value|((S)->t_##T.callout != NULL)
+value|((S)->t_##T.c_flags& (CALLOUT_PENDING))
 end_define
 
 begin_comment
@@ -333,7 +333,7 @@ parameter_list|,
 name|N
 parameter_list|)
 define|\
-value|static void								\ T##_func(node_p node, hook_p hook, void *arg1, int arg2)		\ {									\ 	struct sscop *sscop = arg1;					\ 									\ 	callout_handle_init(&sscop->t_##T);				\ 	VERBOSE(sscop, SSCOP_DBG_TIMER, (sscop, sscop->aarg,		\ 	    "timer_" #T " expired"));					\ 	sscop_signal(sscop, SIG_T_##N, NULL);				\ }
+value|static void								\ T##_func(node_p node, hook_p hook, void *arg1, int arg2)		\ {									\ 	struct sscop *sscop = arg1;					\ 									\ 	VERBOSE(sscop, SSCOP_DBG_TIMER, (sscop, sscop->aarg,		\ 	    "timer_" #T " expired"));					\ 	sscop_signal(sscop, SIG_T_##N, NULL);				\ }
 end_define
 
 begin_comment

@@ -246,7 +246,7 @@ struct|struct
 name|uni_timer
 block|{
 name|struct
-name|callout_handle
+name|callout
 name|c
 decl_stmt|;
 block|}
@@ -262,7 +262,7 @@ name|X
 parameter_list|,
 name|T
 parameter_list|)
-value|callout_handle_init(&(X)->T.c)
+value|ng_callout_init(&(X)->T.c)
 end_define
 
 begin_define
@@ -286,7 +286,7 @@ name|UNI
 parameter_list|,
 name|FIELD
 parameter_list|)
-value|do {						\ 	ng_untimeout(FIELD.c, (UNI)->arg);					\ 	callout_handle_init(&FIELD.c);					\     } while (0)
+value|do {						\ 	ng_untimeout(&FIELD.c, (UNI)->arg);					\     } while (0)
 end_define
 
 begin_define
@@ -298,7 +298,7 @@ name|UNI
 parameter_list|,
 name|T
 parameter_list|)
-value|((UNI)->T.c.callout != NULL)
+value|((UNI)->T.c.c_flags& (CALLOUT_ACTIVE |	\ 							CALLOUT_PENDING))
 end_define
 
 begin_define
@@ -316,7 +316,7 @@ name|DUE
 parameter_list|,
 name|FUNC
 parameter_list|)
-value|do {			\ 	_TIMER_STOP(UNI, FIELD);					\ 	FIELD.c = ng_timeout((UNI)->arg, NULL,				\ 	    hz * (DUE) / 1000, FUNC, (ARG), 0);				\     } while (0)
+value|do {			\ 	_TIMER_STOP(UNI, FIELD);					\ 	ng_timeout(&FIELD.c, (UNI)->arg, NULL,				\ 	    hz * (DUE) / 1000, FUNC, (ARG), 0);				\     } while (0)
 end_define
 
 begin_define
@@ -329,7 +329,7 @@ parameter_list|,
 name|F
 parameter_list|)
 define|\
-value|static void F(struct uni *);						\ static void								\ _##T##_func(node_p node, hook_p hook, void *arg1, int arg2)		\ {									\ 	struct uni *uni = (struct uni *)arg1;				\ 									\ 	callout_handle_init(&uni->T.c);					\ 	(F)(uni);							\ 	uni_work(uni);							\ }
+value|static void F(struct uni *);						\ static void								\ _##T##_func(node_p node, hook_p hook, void *arg1, int arg2)		\ {									\ 	struct uni *uni = (struct uni *)arg1;				\ 									\ 	(F)(uni);							\ 	uni_work(uni);							\ }
 end_define
 
 begin_comment
@@ -346,7 +346,7 @@ parameter_list|,
 name|F
 parameter_list|)
 define|\
-value|static void F(struct call *);						\ static void								\ _##T##_func(node_p node, hook_p hook, void *arg1, int arg2)		\ {									\ 	struct call *call = (struct call *)arg1;			\ 	struct uni *uni = call->uni;					\ 									\ 	callout_handle_init(&call->T.c);				\ 	(F)(call);							\ 	uni_work(uni);							\ }
+value|static void F(struct call *);						\ static void								\ _##T##_func(node_p node, hook_p hook, void *arg1, int arg2)		\ {									\ 	struct call *call = (struct call *)arg1;			\ 	struct uni *uni = call->uni;					\ 									\ 	(F)(call);							\ 	uni_work(uni);							\ }
 end_define
 
 begin_comment
@@ -363,7 +363,7 @@ parameter_list|,
 name|F
 parameter_list|)
 define|\
-value|static void F(struct party *);						\ static void								\ _##T##_func(node_p node, hook_p hook, void *arg1, int arg2)		\ {									\ 	struct party *party = (struct party *)arg1;			\ 	struct uni *uni = party->call->uni;				\ 									\ 	callout_handle_init(&party->T.c);					\ 	(F)(party);							\ 	uni_work(uni);							\ }
+value|static void F(struct party *);						\ static void								\ _##T##_func(node_p node, hook_p hook, void *arg1, int arg2)		\ {									\ 	struct party *party = (struct party *)arg1;			\ 	struct uni *uni = party->call->uni;				\ 									\ 	(F)(party);							\ 	uni_work(uni);							\ }
 end_define
 
 begin_decl_stmt
