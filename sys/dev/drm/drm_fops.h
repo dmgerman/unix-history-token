@@ -36,9 +36,7 @@ name|uid
 init|=
 name|p
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 operator|->
 name|cr_svuid
 decl_stmt|;
@@ -259,9 +257,7 @@ name|uid
 operator|=
 name|p
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 operator|->
 name|cr_svuid
 expr_stmt|;

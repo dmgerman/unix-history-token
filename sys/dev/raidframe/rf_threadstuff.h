@@ -281,9 +281,7 @@ operator|)
 name|td
 operator|)
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 operator|)
 return|;
 block|}

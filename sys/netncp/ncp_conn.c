@@ -3301,7 +3301,7 @@ name|ncp_conn
 modifier|*
 name|ncp
 decl_stmt|;
-comment|/*	struct ucred *cred = req->p->p_ucred;*/
+comment|/*	struct ucred *cred = req->td->td_ucred;*/
 name|error
 operator|=
 literal|0

@@ -5681,9 +5681,7 @@ name|mac_ioctl_ifnet_get
 argument_list|(
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|ifr
 argument_list|,
@@ -5996,9 +5994,7 @@ name|mac_ioctl_ifnet_set
 argument_list|(
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|ifr
 argument_list|,

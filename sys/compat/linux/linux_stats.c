@@ -1245,9 +1245,7 @@ name|mac_check_mount_stat
 argument_list|(
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|mp
 argument_list|)
@@ -1523,9 +1521,7 @@ name|mac_check_mount_stat
 argument_list|(
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|mp
 argument_list|)
@@ -1877,9 +1873,7 @@ name|mac_check_mount_stat
 argument_list|(
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|vp
 operator|->

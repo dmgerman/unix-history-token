@@ -1497,9 +1497,7 @@ name|mac_check_vnode_readdir
 argument_list|(
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|vp
 argument_list|)
