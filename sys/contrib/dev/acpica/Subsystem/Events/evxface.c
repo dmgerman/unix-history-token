@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evxface - External interfaces for ACPI events  *              $Revision: 96 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evxface - External interfaces for ACPI events  *              $Revision: 97 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -210,7 +210,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"Enabled fixed event %d.  Handler: %x\n"
+literal|"Enabled fixed event %X, Handler=%p\n"
 operator|,
 name|Event
 operator|,
@@ -344,7 +344,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"Disabled fixed event %d.\n"
+literal|"Disabled fixed event %X.\n"
 operator|,
 name|Event
 operator|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbxface - AML Debugger external interfaces  *              $Revision: 31 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbxface - AML Debugger external interfaces  *              $Revision: 32 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -134,7 +134,7 @@ block|{
 comment|/* Hit the breakpoint, resume single step, reset breakpoint */
 name|AcpiOsPrintf
 argument_list|(
-literal|"***Break*** at AML offset 0x%X\n"
+literal|"***Break*** at AML offset %X\n"
 argument_list|,
 name|Op
 operator|->

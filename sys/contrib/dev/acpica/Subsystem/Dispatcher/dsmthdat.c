@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dsmthdat - control method arguments and local variables  *              $Revision: 34 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dsmthdat - control method arguments and local variables  *              $Revision: 36 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -150,7 +150,20 @@ index|]
 operator|.
 name|Type
 operator|=
-name|INTERNAL_TYPE_METHOD_ARGUMENT
+name|ACPI_TYPE_ANY
+expr_stmt|;
+name|WalkState
+operator|->
+name|Arguments
+index|[
+name|i
+index|]
+operator|.
+name|Flags
+operator|=
+name|ANOBJ_END_OF_PEER_LIST
+operator||
+name|ANOBJ_METHOD_ARG
 expr_stmt|;
 block|}
 comment|/* Init the method locals */
@@ -218,7 +231,20 @@ index|]
 operator|.
 name|Type
 operator|=
-name|INTERNAL_TYPE_METHOD_LOCAL_VAR
+name|ACPI_TYPE_ANY
+expr_stmt|;
+name|WalkState
+operator|->
+name|LocalVariables
+index|[
+name|i
+index|]
+operator|.
+name|Flags
+operator|=
+name|ANOBJ_END_OF_PEER_LIST
+operator||
+name|ANOBJ_METHOD_LOCAL
 expr_stmt|;
 block|}
 name|return_ACPI_STATUS
@@ -1159,7 +1185,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"DsMethodDataGetValue: Uninitialized Arg[%d] at entry %X\n"
+literal|"DsMethodDataGetValue: Uninitialized Arg[%d] at entry %p\n"
 operator|,
 name|Index
 operator|,
@@ -1181,7 +1207,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"DsMethodDataGetValue: Uninitialized Local[%d] at entry %X\n"
+literal|"DsMethodDataGetValue: Uninitialized Local[%d] at entry %p\n"
 operator|,
 name|Index
 operator|,

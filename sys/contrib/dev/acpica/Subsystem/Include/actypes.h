@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 152 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 155 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -86,15 +86,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|long
-name|INT64
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
+name|COMPILER_DEPENDENT_UINT64
 name|UINT64
 typedef|;
 end_typedef
@@ -1298,7 +1290,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INTERNAL_TYPE_METHOD_ARGUMENT
+name|INTERNAL_TYPE_EXTRA
 value|33
 end_define
 
@@ -1309,37 +1301,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INTERNAL_TYPE_METHOD_LOCAL_VAR
-value|34
-end_define
-
-begin_comment
-comment|/* 0x22  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INTERNAL_TYPE_EXTRA
-value|35
-end_define
-
-begin_comment
-comment|/* 0x23  */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|INTERNAL_TYPE_MAX
-value|35
+value|33
 end_define
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_INVALID
-value|36
+value|34
 end_define
 
 begin_define
@@ -1550,7 +1520,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|UINT32
+name|UINT8
 name|ACPI_ADDRESS_SPACE_TYPE
 typedef|;
 end_typedef
@@ -1588,6 +1558,20 @@ define|#
 directive|define
 name|ADDRESS_SPACE_SMBUS
 value|(ACPI_ADDRESS_SPACE_TYPE) 4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADDRESS_SPACE_CMOS
+value|(ACPI_ADDRESS_SPACE_TYPE) 5
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADDRESS_SPACE_PCI_BAR_TARGET
+value|(ACPI_ADDRESS_SPACE_TYPE) 6
 end_define
 
 begin_comment

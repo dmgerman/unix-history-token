@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbutils - AML debugger utilities  *              $Revision: 32 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbutils - AML debugger utilities  *              $Revision: 33 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -142,7 +142,7 @@ parameter_list|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"\nLocation 0x%X:\n"
+literal|"\nLocation %X:\n"
 argument_list|,
 name|Address
 argument_list|)
@@ -248,7 +248,7 @@ name|ACPI_TYPE_NUMBER
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Number]  Value: %ld (0x%lX)\n"
+literal|"[Number]  Value: %ld (%lX)\n"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -430,7 +430,7 @@ break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Unknown Type] 0x%X \n"
+literal|"[Unknown Type] %X \n"
 argument_list|,
 name|ObjDesc
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbinput - user front-end to the AML debugger  *              $Revision: 51 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbinput - user front-end to the AML debugger  *              $Revision: 52 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -1537,7 +1537,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"AcpiEnable failed (0x%x)\n"
+literal|"AcpiEnable failed (Status=%X)\n"
 argument_list|,
 name|Status
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amconfig - Namespace reconfiguration (Load/Unload opcodes)  *              $Revision: 25 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: amconfig - Namespace reconfiguration (Load/Unload opcodes)  *              $Revision: 26 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -741,7 +741,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"ExecReconfiguration/AML_LOAD_OP: bad operand(s) (0x%X)\n"
+literal|"ExecReconfiguration/AML_LOAD_OP: bad operand(s) (%X)\n"
 operator|,
 name|Status
 operator|)
@@ -784,7 +784,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"ExecReconfiguration/AML_UNLOAD_OP: bad operand(s) (0x%X)\n"
+literal|"ExecReconfiguration/AML_UNLOAD_OP: bad operand(s) (%X)\n"
 operator|,
 name|Status
 operator|)

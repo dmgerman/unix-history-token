@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 81 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 82 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -525,7 +525,7 @@ block|{
 name|REPORT_WARNING
 argument_list|(
 operator|(
-literal|"Invalid ACPI Name 0x%X\n"
+literal|"Invalid ACPI Name %08X\n"
 operator|,
 name|ThisNode
 operator|->
@@ -900,7 +900,7 @@ argument_list|(
 name|TRACE_TABLES
 argument_list|,
 operator|(
-literal|"(Ptr to ACPI Object type 0x%X [UNKNOWN])\n"
+literal|"(Ptr to ACPI Object type %X [UNKNOWN])\n"
 operator|,
 name|ObjType
 operator|)
@@ -918,7 +918,7 @@ argument_list|(
 name|TRACE_TABLES
 argument_list|,
 operator|(
-literal|"(Ptr to ACPI Object type 0x%X [%s])\n"
+literal|"(Ptr to ACPI Object type %X [%s])\n"
 operator|,
 name|ObjType
 operator|,

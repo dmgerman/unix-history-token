@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: cmdebug - Debug print routines  *              $Revision: 60 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: cmdebug - Debug print routines  *              $Revision: 61 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -153,7 +153,7 @@ name|ComponentId
 argument_list|,
 name|TRACE_FUNCTIONS
 argument_list|,
-literal|" %2.2ld Entered Function: %s, 0x%p\n"
+literal|" %2.2ld Entered Function: %s, %p\n"
 argument_list|,
 name|AcpiGbl_NestingLevel
 argument_list|,
@@ -256,7 +256,7 @@ name|ComponentId
 argument_list|,
 name|TRACE_FUNCTIONS
 argument_list|,
-literal|" %2.2ld Entered Function: %s, 0x%lX\n"
+literal|" %2.2ld Entered Function: %s, %lX\n"
 argument_list|,
 name|AcpiGbl_NestingLevel
 argument_list|,
@@ -404,7 +404,7 @@ name|ComponentId
 argument_list|,
 name|TRACE_FUNCTIONS
 argument_list|,
-literal|" %2.2ld Exiting Function: %s, 0x%X\n"
+literal|" %2.2ld Exiting Function: %s, %X\n"
 argument_list|,
 name|AcpiGbl_NestingLevel
 argument_list|,
@@ -456,7 +456,7 @@ name|ComponentId
 argument_list|,
 name|TRACE_FUNCTIONS
 argument_list|,
-literal|" %2.2ld Exiting Function: %s, 0x%p\n"
+literal|" %2.2ld Exiting Function: %s, %p\n"
 argument_list|,
 name|AcpiGbl_NestingLevel
 argument_list|,

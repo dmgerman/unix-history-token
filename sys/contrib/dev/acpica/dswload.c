@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswload - Dispatcher namespace load callbacks  *              $Revision: 23 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswload - Dispatcher namespace load callbacks  *              $Revision: 24 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1829,6 +1829,9 @@ operator|)
 operator|->
 name|Length
 argument_list|,
+operator|(
+name|ACPI_ADDRESS_SPACE_TYPE
+operator|)
 name|Arg
 operator|->
 name|Value

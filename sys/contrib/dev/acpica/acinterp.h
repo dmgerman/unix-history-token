@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acinterp.h - Interpreter subcomponent prototypes and defines  *       $Revision: 85 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acinterp.h - Interpreter subcomponent prototypes and defines  *       $Revision: 86 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -400,7 +400,7 @@ parameter_list|,
 name|UINT32
 name|AcpiAmlLength
 parameter_list|,
-name|UINT32
+name|UINT8
 name|RegionSpace
 parameter_list|,
 name|ACPI_WALK_STATE

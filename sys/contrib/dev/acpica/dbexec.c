@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbexec - debugger control method execution  *              $Revision: 18 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbexec - debugger control method execution  *              $Revision: 19 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -859,7 +859,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Bad argument: Threads %d, Loops %d\n"
+literal|"Bad argument: Threads %X, Loops %X\n"
 argument_list|,
 name|NumThreads
 argument_list|,
@@ -941,7 +941,7 @@ expr_stmt|;
 comment|/* Create the threads */
 name|AcpiOsPrintf
 argument_list|(
-literal|"Creating %d threads to execute %d times each\n"
+literal|"Creating %X threads to execute %X times each\n"
 argument_list|,
 name|NumThreads
 argument_list|,
@@ -1014,7 +1014,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"All threads (%d) have completed\n"
+literal|"All threads (%X) have completed\n"
 argument_list|,
 name|NumThreads
 argument_list|)

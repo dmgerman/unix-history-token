@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evregion - ACPI AddressSpace (OpRegion) handler dispatch  *              $Revision: 88 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evregion - ACPI AddressSpace (OpRegion) handler dispatch  *              $Revision: 90 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -431,7 +431,7 @@ argument_list|(
 name|TRACE_OPREGION
 argument_list|,
 operator|(
-literal|"Dispatch address access region 0x%p, no handler\n"
+literal|"Dispatch address access region %p, no handler\n"
 operator|,
 name|RegionObj
 operator|)
@@ -531,7 +531,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"EvAddressSpaceDispatch: %s from region init, SpaceID %d\n"
+literal|"EvAddressSpaceDispatch: %s from region init, SpaceID %X\n"
 operator|,
 name|AcpiCmFormatException
 argument_list|(
@@ -592,7 +592,7 @@ name|VERBOSE_INFO
 operator|)
 argument_list|,
 operator|(
-literal|"Addrhandler 0x%p (0x%p), Address 0x%p\n"
+literal|"Addrhandler %p (%p), Address %p\n"
 operator|,
 operator|&
 name|RegionObj
@@ -671,7 +671,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"EvAddressSpaceDispatch: %s from handler, SpaceID %d\n"
+literal|"EvAddressSpaceDispatch: %s from handler, SpaceID %X\n"
 operator|,
 name|AcpiCmFormatException
 argument_list|(
@@ -822,7 +822,7 @@ argument_list|(
 name|TRACE_OPREGION
 argument_list|,
 operator|(
-literal|"Removing Region 0x%p from address handler 0x%p\n"
+literal|"Removing Region %p from address handler %p\n"
 operator|,
 name|RegionObj
 operator|,
@@ -898,7 +898,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"EvDisassociateRegionFromHandler: %s from region init, SpaceID %d\n"
+literal|"EvDisassociateRegionFromHandler: %s from region init, SpaceID %X\n"
 operator|,
 name|AcpiCmFormatException
 argument_list|(
@@ -974,7 +974,7 @@ argument_list|(
 name|TRACE_OPREGION
 argument_list|,
 operator|(
-literal|"Cannot remove region 0x%p from address handler 0x%p\n"
+literal|"Cannot remove region %p from address handler %p\n"
 operator|,
 name|RegionObj
 operator|,
@@ -1020,7 +1020,7 @@ argument_list|(
 name|TRACE_OPREGION
 argument_list|,
 operator|(
-literal|"Adding Region 0x%p to address handler 0x%p\n"
+literal|"Adding Region %p to address handler %p\n"
 operator|,
 name|RegionObj
 operator|,
@@ -1312,16 +1312,16 @@ argument_list|(
 name|TRACE_OPREGION
 argument_list|,
 operator|(
-literal|"Found handler for %s in device 0x%p (0x%p) handler 0x%p\n"
+literal|"Found handler for region %s in device %p(%p) handler %p\n"
 operator|,
-name|AcpiGbl_RegionTypes
-index|[
+name|AcpiCmGetRegionName
+argument_list|(
 name|HandlerObj
 operator|->
 name|AddrHandler
 operator|.
 name|SpaceId
-index|]
+argument_list|)
 operator|,
 name|ObjDesc
 operator|,

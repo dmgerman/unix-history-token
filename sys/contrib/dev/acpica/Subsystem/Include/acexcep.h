@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acexcep.h - Exception codes returned by the ACPI subsystem  *       $Revision: 36 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acexcep.h - Exception codes returned by the ACPI subsystem  *       $Revision: 37 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -454,8 +454,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|AE_AML_INVALID_SPACE_ID
+value|(ACPI_STATUS) (0x0012 | AE_CODE_AML)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AE_CODE_AML_MAX
-value|0x0011
+value|0x0012
 end_define
 
 begin_comment
@@ -669,6 +676,8 @@ block|,
 literal|"AE_AML_NAME_NOT_FOUND"
 block|,
 literal|"AE_AML_INTERNAL"
+block|,
+literal|"AE_AML_INVALID_SPACE_ID"
 block|, }
 decl_stmt|;
 end_decl_stmt

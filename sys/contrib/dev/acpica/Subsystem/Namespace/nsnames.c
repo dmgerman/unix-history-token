@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsnames - Name manipulation and search  *              $Revision: 49 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsnames - Name manipulation and search  *              $Revision: 51 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -247,7 +247,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"NsGetTablePathname:  Bad pointer returned; size = %d\n"
+literal|"NsGetTablePathname:  Bad pointer returned; size=%X\n"
 operator|,
 name|Size
 operator|)
@@ -375,6 +375,18 @@ control|)
 block|{
 name|Size
 operator|+=
+name|PATH_SEGMENT_LENGTH
+expr_stmt|;
+block|}
+comment|/* Special case for size still 0 - no parent for "special" nodes */
+if|if
+condition|(
+operator|!
+name|Size
+condition|)
+block|{
+name|Size
+operator|=
 name|PATH_SEGMENT_LENGTH
 expr_stmt|;
 block|}
@@ -510,7 +522,7 @@ argument_list|(
 name|TRACE_EXEC
 argument_list|,
 operator|(
-literal|"NsHandleToPathname: Len=%d, %s \n"
+literal|"NsHandleToPathname: Len=%X, %s \n"
 operator|,
 name|PathLength
 operator|,

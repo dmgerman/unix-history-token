@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbinstal - ACPI table installation and removal  *              $Revision: 33 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbinstal - ACPI table installation and removal  *              $Revision: 34 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -331,7 +331,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"Unsupported table %s (Type %d) was found and discarded\n"
+literal|"Unsupported table %s (Type %X) was found and discarded\n"
 operator|,
 name|AcpiGbl_AcpiTableData
 index|[

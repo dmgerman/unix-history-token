@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: cmglobal - Global variables for the ACPI subsystem  *              $Revision: 110 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: cmglobal - Global variables for the ACPI subsystem  *              $Revision: 112 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|"acinterp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"amlcode.h"
 end_include
 
 begin_define
@@ -401,15 +407,9 @@ block|,
 comment|/* 32 DefAny           */
 name|NSP_NORMAL
 block|,
-comment|/* 33 Method Arg       */
+comment|/* 33 Extra            */
 name|NSP_NORMAL
-block|,
-comment|/* 34 Method Local     */
-name|NSP_NORMAL
-block|,
-comment|/* 35 Extra            */
-name|NSP_NORMAL
-comment|/* 36 Invalid          */
+comment|/* 34 Invalid          */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -787,15 +787,9 @@ comment|/* 32 */
 literal|"DefAny"
 block|,
 comment|/* 33 */
-literal|"MethodArg"
-block|,
-comment|/* 34 */
-literal|"MethodLcl"
-block|,
-comment|/* 35 */
 literal|"Extra"
 block|,
-comment|/* 36 */
+comment|/* 34 */
 literal|"Invalid"
 block|}
 decl_stmt|;
@@ -837,6 +831,189 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* Region type decoding */
+end_comment
+
+begin_decl_stmt
+name|NATIVE_CHAR
+modifier|*
+name|AcpiGbl_RegionTypes
+index|[
+name|NUM_REGION_TYPES
+index|]
+init|=
+block|{
+literal|"SystemMemory"
+block|,
+literal|"SystemIO"
+block|,
+literal|"PCIConfig"
+block|,
+literal|"EmbeddedControl"
+block|,
+literal|"SMBus"
+block|,
+literal|"CMOS"
+block|,
+literal|"PCIBarTarget"
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiCmGetRegionName  *  * PARAMETERS:  None.  *  * RETURN:      Status  *  * DESCRIPTION: Translate a Space ID into a name string (Debug only)  *  ****************************************************************************/
+end_comment
+
+begin_function
+name|NATIVE_CHAR
+modifier|*
+name|AcpiCmGetRegionName
+parameter_list|(
+name|UINT8
+name|SpaceId
+parameter_list|)
+block|{
+if|if
+condition|(
+name|SpaceId
+operator|>=
+name|USER_REGION_BEGIN
+condition|)
+block|{
+return|return
+operator|(
+literal|"UserDefinedRegion"
+operator|)
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|SpaceId
+operator|>=
+name|NUM_REGION_TYPES
+condition|)
+block|{
+return|return
+operator|(
+literal|"InvalidSpaceID"
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|AcpiGbl_RegionTypes
+index|[
+name|SpaceId
+index|]
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Data used in keeping track of fields */
+end_comment
+
+begin_decl_stmt
+name|NATIVE_CHAR
+modifier|*
+name|AcpiGbl_FENames
+index|[
+name|NUM_FIELD_NAMES
+index|]
+init|=
+block|{
+literal|"skip"
+block|,
+literal|"?access?"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* FE = Field Element */
+end_comment
+
+begin_decl_stmt
+name|NATIVE_CHAR
+modifier|*
+name|AcpiGbl_MatchOps
+index|[
+name|NUM_MATCH_OPS
+index|]
+init|=
+block|{
+literal|"Error"
+block|,
+literal|"MTR"
+block|,
+literal|"MEQ"
+block|,
+literal|"MLE"
+block|,
+literal|"MLT"
+block|,
+literal|"MGE"
+block|,
+literal|"MGT"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Access type decoding */
+end_comment
+
+begin_decl_stmt
+name|NATIVE_CHAR
+modifier|*
+name|AcpiGbl_AccessTypes
+index|[
+name|NUM_ACCESS_TYPES
+index|]
+init|=
+block|{
+literal|"AnyAcc"
+block|,
+literal|"ByteAcc"
+block|,
+literal|"WordAcc"
+block|,
+literal|"DWordAcc"
+block|,
+literal|"BlockAcc"
+block|,
+literal|"SMBSendRecvAcc"
+block|,
+literal|"SMBQuickAcc"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Update rule decoding */
+end_comment
+
+begin_decl_stmt
+name|NATIVE_CHAR
+modifier|*
+name|AcpiGbl_UpdateRules
+index|[
+name|NUM_UPDATE_RULES
+index|]
+init|=
+block|{
+literal|"Preserve"
+block|,
+literal|"WriteAsOnes"
+block|,
+literal|"WriteAsZeros"
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

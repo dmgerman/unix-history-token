@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbget - ACPI Table get* routines  *              $Revision: 39 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbget - ACPI Table get* routines  *              $Revision: 40 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -738,7 +738,7 @@ argument_list|(
 name|TRACE_TABLES
 argument_list|,
 operator|(
-literal|"Hex dump of DSDT (After header), size %d (0x%x)\n"
+literal|"Hex dump of DSDT (After header), size %d (%x)\n"
 operator|,
 name|AcpiGbl_DSDT
 operator|->

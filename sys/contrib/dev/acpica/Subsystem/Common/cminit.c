@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: cminit - Common ACPI subsystem initialization  *              $Revision: 88 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: cminit - Common ACPI subsystem initialization  *              $Revision: 89 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -83,7 +83,7 @@ block|{
 name|REPORT_ERROR
 argument_list|(
 operator|(
-literal|"Invalid FADT register value, %s = 0x%X (FADT=0x%X)\n"
+literal|"Invalid FADT register value, %s=%X (FADT=%p)\n"
 operator|,
 name|RegisterName
 operator|,

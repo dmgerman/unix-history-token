@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rscreate - AcpiRsCreateResourceList  *                         AcpiRsCreatePciRoutingTable  *                         AcpiRsCreateByteStream  *              $Revision: 21 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rscreate - AcpiRsCreateResourceList  *                         AcpiRsCreatePciRoutingTable  *                         AcpiRsCreateByteStream  *              $Revision: 22 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -130,7 +130,7 @@ argument_list|(
 name|VERBOSE_INFO
 argument_list|,
 operator|(
-literal|"RsCreateResourceList: Status=%d ListSizeNeeded=%d\n"
+literal|"RsCreateResourceList: Status=%X ListSizeNeeded=%X\n"
 operator|,
 name|Status
 operator|,
@@ -330,7 +330,7 @@ argument_list|(
 name|VERBOSE_INFO
 argument_list|,
 operator|(
-literal|"RsCreatePciRoutingTable: BufferSizeNeeded = %d\n"
+literal|"RsCreatePciRoutingTable: BufferSizeNeeded = %X\n"
 operator|,
 name|BufferSizeNeeded
 operator|)
@@ -782,7 +782,7 @@ argument_list|(
 name|VERBOSE_INFO
 argument_list|,
 operator|(
-literal|"RsCreateByteStream: ByteStreamSizeNeeded=%d, %s\n"
+literal|"RsCreateByteStream: ByteStreamSizeNeeded=%X, %s\n"
 operator|,
 name|ByteStreamSizeNeeded
 operator|,

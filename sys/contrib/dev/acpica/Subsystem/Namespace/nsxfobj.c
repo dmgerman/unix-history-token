@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsxfobj - Public interfaces to the ACPI subsystem  *                         ACPI Object oriented interfaces  *              $Revision: 74 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsxfobj - Public interfaces to the ACPI subsystem  *                         ACPI Object oriented interfaces  *              $Revision: 75 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -495,7 +495,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AcpiEvaluateObject: Needed buffer size %d, received %d\n"
+literal|"AcpiEvaluateObject: Needed buffer size %X, received %X\n"
 operator|,
 name|BufferSpaceNeeded
 operator|,

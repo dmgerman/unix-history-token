@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsmethod - Parser/Interpreter interface - control method parsing  *              $Revision: 52 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsmethod - Parser/Interpreter interface - control method parsing  *              $Revision: 53 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -961,7 +961,7 @@ block|{
 comment|/*              * Get the return value (if any) from the previous method.              * NULL if no return value              */
 name|Status
 operator|=
-name|AcpiDsResultStackPush
+name|AcpiDsResultPush
 argument_list|(
 name|ReturnDesc
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evrgnini- ACPI AddressSpace (OpRegion) init  *              $Revision: 29 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evrgnini- ACPI AddressSpace (OpRegion) init  *              $Revision: 31 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -295,7 +295,7 @@ argument_list|(
 name|TRACE_OPREGION
 argument_list|,
 operator|(
-literal|"Attempting to init a region 0x%X, with no handler\n"
+literal|"Attempting to init a region %X, with no handler\n"
 operator|,
 name|RegionObj
 operator|)
@@ -666,7 +666,7 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
 decl_stmt|;
-name|UINT32
+name|ACPI_ADDRESS_SPACE_TYPE
 name|SpaceId
 decl_stmt|;
 name|ACPI_NAMESPACE_NODE
@@ -899,7 +899,7 @@ argument_list|(
 name|TRACE_OPREGION
 argument_list|,
 operator|(
-literal|"Found handler (0x%X) for region 0x%X in obj 0x%X\n"
+literal|"Found handler %p for region %p in obj %p\n"
 operator|,
 name|HandlerObj
 operator|,
@@ -952,7 +952,12 @@ argument_list|(
 name|TRACE_OPREGION
 argument_list|,
 operator|(
-literal|"No handler currently for SpaceId[%d] (Initializing region 0x%X)\n"
+literal|"No handler for RegionType %s(%X) (RegionObj %p)\n"
+operator|,
+name|AcpiCmGetRegionName
+argument_list|(
+name|SpaceId
+argument_list|)
 operator|,
 name|SpaceId
 operator|,

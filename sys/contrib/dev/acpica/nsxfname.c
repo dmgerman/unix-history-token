@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsxfname - Public interfaces to the ACPI subsystem  *                         ACPI Namespace oriented interfaces  *              $Revision: 72 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsxfname - Public interfaces to the ACPI subsystem  *                         ACPI Namespace oriented interfaces  *              $Revision: 73 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -118,6 +118,7 @@ name|AE_BAD_PARAMETER
 operator|)
 return|;
 block|}
+comment|/* Convert a parent handle to a prefix node */
 if|if
 condition|(
 name|Parent
@@ -159,7 +160,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Special case for root, since we can't search for it */
-comment|/* TBD: [Investigate] Check for both forward and backslash?? */
 if|if
 condition|(
 name|STRCMP
@@ -186,14 +186,14 @@ name|AE_OK
 operator|)
 return|;
 block|}
-comment|/*      *  Find the Node and convert to the user format      */
+comment|/*      *  Find the Node and convert to a handle      */
 name|Status
 operator|=
 name|AcpiNsGetNode
 argument_list|(
 name|Pathname
 argument_list|,
-name|Node
+name|PrefixNode
 argument_list|,
 operator|&
 name|Node

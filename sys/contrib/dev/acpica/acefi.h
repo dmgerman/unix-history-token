@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acefi.h - OS specific defines, etc.  *       $Revision: 3 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acefi.h - OS specific defines, etc.  *       $Revision: 4 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -44,53 +44,31 @@ directive|include
 file|<efilib.h>
 end_include
 
-begin_undef
-undef|#
-directive|undef
-name|UINT8
-end_undef
+begin_comment
+comment|/* _int64 works for both IA32 and IA64 */
+end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|BOOLEAN
-end_undef
+begin_define
+define|#
+directive|define
+name|COMPILER_DEPENDENT_UINT64
+value|unsigned __int64
+end_define
 
-begin_undef
-undef|#
-directive|undef
-name|UCHAR
-end_undef
+begin_comment
+comment|/* warn C4142: redefinition of type */
+end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|UINT16
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|INT32
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|UINT32
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|INT64
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|UINT64
-end_undef
+begin_pragma
+pragma|#
+directive|pragma
+name|warning
+name|(
+name|disable
+name|:
+name|4142
+name|)
+end_pragma
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsopcode - Dispatcher Op Region support and handling of  *                         "control" opcodes  *              $Revision: 25 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsopcode - Dispatcher Op Region support and handling of  *                         "control" opcodes  *              $Revision: 28 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -487,12 +487,29 @@ argument_list|(
 name|TRACE_EXEC
 argument_list|,
 operator|(
-literal|"DsGetRegionArguments: [%4.4s] OpRegion JIT Init\n"
+literal|"DsGetRegionArguments: [%4.4s] OpRegion Init at AML %p[%x]\n"
 operator|,
 operator|&
 name|Node
 operator|->
 name|Name
+operator|,
+name|ExtraDesc
+operator|->
+name|Extra
+operator|.
+name|Pcode
+operator|,
+operator|*
+operator|(
+name|UINT32
+operator|*
+operator|)
+name|ExtraDesc
+operator|->
+name|Extra
+operator|.
+name|Pcode
 operator|)
 argument_list|)
 expr_stmt|;
@@ -996,7 +1013,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"ExecCreateField/%s: bad operand(s) (0x%X)\n"
+literal|"ExecCreateField/%s: bad operand(s) (%X)\n"
 operator|,
 name|AcpiPsGetOpcodeName
 argument_list|(
@@ -1379,7 +1396,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlExecCreateField: Tried to create field in invalid object type - 0x%X\n"
+literal|"AmlExecCreateField: Tried to create field in invalid object type %X\n"
 operator|,
 name|SrcDesc
 operator|->
@@ -2160,11 +2177,23 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|WalkState
 operator|->
+name|Results
+operator|)
+operator|&&
+operator|(
+name|WalkState
+operator|->
+name|Results
+operator|->
+name|Results
+operator|.
 name|NumResults
 operator|>
 literal|0
+operator|)
 condition|)
 block|{
 comment|/*              * The return value has come from a previous calculation.              *              * If value being returned is a Reference (such as              * an arg or local), resolve it now because it may              * cease to exist at the end of the method.              */
@@ -2176,6 +2205,10 @@ operator|&
 name|WalkState
 operator|->
 name|Results
+operator|->
+name|Results
+operator|.
+name|ObjDesc
 index|[
 literal|0
 index|]
@@ -2204,6 +2237,10 @@ operator|=
 name|WalkState
 operator|->
 name|Results
+operator|->
+name|Results
+operator|.
+name|ObjDesc
 index|[
 literal|0
 index|]

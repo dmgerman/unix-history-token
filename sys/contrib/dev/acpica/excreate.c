@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amcreate - Named object creation  *              $Revision: 50 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: amcreate - Named object creation  *              $Revision: 51 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -839,7 +839,7 @@ parameter_list|,
 name|UINT32
 name|AmlLength
 parameter_list|,
-name|UINT32
+name|UINT8
 name|RegionSpace
 parameter_list|,
 name|ACPI_WALK_STATE
@@ -863,15 +863,23 @@ argument_list|(
 literal|"AmlExecCreateRegion"
 argument_list|)
 expr_stmt|;
+comment|/*       * Space ID must be one of the predefined IDs, or in the user-defined       * range      */
 if|if
 condition|(
+operator|(
 name|RegionSpace
 operator|>=
 name|NUM_REGION_TYPES
+operator|)
+operator|&&
+operator|(
+name|RegionSpace
+operator|<
+name|USER_REGION_BEGIN
+operator|)
 condition|)
 block|{
-comment|/* TBD: [Future] In ACPI 2.0, valid region space          *  includes types 0-6 (Adding CMOS and PCIBARTarget).          *  Also, types 0x80-0xff are defined as "OEM Region          *  Space handler"          *          * Should this return an error, or should we just keep          * going?  How do we handle the OEM region handlers?          */
-name|REPORT_WARNING
+name|REPORT_ERROR
 argument_list|(
 operator|(
 literal|"Invalid AddressSpace type %X\n"
@@ -880,18 +888,25 @@ name|RegionSpace
 operator|)
 argument_list|)
 expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_AML_INVALID_SPACE_ID
+argument_list|)
+expr_stmt|;
 block|}
 name|DEBUG_PRINT
 argument_list|(
 name|TRACE_LOAD
 argument_list|,
 operator|(
-literal|"AmlDoNode: Region Type [%s]\n"
+literal|"AmlExecCreateRegion: Region Type - %s (%X)\n"
 operator|,
-name|AcpiGbl_RegionTypes
-index|[
+name|AcpiCmGetRegionName
+argument_list|(
 name|RegionSpace
-index|]
+argument_list|)
+operator|,
+name|RegionSpace
 operator|)
 argument_list|)
 expr_stmt|;
@@ -993,9 +1008,6 @@ name|Region
 operator|.
 name|SpaceId
 operator|=
-operator|(
-name|UINT8
-operator|)
 name|RegionSpace
 expr_stmt|;
 name|ObjDesc

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbdisply - debug display commands  *              $Revision: 35 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbdisply - debug display commands  *              $Revision: 38 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -674,8 +674,9 @@ argument_list|(
 literal|"Could not convert name to pathname\n"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
+else|else
+block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|"Object Pathname:  %s\n"
@@ -685,6 +686,7 @@ operator|.
 name|Pointer
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -742,7 +744,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"\nAttached Object (0x%p):\n"
+literal|"\nAttached Object (%p):\n"
 argument_list|,
 name|Node
 operator|->
@@ -854,7 +856,7 @@ name|ACPI_TYPE_NUMBER
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"0x%.8X"
+literal|"%.8X"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -954,7 +956,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"<Node>            Name %4.4s Type %s"
+literal|"<Node>            Name %4.4s Type-%s"
 argument_list|,
 operator|&
 operator|(
@@ -981,6 +983,48 @@ name|Type
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|(
+name|ACPI_NAMESPACE_NODE
+operator|*
+operator|)
+name|ObjDesc
+operator|)
+operator|->
+name|Flags
+operator|&
+name|ANOBJ_METHOD_ARG
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|" [Method Arg]"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+operator|(
+name|ACPI_NAMESPACE_NODE
+operator|*
+operator|)
+name|ObjDesc
+operator|)
+operator|->
+name|Flags
+operator|&
+name|ANOBJ_METHOD_LOCAL
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|" [Method Local]"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -1049,7 +1093,7 @@ name|AML_ZERO_OP
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Const]     Number 0x%.8X"
+literal|"[Const]     Number %.8X"
 argument_list|,
 literal|0
 argument_list|)
@@ -1060,7 +1104,7 @@ name|AML_ONES_OP
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Const]     Number 0x%.8X"
+literal|"[Const]     Number %.8X"
 argument_list|,
 name|ACPI_UINT32_MAX
 argument_list|)
@@ -1071,7 +1115,7 @@ name|AML_ONE_OP
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Const]     Number 0x%.8X"
+literal|"[Const]     Number %.8X"
 argument_list|,
 literal|1
 argument_list|)
@@ -1358,7 +1402,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%d arguments, max concurrency = %d\n"
+literal|"%X arguments, max concurrency = %X\n"
 argument_list|,
 name|NumArgs
 argument_list|,
@@ -1507,7 +1551,7 @@ expr_stmt|;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"Method contains:       %d AML Opcodes - %d Operators, %d Operands\n"
+literal|"Method contains:       %X AML Opcodes - %X Operators, %X Operands\n"
 argument_list|,
 name|NumOps
 argument_list|,
@@ -1518,7 +1562,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Remaining to execute:  %d AML Opcodes - %d Operators, %d Operands\n"
+literal|"Remaining to execute:  %X AML Opcodes - %X Operators, %X Operands\n"
 argument_list|,
 name|NumRemainingOps
 argument_list|,
@@ -1723,7 +1767,7 @@ name|Concurrency
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Method [%4.4s] has %d arguments, max concurrency = %d\n"
+literal|"Method [%4.4s] has %X arguments, max concurrency = %X\n"
 argument_list|,
 operator|&
 name|Node
@@ -1802,6 +1846,8 @@ name|ObjDesc
 decl_stmt|;
 name|UINT32
 name|NumResults
+init|=
+literal|0
 decl_stmt|;
 name|ACPI_NAMESPACE_NODE
 modifier|*
@@ -1839,19 +1885,27 @@ name|WalkState
 operator|->
 name|MethodNode
 expr_stmt|;
+if|if
+condition|(
+name|WalkState
+operator|->
+name|Results
+condition|)
+block|{
 name|NumResults
 operator|=
 name|WalkState
 operator|->
-name|NumResults
-operator|-
-name|WalkState
+name|Results
 operator|->
-name|CurrentResult
+name|Results
+operator|.
+name|NumResults
 expr_stmt|;
+block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"Method [%4.4s] has %d stacked result objects\n"
+literal|"Method [%4.4s] has %X stacked result objects\n"
 argument_list|,
 operator|&
 name|Node
@@ -1865,14 +1919,10 @@ for|for
 control|(
 name|i
 operator|=
-name|WalkState
-operator|->
-name|CurrentResult
+literal|0
 init|;
 name|i
 operator|<
-name|WalkState
-operator|->
 name|NumResults
 condition|;
 name|i
@@ -1884,6 +1934,10 @@ operator|=
 name|WalkState
 operator|->
 name|Results
+operator|->
+name|Results
+operator|.
+name|ObjDesc
 index|[
 name|i
 index|]

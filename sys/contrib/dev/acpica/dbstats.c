@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbstats - Generation and display of ACPI table statistics  *              $Revision: 34 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbstats - Generation and display of ACPI table statistics  *              $Revision: 35 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -759,7 +759,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"DSDT Length:................% 7ld (0x%X)\n"
+literal|"DSDT Length:................% 7ld (%X)\n"
 argument_list|,
 name|AcpiGbl_DSDT
 operator|->

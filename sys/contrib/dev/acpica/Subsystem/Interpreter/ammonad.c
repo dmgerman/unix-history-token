@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: ammonad - ACPI AML (p-code) execution for monadic operators  *              $Revision: 83 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: ammonad - ACPI AML (p-code) execution for monadic operators  *              $Revision: 85 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -360,14 +360,17 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"ExecMonadic1/%s: bad operand(s) (0x%X)\n"
+literal|"ExecMonadic1/%s: bad operand(s) (Status=%s)\n"
 operator|,
 name|AcpiPsGetOpcodeName
 argument_list|(
 name|Opcode
 argument_list|)
 operator|,
+name|AcpiCmFormatException
+argument_list|(
 name|Status
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -613,14 +616,17 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"ExecMonadic2R/%s: bad operand(s) (0x%X)\n"
+literal|"ExecMonadic2R/%s: bad operand(s) (Status=%s)\n"
 operator|,
 name|AcpiPsGetOpcodeName
 argument_list|(
 name|Opcode
 argument_list|)
 operator|,
+name|AcpiCmFormatException
+argument_list|(
 name|Status
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1651,14 +1657,17 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"ExecMonadic2/%s: bad operand(s) (0x%X)\n"
+literal|"ExecMonadic2/%s: bad operand(s) (Status=%s)\n"
 operator|,
 name|AcpiPsGetOpcodeName
 argument_list|(
 name|Opcode
 argument_list|)
 operator|,
+name|AcpiCmFormatException
+argument_list|(
 name|Status
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2002,7 +2011,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlExecMonadic2: Not Buf/Str/Pkg - found type 0x%X\n"
+literal|"AmlExecMonadic2: Not Buf/Str/Pkg - found type %X\n"
 operator|,
 name|ObjDesc
 operator|->

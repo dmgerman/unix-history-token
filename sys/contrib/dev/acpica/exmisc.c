@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: ammisc - ACPI AML (p-code) execution - specific opcodes  *              $Revision: 70 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: ammisc - ACPI AML (p-code) execution - specific opcodes  *              $Revision: 71 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -163,7 +163,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AcpiAmlExecFatal/AML_FATAL_OP: bad operand(s) (0x%X)\n"
+literal|"AcpiAmlExecFatal/AML_FATAL_OP: bad operand(s) (Status=%X)\n"
 operator|,
 name|Status
 operator|)
@@ -358,7 +358,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AcpiAmlExecIndex/AML_INDEX_OP: bad operand(s) (0x%X)\n"
+literal|"AcpiAmlExecIndex/AML_INDEX_OP: bad operand(s) (Status=%X)\n"
 operator|,
 name|Status
 operator|)
@@ -883,7 +883,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"ExecMatch/AML_MATCH_OP: bad operand(s) (0x%X)\n"
+literal|"ExecMatch/AML_MATCH_OP: bad operand(s) (Status=%X)\n"
 operator|,
 name|Status
 operator|)

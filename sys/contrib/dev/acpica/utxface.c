@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: cmxface - External interfaces for "global" ACPI functions  *              $Revision: 54 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: cmxface - External interfaces for "global" ACPI functions  *              $Revision: 55 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -378,11 +378,17 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|return_ACPI_STATUS
+comment|/* TBD: workaround. Old Lions don't enable properly */
+name|DEBUG_PRINT
 argument_list|(
-name|Status
+name|ACPI_WARN
+argument_list|,
+operator|(
+literal|"AcpiEnable failed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
+comment|/*return_ACPI_STATUS (Status);*/
 block|}
 block|}
 comment|/*      * Note:      * We must have the hardware AND events initialized before we can execute      * ANY control methods SAFELY.  Any control method can require ACPI hardware      * support, so the hardware MUST be initialized before execution!      */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: hwacpi - ACPI hardware functions - mode and timer  *              $Revision: 31 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: hwacpi - ACPI hardware functions - mode and timer  *              $Revision: 32 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -487,7 +487,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"Mode %d successfully enabled\n"
+literal|"Mode %X successfully enabled\n"
 operator|,
 name|Mode
 operator|)

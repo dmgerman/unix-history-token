@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: cmdelete - object deletion and reference count utilities  *              $Revision: 59 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: cmdelete - object deletion and reference count utilities  *              $Revision: 60 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -174,7 +174,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"CmDeleteInternalObj: **** Package of count %d\n"
+literal|"CmDeleteInternalObj: **** Package of count %X\n"
 operator|,
 name|Object
 operator|->
@@ -672,7 +672,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"CmUpdateRefCount: Obj %p Refs=%d, [Incremented]\n"
+literal|"CmUpdateRefCount: Obj %p Refs=%X, [Incremented]\n"
 operator|,
 name|Object
 operator|,
@@ -696,7 +696,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"CmUpdateRefCount: Obj %p Refs=%d, can't decrement! (Set to 0)\n"
+literal|"CmUpdateRefCount: Obj %p Refs=%X, can't decrement! (Set to 0)\n"
 operator|,
 name|Object
 operator|,
@@ -719,7 +719,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"CmUpdateRefCount: Obj %p Refs=%d, [Decremented]\n"
+literal|"CmUpdateRefCount: Obj %p Refs=%X, [Decremented]\n"
 operator|,
 name|Object
 operator|,
@@ -744,7 +744,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"CmUpdateRefCount: Method Obj %p Refs=%d, [Decremented]\n"
+literal|"CmUpdateRefCount: Method Obj %p Refs=%X, [Decremented]\n"
 operator|,
 name|Object
 operator|,
@@ -783,7 +783,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"CmUpdateRefCount: Obj %p Refs=%d, Force delete! (Set to 0)\n"
+literal|"CmUpdateRefCount: Obj %p Refs=%X, Force delete! (Set to 0)\n"
 operator|,
 name|Object
 operator|,
@@ -815,7 +815,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"CmUpdateRefCount: Unknown action (%d)\n"
+literal|"CmUpdateRefCount: Unknown action (%X)\n"
 operator|,
 name|Action
 operator|)
@@ -836,7 +836,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"CmUpdateRefCount: **** AE_ERROR **** Invalid Reference Count (0x%X) in object %p\n\n"
+literal|"CmUpdateRefCount: **** AE_ERROR **** Invalid Reference Count (%X) in object %p\n\n"
 operator|,
 name|Count
 operator|,
@@ -1412,7 +1412,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"CmRemoveReference: Obj %p Refs=%d\n"
+literal|"CmRemoveReference: Obj %p Refs=%X\n"
 operator|,
 name|Object
 operator|,

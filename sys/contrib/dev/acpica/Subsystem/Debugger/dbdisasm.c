@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbdisasm - parser op tree display routines  *              $Revision: 33 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbdisasm - parser op tree display routines  *              $Revision: 34 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -1652,6 +1652,16 @@ operator|&&
 operator|(
 name|WalkState
 operator|->
+name|Results
+operator|)
+operator|&&
+operator|(
+name|WalkState
+operator|->
+name|Results
+operator|->
+name|Results
+operator|.
 name|NumResults
 operator|)
 condition|)
@@ -1661,9 +1671,17 @@ argument_list|(
 name|WalkState
 operator|->
 name|Results
+operator|->
+name|Results
+operator|.
+name|ObjDesc
 index|[
 name|WalkState
 operator|->
+name|Results
+operator|->
+name|Results
+operator|.
 name|NumResults
 operator|-
 literal|1

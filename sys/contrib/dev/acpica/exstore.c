@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amstore - AML Interpreter object store support  *              $Revision: 116 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: amstore - AML Interpreter object store support  *              $Revision: 117 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -769,7 +769,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlExecStore/Index: Source must be Number/Buffer/String type, not 0x%x\n"
+literal|"AmlExecStore/Index: Source must be Number/Buffer/String type, not %X\n"
 operator|,
 name|ValDesc
 operator|->

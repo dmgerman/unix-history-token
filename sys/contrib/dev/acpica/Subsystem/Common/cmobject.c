@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: cmobject - ACPI object create/delete/size/cache routines  *              $Revision: 31 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: cmobject - ACPI object create/delete/size/cache routines  *              $Revision: 32 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -445,7 +445,7 @@ argument_list|(
 name|TRACE_ALLOCATIONS
 argument_list|,
 operator|(
-literal|"AllocateObjectDesc: %p Size 0x%x\n"
+literal|"AllocateObjectDesc: %p Size %X\n"
 operator|,
 name|Object
 operator|,
@@ -916,7 +916,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"CmGetSimpleObjectSize: Unsupported Reference opcode=0x%X in object %p\n"
+literal|"CmGetSimpleObjectSize: Unsupported Reference opcode=%X in object %p\n"
 operator|,
 name|InternalObj
 operator|->
@@ -940,7 +940,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"CmGetSimpleObjectSize: Unsupported type=0x%X in object %p\n"
+literal|"CmGetSimpleObjectSize: Unsupported type=%X in object %p\n"
 operator|,
 name|InternalObj
 operator|->
@@ -1259,7 +1259,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"CmGetPackageObjectSize: Pkg nested too deep (max %d)\n"
+literal|"CmGetPackageObjectSize: Pkg nested too deep (max %X)\n"
 operator|,
 name|MAX_PACKAGE_DEPTH
 operator|)

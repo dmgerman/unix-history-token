@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dsutils - Dispatcher utilities  *              $Revision: 48 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dsutils - Dispatcher utilities  *              $Revision: 50 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -283,6 +283,101 @@ case|case
 name|OPTYPE_NAMED_OBJECT
 case|:
 comment|/* Scope, method, etc. */
+comment|/*           * These opcodes allow TermArg(s) as operands and therefore          * method calls.  The result is used.          */
+if|if
+condition|(
+operator|(
+name|Op
+operator|->
+name|Parent
+operator|->
+name|Opcode
+operator|==
+name|AML_REGION_OP
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Parent
+operator|->
+name|Opcode
+operator|==
+name|AML_CREATE_FIELD_OP
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Parent
+operator|->
+name|Opcode
+operator|==
+name|AML_BIT_FIELD_OP
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Parent
+operator|->
+name|Opcode
+operator|==
+name|AML_BYTE_FIELD_OP
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Parent
+operator|->
+name|Opcode
+operator|==
+name|AML_WORD_FIELD_OP
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Parent
+operator|->
+name|Opcode
+operator|==
+name|AML_DWORD_FIELD_OP
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Parent
+operator|->
+name|Opcode
+operator|==
+name|AML_QWORD_FIELD_OP
+operator|)
+condition|)
+block|{
+name|DEBUG_PRINT
+argument_list|(
+name|TRACE_DISPATCH
+argument_list|,
+operator|(
+literal|"DsIsResultUsed: Result used, [Region or CreateField] opcode=%X Op=%X\n"
+operator|,
+name|Op
+operator|->
+name|Opcode
+operator|,
+name|Op
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_VALUE
+argument_list|(
+name|TRUE
+argument_list|)
+expr_stmt|;
+block|}
 name|DEBUG_PRINT
 argument_list|(
 name|TRACE_DISPATCH
@@ -394,7 +489,7 @@ block|{
 comment|/*          * Must pop the result stack (ObjDesc should be equal          *  to ResultObj)          */
 name|Status
 operator|=
-name|AcpiDsResultStackPop
+name|AcpiDsResultPop
 argument_list|(
 operator|&
 name|ObjDesc
@@ -437,6 +532,9 @@ parameter_list|,
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|Arg
+parameter_list|,
+name|UINT32
+name|ArgIndex
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -828,7 +926,7 @@ expr_stmt|;
 comment|/*              * Use value that was already previously returned              * by the evaluation of this argument              */
 name|Status
 operator|=
-name|AcpiDsResultStackPop
+name|AcpiDsResultPopFromBottom
 argument_list|(
 operator|&
 name|ObjDesc
@@ -993,7 +1091,7 @@ modifier|*
 name|Arg
 decl_stmt|;
 name|UINT32
-name|ArgsPushed
+name|ArgCount
 init|=
 literal|0
 decl_stmt|;
@@ -1004,11 +1102,11 @@ argument_list|,
 name|FirstArg
 argument_list|)
 expr_stmt|;
+comment|/* For all arguments in the list... */
 name|Arg
 operator|=
 name|FirstArg
 expr_stmt|;
-comment|/* For all arguments in the list... */
 while|while
 condition|(
 name|Arg
@@ -1021,6 +1119,8 @@ argument_list|(
 name|WalkState
 argument_list|,
 name|Arg
+argument_list|,
+name|ArgCount
 argument_list|)
 expr_stmt|;
 if|if
@@ -1042,7 +1142,7 @@ argument_list|,
 operator|(
 literal|"DsCreateOperands: Arg #%d (%p) done, Arg1=%p\n"
 operator|,
-name|ArgsPushed
+name|ArgCount
 operator|,
 name|Arg
 operator|,
@@ -1057,7 +1157,7 @@ name|Arg
 operator|->
 name|Next
 expr_stmt|;
-name|ArgsPushed
+name|ArgCount
 operator|++
 expr_stmt|;
 block|}
@@ -1071,7 +1171,7 @@ label|:
 comment|/*      * We must undo everything done above; meaning that we must      * pop everything off of the operand stack and delete those      * objects      */
 name|AcpiDsObjStackPopAndDelete
 argument_list|(
-name|ArgsPushed
+name|ArgCount
 argument_list|,
 name|WalkState
 argument_list|)
@@ -1084,7 +1184,7 @@ operator|(
 literal|"DsCreateOperands: Error while creating Arg %d - %s\n"
 operator|,
 operator|(
-name|ArgsPushed
+name|ArgCount
 operator|+
 literal|1
 operator|)

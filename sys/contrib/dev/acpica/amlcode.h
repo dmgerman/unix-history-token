@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: amlcode.h - Definitions for AML, as included in "definition blocks"  *                   Declarations and definitions contained herein are derived  *                   directly from the ACPI specification.  *       $Revision: 40 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: amlcode.h - Definitions for AML, as included in "definition blocks"  *                   Declarations and definitions contained herein are derived  *                   directly from the ACPI specification.  *       $Revision: 42 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -592,7 +592,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AML_BUFF_OP
+name|AML_TO_BUFFER_OP
 value|(UINT16) 0x96
 end_define
 
@@ -603,7 +603,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AML_DEC_STR_OP
+name|AML_TO_DECSTRING_OP
 value|(UINT16) 0x97
 end_define
 
@@ -614,7 +614,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AML_HEX_STR_OP
+name|AML_TO_HEXSTRING_OP
 value|(UINT16) 0x98
 end_define
 
@@ -625,8 +625,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AML_INT_OP
+name|AML_TO_INTEGER_OP
 value|(UINT16) 0x99
+end_define
+
+begin_comment
+comment|/* ACPI 2.0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AML_TO_STRING_OP
+value|(UINT16) 0x9c
 end_define
 
 begin_comment
@@ -1719,7 +1730,7 @@ begin_define
 define|#
 directive|define
 name|NUM_REGION_TYPES
-value|5
+value|7
 end_define
 
 begin_define
@@ -1757,6 +1768,23 @@ name|NUM_FIELD_NAMES
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|USER_REGION_BEGIN
+value|0x80
+end_define
+
+begin_comment
+comment|/*  * AML tables  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEFINE_AML_GLOBALS
+end_ifdef
+
 begin_comment
 comment|/* External declarations of the AML tables */
 end_comment
@@ -1778,199 +1806,6 @@ name|AcpiGbl_Pfx
 index|[
 name|NUM_OPCODES
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|NATIVE_CHAR
-modifier|*
-name|AcpiGbl_RegionTypes
-index|[
-name|NUM_REGION_TYPES
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|NATIVE_CHAR
-modifier|*
-name|AcpiGbl_MatchOps
-index|[
-name|NUM_MATCH_OPS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|NATIVE_CHAR
-modifier|*
-name|AcpiGbl_AccessTypes
-index|[
-name|NUM_ACCESS_TYPES
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|NATIVE_CHAR
-modifier|*
-name|AcpiGbl_UpdateRules
-index|[
-name|NUM_UPDATE_RULES
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|NATIVE_CHAR
-modifier|*
-name|AcpiGbl_FENames
-index|[
-name|NUM_FIELD_NAMES
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * AML tables  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEFINE_AML_GLOBALS
-end_ifdef
-
-begin_comment
-comment|/* Data used in keeping track of fields */
-end_comment
-
-begin_decl_stmt
-name|NATIVE_CHAR
-modifier|*
-name|AcpiGbl_FENames
-index|[
-name|NUM_FIELD_NAMES
-index|]
-init|=
-block|{
-literal|"skip"
-block|,
-literal|"?access?"
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* FE = Field Element */
-end_comment
-
-begin_comment
-comment|/* Region type decoding */
-end_comment
-
-begin_decl_stmt
-name|NATIVE_CHAR
-modifier|*
-name|AcpiGbl_RegionTypes
-index|[
-name|NUM_REGION_TYPES
-index|]
-init|=
-block|{
-literal|"SystemMemory"
-block|,
-literal|"SystemIO"
-block|,
-literal|"PCIConfig"
-block|,
-literal|"EmbeddedControl"
-block|,
-literal|"SMBus"
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|NATIVE_CHAR
-modifier|*
-name|AcpiGbl_MatchOps
-index|[
-name|NUM_MATCH_OPS
-index|]
-init|=
-block|{
-literal|"Error"
-block|,
-literal|"MTR"
-block|,
-literal|"MEQ"
-block|,
-literal|"MLE"
-block|,
-literal|"MLT"
-block|,
-literal|"MGE"
-block|,
-literal|"MGT"
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Access type decoding */
-end_comment
-
-begin_decl_stmt
-name|NATIVE_CHAR
-modifier|*
-name|AcpiGbl_AccessTypes
-index|[
-name|NUM_ACCESS_TYPES
-index|]
-init|=
-block|{
-literal|"AnyAcc"
-block|,
-literal|"ByteAcc"
-block|,
-literal|"WordAcc"
-block|,
-literal|"DWordAcc"
-block|,
-literal|"BlockAcc"
-block|,
-literal|"SMBSendRecvAcc"
-block|,
-literal|"SMBQuickAcc"
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Update rule decoding */
-end_comment
-
-begin_decl_stmt
-name|NATIVE_CHAR
-modifier|*
-name|AcpiGbl_UpdateRules
-index|[
-name|NUM_UPDATE_RULES
-index|]
-init|=
-block|{
-literal|"Preserve"
-block|,
-literal|"WriteAsOnes"
-block|,
-literal|"WriteAsZeros"
-block|}
 decl_stmt|;
 end_decl_stmt
 

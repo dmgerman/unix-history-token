@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbcmds - debug commands and output routines  *              $Revision: 41 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbcmds - debug commands and output routines  *              $Revision: 42 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -393,7 +393,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%s at 0x%p length 0x%X\n"
+literal|"%s at %p length %X\n"
 argument_list|,
 name|AcpiGbl_AcpiTableData
 index|[
@@ -595,7 +595,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Breakpoint 0x%X is beyond current address 0x%X\n"
+literal|"Breakpoint %X is beyond current address %X\n"
 argument_list|,
 name|Address
 argument_list|,
@@ -614,7 +614,7 @@ name|Address
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Breakpoint set at AML offset 0x%X\n"
+literal|"Breakpoint set at AML offset %X\n"
 argument_list|,
 name|Address
 argument_list|)
@@ -982,7 +982,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"ACPI Namespace by owner 0x%X:\n"
+literal|"ACPI Namespace by owner %X:\n"
 argument_list|,
 name|OwnerId
 argument_list|)
@@ -1468,7 +1468,7 @@ name|ACPI_TYPE_METHOD
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"  #Args %d  Concurrency %d"
+literal|"  #Args %d  Concurrency %X"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -1489,7 +1489,7 @@ name|ACPI_TYPE_NUMBER
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"  Value 0x%X"
+literal|"  Value %X"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -1519,7 +1519,7 @@ name|ACPI_TYPE_REGION
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"  SpaceId %d Address %X Length %X"
+literal|"  SpaceId %X Address %X Length %X"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -1546,7 +1546,7 @@ name|ACPI_TYPE_PACKAGE
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"  #Elements %d"
+literal|"  #Elements %X"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -1561,7 +1561,7 @@ name|ACPI_TYPE_BUFFER
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"  Length %d"
+literal|"  Length %X"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -1891,7 +1891,7 @@ else|else
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%32s (0x%p) - %s\n"
+literal|"%32s (%p) - %s\n"
 argument_list|,
 name|Buffer
 argument_list|,
