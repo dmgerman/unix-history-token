@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)position.c	5.2 (Berkeley) %G%"
+literal|"@(#)position.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -207,6 +207,7 @@ operator|)
 operator|>
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|in
@@ -236,12 +237,13 @@ operator|--
 name|cnt
 expr_stmt|;
 block|}
-continue|continue;
 block|}
 else|else
 operator|--
 name|cnt
 expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 name|nr
