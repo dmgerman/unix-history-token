@@ -223,6 +223,30 @@ value|0x1
 end_define
 
 begin_comment
+comment|/* Macros for extracting parts of a PCI address from an _ADR value. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_ADR_PCI_SLOT
+parameter_list|(
+name|adr
+parameter_list|)
+value|(((adr)& 0xffff0000)>> 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ADR_PCI_FUNC
+parameter_list|(
+name|adr
+parameter_list|)
+value|((adr)& 0xffff)
+end_define
+
+begin_comment
 comment|/*  * Entry points to ACPI from above are global functions defined in this  * file, sysctls, and I/O on the control device.  Entry points from below  * are interrupts (the SCI), notifies, task queue threads, and the thermal  * zone polling thread.  *  * ACPI tables and global shared data are protected by a global lock  * (acpi_mutex).    *  * Each ACPI device can have its own driver-specific mutex for protecting  * shared access to local data.  The ACPI_LOCK macros handle mutexes.  *  * Drivers that need to serialize access to functions (e.g., to route  * interrupts, get/set control paths, etc.) should use the sx lock macros  * (ACPI_SERIAL).  *  * ACPI-CA handles its own locking and should not be called with locks held.  *  * The most complicated path is:  *     GPE -> EC runs _Qxx -> _Qxx reads EC space -> GPE  */
 end_comment
 

@@ -793,15 +793,17 @@ block|{
 comment|/* XXX: We assume bus 0. */
 name|slot
 operator|=
+name|ACPI_ADR_PCI_SLOT
+argument_list|(
 name|addr
-operator|>>
-literal|16
+argument_list|)
 expr_stmt|;
 name|func
 operator|=
+name|ACPI_ADR_PCI_FUNC
+argument_list|(
 name|addr
-operator|&
-literal|0xffff
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
