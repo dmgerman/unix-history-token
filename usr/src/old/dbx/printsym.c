@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printsym.c 1.2 %G%"
+literal|"@(#)printsym.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,6 +99,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Maximum number of arguments to a function.  * This is used as a check for the possibility that the stack has been  * overwritten and therefore a saved argument pointer might indicate  * to an absurdly large number of arguments.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXARGSPASSED
+value|20
+end_define
 
 begin_comment
 comment|/*  * Return a pointer to the string for the name of the class that  * the given symbol belongs to.  */
@@ -591,6 +602,18 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|m
+operator|>
+name|MAXARGSPASSED
+condition|)
+block|{
+name|m
+operator|=
+name|MAXARGSPASSED
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|f
@@ -1515,6 +1538,28 @@ operator|.
 name|beginaddr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|nosource
+argument_list|(
+name|s
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"does not have source information\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"has source information\n"
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|RANGE
