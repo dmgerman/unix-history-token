@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	8.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -304,6 +304,17 @@ end_define
 
 begin_comment
 comment|/* /proc Filesystem */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUNT_AFS
+value|13
+end_define
+
+begin_comment
+comment|/* Andrew Filesystem */
 end_comment
 
 begin_define
