@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.50 (Berkeley) %G%"
+literal|"@(#)util.c	8.51 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5979,37 +5979,7 @@ operator|++
 operator|=
 literal|' '
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
-name|p
-operator|=
-name|macvalue
-argument_list|(
-literal|'_'
-argument_list|,
-name|CurEnv
-argument_list|)
-expr_stmt|;
-name|syslog
-argument_list|(
-name|LOG_ALERT
-argument_list|,
-literal|"POSSIBLE ATTACK from %s: newline in string \"%s\""
-argument_list|,
-name|p
-operator|==
-name|NULL
-condition|?
-literal|"[UNKNOWN]"
-else|:
-name|p
-argument_list|,
-name|bp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
+comment|/* #ifdef LOG 	p = macvalue('_', CurEnv); 	syslog(LOG_ALERT, "POSSIBLE ATTACK from %s: newline in string \"%s\"", 		p == NULL ? "[UNKNOWN]" : p, bp); #endif */
 return|return
 name|bp
 return|;
