@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.9 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1868,6 +1868,29 @@ name|testselfdestruct
 label|:
 if|if
 condition|(
+name|tTd
+argument_list|(
+literal|26
+argument_list|,
+literal|8
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"testselfdestruct: "
+argument_list|)
+expr_stmt|;
+name|printaddr
+argument_list|(
+name|a
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|a
 operator|->
 name|q_alias
@@ -1880,13 +1903,21 @@ operator|&
 name|e
 operator|->
 name|e_from
+operator|&&
+name|bitset
+argument_list|(
+name|QDONTSEND
+argument_list|,
+name|a
+operator|->
+name|q_flags
+argument_list|)
 condition|)
 block|{
 name|q
 operator|=
-name|a
-operator|->
-name|q_next
+operator|*
+name|sendq
 expr_stmt|;
 while|while
 condition|(
@@ -1911,15 +1942,6 @@ name|q_next
 expr_stmt|;
 if|if
 condition|(
-name|bitset
-argument_list|(
-name|QDONTSEND
-argument_list|,
-name|a
-operator|->
-name|q_flags
-argument_list|)
-operator|&&
 name|q
 operator|==
 name|NULL
