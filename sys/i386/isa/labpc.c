@@ -2016,7 +2016,7 @@ name|unit
 operator|++
 expr_stmt|;
 return|return
-literal|1
+literal|0x20
 return|;
 block|}
 else|else
