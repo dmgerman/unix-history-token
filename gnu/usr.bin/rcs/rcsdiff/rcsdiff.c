@@ -98,7 +98,7 @@ argument|rcsdiffId
 argument_list|,
 literal|"rcsdiff"
 argument_list|,
-literal|"$Id: rcsdiff.c,v 1.3 1995/10/28 21:50:36 peter Exp $"
+literal|"$Id: rcsdiff.c,v 1.4 1995/10/29 22:06:42 peter Exp $"
 argument_list|)
 end_macro
 
@@ -474,8 +474,8 @@ name|c
 operator|==
 literal|'L'
 operator|&&
-operator|++
 name|file_labels
+operator|++
 operator|==
 literal|2
 condition|)
