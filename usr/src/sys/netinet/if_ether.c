@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_ether.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_ether.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1711,6 +1711,8 @@ name|s_addr
 condition|)
 block|{
 comment|/* ensure we have a table entry */
+if|if
+condition|(
 name|at
 operator|=
 name|arptnew
@@ -1718,7 +1720,8 @@ argument_list|(
 operator|&
 name|isaddr
 argument_list|)
-expr_stmt|;
+condition|)
+block|{
 name|bcopy
 argument_list|(
 operator|(
@@ -1749,6 +1752,7 @@ name|at_flags
 operator||=
 name|ATF_COM
 expr_stmt|;
+block|}
 block|}
 name|splx
 argument_list|(
@@ -2378,6 +2382,9 @@ condition|)
 continue|continue;
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|at
 operator|->
 name|at_timer
@@ -2619,6 +2626,24 @@ operator|->
 name|sin_addr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|at
+operator|==
+name|NULL
+condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EADDRNOTAVAIL
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|ar
