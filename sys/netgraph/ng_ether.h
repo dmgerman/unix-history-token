@@ -118,6 +118,52 @@ block|}
 enum|;
 end_enum
 
+begin_comment
+comment|/* Per-node private data */
+end_comment
+
+begin_struct
+struct|struct
+name|ng_ether_private
+block|{
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+comment|/* associated interface */
+name|hook_p
+name|upper
+decl_stmt|;
+comment|/* upper hook connection */
+name|hook_p
+name|lower
+decl_stmt|;
+comment|/* lower OR orphan hook connection */
+name|u_char
+name|lowerOrphan
+decl_stmt|;
+comment|/* whether lower is lower or orphan */
+name|u_char
+name|autoSrcAddr
+decl_stmt|;
+comment|/* always overwrite source address */
+name|u_char
+name|promisc
+decl_stmt|;
+comment|/* promiscuous mode enabled */
+name|u_long
+name|hwassist
+decl_stmt|;
+comment|/* hardware checksum capabilities */
+name|u_int
+name|flags
+decl_stmt|;
+comment|/* flags e.g. really die */
+block|}
+struct|;
+end_struct
+
 begin_endif
 endif|#
 directive|endif
