@@ -1330,7 +1330,7 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|10000
+literal|100000
 argument_list|)
 expr_stmt|;
 name|i
@@ -1390,6 +1390,32 @@ name|id
 operator|&
 literal|0x000000ff
 expr_stmt|;
+if|if
+condition|(
+name|id
+operator|==
+literal|0
+operator|||
+name|id
+operator|==
+literal|0xffffffff
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|codec
+operator|->
+name|dev
+argument_list|,
+literal|"ac97 codec invalid or not present (id == %x)\n"
+argument_list|,
+name|id
+argument_list|)
+expr_stmt|;
+return|return
+name|ENODEV
+return|;
+block|}
 for|for
 control|(
 name|i
@@ -1549,7 +1575,7 @@ name|codec
 operator|->
 name|dev
 argument_list|,
-literal|"ac97 codec id 0x%8x"
+literal|"ac97 codec id 0x%08x"
 argument_list|,
 name|id
 argument_list|)
@@ -1935,11 +1961,17 @@ return|return
 operator|-
 literal|1
 return|;
+if|if
+condition|(
 name|ac97_initmixer
 argument_list|(
 name|codec
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|mix_setdevs
 argument_list|(
 name|m
