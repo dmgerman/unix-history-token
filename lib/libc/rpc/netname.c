@@ -87,13 +87,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<limits.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -105,7 +111,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<unistd.h>
 end_include
 
 begin_ifndef
@@ -143,6 +149,41 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|TYPE_BIT
+parameter_list|(
+name|type
+parameter_list|)
+value|(sizeof (type) * CHAR_BIT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_SIGNED
+parameter_list|(
+name|type
+parameter_list|)
+value|(((type) -1)< 0)
+end_define
+
+begin_comment
+comment|/* ** 302 / 1000 is log10(2.0) rounded up. ** Subtract one for the sign bit if the type is signed; ** add one for integer division truncation; ** add one more for a minus sign if the type is signed. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INT_STRLEN_MAXIMUM
+parameter_list|(
+name|type
+parameter_list|)
+define|\
+value|((TYPE_BIT(type) - TYPE_SIGNED(type)) * 302 / 1000 + 1 + TYPE_SIGNED(type))
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -265,11 +306,6 @@ name|char
 modifier|*
 name|dfltdom
 decl_stmt|;
-define|#
-directive|define
-name|MAXIPRINT
-value|(20)
-comment|/* max length of printed integer */
 if|if
 condition|(
 name|domain
@@ -308,7 +344,10 @@ argument_list|)
 operator|+
 literal|1
 operator|+
-name|MAXIPRINT
+name|INT_STRLEN_MAXIMUM
+argument_list|(
+name|u_long
+argument_list|)
 operator|+
 literal|1
 operator|+
