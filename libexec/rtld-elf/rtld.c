@@ -6407,9 +6407,6 @@ argument_list|(
 literal|"rtld_exit()"
 argument_list|)
 expr_stmt|;
-name|wlock_acquire
-argument_list|()
-expr_stmt|;
 comment|/* Clear all the reference counts so the fini functions will be called. */
 for|for
 control|(
@@ -6432,9 +6429,6 @@ operator|->
 name|refcount
 operator|=
 literal|0
-expr_stmt|;
-name|wlock_release
-argument_list|()
 expr_stmt|;
 name|objlist_call_fini
 argument_list|(
