@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -108,6 +114,20 @@ include|#
 directive|include
 file|"extern.h"
 end_include
+
+begin_comment
+comment|/*  * For -C option: determine whether a byte is a valid character in the  * current character set (as defined by LC_CTYPE).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISCHAR
+parameter_list|(
+name|c
+parameter_list|)
+value|(iscntrl(c) || isprint(c))
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -706,6 +726,8 @@ name|STR
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -748,6 +770,8 @@ modifier|*
 name|p
 decl_stmt|;
 name|int
+name|Cflag
+decl_stmt|,
 name|cflag
 decl_stmt|,
 name|dflag
@@ -766,6 +790,8 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
+name|Cflag
+operator|=
 name|cflag
 operator|=
 name|dflag
@@ -785,7 +811,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cdsu"
+literal|"Ccdsu"
 argument_list|)
 operator|)
 operator|!=
@@ -801,11 +827,27 @@ name|ch
 condition|)
 block|{
 case|case
+literal|'C'
+case|:
+name|Cflag
+operator|=
+literal|1
+expr_stmt|;
+name|cflag
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
 literal|'c'
 case|:
 name|cflag
 operator|=
 literal|1
+expr_stmt|;
+name|Cflag
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -885,7 +927,7 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * tr -ds [-c] string1 string2 	 * Delete all characters (or complemented characters) in string1. 	 * Squeeze all characters in string2. 	 */
+comment|/* 	 * tr -ds [-Cc] string1 string2 	 * Delete all characters (or complemented characters) in string1. 	 * Squeeze all characters in string2. 	 */
 if|if
 condition|(
 name|dflag
@@ -914,6 +956,8 @@ operator|&
 name|s1
 argument_list|,
 name|cflag
+argument_list|,
+name|Cflag
 argument_list|)
 expr_stmt|;
 name|setup
@@ -927,6 +971,8 @@ index|]
 argument_list|,
 operator|&
 name|s2
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -987,7 +1033,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * tr -d [-c] string1 	 * Delete all characters (or complemented characters) in string1. 	 */
+comment|/* 	 * tr -d [-Cc] string1 	 * Delete all characters (or complemented characters) in string1. 	 */
 if|if
 condition|(
 name|dflag
@@ -1013,6 +1059,8 @@ operator|&
 name|s1
 argument_list|,
 name|cflag
+argument_list|,
+name|Cflag
 argument_list|)
 expr_stmt|;
 while|while
@@ -1048,7 +1096,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * tr -s [-c] string1 	 * Squeeze all characters (or complemented characters) in string1. 	 */
+comment|/* 	 * tr -s [-Cc] string1 	 * Squeeze all characters (or complemented characters) in string1. 	 */
 if|if
 condition|(
 name|sflag
@@ -1070,6 +1118,8 @@ operator|&
 name|s1
 argument_list|,
 name|cflag
+argument_list|,
+name|Cflag
 argument_list|)
 expr_stmt|;
 for|for
@@ -1120,7 +1170,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * tr [-cs] string1 string2 	 * Replace all characters (or complemented characters) in string1 with 	 * the character in the same position in string2.  If the -s option is 	 * specified, squeeze all the characters in string2. 	 */
+comment|/* 	 * tr [-Ccs] string1 string2 	 * Replace all characters (or complemented characters) in string1 with 	 * the character in the same position in string2.  If the -s option is 	 * specified, squeeze all the characters in string2. 	 */
 if|if
 condition|(
 operator|!
@@ -1150,6 +1200,8 @@ expr_stmt|;
 if|if
 condition|(
 name|cflag
+operator|||
+name|Cflag
 condition|)
 for|for
 control|(
@@ -1306,6 +1358,48 @@ name|ch
 else|:
 name|cnt
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|Cflag
+condition|)
+for|for
+control|(
+name|cnt
+operator|=
+literal|0
+operator|,
+name|p
+operator|=
+name|string1
+init|;
+name|cnt
+operator|<
+name|NCHARS
+condition|;
+operator|++
+name|p
+operator|,
+operator|++
+name|cnt
+control|)
+operator|*
+name|p
+operator|=
+operator|*
+name|p
+operator|==
+name|OOBCH
+operator|&&
+name|ISCHAR
+argument_list|(
+name|cnt
+argument_list|)
+condition|?
+name|ch
+else|:
+name|cnt
+expr_stmt|;
 if|if
 condition|(
 name|sflag
@@ -1404,6 +1498,8 @@ parameter_list|,
 name|str
 parameter_list|,
 name|cflag
+parameter_list|,
+name|Cflag
 parameter_list|)
 name|int
 modifier|*
@@ -1419,6 +1515,9 @@ name|str
 decl_stmt|;
 name|int
 name|cflag
+decl_stmt|;
+name|int
+name|Cflag
 decl_stmt|;
 block|{
 name|int
@@ -1488,6 +1587,40 @@ operator|!
 operator|*
 name|p
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|Cflag
+condition|)
+for|for
+control|(
+name|cnt
+operator|=
+literal|0
+init|;
+name|cnt
+operator|<
+name|NCHARS
+condition|;
+name|cnt
+operator|++
+control|)
+name|string
+index|[
+name|cnt
+index|]
+operator|=
+operator|!
+name|string
+index|[
+name|cnt
+index|]
+operator|&&
+name|ISCHAR
+argument_list|(
+name|cnt
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1506,13 +1639,13 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: tr [-csu] string1 string2"
+literal|"usage: tr [-Ccsu] string1 string2"
 argument_list|,
-literal|"       tr [-cu] -d string1"
+literal|"       tr [-Ccu] -d string1"
 argument_list|,
-literal|"       tr [-cu] -s string1"
+literal|"       tr [-Ccu] -s string1"
 argument_list|,
-literal|"       tr [-cu] -ds string1 string2"
+literal|"       tr [-Ccu] -ds string1 string2"
 argument_list|)
 expr_stmt|;
 name|exit
