@@ -4692,6 +4692,23 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Set up the PCI DMA control register. */
+if|if
+condition|(
+name|pci_read_config
+argument_list|(
+name|sc
+operator|->
+name|bge_dev
+argument_list|,
+name|BGE_PCI_PCISTATE
+argument_list|,
+literal|4
+argument_list|)
+operator|&
+name|BGE_PCISTATE_PCI_BUSMODE
+condition|)
+block|{
+comment|/* Conventional PCI bus */
 name|pci_write_config
 argument_list|(
 name|sc
@@ -4704,11 +4721,33 @@ name|BGE_PCI_READ_CMD
 operator||
 name|BGE_PCI_WRITE_CMD
 operator||
-literal|0x0F
+literal|0x3F000F
 argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* PCI-X bus */
+name|pci_write_config
+argument_list|(
+name|sc
+operator|->
+name|bge_dev
+argument_list|,
+name|BGE_PCI_DMA_RW_CTL
+argument_list|,
+name|BGE_PCI_READ_CMD
+operator||
+name|BGE_PCI_WRITE_CMD
+operator||
+literal|0x1B000F
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Set up general mode register. 	 */
 name|CSR_WRITE_4
 argument_list|(
