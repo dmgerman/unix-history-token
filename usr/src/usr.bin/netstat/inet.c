@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet.c	8.3 (Berkeley) %G%"
+literal|"@(#)inet.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1056,7 +1056,7 @@ argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
-name|tcps_predack
+name|tcps_preddat
 argument_list|,
 literal|"\t%d correct data packet header prediction%s\n"
 argument_list|)
@@ -1065,7 +1065,7 @@ name|p3
 argument_list|(
 name|tcps_pcbcachemiss
 argument_list|,
-literal|"\t%d cache miss%s\n"
+literal|"\t%d PCB cache miss%s\n"
 argument_list|)
 expr_stmt|;
 undef|#
