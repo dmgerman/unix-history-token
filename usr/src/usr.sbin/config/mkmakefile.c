@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * mkmakefile.c	1.15	82/07/13  *	Functions in this file build the makefile from the files list  *	and the information in the config table  */
+comment|/*  * mkmakefile.c	1.16	82/07/21  *	Functions in this file build the makefile from the files list  *	and the information in the config table  */
 end_comment
 
 begin_include
@@ -348,6 +348,28 @@ name|op
 operator|->
 name|op_next
 control|)
+if|if
+condition|(
+name|op
+operator|->
+name|op_value
+condition|)
+name|fprintf
+argument_list|(
+name|ofp
+argument_list|,
+literal|" -D%s=\"%s\""
+argument_list|,
+name|op
+operator|->
+name|op_name
+argument_list|,
+name|op
+operator|->
+name|op_value
+argument_list|)
+expr_stmt|;
+else|else
 name|fprintf
 argument_list|(
 name|ofp
