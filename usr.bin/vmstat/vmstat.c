@@ -681,10 +681,6 @@ index|[
 name|_POSIX2_LINE_MAX
 index|]
 decl_stmt|;
-name|char
-modifier|*
-name|err_str
-decl_stmt|;
 name|memf
 operator|=
 name|nlistf
@@ -1318,16 +1314,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
-name|char
-name|buf
-index|[
-literal|30
-index|]
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -2117,7 +2103,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%2d%2d%2d"
+literal|"%2d %2d %2d"
 argument_list|,
 name|total
 operator|.
@@ -2486,7 +2472,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" procs      memory      page%*s"
+literal|" procs        memory      page%*s"
 argument_list|,
 literal|19
 argument_list|,
@@ -2543,7 +2529,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" r b w     avm    fre  flt  re  pi  po  fr  sr "
+literal|" r  b  w     avm    fre  flt  re  pi  po  fr  sr "
 argument_list|)
 expr_stmt|;
 for|for
@@ -4157,13 +4143,6 @@ modifier|*
 name|kmsp
 decl_stmt|;
 name|char
-modifier|*
-name|kmemnames
-index|[
-name|MAX_KMSTATS
-index|]
-decl_stmt|;
-name|char
 name|buf
 index|[
 literal|1024
@@ -4454,7 +4433,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %8ld %6ld %10ld %7ld %10ld\n"
+literal|" %8ld %6ld %10lld %7ld %10ld\n"
 argument_list|,
 name|kp
 operator|->
@@ -4758,7 +4737,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%13s%6ld%6ldK%7ldK%6ldK%9ld%5u%6u"
+literal|"%13s%6ld%6ldK%7ldK%6ldK%9lld%5u%6u"
 argument_list|,
 name|ks
 operator|->
