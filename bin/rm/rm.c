@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rm.c,v 1.11 1993/11/16 23:59:17 jtc Exp $"
+literal|"$Id: rm.c,v 1.3 1993/11/22 23:53:17 jtc Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -378,6 +378,10 @@ expr_stmt|;
 block|}
 name|exit
 argument_list|(
+name|fflag
+condition|?
+literal|0
+else|:
 name|retval
 argument_list|)
 expr_stmt|;
