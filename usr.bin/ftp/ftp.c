@@ -5604,6 +5604,11 @@ argument_list|(
 literal|"Passive mode refused.\n"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|data
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -5644,6 +5649,11 @@ block|{
 name|printf
 argument_list|(
 literal|"Passive mode address scan failure. Shouldn't happen!\n"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|data
 argument_list|)
 expr_stmt|;
 return|return
@@ -5729,6 +5739,11 @@ block|{
 name|perror
 argument_list|(
 literal|"ftp: connect"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|data
 argument_list|)
 expr_stmt|;
 return|return
