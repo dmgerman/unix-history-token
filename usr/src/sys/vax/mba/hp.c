@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.14	81/02/25	*/
+comment|/*	hp.c	4.15	81/02/25	*/
 end_comment
 
 begin_include
@@ -1542,6 +1542,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|harderr
 argument_list|(
 name|bp
@@ -1573,6 +1574,7 @@ argument_list|,
 name|HPER2_BITS
 argument_list|)
 expr_stmt|;
+block|}
 name|hpaddr
 operator|->
 name|hpcs1
