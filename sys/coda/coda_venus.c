@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/cfs/coda_venus.c,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  *  $Id: coda_venus.c,v 1.4 1998/09/13 13:57:59 rvb Exp $  *   */
+comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/cfs/coda_venus.c,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  *  $Id: coda_venus.c,v 1.5 1998/10/28 19:33:50 rvb Exp $  *   */
 end_comment
 
 begin_include
@@ -192,6 +192,14 @@ parameter_list|)
 define|\
 value|do { \ 		(top)->va_type = (fromp)->va_type; \ 		(top)->va_mode = (fromp)->va_mode; \ 		(top)->va_nlink = (fromp)->va_nlink; \ 		(top)->va_uid = (fromp)->va_uid; \ 		(top)->va_gid = (fromp)->va_gid; \ 		(top)->va_fileid = (fromp)->va_fileid; \ 		(top)->va_size = (fromp)->va_size; \ 		(top)->va_blocksize = (fromp)->va_blocksize; \ 		(top)->va_atime = (fromp)->va_atime; \ 		(top)->va_mtime = (fromp)->va_mtime; \ 		(top)->va_ctime = (fromp)->va_ctime; \ 		(top)->va_gen = (fromp)->va_gen; \ 		(top)->va_flags = (fromp)->va_flags; \ 		(top)->va_rdev = (fromp)->va_rdev; \ 		(top)->va_bytes = (fromp)->va_bytes; \ 		(top)->va_filerev = (fromp)->va_filerev; \ 	} while (0)
 end_define
+
+begin_decl_stmt
+name|int
+name|coda_kernel_version
+init|=
+name|CODA_KERNEL_VERSION
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int
@@ -1505,12 +1513,20 @@ operator|=
 operator|*
 name|fid
 expr_stmt|;
+comment|/* NOTE:      * Between version 1 and version 2 we have added an extra flag field      * to this structure.  But because the string was at the end and because      * of the wierd way we represent strings by having the slot point to      * where the string characters are in the "heap", we can just slip the      * flag parameter in after the string slot pointer and veni that don't      * know better won't see this new flag field ...      * Otherwise we'd need two different venus_lookup functions.      */
 name|inp
 operator|->
 name|name
 operator|=
 name|Isize
 expr_stmt|;
+name|inp
+operator|->
+name|flags
+operator|=
+name|CLU_CASE_SENSITIVE
+expr_stmt|;
+comment|/* doesn't really matter for BSD */
 name|STRCPY
 argument_list|(
 name|name

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/coda/coda.h,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $   *  $Id: coda.h,v 1.4 1998/09/13 13:57:59 rvb Exp $  *   */
+comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/coda/coda.h,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $   *  $Id: coda.h,v 1.5 1998/10/28 19:33:49 rvb Exp $  *   */
 end_comment
 
 begin_comment
@@ -124,6 +124,25 @@ name|caddr_t
 typedef|;
 end_typedef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DOS
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|__int64
+name|u_quad_t
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -132,6 +151,11 @@ name|long
 name|u_quad_t
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -799,7 +823,7 @@ parameter_list|(
 name|fid
 parameter_list|)
 define|\
-value|(fid) ? ((fid)->Unique + ((fid)->Vnode<<10) + ((fid)->Volume<<20)) : 0
+value|((fid) ? ((fid)->Unique + ((fid)->Vnode<<10) + ((fid)->Volume<<20)) : 0)
 end_define
 
 begin_endif
@@ -1278,6 +1302,57 @@ name|VC_MAXMSGSIZE
 value|sizeof(union inputArgs)+sizeof(union outputArgs) +\                             VC_MAXDATASIZE
 end_define
 
+begin_define
+define|#
+directive|define
+name|CIOC_KERNEL_VERSION
+value|_IOWR('c', 10, sizeof (int))
+end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* don't care about kernel version number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CODA_KERNEL_VERSION
+value|0
+end_define
+
+begin_comment
+comment|/* The old venus 4.6 compatible interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CODA_KERNEL_VERSION
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* venus_lookup gets an extra parameter to aid windows.*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CODA_KERNEL_VERSION
+value|2
+end_define
+
 begin_comment
 comment|/*  *        Venus<-> Coda  RPC arguments  */
 end_comment
@@ -1610,6 +1685,24 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* lookup flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLU_CASE_SENSITIVE
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLU_CASE_INSENSITIVE
+value|0x02
+end_define
+
+begin_comment
 comment|/* coda_lookup: */
 end_comment
 
@@ -1628,6 +1721,9 @@ name|int
 name|name
 decl_stmt|;
 comment|/* Place holder for data. */
+name|int
+name|flags
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2622,6 +2718,49 @@ block|}
 struct|;
 end_struct
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__CYGWIN32__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|DJGPP
+argument_list|)
+end_if
+
+begin_struct
+struct|struct
+name|PioctlData
+block|{
+name|unsigned
+name|long
+name|cmd
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|path
+decl_stmt|;
+name|int
+name|follow
+decl_stmt|;
+name|struct
+name|ViceIoctl
+name|vi
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_struct
 struct|struct
 name|PioctlData
@@ -2641,6 +2780,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
