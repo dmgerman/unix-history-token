@@ -153,13 +153,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"/sys/i386/isa/rpreg.h"
+file|<i386/isa/rpreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"/sys/i386/isa/rpvar.h"
+file|<i386/isa/rpvar.h>
 end_include
 
 begin_ifndef
