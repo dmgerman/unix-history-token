@@ -6717,7 +6717,7 @@ name|EVENTHANDLER_REGISTER
 argument_list|(
 name|shutdown_pre_sync
 argument_list|,
-name|shutdown_kproc
+name|kproc_shutdown
 argument_list|,
 name|bufdaemonproc
 argument_list|,
@@ -6758,7 +6758,7 @@ init|;
 condition|;
 control|)
 block|{
-name|kproc_suspend_loop
+name|kthread_suspend_check
 argument_list|(
 name|bufdaemonproc
 argument_list|)

@@ -380,7 +380,7 @@ end_comment
 
 begin_function
 name|int
-name|suspend_kproc
+name|kthread_suspend
 parameter_list|(
 name|struct
 name|proc
@@ -431,7 +431,7 @@ name|p_siglist
 argument_list|,
 name|PPAUSE
 argument_list|,
-literal|"suspkp"
+literal|"suspkt"
 argument_list|,
 name|timo
 argument_list|)
@@ -441,7 +441,7 @@ end_function
 
 begin_function
 name|int
-name|resume_kproc
+name|kthread_resume
 parameter_list|(
 name|struct
 name|proc
@@ -497,7 +497,7 @@ end_function
 
 begin_function
 name|void
-name|kproc_suspend_loop
+name|kthread_suspend_check
 parameter_list|(
 name|struct
 name|proc
@@ -540,7 +540,7 @@ name|p_siglist
 argument_list|,
 name|PPAUSE
 argument_list|,
-literal|"kpsusp"
+literal|"ktsusp"
 argument_list|,
 literal|0
 argument_list|)

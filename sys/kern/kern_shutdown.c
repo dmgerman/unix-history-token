@@ -2308,7 +2308,7 @@ end_expr_stmt
 
 begin_function
 name|void
-name|shutdown_kproc
+name|kproc_shutdown
 parameter_list|(
 name|void
 modifier|*
@@ -2353,7 +2353,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|suspend_kproc
+name|kthread_suspend
 argument_list|(
 name|p
 argument_list|,
