@@ -47,6 +47,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|suser_permitted
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* suser_xxx() is permitted to return 0 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|cold
 decl_stmt|;
 end_decl_stmt

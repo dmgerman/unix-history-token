@@ -4314,6 +4314,16 @@ block|{
 if|if
 condition|(
 operator|!
+name|suser_permitted
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
+if|if
+condition|(
+operator|!
 name|cred
 operator|&&
 operator|!
