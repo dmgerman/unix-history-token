@@ -683,14 +683,6 @@ condition|)
 block|{
 comment|/* but not our request */
 comment|/* 		 * It would be nice to sleep on the lock 		 * itself, but it could get moved if the 		 * table expands during the wait.  Wait on 		 * the lock address + 1 (since waiting on 		 * 0 isn't allowed) instead.  It isn't 		 * exactly unique, but we won't have many 		 * conflicts.  The worst effect of a 		 * conflict would be an additional 		 * schedule and time through this loop. 		 */
-while|while
-condition|(
-name|lock
-operator|->
-name|stripe
-condition|)
-block|{
-comment|/* wait for it to become free */
 ifdef|#
 directive|ifdef
 name|VINUMDEBUG
@@ -742,6 +734,19 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|plex
+operator|->
+name|lockwaits
+operator|++
+expr_stmt|;
+comment|/* waited one more time */
+while|while
+condition|(
+name|lock
+operator|->
+name|stripe
+condition|)
+comment|/* wait for it to become free */
 name|tsleep
 argument_list|(
 operator|(
@@ -763,13 +768,6 @@ operator|*
 name|hz
 argument_list|)
 expr_stmt|;
-name|plex
-operator|->
-name|lockwaits
-operator|++
-expr_stmt|;
-comment|/* waited one more time */
-block|}
 break|break;
 comment|/* out of the inner level loop */
 block|}
