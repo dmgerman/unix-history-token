@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)csh.c	5.35 (Berkeley) %G%"
+literal|"@(#)csh.c	5.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -627,6 +627,16 @@ expr_stmt|;
 name|gid
 operator|=
 name|getgid
+argument_list|()
+expr_stmt|;
+name|euid
+operator|=
+name|geteuid
+argument_list|()
+expr_stmt|;
+name|egid
+operator|=
+name|getegid
 argument_list|()
 expr_stmt|;
 comment|/*      * We are a login shell if: 1. we were invoked as -<something> and we had      * no arguments 2. or we were invoked only with the -l flag      */
@@ -1730,13 +1740,11 @@ operator|&&
 operator|(
 name|uid
 operator|!=
-name|geteuid
-argument_list|()
+name|euid
 operator|||
 name|gid
 operator|!=
-name|getegid
-argument_list|()
+name|egid
 operator|)
 condition|)
 block|{
@@ -2632,6 +2640,40 @@ operator|*
 name|dp
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|*
+name|cp
+operator|!=
+literal|'/'
+operator|||
+operator|*
+name|cp
+operator|==
+literal|'\0'
+operator|)
+operator|&&
+operator|(
+name|euid
+operator|==
+literal|0
+operator|||
+name|uid
+operator|==
+literal|0
+operator|)
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|csherr
+argument_list|,
+literal|"Warning: imported path contains relative components\n"
+argument_list|)
 expr_stmt|;
 name|pv
 index|[
@@ -5300,6 +5342,16 @@ expr_stmt|;
 undef|#
 directive|undef
 name|DIRAPPEND
+if|if
+condition|(
+name|euid
+operator|!=
+literal|0
+operator|&&
+name|uid
+operator|!=
+literal|0
+condition|)
 operator|*
 name|blkp
 operator|++
