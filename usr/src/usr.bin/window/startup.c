@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)startup.c	1.2 83/07/22"
+literal|"@(#)startup.c	1.3 83/07/29"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,7 +81,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%s/.windowcf"
+literal|"%s/.windowrc"
 argument_list|,
 name|home
 argument_list|)
