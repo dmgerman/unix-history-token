@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.52 2003/06/11 16:53:26 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.53 2003/06/17 12:29:20 imp Exp   */
 end_comment
 
 begin_comment
@@ -4713,6 +4713,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCMCIA_VENDOR_FREECOM
+value|0xffffffff
+end_define
+
+begin_comment
+comment|/* Freecom */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_VENDOR_GEMTEK
 value|0xffffffff
 end_define
@@ -5636,6 +5647,27 @@ define|#
 directive|define
 name|PCMCIA_STR_EXP_EXPMULTIMEDIA
 value|"EXP IDE/ATAPI DVD Card"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_FREECOM_PCCARDIDE
+value|{ "FREECOM", "PCCARD-IDE", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_FREECOM_PCCARDIDE
+value|0xffffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_FREECOM_PCCARDIDE
+value|"FREECOM PCCARD-IDE"
 end_define
 
 begin_define
