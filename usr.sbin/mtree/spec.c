@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: spec.c,v 1.7 1997/10/01 06:30:02 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1007,6 +1007,11 @@ argument_list|(
 name|m
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|m
 argument_list|)
 expr_stmt|;
 break|break;
