@@ -36,7 +36,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: usleep.c,v 1.19 1997/10/17 09:40:08 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,6 +52,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<time.h>
 end_include
 
@@ -62,7 +68,7 @@ file|<unistd.h>
 end_include
 
 begin_function
-name|void
+name|int
 name|usleep
 parameter_list|(
 name|useconds
@@ -79,17 +85,29 @@ decl_stmt|;
 if|if
 condition|(
 name|useconds
+operator|>=
+literal|1000000
+condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+if|if
+condition|(
+name|useconds
 condition|)
 block|{
 name|time_to_sleep
 operator|.
 name|tv_nsec
 operator|=
-operator|(
 name|useconds
-operator|%
-literal|1000000
-operator|)
 operator|*
 literal|1000
 expr_stmt|;
@@ -97,13 +115,9 @@ name|time_to_sleep
 operator|.
 name|tv_sec
 operator|=
-name|useconds
-operator|/
-literal|1000000
+literal|0
 expr_stmt|;
-operator|(
-name|void
-operator|)
+return|return
 name|nanosleep
 argument_list|(
 operator|&
@@ -111,8 +125,11 @@ name|time_to_sleep
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
+return|;
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
