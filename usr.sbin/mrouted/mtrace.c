@@ -7499,8 +7499,6 @@ sizeof|sizeof
 argument_list|(
 name|timebuf
 argument_list|)
-operator|-
-literal|1
 argument_list|,
 literal|"%b %e %k:%M:%S"
 argument_list|,
