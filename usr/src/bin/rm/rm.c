@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)rm.c	4.11 (Berkeley) %G%"
+literal|"@(#)rm.c	4.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dir.h>
+file|<sys/dir.h>
 end_include
 
 begin_function_decl
@@ -521,6 +521,8 @@ condition|)
 block|{
 name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"rm: "
 argument_list|)
 expr_stmt|;
