@@ -1890,6 +1890,10 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|term__flush
+argument_list|()
+expr_stmt|;
+comment|/* flush any buffered output */
 operator|(
 name|void
 operator|)
@@ -1899,10 +1903,6 @@ name|el
 argument_list|)
 expr_stmt|;
 comment|/* make sure the tty is set up correctly */
-name|term__flush
-argument_list|()
-expr_stmt|;
-comment|/* flush any buffered output */
 if|if
 condition|(
 name|el
