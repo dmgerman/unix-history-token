@@ -1036,22 +1036,6 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|static
-name|int
-name|once
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|once
-operator|++
-condition|)
-name|cdevsw_add
-argument_list|(
-operator|&
-name|mse_cdevsw
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Check for each mouse type in the table. 	 */
 name|i
 operator|=

@@ -2188,14 +2188,6 @@ argument_list|,
 name|SHUTDOWN_PRI_DEFAULT
 argument_list|)
 expr_stmt|;
-comment|/*      * syscons's cdevsw must be registered from here. As syscons and      * pcvt share the same major number, their cdevsw cannot be      * registered at module loading/initialization time or by SYSINIT.      */
-name|cdevsw_add
-argument_list|(
-operator|&
-name|sc_cdevsw
-argument_list|)
-expr_stmt|;
-comment|/* XXX do this just once... */
 for|for
 control|(
 name|vc
