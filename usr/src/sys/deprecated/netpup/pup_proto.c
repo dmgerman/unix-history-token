@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pup_proto.c	6.1	83/07/29	*/
+comment|/*	pup_proto.c	6.2	84/08/21	*/
 end_comment
 
 begin_include
@@ -47,6 +47,18 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|extern
+name|struct
+name|domain
+name|pupdomain
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* or at least forward */
+end_comment
+
+begin_decl_stmt
 name|struct
 name|protosw
 name|pupsw
@@ -56,7 +68,8 @@ block|{
 block|{
 name|SOCK_RAW
 block|,
-name|PF_PUP
+operator|&
+name|pupdomain
 block|,
 literal|0
 block|,
@@ -95,6 +108,12 @@ block|{
 name|AF_PUP
 block|,
 literal|"pup"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
 block|,
 name|pupsw
 block|,
@@ -153,7 +172,8 @@ block|{
 block|{
 name|SOCK_RAW
 block|,
-name|PF_ETHERLINK
+operator|&
+name|endomain
 block|,
 literal|0
 block|,
@@ -191,6 +211,12 @@ init|=
 block|{
 name|AF_ETHERLINK
 literal|"ether"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
 block|,
 name|ensw
 block|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_usrreq.c	6.3	84/08/20	*/
+comment|/*	raw_usrreq.c	6.4	84/08/21	*/
 end_comment
 
 begin_include
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|"../h/mbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/domain.h"
 end_include
 
 begin_include
@@ -389,7 +395,9 @@ if|if
 condition|(
 name|lproto
 operator|->
-name|pr_family
+name|pr_domain
+operator|->
+name|dom_family
 operator|!=
 name|rh
 operator|->
