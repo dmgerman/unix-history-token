@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)siginterrupt.c	5.3 (Berkeley) %G%"
+literal|"@(#)siginterrupt.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,9 +66,13 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|extern
+name|sigset_t
+name|_sigintr
+decl_stmt|;
 name|struct
-name|sigvec
-name|sv
+name|sigaction
+name|sa
 decl_stmt|;
 name|int
 name|ret
@@ -78,19 +82,19 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|sigvec
+name|sigaction
 argument_list|(
 name|sig
 argument_list|,
 operator|(
 expr|struct
-name|sigvec
+name|sigaction
 operator|*
 operator|)
 literal|0
 argument_list|,
 operator|&
-name|sv
+name|sa
 argument_list|)
 operator|)
 operator|<
@@ -105,32 +109,52 @@ if|if
 condition|(
 name|flag
 condition|)
-name|sv
-operator|.
-name|sv_flags
-operator||=
-name|SV_INTERRUPT
+block|{
+name|sigaddset
+argument_list|(
+operator|&
+name|_sigintr
+argument_list|,
+name|sig
+argument_list|)
 expr_stmt|;
-else|else
-name|sv
+name|sa
 operator|.
-name|sv_flags
+name|sa_flags
 operator|&=
 operator|~
-name|SV_INTERRUPT
+name|SA_RESTART
 expr_stmt|;
+block|}
+else|else
+block|{
+name|sigdelset
+argument_list|(
+operator|&
+name|_sigintr
+argument_list|,
+name|sig
+argument_list|)
+expr_stmt|;
+name|sa
+operator|.
+name|sa_flags
+operator||=
+name|SA_RESTART
+expr_stmt|;
+block|}
 return|return
 operator|(
-name|sigvec
+name|sigaction
 argument_list|(
 name|sig
 argument_list|,
 operator|&
-name|sv
+name|sa
 argument_list|,
 operator|(
 expr|struct
-name|sigvec
+name|sigaction
 operator|*
 operator|)
 literal|0

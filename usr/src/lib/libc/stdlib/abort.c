@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)abort.c	5.5 (Berkeley) %G%"
+literal|"@(#)abort.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,7 +64,7 @@ name|void
 operator|)
 name|signal
 argument_list|(
-name|SIGILL
+name|SIGABRT
 argument_list|,
 name|SIG_DFL
 argument_list|)
@@ -77,7 +77,7 @@ argument_list|(
 operator|~
 name|sigmask
 argument_list|(
-name|SIGILL
+name|SIGABRT
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -89,7 +89,7 @@ argument_list|(
 name|getpid
 argument_list|()
 argument_list|,
-name|SIGILL
+name|SIGABRT
 argument_list|)
 expr_stmt|;
 block|}
