@@ -2866,15 +2866,9 @@ literal|"soft error (ECC corrected)"
 argument_list|,
 name|request
 operator|->
-name|blockaddr
-operator|+
-operator|(
-name|request
-operator|->
 name|donecount
 operator|/
 name|DEV_BSIZE
-operator|)
 argument_list|,
 literal|1
 argument_list|)
@@ -2950,17 +2944,11 @@ literal|"hard error"
 argument_list|,
 name|request
 operator|->
-name|blockaddr
-operator|+
-operator|(
-name|request
-operator|->
 name|donecount
 operator|/
 name|DEV_BSIZE
-operator|)
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* if this is a UDMA CRC error, reinject request */
