@@ -64,11 +64,22 @@ directive|undef
 name|CPP_PREDEFINES
 end_undef
 
+begin_comment
+comment|/* Obsolete, do not define it. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_OS_CPP_BUILTINS
+end_undef
+
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|FBSD_CPP_PREDEFINES
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+value|FBSD_TARGET_OS_CPP_BUILTINS()
 end_define
 
 begin_undef
@@ -162,23 +173,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Allow #sccs in preprocessor.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|SCCS_DIRECTIVE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SCCS_DIRECTIVE
-value|1
-end_define
-
-begin_comment
 comment|/* Make gcc agree with FreeBSD's standard headers (<machine/ansi.h>, etc...)  */
 end_comment
 
@@ -193,19 +187,6 @@ define|#
 directive|define
 name|WCHAR_TYPE
 value|"int"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|WCHAR_UNSIGNED
-end_undef
-
-begin_define
-define|#
-directive|define
-name|WCHAR_UNSIGNED
-value|0
 end_define
 
 begin_ifdef
@@ -278,14 +259,6 @@ directive|define
 name|TARGET_HAS_F_SETLKW
 value|1
 end_define
-
-begin_comment
-comment|/************************[  Assembler stuff  ]********************************/
-end_comment
-
-begin_comment
-comment|/************************[  Debugger stuff  ]*********************************/
-end_comment
 
 end_unit
 

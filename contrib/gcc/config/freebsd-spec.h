@@ -54,148 +54,60 @@ define|\
 value|(DEFAULT_WORD_SWITCH_TAKES_ARG (STR)					\    || !strcmp ((STR), "rpath") || !strcmp ((STR), "rpath-link")		\    || !strcmp ((STR), "soname") || !strcmp ((STR), "defsym") 		\    || !strcmp ((STR), "assert") || !strcmp ((STR), "dynamic-linker"))
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FREEBSD_NATIVE
-end_ifndef
+begin_define
+define|#
+directive|define
+name|FBSD_TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do									\     {									\ 	if (FBSD_MAJOR == 6)						\ 	  builtin_define ("__FreeBSD__=6");			       	\ 	else if (FBSD_MAJOR == 5)	       				\ 	  builtin_define ("__FreeBSD__=5");			       	\ 	else if (FBSD_MAJOR == 4)			       		\ 	  builtin_define ("__FreeBSD__=4");			       	\ 	else if (FBSD_MAJOR == 3)	       				\ 	  builtin_define ("__FreeBSD__=3");			       	\ 	else								\ 	  builtin_define ("__FreeBSD__");			       	\ 	builtin_define_std ("unix");					\ 	builtin_define ("__ELF__");					\ 	builtin_define ("__KPRINTF_ATTRIBUTE__");		       	\ 	builtin_assert ("system=unix");					\ 	builtin_assert ("system=bsd");					\ 	builtin_assert ("system=FreeBSD");				\ 	FBSD_NATIVE_TARGET_OS_CPP_BUILTINS();				\ 	FBSD_TARGET_CPU_CPP_BUILTINS();					\     }									\   while (0)
+end_define
 
 begin_comment
-comment|/* these bits are here to reduce merge diffs, but I don't want to acutally use the bits right now */
+comment|/* Define the default FreeBSD-specific per-CPU hook code. */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|FBSD_MAJOR
-operator|==
-literal|6
-end_if
+begin_define
+define|#
+directive|define
+name|FBSD_TARGET_CPU_CPP_BUILTINS
+parameter_list|()
+value|do {} while (0)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FREEBSD_NATIVE
+end_ifdef
 
 begin_define
 define|#
 directive|define
-name|FBSD_CPP_PREDEFINES
+name|FBSD_NATIVE_TARGET_OS_CPP_BUILTINS
+parameter_list|()
 define|\
-value|"-D__FreeBSD__=6 -Dunix -D__ELF__ -D__KPRINTF_ATTRIBUTE__ -Asystem=unix -Asystem=bsd -Asystem=FreeBSD"
+value|do {									\ 	builtin_define_std ("__FreeBSD_cc_version=500006");		\   } while (0)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|FBSD_MAJOR
-operator|==
-literal|5
-end_if
-
-begin_define
-define|#
-directive|define
-name|FBSD_CPP_PREDEFINES
-define|\
-value|"-D__FreeBSD__=5 -Dunix -D__ELF__ -D__KPRINTF_ATTRIBUTE__ -Asystem=unix -Asystem=bsd -Asystem=FreeBSD"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|FBSD_MAJOR
-operator|==
-literal|4
-end_if
-
-begin_define
-define|#
-directive|define
-name|FBSD_CPP_PREDEFINES
-define|\
-value|"-D__FreeBSD__=4 -Dunix -D__ELF__ -D__KPRINTF_ATTRIBUTE__ -Asystem=unix -Asystem=bsd -Asystem=FreeBSD"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|FBSD_MAJOR
-operator|==
-literal|3
-end_if
-
-begin_define
-define|#
-directive|define
-name|FBSD_CPP_PREDEFINES
-define|\
-value|"-D__FreeBSD__=3 -Dunix -D__ELF__ -D__KPRINTF_ATTRIBUTE__ -Asystem=unix -Asystem=bsd -Asystem=FreeBSD"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FBSD_CPP_PREDEFINES
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|FBSD_CPP_PREDEFINES
-define|\
-value|"-D__FreeBSD__   -Dunix -D__ELF__ -D__KPRINTF_ATTRIBUTE__ -Asystem=unix -Asystem=bsd -Asystem=FreeBSD"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_else
 else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* FREEBSD_NATIVE */
-end_comment
-
-begin_comment
-comment|/* Place spaces around this string.  We depend on string splicing to produce    the final CPP_PREDEFINES value.  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|FBSD_CPP_PREDEFINES
+name|FBSD_NATIVE_TARGET_OS_CPP_BUILTINS
+parameter_list|()
 define|\
-value|"-D__FreeBSD__=5 -D__FreeBSD_cc_version=500005 -Dunix -D__ELF__ -D__KPRINTF_ATTRIBUTE__ -Asystem=unix -Asystem=bsd -Asystem=FreeBSD"
+value|do {} while (0)
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* ! FREEBSD_NATIVE */
-end_comment
 
 begin_comment
 comment|/* Provide a CPP_SPEC appropriate for FreeBSD.  We just deal with the GCC     option `-posix', and PIC issues.  Try to detect support for the    `long long' type.  Unfortunately the GCC spec parser will not allow us    to properly detect the "iso9899:1990" and "iso9899:199409" forms of    -std=c89.  Because of the ':' in the -std argument. :-(  I have left    them in the spec as a place holder in hopes someone knows a way to make    the detection of them work.  */
@@ -209,7 +121,7 @@ value|"							\   %(cpp_cpu)								\   %{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__P
 end_define
 
 begin_comment
-comment|/* Provide a STARTFILE_SPEC appropriate for FreeBSD.  Here we add    the magical crtbegin.o file (see crtstuff.c) which provides part  	of the support for getting C++ file-scope static object constructed  	before entering `main'. */
+comment|/* Provide a STARTFILE_SPEC appropriate for FreeBSD.  Here we add    the magical crtbegin.o file (see crtstuff.c) which provides part  	of the support for getting C++ file-scope static object constructed  	before entering `main'.  */
 end_comment
 
 begin_define
