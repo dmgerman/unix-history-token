@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the Advanced Systems Inc. SCSI controllers  * Product specific probe and attach routines can be found in:  *   * i386/isa/adv_isa.c	ABP5140, ABP542, ABP5150, ABP842, ABP852  * i386/eisa/adv_eisa.c	ABP742, ABP752  * pci/adv_pci.c	ABP920, ABP930, ABP930U, ABP930UA, ABP940, ABP940U,  *			ABP940UA, ABP950, ABP960, ABP960U, ABP960UA,  *			ABP970, ABP970U  *  * Copyright (c) 1996-1998 Justin Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: advansys.c,v 1.4 1997/02/22 09:38:38 peter Exp $  */
+comment|/*  * Generic driver for the Advanced Systems Inc. SCSI controllers  * Product specific probe and attach routines can be found in:  *   * i386/isa/adv_isa.c	ABP5140, ABP542, ABP5150, ABP842, ABP852  * i386/eisa/adv_eisa.c	ABP742, ABP752  * pci/adv_pci.c	ABP920, ABP930, ABP930U, ABP930UA, ABP940, ABP940U,  *			ABP940UA, ABP950, ABP960, ABP960U, ABP960UA,  *			ABP970, ABP970U  *  * Copyright (c) 1996-1998 Justin Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: advansys.c,v 1.1 1998/09/15 07:03:33 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -4579,21 +4579,14 @@ operator|+
 name|ADV_SCSIQ_B_FWD
 argument_list|)
 expr_stmt|;
-name|done_qaddr
-operator|=
-name|ADV_QNO_TO_QADDR
-argument_list|(
-name|done_qno
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
 if|if
 condition|(
-name|sg_list_qp
+name|done_qno
 operator|==
-name|ASC_QLINK_END
+name|ADV_QLINK_END
 condition|)
 block|{
 name|panic
@@ -4605,6 +4598,13 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|done_qaddr
+operator|=
+name|ADV_QNO_TO_QADDR
+argument_list|(
+name|done_qno
+argument_list|)
+expr_stmt|;
 comment|/* Mark SG queue as free */
 name|adv_write_lram_8
 argument_list|(
@@ -4631,9 +4631,13 @@ if|if
 condition|(
 name|adv
 operator|->
-name|cur_total_qng
+name|cur_active
 operator|<
-name|n_q_used
+operator|(
+name|sg_queue_cnt
+operator|+
+literal|1
+operator|)
 condition|)
 name|panic
 argument_list|(
