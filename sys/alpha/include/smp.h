@@ -60,6 +60,13 @@ name|IPI_STOP
 value|0x0010
 end_define
 
+begin_define
+define|#
+directive|define
+name|IPI_HALT
+value|0x1000
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef

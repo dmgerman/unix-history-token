@@ -944,9 +944,11 @@ name|howto
 operator|&
 name|RB_HALT
 condition|)
-name|alpha_pal_halt
+block|{
+name|cpu_halt
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -7076,7 +7078,41 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/*alpha_pal_halt(); */
+ifdef|#
+directive|ifdef
+name|SMP
+name|printf
+argument_list|(
+literal|"sending IPI_HALT to other processors\n"
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1000000
+argument_list|)
+expr_stmt|;
+name|ipi_all_but_self
+argument_list|(
+name|IPI_HALT
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1000000
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Halting Self\n"
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1000000
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|prom_halt
 argument_list|(
 literal|1
