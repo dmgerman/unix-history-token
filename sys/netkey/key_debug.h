@@ -172,7 +172,9 @@ parameter_list|,
 name|arg
 parameter_list|)
 define|\
-value|do { if ((key_debug_level& (lev)) == (lev)) { arg; } } while (0)
+value|do { if ((key_debug_level& (lev)) == (lev)) { arg; } } while (
+comment|/*CONSTCOND*/
+value|0)
 end_define
 
 begin_decl_stmt

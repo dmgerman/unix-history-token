@@ -1382,7 +1382,9 @@ parameter_list|,
 name|field
 parameter_list|)
 define|\
-value|do {\ 	struct type *curelm = LIST_FIRST(head); \ 	if (curelm == NULL) {\ 		LIST_INSERT_HEAD(head, elm, field); \ 	} else { \ 		while (LIST_NEXT(curelm, field)) \ 			curelm = LIST_NEXT(curelm, field);\ 		LIST_INSERT_AFTER(curelm, elm, field);\ 	}\ } while (0)
+value|do {\ 	struct type *curelm = LIST_FIRST(head); \ 	if (curelm == NULL) {\ 		LIST_INSERT_HEAD(head, elm, field); \ 	} else { \ 		while (LIST_NEXT(curelm, field)) \ 			curelm = LIST_NEXT(curelm, field);\ 		LIST_INSERT_AFTER(curelm, elm, field);\ 	}\ } while (
+comment|/*CONSTCOND*/
+value|0)
 end_define
 
 begin_define
@@ -1397,7 +1399,9 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|do { \ 	if ((head) != (sav)) {						\ 		ipseclog((LOG_DEBUG, "%s: state mismatched (TREE=%d SA=%d)\n", \ 			(name), (head), (sav)));			\ 		continue;						\ 	}								\ } while (0)
+value|do { \ 	if ((head) != (sav)) {						\ 		ipseclog((LOG_DEBUG, "%s: state mismatched (TREE=%d SA=%d)\n", \ 			(name), (head), (sav)));			\ 		continue;						\ 	}								\ } while (
+comment|/*CONSTCOND*/
+value|0)
 end_define
 
 begin_define
@@ -1412,7 +1416,9 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|do { \ 	if ((head) != (sp)) {						\ 		ipseclog((LOG_DEBUG, "%s: direction mismatched (TREE=%d SP=%d), " \ 			"anyway continue.\n",				\ 			(name), (head), (sp)));				\ 	}								\ } while (0)
+value|do { \ 	if ((head) != (sp)) {						\ 		ipseclog((LOG_DEBUG, "%s: direction mismatched (TREE=%d SP=%d), " \ 			"anyway continue.\n",				\ 			(name), (head), (sp)));				\ 	}								\ } while (
+comment|/*CONSTCOND*/
+value|0)
 end_define
 
 begin_if
@@ -1464,7 +1470,9 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|do { \ 	((p) = (t)malloc((unsigned long)(n), M_SECA, M_NOWAIT));             \ 	printf("%s %d: %p<- KMALLOC(%s, %d)\n",                             \ 		__FILE__, __LINE__, (p), #t, n);                             \ } while (0)
+value|do { \ 	((p) = (t)malloc((unsigned long)(n), M_SECA, M_NOWAIT));             \ 	printf("%s %d: %p<- KMALLOC(%s, %d)\n",                             \ 		__FILE__, __LINE__, (p), #t, n);                             \ } while (
+comment|/*CONSTCOND*/
+value|0)
 end_define
 
 begin_define
@@ -1475,7 +1483,9 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|do {                                                                 \ 		printf("%s %d: %p -> KFREE()\n", __FILE__, __LINE__, (p));   \ 		free((caddr_t)(p), M_SECA);                                  \ 	} while (0)
+value|do {                                                                 \ 		printf("%s %d: %p -> KFREE()\n", __FILE__, __LINE__, (p));   \ 		free((caddr_t)(p), M_SECA);                                  \ 	} while (
+comment|/*CONSTCOND*/
+value|0)
 end_define
 
 begin_endif
@@ -1507,7 +1517,9 @@ parameter_list|,
 name|idx
 parameter_list|)
 define|\
-value|do { \ 	bzero((idx), sizeof(struct secpolicyindex));                             \ 	(idx)->dir = (_dir);                                                 \ 	(idx)->prefs = (ps);                                                 \ 	(idx)->prefd = (pd);                                                 \ 	(idx)->ul_proto = (ulp);                                             \ 	bcopy((s),&(idx)->src, ((const struct sockaddr *)(s))->sa_len);     \ 	bcopy((d),&(idx)->dst, ((const struct sockaddr *)(d))->sa_len);     \ } while (0)
+value|do { \ 	bzero((idx), sizeof(struct secpolicyindex));                             \ 	(idx)->dir = (_dir);                                                 \ 	(idx)->prefs = (ps);                                                 \ 	(idx)->prefd = (pd);                                                 \ 	(idx)->ul_proto = (ulp);                                             \ 	bcopy((s),&(idx)->src, ((const struct sockaddr *)(s))->sa_len);     \ 	bcopy((d),&(idx)->dst, ((const struct sockaddr *)(d))->sa_len);     \ } while (
+comment|/*CONSTCOND*/
+value|0)
 end_define
 
 begin_comment
@@ -1532,7 +1544,9 @@ parameter_list|,
 name|idx
 parameter_list|)
 define|\
-value|do { \ 	bzero((idx), sizeof(struct secasindex));                             \ 	(idx)->proto = (p);                                                  \ 	(idx)->mode = (m);                                                   \ 	(idx)->reqid = (r);                                                  \ 	bcopy((s),&(idx)->src, ((const struct sockaddr *)(s))->sa_len);     \ 	bcopy((d),&(idx)->dst, ((const struct sockaddr *)(d))->sa_len);     \ } while (0)
+value|do { \ 	bzero((idx), sizeof(struct secasindex));                             \ 	(idx)->proto = (p);                                                  \ 	(idx)->mode = (m);                                                   \ 	(idx)->reqid = (r);                                                  \ 	bcopy((s),&(idx)->src, ((const struct sockaddr *)(s))->sa_len);     \ 	bcopy((d),&(idx)->dst, ((const struct sockaddr *)(d))->sa_len);     \ } while (
+comment|/*CONSTCOND*/
+value|0)
 end_define
 
 begin_comment

@@ -2372,7 +2372,9 @@ parameter_list|(
 name|filterp
 parameter_list|)
 define|\
-value|do {								\ 	int i; u_char *p;					\ 	p = (u_char *)filterp;					\ 	for (i = 0; i< sizeof(struct icmp6_filter); i++)	\ 		p[i] = 0xff;					\ } while (0)
+value|do {								\ 	int i; u_char *p;					\ 	p = (u_char *)filterp;					\ 	for (i = 0; i< sizeof(struct icmp6_filter); i++)	\ 		p[i] = 0xff;					\ } while (
+comment|/*CONSTCOND*/
+value|0)
 end_define
 
 begin_define
@@ -3041,7 +3043,9 @@ parameter_list|,
 name|tag
 parameter_list|)
 define|\
-value|do {								\ 	if ((ifp)&& (ifp)->if_index<= if_index			\&& (ifp)->if_index< icmp6_ifstatmax			\&& icmp6_ifstat&& icmp6_ifstat[(ifp)->if_index]) {	\ 		icmp6_ifstat[(ifp)->if_index]->tag++;		\ 	}							\ } while (0)
+value|do {								\ 	if ((ifp)&& (ifp)->if_index<= if_index			\&& (ifp)->if_index< icmp6_ifstatmax			\&& icmp6_ifstat&& icmp6_ifstat[(ifp)->if_index]) {	\ 		icmp6_ifstat[(ifp)->if_index]->tag++;		\ 	}							\ } while (
+comment|/*CONSTCOND*/
+value|0)
 end_define
 
 begin_define
@@ -3056,7 +3060,9 @@ parameter_list|,
 name|code
 parameter_list|)
 define|\
-value|do { \ 		icmp6_ifstat_inc(ifp, ifs6_out_msg); \  		if (type< ICMP6_INFOMSG_MASK) \  			icmp6_ifstat_inc(ifp, ifs6_out_error); \ 		switch(type) { \ 		 case ICMP6_DST_UNREACH: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_dstunreach); \ 			 if (code == ICMP6_DST_UNREACH_ADMIN) \ 				 icmp6_ifstat_inc(ifp, ifs6_out_adminprohib); \ 			 break; \ 		 case ICMP6_PACKET_TOO_BIG: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_pkttoobig); \ 			 break; \ 		 case ICMP6_TIME_EXCEEDED: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_timeexceed); \ 			 break; \ 		 case ICMP6_PARAM_PROB: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_paramprob); \ 			 break; \ 		 case ICMP6_ECHO_REQUEST: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_echo); \ 			 break; \ 		 case ICMP6_ECHO_REPLY: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_echoreply); \ 			 break; \ 		 case MLD_LISTENER_QUERY: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_mldquery); \ 			 break; \ 		 case MLD_LISTENER_REPORT: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_mldreport); \ 			 break; \ 		 case MLD_LISTENER_DONE: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_mlddone); \ 			 break; \ 		 case ND_ROUTER_SOLICIT: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_routersolicit); \ 			 break; \ 		 case ND_ROUTER_ADVERT: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_routeradvert); \ 			 break; \ 		 case ND_NEIGHBOR_SOLICIT: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_neighborsolicit); \ 			 break; \ 		 case ND_NEIGHBOR_ADVERT: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_neighboradvert); \ 			 break; \ 		 case ND_REDIRECT: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_redirect); \ 			 break; \ 		} \ } while (0)
+value|do { \ 		icmp6_ifstat_inc(ifp, ifs6_out_msg); \  		if (type< ICMP6_INFOMSG_MASK) \  			icmp6_ifstat_inc(ifp, ifs6_out_error); \ 		switch(type) { \ 		 case ICMP6_DST_UNREACH: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_dstunreach); \ 			 if (code == ICMP6_DST_UNREACH_ADMIN) \ 				 icmp6_ifstat_inc(ifp, ifs6_out_adminprohib); \ 			 break; \ 		 case ICMP6_PACKET_TOO_BIG: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_pkttoobig); \ 			 break; \ 		 case ICMP6_TIME_EXCEEDED: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_timeexceed); \ 			 break; \ 		 case ICMP6_PARAM_PROB: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_paramprob); \ 			 break; \ 		 case ICMP6_ECHO_REQUEST: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_echo); \ 			 break; \ 		 case ICMP6_ECHO_REPLY: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_echoreply); \ 			 break; \ 		 case MLD_LISTENER_QUERY: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_mldquery); \ 			 break; \ 		 case MLD_LISTENER_REPORT: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_mldreport); \ 			 break; \ 		 case MLD_LISTENER_DONE: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_mlddone); \ 			 break; \ 		 case ND_ROUTER_SOLICIT: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_routersolicit); \ 			 break; \ 		 case ND_ROUTER_ADVERT: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_routeradvert); \ 			 break; \ 		 case ND_NEIGHBOR_SOLICIT: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_neighborsolicit); \ 			 break; \ 		 case ND_NEIGHBOR_ADVERT: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_neighboradvert); \ 			 break; \ 		 case ND_REDIRECT: \ 			 icmp6_ifstat_inc(ifp, ifs6_out_redirect); \ 			 break; \ 		} \ } while (
+comment|/*CONSTCOND*/
+value|0)
 end_define
 
 begin_decl_stmt

@@ -841,7 +841,9 @@ parameter_list|,
 name|ret
 parameter_list|)
 define|\
-value|do {									\     if ((m)->m_next != NULL) {						\ 	if (((m)->m_flags& M_LOOP)&&					\ 	    ((m)->m_len< (off) + (hlen))&&				\ 	    (((m) = m_pullup((m), (off) + (hlen))) == NULL)) {		\ 		ip6stat.ip6s_exthdrtoolong++;				\ 		return ret;						\ 	} else if ((m)->m_flags& M_EXT) {				\ 		if ((m)->m_len< (off) + (hlen)) {			\ 			ip6stat.ip6s_exthdrtoolong++;			\ 			m_freem(m);					\ 			return ret;					\ 		}							\ 	} else {							\ 		if ((m)->m_len< (off) + (hlen)) {			\ 			ip6stat.ip6s_exthdrtoolong++;			\ 			m_freem(m);					\ 			return ret;					\ 		}							\ 	}								\     } else {								\ 	if ((m)->m_len< (off) + (hlen)) {				\ 		ip6stat.ip6s_tooshort++;				\ 		in6_ifstat_inc(m->m_pkthdr.rcvif, ifs6_in_truncated);	\ 		m_freem(m);						\ 		return ret;						\ 	}								\     }									\ } while (0)
+value|do {									\     if ((m)->m_next != NULL) {						\ 	if (((m)->m_flags& M_LOOP)&&					\ 	    ((m)->m_len< (off) + (hlen))&&				\ 	    (((m) = m_pullup((m), (off) + (hlen))) == NULL)) {		\ 		ip6stat.ip6s_exthdrtoolong++;				\ 		return ret;						\ 	} else if ((m)->m_flags& M_EXT) {				\ 		if ((m)->m_len< (off) + (hlen)) {			\ 			ip6stat.ip6s_exthdrtoolong++;			\ 			m_freem(m);					\ 			return ret;					\ 		}							\ 	} else {							\ 		if ((m)->m_len< (off) + (hlen)) {			\ 			ip6stat.ip6s_exthdrtoolong++;			\ 			m_freem(m);					\ 			return ret;					\ 		}							\ 	}								\     } else {								\ 	if ((m)->m_len< (off) + (hlen)) {				\ 		ip6stat.ip6s_tooshort++;				\ 		in6_ifstat_inc(m->m_pkthdr.rcvif, ifs6_in_truncated);	\ 		m_freem(m);						\ 		return ret;						\ 	}								\     }									\ } while (
+comment|/*CONSTCOND*/
+value|0)
 end_define
 
 begin_comment
@@ -864,7 +866,9 @@ parameter_list|,
 name|len
 parameter_list|)
 define|\
-value|do {									\ 	struct mbuf *t;							\ 	int tmp;							\ 	if ((m)->m_len>= (off) + (len))				\ 		(val) = (typ)(mtod((m), caddr_t) + (off));		\ 	else {								\ 		t = m_pulldown((m), (off), (len),&tmp);		\ 		if (t) {						\ 			if (t->m_len< tmp + (len))			\ 				panic("m_pulldown malfunction");	\ 			(val) = (typ)(mtod(t, caddr_t) + tmp);		\ 		} else {						\ 			(val) = (typ)NULL;				\ 			(m) = NULL;					\ 		}							\ 	}								\ } while (0)
+value|do {									\ 	struct mbuf *t;							\ 	int tmp;							\ 	if ((m)->m_len>= (off) + (len))				\ 		(val) = (typ)(mtod((m), caddr_t) + (off));		\ 	else {								\ 		t = m_pulldown((m), (off), (len),&tmp);		\ 		if (t) {						\ 			if (t->m_len< tmp + (len))			\ 				panic("m_pulldown malfunction");	\ 			(val) = (typ)(mtod(t, caddr_t) + tmp);		\ 		} else {						\ 			(val) = (typ)NULL;				\ 			(m) = NULL;					\ 		}							\ 	}								\ } while (
+comment|/*CONSTCOND*/
+value|0)
 end_define
 
 begin_define
@@ -883,7 +887,9 @@ parameter_list|,
 name|len
 parameter_list|)
 define|\
-value|do {									\ 	struct mbuf *t;							\ 	if ((off) == 0)							\ 		(val) = (typ)mtod(m, caddr_t);				\ 	else {								\ 		t = m_pulldown((m), (off), (len), NULL);		\ 		if (t) {						\ 			if (t->m_len< (len))				\ 				panic("m_pulldown malfunction");	\ 			(val) = (typ)mtod(t, caddr_t);			\ 		} else {						\ 			(val) = (typ)NULL;				\ 			(m) = NULL;					\ 		}							\ 	}								\ } while (0)
+value|do {									\ 	struct mbuf *t;							\ 	if ((off) == 0)							\ 		(val) = (typ)mtod(m, caddr_t);				\ 	else {								\ 		t = m_pulldown((m), (off), (len), NULL);		\ 		if (t) {						\ 			if (t->m_len< (len))				\ 				panic("m_pulldown malfunction");	\ 			(val) = (typ)mtod(t, caddr_t);			\ 		} else {						\ 			(val) = (typ)NULL;				\ 			(m) = NULL;					\ 		}							\ 	}								\ } while (
+comment|/*CONSTCOND*/
+value|0)
 end_define
 
 begin_endif
