@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*      ndbm.h     4.3     84/08/28     */
+comment|/*	ndbm.h	4.4	84/09/05	*/
 end_comment
 
 begin_comment
@@ -40,13 +40,23 @@ comment|/* flags, see below */
 name|long
 name|dbm_maxbno
 decl_stmt|;
-comment|/* last ``block'' in page file */
+comment|/* last ``bit'' in dir file */
 name|long
 name|dbm_bitno
 decl_stmt|;
+comment|/* current bit number */
 name|long
 name|dbm_hmask
 decl_stmt|;
+comment|/* hash mask */
+name|long
+name|dbm_blkptr
+decl_stmt|;
+comment|/* current block for dbm_nextkey */
+name|int
+name|dbm_keyptr
+decl_stmt|;
+comment|/* current key for dbm_nextkey */
 name|long
 name|dbm_blkno
 decl_stmt|;
