@@ -1133,7 +1133,7 @@ operator|)
 condition|?
 literal|"master"
 else|:
-literal|"slave "
+literal|"slave"
 argument_list|)
 expr_stmt|;
 name|printf

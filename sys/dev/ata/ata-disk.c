@@ -802,7 +802,7 @@ operator|)
 condition|?
 literal|"master"
 else|:
-literal|"slave "
+literal|"slave"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -984,7 +984,7 @@ operator|)
 condition|?
 literal|"master"
 else|:
-literal|"slave "
+literal|"slave"
 argument_list|,
 name|ata_mode2str
 argument_list|(
