@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)routed.c	4.1 %G%"
+literal|"@(#)routed.c	4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -277,6 +277,9 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|errno
+decl_stmt|,
+name|exit
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -504,6 +507,13 @@ name|argc
 operator|--
 expr_stmt|;
 block|}
+name|sigset
+argument_list|(
+name|SIGTERM
+argument_list|,
+name|exit
+argument_list|)
+expr_stmt|;
 name|sigset
 argument_list|(
 name|SIGALRM
