@@ -9699,7 +9699,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Step 2: Wait until we know hardware has finished any possible 	 * use of the xfer.  Also make sure the soft interrupt routine 	 * has run. 	 */
+comment|/* 	 * Step 2: Wait until we know hardware has finished any possible 	 * use of the xfer.  Also make sure the soft interrupt routine 	 * has run. 	 */
 name|usb_delay_ms
 argument_list|(
 name|upipe
@@ -17225,7 +17225,7 @@ operator|(
 name|err
 operator|)
 return|;
-comment|/*  	 * Pipe isn't running (otherwise err would be USBD_INPROG), 	 * so start it first. 	 */
+comment|/* 	 * Pipe isn't running (otherwise err would be USBD_INPROG), 	 * so start it first. 	 */
 return|return
 operator|(
 name|uhci_root_intr_start

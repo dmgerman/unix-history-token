@@ -7812,7 +7812,7 @@ break|break;
 case|case
 name|UE_BULK
 case|:
-comment|/*  		 * We have no easy way of determining if a read will 		 * yield any data or a write will happen. 		 * Pretend they will. 		 */
+comment|/* 		 * We have no easy way of determining if a read will 		 * yield any data or a write will happen. 		 * Pretend they will. 		 */
 name|revents
 operator||=
 name|events

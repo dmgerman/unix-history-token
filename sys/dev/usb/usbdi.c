@@ -2649,7 +2649,7 @@ literal|"usbd_clear_endpoint_stall\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Clearing en endpoint stall resets the endpoint toggle, so 	 * do the same to the HC toggle. 	 */
+comment|/* 	 * Clearing en endpoint stall resets the endpoint toggle, so 	 * do the same to the HC toggle. 	 */
 name|pipe
 operator|->
 name|methods
@@ -4686,7 +4686,7 @@ operator|==
 name|USBD_STALLED
 condition|)
 block|{
-comment|/*  		 * The control endpoint has stalled.  Control endpoints 		 * should not halt, but some may do so anyway so clear 		 * any halt condition. 		 */
+comment|/* 		 * The control endpoint has stalled.  Control endpoints 		 * should not halt, but some may do so anyway so clear 		 * any halt condition. 		 */
 name|usb_device_request_t
 name|treq
 decl_stmt|;

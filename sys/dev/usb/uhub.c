@@ -333,7 +333,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*   * We need two attachment points:  * hub to usb and hub to hub  * Every other driver only connects to hubs  */
+comment|/*  * We need two attachment points:  * hub to usb and hub to hub  * Every other driver only connects to hubs  */
 end_comment
 
 begin_if
@@ -561,7 +561,7 @@ name|dd
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*  	 * The subclass for hubs seems to be 0 for some and 1 for others, 	 * so we just ignore the subclass. 	 */
+comment|/* 	 * The subclass for hubs seems to be 0 for some and 1 for others, 	 * so we just ignore the subclass. 	 */
 if|if
 condition|(
 name|uaa
@@ -1862,7 +1862,7 @@ name|defined
 argument_list|(
 name|DIAGNOSTIC
 argument_list|)
-block|if (up->device == NULL&&  			    (status& UPS_CURRENT_CONNECT_STATUS)) 				printf("%s: connected, no device\n", 				       USBDEVNAME(sc->sc_dev));
+block|if (up->device == NULL&& 			    (status& UPS_CURRENT_CONNECT_STATUS)) 				printf("%s: connected, no device\n", 				       USBDEVNAME(sc->sc_dev));
 endif|#
 directive|endif
 continue|continue;
@@ -2200,7 +2200,7 @@ argument_list|)
 expr_stmt|;
 comment|/* Avoid addressing problems by disabling. */
 comment|/* usbd_reset_port(dev, port,&up->status); */
-comment|/*  			 * The unit refused to accept a new address, or had 			 * some other serious problem.  Since we cannot leave 			 * at 0 we have to disable the port instead. 			 */
+comment|/* 			 * The unit refused to accept a new address, or had 			 * some other serious problem.  Since we cannot leave 			 * at 0 we have to disable the port instead. 			 */
 name|printf
 argument_list|(
 literal|"%s: device problem, disabling port %d\n"

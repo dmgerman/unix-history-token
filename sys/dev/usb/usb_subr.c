@@ -4227,7 +4227,7 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-comment|/*  	 * XXX uaa is a static var. Not a problem as it _should_ be used only 	 * during probe and attach. Should be changed however. 	 */
+comment|/* 	 * XXX uaa is a static var. Not a problem as it _should_ be used only 	 * during probe and attach. Should be changed however. 	 */
 name|device_t
 name|bdev
 decl_stmt|;
@@ -5020,7 +5020,7 @@ name|USBD_NORMAL_COMPLETION
 operator|)
 return|;
 block|}
-comment|/*  	 * The generic attach failed, but leave the device as it is. 	 * We just did not find any drivers, that's all.  The device is 	 * fully operational and not harming anyone. 	 */
+comment|/* 	 * The generic attach failed, but leave the device as it is. 	 * We just did not find any drivers, that's all.  The device is 	 * fully operational and not harming anyone. 	 */
 name|DPRINTF
 argument_list|(
 operator|(
@@ -6116,7 +6116,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/*  	 * It gets very crowded with these locators on the attach line. 	 * They are not really needed since they are printed in the clear 	 * by each driver. 	 */
+comment|/* 	 * It gets very crowded with these locators on the attach line. 	 * They are not really needed since they are printed in the clear 	 * by each driver. 	 */
 block|if (uaa->vendor != UHUB_UNK_VENDOR) 		printf(" vendor 0x%04x", uaa->vendor); 	if (uaa->product != UHUB_UNK_PRODUCT) 		printf(" product 0x%04x", uaa->product); 	if (uaa->release != UHUB_UNK_RELEASE) 		printf(" release 0x%04x", uaa->release);
 endif|#
 directive|endif

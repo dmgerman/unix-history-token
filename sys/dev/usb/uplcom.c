@@ -1423,7 +1423,7 @@ name|ucom
 operator|->
 name|sc_iface
 expr_stmt|;
-comment|/* 	 * USB-RSAQ1 has two interface 	 * 	 *  USB-RSAQ1       | USB-RSAQ2 	 * -----------------+----------------- 	 * Interface 0      |Interface 0 	 *  Interrupt(0x81) | Interrupt(0x81) 	 * -----------------+ BulkIN(0x02) 	 * Interface 1	    | BulkOUT(0x83) 	 *   BulkIN(0x02)   |  	 *   BulkOUT(0x83)  | 	 */
+comment|/* 	 * USB-RSAQ1 has two interface 	 * 	 *  USB-RSAQ1       | USB-RSAQ2 	 * -----------------+----------------- 	 * Interface 0      |Interface 0 	 *  Interrupt(0x81) | Interrupt(0x81) 	 * -----------------+ BulkIN(0x02) 	 * Interface 1	    | BulkOUT(0x83) 	 *   BulkIN(0x02)   | 	 *   BulkOUT(0x83)  | 	 */
 if|if
 condition|(
 name|cdesc

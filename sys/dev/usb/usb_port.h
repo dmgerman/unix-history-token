@@ -28,7 +28,7 @@ name|_USB_PORT_H
 end_define
 
 begin_comment
-comment|/*   * Macro's to cope with the differences between operating systems.  */
+comment|/*  * Macro's to cope with the differences between operating systems.  */
 end_comment
 
 begin_if

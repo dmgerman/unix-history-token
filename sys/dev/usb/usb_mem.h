@@ -131,7 +131,7 @@ argument_list|)
 end_elif
 
 begin_comment
-comment|/*   * FreeBSD does not have special functions for dma memory, so let's keep it  * simple for now.  */
+comment|/*  * FreeBSD does not have special functions for dma memory, so let's keep it  * simple for now.  */
 end_comment
 
 begin_include

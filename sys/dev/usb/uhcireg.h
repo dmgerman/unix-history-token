@@ -472,7 +472,7 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|/*   * Wait this long after a QH has been removed.  This gives that HC a  * chance to stop looking at it before it's recycled.  */
+comment|/*  * Wait this long after a QH has been removed.  This gives that HC a  * chance to stop looking at it before it's recycled.  */
 end_comment
 
 begin_define

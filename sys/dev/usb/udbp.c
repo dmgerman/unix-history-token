@@ -8,7 +8,7 @@ comment|/* Driver for arbitrary double bulk pipe devices.  * The driver assumes 
 end_comment
 
 begin_comment
-comment|/* probe/attach/detach:  *  Connect the driver to the hardware and netgraph  *  * udbp_setup_out_transfer(sc);  *  Setup an outbound transfer. Only one transmit can be active at the same  *  time.  *  XXX If it is required that the driver is able to queue multiple requests  *      let me know. That is slightly difficult, due to the fact that we  *	cannot call usbd_alloc_xfer in int context.  *  * udbp_setup_in_transfer(sc)  *  Prepare an in transfer that will be waiting for data to come in. It  *  is submitted and sits there until data is available.  *  The callback resubmits a new transfer on completion.  *  *  The reason we submit a bulk in transfer is that USB does not know about  *  interrupts. The bulk transfer continuously polls the device for data.  *  While the device has no data available, the device NAKs the TDs. As soon  *  as there is data, the transfer happens and the data comes flowing in.  *  *  In case you were wondering, interrupt transfers happen exactly that way.  *  It therefore doesn't make sense to use the interrupt pipe to signal  *  'data ready' and then schedule a bulk transfer to fetch it. That would  *  incur a 2ms delay at least, without reducing bandwidth requirements.  *    */
+comment|/* probe/attach/detach:  *  Connect the driver to the hardware and netgraph  *  * udbp_setup_out_transfer(sc);  *  Setup an outbound transfer. Only one transmit can be active at the same  *  time.  *  XXX If it is required that the driver is able to queue multiple requests  *      let me know. That is slightly difficult, due to the fact that we  *	cannot call usbd_alloc_xfer in int context.  *  * udbp_setup_in_transfer(sc)  *  Prepare an in transfer that will be waiting for data to come in. It  *  is submitted and sits there until data is available.  *  The callback resubmits a new transfer on completion.  *  *  The reason we submit a bulk in transfer is that USB does not know about  *  interrupts. The bulk transfer continuously polls the device for data.  *  While the device has no data available, the device NAKs the TDs. As soon  *  as there is data, the transfer happens and the data comes flowing in.  *  *  In case you were wondering, interrupt transfers happen exactly that way.  *  It therefore doesn't make sense to use the interrupt pipe to signal  *  'data ready' and then schedule a bulk transfer to fetch it. That would  *  incur a 2ms delay at least, without reducing bandwidth requirements.  *  */
 end_comment
 
 begin_include
@@ -2756,7 +2756,7 @@ argument_list|(
 name|item
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Now queue the data for when it can be sent 	 */
+comment|/* 	 * Now queue the data for when it can be sent 	 */
 if|if
 condition|(
 name|meta
@@ -2924,7 +2924,7 @@ operator|&
 name|DISCONNECTED
 condition|)
 block|{
-comment|/*  		 * WE are really going away.. hardware must have gone. 		 * Assume that the hardware drive part will clear up the  		 * sc, in fact it may already have done so.. 		 * In which case we may have just segfaulted..XXX 		 */
+comment|/* 		 * WE are really going away.. hardware must have gone. 		 * Assume that the hardware drive part will clear up the 		 * sc, in fact it may already have done so.. 		 * In which case we may have just segfaulted..XXX 		 */
 return|return
 operator|(
 literal|0

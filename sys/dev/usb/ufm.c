@@ -1364,7 +1364,7 @@ decl_stmt|;
 name|u_int8_t
 name|ret
 decl_stmt|;
-comment|/* 	 * Freq now is in Hz.  We need to convert it to the frequency 	 * that the radio wants.  This frequency is 10.7MHz above 	 * the actual frequency.  We then need to convert to 	 * units of 12.5kHz.  We add one to the IFM to make rounding 	 * easier.  	 */
+comment|/* 	 * Freq now is in Hz.  We need to convert it to the frequency 	 * that the radio wants.  This frequency is 10.7MHz above 	 * the actual frequency.  We then need to convert to 	 * units of 12.5kHz.  We add one to the IFM to make rounding 	 * easier. 	 */
 name|sc
 operator|->
 name|sc_freq

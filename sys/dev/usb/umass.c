@@ -5318,7 +5318,7 @@ name|proto
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Do a Bulk-Only transfer with cmdlen bytes from cmd, possibly 	 * a data phase of datalen bytes from/to the device and finally a 	 * csw read phase. 	 * If the data direction was inbound a maximum of datalen bytes 	 * is stored in the buffer pointed to by data. 	 * 	 * umass_bbb_transfer initialises the transfer and lets the state 	 * machine in umass_bbb_state handle the completion. It uses the  	 * following states: 	 * TSTATE_BBB_COMMAND 	 *   -> TSTATE_BBB_DATA 	 *   -> TSTATE_BBB_STATUS 	 *   -> TSTATE_BBB_STATUS2 	 *   -> TSTATE_BBB_IDLE 	 * 	 * An error in any of those states will invoke 	 * umass_bbb_reset. 	 */
+comment|/* 	 * Do a Bulk-Only transfer with cmdlen bytes from cmd, possibly 	 * a data phase of datalen bytes from/to the device and finally a 	 * csw read phase. 	 * If the data direction was inbound a maximum of datalen bytes 	 * is stored in the buffer pointed to by data. 	 * 	 * umass_bbb_transfer initialises the transfer and lets the state 	 * machine in umass_bbb_state handle the completion. It uses the 	 * following states: 	 * TSTATE_BBB_COMMAND 	 *   -> TSTATE_BBB_DATA 	 *   -> TSTATE_BBB_STATUS 	 *   -> TSTATE_BBB_STATUS2 	 *   -> TSTATE_BBB_IDLE 	 * 	 * An error in any of those states will invoke 	 * umass_bbb_reset. 	 */
 comment|/* check the given arguments */
 name|KASSERT
 argument_list|(
@@ -7247,7 +7247,7 @@ name|proto
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Command Block Reset Protocol 	 *  	 * First send a reset request to the device. Then clear 	 * any possibly stalled bulk endpoints.  	 * This is done in 3 steps, states: 	 * TSTATE_CBI_RESET1 	 * TSTATE_CBI_RESET2 	 * TSTATE_CBI_RESET3 	 * 	 * If the reset doesn't succeed, the device should be port reset. 	 */
+comment|/* 	 * Command Block Reset Protocol 	 * 	 * First send a reset request to the device. Then clear 	 * any possibly stalled bulk endpoints.  	 * This is done in 3 steps, states: 	 * TSTATE_CBI_RESET1 	 * TSTATE_CBI_RESET2 	 * TSTATE_CBI_RESET3 	 * 	 * If the reset doesn't succeed, the device should be port reset. 	 */
 name|DPRINTF
 argument_list|(
 name|UDMASS_CBI
@@ -7441,7 +7441,7 @@ name|proto
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Do a CBI transfer with cmdlen bytes from cmd, possibly 	 * a data phase of datalen bytes from/to the device and finally a 	 * csw read phase. 	 * If the data direction was inbound a maximum of datalen bytes 	 * is stored in the buffer pointed to by data. 	 * 	 * umass_cbi_transfer initialises the transfer and lets the state 	 * machine in umass_cbi_state handle the completion. It uses the  	 * following states: 	 * TSTATE_CBI_COMMAND 	 *   -> XXX fill in 	 * 	 * An error in any of those states will invoke 	 * umass_cbi_reset. 	 */
+comment|/* 	 * Do a CBI transfer with cmdlen bytes from cmd, possibly 	 * a data phase of datalen bytes from/to the device and finally a 	 * csw read phase. 	 * If the data direction was inbound a maximum of datalen bytes 	 * is stored in the buffer pointed to by data. 	 * 	 * umass_cbi_transfer initialises the transfer and lets the state 	 * machine in umass_cbi_state handle the completion. It uses the 	 * following states: 	 * TSTATE_CBI_COMMAND 	 *   -> XXX fill in 	 * 	 * An error in any of those states will invoke 	 * umass_cbi_reset. 	 */
 comment|/* check the given arguments */
 name|KASSERT
 argument_list|(
@@ -9897,7 +9897,7 @@ name|rcmdlen
 argument_list|)
 condition|)
 block|{
-comment|/*  			 * Handle EVPD inquiry for broken devices first 			 * NO_INQUIRY also implies NO_INQUIRY_EVPD 			 */
+comment|/* 			 * Handle EVPD inquiry for broken devices first 			 * NO_INQUIRY also implies NO_INQUIRY_EVPD 			 */
 if|if
 condition|(
 operator|(

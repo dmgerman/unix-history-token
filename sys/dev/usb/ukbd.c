@@ -1260,7 +1260,7 @@ comment|/* no translation */
 end_comment
 
 begin_comment
-comment|/*   * Translate USB keycodes to AT keyboard scancodes.  */
+comment|/*  * Translate USB keycodes to AT keyboard scancodes.  */
 end_comment
 
 begin_comment
@@ -2350,7 +2350,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   * The back door to the keyboard driver!  * This function is called by the console driver, via the kbdio module,  * to tickle keyboard drivers when the low-level console is being initialized.  * Almost nothing in the kernel has been initialied yet.  Try to probe  * keyboards if possible.  * NOTE: because of the way the low-level conole is initialized, this routine  * may be called more than once!!  */
+comment|/*  * The back door to the keyboard driver!  * This function is called by the console driver, via the kbdio module,  * to tickle keyboard drivers when the low-level console is being initialized.  * Almost nothing in the kernel has been initialied yet.  Try to probe  * keyboards if possible.  * NOTE: because of the way the low-level conole is initialized, this routine  * may be called more than once!!  */
 end_comment
 
 begin_function
@@ -3053,7 +3053,7 @@ operator|->
 name|ks_timeout_handle
 argument_list|)
 expr_stmt|;
-comment|/*  		 * FIXME: set the initial value for lock keys in ks_state 		 * according to the BIOS data? 		 */
+comment|/* 		 * FIXME: set the initial value for lock keys in ks_state 		 * according to the BIOS data? 		 */
 name|KBD_PROBE_DONE
 argument_list|(
 name|kbd
@@ -4490,7 +4490,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Enable the access to the device; until this function is called,  * the client cannot read from the keyboard.  */
+comment|/*  * Enable the access to the device; until this function is called,  * the client cannot read from the keyboard.  */
 end_comment
 
 begin_function

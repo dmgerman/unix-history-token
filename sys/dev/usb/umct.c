@@ -1029,7 +1029,7 @@ goto|goto
 name|error
 goto|;
 block|}
-comment|/* 		 * The real bulk-in endpoint is also marked as an interrupt.   		 * The only way to differentiate it from the real interrupt                  * endpoint is to look at the wMaxPacketSize field. 		 */
+comment|/* 		 * The real bulk-in endpoint is also marked as an interrupt. 		 * The only way to differentiate it from the real interrupt                  * endpoint is to look at the wMaxPacketSize field. 		 */
 if|if
 condition|(
 name|UE_GET_DIR
