@@ -1259,6 +1259,45 @@ value|8
 end_define
 
 begin_comment
+comment|/*  * mount flags  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_MS_RDONLY
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_MS_NOSUID
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_MS_NODEV
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_MS_NOEXEC
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_MS_REMOUNT
+value|0x0020
+end_define
+
+begin_comment
 comment|/*  * SystemV IPC defines  */
 end_comment
 
