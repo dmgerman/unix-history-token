@@ -4714,6 +4714,14 @@ name|p
 operator|->
 name|p_sticks
 expr_stmt|;
+name|p
+operator|->
+name|p_md
+operator|.
+name|md_regs
+operator|=
+name|framep
+expr_stmt|;
 name|astoff
 argument_list|(
 name|p
