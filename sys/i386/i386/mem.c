@@ -2007,6 +2007,14 @@ condition|(
 name|error
 operator|!=
 literal|0
+operator|&&
+name|cmd
+operator|!=
+name|FIONBIO
+operator|&&
+name|cmd
+operator|!=
+name|FIOASYNC
 condition|)
 return|return
 operator|(
