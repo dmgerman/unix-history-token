@@ -1,18 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_cluster.c	3.2	%H%	*/
-end_comment
-
-begin_decl_stmt
-name|int
-name|distrust
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* TEST */
+comment|/*	vfs_cluster.c	3.3	%H%	*/
 end_comment
 
 begin_include
@@ -1083,122 +1071,6 @@ block|}
 end_block
 
 begin_comment
-comment|/* HASHING IS A GUN LIKE CHANGE, THIS IS THE SAFETY */
-end_comment
-
-begin_function
-name|struct
-name|buf
-modifier|*
-name|oincore
-parameter_list|(
-name|dev
-parameter_list|,
-name|blkno
-parameter_list|)
-name|dev_t
-name|dev
-decl_stmt|;
-name|daddr_t
-name|blkno
-decl_stmt|;
-block|{
-specifier|register
-name|struct
-name|buf
-modifier|*
-name|bp
-decl_stmt|;
-specifier|register
-name|struct
-name|buf
-modifier|*
-name|dp
-decl_stmt|;
-specifier|register
-name|int
-name|dblkno
-init|=
-name|fsbtodb
-argument_list|(
-name|blkno
-argument_list|)
-decl_stmt|;
-name|dp
-operator|=
-name|bdevsw
-index|[
-name|major
-argument_list|(
-name|dev
-argument_list|)
-index|]
-operator|.
-name|d_tab
-expr_stmt|;
-for|for
-control|(
-name|bp
-operator|=
-name|dp
-operator|->
-name|b_forw
-init|;
-name|bp
-operator|!=
-name|dp
-condition|;
-name|bp
-operator|=
-name|bp
-operator|->
-name|b_forw
-control|)
-if|if
-condition|(
-name|bp
-operator|->
-name|b_blkno
-operator|==
-name|dblkno
-operator|&&
-name|bp
-operator|->
-name|b_dev
-operator|==
-name|dev
-operator|&&
-name|bp
-operator|>=
-name|buf
-operator|&&
-name|bp
-operator|<
-operator|&
-name|buf
-index|[
-name|NBUF
-index|]
-condition|)
-return|return
-operator|(
-name|bp
-operator|)
-return|;
-return|return
-operator|(
-operator|(
-expr|struct
-name|buf
-operator|*
-operator|)
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * See if the block is associated with some buffer  * (mainly to avoid getting hung up on a wait in breada)  */
 end_comment
 
@@ -1289,55 +1161,11 @@ name|b_dev
 operator|==
 name|dev
 condition|)
-block|{
-if|if
-condition|(
-name|distrust
-condition|)
-if|if
-condition|(
-name|oincore
-argument_list|(
-name|dev
-argument_list|,
-name|blkno
-argument_list|)
-operator|!=
-name|bp
-condition|)
-comment|/* TEST */
-name|panic
-argument_list|(
-literal|"incore 1"
-argument_list|)
-expr_stmt|;
-comment|/* TEST */
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-block|}
-if|if
-condition|(
-name|distrust
-condition|)
-if|if
-condition|(
-name|oincore
-argument_list|(
-name|dev
-argument_list|,
-name|blkno
-argument_list|)
-condition|)
-comment|/* TEST */
-name|panic
-argument_list|(
-literal|"incore 2"
-argument_list|)
-expr_stmt|;
-comment|/* TEST */
 return|return
 operator|(
 literal|0
@@ -1495,28 +1323,6 @@ operator|!=
 name|dev
 condition|)
 continue|continue;
-if|if
-condition|(
-name|distrust
-condition|)
-if|if
-condition|(
-name|bp
-operator|!=
-name|oincore
-argument_list|(
-name|dev
-argument_list|,
-name|blkno
-argument_list|)
-condition|)
-comment|/* TEST */
-name|panic
-argument_list|(
-literal|"getblk 1"
-argument_list|)
-expr_stmt|;
-comment|/* TEST */
 name|VOID
 name|spl6
 parameter_list|()
@@ -1620,26 +1426,6 @@ name|bp
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|distrust
-condition|)
-if|if
-condition|(
-name|oincore
-argument_list|(
-name|dev
-argument_list|,
-name|blkno
-argument_list|)
-condition|)
-comment|/* TEST */
-name|panic
-argument_list|(
-literal|"getblk 2"
-argument_list|)
-expr_stmt|;
-comment|/* TEST */
 if|if
 condition|(
 name|major
