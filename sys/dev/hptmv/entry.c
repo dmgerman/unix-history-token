@@ -345,6 +345,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|launch_worker_thread
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|MV_SATA_CHANNEL
@@ -9876,9 +9886,17 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
+comment|/* Only do this setup for the first device. */
 if|if
 condition|(
-operator|(
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
 name|pAdapter
 operator|->
 name|eh
@@ -9893,17 +9911,25 @@ name|dev
 argument_list|,
 name|SHUTDOWN_PRI_DEFAULT
 argument_list|)
-operator|)
-operator|==
+expr_stmt|;
+if|if
+condition|(
+name|pAdapter
+operator|->
+name|eh
+operator|!=
 name|NULL
 condition|)
-name|device_printf
+name|launch_worker_thread
+argument_list|()
+expr_stmt|;
+else|else
+name|printf
 argument_list|(
-name|dev
-argument_list|,
-literal|"Shutdown event registrration failed\n"
+literal|"hptmv: shutdown event registration failed\n"
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 literal|0
 return|;
@@ -11759,22 +11785,6 @@ endif|#
 directive|endif
 block|}
 end_function
-
-begin_expr_stmt
-name|SYSINIT
-argument_list|(
-name|hptwt
-argument_list|,
-name|SI_SUB_KTHREAD_IDLE
-argument_list|,
-name|SI_ORDER_FIRST
-argument_list|,
-name|launch_worker_thread
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_endif
 endif|#
