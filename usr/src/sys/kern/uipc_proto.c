@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_proto.c	7.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_proto.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -37,19 +37,19 @@ begin_comment
 comment|/*  * Definitions of protocols supported in the UNIX domain.  */
 end_comment
 
-begin_function_decl
-name|int
-name|uipc_usrreq
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|int
-name|raw_init
+name|uipc_usrreq
 argument_list|()
 decl_stmt|,
 name|raw_usrreq
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|raw_init
 argument_list|()
 decl_stmt|,
 name|raw_input
