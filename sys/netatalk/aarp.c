@@ -290,6 +290,20 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|callout_handle
+name|aarptimer_ch
+init|=
+name|CALLOUT_HANDLE_INITIALIZER
+argument_list|(
+operator|&
+name|aarptimer_ch
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -310,6 +324,8 @@ name|i
 decl_stmt|,
 name|s
 decl_stmt|;
+name|aarptimer_ch
+operator|=
 name|timeout
 argument_list|(
 name|aarptimer
@@ -1978,6 +1994,10 @@ argument_list|(
 name|aarpprobe
 argument_list|,
 name|ac
+argument_list|,
+name|aa
+operator|->
+name|aa_ch
 argument_list|)
 expr_stmt|;
 name|wakeup
@@ -2705,6 +2725,8 @@ name|first
 operator|=
 literal|0
 expr_stmt|;
+name|aarptimer_ch
+operator|=
 name|timeout
 argument_list|(
 name|aarptimer
@@ -2980,6 +3002,10 @@ return|return;
 block|}
 else|else
 block|{
+name|aa
+operator|->
+name|aa_ch
+operator|=
 name|timeout
 argument_list|(
 name|aarpprobe
@@ -3484,6 +3510,8 @@ argument_list|(
 name|aarptimer
 argument_list|,
 literal|0
+argument_list|,
+name|aarptimer_ch
 argument_list|)
 expr_stmt|;
 for|for

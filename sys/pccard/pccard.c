@@ -885,6 +885,10 @@ name|void
 operator|*
 operator|)
 name|sp
+argument_list|,
+name|sp
+operator|->
+name|insert_ch
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Unload the drivers attached to this slot. 			 */
@@ -1281,6 +1285,10 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Power off the slot 1/2 second after remove of the card */
+name|sp
+operator|->
+name|poff_ch
+operator|=
 name|timeout
 argument_list|(
 name|power_off_slot
@@ -2891,6 +2899,13 @@ name|vpp
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|->
+name|pwr_off_pending
+condition|)
+block|{
 name|untimeout
 argument_list|(
 name|power_off_slot
@@ -2899,14 +2914,12 @@ operator|(
 name|caddr_t
 operator|)
 name|sp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+argument_list|,
 name|sp
 operator|->
-name|pwr_off_pending
-condition|)
+name|poff_ch
+argument_list|)
+expr_stmt|;
 name|sp
 operator|->
 name|ctrl
@@ -2916,6 +2929,7 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
+block|}
 name|sp
 operator|->
 name|pwr_off_pending
@@ -3039,6 +3053,10 @@ name|void
 operator|*
 operator|)
 name|sp
+argument_list|,
+name|sp
+operator|->
+name|insert_ch
 argument_list|)
 expr_stmt|;
 block|}
@@ -3139,6 +3157,10 @@ name|insert_seq
 operator|=
 literal|1
 expr_stmt|;
+name|sp
+operator|->
+name|insert_ch
+operator|=
 name|timeout
 argument_list|(
 name|inserted

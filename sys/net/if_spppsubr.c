@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Synchronous PPP/Cisco link level subroutines.  * Keepalive protocol implemented in both Cisco and PPP modes.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 1.9, Wed Oct  4 18:58:15 MSK 1995  *  * $Id: if_spppsubr.c,v 1.25 1997/08/12 05:22:54 kjc Exp $  */
+comment|/*  * Synchronous PPP/Cisco link level subroutines.  * Keepalive protocol implemented in both Cisco and PPP modes.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 1.9, Wed Oct  4 18:58:15 MSK 1995  *  * $Id: if_spppsubr.c,v 1.26 1997/09/02 01:18:37 bde Exp $  */
 end_comment
 
 begin_include
@@ -1848,6 +1848,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|callout_handle
+name|keepalive_ch
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -3491,6 +3499,8 @@ condition|(
 operator|!
 name|spppq
 condition|)
+name|keepalive_ch
+operator|=
 name|timeout
 argument_list|(
 name|sppp_keepalive
@@ -3685,6 +3695,8 @@ argument_list|(
 name|sppp_keepalive
 argument_list|,
 literal|0
+argument_list|,
+name|keepalive_ch
 argument_list|)
 expr_stmt|;
 for|for
@@ -3716,6 +3728,13 @@ name|void
 operator|*
 operator|)
 name|sp
+argument_list|,
+name|sp
+operator|->
+name|ch
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -8210,6 +8229,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|sp
+operator|->
+name|ch
+index|[
+name|cp
+operator|->
+name|protoidx
+index|]
+operator|=
 name|timeout
 argument_list|(
 name|cp
@@ -8268,6 +8296,15 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
+name|sp
+operator|->
+name|ch
+index|[
+name|cp
+operator|->
+name|protoidx
+index|]
+operator|=
 name|timeout
 argument_list|(
 name|cp
@@ -8342,6 +8379,15 @@ name|void
 operator|*
 operator|)
 name|sp
+argument_list|,
+name|sp
+operator|->
+name|ch
+index|[
+name|cp
+operator|->
+name|protoidx
+index|]
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -8380,6 +8426,15 @@ case|:
 case|case
 name|STATE_ACK_SENT
 case|:
+name|sp
+operator|->
+name|ch
+index|[
+name|cp
+operator|->
+name|protoidx
+index|]
+operator|=
 name|timeout
 argument_list|(
 name|cp
@@ -8481,6 +8536,17 @@ operator|.
 name|their_mru
 operator|=
 name|PP_MTU
+expr_stmt|;
+name|callout_handle_init
+argument_list|(
+operator|&
+name|sp
+operator|->
+name|ch
+index|[
+name|IDX_LCP
+index|]
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize counters and timeout values.  Note that we don't 	 * use the 3 seconds suggested in RFC 1661 since we are likely 	 * running on a fast link.  XXX We should probably implement 	 * the exponential backoff option.  Note that these values are 	 * relevant for all control protocols, not just LCP only. 	 */
 name|sp
@@ -11103,6 +11169,17 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+name|callout_handle_init
+argument_list|(
+operator|&
+name|sp
+operator|->
+name|ch
+index|[
+name|IDX_IPCP
+index|]
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -13198,6 +13275,8 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|keepalive_ch
+operator|=
 name|timeout
 argument_list|(
 name|sppp_keepalive

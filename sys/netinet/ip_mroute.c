@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.39 1997/03/24 11:33:28 bde Exp $  */
+comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.40 1997/07/19 20:07:07 fenner Exp $  */
 end_comment
 
 begin_include
@@ -1136,6 +1136,14 @@ end_decl_stmt
 begin_comment
 comment|/* rsvp debug level   */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|callout_handle
+name|expire_upcalls_ch
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -2693,6 +2701,8 @@ name|pim_assert
 operator|=
 literal|0
 expr_stmt|;
+name|expire_upcalls_ch
+operator|=
 name|timeout
 argument_list|(
 name|expire_upcalls
@@ -2909,6 +2919,8 @@ operator|(
 name|caddr_t
 operator|)
 name|NULL
+argument_list|,
+name|expire_upcalls_ch
 argument_list|)
 expr_stmt|;
 comment|/*      * Free all multicast forwarding cache entries.      */
@@ -6708,6 +6720,8 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|expire_upcalls_ch
+operator|=
 name|timeout
 argument_list|(
 name|expire_upcalls

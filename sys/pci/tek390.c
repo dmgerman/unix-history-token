@@ -639,6 +639,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * XXX No timeouts are scheduled in this driver as the timeout handler  *     doesn't do anything yet!!!  */
+end_comment
+
 begin_function_decl
 specifier|static
 name|void
@@ -3191,26 +3195,6 @@ argument_list|,
 name|pACB
 argument_list|,
 name|pSRB
-argument_list|)
-expr_stmt|;
-name|timeout
-argument_list|(
-name|DC390_timeout
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-name|pSRB
-argument_list|,
-operator|(
-name|pcmd
-operator|->
-name|timeout
-operator|*
-name|hz
-operator|)
-operator|/
-literal|1000
 argument_list|)
 expr_stmt|;
 name|splx

@@ -2096,6 +2096,10 @@ operator|=
 literal|10
 expr_stmt|;
 comment|/* 		 * start off the probes as an asynchronous activity. 		 * though why wait 200mSec? 		 */
+name|aa
+operator|->
+name|aa_ch
+operator|=
 name|timeout
 argument_list|(
 name|aarpprobe

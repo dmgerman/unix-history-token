@@ -367,6 +367,16 @@ name|int
 name|insert_seq
 decl_stmt|;
 comment|/* Firing up under the card */
+name|struct
+name|callout_handle
+name|insert_ch
+decl_stmt|;
+comment|/* Insert event timeout handle */
+name|struct
+name|callout_handle
+name|poff_ch
+decl_stmt|;
+comment|/* Power Off timeout handle */
 name|enum
 name|cardstate
 name|state

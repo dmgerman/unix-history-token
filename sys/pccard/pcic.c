@@ -562,6 +562,20 @@ name|pcictimeout
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|callout_handle
+name|pcictimeout_ch
+init|=
+name|CALLOUT_HANDLE_INITIALIZER
+argument_list|(
+operator|&
+name|pcictimeout_ch
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1235,6 +1249,8 @@ argument_list|(
 name|pcictimeout
 argument_list|,
 literal|0
+argument_list|,
+name|pcictimeout_ch
 argument_list|)
 expr_stmt|;
 if|if
@@ -3487,6 +3503,8 @@ if|if
 condition|(
 name|validslots
 condition|)
+name|pcictimeout_ch
+operator|=
 name|timeout
 argument_list|(
 name|pcictimeout
@@ -4686,6 +4704,8 @@ modifier|*
 name|chan
 parameter_list|)
 block|{
+name|pcictimeout_ch
+operator|=
 name|timeout
 argument_list|(
 name|pcictimeout
