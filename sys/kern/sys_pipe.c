@@ -1401,8 +1401,6 @@ name|struct
 name|timeval
 name|lastfail
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|cpipe
@@ -1676,19 +1674,6 @@ name|object
 operator|=
 name|NULL
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|PIPE_NODIRECT
-name|cpipe
-operator|->
-name|pipe_map
-operator|.
-name|kva
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * protect so pipeclose() doesn't follow a junk pointer 	 * if pipespace() fails. 	 */
 name|bzero
 argument_list|(
