@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: util.c,v 1.5 1998/02/03 20:53:25 pst Exp $	*/
+comment|/*	$Id: util.c,v 1.6 1998/07/19 00:01:24 jmz Exp $	*/
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$Id: util.c,v 1.5 1998/02/03 20:53:25 pst Exp $"
+literal|"$Id: util.c,v 1.6 1998/07/19 00:01:24 jmz Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -325,7 +325,7 @@ literal|"%s: bad port number '%s'.\n"
 argument_list|,
 name|argv
 index|[
-literal|1
+literal|0
 index|]
 argument_list|,
 name|argv
