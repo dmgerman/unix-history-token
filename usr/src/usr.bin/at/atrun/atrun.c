@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atrun.c	4.6	(Berkeley)	%G%"
+literal|"@(#)atrun.c	4.7	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -454,6 +454,13 @@ index|]
 decl_stmt|;
 comment|/* file sent to forked shell for exec- 					   ution */
 name|char
+name|owner
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* owner of job we're going to run */
+name|char
 name|jobname
 index|[
 literal|100
@@ -467,6 +474,12 @@ literal|100
 index|]
 decl_stmt|;
 comment|/* which shell should we fork off? */
+name|struct
+name|passwd
+modifier|*
+name|pwdbuf
+decl_stmt|;
+comment|/* password info of the owner of job */
 name|struct
 name|stat
 name|errbuf
@@ -524,6 +537,15 @@ name|fscanf
 argument_list|(
 name|infile
 argument_list|,
+literal|"# owner: %s\n"
+argument_list|,
+name|owner
+argument_list|)
+expr_stmt|;
+name|fscanf
+argument_list|(
+name|infile
+argument_list|,
 literal|"# jobname: %s\n"
 argument_list|,
 name|jobname
@@ -566,6 +588,44 @@ argument_list|(
 name|infile
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Change the ownership of the spoolfile from "daemon" to the owner 	 * of the job. 	 */
+name|pwdbuf
+operator|=
+name|getpwnam
+argument_list|(
+name|owner
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|chown
+argument_list|(
+name|spoolfile
+argument_list|,
+name|pwdbuf
+operator|->
+name|pw_uid
+argument_list|,
+name|pwdbuf
+operator|->
+name|pw_gid
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|perror
+argument_list|(
+name|spoolfile
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Move the spoolfile to the directory where jobs are run from and 	 * then move into that directory. 	 */
 name|sprintf
 argument_list|(
