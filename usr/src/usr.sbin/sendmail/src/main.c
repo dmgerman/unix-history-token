@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.12	%G%"
+literal|"@(#)main.c	3.13	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1244,7 +1244,7 @@ name|define
 argument_list|(
 literal|'x'
 argument_list|,
-name|nbuf
+name|fullname
 argument_list|)
 expr_stmt|;
 comment|/* 	** Get a temp file. 	*/
