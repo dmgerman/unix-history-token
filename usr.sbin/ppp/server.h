@@ -15,6 +15,9 @@ specifier|const
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|mode_t
+name|mask
 parameter_list|)
 function_decl|;
 end_function_decl
