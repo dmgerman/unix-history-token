@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uuclean.c	5.6 (Berkeley) %G%"
+literal|"@(#)uuclean.c	5.7	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,15 +115,16 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
+specifier|register
 name|DIR
 modifier|*
 name|dirp
 decl_stmt|;
-name|char
-name|file
-index|[
-name|NAMESIZE
-index|]
+specifier|register
+name|struct
+name|direct
+modifier|*
+name|dentp
 decl_stmt|;
 name|time_t
 name|nomtime
@@ -386,11 +387,11 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|gnamef
+name|dentp
+operator|=
+name|readdir
 argument_list|(
 name|dirp
-argument_list|,
-name|file
 argument_list|)
 condition|)
 block|{
@@ -401,7 +402,9 @@ operator|&&
 operator|!
 name|chkpre
 argument_list|(
-name|file
+name|dentp
+operator|->
+name|d_name
 argument_list|)
 condition|)
 continue|continue;
@@ -409,7 +412,9 @@ if|if
 condition|(
 name|stat
 argument_list|(
-name|file
+name|dentp
+operator|->
+name|d_name
 argument_list|,
 operator|&
 name|stbuf
@@ -425,7 +430,9 @@ literal|4
 argument_list|,
 literal|"stat on %s failed\n"
 argument_list|,
-name|file
+name|dentp
+operator|->
+name|d_name
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -458,7 +465,9 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|file
+name|dentp
+operator|->
+name|d_name
 index|[
 literal|0
 index|]
@@ -467,7 +476,9 @@ name|CMDPRE
 condition|)
 name|notfyuser
 argument_list|(
-name|file
+name|dentp
+operator|->
+name|d_name
 argument_list|)
 expr_stmt|;
 name|DEBUG
@@ -476,12 +487,16 @@ literal|4
 argument_list|,
 literal|"unlink file %s\n"
 argument_list|,
-name|file
+name|dentp
+operator|->
+name|d_name
 argument_list|)
 expr_stmt|;
 name|unlink
 argument_list|(
-name|file
+name|dentp
+operator|->
+name|d_name
 argument_list|)
 expr_stmt|;
 if|if
@@ -490,7 +505,9 @@ name|mflg
 condition|)
 name|sdmail
 argument_list|(
-name|file
+name|dentp
+operator|->
+name|d_name
 argument_list|,
 name|stbuf
 operator|.
