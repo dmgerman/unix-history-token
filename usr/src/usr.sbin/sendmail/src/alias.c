@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.8 (Berkeley) %G%"
+literal|"@(#)alias.c	8.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -325,10 +325,6 @@ operator|--
 expr_stmt|;
 if|if
 condition|(
-name|naliases
-operator|>
-literal|0
-operator|&&
 operator|!
 name|bitset
 argument_list|(
