@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.11 1994/10/04 15:54:39 jkh Exp $"
+literal|"$Id: perform.c,v 1.12 1994/10/14 05:55:46 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -280,7 +280,10 @@ name|plist
 argument_list|,
 name|PLIST_NAME
 argument_list|,
+name|basename_of
+argument_list|(
 name|pkg
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Make a directory to stomp around in */
