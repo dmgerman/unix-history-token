@@ -157,6 +157,17 @@ init|=
 name|_get_curthread
 argument_list|()
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|_kse_isthreaded
+argument_list|()
+condition|)
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* Check if this thread is already in the process of exiting: */
 if|if
 condition|(
