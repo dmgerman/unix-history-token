@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)comsat.c	5.1 (Berkeley) %G%"
+literal|"@(#)comsat.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -498,9 +498,10 @@ continue|continue;
 block|}
 name|sigblock
 argument_list|(
-literal|1
-operator|<<
+name|sigmask
+argument_list|(
 name|SIGALRM
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|msgbuf
