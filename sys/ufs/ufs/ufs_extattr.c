@@ -2428,25 +2428,6 @@ goto|goto
 name|vopunlock_exit
 goto|;
 block|}
-if|if
-condition|(
-name|ueh
-operator|.
-name|ueh_len
-operator|<
-name|uio
-operator|->
-name|uio_offset
-condition|)
-block|{
-name|error
-operator|=
-literal|0
-expr_stmt|;
-goto|goto
-name|vopunlock_exit
-goto|;
-block|}
 comment|/* allow for offset into the attr data */
 name|uio
 operator|->
