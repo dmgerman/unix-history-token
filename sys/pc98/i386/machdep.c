@@ -848,7 +848,7 @@ literal|0
 argument_list|,
 name|sysctl_hw_physmem
 argument_list|,
-literal|"I"
+literal|"IU"
 argument_list|,
 literal|""
 argument_list|)
@@ -911,7 +911,7 @@ literal|0
 argument_list|,
 name|sysctl_hw_usermem
 argument_list|,
-literal|"I"
+literal|"IU"
 argument_list|,
 literal|""
 argument_list|)
@@ -8583,35 +8583,7 @@ operator|.
 name|p_contested
 argument_list|)
 expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|,
-literal|"sched lock"
-argument_list|,
-name|MTX_SPIN
-operator||
-name|MTX_RECURSE
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
-comment|/* 	 * Interrupts can happen very early, so initialize imen_mtx here, rather 	 * than in init_locks(). 	 */
-name|mtx_init
-argument_list|(
-operator|&
-name|imen_mtx
-argument_list|,
-literal|"imen"
-argument_list|,
-name|MTX_SPIN
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* 	 * Giant is used early for at least debugger traps and unexpected traps. 	 */
+comment|/* 	 * Initialize mutexes. 	 */
 name|mtx_init
 argument_list|(
 operator|&
@@ -8620,6 +8592,18 @@ argument_list|,
 literal|"Giant"
 argument_list|,
 name|MTX_DEF
+operator||
+name|MTX_RECURSE
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+literal|"sched lock"
+argument_list|,
+name|MTX_SPIN
 operator||
 name|MTX_RECURSE
 argument_list|)
@@ -8636,6 +8620,33 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|clock_lock
+argument_list|,
+literal|"clk"
+argument_list|,
+name|MTX_SPIN
+operator||
+name|MTX_RECURSE
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+name|mtx_init
+argument_list|(
+operator|&
+name|imen_mtx
+argument_list|,
+literal|"imen"
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|mtx_lock
 argument_list|(
 operator|&
@@ -9235,19 +9246,6 @@ name|lidt
 argument_list|(
 operator|&
 name|r_idt
-argument_list|)
-expr_stmt|;
-comment|/* 	 * We need this mutex before the console probe. 	 */
-name|mtx_init
-argument_list|(
-operator|&
-name|clock_lock
-argument_list|,
-literal|"clk"
-argument_list|,
-name|MTX_SPIN
-operator||
-name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize the console before we print anything out. 	 */
