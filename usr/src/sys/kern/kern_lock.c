@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)kern_lock.c	8.8 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)kern_lock.c	8.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -82,30 +82,6 @@ name|wanted
 parameter_list|)
 end_define
 
-begin_comment
-comment|/*  * Panic messages for inline expanded simple locks.  * Put text here to avoid hundreds of copies.  */
-end_comment
-
-begin_decl_stmt
-specifier|const
-name|char
-modifier|*
-name|simple_lock_held
-init|=
-literal|"simple_lock: lock held"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|const
-name|char
-modifier|*
-name|simple_lock_not_held
-init|=
-literal|"simple_lock: lock not held"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -142,7 +118,7 @@ end_comment
 
 begin_function
 name|void
-name|lock_init
+name|lockinit
 parameter_list|(
 name|lkp
 parameter_list|,
@@ -1314,6 +1290,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Print out information about state of a lock. Used by VOP_PRINT  * routines to display ststus about contained locks.  */
+end_comment
+
 begin_macro
 name|lockmgr_printinfo
 argument_list|(
@@ -1387,6 +1367,163 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DEBUG
+argument_list|)
+operator|&&
+name|NCPUS
+operator|==
+literal|1
+end_if
+
+begin_comment
+comment|/*  * Simple lock functions so that the debugger can see from whence  * they are being called.  */
+end_comment
+
+begin_function
+name|void
+name|simple_lock_init
+parameter_list|(
+name|alp
+parameter_list|)
+name|struct
+name|simple_lock
+modifier|*
+name|alp
+decl_stmt|;
+block|{
+name|alp
+operator|->
+name|lock_data
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|simple_lock
+parameter_list|(
+name|alp
+parameter_list|)
+name|__volatile
+name|struct
+name|simple_lock
+modifier|*
+name|alp
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|alp
+operator|->
+name|lock_data
+operator|==
+literal|1
+condition|)
+name|panic
+argument_list|(
+literal|"simple_lock: lock held"
+argument_list|)
+expr_stmt|;
+name|alp
+operator|->
+name|lock_data
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|simple_lock_try
+parameter_list|(
+name|alp
+parameter_list|)
+name|__volatile
+name|struct
+name|simple_lock
+modifier|*
+name|alp
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|alp
+operator|->
+name|lock_data
+operator|==
+literal|1
+condition|)
+name|panic
+argument_list|(
+literal|"simple_lock: lock held"
+argument_list|)
+expr_stmt|;
+name|alp
+operator|->
+name|lock_data
+operator|=
+literal|1
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|simple_unlock
+parameter_list|(
+name|alp
+parameter_list|)
+name|__volatile
+name|struct
+name|simple_lock
+modifier|*
+name|alp
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|alp
+operator|->
+name|lock_data
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"simple_lock: lock not held"
+argument_list|)
+expr_stmt|;
+name|alp
+operator|->
+name|lock_data
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DEBUG&& NCPUS == 1 */
+end_comment
 
 end_unit
 
