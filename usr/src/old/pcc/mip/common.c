@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	common.c	4.4	87/12/09	*/
+comment|/*	common.c	4.5	88/05/11	*/
 end_comment
 
 begin_ifdef
@@ -931,7 +931,7 @@ begin_define
 define|#
 directive|define
 name|NR
-value|100
+value|32
 end_define
 
 begin_comment
@@ -965,6 +965,19 @@ end_function_decl
 
 begin_block
 block|{
+name|NODE
+modifier|*
+name|Aat
+index|[
+name|NR
+index|]
+decl_stmt|;
+name|int
+name|Aao
+index|[
+name|NR
+index|]
+decl_stmt|;
 specifier|register
 name|int
 name|i
@@ -984,20 +997,20 @@ operator|.
 name|op
 argument_list|)
 decl_stmt|;
-specifier|static
+specifier|register
 name|NODE
 modifier|*
+modifier|*
 name|at
-index|[
-name|NR
-index|]
+init|=
+name|Aat
 decl_stmt|;
-specifier|static
+specifier|register
 name|int
+modifier|*
 name|ao
-index|[
-name|NR
-index|]
+init|=
+name|Aao
 decl_stmt|;
 define|#
 directive|define
