@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: disk.c,v 1.3 1995/04/29 04:00:55 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: disk.c,v 1.4 1995/04/29 04:50:37 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -134,6 +134,10 @@ name|struct
 name|diskslices
 name|ds
 decl_stmt|;
+name|struct
+name|disklabel
+name|dl
+decl_stmt|;
 name|char
 name|device
 index|[
@@ -192,6 +196,41 @@ name|ioctl
 argument_list|(
 name|fd
 argument_list|,
+name|DIOCGDINFO
+argument_list|,
+operator|&
+name|dl
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|<
+literal|0
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"DIOCGDINFO(%s) failed"
+argument_list|,
+name|device
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+name|i
+operator|=
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
 name|DIOCGSLICEINFO
 argument_list|,
 operator|&
@@ -207,7 +246,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"DIOCSLICEINFO(%s) failed"
+literal|"DIOCGSLICEINFO(%s) failed"
 argument_list|,
 name|device
 argument_list|)
@@ -260,6 +299,22 @@ argument_list|)
 expr_stmt|;
 name|d
 operator|->
+name|bios_sect
+operator|=
+name|dl
+operator|.
+name|d_nsectors
+expr_stmt|;
+name|d
+operator|->
+name|bios_hd
+operator|=
+name|dl
+operator|.
+name|d_ntracks
+expr_stmt|;
+name|d
+operator|->
 name|name
 operator|=
 name|strdup
@@ -282,6 +337,32 @@ name|WHOLE_DISK_SLICE
 index|]
 operator|.
 name|ds_size
+expr_stmt|;
+if|if
+condition|(
+name|dl
+operator|.
+name|d_ntracks
+operator|&&
+name|dl
+operator|.
+name|d_nsectors
+condition|)
+name|d
+operator|->
+name|bios_cyl
+operator|=
+name|size
+operator|/
+operator|(
+name|dl
+operator|.
+name|d_ntracks
+operator|*
+name|dl
+operator|.
+name|d_nsectors
+operator|)
 expr_stmt|;
 if|if
 condition|(
