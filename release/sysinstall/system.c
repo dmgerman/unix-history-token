@@ -794,13 +794,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|signal
-argument_list|(
-name|SIGCHLD
-argument_list|,
-name|reap_children
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|signal(SIGCHLD, reap_children);
+endif|#
+directive|endif
 block|}
 else|else
 block|{
