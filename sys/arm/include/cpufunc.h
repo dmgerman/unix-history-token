@@ -58,82 +58,9 @@ parameter_list|)
 block|{ }
 end_function
 
-begin_function
-specifier|static
-name|__inline
-name|register_t
-name|intr_disable
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|int
-name|s
-init|=
-literal|0
-decl_stmt|,
-name|tmp
-decl_stmt|;
-asm|__asm __volatile("mrs %0, cpsr; \ 	    		orr %1, %0, %2;\ 			msr cpsr_all, %1;"
-block|:
-literal|"=r"
-operator|(
-name|s
-operator|)
-operator|,
-literal|"=r"
-operator|(
-name|tmp
-operator|)
-operator|:
-literal|"I"
-operator|(
-name|I32_bit
-operator|)
-operator|:
-literal|"cc"
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-operator|(
-name|s
-operator|)
-return|;
-end_return
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|intr_restore
-parameter_list|(
-name|int
-name|s
-parameter_list|)
-block|{
-asm|__asm __volatile("msr cpsr_all, %0 "
-block|:
-comment|/* no output */
-block|:
-literal|"r"
-operator|(
-name|s
-operator|)
-operator|:
-literal|"cc"
-block|)
-function|;
-end_function
-
-begin_macro
-unit|} struct
+begin_struct
+struct|struct
 name|cpu_functions
-end_macro
-
-begin_block
 block|{
 comment|/* CPU functions */
 name|u_int
@@ -439,11 +366,8 @@ name|string
 parameter_list|)
 function_decl|;
 block|}
-end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+struct|;
+end_struct
 
 begin_decl_stmt
 specifier|extern
@@ -2516,6 +2440,8 @@ literal|"r"
 operator|(
 name|eor
 operator|)
+operator|:
+literal|"memory"
 block|)
 function|;
 end_function
@@ -2546,7 +2472,7 @@ parameter_list|(
 name|mask
 parameter_list|)
 define|\
-value|(__set_cpsr_c((mask)& (I32_bit | F32_bit), 0))
+value|(__set_cpsr_c((mask | F32_bit)& (I32_bit | F32_bit), 0))
 end_define
 
 begin_define
@@ -2558,6 +2484,26 @@ name|old_cpsr
 parameter_list|)
 define|\
 value|(__set_cpsr_c((I32_bit | F32_bit), (old_cpsr)& (I32_bit | F32_bit)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|intr_disable
+parameter_list|()
+define|\
+value|disable_interrupts(I32_bit | F32_bit)
+end_define
+
+begin_define
+define|#
+directive|define
+name|intr_restore
+parameter_list|(
+name|s
+parameter_list|)
+define|\
+value|restore_interrupts(s)
 end_define
 
 begin_comment
