@@ -326,7 +326,7 @@ begin_define
 define|#
 directive|define
 name|RDONLY
-value|0x000200
+value|0x0000200
 end_define
 
 begin_comment
@@ -337,7 +337,7 @@ begin_define
 define|#
 directive|define
 name|HASBUF
-value|0x000400
+value|0x0000400
 end_define
 
 begin_comment
@@ -348,7 +348,7 @@ begin_define
 define|#
 directive|define
 name|SAVENAME
-value|0x000800
+value|0x0000800
 end_define
 
 begin_comment
@@ -359,7 +359,7 @@ begin_define
 define|#
 directive|define
 name|SAVESTART
-value|0x001000
+value|0x0001000
 end_define
 
 begin_comment
@@ -370,7 +370,7 @@ begin_define
 define|#
 directive|define
 name|ISDOTDOT
-value|0x002000
+value|0x0002000
 end_define
 
 begin_comment
@@ -381,7 +381,7 @@ begin_define
 define|#
 directive|define
 name|MAKEENTRY
-value|0x004000
+value|0x0004000
 end_define
 
 begin_comment
@@ -392,7 +392,7 @@ begin_define
 define|#
 directive|define
 name|ISLASTCN
-value|0x008000
+value|0x0008000
 end_define
 
 begin_comment
@@ -403,7 +403,7 @@ begin_define
 define|#
 directive|define
 name|ISSYMLINK
-value|0x010000
+value|0x0010000
 end_define
 
 begin_comment
@@ -414,7 +414,7 @@ begin_define
 define|#
 directive|define
 name|ISWHITEOUT
-value|0x020000
+value|0x0020000
 end_define
 
 begin_comment
@@ -425,7 +425,7 @@ begin_define
 define|#
 directive|define
 name|DOWHITEOUT
-value|0x040000
+value|0x0040000
 end_define
 
 begin_comment
@@ -436,7 +436,7 @@ begin_define
 define|#
 directive|define
 name|WILLBEDIR
-value|0x080000
+value|0x0080000
 end_define
 
 begin_comment
@@ -447,7 +447,7 @@ begin_define
 define|#
 directive|define
 name|ISUNICODE
-value|0x100000
+value|0x0100000
 end_define
 
 begin_comment
@@ -458,7 +458,7 @@ begin_define
 define|#
 directive|define
 name|PDIRUNLOCK
-value|0x200000
+value|0x0200000
 end_define
 
 begin_comment
@@ -469,7 +469,7 @@ begin_define
 define|#
 directive|define
 name|NOCROSSMOUNT
-value|0x400000
+value|0x0400000
 end_define
 
 begin_comment
@@ -480,7 +480,7 @@ begin_define
 define|#
 directive|define
 name|NOMACCHECK
-value|0x800000
+value|0x0800000
 end_define
 
 begin_comment
@@ -490,13 +490,45 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MPSAFE
+value|0x1000000
+end_define
+
+begin_comment
+comment|/* namei() must acquire Giant if needed. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GIANTHELD
+value|0x2000000
+end_define
+
+begin_comment
+comment|/* namei() is holding giant. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PARAMASK
-value|0xfffe00
+value|0x3fffe00
 end_define
 
 begin_comment
 comment|/* mask of parameter descriptors */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NDHASGIANT
+parameter_list|(
+name|NDP
+parameter_list|)
+value|(((NDP)->ni_cnd.cn_flags& GIANTHELD) != 0)
+end_define
 
 begin_comment
 comment|/*  * Initialization of a nameidata structure.  */
