@@ -916,6 +916,9 @@ name|struct
 name|mtx
 name|mtx
 decl_stmt|;
+name|int
+name|em_insert_vlan_header
+decl_stmt|;
 comment|/* Info about the board itself */
 name|u_int32_t
 name|part_num
