@@ -386,6 +386,7 @@ name|initted
 init|=
 literal|0
 decl_stmt|;
+specifier|static
 name|struct
 name|bwx_space
 name|io_space
