@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	4.7 (Berkeley) 83/10/26"
+literal|"@(#)main.c	4.8 (Berkeley) 83/11/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -240,6 +240,30 @@ begin_comment
 comment|/* user's group ID */
 end_comment
 
+begin_decl_stmt
+name|struct
+name|passwd
+modifier|*
+name|pw
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* pointer to static area used by getpwent */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|group
+modifier|*
+name|gr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* pointer to static area used by getgrent */
+end_comment
+
 begin_function_decl
 name|int
 name|cleanup
@@ -274,12 +298,6 @@ specifier|register
 name|char
 modifier|*
 name|arg
-decl_stmt|;
-specifier|register
-name|struct
-name|passwd
-modifier|*
-name|pw
 decl_stmt|;
 name|int
 name|cmdargs

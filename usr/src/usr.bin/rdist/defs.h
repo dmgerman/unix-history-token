@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.6	83/10/26	*/
+comment|/*	defs.h	4.7	83/11/01	*/
 end_comment
 
 begin_include
@@ -264,15 +264,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|STRIP
-value|0x10
-end_define
-
-begin_define
-define|#
-directive|define
 name|REMOVE
-value|0x20
+value|0x10
 end_define
 
 begin_define
@@ -434,6 +427,32 @@ end_decl_stmt
 
 begin_comment
 comment|/* file name for logging changes */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|passwd
+modifier|*
+name|pw
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* pointer to static area used by getpwent */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|group
+modifier|*
+name|gr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* pointer to static area used by getgrent */
 end_comment
 
 begin_decl_stmt
