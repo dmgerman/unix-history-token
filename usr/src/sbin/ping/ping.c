@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ping.c	5.10 (Berkeley) %G%"
+literal|"@(#)ping.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4876,6 +4876,12 @@ name|MAXPACKET
 operator|-
 operator|(
 literal|8
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|timeval
+argument_list|)
 operator|+
 name|ii
 operator|)
