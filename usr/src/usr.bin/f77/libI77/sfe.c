@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_sfe[] = "@(#)sfe.c	1.4";  *  * sequential formatted external routines  */
+comment|/* char id_sfe[] = "@(#)sfe.c	1.5";  *  * sequential formatted external routines  */
 end_comment
 
 begin_include
@@ -184,11 +184,15 @@ name|ch
 decl_stmt|;
 if|if
 condition|(
-operator|!
 name|curunit
 operator|->
 name|uend
 condition|)
+return|return
+operator|(
+name|EOF
+operator|)
+return|;
 while|while
 condition|(
 operator|(
@@ -209,10 +213,6 @@ condition|)
 empty_stmt|;
 if|if
 condition|(
-name|recpos
-operator|==
-literal|0
-operator|&&
 name|feof
 argument_list|(
 name|cf
@@ -225,6 +225,12 @@ name|uend
 operator|=
 name|YES
 expr_stmt|;
+if|if
+condition|(
+name|recpos
+operator|==
+literal|0
+condition|)
 return|return
 operator|(
 name|EOF
