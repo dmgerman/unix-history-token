@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_loop.c	4.4	81/12/07	*/
+comment|/*	if_loop.c	4.5	81/12/22	*/
 end_comment
 
 begin_comment
@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|LONET
-value|254
+value|127
 end_define
 
 begin_define
