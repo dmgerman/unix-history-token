@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vmmeter.h>
 end_include
 
@@ -49,12 +55,6 @@ begin_include
 include|#
 directive|include
 file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/mutex.h>
 end_include
 
 begin_include
@@ -267,12 +267,15 @@ name|kmemlimit
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|mtx
+begin_expr_stmt
+name|MUTEX_DECLARE
+argument_list|(
+specifier|static
+argument_list|,
 name|malloc_mtx
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|u_int
@@ -2125,6 +2128,8 @@ argument_list|,
 literal|"malloc"
 argument_list|,
 name|MTX_DEF
+operator||
+name|MTX_COLD
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Try to auto-tune the kernel memory size, so that it is 	 * more applicable for a wider range of machine sizes. 	 * On an X86, a VM_KMEM_SIZE_SCALE value of 4 is good, while 	 * a VM_KMEM_SIZE of 12MB is a fair compromise.  The 	 * VM_KMEM_SIZE_MAX is dependent on the maximum KVA space 	 * available, and on an X86 with a total KVA space of 256MB, 	 * try to keep VM_KMEM_SIZE_MAX at 80MB or below. 	 * 	 * Note that the kmem_map is also used by the zone allocator, 	 * so make sure that there is enough space. 	 */
