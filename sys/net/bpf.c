@@ -2237,6 +2237,18 @@ operator|(
 name|EMSGSIZE
 operator|)
 return|;
+if|if
+condition|(
+name|d
+operator|->
+name|bd_hdrcmplt
+condition|)
+name|dst
+operator|.
+name|sa_family
+operator|=
+name|pseudo_AF_HDRCMPLT
+expr_stmt|;
 name|s
 operator|=
 name|splnet
@@ -2365,7 +2377,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/*  *  FIONREAD		Check for read packet available.  *  SIOCGIFADDR		Get interface address - convenient hook to driver.  *  BIOCGBLEN		Get buffer len [for read()].  *  BIOCSETF		Set ethernet read filter.  *  BIOCFLUSH		Flush read packet buffer.  *  BIOCPROMISC		Put interface into promiscuous mode.  *  BIOCGDLT		Get link layer type.  *  BIOCGETIF		Get interface name.  *  BIOCSETIF		Set interface.  *  BIOCSRTIMEOUT	Set read timeout.  *  BIOCGRTIMEOUT	Get read timeout.  *  BIOCGSTATS		Get packet stats.  *  BIOCIMMEDIATE	Set immediate mode.  *  BIOCVERSION		Get filter language version.  */
+comment|/*  *  FIONREAD		Check for read packet available.  *  SIOCGIFADDR		Get interface address - convenient hook to driver.  *  BIOCGBLEN		Get buffer len [for read()].  *  BIOCSETF		Set ethernet read filter.  *  BIOCFLUSH		Flush read packet buffer.  *  BIOCPROMISC		Put interface into promiscuous mode.  *  BIOCGDLT		Get link layer type.  *  BIOCGETIF		Get interface name.  *  BIOCSETIF		Set interface.  *  BIOCSRTIMEOUT	Set read timeout.  *  BIOCGRTIMEOUT	Get read timeout.  *  BIOCGSTATS		Get packet stats.  *  BIOCIMMEDIATE	Set immediate mode.  *  BIOCVERSION		Get filter language version.  *  BIOCGHDRCMPLT	Get "header already complete" flag  *  BIOCSHDRCMPLT	Set "header already complete" flag  */
 comment|/* ARGSUSED */
 specifier|static
 name|int
@@ -2982,6 +2994,42 @@ name|BPF_MINOR_VERSION
 expr_stmt|;
 break|break;
 block|}
+comment|/* 	 * Get "header already complete" flag 	 */
+case|case
+name|BIOCGHDRCMPLT
+case|:
+operator|*
+operator|(
+name|u_int
+operator|*
+operator|)
+name|addr
+operator|=
+name|d
+operator|->
+name|bd_hdrcmplt
+expr_stmt|;
+break|break;
+comment|/* 	 * Set "header already complete" flag 	 */
+case|case
+name|BIOCSHDRCMPLT
+case|:
+name|d
+operator|->
+name|bd_hdrcmplt
+operator|=
+operator|*
+operator|(
+name|u_int
+operator|*
+operator|)
+name|addr
+condition|?
+literal|1
+else|:
+literal|0
+expr_stmt|;
+break|break;
 case|case
 name|FIONBIO
 case|:

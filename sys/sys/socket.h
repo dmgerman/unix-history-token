@@ -711,8 +711,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AF_MAX
+name|pseudo_AF_HDRCMPLT
 value|31
+end_define
+
+begin_comment
+comment|/* Used by BPF to not rewrite headers 					 * in interface output routine 					 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AF_MAX
+value|32
 end_define
 
 begin_comment

@@ -97,6 +97,10 @@ name|bd_immediate
 decl_stmt|;
 comment|/* true to return on packet arrival */
 name|int
+name|bd_hdrcmplt
+decl_stmt|;
+comment|/* false to fill in src lladdr automatically */
+name|int
 name|bd_async
 decl_stmt|;
 comment|/* non-zero if packet reception should generate signal */

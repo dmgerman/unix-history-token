@@ -1632,7 +1632,7 @@ begin_define
 define|#
 directive|define
 name|AF_MAX
-value|31
+value|32
 end_define
 
 begin_comment
