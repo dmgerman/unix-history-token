@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
+comment|/*  * Copyright (c) 1983, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tables.c	5.11 (Berkeley) %G%"
+literal|"@(#)tables.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,7 +53,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<syslog.h>
+file|<sys/syslog.h>
 end_include
 
 begin_ifndef
@@ -266,6 +266,17 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_decl_stmt
+name|struct
+name|sockaddr
+name|wildcard
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* zero valued cookie for wildcard searches */
+end_comment
 
 begin_comment
 comment|/*  * Find a route to dst as the kernel would.  */
@@ -494,6 +505,33 @@ goto|goto
 name|again
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|notyet
+comment|/* 	 * Check for wildcard gateway, by convention network 0. 	 */
+if|if
+condition|(
+name|dst
+operator|!=
+operator|&
+name|wildcard
+condition|)
+block|{
+name|dst
+operator|=
+operator|&
+name|wildcard
+operator|,
+name|hash
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|again
+goto|;
+block|}
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -790,7 +828,7 @@ argument_list|)
 expr_stmt|;
 name|TRACE_ACTION
 argument_list|(
-name|ADD
+literal|"ADD"
 argument_list|,
 name|rt
 argument_list|)
@@ -896,7 +934,7 @@ condition|)
 block|{
 name|TRACE_ACTION
 argument_list|(
-name|DELETE
+literal|"DELETE"
 argument_list|,
 name|rt
 argument_list|)
@@ -961,10 +999,6 @@ init|=
 literal|0
 decl_stmt|,
 name|delete
-init|=
-literal|0
-decl_stmt|,
-name|metricchanged
 init|=
 literal|0
 decl_stmt|;
@@ -1040,28 +1074,52 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
+name|equal
+argument_list|(
+operator|&
+name|rt
+operator|->
+name|rt_router
+argument_list|,
+name|gate
+argument_list|)
+condition|)
+block|{
+name|TRACE_ACTION
+argument_list|(
+literal|"CHANGE FROM "
+argument_list|,
+name|rt
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|metric
 operator|!=
 name|rt
 operator|->
 name|rt_metric
 condition|)
-name|metricchanged
-operator|++
+name|TRACE_NEWMETRIC
+argument_list|(
+name|rt
+argument_list|,
+name|metric
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|delete
-operator|||
-name|metricchanged
 condition|)
-name|TRACE_ACTION
-argument_list|(
-argument|CHANGE FROM
-argument_list|,
-argument|rt
-argument_list|)
-empty_stmt|;
+name|oldroute
+operator|=
+name|rt
+operator|->
+name|rt_rt
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1082,10 +1140,6 @@ operator|&=
 operator|~
 name|RTS_INTERFACE
 expr_stmt|;
-if|if
-condition|(
-name|add
-condition|)
 name|rt
 operator|->
 name|rt_flags
@@ -1101,22 +1155,18 @@ operator|->
 name|rt_metric
 operator|&&
 name|delete
-operator|&&
-operator|(
-name|rt
-operator|->
-name|rt_state
-operator|&
-name|RTS_INTERNAL
-operator|)
-operator|==
-literal|0
 condition|)
 name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"changing route from interface %s (timed out)"
+literal|"%s route to interface %s (timed out)"
+argument_list|,
+name|add
+condition|?
+literal|"changing"
+else|:
+literal|"deleting"
 argument_list|,
 name|rt
 operator|->
@@ -1126,16 +1176,6 @@ name|int_name
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|delete
-condition|)
-name|oldroute
-operator|=
-name|rt
-operator|->
-name|rt_rt
-expr_stmt|;
 if|if
 condition|(
 name|add
@@ -1196,16 +1236,14 @@ expr_stmt|;
 if|if
 condition|(
 name|add
-operator|||
-name|metricchanged
 condition|)
 name|TRACE_ACTION
 argument_list|(
-argument|CHANGE TO
+literal|"CHANGE TO   "
 argument_list|,
-argument|rt
+name|rt
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|add
@@ -1286,6 +1324,22 @@ end_decl_stmt
 
 begin_block
 block|{
+name|TRACE_ACTION
+argument_list|(
+literal|"DELETE"
+argument_list|,
+name|rt
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rt
+operator|->
+name|rt_metric
+operator|<
+name|HOPCNT_INFINITY
+condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -1306,20 +1360,13 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"deleting route to interface %s (timed out)"
+literal|"deleting route to interface %s? (timed out?)"
 argument_list|,
 name|rt
 operator|->
 name|rt_ifp
 operator|->
 name|int_name
-argument_list|)
-expr_stmt|;
-name|TRACE_ACTION
-argument_list|(
-name|DELETE
-argument_list|,
-name|rt
 argument_list|)
 expr_stmt|;
 if|if
@@ -1361,6 +1408,7 @@ argument_list|(
 literal|"SIOCDELRT"
 argument_list|)
 expr_stmt|;
+block|}
 name|remque
 argument_list|(
 name|rt
@@ -1469,11 +1517,17 @@ operator|->
 name|rt_state
 operator|&
 name|RTS_INTERFACE
+operator|||
+name|rt
+operator|->
+name|rt_metric
+operator|>=
+name|HOPCNT_INFINITY
 condition|)
 continue|continue;
 name|TRACE_ACTION
 argument_list|(
-name|DELETE
+literal|"DELETE"
 argument_list|,
 name|rt
 argument_list|)
@@ -1534,7 +1588,7 @@ goto|goto
 name|again
 goto|;
 block|}
-name|hup
+name|exit
 argument_list|(
 name|s
 argument_list|)
