@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vfscanf.c	4.1	(Berkeley)	82/12/03"
+literal|"@(#)vfscanf.c	4.2	(Berkeley)	82/12/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -1133,7 +1133,18 @@ operator|||
 name|np
 operator|==
 name|numbuf
+operator|||
+operator|(
+name|negflg
+operator|&&
+name|np
+operator|==
+name|numbuf
+operator|+
+literal|1
+operator|)
 condition|)
+comment|/* gene dykes*/
 return|return
 operator|(
 literal|0
