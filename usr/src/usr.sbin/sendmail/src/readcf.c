@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	5.27 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2404,6 +2404,18 @@ condition|(
 name|opt
 condition|)
 block|{
+case|case
+literal|'='
+case|:
+comment|/* config file generation level */
+name|ConfigLevel
+operator|=
+name|atoi
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 literal|'A'
 case|:
