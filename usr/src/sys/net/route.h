@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)route.h	8.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)route.h	8.5.1.1 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -397,6 +397,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RTF_MULTICAST
+value|0x2000
+end_define
+
+begin_comment
+comment|/* try joining uni/multicast routing */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RTF_PROTO2
 value|0x4000
 end_define
@@ -672,6 +683,28 @@ end_define
 
 begin_comment
 comment|/* iface going up/down etc. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTM_ADDPKT
+value|0xf
+end_define
+
+begin_comment
+comment|/* Add Route based on entire packet hdr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTM_DELPKT
+value|0x10
+end_define
+
+begin_comment
+comment|/* Delete Route base on entire packet hdr */
 end_comment
 
 begin_define
@@ -993,6 +1026,27 @@ name|rti_info
 index|[
 name|RTAX_MAX
 index|]
+decl_stmt|;
+name|int
+name|rti_flags
+decl_stmt|;
+name|struct
+name|ifaddr
+modifier|*
+name|rti_ifa
+decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|rti_ifp
+decl_stmt|;
+name|struct
+name|rt_msghdr
+modifier|*
+name|rti_rtm
+decl_stmt|;
+name|caddr_t
+name|rti_pkthdr
 decl_stmt|;
 name|int
 name|rti_flags
@@ -1414,6 +1468,27 @@ name|sockaddr
 operator|*
 operator|,
 name|int
+operator|,
+expr|struct
+name|rtentry
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|rtrequest1
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+expr|struct
+name|rt_addrinfo
+operator|*
 operator|,
 expr|struct
 name|rtentry
