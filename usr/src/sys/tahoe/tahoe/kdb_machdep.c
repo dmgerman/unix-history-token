@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_machdep.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_machdep.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -576,10 +576,6 @@ modifier|*
 name|trap_type
 index|[]
 decl_stmt|;
-specifier|extern
-name|int
-name|TRAP_TYPES
-decl_stmt|;
 comment|/* 	 * Allow panic if the debugger is not enabled. 	 */
 if|if
 condition|(
@@ -608,14 +604,8 @@ name|locr0
 index|[
 name|TYPE
 index|]
-operator|,
-name|code
-operator|=
-name|locr0
-index|[
-name|CODE
-index|]
 expr_stmt|;
+comment|/* 	 * If we were invoked from kernel stack and are now back 	 * on the interrupt stack, restore the saved type and code. 	 * If we return, trap will have the correct type. 	 */
 if|if
 condition|(
 name|type
@@ -628,11 +618,19 @@ operator|-
 literal|1
 condition|)
 block|{
+name|locr0
+index|[
+name|TYPE
+index|]
+operator|=
 name|type
 operator|=
 name|prevtype
-operator|,
-name|code
+expr_stmt|;
+name|locr0
+index|[
+name|CODE
+index|]
 operator|=
 name|prevcode
 expr_stmt|;
@@ -642,6 +640,13 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
+name|code
+operator|=
+name|locr0
+index|[
+name|CODE
+index|]
+expr_stmt|;
 if|if
 condition|(
 name|type
@@ -782,9 +787,26 @@ argument_list|(
 name|locr0
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Return 1 (return from trap) if this was a kdb trap 	 * (from breakpoint, keyboard or panic) 	 * unless a panic has been requested (kdb returns 0). 	 * Otherwise, return 0 (panic because of trap). 	 */
 return|return
 operator|(
+operator|(
+name|type
+operator|==
+name|T_KDBTRAP
+operator|&&
 name|retval
+operator|!=
+literal|0
+operator|)
+operator|||
+name|type
+operator|==
+name|T_TRCTRAP
+operator|||
+name|type
+operator|==
+name|T_BPTFLT
 operator|)
 return|;
 block|}
