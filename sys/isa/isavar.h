@@ -336,6 +336,8 @@ block|,
 name|ISA_IVAR_LOGICALID
 block|,
 name|ISA_IVAR_COMPATID
+block|,
+name|ISA_IVAR_CONFIGATTR
 block|}
 enum|;
 end_enum
@@ -464,6 +466,17 @@ argument_list|(
 argument|compatid
 argument_list|,
 argument|COMPATID
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|ISA_ACCESSOR
+argument_list|(
+argument|configattr
+argument_list|,
+argument|CONFIGATTR
 argument_list|,
 argument|int
 argument_list|)

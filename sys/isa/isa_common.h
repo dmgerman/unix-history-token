@@ -93,6 +93,20 @@ modifier|*
 name|id_config_arg
 decl_stmt|;
 comment|/* callback argument */
+name|int
+name|id_config_attr
+decl_stmt|;
+comment|/* pnp config attributes */
+define|#
+directive|define
+name|ISACFGATTR_CANDISABLE
+value|(1<< 0)
+comment|/* can be disabled */
+define|#
+directive|define
+name|ISACFGATTR_DYNAMIC
+value|(1<< 1)
+comment|/* dynamic configuration */
 block|}
 struct|;
 end_struct
