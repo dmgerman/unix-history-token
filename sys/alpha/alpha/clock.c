@@ -131,6 +131,10 @@ begin_comment
 comment|/* seconds per common year */
 end_comment
 
+begin_comment
+comment|/*  * 32-bit time_t's can't reach leap years before 1904 or after 2036, so we  * can use a simple formula for leap years.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -138,8 +142,7 @@ name|LEAPYEAR
 parameter_list|(
 name|y
 parameter_list|)
-define|\
-value|(((y) % 4) == 0&& (((y) % 100) != 0 || ((y) % 400) == 0))
+value|(((y) % 4) == 0)
 end_define
 
 begin_decl_stmt
