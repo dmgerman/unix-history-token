@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.27 1997/05/25 08:36:20 phk Exp $"
+literal|"$Id: route.c,v 1.28 1997/07/29 06:51:41 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -439,6 +439,7 @@ name|p_rtnode
 name|__P
 argument_list|(
 operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -451,6 +452,7 @@ name|ntreestuff
 name|__P
 argument_list|(
 operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -520,6 +522,37 @@ operator|(
 expr|struct
 name|rtentry
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_long
+name|forgemask
+name|__P
+argument_list|(
+operator|(
+name|u_long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|domask
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|u_long
+operator|,
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2687,6 +2720,13 @@ name|if_unit
 argument_list|)
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"%8.8s"
+argument_list|,
+name|prettyname
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rt
@@ -2724,9 +2764,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|" %8.8s %6d%s"
-argument_list|,
-name|prettyname
+literal|" %6d%s"
 argument_list|,
 operator|(
 name|int
@@ -2748,14 +2786,9 @@ literal|""
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|" %8.8s%s"
-argument_list|,
-name|prettyname
-argument_list|,
+elseif|else
+if|if
+condition|(
 name|rt
 operator|->
 name|rt_nodes
@@ -2764,10 +2797,11 @@ literal|0
 index|]
 operator|.
 name|rn_dupedkey
-condition|?
+condition|)
+block|{
+name|printf
+argument_list|(
 literal|" =>"
-else|:
-literal|""
 argument_list|)
 expr_stmt|;
 block|}
@@ -4633,6 +4667,7 @@ operator|-
 literal|'a'
 operator|)
 expr_stmt|;
+break|break;
 block|}
 block|}
 end_function
