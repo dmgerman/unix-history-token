@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_stub.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_stub.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1667,6 +1667,9 @@ name|addr
 argument_list|,
 name|len
 argument_list|)
+expr_stmt|;
+name|ICIA
+argument_list|()
 expr_stmt|;
 block|}
 break|break;
