@@ -160,11 +160,33 @@ directive|ifdef
 name|LOCK_PROCESS
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYS_SOLARIS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/mman.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<sys/lock.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -648,6 +670,11 @@ name|defined
 argument_list|(
 name|SYS_AIX
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SYS_ULTRIX
+argument_list|)
 operator|(
 name|void
 operator|)
@@ -953,12 +980,45 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|PROCLOCK
+name|LOCK_PROCESS
+argument_list|)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MCL_CURRENT
 argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|LOCK_PROCESS
+name|MCL_FUTURE
+argument_list|)
+comment|/* 	 * lock the process into memory 	 */
+if|if
+condition|(
+name|mlockall
+argument_list|(
+name|MCL_CURRENT
+operator||
+name|MCL_FUTURE
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"mlockall(): %m"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+if|#
+directive|if
+name|defined
+argument_list|(
+name|PROCLOCK
 argument_list|)
 comment|/* 	 * lock the process into memory 	 */
 if|if
@@ -977,6 +1037,10 @@ argument_list|,
 literal|"plock(): %m"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|#
+directive|endif
 endif|#
 directive|endif
 if|#

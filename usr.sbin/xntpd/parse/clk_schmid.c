@@ -26,7 +26,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/parse/clk_schmid.c,v 3.10 1994/01/25 19:05:15 kardel Exp  *    * clk_schmid.c,v 3.10 1994/01/25 19:05:15 kardel Exp  *  * Schmid clock support  *  * Copyright (c) 1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/v3/parse/clk_schmid.c,v 3.13 1994/02/20 13:04:41 kardel Exp  *    * clk_schmid.c,v 3.13 1994/02/20 13:04:41 kardel Exp  *  * Schmid clock support  *  * Copyright (c) 1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_include
@@ -604,8 +604,9 @@ name|clock
 operator|->
 name|flags
 operator||=
-name|PARSEB_LEAP
+name|PARSEB_LEAPADD
 expr_stmt|;
+comment|/* default: DCF77 data format deficiency */
 block|}
 block|}
 name|clock
@@ -634,7 +635,7 @@ comment|/* defined(PARSE)&& defined(CLOCK_SCHMID) */
 end_comment
 
 begin_comment
-comment|/*  * History:  *  * clk_schmid.c,v  * Revision 3.10  1994/01/25  19:05:15  kardel  * 94/01/23 reconcilation  *  * Revision 3.9  1994/01/23  17:21:56  kardel  * 1994 reconcilation  *  * Revision 3.8  1993/11/01  20:00:18  kardel  * parse Solaris support (initial version)  *  * Revision 3.7  1993/10/30  09:44:43  kardel  * conditional compilation flag cleanup  *  * Revision 3.6  1993/10/09  15:01:32  kardel  * file structure unified  *  * Revision 3.5  1993/10/03  19:10:47  kardel  * restructured I/O handling  *  * Revision 3.4  1993/09/27  21:08:09  kardel  * utcoffset now in seconds  *  * Revision 3.3  1993/09/26  23:40:27  kardel  * new parse driver logic  *  * Revision 3.2  1993/07/09  11:37:19  kardel  * Initial restructured version + GPS support  *  * Revision 3.1  1993/07/06  10:00:22  kardel  * DCF77 driver goes generic...  *  */
+comment|/*  * History:  *  * clk_schmid.c,v  * Revision 3.13  1994/02/20  13:04:41  kardel  * parse add/delete second support  *  * Revision 3.12  1994/02/02  17:45:25  kardel  * rcs ids fixed  *  * Revision 3.10  1994/01/25  19:05:15  kardel  * 94/01/23 reconcilation  *  * Revision 3.9  1994/01/23  17:21:56  kardel  * 1994 reconcilation  *  * Revision 3.8  1993/11/01  20:00:18  kardel  * parse Solaris support (initial version)  *  * Revision 3.7  1993/10/30  09:44:43  kardel  * conditional compilation flag cleanup  *  * Revision 3.6  1993/10/09  15:01:32  kardel  * file structure unified  *  * Revision 3.5  1993/10/03  19:10:47  kardel  * restructured I/O handling  *  * Revision 3.4  1993/09/27  21:08:09  kardel  * utcoffset now in seconds  *  * Revision 3.3  1993/09/26  23:40:27  kardel  * new parse driver logic  *  * Revision 3.2  1993/07/09  11:37:19  kardel  * Initial restructured version + GPS support  *  * Revision 3.1  1993/07/06  10:00:22  kardel  * DCF77 driver goes generic...  *  */
 end_comment
 
 end_unit

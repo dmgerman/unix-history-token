@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/include/parse.h,v 3.13 1994/01/25 19:04:21 kardel Exp  *  * parse.h,v 3.13 1994/01/25 19:04:21 kardel Exp  *  * Copyright (c) 1989,1990,1991,1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/v3/include/parse.h,v 3.17 1994/03/03 09:27:20 kardel Exp  *  * parse.h,v 3.17 1994/03/03 09:27:20 kardel Exp  *  * Copyright (c) 1989,1990,1991,1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_ifndef
@@ -38,7 +38,7 @@ name|char
 name|parsehrcsid
 index|[]
 init|=
-literal|"parse.h,v 3.13 1994/01/25 19:04:21 kardel Exp FAU"
+literal|"parse.h,v 3.17 1994/03/03 09:27:20 kardel Exp"
 decl_stmt|;
 end_decl_stmt
 
@@ -455,19 +455,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PARSEB_ANNOUNCE
-value|0x0001
-end_define
-
-begin_comment
-comment|/* switch time zone warning (DST switch) */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PARSEB_POWERUP
-value|0x0002
+value|0x00000001
 end_define
 
 begin_comment
@@ -478,18 +467,33 @@ begin_define
 define|#
 directive|define
 name|PARSEB_NOSYNC
-value|0x0004
+value|0x00000002
 end_define
 
 begin_comment
 comment|/* timecode currently not confirmed */
 end_comment
 
+begin_comment
+comment|/*  * time zone information  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PARSEB_ANNOUNCE
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* switch time zone warning (DST switch) */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|PARSEB_DST
-value|0x0008
+value|0x00000020
 end_define
 
 begin_comment
@@ -500,29 +504,70 @@ begin_define
 define|#
 directive|define
 name|PARSEB_UTC
-value|0x0010
+value|0x00000040
 end_define
 
 begin_comment
 comment|/* UTC time */
 end_comment
 
+begin_comment
+comment|/*  * leap information  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PARSEB_LEAP
-value|0x0020
+name|PARSEB_LEAPDEL
+value|0x00000100
 end_define
 
 begin_comment
-comment|/* LEAP warning (1 hour prior to occurence) */
+comment|/* LEAP deletion warning */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PARSEB_LEAPADD
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* LEAP addition warning */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PARSEB_LEAPS
+value|0x00000300
+end_define
+
+begin_comment
+comment|/* LEAP warnings */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PARSEB_LEAPSECOND
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* actual leap second */
+end_comment
+
+begin_comment
+comment|/*  * optional status information  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PARSEB_ALTERNATE
-value|0x0040
+value|0x00001000
 end_define
 
 begin_comment
@@ -533,29 +578,22 @@ begin_define
 define|#
 directive|define
 name|PARSEB_POSITION
-value|0x0080
+value|0x00002000
 end_define
 
 begin_comment
 comment|/* position available */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PARSEB_LEAPSECOND
-value|0x0100
-end_define
-
 begin_comment
-comment|/* actual leap second */
+comment|/*  * feature information  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PARSEB_S_LEAP
-value|0x0200
+value|0x00010000
 end_define
 
 begin_comment
@@ -566,7 +604,7 @@ begin_define
 define|#
 directive|define
 name|PARSEB_S_ANTENNA
-value|0x0400
+value|0x00020000
 end_define
 
 begin_comment
@@ -577,7 +615,7 @@ begin_define
 define|#
 directive|define
 name|PARSEB_S_PPS
-value|0x0800
+value|0x00040000
 end_define
 
 begin_comment
@@ -588,18 +626,22 @@ begin_define
 define|#
 directive|define
 name|PARSEB_S_POSITION
-value|0x1000
+value|0x00080000
 end_define
 
 begin_comment
 comment|/* supports position information (GPS) */
 end_comment
 
+begin_comment
+comment|/*  * time stamp availality  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|PARSEB_TIMECODE
-value|0x2000
+value|0x10000000
 end_define
 
 begin_comment
@@ -610,7 +652,7 @@ begin_define
 define|#
 directive|define
 name|PARSEB_PPS
-value|0x4000
+value|0x20000000
 end_define
 
 begin_comment
@@ -621,7 +663,7 @@ begin_define
 define|#
 directive|define
 name|PARSE_TCINFO
-value|(PARSEB_ANNOUNCE|PARSEB_POWERUP|PARSEB_NOSYNC|PARSEB_DST|\ 				 PARSEB_UTC|PARSEB_LEAP|PARSEB_ALTERNATE|PARSEB_S_LEAP|\ 				 PARSEB_S_LOCATION|PARSEB_TIMECODE)
+value|(PARSEB_ANNOUNCE|PARSEB_POWERUP|PARSEB_NOSYNC|PARSEB_DST|\ 				 PARSEB_UTC|PARSEB_LEAPS|PARSEB_ALTERNATE|PARSEB_S_LEAP|\ 				 PARSEB_S_LOCATION|PARSEB_TIMECODE)
 end_define
 
 begin_define
@@ -687,11 +729,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|PARSE_LEAP
+name|PARSE_LEAPADD
 parameter_list|(
 name|x
 parameter_list|)
-value|(PARSE_SYNC(x)&& ((x)& PARSEB_LEAP))
+value|(PARSE_SYNC(x)&& (((x)& PARSEB_LEAPS) == PARSEB_LEAPADD))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PARSE_LEAPDEL
+parameter_list|(
+name|x
+parameter_list|)
+value|(PARSE_SYNC(x)&& (((x)& PARSEB_LEAPS) == PARSEB_LEAPDEL))
 end_define
 
 begin_define
@@ -1327,6 +1379,10 @@ name|LONG
 name|utcoffset
 decl_stmt|;
 comment|/* in seconds */
+name|time_t
+name|utctime
+decl_stmt|;
+comment|/* the actual time - alternative to date/time */
 name|LONG
 name|flags
 decl_stmt|;
@@ -1871,7 +1927,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * History:  *  * parse.h,v  * Revision 3.13  1994/01/25  19:04:21  kardel  * 94/01/23 reconcilation  *  * Revision 3.12  1994/01/23  17:23:05  kardel  * 1994 reconcilation  *  * Revision 3.11  1993/11/11  11:20:18  kardel  * declaration fixes  *  * Revision 3.10  1993/11/01  19:59:48  kardel  * parse Solaris support (initial version)  *  * Revision 3.9  1993/10/06  00:14:57  kardel  * include fixes  *  * Revision 3.8  1993/10/05  23:15:41  kardel  * more STREAM protection  *  * Revision 3.7  1993/10/05  22:56:10  kardel  * STREAM must be defined for PARSESTREAMS  *  * Revision 3.6  1993/10/03  19:10:28  kardel  * restructured I/O handling  *  * Revision 3.5  1993/09/26  23:41:13  kardel  * new parse driver logic  *  * Revision 3.4  1993/09/01  21:46:31  kardel  * conditional cleanup  *  * Revision 3.3  1993/08/27  00:29:29  kardel  * compilation cleanup  *  * Revision 3.2  1993/07/09  11:37:05  kardel  * Initial restructured version + GPS support  *  * Revision 3.1  1993/07/06  09:59:12  kardel  * DCF77 driver goes generic...  *  */
+comment|/*  * History:  *  * parse.h,v  * Revision 3.17  1994/03/03  09:27:20  kardel  * rcs ids fixed  *  * Revision 3.13  1994/01/25  19:04:21  kardel  * 94/01/23 reconcilation  *  * Revision 3.12  1994/01/23  17:23:05  kardel  * 1994 reconcilation  *  * Revision 3.11  1993/11/11  11:20:18  kardel  * declaration fixes  *  * Revision 3.10  1993/11/01  19:59:48  kardel  * parse Solaris support (initial version)  *  * Revision 3.9  1993/10/06  00:14:57  kardel  * include fixes  *  * Revision 3.8  1993/10/05  23:15:41  kardel  * more STREAM protection  *  * Revision 3.7  1993/10/05  22:56:10  kardel  * STREAM must be defined for PARSESTREAMS  *  * Revision 3.6  1993/10/03  19:10:28  kardel  * restructured I/O handling  *  * Revision 3.5  1993/09/26  23:41:13  kardel  * new parse driver logic  *  * Revision 3.4  1993/09/01  21:46:31  kardel  * conditional cleanup  *  * Revision 3.3  1993/08/27  00:29:29  kardel  * compilation cleanup  *  * Revision 3.2  1993/07/09  11:37:05  kardel  * Initial restructured version + GPS support  *  * Revision 3.1  1993/07/06  09:59:12  kardel  * DCF77 driver goes generic...  *  */
 end_comment
 
 end_unit

@@ -1782,7 +1782,7 @@ block|,
 comment|/* REFCLK_LOCALCLOCK */
 name|CTL_SST_TS_HF
 block|,
-comment|/* REFCLK_WWV_HEATH */
+comment|/* REFCLK_GPS_TRAK */
 name|CTL_SST_TS_HF
 block|,
 comment|/* REFCLK_WWV_PST */
