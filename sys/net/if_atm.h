@@ -169,6 +169,17 @@ begin_comment
 comment|/* 77252 based ProSum card 155MBit */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ATM_DEVICE_VIRTUAL
+value|14
+end_define
+
+begin_comment
+comment|/* virtual ATM device (netgraph) */
+end_comment
+
 begin_comment
 comment|/* map to strings and vendors */
 end_comment
@@ -178,7 +189,7 @@ define|#
 directive|define
 name|ATM_DEVICE_NAMES
 define|\
-value|{ "Unknown",		"Unknown" },				\ 	{ "PCA200-E",		"Fore/Marconi" },			\ 	{ "HE155",		"Fore/Marconi" },			\ 	{ "HE622",		"Fore/Marconi" },			\ 	{ "ENI155p",		"Efficient Networks" },			\ 	{ "ADP155p",		"Adaptec" },				\ 	{ "ForeRunnerLE25",	"Fore/Marconi" },			\ 	{ "ForeRunnerLE155",	"Fore/Marconi" },			\ 	{ "IDT77211/25",	"IDT" },				\ 	{ "IDT77211/155",	"IDT" },				\ 	{ "IDT77252/25",	"IDT" },				\ 	{ "IDT77252/155",	"IDT" },				\ 	{ "ProATM/25",		"ProSum" },				\ 	{ "ProATM/155",		"ProSum" },
+value|{ "Unknown",		"Unknown" },				\ 	{ "PCA200-E",		"Fore/Marconi" },			\ 	{ "HE155",		"Fore/Marconi" },			\ 	{ "HE622",		"Fore/Marconi" },			\ 	{ "ENI155p",		"Efficient Networks" },			\ 	{ "ADP155p",		"Adaptec" },				\ 	{ "ForeRunnerLE25",	"Fore/Marconi" },			\ 	{ "ForeRunnerLE155",	"Fore/Marconi" },			\ 	{ "IDT77211/25",	"IDT" },				\ 	{ "IDT77211/155",	"IDT" },				\ 	{ "IDT77252/25",	"IDT" },				\ 	{ "IDT77252/155",	"IDT" },				\ 	{ "ProATM/25",		"ProSum" },				\ 	{ "ProATM/155",		"ProSum" },				\ 	{ "Virtual",		"NetGraph" },
 end_define
 
 begin_comment
