@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttydefaults.c	5.1 (Berkeley) %G%"
+literal|"@(#)ttydefaults.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,20 +34,21 @@ directive|include
 file|<sys/termios.h>
 end_include
 
-begin_macro
-name|set_ttydefaults
-argument_list|(
-argument|fd
-argument_list|)
-end_macro
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
 
-begin_decl_stmt
+begin_function
+name|void
+name|set_ttydefaults
+parameter_list|(
+name|fd
+parameter_list|)
 name|int
 name|fd
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|termios
@@ -96,7 +97,7 @@ name|term
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
