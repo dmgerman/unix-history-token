@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)spp_usrreq.c	6.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)spp_usrreq.c	6.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2430,6 +2430,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
+comment|/* 		 * Force length even, by adding a "garbage byte" if 		 * necessary. 		 */
 if|if
 condition|(
 name|len
@@ -2453,13 +2454,11 @@ name|m_off
 operator|<
 name|MMAXOFF
 condition|)
-block|{
 name|m
 operator|->
 name|m_len
 operator|++
 expr_stmt|;
-block|}
 else|else
 block|{
 name|struct
@@ -2506,7 +2505,7 @@ name|MMAXOFF
 operator|-
 literal|1
 expr_stmt|;
-name|mprev
+name|m
 operator|->
 name|m_next
 operator|=
@@ -2612,7 +2611,68 @@ name|struct
 name|sphdr
 modifier|*
 name|sh
-init|=
+decl_stmt|;
+if|if
+condition|(
+name|m0
+operator|->
+name|m_len
+operator|<
+sizeof|sizeof
+argument_list|(
+operator|*
+name|sh
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|m0
+operator|=
+name|m_pullup
+argument_list|(
+name|m0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|sh
+argument_list|)
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|m_free
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m0
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
+name|m
+operator|->
+name|m_next
+operator|=
+name|m0
+expr_stmt|;
+block|}
+name|sh
+operator|=
 name|mtod
 argument_list|(
 name|m0
@@ -2621,7 +2681,7 @@ expr|struct
 name|sphdr
 operator|*
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|si
 operator|->
 name|si_dt
@@ -2686,7 +2746,7 @@ operator|&
 name|SF_SOOB
 condition|)
 block|{
-comment|/* 			 * Per jqj@cornell: 			 * make sure OB packets convey exactly 1 byte. 			 * If the packet is 1 byte or larger, we 			 * have already guaranted there to be at least 			 * one garbage byte for the checksum, and 			 * extra bytes shouldn't hurt! 			 *  			 */
+comment|/* 			 * Per jqj@cornell: 			 * make sure OB packets convey exactly 1 byte. 			 * If the packet is 1 byte or larger, we 			 * have already guaranted there to be at least 			 * one garbage byte for the checksum, and 			 * extra bytes shouldn't hurt! 			 */
 if|if
 condition|(
 name|len
@@ -2899,6 +2959,7 @@ argument_list|(
 name|cb
 argument_list|)
 expr_stmt|;
+comment|/* tcp has cb->s_rxtshift = 0; here */
 block|}
 block|}
 name|m
@@ -3020,16 +3081,12 @@ block|{
 comment|/* 		 * must make a copy of this packet for 		 * idp_output to monkey with 		 */
 name|m
 operator|=
+name|m_copy
+argument_list|(
 name|dtom
 argument_list|(
 name|si
 argument_list|)
-expr_stmt|;
-name|m
-operator|=
-name|m_copy
-argument_list|(
-name|m
 argument_list|,
 literal|0
 argument_list|,
@@ -3231,7 +3288,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* If this is a new packet (and not a system packet), 		 * and we are not currently timing anything, 		 * time this one and ask for an ack. 		 */
+comment|/* 		 * If this is a new packet (and not a system packet), 		 * and we are not currently timing anything, 		 * time this one and ask for an ack. 		 */
 if|if
 condition|(
 name|SSEQ_LT
@@ -3389,19 +3446,14 @@ operator|->
 name|si_len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|len
-operator|=
-operator|(
-operator|(
+operator|&
+literal|1
+condition|)
 name|len
-operator|-
-literal|1
-operator|)
-operator||
-literal|1
-operator|)
-operator|+
-literal|1
+operator|++
 expr_stmt|;
 name|si
 operator|->
