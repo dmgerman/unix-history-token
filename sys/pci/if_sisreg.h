@@ -899,7 +899,7 @@ define|#
 directive|define
 name|SIS_INTRS
 define|\
-value|(SIS_IMR_RX_OFLOW|SIS_IMR_TX_UFLOW|SIS_IMR_TX_OK|\ 	 SIS_IMR_TX_IDLE|SIS_IMR_RX_OK|SIS_IMR_RX_ERR|\ 	 SIS_IMR_SYSERR)
+value|(SIS_IMR_RX_OFLOW|SIS_IMR_TX_UFLOW|SIS_IMR_TX_OK|\ 	 SIS_IMR_TX_IDLE|SIS_IMR_RX_OK|SIS_IMR_RX_ERR|\ 	 SIS_IMR_RX_IDLE|\ 	 SIS_IMR_SYSERR)
 end_define
 
 begin_define
@@ -1514,7 +1514,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|(x) = (x + 1) % y
+value|{ if (++(x) == y) x=0 ; }
 end_define
 
 begin_define
