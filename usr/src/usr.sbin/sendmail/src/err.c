@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.7 (Berkeley) %G%"
+literal|"@(#)err.c	8.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -642,6 +642,29 @@ end_decl_stmt
 
 begin_block
 block|{
+comment|/* display for debugging */
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|54
+argument_list|,
+literal|8
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"--- %s%s\n"
+argument_list|,
+name|msg
+argument_list|,
+name|holdmsg
+condition|?
+literal|" (held)"
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
 comment|/* output to transcript if serious */
 if|if
 condition|(
