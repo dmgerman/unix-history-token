@@ -62,13 +62,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
+file|<sys/file.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<sys/socket.h>
 end_include
 
 begin_include
@@ -99,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
 end_include
 
 begin_include
