@@ -45,18 +45,6 @@ modifier|*
 name|nextPtr
 decl_stmt|;
 comment|/* next in list */
-name|int
-name|useCount
-range|:
-literal|8
-decl_stmt|;
-comment|/* Count of functions using the node. Node may not 			     * be deleted until count goes to 0 */
-name|int
-name|flags
-range|:
-literal|8
-decl_stmt|;
-comment|/* Node status flags */
 name|void
 modifier|*
 name|datum
@@ -71,37 +59,6 @@ typedef|typedef
 name|struct
 name|LstNode
 name|LstNode
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * Flags required for synchronization  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LN_DELETED
-value|0x0001
-end_define
-
-begin_comment
-comment|/* List node should be removed when done */
-end_comment
-
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|LstHead
-block|,
-name|LstMiddle
-block|,
-name|LstTail
-block|,
-name|LstUnknown
-block|}
-name|LstWhere
 typedef|;
 end_typedef
 
@@ -145,20 +102,6 @@ name|void
 modifier|*
 parameter_list|,
 specifier|const
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
-name|DoProc
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
 name|void
 modifier|*
 parameter_list|)
@@ -557,38 +500,8 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Apply a function to all elements of a lst */
+comment|/* Loop through a list. Note, that you may not delete the list element. */
 end_comment
-
-begin_function_decl
-name|void
-name|Lst_ForEach
-parameter_list|(
-name|Lst
-modifier|*
-parameter_list|,
-name|DoProc
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|Lst_ForEach
-parameter_list|(
-name|LST
-parameter_list|,
-name|FN
-parameter_list|,
-name|D
-parameter_list|)
-value|(Lst_ForEachFrom((LST), Lst_First(LST), \ 				    (FN), (D)))
-end_define
 
 begin_define
 define|#
@@ -602,29 +515,6 @@ parameter_list|)
 define|\
 value|for ((PTR) = (LST)->firstPtr; (PTR) != NULL; (PTR) = (PTR)->nextPtr)
 end_define
-
-begin_comment
-comment|/*  * Apply a function to all elements of a lst starting from a certain point.  * If the list is circular, the application will wrap around to the  * beginning of the list again.  */
-end_comment
-
-begin_function_decl
-name|void
-name|Lst_ForEachFrom
-parameter_list|(
-name|Lst
-modifier|*
-parameter_list|,
-name|LstNode
-modifier|*
-parameter_list|,
-name|DoProc
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  * for using the list as a queue  */
