@@ -260,7 +260,8 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|((a)->sat_len == (b)->sat_len&& \ 		    (a)->sat_family == (b)->sat_family&& \ 		    (a)->sat_addr.s_net == (b)->sat_addr.s_net&& \ 		    (a)->sat_addr.s_node == (b)->sat_addr.s_node)
+define|\
+value|((a)->sat_len == (b)->sat_len&&				\ 	(a)->sat_family == (b)->sat_family&&				\ 	(a)->sat_addr.s_net == (b)->sat_addr.s_net&&			\ 	(a)->sat_addr.s_node == (b)->sat_addr.s_node)
 end_define
 
 begin_function
