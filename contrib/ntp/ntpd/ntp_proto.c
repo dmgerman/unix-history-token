@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ntp_proto.c - NTP version 4 protocol machinery  */
+comment|/*  * ntp_proto.c - NTP version 4 protocol machinery  *  * $FreeBSD$  */
 end_comment
 
 begin_ifdef
@@ -8651,7 +8651,7 @@ literal|3
 name|u_long
 name|freq
 decl_stmt|;
-name|int
+name|size_t
 name|j
 decl_stmt|;
 comment|/* Try to see if we can find the frequency of of the counter 	 * which drives our timekeeping 	 */
