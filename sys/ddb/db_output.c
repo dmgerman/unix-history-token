@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_output.c,v 1.10 1994/10/30 20:55:44 bde Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_output.c,v 1.11 1995/05/30 07:57:02 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -33,6 +33,12 @@ begin_include
 include|#
 directive|include
 file|<ddb/ddb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ddb/db_output.h>
 end_include
 
 begin_include
@@ -104,19 +110,44 @@ begin_comment
 comment|/* output line width */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|db_ksprintn
+name|__P
+argument_list|(
+operator|(
+name|u_long
+name|ul
+operator|,
+name|int
+name|base
+operator|,
+name|int
+operator|*
+name|lenp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|db_printf_guts
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 specifier|const
 name|char
-modifier|*
-parameter_list|,
+operator|*
+operator|,
 name|va_list
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Force pending whitespace.  */
@@ -409,6 +440,7 @@ begin_function
 name|void
 name|kdbprintf
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
