@@ -885,6 +885,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Allocate kva for pipe circular buffer, the space is pageable  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -2103,6 +2107,9 @@ name|m
 decl_stmt|;
 name|vm_fault_quick
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|addr
 argument_list|,
 name|VM_PROT_READ
@@ -3393,6 +3400,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Don't return EPIPE if I/O was successful 	 */
 if|if
 condition|(
 operator|(
