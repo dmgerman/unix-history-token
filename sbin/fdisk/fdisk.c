@@ -6417,6 +6417,30 @@ return|;
 if|if
 condition|(
 name|start
+operator|==
+literal|0
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"WARNING: partition overlaps with partition table"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ok
+argument_list|(
+literal|"Correct this automatically?"
+argument_list|)
+condition|)
+name|start
+operator|=
+name|dos_sectors
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|start
 operator|%
 name|dos_sectors
 operator|!=
