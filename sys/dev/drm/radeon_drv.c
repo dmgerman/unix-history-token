@@ -66,7 +66,7 @@ literal|0x4242
 block|,
 literal|1
 block|,
-literal|"ATI Radeon BB AIW 8500DV (AGP)"
+literal|"ATI Radeon BB R200 AIW 8500DV"
 block|}
 block|,
 block|{
@@ -76,17 +76,7 @@ literal|0x4336
 block|,
 literal|1
 block|,
-literal|"ATI Radeon Mobility"
-block|}
-block|,
-block|{
-literal|0x1002
-block|,
-literal|0x4337
-block|,
-literal|1
-block|,
-literal|"ATI Radeon IGP 340"
+literal|"ATI Radeon Mobility U1"
 block|}
 block|,
 block|{
@@ -96,7 +86,7 @@ literal|0x4964
 block|,
 literal|1
 block|,
-literal|"ATI Radeon Id 9000"
+literal|"ATI Radeon Id R250 9000"
 block|}
 block|,
 block|{
@@ -106,7 +96,7 @@ literal|0x4965
 block|,
 literal|1
 block|,
-literal|"ATI Radeon Ie 9000"
+literal|"ATI Radeon Ie R250 9000"
 block|}
 block|,
 block|{
@@ -116,7 +106,7 @@ literal|0x4966
 block|,
 literal|1
 block|,
-literal|"ATI Radeon If 9000"
+literal|"ATI Radeon If R250 9000"
 block|}
 block|,
 block|{
@@ -126,17 +116,7 @@ literal|0x4967
 block|,
 literal|1
 block|,
-literal|"ATI Radeon Ig 9000"
-block|}
-block|,
-block|{
-literal|0x1002
-block|,
-literal|0x496e
-block|,
-literal|1
-block|,
-literal|"ATI Radeon Ig 9000"
+literal|"ATI Radeon Ig R250 9000"
 block|}
 block|,
 block|{
@@ -146,7 +126,7 @@ literal|0x4C57
 block|,
 literal|1
 block|,
-literal|"ATI Radeon LW Mobility 7 (AGP)"
+literal|"ATI Radeon LW Mobility 7500 M7"
 block|}
 block|,
 block|{
@@ -156,7 +136,7 @@ literal|0x4C58
 block|,
 literal|1
 block|,
-literal|"ATI Radeon LX Mobility 7 (AGP)"
+literal|"ATI Radeon LX RV200 Mobility FireGL 7800 M7"
 block|}
 block|,
 block|{
@@ -166,7 +146,7 @@ literal|0x4C59
 block|,
 literal|1
 block|,
-literal|"ATI Radeon LY Mobility 6 (AGP)"
+literal|"ATI Radeon LY Mobility M6"
 block|}
 block|,
 block|{
@@ -176,7 +156,7 @@ literal|0x4C5A
 block|,
 literal|1
 block|,
-literal|"ATI Radeon LZ Mobility 6 (AGP)"
+literal|"ATI Radeon LZ Mobility M6"
 block|}
 block|,
 block|{
@@ -186,7 +166,7 @@ literal|0x4C64
 block|,
 literal|1
 block|,
-literal|"ATI Radeon Ld Mobility 9000 (AGP)"
+literal|"ATI Radeon Ld R250 Mobility 9000 M9"
 block|}
 block|,
 block|{
@@ -196,7 +176,7 @@ literal|0x4C65
 block|,
 literal|1
 block|,
-literal|"ATI Radeon Le Mobility 9000 (AGP)"
+literal|"ATI Radeon Le R250 Mobility 9000 M9"
 block|}
 block|,
 block|{
@@ -206,7 +186,7 @@ literal|0x4C66
 block|,
 literal|1
 block|,
-literal|"ATI Radeon Lf Mobility 9000 (AGP)"
+literal|"ATI Radeon Lf R250 Mobility 9000 M9"
 block|}
 block|,
 block|{
@@ -216,7 +196,7 @@ literal|0x4C67
 block|,
 literal|1
 block|,
-literal|"ATI Radeon Lg Mobility 9000 (AGP)"
+literal|"ATI Radeon Lg R250 Mobility 9000 M9"
 block|}
 block|,
 block|{
@@ -226,7 +206,7 @@ literal|0x5144
 block|,
 literal|1
 block|,
-literal|"ATI Radeon QD R100 (AGP)"
+literal|"ATI Radeon QD R100"
 block|}
 block|,
 block|{
@@ -236,7 +216,7 @@ literal|0x5145
 block|,
 literal|1
 block|,
-literal|"ATI Radeon QE R100 (AGP)"
+literal|"ATI Radeon QE R100"
 block|}
 block|,
 block|{
@@ -246,7 +226,7 @@ literal|0x5146
 block|,
 literal|1
 block|,
-literal|"ATI Radeon QF R100 (AGP)"
+literal|"ATI Radeon QF R100"
 block|}
 block|,
 block|{
@@ -256,7 +236,7 @@ literal|0x5147
 block|,
 literal|1
 block|,
-literal|"ATI Radeon QG R100 (AGP)"
+literal|"ATI Radeon QG R100"
 block|}
 block|,
 block|{
@@ -266,7 +246,7 @@ literal|0x5148
 block|,
 literal|1
 block|,
-literal|"ATI Radeon QH FireGL 8x00 (AGP)"
+literal|"ATI Radeon QH FireGL 8x00"
 block|}
 block|,
 block|{
@@ -306,7 +286,37 @@ literal|0x514C
 block|,
 literal|1
 block|,
-literal|"ATI Radeon QL 8500 (AGP)"
+literal|"ATI Radeon QL R200 8500 LE"
+block|}
+block|,
+block|{
+literal|0x1002
+block|,
+literal|0x514D
+block|,
+literal|1
+block|,
+literal|"ATI Radeon QM R200 9100"
+block|}
+block|,
+block|{
+literal|0x1002
+block|,
+literal|0x514E
+block|,
+literal|1
+block|,
+literal|"ATI Radeon QN R200 8500 LE"
+block|}
+block|,
+block|{
+literal|0x1002
+block|,
+literal|0x514F
+block|,
+literal|1
+block|,
+literal|"ATI Radeon QO R200 8500 LE"
 block|}
 block|,
 block|{
@@ -316,7 +326,7 @@ literal|0x5157
 block|,
 literal|1
 block|,
-literal|"ATI Radeon QW 7500 (AGP)"
+literal|"ATI Radeon QW RV200 7500"
 block|}
 block|,
 block|{
@@ -326,7 +336,7 @@ literal|0x5158
 block|,
 literal|1
 block|,
-literal|"ATI Radeon QX 7500 (AGP)"
+literal|"ATI Radeon QX RV200 7500"
 block|}
 block|,
 block|{
@@ -336,7 +346,7 @@ literal|0x5159
 block|,
 literal|1
 block|,
-literal|"ATI Radeon QY VE (AGP)"
+literal|"ATI Radeon QY RV100 VE"
 block|}
 block|,
 block|{
@@ -346,7 +356,7 @@ literal|0x515A
 block|,
 literal|1
 block|,
-literal|"ATI Radeon QZ VE (AGP)"
+literal|"ATI Radeon QZ RV100 VE"
 block|}
 block|,
 block|{
@@ -387,6 +397,16 @@ block|,
 literal|1
 block|,
 literal|"ATI Radeon Qk R200"
+block|}
+block|,
+block|{
+literal|0x1002
+block|,
+literal|0x516C
+block|,
+literal|1
+block|,
+literal|"ATI Radeon Ql R200"
 block|}
 block|,
 block|{
