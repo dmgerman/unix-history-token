@@ -1536,11 +1536,10 @@ name|CTLTYPE_NODE
 condition|)
 block|{
 comment|/* Allocate space for children */
-name|SYSCTL_CHILDREN
+name|SYSCTL_CHILDREN_SET
 argument_list|(
 name|oidp
-argument_list|)
-operator|=
+argument_list|,
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -1552,6 +1551,7 @@ argument_list|,
 name|M_SYSCTLOID
 argument_list|,
 name|M_WAITOK
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|SLIST_INIT
@@ -5374,12 +5374,14 @@ operator|==
 name|CTLTYPE_NODE
 condition|)
 block|{
+name|arg1
+operator|=
 operator|(
 name|int
 operator|*
 operator|)
 name|arg1
-operator|+=
+operator|+
 name|indx
 expr_stmt|;
 name|arg2

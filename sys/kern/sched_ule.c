@@ -3073,12 +3073,15 @@ name|ke
 decl_stmt|;
 do|do
 block|{
+operator|*
 operator|(
 specifier|volatile
 expr|struct
 name|kse
 operator|*
+operator|*
 operator|)
+operator|&
 name|ke
 operator|=
 name|kseq
@@ -3191,12 +3194,15 @@ expr_stmt|;
 comment|/* 	 * Place a KSE on another cpu's queue and force a resched. 	 */
 do|do
 block|{
+operator|*
 operator|(
 specifier|volatile
 expr|struct
 name|kse
 operator|*
+operator|*
 operator|)
+operator|&
 name|ke
 operator|->
 name|ke_assign
