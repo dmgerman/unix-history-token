@@ -1866,10 +1866,6 @@ name|mandatory
 operator|=
 literal|1
 expr_stmt|;
-name|needcount
-operator|=
-literal|1
-expr_stmt|;
 block|}
 elseif|else
 if|if
