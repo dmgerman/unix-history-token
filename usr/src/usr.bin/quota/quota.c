@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quota.c	8.2 (Berkeley) %G%"
+literal|"@(#)quota.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -90,7 +90,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -102,7 +108,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<grp.h>
 end_include
 
 begin_include
@@ -114,13 +120,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<grp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
+file|<stdio.h>
 end_include
 
 begin_decl_stmt
@@ -2069,7 +2069,7 @@ argument_list|(
 name|fd
 argument_list|,
 call|(
-name|long
+name|off_t
 call|)
 argument_list|(
 name|id
