@@ -2720,8 +2720,15 @@ operator|||
 operator|(
 name|paddr
 operator|=
-name|pmap_kextract
+name|pmap_extract
 argument_list|(
+name|vmspace_pmap
+argument_list|(
+name|curproc
+operator|->
+name|p_vmspace
+argument_list|)
+argument_list|,
 name|addr
 argument_list|)
 operator|)
