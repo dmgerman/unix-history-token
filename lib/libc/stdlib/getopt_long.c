@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: getopt_long.c,v 1.16 2004/02/04 18:17:25 millert Exp $	*/
+comment|/*	$OpenBSD: getopt_long.c,v 1.17 2004/06/03 18:46:52 millert Exp $	*/
 end_comment
 
 begin_comment
@@ -2435,7 +2435,7 @@ name|FLAG_PERMUTE
 operator|)
 condition|)
 block|{
-comment|/* 			 * If permutation is disabled, we can accept an 			 * optional arg separated by whitespace. 			 */
+comment|/* 			 * If permutation is disabled, we can accept an 			 * optional arg separated by whitespace so long 			 * as it does not start with a dash (-). 			 */
 if|if
 condition|(
 name|optind
@@ -2443,6 +2443,16 @@ operator|+
 literal|1
 operator|<
 name|nargc
+operator|&&
+operator|*
+name|nargv
+index|[
+name|optind
+operator|+
+literal|1
+index|]
+operator|!=
+literal|'-'
 condition|)
 name|optarg
 operator|=
