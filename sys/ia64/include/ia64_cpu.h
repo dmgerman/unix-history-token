@@ -817,7 +817,7 @@ name|u_int64_t
 name|v
 parameter_list|)
 block|{
-asm|__asm __volatile("ptc.e %0;;" :: "r"(v));
+asm|__asm __volatile("ptc.e %0;; srlz.d;;" :: "r"(v));
 block|}
 end_function
 
@@ -838,7 +838,7 @@ name|u_int64_t
 name|log2size
 parameter_list|)
 block|{
-asm|__asm __volatile("ptc.g %0,%1;;" :: "r"(va), "r"(log2size));
+asm|__asm __volatile("ptc.g %0,%1;; srlz.d;;" :: "r"(va), "r"(log2size));
 block|}
 end_function
 
@@ -859,7 +859,7 @@ name|u_int64_t
 name|log2size
 parameter_list|)
 block|{
-asm|__asm __volatile("ptc.ga %0,%1;;" :: "r"(va), "r"(log2size));
+asm|__asm __volatile("ptc.ga %0,%1;; srlz.d;;" :: "r"(va), "r"(log2size));
 block|}
 end_function
 
@@ -880,7 +880,7 @@ name|u_int64_t
 name|log2size
 parameter_list|)
 block|{
-asm|__asm __volatile("ptc.l %0,%1;;" :: "r"(va), "r"(log2size));
+asm|__asm __volatile("ptc.l %0,%1;; srlz.d;;" :: "r"(va), "r"(log2size));
 block|}
 end_function
 
@@ -1375,16 +1375,30 @@ name|u_int64_t
 name|v
 parameter_list|)
 block|{
-asm|__asm __volatile("mov rr[%0]=%1" :: "r"(rrbase), "r"(v) : "memory");
-block|}
+asm|__asm __volatile("mov rr[%0]=%1;; srlz.d;;"
+operator|::
+literal|"r"
+operator|(
+name|rrbase
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|v
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
 end_function
 
 begin_comment
+unit|}
 comment|/*  * Read a CPUID register.  */
 end_comment
 
 begin_function
-specifier|static
+unit|static
 name|__inline
 name|u_int64_t
 name|ia64_get_cpuid
