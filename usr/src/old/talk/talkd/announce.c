@@ -73,14 +73,6 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_function_decl
-name|char
-modifier|*
-name|sprintf
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|extern
 name|int
