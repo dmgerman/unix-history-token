@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys/i386/i386/machdep.c,v 1.4 1993/07/16 23:55:07 davidg Exp $"
+literal|"$Header: /freefall/a/cvs/386BSD/src/sys/i386/i386/machdep.c,v 1.5 1993/07/27 10:52:17 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4920,6 +4920,34 @@ name|GPROC0_SEL
 argument_list|,
 name|SEL_KPL
 argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+operator|(
+operator|(
+expr|struct
+name|i386tss
+operator|*
+operator|)
+name|gdt_segs
+index|[
+name|GPROC0_SEL
+index|]
+operator|.
+name|ssd_base
+operator|)
+operator|->
+name|tss_ioopt
+operator|=
+operator|(
+sizeof|sizeof
+argument_list|(
+name|tss
+argument_list|)
+operator|)
+operator|<<
+literal|16
 expr_stmt|;
 end_expr_stmt
 

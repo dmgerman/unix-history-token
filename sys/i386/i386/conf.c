@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys/i386/i386/conf.c,v 1.1.1.1 1993/06/12 14:58:07 rgrimes Exp $"
+literal|"$Header: /freefall/a/cvs/386BSD/src/sys/i386/i386/conf.c,v 1.2 1993/07/30 00:57:06 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1079,12 +1079,18 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|int
+name|mmopen
+argument_list|()
+decl_stmt|,
+name|mmclose
+argument_list|()
+decl_stmt|,
 name|mmrw
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -2112,9 +2118,9 @@ name|NULL
 block|}
 block|,
 block|{
-name|nullop
+name|mmopen
 block|,
-name|nullop
+name|mmclose
 block|,
 name|mmrw
 block|,
