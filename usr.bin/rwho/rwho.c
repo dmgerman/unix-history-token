@@ -47,17 +47,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -66,6 +55,20 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -136,6 +139,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<timeconv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -158,13 +167,6 @@ name|whod
 name|wd
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|int
-name|utmpcmp
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_define
 define|#
@@ -213,7 +215,7 @@ begin_define
 define|#
 directive|define
 name|WHDRSIZE
-value|(sizeof (wd) - sizeof (wd.wd_we))
+value|(ssize_t)(sizeof (wd) - sizeof (wd.wd_we))
 end_define
 
 begin_comment
@@ -273,18 +275,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
-modifier|*
 name|argv
-decl_stmt|;
+index|[]
+parameter_list|)
 block|{
 name|int
 name|ch
@@ -295,9 +293,10 @@ modifier|*
 name|dp
 decl_stmt|;
 name|int
-name|cc
-decl_stmt|,
 name|width
+decl_stmt|;
+name|ssize_t
+name|cc
 decl_stmt|;
 specifier|register
 name|struct
@@ -970,7 +969,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -994,28 +995,23 @@ name|MYUTMP
 parameter_list|(
 name|a
 parameter_list|)
-value|((struct myutmp *)(a))
+value|((const struct myutmp *)(a))
 end_define
 
 begin_function
 name|int
 name|utmpcmp
 parameter_list|(
-name|u1
-parameter_list|,
-name|u2
-parameter_list|)
 specifier|const
 name|void
 modifier|*
 name|u1
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
 name|u2
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|rc
@@ -1129,7 +1125,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
