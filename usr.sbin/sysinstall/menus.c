@@ -11296,7 +11296,21 @@ literal|"keymap=jp.106"
 block|}
 block|,
 block|{
-literal|"Latin American"
+literal|"Latin American (accent)"
+block|,
+literal|"Latin American ISO keymap (accent keys)"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=latinamerican.iso.acc"
+block|}
+block|,
+block|{
+literal|" Latin American"
 block|,
 literal|"Latin American ISO keymap"
 block|,
