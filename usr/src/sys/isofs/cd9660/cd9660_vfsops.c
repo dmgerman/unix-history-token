@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vfsops.c	8.11 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vfsops.c	8.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -385,12 +385,6 @@ name|mp
 argument_list|,
 name|mnt_list
 argument_list|)
-expr_stmt|;
-name|mp
-operator|->
-name|mnt_flag
-operator||=
-name|MNT_ROOTFS
 expr_stmt|;
 name|mp
 operator|->
@@ -1938,34 +1932,10 @@ name|mntflags
 operator|&
 name|MNT_FORCE
 condition|)
-block|{
-specifier|extern
-name|int
-name|doforce
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|doforce
-operator|||
-operator|(
-name|mp
-operator|->
-name|mnt_flag
-operator|&
-name|MNT_ROOTFS
-operator|)
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 name|flags
 operator||=
 name|FORCECLOSE
 expr_stmt|;
-block|}
 if|#
 directive|if
 literal|0

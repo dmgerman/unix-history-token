@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	8.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	8.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1768,30 +1768,10 @@ name|mntflags
 operator|&
 name|MNT_FORCE
 condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|doforce
-operator|||
-operator|(
-name|mp
-operator|->
-name|mnt_flag
-operator|&
-name|MNT_ROOTFS
-operator|)
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 name|flags
 operator||=
 name|FORCECLOSE
 expr_stmt|;
-block|}
 name|ump
 operator|=
 name|VFSTOUFS
