@@ -8,7 +8,7 @@ comment|/*  *	Modified from the FreeBSD 1.1.5.1 version by:  *		 	Andres Vega Ga
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_ep.c,v 1.53.2.2 1997/10/30 00:38:18 nate Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_ep.c,v 1.53.2.3 1997/11/10 23:53:30 itojun Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_comment
@@ -2191,7 +2191,7 @@ operator|=
 name|ep_unit
 operator|++
 expr_stmt|;
-comment|/*      * The iobase was found and MFG_ID was 0x6d50. PROD_ID should be      * 0x9[0-f]50      */
+comment|/*      * The iobase was found and MFG_ID was 0x6d50. PROD_ID should be      * 0x9[0-f]50	(IBM-PC)      * 0x9[0-f]5[0-f]	(PC-98)      */
 name|GO_WINDOW
 argument_list|(
 literal|0
@@ -2205,6 +2205,26 @@ name|epb
 operator|->
 name|prod_id
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PC98
+if|if
+condition|(
+operator|(
+name|k
+operator|&
+literal|0xf0f0
+operator|)
+operator|!=
+operator|(
+name|PROD_ID
+operator|&
+literal|0xf0f0
+operator|)
+condition|)
+block|{
+else|#
+directive|else
 if|if
 condition|(
 operator|(
@@ -2220,6 +2240,8 @@ literal|0xf0ff
 operator|)
 condition|)
 block|{
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"ep_isa_probe: ignoring model %04x\n"
@@ -2295,9 +2317,6 @@ operator|)
 return|;
 comment|/* 16 bytes of I/O space used. */
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|ep_isa_attach
@@ -2464,9 +2483,6 @@ return|return
 literal|1
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|ep_attach
 parameter_list|(
@@ -2962,13 +2978,7 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * The order in here seems important. Otherwise we may not receive  * interrupts. ?!  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|epinit
@@ -3561,9 +3571,6 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_decl_stmt
 specifier|static
 specifier|const
 name|char
@@ -3580,9 +3587,6 @@ block|,
 literal|1
 block|}
 decl_stmt|;
-end_decl_stmt
-
-begin_function
 specifier|static
 name|void
 name|epstart
@@ -4093,9 +4097,6 @@ goto|goto
 name|startagain
 goto|;
 block|}
-end_function
-
-begin_function
 name|void
 name|epintr
 parameter_list|(
@@ -4131,9 +4132,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|ep_intr
 parameter_list|(
@@ -4637,9 +4635,6 @@ name|x
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|epread
@@ -5535,13 +5530,7 @@ name|RX_INIT_EARLY_THRESH
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Look familiar?  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|epioctl
@@ -6052,9 +6041,6 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|epwatchdog
@@ -6106,9 +6092,6 @@ name|if_softc
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|epstop
@@ -6245,25 +6228,13 @@ name|SET_RX_FILTER
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_if
 if|#
 directive|if
 literal|0
-end_if
-
-begin_endif
-unit|static int send_ID_sequence(port)     int port; {     int cx, al;      for (al = 0xff, cx = 0; cx< 255; cx++) { 	outb(port, al); 	al<<= 1; 	if (al& 0x100) 	    al ^= 0xcf;     }     return (1); }
+block|static int send_ID_sequence(port)     int port; {     int cx, al;      for (al = 0xff, cx = 0; cx< 255; cx++) { 	outb(port, al); 	al<<= 1; 	if (al& 0x100) 	    al ^= 0xcf;     }     return (1); }
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/*  * We get eeprom data from the id_port given an offset into the eeprom.  * Basically; after the ID_sequence is sent to all of the cards; they enter  * the ID_CMD state where they will accept command requests. 0x80-0xbf loads  * the eeprom data.  We then read the port 16 times and with every read; the  * cards check for contention (ie: if one card writes a 0 bit and another  * writes a 1 bit then the host sees a 0. At the end of the cycle; each card  * compares the data on the bus; if there is a difference then that card goes  * into ID_WAIT state again). In the meantime; one bit of data is returned in  * the AX register which is conveniently returned to us by inb().  Hence; we  * read 16 times getting one bit of data with each read.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|get_eeprom_data
