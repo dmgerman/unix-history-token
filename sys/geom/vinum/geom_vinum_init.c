@@ -1262,9 +1262,9 @@ expr_stmt|;
 comment|/* 		 * This hack declare this bio as part of an initialization 		 * process, so that the lower levels allow it to get through. 		 */
 name|bp
 operator|->
-name|bio_caller1
-operator|=
-name|p
+name|bio_cflags
+operator||=
+name|GV_BIO_SYNCREQ
 expr_stmt|;
 comment|/* Schedule it down ... */
 name|g_io_request

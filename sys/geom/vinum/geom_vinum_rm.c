@@ -778,6 +778,11 @@ argument_list|,
 name|volume
 argument_list|)
 expr_stmt|;
+name|gv_kill_vol_thread
+argument_list|(
+name|v
+argument_list|)
+expr_stmt|;
 name|g_free
 argument_list|(
 name|v

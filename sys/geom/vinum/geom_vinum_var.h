@@ -313,6 +313,20 @@ name|GV_BIO_ONHOLD
 value|0x04
 end_define
 
+begin_define
+define|#
+directive|define
+name|GV_BIO_SYNCREQ
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_BIO_SUCCEED
+value|0x10
+end_define
+
 begin_comment
 comment|/*  * hostname is 256 bytes long, but we don't need to shlep multiple copies in  * vinum.  We use the host name just to identify this system, and 32 bytes  * should be ample for that purpose.  */
 end_comment
@@ -885,17 +899,25 @@ decl_stmt|;
 comment|/* Count of synced bytes. */
 name|struct
 name|mtx
-name|worklist_mtx
+name|bqueue_mtx
 decl_stmt|;
-comment|/* Mutex for RAID5 worklist. */
+comment|/* Lock for the BIO queue. */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|gv_bioq
+argument_list|)
+name|bqueue
+expr_stmt|;
+comment|/* BIO queue. */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|gv_raid5_packet
 argument_list|)
-name|worklist
+name|packets
 expr_stmt|;
-comment|/* List of RAID5 work packets. */
+comment|/* RAID5 sub-requests. */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -981,6 +1003,37 @@ define|#
 directive|define
 name|GV_VOL_UP
 value|1
+name|int
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|GV_VOL_THREAD_ACTIVE
+value|0x01
+comment|/* Volume has an active thread. */
+define|#
+directive|define
+name|GV_VOL_THREAD_DIE
+value|0x02
+comment|/* Signal the thread to die. */
+define|#
+directive|define
+name|GV_VOL_THREAD_DEAD
+value|0x04
+comment|/* The thread has died. */
+name|struct
+name|mtx
+name|bqueue_mtx
+decl_stmt|;
+comment|/* Lock for the BIO queue. */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|gv_bioq
+argument_list|)
+name|bqueue
+expr_stmt|;
+comment|/* BIO queue. */
 name|LIST_HEAD
 argument_list|(
 argument_list|,

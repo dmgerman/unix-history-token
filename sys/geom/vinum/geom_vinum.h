@@ -435,6 +435,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|gv_kill_vol_thread
+parameter_list|(
+name|struct
+name|gv_volume
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|gv_object_type
 parameter_list|(
