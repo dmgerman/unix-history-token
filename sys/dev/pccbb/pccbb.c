@@ -4059,7 +4059,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Delay 1 second, make sure the user is done with 			 * whatever he is doing.  We tsleep on sc->sc_flags, 			 * which should never be woken up. 			 */
+comment|/* 			 * Delay 1 second, make sure the user is done with 			 * whatever he is doing.  We tsleep on sc->sc_flags, 			 * which should never be woken up. 			 * 			 * XXX Note: This can cause problems on card 			 * removal.  See OLDCARD's ISR for how you may 			 * have to deal with the debouncing problem.  The 			 * crux of the issue is interrupts delivered to 			 * the card after eject are unstable. 			 */
 name|tsleep
 argument_list|(
 operator|&
