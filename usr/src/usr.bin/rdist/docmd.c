@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)docmd.c	4.3 (Berkeley) 83/10/10"
+literal|"@(#)docmd.c	4.4 (Berkeley) 83/10/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -373,7 +373,7 @@ name|b_name
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|options
 argument_list|)
 expr_stmt|;
 block|}
@@ -448,6 +448,8 @@ argument_list|,
 name|c
 operator|->
 name|b_args
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -504,19 +506,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"/usr/local/rdist -Server%s%s%s%s%s"
-argument_list|,
-name|vflag
-condition|?
-literal|" -v"
-else|:
-literal|""
-argument_list|,
-name|qflag
-condition|?
-literal|" -q"
-else|:
-literal|""
+literal|"/usr/local/rdist -Server%s%s"
 argument_list|,
 name|nflag
 condition|?
@@ -524,15 +514,9 @@ literal|" -n"
 else|:
 literal|""
 argument_list|,
-name|yflag
+name|qflag
 condition|?
-literal|" -y"
-else|:
-literal|""
-argument_list|,
-name|debug
-condition|?
-literal|" -D"
+literal|" -q"
 else|:
 literal|""
 argument_list|)
@@ -674,7 +658,7 @@ argument|dest
 argument_list|,
 argument|destdir
 argument_list|,
-argument|options
+argument|opts
 argument_list|)
 end_macro
 
@@ -692,7 +676,7 @@ begin_decl_stmt
 name|int
 name|destdir
 decl_stmt|,
-name|options
+name|opts
 decl_stmt|;
 end_decl_stmt
 
@@ -720,9 +704,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%s %s %s\n"
+literal|"%s%s%s %s %s\n"
 argument_list|,
-name|options
+name|opts
 operator|&
 name|VERIFY
 condition|?
@@ -730,11 +714,19 @@ literal|"verify"
 else|:
 literal|"install"
 argument_list|,
-name|options
+name|opts
 operator|&
 name|WHOLE
 condition|?
 literal|" -w"
+else|:
+literal|""
+argument_list|,
+name|opts
+operator|&
+name|YOUNGER
+condition|?
+literal|" -y"
 else|:
 literal|""
 argument_list|,
@@ -800,12 +792,12 @@ operator|!
 name|destdir
 operator|&&
 operator|(
-name|options
+name|opts
 operator|&
 name|WHOLE
 operator|)
 condition|)
-name|options
+name|opts
 operator||=
 name|STRIP
 expr_stmt|;
@@ -815,7 +807,7 @@ name|src
 argument_list|,
 name|NULL
 argument_list|,
-name|options
+name|opts
 argument_list|)
 expr_stmt|;
 block|}
@@ -907,6 +899,17 @@ modifier|*
 name|cpp
 decl_stmt|;
 name|struct
+name|timeval
+name|tv
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|struct
+name|timezone
+name|tz
+decl_stmt|;
+name|struct
 name|stat
 name|stb
 decl_stmt|;
@@ -939,7 +942,7 @@ name|expand
 argument_list|(
 name|stamps
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1061,13 +1064,54 @@ name|stb
 operator|.
 name|st_mtime
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|gettimeofday
+argument_list|(
+operator|&
+name|tv
+index|[
+literal|0
+index|]
+argument_list|,
+operator|&
+name|tz
+argument_list|)
+expr_stmt|;
+name|tv
+index|[
+literal|1
+index|]
+operator|=
+name|tv
+index|[
+literal|0
+index|]
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|utimes
+argument_list|(
+name|b
+operator|->
+name|b_name
+argument_list|,
+name|tv
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|nflag
 operator|&&
 operator|!
-name|vflag
+operator|(
+name|options
+operator|&
+name|VERIFY
+operator|)
 condition|)
 block|{
 if|if
@@ -1185,14 +1229,11 @@ name|b_name
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|!
-name|nflag
-operator|&&
-operator|!
-name|vflag
-condition|)
+operator|*
+name|tmpinc
+operator|=
+literal|'A'
+expr_stmt|;
 for|for
 control|(
 name|t
@@ -1210,6 +1251,7 @@ condition|;
 name|t
 operator|++
 control|)
+block|{
 if|if
 condition|(
 name|t
@@ -1228,17 +1270,6 @@ operator|->
 name|tfp
 argument_list|)
 expr_stmt|;
-operator|*
-name|tmpinc
-operator|=
-literal|'A'
-expr_stmt|;
-while|while
-condition|(
-name|nstamps
-operator|--
-condition|)
-block|{
 for|for
 control|(
 name|b
@@ -1272,6 +1303,10 @@ argument_list|,
 name|b
 operator|->
 name|b_args
+argument_list|,
+name|t
+operator|->
+name|lastmod
 argument_list|)
 expr_stmt|;
 if|if
@@ -1280,7 +1315,11 @@ operator|!
 name|nflag
 operator|&&
 operator|!
-name|vflag
+operator|(
+name|options
+operator|&
+name|VERIFY
+operator|)
 condition|)
 operator|(
 name|void
@@ -1471,19 +1510,18 @@ condition|(
 name|stb
 operator|.
 name|st_mtime
-operator|<=
+operator|>
 name|t
 operator|->
 name|lastmod
 condition|)
-return|return;
 name|log
 argument_list|(
 name|t
 operator|->
 name|tfp
 argument_list|,
-literal|"updating: %s\n"
+literal|"new: %s\n"
 argument_list|,
 name|name
 argument_list|)
@@ -1699,7 +1737,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Notify the list of people the changes that were made.  */
+comment|/*  * Notify the list of people the changes that were made.  * rhost == NULL if we are mailing a list of changes compared to at time  * stamp file.  */
 end_comment
 
 begin_macro
@@ -1710,6 +1748,8 @@ argument_list|,
 argument|rhost
 argument_list|,
 argument|to
+argument_list|,
+argument|lmod
 argument_list|)
 end_macro
 
@@ -1729,6 +1769,12 @@ name|struct
 name|block
 modifier|*
 name|to
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|time_t
+name|lmod
 decl_stmt|;
 end_decl_stmt
 
@@ -1754,7 +1800,9 @@ name|stb
 decl_stmt|;
 if|if
 condition|(
-name|vflag
+name|options
+operator|&
+name|VERIFY
 condition|)
 return|return;
 if|if
@@ -1923,13 +1971,6 @@ argument_list|,
 literal|"To:"
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-name|to
-operator|!=
-name|NULL
-condition|)
-block|{
 if|if
 condition|(
 operator|!
@@ -1977,6 +2018,60 @@ name|to
 operator|->
 name|b_next
 expr_stmt|;
+while|while
+condition|(
+name|to
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|any
+argument_list|(
+literal|'@'
+argument_list|,
+name|to
+operator|->
+name|b_name
+argument_list|)
+operator|&&
+name|host
+operator|!=
+name|NULL
+condition|)
+name|fprintf
+argument_list|(
+name|pf
+argument_list|,
+literal|", %s@%s"
+argument_list|,
+name|to
+operator|->
+name|b_name
+argument_list|,
+name|rhost
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|pf
+argument_list|,
+literal|", %s"
+argument_list|,
+name|to
+operator|->
+name|b_name
+argument_list|)
+expr_stmt|;
+name|to
+operator|=
+name|to
+operator|->
+name|b_next
+expr_stmt|;
 block|}
 name|putc
 argument_list|(
@@ -1985,6 +2080,12 @@ argument_list|,
 name|pf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rhost
+operator|!=
+name|NULL
+condition|)
 name|fprintf
 argument_list|(
 name|pf
@@ -1994,6 +2095,20 @@ argument_list|,
 name|host
 argument_list|,
 name|rhost
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|pf
+argument_list|,
+literal|"Subject: files updated after %s\n"
+argument_list|,
+name|ctime
+argument_list|(
+operator|&
+name|lmod
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|putc

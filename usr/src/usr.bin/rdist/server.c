@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)server.c	4.3 (Berkeley) 83/10/10"
+literal|"@(#)server.c	4.4 (Berkeley) 83/10/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -624,7 +624,7 @@ argument|lname
 argument_list|,
 argument|rname
 argument_list|,
-argument|options
+argument|opts
 argument_list|)
 end_macro
 
@@ -640,7 +640,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|options
+name|opts
 decl_stmt|;
 end_decl_stmt
 
@@ -683,7 +683,7 @@ name|rname
 else|:
 literal|"NULL"
 argument_list|,
-name|options
+name|opts
 argument_list|)
 expr_stmt|;
 if|if
@@ -735,12 +735,12 @@ expr_stmt|;
 comment|/* 		 * If we are renaming a directory and we want to preserve 		 * the directory heirarchy (-w), we must strip off the first 		 * directory name and preserve the rest. 		 */
 if|if
 condition|(
-name|options
+name|opts
 operator|&
 name|STRIP
 condition|)
 block|{
-name|options
+name|opts
 operator|&=
 operator|~
 name|STRIP
@@ -774,7 +774,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|options
+name|opts
 operator|&
 name|WHOLE
 operator|)
@@ -852,7 +852,7 @@ name|lname
 argument_list|,
 name|rname
 argument_list|,
-name|options
+name|opts
 argument_list|,
 operator|&
 name|stb
@@ -966,7 +966,7 @@ name|lname
 argument_list|,
 name|rname
 argument_list|,
-name|options
+name|opts
 argument_list|,
 operator|&
 name|stb
@@ -1010,13 +1010,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|options
+name|opts
 operator|&
 name|VERIFY
-operator|)
-operator|||
-name|vflag
 condition|)
 return|return;
 if|if
@@ -1056,7 +1052,9 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"R%04o %D %D %s %s %s\n"
+literal|"R%1o %04o %D %D %s %s %s\n"
+argument_list|,
+name|opts
 argument_list|,
 name|stb
 operator|.
@@ -1244,7 +1242,7 @@ argument|lname
 argument_list|,
 argument|rname
 argument_list|,
-argument|options
+argument|opts
 argument_list|,
 argument|st
 argument_list|,
@@ -1266,7 +1264,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|options
+name|opts
 decl_stmt|;
 end_decl_stmt
 
@@ -1321,7 +1319,7 @@ name|lname
 argument_list|,
 name|rname
 argument_list|,
-name|options
+name|opts
 argument_list|,
 name|st
 argument_list|,
@@ -1365,7 +1363,9 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"D%04o 0 0 %s %s %s\n"
+literal|"D%1o %04o 0 0 %s %s %s\n"
+argument_list|,
+name|opts
 argument_list|,
 name|st
 operator|->
@@ -1533,7 +1533,7 @@ name|dp
 operator|->
 name|d_name
 argument_list|,
-name|options
+name|opts
 argument_list|)
 expr_stmt|;
 block|}
@@ -1583,7 +1583,7 @@ argument|lname
 argument_list|,
 argument|rname
 argument_list|,
-argument|options
+argument|opts
 argument_list|,
 argument|st
 argument_list|)
@@ -1601,7 +1601,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|options
+name|opts
 decl_stmt|;
 end_decl_stmt
 
@@ -1640,7 +1640,7 @@ name|lname
 argument_list|,
 name|rname
 argument_list|,
-name|options
+name|opts
 argument_list|,
 name|st
 argument_list|)
@@ -1961,13 +1961,9 @@ block|}
 comment|/* 	 * File needs to be updated? 	 */
 if|if
 condition|(
-name|yflag
-operator|||
-operator|(
-name|options
+name|opts
 operator|&
 name|YOUNGER
-operator|)
 condition|)
 block|{
 if|if
@@ -2256,6 +2252,8 @@ name|f
 decl_stmt|,
 name|mode
 decl_stmt|,
+name|opts
+decl_stmt|,
 name|wrerr
 decl_stmt|,
 name|olderrno
@@ -2300,25 +2298,66 @@ name|char
 modifier|*
 name|tmpname
 decl_stmt|;
+name|cp
+operator|=
+name|cmd
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|cp
+operator|<
+literal|'0'
+operator|||
+operator|*
+name|cp
+operator|>
+literal|'7'
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"bad options\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|opts
+operator|=
+operator|*
+name|cp
+operator|++
+operator|-
+literal|'0'
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|cp
+operator|++
+operator|!=
+literal|' '
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"options not delimited\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|mode
 operator|=
 literal|0
 expr_stmt|;
-for|for
-control|(
-name|cp
-operator|=
-name|cmd
-init|;
+while|while
+condition|(
 name|cp
 operator|<
 name|cmd
 operator|+
-literal|4
-condition|;
-name|cp
-operator|++
-control|)
+literal|6
+condition|)
 block|{
 if|if
 condition|(
@@ -2351,6 +2390,7 @@ operator||
 operator|(
 operator|*
 name|cp
+operator|++
 operator|-
 literal|'0'
 operator|)
@@ -2599,7 +2639,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|vflag
+name|opts
+operator|&
+name|VERIFY
 condition|)
 block|{
 name|ga
@@ -3858,7 +3900,11 @@ comment|/* Save changes (for mailing) if really updating files */
 if|if
 condition|(
 operator|!
-name|vflag
+operator|(
+name|options
+operator|&
+name|VERIFY
+operator|)
 operator|&&
 name|fp
 operator|!=

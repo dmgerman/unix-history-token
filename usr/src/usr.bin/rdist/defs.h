@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.3	83/10/10	*/
+comment|/*	defs.h	4.4	83/10/12	*/
 end_comment
 
 begin_include
@@ -328,23 +328,12 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|vflag
+name|options
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* verify only */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|yflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* update iff remote younger than master */
+comment|/* global options */
 end_comment
 
 begin_decl_stmt
