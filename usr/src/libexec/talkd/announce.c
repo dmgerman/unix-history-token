@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)announce.c	5.8 (Berkeley) %G%"
+literal|"@(#)announce.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,31 +43,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sgtty.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/wait.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/wait.h>
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<protocols/talkd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sgtty.h>
 end_include
 
 begin_include
@@ -85,7 +85,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<protocols/talkd.h>
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -93,13 +105,6 @@ include|#
 directive|include
 file|<paths.h>
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

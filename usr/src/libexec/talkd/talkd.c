@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)talkd.c	5.7 (Berkeley) %G%"
+literal|"@(#)talkd.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,13 +59,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<protocols/talkd.h>
 end_include
 
 begin_include
@@ -83,7 +89,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|<protocols/talkd.h>
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -119,7 +155,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|int
+name|void
 name|timeout
 parameter_list|()
 function_decl|;
@@ -438,12 +474,10 @@ block|}
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|timeout
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -467,7 +501,7 @@ name|TIMEOUT
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

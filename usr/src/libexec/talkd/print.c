@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.7 (Berkeley) %G%"
+literal|"@(#)print.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<protocols/talkd.h>
 end_include
 
 begin_include
@@ -47,13 +59,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<protocols/talkd.h>
+file|<stdio.h>
 end_include
 
 begin_decl_stmt

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)table.c	5.6 (Berkeley) %G%"
+literal|"@(#)table.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -47,19 +47,43 @@ end_include
 begin_include
 include|#
 directive|include
-file|<syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<protocols/talkd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_define
@@ -97,7 +121,6 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|timezone
-modifier|*
 name|txp
 decl_stmt|;
 end_decl_stmt
@@ -157,14 +180,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Look in the table for an invitation that matches the current  * request looking for an invitation  */
 end_comment
@@ -187,7 +202,7 @@ name|TABLE_ENTRY
 modifier|*
 name|ptr
 decl_stmt|;
-name|long
+name|time_t
 name|current_time
 decl_stmt|;
 name|gettimeofday
@@ -365,7 +380,7 @@ name|TABLE_ENTRY
 modifier|*
 name|ptr
 decl_stmt|;
-name|long
+name|time_t
 name|current_time
 decl_stmt|;
 name|gettimeofday
@@ -573,7 +588,7 @@ name|TABLE_ENTRY
 modifier|*
 name|ptr
 decl_stmt|;
-name|long
+name|time_t
 name|current_time
 decl_stmt|;
 name|gettimeofday
