@@ -5153,7 +5153,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"udf_readlblks returned %d\n"
+literal|"warning: udf_readlblks returned error %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -5436,8 +5436,6 @@ name|short_ad
 argument_list|,
 name|icb
 argument_list|)
-operator|-
-name|offset
 expr_stmt|;
 break|break;
 case|case
@@ -5549,8 +5547,6 @@ name|long_ad
 argument_list|,
 name|icb
 argument_list|)
-operator|-
-name|offset
 expr_stmt|;
 break|break;
 case|case
