@@ -921,13 +921,13 @@ end_decl_stmt
 
 begin_decl_stmt
 name|d_read_t
-name|vinumread
+name|physread
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|d_write_t
-name|vinumwrite
+name|physwrite
 decl_stmt|;
 end_decl_stmt
 

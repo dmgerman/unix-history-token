@@ -95,9 +95,9 @@ name|vinumopen
 block|,
 name|vinumclose
 block|,
-name|vinumread
+name|physread
 block|,
-name|vinumwrite
+name|physwrite
 block|,
 name|vinumioctl
 block|,
