@@ -212,7 +212,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"maxqueue %u maxqchip %u mcr1full\n"
+literal|"maxqueue %u maxqchip %u mcr1full %u\n"
 argument_list|,
 name|stats
 operator|.
