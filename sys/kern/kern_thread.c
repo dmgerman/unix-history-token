@@ -1227,7 +1227,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|ksegrp_init
+name|ksegrp_ctor
 parameter_list|(
 name|void
 modifier|*
@@ -1235,6 +1235,10 @@ name|mem
 parameter_list|,
 name|int
 name|size
+parameter_list|,
+name|void
+modifier|*
+name|arg
 parameter_list|,
 name|int
 name|flags
@@ -1254,6 +1258,13 @@ operator|*
 operator|)
 name|mem
 expr_stmt|;
+name|bzero
+argument_list|(
+name|mem
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
 name|kg
 operator|->
 name|kg_sched
@@ -1269,7 +1280,6 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-comment|/* sched_newksegrp(kg); */
 return|return
 operator|(
 literal|0
@@ -1605,11 +1615,11 @@ argument_list|,
 name|sched_sizeof_ksegrp
 argument_list|()
 argument_list|,
-name|NULL
+name|ksegrp_ctor
 argument_list|,
 name|NULL
 argument_list|,
-name|ksegrp_init
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
