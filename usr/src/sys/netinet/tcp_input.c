@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.61	82/03/15	*/
+comment|/*	tcp_input.c	1.62	82/03/19	*/
 end_comment
 
 begin_include
@@ -1651,6 +1651,10 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+name|tp
+operator|=
+literal|0
+expr_stmt|;
 goto|goto
 name|dropwithreset
 goto|;
@@ -1818,6 +1822,10 @@ name|tp
 argument_list|,
 name|ECONNRESET
 argument_list|)
+expr_stmt|;
+name|tp
+operator|=
+literal|0
 expr_stmt|;
 goto|goto
 name|dropwithreset
