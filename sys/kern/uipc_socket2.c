@@ -2924,6 +2924,18 @@ operator|->
 name|m_type
 operator|!=
 name|MT_DATA
+operator|&&
+name|m
+operator|->
+name|m_type
+operator|!=
+name|MT_HEADER
+operator|&&
+name|m
+operator|->
+name|m_type
+operator|!=
+name|MT_OOBDATA
 condition|)
 comment|/* XXX: Probably don't need.*/
 name|sb
@@ -3248,6 +3260,18 @@ operator|->
 name|m_type
 operator|!=
 name|MT_DATA
+operator|&&
+name|m
+operator|->
+name|m_type
+operator|!=
+name|MT_HEADER
+operator|&&
+name|m
+operator|->
+name|m_type
+operator|!=
+name|MT_OOBDATA
 condition|)
 name|sb
 operator|->

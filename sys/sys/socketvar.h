@@ -673,7 +673,7 @@ name|sb
 parameter_list|,
 name|m
 parameter_list|)
-value|{ \ 	(sb)->sb_cc += (m)->m_len; \ 	if ((m)->m_type != MT_DATA) \ 		(sb)->sb_ctl += (m)->m_len; \ 	(sb)->sb_mbcnt += MSIZE; \ 	if ((m)->m_flags& M_EXT) \ 		(sb)->sb_mbcnt += (m)->m_ext.ext_size; \ }
+value|{ \ 	(sb)->sb_cc += (m)->m_len; \ 	if ((m)->m_type != MT_DATA&& (m)->m_type != MT_HEADER&& \ 	    (m)->m_type != MT_OOBDATA) \ 		(sb)->sb_ctl += (m)->m_len; \ 	(sb)->sb_mbcnt += MSIZE; \ 	if ((m)->m_flags& M_EXT) \ 		(sb)->sb_mbcnt += (m)->m_ext.ext_size; \ }
 end_define
 
 begin_comment
@@ -689,7 +689,7 @@ name|sb
 parameter_list|,
 name|m
 parameter_list|)
-value|{ \ 	(sb)->sb_cc -= (m)->m_len; \ 	if ((m)->m_type != MT_DATA) \ 		(sb)->sb_ctl -= (m)->m_len; \ 	(sb)->sb_mbcnt -= MSIZE; \ 	if ((m)->m_flags& M_EXT) \ 		(sb)->sb_mbcnt -= (m)->m_ext.ext_size; \ }
+value|{ \ 	(sb)->sb_cc -= (m)->m_len; \ 	if ((m)->m_type != MT_DATA&& (m)->m_type != MT_HEADER&& \ 	    (m)->m_type != MT_OOBDATA) \ 		(sb)->sb_ctl -= (m)->m_len; \ 	(sb)->sb_mbcnt -= MSIZE; \ 	if ((m)->m_flags& M_EXT) \ 		(sb)->sb_mbcnt -= (m)->m_ext.ext_size; \ }
 end_define
 
 begin_comment
