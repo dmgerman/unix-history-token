@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tree.c 1.5 %G%"
+literal|"@(#)tree.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1866,6 +1866,14 @@ expr_stmt|;
 block|}
 name|i
 operator|=
+operator|(
+name|ub
+operator|-
+name|lb
+operator|+
+literal|1
+operator|)
+operator|*
 name|i
 operator|+
 operator|(
