@@ -271,11 +271,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<port_ipv6.h>
-end_include
+begin_define
+define|#
+directive|define
+name|HAVE_INET6_STRUCTS
+end_define
 
 begin_ifndef
 ifndef|#
