@@ -401,8 +401,6 @@ specifier|static
 name|char
 modifier|*
 name|nlistf
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -411,8 +409,6 @@ specifier|static
 name|char
 modifier|*
 name|memf
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -751,7 +747,7 @@ literal|"TM:N:fknst"
 expr_stmt|;
 name|usagestr
 operator|=
-literal|"pstat [-Tfknstv] [-M core] [-N system]"
+literal|"pstat [-Tfknst] [-M core] [-N system]"
 expr_stmt|;
 block|}
 while|while
