@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readobj.c 1.3 %G%"
+literal|"@(#)readobj.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|"mappings/linetab.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"objsym.rep"
 end_include
 
 begin_define
@@ -566,8 +572,8 @@ name|FILETAB
 modifier|*
 name|ftp
 decl_stmt|;
-name|short
-name|lineincr
+name|OBJLINE
+name|info
 decl_stmt|;
 if|if
 condition|(
@@ -708,41 +714,30 @@ operator|->
 name|line
 expr_stmt|;
 block|}
-name|lineincr
+name|info
+operator|.
+name|together
 operator|=
-operator|(
-name|unsigned
-operator|)
-name|getc
+name|getw
 argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|lineincr
-operator|>
-literal|127
-condition|)
-block|{
-name|lineincr
-operator|-=
-literal|256
-expr_stmt|;
-block|}
 name|oline
 operator|+=
+name|info
+operator|.
+name|separate
+operator|.
 name|lineincr
 expr_stmt|;
 name|oaddr
 operator|+=
-operator|(
-name|unsigned
-operator|)
-name|getc
-argument_list|(
-name|fp
-argument_list|)
+name|info
+operator|.
+name|separate
+operator|.
+name|addrincr
 expr_stmt|;
 name|lp
 operator|->
