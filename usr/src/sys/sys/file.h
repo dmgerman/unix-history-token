@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	file.h	4.16	83/06/03	*/
+comment|/*	file.h	4.17	83/06/09	*/
 end_comment
 
 begin_ifdef
@@ -394,8 +394,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LOCK_UN
+name|LOCK_NB
 value|4
+end_define
+
+begin_comment
+comment|/* don't block when locking */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOCK_UN
+value|8
 end_define
 
 begin_comment
