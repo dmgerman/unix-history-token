@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_misc.c,v 1.38 1998/05/17 11:52:26 phk Exp $  */
+comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_misc.c,v 1.39 1998/07/10 22:30:01 jkh Exp $  */
 end_comment
 
 begin_include
@@ -510,12 +510,19 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): brk(%08x)\n"
+literal|"Linux-emul(%ld): brk(%p)\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|args
 operator|->
 name|dsend
@@ -1143,7 +1150,7 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"uselib: Non page aligned binary %d\n"
+literal|"uselib: Non page aligned binary %lu\n"
 argument_list|,
 name|file_offset
 argument_list|)
@@ -1317,7 +1324,7 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"uselib: Page aligned binary %d\n"
+literal|"uselib: Page aligned binary %lu\n"
 argument_list|,
 name|file_offset
 argument_list|)
@@ -1721,8 +1728,11 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): newselect(%d, %x, %x, %x, %x)\n"
+literal|"Linux-emul(%ld): newselect(%d, %p, %p, %p, %p)\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid
@@ -1731,18 +1741,34 @@ name|args
 operator|->
 name|nfds
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|args
 operator|->
 name|readfds
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|args
 operator|->
 name|writefds
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|args
 operator|->
 name|exceptfds
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|args
 operator|->
 name|timeout
@@ -1831,8 +1857,11 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): incoming timeout (%d/%d)\n"
+literal|"Linux-emul(%ld): incoming timeout (%ld/%ld)\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid
@@ -2079,8 +2108,11 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): outgoing timeout (%d/%d)\n"
+literal|"Linux-emul(%ld): outgoing timeout (%ld/%ld)\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid
@@ -2403,12 +2435,19 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): mmap(%08x, %d, %d, %08x, %d, %d)\n"
+literal|"Linux-emul(%ld): mmap(%p, %d, %d, %08x, %d, %d)\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|linux_args
 operator|.
 name|addr
@@ -2589,12 +2628,19 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): mremap(%08x, %08x, %08x, %08x)\n"
+literal|"Linux-emul(%ld): mremap(%p, %08x, %08x, %08x)\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|args
 operator|->
 name|addr
@@ -3625,8 +3671,11 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): waitpid(%d, 0x%x, %d)\n"
+literal|"Linux-emul(%ld): waitpid(%d, %p, %d)\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid
@@ -3635,6 +3684,10 @@ name|args
 operator|->
 name|pid
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|args
 operator|->
 name|status
@@ -3825,8 +3878,11 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): wait4(%d, 0x%x, %d, 0x%x)\n"
+literal|"Linux-emul(%ld): wait4(%d, %p, %d, %p)\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid
@@ -3835,6 +3891,10 @@ name|args
 operator|->
 name|pid
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|args
 operator|->
 name|status
@@ -3843,6 +3903,10 @@ name|args
 operator|->
 name|options
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|args
 operator|->
 name|rusage
@@ -4253,16 +4317,27 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): setitimer(%08x, %08x)\n"
+literal|"Linux-emul(%ld): setitimer(%p, %p)\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|args
 operator|->
 name|itv
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|args
 operator|->
 name|oitv
@@ -4336,7 +4411,7 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"setitimer: value: sec: %d, usec: %d\n"
+literal|"setitimer: value: sec: %ld, usec: %ld\n"
 argument_list|,
 name|foo
 operator|.
@@ -4353,7 +4428,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"setitimer: interval: sec: %d, usec: %d\n"
+literal|"setitimer: interval: sec: %ld, usec: %ld\n"
 argument_list|,
 name|foo
 operator|.
@@ -4407,12 +4482,19 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): getitimer(%08x)\n"
+literal|"Linux-emul(%ld): getitimer(%p)\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|args
 operator|->
 name|itv
