@@ -2641,6 +2641,8 @@ name|u_int32_t
 name|nge_extsts
 decl_stmt|;
 comment|/* Driver software section */
+union|union
+block|{
 name|struct
 name|mbuf
 modifier|*
@@ -2651,6 +2653,15 @@ name|nge_desc_64
 modifier|*
 name|nge_nextdesc
 decl_stmt|;
+name|u_int64_t
+name|nge_dummy
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+name|nge_u
+union|;
 block|}
 struct|;
 end_struct
@@ -2685,6 +2696,8 @@ name|u_int32_t
 name|nge_extsts
 decl_stmt|;
 comment|/* Driver software section */
+union|union
+block|{
 name|struct
 name|mbuf
 modifier|*
@@ -2695,6 +2708,15 @@ name|nge_desc_32
 modifier|*
 name|nge_nextdesc
 decl_stmt|;
+name|u_int64_t
+name|nge_dummy
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+name|nge_u
+union|;
 block|}
 struct|;
 end_struct
@@ -2704,6 +2726,20 @@ define|#
 directive|define
 name|nge_desc
 value|nge_desc_32
+end_define
+
+begin_define
+define|#
+directive|define
+name|nge_mbuf
+value|nge_u.nge_mbuf
+end_define
+
+begin_define
+define|#
+directive|define
+name|nge_nextdesc
+value|nge_u.nge_nextdesc
 end_define
 
 begin_define
