@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1980 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*	static	char sccsid[] = "@(#)pc3.h 1.1 %G%"; */
+comment|/*	static	char sccsid[] = "@(#)pc3.h 1.2 %G%"; */
 end_comment
 
 begin_comment
@@ -75,12 +75,9 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|NIL
-value|0
-end_define
+begin_comment
+comment|/*      *	struct for an argument .o file.      */
+end_comment
 
 begin_struct
 struct|struct
@@ -104,6 +101,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*      *	old archive magic for error detection.      */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -126,7 +127,7 @@ value|( n& 077777 )
 end_define
 
 begin_comment
-comment|/*      *	a prime number which rounds a struct symboltableinfo up to ~BUFSIZ      */
+comment|/*      *	a prime number which gets sizeof( struct symboltableinfo )      *	up to a multiple of BUFSIZ.      */
 end_comment
 
 begin_define
@@ -176,7 +177,7 @@ value|BUFSIZ
 end_define
 
 begin_comment
-comment|/*      *	a prime number which rounds a struct stringtableinfo up to ~BUFSIZ      */
+comment|/*      *	a prime number which gets sizeof( struct stringtableinfo )      *	up to a multiple of BUFSIZ.      */
 end_comment
 
 begin_define
@@ -222,6 +223,17 @@ define|#
 directive|define
 name|CHARALLOC
 value|BUFSIZ
+end_define
+
+begin_comment
+comment|/*      *	uninitialized pointer      */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NIL
+value|0
 end_define
 
 begin_comment
