@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: brooktree848.c,v 1.80 1999/05/23 21:40:51 roger Exp $ */
+comment|/* $Id: brooktree848.c,v 1.81 1999/05/25 12:43:40 roger Exp $ */
 end_comment
 
 begin_comment
@@ -971,32 +971,61 @@ name|cdevsw
 name|bktr_cdevsw
 init|=
 block|{
+comment|/* open */
 name|bktr_open
 block|,
+comment|/* close */
 name|bktr_close
 block|,
+comment|/* read */
 name|bktr_read
 block|,
+comment|/* write */
 name|bktr_write
 block|,
+comment|/* ioctl */
 name|bktr_ioctl
 block|,
+comment|/* stop */
 name|nostop
 block|,
-name|nullreset
+comment|/* reset */
+name|noreset
 block|,
+comment|/* devtotty */
 name|nodevtotty
 block|,
-name|seltrue
+comment|/* poll */
+name|nopoll
 block|,
+comment|/* mmap */
 name|bktr_mmap
 block|,
-name|NULL
+comment|/* strategy */
+name|nostrategy
 block|,
+comment|/* name */
 literal|"bktr"
 block|,
-name|NULL
+comment|/* parms */
+name|noparms
 block|,
+comment|/* maj */
+name|CDEV_MAJOR
+block|,
+comment|/* dump */
+name|nodump
+block|,
+comment|/* psize */
+name|nopsize
+block|,
+comment|/* flags */
+literal|0
+block|,
+comment|/* maxio */
+literal|0
+block|,
+comment|/* bmaj */
 operator|-
 literal|1
 block|}

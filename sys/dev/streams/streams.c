@@ -395,32 +395,61 @@ name|cdevsw
 name|streams_cdevsw
 init|=
 block|{
+comment|/* open */
 name|streamsopen
 block|,
-name|NULL
+comment|/* close */
+name|noclose
 block|,
-name|NULL
+comment|/* read */
+name|noread
 block|,
-name|NULL
+comment|/* write */
+name|nowrite
 block|,
-name|NULL
+comment|/* ioctl */
+name|noioctl
 block|,
-name|NULL
+comment|/* stop */
+name|nostop
 block|,
-name|NULL
+comment|/* reset */
+name|noreset
 block|,
-name|NULL
+comment|/* devtotty */
+name|nodevtotty
 block|,
-name|NULL
+comment|/* poll */
+name|nopoll
 block|,
-name|NULL
+comment|/* mmap */
+name|nommap
 block|,
-name|NULL
+comment|/* strategy */
+name|nostrategy
 block|,
+comment|/* name */
 literal|"streams"
 block|,
-name|NULL
+comment|/* parms */
+name|noparms
 block|,
+comment|/* maj */
+name|CDEV_MAJOR
+block|,
+comment|/* dump */
+name|nodump
+block|,
+comment|/* psize */
+name|nopsize
+block|,
+comment|/* flags */
+literal|0
+block|,
+comment|/* maxio */
+literal|0
+block|,
+comment|/* bmaj */
 operator|-
 literal|1
 block|}

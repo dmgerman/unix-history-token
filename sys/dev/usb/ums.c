@@ -623,32 +623,61 @@ name|cdevsw
 name|ums_cdevsw
 init|=
 block|{
+comment|/* open */
 name|ums_open
 block|,
+comment|/* close */
 name|ums_close
 block|,
+comment|/* read */
 name|ums_read
 block|,
+comment|/* write */
 name|nowrite
 block|,
+comment|/* ioctl */
 name|ums_ioctl
 block|,
+comment|/* stop */
 name|nostop
 block|,
-name|nullreset
+comment|/* reset */
+name|noreset
 block|,
+comment|/* devtotty */
 name|nodevtotty
 block|,
+comment|/* poll */
 name|ums_poll
 block|,
+comment|/* mmap */
 name|nommap
 block|,
-name|nostrat
+comment|/* strategy */
+name|nostrategy
 block|,
+comment|/* name */
 literal|"ums"
 block|,
-name|NULL
+comment|/* parms */
+name|noparms
 block|,
+comment|/* maj */
+name|UMS_CDEV_MAJOR
+block|,
+comment|/* dump */
+name|nodump
+block|,
+comment|/* psize */
+name|nopsize
+block|,
+comment|/* flags */
+literal|0
+block|,
+comment|/* maxio */
+literal|0
+block|,
+comment|/* bmaj */
 operator|-
 literal|1
 block|}

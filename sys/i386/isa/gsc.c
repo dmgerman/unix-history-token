@@ -708,34 +708,61 @@ name|cdevsw
 name|gsc_cdevsw
 init|=
 block|{
+comment|/* open */
 name|gscopen
 block|,
+comment|/* close */
 name|gscclose
 block|,
+comment|/* read */
 name|gscread
 block|,
+comment|/* write */
 name|nowrite
 block|,
-comment|/*47*/
+comment|/* ioctl */
 name|gscioctl
 block|,
+comment|/* stop */
 name|nostop
 block|,
-name|nullreset
+comment|/* reset */
+name|noreset
 block|,
+comment|/* devtotty */
 name|nodevtotty
 block|,
-comment|/* gsc */
-name|seltrue
+comment|/* poll */
+name|nopoll
 block|,
+comment|/* mmap */
 name|nommap
 block|,
-name|NULL
+comment|/* strategy */
+name|nostrategy
 block|,
+comment|/* name */
 literal|"gsc"
 block|,
-name|NULL
+comment|/* parms */
+name|noparms
 block|,
+comment|/* maj */
+name|CDEV_MAJOR
+block|,
+comment|/* dump */
+name|nodump
+block|,
+comment|/* psize */
+name|nopsize
+block|,
+comment|/* flags */
+literal|0
+block|,
+comment|/* maxio */
+literal|0
+block|,
+comment|/* bmaj */
 operator|-
 literal|1
 block|}

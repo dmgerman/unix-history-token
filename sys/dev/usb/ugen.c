@@ -536,32 +536,61 @@ name|cdevsw
 name|ugen_cdevsw
 init|=
 block|{
+comment|/* open */
 name|ugenopen
 block|,
+comment|/* close */
 name|ugenclose
 block|,
+comment|/* read */
 name|ugenread
 block|,
+comment|/* write */
 name|ugenwrite
 block|,
+comment|/* ioctl */
 name|ugenioctl
 block|,
+comment|/* stop */
 name|nostop
 block|,
-name|nullreset
+comment|/* reset */
+name|noreset
 block|,
+comment|/* devtotty */
 name|nodevtotty
 block|,
+comment|/* poll */
 name|ugenpoll
 block|,
+comment|/* mmap */
 name|nommap
 block|,
-name|nostrat
+comment|/* strategy */
+name|nostrategy
 block|,
+comment|/* name */
 literal|"ugen"
 block|,
-name|NULL
+comment|/* parms */
+name|noparms
 block|,
+comment|/* maj */
+name|UGEN_CDEV_MAJOR
+block|,
+comment|/* dump */
+name|nodump
+block|,
+comment|/* psize */
+name|nopsize
+block|,
+comment|/* flags */
+literal|0
+block|,
+comment|/* maxio */
+literal|0
+block|,
+comment|/* bmaj */
 operator|-
 literal|1
 block|}

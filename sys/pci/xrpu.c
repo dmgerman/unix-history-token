@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: xrpu.c,v 1.9 1999/04/24 20:14:03 peter Exp $  *  * A very simple device driver for PCI cards based on Xilinx 6200 series  * FPGA/RPU devices.  Current Functionality is to allow you to open and  * mmap the entire thing into your program.  *  * Hardware currently supported:  *	www.vcc.com HotWorks 1 6216 based card.  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: xrpu.c,v 1.10 1999/05/09 17:07:12 peter Exp $  *  * A very simple device driver for PCI cards based on Xilinx 6200 series  * FPGA/RPU devices.  Current Functionality is to allow you to open and  * mmap the entire thing into your program.  *  * Hardware currently supported:  *	www.vcc.com HotWorks 1 6216 based card.  *  */
 end_comment
 
 begin_include
@@ -179,35 +179,64 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|cdevsw
-name|xrpudevsw
+name|xrpu_cdevsw
 init|=
 block|{
+comment|/* open */
 name|xrpu_open
 block|,
+comment|/* close */
 name|xrpu_close
 block|,
+comment|/* read */
 name|noread
 block|,
+comment|/* write */
 name|nowrite
 block|,
+comment|/* ioctl */
 name|xrpu_ioctl
 block|,
-name|nullstop
+comment|/* stop */
+name|nostop
 block|,
+comment|/* reset */
 name|noreset
 block|,
+comment|/* devtotty */
 name|nodevtotty
 block|,
-name|seltrue
+comment|/* poll */
+name|nopoll
 block|,
+comment|/* mmap */
 name|xrpu_mmap
 block|,
+comment|/* strategy */
 name|nostrategy
 block|,
+comment|/* name */
 literal|"xrpu"
 block|,
-name|NULL
+comment|/* parms */
+name|noparms
 block|,
+comment|/* maj */
+name|CDEV_MAJOR
+block|,
+comment|/* dump */
+name|nodump
+block|,
+comment|/* psize */
+name|nopsize
+block|,
+comment|/* flags */
+literal|0
+block|,
+comment|/* maxio */
+literal|0
+block|,
+comment|/* bmaj */
 operator|-
 literal|1
 block|}
@@ -951,7 +980,7 @@ name|DEVFS
 name|devfs_add_devswf
 argument_list|(
 operator|&
-name|xrpudevsw
+name|xrpu_cdevsw
 argument_list|,
 operator|(
 name|i
@@ -1366,7 +1395,7 @@ operator|&
 name|cdev
 argument_list|,
 operator|&
-name|xrpudevsw
+name|xrpu_cdevsw
 argument_list|,
 name|NULL
 argument_list|)
@@ -1377,7 +1406,7 @@ name|DEVFS
 name|devfs_add_devswf
 argument_list|(
 operator|&
-name|xrpudevsw
+name|xrpu_cdevsw
 argument_list|,
 literal|0
 argument_list|,

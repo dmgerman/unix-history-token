@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.44 1999/05/07 07:03:29 phk Exp $ */
+comment|/* $Id: scd.c,v 1.45 1999/05/09 20:29:04 phk Exp $ */
 end_comment
 
 begin_comment
@@ -1001,45 +1001,62 @@ name|cdevsw
 name|scd_cdevsw
 init|=
 block|{
+comment|/* open */
 name|scdopen
 block|,
+comment|/* close */
 name|scdclose
 block|,
+comment|/* read */
 name|physread
 block|,
+comment|/* write */
 name|nowrite
 block|,
+comment|/* ioctl */
 name|scdioctl
 block|,
+comment|/* stop */
 name|nostop
 block|,
-name|nullreset
+comment|/* reset */
+name|noreset
 block|,
+comment|/* devtotty */
 name|nodevtotty
 block|,
-name|seltrue
+comment|/* poll */
+name|nopoll
 block|,
+comment|/* mmap */
 name|nommap
 block|,
+comment|/* strategy */
 name|scdstrategy
 block|,
+comment|/* name */
 literal|"scd"
 block|,
-name|NULL
+comment|/* parms */
+name|noparms
 block|,
-operator|-
-literal|1
+comment|/* maj */
+name|CDEV_MAJOR
 block|,
+comment|/* dump */
 name|nodump
 block|,
+comment|/* psize */
 name|nopsize
 block|,
+comment|/* flags */
 name|D_DISK
 block|,
+comment|/* maxio */
 literal|0
 block|,
-operator|-
-literal|1
+comment|/* bmaj */
+name|BDEV_MAJOR
 block|}
 decl_stmt|;
 end_decl_stmt

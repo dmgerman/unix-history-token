@@ -1076,33 +1076,62 @@ name|cdevsw
 name|ipl_cdevsw
 init|=
 block|{
+comment|/* open */
 name|iplopen
 block|,
+comment|/* close */
 name|iplclose
 block|,
+comment|/* read */
 name|iplread
 block|,
+comment|/* write */
 name|nowrite
 block|,
-comment|/* 79 */
+comment|/* ioctl */
 name|iplioctl
 block|,
+comment|/* stop */
 name|nostop
 block|,
+comment|/* reset */
 name|noreset
 block|,
+comment|/* devtotty */
 name|nodevtotty
 block|,
-name|seltrue
+comment|/* poll */
+name|nopoll
 block|,
+comment|/* mmap */
 name|nommap
 block|,
+comment|/* strategy */
 name|nostrategy
 block|,
+comment|/* name */
 literal|"ipl"
 block|,
-name|NULL
+comment|/* parms */
+name|noparms
 block|,
+comment|/* maj */
+operator|-
+literal|1
+block|,
+comment|/* dump */
+name|nodump
+block|,
+comment|/* psize */
+name|nopsize
+block|,
+comment|/* flags */
+literal|0
+block|,
+comment|/* maxio */
+literal|0
+block|,
+comment|/* bmaj */
 operator|-
 literal|1
 block|}

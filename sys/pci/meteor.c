@@ -434,34 +434,61 @@ name|cdevsw
 name|meteor_cdevsw
 init|=
 block|{
+comment|/* open */
 name|meteor_open
 block|,
+comment|/* close */
 name|meteor_close
 block|,
+comment|/* read */
 name|meteor_read
 block|,
+comment|/* write */
 name|meteor_write
 block|,
-comment|/*67*/
+comment|/* ioctl */
 name|meteor_ioctl
 block|,
+comment|/* stop */
 name|nostop
 block|,
-name|nullreset
+comment|/* reset */
+name|noreset
 block|,
+comment|/* devtotty */
 name|nodevtotty
 block|,
-comment|/* Meteor */
-name|seltrue
+comment|/* poll */
+name|nopoll
 block|,
+comment|/* mmap */
 name|meteor_mmap
 block|,
-name|NULL
+comment|/* strategy */
+name|nostrategy
 block|,
+comment|/* name */
 literal|"meteor"
 block|,
-name|NULL
+comment|/* parms */
+name|noparms
 block|,
+comment|/* maj */
+name|CDEV_MAJOR
+block|,
+comment|/* dump */
+name|nodump
+block|,
+comment|/* psize */
+name|nopsize
+block|,
+comment|/* flags */
+literal|0
+block|,
+comment|/* maxio */
+literal|0
+block|,
+comment|/* bmaj */
 operator|-
 literal|1
 block|}

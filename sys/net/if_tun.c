@@ -439,32 +439,61 @@ name|cdevsw
 name|tun_cdevsw
 init|=
 block|{
+comment|/* open */
 name|tunopen
 block|,
+comment|/* close */
 name|tunclose
 block|,
+comment|/* read */
 name|tunread
 block|,
+comment|/* write */
 name|tunwrite
 block|,
+comment|/* ioctl */
 name|tunioctl
 block|,
-name|nullstop
+comment|/* stop */
+name|nostop
 block|,
+comment|/* reset */
 name|noreset
 block|,
+comment|/* devtotty */
 name|nodevtotty
 block|,
+comment|/* poll */
 name|tunpoll
 block|,
+comment|/* mmap */
 name|nommap
 block|,
+comment|/* strategy */
 name|nostrategy
 block|,
+comment|/* name */
 literal|"tun"
 block|,
-name|NULL
+comment|/* parms */
+name|noparms
 block|,
+comment|/* maj */
+name|CDEV_MAJOR
+block|,
+comment|/* dump */
+name|nodump
+block|,
+comment|/* psize */
+name|nopsize
+block|,
+comment|/* flags */
+literal|0
+block|,
+comment|/* maxio */
+literal|0
+block|,
+comment|/* bmaj */
 operator|-
 literal|1
 block|}

@@ -36,7 +36,7 @@ comment|/*	The proceeding strings may not be changed*/
 end_comment
 
 begin_comment
-comment|/* $Id: matcd.c,v 1.38 1999/04/28 10:53:12 dt Exp $ */
+comment|/* $Id: matcd.c,v 1.39 1999/05/07 07:03:36 phk Exp $ */
 end_comment
 
 begin_comment
@@ -873,45 +873,62 @@ name|cdevsw
 name|matcd_cdevsw
 init|=
 block|{
+comment|/* open */
 name|matcdopen
 block|,
+comment|/* close */
 name|matcdclose
 block|,
+comment|/* read */
 name|physread
 block|,
+comment|/* write */
 name|nowrite
 block|,
+comment|/* ioctl */
 name|matcdioctl
 block|,
+comment|/* stop */
 name|nostop
 block|,
-name|nullreset
+comment|/* reset */
+name|noreset
 block|,
+comment|/* devtotty */
 name|nodevtotty
 block|,
-name|seltrue
+comment|/* poll */
+name|nopoll
 block|,
+comment|/* mmap */
 name|nommap
 block|,
+comment|/* strategy */
 name|matcdstrategy
 block|,
+comment|/* name */
 literal|"matcd"
 block|,
-name|NULL
+comment|/* parms */
+name|noparms
 block|,
-operator|-
-literal|1
+comment|/* maj */
+name|CDEV_MAJOR
 block|,
+comment|/* dump */
 name|nodump
 block|,
+comment|/* psize */
 name|nopsize
 block|,
+comment|/* flags */
 name|D_DISK
 block|,
+comment|/* maxio */
 literal|0
 block|,
-operator|-
-literal|1
+comment|/* bmaj */
+name|BDEV_MAJOR
 block|}
 decl_stmt|;
 end_decl_stmt

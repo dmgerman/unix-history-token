@@ -488,32 +488,62 @@ name|cdevsw
 name|usb_cdevsw
 init|=
 block|{
+comment|/* open */
 name|usbopen
 block|,
+comment|/* close */
 name|usbclose
 block|,
+comment|/* read */
 name|noread
 block|,
+comment|/* write */
 name|nowrite
 block|,
+comment|/* ioctl */
 name|usbioctl
 block|,
-name|nullstop
+comment|/* stop */
+name|nostop
 block|,
-name|nullreset
+comment|/* reset */
+name|noreset
 block|,
+comment|/* devtotty */
 name|nodevtotty
 block|,
+comment|/* poll */
 name|usbpoll
 block|,
+comment|/* mmap */
 name|nommap
 block|,
-name|nostrat
+comment|/* strategy */
+name|nostrategy
 block|,
+comment|/* name */
 literal|"usb"
 block|,
-name|NULL
+comment|/* parms */
+name|noparms
 block|,
+comment|/* maj */
+operator|-
+literal|1
+block|,
+comment|/* dump */
+name|nodump
+block|,
+comment|/* psize */
+name|nopsize
+block|,
+comment|/* flags */
+literal|0
+block|,
+comment|/* maxio */
+literal|0
+block|,
+comment|/* bmaj */
 operator|-
 literal|1
 block|}

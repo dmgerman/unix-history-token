@@ -491,35 +491,65 @@ name|cdevsw
 name|ukbd_cdevsw
 init|=
 block|{
+comment|/* open */
 name|ukbdopen
 block|,
+comment|/* close */
 name|ukbdclose
 block|,
+comment|/* read */
 name|ukbdread
 block|,
+comment|/* write */
 name|nowrite
 block|,
+comment|/* ioctl */
 name|ukbdioctl
 block|,
+comment|/* stop */
 name|nostop
 block|,
-name|nullreset
+comment|/* reset */
+name|noreset
 block|,
+comment|/* devtotty */
 name|nodevtotty
 block|,
+comment|/* poll */
 name|ukbdpoll
 block|,
+comment|/* mmap */
 name|nommap
 block|,
-name|NULL
+comment|/* strategy */
+name|nostrategy
 block|,
+comment|/* name */
 name|DRIVER_NAME
 block|,
-name|NULL
+comment|/* parms */
+name|noparms
 block|,
+comment|/* maj */
 operator|-
 literal|1
-block|, }
+block|,
+comment|/* dump */
+name|nodump
+block|,
+comment|/* psize */
+name|nopsize
+block|,
+comment|/* flags */
+literal|0
+block|,
+comment|/* maxio */
+literal|0
+block|,
+comment|/* bmaj */
+operator|-
+literal|1
+block|}
 decl_stmt|;
 end_decl_stmt
 

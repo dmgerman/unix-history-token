@@ -1192,32 +1192,61 @@ name|cdevsw
 name|labpc_cdevsw
 init|=
 block|{
+comment|/* open */
 name|labpcopen
 block|,
+comment|/* close */
 name|labpcclose
 block|,
+comment|/* read */
 name|physread
 block|,
+comment|/* write */
 name|physwrite
 block|,
+comment|/* ioctl */
 name|labpcioctl
 block|,
+comment|/* stop */
 name|nostop
 block|,
-name|nullreset
+comment|/* reset */
+name|noreset
 block|,
+comment|/* devtotty */
 name|nodevtotty
 block|,
-name|seltrue
+comment|/* poll */
+name|nopoll
 block|,
+comment|/* mmap */
 name|nommap
 block|,
+comment|/* strategy */
 name|labpcstrategy
 block|,
+comment|/* name */
 literal|"labpc"
 block|,
-name|NULL
+comment|/* parms */
+name|noparms
 block|,
+comment|/* maj */
+name|CDEV_MAJOR
+block|,
+comment|/* dump */
+name|nodump
+block|,
+comment|/* psize */
+name|nopsize
+block|,
+comment|/* flags */
+literal|0
+block|,
+comment|/* maxio */
+literal|0
+block|,
+comment|/* bmaj */
 operator|-
 literal|1
 block|}

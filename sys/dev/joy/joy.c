@@ -296,34 +296,61 @@ name|cdevsw
 name|joy_cdevsw
 init|=
 block|{
+comment|/* open */
 name|joyopen
 block|,
+comment|/* close */
 name|joyclose
 block|,
+comment|/* read */
 name|joyread
 block|,
+comment|/* write */
 name|nowrite
 block|,
-comment|/*51*/
+comment|/* ioctl */
 name|joyioctl
 block|,
+comment|/* stop */
 name|nostop
 block|,
-name|nullreset
+comment|/* reset */
+name|noreset
 block|,
+comment|/* devtotty */
 name|nodevtotty
 block|,
-comment|/*joystick */
-name|seltrue
+comment|/* poll */
+name|nopoll
 block|,
+comment|/* mmap */
 name|nommap
 block|,
-name|NULL
+comment|/* strategy */
+name|nostrategy
 block|,
+comment|/* name */
 literal|"joy"
 block|,
-name|NULL
+comment|/* parms */
+name|noparms
 block|,
+comment|/* maj */
+name|CDEV_MAJOR
+block|,
+comment|/* dump */
+name|nodump
+block|,
+comment|/* psize */
+name|nopsize
+block|,
+comment|/* flags */
+literal|0
+block|,
+comment|/* maxio */
+literal|0
+block|,
+comment|/* bmaj */
 operator|-
 literal|1
 block|}

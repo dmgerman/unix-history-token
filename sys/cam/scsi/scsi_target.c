@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Implementation of a simple Target Mode SCSI Proccessor Target driver for CAM.  *  * Copyright (c) 1998, 1999 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_target.c,v 1.11 1999/05/07 07:03:03 phk Exp $  */
+comment|/*  * Implementation of a simple Target Mode SCSI Proccessor Target driver for CAM.  *  * Copyright (c) 1998, 1999 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_target.c,v 1.12 1999/05/22 22:00:24 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -504,62 +504,61 @@ name|cdevsw
 name|targ_cdevsw
 init|=
 block|{
-comment|/*d_open*/
+comment|/* open */
 name|targopen
 block|,
-comment|/*d_close*/
+comment|/* close */
 name|targclose
 block|,
-comment|/*d_read*/
+comment|/* read */
 name|targread
 block|,
-comment|/*d_write*/
+comment|/* write */
 name|targwrite
 block|,
-comment|/*d_ioctl*/
+comment|/* ioctl */
 name|targioctl
 block|,
-comment|/*d_stop*/
+comment|/* stop */
 name|nostop
 block|,
-comment|/*d_reset*/
+comment|/* reset */
 name|noreset
 block|,
-comment|/*d_devtotty*/
+comment|/* devtotty */
 name|nodevtotty
 block|,
-comment|/*d_poll*/
+comment|/* poll */
 name|targpoll
 block|,
-comment|/*d_mmap*/
+comment|/* mmap */
 name|nommap
 block|,
-comment|/*d_strategy*/
+comment|/* strategy */
 name|targstrategy
 block|,
-comment|/*d_name*/
+comment|/* name */
 literal|"targ"
 block|,
-comment|/*d_spare*/
-name|NULL
+comment|/* parms */
+name|noparms
 block|,
-comment|/*d_maj*/
-operator|-
-literal|1
+comment|/* maj */
+name|TARG_CDEV_MAJOR
 block|,
-comment|/*d_dump*/
+comment|/* dump */
 name|nodump
 block|,
-comment|/*d_psize*/
+comment|/* psize */
 name|nopsize
 block|,
-comment|/*d_flags*/
+comment|/* flags */
 literal|0
 block|,
-comment|/*d_maxio*/
+comment|/* maxio */
 literal|0
 block|,
-comment|/*b_maj*/
+comment|/* bmaj */
 operator|-
 literal|1
 block|}

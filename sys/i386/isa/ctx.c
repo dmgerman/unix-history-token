@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * CORTEX-I Frame Grabber driver V1.0  *  *	Copyright (C) 1994, Paul S. LaFollette, Jr. This software may be used,  *	modified, copied, distributed, and sold, in both source and binary form  *	provided that the above copyright and these terms are retained. Under  *	no circumstances is the author responsible for the proper functioning  *	of this software, nor does the author assume any responsibility  *	for damages incurred with its use.  *  *	$Id: ctx.c,v 1.29 1998/12/09 02:56:48 eivind Exp $  */
+comment|/*  * CORTEX-I Frame Grabber driver V1.0  *  *	Copyright (C) 1994, Paul S. LaFollette, Jr. This software may be used,  *	modified, copied, distributed, and sold, in both source and binary form  *	provided that the above copyright and these terms are retained. Under  *	no circumstances is the author responsible for the proper functioning  *	of this software, nor does the author assume any responsibility  *	for damages incurred with its use.  *  *	$Id: ctx.c,v 1.30 1999/04/28 10:52:19 dt Exp $  */
 end_comment
 
 begin_comment
@@ -240,34 +240,61 @@ name|cdevsw
 name|ctx_cdevsw
 init|=
 block|{
+comment|/* open */
 name|ctxopen
 block|,
+comment|/* close */
 name|ctxclose
 block|,
+comment|/* read */
 name|ctxread
 block|,
+comment|/* write */
 name|ctxwrite
 block|,
-comment|/*40*/
+comment|/* ioctl */
 name|ctxioctl
 block|,
+comment|/* stop */
 name|nostop
 block|,
-name|nullreset
+comment|/* reset */
+name|noreset
 block|,
+comment|/* devtotty */
 name|nodevtotty
 block|,
-comment|/* cortex */
-name|seltrue
+comment|/* poll */
+name|nopoll
 block|,
+comment|/* mmap */
 name|nommap
 block|,
-name|NULL
+comment|/* strategy */
+name|nostrategy
 block|,
+comment|/* name */
 literal|"ctx"
 block|,
-name|NULL
+comment|/* parms */
+name|noparms
 block|,
+comment|/* maj */
+name|CDEV_MAJOR
+block|,
+comment|/* dump */
+name|nodump
+block|,
+comment|/* psize */
+name|nopsize
+block|,
+comment|/* flags */
+literal|0
+block|,
+comment|/* maxio */
+literal|0
+block|,
+comment|/* bmaj */
 operator|-
 literal|1
 block|}

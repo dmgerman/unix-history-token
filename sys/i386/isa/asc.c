@@ -4,7 +4,7 @@ comment|/* asc.c - device driver for hand scanners  *  * Current version support
 end_comment
 
 begin_comment
-comment|/*  * $Id: asc.c,v 1.35 1999/04/28 10:52:14 dt Exp $  */
+comment|/*  * $Id: asc.c,v 1.36 1999/05/06 18:12:24 peter Exp $  */
 end_comment
 
 begin_include
@@ -790,34 +790,61 @@ name|cdevsw
 name|asc_cdevsw
 init|=
 block|{
+comment|/* open */
 name|ascopen
 block|,
+comment|/* close */
 name|ascclose
 block|,
+comment|/* read */
 name|ascread
 block|,
+comment|/* write */
 name|nowrite
 block|,
-comment|/*71*/
+comment|/* ioctl */
 name|ascioctl
 block|,
+comment|/* stop */
 name|nostop
 block|,
-name|nullreset
+comment|/* reset */
+name|noreset
 block|,
+comment|/* devtotty */
 name|nodevtotty
 block|,
-comment|/* asc */
+comment|/* poll */
 name|ascpoll
 block|,
+comment|/* mmap */
 name|nommap
 block|,
-name|NULL
+comment|/* strategy */
+name|nostrategy
 block|,
+comment|/* name */
 literal|"asc"
 block|,
-name|NULL
+comment|/* parms */
+name|noparms
 block|,
+comment|/* maj */
+name|CDEV_MAJOR
+block|,
+comment|/* dump */
+name|nodump
+block|,
+comment|/* psize */
+name|nopsize
+block|,
+comment|/* flags */
+literal|0
+block|,
+comment|/* maxio */
+literal|0
+block|,
+comment|/* bmaj */
 operator|-
 literal|1
 block|}

@@ -383,41 +383,64 @@ name|cdevsw
 name|rc_cdevsw
 init|=
 block|{
+comment|/* open */
 name|rcopen
 block|,
+comment|/* close */
 name|rcclose
 block|,
+comment|/* read */
 name|rcread
 block|,
+comment|/* write */
 name|rcwrite
 block|,
+comment|/* ioctl */
 name|rcioctl
 block|,
+comment|/* stop */
 name|rcstop
 block|,
+comment|/* reset */
 name|noreset
 block|,
+comment|/* devtotty */
 name|rcdevtotty
 block|,
+comment|/* poll */
 name|ttpoll
 block|,
+comment|/* mmap */
 name|nommap
 block|,
-name|NULL
+comment|/* strategy */
+name|nostrategy
 block|,
+comment|/* name */
 literal|"rc"
 block|,
-name|NULL
+comment|/* parms */
+name|noparms
 block|,
-operator|-
-literal|1
+comment|/* maj */
+name|CDEV_MAJOR
 block|,
+comment|/* dump */
 name|nodump
 block|,
+comment|/* psize */
 name|nopsize
 block|,
+comment|/* flags */
 name|D_TTY
-block|, }
+block|,
+comment|/* maxio */
+literal|0
+block|,
+comment|/* bmaj */
+operator|-
+literal|1
+block|}
 decl_stmt|;
 end_decl_stmt
 

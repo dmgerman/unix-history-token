@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: scsi_sa.c,v 1.25 1999/05/22 22:00:23 gibbs Exp $  *  * Implementation of SCSI Sequential Access Peripheral driver for CAM.  *  * Copyright (c) 1997 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * Substantial subsequent modifications  * Copyright (c) 1999 Matthew Jacob  *  NASA Ames Research Center,  *  Feral Software  */
+comment|/*  * $Id: scsi_sa.c,v 1.26 1999/05/25 23:10:54 mjacob Exp $  *  * Implementation of SCSI Sequential Access Peripheral driver for CAM.  *  * Copyright (c) 1997 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * Substantial subsequent modifications  * Copyright (c) 1999 Matthew Jacob  *  NASA Ames Research Center,  *  Feral Software  */
 end_comment
 
 begin_include
@@ -1470,64 +1470,62 @@ name|cdevsw
 name|sa_cdevsw
 init|=
 block|{
-comment|/*d_open*/
+comment|/* open */
 name|saopen
 block|,
-comment|/*d_close*/
+comment|/* close */
 name|saclose
 block|,
-comment|/*d_read*/
+comment|/* read */
 name|physread
 block|,
-comment|/*d_write*/
+comment|/* write */
 name|physwrite
 block|,
-comment|/*d_ioctl*/
+comment|/* ioctl */
 name|saioctl
 block|,
-comment|/*d_stop*/
+comment|/* stop */
 name|nostop
 block|,
-comment|/*d_reset*/
+comment|/* reset */
 name|noreset
 block|,
-comment|/*d_devtotty*/
+comment|/* devtotty */
 name|nodevtotty
 block|,
-comment|/*d_poll*/
-name|seltrue
+comment|/* poll */
+name|nopoll
 block|,
-comment|/*d_mmap*/
+comment|/* mmap */
 name|nommap
 block|,
-comment|/*d_strategy*/
+comment|/* strategy */
 name|sastrategy
 block|,
-comment|/*d_name*/
+comment|/* name */
 literal|"sa"
 block|,
-comment|/*d_spare*/
-name|NULL
+comment|/* parms */
+name|noparms
 block|,
-comment|/*d_maj*/
-operator|-
-literal|1
+comment|/* maj */
+name|SA_CDEV_MAJOR
 block|,
-comment|/*d_dump*/
+comment|/* dump */
 name|nodump
 block|,
-comment|/*d_psize*/
+comment|/* psize */
 name|nopsize
 block|,
-comment|/*d_flags*/
+comment|/* flags */
 name|D_TAPE
 block|,
-comment|/*d_maxio*/
+comment|/* maxio */
 literal|0
 block|,
-comment|/*b_maj*/
-operator|-
-literal|1
+comment|/* bmaj */
+name|SA_BDEV_MAJOR
 block|}
 decl_stmt|;
 end_decl_stmt

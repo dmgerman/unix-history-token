@@ -8,7 +8,7 @@ comment|/**  * dpt_control.c: Control Functions and /dev entry points for /dev/d
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_control.c,v 1.11 1999/05/11 11:03:18 jkh Exp $"
+empty|#ident "$Id: dpt_control.c,v 1.12 1999/05/13 05:24:53 jkh Exp $"
 end_empty
 
 begin_include
@@ -360,37 +360,67 @@ comment|/* Normally, this is a static structure.  But we need it in pci/dpt_pci.
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|cdevsw
 name|dpt_cdevsw
 init|=
 block|{
+comment|/* open */
 name|dpt_open
 block|,
+comment|/* close */
 name|dpt_close
 block|,
+comment|/* read */
 name|dpt_read
 block|,
+comment|/* write */
 name|dpt_write
 block|,
+comment|/* ioctl */
 name|dpt_ioctl
 block|,
+comment|/* stop */
 name|nostop
 block|,
-name|nullreset
+comment|/* reset */
+name|noreset
 block|,
+comment|/* devtotty */
 name|nodevtotty
 block|,
-name|seltrue
+comment|/* poll */
+name|nopoll
 block|,
+comment|/* mmap */
 name|nommap
 block|,
-name|NULL
+comment|/* strategy */
+name|nostrategy
 block|,
+comment|/* name */
 literal|"dpt"
 block|,
-name|NULL
+comment|/* parms */
+name|noparms
 block|,
+comment|/* maj */
+name|CDEV_MAJOR
+block|,
+comment|/* dump */
+name|nodump
+block|,
+comment|/* psize */
+name|nopsize
+block|,
+comment|/* flags */
+literal|0
+block|,
+comment|/* maxio */
+literal|0
+block|,
+comment|/* bmaj */
 operator|-
 literal|1
 block|}

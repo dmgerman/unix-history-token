@@ -366,41 +366,64 @@ name|cdevsw
 name|pc_cdevsw
 init|=
 block|{
+comment|/* open */
 name|pcopen
 block|,
+comment|/* close */
 name|pcclose
 block|,
+comment|/* read */
 name|pcread
 block|,
+comment|/* write */
 name|pcwrite
 block|,
+comment|/* ioctl */
 name|pcioctl
 block|,
-name|nullstop
+comment|/* stop */
+name|nostop
 block|,
+comment|/* reset */
 name|noreset
 block|,
+comment|/* devtotty */
 name|pcdevtotty
 block|,
+comment|/* poll */
 name|ttpoll
 block|,
+comment|/* mmap */
 name|pcmmap
 block|,
+comment|/* strategy */
 name|nostrategy
 block|,
+comment|/* name */
 literal|"vt"
 block|,
-name|NULL
+comment|/* parms */
+name|noparms
 block|,
-operator|-
-literal|1
+comment|/* maj */
+name|CDEV_MAJOR
 block|,
+comment|/* dump */
 name|nodump
 block|,
+comment|/* psize */
 name|nopsize
 block|,
+comment|/* flags */
 name|D_TTY
-block|, }
+block|,
+comment|/* maxio */
+literal|0
+block|,
+comment|/* bmaj */
+operator|-
+literal|1
+block|}
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: promcons.c,v 1.6 1999/05/07 10:09:28 phk Exp $ */
+comment|/* $Id: promcons.c,v 1.7 1999/05/09 08:57:47 phk Exp $ */
 end_comment
 
 begin_comment
@@ -229,35 +229,64 @@ name|cdevsw
 name|prom_cdevsw
 init|=
 block|{
+comment|/* open */
 name|promopen
 block|,
+comment|/* close */
 name|promclose
 block|,
+comment|/* read */
 name|promread
 block|,
+comment|/* write */
 name|promwrite
 block|,
+comment|/* ioctl */
 name|promioctl
 block|,
+comment|/* stop */
 name|promstop
 block|,
+comment|/* reset */
 name|noreset
 block|,
+comment|/* devtotty */
 name|promdevtotty
 block|,
+comment|/* poll */
 name|ttpoll
 block|,
+comment|/* mmap */
 name|nommap
 block|,
-name|NULL
+comment|/* strategy */
+name|nostrategy
 block|,
+comment|/* name */
 literal|"prom"
 block|,
-name|NULL
+comment|/* parms */
+name|noparms
 block|,
+comment|/* maj */
+name|CDEV_MAJOR
+block|,
+comment|/* dump */
+name|nodump
+block|,
+comment|/* psize */
+name|nopsize
+block|,
+comment|/* flags */
+literal|0
+block|,
+comment|/* maxio */
+literal|0
+block|,
+comment|/* bmaj */
 operator|-
 literal|1
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 

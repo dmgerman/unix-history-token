@@ -410,30 +410,64 @@ name|cdevsw
 name|snd_cdevsw
 init|=
 block|{
+comment|/* open */
 name|sndopen
 block|,
+comment|/* close */
 name|sndclose
 block|,
+comment|/* read */
 name|sndread
 block|,
+comment|/* write */
 name|sndwrite
 block|,
+comment|/* ioctl */
 name|sndioctl
 block|,
+comment|/* stop */
 name|nostop
 block|,
+comment|/* reset */
 name|noreset
 block|,
+comment|/* devtotty */
 name|nodevtotty
 block|,
+comment|/* poll */
 name|sndpoll
 block|,
+comment|/* mmap */
 name|sndmmap
 block|,
+comment|/* strategy */
 name|nostrategy
 block|,
+comment|/* name */
 name|driver_name
-block|, }
+block|,
+comment|/* parms */
+name|noparms
+block|,
+comment|/* maj */
+name|CDEV_MAJOR
+block|,
+comment|/* dump */
+name|nodump
+block|,
+comment|/* psize */
+name|nopsize
+block|,
+comment|/* flags */
+literal|0
+block|,
+comment|/* maxio */
+literal|0
+block|,
+comment|/* bmaj */
+operator|-
+literal|1
+block|}
 decl_stmt|;
 end_decl_stmt
 

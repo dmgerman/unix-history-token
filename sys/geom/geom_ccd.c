@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccd.c,v 1.46 1999/05/07 10:09:42 phk Exp $ */
+comment|/* $Id: ccd.c,v 1.47 1999/05/11 19:54:00 phk Exp $ */
 end_comment
 
 begin_comment
@@ -427,45 +427,62 @@ name|cdevsw
 name|ccd_cdevsw
 init|=
 block|{
+comment|/* open */
 name|ccdopen
 block|,
+comment|/* close */
 name|ccdclose
 block|,
+comment|/* read */
 name|physread
 block|,
+comment|/* write */
 name|physwrite
 block|,
+comment|/* ioctl */
 name|ccdioctl
 block|,
+comment|/* stop */
 name|nostop
 block|,
-name|nullreset
+comment|/* reset */
+name|noreset
 block|,
+comment|/* devtotty */
 name|nodevtotty
 block|,
-name|seltrue
+comment|/* poll */
+name|nopoll
 block|,
+comment|/* mmap */
 name|nommap
 block|,
+comment|/* strategy */
 name|ccdstrategy
 block|,
+comment|/* name */
 literal|"ccd"
 block|,
-name|NULL
+comment|/* parms */
+name|noparms
 block|,
-operator|-
-literal|1
+comment|/* maj */
+name|CDEV_MAJOR
 block|,
+comment|/* dump */
 name|ccddump
 block|,
+comment|/* psize */
 name|ccdsize
 block|,
+comment|/* flags */
 name|D_DISK
 block|,
+comment|/* maxio */
 literal|0
 block|,
-operator|-
-literal|1
+comment|/* bmaj */
+name|BDEV_MAJOR
 block|}
 decl_stmt|;
 end_decl_stmt

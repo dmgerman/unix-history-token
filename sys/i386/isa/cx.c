@@ -505,41 +505,64 @@ name|cdevsw
 name|cx_cdevsw
 init|=
 block|{
+comment|/* open */
 name|cxopen
 block|,
+comment|/* close */
 name|cxclose
 block|,
+comment|/* read */
 name|cxread
 block|,
+comment|/* write */
 name|cxwrite
 block|,
+comment|/* ioctl */
 name|cxioctl
 block|,
+comment|/* stop */
 name|cxstop
 block|,
-name|nullreset
+comment|/* reset */
+name|noreset
 block|,
+comment|/* devtotty */
 name|cxdevtotty
 block|,
+comment|/* poll */
 name|ttpoll
 block|,
+comment|/* mmap */
 name|nommap
 block|,
-name|NULL
+comment|/* strategy */
+name|nostrategy
 block|,
+comment|/* name */
 literal|"cx"
 block|,
-name|NULL
+comment|/* parms */
+name|noparms
 block|,
-operator|-
-literal|1
+comment|/* maj */
+name|CDEV_MAJOR
 block|,
+comment|/* dump */
 name|nodump
 block|,
+comment|/* psize */
 name|nopsize
 block|,
+comment|/* flags */
 name|D_TTY
-block|, }
+block|,
+comment|/* maxio */
+literal|0
+block|,
+comment|/* bmaj */
+operator|-
+literal|1
+block|}
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: fore_load.c,v 1.7 1999/05/09 17:07:30 peter Exp $  *  */
+comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: fore_load.c,v 1.8 1999/05/10 22:53:45 mks Exp $  *  */
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"@(#) $Id: fore_load.c,v 1.7 1999/05/09 17:07:30 peter Exp $"
+literal|"@(#) $Id: fore_load.c,v 1.8 1999/05/10 22:53:45 mks Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4420,46 +4420,64 @@ name|cdevsw
 name|fore_cdev
 init|=
 block|{
-operator|(
-name|d_open_t
-operator|*
-operator|)
-name|enodev
-block|,
 comment|/* open */
-operator|(
-name|d_close_t
-operator|*
-operator|)
-name|enodev
+name|noopen
 block|,
 comment|/* close */
-name|NULL
+name|noclose
 block|,
 comment|/* read */
-name|NULL
+name|noread
 block|,
 comment|/* write */
-name|NULL
+name|nowrite
 block|,
 comment|/* ioctl */
-name|NULL
+name|noioctl
 block|,
 comment|/* stop */
-name|NULL
+name|nostop
 block|,
 comment|/* reset */
-name|NULL
+name|noreset
 block|,
 comment|/* devtotty */
-name|NULL
+name|nodevtotty
 block|,
-comment|/* select */
-name|NULL
+comment|/* poll */
+name|nopoll
 block|,
 comment|/* mmap */
-name|NULL
+name|nommap
+block|,
 comment|/* strategy */
+name|nostrategy
+block|,
+comment|/* name */
+name|noname
+block|,
+comment|/* parms */
+name|noparms
+block|,
+comment|/* maj */
+operator|-
+literal|1
+block|,
+comment|/* dump */
+name|nodump
+block|,
+comment|/* psize */
+name|nopsize
+block|,
+comment|/* flags */
+literal|0
+block|,
+comment|/* maxio */
+literal|0
+block|,
+comment|/* bmaj */
+operator|-
+literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
