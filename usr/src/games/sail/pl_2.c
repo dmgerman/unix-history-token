@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_2.c	2.2 83/11/08"
+literal|"@(#)pl_2.c	2.3 83/12/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -185,10 +185,16 @@ case|:
 name|centerview
 argument_list|()
 expr_stmt|;
+name|blockalarm
+argument_list|()
+expr_stmt|;
 name|draw_board
 argument_list|()
 expr_stmt|;
 name|draw_screen
+argument_list|()
+expr_stmt|;
+name|unblockalarm
 argument_list|()
 expr_stmt|;
 break|break;
@@ -314,7 +320,13 @@ case|:
 name|centerview
 argument_list|()
 expr_stmt|;
+name|blockalarm
+argument_list|()
+expr_stmt|;
 name|draw_view
+argument_list|()
+expr_stmt|;
+name|unblockalarm
 argument_list|()
 expr_stmt|;
 break|break;
@@ -324,7 +336,13 @@ case|:
 name|upview
 argument_list|()
 expr_stmt|;
+name|blockalarm
+argument_list|()
+expr_stmt|;
 name|draw_view
+argument_list|()
+expr_stmt|;
+name|unblockalarm
 argument_list|()
 expr_stmt|;
 break|break;
@@ -337,7 +355,13 @@ case|:
 name|downview
 argument_list|()
 expr_stmt|;
+name|blockalarm
+argument_list|()
+expr_stmt|;
 name|draw_view
+argument_list|()
+expr_stmt|;
+name|unblockalarm
 argument_list|()
 expr_stmt|;
 break|break;
@@ -347,7 +371,13 @@ case|:
 name|leftview
 argument_list|()
 expr_stmt|;
+name|blockalarm
+argument_list|()
+expr_stmt|;
 name|draw_view
+argument_list|()
+expr_stmt|;
+name|unblockalarm
 argument_list|()
 expr_stmt|;
 break|break;
@@ -357,7 +387,13 @@ case|:
 name|rightview
 argument_list|()
 expr_stmt|;
+name|blockalarm
+argument_list|()
+expr_stmt|;
 name|draw_view
+argument_list|()
+expr_stmt|;
+name|unblockalarm
 argument_list|()
 expr_stmt|;
 break|break;
@@ -376,7 +412,13 @@ operator|=
 operator|!
 name|dont_adjust
 expr_stmt|;
+name|blockalarm
+argument_list|()
+expr_stmt|;
 name|draw_turn
+argument_list|()
+expr_stmt|;
+name|unblockalarm
 argument_list|()
 expr_stmt|;
 break|break;

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_6.c	2.1 83/10/31"
+literal|"@(#)pl_6.c	2.2 83/12/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -456,12 +456,24 @@ name|repairs
 operator|=
 literal|0
 expr_stmt|;
+name|blockalarm
+argument_list|()
+expr_stmt|;
 name|draw_stat
+argument_list|()
+expr_stmt|;
+name|unblockalarm
 argument_list|()
 expr_stmt|;
 block|}
 block|}
+name|blockalarm
+argument_list|()
+expr_stmt|;
 name|draw_slot
+argument_list|()
+expr_stmt|;
+name|unblockalarm
 argument_list|()
 expr_stmt|;
 block|}

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_7.c	2.3 83/11/08"
+literal|"@(#)pl_7.c	2.4 83/12/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -197,6 +197,7 @@ end_macro
 
 begin_block
 block|{
+comment|/* alarm already turned off */
 if|if
 condition|(
 name|done_curses

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_1.c	2.3 83/11/02"
+literal|"@(#)pl_1.c	2.4 83/12/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -1315,7 +1315,13 @@ block|}
 name|initscreen
 argument_list|()
 expr_stmt|;
+name|blockalarm
+argument_list|()
+expr_stmt|;
 name|draw_board
+argument_list|()
+expr_stmt|;
+name|unblockalarm
 argument_list|()
 expr_stmt|;
 operator|(
