@@ -57,7 +57,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.88
+literal|3.89
 operator|%
 name|G
 operator|%
@@ -1588,6 +1588,11 @@ name|exit
 argument_list|(
 literal|0
 argument_list|)
+expr_stmt|;
+name|MotherPid
+operator|=
+name|getpid
+argument_list|()
 expr_stmt|;
 block|}
 ifdef|#
