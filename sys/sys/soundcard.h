@@ -1016,6 +1016,13 @@ name|SNDCTL_SEQ_OUTOFBAND
 value|_IOW ('Q',18, struct seq_event_rec)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SNDCTL_SEQ_GETTIME
+value|_IOR ('Q',19, int)
+end_define
+
 begin_struct
 struct|struct
 name|seq_event_rec
@@ -2275,6 +2282,10 @@ define|#
 directive|define
 name|FM_TYPE_OPL3
 value|0x01
+define|#
+directive|define
+name|MIDI_TYPE_MPU401
+value|0x401
 define|#
 directive|define
 name|SAMPLE_TYPE_BASIC
