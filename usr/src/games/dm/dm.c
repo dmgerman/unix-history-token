@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dm.c	5.9 (Berkeley) %G%"
+literal|"@(#)dm.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -282,6 +282,10 @@ end_expr_stmt
 
 begin_block
 block|{
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
 name|char
 name|pbuf
 index|[
@@ -290,6 +294,10 @@ index|]
 decl_stmt|,
 modifier|*
 name|strcpy
+argument_list|()
+decl_stmt|,
+modifier|*
+name|strerror
 argument_list|()
 decl_stmt|;
 operator|(
@@ -352,9 +360,21 @@ argument_list|,
 name|args
 argument_list|)
 expr_stmt|;
-name|perror
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|"dm"
+name|stderr
+argument_list|,
+literal|"dm: %s: %s\n"
+argument_list|,
+name|pbuf
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
