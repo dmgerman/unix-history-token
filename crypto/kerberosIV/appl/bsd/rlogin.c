@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rlogin.c,v 1.67 1999/11/13 06:13:02 assar Exp $"
+literal|"$Id: rlogin.c,v 1.67.2.2 2000/10/10 12:54:26 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -968,6 +968,19 @@ name|FD_ZERO
 argument_list|(
 operator|&
 name|readfds
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rem
+operator|>=
+name|FD_SETSIZE
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"fd too large"
 argument_list|)
 expr_stmt|;
 name|FD_SET
@@ -2701,7 +2714,7 @@ condition|(
 name|use_kerberos
 condition|)
 block|{
-name|setuid
+name|paranoid_setuid
 argument_list|(
 name|getuid
 argument_list|()
@@ -3081,7 +3094,7 @@ comment|/* IP_TOS */
 endif|#
 directive|endif
 comment|/* HAVE_SETSOCKOPT */
-name|setuid
+name|paranoid_setuid
 argument_list|(
 name|uid
 argument_list|)

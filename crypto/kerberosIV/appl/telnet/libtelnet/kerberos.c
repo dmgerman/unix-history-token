@@ -31,7 +31,7 @@ end_endif
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kerberos.c,v 1.45 1999/03/13 21:18:55 assar Exp $"
+literal|"$Id: kerberos.c,v 1.46 1999/09/16 20:41:33 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -778,7 +778,7 @@ name|instance
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|instance
 argument_list|,
@@ -2624,7 +2624,7 @@ name|UserNameRequested
 argument_list|)
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|name
 argument_list|,
@@ -2724,7 +2724,7 @@ case|case
 name|KRB_REJECT
 case|:
 comment|/* Rejected (reason might follow) */
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char
@@ -2744,7 +2744,7 @@ case|case
 name|KRB_ACCEPT
 case|:
 comment|/* Accepted (name might follow) */
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char
@@ -2830,7 +2830,7 @@ case|case
 name|KRB_AUTH
 case|:
 comment|/* Authentication data follows */
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char
@@ -2849,7 +2849,7 @@ goto|;
 case|case
 name|KRB_CHALLENGE
 case|:
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char
@@ -2868,7 +2868,7 @@ goto|;
 case|case
 name|KRB_RESPONSE
 case|:
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char

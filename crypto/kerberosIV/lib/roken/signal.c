@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: signal.c,v 1.9 1999/12/02 16:58:52 joda Exp $"
+literal|"$Id: signal.c,v 1.9.2.1 2000/03/12 19:36:16 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -38,11 +38,21 @@ begin_comment
 comment|/*  * We would like to always use this signal but there is a link error  * on NEXTSTEP  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|NeXT
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+end_if
 
 begin_comment
 comment|/*  * Bugs:  *  * Do we need any extra hacks for SIGCLD and/or SIGCHLD?  */

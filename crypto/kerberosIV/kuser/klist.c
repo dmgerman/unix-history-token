@@ -65,7 +65,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: klist.c,v 1.44.2.2 1999/12/07 00:20:43 assar Exp $"
+literal|"$Id: klist.c,v 1.44.2.3 2000/10/18 20:38:29 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

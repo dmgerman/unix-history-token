@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rsh.c,v 1.43 1999/11/13 06:13:34 assar Exp $"
+literal|"$Id: rsh.c,v 1.43.2.2 2000/10/10 12:53:50 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -364,6 +364,19 @@ operator|&
 name|rembits
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rem
+operator|>=
+name|FD_SETSIZE
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"fd too large"
+argument_list|)
+expr_stmt|;
 name|FD_SET
 argument_list|(
 name|rem
@@ -541,6 +554,23 @@ name|FD_ZERO
 argument_list|(
 operator|&
 name|readfrom
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rem
+operator|>=
+name|FD_SETSIZE
+operator|||
+name|rfd2
+operator|>=
+name|FD_SETSIZE
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"fd too large"
 argument_list|)
 expr_stmt|;
 name|FD_SET
@@ -1128,7 +1158,7 @@ name|argv
 operator|=
 literal|"rlogin"
 expr_stmt|;
-name|setuid
+name|paranoid_setuid
 argument_list|(
 name|getuid
 argument_list|()
@@ -1252,7 +1282,7 @@ condition|(
 name|use_kerberos
 condition|)
 block|{
-name|setuid
+name|paranoid_setuid
 argument_list|(
 name|getuid
 argument_list|()
@@ -1635,7 +1665,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|setuid
+name|paranoid_setuid
 argument_list|(
 name|uid
 argument_list|)
@@ -1747,6 +1777,13 @@ argument_list|(
 name|SIGTERM
 argument_list|,
 name|sendsig
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|SIG_IGN
 argument_list|)
 expr_stmt|;
 if|if

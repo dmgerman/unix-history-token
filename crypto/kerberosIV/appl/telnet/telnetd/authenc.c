@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: authenc.c,v 1.8 1998/07/09 23:16:37 assar Exp $"
+literal|"$Id: authenc.c,v 1.9 1999/09/05 19:14:50 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -141,13 +141,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+return|return
 name|ttloop
 argument_list|()
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
 return|;
 block|}
 end_function

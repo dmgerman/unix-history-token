@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: send_to_kdc.c,v 1.71 1999/11/25 02:20:53 assar Exp $"
+literal|"$Id: send_to_kdc.c,v 1.71.2.1 2000/10/10 12:47:21 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2487,6 +2487,31 @@ operator|&
 name|readfds
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|>=
+name|FD_SETSIZE
+condition|)
+block|{
+if|if
+condition|(
+name|krb_debug
+condition|)
+name|krb_warning
+argument_list|(
+literal|"fd too large\n"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
 name|FD_SET
 argument_list|(
 name|s

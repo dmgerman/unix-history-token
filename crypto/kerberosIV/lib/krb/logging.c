@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: logging.c,v 1.18 1999/12/02 16:58:42 joda Exp $"
+literal|"$Id: logging.c,v 1.18.2.1 2000/10/13 15:57:34 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -110,6 +110,15 @@ argument_list|,
 literal|"a"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|file
+operator|==
+name|NULL
+condition|)
+return|return
+name|KFAILURE
+return|;
 name|ret
 operator|=
 name|f

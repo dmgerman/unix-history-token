@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kcmd.c,v 1.20 1998/07/13 13:54:07 assar Exp $"
+literal|"$Id: kcmd.c,v 1.20.4.1 2000/10/10 12:55:55 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -761,6 +761,41 @@ operator|&
 name|fds
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|>=
+name|FD_SETSIZE
+operator|||
+name|s2
+operator|>=
+name|FD_SETSIZE
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"file descriptor too large"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|s2
+argument_list|)
+expr_stmt|;
+name|status
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
 name|FD_SET
 argument_list|(
 name|s

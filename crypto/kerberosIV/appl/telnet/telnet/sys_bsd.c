@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: sys_bsd.c,v 1.23 1998/06/09 19:24:46 joda Exp $"
+literal|"$Id: sys_bsd.c,v 1.23.18.2 2000/10/19 21:21:21 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3057,6 +3057,27 @@ block|}
 decl_stmt|;
 if|if
 condition|(
+name|net
+operator|>=
+name|FD_SETSIZE
+operator|||
+name|tout
+operator|>=
+name|FD_SETSIZE
+operator|||
+name|tin
+operator|>=
+name|FD_SETSIZE
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"fd too large"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|netout
 condition|)
 block|{
@@ -3141,7 +3162,7 @@ name|c
 operator|=
 name|select
 argument_list|(
-literal|16
+name|FD_SETSIZE
 argument_list|,
 operator|&
 name|ibits

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997, 1998, 1999 Kungliga Tekniska Högskolan  * (Ro
 end_comment
 
 begin_comment
-comment|/* $Id: krb-protos.h,v 1.24 1999/12/02 16:58:42 joda Exp $ */
+comment|/* $Id: krb-protos.h,v 1.24.2.1 2000/06/23 03:32:04 assar Exp $ */
 end_comment
 
 begin_ifndef
@@ -1250,13 +1250,22 @@ name|char
 operator|*
 name|name
 operator|,
+name|size_t
+name|name_len
+operator|,
 name|char
 operator|*
 name|instance
 operator|,
+name|size_t
+name|instance_len
+operator|,
 name|char
 operator|*
 name|realm
+operator|,
+name|size_t
+name|realm_len
 operator|)
 argument_list|)
 decl_stmt|;
