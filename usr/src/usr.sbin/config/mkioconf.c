@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkioconf.c	5.25 (Berkeley) %G%"
+literal|"@(#)mkioconf.c	5.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3227,7 +3227,7 @@ name|isscsidev
 parameter_list|(
 name|n
 parameter_list|)
-value|(eq(n,"sd") || eq(n,"st"))
+value|(eq(n,"sd") || eq(n,"st") || eq(n,"ac"))
 end_define
 
 begin_expr_stmt
