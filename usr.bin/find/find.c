@@ -106,7 +106,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * find_compare --  *	tell fts_open() how to order the traversal of the hierarchy.   *	This variant gives lexicographical order in each directory.  */
+comment|/*  * find_compare --  *	tell fts_open() how to order the traversal of the hierarchy.   *	This variant gives lexicographical order, i.e., alphabetical  *	order within each directory.  */
 end_comment
 
 begin_function
