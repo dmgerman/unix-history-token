@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: login.c,v 1.34 1998/04/30 16:50:07 peter Exp $"
+literal|"$Id: login.c,v 1.35 1998/06/01 08:47:04 amurai Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1860,7 +1860,7 @@ condition|)
 block|{
 name|char
 modifier|*
-name|approvp
+name|approvep
 decl_stmt|;
 comment|/* 			 * If authentication succeeds, run any approval 			 * program, if applicable for this class. 			 */
 name|approvep
@@ -1920,7 +1920,7 @@ if|if
 condition|(
 name|r
 operator|!=
-name|AUTH_NONE
+literal|0
 condition|)
 block|{
 name|rval
