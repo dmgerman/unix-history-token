@@ -223,6 +223,12 @@ directive|include
 file|<krb.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"bsd_locl.h"
+end_include
+
 begin_decl_stmt
 name|char
 name|dst_realm_buf
