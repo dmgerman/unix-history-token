@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ncheck.c	1.2 (Berkeley) %G%"
+literal|"@(#)ncheck.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -194,6 +194,9 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 name|argv
@@ -353,12 +356,16 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
+name|int
 name|i
-operator|,
+decl_stmt|,
 name|j
-operator|,
+decl_stmt|,
 name|c
-expr_stmt|;
+decl_stmt|;
+name|int
+name|nfiles
+decl_stmt|;
 name|fi
 operator|=
 name|open
@@ -420,6 +427,58 @@ name|sblock
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sblock
+operator|.
+name|fs_magic
+operator|!=
+name|FS_MAGIC
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: not a file system\n"
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
+name|nerror
+operator|++
+expr_stmt|;
+return|return;
+block|}
+name|nfiles
+operator|=
+name|sblock
+operator|.
+name|fs_ipg
+operator|*
+name|sblock
+operator|.
+name|fs_ncg
+expr_stmt|;
+if|if
+condition|(
+name|nfiles
+operator|>
+literal|65535
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: %d is a preposterous number of files\n"
+argument_list|,
+name|file
+argument_list|,
+name|nfiles
+argument_list|)
+expr_stmt|;
+name|nerror
+operator|++
+expr_stmt|;
+return|return;
+block|}
 name|ino
 operator|=
 literal|0
@@ -1338,6 +1397,12 @@ name|i
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|lev
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -1424,6 +1489,9 @@ name|ef
 parameter_list|)
 name|ino_t
 name|i
+decl_stmt|;
+name|int
+name|ef
 decl_stmt|;
 block|{
 specifier|register
@@ -1549,6 +1617,12 @@ name|buf
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|cnt
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -1560,7 +1634,7 @@ name|fi
 argument_list|,
 name|bno
 operator|*
-name|BSIZE
+name|FSIZE
 argument_list|,
 literal|0
 argument_list|)
@@ -1618,6 +1692,9 @@ name|bmap
 parameter_list|(
 name|i
 parameter_list|)
+name|int
+name|i
+decl_stmt|;
 block|{
 name|daddr_t
 name|ibuf

@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dcheck.c	1.2 (Berkeley) %G%"
+literal|"@(#)dcheck.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1151,7 +1151,7 @@ name|gip
 operator|->
 name|di_ib
 index|[
-name|i
+literal|0
 index|]
 argument_list|,
 operator|(
