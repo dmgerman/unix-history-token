@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.21 (Berkeley) %G%"
+literal|"@(#)err.c	8.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,12 @@ begin_include
 include|#
 directive|include
 file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
 end_include
 
 begin_comment
@@ -145,6 +151,26 @@ decl_stmt|;
 name|bool
 name|panic
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG
+name|char
+modifier|*
+name|uname
+decl_stmt|;
+name|struct
+name|passwd
+modifier|*
+name|pw
+decl_stmt|;
+name|char
+name|ubuf
+index|[
+literal|80
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 name|VA_LOCAL_DECL
 name|panic
 init|=
@@ -234,6 +260,43 @@ block|}
 ifdef|#
 directive|ifdef
 name|LOG
+name|pw
+operator|=
+name|getpwuid
+argument_list|(
+name|getuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pw
+operator|!=
+name|NULL
+condition|)
+name|uname
+operator|=
+name|pw
+operator|->
+name|pw_name
+expr_stmt|;
+else|else
+block|{
+name|uname
+operator|=
+name|ubuf
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|ubuf
+argument_list|,
+literal|"UID%d"
+argument_list|,
+name|getuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|LogLevel
@@ -248,7 +311,7 @@ name|LOG_ALERT
 else|:
 name|LOG_CRIT
 argument_list|,
-literal|"%s: SYSERR: %s"
+literal|"%s: SYSERR(%s): %s"
 argument_list|,
 name|CurEnv
 operator|->
@@ -261,6 +324,8 @@ else|:
 name|CurEnv
 operator|->
 name|e_id
+argument_list|,
+name|uname
 argument_list|,
 operator|&
 name|MsgBuf
