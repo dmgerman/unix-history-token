@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_iio[] = "@(#)iio.c	1.6";  *  * internal (character array) i/o  */
+comment|/* char id_iio[] = "@(#)iio.c	1.7";  *  * internal (character array) i/o  */
 end_comment
 
 begin_include
@@ -14,6 +14,18 @@ include|#
 directive|include
 file|"lio.h"
 end_include
+
+begin_decl_stmt
+name|LOCAL
+name|icilist
+modifier|*
+name|svic
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* active internal io list */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -56,12 +68,10 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|LOCAL
 name|z_getc
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -86,6 +96,17 @@ return|;
 block|}
 if|if
 condition|(
+name|formatted
+operator|==
+name|LISTDIRECTED
+condition|)
+return|return
+operator|(
+name|EOF
+operator|)
+return|;
+if|if
+condition|(
 name|recpos
 operator|++
 operator|<
@@ -100,39 +121,23 @@ name|icptr
 operator|++
 operator|)
 return|;
-if|if
-condition|(
-name|formatted
-operator|==
-name|LISTDIRECTED
-condition|)
-return|return
-operator|(
-name|EOF
-operator|)
-return|;
 return|return
 operator|(
 literal|' '
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|LOCAL
 name|z_putc
-argument_list|(
-argument|c
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|c
+parameter_list|)
 name|char
 name|c
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -217,24 +222,19 @@ argument_list|)
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|LOCAL
 name|z_ungetc
-argument_list|(
-argument|ch
-argument_list|,
-argument|cf
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ch
+parameter_list|,
+name|cf
+parameter_list|)
 name|char
 name|ch
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -286,7 +286,7 @@ name|OK
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|s_rsfi
@@ -516,21 +516,16 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|LOCAL
 name|c_fi
-argument_list|(
-argument|a
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|a
+parameter_list|)
 name|icilist
 modifier|*
 name|a
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|fmtbuf
 operator|=
@@ -628,23 +623,18 @@ name|OK
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|LOCAL
 name|c_si
-argument_list|(
-argument|a
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|a
+parameter_list|)
 name|icilist
 modifier|*
 name|a
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|sequential
 operator|=
@@ -669,23 +659,18 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|LOCAL
 name|c_di
-argument_list|(
-argument|a
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|a
+parameter_list|)
 name|icilist
 modifier|*
 name|a
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|sequential
 operator|=
@@ -720,14 +705,12 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|LOCAL
 name|z_rnew
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|icptr
 operator|=
@@ -758,14 +741,12 @@ name|OK
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|LOCAL
 name|z_wnew
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -820,14 +801,12 @@ name|OK
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|LOCAL
 name|z_tab
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|n
@@ -932,7 +911,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|e_rsfi
@@ -1009,21 +988,16 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|LOCAL
 name|c_li
-argument_list|(
-argument|a
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|a
+parameter_list|)
 name|icilist
 modifier|*
 name|a
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|fmtbuf
 operator|=
@@ -1099,7 +1073,7 @@ name|OK
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|s_rsli

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_dfe[] = "@(#)dfe.c	1.5";  *  * direct formatted external i/o  */
+comment|/* char id_dfe[] = "@(#)dfe.c	1.6";  *  * direct formatted external i/o  */
 end_comment
 
 begin_include
@@ -46,6 +46,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|LOCAL
 name|char
 name|rdfe
 index|[]
@@ -55,6 +56,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|LOCAL
 name|char
 name|wdfe
 index|[]
@@ -320,23 +322,18 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|LOCAL
 name|c_dfe
-argument_list|(
-argument|a
-argument_list|,
-argument|flag
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|a
+parameter_list|,
+name|flag
+parameter_list|)
 name|cilist
 modifier|*
 name|a
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|n
@@ -554,14 +551,12 @@ name|OK
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|LOCAL
 name|y_getc
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|ch
@@ -650,16 +645,14 @@ literal|' '
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|LOCAL
 name|y_putc
-argument_list|(
-argument|c
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|c
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -697,14 +690,12 @@ name|OK
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|LOCAL
 name|y_tab
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|n
@@ -899,7 +890,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* /*y_rev() /*{	/*what about work done?*/
@@ -909,12 +900,10 @@ begin_comment
 comment|/*	if(curunit->url==1) return(0); /*	while(recpos<curunit->url) (*putn)(' '); /*	recpos=0; /*	return(0); /*} /* /*y_err() /*{ /*	err(errflag, F_EREREC, rdfe+5); /*} */
 end_comment
 
-begin_macro
+begin_function
+name|LOCAL
 name|y_rnew
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -959,14 +948,12 @@ name|OK
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|LOCAL
 name|y_wnew
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -1039,14 +1026,12 @@ name|OK
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|LOCAL
 name|y_rend
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 return|return
 operator|(
@@ -1054,14 +1039,12 @@ name|OK
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|LOCAL
 name|y_wend
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 return|return
 operator|(
@@ -1070,7 +1053,7 @@ argument_list|()
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_dofio[] = "@(#)dofio.c	1.8";  *  * fortran format executer  */
+comment|/* char id_dofio[] = "@(#)dofio.c	1.9";  *  * fortran format executer  */
 end_comment
 
 begin_include
@@ -57,6 +57,7 @@ value|10
 end_define
 
 begin_decl_stmt
+name|LOCAL
 name|int
 name|cnt
 index|[
@@ -75,6 +76,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|LOCAL
 name|char
 modifier|*
 name|dfio
@@ -122,7 +124,7 @@ comment|/* OP_TYPE_TAB is defined in format.h, 		  it is NED for X,SLASH,APOS,H,
 end_comment
 
 begin_decl_stmt
-specifier|static
+name|LOCAL
 name|int
 name|optypes
 index|[]
@@ -134,7 +136,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|LOCAL
 name|int
 name|rep_count
 decl_stmt|,
@@ -733,12 +735,12 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
-specifier|static
+begin_function
+name|LOCAL
 name|dof_err
-argument_list|(
-argument|n
-argument_list|)
+parameter_list|(
+name|n
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -757,9 +759,6 @@ condition|)
 name|donewrec
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|(
 name|errno
@@ -767,8 +766,8 @@ operator|=
 name|n
 operator|)
 return|;
-end_return
+block|}
+end_function
 
-unit|}
 end_unit
 

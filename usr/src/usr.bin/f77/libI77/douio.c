@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_douio[] = "@(#)douio.c	1.3";  *  * unformatted external i/o  */
+comment|/* char id_douio[] = "@(#)douio.c	1.4";  *  * unformatted external i/o  */
 end_comment
 
 begin_include
@@ -10,6 +10,7 @@ file|"fio.h"
 end_include
 
 begin_decl_stmt
+name|LOCAL
 name|char
 modifier|*
 name|eor
@@ -19,6 +20,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|LOCAL
 name|char
 modifier|*
 name|uio
@@ -27,42 +29,28 @@ literal|"uio"
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|LOCAL
 name|do_us
-argument_list|(
-argument|number
-argument_list|,
-argument|ptr
-argument_list|,
-argument|len
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|number
+parameter_list|,
+name|ptr
+parameter_list|,
+name|len
+parameter_list|)
 name|ftnint
 modifier|*
 name|number
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ftnlen
 name|len
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|ptr
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* sequential */
-end_comment
-
-begin_block
 block|{
 if|if
 condition|(
@@ -174,7 +162,7 @@ name|OK
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|do_uio
@@ -241,42 +229,28 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|LOCAL
 name|do_ud
-argument_list|(
-argument|number
-argument_list|,
-argument|ptr
-argument_list|,
-argument|len
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|number
+parameter_list|,
+name|ptr
+parameter_list|,
+name|len
+parameter_list|)
 name|ftnint
 modifier|*
 name|number
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ftnlen
 name|len
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|ptr
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* direct */
-end_comment
-
-begin_block
 block|{
 name|recpos
 operator|+=
@@ -374,7 +348,7 @@ name|OK
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|due_err

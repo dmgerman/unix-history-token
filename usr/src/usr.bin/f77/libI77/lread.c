@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_lread[] = "@(#)lread.c	1.10";  *  * list directed read  */
+comment|/* char id_lread[] = "@(#)lread.c	1.11";  *  * list directed read  */
 end_comment
 
 begin_include
@@ -128,6 +128,7 @@ value|(x=(*getn)())
 end_define
 
 begin_decl_stmt
+name|LOCAL
 name|char
 name|lrd
 index|[]
@@ -137,6 +138,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|LOCAL
 name|char
 modifier|*
 name|lchar
@@ -144,6 +146,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|LOCAL
 name|double
 name|lx
 decl_stmt|,
@@ -152,6 +155,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|LOCAL
 name|int
 name|ltype
 decl_stmt|;
@@ -171,6 +175,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|LOCAL
 name|char
 name|ltab
 index|[
@@ -566,12 +571,10 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|LOCAL
 name|t_getc
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|ch
@@ -636,7 +639,7 @@ name|EOF
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|e_rsle
@@ -1158,12 +1161,10 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|LOCAL
 name|lr_comm
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|ch
@@ -1243,14 +1244,12 @@ name|OK
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|LOCAL
 name|get_repet
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|char
 name|ch
@@ -1340,22 +1339,17 @@ name|OK
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|LOCAL
 name|l_R
-argument_list|(
-argument|flg
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|flg
+parameter_list|)
 name|int
 name|flg
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|double
 name|a
@@ -1731,23 +1725,18 @@ name|OK
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|LOCAL
 name|rd_int
-argument_list|(
-argument|x
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|x
+parameter_list|)
 name|double
 modifier|*
 name|x
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|ch
@@ -1863,14 +1852,12 @@ operator|)
 return|;
 comment|/* 0:[+]&&y==0, -1:-&&y==0,>0:#digits&&y!=0 */
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|LOCAL
 name|l_C
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|ch
@@ -2010,14 +1997,12 @@ name|OK
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|LOCAL
 name|l_L
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|ch
@@ -2200,7 +2185,7 @@ name|OK
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_define
 define|#
@@ -2209,12 +2194,10 @@ name|BUFSIZE
 value|128
 end_define
 
-begin_macro
+begin_function
+name|LOCAL
 name|l_CHAR
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|ch
@@ -2645,14 +2628,12 @@ return|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|LOCAL
 name|t_sep
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|ch
@@ -2747,18 +2728,13 @@ name|OK
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|LOCAL
 name|nullfld
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* look for null field following a repeat count */
-end_comment
-
-begin_block
 block|{
 name|int
 name|ch
@@ -2807,7 +2783,7 @@ name|NO
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

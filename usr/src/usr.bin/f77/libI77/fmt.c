@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_fmt[] = "@(#)fmt.c	1.8";  *  * fortran format parser  */
+comment|/* char id_fmt[] = "@(#)fmt.c	1.9";  *  * fortran format parser  */
 end_comment
 
 begin_include
@@ -100,6 +100,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+name|LOCAL
 name|struct
 name|syl
 name|syl_vec
@@ -118,11 +119,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|LOCAL
 name|int
 name|parenlvl
 decl_stmt|,
 name|revloc
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|low_case
 index|[
 literal|256
@@ -352,6 +358,7 @@ block|}
 end_block
 
 begin_function
+name|LOCAL
 name|char
 modifier|*
 name|f_s
@@ -447,6 +454,7 @@ block|}
 end_function
 
 begin_function
+name|LOCAL
 name|char
 modifier|*
 name|f_list
@@ -566,6 +574,7 @@ block|}
 end_function
 
 begin_function
+name|LOCAL
 name|char
 modifier|*
 name|i_tem
@@ -719,25 +728,23 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|LOCAL
 name|ne_d
-argument_list|(
-argument|s
-argument_list|,
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|s
+parameter_list|,
+name|p
+parameter_list|)
 name|char
 modifier|*
 name|s
 decl_stmt|,
-modifier|*
+decl|*
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -1468,25 +1475,23 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|LOCAL
 name|e_d
-argument_list|(
-argument|s
-argument_list|,
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|s
+parameter_list|,
+name|p
+parameter_list|)
 name|char
 modifier|*
 name|s
 decl_stmt|,
-modifier|*
+decl|*
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -2135,29 +2140,24 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|LOCAL
 name|op_gen
-argument_list|(
-argument|a
-argument_list|,
-argument|b
-argument_list|,
-argument|c
-argument_list|,
-argument|rep
-argument_list|,
-argument|s
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|rep
+parameter_list|,
+name|s
+parameter_list|)
 name|char
 modifier|*
 name|s
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|syl
@@ -2278,9 +2278,10 @@ operator|++
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
+name|LOCAL
 name|char
 modifier|*
 name|gt_num
@@ -2382,6 +2383,7 @@ block|}
 end_function
 
 begin_function
+name|LOCAL
 name|char
 modifier|*
 name|ap_end

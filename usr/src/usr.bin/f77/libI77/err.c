@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_err[] = "@(#)err.c	1.15";  *  * file i/o error and initialization routines  */
+comment|/* char id_err[] = "@(#)err.c	1.16";  *  * fatal(): i/o error routine  * flush_(): flush file buffer  */
 end_comment
 
 begin_include
@@ -24,37 +24,11 @@ end_include
 begin_include
 include|#
 directive|include
-file|"fiodefs.h"
+file|"fio.h"
 end_include
 
 begin_comment
 comment|/*  * global definitions  */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|tmplate
-init|=
-literal|"tmp.FXXXXXX"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* scratch file template */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|fortfile
-init|=
-literal|"fort.%d"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* default file template */
 end_comment
 
 begin_decl_stmt
@@ -204,17 +178,6 @@ end_decl_stmt
 
 begin_comment
 comment|/*for formatted io*/
-end_comment
-
-begin_decl_stmt
-name|icilist
-modifier|*
-name|svic
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* active internal io list */
 end_comment
 
 begin_decl_stmt
@@ -662,12 +625,10 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|LOCAL
 name|prnt_ext
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|ch
@@ -801,14 +762,12 @@ name|stderr
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|LOCAL
 name|prnt_int
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|char
 modifier|*
@@ -888,22 +847,17 @@ name|stderr
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|LOCAL
 name|prnt_fmt
-argument_list|(
-argument|n
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|n
+parameter_list|)
 name|int
 name|n
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|i
@@ -1048,31 +1002,23 @@ name|stderr
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|LOCAL
 name|ffputc
-argument_list|(
-argument|c
-argument_list|,
-argument|f
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|c
+parameter_list|,
+name|f
+parameter_list|)
 name|int
 name|c
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FILE
 modifier|*
 name|f
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|c
 operator|&=
@@ -1109,53 +1055,66 @@ name|f
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_comment
-comment|/*initialization routine*/
-end_comment
-
-begin_macro
-name|f_init
-argument_list|()
-end_macro
-
-begin_block
+begin_function
+name|ftnint
+name|flush_
+parameter_list|(
+name|u
+parameter_list|)
+name|ftnint
+modifier|*
+name|u
+decl_stmt|;
 block|{
-name|ini_std
+name|FILE
+modifier|*
+name|F
+decl_stmt|;
+if|if
+condition|(
+name|not_legal
 argument_list|(
-name|STDERR
-argument_list|,
-name|stderr
-argument_list|,
-name|WRITE
+operator|*
+name|u
 argument_list|)
+condition|)
+return|return
+operator|(
+name|F_ERUNIT
+operator|)
+return|;
+name|F
+operator|=
+name|units
+index|[
+operator|*
+name|u
+index|]
+operator|.
+name|ufd
 expr_stmt|;
-name|ini_std
+if|if
+condition|(
+name|F
+condition|)
+return|return
+operator|(
+name|fflush
 argument_list|(
-name|STDIN
-argument_list|,
-name|stdin
-argument_list|,
-name|READ
+name|F
 argument_list|)
-expr_stmt|;
-name|ini_std
-argument_list|(
-name|STDOUT
-argument_list|,
-name|stdout
-argument_list|,
-name|WRITE
-argument_list|)
-expr_stmt|;
-name|setlinebuf
-argument_list|(
-name|stderr
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
+else|else
+return|return
+operator|(
+name|F_ERNOPEN
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 end_unit
 

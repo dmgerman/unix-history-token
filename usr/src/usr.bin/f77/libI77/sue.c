@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_sue[] = "@(#)sue.c	1.3";  *  * sequential unformatted external read/write routines  */
+comment|/* char id_sue[] = "@(#)sue.c	1.4";  *  * sequential unformatted external read/write routines  */
 end_comment
 
 begin_include
@@ -17,12 +17,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|LOCAL
 name|long
 name|recloc
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|LOCAL
 name|char
 name|rsue
 index|[]
@@ -32,6 +34,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|LOCAL
 name|char
 name|wsue
 index|[]
@@ -266,23 +269,18 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|LOCAL
 name|c_sue
-argument_list|(
-argument|a
-argument_list|,
-argument|flag
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|a
+parameter_list|,
+name|flag
+parameter_list|)
 name|cilist
 modifier|*
 name|a
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|n
@@ -449,7 +447,7 @@ name|OK
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|e_wsue

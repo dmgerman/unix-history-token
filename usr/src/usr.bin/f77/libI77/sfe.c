@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_sfe[] = "@(#)sfe.c	1.9";  *  * sequential formatted external routines  */
+comment|/* char id_sfe[] = "@(#)sfe.c	1.10";  *  * sequential formatted external routines  */
 end_comment
 
 begin_include
@@ -38,6 +38,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|LOCAL
 name|char
 name|rsfe
 index|[]
@@ -47,6 +48,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|LOCAL
 name|char
 name|wsfe
 index|[]
@@ -166,16 +168,11 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|LOCAL
 name|x_rnew
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* find next record */
-end_comment
-
-begin_block
 block|{
 name|int
 name|ch
@@ -249,14 +246,12 @@ name|OK
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|LOCAL
 name|x_getc
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|ch
@@ -338,7 +333,7 @@ name|EOF
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|e_rsfe
@@ -367,27 +362,19 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|LOCAL
 name|c_sfe
-argument_list|(
-argument|a
-argument_list|,
-argument|flag
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|a
+parameter_list|,
+name|flag
+parameter_list|)
 name|cilist
 modifier|*
 name|a
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* check */
-end_comment
-
-begin_block
 block|{
 name|unit
 modifier|*
@@ -579,7 +566,7 @@ name|OK
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * write sequential formatted external  */
@@ -613,6 +600,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|LOCAL
 name|ioflag
 name|new
 decl_stmt|;
@@ -753,14 +741,12 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|LOCAL
 name|x_putc
-argument_list|(
-argument|c
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|c
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -797,16 +783,14 @@ name|OK
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|LOCAL
 name|pr_put
-argument_list|(
-argument|c
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|c
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -887,14 +871,12 @@ name|OK
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|LOCAL
 name|x_tab
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|n
@@ -1077,14 +1059,12 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|LOCAL
 name|x_wnew
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -1120,22 +1100,17 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|LOCAL
 name|x_wend
-argument_list|(
-argument|last
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|last
+parameter_list|)
 name|char
 name|last
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -1171,7 +1146,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* /*xw_rev() /*{ /*	if(workdone) x_wSL(); /*	return(workdone=0); /*} /* */
