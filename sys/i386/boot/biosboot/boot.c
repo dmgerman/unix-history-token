@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.43.2.1 1995/05/31 21:42:38 jkh Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.44 1995/06/11 19:31:10 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -125,24 +125,52 @@ block|{
 name|int
 name|ret
 decl_stmt|;
-name|char
-modifier|*
-name|t
-decl_stmt|;
-if|#
-directive|if
-literal|0
 ifndef|#
 directive|ifndef
 name|FORCE_COMCONSOLE
-block|if (probe_keyboard()) { 		init_serial(); 		loadflags |= RB_SERIAL; 		printf("\nNo keyboard found."); 	}
+ifdef|#
+directive|ifdef
+name|notyet
+if|if
+condition|(
+name|probe_keyboard
+argument_list|()
+condition|)
+block|{
+name|init_serial
+argument_list|()
+expr_stmt|;
+name|loadflags
+operator||=
+name|RB_SERIAL
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\nNo keyboard found."
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* notyet */
 else|#
 directive|else
-block|init_serial(); 	loadflags |= RB_SERIAL; 	printf("\nSerial console forced.");
+comment|/* FORCE_COMCONSOLE */
+name|init_serial
+argument_list|()
+expr_stmt|;
+name|loadflags
+operator||=
+name|RB_SERIAL
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\nSerial console forced."
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
-endif|#
-directive|endif
+comment|/* FORCE_COMCONSOLE */
 comment|/* Pick up the story from the Bios on geometry of disks */
 for|for
 control|(
@@ -273,6 +301,16 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+name|name
+operator|=
+name|dflname
+expr_stmt|;
+comment|/* re-initialize in case of loop */
+name|loadflags
+operator|&=
+name|RB_SERIAL
+expr_stmt|;
+comment|/* clear all, but leave serial console */
 name|getbootdev
 argument_list|(
 name|namebuf

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:35:57  rpd  *	$Id: io.c,v 1.13 1995/04/14 21:26:51 joerg Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:35:57  rpd  *	$Id: io.c,v 1.14 1995/05/30 07:58:33 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -204,16 +204,17 @@ begin_comment
 comment|/* printf - only handles %d as decimal, %c as char, %s as string */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|printf
-argument_list|(
-argument|const char *format
-argument_list|,
-argument|...
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|format
+parameter_list|,
+modifier|...
+parameter_list|)
 block|{
 name|int
 modifier|*
@@ -234,11 +235,13 @@ operator|++
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
 name|format
 operator|++
+operator|)
 condition|)
 if|if
 condition|(
@@ -445,11 +448,13 @@ operator|++
 decl_stmt|;
 while|while
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
 name|ptr
 operator|++
+operator|)
 condition|)
 name|putchar
 argument_list|(
@@ -460,7 +465,7 @@ break|break;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_function
 name|void
