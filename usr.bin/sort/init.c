@@ -1914,7 +1914,9 @@ operator|=
 name|rto
 expr_stmt|;
 return|return
+operator|(
 name|ret
+operator|)
 return|;
 block|}
 end_function
@@ -2373,7 +2375,9 @@ name|b
 operator|)
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|sa
 index|[
@@ -2404,12 +2408,14 @@ name|b
 operator|)
 expr_stmt|;
 return|return
+operator|(
 name|strcoll
 argument_list|(
 name|sa
 argument_list|,
 name|sb
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
