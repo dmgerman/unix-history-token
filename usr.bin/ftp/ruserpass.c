@@ -668,6 +668,12 @@ name|PASSWD
 case|:
 if|if
 condition|(
+operator|(
+operator|*
+name|aname
+operator|==
+name|NULL
+operator|||
 name|strcmp
 argument_list|(
 operator|*
@@ -675,6 +681,7 @@ name|aname
 argument_list|,
 literal|"anonymous"
 argument_list|)
+operator|)
 operator|&&
 name|fstat
 argument_list|(
