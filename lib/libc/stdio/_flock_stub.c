@@ -236,6 +236,12 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|_pthread_mutex_unlock
+argument_list|(
+operator|&
+name|init_lock_mutex
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
