@@ -1717,7 +1717,7 @@ condition|)
 block|{
 name|msg_perror
 argument_list|(
-literal|"cannot change mode of file %s to %ld"
+literal|"cannot change mode of file %s to 0%o"
 argument_list|,
 name|skipcrud
 operator|+
@@ -2620,7 +2620,7 @@ condition|)
 block|{
 name|msg_perror
 argument_list|(
-literal|"cannot change mode of file %s to %ld"
+literal|"cannot change mode of file %s to 0%o"
 argument_list|,
 name|skipcrud
 operator|+
@@ -3310,7 +3310,7 @@ condition|)
 block|{
 name|msg_perror
 argument_list|(
-literal|"cannot change mode of file %s to %ld"
+literal|"cannot change mode of file %s to 0%o"
 argument_list|,
 name|saved_dir_info_head
 operator|->
