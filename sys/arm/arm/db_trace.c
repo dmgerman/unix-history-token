@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/armreg.h>
 end_include
 
@@ -241,6 +247,13 @@ decl_stmt|;
 name|int
 name|scp_offset
 decl_stmt|;
+if|if
+condition|(
+name|kdb_frame
+operator|==
+name|NULL
+condition|)
+return|return;
 while|while
 condition|(
 operator|(
@@ -287,7 +300,7 @@ name|u_int32_t
 operator|*
 operator|)
 operator|(
-name|DDB_REGS
+name|kdb_frame
 operator|->
 name|tf_r11
 operator|)
@@ -492,8 +505,8 @@ argument_list|)
 expr_stmt|;
 name|pc
 operator|=
-name|ddb_regs
-operator|.
+name|kdb_frame
+operator|->
 name|tf_pc
 expr_stmt|;
 name|sym
@@ -884,10 +897,16 @@ block|}
 end_function
 
 begin_function
-name|void
-name|db_print_backtrace
+name|int
+name|db_trace_thread
 parameter_list|(
-name|void
+name|struct
+name|thread
+modifier|*
+name|thr
+parameter_list|,
+name|int
+name|count
 parameter_list|)
 block|{
 name|db_stack_trace_cmd
@@ -908,7 +927,21 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
+end_function
+
+begin_function
+name|void
+name|db_trace_self
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
 end_function
 
 end_unit

@@ -61,36 +61,12 @@ name|db_expr_t
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|struct
-name|trapframe
-name|db_regs_t
-typedef|;
-end_typedef
-
-begin_decl_stmt
-specifier|extern
-name|db_regs_t
-name|ddb_regs
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|DDB_REGS
-value|(&ddb_regs)
-end_define
-
 begin_define
 define|#
 directive|define
 name|PC_REGS
-parameter_list|(
-name|regs
-parameter_list|)
-value|((db_addr_t)(regs)->tf_pc)
+parameter_list|()
+value|((db_addr_t)kdb_thrctx->un_32.pcb32_pc)
 end_define
 
 begin_define
@@ -121,7 +97,7 @@ begin_define
 define|#
 directive|define
 name|BKPT_SKIP
-value|do {							\ 	ddb_regs.tf_pc -= BKPT_SIZE; \ } while (0)
+value|do {							\ 	kdb_frame->tf_pc -= BKPT_SIZE; \ } while (0)
 end_define
 
 begin_define
