@@ -351,7 +351,7 @@ name|xflag
 condition|)
 name|printf
 argument_list|(
-literal|"%-16s%4d %-16s %s\n"
+literal|"%-16s %4d %-16s %s\n"
 argument_list|,
 name|node
 operator|->
