@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)command.c	5.16 (Berkeley) %G%"
+literal|"@(#)command.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -606,6 +606,8 @@ block|{
 specifier|extern
 name|int
 name|linenums
+decl_stmt|,
+name|short_file
 decl_stmt|;
 specifier|extern
 name|char
@@ -700,8 +702,12 @@ expr_stmt|;
 comment|/* if no -e flag and we've hit EOF on the last file, quit. */
 if|if
 condition|(
+operator|(
 operator|!
 name|quit_at_eof
+operator|||
+name|short_file
+operator|)
 operator|&&
 name|hit_eof
 operator|&&
