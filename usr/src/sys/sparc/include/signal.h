@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)signal.h	7.3 (Berkeley) %G%  *  * from: $Header: signal.h,v 1.5 92/11/26 02:04:46 torek Exp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)signal.h	7.4 (Berkeley) %G%  *  * from: $Header: signal.h,v 1.5 92/11/26 02:04:46 torek Exp $  */
 end_comment
 
 begin_ifndef
@@ -8,6 +8,13 @@ ifndef|#
 directive|ifndef
 name|LOCORE
 end_ifndef
+
+begin_typedef
+typedef|typedef
+name|int
+name|sig_atomic_t
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * Information pushed on stack when a signal is delivered.  * This is used by the kernel to restore state following  * execution of the signal handler.  It is also made available  * to the handler to allow it to restore state properly if  * a non-standard exit is performed.  *  * All machines must have an sc_onstack and sc_mask.  */
