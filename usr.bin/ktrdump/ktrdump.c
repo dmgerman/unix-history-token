@@ -352,9 +352,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|int
-name|n
-decl_stmt|;
 comment|/* 	 * Parse commandline arguments. 	 */
 name|out
 operator|=
