@@ -494,11 +494,6 @@ operator|.
 name|d_name
 operator|=
 literal|"raidctl"
-block|,
-operator|.
-name|d_maj
-operator|=
-literal|201
 block|, }
 decl_stmt|;
 end_decl_stmt
