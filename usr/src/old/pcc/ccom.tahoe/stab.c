@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)stab.c	1.4 (Berkeley) %G%"
+literal|"@(#)stab.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2449,13 +2449,6 @@ operator|+
 literal|3
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|i
-operator|!=
-name|NILINDEX
-operator|&&
-operator|(
 name|p
 operator|=
 operator|&
@@ -2463,7 +2456,10 @@ name|stab
 index|[
 name|i
 index|]
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|p
 operator|->
 name|sname
 operator|!=
