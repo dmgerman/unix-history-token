@@ -173,13 +173,6 @@ name|scale
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|char
-name|device
-decl_stmt|;
-end_decl_stmt
-
 begin_extern
 extern|extern point(
 end_extern
@@ -287,8 +280,12 @@ name|DevRange
 decl_stmt|;
 end_decl_stmt
 
-begin_escape
-end_escape
+begin_decl_stmt
+specifier|extern
+name|char
+name|device
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|line
@@ -552,9 +549,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_escape
-end_escape
 
 begin_macro
 name|HGPrintElt
@@ -965,9 +959,6 @@ end_block
 begin_comment
 comment|/* end PrintElt */
 end_comment
-
-begin_escape
-end_escape
 
 begin_macro
 name|HGPutText
@@ -1617,9 +1608,6 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_escape
-end_escape
-
 begin_define
 define|#
 directive|define
@@ -1906,9 +1894,6 @@ end_comment
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
-
-begin_escape
-end_escape
 
 begin_macro
 name|RoundEnd
@@ -2239,9 +2224,6 @@ end_comment
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
-
-begin_escape
-end_escape
 
 begin_define
 define|#
@@ -3178,9 +3160,6 @@ begin_comment
 comment|/* end PeriodicSpline */
 end_comment
 
-begin_escape
-end_escape
-
 begin_expr_stmt
 specifier|static
 name|NaturalEndSpline
@@ -3694,9 +3673,6 @@ end_block
 begin_comment
 comment|/* end NaturalEndSpline */
 end_comment
-
-begin_escape
-end_escape
 
 begin_define
 define|#
@@ -4220,9 +4196,6 @@ begin_comment
 comment|/* end HGCurve */
 end_comment
 
-begin_escape
-end_escape
-
 begin_macro
 name|HGplotch
 argument_list|(
@@ -4459,9 +4432,6 @@ name|width
 expr_stmt|;
 block|}
 end_block
-
-begin_escape
-end_escape
 
 begin_macro
 name|HGInitFont
@@ -4717,9 +4687,6 @@ expr_stmt|;
 block|}
 block|}
 end_block
-
-begin_escape
-end_escape
 
 begin_macro
 name|HGtline
@@ -5060,9 +5027,6 @@ end_block
 begin_comment
 comment|/* end HGtline */
 end_comment
-
-begin_escape
-end_escape
 
 begin_macro
 name|HGMove

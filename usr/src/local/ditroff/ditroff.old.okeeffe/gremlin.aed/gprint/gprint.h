@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* gprint.h -  *  *  * This file contains standard definitions used by the gprint program.  */
+comment|/*	gprint.h	1.2	83/03/02  *  * This file contains standard definitions used by the gprint program.  */
 end_comment
 
 begin_define
@@ -134,13 +134,6 @@ define|#
 directive|define
 name|LONGDASHED
 value|074
-end_define
-
-begin_define
-define|#
-directive|define
-name|SETSTATE
-value|(('v'<<8)+1)
 end_define
 
 begin_include
