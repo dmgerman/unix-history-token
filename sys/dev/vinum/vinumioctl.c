@@ -90,6 +90,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|jmp_buf
+name|command_fail
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* return on a failed command */
+end_comment
+
 begin_comment
 comment|/* ioctl routine */
 end_comment

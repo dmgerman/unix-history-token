@@ -15,16 +15,6 @@ directive|ifdef
 name|VINUMDEBUG
 end_ifdef
 
-begin_decl_stmt
-name|jmp_buf
-name|command_fail
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* return on a failed command */
-end_comment
-
 begin_undef
 undef|#
 directive|undef
