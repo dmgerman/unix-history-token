@@ -1323,7 +1323,9 @@ operator|==
 literal|0
 condition|)
 name|cpu_critical_enter
-argument_list|()
+argument_list|(
+name|td
+argument_list|)
 expr_stmt|;
 name|td
 operator|->
@@ -1420,7 +1422,9 @@ operator|=
 literal|0
 expr_stmt|;
 name|cpu_critical_exit
-argument_list|()
+argument_list|(
+name|td
+argument_list|)
 expr_stmt|;
 block|}
 else|else
