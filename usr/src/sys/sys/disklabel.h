@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)disklabel.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987,1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)disklabel.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -98,13 +98,46 @@ literal|16
 index|]
 decl_stmt|;
 comment|/* type name, e.g. "eagle" */
+comment|/*  	 * d_packname contains the pack identifier and is returned when 	 * the disklabel is read off the disk or in-core copy. 	 * d_boot0 and d_boot1 are the (optional) names of the 	 * primary (block 0) and secondary (block 1-15) bootstraps 	 * as found in /usr/mdec.  These are returned when using 	 * getdiskbyname(3) to retrieve the values from /etc/disktab. 	 */
+union|union
+block|{
 name|char
-name|d_name
+name|un_d_packname
 index|[
 literal|16
 index|]
 decl_stmt|;
 comment|/* pack identifier */
+struct|struct
+block|{
+name|char
+modifier|*
+name|un_d_boot0
+decl_stmt|;
+comment|/* primary bootstrap name */
+name|char
+modifier|*
+name|un_d_boot1
+decl_stmt|;
+comment|/* secondary bootstrap name */
+block|}
+name|un_b
+struct|;
+block|}
+name|d_un
+union|;
+define|#
+directive|define
+name|d_packname
+value|d_un.un_d_packname
+define|#
+directive|define
+name|d_boot0
+value|d_un.un_b.un_d_boot0
+define|#
+directive|define
+name|d_boot1
+value|d_un.un_b.un_d_boot1
 comment|/* disk geometry: */
 name|u_long
 name|d_secsize
@@ -717,7 +750,7 @@ comment|/*  * Disk-specific ioctls.  */
 end_comment
 
 begin_comment
-comment|/* get and set disklabel; last form used internally */
+comment|/* get and set disklabel; DIOCGPART used internally */
 end_comment
 
 begin_define
@@ -750,7 +783,7 @@ value|_IOW('d', 103, struct disklabel)
 end_define
 
 begin_comment
-comment|/* set and write back */
+comment|/* set, update disk */
 end_comment
 
 begin_define
@@ -802,6 +835,17 @@ end_define
 
 begin_comment
 comment|/* set # of retries */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DIOCWLABEL
+value|_IOW('d', 109, int)
+end_define
+
+begin_comment
+comment|/* write en/disable label */
 end_comment
 
 begin_endif
