@@ -359,9 +359,6 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-name|ssize_t
-name|n
-decl_stmt|;
 name|time_t
 name|time
 decl_stmt|;
@@ -369,15 +366,7 @@ name|int64_t
 name|fssize
 decl_stmt|;
 name|int
-name|c
-decl_stmt|,
 name|i
-decl_stmt|,
-name|j
-decl_stmt|,
-name|k
-decl_stmt|,
-name|size
 decl_stmt|;
 if|if
 condition|(
@@ -1336,10 +1325,6 @@ return|;
 block|}
 end_function
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_function
 name|int
 name|dumpcg
@@ -1819,10 +1804,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_function
 name|void
