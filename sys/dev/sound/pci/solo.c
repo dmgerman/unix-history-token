@@ -1119,12 +1119,16 @@ name|u_char
 name|val
 parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-block|printf("ess_cmd: %x\n", val);
-endif|#
-directive|endif
+name|DEB
+argument_list|(
+name|printf
+argument_list|(
+literal|"ess_cmd: %x\n"
+argument_list|,
+name|val
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 name|ess_dspwr
 argument_list|(
@@ -1153,12 +1157,18 @@ name|int
 name|val
 parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-block|printf("ess_cmd1: %x, %x\n", cmd, val);
-endif|#
-directive|endif
+name|DEB
+argument_list|(
+name|printf
+argument_list|(
+literal|"ess_cmd1: %x, %x\n"
+argument_list|,
+name|cmd
+argument_list|,
+name|val
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ess_dspwr
@@ -1485,6 +1495,14 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|DEB
+argument_list|(
+name|printf
+argument_list|(
+literal|"ess_reset_dsp\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ess_wr
 argument_list|(
 name|sc
@@ -1522,17 +1540,11 @@ name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"ess_reset_dsp 0x%lx failed\n"
-argument_list|,
-name|rman_get_start
-argument_list|(
-name|d
-operator|->
-name|io_base
-argument_list|)
+literal|"ess_reset_dsp failed\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 			   rman_get_start(d->io_base))); */
 return|return
 name|ENXIO
 return|;
@@ -1645,6 +1657,18 @@ condition|?
 literal|1
 else|:
 literal|0
+expr_stmt|;
+name|DEB
+argument_list|(
+name|printf
+argument_list|(
+literal|"ess_intr: pirq:%d rirq:%d\n"
+argument_list|,
+name|pirq
+argument_list|,
+name|rirq
+argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2194,6 +2218,14 @@ name|spdval
 decl_stmt|,
 name|fmtval
 decl_stmt|;
+name|DEB
+argument_list|(
+name|printf
+argument_list|(
+literal|"ess_setupch\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|spdval
 operator|=
 operator|(
@@ -2287,7 +2319,7 @@ name|play
 condition|?
 literal|0x00
 else|:
-literal|0x08
+literal|0x0a
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2363,7 +2395,7 @@ name|sc
 argument_list|,
 literal|0xb7
 argument_list|,
-literal|0x90
+literal|0x91
 operator||
 operator|(
 name|unsign
@@ -2588,6 +2620,13 @@ name|ch
 operator|->
 name|parent
 decl_stmt|;
+name|DEB
+argument_list|(
+argument|printf(
+literal|"ess_start\n"
+argument|);
+argument_list|)
+empty_stmt|;
 name|ess_setupch
 argument_list|(
 name|sc
@@ -2713,6 +2752,14 @@ name|ch
 operator|->
 name|parent
 decl_stmt|;
+name|DEB
+argument_list|(
+name|printf
+argument_list|(
+literal|"ess_stop\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ch
 operator|->
 name|stopping
@@ -2744,14 +2791,6 @@ operator|~
 literal|0x04
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-if|if (ch->dir == PCMDIR_PLAY) { 			DELAY(25000);
-comment|/* 25 ms */
-if|ess_cmd(sc, 0xd3); 		}
-endif|#
-directive|endif
 else|else
 name|ess_setmixer
 argument_list|(
@@ -2768,6 +2807,14 @@ argument_list|)
 operator|&
 operator|~
 literal|0x10
+argument_list|)
+expr_stmt|;
+name|DEB
+argument_list|(
+name|printf
+argument_list|(
+literal|"done with stop\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2830,6 +2877,14 @@ name|sc
 operator|->
 name|rch
 decl_stmt|;
+name|DEB
+argument_list|(
+name|printf
+argument_list|(
+literal|"esschan_init\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ch
 operator|->
 name|parent
@@ -3085,6 +3140,16 @@ name|ch
 operator|->
 name|parent
 decl_stmt|;
+name|DEB
+argument_list|(
+name|printf
+argument_list|(
+literal|"esschan_trigger: %d\n"
+argument_list|,
+name|go
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|go
