@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_denode.c,v 1.39 1998/08/17 19:09:36 bde Exp $ */
+comment|/*	$Id: msdosfs_denode.c,v 1.40 1998/10/29 09:29:17 peter Exp $ */
 end_comment
 
 begin_comment
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
 end_include
 
 begin_include
