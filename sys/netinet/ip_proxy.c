@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_proxy.c,v 2.0.2.11.2.6 1997/11/28 00:41:25 darrenr Exp $"
+literal|"@(#)$Id: ip_proxy.c,v 1.1.1.3 1998/03/21 10:11:30 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -129,11 +129,26 @@ directive|include
 file|<sys/file.h>
 end_include
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -295,6 +310,12 @@ begin_include
 include|#
 directive|include
 file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
 end_include
 
 begin_endif

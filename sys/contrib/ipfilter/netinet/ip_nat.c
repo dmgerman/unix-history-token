@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_nat.c,v 2.0.2.44.2.7 1997/12/02 13:54:27 darrenr Exp $"
+literal|"@(#)$Id: ip_nat.c,v 1.1.1.6 1998/03/21 10:11:15 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,6 +39,23 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"opt_ipfilter.h"
+end_include
+
+begin_define
+define|#
+directive|define
+name|__FreeBSD_version
+value|300000
+end_define
+
+begin_comment
+comment|/* it's a hack, but close enough */
+end_comment
 
 begin_if
 if|#
@@ -329,6 +346,12 @@ begin_include
 include|#
 directive|include
 file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
 end_include
 
 begin_endif

@@ -51,11 +51,16 @@ else|#
 directive|else
 end_else
 
-begin_include
-include|#
-directive|include
-file|<sys/osreldate.h>
-end_include
+begin_define
+define|#
+directive|define
+name|__FreeBSD_version
+value|300000
+end_define
+
+begin_comment
+comment|/* this will do as a hack */
+end_comment
 
 begin_endif
 endif|#
@@ -1085,7 +1090,7 @@ name|noreset
 block|,
 name|nodevtotty
 block|,
-name|noselect
+name|seltrue
 block|,
 name|nommap
 block|,
@@ -1521,11 +1526,17 @@ argument_list|,
 name|LEASE_WRITE
 argument_list|)
 expr_stmt|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|nd
 operator|.
 name|ni_vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|curproc
 argument_list|)
 expr_stmt|;
 name|VOP_LEASE

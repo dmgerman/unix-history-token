@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_frag.c,v 2.0.2.19.2.1 1997/11/12 10:50:21 darrenr Exp $"
+literal|"@(#)$Id: ip_frag.c,v 1.1.1.5 1997/11/16 05:55:34 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,6 +39,43 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|KERNEL
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|_KERNEL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|__FreeBSD_version
+value|300000
+end_define
+
+begin_comment
+comment|/* it's a hack, but close enough */
+end_comment
 
 begin_if
 if|#
@@ -128,6 +165,12 @@ begin_include
 include|#
 directive|include
 file|<sys/fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
 end_include
 
 begin_else
@@ -261,6 +304,32 @@ begin_include
 include|#
 directive|include
 file|<sys/kmem.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|KERNEL
+argument_list|)
+operator|&&
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|300000
+operator|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
 end_include
 
 begin_endif

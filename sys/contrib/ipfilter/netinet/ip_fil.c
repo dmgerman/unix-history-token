@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_fil.c,v 2.0.2.44.2.5 1997/11/24 10:02:02 darrenr Exp $"
+literal|"@(#)$Id: ip_fil.c,v 1.1.1.6 1998/03/21 10:11:08 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,6 +39,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"opt_ipfilter.h"
+end_include
 
 begin_ifndef
 ifndef|#
@@ -105,11 +111,16 @@ name|IPFILTER_LKM
 argument_list|)
 end_if
 
-begin_include
-include|#
-directive|include
-file|<sys/osreldate.h>
-end_include
+begin_define
+define|#
+directive|define
+name|__FreeBSD_version
+value|300000
+end_define
+
+begin_comment
+comment|/* this will do as a hack */
+end_comment
 
 begin_else
 else|#
@@ -282,6 +293,10 @@ name|OpenBSD
 operator|>
 literal|199603
 operator|)
+operator|||
+name|__FreeBSD_version
+operator|>=
+literal|220000
 end_if
 
 begin_include
@@ -375,6 +390,12 @@ begin_include
 include|#
 directive|include
 file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
 end_include
 
 begin_endif
@@ -2991,6 +3012,31 @@ name|ifp
 decl_stmt|;
 if|#
 directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|300000
+operator|)
+for|for
+control|(
+name|ifp
+operator|=
+name|ifnet
+operator|.
+name|tqh_first
+init|;
+name|ifp
+condition|;
+name|ifp
+operator|=
+name|ifp
+operator|->
+name|if_link
+operator|.
+name|tqe_next
+control|)
+elif|#
+directive|elif
 name|defined
 argument_list|(
 name|__OpenBSD__
