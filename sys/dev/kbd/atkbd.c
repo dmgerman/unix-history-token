@@ -1618,7 +1618,7 @@ expr_stmt|;
 if|if
 condition|(
 name|kbd
-operator|==
+operator|!=
 name|NULL
 condition|)
 name|free
