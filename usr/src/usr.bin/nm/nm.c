@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nm.c 4.6 %G%"
+literal|"@(#)nm.c 4.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1288,6 +1288,17 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+name|c
+operator|==
+name|N_FN
+condition|)
+name|c
+operator|=
+literal|'f'
+expr_stmt|;
+else|else
 switch|switch
 condition|(
 name|c
@@ -1348,12 +1359,10 @@ operator|=
 literal|'b'
 expr_stmt|;
 break|break;
-case|case
-name|N_FN
-case|:
+default|default:
 name|c
 operator|=
-literal|'f'
+literal|'?'
 expr_stmt|;
 break|break;
 block|}
