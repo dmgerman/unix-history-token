@@ -1301,7 +1301,8 @@ end_function
 
 begin_decl_stmt
 specifier|static
-name|int
+name|unsigned
+name|long
 name|acpi_host_mem_start
 init|=
 literal|0x80000000
@@ -1309,7 +1310,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
+name|TUNABLE_ULONG
 argument_list|(
 literal|"hw.acpi.host_mem_start"
 argument_list|,
