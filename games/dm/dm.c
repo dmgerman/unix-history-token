@@ -109,6 +109,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pathnames.h"
 end_include
 
@@ -295,14 +301,6 @@ name|pbuf
 index|[
 name|MAXPATHLEN
 index|]
-decl_stmt|,
-modifier|*
-name|strcpy
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strerror
-argument_list|()
 decl_stmt|;
 operator|(
 name|void
