@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printjob.c	4.17 (Berkeley) %G%"
+literal|"@(#)printjob.c	4.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,7 +53,6 @@ comment|/* abort if dofork fails */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|char
 name|title
 index|[
@@ -67,7 +66,6 @@ comment|/* ``pr'' title */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|FILE
 modifier|*
 name|cfp
@@ -79,7 +77,6 @@ comment|/* control file */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|pfd
 decl_stmt|;
@@ -90,7 +87,6 @@ comment|/* printer file descriptor */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|ofd
 decl_stmt|;
@@ -101,7 +97,6 @@ comment|/* output filter file descriptor */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|lfd
 decl_stmt|;
@@ -112,7 +107,6 @@ comment|/* lock file descriptor */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|pid
 decl_stmt|;
@@ -123,7 +117,6 @@ comment|/* pid of lpd process */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|prchild
 decl_stmt|;
@@ -134,7 +127,6 @@ comment|/* id of pr process */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|child
 decl_stmt|;
@@ -145,7 +137,6 @@ comment|/* id of any filters */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|ofilter
 decl_stmt|;
@@ -156,7 +147,6 @@ comment|/* id of output filter, if any */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|tof
 decl_stmt|;
@@ -167,18 +157,6 @@ comment|/* true if at top of form */
 end_comment
 
 begin_decl_stmt
-specifier|static
-name|int
-name|count
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Number of files actually printed */
-end_comment
-
-begin_decl_stmt
-specifier|static
 name|int
 name|remote
 decl_stmt|;
@@ -189,7 +167,6 @@ comment|/* true if sending files to remote */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|char
 name|fromhost
 index|[
@@ -203,7 +180,6 @@ comment|/* user's host machine */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|char
 name|logname
 index|[
@@ -217,7 +193,6 @@ comment|/* user's login name */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|char
 name|jobname
 index|[
@@ -231,7 +206,6 @@ comment|/* job or file name */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|char
 name|class
 index|[
@@ -245,7 +219,6 @@ comment|/* classification field */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|char
 name|width
 index|[
@@ -261,7 +234,6 @@ comment|/* page width in characters */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|char
 name|length
 index|[
@@ -277,7 +249,6 @@ comment|/* page length in lines */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|char
 name|pxwidth
 index|[
@@ -293,7 +264,6 @@ comment|/* page width in pixels */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|char
 name|pxlength
 index|[
@@ -309,7 +279,6 @@ comment|/* page length in pixels */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|char
 name|indent
 index|[
@@ -325,7 +294,6 @@ comment|/* indentation size in characters */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|char
 name|tmpfile
 index|[]
@@ -374,9 +342,14 @@ decl_stmt|;
 name|long
 name|pidoff
 decl_stmt|;
+name|int
+name|count
+init|=
+literal|0
+decl_stmt|;
 specifier|extern
 name|int
-name|onintr
+name|abortpr
 parameter_list|()
 function_decl|;
 name|init
@@ -396,49 +369,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* ack that daemon is started */
-operator|(
-name|void
-operator|)
-name|close
+name|setgid
 argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* set up log file */
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|open
-argument_list|(
-name|LF
-argument_list|,
-name|O_WRONLY
-operator||
-name|O_APPEND
-argument_list|)
-operator|<
-literal|0
-condition|)
-operator|(
-name|void
-operator|)
-name|open
-argument_list|(
-literal|"/dev/null"
-argument_list|,
-name|O_WRONLY
-argument_list|)
-expr_stmt|;
-name|dup
-argument_list|(
-literal|1
+name|getegid
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|pid
@@ -458,28 +392,28 @@ name|signal
 argument_list|(
 name|SIGHUP
 argument_list|,
-name|onintr
+name|abortpr
 argument_list|)
 expr_stmt|;
 name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
-name|onintr
+name|abortpr
 argument_list|)
 expr_stmt|;
 name|signal
 argument_list|(
 name|SIGQUIT
 argument_list|,
-name|onintr
+name|abortpr
 argument_list|)
 expr_stmt|;
 name|signal
 argument_list|(
 name|SIGTERM
 argument_list|,
-name|onintr
+name|abortpr
 argument_list|)
 expr_stmt|;
 operator|(
@@ -501,9 +435,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|log
+name|syslog
 argument_list|(
-literal|"cannot chdir to %s"
+name|LOG_ERR
+argument_list|,
+literal|"%s: %m"
 argument_list|,
 name|SD
 argument_list|)
@@ -560,9 +496,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|log
+name|syslog
 argument_list|(
-literal|"cannot create %s"
+name|LOG_ERR
+argument_list|,
+literal|"%s: %s: %m"
+argument_list|,
+name|printer
 argument_list|,
 name|LO
 argument_list|)
@@ -599,9 +539,13 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|log
+name|syslog
 argument_list|(
-literal|"cannot lock %s"
+name|LOG_ERR
+argument_list|,
+literal|"%s: %s: %m"
+argument_list|,
+name|printer
 argument_list|,
 name|LO
 argument_list|)
@@ -652,9 +596,15 @@ operator|!=
 name|i
 condition|)
 block|{
-name|log
+name|syslog
 argument_list|(
-literal|"cannot write daemon pid"
+name|LOG_ERR
+argument_list|,
+literal|"%s: %s: %m"
+argument_list|,
+name|printer
+argument_list|,
+name|LO
 argument_list|)
 expr_stmt|;
 name|exit
@@ -679,9 +629,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|log
+name|syslog
 argument_list|(
-literal|"can't scan spool directory %s"
+name|LOG_ERR
+argument_list|,
+literal|"%s: can't scan %s"
+argument_list|,
+name|printer
 argument_list|,
 name|SD
 argument_list|)
@@ -729,9 +683,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|log
+name|syslog
 argument_list|(
-literal|"cannot chmod %s"
+name|LOG_ERR
+argument_list|,
+literal|"%s: %s: %m"
+argument_list|,
+name|printer
 argument_list|,
 name|LO
 argument_list|)
@@ -832,11 +790,15 @@ argument_list|)
 operator|!=
 name|i
 condition|)
-name|log
+name|syslog
 argument_list|(
-literal|"can't write (%d) control file name"
+name|LOG_ERR
 argument_list|,
-name|errno
+literal|"%s: %s: %m"
+argument_list|,
+name|printer
+argument_list|,
+name|LO
 argument_list|)
 expr_stmt|;
 if|if
@@ -877,6 +839,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* stop printing before starting next job? */
 if|if
 condition|(
 name|stb
@@ -888,6 +851,7 @@ condition|)
 goto|goto
 name|done
 goto|;
+comment|/* rebuild queue (after lpc topq) */
 if|if
 condition|(
 name|stb
@@ -941,9 +905,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|log
+name|syslog
 argument_list|(
-literal|"cannot chmod %s"
+name|LOG_WARNING
+argument_list|,
+literal|"%s: %s: %m"
+argument_list|,
+name|printer
 argument_list|,
 name|LO
 argument_list|)
@@ -970,9 +938,13 @@ literal|0
 condition|)
 block|{
 comment|/* try reprinting the job */
-name|log
+name|syslog
 argument_list|(
-literal|"restarting"
+name|LOG_INFO
+argument_list|,
+literal|"restarting %s"
+argument_list|,
+name|printer
 argument_list|)
 expr_stmt|;
 if|if
@@ -1041,11 +1013,15 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|log
+name|syslog
 argument_list|(
-literal|"can't truncate lock file (%d)"
+name|LOG_WARNING
 argument_list|,
-name|errno
+literal|"%s: %s: %m"
+argument_list|,
+name|printer
+argument_list|,
+name|LO
 argument_list|)
 expr_stmt|;
 name|openpr
@@ -1082,9 +1058,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|log
+name|syslog
 argument_list|(
-literal|"can't scan spool directory %s"
+name|LOG_ERR
+argument_list|,
+literal|"%s: can't scan %s"
+argument_list|,
+name|printer
 argument_list|,
 name|SD
 argument_list|)
@@ -1196,7 +1176,6 @@ comment|/* fonts for troff */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|char
 name|ifonts
 index|[
@@ -1222,17 +1201,19 @@ begin_comment
 comment|/*  * The remaining part is the reading of the control file (cf)  * and performing the various actions.  * Returns 0 if everthing was OK, 1 if we should try to reprint the job and  * -1 if a non-recoverable error occured.  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|printit
 argument_list|(
 argument|file
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|file
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1262,13 +1243,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log
+name|syslog
 argument_list|(
-literal|"control file (%s) open failure<errno = %d>"
+name|LOG_INFO
+argument_list|,
+literal|"%s: %s: %m"
+argument_list|,
+name|printer
 argument_list|,
 name|file
-argument_list|,
-name|errno
 argument_list|)
 expr_stmt|;
 return|return
@@ -1808,18 +1791,20 @@ begin_comment
 comment|/*  * Print a file.  * Set up the chain [ PR [ | {IF, OF} ] ] or {IF, RF, TF, NF, DF, CF, VF}.  * Return -1 if a non-recoverable error occured,  * 2 if the filter detected some errors (but printed the job anyway),  * 1 if we should try to reprint this job and  * 0 if all is well.  * Note: all filters take stdin as the file, stdout as the printer,  * stderr as the log file, and must not ignore SIGINT.  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|print
 argument_list|(
 argument|format
 argument_list|,
 argument|file
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|format
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -1887,23 +1872,12 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|log
-argument_list|(
-literal|"%s: open failure<errno = %d>"
-argument_list|,
-name|file
-argument_list|,
-name|errno
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 if|if
 condition|(
 operator|!
@@ -2172,8 +2146,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|log
+name|syslog
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"cannot execl %s"
 argument_list|,
 name|PR
@@ -2380,9 +2356,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|log
+name|syslog
 argument_list|(
-literal|"cannot create .railmag"
+name|LOG_ERR
+argument_list|,
+literal|"%s: cannot create .railmag"
+argument_list|,
+name|printer
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2606,9 +2586,13 @@ argument_list|(
 name|fi
 argument_list|)
 expr_stmt|;
-name|log
+name|syslog
 argument_list|(
-literal|"illegal format character '%c'"
+name|LOG_ERR
+argument_list|,
+literal|"%s: illegal format character '%c'"
+argument_list|,
+name|printer
 argument_list|,
 name|format
 argument_list|)
@@ -2760,9 +2744,13 @@ argument_list|(
 name|fi
 argument_list|)
 expr_stmt|;
-name|log
+name|syslog
 argument_list|(
-literal|"output filter died (%d)"
+name|LOG_WARNING
+argument_list|,
+literal|"%s: output filter died (%d)"
+argument_list|,
+name|printer
 argument_list|,
 name|status
 operator|.
@@ -2864,9 +2852,11 @@ argument_list|,
 name|av
 argument_list|)
 expr_stmt|;
-name|log
+name|syslog
 argument_list|(
-literal|"cannot execl %s"
+name|LOG_ERR
+argument_list|,
+literal|"cannot execv %s"
 argument_list|,
 name|prog
 argument_list|)
@@ -2943,8 +2933,10 @@ operator|<
 literal|0
 condition|)
 block|{
-name|log
+name|syslog
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"cannot restart output filter"
 argument_list|)
 expr_stmt|;
@@ -2968,9 +2960,13 @@ name|status
 argument_list|)
 condition|)
 block|{
-name|log
+name|syslog
 argument_list|(
-literal|"Daemon filter '%c' terminated (%d)"
+name|LOG_WARNING
+argument_list|,
+literal|"%s: Daemon filter '%c' terminated (%d)"
+argument_list|,
+name|printer
 argument_list|,
 name|format
 argument_list|,
@@ -2996,9 +2992,13 @@ operator|>
 literal|2
 condition|)
 block|{
-name|log
+name|syslog
 argument_list|(
-literal|"Daemon filter '%c' exited (%d)"
+name|LOG_WARNING
+argument_list|,
+literal|"%s: Daemon filter '%c' exited (%d)"
+argument_list|,
+name|printer
 argument_list|,
 name|format
 argument_list|,
@@ -3041,17 +3041,19 @@ begin_comment
 comment|/*  * Send the daemon control file (cf) and any data files.  * Return -1 if a non-recoverable error occured, 1 if a recoverable error and  * 0 if all is well.  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|sendit
 argument_list|(
 argument|file
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|file
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -3085,22 +3087,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|log
-argument_list|(
-literal|"control file (%s) open failure<errno = %d>"
-argument_list|,
-name|file
-argument_list|,
-name|errno
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 comment|/* 	 *      read the control file for work to do 	 * 	 *      file format -- first character in the line is a command 	 *      rest of the line is the argument. 	 *      commands of interest are: 	 * 	 *            a-z -- "file name" name of file to print 	 *              U -- "unlink" name of file to remove 	 *                    (after we print it. (Pass 2 only)). 	 */
 comment|/* 	 * pass 1 	 */
 while|while
@@ -3298,21 +3289,23 @@ begin_comment
 comment|/*  * Send a data file to the remote machine and spool it.  * Return positive if we should try resending.  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|sendfile
 argument_list|(
 argument|type
 argument_list|,
 argument|file
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
 name|type
-operator|,
-operator|*
+decl_stmt|,
+modifier|*
 name|file
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -3336,6 +3329,8 @@ index|]
 decl_stmt|;
 name|int
 name|sizerr
+decl_stmt|,
+name|resp
 decl_stmt|;
 if|if
 condition|(
@@ -3362,23 +3357,12 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|log
-argument_list|(
-literal|"file (%s) open failure<errno = %d>"
-argument_list|,
-name|file
-argument_list|,
-name|errno
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 operator|(
 name|void
 operator|)
@@ -3404,6 +3388,17 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+condition|;
+name|i
+operator|++
+control|)
+block|{
 if|if
 condition|(
 name|write
@@ -3416,6 +3411,19 @@ name|amt
 argument_list|)
 operator|!=
 name|amt
+operator|||
+operator|(
+name|resp
+operator|=
+name|response
+argument_list|()
+operator|)
+operator|<
+literal|0
+operator|||
+name|resp
+operator|==
+literal|'\1'
 condition|)
 block|{
 operator|(
@@ -3431,27 +3439,62 @@ operator|(
 literal|1
 operator|)
 return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|resp
+operator|==
+literal|'\0'
+condition|)
+break|break;
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+name|status
+argument_list|(
+literal|"no space on remote; waiting for queue to drain"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+literal|10
+condition|)
+name|syslog
+argument_list|(
+name|LOG_SALERT
+argument_list|,
+literal|"%s: can't send to %s; queue full"
+argument_list|,
+name|printer
+argument_list|,
+name|RM
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+literal|5
+operator|*
+literal|60
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
-name|noresponse
-argument_list|()
+name|i
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|close
+name|status
 argument_list|(
-name|f
+literal|"sending to %s"
+argument_list|,
+name|RM
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
 name|sizerr
 operator|=
 literal|0
@@ -3558,9 +3601,13 @@ condition|(
 name|sizerr
 condition|)
 block|{
-name|log
+name|syslog
 argument_list|(
-literal|"%s: changed size"
+name|LOG_INFO
+argument_list|,
+literal|"%s: %s: changed size"
+argument_list|,
+name|printer
 argument_list|,
 name|file
 argument_list|)
@@ -3578,13 +3625,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* tell recvjob to ignore this file */
-return|return
-operator|(
+name|i
+operator|=
 operator|-
 literal|1
-operator|)
-return|;
+expr_stmt|;
 block|}
+elseif|else
 if|if
 condition|(
 name|write
@@ -3598,24 +3645,28 @@ argument_list|)
 operator|!=
 literal|1
 condition|)
-return|return
-operator|(
+name|i
+operator|=
 literal|1
-operator|)
-return|;
+expr_stmt|;
+elseif|else
 if|if
 condition|(
-name|noresponse
+name|response
 argument_list|()
 condition|)
-return|return
-operator|(
+name|i
+operator|=
 literal|1
-operator|)
-return|;
+expr_stmt|;
+else|else
+name|i
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|i
 operator|)
 return|;
 block|}
@@ -3625,14 +3676,16 @@ begin_comment
 comment|/*  * Check to make sure there have been no errors and that both programs  * are in sync with eachother.  * Return non-zero if the connection was lost.  */
 end_comment
 
-begin_expr_stmt
-specifier|static
-name|noresponse
+begin_macro
+name|response
 argument_list|()
+end_macro
+
+begin_block
 block|{
 name|char
 name|resp
-block|;
+decl_stmt|;
 if|if
 condition|(
 name|read
@@ -3646,40 +3699,37 @@ literal|1
 argument_list|)
 operator|!=
 literal|1
-operator|||
-name|resp
-operator|!=
-literal|'\0'
 condition|)
 block|{
-name|log
+name|syslog
 argument_list|(
-literal|"lost connection or error in recvjob"
+name|LOG_INFO
+argument_list|,
+literal|"%s: lost connection"
+argument_list|,
+name|printer
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|-
 literal|1
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_return
 return|return
 operator|(
-literal|0
+name|resp
 operator|)
 return|;
-end_return
+block|}
+end_block
 
 begin_comment
-unit|}
 comment|/*  * Banner printing stuff  */
 end_comment
 
 begin_macro
-unit|static
 name|banner
 argument_list|(
 argument|name1
@@ -4034,7 +4084,6 @@ block|}
 end_block
 
 begin_function
-specifier|static
 name|char
 modifier|*
 name|scnline
@@ -4111,8 +4160,7 @@ parameter_list|)
 value|(((q)-' ')&0177)
 end_define
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|scan_out
 argument_list|(
 argument|scfd
@@ -4121,10 +4169,13 @@ argument|scsp
 argument_list|,
 argument|dlm
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|scfd
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -4364,16 +4415,18 @@ block|}
 block|}
 end_block
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|dropit
 argument_list|(
 argument|c
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
 name|c
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -4449,19 +4502,21 @@ begin_comment
 comment|/*  * sendmail ---  *   tell people about job completion  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|sendmail
 argument_list|(
 argument|user
 argument_list|,
 argument|bombed
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|user
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -4812,16 +4867,18 @@ begin_comment
 comment|/*  * dofork - fork with retries on failure  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|dofork
 argument_list|(
 argument|action
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|action
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -4889,8 +4946,10 @@ name|pid
 operator|)
 return|;
 block|}
-name|log
+name|syslog
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"can't fork"
 argument_list|)
 expr_stmt|;
@@ -4909,8 +4968,10 @@ literal|1
 operator|)
 return|;
 default|default:
-name|log
+name|syslog
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"bad action (%d) to dofork"
 argument_list|,
 name|action
@@ -4931,13 +4992,15 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Cleanup child processes when a signal is caught.  */
+comment|/*  * Kill child processes to abort current job.  */
 end_comment
 
-begin_expr_stmt
-specifier|static
-name|onintr
+begin_macro
+name|abortpr
 argument_list|()
+end_macro
+
+begin_block
 block|{
 operator|(
 name|void
@@ -4946,14 +5009,14 @@ name|unlink
 argument_list|(
 name|tmpfile
 argument_list|)
-block|;
+expr_stmt|;
 name|kill
 argument_list|(
 literal|0
 argument_list|,
 name|SIGINT
 argument_list|)
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|ofilter
@@ -4967,9 +5030,6 @@ argument_list|,
 name|SIGCONT
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_while
 while|while
 condition|(
 name|wait
@@ -4980,18 +5040,15 @@ operator|>
 literal|0
 condition|)
 empty_stmt|;
-end_while
-
-begin_expr_stmt
 name|exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_block
 
 begin_macro
-unit|}  static
 name|init
 argument_list|()
 end_macro
@@ -5555,20 +5612,22 @@ begin_comment
 comment|/*  * Acquire line printer or remote connection.  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|openpr
 argument_list|()
+end_macro
+
+begin_block
 block|{
 specifier|register
 name|int
 name|i
-block|,
+decl_stmt|,
 name|n
-block|;
-name|char
+decl_stmt|;
+name|int
 name|resp
-block|;
+decl_stmt|;
 if|if
 condition|(
 operator|*
@@ -5622,9 +5681,11 @@ operator|==
 name|ENOENT
 condition|)
 block|{
-name|log
+name|syslog
 argument_list|(
-literal|"cannot open %s"
+name|LOG_ERR
+argument_list|,
+literal|"%s: %m"
 argument_list|,
 name|LP
 argument_list|)
@@ -5635,9 +5696,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|i
@@ -5651,30 +5709,22 @@ argument_list|,
 name|printer
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|sleep
 argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-unit|} 		if
-operator|(
+block|}
+if|if
+condition|(
 name|isatty
 argument_list|(
 name|pfd
 argument_list|)
-operator|)
+condition|)
 name|setty
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|status
 argument_list|(
 literal|"%s is ready and printing"
@@ -5682,10 +5732,8 @@ argument_list|,
 name|printer
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
-unit|} else
+block|}
+elseif|else
 if|if
 condition|(
 name|RM
@@ -5704,7 +5752,7 @@ name|i
 operator|=
 name|i
 operator|<
-literal|512
+literal|256
 condition|?
 name|i
 operator|<<
@@ -5715,7 +5763,8 @@ control|)
 block|{
 name|resp
 operator|=
-literal|'\0'
+operator|-
+literal|1
 expr_stmt|;
 name|pfd
 operator|=
@@ -5760,43 +5809,15 @@ name|line
 argument_list|,
 name|n
 argument_list|)
-operator|!=
+operator|==
 name|n
-condition|)
-break|break;
-if|if
-condition|(
-name|read
-argument_list|(
-name|pfd
-argument_list|,
-operator|&
-name|resp
-argument_list|,
-literal|1
-argument_list|)
-operator|!=
-literal|1
-condition|)
-block|{
-name|log
-argument_list|(
-literal|"lost connection"
-argument_list|)
-expr_stmt|;
+operator|&&
 operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|pfd
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
 name|resp
+operator|=
+name|response
+argument_list|()
+operator|)
 operator|==
 literal|'\0'
 condition|)
@@ -5820,8 +5841,8 @@ block|{
 if|if
 condition|(
 name|resp
-operator|==
-literal|'\0'
+operator|<
+literal|0
 condition|)
 name|status
 argument_list|(
@@ -5831,6 +5852,7 @@ name|RM
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|status
 argument_list|(
 literal|"waiting for queue to be enabled on %s"
@@ -5838,6 +5860,11 @@ argument_list|,
 name|RM
 argument_list|)
 expr_stmt|;
+name|i
+operator|=
+literal|256
+expr_stmt|;
+block|}
 block|}
 name|sleep
 argument_list|(
@@ -5856,34 +5883,16 @@ name|remote
 operator|=
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|setsockopt
-argument_list|(
-name|pfd
-argument_list|,
-name|SOL_SOCKET
-argument_list|,
-name|SO_KEEPALIVE
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|log
-argument_list|(
-literal|"setsockopt (SO_KEEPALIVE) failed"
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
-name|log
+name|syslog
 argument_list|(
-literal|"no line printer device or remote machine name"
+name|LOG_ERR
+argument_list|,
+literal|"%s: no line printer device or host name"
+argument_list|,
+name|printer
 argument_list|)
 expr_stmt|;
 name|exit
@@ -5892,13 +5901,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_comment
 comment|/* 	 * Start up an output filter, if needed. 	 */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|OF
@@ -6010,9 +6013,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|log
+name|syslog
 argument_list|(
-literal|"can't execl output filter %s"
+name|LOG_ERR
+argument_list|,
+literal|"%s: %s: %m"
+argument_list|,
+name|printer
 argument_list|,
 name|OF
 argument_list|)
@@ -6055,14 +6062,12 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_if
+block|}
+end_block
 
-begin_macro
-unit|}  struct
+begin_struct
+struct|struct
 name|bauds
-end_macro
-
-begin_block
 block|{
 name|int
 name|baud
@@ -6071,12 +6076,9 @@ name|int
 name|speed
 decl_stmt|;
 block|}
-end_block
-
-begin_expr_stmt
 name|bauds
 index|[]
-operator|=
+init|=
 block|{
 literal|50
 block|,
@@ -6142,27 +6144,30 @@ literal|0
 block|,
 literal|0
 block|}
-expr_stmt|;
-end_expr_stmt
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * setup tty lines.  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|setty
 argument_list|()
-block|{ 	struct
+end_macro
+
+begin_block
+block|{
+name|struct
 name|sgttyb
 name|ttybuf
-block|;
+decl_stmt|;
 specifier|register
-expr|struct
+name|struct
 name|bauds
-operator|*
+modifier|*
 name|bp
-block|;
+decl_stmt|;
 if|if
 condition|(
 name|ioctl
@@ -6181,9 +6186,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|log
+name|syslog
 argument_list|(
-literal|"cannot set exclusive-use"
+name|LOG_ERR
+argument_list|,
+literal|"%s: ioctl(TIOCEXCL): %m"
+argument_list|,
+name|printer
 argument_list|)
 expr_stmt|;
 name|exit
@@ -6192,9 +6201,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|ioctl
@@ -6214,9 +6220,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|log
+name|syslog
 argument_list|(
-literal|"cannot get tty parameters"
+name|LOG_ERR
+argument_list|,
+literal|"%s: ioctl(TIOCGETP): %m"
+argument_list|,
+name|printer
 argument_list|)
 expr_stmt|;
 name|exit
@@ -6225,9 +6235,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 name|BR
@@ -6265,9 +6272,13 @@ operator|->
 name|baud
 condition|)
 block|{
-name|log
+name|syslog
 argument_list|(
-literal|"illegal baud rate %d"
+name|LOG_ERR
+argument_list|,
+literal|"%s: illegal baud rate %d"
+argument_list|,
+name|printer
 argument_list|,
 name|BR
 argument_list|)
@@ -6291,9 +6302,6 @@ operator|->
 name|speed
 expr_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
 name|ttybuf
 operator|.
 name|sg_flags
@@ -6301,18 +6309,12 @@ operator|&=
 operator|~
 name|FC
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ttybuf
 operator|.
 name|sg_flags
 operator||=
 name|FS
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|ioctl
@@ -6332,9 +6334,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|log
+name|syslog
 argument_list|(
-literal|"cannot set tty parameters"
+name|LOG_ERR
+argument_list|,
+literal|"%s: ioctl(TIOCSETP): %m"
+argument_list|,
+name|printer
 argument_list|)
 expr_stmt|;
 name|exit
@@ -6343,9 +6349,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 name|XC
@@ -6366,9 +6369,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|log
+name|syslog
 argument_list|(
-literal|"cannot set local tty parameters"
+name|LOG_ERR
+argument_list|,
+literal|"%s: ioctl(TIOCLBIC): %m"
+argument_list|,
+name|printer
 argument_list|)
 expr_stmt|;
 name|exit
@@ -6378,9 +6385,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 name|XS
@@ -6401,9 +6405,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|log
+name|syslog
 argument_list|(
-literal|"cannot set local tty parameters"
+name|LOG_ERR
+argument_list|,
+literal|"%s: ioctl(TIOCLBIS): %m"
+argument_list|,
+name|printer
 argument_list|)
 expr_stmt|;
 name|exit
@@ -6413,15 +6421,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_if
+block|}
+end_block
 
 begin_comment
-unit|}
 comment|/*VARARGS1*/
 end_comment
 
 begin_macro
-unit|static
 name|status
 argument_list|(
 argument|msg
@@ -6486,11 +6493,24 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|fatal
+block|{
+name|syslog
 argument_list|(
-literal|"cannot create status file"
+name|LOG_ERR
+argument_list|,
+literal|"%s: %s: %m"
+argument_list|,
+name|printer
+argument_list|,
+name|ST
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|ftruncate
 argument_list|(
 name|fd
