@@ -435,6 +435,16 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|remember
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|moveifchanged
 parameter_list|(
 specifier|const

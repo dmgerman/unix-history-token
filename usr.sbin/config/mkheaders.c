@@ -152,6 +152,9 @@ name|device
 modifier|*
 name|dp
 decl_stmt|;
+name|int
+name|match
+decl_stmt|;
 for|for
 control|(
 name|fl
@@ -178,6 +181,10 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|match
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|dp
@@ -209,6 +216,9 @@ name|f_needs
 argument_list|)
 condition|)
 block|{
+name|match
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -237,6 +247,20 @@ name|f_flags
 operator|&
 name|NEED_COUNT
 condition|)
+block|{
+if|if
+condition|(
+name|match
+condition|)
+name|printf
+argument_list|(
+literal|"warning: static limits for %s are set\n"
+argument_list|,
+name|fl
+operator|->
+name|f_needs
+argument_list|)
+expr_stmt|;
 name|do_count
 argument_list|(
 name|fl
@@ -244,6 +268,7 @@ operator|->
 name|f_needs
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 for|for
@@ -448,6 +473,11 @@ operator|=
 name|tomacro
 argument_list|(
 name|dev
+argument_list|)
+expr_stmt|;
+name|remember
+argument_list|(
+name|file
 argument_list|)
 expr_stmt|;
 name|inf

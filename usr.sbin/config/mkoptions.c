@@ -733,6 +733,11 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+name|remember
+argument_list|(
+name|file
+argument_list|)
+expr_stmt|;
 name|inf
 operator|=
 name|fopen
