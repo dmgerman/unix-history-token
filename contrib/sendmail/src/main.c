@@ -2530,6 +2530,19 @@ argument_list|(
 literal|"NAME"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|FullName
+operator|!=
+name|NULL
+condition|)
+name|FullName
+operator|=
+name|newstr
+argument_list|(
+name|FullName
+argument_list|)
+expr_stmt|;
 comment|/* 	**  Initialize name server if it is going to be used. 	*/
 if|#
 directive|if

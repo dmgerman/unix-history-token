@@ -117,43 +117,12 @@ directive|ifndef
 name|SM_CONF_SHM
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__sparc64__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SM_CONF_SHM
-value|0
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* __sparc64__ */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|SM_CONF_SHM
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __sparc64__ */
-end_comment
 
 begin_endif
 endif|#
