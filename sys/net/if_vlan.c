@@ -324,7 +324,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_VLAN
 argument_list|,
-literal|"vlan"
+name|VLANNAME
 argument_list|,
 literal|"802.1Q Virtual LAN Interface"
 argument_list|)
@@ -359,7 +359,7 @@ define|#
 directive|define
 name|VLAN_LOCK_INIT
 parameter_list|()
-value|mtx_init(&ifv_mtx, "vlan", NULL, MTX_DEF)
+value|mtx_init(&ifv_mtx, VLANNAME, NULL, MTX_DEF)
 end_define
 
 begin_define
@@ -533,7 +533,7 @@ name|vlan_cloner
 init|=
 name|IF_CLONE_INITIALIZER
 argument_list|(
-literal|"vlan"
+name|VLANNAME
 argument_list|,
 name|vlan_clone_create
 argument_list|,
@@ -1092,7 +1092,7 @@ name|ifp
 operator|->
 name|if_name
 operator|=
-literal|"vlan"
+name|VLANNAME
 expr_stmt|;
 name|ifp
 operator|->
