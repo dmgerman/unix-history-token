@@ -5141,12 +5141,22 @@ name|line_length
 operator|>
 literal|999999
 condition|)
+block|{
+name|archive_set_error
+argument_list|(
+name|a
+argument_list|,
+name|ARCHIVE_ERRNO_MISC
+argument_list|,
+literal|"Rejecting pax extended attribute> 1MB"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|ARCHIVE_WARN
 operator|)
 return|;
+block|}
 name|p
 operator|++
 expr_stmt|;
