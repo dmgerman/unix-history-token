@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	5.21 (Berkeley) %G%"
+literal|"@(#)route.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -248,6 +248,12 @@ literal|'R'
 block|}
 block|,
 block|{
+name|RTF_STATIC
+block|,
+literal|'S'
+block|}
+block|,
+block|{
 literal|0
 block|}
 block|}
@@ -336,6 +342,9 @@ name|rnh
 decl_stmt|,
 name|head
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"Routing tables\n"
@@ -363,29 +372,46 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"radix_node_head: symbol not in namelist\n"
+literal|"rt_tables: symbol not in namelist\n"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-for|for
-control|(
 name|kget
 argument_list|(
 name|rtree
 argument_list|,
-name|rnh
+name|rt_tables
 argument_list|)
-init|;
-name|rnh
-condition|;
-name|rnh
+expr_stmt|;
+for|for
+control|(
+name|i
 operator|=
-name|head
-operator|.
-name|rnh_next
+literal|0
+init|;
+name|i
+operator|<=
+name|AF_MAX
+condition|;
+name|i
+operator|++
 control|)
 block|{
+if|if
+condition|(
+operator|(
+name|rnh
+operator|=
+name|rt_tables
+index|[
+name|i
+index|]
+operator|)
+operator|==
+literal|0
+condition|)
+continue|continue;
 name|kget
 argument_list|(
 name|rnh
@@ -395,9 +421,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|head
-operator|.
-name|rnh_af
+name|i
 operator|==
 name|AF_UNSPEC
 condition|)
@@ -405,6 +429,10 @@ block|{
 if|if
 condition|(
 name|Aflag
+operator|&&
+name|af
+operator|==
+literal|0
 condition|)
 block|{
 name|printf
@@ -430,16 +458,12 @@ name|AF_UNSPEC
 operator|||
 name|af
 operator|==
-name|head
-operator|.
-name|rnh_af
+name|i
 condition|)
 block|{
 name|pr_family
 argument_list|(
-name|head
-operator|.
-name|rnh_af
+name|i
 argument_list|)
 expr_stmt|;
 name|do_rtent
@@ -512,6 +536,14 @@ case|:
 name|afname
 operator|=
 literal|"ISO"
+expr_stmt|;
+break|break;
+case|case
+name|AF_CCITT
+case|:
+name|afname
+operator|=
+literal|"X.25"
 expr_stmt|;
 break|break;
 default|default:

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.24 (Berkeley) %G%"
+literal|"@(#)main.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -304,7 +304,7 @@ directive|define
 name|N_RTREE
 value|21
 block|{
-literal|"_radix_node_head"
+literal|"_rt_tables"
 block|}
 block|,
 define|#
