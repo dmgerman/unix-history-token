@@ -1862,6 +1862,8 @@ literal|"-f"
 argument_list|,
 name|myname
 argument_list|,
+literal|"--"
+argument_list|,
 name|from
 argument_list|,
 name|NULL
