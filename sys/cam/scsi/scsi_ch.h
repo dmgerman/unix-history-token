@@ -889,7 +889,7 @@ value|0x08
 name|u_int8_t
 name|reserved1
 index|[
-literal|2
+literal|4
 index|]
 decl_stmt|;
 comment|/* 	 * Similar to above, but for EXCHANGE MEDIUM. 	 */
