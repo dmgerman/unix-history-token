@@ -399,6 +399,8 @@ name|aic_attach
 argument_list|(
 name|aic
 argument_list|)
+operator|==
+literal|0
 operator|)
 return|;
 block|}
