@@ -137,11 +137,13 @@ name|char
 name|eol
 decl_stmt|;
 comment|/* end of line character */
+specifier|const
 name|char
 modifier|*
 name|sepstring
 decl_stmt|;
 comment|/* string to print before each line */
+specifier|const
 name|char
 modifier|*
 name|format
@@ -192,6 +194,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|gatherline
@@ -204,6 +207,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|getargs
 parameter_list|(
@@ -215,6 +219,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|pad
@@ -242,6 +247,7 @@ name|main
 parameter_list|(
 name|int
 name|argc
+name|__unused
 parameter_list|,
 name|char
 modifier|*
@@ -340,6 +346,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|getargs
 parameter_list|(
@@ -877,6 +884,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|pad
@@ -962,6 +970,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|gatherline
