@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: skey-stuff.c,v 1.6.2.2 1997/12/12 07:20:40 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,6 +93,11 @@ name|skey
 name|skey
 decl_stmt|;
 comment|/* Display s/key challenge where appropriate. */
+operator|*
+name|buf
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 name|pwd
@@ -111,9 +116,14 @@ argument_list|,
 name|buf
 argument_list|)
 condition|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"Password required for %s."
 argument_list|,
