@@ -35,11 +35,9 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<stdint.h>
-end_include
+begin_comment
+comment|/* not in freebsd-4.x: #include<stdint.h> */
+end_comment
 
 begin_include
 include|#
