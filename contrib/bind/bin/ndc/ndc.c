@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ndc.c,v 1.16 2000/12/23 08:14:45 vixie Exp $"
+literal|"$Id: ndc.c,v 1.16.2.1 2001/04/26 02:56:10 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -164,6 +164,24 @@ include|#
 directive|include
 file|"pathnames.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PATH_SEP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PATH_SEP
+value|'/'
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -770,7 +788,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-literal|'/'
+name|PATH_SEP
 argument_list|)
 operator|)
 operator|!=

@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_update.c,v 8.89 2001/01/14 09:46:20 marka Exp $"
+literal|"$Id: ns_update.c,v 8.91.2.2 2001/04/30 03:20:46 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5287,6 +5287,7 @@ modifier|*
 name|in_tsig
 parameter_list|,
 name|ns_updque
+modifier|*
 name|curupd
 parameter_list|)
 block|{
@@ -5697,7 +5698,7 @@ name|ns_notice
 argument_list|(
 name|ns_log_security
 argument_list|,
-literal|"denied update from %s for \"%s\""
+literal|"denied update from %s for \"%s\" %s"
 argument_list|,
 name|sin_ntoa
 argument_list|(
@@ -5710,6 +5711,11 @@ condition|?
 name|dname
 else|:
 literal|"."
+argument_list|,
+name|p_class
+argument_list|(
+name|class
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|nameserIncr
@@ -6043,6 +6049,7 @@ name|zonenum
 expr_stmt|;
 name|APPEND
 argument_list|(
+operator|*
 name|curupd
 argument_list|,
 name|rrecp
@@ -6402,6 +6409,7 @@ expr_stmt|;
 comment|/* Append the current record to the end of list of records. */
 name|APPEND
 argument_list|(
+operator|*
 name|curupd
 argument_list|,
 name|rrecp
@@ -6448,7 +6456,6 @@ name|numupdated
 operator|=
 name|process_updates
 argument_list|(
-operator|&
 name|curupd
 argument_list|,
 operator|&
@@ -6520,7 +6527,6 @@ name|printupdatelog
 argument_list|(
 name|from
 argument_list|,
-operator|&
 name|curupd
 argument_list|,
 name|hp
@@ -6663,6 +6669,16 @@ argument_list|,
 name|r_link
 argument_list|)
 expr_stmt|;
+name|UNLINK
+argument_list|(
+operator|*
+name|updlist
+argument_list|,
+name|rrecp
+argument_list|,
+name|r_link
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rrecp
@@ -6703,7 +6719,22 @@ operator|->
 name|r_dp
 argument_list|)
 expr_stmt|;
+name|rrecp
+operator|->
+name|r_dp
+operator|=
+name|NULL
+expr_stmt|;
 block|}
+name|INSIST
+argument_list|(
+name|rrecp
+operator|->
+name|r_deldp
+operator|==
+name|NULL
+argument_list|)
+expr_stmt|;
 name|res_freeupdrec
 argument_list|(
 name|rrecp
@@ -6722,6 +6753,12 @@ operator|=
 name|rrecp
 operator|->
 name|r_dp
+expr_stmt|;
+name|rrecp
+operator|->
+name|r_dp
+operator|=
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -6810,6 +6847,7 @@ expr_stmt|;
 comment|/*  					 * XXXRTH  					 * 					 * We used to db_freedata() here, 					 * but I removed it because 'dp' was 					 * part of a hashtab before we called 					 * db_update(), and since our delete 					 * has succeeded, it should have been 					 * freed. 					 */
 block|}
 block|}
+block|}
 name|DRCNTDEC
 argument_list|(
 name|dp
@@ -6828,35 +6866,18 @@ argument_list|(
 name|dp
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 			 * Databuf's matching this were deleted by this 			 * update, or were never executed (because we bailed 			 * out early). 			 */
-name|DRCNTDEC
-argument_list|(
-name|dp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|dp
-operator|->
-name|d_rcnt
-operator|==
-literal|0
-condition|)
-name|db_freedata
-argument_list|(
-name|dp
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Process deleted databuf's. */
 name|dp
 operator|=
 name|rrecp
 operator|->
 name|r_deldp
+expr_stmt|;
+name|rrecp
+operator|->
+name|r_deldp
+operator|=
+name|NULL
 expr_stmt|;
 while|while
 condition|(
@@ -6886,49 +6907,18 @@ name|dp
 operator|->
 name|d_next
 expr_stmt|;
+name|tmpdp
+operator|->
+name|d_next
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|rcode
-operator|==
+operator|!=
 name|NOERROR
 condition|)
-block|{
-if|if
-condition|(
-name|tmpdp
-operator|->
-name|d_rcnt
-condition|)
-name|ns_debug
-argument_list|(
-name|ns_log_update
-argument_list|,
-literal|1
-argument_list|,
-literal|"free_rrecp: type = %d, rcnt = %d"
-argument_list|,
-name|p_type
-argument_list|(
-name|tmpdp
-operator|->
-name|d_type
-argument_list|)
-argument_list|,
-name|tmpdp
-operator|->
-name|d_rcnt
-argument_list|)
-expr_stmt|;
-else|else
-block|{
-name|db_freedata
-argument_list|(
-name|tmpdp
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-else|else
 block|{
 comment|/* Add the databuf back. */
 name|tmpdp
@@ -7005,6 +6995,24 @@ name|tmpdp
 argument_list|)
 expr_stmt|;
 block|}
+name|DRCNTDEC
+argument_list|(
+name|tmpdp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tmpdp
+operator|->
+name|d_rcnt
+operator|==
+literal|0
+condition|)
+name|db_freedata
+argument_list|(
+name|tmpdp
+argument_list|)
+expr_stmt|;
 block|}
 name|res_freeupdrec
 argument_list|(
@@ -7012,12 +7020,6 @@ name|rrecp
 argument_list|)
 expr_stmt|;
 block|}
-name|INIT_LIST
-argument_list|(
-operator|*
-name|updlist
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -7092,6 +7094,7 @@ name|from
 argument_list|,
 name|in_tsig
 argument_list|,
+operator|&
 name|curupd
 argument_list|)
 expr_stmt|;
@@ -10617,11 +10620,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fclose
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -11070,6 +11068,11 @@ argument_list|,
 name|id
 argument_list|,
 name|logname
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|fp
 argument_list|)
 expr_stmt|;
 return|return

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: prand_conf.c,v 1.5 1999/07/31 16:44:13 cyarnell Exp $  *  * Portions Copyright (c) 1995-1998 by TIS Labs at Network Assoociates Inc.  * Portions Copyright (c) 1998-1998 by TIS Labs @ Network Associates Inc.  *  * Permission to use, copy modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND NETWORK ASSOCIATES  * DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL  * TRUSTED INFORMATION SYSTEMS BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING  * FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION  * WITH THE USE OR PERFORMANCE OF THE SOFTWARE.  *  * program to find where system commands reside   * and what directores are avialable for inspection   * this information is stored in the file prand_conf.h in current directory  *  * function my_find get variable number of arguments  * the first argument is the name of the command   * all remaining arguments are list of directories to search for the command in  * this function returns the path to the command  */
+comment|/* $Id: prand_conf.c,v 1.7 2001/03/07 06:46:33 marka Exp $  *  * Portions Copyright (c) 1995-1998 by TIS Labs at Network Assoociates Inc.  * Portions Copyright (c) 1998-1998 by TIS Labs @ Network Associates Inc.  *  * Permission to use, copy modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND NETWORK ASSOCIATES  * DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL  * TRUSTED INFORMATION SYSTEMS BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING  * FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,  * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION  * WITH THE USE OR PERFORMANCE OF THE SOFTWARE.  *  * program to find where system commands reside   * and what directores are avialable for inspection   * this information is stored in the file prand_conf.h in current directory  *  * function my_find get variable number of arguments  * the first argument is the name of the command   * all remaining arguments are list of directories to search for the command in  * this function returns the path to the command  */
 end_comment
 
 begin_include
@@ -626,6 +626,10 @@ literal|"/proc/self/status"
 block|,
 literal|"/proc/self/maps"
 block|,
+literal|"/proc/curproc/status"
+block|,
+literal|"/proc/curproc/map"
+block|,
 literal|"/var/log/messages"
 block|,
 literal|"/var/log/wtmp"
@@ -687,7 +691,7 @@ name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"const char *cmds[] = {\n"
+literal|"static const char *cmds[] = {\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1150,7 +1154,7 @@ name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"const char *dirs[] = {\n"
+literal|"static const char *dirs[] = {\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1216,7 +1220,7 @@ name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"const char *files[] = {\n"
+literal|"static const char *files[] = {\n"
 argument_list|)
 expr_stmt|;
 name|tim

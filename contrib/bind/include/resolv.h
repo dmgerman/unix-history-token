@@ -8,7 +8,7 @@ comment|/*  * Portions Copyright (c) 1996-1999 by Internet Software Consortium. 
 end_comment
 
 begin_comment
-comment|/*  *	@(#)resolv.h	8.1 (Berkeley) 6/2/93  *	$Id: resolv.h,v 8.32 2000/12/23 08:14:49 vixie Exp $  */
+comment|/*  *	@(#)resolv.h	8.1 (Berkeley) 6/2/93  *	$Id: resolv.h,v 8.32.2.1 2001/05/17 03:01:30 marka Exp $  */
 end_comment
 
 begin_ifndef
@@ -119,6 +119,7 @@ comment|/* forward */
 end_comment
 
 begin_function_decl
+name|__BEGIN_DECLS
 name|void
 name|__h_errno_set
 parameter_list|(
@@ -132,6 +133,10 @@ name|err
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_comment
 comment|/*  * Resolver configuration file.  * Normally not present, but may contain the address of the  * inital name server(s) to query and the domain search list.  */
@@ -936,43 +941,36 @@ directive|ifdef
 name|_REENTRANT
 end_ifdef
 
-begin_function_decl
+begin_expr_stmt
+name|__BEGIN_DECLS
 specifier|extern
-name|struct
+expr|struct
 name|__res_state
-modifier|*
+operator|*
 name|__res_state
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_define
+begin_expr_stmt
+name|__END_DECLS
 define|#
 directive|define
 name|_res
 value|(*__res_state())
-end_define
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|__BIND_NOSTATIC
-end_ifndef
-
-begin_decl_stmt
 specifier|extern
-name|struct
+expr|struct
 name|__res_state
 name|_res
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_update.c,v 1.25 2000/11/22 01:20:47 marka Exp $"
+literal|"$Id: res_update.c,v 1.26 2001/03/05 04:03:00 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -358,12 +358,21 @@ name|rrecp
 condition|;
 name|rrecp
 operator|=
+name|LINKED
+argument_list|(
+name|rrecp
+argument_list|,
+name|r_link
+argument_list|)
+condition|?
 name|NEXT
 argument_list|(
 name|rrecp
 argument_list|,
 name|r_link
 argument_list|)
+else|:
+name|NULL
 control|)
 block|{
 comment|/* Find the origin for it if there is one. */

@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dig.c,v 8.44 2000/12/23 08:14:31 vixie Exp $"
+literal|"$Id: dig.c,v 8.46 2001/04/01 17:35:01 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4115,6 +4115,10 @@ name|delay
 argument_list|)
 expr_stmt|;
 block|}
+name|tv1
+operator|=
+name|tv2
+expr_stmt|;
 block|}
 return|return
 operator|(
@@ -4159,7 +4163,7 @@ name|fputs
 argument_list|(
 literal|"\ notes:	defname and search don't work; use fully-qualified names.\n\ 	this is DiG version "
 name|VSTRING
-literal|"\n\ 	$Id: dig.c,v 8.44 2000/12/23 08:14:31 vixie Exp $\n\ "
+literal|"\n\ 	$Id: dig.c,v 8.46 2001/04/01 17:35:01 vixie Exp $\n\ "
 argument_list|,
 name|stderr
 argument_list|)

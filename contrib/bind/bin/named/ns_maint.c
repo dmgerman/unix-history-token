@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_maint.c,v 8.117 2001/01/25 05:50:55 marka Exp $"
+literal|"$Id: ns_maint.c,v 8.122 2001/03/01 06:26:31 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4509,6 +4509,9 @@ expr_stmt|;
 name|xfers_running
 operator|++
 expr_stmt|;
+name|xfers_deferred
+operator|--
+expr_stmt|;
 if|if
 condition|(
 name|zp
@@ -5875,6 +5878,30 @@ operator|->
 name|z_class
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|zp
+operator|->
+name|z_flags
+operator|&
+name|Z_NEED_XFER
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|zp
+operator|->
+name|z_flags
+operator|&=
+operator|~
+name|Z_NEED_XFER
+expr_stmt|;
+name|xfers_deferred
+operator|--
+expr_stmt|;
+block|}
 name|ns_stopxfrs
 argument_list|(
 name|zp
@@ -6567,7 +6594,7 @@ name|log
 condition|)
 name|ns_error
 argument_list|(
-name|ns_log_db
+name|ns_log_load
 argument_list|,
 literal|"zone: %s/%s: non-glue record %s bottom of zone: %s/%s"
 argument_list|,
@@ -8322,19 +8349,6 @@ operator|->
 name|z_ixfr_tmp
 argument_list|)
 expr_stmt|;
-name|zp
-operator|->
-name|z_flags
-operator|&=
-operator|~
-operator|(
-name|Z_XFER_RUNNING
-operator||
-name|Z_XFER_ABORTED
-operator||
-name|Z_XFER_GONE
-operator|)
-expr_stmt|;
 name|ns_retrytime
 argument_list|(
 name|zp
@@ -8376,7 +8390,7 @@ name|ns_notice
 argument_list|(
 name|ns_log_default
 argument_list|,
-literal|"zoneref: Masters for secondary zone \"%s\" unreachable"
+literal|"zoneref: Masters for slave zone \"%s\" unreachable"
 argument_list|,
 name|zp
 operator|->
@@ -8682,9 +8696,6 @@ name|Z_NEED_XFER
 operator|)
 condition|)
 block|{
-name|xfers_deferred
-operator|--
-expr_stmt|;
 name|startxfer
 argument_list|(
 name|zp
@@ -9652,7 +9663,7 @@ expr_stmt|;
 name|reloading
 operator|++
 expr_stmt|;
-comment|/* To force transfer if secondary and backing up. */
+comment|/* To force transfer if slave and backing up. */
 name|confmtime
 operator|=
 name|ns_init
@@ -9756,6 +9767,19 @@ decl_stmt|;
 name|int
 name|n
 decl_stmt|;
+name|int
+name|newzones
+init|=
+operator|(
+name|nzones
+operator|==
+literal|0
+operator|)
+condition|?
+name|INITIALZONES
+else|:
+name|NEWZONES
+decl_stmt|;
 name|ns_debug
 argument_list|(
 name|ns_log_config
@@ -9779,7 +9803,7 @@ argument_list|(
 operator|(
 name|nzones
 operator|+
-name|NEWZONES
+name|newzones
 operator|)
 operator|*
 sizeof|sizeof
@@ -9811,7 +9835,7 @@ argument_list|,
 operator|(
 name|nzones
 operator|+
-name|NEWZONES
+name|newzones
 operator|)
 operator|*
 sizeof|sizeof
@@ -9872,7 +9896,7 @@ literal|0
 init|;
 name|n
 operator|<
-name|NEWZONES
+name|newzones
 condition|;
 name|n
 operator|++

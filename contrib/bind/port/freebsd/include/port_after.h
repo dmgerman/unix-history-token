@@ -208,6 +208,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
 begin_comment
 comment|/*  * We need to know the IPv6 address family number even on IPv4-only systems.  * Note that this is NOT a protocol constant, and that if the system has its  * own AF_INET6, different from ours below, all of BIND's libraries and  * executables will need to be recompiled after the system<sys/socket.h>  * has had this type added.  The type number below is correct on most BSD-  * derived systems for which AF_INET6 is defined.  */
 end_comment

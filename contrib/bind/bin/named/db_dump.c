@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_dump.c,v 8.48 2000/12/23 08:14:34 vixie Exp $"
+literal|"$Id: db_dump.c,v 8.49 2001/02/06 06:42:19 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -749,6 +749,15 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|fwddata
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+condition|)
 name|fprintf
 argument_list|(
 name|fp

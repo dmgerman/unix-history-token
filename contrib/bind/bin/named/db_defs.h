@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from db.h	4.16 (Berkeley) 6/1/90  *	$Id: db_defs.h,v 8.40 2000/11/29 06:55:46 marka Exp $  */
+comment|/*  *	from db.h	4.16 (Berkeley) 6/1/90  *	$Id: db_defs.h,v 8.41 2001/02/08 02:05:50 marka Exp $  */
 end_comment
 
 begin_comment
@@ -153,7 +153,7 @@ name|u_int32_t
 name|d_ttl
 decl_stmt|;
 comment|/* time to live */
-comment|/* if d_zone == DB_Z_CACHE, then 					 * d_ttl is actually the time when 					 * the record will expire. 					 * otherwise (for authoritative 					 * primary and secondary zones), 					 * d_ttl is the time to live. 					 */
+comment|/* if d_zone == DB_Z_CACHE, then 					 * d_ttl is actually the time when 					 * the record will expire. 					 * otherwise (for authoritative 					 * master and slave zones), 					 * d_ttl is the time to live. 					 */
 name|unsigned
 name|d_zone
 range|:

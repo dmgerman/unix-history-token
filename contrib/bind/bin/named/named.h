@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1996-2000 by Internet Software Consortium.  *  * Per
 end_comment
 
 begin_comment
-comment|/*  * $Id: named.h,v 8.27 2000/04/21 06:54:04 vixie Exp $  */
+comment|/*  * $Id: named.h,v 8.28 2001/02/12 05:56:15 marka Exp $  */
 end_comment
 
 begin_comment
@@ -153,6 +153,12 @@ begin_undef
 undef|#
 directive|undef
 name|BIND_ZXFR
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|LOG_TSIG_BUG
 end_undef
 
 begin_include

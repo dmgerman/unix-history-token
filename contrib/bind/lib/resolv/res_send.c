@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_send.c,v 8.41 2000/12/23 08:14:58 vixie Exp $"
+literal|"$Id: res_send.c,v 8.42 2001/03/07 06:48:03 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1286,6 +1286,9 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
+name|u_int16_t
+name|nstime
+decl_stmt|;
 name|ina
 operator|=
 name|statp
@@ -1305,6 +1308,18 @@ operator|.
 name|nssocks
 index|[
 literal|0
+index|]
+expr_stmt|;
+name|nstime
+operator|=
+name|EXT
+argument_list|(
+name|statp
+argument_list|)
+operator|.
+name|nstimes
+index|[
+name|ns
 index|]
 expr_stmt|;
 for|for
@@ -1359,6 +1374,28 @@ operator|+
 literal|1
 index|]
 expr_stmt|;
+name|EXT
+argument_list|(
+name|statp
+argument_list|)
+operator|.
+name|nstimes
+index|[
+name|ns
+index|]
+operator|=
+name|EXT
+argument_list|(
+name|statp
+argument_list|)
+operator|.
+name|nstimes
+index|[
+name|ns
+operator|+
+literal|1
+index|]
+expr_stmt|;
 block|}
 name|statp
 operator|->
@@ -1380,6 +1417,18 @@ name|lastns
 index|]
 operator|=
 name|fd
+expr_stmt|;
+name|EXT
+argument_list|(
+name|statp
+argument_list|)
+operator|.
+name|nstimes
+index|[
+name|lastns
+index|]
+operator|=
+name|nstime
 expr_stmt|;
 block|}
 comment|/* 	 * Send request, RETRY times, or until successful. 	 */

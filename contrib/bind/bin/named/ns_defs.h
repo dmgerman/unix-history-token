@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_defs.h,v 8.102 2000/12/01 05:35:48 vixie Exp $  */
+comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_defs.h,v 8.105 2001/04/01 22:41:24 marka Exp $  */
 end_comment
 
 begin_comment
@@ -39,7 +39,18 @@ value|64
 end_define
 
 begin_comment
-comment|/* must be a power of two. */
+comment|/* how many zones to grow the zone table by */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INITIALZONES
+value|NEWZONES
+end_define
+
+begin_comment
+comment|/* how many zones are allocated initially */
 end_comment
 
 begin_define
@@ -142,7 +153,7 @@ value|600
 end_define
 
 begin_comment
-comment|/* retry time for initial secondary */
+comment|/* retry time for initial slave */
 end_comment
 
 begin_comment
@@ -1731,6 +1742,17 @@ end_define
 
 begin_comment
 comment|/* expire timer has gone off */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Z_NEEDREFRESH
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* need to perform a refresh check */
 end_comment
 
 begin_comment
