@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.2 1996/01/29 02:57:33 dyson Exp $  */
+comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.6 1996/02/04 22:09:05 dyson Exp $  */
 end_comment
 
 begin_ifndef
@@ -2232,6 +2232,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 		 * We need to allocate space for an extra page because the 		 * address range might (will) span pages at times. 		 */
 name|wpipe
 operator|->
 name|pipe_map
@@ -2247,6 +2248,8 @@ operator|->
 name|pipe_buffer
 operator|.
 name|size
+operator|+
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 name|amountpipekva
@@ -2256,6 +2259,8 @@ operator|->
 name|pipe_buffer
 operator|.
 name|size
+operator|+
+name|PAGE_SIZE
 expr_stmt|;
 block|}
 name|pmap_qenter
@@ -2408,6 +2413,8 @@ operator|->
 name|pipe_buffer
 operator|.
 name|size
+operator|+
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 name|amountpipekva
@@ -2417,6 +2424,8 @@ operator|->
 name|pipe_buffer
 operator|.
 name|size
+operator|+
+name|PAGE_SIZE
 expr_stmt|;
 block|}
 block|}
@@ -4357,6 +4366,8 @@ operator|->
 name|pipe_buffer
 operator|.
 name|size
+operator|+
+name|PAGE_SIZE
 expr_stmt|;
 name|kmem_free
 argument_list|(
@@ -4373,6 +4384,8 @@ operator|->
 name|pipe_buffer
 operator|.
 name|size
+operator|+
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 block|}
