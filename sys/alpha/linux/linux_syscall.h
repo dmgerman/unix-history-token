@@ -118,6 +118,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LINUX_SYS_linux_mount
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUX_SYS_linux_umount
 value|22
 end_define
@@ -211,6 +218,13 @@ define|#
 directive|define
 name|LINUX_SYS_acct
 value|51
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_SYS_linux_umount2
+value|52
 end_define
 
 begin_define
@@ -867,7 +881,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|LINUX_SYS_reboot
+name|LINUX_SYS_linux_reboot
 value|311
 end_define
 

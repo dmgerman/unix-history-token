@@ -334,18 +334,24 @@ block|}
 block|,
 comment|/* 20 = getpid */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|linux_mount_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nosys
+name|linux_mount
 block|}
 block|,
-comment|/* 21 =  */
+comment|/* 21 = linux_mount */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|linux_umount_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -699,16 +705,19 @@ block|}
 block|,
 comment|/* 51 = acct */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|linux_umount2_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nosys
+name|linux_umount2
 block|}
 block|,
-comment|/* 52 =  */
+comment|/* 52 = linux_umount2 */
 block|{
 literal|0
 block|,
@@ -3790,17 +3799,17 @@ comment|/* 310 = linux_ksyslog */
 block|{
 name|AS
 argument_list|(
-name|reboot_args
+name|linux_reboot_args
 argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|reboot
+name|linux_reboot
 block|}
 block|,
-comment|/* 311 = reboot */
+comment|/* 311 = linux_reboot */
 block|{
 name|AS
 argument_list|(
