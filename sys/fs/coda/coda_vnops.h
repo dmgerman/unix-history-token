@@ -321,6 +321,16 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|coda_pathconf
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|coda_rdwr
 parameter_list|(
 name|struct
