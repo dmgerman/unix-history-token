@@ -8129,8 +8129,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
-name|s
-decl_stmt|,
 name|headersize
 init|=
 literal|0
@@ -9327,11 +9325,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 		 * Add the buffer to the socket buffer chain. 		 */
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|SOCKBUF_LOCK
 argument_list|(
 operator|&
@@ -9420,11 +9413,6 @@ operator|->
 name|so_snd
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 goto|goto
 name|done
 goto|;
@@ -9477,11 +9465,6 @@ operator|->
 name|so_snd
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|EAGAIN
@@ -9527,11 +9510,6 @@ operator|->
 name|so_snd
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 goto|goto
 name|done
 goto|;
@@ -9572,11 +9550,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|td
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 if|if
