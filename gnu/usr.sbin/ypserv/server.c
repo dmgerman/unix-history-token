@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** server.c			YP server routines. ** ** Copyright (c) 1993 Signum Support AB, Sweden ** ** This file is part of the NYS YP Server. ** ** The NYS YP Server is free software; you can redistribute it and/or ** modify it under the terms of the GNU General Public License as ** published by the Free Software Foundation; either version 2 of the ** License, or (at your option) any later version. ** ** The NYS YP Server is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU ** General Public License for more details. **  ** You should have received a copy of the GNU General Public ** License along with the NYS YP Server; see the file COPYING.  If ** not, write to the Free Software Foundation, Inc., 675 Mass Ave, ** Cambridge, MA 02139, USA. ** ** Author: Peter Eriksson<pen@signum.se> ** Ported to FreeBSD and hacked all to pieces  ** by Bill Paul<wpaul@ctr.columbia.edu> ** **	$Id$ ** */
+comment|/* ** server.c			YP server routines. ** ** Copyright (c) 1993 Signum Support AB, Sweden ** ** This file is part of the NYS YP Server. ** ** The NYS YP Server is free software; you can redistribute it and/or ** modify it under the terms of the GNU General Public License as ** published by the Free Software Foundation; either version 2 of the ** License, or (at your option) any later version. ** ** The NYS YP Server is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU ** General Public License for more details. **  ** You should have received a copy of the GNU General Public ** License along with the NYS YP Server; see the file COPYING.  If ** not, write to the Free Software Foundation, Inc., 675 Mass Ave, ** Cambridge, MA 02139, USA. ** ** Author: Peter Eriksson<pen@signum.se> ** Ported to FreeBSD and hacked all to pieces  ** by Bill Paul<wpaul@ctr.columbia.edu> ** **	$Id: server.c,v 1.1 1995/01/31 08:58:53 wpaul Exp $ ** */
 end_comment
 
 begin_include
@@ -202,7 +202,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|"log_tcp.h"
+file|"tcpd.h"
 end_include
 
 begin_decl_stmt
@@ -536,6 +536,15 @@ name|h_name
 else|:
 name|NULL
 expr_stmt|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|FROM_UNKNOWN
+define|#
+directive|define
+name|FROM_UNKNOWN
+value|STRING_UNKNOWN
 endif|#
 directive|endif
 name|status
