@@ -1431,6 +1431,10 @@ name|j
 operator|=
 name|ndb
 init|;
+name|ndb
+operator|<
+name|NDADDR
+operator|&&
 name|j
 operator|<
 name|NDADDR
