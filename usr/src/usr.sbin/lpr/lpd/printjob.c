@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printjob.c	4.21 (Berkeley) %G%"
+literal|"@(#)printjob.c	4.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1285,6 +1285,15 @@ name|ifonts
 index|[
 name|i
 index|]
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|width
+operator|+
+literal|2
+argument_list|,
+literal|"0"
 argument_list|)
 expr_stmt|;
 name|strcpy
