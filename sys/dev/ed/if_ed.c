@@ -3418,6 +3418,9 @@ block|{
 case|case
 literal|2
 case|:
+case|case
+literal|9
+case|:
 name|outb
 argument_list|(
 name|sc
