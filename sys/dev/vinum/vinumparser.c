@@ -573,7 +573,12 @@ argument_list|)
 block|,
 name|keypair
 argument_list|(
-argument|rebuildparity
+name|rebuildparity
+argument_list|)
+block|,
+name|keypair
+argument_list|(
+argument|dumpconfig
 argument_list|)
 block|}
 decl_stmt|;
