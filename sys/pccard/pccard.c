@@ -98,6 +98,69 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/devconf.h>
+end_include
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|kern_devconf
+name|kdc_cpu0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|kern_devconf
+name|kdc_pccard0
+init|=
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* filled in by dev_attach */
+literal|"pccard"
+block|,
+literal|0
+block|,
+block|{
+name|MDDT_BUS
+block|,
+literal|0
+block|}
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|BUS_EXTERNALLEN
+block|,
+operator|&
+name|kdc_cpu0
+block|,
+comment|/* parent is the CPU */
+literal|0
+block|,
+comment|/* no parentdata */
+name|DC_UNCONFIGURED
+block|,
+comment|/* until we see it */
+literal|"PCCARD or PCMCIA bus"
+block|,
+name|DC_CLS_BUS
+comment|/* class */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_include
+include|#
+directive|include
 file|"apm.h"
 end_include
 
@@ -563,6 +626,12 @@ name|slot
 modifier|*
 name|sp
 decl_stmt|;
+name|dev_attach
+argument_list|(
+operator|&
+name|kdc_pccard0
+argument_list|)
+expr_stmt|;
 include|#
 directive|include
 file|"pcic.h"
@@ -1048,6 +1117,13 @@ operator|->
 name|next
 control|)
 block|{
+if|if
+condition|(
+name|devp
+operator|->
+name|running
+condition|)
+block|{
 name|devp
 operator|->
 name|drv
@@ -1063,6 +1139,7 @@ name|running
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 comment|/*  *	Power off the slot.  */
 name|sp
@@ -1414,6 +1491,12 @@ operator|(
 literal|0
 operator|)
 return|;
+name|kdc_pccard0
+operator|.
+name|kdc_state
+operator|=
+name|DC_BUSY
+expr_stmt|;
 name|MALLOC
 argument_list|(
 name|sp
@@ -1802,6 +1885,13 @@ argument_list|,
 name|irq
 argument_list|)
 expr_stmt|;
+name|INTREN
+argument_list|(
+literal|1
+operator|<<
+name|irq
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|irq
@@ -2009,7 +2099,6 @@ block|}
 comment|/*  *	Attempt to allocate an interrupt.  XXX We lose at the moment  *	if the second device relies on a different interrupt mask.  */
 else|else
 block|{
-comment|/* XXX ED.C dp->imask =&net_imask; */
 name|irq
 operator|=
 name|pccard_alloc_intr
@@ -2268,13 +2357,6 @@ name|running
 operator|=
 literal|1
 expr_stmt|;
-name|INTREN
-argument_list|(
-literal|1
-operator|<<
-name|irq
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|err
@@ -2323,6 +2405,7 @@ name|dp
 operator|->
 name|running
 condition|)
+block|{
 name|dp
 operator|->
 name|drv
@@ -2332,6 +2415,13 @@ argument_list|(
 name|dp
 argument_list|)
 expr_stmt|;
+name|dp
+operator|->
+name|running
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|dp
@@ -2359,6 +2449,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|INTRDIS
+argument_list|(
+literal|1
+operator|<<
+name|sp
+operator|->
+name|irq
+argument_list|)
+expr_stmt|;
 name|unregister_intr
 argument_list|(
 name|sp
@@ -2366,6 +2465,32 @@ operator|->
 name|irq
 argument_list|,
 name|slot_irq_handler
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dp
+operator|->
+name|drv
+operator|->
+name|imask
+condition|)
+name|INTRUNMASK
+argument_list|(
+operator|*
+name|dp
+operator|->
+name|drv
+operator|->
+name|imask
+argument_list|,
+operator|(
+literal|1
+operator|<<
+name|sp
+operator|->
+name|irq
+operator|)
 argument_list|)
 expr_stmt|;
 name|sp
