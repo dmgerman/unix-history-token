@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: dec_eb164.c,v 1.1 1998/07/05 12:10:10 dfr Exp $ */
+comment|/* $Id: dec_eb164.c,v 1.2 1998/07/12 16:07:43 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -57,6 +57,24 @@ directive|include
 file|<machine/cpuconf.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sio.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sc.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -109,6 +127,28 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|extern
+name|void
+name|eb164_intr_enable
+parameter_list|(
+name|int
+name|irq
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|eb164_intr_disable
+parameter_list|(
+name|int
+name|irq
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|dec_eb164_init
@@ -155,6 +195,24 @@ name|cons_init
 operator|=
 name|dec_eb164_cons_init
 expr_stmt|;
+name|platform
+operator|.
+name|pci_intr_map
+operator|=
+name|NULL
+expr_stmt|;
+name|platform
+operator|.
+name|pci_intr_disable
+operator|=
+name|eb164_intr_disable
+expr_stmt|;
+name|platform
+operator|.
+name|pci_intr_enable
+operator|=
+name|eb164_intr_enable
+expr_stmt|;
 block|}
 end_function
 
@@ -164,46 +222,135 @@ name|void
 name|dec_eb164_cons_init
 parameter_list|()
 block|{
+name|struct
+name|ctb
+modifier|*
+name|ctb
+decl_stmt|;
 name|cia_init
 argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DDB
-name|siocnattach
+name|siogdbattach
 argument_list|(
-literal|0x3f8
+literal|0x2f8
 argument_list|,
 literal|57600
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-literal|0
-block|struct ctb *ctb; 	struct cia_config *ccp; 	extern struct cia_config cia_configuration;  	ccp =&cia_configuration; 	cia_init(ccp, 0);  	ctb = (struct ctb *)(((caddr_t)hwrpb) + hwrpb->rpb_ctb_off);  	switch (ctb->ctb_term_type) { 	case 2:
+name|ctb
+operator|=
+operator|(
+expr|struct
+name|ctb
+operator|*
+operator|)
+operator|(
+operator|(
+operator|(
+name|caddr_t
+operator|)
+name|hwrpb
+operator|)
+operator|+
+name|hwrpb
+operator|->
+name|rpb_ctb_off
+operator|)
+expr_stmt|;
+switch|switch
+condition|(
+name|ctb
+operator|->
+name|ctb_term_type
+condition|)
+block|{
+case|case
+literal|2
+case|:
 comment|/* serial console ... */
 comment|/* XXX */
 block|{
 comment|/* 			 * Delay to allow PROM putchars to complete. 			 * FIFO depth * character time, 			 * character time = (1000000 / (defaultrate / 10)) 			 */
-block|DELAY(160000000 / comcnrate);  			if(comcnattach(&ccp->cc_iot, 0x3f8, comcnrate, 			    COM_FREQ, 			    (TTYDEF_CFLAG& ~(CSIZE | PARENB)) | CS8)) 				panic("can't init serial console");  			break; 		}  	case 3:
-if|#
-directive|if
-name|NPCKBD
-operator|>
-literal|0
+name|DELAY
+argument_list|(
+literal|160000000
+operator|/
+name|comcnrate
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|siocnattach
+argument_list|(
+literal|0x3f8
+argument_list|,
+name|comcnrate
+argument_list|)
+condition|)
+name|panic
+argument_list|(
+literal|"can't init serial console"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+case|case
+literal|3
+case|:
 comment|/* display console ... */
 comment|/* XXX */
-block|(void) pckbc_cnattach(&ccp->cc_iot, PCKBC_KBD_SLOT);  		if ((ctb->ctb_turboslot& 0xffff) == 0) 			isa_display_console(&ccp->cc_iot,&ccp->cc_memt); 		else 			pci_display_console(&ccp->cc_iot,&ccp->cc_memt,&ccp->cc_pc, (ctb->ctb_turboslot>> 8)& 0xff, 			    ctb->ctb_turboslot& 0xff, 0);
+if|#
+directive|if
+name|NSC
+operator|>
+literal|0
+name|sccnattach
+argument_list|()
+expr_stmt|;
 else|#
 directive|else
-block|panic("not configured to use display&& keyboard console");
+name|panic
+argument_list|(
+literal|"not configured to use display&& keyboard console"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
-block|break;  	default: 		printf("ctb->ctb_term_type = 0x%lx\n", ctb->ctb_term_type); 		printf("ctb->ctb_turboslot = 0x%lx\n", ctb->ctb_turboslot);  		panic("consinit: unknown console type %d\n", 		    ctb->ctb_term_type); 	}
-endif|#
-directive|endif
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"ctb->ctb_term_type = 0x%lx\n"
+argument_list|,
+name|ctb
+operator|->
+name|ctb_term_type
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ctb->ctb_turboslot = 0x%lx\n"
+argument_list|,
+name|ctb
+operator|->
+name|ctb_turboslot
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"consinit: unknown console type %d\n"
+argument_list|,
+name|ctb
+operator|->
+name|ctb_term_type
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
