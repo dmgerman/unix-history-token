@@ -333,35 +333,12 @@ name|MAX_TARGETS
 value|16
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ISP2100_FABRIC
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|MAX_FC_TARG
 value|256
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MAX_FC_TARG
-value|126
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1033,7 +1010,11 @@ range|:
 literal|16
 decl_stmt|,
 range|:
-literal|4
+literal|3
+decl_stmt|,
+name|isp_iid_set
+range|:
+literal|1
 decl_stmt|,
 name|loop_seen_once
 range|:
@@ -1062,6 +1043,10 @@ range|:
 literal|1
 decl_stmt|;
 name|u_int8_t
+name|isp_iid
+decl_stmt|;
+comment|/* 'initiator' id */
+name|u_int8_t
 name|isp_loopid
 decl_stmt|;
 comment|/* hard loop id */
@@ -1069,13 +1054,16 @@ name|u_int8_t
 name|isp_alpa
 decl_stmt|;
 comment|/* ALPA */
+name|u_int32_t
+name|isp_portid
+decl_stmt|;
 specifier|volatile
 name|u_int16_t
 name|isp_lipseq
 decl_stmt|;
 comment|/* LIP sequence # */
-name|u_int32_t
-name|isp_portid
+name|u_int16_t
+name|isp_xxxxxx
 decl_stmt|;
 name|u_int8_t
 name|isp_execthrottle
@@ -1150,7 +1138,7 @@ index|]
 struct|,
 name|tport
 index|[
-name|FL_PORT_ID
+name|FC_PORT_ID
 index|]
 struct|;
 comment|/* 	 * Scratch DMA mapped in area to fetch Port Database stuff, etc. 	 */
@@ -1240,6 +1228,41 @@ define|#
 directive|define
 name|LOOP_PDB_RCVD
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOOP_SCANNING_FABRIC
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOOP_FSCAN_DONE
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOOP_SCANNING_LOOP
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOOP_LSCAN_DONE
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOOP_SYNCING_PDB
+value|6
 end_define
 
 begin_define
@@ -2163,7 +2186,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Platform Dependent to External to Internal Control Function  *  * Assumes all locks are held and that no reentrancy issues need be dealt with.  *  */
+comment|/*  * Platform Dependent to External to Internal Control Function  *  * Assumes locks are held on entry. You should note that with many of  * these commands and locks may be released while this is occurring.  *  * A few notes about some of these functions:  *  * ISPCTL_FCLINK_TEST tests to make sure we have good fibre channel link.  * The argument is a pointer to an integer which is the time, in microseconds,  * we should wait to see whether we have good link. This test, if successful,  * lets us know our connection topology and our Loop ID/AL_PA and so on.  * You can't get anywhere without this.  *  * ISPCTL_SCAN_FABRIC queries the name server (if we're on a fabric) for  * all entities using the FC Generic Services subcommand GET ALL NEXT.  * For each found entity, an ISPASYNC_FABRICDEV event is generated (see  * below).  *  * ISPCTL_SCAN_LOOP does a local loop scan. This is only done if the connection  * topology is NL or FL port (private or public loop). Since the Qlogic f/w  * 'automatically' manages local loop connections, this function essentially  * notes the arrival, departure, and possible shuffling around of local loop  * entities. Thus for each arrival and departure this generates an isp_async  * event of ISPASYNC_PROMENADE (see below).  *  * ISPCTL_PDB_SYNC is somewhat misnamed. It actually is the final step, in  * order, of ISPCTL_FCLINK_TEST, ISPCTL_SCAN_FABRIC, and ISPCTL_SCAN_LOOP.  * The main purpose of ISPCTL_PDB_SYNC is to complete management of logging  * and logging out of fabric devices (if one is on a fabric) and then marking  * the 'loop state' as being ready to now be used for sending commands to  * devices. Originally fabric name server and local loop scanning were  * part of this function. It's now been seperated to allow for finer control.  */
 end_comment
 
 begin_typedef
@@ -2181,13 +2204,25 @@ block|,
 comment|/* Abort Command */
 name|ISPCTL_UPDATE_PARAMS
 block|,
-comment|/* Update Operating Parameters */
+comment|/* Update Operating Parameters (SCSI) */
 name|ISPCTL_FCLINK_TEST
 block|,
 comment|/* Test FC Link Status */
+name|ISPCTL_SCAN_FABRIC
+block|,
+comment|/* (Re)scan Fabric Name Server */
+name|ISPCTL_SCAN_LOOP
+block|,
+comment|/* (Re)scan Local Loop */
 name|ISPCTL_PDB_SYNC
 block|,
 comment|/* Synchronize Port Database */
+name|ISPCTL_SEND_LIP
+block|,
+comment|/* Send a LIP */
+name|ISPCTL_GET_POSMAP
+block|,
+comment|/* Get FC-AL position map */
 name|ISPCTL_TOGGLE_TMODE
 comment|/* toggle target mode */
 block|}
@@ -2215,7 +2250,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Platform Dependent to Internal to External Control Function  * (each platform must provide such a function)  *  * Assumes all locks are held and that no reentrancy issues need be dealt with.  */
+comment|/*  * Platform Dependent to Internal to External Control Function  * (each platform must provide such a function)  *  * Assumes locks are held.  *  * A few notes about some of these functions:  *  * ISPASYNC_CHANGE_NOTIFY notifies the outer layer that a change has  * occurred that invalidates the list of fabric devices known and/or  * the list of known loop devices. The argument passed is a pointer  * whose values are defined below  (local loop change, name server  * change, other). 'Other' may simply be a LIP, or a change in  * connection topology.  *  * ISPASYNC_FABRIC_DEV announces the next element in a list of  * fabric device names we're getting out of the name server. The  * argument points to a GET ALL NEXT response structure. The list  * is known to terminate with an entry that refers to ourselves.  * One of the main purposes of this function is to allow outer  * layers, which are OS dependent, to set policy as to which fabric  * devices might actually be logged into (and made visible) later  * at ISPCTL_PDB_SYNC time. Since there's a finite number of fabric  * devices that we can log into (256 less 3 'reserved' for F-port  * topologies), and fabrics can grow up to 8 million or so entries  * (24 bits of Port Address, less a wad of reserved spaces), clearly  * we had better let the OS determine login policy.  *  * ISPASYNC_PROMENADE has an argument that is a pointer to an integer which  * is an index into the portdb in the softc ('target'). Whether that entrie's  * valid tag is set or not says whether something has arrived or departed.  * The name refers to a favorite pastime of many city dwellers- watching  * people come and go, talking of Michaelangelo, and so on..  */
 end_comment
 
 begin_typedef
@@ -2224,6 +2259,7 @@ enum|enum
 block|{
 name|ISPASYNC_NEW_TGT_PARAMS
 block|,
+comment|/* New Target Parameters Negotiated */
 name|ISPASYNC_BUS_RESET
 block|,
 comment|/* Bus Was Reset */
@@ -2235,13 +2271,13 @@ block|,
 comment|/* FC Loop Up */
 name|ISPASYNC_CHANGE_NOTIFY
 block|,
-comment|/* FC SNS or Port Database Changed */
+comment|/* FC Change Notification */
 name|ISPASYNC_FABRIC_DEV
 block|,
-comment|/* FC Fabric Device Arrived/Left */
-name|ISPASYNC_LOGGED_INOUT
+comment|/* FC Fabric Device Arrival */
+name|ISPASYNC_PROMENADE
 block|,
-comment|/* FC Object Logged In/Out */
+comment|/* FC Objects coming&& going */
 name|ISPASYNC_TARGET_MESSAGE
 block|,
 comment|/* target message */
@@ -2249,7 +2285,10 @@ name|ISPASYNC_TARGET_EVENT
 block|,
 comment|/* target asynchronous event */
 name|ISPASYNC_TARGET_ACTION
+block|,
 comment|/* other target command action */
+name|ISPASYNC_CONF_CHANGE
+comment|/* Platform Configuration Change */
 block|}
 name|ispasync_t
 typedef|;
@@ -2273,6 +2312,27 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|ISPASYNC_CHANGE_PDB
+value|((void *) 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISPASYNC_CHANGE_SNS
+value|((void *) 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISPASYNC_CHANGE_OTHER
+value|((void *) 2)
+end_define
 
 begin_comment
 comment|/*  * Platform Dependent Error and Debug Printout  */
@@ -2486,7 +2546,7 @@ comment|/* log all debug messages (target) */
 end_comment
 
 begin_comment
-comment|/*  * Each Platform provides it's own isposinfo substructure of the ispsoftc  * defined above.  *  * Each platform must also provide the following macros/defines:  *  *  *	INLINE		-	platform specific define for 'inline' functions  *  *	ISP2100_FABRIC	-	defines whether FABRIC support is enabled  *	ISP2100_SCRLEN	-	length for the Fibre Channel scratch DMA area  *  *	MEMZERO(dst, src)			platform zeroing function  *	MEMCPY(dst, src, count)			platform copying function  *	SNPRINTF(buf, bufsize, fmt, ...)	snprintf  *	STRNCAT(dstbuf, size, srcbuf)		strncat  *	USEC_DELAY(usecs)			microsecond spindelay function  *	USEC_SLEEP(isp, usecs)			microsecond sleep function  *  *	NANOTIME_T				nanosecond time type  *  *	GET_NANOTIME(NANOTIME_T *)		get current nanotime.  *  *	GET_NANOSEC(NANOTIME_T *)		get u_int64_t from NANOTIME_T  *  *	NANOTIME_SUB(NANOTIME_T *, NANOTIME_T *)  *						subtract two NANOTIME_T values  *  *  *	MAXISPREQUEST(struct ispsoftc *)	maximum request queue size  *						for this particular board type  *  *	MEMORYBARRIER(struct ispsoftc *, barrier_type, offset, size)  *  *		Function/Macro the provides memory synchronization on  *		various objects so that the ISP's and the system's view  *		of the same object is consistent.  *  *	MBOX_ACQUIRE(struct ispsoftc *)		acquire lock on mailbox regs  *	MBOX_WAIT_COMPLETE(struct ispsoftc *)	wait for mailbox cmd to be done  *	MBOX_NOTIFY_COMPLETE(struct ispsoftc *)	notification of mbox cmd donee  *	MBOX_RELEASE(struct ispsoftc *)		release lock on mailbox regs  *   *  *	SCSI_GOOD	SCSI 'Good' Status  *	SCSI_CHECK	SCSI 'Check Condition' Status  *	SCSI_BUSY	SCSI 'Busy' Status  *	SCSI_QFULL	SCSI 'Queue Full' Status  *  *	XS_T		Platform SCSI transaction type (i.e., command for HBA)  *	XS_ISP(xs)	gets an instance out of an XS_T  *	XS_CHANNEL(xs)	gets the channel (bus # for DUALBUS cards) ""  *	XS_TGT(xs)	gets the target ""  *	XS_LUN(xs)	gets the lun ""  *	XS_CDBP(xs)	gets a pointer to the scsi CDB ""  *	XS_CDBLEN(xs)	gets the CDB's length ""  *	XS_XFRLEN(xs)	gets the associated data transfer length ""  *	XS_TIME(xs)	gets the time (in milliseconds) for this command  *	XS_RESID(xs)	gets the current residual count  *	XS_STSP(xs)	gets a pointer to the SCSI status byte ""  *	XS_SNSP(xs)	gets a pointer to the associate sense data  *	XS_SNSLEN(xs)	gets the length of sense data storage  *	XS_SNSKEY(xs)	dereferences XS_SNSP to get the current stored Sense Key  *	XS_TAG_P(xs)	predicate of whether this command should be tagged  *	XS_TAG_TYPE(xs)	which type of tag to use  *	XS_SETERR(xs)	set error state  *  *		HBA_NOERROR	command has no erros  *		HBA_BOTCH	hba botched something  *		HBA_CMDTIMEOUT	command timed out  *		HBA_SELTIMEOUT	selection timed out (also port logouts for FC)  *		HBA_TGTBSY	target returned a BUSY status  *		HBA_BUSRESET	bus reset destroyed command  *		HBA_ABORTED	command was aborted (by request)  *		HBA_DATAOVR	a data overrun was detected  *		HBA_ARQFAIL	Automatic Request Sense failed  *  *	XS_ERR(xs)	return current error state  *	XS_NOERR(xs)	there is no error currently set  *	XS_INITERR(xs)	initialize error state  *  *	XS_SAVE_SENSE(xs, sp)		save sense data  *  *	XS_SET_STATE_STAT(isp, sp, xs)	platform dependent interpreter of  *					response queue entry status bits  *  *  *	DEFAULT_IID(struct ispsoftc *)		Default SCSI initiator ID  *	DEFAULT_LOOPID(struct ispsoftc *)	Default FC Loop ID  *	DEFAULT_NODEWWN(struct ispsoftc *)	Default Node WWN  *	DEFAULT_PORTWWN(struct ispsoftc *)	Default Port WWN  *		These establish reasonable defaults for each platform.  * 		These must be available independent of card NVRAM and are  *		to be used should NVRAM not be readable.  *  *	ISP_NODEWWN(struct ispsoftc *)	FC Node WWN to use  *	ISP_PORTWWN(struct ispsoftc *)	FC Port WWN to use  *  *		These are to be used after NVRAM is read. The tags  *		in fcparam.isp_{node,port}wwn reflect the values  *		read from NVRAM (possibly corrected for card botches).  *		Each platform can take that information and override  *		it or ignore and return the Node and Port WWNs to be  * 		used when sending the Qlogic f/w the Initialization Control  *		Block.  *  *	(XXX these do endian specific transformations- in transition XXX)  *	ISP_SWIZZLE_ICB  *	ISP_UNSWIZZLE_AND_COPY_PDBP  *	ISP_SWIZZLE_CONTINUATION  *	ISP_SWIZZLE_REQUEST  *	ISP_UNSWIZZLE_RESPONSE  *	ISP_SWIZZLE_SNS_REQ  *	ISP_UNSWIZZLE_SNS_RSP  *	ISP_SWIZZLE_NVRAM_WORD  *  *  */
+comment|/*  * Each Platform provides it's own isposinfo substructure of the ispsoftc  * defined above.  *  * Each platform must also provide the following macros/defines:  *  *  *	INLINE		-	platform specific define for 'inline' functions  *  *	ISP2100_SCRLEN	-	length for the Fibre Channel scratch DMA area  *  *	MEMZERO(dst, src)			platform zeroing function  *	MEMCPY(dst, src, count)			platform copying function  *	SNPRINTF(buf, bufsize, fmt, ...)	snprintf  *	STRNCAT(dstbuf, size, srcbuf)		strncat  *	USEC_DELAY(usecs)			microsecond spindelay function  *	USEC_SLEEP(isp, usecs)			microsecond sleep function  *  *	NANOTIME_T				nanosecond time type  *  *	GET_NANOTIME(NANOTIME_T *)		get current nanotime.  *  *	GET_NANOSEC(NANOTIME_T *)		get u_int64_t from NANOTIME_T  *  *	NANOTIME_SUB(NANOTIME_T *, NANOTIME_T *)  *						subtract two NANOTIME_T values  *  *  *	MAXISPREQUEST(struct ispsoftc *)	maximum request queue size  *						for this particular board type  *  *	MEMORYBARRIER(struct ispsoftc *, barrier_type, offset, size)  *  *		Function/Macro the provides memory synchronization on  *		various objects so that the ISP's and the system's view  *		of the same object is consistent.  *  *	MBOX_ACQUIRE(struct ispsoftc *)		acquire lock on mailbox regs  *	MBOX_WAIT_COMPLETE(struct ispsoftc *)	wait for mailbox cmd to be done  *	MBOX_NOTIFY_COMPLETE(struct ispsoftc *)	notification of mbox cmd donee  *	MBOX_RELEASE(struct ispsoftc *)		release lock on mailbox regs  *  *  *	SCSI_GOOD	SCSI 'Good' Status  *	SCSI_CHECK	SCSI 'Check Condition' Status  *	SCSI_BUSY	SCSI 'Busy' Status  *	SCSI_QFULL	SCSI 'Queue Full' Status  *  *	XS_T		Platform SCSI transaction type (i.e., command for HBA)  *	XS_ISP(xs)	gets an instance out of an XS_T  *	XS_CHANNEL(xs)	gets the channel (bus # for DUALBUS cards) ""  *	XS_TGT(xs)	gets the target ""  *	XS_LUN(xs)	gets the lun ""  *	XS_CDBP(xs)	gets a pointer to the scsi CDB ""  *	XS_CDBLEN(xs)	gets the CDB's length ""  *	XS_XFRLEN(xs)	gets the associated data transfer length ""  *	XS_TIME(xs)	gets the time (in milliseconds) for this command  *	XS_RESID(xs)	gets the current residual count  *	XS_STSP(xs)	gets a pointer to the SCSI status byte ""  *	XS_SNSP(xs)	gets a pointer to the associate sense data  *	XS_SNSLEN(xs)	gets the length of sense data storage  *	XS_SNSKEY(xs)	dereferences XS_SNSP to get the current stored Sense Key  *	XS_TAG_P(xs)	predicate of whether this command should be tagged  *	XS_TAG_TYPE(xs)	which type of tag to use  *	XS_SETERR(xs)	set error state  *  *		HBA_NOERROR	command has no erros  *		HBA_BOTCH	hba botched something  *		HBA_CMDTIMEOUT	command timed out  *		HBA_SELTIMEOUT	selection timed out (also port logouts for FC)  *		HBA_TGTBSY	target returned a BUSY status  *		HBA_BUSRESET	bus reset destroyed command  *		HBA_ABORTED	command was aborted (by request)  *		HBA_DATAOVR	a data overrun was detected  *		HBA_ARQFAIL	Automatic Request Sense failed  *  *	XS_ERR(xs)	return current error state  *	XS_NOERR(xs)	there is no error currently set  *	XS_INITERR(xs)	initialize error state  *  *	XS_SAVE_SENSE(xs, sp)		save sense data  *  *	XS_SET_STATE_STAT(isp, sp, xs)	platform dependent interpreter of  *					response queue entry status bits  *  *  *	DEFAULT_IID(struct ispsoftc *)		Default SCSI initiator ID  *	DEFAULT_LOOPID(struct ispsoftc *)	Default FC Loop ID  *	DEFAULT_NODEWWN(struct ispsoftc *)	Default Node WWN  *	DEFAULT_PORTWWN(struct ispsoftc *)	Default Port WWN  *		These establish reasonable defaults for each platform.  * 		These must be available independent of card NVRAM and are  *		to be used should NVRAM not be readable.  *  *	ISP_NODEWWN(struct ispsoftc *)	FC Node WWN to use  *	ISP_PORTWWN(struct ispsoftc *)	FC Port WWN to use  *  *		These are to be used after NVRAM is read. The tags  *		in fcparam.isp_{node,port}wwn reflect the values  *		read from NVRAM (possibly corrected for card botches).  *		Each platform can take that information and override  *		it or ignore and return the Node and Port WWNs to be  * 		used when sending the Qlogic f/w the Initialization Control  *		Block.  *  *	(XXX these do endian specific transformations- in transition XXX)  *	ISP_SWIZZLE_ICB  *	ISP_UNSWIZZLE_AND_COPY_PDBP  *	ISP_SWIZZLE_CONTINUATION  *	ISP_SWIZZLE_REQUEST  *	ISP_UNSWIZZLE_RESPONSE  *	ISP_SWIZZLE_SNS_REQ  *	ISP_UNSWIZZLE_SNS_RSP  *	ISP_SWIZZLE_NVRAM_WORD  *  *  */
 end_comment
 
 begin_endif
