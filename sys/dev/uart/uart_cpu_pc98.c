@@ -53,6 +53,18 @@ directive|include
 file|<dev/uart/uart_cpu.h>
 end_include
 
+begin_decl_stmt
+name|bus_space_tag_t
+name|uart_bus_space_io
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bus_space_tag_t
+name|uart_bus_space_mem
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|uart_cpu_eqres
@@ -98,6 +110,23 @@ name|ivar
 decl_stmt|,
 name|flags
 decl_stmt|;
+comment|/* Check the environment. */
+if|if
+condition|(
+name|uart_getenv
+argument_list|(
+name|devtype
+argument_list|,
+name|di
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* 	 * There are 2 built-in serial ports on pc98 hardware.  The  	 * first one is 8251 and the second one is I think an enhance 	 * version of that.  However, for the sio driver, flags selected 	 * which type of uart was in the sytem.  We use something similar 	 * to sort things out. 	 */
 for|for
 control|(
@@ -231,7 +260,7 @@ name|bas
 operator|.
 name|bst
 operator|=
-name|I386_BUS_SPACE_IO
+name|uart_bus_space_io
 expr_stmt|;
 if|if
 condition|(
