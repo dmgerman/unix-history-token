@@ -295,11 +295,12 @@ expr_stmt|;
 comment|/* Check that pkgname2 is actually installed */
 if|if
 condition|(
-operator|!
 name|isinstalledpkg
 argument_list|(
 name|pkgname2
 argument_list|)
+operator|<=
+literal|0
 condition|)
 goto|goto
 name|exit
@@ -492,11 +493,12 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
 name|isinstalledpkg
 argument_list|(
 name|pkgname
 argument_list|)
+operator|<=
+literal|0
 condition|)
 block|{
 if|if
@@ -622,11 +624,12 @@ name|filter
 operator|==
 name|TRUE
 operator|&&
-operator|!
 name|isinstalledpkg
 argument_list|(
 name|fbuf
 argument_list|)
+operator|<=
+literal|0
 condition|)
 block|{
 if|if

@@ -525,9 +525,9 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"unable to open %s file"
+literal|"the package info for package '%s' is corrupt"
 argument_list|,
-name|CONTENTS_FNAME
+name|pkg
 argument_list|)
 expr_stmt|;
 return|return

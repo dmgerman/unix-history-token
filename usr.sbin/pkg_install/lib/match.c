@@ -1377,7 +1377,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return TRUE if the specified package is installed,  * or FALSE otherwise.  */
+comment|/*  *   * Return 1 if the specified package is installed,  * 0 if not, and -1 if an error occured.  */
 end_comment
 
 begin_function
@@ -1436,7 +1436,7 @@ operator|==
 name|FAIL
 condition|)
 return|return
-name|FALSE
+literal|0
 return|;
 name|snprintf
 argument_list|(
@@ -1472,10 +1472,11 @@ operator|==
 name|FAIL
 condition|)
 return|return
-name|FALSE
+operator|-
+literal|1
 return|;
 return|return
-name|TRUE
+literal|1
 return|;
 block|}
 end_function

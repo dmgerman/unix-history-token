@@ -268,6 +268,7 @@ value|do {\     if ((pos)< (len)) { \         buf[(pos)] = (ch); \         buf[(
 end_define
 
 begin_function
+specifier|static
 name|int
 name|add_arg
 parameter_list|(

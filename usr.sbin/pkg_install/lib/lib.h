@@ -504,10 +504,12 @@ decl_stmt|,
 modifier|*
 name|tail
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|origin

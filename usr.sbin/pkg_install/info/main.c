@@ -41,7 +41,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"abcdDe:EfgGhiIkl:LmoO:pPqQrRst:vVW:xX"
+literal|"abcdDe:EfgGhiIjkl:LmoO:pPqQrRst:vVW:xX"
 decl_stmt|;
 end_decl_stmt
 
@@ -378,6 +378,14 @@ name|SHOW_INSTALL
 expr_stmt|;
 break|break;
 case|case
+literal|'j'
+case|:
+name|Flags
+operator||=
+name|SHOW_REQUIRE
+expr_stmt|;
+break|break;
+case|case
 literal|'k'
 case|:
 name|Flags
@@ -390,7 +398,7 @@ literal|'r'
 case|:
 name|Flags
 operator||=
-name|SHOW_REQUIRE
+name|SHOW_DEPEND
 expr_stmt|;
 break|break;
 case|case
@@ -822,7 +830,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: pkg_info [-bcdDEfgGiIjLmopPqQrRsvVxX] [-e package] [-l prefix]"
+literal|"usage: pkg_info [-bcdDEfgGiIjkLmopPqQrRsvVxX] [-e package] [-l prefix]"
 argument_list|,
 literal|"                [-t template] -a | pkg-name ..."
 argument_list|,

@@ -252,8 +252,6 @@ name|inPlace
 decl_stmt|,
 name|conflictsfound
 decl_stmt|,
-name|i
-decl_stmt|,
 name|errcode
 decl_stmt|;
 comment|/* support for separate pre/post install scripts */
@@ -1015,6 +1013,8 @@ name|Plist
 operator|.
 name|name
 argument_list|)
+operator|>
+literal|0
 operator|||
 name|matchbyorigin
 argument_list|(
@@ -1079,6 +1079,9 @@ operator|==
 name|PLIST_CONFLICTS
 condition|)
 block|{
+name|int
+name|i
+decl_stmt|;
 name|conflict
 index|[
 literal|0
@@ -1153,6 +1156,8 @@ index|[
 name|i
 index|]
 argument_list|)
+operator|>
+literal|0
 condition|)
 block|{
 name|warnx
@@ -1298,13 +1303,14 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
 name|isinstalledpkg
 argument_list|(
 name|p
 operator|->
 name|name
 argument_list|)
+operator|<=
+literal|0
 operator|&&
 operator|!
 operator|(
