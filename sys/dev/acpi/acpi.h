@@ -34,6 +34,7 @@ name|aml_name
 modifier|*
 name|name
 decl_stmt|;
+comment|/* _PR[0-2] */
 define|#
 directive|define
 name|ACPI_D_STATE_D0
@@ -50,6 +51,10 @@ define|#
 directive|define
 name|ACPI_D_STATE_D3
 value|3
+define|#
+directive|define
+name|ACPI_D_STATE_UNKNOWN
+value|255
 name|u_int8_t
 name|state
 decl_stmt|;
@@ -58,9 +63,85 @@ name|u_int8_t
 name|next_state
 decl_stmt|;
 comment|/* initialized with D0 */
+comment|/* _PRW */
+define|#
+directive|define
+name|ACPI_D_WAKECAP_DISABLE
+value|0
+define|#
+directive|define
+name|ACPI_D_WAKECAP_ENABLE
+value|1
+define|#
+directive|define
+name|ACPI_D_WAKECAP_UNKNOWN
+value|255
+define|#
+directive|define
+name|ACPI_D_WAKECAP_DEFAULT
+value|1
+comment|/* XXX default enable for testing */
+name|u_int8_t
+name|wake_cap
+decl_stmt|;
+comment|/* wake capability */
+name|boolean_t
+name|gpe_enabled
+decl_stmt|;
+comment|/* GEPx_EN enabled/disabled */
+name|union
+name|aml_object
+modifier|*
+name|prw_val
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* elements of _PRW package */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Device Power Management Chind Object Type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_D_PM_TYPE_IRC
+value|0
+end_define
+
+begin_comment
+comment|/* _IRC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_D_PM_TYPE_PRW
+value|1
+end_define
+
+begin_comment
+comment|/* _PRW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_D_PM_TYPE_PRX
+value|2
+end_define
+
+begin_comment
+comment|/* _PR0 - _PR2 */
+end_comment
+
+begin_comment
+comment|/* and more... */
+end_comment
 
 begin_struct
 struct|struct
@@ -122,6 +203,13 @@ name|reflist
 index|[
 name|ACPI_PR_MAX
 index|]
+expr_stmt|;
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|acpi_powerres_device_ref
+argument_list|)
+name|prwlist
 expr_stmt|;
 block|}
 struct|;
@@ -284,6 +372,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|acpi_set_device_wakecap
+parameter_list|(
+name|acpi_softc_t
+modifier|*
+parameter_list|,
+name|struct
+name|aml_name
+modifier|*
+parameter_list|,
+name|u_int8_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* PowerResource State */
 end_comment
@@ -343,6 +447,24 @@ name|acpi_softc_t
 modifier|*
 parameter_list|,
 name|u_int8_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* GPE enable bit manipulation */
+end_comment
+
+begin_function_decl
+name|void
+name|acpi_gpe_enable_bit
+parameter_list|(
+name|acpi_softc_t
+modifier|*
+parameter_list|,
+name|u_int32_t
+parameter_list|,
+name|boolean_t
 parameter_list|)
 function_decl|;
 end_function_decl
