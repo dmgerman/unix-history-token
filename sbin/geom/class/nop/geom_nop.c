@@ -84,6 +84,15 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|intmax_t
+name|secsize
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|intmax_t
 name|size
 init|=
 literal|0
@@ -136,6 +145,17 @@ literal|"size"
 block|,
 operator|&
 name|size
+block|,
+name|G_TYPE_NUMBER
+block|}
+block|,
+block|{
+literal|'S'
+block|,
+literal|"secsize"
+block|,
+operator|&
+name|secsize
 block|,
 name|G_TYPE_NUMBER
 block|}
@@ -220,7 +240,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s create [-v] [-f failprob] [-o offset] [-s size]<dev1> [dev2 [...]]\n"
+literal|"usage: %s create [-v] [-f failprob] [-o offset] [-s size] [-S secsize]<dev1> [dev2 [...]]\n"
 argument_list|,
 name|name
 argument_list|)
