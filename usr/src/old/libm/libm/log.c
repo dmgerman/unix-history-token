@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)log.c	4.1	%G%	*/
+comment|/*	@(#)log.c	4.2	%G%	*/
 end_comment
 
 begin_comment
@@ -84,7 +84,7 @@ name|double
 name|p2
 init|=
 operator|-
-literal|.963769093368686593e1
+literal|.963769093377840513e1
 decl_stmt|;
 end_decl_stmt
 
