@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_lwrite[] = "@(#)lwrite.c	1.3";  *  * list directed write  */
+comment|/* char id_lwrite[] = "@(#)lwrite.c	1.4";  *  * list directed write  */
 end_comment
 
 begin_include
@@ -818,6 +818,8 @@ sizeof|sizeof
 argument_list|(
 name|float
 argument_list|)
+argument_list|,
+literal|'e'
 argument_list|)
 operator|)
 return|;
@@ -976,6 +978,8 @@ sizeof|sizeof
 argument_list|(
 name|double
 argument_list|)
+argument_list|,
+literal|'d'
 argument_list|)
 operator|)
 return|;
