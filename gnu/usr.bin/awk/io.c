@@ -3260,7 +3260,8 @@ specifier|const
 name|char
 modifier|*
 name|cp
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|ptr
 decl_stmt|;
@@ -4132,6 +4133,11 @@ operator|||
 name|defined
 argument_list|(
 name|__osf__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD__
 argument_list|)
 name|gid_t
 name|groupset
