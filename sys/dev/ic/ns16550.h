@@ -652,12 +652,70 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EFR_AUTOCTS
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|EFR_AUTORTS
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
 name|EFR_EFE
 value|0x10
 end_define
 
 begin_comment
 comment|/* enhanced functions enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|com_xon1
+value|4
+end_define
+
+begin_comment
+comment|/* XON 1 character (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|com_xon2
+value|5
+end_define
+
+begin_comment
+comment|/* XON 2 character (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|com_xoff1
+value|6
+end_define
+
+begin_comment
+comment|/* XOFF 1 character (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|com_xoff2
+value|7
+end_define
+
+begin_comment
+comment|/* XOFF 2 character (R/W) */
 end_comment
 
 begin_ifdef
