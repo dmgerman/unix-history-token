@@ -6198,14 +6198,11 @@ name|print_wide_int
 argument_list|(
 name|tree_low_cst
 argument_list|(
-name|DECL_SIZE
-argument_list|(
-name|TYPE_NAME
+name|TYPE_SIZE
 argument_list|(
 name|BINFO_TYPE
 argument_list|(
 name|child
-argument_list|)
 argument_list|)
 argument_list|)
 argument_list|,
