@@ -3573,12 +3573,7 @@ expr_stmt|;
 comment|/* Restore the saved register values, for the case that we            didn't have 78Q8377A at the given address.  */
 name|outb
 argument_list|(
-name|sc
-operator|->
-name|ioaddr
-index|[
-name|FE_BMPR12
-index|]
+name|bmpr12
 argument_list|,
 name|save12
 argument_list|)
@@ -4043,12 +4038,7 @@ name|save20
 operator|=
 name|inb
 argument_list|(
-name|sc
-operator|->
-name|ioaddr
-index|[
-literal|0x14
-index|]
+name|reg20
 argument_list|)
 expr_stmt|;
 comment|/* NOTE: DELAY() timing constants are approximately three            times longer (slower) than the required minimum.  This is            to guarantee a reliable operation under some tough            conditions...  Fortunately, this routine is only called            during the boot phase, so the speed is less important than            stability.  */
@@ -4274,12 +4264,7 @@ name|RET
 label|:
 name|outb
 argument_list|(
-name|sc
-operator|->
-name|ioaddr
-index|[
-literal|0x14
-index|]
+name|reg20
 argument_list|,
 name|save20
 argument_list|)
@@ -4288,15 +4273,15 @@ if|#
 directive|if
 literal|1
 comment|/* Report what we got.  */
-name|data
-operator|-=
-name|LNX_EEPROM_SIZE
-expr_stmt|;
 if|if
 condition|(
 name|bootverbose
 condition|)
 block|{
+name|data
+operator|-=
+name|LNX_EEPROM_SIZE
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -4305,7 +4290,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|JLI_EEPROM_SIZE
+name|LNX_EEPROM_SIZE
 condition|;
 name|i
 operator|+=
@@ -5717,14 +5702,73 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* Setup the board type.  */
+comment|/* Determine the card type.  */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_enaddr
+index|[
+literal|3
+index|]
+operator|==
+literal|0x06
+condition|)
+block|{
+name|sc
+operator|->
+name|typestr
+operator|=
+literal|"C-NET(9N)C"
+expr_stmt|;
+comment|/* We seems to need our own IDENT bits...  FIXME.  */
+name|sc
+operator|->
+name|proto_dlcr7
+operator|=
+name|FE_D7_BYTSWP_LH
+operator||
+name|FE_D7_IDENT_NICE
+expr_stmt|;
+comment|/* C-NET(9N)C requires an explicit IRQ to work.  */
+if|if
+condition|(
+name|dev
+operator|->
+name|id_irq
+operator|==
+name|NO_IRQ
+condition|)
+block|{
+name|fe_irq_failure
+argument_list|(
+name|sc
+operator|->
+name|typestr
+argument_list|,
+name|sc
+operator|->
+name|sc_unit
+argument_list|,
+name|NO_IRQ
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+block|}
+else|else
+block|{
 name|sc
 operator|->
 name|typestr
 operator|=
 literal|"C-NET(9N)E"
 expr_stmt|;
-comment|/* C-NET(9N)E seems to work only IRQ5.  FIXME.  */
+comment|/* C-NET(9N)E works only IRQ5.  */
 if|if
 condition|(
 name|dev
@@ -5762,6 +5806,7 @@ name|init
 operator|=
 name|fe_init_cnet9ne
 expr_stmt|;
+block|}
 comment|/* C-NET(9N)E has 64KB SRAM.  */
 name|sc
 operator|->
@@ -6537,6 +6582,8 @@ parameter_list|)
 block|{
 name|u_char
 name|sum
+decl_stmt|,
+name|save7
 decl_stmt|;
 name|int
 name|i
@@ -6639,6 +6686,38 @@ condition|)
 return|return
 literal|0
 return|;
+comment|/* NOTE: Access/NOTE N98 sometimes freeze when reading station 	   address.  In case of using it togather with C-NET(9N)C, 	   this problem usually happens. 	   Writing DLCR7 prevents freezing, but I don't know why.  FIXME.  */
+comment|/* Save the current value for the DLCR7 register we are about 	   to destroy.  */
+name|save7
+operator|=
+name|inb
+argument_list|(
+name|sc
+operator|->
+name|ioaddr
+index|[
+name|FE_DLCR7
+index|]
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|ioaddr
+index|[
+name|FE_DLCR7
+index|]
+argument_list|,
+name|sc
+operator|->
+name|proto_dlcr7
+operator||
+name|FE_D7_RBS_BMPR
+operator||
+name|FE_D7_POWER_UP
+argument_list|)
+expr_stmt|;
 comment|/* Get our station address form ID ROM and make sure it is UBN's.  */
 name|inblk
 argument_list|(
@@ -6665,9 +6744,9 @@ argument_list|,
 literal|0x00DD01
 argument_list|)
 condition|)
-return|return
-literal|0
-return|;
+goto|goto
+name|fail_ubn
+goto|;
 if|#
 directive|if
 literal|1
@@ -6714,9 +6793,9 @@ name|sum
 operator|!=
 literal|0
 condition|)
-return|return
-literal|0
-return|;
+goto|goto
+name|fail_ubn
+goto|;
 endif|#
 directive|endif
 comment|/* Setup the board type.  */
@@ -6792,9 +6871,9 @@ argument_list|,
 literal|"3/5/6/12"
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
+goto|goto
+name|fail_ubn
+goto|;
 block|}
 comment|/* Setup hooks.  We need a special initialization procedure.  */
 name|sc
@@ -6806,6 +6885,23 @@ expr_stmt|;
 comment|/* The I/O address range is fragmented in the Access/PC N98C+. 	   This is the number of regs at iobase.  */
 return|return
 literal|16
+return|;
+name|fail_ubn
+label|:
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|ioaddr
+index|[
+name|FE_DLCR7
+index|]
+argument_list|,
+name|save7
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
 return|;
 block|}
 end_function
