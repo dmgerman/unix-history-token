@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993, University of Vermont and State  *  Agricultural College.  * Copyright (c) 1992, 1993, Garrett A. Wollman.  *  * Portions:  * Copyright (c) 1990, 1991, William F. Jolitz  * Copyright (c) 1990, The Regents of the University of California  *  * 3Com 3C507 support:  * Copyright (c) 1993, 1994, Charles M. Hannum  *  * EtherExpress 16 support:  * Copyright (c) 1993, 1994, 1995, Rodney W. Grimes  * Copyright (c) 1997, Aaron C. Smith  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	Vermont and State Agricultural College and Garrett A. Wollman, by  *	William F. Jolitz, by the University of California, Berkeley,  *	Lawrence Berkeley Laboratory, and their contributors, by  *	Charles M. Hannum, by Rodney W. Grimes, and by Aaron C. Smith.  * 4. Neither the names of the Universities nor the names of the authors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE UNIVERSITY OR AUTHORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_ie.c,v 1.41 1997/04/14 00:37:50 gibbs Exp $  */
+comment|/*-  * Copyright (c) 1992, 1993, University of Vermont and State  *  Agricultural College.  * Copyright (c) 1992, 1993, Garrett A. Wollman.  *  * Portions:  * Copyright (c) 1990, 1991, William F. Jolitz  * Copyright (c) 1990, The Regents of the University of California  *  * 3Com 3C507 support:  * Copyright (c) 1993, 1994, Charles M. Hannum  *  * EtherExpress 16 support:  * Copyright (c) 1993, 1994, 1995, Rodney W. Grimes  * Copyright (c) 1997, Aaron C. Smith  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	Vermont and State Agricultural College and Garrett A. Wollman, by  *	William F. Jolitz, by the University of California, Berkeley,  *	Lawrence Berkeley Laboratory, and their contributors, by  *	Charles M. Hannum, by Rodney W. Grimes, and by Aaron C. Smith.  * 4. Neither the names of the Universities nor the names of the authors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE UNIVERSITY OR AUTHORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_ie.c,v 1.42 1997/05/21 18:26:09 gibbs Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * Intel 82586 Ethernet chip  * Register, bit, and structure definitions.  *  * Written by GAW with reference to the Clarkson Packet Driver code for this  * chip written by Russ Nelson and others.  *  * Intel EtherExpress 16 support from if_ix.c, written by Rodney W. Grimes.   */
+comment|/*  * Intel 82586 Ethernet chip  * Register, bit, and structure definitions.  *  * Written by GAW with reference to the Clarkson Packet Driver code for this  * chip written by Russ Nelson and others.  *  * Intel EtherExpress 16 support from if_ix.c, written by Rodney W. Grimes.  */
 end_comment
 
 begin_comment
@@ -453,25 +453,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|check_ie_present
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|unit
-operator|,
+parameter_list|,
 name|caddr_t
 name|where
-operator|,
+parameter_list|,
 name|unsigned
 name|size
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -484,19 +481,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|ie_stop
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|unit
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -596,97 +590,82 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|ee16_interrupt_enable
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ie_softc
-operator|*
+modifier|*
 name|ie
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|ee16_eeprom_outbits
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ie_softc
-operator|*
+modifier|*
 name|ie
-operator|,
+parameter_list|,
 name|int
 name|edata
-operator|,
+parameter_list|,
 name|int
 name|cnt
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|ee16_eeprom_clock
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ie_softc
-operator|*
+modifier|*
 name|ie
-operator|,
+parameter_list|,
 name|int
 name|state
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|u_short
 name|ee16_read_eeprom
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ie_softc
-operator|*
+modifier|*
 name|ie
-operator|,
+parameter_list|,
 name|int
 name|location
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|ee16_eeprom_inbits
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ie_softc
-operator|*
+modifier|*
 name|ie
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -778,20 +757,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|chan_attn_timeout
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|*
+modifier|*
 name|rock
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -814,24 +790,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|run_tdr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|unit
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|ie_tdr_cmd
-operator|*
+modifier|*
 name|cmd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -1102,7 +1075,7 @@ value|256
 end_define
 
 begin_comment
-comment|/* size of each buffer,  					 * MUST BE POWER OF TWO 					 */
+comment|/* size of each buffer, MUST BE POWER OF TWO */
 end_comment
 
 begin_define
@@ -1334,13 +1307,11 @@ begin_function
 name|int
 name|ieprobe
 parameter_list|(
-name|dvp
-parameter_list|)
 name|struct
 name|isa_device
 modifier|*
 name|dvp
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|ret
@@ -1401,13 +1372,11 @@ specifier|static
 name|int
 name|sl_probe
 parameter_list|(
-name|dvp
-parameter_list|)
 name|struct
 name|isa_device
 modifier|*
 name|dvp
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|unit
@@ -1569,10 +1538,12 @@ operator|=
 name|sl_chan_attn
 expr_stmt|;
 break|break;
-comment|/*      * Anything else is not recognized or cannot be used.      */
+comment|/* 		 * Anything else is not recognized or cannot be used. 		 */
 default|default:
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|ie_softc
@@ -1587,7 +1558,7 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
-comment|/*    * Divine memory size on-board the card.  Ususally 16k.    */
+comment|/* 	 * Divine memory size on-board the card.  Ususally 16k. 	 */
 name|find_ie_mem_size
 argument_list|(
 name|unit
@@ -1605,7 +1576,9 @@ name|iosize
 condition|)
 block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|dvp
@@ -1669,11 +1642,15 @@ name|hard_type
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -1683,13 +1660,11 @@ specifier|static
 name|int
 name|el_probe
 parameter_list|(
-name|dvp
-parameter_list|)
 name|struct
 name|isa_device
 modifier|*
 name|dvp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ie_softc
@@ -1815,7 +1790,9 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 comment|/* go to RUN state */
@@ -1875,7 +1852,9 @@ name|i
 index|]
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|c
 operator|=
@@ -1903,7 +1882,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ie%d: kernel configured irq %d doesn't match board configured irq %d\n"
+literal|"ie%d: kernel configured irq %d "
+literal|"doesn't match board configured irq %d\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -1920,7 +1900,9 @@ name|c
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|c
@@ -1959,7 +1941,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ie%d: kernel configured maddr %lx doesn't match board configured maddr %x\n"
+literal|"ie%d: kernel configured maddr %lx "
+literal|"doesn't match board configured maddr %x\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -1979,7 +1962,9 @@ literal|12
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|outb
@@ -2004,7 +1989,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 3C507 has no version number. */
-comment|/*    * Divine memory size on-board the card.    */
+comment|/* 	 * Divine memory size on-board the card. 	 */
 name|find_ie_mem_size
 argument_list|(
 name|unit
@@ -2035,7 +2020,9 @@ name|EL_CTRL_NRST
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -2067,7 +2054,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ie%d: kernel configured msize %d doesn't match board configured msize %d\n"
+literal|"ie%d: kernel configured msize %d "
+literal|"doesn't match board configured msize %d\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -2090,7 +2078,9 @@ name|EL_CTRL_NRST
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|sl_read_ether
@@ -2118,7 +2108,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|16
+operator|)
 return|;
 block|}
 end_function
@@ -2128,13 +2120,11 @@ specifier|static
 name|int
 name|ni_probe
 parameter_list|(
-name|dvp
-parameter_list|)
 name|struct
 name|isa_device
 modifier|*
 name|dvp
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|unit
@@ -2255,10 +2245,12 @@ operator|=
 name|sl_chan_attn
 expr_stmt|;
 break|break;
-comment|/*      * Anything else is not recognized or cannot be used.      */
+comment|/* 		 * Anything else is not recognized or cannot be used. 		 */
 default|default:
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|ie_softc
@@ -2270,7 +2262,7 @@ name|hard_vers
 operator|=
 literal|0
 expr_stmt|;
-comment|/*    * Divine memory size on-board the card.  Either 8 or 16k.    */
+comment|/* 	 * Divine memory size on-board the card.  Either 8 or 16k. 	 */
 name|find_ie_mem_size
 argument_list|(
 name|unit
@@ -2288,7 +2280,9 @@ name|iosize
 condition|)
 block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -2326,7 +2320,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ie%d: kernel configured msize %d doesn't match board configured msize %d\n"
+literal|"ie%d: kernel configured msize %d "
+literal|"doesn't match board configured msize %d\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -2343,7 +2338,9 @@ name|iosize
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|sl_read_ether
@@ -2361,7 +2358,9 @@ name|ac_enaddr
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|8
+operator|)
 return|;
 block|}
 end_function
@@ -2371,17 +2370,13 @@ specifier|static
 name|void
 name|ee16_shutdown
 parameter_list|(
-name|howto
-parameter_list|,
-name|sc
-parameter_list|)
 name|int
 name|howto
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ie_softc
@@ -2440,13 +2435,11 @@ begin_function
 name|int
 name|ee16_probe
 parameter_list|(
-name|dvp
-parameter_list|)
 name|struct
 name|isa_device
 modifier|*
 name|dvp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ie_softc
@@ -2686,7 +2679,9 @@ name|board_id
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 comment|/* need sc->port for ee16_read_eeprom */
@@ -2704,7 +2699,7 @@ name|hard_type
 operator|=
 name|IE_EE16
 expr_stmt|;
-comment|/* 	 * The shared RAM location on the EE16 is encoded into bits 	 * 3-7 of EEPROM location 6.  We zero the upper byte, and  	 * shift the 5 bits right 3.  The resulting number tells us 	 * the RAM location.  Because the EE16 supports either 16k or 32k 	 * of shared RAM, we only worry about the 32k locations.  	 * 	 * NOTE: if a 64k EE16 exists, it should be added to this switch. 	 *       then the ia->ia_msize would need to be set per case statement. 	 * 	 *	value	msize	location 	 *	=====	=====	======== 	 *	0x03	0x8000	0xCC000 	 *	0x06	0x8000	0xD0000 	 *	0x0C	0x8000	0xD4000 	 *	0x18	0x8000	0xD8000 	 * 	 */
+comment|/* 	 * The shared RAM location on the EE16 is encoded into bits 3-7 of 	 * EEPROM location 6.  We zero the upper byte, and shift the 5 bits 	 * right 3.  The resulting number tells us the RAM location. 	 * Because the EE16 supports either 16k or 32k of shared RAM, we 	 * only worry about the 32k locations. 	 * 	 * NOTE: if a 64k EE16 exists, it should be added to this switch. then 	 * the ia->ia_msize would need to be set per case statement. 	 * 	 * value	msize	location =====	=====	======== 0x03	0x8000 	 * 0xCC000 0x06	0x8000	0xD0000 0x0C	0x8000	0xD4000 0x18 	 * 0x8000	0xD8000 	 * 	 */
 name|bd_maddr
 operator|=
 literal|0
@@ -2788,7 +2783,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ie%d: kernel configured maddr %lx doesn't match board configured maddr %x\n"
+literal|"ie%d: kernel configured maddr %lx "
+literal|"doesn't match board configured maddr %x\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -2876,10 +2872,12 @@ name|checksum
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
-comment|/* 	 * Size and test the memory on the board.  The size of the memory 	 * can be one of 16k, 32k, 48k or 64k.  It can be located in the 	 * address range 0xC0000 to 0xEFFFF on 16k boundaries.  	 * 	 * If the size does not match the passed in memory allocation size 	 * issue a warning, but continue with the minimum of the two sizes. 	 */
+comment|/* 	 * Size and test the memory on the board.  The size of the memory 	 * can be one of 16k, 32k, 48k or 64k.	It can be located in the 	 * address range 0xC0000 to 0xEFFFF on 16k boundaries. 	 * 	 * If the size does not match the passed in memory allocation size 	 * issue a warning, but continue with the minimum of the two sizes. 	 */
 switch|switch
 condition|(
 name|dvp
@@ -2914,7 +2912,9 @@ name|id_msize
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 break|break;
 comment|/* NOTREACHED */
@@ -2960,7 +2960,9 @@ name|id_maddr
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|pg
@@ -3076,7 +3078,7 @@ argument_list|,
 name|edecode
 argument_list|)
 expr_stmt|;
-comment|/*XXX disable Exxx */
+comment|/* XXX disable Exxx */
 operator|(
 name|void
 operator|)
@@ -3087,7 +3089,7 @@ operator|->
 name|id_maddr
 argument_list|)
 expr_stmt|;
-comment|/* 	 * first prime the stupid bart DRAM controller so that it 	 * works, then zero out all of memory. 	 */
+comment|/* 	 * first prime the stupid bart DRAM controller so that it works, 	 * then zero out all of memory. 	 */
 name|bzero
 argument_list|(
 name|sc
@@ -3108,7 +3110,7 @@ operator|->
 name|iosize
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Get the encoded interrupt number from the EEPROM, check it 	 * against the passed in IRQ.  Issue a warning if they do not 	 * match.  Always use the passed in IRQ, not the one in the EEPROM. 	 */
+comment|/* 	 * Get the encoded interrupt number from the EEPROM, check it 	 * against the passed in IRQ.  Issue a warning if they do not match. 	 * Always use the passed in IRQ, not the one in the EEPROM. 	 */
 name|irq
 operator|=
 name|ee16_read_eeprom
@@ -3155,7 +3157,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ie%d: WARNING: board configured at irq %d, using %d\n"
+literal|"ie%d: WARNING: board configured "
+literal|"at irq %d, using %d\n"
 argument_list|,
 name|dvp
 operator|->
@@ -3195,7 +3198,7 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
-comment|/* 	 * Get the hardware ethernet address from the EEPROM and 	 * save it in the softc for use by the 586 setup code. 	 */
+comment|/* 	 * Get the hardware ethernet address from the EEPROM and save it in 	 * the softc for use by the 586 setup code. 	 */
 name|eaddrtemp
 operator|=
 name|ee16_read_eeprom
@@ -3340,7 +3343,7 @@ name|bart_config
 operator||=
 name|IEE16_BART_MCS16_TEST
 expr_stmt|;
-comment|/*inb doesn't get bit! */
+comment|/* inb doesn't get bit! */
 name|outb
 argument_list|(
 name|PORT
@@ -3392,10 +3395,14 @@ name|iosize
 argument_list|)
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 return|return
+operator|(
 literal|16
+operator|)
 return|;
 comment|/* return the number of I/O ports */
 block|}
@@ -3409,13 +3416,11 @@ begin_function
 name|int
 name|ieattach
 parameter_list|(
-name|dvp
-parameter_list|)
 name|struct
 name|isa_device
 modifier|*
 name|dvp
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|factor
@@ -3453,7 +3458,7 @@ decl_stmt|;
 name|size_t
 name|allocsize
 decl_stmt|;
-comment|/*    * based on the amount of memory we have,    * allocate our tx and rx resources.    */
+comment|/* 	 * based on the amount of memory we have, allocate our tx and rx 	 * resources. 	 */
 name|factor
 operator|=
 name|dvp
@@ -3486,7 +3491,7 @@ name|factor
 operator|*
 name|NTXBUFS
 expr_stmt|;
-comment|/*    * Since all of these guys are arrays of pointers, allocate as one    * big chunk and dole out accordingly.    */
+comment|/* 	 * Since all of these guys are arrays of pointers, allocate as one 	 * big chunk and dole out accordingly. 	 */
 name|allocsize
 operator|=
 sizeof|sizeof
@@ -3800,7 +3805,9 @@ name|ifp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -3813,11 +3820,9 @@ begin_function
 name|void
 name|ieintr
 parameter_list|(
-name|unit
-parameter_list|)
 name|int
 name|unit
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -4132,18 +4137,14 @@ specifier|static
 name|int
 name|ierint
 parameter_list|(
-name|unit
-parameter_list|,
-name|ie
-parameter_list|)
 name|int
 name|unit
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ie_softc
 modifier|*
 name|ie
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -4379,13 +4380,15 @@ name|nframes
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Process a command-complete interrupt.  These are only generated by  * the transmission of frames.  This routine is deceptively simple, since  * most of the real work is done by iestart().  */
+comment|/*  * Process a command-complete interrupt.  These are only generated by  * the transmission of frames.	This routine is deceptively simple, since  * most of the real work is done by iestart().  */
 end_comment
 
 begin_function
@@ -4393,18 +4396,14 @@ specifier|static
 name|int
 name|ietint
 parameter_list|(
-name|unit
-parameter_list|,
-name|ie
-parameter_list|)
 name|int
 name|unit
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ie_softc
 modifier|*
 name|ie
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|status
@@ -4634,7 +4633,7 @@ name|xmit_count
 operator|=
 literal|0
 expr_stmt|;
-comment|/*    * If multicast addresses were added or deleted while we were transmitting,    * ie_mc_reset() set the want_mcsetup flag indicating that we should do it.    */
+comment|/* 	 * If multicast addresses were added or deleted while we were 	 * transmitting, ie_mc_reset() set the want_mcsetup flag indicating 	 * that we should do it. 	 */
 if|if
 condition|(
 name|ie
@@ -4691,7 +4690,9 @@ name|ac_if
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 comment|/* shouldn't be necessary */
 block|}
@@ -4706,18 +4707,14 @@ specifier|static
 name|int
 name|iernr
 parameter_list|(
-name|unit
-parameter_list|,
-name|ie
-parameter_list|)
 name|int
 name|unit
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ie_softc
 modifier|*
 name|ie
-decl_stmt|;
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -4860,13 +4857,15 @@ name|if_ierrors
 operator|++
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Compare two Ether/802 addresses for equality, inlined and  * unrolled for speed.  I'd love to have an inline assembler  * version of this...  */
+comment|/*  * Compare two Ether/802 addresses for equality, inlined and  * unrolled for speed.	I'd love to have an inline assembler  * version of this...  */
 end_comment
 
 begin_function
@@ -4897,7 +4896,9 @@ literal|0
 index|]
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 if|if
 condition|(
@@ -4912,7 +4913,9 @@ literal|1
 index|]
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 if|if
 condition|(
@@ -4927,7 +4930,9 @@ literal|2
 index|]
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 if|if
 condition|(
@@ -4942,7 +4947,9 @@ literal|3
 index|]
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 if|if
 condition|(
@@ -4957,7 +4964,9 @@ literal|4
 index|]
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 if|if
 condition|(
@@ -4972,7 +4981,9 @@ literal|5
 index|]
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 return|return
 literal|1
@@ -4981,7 +4992,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check for a valid address.  to_bpf is filled in with one of the following:  *   0 -> BPF doesn't get this packet  *   1 -> BPF does get this packet  *   2 -> BPF does get this packet, but we don't  * Return value is true if the packet is for us, and false otherwise.  *  * This routine is a mess, but it's also critical that it be as fast  * as possible.  It could be made cleaner if we can assume that the  * only client which will fiddle with IFF_PROMISC is BPF.  This is  * probably a good assumption, but we do not make it here.  (Yet.)  */
+comment|/*  * Check for a valid address.  to_bpf is filled in with one of the following:  *   0 -> BPF doesn't get this packet  *   1 -> BPF does get this packet  *   2 -> BPF does get this packet, but we don't  * Return value is true if the packet is for us, and false otherwise.  *  * This routine is a mess, but it's also critical that it be as fast  * as possible.	 It could be made cleaner if we can assume that the  * only client which will fiddle with IFF_PROMISC is BPF.  This is  * probably a good assumption, but we do not make it here.  (Yet.)  */
 end_comment
 
 begin_function
@@ -5018,12 +5029,13 @@ block|{
 case|case
 name|IFF_ALLMULTI
 case|:
-comment|/*      * Receiving all multicasts, but no unicasts except those destined for us.      */
+comment|/* 		 * Receiving all multicasts, but no unicasts except those 		 * destined for us. 		 */
 if|#
 directive|if
 name|NBPFILTER
 operator|>
 literal|0
+comment|/* BPF gets this packet if anybody cares */
 operator|*
 name|to_bpf
 operator|=
@@ -5039,7 +5051,6 @@ operator|!=
 literal|0
 operator|)
 expr_stmt|;
-comment|/* BPF gets this packet if anybody cares */
 endif|#
 directive|endif
 if|if
@@ -5055,7 +5066,9 @@ literal|1
 condition|)
 block|{
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -5074,15 +5087,19 @@ name|ac_enaddr
 argument_list|)
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 case|case
 name|IFF_PROMISC
 case|:
-comment|/*      * Receiving all packets.  These need to be passed on to BPF.      */
+comment|/* 		 * Receiving all packets.  These need to be passed on to 		 * BPF. 		 */
 if|#
 directive|if
 name|NBPFILTER
@@ -5122,7 +5139,9 @@ name|ac_enaddr
 argument_list|)
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 if|#
 directive|if
@@ -5142,7 +5161,7 @@ expr_stmt|;
 comment|/* we don't need to see it */
 endif|#
 directive|endif
-comment|/*      * Not a multicast, so BPF wants to see it but we don't.      */
+comment|/* 		 * Not a multicast, so BPF wants to see it but we don't. 		 */
 if|if
 condition|(
 operator|!
@@ -5158,9 +5177,11 @@ literal|1
 operator|)
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
-comment|/*      * If it's one of our multicast groups, accept it and pass it      * up.      */
+comment|/* 		 * If it's one of our multicast groups, accept it and pass 		 * it up. 		 */
 for|for
 control|(
 name|i
@@ -5217,19 +5238,23 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 block|}
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 case|case
 name|IFF_ALLMULTI
 operator||
 name|IFF_PROMISC
 case|:
-comment|/*      * Acting as a multicast router, and BPF running at the same time.      * Whew!  (Hope this is a fast machine...)      */
+comment|/* 		 * Acting as a multicast router, and BPF running at the same 		 * time. Whew!	(Hope this is a fast machine...) 		 */
 if|#
 directive|if
 name|NBPFILTER
@@ -5265,7 +5290,9 @@ operator|&
 literal|1
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 comment|/* We want to see our own packets */
 if|if
@@ -5284,7 +5311,9 @@ name|ac_enaddr
 argument_list|)
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 comment|/* Anything else goes to BPF but nothing else. */
 if|#
@@ -5305,10 +5334,12 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 default|default:
-comment|/*      * Only accept unicast packets destined for us, or multicasts      * for groups that we belong to.  For now, we assume that the      * '586 will only return packets that we asked it for.  This      * isn't strictly true (it uses hashing for the multicast filter),      * but it will do in this case, and we want to get out of here      * as quickly as possible.      */
+comment|/* 		 * Only accept unicast packets destined for us, or 		 * multicasts for groups that we belong to.  For now, we 		 * assume that the '586 will only return packets that we 		 * asked it for.  This isn't strictly true (it uses hashing 		 * for the multicast filter), but it will do in this case, 		 * and we want to get out of here as quickly as possible. 		 */
 if|#
 directive|if
 name|NBPFILTER
@@ -5332,11 +5363,15 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -5472,8 +5507,10 @@ name|unit
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|i
@@ -5518,7 +5555,9 @@ name|i
 condition|)
 do|;
 return|return
+operator|(
 name|acc
+operator|)
 return|;
 block|}
 end_function
@@ -5533,39 +5572,29 @@ specifier|inline
 name|int
 name|ieget
 parameter_list|(
-name|unit
-parameter_list|,
-name|ie
-parameter_list|,
-name|mp
-parameter_list|,
-name|ehp
-parameter_list|,
-name|to_bpf
-parameter_list|)
 name|int
 name|unit
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ie_softc
 modifier|*
 name|ie
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 modifier|*
 name|mp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ether_header
 modifier|*
 name|ehp
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|to_bpf
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|mbuf
@@ -5612,8 +5641,10 @@ operator|<=
 literal|0
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|i
 operator|=
@@ -5621,7 +5652,7 @@ name|ie
 operator|->
 name|rbhead
 expr_stmt|;
-comment|/*    * Snarf the Ethernet header.    */
+comment|/* 	 * Snarf the Ethernet header. 	 */
 name|bcopy
 argument_list|(
 operator|(
@@ -5645,7 +5676,7 @@ name|ehp
 argument_list|)
 expr_stmt|;
 comment|/* ignore cast-qual warning here */
-comment|/*    * As quickly as possible, check if this packet is for us.    * If not, don't waste a single cycle copying the rest of the    * packet in.    * This is only a consideration when FILTER is defined; i.e., when    * we are either running BPF or doing multicasting.    */
+comment|/* 	 * As quickly as possible, check if this packet is for us. If not, 	 * don't waste a single cycle copying the rest of the packet in. 	 * This is only a consideration when FILTER is defined; i.e., when 	 * we are either running BPF or doing multicasting. 	 */
 if|if
 condition|(
 operator|!
@@ -5675,10 +5706,12 @@ operator|.
 name|if_ierrors
 operator|--
 expr_stmt|;
-comment|/* just this case, it's not an error */
+comment|/* just this case, it's not an 						 * error 						 */
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|totlen
@@ -5716,8 +5749,10 @@ name|ie
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|m
@@ -5763,11 +5798,11 @@ operator|=
 operator|&
 name|top
 expr_stmt|;
-comment|/*    * This loop goes through and allocates mbufs for all the data we will    * be copying in.  It does not actually do the copying yet.    */
+comment|/* 	 * This loop goes through and allocates mbufs for all the data we 	 * will be copying in.	It does not actually do the copying yet. 	 */
 do|do
 block|{
 comment|/* while(resid> 0) */
-comment|/*      * Try to allocate an mbuf to hold the data that we have.  If we      * already allocated one, just get another one and stick it on the      * end (eventually).  If we don't already have one, try to allocate      * an mbuf cluster big enough to hold the whole packet, if we think it's      * reasonable, or a single mbuf which may or may not be big enough.      * Got that?      */
+comment|/* 		 * Try to allocate an mbuf to hold the data that we have. 		 * If we already allocated one, just get another one and 		 * stick it on the end (eventually).  If we don't already 		 * have one, try to allocate an mbuf cluster big enough to 		 * hold the whole packet, if we think it's reasonable, or a 		 * single mbuf which may or may not be big enough. Got that? 		 */
 if|if
 condition|(
 name|top
@@ -5801,8 +5836,10 @@ name|ie
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|m
@@ -5928,7 +5965,7 @@ name|ie
 operator|->
 name|rbhead
 expr_stmt|;
-comment|/*    * Now we take the mbuf chain (hopefully only one mbuf most of the    * time) and stuff the data into it.  There are no possible failures    * at or after this point.    */
+comment|/* 	 * Now we take the mbuf chain (hopefully only one mbuf most of the 	 * time) and stuff the data into it.  There are no possible failures 	 * at or after this point. 	 */
 while|while
 condition|(
 name|resid
@@ -5949,7 +5986,7 @@ argument_list|)
 operator|-
 name|offset
 decl_stmt|;
-comment|/*      * If too much data for the current mbuf, then fill the current one      * up, go to the next one, and try again.      */
+comment|/* 		 * If too much data for the current mbuf, then fill the 		 * current one up, go to the next one, and try again. 		 */
 if|if
 condition|(
 name|thislen
@@ -6017,15 +6054,15 @@ name|offset
 operator|+=
 name|newlen
 expr_stmt|;
-comment|/* we are now this far into the packet */
+comment|/* we are now this far into 						 * the packet */
 name|resid
 operator|-=
 name|newlen
 expr_stmt|;
-comment|/* so there is this much left to get */
+comment|/* so there is this much left 						 * to get */
 continue|continue;
 block|}
-comment|/*      * If there is more than enough space in the mbuf to hold the      * contents of this buffer, copy everything in, advance pointers,      * and so on.      */
+comment|/* 		 * If there is more than enough space in the mbuf to hold 		 * the contents of this buffer, copy everything in, advance 		 * pointers, and so on. 		 */
 if|if
 condition|(
 name|thislen
@@ -6053,7 +6090,6 @@ operator|+
 name|offset
 argument_list|)
 argument_list|,
-comment|/* ignore warning */
 name|mtod
 argument_list|(
 name|m
@@ -6073,7 +6109,7 @@ name|thismboff
 operator|+=
 name|thislen
 expr_stmt|;
-comment|/* we are this far into the mbuf */
+comment|/* we are this far into the 						 * mbuf */
 name|resid
 operator|-=
 name|thislen
@@ -6083,7 +6119,7 @@ goto|goto
 name|nextbuf
 goto|;
 block|}
-comment|/*      * Otherwise, there is exactly enough space to put this buffer's      * contents into the current mbuf.  Do the combination of the above      * actions.      */
+comment|/* 		 * Otherwise, there is exactly enough space to put this 		 * buffer's contents into the current mbuf.  Do the 		 * combination of the above actions. 		 */
 name|bcopy
 argument_list|(
 call|(
@@ -6100,7 +6136,6 @@ operator|+
 name|offset
 argument_list|)
 argument_list|,
-comment|/* ignore warning */
 name|mtod
 argument_list|(
 name|m
@@ -6132,7 +6167,7 @@ operator|-=
 name|thislen
 expr_stmt|;
 comment|/* and we are this far through */
-comment|/*      * Advance all the pointers.  We can get here from either of the      * last two cases, but never the first.      */
+comment|/* 		 * Advance all the pointers.  We can get here from either of 		 * the last two cases, but never the first. 		 */
 name|nextbuf
 label|:
 name|offset
@@ -6208,15 +6243,17 @@ operator|->
 name|nrxbufs
 expr_stmt|;
 block|}
-comment|/*    * Unless something changed strangely while we were doing the copy,    * we have now copied everything in from the shared memory.    * This means that we are done.    */
+comment|/* 	 * Unless something changed strangely while we were doing the copy, 	 * we have now copied everything in from the shared memory. This 	 * means that we are done. 	 */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Read frame NUM from unit UNIT (pre-cached as IE).  *  * This routine reads the RFD at NUM, and copies in the buffers from  * the list of RBD, then rotates the RBD and RFD lists so that the receiver  * doesn't start complaining.  Trailers are DROPPED---there's no point  * in wasting time on confusing code to deal with them.  Hopefully,  * this machine will never ARP for trailers anyway.  */
+comment|/*  * Read frame NUM from unit UNIT (pre-cached as IE).  *  * This routine reads the RFD at NUM, and copies in the buffers from  * the list of RBD, then rotates the RBD and RFD lists so that the receiver  * doesn't start complaining.  Trailers are DROPPED---there's no point  * in wasting time on confusing code to deal with them.	 Hopefully,  * this machine will never ARP for trailers anyway.  */
 end_comment
 
 begin_function
@@ -6224,24 +6261,18 @@ specifier|static
 name|void
 name|ie_readframe
 parameter_list|(
-name|unit
-parameter_list|,
-name|ie
-parameter_list|,
-name|num
-parameter_list|)
 name|int
 name|unit
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ie_softc
 modifier|*
 name|ie
-decl_stmt|;
+parameter_list|,
 name|int
 name|num
-decl_stmt|;
 comment|/* frame number to read */
+parameter_list|)
 block|{
 name|struct
 name|ie_recv_frame_desc
@@ -6294,7 +6325,7 @@ name|ie_recv_frame_desc
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Immediately advance the RFD list, since we we have copied ours now. */
+comment|/* 	 * Immediately advance the RFD list, since we we have copied ours 	 * now. 	 */
 name|ie
 operator|->
 name|rframes
@@ -6372,27 +6403,34 @@ operator|&
 name|IE_FD_OK
 condition|)
 block|{
-if|if
-condition|(
 if|#
 directive|if
 name|NBPFILTER
 operator|>
 literal|0
+if|if
+condition|(
 name|ieget
 argument_list|(
-argument|unit
+name|unit
 argument_list|,
-argument|ie
+name|ie
 argument_list|,
-argument|&m
+operator|&
+name|m
 argument_list|,
-argument|&eh
+operator|&
+name|eh
 argument_list|,
-argument|&bpf_gets_it
+operator|&
+name|bpf_gets_it
 argument_list|)
+condition|)
+block|{
 else|#
 directive|else
+if|if
+condition|(
 name|ieget
 argument_list|(
 name|unit
@@ -6411,10 +6449,10 @@ operator|*
 operator|)
 literal|0
 argument_list|)
-endif|#
-directive|endif
 condition|)
 block|{
+endif|#
+directive|endif
 name|ie
 operator|->
 name|arpcom
@@ -6424,7 +6462,7 @@ operator|.
 name|if_ierrors
 operator|++
 expr_stmt|;
-comment|/* this counts as an error */
+comment|/* this counts as an 							 * error */
 return|return;
 block|}
 block|}
@@ -6516,7 +6554,7 @@ directive|if
 name|NBPFILTER
 operator|>
 literal|0
-comment|/*    * Check for a BPF filter; if so, hand it up.    * Note that we have to stick an extra mbuf up front, because    * bpf_mtap expects to have the ether header at the front.    * It doesn't matter that this results in an ill-formatted mbuf chain,    * since BPF just looks at the data.  (It doesn't try to free the mbuf,    * tho' it will make a copy for tcpdump.)    */
+comment|/* 	 * Check for a BPF filter; if so, hand it up. Note that we have to 	 * stick an extra mbuf up front, because bpf_mtap expects to have 	 * the ether header at the front. It doesn't matter that this 	 * results in an ill-formatted mbuf chain, since BPF just looks at 	 * the data.  (It doesn't try to free the mbuf, tho' it will make a 	 * copy for tcpdump.) 	 */
 if|if
 condition|(
 name|bpf_gets_it
@@ -6564,7 +6602,7 @@ name|m0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*    * A signal passed up from the filtering code indicating that the    * packet is intended for BPF but not for the protocol machinery.    * We can save a few cycles by not handing it off to them.    */
+comment|/* 	 * A signal passed up from the filtering code indicating that the 	 * packet is intended for BPF but not for the protocol machinery. We 	 * can save a few cycles by not handing it off to them. 	 */
 if|if
 condition|(
 name|bpf_gets_it
@@ -6581,8 +6619,8 @@ block|}
 endif|#
 directive|endif
 comment|/* NBPFILTER> 0 */
-comment|/*    * In here there used to be code to check destination addresses upon    * receipt of a packet.  We have deleted that code, and replaced it    * with code to check the address much earlier in the cycle, before    * copying the data in; this saves us valuable cycles when operating    * as a multicast router or when using BPF.    */
-comment|/*    * Finally pass this packet up to higher layers.    */
+comment|/* 	 * In here there used to be code to check destination addresses upon 	 * receipt of a packet.	 We have deleted that code, and replaced it 	 * with code to check the address much earlier in the cycle, before 	 * copying the data in; this saves us valuable cycles when operating 	 * as a multicast router or when using BPF. 	 */
+comment|/* 	 * Finally pass this packet up to higher layers. 	 */
 name|ether_input
 argument_list|(
 operator|&
@@ -6599,9 +6637,6 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|ie_drop_packet_buffer
@@ -6620,7 +6655,7 @@ name|i
 decl_stmt|;
 do|do
 block|{
-comment|/*      * This means we are somehow out of sync.  So, we reset the      * adapter.      */
+comment|/* 		 * This means we are somehow out of sync.  So, we reset the 		 * adapter. 		 */
 if|if
 condition|(
 operator|!
@@ -6772,24 +6807,16 @@ name|i
 condition|)
 do|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Start transmission on an interface.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|iestart
 parameter_list|(
-name|ifp
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ie_softc
@@ -6816,7 +6843,7 @@ decl_stmt|;
 name|u_short
 name|len
 decl_stmt|;
-comment|/* This is not really volatile, in this routine, but it makes gcc happy. */
+comment|/* 	 * This is not really volatile, in this routine, but it makes gcc 	 * happy. 	 */
 specifier|volatile
 name|u_short
 modifier|*
@@ -6954,7 +6981,7 @@ directive|if
 name|NBPFILTER
 operator|>
 literal|0
-comment|/*      * See if bpf is listening on this interface, let it see the packet      * before we commit it to the wire.      */
+comment|/* 		 * See if bpf is listening on this interface, let it see the 		 * packet before we commit it to the wire. 		 */
 if|if
 condition|(
 name|ie
@@ -7150,7 +7177,7 @@ operator|->
 name|ntxbufs
 condition|)
 do|;
-comment|/*    * If we queued up anything for transmission, send it.    */
+comment|/* 	 * If we queued up anything for transmission, send it. 	 */
 if|if
 condition|(
 name|ie
@@ -7177,7 +7204,7 @@ name|IE_CMD_LAST
 operator||
 name|IE_CMD_INTR
 expr_stmt|;
-comment|/*      * By passing the command pointer as a null, we tell      * command_and_wait() to pretend that this isn't an action      * command.  I wish I understood what was happening here.      */
+comment|/* 		 * By passing the command pointer as a null, we tell 		 * command_and_wait() to pretend that this isn't an action 		 * command.  I wish I understood what was happening here. 		 */
 name|command_and_wait
 argument_list|(
 name|ifp
@@ -7200,32 +7227,20 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Check to see if there's an 82586 out there.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|check_ie_present
 parameter_list|(
-name|unit
-parameter_list|,
-name|where
-parameter_list|,
-name|size
-parameter_list|)
 name|int
 name|unit
-decl_stmt|;
+parameter_list|,
 name|caddr_t
 name|where
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|size
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|volatile
 name|struct
@@ -7298,8 +7313,7 @@ expr|*
 name|scp
 argument_list|)
 expr_stmt|;
-comment|/* ignore cast-qual */
-comment|/*    * First we put the ISCP at the bottom of memory; this tests to make    * sure that our idea of the size of memory is the same as the controller's.    * This is NOT where the ISCP will be in normal operation.    */
+comment|/* 	 * First we put the ISCP at the bottom of memory; this tests to make 	 * sure that our idea of the size of memory is the same as the 	 * controller's. This is NOT where the ISCP will be in normal 	 * operation. 	 */
 name|iscp
 operator|=
 operator|(
@@ -7323,7 +7337,6 @@ expr|*
 name|iscp
 argument_list|)
 expr_stmt|;
-comment|/* ignore cast-qual */
 name|scb
 operator|=
 operator|(
@@ -7347,7 +7360,6 @@ expr|*
 name|scb
 argument_list|)
 expr_stmt|;
-comment|/* ignore cast-qual */
 name|scp
 operator|->
 name|ie_bus_use
@@ -7374,7 +7386,6 @@ name|caddr_t
 operator|)
 name|iscp
 operator|-
-comment|/* ignore cast-qual */
 operator|(
 specifier|volatile
 name|caddr_t
@@ -7446,10 +7457,12 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
-comment|/*    * Now relocate the ISCP to its real home, and reset the controller    * again.    */
+comment|/* 	 * Now relocate the ISCP to its real home, and reset the controller 	 * again. 	 */
 name|iscp
 operator|=
 operator|(
@@ -7569,7 +7582,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|ie_softc
@@ -7611,7 +7626,7 @@ name|scb
 operator|=
 name|scb
 expr_stmt|;
-comment|/*    * Acknowledge any interrupts we may have caused...    */
+comment|/* 	 * Acknowledge any interrupts we may have caused... 	 */
 name|ie_ack
 argument_list|(
 name|scb
@@ -7634,25 +7649,19 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Divine the memory size of ie board UNIT.  * Better hope there's nothing important hiding just below the ie card...  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|find_ie_mem_size
 parameter_list|(
-name|unit
-parameter_list|)
 name|int
 name|unit
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|size
@@ -7703,17 +7712,12 @@ block|}
 block|}
 return|return;
 block|}
-end_function
-
-begin_function
 name|void
 name|el_reset_586
 parameter_list|(
-name|unit
-parameter_list|)
 name|int
 name|unit
-decl_stmt|;
+parameter_list|)
 block|{
 name|outb
 argument_list|(
@@ -7744,17 +7748,12 @@ literal|100
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|sl_reset_586
 parameter_list|(
-name|unit
-parameter_list|)
 name|int
 name|unit
-decl_stmt|;
+parameter_list|)
 block|{
 name|outb
 argument_list|(
@@ -7766,17 +7765,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|ee16_reset_586
 parameter_list|(
-name|unit
-parameter_list|)
 name|int
 name|unit
-decl_stmt|;
+parameter_list|)
 block|{
 name|outb
 argument_list|(
@@ -7807,17 +7801,12 @@ literal|100
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|el_chan_attn
 parameter_list|(
-name|unit
-parameter_list|)
 name|int
 name|unit
-decl_stmt|;
+parameter_list|)
 block|{
 name|outb
 argument_list|(
@@ -7829,17 +7818,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|sl_chan_attn
 parameter_list|(
-name|unit
-parameter_list|)
 name|int
 name|unit
-decl_stmt|;
+parameter_list|)
 block|{
 name|outb
 argument_list|(
@@ -7851,17 +7835,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|ee16_chan_attn
 parameter_list|(
-name|unit
-parameter_list|)
 name|int
 name|unit
-decl_stmt|;
+parameter_list|)
 block|{
 name|outb
 argument_list|(
@@ -7873,24 +7852,17 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|u_short
 name|ee16_read_eeprom
 parameter_list|(
-name|sc
-parameter_list|,
-name|location
-parameter_list|)
 name|struct
 name|ie_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|int
 name|location
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|ectrl
@@ -8003,28 +7975,20 @@ return|return
 name|edata
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|ee16_eeprom_outbits
 parameter_list|(
-name|sc
-parameter_list|,
-name|edata
-parameter_list|,
-name|count
-parameter_list|)
 name|struct
 name|ie_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|int
 name|edata
-decl_stmt|,
+parameter_list|,
+name|int
 name|count
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|ectrl
@@ -8139,19 +8103,14 @@ argument_list|)
 expr_stmt|;
 comment|/* eeprom data must be held for 0.4 uSec */
 block|}
-end_function
-
-begin_function
 name|int
 name|ee16_eeprom_inbits
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|ie_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|ectrl
@@ -8244,24 +8203,17 @@ name|edata
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|ee16_eeprom_clock
 parameter_list|(
-name|sc
-parameter_list|,
-name|state
-parameter_list|)
 name|struct
 name|ie_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|int
 name|state
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|ectrl
@@ -8314,21 +8266,16 @@ argument_list|)
 expr_stmt|;
 comment|/* EESK must be stable for 8.38 uSec */
 block|}
-end_function
-
-begin_function
 specifier|static
 specifier|inline
 name|void
 name|ee16_interrupt_enable
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|ie_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|DELAY
 argument_list|(
@@ -8356,26 +8303,19 @@ literal|100
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|sl_read_ether
 parameter_list|(
-name|unit
-parameter_list|,
-name|addr
-parameter_list|)
 name|int
 name|unit
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|char
 name|addr
 index|[
 literal|6
 index|]
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -8406,18 +8346,13 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|iereset
 parameter_list|(
-name|unit
-parameter_list|)
 name|int
 name|unit
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|s
@@ -8477,7 +8412,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*    * Stop i82586 dead in its tracks.    */
+comment|/* 	 * Stop i82586 dead in its tracks. 	 */
 if|if
 condition|(
 name|command_and_wait
@@ -8539,7 +8474,7 @@ index|]
 operator|.
 name|iomembot
 argument_list|,
-name|ie_softc
+name|e_softc
 index|[
 name|unit
 index|]
@@ -8591,23 +8526,15 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_function
-
-begin_comment
 comment|/*  * This is called if we time out.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|chan_attn_timeout
 parameter_list|(
-name|rock
-parameter_list|)
 name|void
 modifier|*
 name|rock
-decl_stmt|;
+parameter_list|)
 block|{
 operator|*
 operator|(
@@ -8619,39 +8546,25 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Send a command to the controller and wait for it to either  * complete or be accepted, depending on the command.  If the  * command pointer is null, then pretend that the command is  * not an action command.  If the command pointer is not null,  * and the command is an action command, wait for  * ((volatile struct ie_cmd_common *)pcmd)->ie_cmd_status& MASK  * to become true.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|command_and_wait
 parameter_list|(
-name|unit
-parameter_list|,
-name|cmd
-parameter_list|,
-name|pcmd
-parameter_list|,
-name|mask
-parameter_list|)
 name|int
 name|unit
-decl_stmt|;
+parameter_list|,
 name|int
 name|cmd
-decl_stmt|;
+parameter_list|,
 specifier|volatile
 name|void
 modifier|*
 name|pcmd
-decl_stmt|;
+parameter_list|,
 name|int
 name|mask
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|volatile
 name|struct
@@ -8704,7 +8617,7 @@ operator|(
 name|unit
 operator|)
 expr_stmt|;
-comment|/*      * According to the packet driver, the minimum timeout should be      * .369 seconds, which we round up to .37.      */
+comment|/* 		 * According to the packet driver, the minimum timeout 		 * should be .369 seconds, which we round up to .37. 		 */
 name|timeout
 argument_list|(
 name|chan_attn_timeout
@@ -8723,7 +8636,7 @@ literal|100
 argument_list|)
 expr_stmt|;
 comment|/* ignore cast-qual */
-comment|/*      * Now spin-lock waiting for status.  This is not a very nice      * thing to do, but I haven't figured out how, or indeed if, we      * can put the process waiting for action to sleep.  (We may      * be getting called through some other timeout running in the      * kernel.)      */
+comment|/* 		 * Now spin-lock waiting for status.  This is not a very 		 * nice thing to do, but I haven't figured out how, or 		 * indeed if, we can put the process waiting for action to 		 * sleep.  (We may be getting called through some other 		 * timeout running in the kernel.) 		 */
 while|while
 condition|(
 literal|1
@@ -8756,12 +8669,14 @@ argument_list|)
 expr_stmt|;
 comment|/* ignore cast-qual */
 return|return
+operator|(
 name|timedout
+operator|)
 return|;
 block|}
 else|else
 block|{
-comment|/*      * Otherwise, just wait for the command to be accepted.      */
+comment|/* 		 * Otherwise, just wait for the command to be accepted. 		 */
 operator|(
 operator|*
 name|ie_softc
@@ -8789,33 +8704,25 @@ condition|)
 empty_stmt|;
 comment|/* spin lock */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  * Run the time-domain reflectometer...  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|run_tdr
 parameter_list|(
-name|unit
-parameter_list|,
-name|cmd
-parameter_list|)
 name|int
 name|unit
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ie_tdr_cmd
 modifier|*
 name|cmd
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|result
@@ -8994,18 +8901,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|start_receiver
 parameter_list|(
-name|unit
-parameter_list|)
 name|int
 name|unit
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|s
@@ -9075,13 +8977,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Here is a helper routine for iernr() and ieinit().  This sets up  * the RFA.  */
-end_comment
-
-begin_function
 specifier|static
 name|caddr_t
 name|setup_rfa
@@ -9248,7 +9144,7 @@ name|ie_fd_last
 operator||=
 name|IE_FD_LAST
 expr_stmt|;
-comment|/*    * Now lay out some buffers for the incoming frames.  Note that    * we set aside a bit of slop in each buffer, to make sure that    * we have enough space to hold a single frame in every buffer.    */
+comment|/* 	 * Now lay out some buffers for the incoming frames.  Note that we 	 * set aside a bit of slop in each buffer, to make sure that we have 	 * enough space to hold a single frame in every buffer. 	 */
 name|rbd
 operator|=
 operator|(
@@ -9295,7 +9191,6 @@ expr|*
 name|rbd
 argument_list|)
 expr_stmt|;
-comment|/* ignore cast-qual */
 name|ptr
 operator|=
 operator|(
@@ -9416,7 +9311,7 @@ name|ie_rbd_length
 operator||=
 name|IE_RBD_LAST
 expr_stmt|;
-comment|/* We use the head and tail pointers on receive to keep track of    * the order in which RFDs and RBDs are used. */
+comment|/* 	 * We use the head and tail pointers on receive to keep track of the 	 * order in which RFDs and RBDs are used. 	 */
 name|ie
 operator|->
 name|rfhead
@@ -9496,16 +9391,12 @@ name|ptr
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ptr
+operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Run the multicast setup command.  * Call at splimp().  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|mc_setup
@@ -9655,29 +9546,25 @@ name|unit
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * This routine takes the environment generated by check_ie_present()  * and adds to it all the other structures we need to operate the adapter.  * This includes executing the CONFIGURE, IA-SETUP, and MC-SETUP commands,  * starting the receiver unit, and clearing interrupts.  *  * THIS ROUTINE MUST BE CALLED AT splimp() OR HIGHER.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|ieinit
 parameter_list|(
-name|unit
-parameter_list|)
 name|int
 name|unit
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ie_softc
@@ -9723,8 +9610,7 @@ expr|*
 name|scb
 argument_list|)
 expr_stmt|;
-comment|/* ignore cast-qual */
-comment|/*    * Send the configure command first.    */
+comment|/* 	 * Send the configure command first. 	 */
 block|{
 specifier|volatile
 name|struct
@@ -9825,7 +9711,7 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/*    * Now send the Individual Address Setup command.    */
+comment|/* 	 * Now send the Individual Address Setup command. 	 */
 block|{
 specifier|volatile
 name|struct
@@ -9895,7 +9781,6 @@ operator|->
 name|ie_address
 argument_list|)
 expr_stmt|;
-comment|/* ignore cast-qual */
 name|scb
 operator|->
 name|ie_command_list
@@ -9934,7 +9819,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ie%d: individual address setup command failed\n"
+literal|"ie%d: individual address "
+literal|"setup command failed\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -9942,7 +9828,7 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/*    * Now run the time-domain reflectometer.    */
+comment|/* 	 * Now run the time-domain reflectometer. 	 */
 name|run_tdr
 argument_list|(
 name|unit
@@ -9954,7 +9840,7 @@ operator|)
 name|ptr
 argument_list|)
 expr_stmt|;
-comment|/*    * Acknowledge any interrupts we have generated thus far.    */
+comment|/* 	 * Acknowledge any interrupts we have generated thus far. 	 */
 name|ie_ack
 argument_list|(
 name|ie
@@ -9970,7 +9856,7 @@ operator|->
 name|ie_chan_attn
 argument_list|)
 expr_stmt|;
-comment|/*    * Set up the RFA.    */
+comment|/* 	 * Set up the RFA. 	 */
 name|ptr
 operator|=
 name|setup_rfa
@@ -9980,7 +9866,7 @@ argument_list|,
 name|ie
 argument_list|)
 expr_stmt|;
-comment|/*    * Finally, the transmit command and buffer are the last little bit of work.    */
+comment|/* 	 * Finally, the transmit command and buffer are the last little bit 	 * of work. 	 */
 comment|/* transmit command buffers */
 for|for
 control|(
@@ -10138,7 +10024,6 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* ignore */
 name|bzero
 argument_list|(
 operator|(
@@ -10161,7 +10046,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* cast-qual */
 name|bzero
 argument_list|(
 operator|(
@@ -10184,10 +10068,8 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* warnings */
 block|}
-comment|/* here */
-comment|/*    * This must be coordinated with iestart() and ietint().    */
+comment|/* 	 * This must be coordinated with iestart() and ietint(). 	 */
 name|ie
 operator|->
 name|xmit_cmds
@@ -10261,7 +10143,7 @@ name|if_flags
 operator||=
 name|IFF_RUNNING
 expr_stmt|;
-comment|/* tell higher levels we're here */
+comment|/* tell higher levels 							 * we're here */
 name|start_receiver
 argument_list|(
 name|unit
@@ -10269,18 +10151,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|ie_stop
 parameter_list|(
-name|unit
-parameter_list|)
 name|int
 name|unit
-decl_stmt|;
+parameter_list|)
 block|{
 name|command_and_wait
 argument_list|(
@@ -10294,30 +10171,21 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|ieioctl
 parameter_list|(
-name|ifp
-parameter_list|,
-name|command
-parameter_list|,
-name|data
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|,
 name|int
 name|command
-decl_stmt|;
+parameter_list|,
 name|caddr_t
 name|data
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ifaddr
@@ -10419,7 +10287,7 @@ comment|/* INET */
 ifdef|#
 directive|ifdef
 name|IPX
-comment|/* This magic copied from if_is.c; I don't use XNS, so I have no        * way of telling if this actually works or not.        */
+comment|/* 			 * This magic copied from if_is.c; I don't use XNS, 			 * so I have no way of telling if this actually 			 * works or not. 			 */
 case|case
 name|AF_IPX
 case|:
@@ -10520,7 +10388,7 @@ comment|/* IPX */
 ifdef|#
 directive|ifdef
 name|NS
-comment|/* This magic copied from if_is.c; I don't use XNS, so I have no        * way of telling if this actually works or not.        */
+comment|/* 			 * This magic copied from if_is.c; I don't use XNS, 			 * so I have no way of telling if this actually 			 * works or not. 			 */
 case|case
 name|AF_NS
 case|:
@@ -10632,7 +10500,7 @@ break|break;
 case|case
 name|SIOCSIFFLAGS
 case|:
-comment|/*      * Note that this device doesn't have an "all multicast" mode, so we      * must turn on promiscuous mode and do the filtering manually.      */
+comment|/* 		 * Note that this device doesn't have an "all multicast" 		 * mode, so we must turn on promiscuous mode and do the 		 * filtering manually. 		 */
 if|if
 condition|(
 operator|(
@@ -10777,7 +10645,7 @@ case|:
 case|case
 name|SIOCDELMULTI
 case|:
-comment|/*      * Update multicast listeners      */
+comment|/* 		 * Update multicast listeners 		 */
 comment|/* reset multicast filtering */
 name|ie_mc_reset
 argument_list|(
@@ -10794,7 +10662,7 @@ break|break;
 case|case
 name|SIOCSIFMTU
 case|:
-comment|/*      * Set the interface MTU.      */
+comment|/* 		 * Set the interface MTU. 		 */
 if|if
 condition|(
 name|ifr
@@ -10833,12 +10701,11 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|ie_mc_reset
@@ -10863,7 +10730,7 @@ name|ifmultiaddr
 modifier|*
 name|ifma
 decl_stmt|;
-comment|/*    * Step through the list of addresses.    */
+comment|/* 	 * Step through the list of addresses. 	 */
 name|ie
 operator|->
 name|mcast_count
@@ -10992,15 +10859,9 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-end_function
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|DEBUG
-end_ifdef
-
-begin_function
 name|void
 name|print_rbd
 parameter_list|(
