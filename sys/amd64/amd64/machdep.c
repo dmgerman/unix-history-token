@@ -4521,11 +4521,16 @@ operator|=
 name|rcr0
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
 name|cr0
 operator||=
 name|CR0_NE
 expr_stmt|;
 comment|/* Done by npxinit() */
+endif|#
+directive|endif
 name|cr0
 operator||=
 name|CR0_MP
