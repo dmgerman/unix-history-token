@@ -4880,7 +4880,10 @@ condition|(
 name|ret
 operator|!=
 literal|0
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|ret
 operator|!=
 name|ENOMEM
@@ -4890,6 +4893,11 @@ operator|(
 name|ret
 operator|)
 return|;
+name|wiredlen
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 name|req
 operator|->
