@@ -2452,6 +2452,19 @@ operator|->
 name|gone
 condition|)
 return|return;
+comment|/*      * quick fix: Try to detect an interrupt when the card goes away.      */
+if|if
+condition|(
+name|inw
+argument_list|(
+name|BASE
+operator|+
+name|EP_STATUS
+argument_list|)
+operator|==
+literal|0xffff
+condition|)
+return|return;
 name|ifp
 operator|=
 operator|&
