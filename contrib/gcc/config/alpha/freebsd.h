@@ -191,7 +191,7 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"-m elf64alpha					\   %{p:%e`-p' not supported; use `-pg' and gprof(1)}		\   %{Wl,*:%*}							\   %{assert*} %{R*} %{rpath*} %{defsym*}				\   %{shared:-Bshareable %{h*} %{soname*}}			\   %{symbolic:-Bsymbolic}					\   %{!shared:							\     %{!static:							\       %{rdynamic:-export-dynamic}				\       %{!dynamic-linker:-dynamic-linker /usr/libexec/ld-elf.so.1} \     %{static:-Bstatic}}"
+value|"-m elf64alpha					\   %{p:%e`-p' not supported; use `-pg' and gprof(1)}		\   %{Wl,*:%*}							\   %{assert*} %{R*} %{rpath*} %{defsym*}				\   %{shared:-Bshareable %{h*} %{soname*}}			\   %{symbolic:-Bsymbolic}					\   %{!shared:							\     %{!static:							\       %{rdynamic:-export-dynamic}				\       %{!dynamic-linker:-dynamic-linker /usr/libexec/ld-elf.so.1}} \     %{static:-Bstatic}}"
 end_define
 
 begin_comment
