@@ -19258,7 +19258,14 @@ goto|goto
 name|top
 goto|;
 block|}
-comment|/* 	 * If we have managed to get rid of all the dirty buffers, 	 * then we are done. For certain directories and block 	 * devices, we may need to do further work. 	 */
+comment|/* 	 * If we have managed to get rid of all the dirty buffers, 	 * then we are done. For certain directories and block 	 * devices, we may need to do further work. 	 * 	 * We must wait for any I/O in progress to finish so that 	 * all potential buffers on the dirty list will be visible. 	 */
+name|drain_output
+argument_list|(
+name|vp
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|TAILQ_FIRST
@@ -19290,14 +19297,7 @@ operator|&
 name|lk
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we are trying to sync a block device, some of its buffers may 	 * contain metadata that cannot be written until the contents of some 	 * partially written files have been written to disk. The only easy 	 * way to accomplish this is to sync the entire filesystem (luckily 	 * this happens rarely). 	 * 	 * We must wait for any I/O in progress to finish so that 	 * all potential buffers on the dirty list will be visible. 	 */
-name|drain_output
-argument_list|(
-name|vp
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
+comment|/* 	 * If we are trying to sync a block device, some of its buffers may 	 * contain metadata that cannot be written until the contents of some 	 * partially written files have been written to disk. The only easy 	 * way to accomplish this is to sync the entire filesystem (luckily 	 * this happens rarely). 	 */
 if|if
 condition|(
 name|vn_isdisk
