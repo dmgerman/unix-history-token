@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: trap.c,v 1.15 1998/09/08 13:16:52 cracauer Exp $"
+literal|"$Id: trap.c,v 1.16 1998/09/10 14:51:06 cracauer Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1448,7 +1448,7 @@ name|breakwaitcmd
 operator|=
 literal|1
 expr_stmt|;
-comment|/*  	 * If a trap is set, we need to make sure it is executed even 	 * when a childs blocks all signals. 	 */
+comment|/*  	 * If a trap is set, not ignored and not the null command, we need  	 * to make sure traps are executed even when a child blocks signals. 	 */
 if|if
 condition|(
 name|trap
@@ -1457,6 +1457,17 @@ name|signo
 index|]
 operator|!=
 name|NULL
+operator|&&
+operator|!
+name|trap
+index|[
+name|signo
+index|]
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
 operator|&&
 operator|!
 operator|(
