@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.21 1995/03/21 11:21:05 dufault Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.22 1995/04/14 15:10:39 dufault Exp $  */
 end_comment
 
 begin_ifndef
@@ -96,16 +96,6 @@ include|#
 directive|include
 file|<scsi/scsi_driver.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/cpu.h>
-end_include
-
-begin_comment
-comment|/* XXX For bootverbose (funny place) */
-end_comment
 
 begin_comment
 comment|/* Minor number fields:  *  * NON-FIXED SCSI devices:  *  * ???? ???? ???? ???N MMMMMMMM mmmmmmmm  *  * ?: Don't know; those bits didn't use to exist, currently always 0.  * N: New style device: must be zero.  * M: Major device number.  * m: old style minor device number.  *  * FIXED SCSI devices:  *  * ???? SBBB LLLI IIIN MMMMMMMM mmmmmmmm  *  * ?: Not used yet.  * S: "Super" device; reserved for things like resetting the SCSI bus.  * B: Scsi bus  * L: Logical unit  * I: Scsi target  (XXX: Why 16?  Why that many in scsiconf.h?)  * N: New style device; must be one.  * M: Major device number  * m: Old style minor device number.  */
