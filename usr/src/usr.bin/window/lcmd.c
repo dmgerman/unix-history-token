@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lcmd.c	3.10 84/01/12"
+literal|"@(#)lcmd.c	3.11 84/01/13"
 decl_stmt|;
 end_decl_stmt
 
@@ -416,7 +416,7 @@ begin_block
 block|{
 if|if
 condition|(
-name|cx_setfile
+name|cx_beginfile
 argument_list|(
 name|filename
 argument_list|)
@@ -460,7 +460,7 @@ begin_block
 block|{
 if|if
 condition|(
-name|cx_setbuf
+name|cx_beginbuf
 argument_list|(
 name|buffer
 argument_list|)

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)context.c	3.3 83/12/07"
+literal|"@(#)context.c	3.4 84/01/13"
 decl_stmt|;
 end_decl_stmt
 
@@ -200,7 +200,7 @@ block|}
 end_block
 
 begin_macro
-name|cx_setfile
+name|cx_beginfile
 argument_list|(
 argument|filename
 argument_list|)
@@ -292,7 +292,7 @@ literal|0
 expr_stmt|;
 name|cx
 operator|.
-name|x_noerrwin
+name|x_noerr
 operator|=
 literal|0
 expr_stmt|;
@@ -327,7 +327,7 @@ block|}
 end_block
 
 begin_macro
-name|cx_setbuf
+name|cx_beginbuf
 argument_list|(
 argument|buf
 argument_list|)
