@@ -317,7 +317,7 @@ name|noreset
 block|,
 name|pcdevtotty
 block|,
-name|ttselect
+name|ttpoll
 block|,
 name|pcmmap
 block|,

@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* su: SCSI Universal. This is a universal SCSI device that  * has a fixed minor number format.  This allows you to refer  * to your devices by BUS, ID, LUN instead of st0, st1, ...  *  * This code looks up the underlying device for a given SCSI  * target and uses that driver.  *  *Begin copyright  *  * Copyright (C) 1993, 1994, 1995, HD Associates, Inc.  * PO Box 276  * Pepperell, MA 01463  * 508 433 5266  * dufault@hda.com  *  * This code is contributed to the University of California at Berkeley:  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *End copyright  *  *      $Id: su.c,v 1.16 1997/02/22 09:44:40 peter Exp $  *  * Tabstops 4  * XXX devfs entries for this device should be handled by generic scsiconfig  * Add a bdevsw interface.. ?  */
+comment|/* su: SCSI Universal. This is a universal SCSI device that  * has a fixed minor number format.  This allows you to refer  * to your devices by BUS, ID, LUN instead of st0, st1, ...  *  * This code looks up the underlying device for a given SCSI  * target and uses that driver.  *  *Begin copyright  *  * Copyright (C) 1993, 1994, 1995, HD Associates, Inc.  * PO Box 276  * Pepperell, MA 01463  * 508 433 5266  * dufault@hda.com  *  * This code is contributed to the University of California at Berkeley:  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *End copyright  *  *      $Id: su.c,v 1.17 1997/09/02 20:06:40 bde Exp $  *  * Tabstops 4  * XXX devfs entries for this device should be handled by generic scsiconfig  * Add a bdevsw interface.. ?  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -87,8 +93,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_select_t
-name|suselect
+name|d_poll_t
+name|supoll
 decl_stmt|;
 end_decl_stmt
 
@@ -124,7 +130,7 @@ block|,
 name|nodevtotty
 block|,
 comment|/* scsi */
-name|suselect
+name|supoll
 block|,
 name|nommap
 block|,
@@ -214,7 +220,7 @@ name|nxreset
 block|,
 name|nxdevtotty
 block|,
-name|nxselect
+name|seltrue
 block|,
 name|nxmmap
 block|,
@@ -987,13 +993,13 @@ end_function
 begin_function
 specifier|static
 name|int
-name|suselect
+name|supoll
 parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
 name|int
-name|which
+name|events
 parameter_list|,
 name|struct
 name|proc
@@ -1032,12 +1038,12 @@ call|(
 modifier|*
 name|cdev
 operator|->
-name|d_select
+name|d_poll
 call|)
 argument_list|(
 name|base
 argument_list|,
-name|which
+name|events
 argument_list|,
 name|p
 argument_list|)

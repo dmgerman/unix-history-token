@@ -187,7 +187,7 @@ name|nullreset
 block|,
 name|nodevtotty
 block|,
-name|noselect
+name|seltrue
 block|,
 name|nommap
 block|,

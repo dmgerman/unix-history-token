@@ -218,13 +218,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_select_t
-name|spigot_select
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|d_mmap_t
 name|spigot_mmap
 decl_stmt|;
@@ -262,7 +255,7 @@ block|,
 name|nodevtotty
 block|,
 comment|/* Spigot */
-name|spigot_select
+name|seltrue
 block|,
 name|spigot_mmap
 block|,
@@ -900,29 +893,6 @@ return|;
 block|}
 return|return
 literal|0
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|spigot_select
-parameter_list|(
-name|dev_t
-name|dev
-parameter_list|,
-name|int
-name|rw
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|)
-block|{
-return|return
-name|ENXIO
 return|;
 block|}
 end_function

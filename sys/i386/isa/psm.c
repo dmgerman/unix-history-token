@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993 Erik Forsberg.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: psm.c,v 1.40 1997/06/30 12:52:57 yokota Exp $  */
+comment|/*-  * Copyright (c) 1992, 1993 Erik Forsberg.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: psm.c,v 1.41 1997/07/20 14:10:08 bde Exp $  */
 end_comment
 
 begin_comment
@@ -67,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/poll.h>
 end_include
 
 begin_include
@@ -637,8 +643,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_select_t
-name|psmselect
+name|d_poll_t
+name|psmpoll
 decl_stmt|;
 end_decl_stmt
 
@@ -1005,7 +1011,7 @@ name|nullreset
 block|,
 name|nodevtotty
 block|,
-name|psmselect
+name|psmpoll
 block|,
 name|nommap
 block|,
@@ -6853,13 +6859,13 @@ end_function
 begin_function
 specifier|static
 name|int
-name|psmselect
+name|psmpoll
 parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
 name|int
-name|rw
+name|events
 parameter_list|,
 name|struct
 name|proc
@@ -6881,29 +6887,29 @@ argument_list|)
 index|]
 decl_stmt|;
 name|int
-name|ret
-decl_stmt|;
-name|int
 name|s
 decl_stmt|;
-comment|/* Silly to select for output */
-if|if
-condition|(
-name|rw
-operator|==
-name|FWRITE
-condition|)
-return|return
-operator|(
+name|int
+name|revents
+init|=
 literal|0
-operator|)
-return|;
+decl_stmt|;
 comment|/* Return true if a mouse event available */
 name|s
 operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|events
+operator|&
+operator|(
+name|POLLIN
+operator||
+name|POLLRDNORM
+operator|)
+condition|)
 if|if
 condition|(
 operator|(
@@ -6924,14 +6930,17 @@ operator|>
 literal|0
 operator|)
 condition|)
-block|{
-name|ret
-operator|=
-literal|1
+name|revents
+operator||=
+name|events
+operator|&
+operator|(
+name|POLLIN
+operator||
+name|POLLRDNORM
+operator|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|selrecord
 argument_list|(
 name|p
@@ -6942,11 +6951,6 @@ operator|->
 name|rsel
 argument_list|)
 expr_stmt|;
-name|ret
-operator|=
-literal|0
-expr_stmt|;
-block|}
 name|splx
 argument_list|(
 name|s
@@ -6954,7 +6958,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ret
+name|revents
 operator|)
 return|;
 block|}

@@ -96,6 +96,12 @@ directive|include
 file|<sys/select.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/poll.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -367,8 +373,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_select_t
-name|twselect
+name|d_poll_t
+name|twpoll
 decl_stmt|;
 end_decl_stmt
 
@@ -404,7 +410,7 @@ block|,
 name|nodevtotty
 block|,
 comment|/* tw */
-name|twselect
+name|twpoll
 block|,
 name|nommap
 block|,
@@ -1920,11 +1926,11 @@ end_comment
 
 begin_function
 name|int
-name|twselect
+name|twpoll
 parameter_list|(
 name|dev
 parameter_list|,
-name|rw
+name|events
 parameter_list|,
 name|p
 parameter_list|)
@@ -1932,7 +1938,7 @@ name|dev_t
 name|dev
 decl_stmt|;
 name|int
-name|rw
+name|events
 decl_stmt|;
 name|struct
 name|proc
@@ -1945,15 +1951,13 @@ name|tw_sc
 modifier|*
 name|sc
 decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|pp
-decl_stmt|;
 name|int
 name|s
-decl_stmt|,
-name|i
+decl_stmt|;
+name|int
+name|revents
+init|=
+literal|0
 decl_stmt|;
 name|sc
 operator|=
@@ -1971,6 +1975,17 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
+comment|/* XXX is this correct?  the original code didn't test select rw mode!! */
+if|if
+condition|(
+name|events
+operator|&
+operator|(
+name|POLLIN
+operator||
+name|POLLRDNORM
+operator|)
+condition|)
 if|if
 condition|(
 name|sc
@@ -1981,18 +1996,17 @@ name|sc
 operator|->
 name|sc_nextout
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return
+name|revents
+operator||=
+name|events
+operator|&
 operator|(
-literal|1
+name|POLLIN
+operator||
+name|POLLRDNORM
 operator|)
-return|;
-block|}
+expr_stmt|;
+else|else
 name|selrecord
 argument_list|(
 name|p
@@ -2010,7 +2024,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|revents
 operator|)
 return|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: pcaudio.c,v 1.35 1997/09/03 19:08:05 sos Exp $  */
+comment|/*-  * Copyright (c) 1994 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: pcaudio.c,v 1.36 1997/09/06 17:38:29 helbig Exp $  */
 end_comment
 
 begin_include
@@ -63,6 +63,12 @@ begin_include
 include|#
 directive|include
 file|<sys/filio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/poll.h>
 end_include
 
 begin_include
@@ -241,7 +247,7 @@ name|struct
 name|selinfo
 name|wsel
 decl_stmt|;
-comment|/* select status */
+comment|/* select/poll status */
 name|char
 name|non_block
 decl_stmt|;
@@ -420,8 +426,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_select_t
-name|pcaselect
+name|d_poll_t
+name|pcapoll
 decl_stmt|;
 end_decl_stmt
 
@@ -457,7 +463,7 @@ block|,
 name|nodevtotty
 block|,
 comment|/* pcaudio */
-name|pcaselect
+name|pcapoll
 block|,
 name|nommap
 block|,
@@ -2328,13 +2334,13 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pcaselect
+name|pcapoll
 parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
 name|int
-name|rw
+name|events
 parameter_list|,
 name|struct
 name|proc
@@ -2344,23 +2350,32 @@ parameter_list|)
 block|{
 name|int
 name|s
-init|=
-name|spltty
-argument_list|()
 decl_stmt|;
 name|struct
 name|proc
 modifier|*
 name|p1
 decl_stmt|;
-switch|switch
+name|int
+name|revents
+init|=
+literal|0
+decl_stmt|;
+name|s
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
+if|if
 condition|(
-name|rw
+name|events
+operator|&
+operator|(
+name|POLLOUT
+operator||
+name|POLLWRNORM
+operator|)
 condition|)
-block|{
-case|case
-name|FWRITE
-case|:
 if|if
 condition|(
 operator|!
@@ -2387,18 +2402,18 @@ index|[
 literal|2
 index|]
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return
+name|revents
+operator||=
+name|events
+operator|&
 operator|(
-literal|1
+name|POLLOUT
+operator||
+name|POLLWRNORM
 operator|)
-return|;
-block|}
+expr_stmt|;
+else|else
+block|{
 if|if
 condition|(
 name|pca_status
@@ -2449,15 +2464,7 @@ name|p
 operator|->
 name|p_pid
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-default|default:
+block|}
 name|splx
 argument_list|(
 name|s
@@ -2465,10 +2472,9 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|revents
 operator|)
 return|;
-block|}
 block|}
 end_function
 

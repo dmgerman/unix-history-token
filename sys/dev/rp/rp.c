@@ -3828,7 +3828,7 @@ name|noreset
 block|,
 name|rpdevtotty
 block|,
-name|ttselect
+name|ttpoll
 block|,
 name|nommap
 block|,

@@ -393,8 +393,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_select_t
-name|bquselect
+name|d_poll_t
+name|bqupoll
 decl_stmt|;
 end_decl_stmt
 
@@ -430,7 +430,7 @@ block|,
 name|nodevtotty
 block|,
 comment|/* tputer */
-name|bquselect
+name|bqupoll
 block|,
 name|nommap
 block|,
@@ -1767,13 +1767,13 @@ end_function
 begin_function
 specifier|static
 name|int
-name|bquselect
+name|bqupoll
 parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
 name|int
-name|rw
+name|events
 parameter_list|,
 name|struct
 name|proc
@@ -1784,7 +1784,14 @@ block|{
 comment|/* still unimplemented */
 return|return
 operator|(
-literal|1
+name|seltrue
+argument_list|(
+name|dev
+argument_list|,
+name|events
+argument_list|,
+name|p
+argument_list|)
 operator|)
 return|;
 block|}

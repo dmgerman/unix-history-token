@@ -490,8 +490,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_select_t
-name|cxselect
+name|d_poll_t
+name|cxpoll
 decl_stmt|;
 end_decl_stmt
 
@@ -530,7 +530,7 @@ block|,
 name|cxdevtotty
 block|,
 comment|/* cronyx */
-name|cxselect
+name|cxpoll
 block|,
 name|nommap
 block|,
@@ -4600,13 +4600,13 @@ end_function
 
 begin_function
 name|int
-name|cxselect
+name|cxpoll
 parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
 name|int
-name|flag
+name|events
 parameter_list|,
 name|struct
 name|proc
@@ -4639,34 +4639,9 @@ operator|(
 literal|0
 operator|)
 return|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD__
-operator|<
-literal|2
 return|return
 operator|(
-name|ttselect
-argument_list|(
-name|dev
-argument_list|,
-name|flag
-argument_list|,
-name|p
-argument_list|)
-operator|)
-return|;
-else|#
-directive|else
-comment|/* FreeBSD 2.x and BSDI */
-return|return
-operator|(
-name|ttyselect
+name|ttypoll
 argument_list|(
 name|cxchan
 index|[
@@ -4675,14 +4650,12 @@ index|]
 operator|->
 name|ttyp
 argument_list|,
-name|flag
+name|events
 argument_list|,
 name|p
 argument_list|)
 operator|)
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 

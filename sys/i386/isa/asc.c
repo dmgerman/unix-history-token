@@ -4,7 +4,7 @@ comment|/* asc.c - device driver for hand scanners  *  * Current version support
 end_comment
 
 begin_comment
-comment|/*  * $Id: asc.c,v 1.25 1997/03/24 11:23:39 bde Exp $  */
+comment|/*  * $Id: asc.c,v 1.26 1997/04/14 16:47:38 jkh Exp $  */
 end_comment
 
 begin_include
@@ -132,6 +132,12 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/poll.h>
 end_include
 
 begin_ifdef
@@ -837,8 +843,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_select_t
-name|ascselect
+name|d_poll_t
+name|ascpoll
 decl_stmt|;
 end_decl_stmt
 
@@ -874,7 +880,7 @@ block|,
 name|nodevtotty
 block|,
 comment|/* asc */
-name|ascselect
+name|ascpoll
 block|,
 name|nommap
 block|,
@@ -4240,13 +4246,13 @@ end_function
 begin_function
 name|STATIC
 name|int
-name|ascselect
+name|ascpoll
 parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
 name|int
-name|rw
+name|events
 parameter_list|,
 name|struct
 name|proc
@@ -4276,15 +4282,32 @@ name|unit
 decl_stmt|;
 name|int
 name|sps
-init|=
-name|spltty
-argument_list|()
 decl_stmt|;
 name|struct
 name|proc
 modifier|*
 name|p1
 decl_stmt|;
+name|int
+name|revents
+init|=
+literal|0
+decl_stmt|;
+name|sps
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|events
+operator|&
+operator|(
+name|POLLIN
+operator||
+name|POLLRDNORM
+operator|)
+condition|)
 if|if
 condition|(
 name|scu
@@ -4295,16 +4318,18 @@ name|count
 operator|>
 literal|0
 condition|)
-block|{
-name|splx
-argument_list|(
-name|sps
-argument_list|)
+name|revents
+operator||=
+name|events
+operator|&
+operator|(
+name|POLLIN
+operator||
+name|POLLRDNORM
+operator|)
 expr_stmt|;
-return|return
-literal|1
-return|;
-block|}
+else|else
+block|{
 if|if
 condition|(
 operator|!
@@ -4321,41 +4346,6 @@ argument_list|(
 name|scu
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FREEBSD_1_X
-if|if
-condition|(
-name|scu
-operator|->
-name|selp
-operator|==
-operator|(
-name|pid_t
-operator|)
-literal|0
-condition|)
-block|{
-name|scu
-operator|->
-name|selp
-operator|=
-name|p
-operator|->
-name|p_pid
-expr_stmt|;
-block|}
-else|else
-block|{
-name|scu
-operator|->
-name|flags
-operator||=
-name|SEL_COLL
-expr_stmt|;
-block|}
-else|#
-directive|else
 if|if
 condition|(
 name|scu
@@ -4406,8 +4396,7 @@ name|p
 operator|->
 name|p_pid
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 name|splx
 argument_list|(
 name|sps

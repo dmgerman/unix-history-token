@@ -399,7 +399,7 @@ block|,
 name|rcdevtotty
 block|,
 comment|/* rc */
-name|ttselect
+name|ttpoll
 block|,
 name|nommap
 block|,
