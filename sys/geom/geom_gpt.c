@@ -145,6 +145,36 @@ directive|include
 file|<geom/geom_slice.h>
 end_include
 
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|offsetof
+argument_list|(
+expr|struct
+name|gpt_hdr
+argument_list|,
+name|padding
+argument_list|)
+operator|==
+literal|92
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|gpt_ent
+argument_list|)
+operator|==
+literal|128
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * XXX: GEOM is not dynamic enough. We are forced to use a compile-time  * limit. The minimum number of partitions (128) as required by EFI is  * most of the time just a waste of space.  */
 end_comment
