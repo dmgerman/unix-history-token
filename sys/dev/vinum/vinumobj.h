@@ -463,11 +463,12 @@ comment|/* sorted list of free space on drive */
 ifdef|#
 directive|ifdef
 name|_KERNEL
-name|struct
-name|partinfo
-name|partinfo
+name|u_int
+name|sectorsize
 decl_stmt|;
-comment|/* partition information */
+name|off_t
+name|mediasize
+decl_stmt|;
 name|dev_t
 name|dev
 decl_stmt|;
