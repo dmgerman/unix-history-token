@@ -733,7 +733,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|SOFTWARE_SSTEP
+comment|/* SOFTWARE_SSTEP */
 block|}
 if|if
 condition|(
@@ -1013,8 +1013,11 @@ end_function
 begin_endif
 endif|#
 directive|endif
-endif|SOFTWARE_SSTEP
 end_endif
+
+begin_comment
+comment|/* SOFTWARE_SSTEP */
+end_comment
 
 begin_decl_stmt
 specifier|extern
