@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)xstr.c	4.2 (Berkeley) %G%"
+literal|"@(#)xstr.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1471,6 +1471,22 @@ condition|?
 literal|"r+"
 else|:
 literal|"w"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mesgwrit
+operator|==
+name|NULL
+condition|)
+name|perror
+argument_list|(
+name|strings
+argument_list|)
+operator|,
+name|exit
+argument_list|(
+literal|4
 argument_list|)
 expr_stmt|;
 for|for
