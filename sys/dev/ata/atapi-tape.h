@@ -4,13 +4,14 @@ comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *
 end_comment
 
 begin_comment
-comment|/* MODE SENSE parameter header */
+comment|/* ATAPI tape drive Capabilities and Mechanical Status Page */
 end_comment
 
 begin_struct
 struct|struct
-name|ast_header
+name|ast_cappage
 block|{
+comment|/* mode page data header */
 name|u_int8_t
 name|data_length
 decl_stmt|;
@@ -20,43 +21,47 @@ name|medium_type
 decl_stmt|;
 comment|/* medium type (if any) */
 name|u_int8_t
-name|dsp
+name|reserved
+range|:
+literal|4
 decl_stmt|;
-comment|/* device specific parameter */
 name|u_int8_t
-name|bdl
+name|mode
+range|:
+literal|3
+decl_stmt|;
+comment|/* buffering mode */
+name|u_int8_t
+name|write_protect
+range|:
+literal|1
+decl_stmt|;
+comment|/* media is writeprotected */
+name|u_int8_t
+name|blk_desc_len
 decl_stmt|;
 comment|/* block Descriptor Length */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* ATAPI tape drive Capabilities and Mechanical Status Page */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATAPI_TAPE_CAP_PAGE
-value|0x2a
-end_define
-
-begin_struct
-struct|struct
-name|ast_cappage
-block|{
+comment|/* capabilities page */
 name|u_int8_t
 name|page_code
 range|:
 literal|6
 decl_stmt|;
-comment|/* page code == 0x2a */
+define|#
+directive|define
+name|ATAPI_TAPE_CAP_PAGE
+value|0x2a
 name|u_int8_t
-name|reserved1_67
+name|reserved0_6
 range|:
-literal|2
+literal|1
 decl_stmt|;
+name|u_int8_t
+name|ps
+range|:
+literal|1
+decl_stmt|;
+comment|/* parameters saveable */
 name|u_int8_t
 name|page_length
 decl_stmt|;
@@ -186,11 +191,11 @@ range|:
 literal|4
 decl_stmt|;
 name|u_int8_t
-name|slowb
+name|blk32k
 range|:
 literal|1
 decl_stmt|;
-comment|/* restricts byte count */
+comment|/* supports 32kb block size */
 name|u_int16_t
 name|max_speed
 decl_stmt|;
@@ -221,6 +226,241 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* ATAPI OnStream ADR data transfer mode page (ADR unique) */
+end_comment
+
+begin_struct
+struct|struct
+name|ast_transferpage
+block|{
+comment|/* mode page data header */
+name|u_int8_t
+name|data_length
+decl_stmt|;
+comment|/* total length of data */
+name|u_int8_t
+name|medium_type
+decl_stmt|;
+comment|/* medium type (if any) */
+name|u_int8_t
+name|dsp
+decl_stmt|;
+comment|/* device specific parameter */
+name|u_int8_t
+name|blk_desc_len
+decl_stmt|;
+comment|/* block Descriptor Length */
+comment|/* data transfer page */
+name|u_int8_t
+name|page_code
+range|:
+literal|6
+decl_stmt|;
+define|#
+directive|define
+name|ATAPI_TAPE_TRANSFER_PAGE
+value|0x30
+name|u_int8_t
+name|reserved0_6
+range|:
+literal|1
+decl_stmt|;
+name|u_int8_t
+name|ps
+range|:
+literal|1
+decl_stmt|;
+comment|/* parameters saveable */
+name|u_int8_t
+name|page_length
+decl_stmt|;
+comment|/* page Length == 0x02 */
+name|u_int8_t
+name|reserved2
+decl_stmt|;
+name|u_int8_t
+name|read32k
+range|:
+literal|1
+decl_stmt|;
+comment|/* 32k block size (data only) */
+name|u_int8_t
+name|read32k5
+range|:
+literal|1
+decl_stmt|;
+comment|/* 32.5k block size (data& AUX) */
+name|u_int8_t
+name|reserved3_23
+range|:
+literal|2
+decl_stmt|;
+name|u_int8_t
+name|write32k
+range|:
+literal|1
+decl_stmt|;
+comment|/* 32k block size (data only) */
+name|u_int8_t
+name|write32k5
+range|:
+literal|1
+decl_stmt|;
+comment|/* 32.5k block size (data& AUX) */
+name|u_int8_t
+name|reserved3_6
+range|:
+literal|1
+decl_stmt|;
+name|u_int8_t
+name|streaming
+range|:
+literal|1
+decl_stmt|;
+comment|/* streaming mode enable */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* ATAPI OnStream ADR vendor identification mode page (ADR unique) */
+end_comment
+
+begin_struct
+struct|struct
+name|ast_identifypage
+block|{
+comment|/* mode page data header */
+name|u_int8_t
+name|data_length
+decl_stmt|;
+comment|/* total length of data */
+name|u_int8_t
+name|medium_type
+decl_stmt|;
+comment|/* medium type (if any) */
+name|u_int8_t
+name|dsp
+decl_stmt|;
+comment|/* device specific parameter */
+name|u_int8_t
+name|blk_desc_len
+decl_stmt|;
+comment|/* block Descriptor Length */
+comment|/* data transfer page */
+name|u_int8_t
+name|page_code
+range|:
+literal|6
+decl_stmt|;
+define|#
+directive|define
+name|ATAPI_TAPE_IDENTIFY_PAGE
+value|0x36
+name|u_int8_t
+name|reserved0_6
+range|:
+literal|1
+decl_stmt|;
+name|u_int8_t
+name|ps
+range|:
+literal|1
+decl_stmt|;
+comment|/* parameters saveable */
+name|u_int8_t
+name|page_length
+decl_stmt|;
+comment|/* page Length == 0x06 */
+name|u_int8_t
+name|ident
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* host id string */
+name|u_int8_t
+name|reserved6
+decl_stmt|;
+name|u_int8_t
+name|reserved7
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* ATAPI read position structure */
+end_comment
+
+begin_struct
+struct|struct
+name|ast_readposition
+block|{
+name|u_int8_t
+name|reserved0_05
+range|:
+literal|6
+decl_stmt|;
+name|u_int8_t
+name|eop
+range|:
+literal|1
+decl_stmt|;
+comment|/* end of partition */
+name|u_int8_t
+name|bop
+range|:
+literal|1
+decl_stmt|;
+comment|/* beginning of partition */
+name|u_int8_t
+name|reserved1
+decl_stmt|;
+name|u_int8_t
+name|reserved2
+decl_stmt|;
+name|u_int8_t
+name|reserved3
+decl_stmt|;
+name|u_int32_t
+name|host
+decl_stmt|;
+comment|/* frame address in buffer */
+name|u_int32_t
+name|tape
+decl_stmt|;
+comment|/* frame address on tape */
+name|u_int8_t
+name|reserved12
+decl_stmt|;
+name|u_int8_t
+name|reserved13
+decl_stmt|;
+name|u_int8_t
+name|reserved14
+decl_stmt|;
+name|u_int8_t
+name|blks_in_buf
+decl_stmt|;
+comment|/* blocks in buffer */
+name|u_int8_t
+name|reserved16
+decl_stmt|;
+name|u_int8_t
+name|reserved17
+decl_stmt|;
+name|u_int8_t
+name|reserved18
+decl_stmt|;
+name|u_int8_t
+name|reserved19
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|ast_softc
@@ -239,6 +479,36 @@ name|int32_t
 name|flags
 decl_stmt|;
 comment|/* device state flags */
+define|#
+directive|define
+name|F_OPEN
+value|0x0001
+comment|/* the device is opened */
+define|#
+directive|define
+name|F_CTL_WARN
+value|0x0002
+comment|/* warned about CTL wrong? */
+define|#
+directive|define
+name|F_WRITEPROTECT
+value|0x0004
+comment|/* media is writeprotected */
+define|#
+directive|define
+name|F_DATA_WRITTEN
+value|0x0010
+comment|/* data has been written */
+define|#
+directive|define
+name|F_FM_WRITTEN
+value|0x0020
+comment|/* filemark has been written */
+define|#
+directive|define
+name|F_ONSTREAM
+value|0x0100
+comment|/* OnStream ADR device */
 name|int32_t
 name|blksize
 decl_stmt|;
@@ -254,11 +524,6 @@ modifier|*
 name|param
 decl_stmt|;
 comment|/* drive parameters table */
-name|struct
-name|ast_header
-name|header
-decl_stmt|;
-comment|/* MODE SENSE param header */
 name|struct
 name|ast_cappage
 name|cap

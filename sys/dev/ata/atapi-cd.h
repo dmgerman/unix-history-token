@@ -43,7 +43,7 @@ begin_struct
 struct|struct
 name|audiopage
 block|{
-comment|/* Mode Page data header */
+comment|/* mode page data header */
 name|u_int16_t
 name|data_length
 decl_stmt|;
@@ -62,7 +62,7 @@ decl_stmt|;
 name|u_int16_t
 name|blk_desc_len
 decl_stmt|;
-comment|/* Audio control page */
+comment|/* audio control page */
 name|u_int8_t
 name|page_code
 decl_stmt|;
@@ -145,7 +145,7 @@ begin_struct
 struct|struct
 name|cappage
 block|{
-comment|/* Mode data header */
+comment|/* mode page data header */
 name|u_int16_t
 name|data_length
 decl_stmt|;
@@ -232,7 +232,7 @@ decl_stmt|;
 name|u_int16_t
 name|blk_desc_len
 decl_stmt|;
-comment|/* Capabilities page */
+comment|/* capabilities page */
 name|u_int8_t
 name|page_code
 decl_stmt|;
@@ -256,15 +256,33 @@ literal|1
 decl_stmt|;
 comment|/* supports CD-RW read */
 name|u_int8_t
-name|method2
+name|read_packet
 range|:
 literal|1
 decl_stmt|;
 comment|/* supports reading packet tracks */
 name|u_int8_t
-name|reserved2_37
+name|read_dvdrom
 range|:
-literal|5
+literal|1
+decl_stmt|;
+comment|/* supports DVD-ROM read */
+name|u_int8_t
+name|read_dvdr
+range|:
+literal|1
+decl_stmt|;
+comment|/* supports DVD-R read */
+name|u_int8_t
+name|read_dvdram
+range|:
+literal|1
+decl_stmt|;
+comment|/* supports DVD-RAM read */
+name|u_int8_t
+name|reserved2_67
+range|:
+literal|2
 decl_stmt|;
 name|u_int8_t
 name|write_cdr
@@ -285,9 +303,26 @@ literal|1
 decl_stmt|;
 comment|/* supports test writing */
 name|u_int8_t
-name|reserved3_37
+name|reserved3_3
 range|:
-literal|5
+literal|1
+decl_stmt|;
+name|u_int8_t
+name|write_dvdr
+range|:
+literal|1
+decl_stmt|;
+comment|/* supports DVD-R write */
+name|u_int8_t
+name|write_dvdram
+range|:
+literal|1
+decl_stmt|;
+comment|/* supports DVD-RAM write */
+name|u_int8_t
+name|reserved3_67
+range|:
+literal|2
 decl_stmt|;
 name|u_int8_t
 name|audio_play
@@ -452,7 +487,7 @@ label|:
 literal|6
 expr_stmt|;
 name|u_int16_t
-name|max_speed
+name|max_read_speed
 decl_stmt|;
 comment|/* max raw data rate in bytes/1000 */
 name|u_int16_t
@@ -464,7 +499,7 @@ name|buf_size
 decl_stmt|;
 comment|/* internal buffer size in bytes/1024 */
 name|u_int16_t
-name|cur_speed
+name|cur_read_speed
 decl_stmt|;
 comment|/* current data rate in bytes/1000  */
 name|u_int8_t
@@ -513,12 +548,14 @@ name|u_int8_t
 label|:
 literal|3
 expr_stmt|;
-name|u_int8_t
-name|reserved4
-index|[
-literal|2
-index|]
+name|u_int16_t
+name|max_write_speed
 decl_stmt|;
+comment|/* max raw data rate in bytes/1000 */
+name|u_int16_t
+name|cur_write_speed
+decl_stmt|;
+comment|/* current data rate in bytes/1000  */
 block|}
 struct|;
 end_struct
@@ -657,7 +694,7 @@ begin_struct
 struct|struct
 name|write_param
 block|{
-comment|/* Mode Page data header */
+comment|/* mode page data header */
 name|u_int16_t
 name|data_length
 decl_stmt|;
@@ -676,7 +713,7 @@ decl_stmt|;
 name|u_int16_t
 name|blk_desc_len
 decl_stmt|;
-comment|/* Write Parameters mode page */
+comment|/* write parameters page */
 name|u_int8_t
 name|page_code
 decl_stmt|;
@@ -779,7 +816,7 @@ name|CDR_MSES_RESERVED
 value|0x02
 define|#
 directive|define
-name|CDR_MSES_NULTI
+name|CDR_MSES_MULTI
 value|0x03
 name|u_int8_t
 name|data_block_type
@@ -940,7 +977,7 @@ decl_stmt|;
 name|u_int8_t
 name|sub_hdr_byte3
 decl_stmt|;
-comment|/*     u_int8_t 	vendor_specific_byte0;     u_int8_t 	vendor_specific_byte1;     u_int8_t 	vendor_specific_byte2;     u_int8_t 	vendor_specific_byte3; */
+comment|/*     u_int8_t	vendor_specific_byte0;     u_int8_t	vendor_specific_byte1;     u_int8_t	vendor_specific_byte2;     u_int8_t	vendor_specific_byte3; */
 block|}
 name|__attribute__
 argument_list|(
@@ -1083,6 +1120,41 @@ name|int32_t
 name|flags
 decl_stmt|;
 comment|/* device state flags */
+define|#
+directive|define
+name|F_BOPEN
+value|0x0001
+comment|/* the block device is opened */
+define|#
+directive|define
+name|F_LOCKED
+value|0x0002
+comment|/* this unit is locked */
+define|#
+directive|define
+name|F_WRITING
+value|0x0004
+comment|/* this unit is writing */
+define|#
+directive|define
+name|F_TRACK_PREP
+value|0x0010
+comment|/* track should be prep'ed */
+define|#
+directive|define
+name|F_TRACK_PREPED
+value|0x0020
+comment|/* track has been prep'ed */
+define|#
+directive|define
+name|F_DISK_PREPED
+value|0x0040
+comment|/* disk has been prep'ed */
+define|#
+directive|define
+name|F_WRITTEN
+value|0x0080
+comment|/* medium has been written to */
 name|int32_t
 name|refcnt
 decl_stmt|;
@@ -1181,9 +1253,9 @@ name|speed
 decl_stmt|;
 comment|/* select drive speed */
 name|u_int32_t
-name|next_writeable_lba
+name|next_writeable_addr
 decl_stmt|;
-comment|/* next writable position */
+comment|/* next writable address */
 name|struct
 name|wormio_prepare_track
 name|preptrack

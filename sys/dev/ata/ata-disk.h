@@ -440,10 +440,11 @@ name|u_int32_t
 name|currentsize
 decl_stmt|;
 comment|/* size of current transfer */
-name|u_int32_t
-name|result
+name|struct
+name|callout_handle
+name|timeout_handle
 decl_stmt|;
-comment|/* result code */
+comment|/* handle for untimeout */
 name|int32_t
 name|flags
 decl_stmt|;
@@ -484,6 +485,39 @@ comment|/* list management */
 block|}
 struct|;
 end_struct
+
+begin_function_decl
+name|void
+name|ad_transfer
+parameter_list|(
+name|struct
+name|ad_request
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int32_t
+name|ad_interrupt
+parameter_list|(
+name|struct
+name|ad_request
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ad_reinit
+parameter_list|(
+name|struct
+name|ad_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 

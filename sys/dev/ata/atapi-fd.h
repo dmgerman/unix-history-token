@@ -86,13 +86,6 @@ begin_comment
 comment|/* ATAPI Rewriteable drive Capabilities and Mechanical Status Page */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ATAPI_REWRITEABLE_CAP_PAGE
-value|0x05
-end_define
-
 begin_struct
 struct|struct
 name|afd_cappage
@@ -102,6 +95,10 @@ name|page_code
 range|:
 literal|6
 decl_stmt|;
+define|#
+directive|define
+name|ATAPI_REWRITEABLE_CAP_PAGE
+value|0x05
 name|u_int8_t
 name|reserved1_6
 range|:
@@ -185,6 +182,11 @@ name|int32_t
 name|flags
 decl_stmt|;
 comment|/* device state flags */
+define|#
+directive|define
+name|F_OPEN
+value|0x0001
+comment|/* the device is opened */
 name|int32_t
 name|refcnt
 decl_stmt|;
@@ -209,9 +211,8 @@ name|cap
 decl_stmt|;
 comment|/* capabilities page info */
 name|struct
-name|diskslices
-modifier|*
-name|slices
+name|disk
+name|disk
 decl_stmt|;
 comment|/* virtual drives */
 name|struct

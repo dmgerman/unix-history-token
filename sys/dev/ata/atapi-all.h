@@ -63,6 +63,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATAPI_E_MASK
+value|0x0f
+end_define
+
+begin_comment
+comment|/* error mask */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATAPI_E_ILI
 value|0x01
 end_define
@@ -305,12 +316,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATAPI_REZERO_UNIT
+name|ATAPI_REWIND
 value|0x01
 end_define
 
 begin_comment
-comment|/* reinit device */
+comment|/* rewind */
 end_comment
 
 begin_define
@@ -327,13 +338,132 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATAPI_READ
+value|0x08
+end_define
+
+begin_comment
+comment|/* read data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_WRITE
+value|0x0a
+end_define
+
+begin_comment
+comment|/* write data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_WEOF
+value|0x10
+end_define
+
+begin_comment
+comment|/* write filemark */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WF_WRITE
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATAPI_SPACE
+value|0x11
+end_define
+
+begin_comment
+comment|/* space command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SP_FM
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|SP_EOD
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATAPI_MODE_SELECT
+value|0x15
+end_define
+
+begin_comment
+comment|/* mode select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_ERASE
+value|0x19
+end_define
+
+begin_comment
+comment|/* erase */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_MODE_SENSE
+value|0x1a
+end_define
+
+begin_comment
+comment|/* mode sense */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATAPI_START_STOP
 value|0x1b
 end_define
 
 begin_comment
-comment|/* start/stop the media */
+comment|/* start/stop unit */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SS_LOAD
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|SS_RETENSION
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|SS_EJECT
+value|0x04
+end_define
 
 begin_define
 define|#
@@ -382,12 +512,56 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATAPI_LOCATE
+value|0x2b
+end_define
+
+begin_comment
+comment|/* locate to position */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_READ_POSITION
+value|0x34
+end_define
+
+begin_comment
+comment|/* read position */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATAPI_SYNCHRONIZE_CACHE
 value|0x35
 end_define
 
 begin_comment
 comment|/* flush buf, close channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_WRITE_BUFFER
+value|0x3b
+end_define
+
+begin_comment
+comment|/* write device buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_READ_BUFFER
+value|0x3c
+end_define
+
+begin_comment
+comment|/* read device buffer */
 end_comment
 
 begin_define
@@ -442,7 +616,7 @@ value|0x4b
 end_define
 
 begin_comment
-comment|/* stop/start audio operation */
+comment|/* pause audio operation */
 end_comment
 
 begin_define
@@ -459,7 +633,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATAPI_MODE_SELECT
+name|ATAPI_MODE_SELECT_BIG
 value|0x55
 end_define
 
@@ -470,7 +644,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATAPI_MODE_SENSE
+name|ATAPI_MODE_SENSE_BIG
 value|0x5a
 end_define
 
@@ -497,7 +671,7 @@ value|0xa1
 end_define
 
 begin_comment
-comment|/* blank (erase) media */
+comment|/* blank the media */
 end_comment
 
 begin_define
@@ -556,140 +730,6 @@ comment|/* read data */
 end_comment
 
 begin_comment
-comment|/*  ATAPI tape commands not in std ATAPI command set */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATAPI_TAPE_REWIND
-value|0x01
-end_define
-
-begin_comment
-comment|/* tape rewind */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATAPI_TAPE_READ_CMD
-value|0x08
-end_define
-
-begin_comment
-comment|/* tape read data */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATAPI_TAPE_WRITE_CMD
-value|0x0a
-end_define
-
-begin_comment
-comment|/* tape write data */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATAPI_TAPE_WEOF
-value|0x10
-end_define
-
-begin_comment
-comment|/* tape write EOF */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WEOF_WRITE_MASK
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATAPI_TAPE_SPACE_CMD
-value|0x11
-end_define
-
-begin_comment
-comment|/* tape space command */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SP_FM
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|SP_EOD
-value|0x03
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATAPI_TAPE_ERASE
-value|0x19
-end_define
-
-begin_comment
-comment|/* tape erase */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATAPI_TAPE_MODE_SENSE
-value|0x1a
-end_define
-
-begin_comment
-comment|/* tape mode sense */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATAPI_TAPE_LOAD_UNLOAD
-value|0x1b
-end_define
-
-begin_comment
-comment|/* tape load/unload */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LU_LOAD_MASK
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|LU_RETENSION_MASK
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|LU_EOT_MASK
-value|0x04
-end_define
-
-begin_comment
 comment|/* ATAPI device parameter information */
 end_comment
 
@@ -727,12 +767,12 @@ define|#
 directive|define
 name|ATAPI_DRQT_MPROC
 value|0
-comment|/* cpu    3 ms delay */
+comment|/* cpu	  3 ms delay */
 define|#
 directive|define
 name|ATAPI_DRQT_INTR
 value|1
-comment|/* intr  10 ms delay */
+comment|/* intr	 10 ms delay */
 define|#
 directive|define
 name|ATAPI_DRQT_ACCEL
@@ -1044,7 +1084,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* ATAPI REQUEST SENSE structure */
+comment|/* ATAPI request sense structure */
 end_comment
 
 begin_struct
@@ -1178,13 +1218,29 @@ name|unit
 decl_stmt|;
 comment|/* ATA_MASTER or ATA_SLAVE */
 name|int8_t
-name|last_cmd
+name|cmd
 decl_stmt|;
 comment|/* last cmd executed */
 name|u_int32_t
 name|flags
 decl_stmt|;
 comment|/* drive flags */
+define|#
+directive|define
+name|ATAPI_F_MEDIA_CHANGED
+value|0x0001
+define|#
+directive|define
+name|ATAPI_F_DMA_ENABLED
+value|0x0002
+define|#
+directive|define
+name|ATAPI_F_DMA_USED
+value|0x0004
+define|#
+directive|define
+name|ATAPI_F_DRQT_CMD
+value|0x0008
 block|}
 struct|;
 end_struct
@@ -1235,10 +1291,19 @@ name|u_int32_t
 name|donecount
 decl_stmt|;
 comment|/* bytes transferred */
-name|u_int32_t
+name|int32_t
+name|timeout
+decl_stmt|;
+comment|/* timeout for this cmd */
+name|struct
+name|callout_handle
+name|timeout_handle
+decl_stmt|;
+comment|/* handle for untimeout */
+name|int32_t
 name|result
 decl_stmt|;
-comment|/* result code */
+comment|/* result of this cmd */
 name|int32_t
 name|flags
 decl_stmt|;
@@ -1246,14 +1311,6 @@ define|#
 directive|define
 name|A_READ
 value|0x0001
-define|#
-directive|define
-name|ATAPI_F_DMA_ENABLED
-value|0x0002
-define|#
-directive|define
-name|ATAPI_F_DMA_USED
-value|0x0004
 name|int8_t
 modifier|*
 name|data
@@ -1305,6 +1362,29 @@ end_function_decl
 
 begin_function_decl
 name|int32_t
+name|atapi_immed_cmd
+parameter_list|(
+name|struct
+name|atapi_softc
+modifier|*
+parameter_list|,
+name|int8_t
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|int32_t
+parameter_list|,
+name|int32_t
+parameter_list|,
+name|int32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int32_t
 name|atapi_queue_cmd
 parameter_list|(
 name|struct
@@ -1336,6 +1416,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|atapi_reinit
+parameter_list|(
+name|struct
+name|atapi_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int32_t
 name|atapi_error
 parameter_list|(
@@ -1344,6 +1435,45 @@ name|atapi_softc
 modifier|*
 parameter_list|,
 name|int32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int32_t
+name|atapi_test_ready
+parameter_list|(
+name|struct
+name|atapi_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int32_t
+name|atapi_wait_ready
+parameter_list|(
+name|struct
+name|atapi_softc
+modifier|*
+parameter_list|,
+name|int32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|atapi_request_sense
+parameter_list|(
+name|struct
+name|atapi_softc
+modifier|*
+parameter_list|,
+name|struct
+name|atapi_reqsense
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

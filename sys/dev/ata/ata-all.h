@@ -208,23 +208,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATA_C_ATA_IDENTIFY
-value|0xec
+name|ATA_C_ATAPI_RESET
+value|0x08
 end_define
 
 begin_comment
-comment|/* get ATA params */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_C_ATAPI_IDENTIFY
-value|0xa1
-end_define
-
-begin_comment
-comment|/* get ATAPI params*/
+comment|/* reset ATAPI device */
 end_comment
 
 begin_define
@@ -247,6 +236,28 @@ end_define
 
 begin_comment
 comment|/* write command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_C_PACKET_CMD
+value|0xa0
+end_define
+
+begin_comment
+comment|/* packet command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_C_ATAPI_IDENTIFY
+value|0xa1
+end_define
+
+begin_comment
+comment|/* get ATAPI params*/
 end_comment
 
 begin_define
@@ -307,12 +318,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATA_C_PACKET_CMD
-value|0xa0
+name|ATA_C_ATA_IDENTIFY
+value|0xec
 end_define
 
 begin_comment
-comment|/* packet command */
+comment|/* get ATA params */
 end_comment
 
 begin_define
@@ -597,13 +608,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATA_BMSTAT_MASK
-value|0x07
-end_define
-
-begin_define
-define|#
-directive|define
 name|ATA_BMSTAT_ACTIVE
 value|0x01
 end_define
@@ -620,6 +624,13 @@ define|#
 directive|define
 name|ATA_BMSTAT_INTERRUPT
 value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_BMSTAT_MASK
+value|0x07
 end_define
 
 begin_define
@@ -643,20 +654,6 @@ name|ATA_BMDTP_PORT
 value|0x04
 end_define
 
-begin_define
-define|#
-directive|define
-name|ATA_WDMA2
-value|0x22
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATA_UDMA2
-value|0x42
-end_define
-
 begin_comment
 comment|/* structure for holding DMA address data */
 end_comment
@@ -674,6 +671,31 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* ATA device DMA access modes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_WDMA2
+value|0x22
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_UDMA2
+value|0x42
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_UDMA4
+value|0x44
+end_define
 
 begin_comment
 comment|/* structure describing an ATA device */
@@ -709,6 +731,14 @@ name|int32_t
 name|bmaddr
 decl_stmt|;
 comment|/* bus master DMA port */
+name|void
+modifier|*
+name|dev_softc
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* ptr to devices softc's */
 name|struct
 name|ata_dmaentry
 modifier|*
@@ -719,9 +749,36 @@ index|]
 decl_stmt|;
 comment|/* DMA transfer tables */
 name|int32_t
+name|mode
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* transfer mode for devices */
+define|#
+directive|define
+name|ATA_MODE_PIO
+value|0x00
+define|#
+directive|define
+name|ATA_MODE_DMA
+value|0x01
+define|#
+directive|define
+name|ATA_MODE_UDMA33
+value|0x02
+define|#
+directive|define
+name|ATA_MODE_UDMA66
+value|0x04
+name|int32_t
 name|flags
 decl_stmt|;
 comment|/* controller flags */
+define|#
+directive|define
+name|ATA_ATAPI_DMA_RO
+value|0x01
 name|int32_t
 name|devices
 decl_stmt|;
@@ -794,6 +851,23 @@ argument_list|)
 name|atapi_queue
 expr_stmt|;
 comment|/* head of ATAPI queue */
+name|void
+modifier|*
+name|running
+decl_stmt|;
+comment|/* currently running request */
+if|#
+directive|if
+name|NAPM
+operator|>
+literal|0
+name|struct
+name|apmhook
+name|resume_hook
+decl_stmt|;
+comment|/* hook for apm */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -822,6 +896,31 @@ end_comment
 begin_function_decl
 name|void
 name|ata_start
+parameter_list|(
+name|struct
+name|ata_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ata_reset
+parameter_list|(
+name|struct
+name|ata_softc
+modifier|*
+parameter_list|,
+name|int32_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int32_t
+name|ata_reinit
 parameter_list|(
 name|struct
 name|ata_softc
@@ -951,6 +1050,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int8_t
+modifier|*
+name|ata_mode2str
+parameter_list|(
+name|int32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|bswap
 parameter_list|(
@@ -985,28 +1094,6 @@ name|int8_t
 modifier|*
 parameter_list|,
 name|int32_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ad_transfer
-parameter_list|(
-name|struct
-name|ad_request
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int32_t
-name|ad_interrupt
-parameter_list|(
-name|struct
-name|ad_request
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
