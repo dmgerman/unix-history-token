@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)files.c	4.17 (Berkeley) 87/12/21"
+literal|"@(#)files.c	4.18 (Berkeley) 88/09/13"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,7 +37,7 @@ literal|".SUFFIXES : .L .out .o .c .f .e .r .y .yr .ye .l .s .z .x .t .h .cl"
 block|,
 else|#
 directive|else
-literal|".SUFFIXES : .out .o .c .F .f .e .r .y .yr .ye .l .s .cl .p"
+literal|".SUFFIXES : .out .o .c .F .f .e .r .y .yr .ye .l .s .cl .p .8 .7 .6 .5 .4 .3 .2 .1 .0"
 block|,
 endif|#
 directive|endif
@@ -96,6 +96,8 @@ block|,
 literal|"FFLAGS="
 block|,
 literal|"LOADLIBES="
+block|,
+literal|"NROFF=nroff"
 block|,
 ifdef|#
 directive|ifdef
@@ -244,6 +246,38 @@ block|,
 literal|"\t$(CC) $(CFLAGS) lex.yy.c $(LOADLIBES) -ll -o $@"
 block|,
 literal|"\trm lex.yy.c"
+block|,
+literal|".8.0 :"
+block|,
+literal|"\t$(NROFF) -man -h $<> $@"
+block|,
+literal|".7.0 :"
+block|,
+literal|"\t$(NROFF) -man -h $<> $@"
+block|,
+literal|".6.0 :"
+block|,
+literal|"\t$(NROFF) -man -h $<> $@"
+block|,
+literal|".5.0 :"
+block|,
+literal|"\t$(NROFF) -man -h $<> $@"
+block|,
+literal|".4.0 :"
+block|,
+literal|"\t$(NROFF) -man -h $<> $@"
+block|,
+literal|".3.0 :"
+block|,
+literal|"\t$(NROFF) -man -h $<> $@"
+block|,
+literal|".2.0 :"
+block|,
+literal|"\t$(NROFF) -man -h $<> $@"
+block|,
+literal|".1.0 :"
+block|,
+literal|"\t$(NROFF) -man -h $<> $@"
 block|,
 literal|0
 block|}
