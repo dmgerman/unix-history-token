@@ -448,7 +448,7 @@ decl_stmt|;
 block|{
 struct|struct
 block|{
-name|u_int
+name|int
 name|blen
 decl_stmt|;
 name|u_int
@@ -473,14 +473,13 @@ modifier|*
 name|sp
 decl_stmt|;
 name|int
+name|blen
+decl_stmt|,
+name|cnt
+decl_stmt|,
 name|recno
 decl_stmt|,
 name|wrap
-decl_stmt|;
-name|u_int
-name|cnt
-decl_stmt|,
-name|blen
 decl_stmt|;
 if|if
 condition|(
@@ -605,6 +604,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|llines
 index|[
 name|recno
@@ -782,7 +784,7 @@ operator|-
 literal|1
 init|;
 name|cnt
-operator|!=
+operator|>=
 literal|0
 condition|;
 operator|--
@@ -819,9 +821,6 @@ literal|1
 init|;
 name|cnt
 operator|>=
-operator|(
-name|u_int
-operator|)
 name|recno
 condition|;
 operator|--
@@ -859,9 +858,6 @@ name|recno
 init|;
 name|cnt
 operator|<
-operator|(
-name|u_int
-operator|)
 name|off
 condition|;
 operator|++
@@ -892,9 +888,6 @@ literal|0
 init|;
 name|cnt
 operator|<
-operator|(
-name|u_int
-operator|)
 name|recno
 condition|;
 operator|++
