@@ -17059,7 +17059,7 @@ expr_stmt|;
 name|cmd
 operator|->
 name|len
-operator|=
+operator||=
 name|F_INSN_SIZE
 argument_list|(
 name|ipfw_insn_u32
@@ -17163,7 +17163,7 @@ expr_stmt|;
 name|cmd
 operator|->
 name|len
-operator|=
+operator||=
 name|F_INSN_SIZE
 argument_list|(
 name|ipfw_insn_u32
@@ -17249,7 +17249,7 @@ expr_stmt|;
 name|cmd
 operator|->
 name|len
-operator|=
+operator||=
 name|F_INSN_SIZE
 argument_list|(
 name|ipfw_insn_u32
