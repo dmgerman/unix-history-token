@@ -6563,7 +6563,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|witness_list
 parameter_list|(
 name|struct
@@ -6577,6 +6577,13 @@ name|mtx
 modifier|*
 name|m
 decl_stmt|;
+name|int
+name|nheld
+decl_stmt|;
+name|nheld
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 operator|(
@@ -6628,7 +6635,15 @@ operator|->
 name|w_line
 argument_list|)
 expr_stmt|;
+name|nheld
+operator|++
+expr_stmt|;
 block|}
+return|return
+operator|(
+name|nheld
+operator|)
+return|;
 block|}
 end_function
 

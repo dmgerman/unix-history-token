@@ -672,6 +672,26 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITNESS
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|syscallnames
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|__inline
@@ -4433,6 +4453,30 @@ argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WITNESS
+if|if
+condition|(
+name|witness_list
+argument_list|(
+name|p
+argument_list|)
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"system call %s returning with mutex(s) held\n"
+argument_list|,
+name|syscallnames
+index|[
+name|code
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 end_function
 

@@ -259,6 +259,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITNESS
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|syscallnames
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Define the code needed before returning to user mode, for  * trap and syscall.  */
 end_comment
@@ -2171,24 +2191,71 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
+expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WITNESS
+if|if
+condition|(
+name|witness_list
+argument_list|(
+name|p
+argument_list|)
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"system call %s returning with mutex(s) held\n"
+argument_list|,
+name|syscallnames
+index|[
+name|code
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 end_function
 
 begin_comment
+unit|}
 comment|/*  * Process the tail end of a fork() for the child.  */
 end_comment
 
-begin_function
-name|void
+begin_macro
+unit|void
 name|child_return
-parameter_list|(
-name|p
-parameter_list|)
+argument_list|(
+argument|p
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 name|int
 name|have_giant
@@ -2279,7 +2346,7 @@ name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Process an asynchronous software trap.  * This is relatively easy.  */
