@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	4.47	83/05/12	*/
+comment|/*	udp_usrreq.c	4.48	83/05/27	*/
 end_comment
 
 begin_include
@@ -555,6 +555,13 @@ operator|&
 name|udp_in
 argument_list|,
 name|m
+argument_list|,
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
+literal|0
 argument_list|)
 operator|==
 literal|0
@@ -1069,6 +1076,8 @@ argument_list|,
 argument|m
 argument_list|,
 argument|nam
+argument_list|,
+argument|rights
 argument_list|)
 end_macro
 
@@ -1094,6 +1103,9 @@ name|m
 decl_stmt|,
 modifier|*
 name|nam
+decl_stmt|,
+modifier|*
+name|rights
 decl_stmt|;
 end_decl_stmt
 
@@ -1114,6 +1126,23 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|rights
+operator|&&
+name|rights
+operator|->
+name|m_len
+condition|)
+block|{
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+goto|goto
+name|release
+goto|;
+block|}
 if|if
 condition|(
 name|inp
@@ -1457,11 +1486,6 @@ argument_list|(
 literal|"request %d\n"
 argument_list|,
 name|req
-argument_list|)
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"udp_usrreq"
 argument_list|)
 expr_stmt|;
 case|case

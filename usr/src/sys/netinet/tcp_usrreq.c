@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_usrreq.c	1.77	83/05/13	*/
+comment|/*	tcp_usrreq.c	1.78	83/05/27	*/
 end_comment
 
 begin_include
@@ -151,6 +151,12 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|int
+name|tcpsenderrors
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Process a TCP user request for TCP tb.  If this is a send request  * then m is the mbuf chain of send data.  If this is a timer expiration  * (called from the software clock routine), then timertype tells which timer.  */
 end_comment
@@ -169,6 +175,8 @@ argument_list|,
 argument|m
 argument_list|,
 argument|nam
+argument_list|,
+argument|rights
 argument_list|)
 end_macro
 
@@ -194,6 +202,9 @@ name|m
 decl_stmt|,
 modifier|*
 name|nam
+decl_stmt|,
+modifier|*
+name|rights
 decl_stmt|;
 end_decl_stmt
 
@@ -230,6 +241,26 @@ decl_stmt|;
 name|int
 name|ostate
 decl_stmt|;
+if|if
+condition|(
+name|rights
+operator|&&
+name|rights
+operator|->
+name|m_len
+condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
 comment|/* 	 * When a TCP is attached to a socket, then there will be 	 * a (struct inpcb) pointed at by the socket, and this 	 * structure will point at a subsidary (struct tcpcb). 	 */
 if|if
 condition|(
@@ -721,6 +752,12 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+condition|)
+block|{
+comment|/* XXX fix to use other path */
+if|if
+condition|(
+name|error
 operator|==
 name|ENOBUFS
 condition|)
@@ -730,6 +767,10 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* XXX */
+name|tcpsenderrors
+operator|++
+expr_stmt|;
+block|}
 break|break;
 comment|/* 	 * Abort the TCP. 	 */
 case|case
