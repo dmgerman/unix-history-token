@@ -199,22 +199,13 @@ operator|>
 name|base
 condition|)
 block|{
-comment|/* 		 * We check resource limits here, but alow processes to 		 * reduce their usage, even if they remain over the limit. 		 */
+comment|/* 		 * Check the resource limit, but allow a process to reduce 		 * its usage, even if it remains over the limit. 		 */
 if|if
 condition|(
 name|new
-operator|>
-name|old
-operator|&&
-operator|(
-name|new
 operator|-
 name|base
-operator|)
 operator|>
-operator|(
-name|unsigned
-operator|)
 name|td
 operator|->
 name|td_proc
@@ -225,6 +216,10 @@ name|RLIMIT_DATA
 index|]
 operator|.
 name|rlim_cur
+operator|&&
+name|new
+operator|>
+name|old
 condition|)
 block|{
 name|error
@@ -238,7 +233,7 @@ block|}
 if|if
 condition|(
 name|new
-operator|>=
+operator|>
 name|VM_MAXUSER_ADDRESS
 condition|)
 block|{
