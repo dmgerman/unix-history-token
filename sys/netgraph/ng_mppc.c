@@ -202,14 +202,14 @@ value|(((b)& MPPE_128) ? 16 : 8)
 end_define
 
 begin_comment
-comment|/* What sequence number jump is too far */
+comment|/*  * When packets are lost with MPPE, we may have to re-key arbitrarily  * many times to 'catch up' to the new jumped-ahead sequence number.  * Since this can be expensive, we pose a limit on how many re-keyings  * we will do at one time to avoid a possible D.O.S. vulnerability.  * This should instead be a configurable parameter.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MPPC_INSANE_JUMP
-value|256
+name|MPPE_MAX_REKEY
+value|1000
 end_define
 
 begin_comment
@@ -1075,6 +1075,9 @@ expr_stmt|;
 comment|/* Save return address so we can send reset-req's */
 if|if
 condition|(
+operator|!
+name|isComp
+operator|&&
 name|priv
 operator|->
 name|ctrlpath
@@ -2670,7 +2673,8 @@ name|u_int16_t
 name|header
 decl_stmt|,
 name|cc
-decl_stmt|,
+decl_stmt|;
+name|u_int
 name|numLost
 decl_stmt|;
 name|u_char
@@ -2774,7 +2778,7 @@ operator|)
 name|buf
 argument_list|)
 expr_stmt|;
-comment|/* Check for insane jumps in sequence numbering (D.O.S. attack) */
+comment|/* Check for an unexpected jump in the sequence number */
 name|numLost
 operator|=
 operator|(
@@ -2789,38 +2793,6 @@ operator|&
 name|MPPC_CCOUNT_MASK
 operator|)
 expr_stmt|;
-if|if
-condition|(
-name|numLost
-operator|>=
-name|MPPC_INSANE_JUMP
-condition|)
-block|{
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"%s: insane jump %d"
-argument_list|,
-name|__FUNCTION__
-argument_list|,
-name|numLost
-argument_list|)
-expr_stmt|;
-name|priv
-operator|->
-name|recv
-operator|.
-name|cfg
-operator|.
-name|enable
-operator|=
-literal|0
-expr_stmt|;
-goto|goto
-name|failed
-goto|;
-block|}
 comment|/* If flushed bit set, we can always handle packet */
 if|if
 condition|(
@@ -2871,7 +2843,74 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* Resync as necessary, skipping lost packets */
+name|u_int
+name|rekey
+decl_stmt|;
+comment|/* How many times are we going to have to re-key? */
+name|rekey
+operator|=
+operator|(
+operator|(
+name|d
+operator|->
+name|cfg
+operator|.
+name|bits
+operator|&
+name|MPPE_STATELESS
+operator|)
+operator|!=
+literal|0
+operator|)
+condition|?
+name|numLost
+else|:
+operator|(
+name|numLost
+operator|/
+operator|(
+name|MPPE_UPDATE_MASK
+operator|+
+literal|1
+operator|)
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|rekey
+operator|>
+name|MPPE_MAX_REKEY
+condition|)
+block|{
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: too many (%d) packets"
+literal|" dropped, disabling node %p!"
+argument_list|,
+name|__FUNCTION__
+argument_list|,
+name|numLost
+argument_list|,
+name|node
+argument_list|)
+expr_stmt|;
+name|priv
+operator|->
+name|recv
+operator|.
+name|cfg
+operator|.
+name|enable
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|failed
+goto|;
+block|}
+comment|/* Re-key as necessary to catch up to peer */
 while|while
 condition|(
 name|d
@@ -2892,6 +2931,8 @@ name|bits
 operator|&
 name|MPPE_STATELESS
 operator|)
+operator|!=
+literal|0
 operator|||
 operator|(
 name|d
