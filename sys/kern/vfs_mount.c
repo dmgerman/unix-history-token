@@ -4458,6 +4458,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|error
+operator|||
 operator|(
 name|error
 operator|=
