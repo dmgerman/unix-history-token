@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Product specific probe and attach routines can be found in:  * i386/eisa/aic7770.c	27/284X and aic7770 motherboard controllers  * pci/aic7870.c	3940, 2940, aic7880, aic7870, aic7860,  *			and aic7850 controllers  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: aic7xxx.c,v 1.86 1996/11/16 01:19:14 gibbs Exp $  */
+comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Product specific probe and attach routines can be found in:  * i386/eisa/aic7770.c	27/284X and aic7770 motherboard controllers  * pci/aic7870.c	3940, 2940, aic7880, aic7870, aic7860,  *			and aic7850 controllers  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: aic7xxx.c,v 1.87 1996/11/22 08:28:45 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -6313,6 +6313,29 @@ name|lastphase
 argument_list|)
 expr_stmt|;
 block|}
+name|ahc_outb
+argument_list|(
+name|ahc
+argument_list|,
+name|CLRSINT1
+argument_list|,
+name|CLRBUSFREE
+argument_list|)
+expr_stmt|;
+name|ahc_outb
+argument_list|(
+name|ahc
+argument_list|,
+name|CLRINT
+argument_list|,
+name|CLRSCSIINT
+argument_list|)
+expr_stmt|;
+name|restart_sequencer
+argument_list|(
+name|ahc
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -6640,6 +6663,8 @@ argument_list|,
 name|CLRSINT1
 argument_list|,
 name|CLRSELTIMEO
+operator||
+name|CLRBUSFREE
 argument_list|)
 expr_stmt|;
 name|ahc_outb
@@ -11380,7 +11405,9 @@ literal|"in message in phase"
 argument_list|)
 expr_stmt|;
 break|break;
-default|default:
+case|case
+name|P_BUSFREE
+case|:
 name|printf
 argument_list|(
 literal|"while idle, LASTPHASE == 0x%x"
@@ -11388,10 +11415,19 @@ argument_list|,
 name|bus_state
 argument_list|)
 expr_stmt|;
-comment|/*  		 * We aren't in a valid phase, so assume we're 		 * idle. 		 */
 name|bus_state
 operator|=
 literal|0
+expr_stmt|;
+break|break;
+default|default:
+comment|/*  		 * We aren't in a valid phase, so assume we're 		 * idle. 		 */
+name|printf
+argument_list|(
+literal|"invalid phase, LASTPHASE == 0x%x"
+argument_list|,
+name|bus_state
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -13144,6 +13180,8 @@ argument_list|,
 name|CLRSCSIRSTI
 operator||
 name|CLRSELTIMEO
+operator||
+name|CLRBUSFREE
 argument_list|)
 expr_stmt|;
 name|ahc_outb
@@ -13194,6 +13232,8 @@ argument_list|,
 name|CLRSCSIRSTI
 operator||
 name|CLRSELTIMEO
+operator||
+name|CLRBUSFREE
 argument_list|)
 expr_stmt|;
 name|ahc_outb
