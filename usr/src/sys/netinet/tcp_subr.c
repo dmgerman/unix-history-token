@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_subr.c	4.21	82/03/29	*/
+comment|/*	tcp_subr.c	4.22	82/04/04	*/
 end_comment
 
 begin_include
@@ -953,9 +953,9 @@ name|tp
 operator|->
 name|t_flags
 operator|=
-name|TF_NOOPT
+literal|0
 expr_stmt|;
-comment|/* until all TCP's take options */
+comment|/* sends options! */
 name|tp
 operator|->
 name|t_inpcb
