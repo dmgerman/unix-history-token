@@ -1893,6 +1893,17 @@ begin_comment
 comment|/* for use by socket callbacks - soreceive (TCP) */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
@@ -1901,7 +1912,7 @@ value|0x20000
 end_define
 
 begin_comment
-comment|/* for use with emulation layers */
+comment|/* do not generate SIGPIPE on EOF */
 end_comment
 
 begin_endif
