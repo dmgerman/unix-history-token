@@ -71,7 +71,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Lock a terminal up until the given key is entered, until the root  * password is entered, or the given interval times out.  *  * Timeout interval is by default TIMEOUT, it can be changed with  * an argument of the form -time where time is in minutes  */
+comment|/*  * Lock a terminal up until the given key is entered or the given  * interval times out.  *  * Timeout interval is by default TIMEOUT, it can be changed with  * an argument of the form -time where time is in minutes  */
 end_comment
 
 begin_include
