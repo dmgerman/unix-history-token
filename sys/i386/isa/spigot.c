@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Video spigot capture driver.  *  * Copyright (c) 1995, Jim Lowe.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This is the minimum driver code required to make a spigot work.  * Unfortunatly, I can't include a real driver since the information  * on the spigot is under non-disclosure.  You can pick up a library  * that will work with this driver from ftp://ftp.cs.uwm.edu/pub/FreeBSD.  * The library contains the source that I can release as well as several  * object modules and functions that allows one to read spigot data.  * See the code for spigot_grab.c that is included with the library  * data.  *  * We are working with the vendor so I can release the code, please don't  * ask me for it.  When/if I can release it, I will.  *  * Version 1.1, Feb 1, 1995.  *  */
+comment|/*  * Video spigot capture driver.  *  * Copyright (c) 1995, Jim Lowe.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This is the minimum driver code required to make a spigot work.  * Unfortunatly, I can't include a real driver since the information  * on the spigot is under non-disclosure.  You can pick up a library  * that will work with this driver from ftp://ftp.cs.uwm.edu/pub/FreeBSD.  * The library contains the source that I can release as well as several  * object modules and functions that allows one to read spigot data.  * See the code for spigot_grab.c that is included with the library  * data.  *  * We are working with the vendor so I can release the code, please don't  * ask me for it.  When/if I can release it, I will.  *  * Version 1.3, June 23, 1995.  *  */
 end_comment
 
 begin_include
@@ -110,6 +110,13 @@ define|#
 directive|define
 name|OPEN
 value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALIVE
+value|0x02
 end_define
 
 begin_define
@@ -310,10 +317,39 @@ block|{
 name|int
 name|status
 decl_stmt|;
-name|spigot_registerdev
-argument_list|(
+name|struct
+name|spigot_softc
+modifier|*
+name|ss
+init|=
+operator|(
+expr|struct
+name|spigot_softc
+operator|*
+operator|)
+operator|&
+name|spigot_softc
+index|[
 name|devp
-argument_list|)
+operator|->
+name|id_unit
+index|]
+decl_stmt|;
+name|ss
+operator|->
+name|flags
+operator|=
+literal|0
+expr_stmt|;
+name|ss
+operator|->
+name|maddr
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -330,16 +366,30 @@ argument_list|)
 operator|==
 literal|0xff
 condition|)
-comment|/* ff if board isn't there??? */
 name|status
 operator|=
 literal|0
 expr_stmt|;
+comment|/* not found */
 else|else
+block|{
 name|status
 operator|=
 literal|1
 expr_stmt|;
+comment|/* found */
+name|ss
+operator|->
+name|flags
+operator||=
+name|ALIVE
+expr_stmt|;
+name|spigot_registerdev
+argument_list|(
+name|devp
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|status
@@ -389,12 +439,6 @@ name|DC_UNKNOWN
 expr_stmt|;
 name|ss
 operator|->
-name|flags
-operator|=
-literal|0
-expr_stmt|;
-name|ss
-operator|->
 name|maddr
 operator|=
 name|devp
@@ -437,6 +481,21 @@ name|dev
 argument_list|)
 index|]
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|ss
+operator|->
+name|flags
+operator|&
+name|ALIVE
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+name|ENXIO
+return|;
 if|if
 condition|(
 name|ss
@@ -914,9 +973,18 @@ name|offset
 operator|!=
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"spigot mmap offset = 0x%x\n"
+argument_list|,
+name|offset
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 if|if
 condition|(
 name|nprot
