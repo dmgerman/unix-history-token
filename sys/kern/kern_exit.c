@@ -2022,11 +2022,6 @@ name|proctree_lock
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Free up credentials. 			 */
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|--
