@@ -4344,12 +4344,14 @@ name|S_DIGITS
 case|:
 if|if
 condition|(
+operator|(
 name|ishex
 operator|&&
 name|isxdigit
 argument_list|(
 name|c
 argument_list|)
+operator|)
 operator|||
 name|isdigit
 argument_list|(
@@ -4391,6 +4393,7 @@ case|:
 if|if
 condition|(
 operator|(
+operator|(
 name|c
 operator|==
 literal|'E'
@@ -4402,7 +4405,9 @@ operator|)
 operator|&&
 operator|!
 name|ishex
+operator|)
 operator|||
+operator|(
 operator|(
 name|c
 operator|==
@@ -4414,6 +4419,7 @@ literal|'p'
 operator|)
 operator|&&
 name|ishex
+operator|)
 condition|)
 block|{
 if|if
@@ -4433,12 +4439,14 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|ishex
 operator|&&
 name|isxdigit
 argument_list|(
 name|c
 argument_list|)
+operator|)
 operator|||
 name|isdigit
 argument_list|(

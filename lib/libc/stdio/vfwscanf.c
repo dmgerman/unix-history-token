@@ -3726,12 +3726,14 @@ name|S_DIGITS
 case|:
 if|if
 condition|(
+operator|(
 name|ishex
 operator|&&
 name|iswxdigit
 argument_list|(
 name|c
 argument_list|)
+operator|)
 operator|||
 name|iswdigit
 argument_list|(
@@ -3773,6 +3775,7 @@ case|:
 if|if
 condition|(
 operator|(
+operator|(
 name|c
 operator|==
 literal|'E'
@@ -3784,7 +3787,9 @@ operator|)
 operator|&&
 operator|!
 name|ishex
+operator|)
 operator|||
+operator|(
 operator|(
 name|c
 operator|==
@@ -3796,6 +3801,7 @@ literal|'p'
 operator|)
 operator|&&
 name|ishex
+operator|)
 condition|)
 block|{
 if|if
@@ -3815,12 +3821,14 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|ishex
 operator|&&
 name|iswxdigit
 argument_list|(
 name|c
 argument_list|)
+operator|)
 operator|||
 name|iswdigit
 argument_list|(
