@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* %G% (Berkeley) @(#)curses.h	1.10 */
+comment|/* %G% (Berkeley) @(#)curses.h	1.11 */
 end_comment
 
 begin_ifndef
@@ -884,7 +884,7 @@ name|winch
 parameter_list|(
 name|win
 parameter_list|)
-value|(win->_y[win->_cury][win->_curx])
+value|(win->_y[win->_cury][win->_curx]& 0177)
 end_define
 
 begin_define
