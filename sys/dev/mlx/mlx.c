@@ -7907,7 +7907,7 @@ name|sc
 operator|->
 name|mlx_dev
 argument_list|,
-literal|"I/O beyond end of unit (%u,%d> %u)\n"
+literal|"I/O beyond end of unit (%llu,%d> %u)\n"
 argument_list|,
 name|MLX_BIO_LBA
 argument_list|(

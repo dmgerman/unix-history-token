@@ -3646,7 +3646,7 @@ name|sc
 operator|->
 name|amr_dev
 argument_list|,
-literal|"I/O beyond end of unit (%u,%d> %u)\n"
+literal|"I/O beyond end of unit (%llu,%d> %u)\n"
 argument_list|,
 name|bio
 operator|->
