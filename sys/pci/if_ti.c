@@ -9151,6 +9151,8 @@ operator|=
 name|IFCAP_HWCSUM
 operator||
 name|IFCAP_VLAN_HWTAGGING
+operator||
+name|IFCAP_VLAN_MTU
 expr_stmt|;
 name|sc
 operator|->
@@ -12559,6 +12561,8 @@ operator|+
 name|ETHER_HDR_LEN
 operator|+
 name|ETHER_CRC_LEN
+operator|+
+name|ETHER_VLAN_ENCAP_LEN
 argument_list|)
 expr_stmt|;
 name|TI_DO_CMD
