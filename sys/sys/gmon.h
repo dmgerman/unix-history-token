@@ -103,15 +103,8 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Fraction of text space to allocate for histogram counters.  * We allocate counters at the same or higher density as function  * addresses, so that each counter belongs to a unique function.  * A lower density of counters would give less resolution but a  * higher density would be wasted.  *  * Assume that function addresses are at least 4-byte-aligned.  * It would be better to get the linker to align functions more  * strictly so that we could use smaller tables.  */
+comment|/*  * Fraction of text space to allocate for histogram counters.  * We allocate counters at the same or higher density as function  * addresses, so that each counter belongs to a unique function.  * A lower density of counters would give less resolution but a  * higher density would be wasted.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|FUNCTION_ALIGNMENT
-value|4
-end_define
 
 begin_define
 define|#

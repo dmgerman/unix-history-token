@@ -22,6 +22,17 @@ name|KERNEL
 end_ifdef
 
 begin_comment
+comment|/*  * Config generates something to tell the compiler to align functions on 16  * byte boundaries.  A strict alignment is good for keeping the tables small.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FUNCTION_ALIGNMENT
+value|16
+end_define
+
+begin_comment
 comment|/*  * The kernel uses assembler stubs instead of unportable inlines.  * This is mainly to save a little time when profiling is not enabled,  * which is the usual case for the kernel.  */
 end_comment
 
@@ -60,7 +71,7 @@ name|p
 parameter_list|,
 name|index
 parameter_list|)
-value|((p)->kcount[(index) \ 			 / (HISTFRACTION * sizeof(*(p)->kcount))])
+value|((p)->kcount[(index) \ 			 / (HISTFRACTION * sizeof(HISTCOUNTER))])
 end_define
 
 begin_define
@@ -154,6 +165,13 @@ end_else
 begin_comment
 comment|/* !KERNEL */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|FUNCTION_ALIGNMENT
+value|4
+end_define
 
 begin_define
 define|#
