@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: yppasswdd_main.c,v 1.12 1997/10/13 11:18:50 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -978,7 +978,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|strncmp
+name|strncasecmp
 argument_list|(
 name|mastername
 argument_list|,
