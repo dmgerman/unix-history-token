@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.90 1996/11/04 12:56:26 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.93 1996/11/07 08:03:25 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1270,6 +1270,21 @@ name|MenuSyscons
 block|}
 block|,
 block|{
+literal|"Syscons, Font"
+block|,
+literal|"The console screen font."
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuSysconsFont
+block|}
+block|,
+block|{
 literal|"Syscons, Keymap"
 block|,
 literal|"The console keymap configuration menu."
@@ -1312,6 +1327,21 @@ name|NULL
 block|,
 operator|&
 name|MenuSysconsSaver
+block|}
+block|,
+block|{
+literal|"Syscons, Screenmap"
+block|,
+literal|"The console screenmap configuration menu."
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuSysconsScrnmap
 block|}
 block|,
 block|{
@@ -3277,7 +3307,7 @@ block|{
 block|{
 literal|"1 Developer"
 block|,
-literal|"Full sources, binaries and doc but no games [180MB]"
+literal|"Full sources, binaries and doc but no games [180M]"
 block|,
 name|checkDistDeveloper
 block|,
@@ -3287,7 +3317,7 @@ block|,
 block|{
 literal|"2 X-Developer"
 block|,
-literal|"Same as above, but includes XFree86 [201MB]"
+literal|"Same as above, but includes XFree86 [201M]"
 block|,
 name|checkDistXDeveloper
 block|,
@@ -3297,7 +3327,7 @@ block|,
 block|{
 literal|"3 Kern-Developer"
 block|,
-literal|"Full binaries and doc, kernel sources only [70MB]"
+literal|"Full binaries and doc, kernel sources only [70M]"
 block|,
 name|checkDistKernDeveloper
 block|,
@@ -3307,7 +3337,7 @@ block|,
 block|{
 literal|"4 User"
 block|,
-literal|"Average user - binaries and doc only [52MB]"
+literal|"Average user - binaries and doc only [52M]"
 block|,
 name|checkDistUser
 block|,
@@ -3317,7 +3347,7 @@ block|,
 block|{
 literal|"5 X-User"
 block|,
-literal|"Same as above, but includes XFree86 [52MB]"
+literal|"Same as above, but includes XFree86 [52M]"
 block|,
 name|checkDistXUser
 block|,
@@ -3327,7 +3357,7 @@ block|,
 block|{
 literal|"6 Minimal"
 block|,
-literal|"The smallest configuration possible [44MB]"
+literal|"The smallest configuration possible [44M]"
 block|,
 name|checkDistMinimum
 block|,
@@ -3337,7 +3367,7 @@ block|,
 block|{
 literal|"7 All"
 block|,
-literal|"All sources, binaries and XFree86 binaries [700MB]"
+literal|"All sources, binaries and XFree86 binaries [700M]"
 block|,
 name|checkDistEverything
 block|,
@@ -3358,17 +3388,17 @@ block|,
 operator|&
 name|MenuSubDistributions
 block|,
-literal|' '
+literal|'>'
 block|,
-literal|' '
+literal|'>'
 block|,
-literal|' '
+literal|'>'
 block|}
 block|,
 block|{
 literal|"9 Clear"
 block|,
-literal|"Reset selected distribution list to nothing [0MB]"
+literal|"Reset selected distribution list to nothing [0M]"
 block|,
 name|NULL
 block|,
@@ -3434,7 +3464,7 @@ block|{
 block|{
 literal|"bin"
 block|,
-literal|"Binary base distribution (required) [36MB]"
+literal|"Binary base distribution (required) [36M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -3457,7 +3487,7 @@ block|,
 block|{
 literal|"commerce"
 block|,
-literal|"Commercial and shareware demos [10MB]"
+literal|"Commercial and shareware demos [10M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -3480,7 +3510,7 @@ block|,
 block|{
 literal|"compat1x"
 block|,
-literal|"FreeBSD 1.x binary compatibility [2MB]"
+literal|"FreeBSD 1.x binary compatibility [2M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -3503,7 +3533,7 @@ block|,
 block|{
 literal|"compat20"
 block|,
-literal|"FreeBSD 2.0 binary compatibility [2MB]"
+literal|"FreeBSD 2.0 binary compatibility [2M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -3526,7 +3556,7 @@ block|,
 block|{
 literal|"compat21"
 block|,
-literal|"FreeBSD 2.1 binary compatibility [2MB]"
+literal|"FreeBSD 2.1 binary compatibility [2M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -3549,7 +3579,7 @@ block|,
 block|{
 literal|"DES"
 block|,
-literal|"DES encryption code - NOT FOR EXPORT! [.3MB]"
+literal|"DES encryption code - NOT FOR EXPORT! [.3M]"
 block|,
 name|DESFlagCheck
 block|,
@@ -3559,7 +3589,7 @@ block|,
 block|{
 literal|"dict"
 block|,
-literal|"Spelling checker dictionary files [4.2MB]"
+literal|"Spelling checker dictionary files [4.2M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -3582,7 +3612,7 @@ block|,
 block|{
 literal|"doc"
 block|,
-literal|"FreeBSD Handbook and other online docs [10MB]"
+literal|"FreeBSD Handbook and other online docs [10M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -3605,7 +3635,7 @@ block|,
 block|{
 literal|"games"
 block|,
-literal|"Games (non-commercial) [6.4MB]"
+literal|"Games (non-commercial) [6.4M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -3628,7 +3658,7 @@ block|,
 block|{
 literal|"info"
 block|,
-literal|"GNU info files [4.1MB]"
+literal|"GNU info files [4.1M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -3651,7 +3681,7 @@ block|,
 block|{
 literal|"man"
 block|,
-literal|"System manual pages - recommended [3.3MB]"
+literal|"System manual pages - recommended [3.3M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -3674,7 +3704,7 @@ block|,
 block|{
 literal|"proflibs"
 block|,
-literal|"Profiled versions of the libraries [3.3MB]"
+literal|"Profiled versions of the libraries [3.3M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -3697,7 +3727,7 @@ block|,
 block|{
 literal|"src"
 block|,
-literal|"Sources for everything but DES [120MB]"
+literal|"Sources for everything but DES [120M]"
 block|,
 name|srcFlagCheck
 block|,
@@ -3707,7 +3737,7 @@ block|,
 block|{
 literal|"XFree86"
 block|,
-literal|"The XFree86 3.1.2-S distribution"
+literal|"The XFree86 3.2 distribution"
 block|,
 name|x11FlagCheck
 block|,
@@ -3740,7 +3770,7 @@ block|,
 block|{
 literal|"All"
 block|,
-literal|"All sources, binaries and XFree86 binaries [700MB]"
+literal|"All sources, binaries and XFree86 binaries [700M]"
 block|,
 name|NULL
 block|,
@@ -3760,7 +3790,7 @@ block|,
 block|{
 literal|"Clear"
 block|,
-literal|"Reset all of the above [0MB]"
+literal|"Reset all of the above [0M]"
 block|,
 name|NULL
 block|,
@@ -3826,7 +3856,7 @@ block|{
 block|{
 literal|"des"
 block|,
-literal|"Basic DES encryption services [1MB]"
+literal|"Basic DES encryption services [1M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -3849,7 +3879,7 @@ block|,
 block|{
 literal|"krb"
 block|,
-literal|"Kerberos encryption services [2MB]"
+literal|"Kerberos encryption services [2M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -3872,7 +3902,7 @@ block|,
 block|{
 literal|"sebones"
 block|,
-literal|"Sources for eBones (Kerberos) [1MB]"
+literal|"Sources for eBones (Kerberos) [1M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -3895,7 +3925,7 @@ block|,
 block|{
 literal|"ssecure"
 block|,
-literal|"Sources for DES [1MB]"
+literal|"Sources for DES [1M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -3987,7 +4017,7 @@ block|,
 block|{
 literal|"contrib"
 block|,
-literal|"/usr/src/contrib (contributed software) [33MB]"
+literal|"/usr/src/contrib (contributed software) [33M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -4010,7 +4040,7 @@ block|,
 block|{
 literal|"gnu"
 block|,
-literal|"/usr/src/gnu (software from the GNU Project) [42MB]"
+literal|"/usr/src/gnu (software from the GNU Project) [42M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -4056,7 +4086,7 @@ block|,
 block|{
 literal|"games"
 block|,
-literal|"/usr/src/games (the obvious!) [7.8MB]"
+literal|"/usr/src/games (the obvious!) [7.8M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -4102,7 +4132,7 @@ block|,
 block|{
 literal|"lib"
 block|,
-literal|"/usr/src/lib (system libraries) [9.2MB]"
+literal|"/usr/src/lib (system libraries) [9.2M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -4125,7 +4155,7 @@ block|,
 block|{
 literal|"libexec"
 block|,
-literal|"/usr/src/libexec (system programs) [1.2MB]"
+literal|"/usr/src/libexec (system programs) [1.2M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -4194,7 +4224,7 @@ block|,
 block|{
 literal|"bin"
 block|,
-literal|"/usr/src/bin (system binaries) [2.5MB]"
+literal|"/usr/src/bin (system binaries) [2.5M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -4217,7 +4247,7 @@ block|,
 block|{
 literal|"sbin"
 block|,
-literal|"/usr/src/sbin (system binaries) [1.3MB]"
+literal|"/usr/src/sbin (system binaries) [1.3M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -4240,7 +4270,7 @@ block|,
 block|{
 literal|"share"
 block|,
-literal|"/usr/src/share (documents and shared files) [10MB]"
+literal|"/usr/src/share (documents and shared files) [10M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -4263,7 +4293,7 @@ block|,
 block|{
 literal|"sys"
 block|,
-literal|"/usr/src/sys (FreeBSD kernel) [13MB]"
+literal|"/usr/src/sys (FreeBSD kernel) [13M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -4286,7 +4316,7 @@ block|,
 block|{
 literal|"ubin"
 block|,
-literal|"/usr/src/usr.bin (user binaries) [13MB]"
+literal|"/usr/src/usr.bin (user binaries) [13M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -4309,7 +4339,7 @@ block|,
 block|{
 literal|"usbin"
 block|,
-literal|"/usr/src/usr.sbin (aux system binaries) [14MB]"
+literal|"/usr/src/usr.sbin (aux system binaries) [14M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -4355,7 +4385,7 @@ block|,
 block|{
 literal|"All"
 block|,
-literal|"Select all of the above [120MB]"
+literal|"Select all of the above [120M]"
 block|,
 name|NULL
 block|,
@@ -4375,7 +4405,7 @@ block|,
 block|{
 literal|"Clear"
 block|,
-literal|"Reset all of the above [0MB]"
+literal|"Reset all of the above [0M]"
 block|,
 name|NULL
 block|,
@@ -4427,9 +4457,9 @@ init|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
-literal|"XFree86 3.1.2-S Distribution"
+literal|"XFree86 3.2 Distribution"
 block|,
-literal|"Please select the components you need from the XFree86 3.1.2-S\n\ distribution.  We recommend that you select what you need from the basic\n\ component set and at least one entry from the Server and Font set menus."
+literal|"Please select the components you need from the XFree86 3.2\n\ distribution.  We recommend that you select what you need from the basic\n\ component set and at least one entry from the Server and Font set menus."
 block|,
 literal|"Press F1 to read the XFree86 release notes for FreeBSD"
 block|,
@@ -4538,7 +4568,7 @@ name|DMENU_CHECKLIST_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
-literal|"XFree86 3.1.2-S base distribution types"
+literal|"XFree86 3.2 base distribution types"
 block|,
 literal|"Please check off the basic XFree86 components you wish to install.\n\ Bin, lib, xicf, and xdcf are recommended for a minimum installaion."
 block|,
@@ -4550,7 +4580,7 @@ block|{
 block|{
 literal|"bin"
 block|,
-literal|"Client applications and shared libs [4.1MB]."
+literal|"Client applications and shared libs [4.1M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -4571,32 +4601,9 @@ name|DIST_XF86_BIN
 block|}
 block|,
 block|{
-literal|"lib"
+literal|"cfg"
 block|,
-literal|"Data files needed at runtime [750K]"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|XF86Dists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XF86_LIB
-block|}
-block|,
-block|{
-literal|"xicf"
-block|,
-literal|"Customizable xinit runtime configuration file [10K]"
+literal|"Configuration files [10K]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -4613,53 +4620,7 @@ literal|'X'
 block|,
 literal|']'
 block|,
-name|DIST_XF86_XINIT
-block|}
-block|,
-block|{
-literal|"xdcf"
-block|,
-literal|"Customizable xdm runtime configuration file [20K]"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|XF86Dists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XF86_XDMCF
-block|}
-block|,
-block|{
-literal|"etc"
-block|,
-literal|"Clock setting and diagnostic source codes [70K]"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|XF86Dists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XF86_ETC
+name|DIST_XF86_CFG
 block|}
 block|,
 block|{
@@ -4686,9 +4647,101 @@ name|DIST_XF86_DOC
 block|}
 block|,
 block|{
+literal|"html"
+block|,
+literal|"HTML documentation files [400K]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86Dists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_HTML
+block|}
+block|,
+block|{
+literal|"lib"
+block|,
+literal|"Data files needed at runtime [750K]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86Dists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_LIB
+block|}
+block|,
+block|{
+literal|"lk90"
+block|,
+literal|"Server link kit for PC98 machines [8.8M]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86Dists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_LKIT98
+block|}
+block|,
+block|{
+literal|"lkit"
+block|,
+literal|"Server link kit for all other machines [8.8M]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86Dists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_LKIT
+block|}
+block|,
+block|{
 literal|"man"
 block|,
-literal|"Manual pages [1.7MB]"
+literal|"Manual pages [3M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -4709,32 +4762,9 @@ name|DIST_XF86_MAN
 block|}
 block|,
 block|{
-literal|"ctrb"
-block|,
-literal|"Various contributed binaries (ico, xman, etc) [550K]"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|XF86Dists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XF86_CTRB
-block|}
-block|,
-block|{
 literal|"prog"
 block|,
-literal|"Programmer's header and library files [4.1MB]"
+literal|"Programmer's header and library files [4.1M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -4755,9 +4785,9 @@ name|DIST_XF86_PROG
 block|}
 block|,
 block|{
-literal|"link"
+literal|"ps"
 block|,
-literal|"Kit to reconfigure/rebuild X Servers [8.8MB]"
+literal|"Postscript documentation [5M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -4774,36 +4804,13 @@ literal|'X'
 block|,
 literal|']'
 block|,
-name|DIST_XF86_LINK
+name|DIST_XF86_PS
 block|}
 block|,
 block|{
-literal|"ubin"
+literal|"set"
 block|,
-literal|"rstart daemon [2K]"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|XF86Dists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XF86_UBIN
-block|}
-block|,
-block|{
-literal|"pex"
-block|,
-literal|"PEX fonts and libs needed by PEX apps [290K]"
+literal|"Setup Utility [1.0M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -4820,13 +4827,13 @@ literal|'X'
 block|,
 literal|']'
 block|,
-name|DIST_XF86_PEX
+name|DIST_XF86_SET
 block|}
 block|,
 block|{
 literal|"sources"
 block|,
-literal|"XFree86 3.1.2-S standard + contrib sources [200MB]"
+literal|"XFree86 3.2 standard sources [100M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -4847,9 +4854,32 @@ name|DIST_XF86_SRC
 block|}
 block|,
 block|{
+literal|"csources"
+block|,
+literal|"XFree86 3.2 contrib sources [100M]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86Dists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_CSRC
+block|}
+block|,
+block|{
 literal|"All"
 block|,
-literal|"Select all of the above [20MB]"
+literal|"Select all of the above [20M]"
 block|,
 name|NULL
 block|,
@@ -4869,7 +4899,7 @@ block|,
 block|{
 literal|"Clear"
 block|,
-literal|"Reset all of the above [0MB]"
+literal|"Reset all of the above [0M]"
 block|,
 name|NULL
 block|,
@@ -4935,7 +4965,7 @@ block|{
 block|{
 literal|"fnts"
 block|,
-literal|"Standard 75 DPI and miscellaneous fonts [3.6MB]"
+literal|"Standard 75 DPI and miscellaneous fonts [3.6M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -4958,7 +4988,7 @@ block|,
 block|{
 literal|"f100"
 block|,
-literal|"100 DPI fonts [1.8MB]"
+literal|"100 DPI fonts [1.8M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -4981,7 +5011,7 @@ block|,
 block|{
 literal|"fcyr"
 block|,
-literal|"Cyrillic Fonts [1.8MB]"
+literal|"Cyrillic Fonts [1.8M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -5004,7 +5034,7 @@ block|,
 block|{
 literal|"fscl"
 block|,
-literal|"Speedo and Type scalable fonts [1.6MB]"
+literal|"Speedo and Type scalable fonts [1.6M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -5027,7 +5057,7 @@ block|,
 block|{
 literal|"non"
 block|,
-literal|"Japanese, Chinese and other non-english fonts [3.3MB]"
+literal|"Japanese, Chinese and other non-english fonts [3.3M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -5050,7 +5080,7 @@ block|,
 block|{
 literal|"server"
 block|,
-literal|"Font server [0.3MB]"
+literal|"Font server [0.3M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -5073,7 +5103,7 @@ block|,
 block|{
 literal|"All"
 block|,
-literal|"All fonts [10MB]"
+literal|"All fonts [10M]"
 block|,
 name|NULL
 block|,
@@ -5093,7 +5123,7 @@ block|,
 block|{
 literal|"Clear"
 block|,
-literal|"Reset font selections [0MB]"
+literal|"Reset font selections [0M]"
 block|,
 name|NULL
 block|,
@@ -5159,7 +5189,7 @@ block|{
 block|{
 literal|"SVGA"
 block|,
-literal|"Standard VGA or Super VGA display [2.8MB]"
+literal|"Standard VGA or Super VGA card [2.8M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -5182,7 +5212,7 @@ block|,
 block|{
 literal|"VGA16"
 block|,
-literal|"Standard 16 color VGA display [1.3MB]"
+literal|"Standard 16 color VGA card [1.3M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -5205,7 +5235,7 @@ block|,
 block|{
 literal|"Mono"
 block|,
-literal|"Standard Monochrome display [1.3MB]"
+literal|"Standard Monochrome card [1.3M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -5228,7 +5258,7 @@ block|,
 block|{
 literal|"8514"
 block|,
-literal|"8-bit (256 color) IBM 8514 or compatible card [2.2MB]"
+literal|"8-bit (256 color) IBM 8514 or compatible card [2.2M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -5249,9 +5279,285 @@ name|DIST_XF86_SERVER_8514
 block|}
 block|,
 block|{
+literal|"9480"
+block|,
+literal|"PC98 8-bit (256 color) PEGC-480 card [2.2M]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_9480
+block|}
+block|,
+block|{
+literal|"9EGC"
+block|,
+literal|"PC98 4-bit (16 color) EGC card [2.2M]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_9EGC
+block|}
+block|,
+block|{
+literal|"9GA9"
+block|,
+literal|"PC98 GA-968V4/PCI (S3 968) card [2.2M]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_9GA9
+block|}
+block|,
+block|{
+literal|"9GAN"
+block|,
+literal|"PC98 GANB-WAP (cirrus) card [2.2M]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_9GAN
+block|}
+block|,
+block|{
+literal|"9LPW"
+block|,
+literal|"PC98 PowerWindowLB (S3) card [2.2M]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_9LPW
+block|}
+block|,
+block|{
+literal|"9NKV"
+block|,
+literal|"PC98 NKV-NEC (cirrus) card [2.2M]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_9NKV
+block|}
+block|,
+block|{
+literal|"9NS3"
+block|,
+literal|"PC98 NEC (S3) card [2.2M]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_9NS3
+block|}
+block|,
+block|{
+literal|"9SPW"
+block|,
+literal|"PC98 SKB-PowerWindow (S3) card [2.2M]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_9SPW
+block|}
+block|,
+block|{
+literal|"9TGU"
+block|,
+literal|"PC98 Cyber9320 and TGUI9680 cards [2.2M]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_9TGU
+block|}
+block|,
+block|{
+literal|"9WEP"
+block|,
+literal|"PC98 WAB-EP (cirrus) card [2.2M]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_9WEP
+block|}
+block|,
+block|{
+literal|"9WS"
+block|,
+literal|"PC98 WABS (cirrus) card [2.2M]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_9WS
+block|}
+block|,
+block|{
+literal|"9WSN"
+block|,
+literal|"PC98 WSN-A2F (cirrus) card [2.2M]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_9WSN
+block|}
+block|,
+block|{
 literal|"AGX"
 block|,
-literal|"8-bit AGX card [2.4MB]"
+literal|"8-bit AGX card [2.4M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -5272,9 +5578,32 @@ name|DIST_XF86_SERVER_AGX
 block|}
 block|,
 block|{
+literal|"I128"
+block|,
+literal|"8, 16 and 24-bit #9 Imagine I128 card [2.4M]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_I128
+block|}
+block|,
+block|{
 literal|"Ma8"
 block|,
-literal|"8-bit ATI Mach8 card [2.3MB]"
+literal|"8-bit ATI Mach8 card [2.3M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -5297,7 +5626,7 @@ block|,
 block|{
 literal|"Ma32"
 block|,
-literal|"8 and 16-bit (65K color) for ATI Mach32 card [2.4MB]"
+literal|"8 and 16-bit (65K color) ATI Mach32 card [2.4M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -5320,7 +5649,7 @@ block|,
 block|{
 literal|"Ma64"
 block|,
-literal|"8 and 16-bit (65K color) for ATI Mach64 card [2.5MB]"
+literal|"8 and 16-bit (65K color) ATI Mach64 card [2.5M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -5343,7 +5672,7 @@ block|,
 block|{
 literal|"P9K"
 block|,
-literal|"8, 16, and 24-bit color for Weitek P9000 based boards [2.5MB]"
+literal|"8, 16, and 24-bit color Weitek P9000 based boards [2.5M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -5366,7 +5695,7 @@ block|,
 block|{
 literal|"S3"
 block|,
-literal|"8, 16 and 24-bit color for S3 based boards [2.7MB]"
+literal|"8, 16 and 24-bit color S3 based boards [2.7M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -5387,9 +5716,32 @@ name|DIST_XF86_SERVER_S3
 block|}
 block|,
 block|{
+literal|"S3V"
+block|,
+literal|"8, 16 and 24-bit color S3 Virge based boards [2.7M]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_S3V
+block|}
+block|,
+block|{
 literal|"W32"
 block|,
-literal|"8-bit Color for ET4000/W32, /W32i and /W32p cards [2.3MB]"
+literal|"8-bit ET4000/W32, /W32i and /W32p cards [2.3M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -5412,7 +5764,7 @@ block|,
 block|{
 literal|"nest"
 block|,
-literal|"A nested server for testing purposes [1.8MB]"
+literal|"A nested server for testing purposes [1.8M]"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -5433,9 +5785,32 @@ name|DIST_XF86_SERVER_NEST
 block|}
 block|,
 block|{
+literal|"vfb"
+block|,
+literal|"A virtual frame-buffer server [1.8M]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_VFB
+block|}
+block|,
+block|{
 literal|"All"
 block|,
-literal|"Select all of the above [25MB]"
+literal|"Select all of the above [25M]"
 block|,
 name|NULL
 block|,
@@ -5455,7 +5830,7 @@ block|,
 block|{
 literal|"Clear"
 block|,
-literal|"Reset all of the above [0MB]"
+literal|"Reset all of the above [0M]"
 block|,
 name|NULL
 block|,
@@ -6555,6 +6930,21 @@ name|NULL
 block|,
 block|{
 block|{
+literal|"Font"
+block|,
+literal|"Choose an alternate screen font"
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuSysconsFont
+block|}
+block|,
+block|{
 literal|"Keymap"
 block|,
 literal|"Choose an alternate keyboard map"
@@ -6597,6 +6987,21 @@ name|NULL
 block|,
 operator|&
 name|MenuSysconsSaver
+block|}
+block|,
+block|{
+literal|"Screenmap"
+block|,
+literal|"Choose an alternate screenmap"
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuSysconsScrnmap
 block|}
 block|,
 block|{
@@ -6972,13 +7377,229 @@ literal|"Timeout"
 block|,
 literal|"Set the screen saver timeout interval"
 block|,
-name|dmenuVarCheck
+name|NULL
 block|,
 name|configSaverTimeout
 block|,
 name|NULL
 block|,
-literal|"blanktime"
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|DMenu
+name|MenuSysconsScrnmap
+init|=
+block|{
+name|DMENU_RADIO_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"System Console Screenmap"
+block|,
+literal|"Unless you load a specific font, most PC hardware defaults to\n"
+literal|"displaying characters in the IBM 437 character set.  However,\n"
+literal|"in the Unix world, this character set is very rarely used.  Most\n"
+literal|"Western European countries, for example, prefer ISO 8859-1.\n"
+literal|"American users won't notice the difference since the bottom half\n"
+literal|"of all these character sets is ANSI anyway.\n"
+literal|"If your hardware is capable of downloading a new display font,\n"
+literal|"you should probably choose that option.  However, for hardware\n"
+literal|"where this is not possible (e.g. monochrome adapters), a screen\n"
+literal|"map will give you the best approximation that your hardware can\n"
+literal|"display at all."
+block|,
+literal|"Choose a screen map"
+block|,
+name|NULL
+block|,
+block|{
+block|{
+literal|"None"
+block|,
+literal|"No screenmap, use default font"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+literal|"scrnmap=NO"
+block|}
+block|,
+block|{
+literal|"KOI8-R to IBM866"
+block|,
+literal|"Russian KOI8-R to IBM 866 screenmap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+literal|"scrnmap=koi8-r2cp866"
+block|}
+block|,
+block|{
+literal|"ISO 8859-1 to IBM437"
+block|,
+literal|"W-Europe ISO 8859-1 to IBM 437 screenmap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+literal|"scrnmap=iso-8859-1_to_cp437"
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|DMenu
+name|MenuSysconsFont
+init|=
+block|{
+name|DMENU_RADIO_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"System Console Font"
+block|,
+literal|"Most PC hardware defaults to displaying characters in the\n"
+literal|"IBM 437 character set.  However, in the Unix world, this\n"
+literal|"character set is very rarely used.  Most Western European\n"
+literal|"countries, for example, prefer ISO 8859-1.\n"
+literal|"American users won't notice the difference since the bottom half\n"
+literal|"of all these charactersets is ANSI anyway.  However, they might\n"
+literal|"want to load a font anyway to use the 30- or 50-line displays.\n"
+literal|"If your hardware is capable of downloading a new display font,\n"
+literal|"you can select the appropriate font below."
+block|,
+literal|"Choose a font"
+block|,
+name|NULL
+block|,
+block|{
+block|{
+literal|"None"
+block|,
+literal|"Use default font"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"font8x8=NO,font8x14=NO,font8x16=NO"
+block|}
+block|,
+block|{
+literal|"IBM 437"
+block|,
+literal|"English"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"font8x8=cp437-8x8,font8x14=cp437-8x14,font8x16=cp437-8x16"
+block|}
+block|,
+block|{
+literal|"IBM 850"
+block|,
+literal|"Western Europe, IBM encoding"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"font8x8=cp850-8x8,font8x14=cp850-8x14,font8x16=cp850-8x16"
+block|}
+block|,
+block|{
+literal|"IBM 865"
+block|,
+literal|"Norwegian, IBM encoding"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"font8x8=cp865-8x8,font8x14=cp865-8x14,font8x16=cp865-8x16"
+block|}
+block|,
+block|{
+literal|"IBM 866"
+block|,
+literal|"Russian, IBM encoding"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"font8x8=cp866-8x8,font8x14=cp866-8x14,font8x16=cp866-8x16"
+block|}
+block|,
+block|{
+literal|"ISO 8859-1"
+block|,
+literal|"Western Europe, ISO encoding"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"font8x8=iso-8x8,font8x14=iso-8x14,font8x16=iso-8x16"
+block|}
+block|,
+block|{
+literal|"KOI8-R"
+block|,
+literal|"Russian, KOI8-R encoding"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"font8x8=koi8-r-8x8,font8x14=koi8-r-8x14,font8x16=koi8-r-8x16"
 block|}
 block|,
 block|{
