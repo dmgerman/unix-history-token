@@ -102,6 +102,13 @@ name|device_t
 name|dev
 decl_stmt|;
 comment|/* Driver providing this setting. */
+name|int
+name|spec
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* Driver-specific storage for non-standard info. */
 block|}
 struct|;
 end_struct
