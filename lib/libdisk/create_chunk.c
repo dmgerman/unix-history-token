@@ -1624,9 +1624,9 @@ name|strncmp
 argument_list|(
 name|p
 argument_list|,
-literal|"ida"
+literal|"idad"
 argument_list|,
-literal|3
+literal|4
 argument_list|)
 condition|)
 name|cmaj
