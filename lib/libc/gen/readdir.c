@@ -186,11 +186,11 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|int
+name|long
 operator|)
 name|dp
 operator|&
-literal|03
+literal|03L
 condition|)
 comment|/* bogus pointer check */
 return|return
