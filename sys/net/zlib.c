@@ -145,41 +145,6 @@ directive|define
 name|HAVE_MEMCPY
 end_define
 
-begin_define
-define|#
-directive|define
-name|memcpy
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|,
-name|n
-parameter_list|)
-value|bcopy((s), (d), (n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|memset
-parameter_list|(
-name|d
-parameter_list|,
-name|v
-parameter_list|,
-name|n
-parameter_list|)
-value|bzero((d), (n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|memcmp
-value|bcmp
-end_define
-
 begin_else
 else|#
 directive|else
