@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.1 (Berkeley) %G%"
+literal|"@(#)misc.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -185,6 +185,10 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|errno
+condition|)
 operator|(
 name|void
 operator|)
@@ -192,12 +196,22 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" %s\n"
+literal|" %s"
 argument_list|,
 name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 if|if
