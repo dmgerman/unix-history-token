@@ -88,6 +88,12 @@ name|selinfo
 name|tun_wsel
 decl_stmt|;
 comment|/* write select (not used) */
+name|struct
+name|tun_softc
+modifier|*
+name|next
+decl_stmt|;
+comment|/* Next softc in list */
 block|}
 struct|;
 end_struct
