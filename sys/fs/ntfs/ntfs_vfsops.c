@@ -1279,7 +1279,7 @@ argument_list|)
 condition|)
 name|panic
 argument_list|(
-literal|"ffs_mountroot: can't setup bdevvp for root"
+literal|"ntfs_mountroot: can't setup bdevvp for root"
 argument_list|)
 expr_stmt|;
 comment|/* 		 * FS specific handling 		 */
