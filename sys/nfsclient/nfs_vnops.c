@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_vnops.c	8.16 (Berkeley) 5/27/95  * $Id: nfs_vnops.c,v 1.90 1998/05/30 16:33:57 peter Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_vnops.c	8.16 (Berkeley) 5/27/95  * $Id: nfs_vnops.c,v 1.91 1998/05/31 01:03:07 peter Exp $  */
 end_comment
 
 begin_comment
@@ -1981,6 +1981,8 @@ operator|(
 name|EROFS
 operator|)
 return|;
+default|default:
+break|break;
 block|}
 block|}
 comment|/* 	 * For nfs v3, do an access rpc, otherwise you are stuck emulating 	 * ufs_access() locally using the vattr. This may not be correct, 	 * since the server may apply other access criteria such as 	 * client uid-->server uid mapping that we do not know about, but 	 * this is better than just returning anything that is lying about 	 * in the cache. 	 */
@@ -2050,9 +2052,40 @@ condition|(
 name|vp
 operator|->
 name|v_type
-operator|==
+operator|!=
 name|VDIR
 condition|)
+block|{
+if|if
+condition|(
+name|ap
+operator|->
+name|a_mode
+operator|&
+name|VWRITE
+condition|)
+name|mode
+operator||=
+operator|(
+name|NFSV3ACCESS_MODIFY
+operator||
+name|NFSV3ACCESS_EXTEND
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|ap
+operator|->
+name|a_mode
+operator|&
+name|VEXEC
+condition|)
+name|mode
+operator||=
+name|NFSV3ACCESS_EXECUTE
+expr_stmt|;
+block|}
+else|else
 block|{
 if|if
 condition|(
@@ -2083,37 +2116,6 @@ condition|)
 name|mode
 operator||=
 name|NFSV3ACCESS_LOOKUP
-expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|ap
-operator|->
-name|a_mode
-operator|&
-name|VWRITE
-condition|)
-name|mode
-operator||=
-operator|(
-name|NFSV3ACCESS_MODIFY
-operator||
-name|NFSV3ACCESS_EXTEND
-operator|)
-expr_stmt|;
-if|if
-condition|(
-name|ap
-operator|->
-name|a_mode
-operator|&
-name|VEXEC
-condition|)
-name|mode
-operator||=
-name|NFSV3ACCESS_EXECUTE
 expr_stmt|;
 block|}
 operator|*
@@ -3226,6 +3228,7 @@ condition|(
 operator|!
 name|error
 condition|)
+block|{
 name|nfsm_loadattr
 argument_list|(
 name|vp
@@ -3235,6 +3238,7 @@ operator|->
 name|a_vap
 argument_list|)
 expr_stmt|;
+block|}
 name|nfsm_reqdone
 expr_stmt|;
 return|return
@@ -4506,7 +4510,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|componentname
 modifier|*
@@ -4516,7 +4519,6 @@ name|ap
 operator|->
 name|a_cnp
 decl_stmt|;
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -4526,7 +4528,6 @@ name|ap
 operator|->
 name|a_dvp
 decl_stmt|;
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -4537,7 +4538,6 @@ name|ap
 operator|->
 name|a_vpp
 decl_stmt|;
-specifier|register
 name|int
 name|flags
 init|=
@@ -4545,22 +4545,18 @@ name|cnp
 operator|->
 name|cn_flags
 decl_stmt|;
-specifier|register
 name|struct
 name|vnode
 modifier|*
 name|newvp
 decl_stmt|;
-specifier|register
 name|u_long
 modifier|*
 name|tl
 decl_stmt|;
-specifier|register
 name|caddr_t
 name|cp
 decl_stmt|;
-specifier|register
 name|long
 name|t1
 decl_stmt|,
@@ -5187,8 +5183,6 @@ name|EISDIR
 operator|)
 return|;
 block|}
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_nget
@@ -5204,6 +5198,10 @@ argument_list|,
 operator|&
 name|np
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|m_freem
@@ -5415,8 +5413,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_nget
@@ -5432,6 +5428,10 @@ argument_list|,
 operator|&
 name|np
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|m_freem
@@ -13495,8 +13495,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_nget
@@ -13512,6 +13510,10 @@ argument_list|,
 operator|&
 name|np
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 name|doit
 operator|=
@@ -14100,8 +14102,6 @@ name|bad
 goto|;
 block|}
 block|}
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_renameit
@@ -14112,6 +14112,10 @@ name|cnp
 argument_list|,
 name|sp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 goto|goto
 name|bad
@@ -17120,6 +17124,8 @@ operator|(
 name|EROFS
 operator|)
 return|;
+default|default:
+break|break;
 block|}
 block|}
 comment|/* 	 * If you're the super-user, 	 * you always get access. 	 */
