@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumparser.c,v 1.20 2000/04/22 05:32:50 grog Exp grog $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumparser.c,v 1.21 2000/12/20 03:44:13 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -556,7 +556,12 @@ argument_list|)
 block|,
 name|keypair
 argument_list|(
-argument|dumpconfig
+name|dumpconfig
+argument_list|)
+block|,
+name|keypair
+argument_list|(
+argument|retryerrors
 argument_list|)
 block|}
 decl_stmt|;
@@ -653,6 +658,9 @@ name|char
 modifier|*
 name|token
 index|[]
+parameter_list|,
+name|int
+name|maxtoken
 parameter_list|)
 block|{
 name|char
@@ -663,14 +671,15 @@ name|int
 name|tokennr
 decl_stmt|;
 comment|/* index of this token */
+for|for
+control|(
 name|tokennr
 operator|=
 literal|0
-expr_stmt|;
-comment|/* none found yet */
-for|for
-control|(
 init|;
+name|tokennr
+operator|<
+name|maxtoken
 condition|;
 control|)
 block|{
@@ -731,7 +740,16 @@ name|tokennr
 operator|++
 expr_stmt|;
 comment|/* one more */
-comment|/* XXX this is broken.  It leaves superfluous \\ characters in the text */
+if|if
+condition|(
+name|tokennr
+operator|==
+name|maxtoken
+condition|)
+comment|/* run off the end? */
+return|return
+name|tokennr
+return|;
 if|if
 condition|(
 operator|(
@@ -876,6 +894,10 @@ expr_stmt|;
 comment|/* delimit and move to the next */
 block|}
 block|}
+return|return
+name|maxtoken
+return|;
+comment|/* can't get here */
 block|}
 end_function
 
