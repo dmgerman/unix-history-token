@@ -495,6 +495,35 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Print all resources of a specified type, for use in bus_print_child.  * The name is printed if at least one resource of the given type is available.  * The format ist used to print resource start and end.  */
+end_comment
+
+begin_function_decl
+name|int
+name|resource_list_print_type
+parameter_list|(
+name|struct
+name|resource_list
+modifier|*
+name|rl
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|format
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * The root bus, to which all top-level busses are attached.  */
 end_comment
 
@@ -2205,6 +2234,29 @@ name|arg
 parameter_list|)
 define|\ 									\
 value|static driver_t name##_##busname##_driver_list[] = drivers;		\ static struct driver_module_data name##_##busname##_driver_mod = {	\ 	evh, arg,							\ 	#busname,							\ 	name##_##busname##_driver_list,					\ 	(sizeof name##_##busname##_driver_list) /			\ 		(sizeof name##_##busname##_driver_list[0]),		\&devclass							\ };									\ 									\ static moduledata_t name##_##busname##_mod = {				\ 	#busname "/" #name,						\ 	driver_module_handler,						\&name##_##busname##_driver_mod					\ };									\ DECLARE_MODULE(name##_##busname, name##_##busname##_mod,		\ 	       SI_SUB_DRIVERS, SI_ORDER_MIDDLE)
+end_define
+
+begin_comment
+comment|/*  * Generic ivar accessor generation macros for bus drivers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__BUS_ACCESSOR
+parameter_list|(
+name|varp
+parameter_list|,
+name|var
+parameter_list|,
+name|ivarp
+parameter_list|,
+name|ivar
+parameter_list|,
+name|type
+parameter_list|)
+define|\ 									\
+value|static __inline type varp ## _get_ ## var(device_t dev)			\ {									\ 	uintptr_t v;							\ 	BUS_READ_IVAR(device_get_parent(dev), dev,			\ 	    ivarp ## _IVAR_ ## ivar,&v);				\ 	return ((type) v);						\ }									\ 									\ static __inline void varp ## _set_ ## var(device_t dev, type t)		\ {									\ 	uintptr_t v = (uintptr_t) t;					\ 	BUS_WRITE_IVAR(device_get_parent(dev), dev,			\ 	    ivarp ## _IVAR_ ## ivar, v);				\ }
 end_define
 
 begin_endif
