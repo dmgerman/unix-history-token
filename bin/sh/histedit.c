@@ -845,7 +845,7 @@ literal|'e'
 case|:
 name|editor
 operator|=
-name|shoptarg
+name|optarg
 expr_stmt|;
 break|break;
 case|case
