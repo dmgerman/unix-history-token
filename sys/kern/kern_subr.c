@@ -225,7 +225,7 @@ name|map
 argument_list|,
 name|uaddr
 argument_list|,
-name|VM_PROT_READ
+name|VM_PROT_WRITE
 argument_list|,
 operator|&
 name|entry

@@ -885,7 +885,7 @@ name|queue
 decl_stmt|,
 name|s
 decl_stmt|;
-comment|/*  			 * check for page-based copy on write 			 */
+comment|/*  			 * check for page-based copy on write. 			 * We check fs.object == fs.first_object so 			 * as to ensure the legacy COW mechanism is 			 * used when the page in question is part of 			 * a shadow object.  Otherwise, vm_page_cowfault() 			 * removes the page from the backing object,  			 * which is not what we want. 			 */
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -903,6 +903,16 @@ operator|(
 name|fault_type
 operator|&
 name|VM_PROT_WRITE
+operator|)
+operator|&&
+operator|(
+name|fs
+operator|.
+name|object
+operator|==
+name|fs
+operator|.
+name|first_object
 operator|)
 condition|)
 block|{
