@@ -7841,6 +7841,20 @@ literal|"nis_client_enable=YES"
 block|}
 block|,
 block|{
+literal|"nis domainname"
+block|,
+literal|"Set NIS domainname (if enabled)"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuISetVariable
+block|,
+name|NULL
+block|,
+literal|"nisdomainname"
+block|}
+block|,
+block|{
 literal|"nis server"
 block|,
 literal|"This host wishes to be an NIS server."
