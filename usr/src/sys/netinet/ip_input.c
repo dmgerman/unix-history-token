@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_input.c	6.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_input.c	6.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -873,7 +873,7 @@ operator|)
 condition|)
 block|{
 name|u_long
-name|i
+name|t
 decl_stmt|;
 if|if
 condition|(
@@ -916,7 +916,7 @@ goto|goto
 name|ours
 goto|;
 comment|/* 			 * Look for all-0's host part (old broadcast addr), 			 * either for subnet or net. 			 */
-name|i
+name|t
 operator|=
 name|ntohl
 argument_list|(
@@ -929,7 +929,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|i
+name|t
 operator|==
 name|ia
 operator|->
@@ -940,7 +940,7 @@ name|ours
 goto|;
 if|if
 condition|(
-name|i
+name|t
 operator|==
 name|ia
 operator|->
