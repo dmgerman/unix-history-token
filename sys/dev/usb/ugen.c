@@ -1608,7 +1608,7 @@ name|q
 argument_list|,
 name|UGEN_IBSIZE
 argument_list|,
-name|UGEN_IBSIZE
+literal|0
 argument_list|)
 operator|==
 operator|-

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_port.h,v 1.13 1999/10/13 08:10:58 augustss Exp $	*/
+comment|/*	$NetBSD: usb_port.h,v 1.15 1999/11/16 12:04:28 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -864,7 +864,7 @@ value|typedef void * usb_dma_t
 end_define
 
 begin_comment
-comment|/* XXX Change this when FreeBSD has memset  */
+comment|/* XXX Change this when FreeBSD has memset */
 end_comment
 
 begin_define
@@ -983,7 +983,7 @@ name|s
 parameter_list|,
 name|x
 parameter_list|)
-value|(clist_alloc_cblocks((p), (s), (x)), 0)
+value|(clist_alloc_cblocks((p), (s), (s)), 0)
 end_define
 
 begin_define
@@ -1015,6 +1015,13 @@ name|powerhook_disestablish
 parameter_list|(
 name|hdl
 parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PWR_SUSPEND
+value|1
 end_define
 
 begin_define

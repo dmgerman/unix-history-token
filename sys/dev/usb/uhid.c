@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhid.c,v 1.26 1999/10/13 08:10:56 augustss Exp $	*/
+comment|/*	$NetBSD: uhid.c,v 1.27 1999/11/12 00:34:57 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1709,7 +1709,7 @@ name|sc_q
 argument_list|,
 name|UHID_BSIZE
 argument_list|,
-name|UHID_BSIZE
+literal|0
 argument_list|)
 operator|==
 operator|-
