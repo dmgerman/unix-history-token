@@ -254,6 +254,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<net/if_tunvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_tun.h>
 end_include
 

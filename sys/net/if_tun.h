@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_tun.h,v 1.5 1994/06/29 06:36:27 cgd Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1988, Julian Onions<jpo@cs.nott.ac.uk>  * Nottingham University 1987.  *  * This source may be freely distributed, however I would be interested  * in any changes that are made.  *  * This driver takes packets off the IP i/f and hands them up to a  * user process to have it's wicked way with. This driver has it's  * roots in a similar driver written by Phil Cockcroft (formerly) at  * UCL. This driver is based much more on read/write/select mode of  * operation though.  *  * : $Header: if_tnreg.h,v 1.1.2.1 1992/07/16 22:39:16 friedl Exp  */
+comment|/*  * Copyright (c) 1988, Julian Onions<jpo@cs.nott.ac.uk>  * Nottingham University 1987.  *  * This source may be freely distributed, however I would be interested  * in any changes that are made.  *  * This driver takes packets off the IP i/f and hands them up to a  * user process to have it's wicked way with. This driver has it's  * roots in a similar driver written by Phil Cockcroft (formerly) at  * UCL. This driver is based much more on read/write/select mode of  * operation though.  *  * $Id$  */
 end_comment
 
 begin_ifndef
@@ -19,72 +19,9 @@ directive|define
 name|_NET_IF_TUN_H_
 end_define
 
-begin_struct
-struct|struct
-name|tun_softc
-block|{
-name|u_short
-name|tun_flags
-decl_stmt|;
-comment|/* misc flags */
-define|#
-directive|define
-name|TUN_OPEN
-value|0x0001
-define|#
-directive|define
-name|TUN_INITED
-value|0x0002
-define|#
-directive|define
-name|TUN_RCOLL
-value|0x0004
-define|#
-directive|define
-name|TUN_IASET
-value|0x0008
-define|#
-directive|define
-name|TUN_DSTADDR
-value|0x0010
-define|#
-directive|define
-name|TUN_RWAIT
-value|0x0040
-define|#
-directive|define
-name|TUN_ASYNC
-value|0x0080
-define|#
-directive|define
-name|TUN_NBIO
-value|0x0100
-define|#
-directive|define
-name|TUN_READY
-value|(TUN_OPEN | TUN_INITED)
-name|struct
-name|ifnet
-name|tun_if
-decl_stmt|;
-comment|/* the interface */
-name|int
-name|tun_pgrp
-decl_stmt|;
-comment|/* the process group - if any */
-name|struct
-name|selinfo
-name|tun_rsel
-decl_stmt|;
-comment|/* read select */
-name|struct
-name|selinfo
-name|tun_wsel
-decl_stmt|;
-comment|/* write select (not used) */
-block|}
-struct|;
-end_struct
+begin_comment
+comment|/* Refer to if_tunvar.h for the softc stuff */
+end_comment
 
 begin_comment
 comment|/* Maximum transmit packet size (default) */
