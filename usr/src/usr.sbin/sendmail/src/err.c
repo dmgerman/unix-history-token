@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.15 (Berkeley) %G%"
+literal|"@(#)err.c	8.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1357,18 +1357,23 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* SMTP */
-ifdef|#
-directive|ifdef
-name|DAEMON
-ifdef|#
-directive|ifdef
-name|ETIMEDOUT
 comment|/* 	**  Handle special network error codes. 	** 	**	These are 4.2/4.3bsd specific; they should be in daemon.c. 	*/
 switch|switch
 condition|(
 name|errno
 condition|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DAEMON
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|ETIMEDOUT
+argument_list|)
 case|case
 name|ETIMEDOUT
 case|:
@@ -1503,6 +1508,8 @@ operator|(
 name|buf
 operator|)
 return|;
+endif|#
+directive|endif
 case|case
 name|EOPENTIMEOUT
 case|:
@@ -1554,11 +1561,14 @@ operator|)
 return|;
 endif|#
 directive|endif
+case|case
+name|EPERM
+case|:
+comment|/* SunOS gives "Not owner" -- this is the POSIX message */
+return|return
+literal|"Operation not permitted"
+return|;
 block|}
-endif|#
-directive|endif
-endif|#
-directive|endif
 if|if
 condition|(
 name|errno

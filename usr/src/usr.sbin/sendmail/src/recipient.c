@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.27 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2448,16 +2448,22 @@ name|p
 operator|==
 name|NULL
 condition|)
+block|{
+name|errno
+operator|=
+name|ENOTDIR
+expr_stmt|;
 return|return
 name|FALSE
 return|;
+block|}
 operator|*
 name|p
 operator|=
 literal|'\0'
 expr_stmt|;
-if|if
-condition|(
+name|errno
+operator|=
 name|safefile
 argument_list|(
 name|filename
@@ -2474,26 +2480,16 @@ name|S_IWRITE
 operator||
 name|S_IEXEC
 argument_list|)
-operator|!=
+expr_stmt|;
+operator|*
+name|p
+operator|=
+literal|'/'
+expr_stmt|;
+return|return
+name|errno
+operator|==
 literal|0
-condition|)
-block|{
-operator|*
-name|p
-operator|=
-literal|'/'
-expr_stmt|;
-return|return
-name|FALSE
-return|;
-block|}
-operator|*
-name|p
-operator|=
-literal|'/'
-expr_stmt|;
-return|return
-name|TRUE
 return|;
 block|}
 comment|/* 	**  File does exist -- check that it is writable. 	*/
@@ -2526,6 +2522,10 @@ name|stb
 operator|.
 name|st_mode
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|EPERM
 expr_stmt|;
 return|return
 operator|(
@@ -2646,7 +2646,8 @@ operator|.
 name|st_gid
 argument_list|)
 expr_stmt|;
-return|return
+name|errno
+operator|=
 name|safefile
 argument_list|(
 name|filename
@@ -2661,6 +2662,9 @@ name|flags
 argument_list|,
 name|S_IWRITE
 argument_list|)
+expr_stmt|;
+return|return
+name|errno
 operator|==
 literal|0
 return|;
