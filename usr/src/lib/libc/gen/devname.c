@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)devname.c	5.18 (Berkeley) %G%"
+literal|"@(#)devname.c	8.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
