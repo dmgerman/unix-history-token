@@ -388,6 +388,20 @@ literal|"Dell PERC 3/Di"
 block|}
 block|,
 block|{
+literal|0x1028
+block|,
+literal|0x000a
+block|,
+literal|0x1028
+block|,
+literal|0x011b
+block|,
+name|AAC_HWIF_I960RX
+block|,
+literal|"Dell PERC 3/Di"
+block|}
+block|,
+block|{
 literal|0x1011
 block|,
 literal|0x0046
