@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)trap.h	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)trap.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -197,19 +197,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|T_DEBUG
-value|19
-end_define
-
-begin_comment
-comment|/* debug fault/trap catchall */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|T_NMI
-value|20
+value|19
 end_define
 
 begin_comment
@@ -220,7 +209,7 @@ begin_define
 define|#
 directive|define
 name|T_OFLOW
-value|21
+value|20
 end_define
 
 begin_comment
@@ -231,7 +220,7 @@ begin_define
 define|#
 directive|define
 name|T_BOUND
-value|22
+value|21
 end_define
 
 begin_comment
@@ -242,7 +231,7 @@ begin_define
 define|#
 directive|define
 name|T_DNA
-value|23
+value|22
 end_define
 
 begin_comment
@@ -253,7 +242,7 @@ begin_define
 define|#
 directive|define
 name|T_DOUBLEFLT
-value|24
+value|23
 end_define
 
 begin_comment
@@ -264,7 +253,7 @@ begin_define
 define|#
 directive|define
 name|T_FPOPFLT
-value|25
+value|24
 end_define
 
 begin_comment
@@ -275,7 +264,7 @@ begin_define
 define|#
 directive|define
 name|T_TSSFLT
-value|26
+value|25
 end_define
 
 begin_comment
@@ -286,7 +275,7 @@ begin_define
 define|#
 directive|define
 name|T_SEGNPFLT
-value|27
+value|26
 end_define
 
 begin_comment
@@ -297,7 +286,7 @@ begin_define
 define|#
 directive|define
 name|T_STKFLT
-value|28
+value|27
 end_define
 
 begin_comment
@@ -308,11 +297,11 @@ begin_define
 define|#
 directive|define
 name|T_RESERVED
-value|29
+value|28
 end_define
 
 begin_comment
-comment|/* stack fault */
+comment|/* reserved fault base */
 end_comment
 
 begin_comment
@@ -346,6 +335,17 @@ directive|define
 name|ILL_ALIGN_FAULT
 value|T_ALIGNFLT
 end_define
+
+begin_define
+define|#
+directive|define
+name|ILL_FPOP_FAULT
+value|T_FPOPFLT
+end_define
+
+begin_comment
+comment|/* coprocessor operand fault */
+end_comment
 
 begin_comment
 comment|/* codes for SIGFPE/ARITHTRAP */
@@ -404,6 +404,76 @@ end_define
 
 begin_comment
 comment|/* floating underflow */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPE_FPU_NP_TRAP
+value|0x6
+end_define
+
+begin_comment
+comment|/* floating point unit not present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPE_SUBRNG_TRAP
+value|0x7
+end_define
+
+begin_comment
+comment|/* subrange out of bounds */
+end_comment
+
+begin_comment
+comment|/* codes for SIGBUS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUS_PAGE_FAULT
+value|T_PAGEFLT
+end_define
+
+begin_comment
+comment|/* page fault protection base */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUS_SEGNP_FAULT
+value|T_SEGNPFLT
+end_define
+
+begin_comment
+comment|/* segment not present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUS_STK_FAULT
+value|T_STKFLT
+end_define
+
+begin_comment
+comment|/* stack segment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUS_SEGM_FAULT
+value|T_RESERVED
+end_define
+
+begin_comment
+comment|/* segment protection base */
 end_comment
 
 end_unit
