@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	c2.h	4.9	85/03/19	*/
+comment|/*	c2.h	4.10	85/08/22	*/
 end_comment
 
 begin_comment
@@ -942,27 +942,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-modifier|*
-name|lasta
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|lastr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|firstr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
 name|revbr
 index|[]
 decl_stmt|;
@@ -1095,15 +1074,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|struct
-name|node
-modifier|*
-name|alloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1137,6 +1107,60 @@ endif|#
 directive|endif
 endif|notdef
 end_endif
+
+begin_function_decl
+name|char
+modifier|*
+name|xalloc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|newa
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|lasta
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|lastr
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|XALIGN
+parameter_list|(
+name|n
+parameter_list|)
+define|\
+value|(((n)+(sizeof (char *) - 1))& ~(sizeof (char *) - 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|alloc
+parameter_list|(
+name|n
+parameter_list|)
+define|\
+value|((struct node *) \ 		 ((newa = lasta) + (n)> lastr ? \ 			xalloc(n) : \ 			(lasta += XALIGN(n), newa)))
+end_define
 
 end_unit
 

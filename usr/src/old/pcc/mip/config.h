@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	config.h	4.2	85/04/08	*/
+comment|/*	config.h	4.3	85/08/22	*/
 end_comment
 
 begin_ifndef
@@ -179,6 +179,17 @@ end_define
 
 begin_comment
 comment|/* maximum eval recursion depth */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXSCOPES
+value|(SYMTSZ/30)
+end_define
+
+begin_comment
+comment|/* maximum active scopes */
 end_comment
 
 begin_comment

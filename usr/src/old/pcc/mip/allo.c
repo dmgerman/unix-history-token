@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)allo.c	4.6 (Berkeley) %G%"
+literal|"@(#)allo.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3248,6 +3248,12 @@ block|}
 block|}
 end_block
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ncopy
+end_ifndef
+
 begin_macro
 name|ncopy
 argument_list|(
@@ -3403,6 +3409,11 @@ endif|#
 directive|endif
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|NODE

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)reader.c	4.3 (Berkeley) %G%"
+literal|"@(#)reader.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1438,7 +1438,7 @@ case|:
 case|case
 name|CBRANCH
 case|:
-comment|/* for the moment, don7t delay past a conditional context, or 		/* inside of a call */
+comment|/* for the moment, don't delay past a conditional context, or 		/* inside of a call */
 return|return;
 case|case
 name|UNARY
@@ -1777,6 +1777,42 @@ condition|)
 name|printf
 argument_list|(
 literal|"SMONE"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|cookie
+operator|==
+name|SCCON
+condition|)
+name|printf
+argument_list|(
+literal|"SCCON"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|cookie
+operator|==
+name|SSCON
+condition|)
+name|printf
+argument_list|(
+literal|"SSCON"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|cookie
+operator|==
+name|SSOREG
+condition|)
+name|printf
+argument_list|(
+literal|"SSOREG"
 argument_list|)
 expr_stmt|;
 else|else

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pftn.c	1.8 (Berkeley) %G%"
+literal|"@(#)pftn.c	1.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,6 +33,31 @@ name|int
 name|offsz
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|symtab
+modifier|*
+name|schain
+index|[
+name|MAXSCOPES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* sym chains for clearst */
+end_comment
+
+begin_decl_stmt
+name|int
+name|chaintop
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* highest active entry */
+end_comment
 
 begin_struct
 struct|struct
@@ -115,19 +140,24 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_macro
+begin_expr_stmt
 name|defid
 argument_list|(
-argument|q
+name|q
 argument_list|,
-argument|class
+name|class
 argument_list|)
-end_macro
+specifier|register
+name|NODE
+operator|*
+name|q
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
-name|NODE
-modifier|*
-name|q
+specifier|register
+name|int
+name|class
 decl_stmt|;
 end_decl_stmt
 
@@ -142,12 +172,14 @@ decl_stmt|;
 name|int
 name|idp
 decl_stmt|;
+specifier|register
 name|TWORD
 name|type
 decl_stmt|;
 name|TWORD
 name|stp
 decl_stmt|;
+specifier|register
 name|int
 name|scl
 decl_stmt|;
@@ -1088,6 +1120,7 @@ name|FIELD
 condition|)
 block|{
 comment|/* make a new entry */
+specifier|register
 name|int
 modifier|*
 name|memp
@@ -1737,6 +1770,55 @@ operator|=
 name|regvar
 expr_stmt|;
 break|break;
+block|}
+block|{
+specifier|register
+name|int
+name|l
+init|=
+name|p
+operator|->
+name|slevel
+decl_stmt|;
+if|if
+condition|(
+name|l
+operator|>=
+name|MAXSCOPES
+condition|)
+name|cerror
+argument_list|(
+literal|"scopes nested too deep"
+argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|snext
+operator|=
+name|schain
+index|[
+name|l
+index|]
+expr_stmt|;
+name|schain
+index|[
+name|l
+index|]
+operator|=
+name|p
+expr_stmt|;
+if|if
+condition|(
+name|l
+operator|>=
+name|chaintop
+condition|)
+name|chaintop
+operator|=
+name|l
+operator|+
+literal|1
+expr_stmt|;
 block|}
 comment|/* user-supplied routine to fix up new definitions */
 name|FIXDEF
@@ -3850,7 +3932,7 @@ argument|defid( p, class );
 ifndef|#
 directive|ifndef
 name|LCOMM
-argument|if( class==EXTDEF || class==STATIC ){
+argument|if( class==EXTDEF || class==STATIC )
 else|#
 directive|else
 argument|if (class==STATIC) { 		register struct symtab *s =&stab[p->tn.rval]; 		extern int stabLCSYM; 		int sz = tsize(s->stype, s->dimoff, s->sizoff)/SZCHAR; 		 		stabLCSYM =
@@ -3861,9 +3943,10 @@ argument|) 			printf(
 literal|"	.lcomm	L%d,%d\n"
 argument|, s->offset, sz); 		else 			printf(
 literal|"	.lcomm	%s,%d\n"
-argument|, exname(s->sname), sz); 	}else if (class == EXTDEF) {
+argument|, exname(s->sname), sz); 	}else if (class == EXTDEF)
 endif|#
 directive|endif
+argument|{
 comment|/* simulate initialization by 0 */
 argument|beginit(p->tn.rval); 		endinit(); 		} 	if( commflag ) commdec( p->tn.rval ); 	}  TWORD types( t1, t2, t3 ) TWORD t1
 argument_list|,
@@ -4175,25 +4258,21 @@ argument|register struct symtab *q;
 comment|/* I'm not sure that this handles towers of several hidden definitions in all cases */
 argument|q =&stab[lookup( p->sname, p->sflags&(STAG|SMOS|SHIDDEN) )];
 comment|/* make relook always point to either p or an empty cell */
-argument|if( q->stype == UNDEF ){ 		q->stype = TNULL; 		return(q); 		} 	while( q != p ){ 		if( q->stype == TNULL ) break; 		if( ++q>=&stab[SYMTSZ] ) q=stab; 		} 	return(q); 	}  clearst( lev ){
-comment|/* clear entries of internal scope  from the symbol table */
-argument|register struct symtab *p
+argument|if( q->stype == UNDEF ){ 		q->stype = TNULL; 		return(q); 		} 	while( q != p ){ 		if( q->stype == TNULL ) break; 		if( ++q>=&stab[SYMTSZ] ) q=stab; 		} 	return(q); 	}  clearst( lev ) register int lev; { 	register struct symtab *p
 argument_list|,
-argument|*q
-argument_list|,
-argument|*r; 	register int temp
-argument_list|,
-argument|rehash;  	temp = lineno; 	aobeg();
-comment|/* first, find an empty slot to prevent newly hashed entries from 	   being slopped into... */
-argument|for( q=stab; q<&stab[SYMTSZ]; ++q ){ 		if( q->stype == TNULL )goto search; 		}  	cerror(
-literal|"symbol table full"
-argument|);  	search: 	p = q;  	for(;;){ 		if( p->stype == TNULL ) { 			rehash =
+argument|*q; 	register int temp; 	struct symtab *clist =
 literal|0
-argument|; 			goto next; 			} 		lineno = p->suse; 		if( lineno<
+argument|;  	temp = lineno; 	aobeg();
+comment|/* step 1: remove entries */
+argument|while( chaintop-
+literal|1
+argument|> lev ){ 		register int type;  		p = schain[--chaintop]; 		schain[chaintop] =
 literal|0
-argument|) lineno = - lineno; 		if( p->slevel>lev ){
-comment|/* must clobber */
-argument|if( p->stype == UNDEF || ( p->sclass == ULABEL&& lev<
+argument|; 		for( ; p; p = q ){ 			q = p->snext; 			type = p->stype; 			if( p->stype == TNULL || p->slevel<= lev ) 				cerror(
+literal|"schain botch"
+argument|); 			lineno = p->suse<
+literal|0
+argument|? -p->suse : p->suse; 			if( p->stype==UNDEF || ( p->sclass==ULABEL&& lev<
 literal|2
 argument|) ){ 				lineno = temp;
 ifndef|#
@@ -4213,43 +4292,32 @@ argument|} 			else aocode(p);
 ifndef|#
 directive|ifndef
 name|BUG1
+argument|if( ddebug ){
 ifndef|#
 directive|ifndef
 name|FLEXNAMES
-argument|if (ddebug) printf(
-literal|"removing %8s from stab[ %d], flags %o level %d\n"
-argument|,
+argument|printf(
+literal|"removing %.8s"
+argument|, p->sname );
 else|#
 directive|else
-argument|if (ddebug) printf(
-literal|"removing %s from stab[ %d], flags %o level %d\n"
-argument|,
+argument|printf(
+literal|"removing %s"
+argument|, p->sname );
 endif|#
 directive|endif
-argument|p->sname,p-stab,p->sflags,p->slevel);
+argument|printf(
+literal|" from stab[%d], flags %o level %d\n"
+argument|, 					p-stab, p->sflags, p->slevel); 				}
 endif|#
 directive|endif
-argument|if( p->sflags& SHIDES ) unhide(p); 			p->stype = TNULL; 			rehash =
-literal|1
-argument|; 			goto next; 			} 		if( rehash ){ 			if( (r=relook(p)) != p ){ 				movestab( r, p ); 				p->stype = TNULL; 				} 			} 		next: 		if( ++p>=&stab[SYMTSZ] ) p = stab; 		if( p == q ) break; 		} 	lineno = temp; 	aoend(); 	}  movestab( p, q ) register struct symtab *p, *q; { 	int k;
-comment|/* structure assignment: *p = *q; */
-argument|p->stype = q->stype; 	p->sclass = q->sclass; 	p->slevel = q->slevel; 	p->offset = q->offset; 	p->sflags = q->sflags; 	p->dimoff = q->dimoff; 	p->sizoff = q->sizoff; 	p->suse = q->suse;
-ifndef|#
-directive|ifndef
-name|FLEXNAMES
-argument|for( k=
-literal|0
-argument|; k<NCHNAM; ++k ){ 		p->sname[k] = q->sname[k]; 		}
-else|#
-directive|else
-argument|p->sname = q->sname;
-endif|#
-directive|endif
-argument|}   hide( p ) register struct symtab *p; { 	register struct symtab *q; 	for( q=p+
+argument|if( p->sflags& SHIDES )unhide( p ); 			p->stype = TNULL; 			p->snext = clist; 			clist = p; 			} 		}
+comment|/* step 2: fix any mishashed entries */
+argument|p = clist; 	while( p ){ 		register struct symtab *r;  		q = p; 		for(;;){ 			if( ++q>=&stab[SYMTSZ] )q = stab; 			if( q == p || q->stype == TNULL )break; 			if( (r = relook(q)) != q ) { 				*r = *q; 				q->stype = NULL; 				} 			} 		p = p->snext; 		}  	lineno = temp; 	aoend(); 	}  hide( p ) register struct symtab *p; { 	register struct symtab *q; 	for( q=p+
 literal|1
 argument|; ; ++q ){ 		if( q>=&stab[SYMTSZ] ) q = stab; 		if( q == p ) cerror(
 literal|"symbol table full"
-argument|); 		if( q->stype == TNULL ) break; 		} 	movestab( q, p ); 	p->sflags |= SHIDDEN; 	q->sflags = (p->sflags&(SMOS|STAG)) | SHIDES;
+argument|); 		if( q->stype == TNULL ) break; 		} 	*q = *p; 	p->sflags |= SHIDDEN; 	q->sflags = (p->sflags&(SMOS|STAG)) | SHIDES;
 ifndef|#
 directive|ifndef
 name|FLEXNAMES
@@ -4271,7 +4339,9 @@ literal|"	%d hidden in %d\n"
 argument|, p-stab, q-stab );
 endif|#
 directive|endif
-argument|return( idname = q-stab ); 	}  unhide( p ) register struct symtab *p; { 	register struct symtab *q; 	register s, j;  	s = p->sflags& (SMOS|STAG); 	q = p;  	for(;;){  		if( q == stab ) q =&stab[SYMTSZ-
+argument|return( idname = q-stab ); 	}  unhide( p ) register struct symtab *p; { 	register struct symtab *q; 	register s
+argument_list|,
+argument|j;  	s = p->sflags& (SMOS|STAG); 	q = p;  	for(;;){  		if( q == stab ) q =&stab[SYMTSZ-
 literal|1
 argument|]; 		else --q;  		if( q == p ) break;  		if( (q->sflags&(SMOS|STAG)) == s ){
 ifndef|#

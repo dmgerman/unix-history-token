@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c21.c 4.15 %G%"
+literal|"@(#)c21.c 4.16 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6200,6 +6200,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|r
+operator|<
+name|NUSE
+operator|&&
 name|uses
 index|[
 name|r

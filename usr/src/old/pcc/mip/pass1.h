@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pass1.h	4.1	85/03/19	*/
+comment|/*	pass1.h	4.2	85/08/22	*/
 end_comment
 
 begin_ifndef
@@ -28,7 +28,7 @@ file|"manifest.h"
 end_include
 
 begin_comment
-comment|/*  * Symbol table definition.  */
+comment|/*  * Symbol table definition.  *  * Colliding entries are moved down with a standard  * probe (no quadratic rehash here) and moved back when  * entries are cleared.  */
 end_comment
 
 begin_struct
@@ -52,6 +52,12 @@ name|sname
 decl_stmt|;
 endif|#
 directive|endif
+name|struct
+name|symtab
+modifier|*
+name|snext
+decl_stmt|;
+comment|/* link to other symbols in the same scope */
 name|TWORD
 name|stype
 decl_stmt|;
@@ -80,7 +86,7 @@ name|short
 name|sizoff
 decl_stmt|;
 comment|/* offset into the size table */
-name|short
+name|int
 name|suse
 decl_stmt|;
 comment|/* line number of last use of the variable */

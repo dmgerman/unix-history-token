@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)scan.c	1.6 (Berkeley) %G%"
+literal|"@(#)scan.c	1.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_comment
@@ -462,6 +468,21 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|gdebug
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|int
+name|fpe
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|struct
+name|sigvec
+name|fpe_sigvec
 decl_stmt|;
 end_decl_stmt
 
@@ -930,6 +951,30 @@ expr_stmt|;
 name|reached
 operator|=
 literal|1
+expr_stmt|;
+name|fpe_sigvec
+operator|.
+name|sv_handler
+operator|=
+name|fpe
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigvec
+argument_list|(
+name|SIGFPE
+argument_list|,
+operator|&
+name|fpe_sigvec
+argument_list|,
+operator|(
+expr|struct
+name|sigvec
+operator|*
+operator|)
+name|NULL
+argument_list|)
 expr_stmt|;
 name|yyparse
 argument_list|()

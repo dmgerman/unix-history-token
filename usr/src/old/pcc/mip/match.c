@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)match.c	4.3 (Berkeley) %G%"
+literal|"@(#)match.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -209,13 +209,24 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"tshape( %o, %o), op = %d\n"
+literal|"tshape( %o, "
 argument_list|,
 name|p
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|prcook
+argument_list|(
 name|shape
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" ) op = %s\n"
 argument_list|,
+name|opst
+index|[
 name|o
+index|]
 argument_list|)
 expr_stmt|;
 block|}
