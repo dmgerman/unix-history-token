@@ -1281,6 +1281,10 @@ name|name
 argument_list|,
 literal|"unix.%lu@"
 argument_list|,
+operator|(
+name|u_long
+operator|*
+operator|)
 name|u
 argument_list|)
 operator|==

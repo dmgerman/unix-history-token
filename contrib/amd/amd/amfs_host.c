@@ -820,6 +820,7 @@ operator|!=
 name|RPC_SUCCESS
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -1294,6 +1295,7 @@ operator|!=
 name|RPC_SUCCESS
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -2359,6 +2361,7 @@ name|RPC_SYSTEMERROR
 condition|)
 block|{
 comment|/* RPC_SYSTEMERROR seems to be returned for no good reason ... */
+specifier|const
 name|char
 modifier|*
 name|msg

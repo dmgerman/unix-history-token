@@ -605,13 +605,13 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  *  * FreeBSD 3.0 has NFS V3, but you need to regenrate the rpcsc header files  * as follows:  *	cd /usr/local/rpcsvc  *	rpcgen -DWANT_NFS3 mount.x  *	rpcgen -DWANT_NFS3 nfs_prot.x  * But that's not expected of everyone, plus there are additional things  * needed so I define everything that's neede for NFS V3 here.  */
+comment|/*  *  * FreeBSD 3.0 snapshots have NFS V3, but you need to regenrate the rpcsc  * header files as follows:  *	cd /usr/local/rpcsvc  *	rpcgen -DWANT_NFS3 mount.x  *	rpcgen -DWANT_NFS3 nfs_prot.x  * But that's not expected of everyone, plus there are additional things  * needed so I define everything that's needed for NFS V3 here.  * The problem is fixed in FreeBSD-3.0-19981006-BETA hence this code is off.  */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NFSMNT_NFSV3
+name|NFSMNT_NFSV3_off
 end_ifdef
 
 begin_define

@@ -2905,6 +2905,7 @@ comment|/* TIOCNOTTY */
 ifdef|#
 directive|ifdef
 name|HAVE_SETSID
+comment|/* XXX: one day maybe use vhangup(2) */
 if|if
 condition|(
 name|setsid

@@ -91,6 +91,8 @@ name|char
 name|hostname
 index|[
 name|MAXHOSTNAMELEN
+operator|+
+literal|1
 index|]
 init|=
 literal|"localhost"
@@ -108,6 +110,8 @@ index|[
 literal|2
 operator|*
 name|MAXHOSTNAMELEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1074,6 +1078,18 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|hostname
+index|[
+sizeof|sizeof
+argument_list|(
+name|hostname
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 comment|/*    * Check it makes sense    */
 if|if
 condition|(

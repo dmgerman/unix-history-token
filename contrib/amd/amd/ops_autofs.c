@@ -949,12 +949,17 @@ name|fs_hostname
 argument_list|,
 literal|"pid%ld@%s:%s"
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|foreground
 condition|?
 name|mypid
 else|:
 name|getppid
 argument_list|()
+argument_list|)
 argument_list|,
 name|hostname
 argument_list|,
@@ -3958,6 +3963,13 @@ operator|->
 name|mf_info
 argument_list|)
 expr_stmt|;
+name|free_opts
+argument_list|(
+operator|&
+name|ap
+argument_list|)
+expr_stmt|;
+comment|/* don't leak */
 if|if
 condition|(
 name|pt

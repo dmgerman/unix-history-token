@@ -3593,6 +3593,13 @@ operator|->
 name|mf_info
 argument_list|)
 expr_stmt|;
+name|free_opts
+argument_list|(
+operator|&
+name|ap
+argument_list|)
+expr_stmt|;
+comment|/* don't leak */
 if|if
 condition|(
 name|pt

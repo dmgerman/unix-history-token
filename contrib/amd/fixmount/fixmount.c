@@ -173,6 +173,8 @@ name|char
 name|thishost
 index|[
 name|MAXHOSTNAMELEN
+operator|+
+literal|1
 index|]
 init|=
 literal|""
@@ -1407,6 +1409,18 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|thishost
+index|[
+sizeof|sizeof
+argument_list|(
+name|thishost
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 comment|/*      * We need the hostname as it appears to the other side's      * mountd, so get our own hostname by reverse address      * resolution.      */
 if|if
 condition|(

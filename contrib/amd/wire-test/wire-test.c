@@ -49,6 +49,8 @@ decl_stmt|,
 name|hostname
 index|[
 name|MAXHOSTNAMELEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -152,7 +154,10 @@ name|gethostname
 argument_list|(
 name|hostname
 argument_list|,
-name|MAXHOSTNAMELEN
+sizeof|sizeof
+argument_list|(
+name|hostname
+argument_list|)
 argument_list|)
 operator|<
 literal|0
@@ -172,6 +177,18 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|hostname
+index|[
+sizeof|sizeof
+argument_list|(
+name|hostname
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 comment|/* get list of networks */
 name|getwire
 argument_list|(
