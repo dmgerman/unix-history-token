@@ -7010,6 +7010,22 @@ operator|)
 return|;
 comment|/* OPTi -- vendor 0x1045 */
 case|case
+literal|0xc5571045
+case|:
+return|return
+operator|(
+literal|"Opti 82C557 (Viper-M) host to PCI bridge"
+operator|)
+return|;
+case|case
+literal|0xc5581045
+case|:
+return|return
+operator|(
+literal|"Opti 82C558 (Viper-M) ISA+IDE"
+operator|)
+return|;
+case|case
 literal|0xc8221045
 case|:
 return|return
