@@ -2379,8 +2379,6 @@ name|td
 operator|->
 name|td_proc
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 if|if
 condition|(
 operator|(
