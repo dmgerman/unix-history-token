@@ -1680,7 +1680,7 @@ name|VMSTATCOL
 operator|+
 literal|10
 argument_list|,
-literal|"scan"
+literal|"pdwake"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -1693,7 +1693,7 @@ name|VMSTATCOL
 operator|+
 literal|10
 argument_list|,
-literal|"hdrev"
+literal|"pdpgs"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3149,7 +3149,7 @@ name|PUTRATE
 argument_list|(
 name|Cnt
 operator|.
-name|v_scan
+name|v_pdwakeups
 argument_list|,
 name|VMSTATROW
 operator|+
@@ -3164,7 +3164,7 @@ name|PUTRATE
 argument_list|(
 name|Cnt
 operator|.
-name|v_rev
+name|v_pdpages
 argument_list|,
 name|VMSTATROW
 operator|+
