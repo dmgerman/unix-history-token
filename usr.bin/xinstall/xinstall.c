@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: xinstall.c,v 1.9 1996/08/12 17:03:30 peter Exp $"
+literal|"$Id: xinstall.c,v 1.10 1996/09/05 07:27:43 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2257,7 +2257,10 @@ operator|*
 literal|1024
 operator|*
 literal|1024
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|trymmap
 argument_list|(
 name|from_fd
@@ -2442,6 +2445,7 @@ operator|==
 literal|0
 condition|)
 break|break;
+comment|/* EOF */
 elseif|else
 if|if
 condition|(
@@ -2483,14 +2487,41 @@ name|rv
 operator|=
 literal|1
 expr_stmt|;
+comment|/* out of sync */
 block|}
 else|else
 name|rv
 operator|=
 literal|1
 expr_stmt|;
+comment|/* read failure */
+block|}
+name|lseek
+argument_list|(
+name|from_fd
+argument_list|,
+literal|0
+argument_list|,
+name|SEEK_SET
+argument_list|)
+expr_stmt|;
+name|lseek
+argument_list|(
+name|to_fd
+argument_list|,
+literal|0
+argument_list|,
+name|SEEK_SET
+argument_list|)
+expr_stmt|;
 block|}
 block|}
+else|else
+name|rv
+operator|=
+literal|1
+expr_stmt|;
+comment|/* don't bother in this case */
 return|return
 name|rv
 return|;
