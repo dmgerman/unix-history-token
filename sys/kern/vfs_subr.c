@@ -10682,7 +10682,16 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Done with purge, notify sleepers of the grim news. 	 */
+comment|/* 	 * Done with purge, reset to the standard lock and 	 * notify sleepers of the grim news. 	 */
+name|vp
+operator|->
+name|v_vnlock
+operator|=
+operator|&
+name|vp
+operator|->
+name|v_lock
+expr_stmt|;
 name|vp
 operator|->
 name|v_op
