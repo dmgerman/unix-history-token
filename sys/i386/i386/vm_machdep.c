@@ -588,6 +588,39 @@ name|md_regs
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|p2
+operator|->
+name|p_md
+operator|.
+name|md_regs
+operator|->
+name|tf_eax
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Child returns zero */
+name|p2
+operator|->
+name|p_md
+operator|.
+name|md_regs
+operator|->
+name|tf_eflags
+operator|&=
+operator|~
+name|PSL_C
+expr_stmt|;
+comment|/* success */
+name|p2
+operator|->
+name|p_md
+operator|.
+name|md_regs
+operator|->
+name|tf_edx
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * Set registers for trampoline to user mode.  Leave space for the 	 * return address on stack.  These are the kernel mode register values. 	 */
 name|pcb2
 operator|->
