@@ -376,7 +376,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|__inline
-name|u_int32_t
+name|bus_addr_t
 name|dptccbvtop
 parameter_list|(
 name|struct
@@ -1253,7 +1253,7 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|u_int32_t
+name|bus_addr_t
 name|dptccbvtop
 parameter_list|(
 name|struct
@@ -1304,7 +1304,7 @@ name|dptccbptov
 argument_list|(
 argument|struct dpt_softc *dpt
 argument_list|,
-argument|u_int32_t busaddr
+argument|bus_addr_t busaddr
 argument_list|)
 block|{
 return|return
