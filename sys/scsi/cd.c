@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *      $Id: cd.c,v 1.50 1995/12/10 10:58:20 julian Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *      $Id: cd.c,v 1.51 1995/12/10 19:52:51 bde Exp $  */
 end_comment
 
 begin_define
@@ -168,10 +168,6 @@ directive|include
 file|<scsi/scsiconf.h>
 end_include
 
-begin_comment
-comment|/* static function prototypes */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|errval
@@ -182,6 +178,23 @@ operator|(
 name|int
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_int32
+name|cd_size
+name|__P
+argument_list|(
+operator|(
+name|int
+name|unit
+operator|,
+name|int
+name|flags
 operator|)
 argument_list|)
 decl_stmt|;
@@ -320,6 +333,26 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|errval
+name|cd_play_big
+name|__P
+argument_list|(
+operator|(
+name|u_int32
+name|unit
+operator|,
+name|u_int32
+name|blk
+operator|,
+name|u_int32
+name|len
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|errval
 name|cd_play_tracks
 name|__P
 argument_list|(
@@ -399,13 +432,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_psize_t
-name|cdsize
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|d_strategy_t
 name|cdstrategy
 decl_stmt|;
@@ -451,7 +477,7 @@ block|,
 comment|/*6*/
 name|nodump
 block|,
-name|cdsize
+name|nopsize
 block|,
 literal|0
 block|,
@@ -1451,6 +1477,7 @@ comment|/*  * open the device. Make sure the partition info is a up-to-date as c
 end_comment
 
 begin_function
+specifier|static
 name|errval
 name|cd_open
 parameter_list|(
@@ -1877,6 +1904,7 @@ comment|/*  * close the device.. only called if we are the LAST  * occurence of 
 end_comment
 
 begin_function
+specifier|static
 name|errval
 name|cd_close
 parameter_list|(
@@ -2007,6 +2035,7 @@ comment|/*  * Actually translate the requested transfer into one the physical dr
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|cd_strategy
 parameter_list|(
@@ -2231,6 +2260,7 @@ comment|/*  * cdstart looks to see if there is a buf waiting for the device  * a
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|cdstart
 parameter_list|(
@@ -2675,6 +2705,7 @@ comment|/*  * Perform special action on behalf of the user.  * Knows about the i
 end_comment
 
 begin_function
+specifier|static
 name|errval
 name|cd_ioctl
 parameter_list|(
@@ -4720,6 +4751,7 @@ comment|/*  * Load the label information on the named device  * Actually fabrica
 end_comment
 
 begin_function
+specifier|static
 name|errval
 name|cd_getdisklabel
 parameter_list|(
@@ -5375,6 +5407,7 @@ comment|/*  * Get the requested page into the buffer given  */
 end_comment
 
 begin_function
+specifier|static
 name|errval
 name|cd_set_mode
 parameter_list|(
@@ -5494,6 +5527,7 @@ comment|/*  * Get scsi driver to send a "start playing" command  */
 end_comment
 
 begin_function
+specifier|static
 name|errval
 name|cd_play
 parameter_list|(
@@ -5861,6 +5895,7 @@ comment|/*  * Get scsi driver to send a "start playing" command  */
 end_comment
 
 begin_function
+specifier|static
 name|errval
 name|cd_play_tracks
 parameter_list|(
@@ -5979,6 +6014,7 @@ comment|/*  * Get scsi driver to send a "play msf" command  */
 end_comment
 
 begin_function
+specifier|static
 name|errval
 name|cd_play_msf
 parameter_list|(
@@ -6116,6 +6152,7 @@ comment|/*  * Get scsi driver to send a "start up" command  */
 end_comment
 
 begin_function
+specifier|static
 name|errval
 name|cd_pause
 parameter_list|(
@@ -6203,6 +6240,7 @@ comment|/*  * Get scsi driver to send a "RESET" command  */
 end_comment
 
 begin_function
+specifier|static
 name|errval
 name|cd_reset
 parameter_list|(
@@ -6232,6 +6270,7 @@ comment|/*  * Read subchannel  */
 end_comment
 
 begin_function
+specifier|static
 name|errval
 name|cd_read_subchannel
 parameter_list|(
@@ -6633,23 +6672,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-block|}
-end_function
-
-begin_function
-name|int
-name|cdsize
-parameter_list|(
-name|dev_t
-name|dev
-parameter_list|)
-block|{
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
 block|}
 end_function
 
