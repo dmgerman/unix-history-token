@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.14.2.2 1995/09/14 07:10:18 davidg Exp $ */
+comment|/* $Id: if_ppp.c,v 1.14.2.3 1995/10/07 12:55:50 davidg Exp $ */
 end_comment
 
 begin_comment
@@ -1120,6 +1120,11 @@ name|if_flags
 operator||=
 name|IFF_RUNNING
 expr_stmt|;
+name|microtime
+argument_list|(
+argument|sc->if.if_lastchange
+argument_list|)
+empty_stmt|;
 return|return
 name|sc
 return|;
@@ -1237,6 +1242,15 @@ name|IFF_UP
 operator||
 name|IFF_RUNNING
 operator|)
+expr_stmt|;
+name|microtime
+argument_list|(
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_lastchange
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1414,6 +1428,15 @@ name|IFF_UP
 operator||
 name|IFF_RUNNING
 operator|)
+expr_stmt|;
+name|microtime
+argument_list|(
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_lastchange
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -2816,6 +2839,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|sc
 operator|->
 name|sc_if
@@ -2825,6 +2849,16 @@ operator|&=
 operator|~
 name|IFF_UP
 expr_stmt|;
+name|microtime
+argument_list|(
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_lastchange
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 break|break;
@@ -5692,6 +5726,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|sc
 operator|->
 name|sc_if
@@ -5701,6 +5736,16 @@ operator|&=
 operator|~
 name|IFF_UP
 expr_stmt|;
+name|microtime
+argument_list|(
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_lastchange
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|NULL
