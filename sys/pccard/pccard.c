@@ -2470,6 +2470,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|devi
+operator|->
+name|running
+operator|=
+literal|1
+expr_stmt|;
 name|MALLOC
 argument_list|(
 name|devi
@@ -2661,7 +2667,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	If the enable functions returns no error, then the 	 *	device has been successfully installed. If so, then 	 *	attach it to the slot, otherwise free it and return 	 *	the error. 	 */
+comment|/* 	 *	If the enable functions returns no error, then the 	 *	device has been successfully installed. If so, then 	 *	attach it to the slot, otherwise free it and return 	 *	the error.  We assume that when we free the device, 	 *	it will also set 'running' to off. 	 */
 if|if
 condition|(
 name|err
@@ -2670,13 +2676,6 @@ name|remove_device
 argument_list|(
 name|devi
 argument_list|)
-expr_stmt|;
-else|else
-name|devi
-operator|->
-name|running
-operator|=
-literal|1
 expr_stmt|;
 return|return
 operator|(
