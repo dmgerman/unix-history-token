@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Interface to the generic driver for the aic7xxx based adaptec   * SCSI controllers.  This is used to implement product specific   * probe and attach routines.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx.h,v 1.5 1995/03/31 13:54:41 gibbs Exp $  */
+comment|/*  * Interface to the generic driver for the aic7xxx based adaptec   * SCSI controllers.  This is used to implement product specific   * probe and attach routines.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx.h,v 1.6 1995/04/23 22:04:58 gibbs Exp $  */
 end_comment
 
 begin_ifndef
@@ -193,7 +193,7 @@ define|#
 directive|define
 name|SCB_NEEDDMA
 value|0x08
-comment|/* SCB needs to be DMA'd from 						 * from host memory 						 */
+comment|/* Refresh SCB from host ram */
 define|#
 directive|define
 name|SCB_DIS
@@ -312,11 +312,21 @@ name|packed
 operator|)
 argument_list|)
 decl_stmt|;
+comment|/*31*/
+name|u_char
+name|next_waiting
+decl_stmt|;
+comment|/* Used to thread SCBs awaiting  					 * selection 					 */
+define|#
+directive|define
+name|SCB_LIST_NULL
+value|0x10
+comment|/* SCB list equivelent to NULL */
 if|#
 directive|if
 literal|0
 comment|/* 	 *  No real point in transferring this to the 	 *  SCB registers. 	*/
-block|unsigned char RESERVED[2];
+block|unsigned char RESERVED[1];
 endif|#
 directive|endif
 comment|/*-----------------end of hardware supported fields----------------*/
