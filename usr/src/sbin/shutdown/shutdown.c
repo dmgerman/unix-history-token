@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)shutdown.c	4.13 (Berkeley) 82/03/15"
+literal|"@(#)shutdown.c	4.14 (Berkeley) 82/10/23"
 decl_stmt|;
 end_decl_stmt
 
@@ -331,8 +331,8 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-name|int
-name|slots
+name|time_t
+name|nowtime
 decl_stmt|;
 end_decl_stmt
 
@@ -396,13 +396,13 @@ block|,
 literal|2
 name|MINUTES
 block|,
+literal|1
+name|MINUTES
+block|,
+literal|1
+name|MINUTES
+block|,
 literal|30
-name|SECONDS
-block|,
-literal|40
-name|SECONDS
-block|,
-literal|10
 name|SECONDS
 block|,
 literal|0
@@ -459,7 +459,7 @@ name|char
 modifier|*
 name|ts
 decl_stmt|;
-name|long
+name|time_t
 name|sdt
 decl_stmt|;
 name|int
@@ -467,8 +467,8 @@ name|h
 decl_stmt|,
 name|m
 decl_stmt|;
-name|long
-name|nowtime
+name|int
+name|first
 decl_stmt|;
 name|FILE
 modifier|*
@@ -615,6 +615,17 @@ name|finish
 argument_list|()
 expr_stmt|;
 block|}
+name|nowtime
+operator|=
+name|time
+argument_list|(
+operator|(
+name|time_t
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
 name|sdt
 operator|=
 name|getsdt
@@ -664,17 +675,6 @@ name|i
 index|]
 operator|=
 name|NULL
-expr_stmt|;
-name|nowtime
-operator|=
-name|time
-argument_list|(
-operator|(
-name|long
-operator|*
-operator|)
-literal|0
-argument_list|)
 expr_stmt|;
 name|m
 operator|=
@@ -830,6 +830,15 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+else|#
+directive|else
+name|putc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|sint
@@ -840,6 +849,37 @@ expr_stmt|;
 name|f
 operator|=
 literal|""
+expr_stmt|;
+name|ufd
+operator|=
+name|open
+argument_list|(
+literal|"/etc/utmp"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ufd
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"shutdown: /etc/utmp"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|first
+operator|=
+literal|1
 expr_stmt|;
 for|for
 control|(
@@ -884,6 +924,36 @@ expr_stmt|;
 if|if
 condition|(
 name|stogo
+operator|>
+literal|0
+operator|&&
+operator|(
+name|stogo
+operator|-
+name|sint
+operator|)
+operator|<
+name|interval
+index|[
+name|i
+index|]
+operator|.
+name|stogo
+condition|)
+name|sint
+operator|=
+name|stogo
+operator|-
+name|interval
+index|[
+name|i
+index|]
+operator|.
+name|stogo
+expr_stmt|;
+if|if
+condition|(
+name|stogo
 operator|<=
 name|NOLOGTIME
 operator|&&
@@ -914,23 +984,23 @@ name|f
 operator|=
 literal|"FINAL "
 expr_stmt|;
-name|ufd
-operator|=
-name|open
-argument_list|(
-literal|"/etc/utmp"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|nowtime
 operator|=
 name|time
 argument_list|(
 operator|(
-name|long
+name|time_t
 operator|*
 operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+name|lseek
+argument_list|(
+name|ufd
+argument_list|,
+literal|0L
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1051,7 +1121,7 @@ name|fprintf
 argument_list|(
 name|termf
 argument_list|,
-literal|"\n\n"
+literal|"\n\r\n"
 argument_list|)
 expr_stmt|;
 name|warn
@@ -1061,10 +1131,14 @@ argument_list|,
 name|sdt
 argument_list|,
 name|nowtime
+argument_list|,
+name|f
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|first
+operator|||
 name|sdt
 operator|-
 name|nowtime
@@ -1072,6 +1146,19 @@ operator|>
 literal|1
 name|MINUTES
 condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|nolog2
+condition|)
+name|fprintf
+argument_list|(
+name|termf
+argument_list|,
+literal|"\t..."
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|mess
@@ -1088,10 +1175,18 @@ name|fprintf
 argument_list|(
 name|termf
 argument_list|,
-literal|"%s "
+literal|" %s"
 argument_list|,
 operator|*
 name|mess
+argument_list|)
+expr_stmt|;
+block|}
+name|fputc
+argument_list|(
+literal|'\r'
+argument_list|,
+name|termf
 argument_list|)
 expr_stmt|;
 name|fputc
@@ -1133,7 +1228,7 @@ block|}
 if|if
 condition|(
 name|stogo
-operator|<
+operator|<=
 literal|0
 condition|)
 block|{
@@ -1170,6 +1265,21 @@ block|}
 ifndef|#
 directive|ifndef
 name|DEBUG
+name|kill
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+name|SIGTERM
+argument_list|)
+expr_stmt|;
+comment|/* terminate everyone */
+name|sleep
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+comment|/*& wait while they die */
 if|if
 condition|(
 name|reboot
@@ -1241,7 +1351,7 @@ operator|-
 name|time
 argument_list|(
 operator|(
-name|long
+name|time_t
 operator|*
 operator|)
 literal|0
@@ -1250,6 +1360,10 @@ expr_stmt|;
 if|if
 condition|(
 name|stogo
+operator|>
+literal|0
+operator|&&
+name|sint
 operator|>
 literal|0
 condition|)
@@ -1267,6 +1381,10 @@ expr_stmt|;
 name|stogo
 operator|-=
 name|sint
+expr_stmt|;
+name|first
+operator|=
+literal|0
 expr_stmt|;
 block|}
 block|}
@@ -1300,6 +1418,22 @@ name|tm
 modifier|*
 name|lt
 decl_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|s
+argument_list|,
+literal|"now"
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|nowtime
+operator|)
+return|;
 if|if
 condition|(
 operator|*
@@ -1366,7 +1500,7 @@ operator|=
 name|time
 argument_list|(
 operator|(
-name|long
+name|time_t
 operator|*
 operator|)
 literal|0
@@ -1482,7 +1616,7 @@ operator|=
 name|time
 argument_list|(
 operator|(
-name|long
+name|time_t
 operator|*
 operator|)
 literal|0
@@ -1568,7 +1702,9 @@ argument|term
 argument_list|,
 argument|sdt
 argument_list|,
-argument|nowtime
+argument|now
+argument_list|,
+argument|type
 argument_list|)
 end_macro
 
@@ -1580,10 +1716,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|long
+name|time_t
 name|sdt
 decl_stmt|,
-name|nowtime
+name|now
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|type
 decl_stmt|;
 end_decl_stmt
 
@@ -1598,7 +1741,7 @@ name|delay
 operator|=
 name|sdt
 operator|-
-name|nowtime
+name|now
 expr_stmt|;
 if|if
 condition|(
@@ -1623,7 +1766,9 @@ name|fprintf
 argument_list|(
 name|term
 argument_list|,
-literal|"\007\007*** System shutdown message from %s!%s ***\n"
+literal|"\007\007\t*** %sSystem shutdown message from %s!%s ***\r\n\n"
+argument_list|,
+name|type
 argument_list|,
 name|hostname
 argument_list|,
@@ -1635,7 +1780,11 @@ name|fprintf
 argument_list|(
 name|term
 argument_list|,
-literal|"\007\007*** System shutdown message ***\n"
+literal|"\007\007\t*** %sSystem shutdown message (%s) ***\r\n\n"
+argument_list|,
+name|type
+argument_list|,
+name|hostname
 argument_list|)
 expr_stmt|;
 name|ts
@@ -1657,7 +1806,7 @@ name|fprintf
 argument_list|(
 name|term
 argument_list|,
-literal|"System going down at %5.5s\n"
+literal|"System going down at %5.5s\r\n"
 argument_list|,
 name|ts
 operator|+
@@ -1669,7 +1818,7 @@ if|if
 condition|(
 name|delay
 operator|>
-literal|60
+literal|95
 name|SECONDS
 condition|)
 block|{
@@ -1677,7 +1826,7 @@ name|fprintf
 argument_list|(
 name|term
 argument_list|,
-literal|"System going down in %d minute%s\n"
+literal|"System going down in %d minute%s\r\n"
 argument_list|,
 operator|(
 name|delay
@@ -1715,7 +1864,7 @@ name|fprintf
 argument_list|(
 name|term
 argument_list|,
-literal|"System going down in %d second%s\n"
+literal|"System going down in %d second%s\r\n"
 argument_list|,
 name|delay
 argument_list|,
@@ -1734,7 +1883,7 @@ name|fprintf
 argument_list|(
 name|term
 argument_list|,
-literal|"System going down IMMEDIATELY\n"
+literal|"System going down IMMEDIATELY\r\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1748,7 +1897,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|long
+name|time_t
 name|sdt
 decl_stmt|;
 end_decl_stmt
@@ -1765,6 +1914,12 @@ modifier|*
 modifier|*
 name|mess
 decl_stmt|;
+name|unlink
+argument_list|(
+name|nologin
+argument_list|)
+expr_stmt|;
+comment|/* in case linked to std file */
 if|if
 condition|(
 operator|(
@@ -2005,9 +2160,16 @@ if|if
 condition|(
 name|fp
 operator|==
-literal|0
+name|NULL
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Shutdown: log entry failed\n"
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|fseek
 argument_list|(
 name|fp
