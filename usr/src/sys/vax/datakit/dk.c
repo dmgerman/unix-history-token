@@ -1951,7 +1951,9 @@ name|DKXCLUDE
 operator|&&
 name|u
 operator|.
-name|u_ruid
+name|u_procp
+operator|->
+name|p_ruid
 operator|!=
 literal|0
 condition|)
