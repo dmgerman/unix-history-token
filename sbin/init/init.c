@@ -1195,7 +1195,6 @@ argument_list|(
 literal|"ignoring excess arguments"
 argument_list|)
 expr_stmt|;
-comment|/* Mount devfs on /dev */
 if|if
 condition|(
 name|devfs
@@ -1203,7 +1202,7 @@ condition|)
 block|{
 name|mount
 argument_list|(
-name|MOUNT_DEVFS
+literal|"devfs"
 argument_list|,
 literal|"/dev"
 argument_list|,
