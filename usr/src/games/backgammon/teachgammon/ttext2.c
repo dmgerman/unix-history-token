@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"	ttext2.c	4.1	82/05/11	"
+literal|"	ttext2.c	4.2	82/10/24	"
 decl_stmt|;
 end_decl_stmt
 
@@ -14,6 +14,19 @@ include|#
 directive|include
 file|"back.h"
 end_include
+
+begin_decl_stmt
+name|char
+modifier|*
+name|prompt
+decl_stmt|,
+modifier|*
+name|list
+decl_stmt|,
+modifier|*
+name|opts
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
