@@ -676,26 +676,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|ISDOT
-parameter_list|(
-name|c
-parameter_list|)
-value|((c)[0] == '.'&& (((c)[1] == '\0') || ((c)[1] == '/')))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISDOTDOT
-parameter_list|(
-name|c
-parameter_list|)
-value|((c)[0] == '.'&& ISDOT(&((c)[1])))
-end_define
-
 begin_comment
 comment|/* strrcpy():  *	Like strcpy, going backwards and returning the new pointer  */
 end_comment

@@ -1278,6 +1278,26 @@ parameter_list|)
 value|(debug& CONCAT(DEBUG_,module))
 end_define
 
+begin_define
+define|#
+directive|define
+name|ISDOT
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)[0] == '.'&& (((c)[1] == '\0') || ((c)[1] == '/')))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISDOTDOT
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)[0] == '.'&& ISDOT(&((c)[1])))
+end_define
+
 begin_comment
 comment|/*  * Since there are so many, all functions that return non-integer values are  * extracted by means of a sed script or two and stuck in the file "nonints.h"  */
 end_comment
