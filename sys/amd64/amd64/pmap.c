@@ -3216,6 +3216,8 @@ operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
 name|pa
+operator|&
+name|PG_FRAME
 argument_list|)
 expr_stmt|;
 name|vm_page_lock_queues
@@ -3797,6 +3799,8 @@ name|pmap
 argument_list|,
 name|va
 argument_list|)
+operator|&
+name|PG_FRAME
 argument_list|)
 expr_stmt|;
 name|vm_page_unhold
@@ -3856,6 +3860,8 @@ name|pmap
 argument_list|,
 name|va
 argument_list|)
+operator|&
+name|PG_FRAME
 argument_list|)
 expr_stmt|;
 name|vm_page_unhold
@@ -4568,6 +4574,8 @@ name|PHYS_TO_VM_PAGE
 argument_list|(
 operator|*
 name|pml4
+operator|&
+name|PG_FRAME
 argument_list|)
 expr_stmt|;
 name|pdppg
@@ -4847,6 +4855,8 @@ name|PHYS_TO_VM_PAGE
 argument_list|(
 operator|*
 name|pdp
+operator|&
+name|PG_FRAME
 argument_list|)
 expr_stmt|;
 name|pdpg
@@ -5030,6 +5040,8 @@ name|PHYS_TO_VM_PAGE
 argument_list|(
 operator|*
 name|pd
+operator|&
+name|PG_FRAME
 argument_list|)
 expr_stmt|;
 name|m
@@ -5137,6 +5149,8 @@ name|pm_pml4
 index|[
 name|PML4PML4I
 index|]
+operator|&
+name|PG_FRAME
 argument_list|)
 expr_stmt|;
 name|pmap
@@ -6117,6 +6131,8 @@ operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
 name|oldpte
+operator|&
+name|PG_FRAME
 argument_list|)
 expr_stmt|;
 if|if
@@ -6205,6 +6221,8 @@ name|pmap
 argument_list|,
 name|va
 argument_list|)
+operator|&
+name|PG_FRAME
 argument_list|)
 expr_stmt|;
 return|return
@@ -7210,6 +7228,8 @@ operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
 name|pbits
+operator|&
+name|PG_FRAME
 argument_list|)
 expr_stmt|;
 name|vm_page_flag_set
@@ -7252,6 +7272,8 @@ operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
 name|pbits
+operator|&
+name|PG_FRAME
 argument_list|)
 expr_stmt|;
 name|vm_page_dirty
@@ -7608,6 +7630,8 @@ operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
 name|opa
+operator|&
+name|PG_FRAME
 argument_list|)
 expr_stmt|;
 name|vm_page_dirty
@@ -7950,6 +7974,8 @@ name|PHYS_TO_VM_PAGE
 argument_list|(
 operator|*
 name|ptepa
+operator|&
+name|PG_FRAME
 argument_list|)
 expr_stmt|;
 name|mpte
@@ -8886,6 +8912,8 @@ operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
 name|srcptepaddr
+operator|&
+name|PG_FRAME
 argument_list|)
 expr_stmt|;
 if|if
@@ -8991,6 +9019,8 @@ operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
 name|ptetemp
+operator|&
+name|PG_FRAME
 argument_list|)
 expr_stmt|;
 operator|*
@@ -9583,6 +9613,8 @@ operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
 name|tpte
+operator|&
+name|PG_FRAME
 argument_list|)
 expr_stmt|;
 name|KASSERT

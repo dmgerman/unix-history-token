@@ -181,7 +181,7 @@ begin_define
 define|#
 directive|define
 name|PG_FRAME
-value|(~((vm_paddr_t)PAGE_MASK))
+value|(0x000ffffffffff000ul)
 end_define
 
 begin_define
