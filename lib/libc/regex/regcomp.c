@@ -9829,6 +9829,10 @@ operator|!=
 name|O_CH
 condition|)
 do|;
+comment|/* We must skip to the next position, or we'll 			 * leave altoffset() too early. 			 */
+name|scan
+operator|++
+expr_stmt|;
 break|break;
 case|case
 name|OANYOF
