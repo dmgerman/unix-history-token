@@ -11,7 +11,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)pass5.c	3.4 (Berkeley) %G%"
+literal|"@(#)pass5.c	3.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -184,16 +184,28 @@ operator|)
 expr_stmt|;
 name|mapsize
 operator|=
+operator|&
+name|cgrp
+operator|.
+name|cg_free
+index|[
 name|howmany
 argument_list|(
-name|MAXIPG
-operator|+
 name|sblock
 operator|.
 name|fs_fpg
 argument_list|,
 name|NBBY
 argument_list|)
+index|]
+operator|-
+operator|(
+name|u_char
+operator|*
+operator|)
+name|cgrp
+operator|.
+name|cg_iused
 expr_stmt|;
 operator|(
 name|void
