@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)klogin.c	5.2 (Berkeley) %G%"
+literal|"@(#)klogin.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -240,18 +240,6 @@ argument_list|,
 name|DEFAULT_TKT_LIFE
 argument_list|,
 name|password
-argument_list|)
-expr_stmt|;
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"retval of get_pw_in_tkt: %s"
-argument_list|,
-name|krb_err_txt
-index|[
-name|kerror
-index|]
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If we got a TGT, get a local "rcmd" ticket and check it so as to 	 * ensure that we are not talking to a bogus Kerberos server. 	 * 	 * There are 2 cases where we still allow a login: 	 *	1: the VERIFY_SERVICE doesn't exist in the KDC 	 *	2: local host has no srvtab, as (hopefully) indicated by a 	 *	   return value of RD_AP_UNDEC from krb_rd_req(). 	 */
