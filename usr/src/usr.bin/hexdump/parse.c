@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parse.c	5.1 (Berkeley) %G%"
+literal|"@(#)parse.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1307,6 +1307,77 @@ goto|goto
 name|sw1
 goto|;
 case|case
+literal|'l'
+case|:
+operator|++
+name|p2
+expr_stmt|;
+switch|switch
+condition|(
+name|p1
+index|[
+literal|1
+index|]
+condition|)
+block|{
+case|case
+literal|'d'
+case|:
+case|case
+literal|'i'
+case|:
+operator|++
+name|p1
+expr_stmt|;
+name|pr
+operator|->
+name|flags
+operator|=
+name|F_INT
+expr_stmt|;
+goto|goto
+name|sw1
+goto|;
+case|case
+literal|'o'
+case|:
+case|case
+literal|'u'
+case|:
+case|case
+literal|'x'
+case|:
+case|case
+literal|'X'
+case|:
+operator|++
+name|p1
+expr_stmt|;
+name|pr
+operator|->
+name|flags
+operator|=
+name|F_UINT
+expr_stmt|;
+goto|goto
+name|sw1
+goto|;
+default|default:
+name|p1
+index|[
+literal|2
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|badconv
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* NOTREACHED */
+case|case
 literal|'o'
 case|:
 case|case
@@ -2205,7 +2276,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"hexdump: bad conversion character %s.\n"
+literal|"hexdump: bad conversion character %%%s.\n"
 argument_list|,
 name|ch
 argument_list|)
