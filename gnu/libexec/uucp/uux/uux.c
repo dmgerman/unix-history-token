@@ -21,7 +21,7 @@ name|char
 name|uux_rcsid
 index|[]
 init|=
-literal|"$Id: uux.c,v 1.1 1993/08/05 18:28:19 conklin Exp $"
+literal|"$Id: uux.c,v 1.2 1994/04/01 13:11:01 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1932,6 +1932,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|funknown_system
 argument_list|(
 name|puuconf
@@ -1942,7 +1943,6 @@ operator|&
 name|sxqtsys
 argument_list|)
 condition|)
-block|{
 name|ulog
 argument_list|(
 name|LOG_FATAL
@@ -1952,7 +1952,6 @@ argument_list|,
 name|zsys
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 comment|/* Get the local name the remote system know us as.  */
@@ -3160,6 +3159,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|funknown_system
 argument_list|(
 name|puuconf
