@@ -40,10 +40,12 @@ specifier|extern
 name|int
 name|cmdmode
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|cmd
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|args

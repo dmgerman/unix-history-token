@@ -3,32 +3,34 @@ begin_comment
 comment|/*-  * Copyright (c) 1980, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|lint
-end_ifndef
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static char sccsid[] = "@(#)cmds.c	8.2 (Berkeley) 4/29/95";
-endif|#
-directive|endif
-end_endif
+end_ifdef
 
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"@(#)cmds.c	8.2 (Berkeley) 4/29/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,20 +39,10 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* not lint */
-end_comment
-
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
+file|<ctype.h>
 end_include
 
 begin_include
@@ -62,13 +54,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<stdlib.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -89,27 +87,41 @@ name|command
 parameter_list|(
 name|cmd
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|cmd
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|cmdtab
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
+decl_stmt|,
+modifier|*
+name|tmpstr
+decl_stmt|,
+modifier|*
+name|tmpstr1
 decl_stmt|;
 name|int
 name|interval
 decl_stmt|,
 name|omask
 decl_stmt|;
+name|tmpstr
+operator|=
+name|tmpstr1
+operator|=
+name|strdup
+argument_list|(
+name|cmd
+argument_list|)
+expr_stmt|;
 name|omask
 operator|=
 name|sigblock
@@ -124,7 +136,7 @@ for|for
 control|(
 name|cp
 operator|=
-name|cmd
+name|tmpstr1
 init|;
 operator|*
 name|cp
@@ -154,7 +166,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-name|cmd
+name|tmpstr1
 operator|==
 literal|'\0'
 condition|)
@@ -179,7 +191,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|cmd
+name|tmpstr1
 argument_list|,
 literal|"quit"
 argument_list|)
@@ -188,7 +200,7 @@ literal|0
 operator|||
 name|strcmp
 argument_list|(
-name|cmd
+name|tmpstr1
 argument_list|,
 literal|"q"
 argument_list|)
@@ -204,7 +216,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|cmd
+name|tmpstr1
 argument_list|,
 literal|"load"
 argument_list|)
@@ -223,7 +235,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|cmd
+name|tmpstr1
 argument_list|,
 literal|"stop"
 argument_list|)
@@ -256,7 +268,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|cmd
+name|tmpstr1
 argument_list|,
 literal|"help"
 argument_list|)
@@ -265,15 +277,15 @@ literal|0
 condition|)
 block|{
 name|int
-name|col
+name|_col
 decl_stmt|,
-name|len
+name|_len
 decl_stmt|;
 name|move
 argument_list|(
 name|CMDLINE
 argument_list|,
-name|col
+name|_col
 operator|=
 literal|0
 argument_list|)
@@ -292,7 +304,7 @@ name|p
 operator|++
 control|)
 block|{
-name|len
+name|_len
 operator|=
 name|strlen
 argument_list|(
@@ -303,9 +315,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|col
+name|_col
 operator|+
-name|len
+name|_len
 operator|>
 name|COLS
 condition|)
@@ -317,13 +329,13 @@ operator|->
 name|c_name
 argument_list|)
 expr_stmt|;
-name|col
+name|_col
 operator|+=
-name|len
+name|_len
 expr_stmt|;
 if|if
 condition|(
-name|col
+name|_col
 operator|+
 literal|1
 operator|<
@@ -346,7 +358,7 @@ name|interval
 operator|=
 name|atoi
 argument_list|(
-name|cmd
+name|tmpstr1
 argument_list|)
 expr_stmt|;
 if|if
@@ -358,7 +370,7 @@ operator|&&
 operator|(
 name|strcmp
 argument_list|(
-name|cmd
+name|tmpstr1
 argument_list|,
 literal|"start"
 argument_list|)
@@ -367,7 +379,7 @@ literal|0
 operator|||
 name|strcmp
 argument_list|(
-name|cmd
+name|tmpstr1
 argument_list|,
 literal|"interval"
 argument_list|)
@@ -439,7 +451,7 @@ name|p
 operator|=
 name|lookup
 argument_list|(
-name|cmd
+name|tmpstr1
 argument_list|)
 expr_stmt|;
 if|if
@@ -459,7 +471,7 @@ name|error
 argument_list|(
 literal|"%s: Ambiguous command."
 argument_list|,
-name|cmd
+name|tmpstr1
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -619,7 +631,7 @@ operator|->
 name|c_cmd
 call|)
 argument_list|(
-name|cmd
+name|tmpstr1
 argument_list|,
 name|cp
 argument_list|)
@@ -628,7 +640,7 @@ name|error
 argument_list|(
 literal|"%s: Unknown command."
 argument_list|,
-name|cmd
+name|tmpstr1
 argument_list|)
 expr_stmt|;
 name|done
@@ -636,6 +648,11 @@ label|:
 name|sigsetmask
 argument_list|(
 name|omask
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|tmpstr
 argument_list|)
 expr_stmt|;
 block|}
@@ -649,13 +666,13 @@ name|lookup
 parameter_list|(
 name|name
 parameter_list|)
-specifier|register
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
 block|{
-specifier|register
+specifier|const
 name|char
 modifier|*
 name|p
@@ -663,16 +680,14 @@ decl_stmt|,
 modifier|*
 name|q
 decl_stmt|;
-specifier|register
 name|struct
 name|cmdtab
 modifier|*
-name|c
+name|ct
 decl_stmt|,
 modifier|*
 name|found
 decl_stmt|;
-specifier|register
 name|int
 name|nmatches
 decl_stmt|,
@@ -697,17 +712,19 @@ literal|0
 expr_stmt|;
 for|for
 control|(
-name|c
+name|ct
 operator|=
 name|cmdtab
 init|;
+operator|(
 name|p
 operator|=
-name|c
+name|ct
 operator|->
 name|c_name
+operator|)
 condition|;
-name|c
+name|ct
 operator|++
 control|)
 block|{
@@ -737,7 +754,7 @@ condition|)
 comment|/* exact match? */
 return|return
 operator|(
-name|c
+name|ct
 operator|)
 return|;
 if|if
@@ -769,7 +786,7 @@ literal|1
 expr_stmt|;
 name|found
 operator|=
-name|c
+name|ct
 expr_stmt|;
 block|}
 elseif|else
@@ -838,7 +855,7 @@ name|s1
 parameter_list|,
 name|s2
 parameter_list|)
-specifier|register
+specifier|const
 name|char
 modifier|*
 name|s1

@@ -28,9 +28,11 @@ begin_function_decl
 name|int
 name|dscmd
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,

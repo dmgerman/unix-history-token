@@ -3,24 +3,34 @@ begin_comment
 comment|/*-  * Copyright (c) 1980, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_comment
-comment|/* static char sccsid[] = "@(#)netstat.c	8.1 (Berkeley) 6/6/93"; */
-end_comment
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|lint
+end_ifdef
 
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"@(#)netstat.c	8.1 (Berkeley) 6/6/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,10 +38,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
 
 begin_comment
 comment|/*  * netstat  */
@@ -196,18 +202,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<nlist.h>
 end_include
 
@@ -215,6 +209,18 @@ begin_include
 include|#
 directive|include
 file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -244,6 +250,7 @@ operator|*
 operator|,
 name|int
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -268,6 +275,7 @@ operator|*
 operator|,
 name|int
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -292,6 +300,7 @@ operator|*
 operator|,
 name|int
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -353,6 +362,7 @@ operator|*
 operator|,
 name|int
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -456,6 +466,7 @@ name|short
 name|ni_state
 decl_stmt|;
 comment|/* tcp state */
+specifier|const
 name|char
 modifier|*
 name|ni_proto
@@ -537,15 +548,6 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|static
-name|char
-modifier|*
-name|inetname
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_function
 name|void
 name|closenetstat
@@ -557,7 +559,6 @@ modifier|*
 name|w
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|netinfo
 modifier|*
@@ -626,6 +627,7 @@ end_function
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|miblist
@@ -713,13 +715,11 @@ name|void
 name|fetchnetstat_kvm
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|inpcb
 modifier|*
 name|next
 decl_stmt|;
-specifier|register
 name|struct
 name|netinfo
 modifier|*
@@ -1005,7 +1005,6 @@ name|void
 name|fetchnetstat_sysctl
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|netinfo
 modifier|*
@@ -1403,13 +1402,11 @@ name|state
 parameter_list|,
 name|proto
 parameter_list|)
-specifier|register
 name|struct
 name|inpcb
 modifier|*
 name|inp
 decl_stmt|;
-specifier|register
 name|struct
 name|socket
 modifier|*
@@ -1418,12 +1415,12 @@ decl_stmt|;
 name|int
 name|state
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|proto
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|netinfo
 modifier|*
@@ -1484,13 +1481,11 @@ name|state
 parameter_list|,
 name|proto
 parameter_list|)
-specifier|register
 name|struct
 name|inpcb
 modifier|*
 name|inp
 decl_stmt|;
-specifier|register
 name|struct
 name|xsocket
 modifier|*
@@ -1499,12 +1494,12 @@ decl_stmt|;
 name|int
 name|state
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|proto
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|netinfo
 modifier|*
@@ -1565,7 +1560,6 @@ name|state
 parameter_list|,
 name|proto
 parameter_list|)
-specifier|register
 name|struct
 name|inpcb
 modifier|*
@@ -1574,12 +1568,12 @@ decl_stmt|;
 name|int
 name|state
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|proto
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|netinfo
 modifier|*
@@ -1742,7 +1736,10 @@ name|p
 operator|->
 name|ni_proto
 operator|=
+name|strdup
+argument_list|(
 name|proto
+argument_list|)
 expr_stmt|;
 name|p
 operator|->
@@ -1924,7 +1921,6 @@ name|void
 name|shownetstat
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|netinfo
 modifier|*
@@ -2255,6 +2251,7 @@ argument_list|,
 literal|"tcp"
 argument_list|)
 condition|)
+block|{
 if|if
 condition|(
 name|p
@@ -2305,6 +2302,7 @@ name|ni_state
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 name|wclrtoeol
 argument_list|(
 name|wnd
@@ -2372,7 +2370,6 @@ name|port
 parameter_list|,
 name|proto
 parameter_list|)
-specifier|register
 name|struct
 name|in_addr
 modifier|*
@@ -2381,6 +2378,7 @@ decl_stmt|;
 name|int
 name|port
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|proto
@@ -2401,10 +2399,6 @@ index|]
 decl_stmt|,
 modifier|*
 name|cp
-decl_stmt|,
-modifier|*
-name|index
-argument_list|()
 decl_stmt|;
 name|snprintf
 argument_list|(
@@ -2803,6 +2797,7 @@ name|cmd
 parameter_list|,
 name|args
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|cmd

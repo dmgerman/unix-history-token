@@ -1,15 +1,47 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
-end_comment
-
-begin_comment
-comment|/*  * Some code and ideas taken from the old disks.c.  * static char sccsid[] = "@(#)disks.c	8.1 (Berkeley) 6/6/93";  */
+comment|/*  * Copyright (c) 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
 comment|/*-  * Copyright (c) 1980, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|lint
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)disks.c	8.1 (Berkeley) 6/6/93"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -32,7 +64,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<ctype.h>
 end_include
 
 begin_include
@@ -44,19 +76,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<err.h>
+file|<string.h>
 end_include
 
 begin_include
@@ -170,6 +202,7 @@ specifier|static
 name|int
 name|dsmatchselect
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|args
@@ -193,6 +226,7 @@ specifier|static
 name|int
 name|dsselect
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|args
@@ -227,11 +261,13 @@ name|struct
 name|statinfo
 modifier|*
 name|s2
+name|__unused
 parameter_list|,
 name|struct
 name|statinfo
 modifier|*
 name|s3
+name|__unused
 parameter_list|)
 block|{
 comment|/* 	 * Make sure that the userland devstat version matches the kernel 	 * devstat version.  If not, exit and print a message informing  	 * the user of his mistake. 	 */
@@ -384,10 +420,12 @@ begin_function
 name|int
 name|dscmd
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|cmd
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|args
@@ -734,6 +772,7 @@ specifier|static
 name|int
 name|dsmatchselect
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|args
@@ -754,6 +793,12 @@ name|char
 modifier|*
 modifier|*
 name|tempstr
+decl_stmt|,
+modifier|*
+name|tmpstr
+decl_stmt|,
+modifier|*
+name|tmpstr1
 decl_stmt|;
 name|char
 modifier|*
@@ -767,7 +812,6 @@ name|num_args
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -777,6 +821,15 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* 	 * Break the (pipe delimited) input string out into separate 	 * strings. 	 */
+name|tmpstr
+operator|=
+name|tmpstr1
+operator|=
+name|strdup
+argument_list|(
+name|args
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|tempstr
@@ -794,7 +847,7 @@ operator|=
 name|strsep
 argument_list|(
 operator|&
-name|args
+name|tmpstr1
 argument_list|,
 literal|"|"
 argument_list|)
@@ -831,6 +884,11 @@ literal|100
 index|]
 condition|)
 break|break;
+name|free
+argument_list|(
+name|tmpstr
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|num_args
@@ -1010,6 +1068,7 @@ specifier|static
 name|int
 name|dsselect
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|args
@@ -1026,12 +1085,19 @@ modifier|*
 name|s1
 parameter_list|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
+decl_stmt|,
+modifier|*
+name|tmpstr
+decl_stmt|,
+modifier|*
+name|tmpstr1
+decl_stmt|,
+modifier|*
+name|buffer
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1040,11 +1106,6 @@ name|retval
 init|=
 literal|0
 decl_stmt|;
-name|char
-modifier|*
-name|index
-parameter_list|()
-function_decl|;
 comment|/* 	 * If we've gone through this code before, free previously 	 * allocated resources. 	 */
 if|if
 condition|(
@@ -1105,11 +1166,20 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|tmpstr
+operator|=
+name|tmpstr1
+operator|=
+name|strdup
+argument_list|(
+name|args
+argument_list|)
+expr_stmt|;
 name|cp
 operator|=
 name|index
 argument_list|(
-name|args
+name|tmpstr1
 argument_list|,
 literal|'\n'
 argument_list|)
@@ -1133,7 +1203,7 @@ for|for
 control|(
 name|cp
 operator|=
-name|args
+name|tmpstr1
 init|;
 operator|*
 name|cp
@@ -1148,7 +1218,7 @@ name|cp
 operator|++
 control|)
 empty_stmt|;
-name|args
+name|tmpstr1
 operator|=
 name|cp
 expr_stmt|;
@@ -1203,15 +1273,10 @@ name|i
 operator|++
 control|)
 block|{
-name|char
-name|tmpstr
-index|[
-literal|80
-index|]
-decl_stmt|;
-name|sprintf
+name|asprintf
 argument_list|(
-name|tmpstr
+operator|&
+name|buffer
 argument_list|,
 literal|"%s%d"
 argument_list|,
@@ -1234,9 +1299,9 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|args
+name|buffer
 argument_list|,
-name|tmpstr
+name|tmpstr1
 argument_list|)
 operator|==
 literal|0
@@ -1274,11 +1339,22 @@ index|]
 operator|=
 name|strdup
 argument_list|(
-name|args
+name|tmpstr1
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|buffer
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
+else|else
+name|free
+argument_list|(
+name|buffer
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1298,6 +1374,11 @@ operator|=
 name|cp
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|tmpstr
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|num_devices_specified

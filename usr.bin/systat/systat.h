@@ -13,6 +13,7 @@ begin_struct
 struct|struct
 name|cmdtab
 block|{
+specifier|const
 name|char
 modifier|*
 name|c_name
@@ -86,9 +87,11 @@ modifier|*
 name|c_cmd
 function_decl|)
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)

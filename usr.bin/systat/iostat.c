@@ -1,20 +1,35 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
 comment|/*  * Copyright (c) 1980, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|lint
-end_ifndef
+end_ifdef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -26,7 +41,6 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
 
 begin_include
@@ -50,13 +64,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<devstat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -74,13 +88,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<devstat.h>
+file|<stdlib.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<err.h>
+file|<string.h>
 end_include
 
 begin_include
@@ -420,9 +434,6 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
-name|int
-name|err
-decl_stmt|;
 name|len
 operator|=
 sizeof|sizeof
@@ -432,8 +443,8 @@ operator|.
 name|cp_time
 argument_list|)
 expr_stmt|;
-name|err
-operator|=
+if|if
+condition|(
 name|sysctlbyname
 argument_list|(
 literal|"kern.cp_time"
@@ -450,10 +461,6 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err
 operator|||
 name|len
 operator|!=
@@ -708,7 +715,7 @@ block|{
 name|int
 name|i
 decl_stmt|,
-name|col
+name|_col
 decl_stmt|,
 name|regions
 decl_stmt|,
@@ -792,7 +799,7 @@ name|linesperregion
 operator|=
 literal|3
 expr_stmt|;
-name|col
+name|_col
 operator|=
 name|INSET
 expr_stmt|;
@@ -821,7 +828,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|col
+name|_col
 operator|+
 name|COLWIDTH
 operator|>=
@@ -832,7 +839,7 @@ operator|-
 name|INSET
 condition|)
 block|{
-name|col
+name|_col
 operator|=
 name|INSET
 operator|,
@@ -885,7 +892,7 @@ name|wnd
 argument_list|,
 name|row
 argument_list|,
-name|col
+name|_col
 operator|+
 literal|4
 argument_list|,
@@ -900,19 +907,19 @@ name|row
 operator|+
 literal|1
 argument_list|,
-name|col
+name|_col
 argument_list|,
 literal|"  KB/t tps  MB/s "
 argument_list|)
 expr_stmt|;
-name|col
+name|_col
 operator|+=
 name|COLWIDTH
 expr_stmt|;
 block|}
 if|if
 condition|(
-name|col
+name|_col
 condition|)
 name|row
 operator|+=
@@ -1077,17 +1084,15 @@ name|void
 name|showiostat
 parameter_list|()
 block|{
-specifier|register
 name|long
 name|t
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|,
 name|row
 decl_stmt|,
-name|col
+name|_col
 decl_stmt|;
 define|#
 directive|define
@@ -1226,7 +1231,7 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-name|col
+name|_col
 operator|=
 name|INSET
 expr_stmt|;
@@ -1287,7 +1292,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|col
+name|_col
 operator|+
 name|COLWIDTH
 operator|>=
@@ -1298,7 +1303,7 @@ operator|-
 name|INSET
 condition|)
 block|{
-name|col
+name|_col
 operator|=
 name|INSET
 operator|,
@@ -1365,12 +1370,12 @@ name|row
 operator|+
 literal|3
 argument_list|,
-name|col
+name|_col
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|col
+name|_col
 operator|+=
 name|COLWIDTH
 expr_stmt|;
@@ -1385,14 +1390,14 @@ name|devstats
 parameter_list|(
 name|row
 parameter_list|,
-name|col
+name|_col
 parameter_list|,
 name|dn
 parameter_list|)
 name|int
 name|row
 decl_stmt|,
-name|col
+name|_col
 decl_stmt|,
 name|dn
 decl_stmt|;
@@ -1502,7 +1507,7 @@ name|wnd
 argument_list|,
 name|row
 argument_list|,
-name|col
+name|_col
 argument_list|,
 literal|" %5.2Lf %3.0Lf %5.2Lf "
 argument_list|,
@@ -1526,7 +1531,7 @@ argument_list|,
 name|row
 operator|++
 argument_list|,
-name|col
+name|_col
 argument_list|)
 expr_stmt|;
 name|histogram
@@ -1545,7 +1550,7 @@ argument_list|,
 name|row
 operator|++
 argument_list|,
-name|col
+name|_col
 argument_list|)
 expr_stmt|;
 name|histogram
@@ -1569,7 +1574,7 @@ argument_list|,
 name|row
 operator|++
 argument_list|,
-name|col
+name|_col
 argument_list|)
 expr_stmt|;
 name|histogram
@@ -1605,16 +1610,15 @@ decl_stmt|,
 name|o
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
 name|double
-name|time
+name|dtime
 decl_stmt|;
-name|time
+name|dtime
 operator|=
-literal|0
+literal|0.0
 expr_stmt|;
 for|for
 control|(
@@ -1629,7 +1633,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|time
+name|dtime
 operator|+=
 name|cur
 operator|.
@@ -1640,11 +1644,11 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|time
+name|dtime
 operator|==
 literal|0.0
 condition|)
-name|time
+name|dtime
 operator|=
 literal|1.0
 expr_stmt|;
@@ -1672,7 +1676,7 @@ index|[
 name|o
 index|]
 operator|/
-name|time
+name|dtime
 argument_list|,
 literal|50
 argument_list|,
@@ -1710,11 +1714,9 @@ index|[
 literal|10
 index|]
 decl_stmt|;
-specifier|register
 name|int
 name|k
 decl_stmt|;
-specifier|register
 name|int
 name|v
 init|=
@@ -1815,6 +1817,7 @@ name|cmd
 parameter_list|,
 name|args
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|cmd

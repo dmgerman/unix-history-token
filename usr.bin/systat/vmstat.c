@@ -3,32 +3,34 @@ begin_comment
 comment|/*-  * Copyright (c) 1983, 1989, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|lint
-end_ifndef
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static char sccsid[] = "@(#)vmstat.c	8.2 (Berkeley) 1/12/94";
-endif|#
-directive|endif
-end_endif
+end_ifdef
 
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"@(#)vmstat.c	8.2 (Berkeley) 1/12/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,10 +38,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
 
 begin_comment
 comment|/*  * Cursed vmstat -- from Robert Elz.  */
@@ -504,9 +502,6 @@ operator|(
 expr|struct
 name|Info
 operator|*
-operator|,
-expr|enum
-name|state
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1327,8 +1322,6 @@ name|getinfo
 argument_list|(
 operator|&
 name|s2
-argument_list|,
-name|RUN
 argument_list|)
 expr_stmt|;
 name|copyinfo
@@ -1425,8 +1418,6 @@ name|getinfo
 argument_list|(
 operator|&
 name|s
-argument_list|,
-name|state
 argument_list|)
 expr_stmt|;
 block|}
@@ -1437,7 +1428,6 @@ name|void
 name|labelkre
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -2255,7 +2245,7 @@ name|k
 decl_stmt|,
 name|l
 decl_stmt|,
-name|c
+name|lc
 decl_stmt|;
 specifier|static
 name|int
@@ -2450,6 +2440,9 @@ literal|0
 init|;
 name|j
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|intrbuffer
@@ -2667,15 +2660,15 @@ literal|0.0
 expr_stmt|;
 for|for
 control|(
-name|c
+name|lc
 operator|=
 literal|0
 init|;
-name|c
+name|lc
 operator|<
 name|CPUSTATES
 condition|;
-name|c
+name|lc
 operator|++
 control|)
 block|{
@@ -2683,7 +2676,7 @@ name|i
 operator|=
 name|cpuorder
 index|[
-name|c
+name|lc
 index|]
 expr_stmt|;
 name|f1
@@ -2735,7 +2728,7 @@ name|GRAPHCOL
 operator|+
 literal|10
 operator|*
-name|c
+name|lc
 argument_list|,
 literal|4
 argument_list|,
@@ -2768,7 +2761,7 @@ name|addch
 argument_list|(
 name|cpuchar
 index|[
-name|c
+name|lc
 index|]
 argument_list|)
 expr_stmt|;
@@ -3726,7 +3719,7 @@ name|i
 operator|=
 literal|0
 operator|,
-name|c
+name|lc
 operator|=
 literal|0
 init|;
@@ -3734,7 +3727,7 @@ name|i
 operator|<
 name|num_devices
 operator|&&
-name|c
+name|lc
 operator|<
 name|MAXDRIVES
 condition|;
@@ -3788,7 +3781,7 @@ literal|5
 operator|+
 literal|6
 operator|*
-name|c
+name|lc
 argument_list|,
 literal|" %5.5s"
 argument_list|,
@@ -3808,7 +3801,7 @@ argument_list|(
 name|i
 argument_list|,
 operator|++
-name|c
+name|lc
 argument_list|,
 operator|&
 name|cur
@@ -3826,7 +3819,7 @@ argument_list|(
 name|i
 argument_list|,
 operator|++
-name|c
+name|lc
 argument_list|,
 operator|&
 name|cur
@@ -3844,7 +3837,7 @@ argument_list|(
 name|i
 argument_list|,
 operator|++
-name|c
+name|lc
 argument_list|,
 operator|&
 name|cur
@@ -3997,6 +3990,7 @@ name|cmd
 parameter_list|,
 name|args
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|cmd
@@ -4189,8 +4183,6 @@ name|getinfo
 argument_list|(
 operator|&
 name|s1
-argument_list|,
-name|RUN
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -4312,7 +4304,6 @@ name|int
 name|ucount
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|nusers
 init|=
@@ -4387,13 +4378,12 @@ name|indx
 decl_stmt|;
 block|{
 name|double
-name|t
+name|lt
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
-name|t
+name|lt
 operator|=
 literal|0
 expr_stmt|;
@@ -4410,7 +4400,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|t
+name|lt
 operator|+=
 name|s
 operator|.
@@ -4421,11 +4411,11 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|t
+name|lt
 operator|==
 literal|0.0
 condition|)
-name|t
+name|lt
 operator|=
 literal|1.0
 expr_stmt|;
@@ -4440,7 +4430,7 @@ index|]
 operator|*
 literal|100.0
 operator|/
-name|t
+name|lt
 operator|)
 return|;
 block|}
@@ -4455,7 +4445,7 @@ name|n
 parameter_list|,
 name|l
 parameter_list|,
-name|c
+name|lc
 parameter_list|,
 name|w
 parameter_list|)
@@ -4464,7 +4454,7 @@ name|n
 decl_stmt|,
 name|l
 decl_stmt|,
-name|c
+name|lc
 decl_stmt|,
 name|w
 decl_stmt|;
@@ -4479,7 +4469,7 @@ name|move
 argument_list|(
 name|l
 argument_list|,
-name|c
+name|lc
 argument_list|)
 expr_stmt|;
 if|if
@@ -4521,6 +4511,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|b
@@ -4560,7 +4553,7 @@ name|f
 parameter_list|,
 name|l
 parameter_list|,
-name|c
+name|lc
 parameter_list|,
 name|w
 parameter_list|,
@@ -4574,7 +4567,7 @@ decl_stmt|;
 name|int
 name|l
 decl_stmt|,
-name|c
+name|lc
 decl_stmt|,
 name|w
 decl_stmt|,
@@ -4593,7 +4586,7 @@ name|move
 argument_list|(
 name|l
 argument_list|,
-name|c
+name|lc
 argument_list|)
 expr_stmt|;
 if|if
@@ -4639,6 +4632,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|b
@@ -4664,6 +4660,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|b
@@ -4703,7 +4702,7 @@ name|f
 parameter_list|,
 name|l
 parameter_list|,
-name|c
+name|lc
 parameter_list|,
 name|w
 parameter_list|,
@@ -4718,7 +4717,7 @@ decl_stmt|;
 name|int
 name|l
 decl_stmt|,
-name|c
+name|lc
 decl_stmt|,
 name|w
 decl_stmt|,
@@ -4737,7 +4736,7 @@ name|move
 argument_list|(
 name|l
 argument_list|,
-name|c
+name|lc
 argument_list|)
 expr_stmt|;
 if|if
@@ -4778,6 +4777,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|b
@@ -4798,6 +4800,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|b
@@ -4833,18 +4838,12 @@ specifier|static
 name|void
 name|getinfo
 parameter_list|(
-name|s
-parameter_list|,
-name|st
+name|ls
 parameter_list|)
 name|struct
 name|Info
 modifier|*
-name|s
-decl_stmt|;
-name|enum
-name|state
-name|st
+name|ls
 decl_stmt|;
 block|{
 name|struct
@@ -4865,7 +4864,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"kern.cp_time"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|time
 argument_list|)
@@ -4883,7 +4882,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vm.stats.sys.v_swtch"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|v_swtch
 argument_list|)
@@ -4892,7 +4891,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vm.stats.sys.v_trap"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|v_trap
 argument_list|)
@@ -4901,7 +4900,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vm.stats.sys.v_syscall"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|v_syscall
 argument_list|)
@@ -4910,7 +4909,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vm.stats.sys.v_intr"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|v_intr
 argument_list|)
@@ -4919,7 +4918,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vm.stats.sys.v_soft"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|v_soft
 argument_list|)
@@ -4928,7 +4927,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vm.stats.vm.v_vm_faults"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|v_vm_faults
 argument_list|)
@@ -4937,7 +4936,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vm.stats.vm.v_cow_faults"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|v_cow_faults
 argument_list|)
@@ -4946,7 +4945,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vm.stats.vm.v_zfod"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|v_zfod
 argument_list|)
@@ -4955,7 +4954,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vm.stats.vm.v_ozfod"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|v_ozfod
 argument_list|)
@@ -4964,7 +4963,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vm.stats.vm.v_swapin"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|v_swapin
 argument_list|)
@@ -4973,7 +4972,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vm.stats.vm.v_swapout"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|v_swapout
 argument_list|)
@@ -4982,7 +4981,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vm.stats.vm.v_swappgsin"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|v_swappgsin
 argument_list|)
@@ -4991,7 +4990,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vm.stats.vm.v_swappgsout"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|v_swappgsout
 argument_list|)
@@ -5000,7 +4999,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vm.stats.vm.v_vnodein"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|v_vnodein
 argument_list|)
@@ -5009,7 +5008,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vm.stats.vm.v_vnodeout"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|v_vnodeout
 argument_list|)
@@ -5018,7 +5017,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vm.stats.vm.v_vnodepgsin"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|v_vnodepgsin
 argument_list|)
@@ -5027,7 +5026,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vm.stats.vm.v_vnodepgsout"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|v_vnodepgsout
 argument_list|)
@@ -5036,7 +5035,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vm.stats.vm.v_intrans"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|v_intrans
 argument_list|)
@@ -5045,7 +5044,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vm.stats.vm.v_reactivated"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|v_reactivated
 argument_list|)
@@ -5054,7 +5053,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vm.stats.vm.v_pdwakeups"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|v_pdwakeups
 argument_list|)
@@ -5063,7 +5062,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vm.stats.vm.v_pdpages"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|v_pdpages
 argument_list|)
@@ -5072,7 +5071,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vm.stats.vm.v_dfree"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|v_dfree
 argument_list|)
@@ -5081,7 +5080,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vm.stats.vm.v_pfree"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|v_pfree
 argument_list|)
@@ -5090,7 +5089,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vm.stats.vm.v_tfree"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|v_tfree
 argument_list|)
@@ -5099,7 +5098,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vm.stats.vm.v_page_size"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|v_page_size
 argument_list|)
@@ -5108,7 +5107,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vm.stats.vm.v_free_count"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|v_free_count
 argument_list|)
@@ -5117,7 +5116,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vm.stats.vm.v_wire_count"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|v_wire_count
 argument_list|)
@@ -5126,7 +5125,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vm.stats.vm.v_active_count"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|v_active_count
 argument_list|)
@@ -5135,7 +5134,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vm.stats.vm.v_inactive_count"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|v_inactive_count
 argument_list|)
@@ -5144,7 +5143,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vm.stats.vm.v_cache_count"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|v_cache_count
 argument_list|)
@@ -5153,7 +5152,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vfs.bufspace"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|bufspace
 argument_list|)
@@ -5162,7 +5161,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"kern.maxvnodes"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|desiredvnodes
 argument_list|)
@@ -5171,7 +5170,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"debug.numvnodes"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|numvnodes
 argument_list|)
@@ -5180,7 +5179,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"debug.freevnodes"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|freevnodes
 argument_list|)
@@ -5189,7 +5188,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vfs.cache.nchstats"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|nchstats
 argument_list|)
@@ -5198,7 +5197,7 @@ name|GETSYSCTL
 argument_list|(
 literal|"vfs.numdirtybuffers"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|numdirtybuffers
 argument_list|)
@@ -5207,7 +5206,7 @@ name|getsysctl
 argument_list|(
 literal|"hw.intrcnt"
 argument_list|,
-name|s
+name|ls
 operator|->
 name|intrcnt
 argument_list|,
@@ -5223,7 +5222,7 @@ name|size
 operator|=
 sizeof|sizeof
 argument_list|(
-name|s
+name|ls
 operator|->
 name|Total
 argument_list|)
@@ -5251,7 +5250,7 @@ argument_list|,
 literal|2
 argument_list|,
 operator|&
-name|s
+name|ls
 operator|->
 name|Total
 argument_list|,
@@ -5279,13 +5278,13 @@ expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
-name|s
+name|ls
 operator|->
 name|Total
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|s
+name|ls
 operator|->
 name|Total
 argument_list|)
@@ -5420,15 +5419,15 @@ specifier|static
 name|void
 name|allocinfo
 parameter_list|(
-name|s
+name|ls
 parameter_list|)
 name|struct
 name|Info
 modifier|*
-name|s
+name|ls
 decl_stmt|;
 block|{
-name|s
+name|ls
 operator|->
 name|intrcnt
 operator|=
@@ -5448,7 +5447,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|s
+name|ls
 operator|->
 name|intrcnt
 operator|==
@@ -5473,7 +5472,6 @@ name|from
 parameter_list|,
 name|to
 parameter_list|)
-specifier|register
 name|struct
 name|Info
 modifier|*
@@ -5533,7 +5531,7 @@ name|dinfo
 parameter_list|(
 name|dn
 parameter_list|,
-name|c
+name|lc
 parameter_list|,
 name|now
 parameter_list|,
@@ -5542,7 +5540,7 @@ parameter_list|)
 name|int
 name|dn
 decl_stmt|,
-name|c
+name|lc
 decl_stmt|;
 name|struct
 name|statinfo
@@ -5739,11 +5737,11 @@ name|device_busy
 operator|=
 name|elapsed_time
 expr_stmt|;
-name|c
+name|lc
 operator|=
 name|DISKCOL
 operator|+
-name|c
+name|lc
 operator|*
 literal|6
 expr_stmt|;
@@ -5755,7 +5753,7 @@ name|DISKROW
 operator|+
 literal|1
 argument_list|,
-name|c
+name|lc
 argument_list|,
 literal|5
 argument_list|,
@@ -5772,7 +5770,7 @@ name|DISKROW
 operator|+
 literal|2
 argument_list|,
-name|c
+name|lc
 argument_list|,
 literal|5
 argument_list|,
@@ -5789,7 +5787,7 @@ name|DISKROW
 operator|+
 literal|3
 argument_list|,
-name|c
+name|lc
 argument_list|,
 literal|5
 argument_list|,
@@ -5810,7 +5808,7 @@ name|DISKROW
 operator|+
 literal|4
 argument_list|,
-name|c
+name|lc
 argument_list|,
 literal|5
 argument_list|,
