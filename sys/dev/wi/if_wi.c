@@ -1993,6 +1993,7 @@ literal|4
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|wi_read_record
@@ -2007,6 +2008,9 @@ operator|)
 operator|&
 name|mac
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -3848,8 +3852,6 @@ decl_stmt|;
 block|{
 name|int
 name|i
-decl_stmt|,
-name|err
 decl_stmt|;
 for|for
 control|(
