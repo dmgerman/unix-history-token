@@ -5252,6 +5252,9 @@ name|ifl
 decl_stmt|,
 modifier|*
 name|nfl
+decl_stmt|,
+modifier|*
+name|pfl
 decl_stmt|;
 comment|/* Iterator */
 name|enum
@@ -5262,6 +5265,10 @@ name|debuglog
 argument_list|(
 literal|"Entering retry_blockingfilelocklist\n"
 argument_list|)
+expr_stmt|;
+name|pfl
+operator|=
+name|NULL
 expr_stmt|;
 name|ifl
 operator|=
@@ -5300,6 +5307,13 @@ argument_list|(
 literal|"Iterator choice %p\n"
 argument_list|,
 name|ifl
+argument_list|)
+expr_stmt|;
+name|debuglog
+argument_list|(
+literal|"Prev iterator choice %p\n"
+argument_list|,
+name|pfl
 argument_list|)
 expr_stmt|;
 name|debuglog
@@ -5357,9 +5371,27 @@ argument_list|(
 literal|"Replacing blocked lock\n"
 argument_list|)
 expr_stmt|;
-name|LIST_INSERT_BEFORE
+if|if
+condition|(
+name|pfl
+operator|!=
+name|NULL
+condition|)
+name|LIST_INSERT_AFTER
 argument_list|(
-name|nfl
+name|pfl
+argument_list|,
+name|ifl
+argument_list|,
+name|nfslocklist
+argument_list|)
+expr_stmt|;
+else|else
+comment|/* ifl is the only elem. in the list */
+name|LIST_INSERT_HEAD
+argument_list|(
+operator|&
+name|blockedlocklist_head
 argument_list|,
 name|ifl
 argument_list|,
@@ -5371,6 +5403,42 @@ comment|/* Valid increment behavior regardless of state of ifl */
 name|ifl
 operator|=
 name|nfl
+expr_stmt|;
+comment|/* if a lock was granted incrementing pfl would make it nfl */
+if|if
+condition|(
+name|pfl
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|LIST_NEXT
+argument_list|(
+name|pfl
+argument_list|,
+name|nfslocklist
+argument_list|)
+operator|!=
+name|nfl
+operator|)
+condition|)
+name|pfl
+operator|=
+name|LIST_NEXT
+argument_list|(
+name|pfl
+argument_list|,
+name|nfslocklist
+argument_list|)
+expr_stmt|;
+else|else
+name|pfl
+operator|=
+name|LIST_FIRST
+argument_list|(
+operator|&
+name|blockedlocklist_head
+argument_list|)
 expr_stmt|;
 block|}
 name|debuglog
