@@ -394,6 +394,10 @@ decl_stmt|;
 name|int
 name|wi_prism2_ver
 decl_stmt|;
+name|int
+name|wi_bus_type
+decl_stmt|;
+comment|/* Bus attachment type */
 block|}
 struct|;
 end_struct
@@ -419,9 +423,20 @@ end_define
 begin_define
 define|#
 directive|define
-name|WI_TIMEOUT
-value|65536
+name|WI_DELAY
+value|5
 end_define
+
+begin_define
+define|#
+directive|define
+name|WI_TIMEOUT
+value|(500000/WI_DELAY)
+end_define
+
+begin_comment
+comment|/* 500 ms */
+end_comment
 
 begin_define
 define|#
@@ -464,6 +479,17 @@ directive|define
 name|WI_PORT5
 value|5
 end_define
+
+begin_define
+define|#
+directive|define
+name|WI_PCI_LMEMRES
+value|0x10
+end_define
+
+begin_comment
+comment|/* PCI Memory (native PCI implementations) */
+end_comment
 
 begin_define
 define|#
@@ -524,6 +550,13 @@ define|#
 directive|define
 name|WI_PRISM2STA_MAGIC
 value|0x4A2D
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_HFA384X_PCICOR_OFF
+value|0x26
 end_define
 
 begin_comment
@@ -622,6 +655,39 @@ name|WI_DEFAULT_CHAN
 value|3
 end_define
 
+begin_define
+define|#
+directive|define
+name|WI_BUS_PCCARD
+value|0
+end_define
+
+begin_comment
+comment|/* pccard device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WI_BUS_PCI_PLX
+value|1
+end_define
+
+begin_comment
+comment|/* PCI card w/ PLX PCI/PCMICA bridge */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WI_BUS_PCI_NATIVE
+value|2
+end_define
+
+begin_comment
+comment|/* native PCI device (Prism 2.5) */
+end_comment
+
 begin_comment
 comment|/*  * register space access macros  */
 end_comment
@@ -638,7 +704,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_4(sc->wi_btag, sc->wi_bhandle, reg, val)
+value|bus_space_write_4((sc)->wi_btag, (sc)->wi_bhandle, 	\ 	    (sc)->wi_bus_type == WI_BUS_PCI_NATIVE ? (reg)*2 : (reg), val)
 end_define
 
 begin_define
@@ -653,7 +719,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_2(sc->wi_btag, sc->wi_bhandle, reg, val)
+value|bus_space_write_2((sc)->wi_btag, (sc)->wi_bhandle,	\  	    (sc)->wi_bus_type == WI_BUS_PCI_NATIVE ? (reg)*2 : (reg), val)
 end_define
 
 begin_define
@@ -668,7 +734,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_1(sc->wi_btag, sc->wi_bhandle, reg, val)
+value|bus_space_write_1((sc)->wi_btag, (sc)->wi_bhandle,	\  	    (sc)->wi_bus_type == WI_BUS_PCI_NATIVE ? (reg)*2 : (reg), val)
 end_define
 
 begin_define
@@ -681,7 +747,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_4(sc->wi_btag, sc->wi_bhandle, reg)
+value|bus_space_read_4((sc)->wi_btag, (sc)->wi_bhandle,	\  	    (sc)->wi_bus_type == WI_BUS_PCI_NATIVE ? (reg)*2 : (reg))
 end_define
 
 begin_define
@@ -694,7 +760,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_2(sc->wi_btag, sc->wi_bhandle, reg)
+value|bus_space_read_2((sc)->wi_btag, (sc)->wi_bhandle,	\  	    (sc)->wi_bus_type == WI_BUS_PCI_NATIVE ? (reg)*2 : (reg))
 end_define
 
 begin_define
@@ -707,7 +773,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_1(sc->wi_btag, sc->wi_bhandle, reg)
+value|bus_space_read_1((sc)->wi_btag, (sc)->wi_bhandle,	\  	    (sc)->wi_bus_type == WI_BUS_PCI_NATIVE ? (reg)*2 : (reg))
 end_define
 
 begin_define
@@ -722,7 +788,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_1(sc->wi_bmemtag, sc->wi_bmemhandle, off, val)
+value|bus_space_write_1((sc)->wi_bmemtag, (sc)->wi_bmemhandle, off, val)
 end_define
 
 begin_define
@@ -735,7 +801,7 @@ parameter_list|,
 name|off
 parameter_list|)
 define|\
-value|bus_space_read_1(sc->wi_bmemtag, sc->wi_bmemhandle, off)
+value|bus_space_read_1((sc)->wi_bmemtag, (sc)->wi_bmemhandle, off)
 end_define
 
 begin_comment
