@@ -83,8 +83,8 @@ parameter_list|)
 value|(*(volatile u_int32_t *) (va) = (d))
 define|#
 directive|define
-name|CRITICAL_FORK
-value|(read_eflags() | PSL_I)
+name|MACHINE_CRITICAL_ENTER
+comment|/* MD code defines critical_enter/exit/fork */
 ifdef|#
 directive|ifdef
 name|__GNUC__

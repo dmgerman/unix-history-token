@@ -102,6 +102,22 @@ name|u_int
 name|pc_other_cpus
 decl_stmt|;
 comment|/* Mask of all other cpus */
+name|u_int32_t
+name|pc_int_pending
+decl_stmt|;
+comment|/* master int pending flag */
+name|u_int32_t
+name|pc_ipending
+decl_stmt|;
+comment|/* pending slow interrupts */
+name|u_int32_t
+name|pc_fpending
+decl_stmt|;
+comment|/* pending fast interrupts */
+name|u_int32_t
+name|pc_spending
+decl_stmt|;
+comment|/* pending soft interrupts */
 name|SLIST_ENTRY
 argument_list|(
 argument|pcpu

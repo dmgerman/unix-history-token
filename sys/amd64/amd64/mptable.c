@@ -10588,7 +10588,7 @@ name|__func__
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  * For statclock, we send an IPI to all CPU's to have them call this  * function.  */
+comment|/*  * For statclock, we send an IPI to all CPU's to have them call this  * function.  *  * WARNING! unpend() will call statclock_process() directly and skip this  * routine.  */
 name|void
 name|forwarded_statclock
 parameter_list|(
@@ -10679,7 +10679,7 @@ name|IPI_STATCLOCK
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  * For each hardclock(), we send an IPI to all other CPU's to have them  * execute this function.  It would be nice to reduce contention on  * sched_lock if we could simply peek at the CPU to determine the user/kernel  * state and call hardclock_process() on the CPU receiving the clock interrupt  * and then just use a simple IPI to handle any ast's if needed.  */
+comment|/*  * For each hardclock(), we send an IPI to all other CPU's to have them  * execute this function.  It would be nice to reduce contention on  * sched_lock if we could simply peek at the CPU to determine the user/kernel  * state and call hardclock_process() on the CPU receiving the clock interrupt  * and then just use a simple IPI to handle any ast's if needed.  *  * WARNING! unpend() will call hardclock_process() directly and skip this  * routine.  */
 name|void
 name|forwarded_hardclock
 parameter_list|(
