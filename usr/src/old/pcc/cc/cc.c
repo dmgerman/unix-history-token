@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cc.c 4.17 %G%"
+literal|"@(#)cc.c 4.18 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,14 +116,10 @@ begin_decl_stmt
 name|char
 name|tmp0
 index|[
-literal|30
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* big enough for /tmp/ctm%05.5d */
-end_comment
 
 begin_decl_stmt
 name|char
@@ -731,9 +727,12 @@ index|]
 operator|==
 literal|0
 condition|)
-name|npassname
-operator|=
-literal|"/usr/c/o"
+name|error
+argument_list|(
+literal|"-B requires an argument"
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 continue|continue;
 case|case
@@ -1044,7 +1043,9 @@ name|sprintf
 argument_list|(
 name|tmp0
 argument_list|,
-literal|"/tmp/ctm%05.5d"
+literal|"%s/ctm%05.5d"
+argument_list|,
+name|_PATH_TMP
 argument_list|,
 name|getpid
 argument_list|()
