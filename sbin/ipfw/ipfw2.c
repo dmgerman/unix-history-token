@@ -8006,18 +8006,22 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|sysctl_handler
-argument_list|(
-argument|int ac
-argument_list|,
-argument|char *av[]
-argument_list|,
-argument|int which
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|int
+name|ac
+parameter_list|,
+name|char
+modifier|*
+name|av
+index|[]
+parameter_list|,
+name|int
+name|which
+parameter_list|)
 block|{
 name|ac
 operator|--
@@ -8191,6 +8195,44 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|strncmp
+argument_list|(
+operator|*
+name|av
+argument_list|,
+literal|"dyn_keepalive"
+argument_list|,
+name|strlen
+argument_list|(
+operator|*
+name|av
+argument_list|)
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|sysctlbyname
+argument_list|(
+literal|"net.inet.ip.fw.dyn_keepalive"
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|which
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|which
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 name|warnx
@@ -8203,7 +8245,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
