@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.1 (Berkeley) %G%"
+literal|"@(#)main.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1345,6 +1345,10 @@ name|atoi
 argument_list|(
 name|optarg
 argument_list|)
+expr_stmt|;
+name|iflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
