@@ -21,7 +21,7 @@ name|char
 name|_uuconf_hdnams_rcsid
 index|[]
 init|=
-literal|"$Id: hdnams.c,v 1.4 1994/01/30 21:14:29 ian Rel $"
+literal|"$Id: hdnams.c,v 1.2 1994/05/07 18:12:21 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 

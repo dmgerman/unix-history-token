@@ -1192,7 +1192,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Remember the lowest-addressed loadable section we've seen.      This function is called via bfd_map_over_sections.  */
+comment|/* Remember the lowest-addressed loadable section we've seen.    This function is called via bfd_map_over_sections.  */
 end_comment
 
 begin_if
@@ -4637,7 +4637,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* clear_symtab_users_once:     This function is run after symbol reading, or from a cleanup.    If an old symbol table was obsoleted, the old symbol table    has been blown away, but the other GDB data structures that may     reference it have not yet been cleared or re-directed.  (The old    symtab was zapped, and the cleanup queued, in free_named_symtab()    below.)     This function can be queued N times as a cleanup, or called    directly; it will do all the work the first time, and then will be a    no-op until the next time it is queued.  This works by bumping a    counter at queueing time.  Much later when the cleanup is run, or at    the end of symbol processing (in case the cleanup is discarded), if    the queued count is greater than the "done-count", we do the work    and set the done-count to the queued count.  If the queued count is    less than or equal to the done-count, we just ignore the call.  This    is needed because reading a single .o file will often replace many    symtabs (one per .h file, for example), and we don't want to reset    the breakpoints N times in the user's face.     The reason we both queue a cleanup, and call it directly after symbol    reading, is because the cleanup protects us in case of errors, but is    discarded if symbol reading is successful.  */
+comment|/* clear_symtab_users_once:     This function is run after symbol reading, or from a cleanup.    If an old symbol table was obsoleted, the old symbol table    has been blown away, but the other GDB data structures that may    reference it have not yet been cleared or re-directed.  (The old    symtab was zapped, and the cleanup queued, in free_named_symtab()    below.)     This function can be queued N times as a cleanup, or called    directly; it will do all the work the first time, and then will be a    no-op until the next time it is queued.  This works by bumping a    counter at queueing time.  Much later when the cleanup is run, or at    the end of symbol processing (in case the cleanup is discarded), if    the queued count is greater than the "done-count", we do the work    and set the done-count to the queued count.  If the queued count is    less than or equal to the done-count, we just ignore the call.  This    is needed because reading a single .o file will often replace many    symtabs (one per .h file, for example), and we don't want to reset    the breakpoints N times in the user's face.     The reason we both queue a cleanup, and call it directly after symbol    reading, is because the cleanup protects us in case of errors, but is    discarded if symbol reading is successful.  */
 end_comment
 
 begin_if

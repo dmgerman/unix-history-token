@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* write.c - emit .o file     Copyright (C) 1986, 1987, 1990, 1991, 1992 Free Software Foundation, Inc.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* write.c - emit .o file     Copyright (C) 1986, 1987, 1990, 1991, 1992 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: write.c,v 1.5 1994/02/20 16:06:12 rgrimes Exp $"
+literal|"$Id: write.c,v 1.6 1994/12/23 22:36:22 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3725,7 +3725,7 @@ comment|/* relax_align() */
 end_comment
 
 begin_comment
-comment|/* fixup_segment()        Go through all the fixS's in a segment and see which ones can be    handled now.  (These consist of fixS where we have since discovered    the value of a symbol, or the address of the frag involved.)    For each one, call md_apply_fix to put the fix into the frag data.        Result is a count of how many relocation structs will be needed to    handle the remaining fixS's that we couldn't completely handle here.    These will be output later by emit_relocations().  */
+comment|/* fixup_segment()     Go through all the fixS's in a segment and see which ones can be    handled now.  (These consist of fixS where we have since discovered    the value of a symbol, or the address of the frag involved.)    For each one, call md_apply_fix to put the fix into the frag data.     Result is a count of how many relocation structs will be needed to    handle the remaining fixS's that we couldn't completely handle here.    These will be output later by emit_relocations().  */
 end_comment
 
 begin_function

@@ -326,7 +326,7 @@ break|break;
 case|case
 name|PLUS
 case|:
-comment|/* The interesting case is adding the integer to a sum. 	 Look for constant term in the sum and combine 	 with C.  For an integer constant term, we make a combined 	 integer.  For a constant term that is not an explicit integer, 	 we cannot really combine, but group them together anyway.    	 Use a recursive call in case the remaining operand is something 	 that we handle specially, such as a SYMBOL_REF.  */
+comment|/* The interesting case is adding the integer to a sum. 	 Look for constant term in the sum and combine 	 with C.  For an integer constant term, we make a combined 	 integer.  For a constant term that is not an explicit integer, 	 we cannot really combine, but group them together anyway.  	 Use a recursive call in case the remaining operand is something 	 that we handle specially, such as a SYMBOL_REF.  */
 if|if
 condition|(
 name|GET_CODE
@@ -3294,7 +3294,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Restore the stack pointer for the purpose in SAVE_LEVEL.  SA is the save    area made by emit_stack_save.  If it is zero, we have nothing to do.      Put any emitted insns after insn AFTER, if nonzero, otherwise at     current position.  */
+comment|/* Restore the stack pointer for the purpose in SAVE_LEVEL.  SA is the save    area made by emit_stack_save.  If it is zero, we have nothing to do.     Put any emitted insns after insn AFTER, if nonzero, otherwise at    current position.  */
 end_comment
 
 begin_function
@@ -3520,7 +3520,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* We will need to ensure that the address we return is aligned to      BIGGEST_ALIGNMENT.  If STACK_DYNAMIC_OFFSET is defined, we don't      always know its final value at this point in the compilation (it       might depend on the size of the outgoing parameter lists, for      example), so we must align the value to be returned in that case.      (Note that STACK_DYNAMIC_OFFSET will have a default non-zero value if      STACK_POINTER_OFFSET or ACCUMULATE_OUTGOING_ARGS are defined).      We must also do an alignment operation on the returned value if      the stack pointer alignment is less strict that BIGGEST_ALIGNMENT.       If we have to align, we must leave space in SIZE for the hole      that might result from the alignment operation.  */
+comment|/* We will need to ensure that the address we return is aligned to      BIGGEST_ALIGNMENT.  If STACK_DYNAMIC_OFFSET is defined, we don't      always know its final value at this point in the compilation (it      might depend on the size of the outgoing parameter lists, for      example), so we must align the value to be returned in that case.      (Note that STACK_DYNAMIC_OFFSET will have a default non-zero value if      STACK_POINTER_OFFSET or ACCUMULATE_OUTGOING_ARGS are defined).      We must also do an alignment operation on the returned value if      the stack pointer alignment is less strict that BIGGEST_ALIGNMENT.       If we have to align, we must leave space in SIZE for the hole      that might result from the alignment operation.  */
 if|#
 directive|if
 name|defined

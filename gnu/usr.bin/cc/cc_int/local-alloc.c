@@ -4,7 +4,7 @@ comment|/* Allocate registers within a basic block, for GNU compiler.    Copyrig
 end_comment
 
 begin_comment
-comment|/* Allocation of hard register numbers to pseudo registers is done in    two passes.  In this pass we consider only regs that are born and    die once within one basic block.  We do this one basic block at a    time.  Then the next pass allocates the registers that remain.    Two passes are used because this pass uses methods that work only    on linear code, but that do a better job than the general methods    used in global_alloc, and more quickly too.     The assignments made are recorded in the vector reg_renumber    whose space is allocated here.  The rtl code itself is not altered.     We assign each instruction in the basic block a number    which is its order from the beginning of the block.    Then we can represent the lifetime of a pseudo register with    a pair of numbers, and check for conflicts easily.    We can record the availability of hard registers with a    HARD_REG_SET for each instruction.  The HARD_REG_SET    contains 0 or 1 for each hard reg.     To avoid register shuffling, we tie registers together when one    dies by being copied into another, or dies in an instruction that    does arithmetic to produce another.  The tied registers are    allocated as one.  Registers with different reg class preferences    can never be tied unless the class preferred by one is a subclass    of the one preferred by the other.     Tying is represented with "quantity numbers".    A non-tied register is given a new quantity number.    Tied registers have the same quantity number.        We have provision to exempt registers, even when they are contained    within the block, that can be tied to others that are not contained in it.    This is so that global_alloc could process them both and tie them then.    But this is currently disabled since tying in global_alloc is not    yet implemented.  */
+comment|/* Allocation of hard register numbers to pseudo registers is done in    two passes.  In this pass we consider only regs that are born and    die once within one basic block.  We do this one basic block at a    time.  Then the next pass allocates the registers that remain.    Two passes are used because this pass uses methods that work only    on linear code, but that do a better job than the general methods    used in global_alloc, and more quickly too.     The assignments made are recorded in the vector reg_renumber    whose space is allocated here.  The rtl code itself is not altered.     We assign each instruction in the basic block a number    which is its order from the beginning of the block.    Then we can represent the lifetime of a pseudo register with    a pair of numbers, and check for conflicts easily.    We can record the availability of hard registers with a    HARD_REG_SET for each instruction.  The HARD_REG_SET    contains 0 or 1 for each hard reg.     To avoid register shuffling, we tie registers together when one    dies by being copied into another, or dies in an instruction that    does arithmetic to produce another.  The tied registers are    allocated as one.  Registers with different reg class preferences    can never be tied unless the class preferred by one is a subclass    of the one preferred by the other.     Tying is represented with "quantity numbers".    A non-tied register is given a new quantity number.    Tied registers have the same quantity number.     We have provision to exempt registers, even when they are contained    within the block, that can be tied to others that are not contained in it.    This is so that global_alloc could process them both and tie them then.    But this is currently disabled since tying in global_alloc is not    yet implemented.  */
 end_comment
 
 begin_include
@@ -2766,7 +2766,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* INSN is a copy from SRC to DEST, both registers, and SRC does not die    in INSN.     Search forward to see if SRC dies before either it or DEST is modified,    but don't scan past the end of a basic block.  If so, we can replace SRC    with DEST and let SRC die in INSN.      This will reduce the number of registers live in that range and may enable    DEST to be tied to SRC, thus often saving one register in addition to a    register-register copy.  */
+comment|/* INSN is a copy from SRC to DEST, both registers, and SRC does not die    in INSN.     Search forward to see if SRC dies before either it or DEST is modified,    but don't scan past the end of a basic block.  If so, we can replace SRC    with DEST and let SRC die in INSN.     This will reduce the number of registers live in that range and may enable    DEST to be tied to SRC, thus often saving one register in addition to a    register-register copy.  */
 end_comment
 
 begin_function
@@ -5019,7 +5019,7 @@ literal|'%'
 operator|)
 condition|)
 continue|continue;
-comment|/* Likewise if each alternative has some operand that 		     must match operand zero.  In that case, skip any  		     operand that doesn't list operand 0 since we know that 		     the operand always conflicts with operand 0.  We 		     ignore commutatity in this case to keep things simple.  */
+comment|/* Likewise if each alternative has some operand that 		     must match operand zero.  In that case, skip any 		     operand that doesn't list operand 0 since we know that 		     the operand always conflicts with operand 0.  We 		     ignore commutatity in this case to keep things simple.  */
 if|if
 condition|(
 name|n_matching_alts
@@ -5807,7 +5807,7 @@ argument_list|,
 name|insn_number
 argument_list|)
 expr_stmt|;
-comment|/* If this is an insn that has a REG_RETVAL note pointing at a  	     CLOBBER insn, we have reached the end of a REG_NO_CONFLICT 	     block, so clear any register number that combined within it.  */
+comment|/* If this is an insn that has a REG_RETVAL note pointing at a 	     CLOBBER insn, we have reached the end of a REG_NO_CONFLICT 	     block, so clear any register number that combined within it.  */
 if|if
 condition|(
 operator|(
@@ -5903,7 +5903,7 @@ name|insn
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Now every register that is local to this basic block      should have been given a quantity, or else -1 meaning ignore it.      Every quantity should have a known birth and death.         Order the qtys so we assign them registers in order of the      number of suggested registers they need so we allocate those with      the most restrictive needs first.  */
+comment|/* Now every register that is local to this basic block      should have been given a quantity, or else -1 meaning ignore it.      Every quantity should have a known birth and death.       Order the qtys so we assign them registers in order of the      number of suggested registers they need so we allocate those with      the most restrictive needs first.  */
 name|qty_order
 operator|=
 operator|(
@@ -6125,7 +6125,7 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-comment|/* Order the qtys so we assign them registers in order of       decreasing length of life.  Normally call qsort, but if we       have only a very small number of quantities, sort them ourselves.  */
+comment|/* Order the qtys so we assign them registers in order of      decreasing length of life.  Normally call qsort, but if we      have only a very small number of quantities, sort them ourselves.  */
 for|for
 control|(
 name|i
@@ -7176,7 +7176,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Attempt to combine the two registers (rtx's) USEDREG and SETREG.    Returns 1 if have done so, or 0 if cannot.     Combining registers means marking them as having the same quantity    and adjusting the offsets within the quantity if either of    them is a SUBREG).     We don't actually combine a hard reg with a pseudo; instead    we just record the hard reg as the suggestion for the pseudo's quantity.    If we really combined them, we could lose if the pseudo lives    across an insn that clobbers the hard reg (eg, movstr).     ALREADY_DEAD is non-zero if USEDREG is known to be dead even though    there is no REG_DEAD note on INSN.  This occurs during the processing    of REG_NO_CONFLICT blocks.     MAY_SAVE_COPYCOPY is non-zero if this insn is simply copying USEDREG to    SETREG or if the input and output must share a register.    In that case, we record a hard reg suggestion in QTY_PHYS_COPY_SUGG.        There are elaborate checks for the validity of combining.  */
+comment|/* Attempt to combine the two registers (rtx's) USEDREG and SETREG.    Returns 1 if have done so, or 0 if cannot.     Combining registers means marking them as having the same quantity    and adjusting the offsets within the quantity if either of    them is a SUBREG).     We don't actually combine a hard reg with a pseudo; instead    we just record the hard reg as the suggestion for the pseudo's quantity.    If we really combined them, we could lose if the pseudo lives    across an insn that clobbers the hard reg (eg, movstr).     ALREADY_DEAD is non-zero if USEDREG is known to be dead even though    there is no REG_DEAD note on INSN.  This occurs during the processing    of REG_NO_CONFLICT blocks.     MAY_SAVE_COPYCOPY is non-zero if this insn is simply copying USEDREG to    SETREG or if the input and output must share a register.    In that case, we record a hard reg suggestion in QTY_PHYS_COPY_SUGG.     There are elaborate checks for the validity of combining.  */
 end_comment
 
 begin_function
@@ -8620,7 +8620,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Find a block of SIZE words of hard regs in reg_class CLASS    that can hold something of machine-mode MODE      (but actually we test only the first of the block for holding MODE)    and still free between insn BORN_INDEX and insn DEAD_INDEX,    and return the number of the first of them.    Return -1 if such a block cannot be found.     If QTY crosses calls, insist on a register preserved by calls,    unless ACCEPT_CALL_CLOBBERED is nonzero.     If JUST_TRY_SUGGESTED is non-zero, only try to see if the suggested    register is available.  If not, return -1.  */
+comment|/* Find a block of SIZE words of hard regs in reg_class CLASS    that can hold something of machine-mode MODE      (but actually we test only the first of the block for holding MODE)    and still free between insn BORN_INDEX and insn DEAD_INDEX,    and return the number of the first of them.    Return -1 if such a block cannot be found.    If QTY crosses calls, insist on a register preserved by calls,    unless ACCEPT_CALL_CLOBBERED is nonzero.     If JUST_TRY_SUGGESTED is non-zero, only try to see if the suggested    register is available.  If not, return -1.  */
 end_comment
 
 begin_function

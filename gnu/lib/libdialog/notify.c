@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * File: 	notify.c  * Author: 	Marc van Kempen  * Desc:	display a notify box with a message  *  * Copyright (c) 1995, Marc van Kempen  *  * All rights reserved.  *  * This software may be used, modified, copied, distributed, and  * sold, in both source and binary form provided that the above  * copyright and these terms are retained, verbatim, as the first  * lines of this file.  Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with  * its use.  *   */
+comment|/*  * File: 	notify.c  * Author: 	Marc van Kempen  * Desc:	display a notify box with a message  *  * Copyright (c) 1995, Marc van Kempen  *  * All rights reserved.  *  * This software may be used, modified, copied, distributed, and  * sold, in both source and binary form provided that the above  * copyright and these terms are retained, verbatim, as the first  * lines of this file.  Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with  * its use.  *  */
 end_comment
 
 begin_include
@@ -23,7 +23,7 @@ name|char
 modifier|*
 name|msg
 parameter_list|)
-comment|/*   * Desc: display an error message  */
+comment|/*  * Desc: display an error message  */
 block|{
 name|char
 modifier|*

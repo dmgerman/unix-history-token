@@ -950,7 +950,7 @@ block|{
 if|#
 directive|if
 literal|1
-comment|/* Check to be sure the blocks are nested as we receive them.  	     If the compiler/assembler/linker work, this just burns a small 	     amount of time.  */
+comment|/* Check to be sure the blocks are nested as we receive them. 	     If the compiler/assembler/linker work, this just burns a small 	     amount of time.  */
 if|if
 condition|(
 name|BLOCK_START
@@ -1255,7 +1255,7 @@ if|#
 directive|if
 literal|1
 comment|/* FIXME, shut this off after a while to speed up symbol reading.  */
-comment|/* Some compilers output blocks in the wrong order, but we depend      on their being in the right order so we can binary search.       Check the order and moan about it.  FIXME.  */
+comment|/* Some compilers output blocks in the wrong order, but we depend      on their being in the right order so we can binary search.      Check the order and moan about it.  FIXME.  */
 if|if
 condition|(
 name|BLOCKVECTOR_NBLOCKS

@@ -4,7 +4,7 @@ comment|/*  * $XConsortium: DviP.h,v 1.5 89/07/22 19:44:08 keith Exp $  */
 end_comment
 
 begin_comment
-comment|/*   * DviP.h - Private definitions for Dvi widget  */
+comment|/*  * DviP.h - Private definitions for Dvi widget  */
 end_comment
 
 begin_ifndef
@@ -105,7 +105,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/***************************************  *  *  Instance (widget) structure   *  **************************************/
+comment|/***************************************  *  *  Instance (widget) structure  *  **************************************/
 end_comment
 
 begin_comment

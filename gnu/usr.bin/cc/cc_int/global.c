@@ -58,7 +58,7 @@ file|"output.h"
 end_include
 
 begin_comment
-comment|/* This pass of the compiler performs global register allocation.    It assigns hard register numbers to all the pseudo registers    that were not handled in local_alloc.  Assignments are recorded    in the vector reg_renumber, not by changing the rtl code.    (Such changes are made by final).  The entry point is    the function global_alloc.     After allocation is complete, the reload pass is run as a subroutine    of this pass, so that when a pseudo reg loses its hard reg due to    spilling it is possible to make a second attempt to find a hard    reg for it.  The reload pass is independent in other respects    and it is run even when stupid register allocation is in use.     1. count the pseudo-registers still needing allocation    and assign allocation-numbers (allocnos) to them.    Set up tables reg_allocno and allocno_reg to map     reg numbers to allocnos and vice versa.    max_allocno gets the number of allocnos in use.     2. Allocate a max_allocno by max_allocno conflict bit matrix and clear it.    Allocate a max_allocno by FIRST_PSEUDO_REGISTER conflict matrix    for conflicts between allocnos and explicit hard register use    (which includes use of pseudo-registers allocated by local_alloc).     3. for each basic block     walk forward through the block, recording which     unallocated registers and which hardware registers are live.     Build the conflict matrix between the unallocated registers     and another of unallocated registers versus hardware registers.     Also record the preferred hardware registers     for each unallocated one.     4. Sort a table of the allocnos into order of    desirability of the variables.     5. Allocate the variables in that order; each if possible into    a preferred register, else into another register.  */
+comment|/* This pass of the compiler performs global register allocation.    It assigns hard register numbers to all the pseudo registers    that were not handled in local_alloc.  Assignments are recorded    in the vector reg_renumber, not by changing the rtl code.    (Such changes are made by final).  The entry point is    the function global_alloc.     After allocation is complete, the reload pass is run as a subroutine    of this pass, so that when a pseudo reg loses its hard reg due to    spilling it is possible to make a second attempt to find a hard    reg for it.  The reload pass is independent in other respects    and it is run even when stupid register allocation is in use.     1. count the pseudo-registers still needing allocation    and assign allocation-numbers (allocnos) to them.    Set up tables reg_allocno and allocno_reg to map    reg numbers to allocnos and vice versa.    max_allocno gets the number of allocnos in use.     2. Allocate a max_allocno by max_allocno conflict bit matrix and clear it.    Allocate a max_allocno by FIRST_PSEUDO_REGISTER conflict matrix    for conflicts between allocnos and explicit hard register use    (which includes use of pseudo-registers allocated by local_alloc).     3. for each basic block     walk forward through the block, recording which     unallocated registers and which hardware registers are live.     Build the conflict matrix between the unallocated registers     and another of unallocated registers versus hardware registers.     Also record the preferred hardware registers     for each unallocated one.     4. Sort a table of the allocnos into order of    desirability of the variables.     5. Allocate the variables in that order; each if possible into    a preferred register, else into another register.  */
 end_comment
 
 begin_escape
@@ -3445,7 +3445,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Prune the preferences for global registers to exclude registers that cannot    be used.        Compute `regs_someone_prefers', which is a bitmask of the hard registers    that are preferred by conflicting registers of lower priority.  If possible,    we will avoid using these registers.  */
+comment|/* Prune the preferences for global registers to exclude registers that cannot    be used.     Compute `regs_someone_prefers', which is a bitmask of the hard registers    that are preferred by conflicting registers of lower priority.  If possible,    we will avoid using these registers.  */
 end_comment
 
 begin_function
@@ -4057,7 +4057,7 @@ directive|endif
 block|}
 block|}
 block|}
-comment|/* See if there is a preferred register with the same class as the register      we allocated above.  Making this restriction prevents register      preferencing from creating worse register allocation.       Remove from the preferred registers and conflicting registers.  Note that      additional conflicts may have been added after `prune_preferences' was      called.        First do this for those register with copy preferences, then all      preferred registers.  */
+comment|/* See if there is a preferred register with the same class as the register      we allocated above.  Making this restriction prevents register      preferencing from creating worse register allocation.       Remove from the preferred registers and conflicting registers.  Note that      additional conflicts may have been added after `prune_preferences' was      called.       First do this for those register with copy preferences, then all      preferred registers.  */
 name|AND_COMPL_HARD_REG_SET
 argument_list|(
 name|hard_reg_copy_preferences
@@ -4504,7 +4504,7 @@ block|}
 block|}
 name|no_prefs
 label|:
-comment|/* If we haven't succeeded yet, try with caller-saves.       We need not check to see if the current function has nonlocal      labels because we don't put any pseudos that are live over calls in      registers in that case.  */
+comment|/* If we haven't succeeded yet, try with caller-saves.      We need not check to see if the current function has nonlocal      labels because we don't put any pseudos that are live over calls in      registers in that case.  */
 if|if
 condition|(
 name|flag_caller_saves
@@ -6072,7 +6072,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Try to set a preference for an allocno to a hard register.    We are passed DEST and SRC which are the operands of a SET.  It is known    that SRC is a register.  If SRC or the first operand of SRC is a register,    try to set a preference.  If one of the two is a hard register and the other    is a pseudo-register, mark the preference.        Note that we are not as aggressive as local-alloc in trying to tie a    pseudo-register to a hard register.  */
+comment|/* Try to set a preference for an allocno to a hard register.    We are passed DEST and SRC which are the operands of a SET.  It is known    that SRC is a register.  If SRC or the first operand of SRC is a register,    try to set a preference.  If one of the two is a hard register and the other    is a pseudo-register, mark the preference.     Note that we are not as aggressive as local-alloc in trying to tie a    pseudo-register to a hard register.  */
 end_comment
 
 begin_function

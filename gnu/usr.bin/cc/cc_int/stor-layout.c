@@ -291,7 +291,7 @@ if|if
 condition|(
 name|immediate_size_expand
 condition|)
-comment|/* NULL_RTX is not defined; neither is the rtx type.         Also, we would like to pass const0_rtx here, but don't have it.  */
+comment|/* NULL_RTX is not defined; neither is the rtx type.        Also, we would like to pass const0_rtx here, but don't have it.  */
 name|expand_expr
 argument_list|(
 name|size

@@ -138,7 +138,7 @@ name|CORE_ADDR
 operator|)
 argument_list|)
 decl_stmt|;
-comment|/* Finds the next struct sym_fns.  They are allocated and initialized      in whatever module implements the functions pointed to; an       initializer calls add_symtab_fns to add them to the global chain.  */
+comment|/* Finds the next struct sym_fns.  They are allocated and initialized      in whatever module implements the functions pointed to; an      initializer calls add_symtab_fns to add them to the global chain.  */
 name|struct
 name|sym_fns
 modifier|*

@@ -158,7 +158,7 @@ comment|/* JF: for the 68851 */
 end_comment
 
 begin_comment
-comment|/*    I didn't use much imagination in choosing the     following codes, so many of them aren't very    mnemonic. -rab     P  pmmu register 	Possible values: 	000	TC	Translation Control reg 	100	CAL	Current Access Level 	101	VAL	Validate Access Level 	110	SCC	Stack Change Control 	111	AC	Access Control     W  wide pmmu registers 	Possible values: 	001	DRP	Dma Root Pointer 	010	SRP	Supervisor Root Pointer 	011	CRP	Cpu Root Pointer     f	function code register 	0	SFC 	1	DFC     V	VAL register only     X	BADx, BACx 	100	BAD	Breakpoint Acknowledge Data 	101	BAC	Breakpoint Acknowledge Control     Y	PSR    Z	PCSR     |	memory 		(modes 2-6, 7.*)  */
+comment|/*    I didn't use much imagination in choosing the    following codes, so many of them aren't very    mnemonic. -rab     P  pmmu register 	Possible values: 	000	TC	Translation Control reg 	100	CAL	Current Access Level 	101	VAL	Validate Access Level 	110	SCC	Stack Change Control 	111	AC	Access Control     W  wide pmmu registers 	Possible values: 	001	DRP	Dma Root Pointer 	010	SRP	Supervisor Root Pointer 	011	CRP	Cpu Root Pointer     f	function code register 	0	SFC 	1	DFC     V	VAL register only     X	BADx, BACx 	100	BAD	Breakpoint Acknowledge Data 	101	BAC	Breakpoint Acknowledge Control     Y	PSR    Z	PCSR     |	memory 		(modes 2-6, 7.*)  */
 end_comment
 
 begin_comment

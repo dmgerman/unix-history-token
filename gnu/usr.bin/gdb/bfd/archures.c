@@ -4,11 +4,11 @@ comment|/* BFD library support routines for architectures.    Copyright (C) 1990
 end_comment
 
 begin_comment
-comment|/*  SECTION 	Architectures  	BFD keeps one atom in a BFD describing the 	architecture of the data attached to the BFD: a pointer to a<<bfd_arch_info_type>>.    	Pointers to structures can be requested independently of a BFD 	so that an architecture's information can be interrogated 	without access to an open BFD.  	The architecture information is provided by each architecture package. 	The set of default architectures is selected by the macro<<SELECT_ARCHITECTURES>>.  This is normally set up in the 	@file{config/@var{target}.mt} file of your choice.  If the name is not 	defined, then all the architectures supported are included.   	When BFD starts up, all the architectures are called with an 	initialize method.  It is up to the architecture back end to 	insert as many items into the list of architectures as it wants to; 	generally this would be one for each machine and one for the 	default case (an item with a machine field of 0).   	BFD's idea of an architecture is implemented in	@file{archures.c}. */
+comment|/*  SECTION 	Architectures  	BFD keeps one atom in a BFD describing the 	architecture of the data attached to the BFD: a pointer to a<<bfd_arch_info_type>>.  	Pointers to structures can be requested independently of a BFD 	so that an architecture's information can be interrogated 	without access to an open BFD.  	The architecture information is provided by each architecture package. 	The set of default architectures is selected by the macro<<SELECT_ARCHITECTURES>>.  This is normally set up in the 	@file{config/@var{target}.mt} file of your choice.  If the name is not 	defined, then all the architectures supported are included.  	When BFD starts up, all the architectures are called with an 	initialize method.  It is up to the architecture back end to 	insert as many items into the list of architectures as it wants to; 	generally this would be one for each machine and one for the 	default case (an item with a machine field of 0).  	BFD's idea of an architecture is implemented in	@file{archures.c}. */
 end_comment
 
 begin_comment
-comment|/*  SUBSECTION 	bfd_architecture  DESCRIPTION 	This enum gives the object file's CPU architecture, in a 	global sense---i.e., what processor family does it belong to? 	Another field indicates which processor within 	the family is in use.  The machine gives a number which 	distinguishes different versions of the architecture, 	containing, for example, 2 and 3 for Intel i960 KA and i960 KB, 	and 68020 and 68030 for Motorola 68020 and 68030.   .enum bfd_architecture  .{ .  bfd_arch_unknown,   {* File arch not known *} .  bfd_arch_obscure,   {* Arch known, not one of these *} .  bfd_arch_m68k,      {* Motorola 68xxx *} .  bfd_arch_vax,       {* DEC Vax *}    .  bfd_arch_i960,      {* Intel 960 *} .    {* The order of the following is important. .       lower number indicates a machine type that  .       only accepts a subset of the instructions .       available to machines with higher numbers. .       The exception is the "ca", which is .       incompatible with all other machines except  .       "core". *} . .#define bfd_mach_i960_core      1 .#define bfd_mach_i960_ka_sa     2 .#define bfd_mach_i960_kb_sb     3 .#define bfd_mach_i960_mc        4 .#define bfd_mach_i960_xa        5 .#define bfd_mach_i960_ca        6 . .  bfd_arch_a29k,      {* AMD 29000 *} .  bfd_arch_sparc,     {* SPARC *} .  bfd_arch_mips,      {* MIPS Rxxxx *} .  bfd_arch_i386,      {* Intel 386 *} .  bfd_arch_we32k,     {* AT&T WE32xxx *} .  bfd_arch_tahoe,     {* CCI/Harris Tahoe *} .  bfd_arch_i860,      {* Intel 860 *} .  bfd_arch_romp,      {* IBM ROMP PC/RT *} .  bfd_arch_alliant,   {* Alliant *} .  bfd_arch_convex,    {* Convex *} .  bfd_arch_m88k,      {* Motorola 88xxx *} .  bfd_arch_pyramid,   {* Pyramid Technology *} .  bfd_arch_h8300,     {* Hitachi H8/300 *} .#define bfd_mach_h8300   1 .#define bfd_mach_h8300h  2 .  bfd_arch_powerpc,   {* PowerPC *} .  bfd_arch_rs6000,    {* IBM RS/6000 *} .  bfd_arch_hppa,      {* HP PA RISC *} .  bfd_arch_z8k,       {* Zilog Z8000 *} .#define bfd_mach_z8001		1 .#define bfd_mach_z8002		2 .  bfd_arch_h8500,     {* Hitachi H8/500 *} .  bfd_arch_sh,        {* Hitachi SH *} .  bfd_arch_alpha,     {* Dec Alpha *} .  bfd_arch_ns32k,     {* National Semiconductors ns32000 *} .  bfd_arch_last .  };   */
+comment|/*  SUBSECTION 	bfd_architecture  DESCRIPTION 	This enum gives the object file's CPU architecture, in a 	global sense---i.e., what processor family does it belong to? 	Another field indicates which processor within 	the family is in use.  The machine gives a number which 	distinguishes different versions of the architecture, 	containing, for example, 2 and 3 for Intel i960 KA and i960 KB, 	and 68020 and 68030 for Motorola 68020 and 68030.  .enum bfd_architecture .{ .  bfd_arch_unknown,   {* File arch not known *} .  bfd_arch_obscure,   {* Arch known, not one of these *} .  bfd_arch_m68k,      {* Motorola 68xxx *} .  bfd_arch_vax,       {* DEC Vax *} .  bfd_arch_i960,      {* Intel 960 *} .    {* The order of the following is important. .       lower number indicates a machine type that .       only accepts a subset of the instructions .       available to machines with higher numbers. .       The exception is the "ca", which is .       incompatible with all other machines except .       "core". *} . .#define bfd_mach_i960_core      1 .#define bfd_mach_i960_ka_sa     2 .#define bfd_mach_i960_kb_sb     3 .#define bfd_mach_i960_mc        4 .#define bfd_mach_i960_xa        5 .#define bfd_mach_i960_ca        6 . .  bfd_arch_a29k,      {* AMD 29000 *} .  bfd_arch_sparc,     {* SPARC *} .  bfd_arch_mips,      {* MIPS Rxxxx *} .  bfd_arch_i386,      {* Intel 386 *} .  bfd_arch_we32k,     {* AT&T WE32xxx *} .  bfd_arch_tahoe,     {* CCI/Harris Tahoe *} .  bfd_arch_i860,      {* Intel 860 *} .  bfd_arch_romp,      {* IBM ROMP PC/RT *} .  bfd_arch_alliant,   {* Alliant *} .  bfd_arch_convex,    {* Convex *} .  bfd_arch_m88k,      {* Motorola 88xxx *} .  bfd_arch_pyramid,   {* Pyramid Technology *} .  bfd_arch_h8300,     {* Hitachi H8/300 *} .#define bfd_mach_h8300   1 .#define bfd_mach_h8300h  2 .  bfd_arch_powerpc,   {* PowerPC *} .  bfd_arch_rs6000,    {* IBM RS/6000 *} .  bfd_arch_hppa,      {* HP PA RISC *} .  bfd_arch_z8k,       {* Zilog Z8000 *} .#define bfd_mach_z8001		1 .#define bfd_mach_z8002		2 .  bfd_arch_h8500,     {* Hitachi H8/500 *} .  bfd_arch_sh,        {* Hitachi SH *} .  bfd_arch_alpha,     {* Dec Alpha *} .  bfd_arch_ns32k,     {* National Semiconductors ns32000 *} .  bfd_arch_last .  };   */
 end_comment
 
 begin_include
@@ -30,7 +30,7 @@ file|"libbfd.h"
 end_include
 
 begin_comment
-comment|/*  SUBSECTION 	bfd_arch_info  DESCRIPTION 	This structure contains information on architectures for use 	within BFD.  . .typedef struct bfd_arch_info  .{ .  int bits_per_word; .  int bits_per_address; .  int bits_per_byte; .  enum bfd_architecture arch; .  long mach; .  char *arch_name; .  CONST  char *printable_name; .  unsigned int section_align_power; . {* true if this is the default machine for the architecture *} .  boolean the_default;	 .  CONST struct bfd_arch_info * (*compatible) .	PARAMS ((CONST struct bfd_arch_info *a, .	         CONST struct bfd_arch_info *b)); . .  boolean (*scan) PARAMS ((CONST struct bfd_arch_info *, CONST char *)); .  {* How to disassemble an instruction, producing a printable .     representation on a specified stdio stream.  This isn't .     defined for most processors at present, because of the size .     of the additional tables it would drag in, and because gdb .     wants to use a different interface.  *} .  unsigned int (*disassemble) PARAMS ((bfd_vma addr, CONST char *data, .				        PTR stream)); . .  struct bfd_arch_info *next; .} bfd_arch_info_type; */
+comment|/*  SUBSECTION 	bfd_arch_info  DESCRIPTION 	This structure contains information on architectures for use 	within BFD.  . .typedef struct bfd_arch_info .{ .  int bits_per_word; .  int bits_per_address; .  int bits_per_byte; .  enum bfd_architecture arch; .  long mach; .  char *arch_name; .  CONST  char *printable_name; .  unsigned int section_align_power; . {* true if this is the default machine for the architecture *} .  boolean the_default; .  CONST struct bfd_arch_info * (*compatible) .	PARAMS ((CONST struct bfd_arch_info *a, .	         CONST struct bfd_arch_info *b)); . .  boolean (*scan) PARAMS ((CONST struct bfd_arch_info *, CONST char *)); .  {* How to disassemble an instruction, producing a printable .     representation on a specified stdio stream.  This isn't .     defined for most processors at present, because of the size .     of the additional tables it would drag in, and because gdb .     wants to use a different interface.  *} .  unsigned int (*disassemble) PARAMS ((bfd_vma addr, CONST char *data, .				        PTR stream)); . .  struct bfd_arch_info *next; .} bfd_arch_info_type; */
 end_comment
 
 begin_decl_stmt
@@ -247,7 +247,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* INTERNAL_FUNCTION 	bfd_default_set_arch_mach  SYNOPSIS 	boolean bfd_default_set_arch_mach(bfd *abfd, 		enum bfd_architecture arch, 		unsigned long mach);  DESCRIPTION 	Set the architecture and machine type in BFD @var{abfd} 	to @var{arch} and @var{mach}.  Find the correct 	pointer to a structure and insert it into the<<arch_info>> 	pointer.  */
+comment|/* INTERNAL_FUNCTION 	bfd_default_set_arch_mach  SYNOPSIS 	boolean bfd_default_set_arch_mach(bfd *abfd, 		enum bfd_architecture arch, 		unsigned long mach);  DESCRIPTION 	Set the architecture and machine type in BFD @var{abfd} 	to @var{arch} and @var{mach}.  Find the correct 	pointer to a structure and insert it into the<<arch_info>> 	pointer. */
 end_comment
 
 begin_function
@@ -823,7 +823,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* INTERNAL_FUNCTION  	bfd_arch_init  SYNOPSIS 	void bfd_arch_init(void);  DESCRIPTION 	Initialize the architecture dispatch table by 	calling all installed architecture packages and getting them 	to poke around. */
+comment|/* INTERNAL_FUNCTION 	bfd_arch_init  SYNOPSIS 	void bfd_arch_init(void);  DESCRIPTION 	Initialize the architecture dispatch table by 	calling all installed architecture packages and getting them 	to poke around. */
 end_comment
 
 begin_function
@@ -894,7 +894,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* INTERNAL_FUNCTION  	bfd_default_compatible  SYNOPSIS 	CONST bfd_arch_info_type *bfd_default_compatible 	(CONST bfd_arch_info_type *a, 	CONST bfd_arch_info_type *b);  DESCRIPTION 	The default function for testing for compatibility. */
+comment|/* INTERNAL_FUNCTION 	bfd_default_compatible  SYNOPSIS 	CONST bfd_arch_info_type *bfd_default_compatible 	(CONST bfd_arch_info_type *a, 	CONST bfd_arch_info_type *b);  DESCRIPTION 	The default function for testing for compatibility. */
 end_comment
 
 begin_function
@@ -1402,7 +1402,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_printable_arch_mach  SYNOPSIS 	CONST char *bfd_printable_arch_mach 		(enum bfd_architecture arch, unsigned long machine);  DESCRIPTION 	Return a printable string representing the architecture and 	machine type.   	This routine is depreciated. */
+comment|/* FUNCTION 	bfd_printable_arch_mach  SYNOPSIS 	CONST char *bfd_printable_arch_mach 		(enum bfd_architecture arch, unsigned long machine);  DESCRIPTION 	Return a printable string representing the architecture and 	machine type.  	This routine is depreciated. */
 end_comment
 
 begin_function

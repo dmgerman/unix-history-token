@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Arbitrary precision decimal arithmetic.  *  * Copyright (C) 1984 Free Software Foundation, Inc.  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2, or (at your option)  * any later version.  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, you can either send email to this  * program's author (see below) or write to: The Free Software Foundation,  * Inc.; 675 Mass Ave. Cambridge, MA 02139, USA.  */
+comment|/*  * Arbitrary precision decimal arithmetic.  *  * Copyright (C) 1984 Free Software Foundation, Inc.  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2, or (at your option)  * any later version.  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, you can either send email to this  * program's author (see below) or write to: The Free Software Foundation,  * Inc.; 675 Mass Ave. Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
-comment|/* Some known problems:  	Another problem with decimal_div is found when you try to 	divide a number with> scale fraction digits by 1.  The 	expected result is simply truncation, but all sorts of things 	happen instead.  An example is that the result of .99999998/1 	with scale set to 6 is .000001 		 	There are some problems in the behavior of the decimal package 	related to printing and parsing.  The 	printer is weird about very large output radices, tending to want 	to output single ASCII characters for any and all digits (even 	in radices> 127).  The UNIX bc approach is to print digit groups 	separated by spaces.  There is a rather overwrought workaround in 	the function decputc() in bcmisc.c, but it would be better if 	decimal.c got a fix for this.  */
+comment|/* Some known problems:  	Another problem with decimal_div is found when you try to 	divide a number with> scale fraction digits by 1.  The 	expected result is simply truncation, but all sorts of things 	happen instead.  An example is that the result of .99999998/1 	with scale set to 6 is .000001  	There are some problems in the behavior of the decimal package 	related to printing and parsing.  The 	printer is weird about very large output radices, tending to want 	to output single ASCII characters for any and all digits (even 	in radices> 127).  The UNIX bc approach is to print digit groups 	separated by spaces.  There is a rather overwrought workaround in 	the function decputc() in bcmisc.c, but it would be better if 	decimal.c got a fix for this.  */
 end_comment
 
 begin_comment
@@ -1270,7 +1270,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return (as an integer) the result of dividing decimal number `b' by    integer `divisor'.     This is used in printing decimal numbers in other radices. */
+comment|/* Return (as an integer) the result of dividing decimal number `b' by    integer `divisor'.    This is used in printing decimal numbers in other radices. */
 end_comment
 
 begin_function
@@ -3489,7 +3489,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Divide decimal number `b1' by `b2', keeping at most `digits'    fraction digits.     Returns the result as a decimal number.     When division is not exact, the quotient is truncated toward zero.  */
+comment|/* Divide decimal number `b1' by `b2', keeping at most `digits'    fraction digits.    Returns the result as a decimal number.     When division is not exact, the quotient is truncated toward zero.  */
 end_comment
 
 begin_function
@@ -4361,7 +4361,7 @@ operator|->
 name|after
 argument_list|)
 expr_stmt|;
-comment|/* Compute an initial guess by taking the square root       of a nearby power of RADIX.  */
+comment|/* Compute an initial guess by taking the square root      of a nearby power of RADIX.  */
 if|if
 condition|(
 name|d

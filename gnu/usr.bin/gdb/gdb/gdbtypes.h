@@ -490,7 +490,7 @@ name|int
 name|bitpos
 decl_stmt|;
 comment|/* Size of this field, in bits, or zero if not packed. 	 For an unpacked field, the field's type's length 	 says how many bytes the field occupies.  */
-comment|/* FIXME: This is abused by TYPE_FIELD_STATIC_PHYSNAME to contain  	 a pointer, so it has to be long.  */
+comment|/* FIXME: This is abused by TYPE_FIELD_STATIC_PHYSNAME to contain 	 a pointer, so it has to be long.  */
 name|long
 name|bitsize
 decl_stmt|;
@@ -509,7 +509,7 @@ block|}
 modifier|*
 name|fields
 struct|;
-comment|/* For types with virtual functions, VPTR_BASETYPE is the base class which      defined the virtual function table pointer.         For types that are pointer to member types, VPTR_BASETYPE      is the type that this pointer is a member of.       Unused otherwise.  */
+comment|/* For types with virtual functions, VPTR_BASETYPE is the base class which      defined the virtual function table pointer.       For types that are pointer to member types, VPTR_BASETYPE      is the type that this pointer is a member of.       Unused otherwise.  */
 name|struct
 name|type
 modifier|*

@@ -1604,7 +1604,7 @@ name|current_call_is_indirect
 init|=
 literal|0
 decl_stmt|;
-comment|/* Nonzero if we must avoid push-insns in the args for this call.       If stack space is allocated for register parameters, but not by the      caller, then it is preallocated in the fixed part of the stack frame.      So the entire argument block must then be preallocated (i.e., we      ignore PUSH_ROUNDING in that case).  */
+comment|/* Nonzero if we must avoid push-insns in the args for this call.      If stack space is allocated for register parameters, but not by the      caller, then it is preallocated in the fixed part of the stack frame.      So the entire argument block must then be preallocated (i.e., we      ignore PUSH_ROUNDING in that case).  */
 if|#
 directive|if
 name|defined
@@ -1909,7 +1909,7 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-comment|/* If we don't have specific function to call, see if we have a       constant or `noreturn' function from the type.  */
+comment|/* If we don't have specific function to call, see if we have a      constant or `noreturn' function from the type.  */
 if|if
 condition|(
 name|fndecl
@@ -4676,7 +4676,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|ACCUMULATE_OUTGOING_ARGS
-comment|/* Since the stack pointer will never be pushed, it is possible for 	     the evaluation of a parm to clobber something we have already 	     written to the stack.  Since most function calls on RISC machines 	     do not use the stack, this is uncommon, but must work correctly.  	     Therefore, we save any area of the stack that was already written 	     and that we are using.  Here we set up to do this by making a new 	     stack usage map from the old one.  The actual save will be done 	     by store_one_arg.   	     Another approach might be to try to reorder the argument 	     evaluations to avoid this conflicting stack usage.  */
+comment|/* Since the stack pointer will never be pushed, it is possible for 	     the evaluation of a parm to clobber something we have already 	     written to the stack.  Since most function calls on RISC machines 	     do not use the stack, this is uncommon, but must work correctly.  	     Therefore, we save any area of the stack that was already written 	     and that we are using.  Here we set up to do this by making a new 	     stack usage map from the old one.  The actual save will be done 	     by store_one_arg.  	     Another approach might be to try to reorder the argument 	     evaluations to avoid this conflicting stack usage.  */
 if|#
 directive|if
 name|defined
@@ -5003,7 +5003,7 @@ break|break;
 block|}
 endif|#
 directive|endif
-comment|/* If we preallocated stack space, compute the address of each argument.      We need not ensure it is a valid memory address here; it will be       validized when it is used.  */
+comment|/* If we preallocated stack space, compute the address of each argument.      We need not ensure it is a valid memory address here; it will be      validized when it is used.  */
 if|if
 condition|(
 name|argblock
@@ -5600,7 +5600,7 @@ operator|.
 name|unsignedp
 argument_list|)
 expr_stmt|;
-comment|/* If the value is expensive, and we are inside an appropriately  	   short loop, put the value into a pseudo and then put the pseudo 	   into the hard reg.  	   For small register classes, also do this if this call uses 	   register parameters.  This is to avoid reload conflicts while 	   loading the parameters registers.  */
+comment|/* If the value is expensive, and we are inside an appropriately 	   short loop, put the value into a pseudo and then put the pseudo 	   into the hard reg.  	   For small register classes, also do this if this call uses 	   register parameters.  This is to avoid reload conflicts while 	   loading the parameters registers.  */
 if|if
 condition|(
 operator|(
@@ -6516,7 +6516,7 @@ argument_list|,
 name|reg_parm_seen
 argument_list|)
 expr_stmt|;
-comment|/* Now do the register loads required for any wholly-register parms or any      parms which are passed both on the stack and in a register.  Their      expressions were already evaluated.        Mark all register-parms as living through the call, putting these USE      insns in the CALL_INSN_FUNCTION_USAGE field.  */
+comment|/* Now do the register loads required for any wholly-register parms or any      parms which are passed both on the stack and in a register.  Their      expressions were already evaluated.       Mark all register-parms as living through the call, putting these USE      insns in the CALL_INSN_FUNCTION_USAGE field.  */
 for|for
 control|(
 name|i
@@ -7734,7 +7734,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* If this was alloca, record the new stack level for nonlocal gotos.        Check for the handler slots since we might not have a save area      for non-local gotos. */
+comment|/* If this was alloca, record the new stack level for nonlocal gotos.      Check for the handler slots since we might not have a save area      for non-local gotos. */
 if|if
 condition|(
 name|may_be_alloca
@@ -10774,7 +10774,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Store a single argument for a function call    into the register or memory area where it must be passed.    *ARG describes the argument value and where to pass it.     ARGBLOCK is the address of the stack-block for all the arguments,    or 0 on a machine where arguments are pushed individually.     MAY_BE_ALLOCA nonzero says this could be a call to `alloca'    so must be careful about how the stack is used.      VARIABLE_SIZE nonzero says that this was a variable-sized outgoing    argument stack.  This is used if ACCUMULATE_OUTGOING_ARGS to indicate    that we need not worry about saving and restoring the stack.     FNDECL is the declaration of the function we are calling.  */
+comment|/* Store a single argument for a function call    into the register or memory area where it must be passed.    *ARG describes the argument value and where to pass it.     ARGBLOCK is the address of the stack-block for all the arguments,    or 0 on a machine where arguments are pushed individually.     MAY_BE_ALLOCA nonzero says this could be a call to `alloca'    so must be careful about how the stack is used.     VARIABLE_SIZE nonzero says that this was a variable-sized outgoing    argument stack.  This is used if ACCUMULATE_OUTGOING_ARGS to indicate    that we need not worry about saving and restoring the stack.     FNDECL is the declaration of the function we are calling.  */
 end_comment
 
 begin_function
@@ -11374,7 +11374,7 @@ specifier|register
 name|int
 name|size
 decl_stmt|;
-comment|/* Argument is a scalar, not entirely passed in registers. 	 (If part is passed in registers, arg->partial says how much 	 and emit_push_insn will take care of putting it there.) 	  	 Push it, and if its size is less than the 	 amount of space allocated to it, 	 also bump stack pointer by the additional space. 	 Note that in C the default argument promotions 	 will prevent such mismatches.  */
+comment|/* Argument is a scalar, not entirely passed in registers. 	 (If part is passed in registers, arg->partial says how much 	 and emit_push_insn will take care of putting it there.)  	 Push it, and if its size is less than the 	 amount of space allocated to it, 	 also bump stack pointer by the additional space. 	 Note that in C the default argument promotions 	 will prevent such mismatches.  */
 name|size
 operator|=
 name|GET_MODE_SIZE
@@ -11599,7 +11599,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Unless this is a partially-in-register argument, the argument is now      in the stack.        ??? Note that this can change arg->value from arg->stack to      arg->stack_slot and it matters when they are not the same.      It isn't totally clear that this is correct in all cases.  */
+comment|/* Unless this is a partially-in-register argument, the argument is now      in the stack.       ??? Note that this can change arg->value from arg->stack to      arg->stack_slot and it matters when they are not the same.      It isn't totally clear that this is correct in all cases.  */
 if|if
 condition|(
 name|partial

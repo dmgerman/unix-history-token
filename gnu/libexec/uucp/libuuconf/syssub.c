@@ -21,7 +21,7 @@ name|char
 name|_uuconf_syssub_rcsid
 index|[]
 init|=
-literal|"$Id: syssub.c,v 1.11 1994/01/30 21:14:29 ian Rel $"
+literal|"$Id: syssub.c,v 1.2 1994/05/07 18:12:59 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 

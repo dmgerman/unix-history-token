@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Release: "cancel" a checkout in the history log.  *   * - Don't allow release if anything is active - Don't allow release if not  * above or inside repository. - Don't allow release if ./CVS/Repository is  * not the same as the directory specified in the module database.  *   * - Enter a line in the history log indicating the "release". - If asked to,  * delete the local working directory.  */
+comment|/*  * Release: "cancel" a checkout in the history log.  *  * - Don't allow release if anything is active - Don't allow release if not  * above or inside repository. - Don't allow release if ./CVS/Repository is  * not the same as the directory specified in the module database.  *  * - Enter a line in the history log indicating the "release". - If asked to,  * delete the local working directory.  */
 end_comment
 
 begin_include

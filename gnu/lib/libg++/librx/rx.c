@@ -10,7 +10,7 @@ name|_RX_C_
 end_define
 
 begin_comment
-comment|/* NOTE!!!  AIX is so losing it requires this to be the first thing in the   * file.   * Do not put ANYTHING before it!    */
+comment|/* NOTE!!!  AIX is so losing it requires this to be the first thing in the  * file.  * Do not put ANYTHING before it!  */
 end_comment
 
 begin_if
@@ -6447,7 +6447,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* This adds an edge between two nodes, but doesn't initialize the   * edge label.  */
+comment|/* This adds an edge between two nodes, but doesn't initialize the  * edge label.  */
 end_comment
 
 begin_ifdef
@@ -7006,11 +7006,11 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* This page: translating a pattern expression into an nfa and doing the   * static part of the nfa->super-nfa translation.  */
+comment|/* This page: translating a pattern expression into an nfa and doing the  * static part of the nfa->super-nfa translation.  */
 end_comment
 
 begin_comment
-comment|/* This is the thompson regexp->nfa algorithm.   * It is modified to allow for `side-effect epsilons.'  Those are  * edges that are taken whenever a similar epsilon edge would be,  * but which imply that some side effect occurs when the edge   * is taken.  *  * Side effects are used to model parts of the pattern langauge   * that are not regular (in the formal sense).  */
+comment|/* This is the thompson regexp->nfa algorithm.  * It is modified to allow for `side-effect epsilons.'  Those are  * edges that are taken whenever a similar epsilon edge would be,  * but which imply that some side effect occurs when the edge  * is taken.  *  * Side effects are used to model parts of the pattern langauge  * that are not regular (in the formal sense).  */
 end_comment
 
 begin_ifdef
@@ -7744,7 +7744,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* RX_NAME_NFA_STATES identifies all nodes with outgoing non-epsilon  * transitions.  Only these nodes can occur in super-states.    * All nodes are given an integer id.   * The id is non-negative if the node has non-epsilon out-transitions, negative  * otherwise (this is because we want the non-negative ids to be used as   * array indexes in a few places).  */
+comment|/* RX_NAME_NFA_STATES identifies all nodes with outgoing non-epsilon  * transitions.  Only these nodes can occur in super-states.  * All nodes are given an integer id.  * The id is non-negative if the node has non-epsilon out-transitions, negative  * otherwise (this is because we want the non-negative ids to be used as  * array indexes in a few places).  */
 end_comment
 
 begin_ifdef
@@ -7972,7 +7972,7 @@ name|vb
 parameter_list|)
 else|#
 directive|else
-function|static int  se_list_cmp
+function|static int se_list_cmp
 parameter_list|(
 name|va
 parameter_list|,
@@ -8119,7 +8119,7 @@ name|vb
 parameter_list|)
 else|#
 directive|else
-function|static int  se_list_equal
+function|static int se_list_equal
 parameter_list|(
 name|va
 parameter_list|,
@@ -8637,7 +8637,7 @@ name|vb
 parameter_list|)
 else|#
 directive|else
-function|static int  nfa_set_cmp
+function|static int nfa_set_cmp
 parameter_list|(
 name|va
 parameter_list|,
@@ -8780,7 +8780,7 @@ name|vb
 parameter_list|)
 else|#
 directive|else
-function|static int  nfa_set_equal
+function|static int nfa_set_equal
 parameter_list|(
 name|va
 parameter_list|,
@@ -9982,7 +9982,7 @@ comment|/* This page: storing the nfa in a contiguous region of memory for  * su
 end_comment
 
 begin_comment
-comment|/* This is for qsort on an array of nfa_states. The order  * is based on state ids and goes   *		[0...MAX][MIN..-1] where (MAX>=0) and (MIN<0)  * This way, positive ids double as array indices.  */
+comment|/* This is for qsort on an array of nfa_states. The order  * is based on state ids and goes  *		[0...MAX][MIN..-1] where (MAX>=0) and (MIN<0)  * This way, positive ids double as array indices.  */
 end_comment
 
 begin_ifdef
@@ -10006,7 +10006,7 @@ name|vb
 parameter_list|)
 else|#
 directive|else
-function|static int  nfacmp
+function|static int nfacmp
 parameter_list|(
 name|va
 parameter_list|,
@@ -10446,7 +10446,7 @@ name|unsigned
 name|long
 name|total_size
 decl_stmt|;
-comment|/* This takes place in two stages.   First, the total size of the    * nfa is computed, then structures are copied.      */
+comment|/* This takes place in two stages.   First, the total size of the    * nfa is computed, then structures are copied.    */
 name|n
 operator|=
 name|rx
@@ -11521,11 +11521,11 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* The functions in the next several pages define the lazy-NFA-conversion used  * by matchers.  The input to this construction is an NFA such as   * is built by compactify_nfa (rx.c).  The output is the superNFA.  */
+comment|/* The functions in the next several pages define the lazy-NFA-conversion used  * by matchers.  The input to this construction is an NFA such as  * is built by compactify_nfa (rx.c).  The output is the superNFA.  */
 end_comment
 
 begin_comment
-comment|/* Match engines can use arbitrary values for opcodes.  So, the parse tree   * is built using instructions names (enum rx_opcode), but the superstate  * nfa is populated with mystery opcodes (void *).  *  * For convenience, here is an id table.  The opcodes are == to their inxs  *  * The lables in re_search_2 would make good values for instructions.  */
+comment|/* Match engines can use arbitrary values for opcodes.  So, the parse tree  * is built using instructions names (enum rx_opcode), but the superstate  * nfa is populated with mystery opcodes (void *).  *  * For convenience, here is an id table.  The opcodes are == to their inxs  *  * The lables in re_search_2 would make good values for instructions.  */
 end_comment
 
 begin_decl_stmt
@@ -11840,7 +11840,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* The partially instantiated superstate graph has a transition   * table at every node.  There is one entry for every character.  * This fills in the transition for a set.  */
+comment|/* The partially instantiated superstate graph has a transition  * table at every node.  There is one entry for every character.  * This fills in the transition for a set.  */
 end_comment
 
 begin_ifdef
@@ -12183,7 +12183,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* When a superstate is old and neglected, it can enter a   * semi-free state.  A semi-free state is slated to die.  * Incoming transitions to a semi-free state are re-written  * to cause an (interpreted) fault when they are taken.  * The fault handler revives the semi-free state, patches  * incoming transitions back to normal, and continues.  *  * The idea is basicly to free in two stages, aborting   * between the two if the state turns out to be useful again.  * When a free is aborted, the rescued superstate is placed  * in the most-favored slot to maximize the time until it  * is next semi-freed.  */
+comment|/* When a superstate is old and neglected, it can enter a  * semi-free state.  A semi-free state is slated to die.  * Incoming transitions to a semi-free state are re-written  * to cause an (interpreted) fault when they are taken.  * The fault handler revives the semi-free state, patches  * incoming transitions back to normal, and continues.  *  * The idea is basicly to free in two stages, aborting  * between the two if the state turns out to be useful again.  * When a free is aborted, the rescued superstate is placed  * in the most-favored slot to maximize the time until it  * is next semi-freed.  */
 end_comment
 
 begin_ifdef
@@ -15162,7 +15162,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This adds an element to a superstate set.  These sets are lists, such  * that lists with == elements are ==.  The empty set is returned by  * superset_cons (rx, 0, 0) and is NOT equivelent to   * (struct rx_superset)0.  */
+comment|/* This adds an element to a superstate set.  These sets are lists, such  * that lists with == elements are ==.  The empty set is returned by  * superset_cons (rx, 0, 0) and is NOT equivelent to  * (struct rx_superset)0.  */
 end_comment
 
 begin_ifdef
@@ -15677,7 +15677,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  * This makes sure that a list of rx_distinct_futures contains  * a future for each possible set of side effects in the eclosure  * of a given state.  This is some of the work of filling in a  * superstate transition.   */
+comment|/*  * This makes sure that a list of rx_distinct_futures contains  * a future for each possible set of side effects in the eclosure  * of a given state.  This is some of the work of filling in a  * superstate transition.  */
 end_comment
 
 begin_ifdef
@@ -16159,7 +16159,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* This constructs a new superstate from its state set.  The only   * complexity here is memory management.  */
+comment|/* This constructs a new superstate from its state set.  The only  * complexity here is memory management.  */
 end_comment
 
 begin_ifdef
@@ -16852,7 +16852,7 @@ name|e
 operator|->
 name|next
 control|)
-comment|/* If we find an edge that is labeled with  	 * the characters we are solving for..... 	 */
+comment|/* If we find an edge that is labeled with 	 * the characters we are solving for..... 	 */
 if|if
 condition|(
 name|rx_bitset_is_subset
@@ -16962,7 +16962,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* It is possible that the RX_DISTINCT_FUTURE we are working on has     * the empty set of NFA states as its definition.  In that case, this    * is a failure point.    */
+comment|/* It is possible that the RX_DISTINCT_FUTURE we are working on has    * the empty set of NFA states as its definition.  In that case, this    * is a failure point.    */
 if|if
 condition|(
 name|solution
@@ -17164,7 +17164,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* This takes a superstate and a character, and computes some edges  * from the superstate NFA.  In particular, this computes all edges  * that lead from SUPERSTATE given CHR.   This function also   * computes the set of characters that share this edge set.  * This returns 0 on allocation error.  * The character set and list of edges are returned through   * the paramters CSETOUT and DFOUT. } */
+comment|/* This takes a superstate and a character, and computes some edges  * from the superstate NFA.  In particular, this computes all edges  * that lead from SUPERSTATE given CHR.   This function also  * computes the set of characters that share this edge set.  * This returns 0 on allocation error.  * The character set and list of edges are returned through  * the paramters CSETOUT and DFOUT. } */
 end_comment
 
 begin_ifdef
@@ -17270,7 +17270,7 @@ name|superstate
 operator|->
 name|contents
 decl_stmt|;
-comment|/* To compute the set of characters that share edges with CHR,     * we start with the full character set, and subtract.    */
+comment|/* To compute the set of characters that share edges with CHR,    * we start with the full character set, and subtract.    */
 name|rx_bitset_universe
 argument_list|(
 name|rx
@@ -18613,11 +18613,11 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*   * Macros used while compiling patterns.  *  * By convention, PEND points just past the end of the uncompiled pattern,  * P points to the read position in the pattern.  `translate' is the name  * of the translation table (`TRANSLATE' is the name of a macro that looks  * things up in `translate').  */
+comment|/*  * Macros used while compiling patterns.  *  * By convention, PEND points just past the end of the uncompiled pattern,  * P points to the read position in the pattern.  `translate' is the name  * of the translation table (`TRANSLATE' is the name of a macro that looks  * things up in `translate').  */
 end_comment
 
 begin_comment
-comment|/*  * Fetch the next character in the uncompiled pattern---translating it   * if necessary. *Also cast from a signed character in the constant  * string passed to us by the user to an unsigned char that we can use  * as an array index (in, e.g., `translate').  */
+comment|/*  * Fetch the next character in the uncompiled pattern---translating it  * if necessary. *Also cast from a signed character in the constant  * string passed to us by the user to an unsigned char that we can use  * as an array index (in, e.g., `translate').  */
 end_comment
 
 begin_define
@@ -18632,7 +18632,7 @@ value|do {if (p == pend) return REG_EEND;					\     c = (unsigned char) *p++;			
 end_define
 
 begin_comment
-comment|/*   * Fetch the next character in the uncompiled pattern, with no  * translation.  */
+comment|/*  * Fetch the next character in the uncompiled pattern, with no  * translation.  */
 end_comment
 
 begin_define
@@ -18826,7 +18826,7 @@ comment|/* These predicates are used in regex_compile. */
 end_comment
 
 begin_comment
-comment|/* P points to just after a ^ in PATTERN.  Return true if that ^ comes  * after an alternative or a begin-subexpression.  We assume there is at  * least one character before the ^.    */
+comment|/* P points to just after a ^ in PATTERN.  Return true if that ^ comes  * after an alternative or a begin-subexpression.  We assume there is at  * least one character before the ^.  */
 end_comment
 
 begin_ifdef
@@ -19829,7 +19829,7 @@ comment|/* More subroutine declarations and macros for regex_compile.  */
 end_comment
 
 begin_comment
-comment|/* Returns true if REGNUM is in one of COMPILE_STACK's elements and     false if it's not.  */
+comment|/* Returns true if REGNUM is in one of COMPILE_STACK's elements and    false if it's not.  */
 end_comment
 
 begin_ifdef
@@ -19909,7 +19909,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read the ending character of a range (in a bracket expression) from the  * uncompiled pattern *P_PTR (which ends at PEND).  We assume the  * starting character is in `P[-2]'.  (`P[-1]' is the character `-'.)  * Then we set the translation of all bits between the starting and  * ending characters (inclusive) in the compiled pattern B.  *   * Return an error code.  *   * We use these short variable names so we can use the same macros as  * `regex_compile' itself.    */
+comment|/*  * Read the ending character of a range (in a bracket expression) from the  * uncompiled pattern *P_PTR (which ends at PEND).  We assume the  * starting character is in `P[-2]'.  (`P[-1]' is the character `-'.)  * Then we set the translation of all bits between the starting and  * ending characters (inclusive) in the compiled pattern B.  *  * Return an error code.  *  * We use these short variable names so we can use the same macros as  * `regex_compile' itself.  */
 end_comment
 
 begin_ifdef
@@ -20800,7 +20800,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* This removes register assignments that aren't required by backreferencing.  * This can speed up explore_future, especially if it eliminates  * non-determinism in the superstate NFA.  *   * NEEDED is an array of characters, presumably filled in by FIND_BACKREFS.  * The non-zero elements of the array indicate which register assignments  * can NOT be removed from the expression.  */
+comment|/* This removes register assignments that aren't required by backreferencing.  * This can speed up explore_future, especially if it eliminates  * non-determinism in the superstate NFA.  *  * NEEDED is an array of characters, presumably filled in by FIND_BACKREFS.  * The non-zero elements of the array indicate which register assignments  * can NOT be removed from the expression.  */
 end_comment
 
 begin_ifdef
@@ -22316,7 +22316,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* This computes rougly what it's name suggests.   It can (and does) go wrong   * in the direction of returning spurious 0 without causing disasters.  */
+comment|/* This computes rougly what it's name suggests.   It can (and does) go wrong  * in the direction of returning spurious 0 without causing disasters.  */
 end_comment
 
 begin_ifdef
@@ -22486,7 +22486,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* This destructively removes some of the re_se_tv side effects from   * a rexp tree.  In particular, during parsing re_se_tv was inserted on the  * right half of every | to guarantee that posix path preference could be   * honored.  This function removes some which it can be determined aren't   * needed.    */
+comment|/* This destructively removes some of the re_se_tv side effects from  * a rexp tree.  In particular, during parsing re_se_tv was inserted on the  * right half of every | to guarantee that posix path preference could be  * honored.  This function removes some which it can be determined aren't  * needed.  */
 end_comment
 
 begin_ifdef
@@ -22791,7 +22791,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* `regex_compile' compiles PATTERN (of length SIZE) according to SYNTAX.    Returns one of error codes defined in `regex.h', or zero for success.     Assumes the `allocated' (and perhaps `buffer') and `translate'    fields are set in BUFP on entry.     If it succeeds, results are put in BUFP (if it returns an error, the    contents of BUFP are undefined):      `buffer' is the compiled pattern;      `syntax' is set to SYNTAX;      `used' is set to the length of the compiled pattern;      `fastmap_accurate' is set to zero;      `re_nsub' is set to the number of groups in PATTERN;      `not_bol' and `not_eol' are set to zero.        The `fastmap' and `newline_anchor' fields are neither    examined nor set.  */
+comment|/* `regex_compile' compiles PATTERN (of length SIZE) according to SYNTAX.    Returns one of error codes defined in `regex.h', or zero for success.     Assumes the `allocated' (and perhaps `buffer') and `translate'    fields are set in BUFP on entry.     If it succeeds, results are put in BUFP (if it returns an error, the    contents of BUFP are undefined):      `buffer' is the compiled pattern;      `syntax' is set to SYNTAX;      `used' is set to the length of the compiled pattern;      `fastmap_accurate' is set to zero;      `re_nsub' is set to the number of groups in PATTERN;      `not_bol' and `not_eol' are set to zero.     The `fastmap' and `newline_anchor' fields are neither    examined nor set.  */
 end_comment
 
 begin_ifdef
@@ -22952,7 +22952,7 @@ name|rexp
 init|=
 literal|0
 decl_stmt|;
-comment|/* In the midst of compilation, this holds onto the regexp     * first parst while rexp goes on to aquire additional constructs.    */
+comment|/* In the midst of compilation, this holds onto the regexp    * first parst while rexp goes on to aquire additional constructs.    */
 name|struct
 name|rexp_node
 modifier|*
@@ -22997,7 +22997,7 @@ name|regnum
 init|=
 literal|0
 decl_stmt|;
-comment|/* Place in the uncompiled pattern (i.e., the {) to    * which to go back if the interval is invalid.      */
+comment|/* Place in the uncompiled pattern (i.e., the {) to    * which to go back if the interval is invalid.    */
 name|__const__
 name|char
 modifier|*
@@ -23122,7 +23122,7 @@ name|least_subs
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Always count groups, whether or not rxb->no_sub is set.      * The whole pattern is implicitly group 0, so counting begins    * with 1.    */
+comment|/* Always count groups, whether or not rxb->no_sub is set.    * The whole pattern is implicitly group 0, so counting begins    * with 1.    */
 name|rxb
 operator|->
 name|re_nsub
@@ -23942,7 +23942,7 @@ name|add_side_effect
 goto|;
 block|}
 block|}
-comment|/* The old regex.c used to optimize `.*\n'.   	     * Maybe rx should too? 	     */
+comment|/* The old regex.c used to optimize `.*\n'. 	     * Maybe rx should too? 	     */
 block|}
 break|break;
 case|case
@@ -24484,7 +24484,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* If isn't a word bracketed by `[:' and:`]':                        undo the ending character, the letters, and leave                         the leading `:' and `[' (but set bits for them).  */
+comment|/* If isn't a word bracketed by `[:' and:`]':                        undo the ending character, the letters, and leave                        the leading `:' and `[' (but set bits for them).  */
 if|if
 condition|(
 name|c
@@ -25214,7 +25214,7 @@ operator|.
 name|right
 expr_stmt|;
 block|}
-comment|/* 	       * These are the values to restore when we hit end of this                * group.   	       */
+comment|/* 	       * These are the values to restore when we hit end of this                * group. 	       */
 name|COMPILE_STACK_TOP
 operator|.
 name|top_expression
@@ -25759,7 +25759,7 @@ name|syntax
 operator|&
 name|RE_INTERVALS
 operator|)
-comment|/* If we're at `\{' and it's not the open-interval                          operator.  */
+comment|/* If we're at `\{' and it's not the open-interval                         operator.  */
 operator|||
 operator|(
 operator|(
@@ -26696,7 +26696,7 @@ name|append_node
 goto|;
 block|}
 break|break;
-comment|/* With a little extra work, some of these side effects could be optimized  * away (basicly by looking at what we already know about the surrounding  * chars).    */
+comment|/* With a little extra work, some of these side effects could be optimized  * away (basicly by looking at what we already know about the surrounding  * chars).  */
 case|case
 literal|'<'
 case|:
@@ -27581,8 +27581,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* At least one more optimization would be nice to have here but i ran out       * of time.  The idea would be to delay side effects.        * For examle, `(abc)' is the same thing as `abc()' except that the      * left paren is offset by 3 (which we know at compile time).      * (In this comment, write that second pattern `abc(:3:)'       * where `(:3:' is a syntactic unit.)      *      * Trickier:  `(abc|defg)'  is the same as `(abc(:3:|defg(:4:))'      * (The paren nesting may be hard to follow -- that's an alternation      *	of `abc(:3:' and `defg(:4:' inside (purely syntactic) parens      *  followed by the closing paren from the original expression.)      *      * Neither the expression tree representation nor the the nfa make      * this very easy to write. :(      */
-comment|/* What we compile is different than what the parser returns.    * Suppose the parser returns expression R.    * Let R' be R with unnecessary register assignments removed     * (see REMOVE_UNECESSARY_SIDE_EFFECTS, above).    *    * What we will compile is the expression:    *    *    m{try}R{win}\|s{try}R'{win}    *    * {try} and {win} denote side effect epsilons (see EXPLORE_FUTURE).    *     * When trying a match, we insert an `m' at the beginning of the     * string if the user wants registers to be filled, `s' if not.    */
+comment|/* At least one more optimization would be nice to have here but i ran out      * of time.  The idea would be to delay side effects.      * For examle, `(abc)' is the same thing as `abc()' except that the      * left paren is offset by 3 (which we know at compile time).      * (In this comment, write that second pattern `abc(:3:)'      * where `(:3:' is a syntactic unit.)      *      * Trickier:  `(abc|defg)'  is the same as `(abc(:3:|defg(:4:))'      * (The paren nesting may be hard to follow -- that's an alternation      *	of `abc(:3:' and `defg(:4:' inside (purely syntactic) parens      *  followed by the closing paren from the original expression.)      *      * Neither the expression tree representation nor the the nfa make      * this very easy to write. :(      */
+comment|/* What we compile is different than what the parser returns.    * Suppose the parser returns expression R.    * Let R' be R with unnecessary register assignments removed    * (see REMOVE_UNECESSARY_SIDE_EFFECTS, above).    *    * What we will compile is the expression:    *    *    m{try}R{win}\|s{try}R'{win}    *    * {try} and {win} denote side effect epsilons (see EXPLORE_FUTURE).    *    * When trying a match, we insert an `m' at the beginning of the    * string if the user wants registers to be filled, `s' if not.    */
 name|new_rexp
 operator|=
 name|rx_mk_r_alternate

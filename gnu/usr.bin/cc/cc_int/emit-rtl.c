@@ -392,7 +392,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* All references to the following fixed hard registers go through    these unique rtl objects.  On machines where the frame-pointer and    arg-pointer are the same register, they use the same unique object.     After register allocation, other rtl objects which used to be pseudo-regs    may be clobbered to refer to the frame-pointer register.    But references that were originally to the frame-pointer can be    distinguished from the others because they contain frame_pointer_rtx.     When to use frame_pointer_rtx and hard_frame_pointer_rtx is a little    tricky: until register elimination has taken place hard_frame_pointer_rtx    should be used if it is being set, and frame_pointer_rtx otherwise.  After     register elimination hard_frame_pointer_rtx should always be used.    On machines where the two registers are same (most) then these are the    same.     In an inline procedure, the stack and frame pointer rtxs may not be    used for anything else.  */
+comment|/* All references to the following fixed hard registers go through    these unique rtl objects.  On machines where the frame-pointer and    arg-pointer are the same register, they use the same unique object.     After register allocation, other rtl objects which used to be pseudo-regs    may be clobbered to refer to the frame-pointer register.    But references that were originally to the frame-pointer can be    distinguished from the others because they contain frame_pointer_rtx.     When to use frame_pointer_rtx and hard_frame_pointer_rtx is a little    tricky: until register elimination has taken place hard_frame_pointer_rtx    should be used if it is being set, and frame_pointer_rtx otherwise.  After    register elimination hard_frame_pointer_rtx should always be used.    On machines where the two registers are same (most) then these are the    same.     In an inline procedure, the stack and frame pointer rtxs may not be    used for anything else.  */
 end_comment
 
 begin_decl_stmt
@@ -551,7 +551,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The ends of the doubly-linked chain of rtl for the current function.    Both are reset to null at the start of rtl generation for the function.        start_sequence saves both of these on `sequence_stack' along with    `sequence_rtl_expr' and then starts a new, nested sequence of insns.  */
+comment|/* The ends of the doubly-linked chain of rtl for the current function.    Both are reset to null at the start of rtl generation for the function.     start_sequence saves both of these on `sequence_stack' along with    `sequence_rtl_expr' and then starts a new, nested sequence of insns.  */
 end_comment
 
 begin_decl_stmt
@@ -1769,7 +1769,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Return a value representing some low-order bits of X, where the number    of low-order bits is given by MODE.  Note that no conversion is done    between floating-point and fixed-point values, rather, the bit     representation is returned.     This function handles the cases in common between gen_lowpart, below,    and two variants in cse.c and combine.c.  These are the cases that can    be safely handled at all points in the compilation.     If this is not a case we can handle, return 0.  */
+comment|/* Return a value representing some low-order bits of X, where the number    of low-order bits is given by MODE.  Note that no conversion is done    between floating-point and fixed-point values, rather, the bit    representation is returned.     This function handles the cases in common between gen_lowpart, below,    and two variants in cse.c and combine.c.  These are the cases that can    be safely handled at all points in the compilation.     If this is not a case we can handle, return 0.  */
 end_comment
 
 begin_function
@@ -2108,7 +2108,7 @@ operator|==
 name|REG
 condition|)
 block|{
-comment|/* If the register is not valid for MODE, return 0.  If we don't 	 do this, there is no way to fix up the resulting REG later.   	 But we do do this if the current REG is not valid for its 	 mode.  This latter is a kludge, but is required due to the 	 way that parameters are passed on some machines, most 	 notably Sparc.  */
+comment|/* If the register is not valid for MODE, return 0.  If we don't 	 do this, there is no way to fix up the resulting REG later. 	 But we do do this if the current REG is not valid for its 	 mode.  This latter is a kludge, but is required due to the 	 way that parameters are passed on some machines, most 	 notably Sparc.  */
 if|if
 condition|(
 name|REGNO
@@ -2432,7 +2432,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* If X is an integral constant but we want it in floating-point, it      must be the case that we have a union of an integer and a floating-point      value.  If the machine-parameters allow it, simulate that union here      and return the result.  The two-word and single-word cases are       different.  */
+comment|/* If X is an integral constant but we want it in floating-point, it      must be the case that we have a union of an integer and a floating-point      value.  If the machine-parameters allow it, simulate that union here      and return the result.  The two-word and single-word cases are      different.  */
 elseif|else
 if|if
 condition|(
@@ -3400,7 +3400,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Like `gen_lowpart', but refer to the most significant part.     This is used to access the imaginary part of a complex number.  */
+comment|/* Like `gen_lowpart', but refer to the most significant part.    This is used to access the imaginary part of a complex number.  */
 end_comment
 
 begin_function
@@ -4660,7 +4660,7 @@ block|}
 endif|#
 directive|endif
 comment|/* no REAL_ARITHMETIC */
-comment|/* The only remaining cases that we can handle are integers.      Convert to proper endianness now since these cases need it.      At this point, i == 0 means the low-order word.         We do not want to handle the case when BITS_PER_WORD<= HOST_BITS_PER_INT      in general.  However, if OP is (const_int 0), we can just return      it for any word.  */
+comment|/* The only remaining cases that we can handle are integers.      Convert to proper endianness now since these cases need it.      At this point, i == 0 means the low-order word.       We do not want to handle the case when BITS_PER_WORD<= HOST_BITS_PER_INT      in general.  However, if OP is (const_int 0), we can just return      it for any word.  */
 if|if
 condition|(
 name|op
@@ -4829,7 +4829,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Similar to `operand_subword', but never return 0.  If we can't extract    the required subword, put OP into a register and try again.  If that fails,    abort.  We always validate the address in this case.  It is not valid    to call this function after reload; it is mostly meant for RTL    generation.      MODE is the mode of OP, in case it is CONST_INT.  */
+comment|/* Similar to `operand_subword', but never return 0.  If we can't extract    the required subword, put OP into a register and try again.  If that fails,    abort.  We always validate the address in this case.  It is not valid    to call this function after reload; it is mostly meant for RTL    generation.     MODE is the mode of OP, in case it is CONST_INT.  */
 end_comment
 
 begin_function
@@ -11220,7 +11220,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Similarly, but indicate that this sequence will be placed in     T, an RTL_EXPR.  */
+comment|/* Similarly, but indicate that this sequence will be placed in    T, an RTL_EXPR.  */
 end_comment
 
 begin_function
@@ -11764,7 +11764,7 @@ name|max_uid
 operator|+
 literal|1
 expr_stmt|;
-comment|/* If any regs are missing, make them up.         ??? word_mode is not necessarily the right mode.  Most likely these REGs      are never used.  At some point this should be checked.  */
+comment|/* If any regs are missing, make them up.       ??? word_mode is not necessarily the right mode.  Most likely these REGs      are never used.  At some point this should be checked.  */
 for|for
 control|(
 name|i

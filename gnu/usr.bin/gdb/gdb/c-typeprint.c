@@ -215,7 +215,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Print a description of a type in the format of a     typedef for the current language.    NEW is the new name for a type TYPE. */
+comment|/* Print a description of a type in the format of a    typedef for the current language.    NEW is the new name for a type TYPE. */
 end_comment
 
 begin_function

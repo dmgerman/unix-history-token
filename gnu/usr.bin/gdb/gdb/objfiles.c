@@ -220,7 +220,7 @@ comment|/* Try to use mapped symbol files */
 end_comment
 
 begin_comment
-comment|/* Locate all mappable sections of a BFD file.     objfile_p_char is a char * to get it through    bfd_map_over_sections; we cast it back to its proper type.  */
+comment|/* Locate all mappable sections of a BFD file.    objfile_p_char is a char * to get it through    bfd_map_over_sections; we cast it back to its proper type.  */
 end_comment
 
 begin_function
@@ -2949,7 +2949,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* In SVR4, we recognize a trampoline by it's section name.     That is, if the pc is in a section named ".plt" then we are in    a trampoline.  */
+comment|/* In SVR4, we recognize a trampoline by it's section name.    That is, if the pc is in a section named ".plt" then we are in    a trampoline.  */
 end_comment
 
 begin_function

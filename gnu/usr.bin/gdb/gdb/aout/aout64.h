@@ -1029,7 +1029,7 @@ comment|/* Weak bss symbol.  */
 end_comment
 
 begin_comment
-comment|/* Relocations     There	are two types of relocation flavours for a.out systems,   standard and extended. The standard form is used on systems where the   instruction has room for all the bits of an offset to the operand, whilst   the extended form is used when an address operand has to be split over n   instructions. Eg, on the 68k, each move instruction can reference   the target with a displacement of 16 or 32 bits. On the sparc, move   instructions use an offset of 14 bits, so the offset is stored in   the reloc field, and the data in the section is ignored. */
+comment|/* Relocations    There	are two types of relocation flavours for a.out systems,   standard and extended. The standard form is used on systems where the   instruction has room for all the bits of an offset to the operand, whilst   the extended form is used when an address operand has to be split over n   instructions. Eg, on the 68k, each move instruction can reference   the target with a displacement of 16 or 32 bits. On the sparc, move   instructions use an offset of 14 bits, so the offset is stored in   the reloc field, and the data in the section is ignored. */
 end_comment
 
 begin_comment

@@ -4,7 +4,7 @@ comment|/* This file contains code for X-CHESS.    Copyright (C) 1986 Free Softw
 end_comment
 
 begin_comment
-comment|/* RCS Info: $Revision: 1.2 $ on $Date: 86/11/26 12:10:38 $  *           $Source: /users/faustus/xchess/RCS/popup.c,v $  * Copyright (c) 1986 Wayne A. Christopher, U. C. Berkeley CAD Group   *	 faustus@cad.berkeley.edu, ucbvax!faustus  * Permission is granted to modify and re-distribute this code in any manner  * as long as this notice is preserved.  All standard disclaimers apply.  *  * A simple pop-up menu system.  */
+comment|/* RCS Info: $Revision: 1.1.1.1 $ on $Date: 1993/06/12 14:41:13 $  *           $Source: /home/ncvs/src/gnu/games/chess/Xchess/popup.c,v $  * Copyright (c) 1986 Wayne A. Christopher, U. C. Berkeley CAD Group  *	 faustus@cad.berkeley.edu, ucbvax!faustus  * Permission is granted to modify and re-distribute this code in any manner  * as long as this notice is preserved.  All standard disclaimers apply.  *  * A simple pop-up menu system.  */
 end_comment
 
 begin_include

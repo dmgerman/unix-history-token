@@ -2939,7 +2939,7 @@ directive|if
 literal|0
 comment|/* No longer have this syntax option -- POSIX says empty alternatives      are undefined as of draft 11.2.  */
 comment|/* You can't have empty alternatives if RE_NO_EMPTY_ALTS is set.  */
-block|re_set_syntax (RE_NO_BK_VBAR | RE_NO_BK_PARENS | RE_NO_EMPTY_ALTS);      INVALID_PATTERN ("|");   INVALID_PATTERN ("^|a");   INVALID_PATTERN ("a|");   INVALID_PATTERN ("a||");   INVALID_PATTERN ("a||b");   INVALID_PATTERN ("(|a)");   INVALID_PATTERN ("(a|)");   INVALID_PATTERN ("(a|)");
+block|re_set_syntax (RE_NO_BK_VBAR | RE_NO_BK_PARENS | RE_NO_EMPTY_ALTS);    INVALID_PATTERN ("|");   INVALID_PATTERN ("^|a");   INVALID_PATTERN ("a|");   INVALID_PATTERN ("a||");   INVALID_PATTERN ("a||b");   INVALID_PATTERN ("(|a)");   INVALID_PATTERN ("(a|)");   INVALID_PATTERN ("(a|)");
 comment|/* Test above with `\(' and `\)'.  */
 block|re_set_syntax (RE_NO_BK_VBAR | RE_NO_EMPTY_ALTS);   INVALID_PATTERN ("\\(|a\\)");   INVALID_PATTERN ("\\(a|\\)");    re_set_syntax (RE_NO_BK_VBAR | RE_NO_BK_PARENS | RE_NO_EMPTY_ALTS);   INVALID_PATTERN ("(|)()$|d$");
 endif|#

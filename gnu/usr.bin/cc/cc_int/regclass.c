@@ -1987,7 +1987,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* altclass[R] is a register class that we should use for allocating    pseudo number R if no register in the preferred class is available.    If no register in this class is available, memory is preferred.     It might appear to be more general to have a bitmask of classes here,    but since it is recommended that there be a class corresponding to the    union of most major pair of classes, that generality is not required.      This is available after `regclass' is run.  */
+comment|/* altclass[R] is a register class that we should use for allocating    pseudo number R if no register in the preferred class is available.    If no register in this class is available, memory is preferred.     It might appear to be more general to have a bitmask of classes here,    but since it is recommended that there be a class corresponding to the    union of most major pair of classes, that generality is not required.     This is available after `regclass' is run.  */
 end_comment
 
 begin_decl_stmt
@@ -3923,7 +3923,7 @@ name|REGISTER_CONSTRAINTS
 end_ifdef
 
 begin_comment
-comment|/* Record the cost of using memory or registers of various classes for    the operands in INSN.     N_ALTS is the number of alternatives.     N_OPS is the number of operands.     OPS is an array of the operands.     MODES are the modes of the operands, in case any are VOIDmode.     CONSTRAINTS are the constraints to use for the operands.  This array    is modified by this procedure.     This procedure works alternative by alternative.  For each alternative    we assume that we will be able to allocate all pseudos to their ideal    register class and calculate the cost of using that alternative.  Then    we compute for each operand that is a pseudo-register, the cost of     having the pseudo allocated to each register class and using it in that    alternative.  To this cost is added the cost of the alternative.     The cost of each class for this insn is its lowest cost among all the    alternatives.  */
+comment|/* Record the cost of using memory or registers of various classes for    the operands in INSN.     N_ALTS is the number of alternatives.     N_OPS is the number of operands.     OPS is an array of the operands.     MODES are the modes of the operands, in case any are VOIDmode.     CONSTRAINTS are the constraints to use for the operands.  This array    is modified by this procedure.     This procedure works alternative by alternative.  For each alternative    we assume that we will be able to allocate all pseudos to their ideal    register class and calculate the cost of using that alternative.  Then    we compute for each operand that is a pseudo-register, the cost of    having the pseudo allocated to each register class and using it in that    alternative.  To this cost is added the cost of the alternative.     The cost of each class for this insn is its lowest cost among all the    alternatives.  */
 end_comment
 
 begin_function
@@ -4105,7 +4105,7 @@ decl_stmt|;
 name|char
 name|c
 decl_stmt|;
-comment|/* If this operand has no constraints at all, we can conclude  	     nothing about it since anything is valid.  */
+comment|/* If this operand has no constraints at all, we can conclude 	     nothing about it since anything is valid.  */
 if|if
 condition|(
 operator|*
@@ -5437,7 +5437,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_SECONDARY_RELOADS
-comment|/* If we need a secondary reload (we assume here that we are using       the secondary reload as an intermediate, not a scratch register), the      cost is that to load the input into the intermediate register, then      to copy them.  We use a special value of TO_P to avoid recursion.  */
+comment|/* If we need a secondary reload (we assume here that we are using      the secondary reload as an intermediate, not a scratch register), the      cost is that to load the input into the intermediate register, then      to copy them.  We use a special value of TO_P to avoid recursion.  */
 ifdef|#
 directive|ifdef
 name|SECONDARY_INPUT_RELOAD_CLASS
@@ -5742,7 +5742,7 @@ argument_list|,
 name|scale
 argument_list|)
 expr_stmt|;
-comment|/* If index and base registers are the same on this machine, just 	   record registers in any non-constant operands.  We assume here, 	   as well as in the tests below, that all addresses are in  	   canonical form.  */
+comment|/* If index and base registers are the same on this machine, just 	   record registers in any non-constant operands.  We assume here, 	   as well as in the tests below, that all addresses are in 	   canonical form.  */
 elseif|else
 if|if
 condition|(
@@ -5824,7 +5824,7 @@ argument_list|,
 name|scale
 argument_list|)
 expr_stmt|;
-comment|/* If this the sum of two registers where the first is known to be a  	   pointer, it must be a base register with the second an index.  */
+comment|/* If this the sum of two registers where the first is known to be a 	   pointer, it must be a base register with the second an index.  */
 elseif|else
 if|if
 condition|(
@@ -6951,7 +6951,7 @@ argument_list|)
 index|]
 operator|++
 expr_stmt|;
-comment|/* If this is setting a pseudo from another pseudo or the sum of a 	 pseudo and a constant integer and the other pseudo is known to be 	 a pointer, set the destination to be a pointer as well.  	 Likewise if it is setting the destination from an address or from a 	 value equivalent to an address or to the sum of an address and 	 something else. 		      	 But don't do any of this if the pseudo corresponds to a user 	 variable since it should have already been set as a pointer based 	 on the type.  */
+comment|/* If this is setting a pseudo from another pseudo or the sum of a 	 pseudo and a constant integer and the other pseudo is known to be 	 a pointer, set the destination to be a pointer as well.  	 Likewise if it is setting the destination from an address or from a 	 value equivalent to an address or to the sum of an address and 	 something else.  	 But don't do any of this if the pseudo corresponds to a user 	 variable since it should have already been set as a pointer based 	 on the type.  */
 if|if
 condition|(
 name|GET_CODE

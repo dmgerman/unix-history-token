@@ -69,7 +69,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/* This struct is passed into the instruction decoding routine,     and is passed back out into each callback.  The various fields are used    for conveying information from your main routine into your callbacks,    for passing information into the instruction decoders (such as the    addresses of the callback functions), or for passing information    back from the instruction decoders to their callers.     It must be initialized before it is first passed; this can be done    by hand, or using one of the initialization macros below.  */
+comment|/* This struct is passed into the instruction decoding routine,    and is passed back out into each callback.  The various fields are used    for conveying information from your main routine into your callbacks,    for passing information into the instruction decoders (such as the    addresses of the callback functions), or for passing information    back from the instruction decoders to their callers.     It must be initialized before it is first passed; this can be done    by hand, or using one of the initialization macros below.  */
 end_comment
 
 begin_typedef

@@ -412,7 +412,7 @@ comment|/* TTY port */
 end_comment
 
 begin_comment
-unit|dont_repeat();    if (args)     fprintf_unfiltered(gdb_stderr, "This command takes no args.  They have been ignored.\n"); 	   printf_unfiltered("[Entering connect mode.  Use ~. or ~^D to escape]\n");    tty_desc = SERIAL_FDOPEN (0);   port_desc = last_serial_opened;    ttystate = SERIAL_GET_TTY_STATE (tty_desc);    SERIAL_RAW (tty_desc);   SERIAL_RAW (port_desc);    make_cleanup (cleanup_tty, ttystate);    while (1)     {       int mask;        mask = SERIAL_WAIT_2 (tty_desc, port_desc, -1);        if (mask& 2) 	{
+unit|dont_repeat();    if (args)     fprintf_unfiltered(gdb_stderr, "This command takes no args.  They have been ignored.\n");    printf_unfiltered("[Entering connect mode.  Use ~. or ~^D to escape]\n");    tty_desc = SERIAL_FDOPEN (0);   port_desc = last_serial_opened;    ttystate = SERIAL_GET_TTY_STATE (tty_desc);    SERIAL_RAW (tty_desc);   SERIAL_RAW (port_desc);    make_cleanup (cleanup_tty, ttystate);    while (1)     {       int mask;        mask = SERIAL_WAIT_2 (tty_desc, port_desc, -1);        if (mask& 2) 	{
 comment|/* tty input */
 end_comment
 

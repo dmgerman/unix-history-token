@@ -445,7 +445,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Block in which the most recently searched-for symbol was found.    Might be better to make this a parameter to lookup_symbol and     value_of_this. */
+comment|/* Block in which the most recently searched-for symbol was found.    Might be better to make this a parameter to lookup_symbol and    value_of_this. */
 end_comment
 
 begin_decl_stmt
@@ -1877,7 +1877,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Find the definition for a specified symbol name NAME    in namespace NAMESPACE, visible from lexical block BLOCK.    Returns the struct symbol pointer, or zero if no symbol is found.    If SYMTAB is non-NULL, store the symbol table in which the    symbol was found there, or NULL if not found.    C++: if IS_A_FIELD_OF_THIS is nonzero on entry, check to see if    NAME is a field of the current implied argument `this'.  If so set    *IS_A_FIELD_OF_THIS to 1, otherwise set it to zero.     BLOCK_FOUND is set to the block in which NAME is found (in the case of    a field of `this', value_of_this sets BLOCK_FOUND to the proper value.) */
+comment|/* Find the definition for a specified symbol name NAME    in namespace NAMESPACE, visible from lexical block BLOCK.    Returns the struct symbol pointer, or zero if no symbol is found.    If SYMTAB is non-NULL, store the symbol table in which the    symbol was found there, or NULL if not found.    C++: if IS_A_FIELD_OF_THIS is nonzero on entry, check to see if    NAME is a field of the current implied argument `this'.  If so set    *IS_A_FIELD_OF_THIS to 1, otherwise set it to zero.    BLOCK_FOUND is set to the block in which NAME is found (in the case of    a field of `this', value_of_this sets BLOCK_FOUND to the proper value.) */
 end_comment
 
 begin_comment
@@ -2181,7 +2181,7 @@ block|}
 block|}
 block|}
 block|}
-comment|/* C++: If requested to do so by the caller,       check to see if NAME is a field of `this'. */
+comment|/* C++: If requested to do so by the caller,      check to see if NAME is a field of `this'. */
 if|if
 condition|(
 name|is_a_field_of_this
@@ -3942,7 +3942,7 @@ comment|/* Search the global and static blocks in this symtab for 	 the closest 
 end_comment
 
 begin_comment
-unit|for (blocknum = GLOBAL_BLOCK; blocknum<= STATIC_BLOCK; blocknum++) 	{ 	  QUIT; 	  block = BLOCKVECTOR_BLOCK (BLOCKVECTOR (symtab), blocknum); 	  top = BLOCK_NSYMS (block); 	  for (bot = 0; bot< top; bot++) 	    { 	      sym = BLOCK_SYM (block, bot); 	      switch (SYMBOL_CLASS (sym)) 		{ 		case LOC_STATIC:	 		case LOC_LABEL:	 		  sym_addr = SYMBOL_VALUE_ADDRESS (sym); 		  break;  		case LOC_BLOCK: 		  sym_addr = BLOCK_START (SYMBOL_BLOCK_VALUE (sym)); 		  break;  		default: 		  continue; 		}  		if (sym_addr<= addr) 		  if (sym_addr> best_sym_addr) 		    {
+unit|for (blocknum = GLOBAL_BLOCK; blocknum<= STATIC_BLOCK; blocknum++) 	{ 	  QUIT; 	  block = BLOCKVECTOR_BLOCK (BLOCKVECTOR (symtab), blocknum); 	  top = BLOCK_NSYMS (block); 	  for (bot = 0; bot< top; bot++) 	    { 	      sym = BLOCK_SYM (block, bot); 	      switch (SYMBOL_CLASS (sym)) 		{ 		case LOC_STATIC: 		case LOC_LABEL: 		  sym_addr = SYMBOL_VALUE_ADDRESS (sym); 		  break;  		case LOC_BLOCK: 		  sym_addr = BLOCK_START (SYMBOL_BLOCK_VALUE (sym)); 		  break;  		default: 		  continue; 		}  		if (sym_addr<= addr) 		  if (sym_addr> best_sym_addr) 		    {
 comment|/* Quit if we found an exact match.  */
 end_comment
 
@@ -10695,7 +10695,7 @@ if|#
 directive|if
 literal|0
 comment|/* FIXME, why is this zapped out? */
-block|char buf[1024]; 			c_type_print_base (TYPE_FN_FIELD_TYPE(t, i), 					   gdb_stdout, 0, 0);  			c_type_print_varspec_prefix (TYPE_FN_FIELD_TYPE(t, i), 						     gdb_stdout, 0);  			sprintf (buf, " %s::", type_name_no_tag (t)); 			cp_type_print_method_args (TYPE_FN_FIELD_ARGS (t, i), 						   buf, name, gdb_stdout);
+block|char buf[1024]; 			c_type_print_base (TYPE_FN_FIELD_TYPE(t, i), 					   gdb_stdout, 0, 0); 			c_type_print_varspec_prefix (TYPE_FN_FIELD_TYPE(t, i), 						     gdb_stdout, 0); 			sprintf (buf, " %s::", type_name_no_tag (t)); 			cp_type_print_method_args (TYPE_FN_FIELD_ARGS (t, i), 						   buf, name, gdb_stdout);
 endif|#
 directive|endif
 block|}
@@ -12170,11 +12170,11 @@ literal|0
 end_if
 
 begin_comment
-comment|/* Add the type of the symbol sym to the type of the current    function whose block we are in (assumed).  The type of    this current function is contained in *TYPE.        This basically works as follows:  When we find a function    symbol (N_FUNC with a 'f' or 'F' in the symbol name), we record    a pointer to its type in the global in_function_type.  Every     time we come across a parameter symbol ('p' in its name), then    this procedure adds the name and type of that parameter    to the function type pointed to by *TYPE.  (Which should correspond    to in_function_type if it was called correctly).     Note that since we are modifying a type, the result of     lookup_function_type() should be memcpy()ed before calling    this.  When not in strict typing mode, the expression    evaluator can choose to ignore this.     Assumption:  All of a function's parameter symbols will    appear before another function symbol is found.  The parameters     appear in the same order in the argument list as they do in the    symbol table. */
+comment|/* Add the type of the symbol sym to the type of the current    function whose block we are in (assumed).  The type of    this current function is contained in *TYPE.     This basically works as follows:  When we find a function    symbol (N_FUNC with a 'f' or 'F' in the symbol name), we record    a pointer to its type in the global in_function_type.  Every    time we come across a parameter symbol ('p' in its name), then    this procedure adds the name and type of that parameter    to the function type pointed to by *TYPE.  (Which should correspond    to in_function_type if it was called correctly).     Note that since we are modifying a type, the result of    lookup_function_type() should be memcpy()ed before calling    this.  When not in strict typing mode, the expression    evaluator can choose to ignore this.     Assumption:  All of a function's parameter symbols will    appear before another function symbol is found.  The parameters    appear in the same order in the argument list as they do in the    symbol table. */
 end_comment
 
 begin_endif
-unit|void add_param_to_type (type,sym)    struct type **type;    struct symbol *sym; {    int num = ++(TYPE_NFIELDS(*type));     if(TYPE_NFIELDS(*type)-1)       TYPE_FIELDS(*type) = (struct field *) 	  (*current_objfile->xrealloc) ((char *)(TYPE_FIELDS(*type)), 					num*sizeof(struct field));    else       TYPE_FIELDS(*type) = (struct field *) 	  (*current_objfile->xmalloc) (num*sizeof(struct field));        TYPE_FIELD_BITPOS(*type,num-1) = num-1;    TYPE_FIELD_BITSIZE(*type,num-1) = 0;    TYPE_FIELD_TYPE(*type,num-1) = SYMBOL_TYPE(sym);    TYPE_FIELD_NAME(*type,num-1) = SYMBOL_NAME(sym); }
+unit|void add_param_to_type (type,sym)    struct type **type;    struct symbol *sym; {    int num = ++(TYPE_NFIELDS(*type));     if(TYPE_NFIELDS(*type)-1)       TYPE_FIELDS(*type) = (struct field *) 	  (*current_objfile->xrealloc) ((char *)(TYPE_FIELDS(*type)), 					num*sizeof(struct field));    else       TYPE_FIELDS(*type) = (struct field *) 	  (*current_objfile->xmalloc) (num*sizeof(struct field));     TYPE_FIELD_BITPOS(*type,num-1) = num-1;    TYPE_FIELD_BITSIZE(*type,num-1) = 0;    TYPE_FIELD_TYPE(*type,num-1) = SYMBOL_TYPE(sym);    TYPE_FIELD_NAME(*type,num-1) = SYMBOL_NAME(sym); }
 endif|#
 directive|endif
 end_endif

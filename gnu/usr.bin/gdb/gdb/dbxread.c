@@ -4,7 +4,7 @@ comment|/* Read dbx symbol tables and convert to internal format, for GDB.    Co
 end_comment
 
 begin_comment
-comment|/* This module provides three functions: dbx_symfile_init,    which initializes to read a symbol file; dbx_new_init, which     discards existing cached information when all symbols are being    discarded; and dbx_symfile_read, which reads a symbol table    from a file.     dbx_symfile_read only does the minimum work necessary for letting the    user "name" things symbolically; it does not read the entire symtab.    Instead, it reads the external and static symbols and puts them in partial    symbol tables.  When more extensive information is requested of a    file, the corresponding partial symbol table is mutated into a full    fledged symbol table by going back and reading the symbols    for real.  dbx_psymtab_to_symtab() is the function that does this */
+comment|/* This module provides three functions: dbx_symfile_init,    which initializes to read a symbol file; dbx_new_init, which    discards existing cached information when all symbols are being    discarded; and dbx_symfile_read, which reads a symbol table    from a file.     dbx_symfile_read only does the minimum work necessary for letting the    user "name" things symbolically; it does not read the entire symtab.    Instead, it reads the external and static symbols and puts them in partial    symbol tables.  When more extensive information is requested of a    file, the corresponding partial symbol table is mutated into a full    fledged symbol table by going back and reading the symbols    for real.  dbx_psymtab_to_symtab() is the function that does this */
 end_comment
 
 begin_include
@@ -1686,7 +1686,7 @@ name|ms_type
 operator|=
 name|mst_file_data
 expr_stmt|;
-comment|/* Check for __DYNAMIC, which is used by Sun shared libraries.  	 Record it as global even if it's local, not global, so 	 lookup_minimal_symbol can find it.  We don't check symbol_leading_char 	 because for SunOS4 it always is '_'.  */
+comment|/* Check for __DYNAMIC, which is used by Sun shared libraries. 	 Record it as global even if it's local, not global, so 	 lookup_minimal_symbol can find it.  We don't check symbol_leading_char 	 because for SunOS4 it always is '_'.  */
 if|if
 condition|(
 name|name
@@ -1830,7 +1830,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Scan and build partial symbols for a symbol file.    We have been initialized by a call to dbx_symfile_init, which     put all the relevant info into a "struct dbx_symfile_info",    hung off the objfile structure.     SECTION_OFFSETS contains offsets relative to which the symbols in the    various sections are (depending where the sections were actually loaded).    MAINLINE is true if we are reading the main symbol    table (as opposed to a shared lib or dynamically loaded file).  */
+comment|/* Scan and build partial symbols for a symbol file.    We have been initialized by a call to dbx_symfile_init, which    put all the relevant info into a "struct dbx_symfile_info",    hung off the objfile structure.     SECTION_OFFSETS contains offsets relative to which the symbols in the    various sections are (depending where the sections were actually loaded).    MAINLINE is true if we are reading the main symbol    table (as opposed to a shared lib or dynamically loaded file).  */
 end_comment
 
 begin_function
@@ -2176,7 +2176,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* dbx_symfile_init ()    is the dbx-specific initialization routine for reading symbols.    It is passed a struct objfile which contains, among other things,    the BFD for the file whose symbols are being read, and a slot for a pointer    to "private data" which we fill with goodies.     We read the string table into malloc'd space and stash a pointer to it.     Since BFD doesn't know how to read debug symbols in a format-independent    way (and may never do so...), we have to do it ourselves.  We will never    be called unless this is an a.out (or very similar) file.     FIXME, there should be a cleaner peephole into the BFD environment here.  */
+comment|/* dbx_symfile_init ()    is the dbx-specific initialization routine for reading symbols.    It is passed a struct objfile which contains, among other things,    the BFD for the file whose symbols are being read, and a slot for a pointer    to "private data" which we fill with goodies.     We read the string table into malloc'd space and stash a pointer to it.     Since BFD doesn't know how to read debug symbols in a format-independent    way (and may never do so...), we have to do it ourselves.  We will never    be called unless this is an a.out (or very similar) file.    FIXME, there should be a cleaner peephole into the BFD environment here.  */
 end_comment
 
 begin_define
@@ -2660,7 +2660,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The address in memory of the string table of the object file we are    reading (which might not be the "main" object file, but might be a    shared library or some other dynamically loaded thing).  This is set    by read_dbx_symtab when building psymtabs, and by read_ofile_symtab     when building symtabs, and is used only by next_symbol_text.  */
+comment|/* The address in memory of the string table of the object file we are    reading (which might not be the "main" object file, but might be a    shared library or some other dynamically loaded thing).  This is set    by read_dbx_symtab when building psymtabs, and by read_ofile_symtab    when building symtabs, and is used only by next_symbol_text.  */
 end_comment
 
 begin_decl_stmt
@@ -4071,7 +4071,7 @@ name|abfd
 argument_list|)
 expr_stmt|;
 comment|/* Ok.  There is a lot of code duplicated in the rest of this          switch statement (for efficiency reasons).  Since I don't          like duplicating code, I will do my penance here, and          describe the code which is duplicated:  	 *) The assignment to namestring. 	 *) The call to strchr. 	 *) The addition of a partial symbol the the two partial 	    symbol lists.  This last is a large section of code, so 	    I've imbedded it in the following macro. 	 */
-comment|/* Set namestring based on bufp.  If the string table index is invalid,     give a fake name, and print a single error message per symbol file read,    rather than abort the symbol reading or flood the user with messages.  */
+comment|/* Set namestring based on bufp.  If the string table index is invalid,    give a fake name, and print a single error message per symbol file read,    rather than abort the symbol reading or flood the user with messages.  */
 comment|/*FIXME: Too many adds and indirections in here for the inner loop.  */
 define|#
 directive|define
@@ -4403,7 +4403,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Close off the current usage of PST.      Returns PST or NULL if the partial symtab was empty and thrown away.     FIXME:  List variables and peculiarities of same.  */
+comment|/* Close off the current usage of PST.    Returns PST or NULL if the partial symtab was empty and thrown away.     FIXME:  List variables and peculiarities of same.  */
 end_comment
 
 begin_function
@@ -4495,7 +4495,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|N_SO_ADDRESS_MAYBE_MISSING
-comment|/* Under Solaris, the N_SO symbols always have a value of 0,      instead of the usual address of the .o file.  Therefore,      we have to do some tricks to fill in texthigh and textlow.      The first trick is in partial-stab.h: if we see a static      or global function, and the textlow for the current pst      is still 0, then we use that function's address for       the textlow of the pst.       Now, to fill in texthigh, we remember the last function seen      in the .o file (also in partial-stab.h).  Also, there's a hack in      bfd/elf.c and gdb/elfread.c to pass the ELF st_size field      to here via the misc_info field.  Therefore, we can fill in      a reliable texthigh by taking the address plus size of the      last function in the file.       Unfortunately, that does not cover the case where the last function      in the file is static.  See the paragraph below for more comments      on this situation.       Finally, if we have a valid textlow for the current file, we run      down the partial_symtab_list filling in previous texthighs that      are still unknown.  */
+comment|/* Under Solaris, the N_SO symbols always have a value of 0,      instead of the usual address of the .o file.  Therefore,      we have to do some tricks to fill in texthigh and textlow.      The first trick is in partial-stab.h: if we see a static      or global function, and the textlow for the current pst      is still 0, then we use that function's address for      the textlow of the pst.       Now, to fill in texthigh, we remember the last function seen      in the .o file (also in partial-stab.h).  Also, there's a hack in      bfd/elf.c and gdb/elfread.c to pass the ELF st_size field      to here via the misc_info field.  Therefore, we can fill in      a reliable texthigh by taking the address plus size of the      last function in the file.       Unfortunately, that does not cover the case where the last function      in the file is static.  See the paragraph below for more comments      on this situation.       Finally, if we have a valid textlow for the current file, we run      down the partial_symtab_list filling in previous texthighs that      are still unknown.  */
 if|if
 condition|(
 name|pst
@@ -4603,7 +4603,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* This file ends with a static function, and it's 	 difficult to imagine how hard it would be to track down 	 the elf symbol.  Luckily, most of the time no one will notice, 	 since the next file will likely be compiled with -g, so 	 the code below will copy the first fuction's start address  	 back to our texthigh variable.  (Also, if this file is the 	 last one in a dynamically linked program, texthigh already 	 has the right value.)  If the next file isn't compiled 	 with -g, then the last function in this file winds up owning 	 all of the text space up to the next -g file, or the end (minus 	 shared libraries).  This only matters for single stepping, 	 and even then it will still work, except that it will single 	 step through all of the covered functions, instead of setting 	 breakpoints around them as it usualy does.  This makes it 	 pretty slow, but at least it doesn't fail.  	 We can fix this with a fairly big change to bfd, but we need 	 to coordinate better with Cygnus if we want to do that.  FIXME.  */
+comment|/* This file ends with a static function, and it's 	 difficult to imagine how hard it would be to track down 	 the elf symbol.  Luckily, most of the time no one will notice, 	 since the next file will likely be compiled with -g, so 	 the code below will copy the first fuction's start address 	 back to our texthigh variable.  (Also, if this file is the 	 last one in a dynamically linked program, texthigh already 	 has the right value.)  If the next file isn't compiled 	 with -g, then the last function in this file winds up owning 	 all of the text space up to the next -g file, or the end (minus 	 shared libraries).  This only matters for single stepping, 	 and even then it will still work, except that it will single 	 step through all of the covered functions, instead of setting 	 breakpoints around them as it usualy does.  This makes it 	 pretty slow, but at least it doesn't fail.  	 We can fix this with a fairly big change to bfd, but we need 	 to coordinate better with Cygnus if we want to do that.  FIXME.  */
 block|}
 name|last_function_name
 operator|=

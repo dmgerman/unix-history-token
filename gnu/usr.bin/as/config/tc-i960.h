@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-i960.h - Basic 80960 instruction formats.    Copyright (C) 1989, 1990, 1991, 1992 Free Software Foundation, Inc.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2,    or (at your option) any later version.        GAS is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.        You should have received a copy of the GNU General Public    License along with GAS; see the file COPYING.  If not, write    to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA. */
+comment|/* tc-i960.h - Basic 80960 instruction formats.    Copyright (C) 1989, 1990, 1991, 1992 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2,    or (at your option) any later version.     GAS is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public    License along with GAS; see the file COPYING.  If not, write    to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA. */
 end_comment
 
 begin_ifndef
@@ -179,7 +179,7 @@ value|0x2000
 end_define
 
 begin_comment
-comment|/* Generate the 12-bit opcode for a REG format instruction by placing the   * high 8 bits in instruction bits 24-31, the low 4 bits in instruction bits  * 7-10.  */
+comment|/* Generate the 12-bit opcode for a REG format instruction by placing the  * high 8 bits in instruction bits 24-31, the low 4 bits in instruction bits  * 7-10.  */
 end_comment
 
 begin_define
@@ -593,7 +593,7 @@ comment|/* Military instruction		*/
 end_comment
 
 begin_comment
-comment|/* MEANING OF 'n_other' in the symbol record.  *  * If non-zero, the 'n_other' fields indicates either a leaf procedure or  * a system procedure, as follows:  *  *	1<= n_other<= 32 :  *		The symbol is the entry point to a system procedure.  *		'n_value' is the address of the entry, as for any other  *		procedure.  The system procedure number (which can be used in  *		a 'calls' instruction) is (n_other-1).  These entries come from  *		'.sysproc' directives.  *  *	n_other == N_CALLNAME  *		the symbol is the 'call' entry point to a leaf procedure.  *		The *next* symbol in the symbol table must be the corresponding  *		'bal' entry point to the procedure (see following).  These  *		entries come from '.leafproc' directives in which two different  *		symbols are specified (the first one is represented here).  *	  *  *	n_other == N_BALNAME  *		the symbol is the 'bal' entry point to a leaf procedure.  *		These entries result from '.leafproc' directives in which only  *		one symbol is specified, or in which the same symbol is  *		specified twice.  *  * Note that an N_CALLNAME entry *must* have a corresponding N_BALNAME entry,  * but not every N_BALNAME entry must have an N_CALLNAME entry.  */
+comment|/* MEANING OF 'n_other' in the symbol record.  *  * If non-zero, the 'n_other' fields indicates either a leaf procedure or  * a system procedure, as follows:  *  *	1<= n_other<= 32 :  *		The symbol is the entry point to a system procedure.  *		'n_value' is the address of the entry, as for any other  *		procedure.  The system procedure number (which can be used in  *		a 'calls' instruction) is (n_other-1).  These entries come from  *		'.sysproc' directives.  *  *	n_other == N_CALLNAME  *		the symbol is the 'call' entry point to a leaf procedure.  *		The *next* symbol in the symbol table must be the corresponding  *		'bal' entry point to the procedure (see following).  These  *		entries come from '.leafproc' directives in which two different  *		symbols are specified (the first one is represented here).  *  *  *	n_other == N_BALNAME  *		the symbol is the 'bal' entry point to a leaf procedure.  *		These entries result from '.leafproc' directives in which only  *		one symbol is specified, or in which the same symbol is  *		specified twice.  *  * Note that an N_CALLNAME entry *must* have a corresponding N_BALNAME entry,  * but not every N_BALNAME entry must have an N_CALLNAME entry.  */
 end_comment
 
 begin_define

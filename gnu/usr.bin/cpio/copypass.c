@@ -1893,7 +1893,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Try and create a hard link from FILE_NAME to another file     with the given major/minor device number and inode.  If no other    file with the same major/minor/inode numbers is known, add this file    to the list of known files and associated major/minor/inode numbers    and return -1.  If another file with the same major/minor/inode    numbers is found, try and create another link to it using    link_to_name, and return 0 for success and -1 for failure.  */
+comment|/* Try and create a hard link from FILE_NAME to another file    with the given major/minor device number and inode.  If no other    file with the same major/minor/inode numbers is known, add this file    to the list of known files and associated major/minor/inode numbers    and return -1.  If another file with the same major/minor/inode    numbers is found, try and create another link to it using    link_to_name, and return 0 for success and -1 for failure.  */
 end_comment
 
 begin_function
@@ -1988,7 +1988,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Try and create a hard link from LINK_NAME to LINK_TARGET.  If    `create_dir_flag' is set, any non-existent (parent) directories     needed by LINK_NAME will be created.  If the link is successfully    created and `verbose_flag' is set, print "LINK_TARGET linked to LINK_NAME\n".    If the link can not be created and `link_flag' is set, print    "cannot link LINK_TARGET to LINK_NAME\n".  Return 0 if the link    is created, -1 otherwise.  */
+comment|/* Try and create a hard link from LINK_NAME to LINK_TARGET.  If    `create_dir_flag' is set, any non-existent (parent) directories    needed by LINK_NAME will be created.  If the link is successfully    created and `verbose_flag' is set, print "LINK_TARGET linked to LINK_NAME\n".    If the link can not be created and `link_flag' is set, print    "cannot link LINK_TARGET to LINK_NAME\n".  Return 0 if the link    is created, -1 otherwise.  */
 end_comment
 
 begin_function

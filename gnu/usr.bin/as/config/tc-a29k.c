@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-a29k.c -- Assemble for the AMD 29000.    Copyright (C) 1989, 1990, 1991, 1992 Free Software Foundation, Inc.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* tc-a29k.c -- Assemble for the AMD 29000.    Copyright (C) 1989, 1990, 1991, 1992 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
@@ -547,7 +547,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  *  anull bit - causes the branch delay slot instructions to not be executed   */
+comment|/*  *  anull bit - causes the branch delay slot instructions to not be executed  */
 end_comment
 
 begin_define
@@ -1747,7 +1747,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Instruction parsing.  Takes a string containing the opcode.      Operands are at input_line_pointer.  Output is in the_insn.    Warnings or errors are generated.  */
+comment|/* Instruction parsing.  Takes a string containing the opcode.    Operands are at input_line_pointer.  Output is in the_insn.    Warnings or errors are generated.  */
 end_comment
 
 begin_function
@@ -2776,7 +2776,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   This is identical to the md_atof in m68k.c.  I think this is right,   but I'm not sure.      Turn a string in input_line_pointer into a floating point constant of type   type, and store the appropriate bytes in *litP.  The number of LITTLENUMS   emitted is stored in *sizeP. An error message is returned, or NULL on OK.   */
+comment|/*   This is identical to the md_atof in m68k.c.  I think this is right,   but I'm not sure.    Turn a string in input_line_pointer into a floating point constant of type   type, and store the appropriate bytes in *litP.  The number of LITTLENUMS   emitted is stored in *sizeP. An error message is returned, or NULL on OK.   */
 end_comment
 
 begin_comment
@@ -3380,7 +3380,7 @@ break|break;
 if|#
 directive|if
 literal|0
-block|case RELOC_PC10:  	case RELOC_PC22:  	case RELOC_JMP_TBL: 	case RELOC_SEGOFF16: 	case RELOC_GLOB_DAT: 	case RELOC_JMP_SLOT:  	case RELOC_RELATIVE:
+block|case RELOC_PC10: 	case RELOC_PC22: 	case RELOC_JMP_TBL: 	case RELOC_SEGOFF16: 	case RELOC_GLOB_DAT: 	case RELOC_JMP_SLOT: 	case RELOC_RELATIVE:
 endif|#
 directive|endif
 case|case
@@ -3739,13 +3739,13 @@ comment|/* for debugging only */
 end_comment
 
 begin_endif
-unit|static void     print_insn(insn) struct machine_it *insn; { 	char *Reloc[] = { 		"RELOC_8", 		"RELOC_16", 		"RELOC_32", 		"RELOC_DISP8", 		"RELOC_DISP16", 		"RELOC_DISP32", 		"RELOC_WDISP30", 		"RELOC_WDISP22", 		"RELOC_HI22", 		"RELOC_22", 		"RELOC_13", 		"RELOC_LO10", 		"RELOC_SFA_BASE", 		"RELOC_SFA_OFF13", 		"RELOC_BASE10", 		"RELOC_BASE13", 		"RELOC_BASE22", 		"RELOC_PC10", 		"RELOC_PC22", 		"RELOC_JMP_TBL", 		"RELOC_SEGOFF16", 		"RELOC_GLOB_DAT", 		"RELOC_JMP_SLOT", 		"RELOC_RELATIVE", 		"NO_RELOC" 	    }; 	 	if (insn->error) { 		fprintf(stderr, "ERROR: %s\n"); 	} 	fprintf(stderr, "opcode=0x%08x\n", insn->opcode); 	fprintf(stderr, "reloc = %s\n", Reloc[insn->reloc]); 	fprintf(stderr, "exp =  {\n"); 	fprintf(stderr, "\t\tX_add_symbol = %s\n", 		insn->exp.X_add_symbol ? 		(S_GET_NAME(insn->exp.X_add_symbol) ?  		 S_GET_NAME(insn->exp.X_add_symbol) : "???") : "0"); 	fprintf(stderr, "\t\tX_sub_symbol = %s\n", 		insn->exp.X_subtract_symbol ? 		(S_GET_NAME(insn->exp.X_subtract_symbol) ?  		 S_GET_NAME(insn->exp.X_subtract_symbol) : "???") : "0"); 	fprintf(stderr, "\t\tX_add_number = %d\n", 		insn->exp.X_add_number); 	fprintf(stderr, "}\n"); 	return; }
+unit|static void     print_insn(insn) struct machine_it *insn; { 	char *Reloc[] = { 		"RELOC_8", 		"RELOC_16", 		"RELOC_32", 		"RELOC_DISP8", 		"RELOC_DISP16", 		"RELOC_DISP32", 		"RELOC_WDISP30", 		"RELOC_WDISP22", 		"RELOC_HI22", 		"RELOC_22", 		"RELOC_13", 		"RELOC_LO10", 		"RELOC_SFA_BASE", 		"RELOC_SFA_OFF13", 		"RELOC_BASE10", 		"RELOC_BASE13", 		"RELOC_BASE22", 		"RELOC_PC10", 		"RELOC_PC22", 		"RELOC_JMP_TBL", 		"RELOC_SEGOFF16", 		"RELOC_GLOB_DAT", 		"RELOC_JMP_SLOT", 		"RELOC_RELATIVE", 		"NO_RELOC" 	    };  	if (insn->error) { 		fprintf(stderr, "ERROR: %s\n"); 	} 	fprintf(stderr, "opcode=0x%08x\n", insn->opcode); 	fprintf(stderr, "reloc = %s\n", Reloc[insn->reloc]); 	fprintf(stderr, "exp =  {\n"); 	fprintf(stderr, "\t\tX_add_symbol = %s\n", 		insn->exp.X_add_symbol ? 		(S_GET_NAME(insn->exp.X_add_symbol) ? 		 S_GET_NAME(insn->exp.X_add_symbol) : "???") : "0"); 	fprintf(stderr, "\t\tX_sub_symbol = %s\n", 		insn->exp.X_subtract_symbol ? 		(S_GET_NAME(insn->exp.X_subtract_symbol) ? 		 S_GET_NAME(insn->exp.X_subtract_symbol) : "???") : "0"); 	fprintf(stderr, "\t\tX_add_number = %d\n", 		insn->exp.X_add_number); 	fprintf(stderr, "}\n"); 	return; }
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* Translate internal representation of relocation info to target format.        On sparc/29k: first 4 bytes are normal unsigned long address, next three    bytes are index, most sig. byte first.  Byte 7 is broken up with    bit 7 as external, bits 6& 5 unused, and the lower    five bits as relocation type.  Next 4 bytes are long addend. */
+comment|/* Translate internal representation of relocation info to target format.     On sparc/29k: first 4 bytes are normal unsigned long address, next three    bytes are index, most sig. byte first.  Byte 7 is broken up with    bit 7 as external, bits 6& 5 unused, and the lower    five bits as relocation type.  Next 4 bytes are long addend. */
 end_comment
 
 begin_comment

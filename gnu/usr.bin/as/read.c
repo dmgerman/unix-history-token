@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* read.c - read a source file -     Copyright (C) 1986, 1987, 1990, 1991, 1992 Free Software Foundation, Inc.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA. */
+comment|/* read.c - read a source file -     Copyright (C) 1986, 1987, 1990, 1991, 1992 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA. */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: read.c,v 1.4 1993/12/12 17:01:16 jkh Exp $"
+literal|"$Id: read.c,v 1.5 1994/12/23 22:36:15 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6938,7 +6938,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|WANT_BITFIELDS
-comment|/* Some other assemblers, (eg, asm960), allow 		   bitfields after ".byte" as w:x,y:z, where w and 		   y are bitwidths and x and y are values.  They 		   then pack them all together. We do a little 		   better in that we allow them in words, longs, 		   etc. and we'll pack them in target byte order 		   for you. 		    		   The rules are: pack least significat bit first, 		   if a field doesn't entirely fit, put it in the 		   next unit.  Overflowing the bitfield is 		   explicitly *not* even a warning.  The bitwidth 		   should be considered a "mask". 		    		   FIXME-SOMEDAY: If this is considered generally 		   useful, this logic should probably be reworked. 		   xoxorich. */
+comment|/* Some other assemblers, (eg, asm960), allow 		   bitfields after ".byte" as w:x,y:z, where w and 		   y are bitwidths and x and y are values.  They 		   then pack them all together. We do a little 		   better in that we allow them in words, longs, 		   etc. and we'll pack them in target byte order 		   for you.  		   The rules are: pack least significat bit first, 		   if a field doesn't entirely fit, put it in the 		   next unit.  Overflowing the bitfield is 		   explicitly *not* even a warning.  The bitwidth 		   should be considered a "mask".  		   FIXME-SOMEDAY: If this is considered generally 		   useful, this logic should probably be reworked. 		   xoxorich. */
 if|if
 condition|(
 operator|*
@@ -6978,7 +6978,7 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* next piece is not a bitfield */
-comment|/* In the general case, we can't allow 				   full expressions with symbol 				   differences and such.  The relocation 				   entries for symbols not defined in this 				   assembly would require arbitrary field 				   widths, positions, and masks which most 				   of our current object formats don't 				   support. 				    				   In the specific case where a symbol 				   *is* defined in this assembly, we 				   *could* build fixups and track it, but 				   this could lead to confusion for the 				   backends.  I'm lazy. I'll take any 				   SEG_ABSOLUTE. I think that means that 				   you can use a previous .set or 				   .equ type symbol.  xoxorich. */
+comment|/* In the general case, we can't allow 				   full expressions with symbol 				   differences and such.  The relocation 				   entries for symbols not defined in this 				   assembly would require arbitrary field 				   widths, positions, and masks which most 				   of our current object formats don't 				   support.  				   In the specific case where a symbol 				   *is* defined in this assembly, we 				   *could* build fixups and track it, but 				   this could lead to confusion for the 				   backends.  I'm lazy. I'll take any 				   SEG_ABSOLUTE. I think that means that 				   you can use a previous .set or 				   .equ type symbol.  xoxorich. */
 if|if
 condition|(
 name|segment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Demangler for GNU C++     Copyright 1989, 1991 Free Software Foundation, Inc.    Written by James Clark (jjc@jclark.uucp)    Rewritten by Fred Fish (fnf@cygnus.com) for ARM and Lucid demangling     This file is part of the libiberty library. Libiberty is free software; you can redistribute it and/or modify it under the terms of the GNU Library General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  Libiberty is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for more details.  You should have received a copy of the GNU Library General Public License along with libiberty; see the file COPYING.LIB.  If not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Demangler for GNU C++    Copyright 1989, 1991 Free Software Foundation, Inc.    Written by James Clark (jjc@jclark.uucp)    Rewritten by Fred Fish (fnf@cygnus.com) for ARM and Lucid demangling  This file is part of the libiberty library. Libiberty is free software; you can redistribute it and/or modify it under the terms of the GNU Library General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  Libiberty is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for more details.  You should have received a copy of the GNU Library General Public License along with libiberty; see the file COPYING.LIB.  If not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
@@ -2569,7 +2569,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* char *cplus_demangle (const char *mangled, int options)     If MANGLED is a mangled function name produced by GNU C++, then    a pointer to a malloced string giving a C++ representation    of the name will be returned; otherwise NULL will be returned.    It is the caller's responsibility to free the string which    is returned.     The OPTIONS arg may contain one or more of the following bits:     	DMGL_ANSI	ANSI qualifiers such as `const' and `void' are 			included. 	DMGL_PARAMS	Function parameters are included.     For example,        cplus_demangle ("foo__1Ai", DMGL_PARAMS)		=> "A::foo(int)"    cplus_demangle ("foo__1Ai", DMGL_PARAMS | DMGL_ANSI)	=> "A::foo(int)"    cplus_demangle ("foo__1Ai", 0)			=> "A::foo"     cplus_demangle ("foo__1Afe", DMGL_PARAMS)		=> "A::foo(float,...)"    cplus_demangle ("foo__1Afe", DMGL_PARAMS | DMGL_ANSI)=> "A::foo(float,...)"    cplus_demangle ("foo__1Afe", 0)			=> "A::foo"     Note that any leading underscores, or other such characters prepended by    the compilation system, are presumed to have already been stripped from    MANGLED.  */
+comment|/* char *cplus_demangle (const char *mangled, int options)     If MANGLED is a mangled function name produced by GNU C++, then    a pointer to a malloced string giving a C++ representation    of the name will be returned; otherwise NULL will be returned.    It is the caller's responsibility to free the string which    is returned.     The OPTIONS arg may contain one or more of the following bits:     	DMGL_ANSI	ANSI qualifiers such as `const' and `void' are 			included. 	DMGL_PARAMS	Function parameters are included.     For example,     cplus_demangle ("foo__1Ai", DMGL_PARAMS)		=> "A::foo(int)"    cplus_demangle ("foo__1Ai", DMGL_PARAMS | DMGL_ANSI)	=> "A::foo(int)"    cplus_demangle ("foo__1Ai", 0)			=> "A::foo"     cplus_demangle ("foo__1Afe", DMGL_PARAMS)		=> "A::foo(float,...)"    cplus_demangle ("foo__1Afe", DMGL_PARAMS | DMGL_ANSI)=> "A::foo(float,...)"    cplus_demangle ("foo__1Afe", 0)			=> "A::foo"     Note that any leading underscores, or other such characters prepended by    the compilation system, are presumed to have already been stripped from    MANGLED.  */
 end_comment
 
 begin_function
@@ -4875,7 +4875,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	demangle_prefix -- consume the mangled name prefix and find signature  SYNOPSIS  	static int 	demangle_prefix (struct work_stuff *work, const char **mangled, 			 string *declp);  DESCRIPTION  	Consume and demangle the prefix of the mangled name.  	DECLP points to the string buffer into which demangled output is 	placed.  On entry, the buffer is empty.  On exit it contains 	the root function name, the demangled operator name, or in some 	special cases either nothing or the completely demangled result.  	MANGLED points to the current pointer into the mangled name.  As each 	token of the mangled name is consumed, it is updated.  Upon entry 	the current mangled name pointer points to the first character of 	the mangled name.  Upon exit, it should point to the first character 	of the signature if demangling was successful, or to the first 	unconsumed character if demangling of the prefix was unsuccessful. 	 	Returns 1 on success, 0 otherwise.  */
+comment|/*  LOCAL FUNCTION  	demangle_prefix -- consume the mangled name prefix and find signature  SYNOPSIS  	static int 	demangle_prefix (struct work_stuff *work, const char **mangled, 			 string *declp);  DESCRIPTION  	Consume and demangle the prefix of the mangled name.  	DECLP points to the string buffer into which demangled output is 	placed.  On entry, the buffer is empty.  On exit it contains 	the root function name, the demangled operator name, or in some 	special cases either nothing or the completely demangled result.  	MANGLED points to the current pointer into the mangled name.  As each 	token of the mangled name is consumed, it is updated.  Upon entry 	the current mangled name pointer points to the first character of 	the mangled name.  Upon exit, it should point to the first character 	of the signature if demangling was successful, or to the first 	unconsumed character if demangling of the prefix was unsuccessful.  	Returns 1 on success, 0 otherwise.  */
 end_comment
 
 begin_function
@@ -6935,7 +6935,7 @@ name|namelength
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Now either prepend the temp buffer to the result, or append it,       depending upon the state of the append flag. */
+comment|/* Now either prepend the temp buffer to the result, or append it,      depending upon the state of the append flag. */
 if|if
 condition|(
 name|append

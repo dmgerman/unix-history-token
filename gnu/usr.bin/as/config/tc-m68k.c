@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-m68k.c  All the m68020 specific stuff in one convenient, huge,    slow to compile, easy to find file.        Copyright (C) 1987, 1991, 1992 Free Software Foundation, Inc.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* tc-m68k.c  All the m68020 specific stuff in one convenient, huge,    slow to compile, easy to find file.     Copyright (C) 1987, 1991, 1992 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_include
@@ -272,7 +272,7 @@ value|6
 end_define
 
 begin_comment
-comment|/* Operands we can parse:  (And associated modes)        numb:	8 bit num    numw:	16 bit num    numl:	32 bit num    dreg:	data reg 0-7    reg:	address or data register    areg:	address register    apc:	address register, PC, ZPC or empty string    num:	16 or 32 bit num    num2:	like num    sz:	w or l		if omitted, l assumed    scale:	1 2 4 or 8	if omitted, 1 assumed        7.4 IMMED #num				--> NUM    0.? DREG  dreg				--> dreg    1.? AREG  areg				--> areg    2.? AINDR areg@				--> *(areg)    3.? AINC  areg@+			--> *(areg++)    4.? ADEC  areg@-			--> *(--areg)    5.? AOFF  apc@(numw)			--> *(apc+numw)	-- empty string and ZPC not allowed here    6.? AINDX apc@(num,reg:sz:scale)	--> *(apc+num+reg*scale)    6.? AINDX apc@(reg:sz:scale)		--> same, with num=0    6.? APODX apc@(num)@(num2,reg:sz:scale)	--> *(*(apc+num)+num2+reg*scale)    6.? APODX apc@(num)@(reg:sz:scale)	--> same, with num2=0    6.? AMIND apc@(num)@(num2)		--> *(*(apc+num)+num2) (previous mode without an index reg)    6.? APRDX apc@(num,reg:sz:scale)@(num2)	--> *(*(apc+num+reg*scale)+num2)    6.? APRDX apc@(reg:sz:scale)@(num2)	--> same, with num=0    7.0 ABSL  num:sz			--> *(num)    num				--> *(num) (sz L assumed)    *** MSCR  otherreg			--> Magic    With -l option    5.? AOFF  apc@(num)			--> *(apc+num) -- empty string and ZPC not allowed here still        examples:    #foo	#0x35	#12    d2    a4    a3@    a5@+    a6@-    a2@(12)	pc@(14)    a1@(5,d2:w:1)	@(45,d6:l:4)    pc@(a2)		@(d4)    etc...            #name@(numw)	-->turn into PC rel mode    apc@(num8,reg:sz:scale)		--> *(apc+num8+reg*scale)        */
+comment|/* Operands we can parse:  (And associated modes)     numb:	8 bit num    numw:	16 bit num    numl:	32 bit num    dreg:	data reg 0-7    reg:	address or data register    areg:	address register    apc:	address register, PC, ZPC or empty string    num:	16 or 32 bit num    num2:	like num    sz:	w or l		if omitted, l assumed    scale:	1 2 4 or 8	if omitted, 1 assumed     7.4 IMMED #num				--> NUM    0.? DREG  dreg				--> dreg    1.? AREG  areg				--> areg    2.? AINDR areg@				--> *(areg)    3.? AINC  areg@+			--> *(areg++)    4.? ADEC  areg@-			--> *(--areg)    5.? AOFF  apc@(numw)			--> *(apc+numw)	-- empty string and ZPC not allowed here    6.? AINDX apc@(num,reg:sz:scale)	--> *(apc+num+reg*scale)    6.? AINDX apc@(reg:sz:scale)		--> same, with num=0    6.? APODX apc@(num)@(num2,reg:sz:scale)	--> *(*(apc+num)+num2+reg*scale)    6.? APODX apc@(num)@(reg:sz:scale)	--> same, with num2=0    6.? AMIND apc@(num)@(num2)		--> *(*(apc+num)+num2) (previous mode without an index reg)    6.? APRDX apc@(num,reg:sz:scale)@(num2)	--> *(*(apc+num+reg*scale)+num2)    6.? APRDX apc@(reg:sz:scale)@(num2)	--> same, with num=0    7.0 ABSL  num:sz			--> *(num)    num				--> *(num) (sz L assumed)    *** MSCR  otherreg			--> Magic    With -l option    5.? AOFF  apc@(num)			--> *(apc+num) -- empty string and ZPC not allowed here still     examples:    #foo	#0x35	#12    d2    a4    a3@    a5@+    a6@-    a2@(12)	pc@(14)    a1@(5,d2:w:1)	@(45,d6:l:4)    pc@(a2)		@(d4)    etc...      #name@(numw)	-->turn into PC rel mode    apc@(num8,reg:sz:scale)		--> *(apc+num8+reg*scale)     */
 end_comment
 
 begin_enum
@@ -1663,7 +1663,7 @@ literal|0
 block|,
 literal|0
 block|}
-block|, 	         }
+block|,      }
 decl_stmt|;
 end_decl_stmt
 
@@ -3462,7 +3462,7 @@ value|{ str++; if (*str == ' ') str++;}
 end_define
 
 begin_comment
-comment|/*  * m68k_ip_op := '#' +<anything>  *	|<register> + range_sep + get_regs  *	;  *   * range_sep := '/' | '-' ;  *  * SKIP_WHITE :=<empty> | ' ' ;  *  */
+comment|/*  * m68k_ip_op := '#' +<anything>  *	|<register> + range_sep + get_regs  *	;  *  * range_sep := '/' | '-' ;  *  * SKIP_WHITE :=<empty> | ' ' ;  *  */
 end_comment
 
 begin_function
@@ -4075,7 +4075,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* if (str[-3] == ':') { 		   int siz; 		    		   switch (str[-2]) { 		   case 'b': 		   case 'B': 		   siz=1; 		   break; 		   case 'w': 		   case 'W': 		   siz=2; 		   break; 		   case 'l': 		   case 'L': 		   siz=3; 		   break; 		   default: 		   opP->error="Specified size isn't :w or :l"; 		   return FAIL; 		   } 		   opP->con1=add_exp(beg_str,str-4); 		   opP->con1->e_siz=siz; 		   } else */
+comment|/* if (str[-3] == ':') { 		   int siz;  		   switch (str[-2]) { 		   case 'b': 		   case 'B': 		   siz=1; 		   break; 		   case 'w': 		   case 'W': 		   siz=2; 		   break; 		   case 'l': 		   case 'L': 		   siz=3; 		   break; 		   default: 		   opP->error="Specified size isn't :w or :l"; 		   return FAIL; 		   } 		   opP->con1=add_exp(beg_str,str-4); 		   opP->con1->e_siz=siz; 		   } else */
 name|opP
 operator|->
 name|con1
@@ -4509,7 +4509,7 @@ comment|/* m68k_ip_op() */
 end_comment
 
 begin_comment
-comment|/*  *   * try_index := data_or_address_register + ')' + SKIP_W  *	| data_or_address_register + ':' + SKIP_W + size_spec + SKIP_W + multiplier + ')' + SKIP_W  *  * multiplier :=<empty>  *	| ':' + multiplier_number  *	;  *  * multiplier_number := '1' | '2' | '4' | '8' ;  *  * size_spec := 'l' | 'L' | 'w' | 'W' ;  *  * SKIP_W :=<empty> | ' ' ;  *  */
+comment|/*  *  * try_index := data_or_address_register + ')' + SKIP_W  *	| data_or_address_register + ':' + SKIP_W + size_spec + SKIP_W + multiplier + ')' + SKIP_W  *  * multiplier :=<empty>  *	| ':' + multiplier_number  *	;  *  * multiplier_number := '1' | '2' | '4' | '8' ;  *  * size_spec := 'l' | 'L' | 'w' | 'W' ;  *  * SKIP_W :=<empty> | ' ' ;  *  */
 end_comment
 
 begin_function
@@ -11310,7 +11310,7 @@ comment|/* m68k_ip() */
 end_comment
 
 begin_comment
-comment|/*  * get_regs := '/' + ?  *	| '-' +<register>  *	| '-' +<register> + ?  *	|<empty>  *	;  *    * The idea here must be to scan in a set of registers but I don't  * understand it.  Looks awfully sloppy to me but I don't have any doc on  * this format so...    *   *  */
+comment|/*  * get_regs := '/' + ?  *	| '-' +<register>  *	| '-' +<register> + ?  *	|<empty>  *	;  *   * The idea here must be to scan in a set of registers but I don't  * understand it.  Looks awfully sloppy to me but I don't have any doc on  * this format so...   *  *  */
 end_comment
 
 begin_function
@@ -16377,7 +16377,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/* the bit-field entries in the relocation_info struct plays hell     with the byte-order problems of cross-assembly.  So as a hack,    I added this mach. dependent ri twiddler.  Ugly, but it gets    you there. -KWK */
+comment|/* the bit-field entries in the relocation_info struct plays hell    with the byte-order problems of cross-assembly.  So as a hack,    I added this mach. dependent ri twiddler.  Ugly, but it gets    you there. -KWK */
 end_comment
 
 begin_comment
@@ -17081,7 +17081,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Different values of OK tell what its OK to return.  Things that aren't OK are an error (what a shock, no?)        0:  Everything is OK    10:  Absolute 1:8	only    20:  Absolute 0:7	only    30:  absolute 0:15	only    40:  Absolute 0:31	only    50:  absolute 0:127	only    55:  absolute -64:63    only    60:  absolute -128:127	only    70:  absolute 0:4095	only    80:  No bignums        */
+comment|/* Different values of OK tell what its OK to return.  Things that aren't OK are an error (what a shock, no?)     0:  Everything is OK    10:  Absolute 1:8	only    20:  Absolute 0:7	only    30:  absolute 0:15	only    40:  Absolute 0:31	only    50:  absolute 0:127	only    55:  absolute -64:63    only    60:  absolute -128:127	only    70:  absolute 0:4095	only    80:  No bignums     */
 end_comment
 
 begin_function
@@ -19095,7 +19095,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Possible states for relaxation:        0 0	branch offset	byte	(bra, etc)    0 1			word    0 2			long        1 0	indexed offsets	byte	a0@(32,d4:w:1) etc    1 1			word    1 2			long        2 0	two-offset index word-word a0@(32,d4)@(45) etc    2 1			word-long    2 2			long-word    2 3			long-long        */
+comment|/* Possible states for relaxation:     0 0	branch offset	byte	(bra, etc)    0 1			word    0 2			long     1 0	indexed offsets	byte	a0@(32,d4:w:1) etc    1 1			word    1 2			long     2 0	two-offset index word-word a0@(32,d4)@(45) etc    2 1			word-long    2 2			long-word    2 3			long-long     */
 end_comment
 
 begin_ifdef
@@ -19245,7 +19245,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Parse an operand that is machine-specific.      We just return without modifying the expression if we have nothing    to do.  */
+comment|/* Parse an operand that is machine-specific.    We just return without modifying the expression if we have nothing    to do.  */
 end_comment
 
 begin_comment

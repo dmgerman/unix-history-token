@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  ***********  *  * XCHAT.C *  *  ***********  *  * Extended chat processor for Taylor UUCP. See accompanying documentation.  *  * Written by:  *   Bob Denny (denny@alisa.com)  *   Based on code in DECUS UUCP (for VAX/VMS)  *  * Small modification by:  *   Daniel Hagerty (hag@eddie.mit.edu)  *  * History:  *   Version 1.0 shipped with Taylor 1.03. No configuration info inside.  *  *   Bob Denny - Sun Aug 30 18:41:30 1992  *     V1.1 - long overdue changes for other systems. Rip out interval  *            timer code, use timer code from Taylor UUCP, use select()  *            for timed reads. Use Taylor UUCP "conf.h" file to set  *            configuration for this program. Add defaulting of script  *            and log file paths.  *     *   Daniel Hagerty - Mon Nov 22 18:17:38 1993  *     V1.2 - Added a new opcode to xchat. "expectstr" is a cross between  *            sendstr and expect, looking for a parameter supplied string.  *            Useful where a prompt could change for different dial in  *            lines and such.  *  * Bugs:  *   Does not support BSD terminal I/O. Anyone care to add it?  */
+comment|/*  *  ***********  *  * XCHAT.C *  *  ***********  *  * Extended chat processor for Taylor UUCP. See accompanying documentation.  *  * Written by:  *   Bob Denny (denny@alisa.com)  *   Based on code in DECUS UUCP (for VAX/VMS)  *  * Small modification by:  *   Daniel Hagerty (hag@eddie.mit.edu)  *  * History:  *   Version 1.0 shipped with Taylor 1.03. No configuration info inside.  *  *   Bob Denny - Sun Aug 30 18:41:30 1992  *     V1.1 - long overdue changes for other systems. Rip out interval  *            timer code, use timer code from Taylor UUCP, use select()  *            for timed reads. Use Taylor UUCP "conf.h" file to set  *            configuration for this program. Add defaulting of script  *            and log file paths.  *  *   Daniel Hagerty - Mon Nov 22 18:17:38 1993  *     V1.2 - Added a new opcode to xchat. "expectstr" is a cross between  *            sendstr and expect, looking for a parameter supplied string.  *            Useful where a prompt could change for different dial in  *            lines and such.  *  * Bugs:  *   Does not support BSD terminal I/O. Anyone care to add it?  */
 end_comment
 
 begin_include
@@ -58,7 +58,7 @@ file|"xc-conf.h"
 end_include
 
 begin_comment
-comment|/*   * Pick a timing routine to use, as done in Taylor UUCP.  */
+comment|/*  * Pick a timing routine to use, as done in Taylor UUCP.  */
 end_comment
 
 begin_if
@@ -1772,7 +1772,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * **********************************  * * BEGIN EXECUTION - MAIN PROGRAM *  * **********************************  *  * This program is called by Taylor UUCP with a list of  * arguments in argc/argv, and stdin/stdout mapped to the  * tty device, and stderr mapped to the Taylor logfile, where  * anything written to stdout will be logged as an error.  *   */
+comment|/*  * **********************************  * * BEGIN EXECUTION - MAIN PROGRAM *  * **********************************  *  * This program is called by Taylor UUCP with a list of  * arguments in argc/argv, and stdin/stdout mapped to the  * tty device, and stderr mapped to the Taylor logfile, where  * anything written to stdout will be logged as an error.  *  */
 end_comment
 
 begin_function
@@ -1876,7 +1876,7 @@ name|FAIL
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*    * If the script file argument begins with '/', then we assume    * it is an absolute pathname, otherwise, we prepend the     * SCRIPT_DIR path.    */
+comment|/*    * If the script file argument begins with '/', then we assume    * it is an absolute pathname, otherwise, we prepend the    * SCRIPT_DIR path.    */
 operator|*
 name|sfname
 operator|=
@@ -2125,7 +2125,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * deal_script - deallocate a script and all strings it points to  */
+comment|/*  * deal_script - deallocate a script and all strings it points to  */
 end_comment
 
 begin_function
@@ -2216,7 +2216,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * read_script  *  * Read& compile a script, return pointer to first entry, or null if bad  */
+comment|/*  * read_script  *  * Read& compile a script, return pointer to first entry, or null if bad  */
 end_comment
 
 begin_function
@@ -2325,7 +2325,7 @@ operator|==
 literal|'\n'
 condition|)
 continue|continue;
-comment|/*         * Get rid of the trailing newline, and copy the string        */
+comment|/*        * Get rid of the trailing newline, and copy the string        */
 name|inpline
 index|[
 name|strlen
@@ -2551,7 +2551,7 @@ name|cp
 operator|++
 argument_list|)
 expr_stmt|;
-comment|/*         * If we have an opcode but we haven't seen anything        * else (like a label) yet, i.e., this is the first        * entry, and there was no label.  We need to         * cobble up a label so that read_script is happy        */
+comment|/*        * If we have an opcode but we haven't seen anything        * else (like a label) yet, i.e., this is the first        * entry, and there was no label.  We need to        * cobble up a label so that read_script is happy        */
 if|if
 condition|(
 name|first
@@ -2644,7 +2644,7 @@ operator|)
 name|NULL
 expr_stmt|;
 block|}
-comment|/*         * Find opcode - ndex through the opcode definition table        */
+comment|/*        * Find opcode - ndex through the opcode definition table        */
 for|for
 control|(
 name|i
@@ -2790,7 +2790,7 @@ operator|*
 operator|)
 name|NULL
 expr_stmt|;
-comment|/*         * Pick up new state parameter, if any        */
+comment|/*        * Pick up new state parameter, if any        */
 if|if
 condition|(
 name|sc_opdef
@@ -3099,7 +3099,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	   * For XSTR, Translate the string and store its 	   * length. Note that, after escape sequences are  	   * compressed, the resulting string may well be a  	   * few bytes shorter than the input string (whose  	   * length was the basis for the malloc above), 	   * but it will never be longer. 	   */
+comment|/* 	   * For XSTR, Translate the string and store its 	   * length. Note that, after escape sequences are 	   * compressed, the resulting string may well be a 	   * few bytes shorter than the input string (whose 	   * length was the basis for the malloc above), 	   * but it will never be longer. 	   */
 if|if
 condition|(
 name|sc_opdef
@@ -3158,7 +3158,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * xlat_str  *  * Translate embedded escape characters in a "send" or "expect" string.  *  * Called by read_script(), above.  *  * Returns the actual length of the resulting string.  Note that imbedded  * nulls (specified by \000 in the input) ARE allowed in the result.    */
+comment|/*  * xlat_str  *  * Translate embedded escape characters in a "send" or "expect" string.  *  * Called by read_script(), above.  *  * Returns the actual length of the resulting string.  Note that imbedded  * nulls (specified by \000 in the input) ARE allowed in the result.  */
 end_comment
 
 begin_macro
@@ -3546,7 +3546,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * do_script() - execute a script   */
+comment|/*  * do_script() - execute a script  */
 end_comment
 
 begin_function
@@ -3694,7 +3694,7 @@ name|SUCCESS
 return|;
 name|_newstate
 label|:
-comment|/*     * do all of curstate's actions.  Enter with curstate pointing    * to a label entry    */
+comment|/*    * do all of curstate's actions.  Enter with curstate pointing    * to a label entry    */
 name|expin
 operator|=
 literal|0
@@ -4064,7 +4064,7 @@ break|break;
 case|case
 name|SC_DBOF
 case|:
-comment|/* 	   * If the debug file name does not begin with "/", then 	   * we prepend the LOG_DIR to the string. Then CREATE the 	   * file. This WIPES OUT previous logs.  	   */
+comment|/* 	   * If the debug file name does not begin with "/", then 	   * we prepend the LOG_DIR to the string. Then CREATE the 	   * file. This WIPES OUT previous logs. 	   */
 operator|*
 name|dfname
 operator|=
@@ -5187,7 +5187,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* New opcode added by hag@eddie.mit.edu for expecting a  		 parameter supplied string */
+comment|/* New opcode added by hag@eddie.mit.edu for expecting a 		 parameter supplied string */
 end_comment
 
 begin_case
@@ -5374,7 +5374,7 @@ comment|/*  * TERMINAL I/O ROUTINES  */
 end_comment
 
 begin_comment
-comment|/*  * xgetc - get a character with timeout  *  * Assumes that stdin is opened on a terminal or TCP socket   * with O_NONBLOCK.   */
+comment|/*  * xgetc - get a character with timeout  *  * Assumes that stdin is opened on a terminal or TCP socket  * with O_NONBLOCK.  */
 end_comment
 
 begin_function
@@ -5485,7 +5485,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Pause for an interval in milliseconds  */
+comment|/*  * Pause for an interval in milliseconds  */
 end_comment
 
 begin_function
@@ -5574,7 +5574,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/*     * We need to pass an unused pollfd structure because poll checks    * the address before checking the number of elements.    */
+comment|/*    * We need to pass an unused pollfd structure because poll checks    * the address before checking the number of elements.    */
 name|poll
 argument_list|(
 operator|&
@@ -5742,7 +5742,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * charlog - log a string of characters  *  * SPECIAL CASE: msg=NULL, len=1 and msg[0]='\377' gets logged  *               when read does its 1 sec. timeout. Log "<1 sec.>"  *               so user can see elapsed time   */
+comment|/*  * charlog - log a string of characters  *  * SPECIAL CASE: msg=NULL, len=1 and msg[0]='\377' gets logged  *               when read does its 1 sec. timeout. Log "<1 sec.>"  *               so user can see elapsed time  */
 end_comment
 
 begin_function
@@ -5982,7 +5982,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * ttoslow() - Send characters with pacing delays  */
+comment|/*  * ttoslow() - Send characters with pacing delays  */
 end_comment
 
 begin_function

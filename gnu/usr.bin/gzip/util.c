@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: util.c,v 0.15 1993/06/15 09:04:13 jloup Exp $"
+literal|"$Id: util.c,v 1.3 1993/10/14 00:33:26 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1175,7 +1175,7 @@ comment|/* NO_STRING_H */
 end_comment
 
 begin_comment
-comment|/* ========================================================================  * Add an environment variable (if any) before argv, and update argc.  * Return the expanded environment variable to be freed later, or NULL   * if no options were added to argv.  */
+comment|/* ========================================================================  * Add an environment variable (if any) before argv, and update argc.  * Return the expanded environment variable to be freed later, or NULL  * if no options were added to argv.  */
 end_comment
 
 begin_define

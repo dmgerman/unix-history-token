@@ -4,7 +4,7 @@ comment|/* Compare two open file descriptors to see if they refer to the same fi
 end_comment
 
 begin_comment
-comment|/*  NAME  	fdmatch -- see if two file descriptors refer to same file  SYNOPSIS  	int fdmatch (int fd1, int fd2)  DESCRIPTION  	Check to see if two open file descriptors refer to the same file. 	This is useful, for example, when we have an open file descriptor 	for an unnamed file, and the name of a file that we believe to  	correspond to that fd.  This can happen when we are exec'd with 	an already open file (stdout for example) or from the SVR4 /proc 	calls that return open file descriptors for mapped address spaces. 	All we have to do is open the file by name and check the two file 	descriptors for a match, which is done by comparing major&minor 	device numbers and inode numbers.  BUGS  	(FIXME: does this work for networks?) 	It works for NFS, which assigns a device number to each mount.  */
+comment|/*  NAME  	fdmatch -- see if two file descriptors refer to same file  SYNOPSIS  	int fdmatch (int fd1, int fd2)  DESCRIPTION  	Check to see if two open file descriptors refer to the same file. 	This is useful, for example, when we have an open file descriptor 	for an unnamed file, and the name of a file that we believe to 	correspond to that fd.  This can happen when we are exec'd with 	an already open file (stdout for example) or from the SVR4 /proc 	calls that return open file descriptors for mapped address spaces. 	All we have to do is open the file by name and check the two file 	descriptors for a match, which is done by comparing major&minor 	device numbers and inode numbers.  BUGS  	(FIXME: does this work for networks?) 	It works for NFS, which assigns a device number to each mount.  */
 end_comment
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * man.c  *  * Copyright (c) 1990, 1991, John W. Eaton.  *  * You may distribute under the terms of the GNU General Public  * License as specified in the file COPYING that comes with the man  * distribution.    *  * John W. Eaton  * jwe@che.utexas.edu  * Department of Chemical Engineering  * The University of Texas at Austin  * Austin, Texas  78712  */
+comment|/*  * man.c  *  * Copyright (c) 1990, 1991, John W. Eaton.  *  * You may distribute under the terms of the GNU General Public  * License as specified in the file COPYING that comes with the man  * distribution.  *  * John W. Eaton  * jwe@che.utexas.edu  * Department of Chemical Engineering  * The University of Texas at Austin  * Austin, Texas  78712  */
 end_comment
 
 begin_define
@@ -1765,7 +1765,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check to see if the argument is a valid section number.  If the  * first character of name is a numeral, or the name matches one of  * the sections listed in section_list, we'll assume that it's a section.  * The list of sections in config.h simply allows us to specify oddly  * named directories like .../man3f.  Yuk.   */
+comment|/*  * Check to see if the argument is a valid section number.  If the  * first character of name is a numeral, or the name matches one of  * the sections listed in section_list, we'll assume that it's a section.  * The list of sections in config.h simply allows us to specify oddly  * named directories like .../man3f.  Yuk.  */
 end_comment
 
 begin_function
@@ -2539,7 +2539,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return an un-globbed name in the same form as if we were doing  * globbing.   */
+comment|/*  * Return an un-globbed name in the same form as if we were doing  * globbing.  */
 end_comment
 
 begin_function
@@ -3832,7 +3832,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/*        * Is there really any point in continuing to look for        * preprocessor options if we can't even read the man page source?         */
+comment|/*        * Is there really any point in continuing to look for        * preprocessor options if we can't even read the man page source?        */
 name|gripe_reading_man_file
 argument_list|(
 name|file
@@ -4598,7 +4598,7 @@ operator|!
 name|found
 condition|)
 block|{
-comment|/* Try again as real user - see note below. 		     By running with  		       effective group (user) ID == real group (user) ID 		     except for the call above, I believe the problems 		     of reading private man pages is avoided.  */
+comment|/* Try again as real user - see note below. 		     By running with 		       effective group (user) ID == real group (user) ID 		     except for the call above, I believe the problems 		     of reading private man pages is avoided.  */
 name|found
 operator|=
 name|make_cat_file
@@ -4660,7 +4660,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		   * Couldn't create cat file.  Just format it and 		   * display it through the pager.  		   */
+comment|/* 		   * Couldn't create cat file.  Just format it and 		   * display it through the pager. 		   */
 name|roff_command
 operator|=
 name|make_roff_command
@@ -4898,7 +4898,7 @@ name|names
 operator|==
 name|NULL
 condition|)
-comment|/*      * No files match.  See if there's a preformatted page around that      * we can display.       */
+comment|/*      * No files match.  See if there's a preformatted page around that      * we can display.      */
 endif|#
 directive|endif
 comment|/* NROFF_MISSING */

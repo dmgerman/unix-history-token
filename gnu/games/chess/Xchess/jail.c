@@ -4,7 +4,7 @@ comment|/* This file contains code for X-CHESS.    Copyright (C) 1986 Free Softw
 end_comment
 
 begin_comment
-comment|/* RCS Info: $Revision: 1.3 $ on $Date: 86/11/26 12:09:54 $  *           $Source: /users/faustus/xchess/RCS/jail.c,v $  * Copyright (c) 1986 Wayne A. Christopher, U. C. Berkeley CAD Group  *	Permission is granted to do anything with this code except sell it  *	or remove this message.  *  */
+comment|/* RCS Info: $Revision: 1.1.1.1 $ on $Date: 1993/06/12 14:41:12 $  *           $Source: /home/ncvs/src/gnu/games/chess/Xchess/jail.c,v $  * Copyright (c) 1986 Wayne A. Christopher, U. C. Berkeley CAD Group  *	Permission is granted to do anything with this code except sell it  *	or remove this message.  *  */
 end_comment
 
 begin_include

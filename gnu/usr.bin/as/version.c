@@ -18,7 +18,7 @@ begin_decl_stmt
 specifier|const
 endif|#
 directive|endif
-comment|/* DO NOT PUT COMMENTS ABOUT CHANGES IN THIS FILE.        This file exists only to define `version_string'.        Log changes in ChangeLog.  The easiest way to do this is with    the Emacs command `add-change-log-entry'.  If you don't use Emacs,    add entries of the form:        Thu Jan  1 00:00:00 1970  Dennis Ritchie  (dmr at alice)        universe.c (temporal_reality): Began Time.    */
+comment|/* DO NOT PUT COMMENTS ABOUT CHANGES IN THIS FILE.     This file exists only to define `version_string'.     Log changes in ChangeLog.  The easiest way to do this is with    the Emacs command `add-change-log-entry'.  If you don't use Emacs,    add entries of the form:     Thu Jan  1 00:00:00 1970  Dennis Ritchie  (dmr at alice)     universe.c (temporal_reality): Began Time.    */
 ifndef|#
 directive|ifndef
 name|lint
@@ -27,7 +27,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: version.c,v 1.2 1993/11/03 00:52:27 paul Exp $"
+literal|"$Id: version.c,v 1.3 1994/02/14 21:18:05 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,7 +41,7 @@ name|char
 name|version_string
 index|[]
 init|=
-literal|"GNU assembler version 1.92.3, FreeBSD $Revision: 1.2 $\n"
+literal|"GNU assembler version 1.92.3, FreeBSD $Revision: 1.3 $\n"
 decl_stmt|;
 end_decl_stmt
 

@@ -9657,7 +9657,7 @@ comment|/* If we don't need a real op=, just do a bitwise copy.  */
 end_comment
 
 begin_comment
-unit|if (! TYPE_HAS_COMPLEX_ASSIGN_REF (type))     {       tbuf = "{__builtin_memcpy(this,&_ctor_arg,sizeof(_ctor_arg));return *this;}";       *lenp = strlen (tbuf);       *bufp = obstack_alloc (&inline_text_obstack, *lenp + 1);       strcpy (*bufp, tbuf);       return;     }    if (TREE_CODE (type) == UNION_TYPE)     {       if (fields) 	{ 	  tree main = fields; 	  char * s; 	  tree f;  	  for (f = TREE_CHAIN (fields); f; f = TREE_CHAIN (f)) 	    if (tree_int_cst_lt (TYPE_SIZE (TREE_TYPE (main)), 				 TYPE_SIZE (TREE_TYPE (f)))) 	      main = f;  	  s = IDENTIFIER_POINTER (DECL_NAME (main));  	  tneed = (2 * strlen (s)) + 28; 	  if (tgot< tneed) 	    { 	      tgot = tneed; 	      tbuf = (char *) alloca (tgot); 	    }  	  sprintf (tbuf, "{%s=_ctor_arg.%s;return *this;}", s, s); 	}       else 	tbuf = "{}";              *lenp = strlen (tbuf);       *bufp = obstack_alloc (&inline_text_obstack, *lenp + 1);       strcpy (*bufp, tbuf);       return;     }
+unit|if (! TYPE_HAS_COMPLEX_ASSIGN_REF (type))     {       tbuf = "{__builtin_memcpy(this,&_ctor_arg,sizeof(_ctor_arg));return *this;}";       *lenp = strlen (tbuf);       *bufp = obstack_alloc (&inline_text_obstack, *lenp + 1);       strcpy (*bufp, tbuf);       return;     }    if (TREE_CODE (type) == UNION_TYPE)     {       if (fields) 	{ 	  tree main = fields; 	  char * s; 	  tree f;  	  for (f = TREE_CHAIN (fields); f; f = TREE_CHAIN (f)) 	    if (tree_int_cst_lt (TYPE_SIZE (TREE_TYPE (main)), 				 TYPE_SIZE (TREE_TYPE (f)))) 	      main = f;  	  s = IDENTIFIER_POINTER (DECL_NAME (main));  	  tneed = (2 * strlen (s)) + 28; 	  if (tgot< tneed) 	    { 	      tgot = tneed; 	      tbuf = (char *) alloca (tgot); 	    }  	  sprintf (tbuf, "{%s=_ctor_arg.%s;return *this;}", s, s); 	}       else 	tbuf = "{}";        *lenp = strlen (tbuf);       *bufp = obstack_alloc (&inline_text_obstack, *lenp + 1);       strcpy (*bufp, tbuf);       return;     }
 comment|/* Construct base classes...      FIXME: Does not deal with multiple inheritance and virtual bases      correctly.  See g++.old-deja/g++.jason/opeq5.C for a testcase.      We need to do wacky things if everything between us and the virtual      base (by all paths) has a "complex" op=.  */
 end_comment
 
@@ -14652,7 +14652,7 @@ operator|==
 literal|'"'
 condition|)
 block|{
-comment|/* We are looking at a string.  Complain 			 if the token before the string is no `extern'. 			  			 Could cheat some memory by placing this string 			 on the temporary_, instead of the saveable_ 			 obstack.  */
+comment|/* We are looking at a string.  Complain 			 if the token before the string is no `extern'.  			 Could cheat some memory by placing this string 			 on the temporary_, instead of the saveable_ 			 obstack.  */
 if|if
 condition|(
 name|ptr
@@ -16655,7 +16655,7 @@ block|type = 0; 	    for (i = 0; i< sizeof (type_sequence) / sizeof (type_sequen
 comment|/* A hex or octal constant traditionally is unsigned.  */
 block|&& !(base != 10&& flag_traditional&& !type_sequence[i].unsigned_flag)
 comment|/* A decimal constant can't be unsigned int 		     unless explicitly specified.  */
-block|&& !(base == 10&& !spec_unsigned&& *type_sequence[i].node_var == unsigned_type_node)) 		if (int_fits_type_p (yylval.ttype, *type_sequence[i].node_var)) 		  { 		    type = *type_sequence[i].node_var; 		    break; 		  } 	    if (flag_traditional&& type == long_unsigned_type_node&& !spec_unsigned) 	      type = long_integer_type_node; 	       	    if (type == 0) 	      { 		type = long_long_integer_type_node; 		warning ("integer constant out of range"); 	      }
+block|&& !(base == 10&& !spec_unsigned&& *type_sequence[i].node_var == unsigned_type_node)) 		if (int_fits_type_p (yylval.ttype, *type_sequence[i].node_var)) 		  { 		    type = *type_sequence[i].node_var; 		    break; 		  } 	    if (flag_traditional&& type == long_unsigned_type_node&& !spec_unsigned) 	      type = long_integer_type_node;  	    if (type == 0) 	      { 		type = long_long_integer_type_node; 		warning ("integer constant out of range"); 	      }
 comment|/* Warn about some cases where the type of a given constant 	       changes from traditional C to ANSI C.  */
 block|if (warn_traditional) 	      { 		tree other_type = 0;
 comment|/* This computation is the same as the previous one 		   except that flag_traditional is used backwards.  */
@@ -16663,7 +16663,7 @@ block|for (i = 0; i< sizeof (type_sequence) / sizeof (type_sequence[0]); 		     
 comment|/* A hex or octal constant traditionally is unsigned.  */
 block|&& !(base != 10&& !flag_traditional&& !type_sequence[i].unsigned_flag)
 comment|/* A decimal constant can't be unsigned int 			 unless explicitly specified.  */
-block|&& !(base == 10&& !spec_unsigned&& *type_sequence[i].node_var == unsigned_type_node)) 		    if (int_fits_type_p (yylval.ttype, *type_sequence[i].node_var)) 		      { 			other_type = *type_sequence[i].node_var; 			break; 		      } 		if (!flag_traditional&& type == long_unsigned_type_node&& !spec_unsigned) 		  type = long_integer_type_node; 	       		if (other_type != 0&& other_type != type) 		  { 		    if (flag_traditional) 		      warning ("type of integer constant would be different without -traditional"); 		    else 		      warning ("type of integer constant would be different with -traditional"); 		  } 	      }
+block|&& !(base == 10&& !spec_unsigned&& *type_sequence[i].node_var == unsigned_type_node)) 		    if (int_fits_type_p (yylval.ttype, *type_sequence[i].node_var)) 		      { 			other_type = *type_sequence[i].node_var; 			break; 		      } 		if (!flag_traditional&& type == long_unsigned_type_node&& !spec_unsigned) 		  type = long_integer_type_node;  		if (other_type != 0&& other_type != type) 		  { 		    if (flag_traditional) 		      warning ("type of integer constant would be different without -traditional"); 		    else 		      warning ("type of integer constant would be different with -traditional"); 		  } 	      }
 else|#
 directive|else
 comment|/* 1 */

@@ -2211,7 +2211,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero indicates special processing used by the pcp program.  The    special effects of this mode are:             Inhibit all macro expansion, except those inside #if directives.       Process #define directives normally, and output their contents       to the output file.       Output preconditions to pcp_outfile indicating all the relevant      preconditions for use of this file in a later cpp run. */
+comment|/* Nonzero indicates special processing used by the pcp program.  The    special effects of this mode are:       Inhibit all macro expansion, except those inside #if directives.       Process #define directives normally, and output their contents      to the output file.       Output preconditions to pcp_outfile indicating all the relevant      preconditions for use of this file in a later cpp run. */
 end_comment
 
 begin_decl_stmt
@@ -2964,7 +2964,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Global list of strings read in from precompiled files.  This list    is kept in the order the strings are read in, with new strings being    added at the end through stringlist_tailp.  We use this list to output    the strings at the end of the run.  */
+comment|/* Global list of strings read in from precompiled files.  This list    is kept in the order the strings are read in, with new strings being    added at the end through stringlist_tailp.  We use this list to output    the strings at the end of the run. */
 end_comment
 
 begin_decl_stmt
@@ -3154,7 +3154,7 @@ union|;
 end_union
 
 begin_comment
-comment|/*  * special extension string that can be added to the last macro argument to   * allow it to absorb the "rest" of the arguments when expanded.  Ex:  * 		#define wow(a, b...)		process (b, a, b)  *		{ wow (1, 2, 3); }	->	{ process (2, 3, 1, 2, 3); }  *		{ wow (one, two); }	->	{ process (two, one, two); }  * if this "rest_arg" is used with the concat token '##' and if it is not  * supplied then the token attached to with ## will not be outputted.  Ex:  * 		#define wow (a, b...)		process (b ## , a, ## b)  *		{ wow (1, 2); }		->	{ process (2, 1, 2); }  *		{ wow (one); }		->	{ process (one); {  */
+comment|/*  * special extension string that can be added to the last macro argument to  * allow it to absorb the "rest" of the arguments when expanded.  Ex:  * 		#define wow(a, b...)		process (b, a, b)  *		{ wow (1, 2, 3); }	->	{ process (2, 3, 1, 2, 3); }  *		{ wow (one, two); }	->	{ process (two, one, two); }  * if this "rest_arg" is used with the concat token '##' and if it is not  * supplied then the token attached to with ## will not be outputted.  Ex:  * 		#define wow (a, b...)		process (b ## , a, ## b)  *		{ wow (1, 2); }		->	{ process (2, 1, 2); }  *		{ wow (one); }		->	{ process (one); {  */
 end_comment
 
 begin_decl_stmt
@@ -21121,7 +21121,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Load the specified precompiled header into core, and verify its    preconditions.  PCF indicates the file descriptor to read, which must    be a regular file.  FNAME indicates the file name of the original     header.  *LIMIT will be set to an address one past the end of the file.    If the preconditions of the file are not satisfied, the buffer is     freed and we return 0.  If the preconditions are satisfied, return    the address of the buffer following the preconditions.  The buffer, in    this case, should never be freed because various pieces of it will    be referred to until all precompiled strings are output at the end of    the run. */
+comment|/* Load the specified precompiled header into core, and verify its    preconditions.  PCF indicates the file descriptor to read, which must    be a regular file.  FNAME indicates the file name of the original    header.  *LIMIT will be set to an address one past the end of the file.    If the preconditions of the file are not satisfied, the buffer is    freed and we return 0.  If the preconditions are satisfied, return    the address of the buffer following the preconditions.  The buffer, in    this case, should never be freed because various pieces of it will    be referred to until all precompiled strings are output at the end of    the run. */
 end_comment
 
 begin_function
@@ -22167,7 +22167,7 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-comment|/* This output_line_command serves to switch us back to the current      input file in case some of these strings get output (which will       result in line commands for the header file being output). */
+comment|/* This output_line_command serves to switch us back to the current      input file in case some of these strings get output (which will      result in line commands for the header file being output). */
 name|output_line_command
 argument_list|(
 operator|&
@@ -22677,7 +22677,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Create a DEFINITION node from a #define directive.  Arguments are     as for do_define. */
+comment|/* Create a DEFINITION node from a #define directive.  Arguments are    as for do_define. */
 end_comment
 
 begin_function
@@ -24646,7 +24646,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Read a replacement list for a macro with parameters.    Build the DEFINITION structure.    Reads characters of text starting at BUF until END.    ARGLIST specifies the formal parameters to look for    in the text of the definition; NARGS is the number of args    in that list, or -1 for a macro name that wants no argument list.    MACRONAME is the macro name itself (so we can avoid recursive expansion)    and NAMELEN is its length in characters.     Note that comments and backslash-newlines have already been deleted from the argument.  */
+comment|/* Read a replacement list for a macro with parameters.    Build the DEFINITION structure.    Reads characters of text starting at BUF until END.    ARGLIST specifies the formal parameters to look for    in the text of the definition; NARGS is the number of args    in that list, or -1 for a macro name that wants no argument list.    MACRONAME is the macro name itself (so we can avoid recursive expansion)    and NAMELEN is its length in characters.  Note that comments and backslash-newlines have already been deleted from the argument.  */
 end_comment
 
 begin_comment
@@ -33600,7 +33600,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* This structure represents one parsed argument in a macro call.    `raw' points to the argument text as written (`raw_length' is its length).    `expanded' points to the argument's macro-expansion    (its length is `expand_length').    `stringified_length' is the length the argument would have    if stringified.    `use_count' is the number of times this macro arg is substituted    into the macro.  If the actual use count exceeds 10,     the value stored is 10.    `free1' and `free2', if nonzero, point to blocks to be freed    when the macro argument data is no longer needed.  */
+comment|/* This structure represents one parsed argument in a macro call.    `raw' points to the argument text as written (`raw_length' is its length).    `expanded' points to the argument's macro-expansion    (its length is `expand_length').    `stringified_length' is the length the argument would have    if stringified.    `use_count' is the number of times this macro arg is substituted    into the macro.  If the actual use count exceeds 10,    the value stored is 10.    `free1' and `free2', if nonzero, point to blocks to be freed    when the macro argument data is no longer needed.  */
 end_comment
 
 begin_struct
@@ -36783,7 +36783,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Discard comments and duplicate newlines    in the string of length LENGTH at START,    except inside of string constants.    The string is copied into itself with its beginning staying fixed.       NEWLINES is the number of newlines that must be duplicated.    We assume that that much extra space is available past the end    of the string.  */
+comment|/* Discard comments and duplicate newlines    in the string of length LENGTH at START,    except inside of string constants.    The string is copied into itself with its beginning staying fixed.     NEWLINES is the number of newlines that must be duplicated.    We assume that that much extra space is available past the end    of the string.  */
 end_comment
 
 begin_function
@@ -43084,7 +43084,7 @@ operator|=
 name|Local
 expr_stmt|;
 comment|/* initialize */
-comment|/* We are trying to do a number of things here.  First of all, we are      trying to hammer the filenames into a standard format, such that later      processing can handle them.            If the file name contains something like [dir.], then it recognizes this      as a root, and strips the ".]".  Later processing will add whatever is      needed to get things working properly.            If no device is specified, then the first directory name is taken to be      a device name (or a rooted logical). */
+comment|/* We are trying to do a number of things here.  First of all, we are      trying to hammer the filenames into a standard format, such that later      processing can handle them.       If the file name contains something like [dir.], then it recognizes this      as a root, and strips the ".]".  Later processing will add whatever is      needed to get things working properly.       If no device is specified, then the first directory name is taken to be      a device name (or a rooted logical). */
 comment|/* See if we found that 1st slash */
 if|if
 condition|(

@@ -4,7 +4,7 @@ comment|/*  * Copyright 1991 Massachusetts Institute of Technology  *  * Permiss
 end_comment
 
 begin_comment
-comment|/*  * xditview --   *  *   Display ditroff output in an X window  */
+comment|/*  * xditview --  *  *   Display ditroff output in an X window  */
 end_comment
 
 begin_ifndef

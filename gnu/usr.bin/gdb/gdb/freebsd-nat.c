@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Native-dependent code for BSD Unix running on i386's, for GDB.    Copyright 1988, 1989, 1991, 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  	$Id: freebsd-nat.c,v 1.5 1995/04/26 01:01:07 jkh Exp $ */
+comment|/* Native-dependent code for BSD Unix running on i386's, for GDB.    Copyright 1988, 1989, 1991, 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  	$Id: freebsd-nat.c,v 1.6 1995/05/09 13:59:22 rgrimes Exp $ */
 end_comment
 
 begin_include
@@ -176,7 +176,7 @@ name|long
 modifier|*
 name|lp
 decl_stmt|;
-comment|/* push extended mode on 387 stack, then pop in double mode    *    * first, set exception masks so no error is generated -    * number will be rounded to inf or 0, if necessary     */
+comment|/* push extended mode on 387 stack, then pop in double mode    *    * first, set exception masks so no error is generated -    * number will be rounded to inf or 0, if necessary    */
 asm|asm ("pushl %eax");
 comment|/* grab a stack slot */
 asm|asm ("fstcw (%esp)");
@@ -2744,7 +2744,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * read len bytes from kernel virtual address 'addr' into local   * buffer 'buf'.  Return numbert of bytes if read ok, 0 otherwise.  On read  * errors, portion of buffer not read is zeroed.  */
+comment|/*  * read len bytes from kernel virtual address 'addr' into local  * buffer 'buf'.  Return numbert of bytes if read ok, 0 otherwise.  On read  * errors, portion of buffer not read is zeroed.  */
 end_comment
 
 begin_macro

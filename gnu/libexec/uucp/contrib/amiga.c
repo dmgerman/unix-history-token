@@ -8,7 +8,7 @@ comment|/* processes.                                                           
 end_comment
 
 begin_comment
-comment|/* The problem:  Cron is not a "licensed" process. any process that grabs a     controlling terminal needs to be licensed.  Taylor UUCP needs controlling    terminals.  Taylor UUCP does relinquish the controlling terminal before     fork(), so the "UUCP" license is appropriate.     This simple program does the "right" thing, but *MUST* be SETUID ROOT */
+comment|/* The problem:  Cron is not a "licensed" process. any process that grabs a    controlling terminal needs to be licensed.  Taylor UUCP needs controlling    terminals.  Taylor UUCP does relinquish the controlling terminal before    fork(), so the "UUCP" license is appropriate.    This simple program does the "right" thing, but *MUST* be SETUID ROOT */
 end_comment
 
 begin_comment

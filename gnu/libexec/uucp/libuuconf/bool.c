@@ -21,7 +21,7 @@ name|char
 name|_uuconf_bool_rcsid
 index|[]
 init|=
-literal|"$Id: bool.c,v 1.3 1994/01/30 21:14:29 ian Rel $"
+literal|"$Id: bool.c,v 1.2 1994/05/07 18:11:58 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -508,7 +508,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * find& return amound a local space allocated, and advance codestream to  * first register push (if any)  *  * if entry sequence doesn't make sense, return -1, and leave   * codestream pointer random  */
+comment|/*  * find& return amound a local space allocated, and advance codestream to  * first register push (if any)  *  * if entry sequence doesn't make sense, return -1, and leave  * codestream pointer random  */
 end_comment
 
 begin_function
@@ -547,7 +547,7 @@ literal|0x58
 condition|)
 comment|/* popl %eax */
 block|{
-comment|/*        * this function must start with        *         *    popl %eax		  0x58        *    xchgl %eax, (%esp)  0x87 0x04 0x24        * or xchgl %eax, 0(%esp) 0x87 0x44 0x24 0x00        *        * (the system 5 compiler puts out the second xchg        * inst, and the assembler doesn't try to optimize it,        * so the 'sib' form gets generated)        *         * this sequence is used to get the address of the return        * buffer for a function that returns a structure        */
+comment|/*        * this function must start with        *        *    popl %eax		  0x58        *    xchgl %eax, (%esp)  0x87 0x04 0x24        * or xchgl %eax, 0(%esp) 0x87 0x44 0x24 0x00        *        * (the system 5 compiler puts out the second xchg        * inst, and the assembler doesn't try to optimize it,        * so the 'sib' form gets generated)        *        * this sequence is used to get the address of the return        * buffer for a function that returns a structure        */
 name|int
 name|pos
 decl_stmt|;
@@ -708,7 +708,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* check for stack adjustment         *        *  subl $XXX, %esp        *        * note: you can't subtract a 16 bit immediate        * from a 32 bit reg, so we don't have to worry        * about a data16 prefix         */
+comment|/* check for stack adjustment        *        *  subl $XXX, %esp        *        * note: you can't subtract a 16 bit immediate        * from a 32 bit reg, so we don't have to worry        * about a data16 prefix        */
 name|op
 operator|=
 name|codestream_peek
@@ -746,7 +746,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* subl with signed byte immediate  	   * (though it wouldn't make sense to be negative) 	   */
+comment|/* subl with signed byte immediate 	   * (though it wouldn't make sense to be negative) 	   */
 return|return
 operator|(
 name|codestream_get
@@ -1082,7 +1082,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * parse the first few instructions of the function to see  * what registers were stored.  *  * We handle these cases:  *  * The startup sequence can be at the start of the function,  * or the function can start with a branch to startup code at the end.  *  * %ebp can be set up with either the 'enter' instruction, or   * 'pushl %ebp, movl %esp, %ebp' (enter is too slow to be useful,  * but was once used in the sys5 compiler)  *  * Local space is allocated just below the saved %ebp by either the  * 'enter' instruction, or by 'subl $<size>, %esp'.  'enter' has  * a 16 bit unsigned argument for space to allocate, and the  * 'addl' instruction could have either a signed byte, or  * 32 bit immediate.  *  * Next, the registers used by this function are pushed.  In  * the sys5 compiler they will always be in the order: %edi, %esi, %ebx  * (and sometimes a harmless bug causes it to also save but not restore %eax);  * however, the code below is willing to see the pushes in any order,  * and will handle up to 8 of them.  *  * If the setup sequence is at the end of the function, then the  * next instruction will be a branch back to the start.  */
+comment|/*  * parse the first few instructions of the function to see  * what registers were stored.  *  * We handle these cases:  *  * The startup sequence can be at the start of the function,  * or the function can start with a branch to startup code at the end.  *  * %ebp can be set up with either the 'enter' instruction, or  * 'pushl %ebp, movl %esp, %ebp' (enter is too slow to be useful,  * but was once used in the sys5 compiler)  *  * Local space is allocated just below the saved %ebp by either the  * 'enter' instruction, or by 'subl $<size>, %esp'.  'enter' has  * a 16 bit unsigned argument for space to allocate, and the  * 'addl' instruction could have either a signed byte, or  * 32 bit immediate.  *  * Next, the registers used by this function are pushed.  In  * the sys5 compiler they will always be in the order: %edi, %esi, %ebx  * (and sometimes a harmless bug causes it to also save but not restore %eax);  * however, the code below is willing to see the pushes in any order,  * and will handle up to 8 of them.  *  * If the setup sequence is at the end of the function, then the  * next instruction will be a branch back to the start.  */
 end_comment
 
 begin_function
@@ -1390,7 +1390,7 @@ operator|(
 name|pc
 operator|)
 return|;
-comment|/* found valid frame setup - codestream now points to     * start of push instructions for saving registers    */
+comment|/* found valid frame setup - codestream now points to    * start of push instructions for saving registers    */
 comment|/* skip over register saves */
 for|for
 control|(

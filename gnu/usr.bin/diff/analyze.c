@@ -1508,7 +1508,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Compare in detail contiguous subsequences of the two files    which are known, as a whole, to match each other.     The results are recorded in the vectors files[N].changed_flag, by    storing a 1 in the element for each line that is an insertion or deletion.     The subsequence of file 0 is [XOFF, XLIM) and likewise for file 1.     Note that XLIM, YLIM are exclusive bounds.    All line numbers are origin-0 and discarded lines are not counted.      If MINIMAL is nonzero, find a minimal difference no matter how    expensive it is.  */
+comment|/* Compare in detail contiguous subsequences of the two files    which are known, as a whole, to match each other.     The results are recorded in the vectors files[N].changed_flag, by    storing a 1 in the element for each line that is an insertion or deletion.     The subsequence of file 0 is [XOFF, XLIM) and likewise for file 1.     Note that XLIM, YLIM are exclusive bounds.    All line numbers are origin-0 and discarded lines are not counted.     If MINIMAL is nonzero, find a minimal difference no matter how    expensive it is.  */
 end_comment
 
 begin_function

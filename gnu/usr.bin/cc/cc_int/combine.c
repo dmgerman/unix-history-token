@@ -4,7 +4,7 @@ comment|/* Optimize by combining instructions for GNU compiler.    Copyright (C)
 end_comment
 
 begin_comment
-comment|/* This module is essentially the "combiner" phase of the U. of Arizona    Portable Optimizer, but redone to work on our list-structured    representation for RTL instead of their string representation.     The LOG_LINKS of each insn identify the most recent assignment    to each REG used in the insn.  It is a list of previous insns,    each of which contains a SET for a REG that is used in this insn    and not used or set in between.  LOG_LINKs never cross basic blocks.    They were set up by the preceding pass (lifetime analysis).     We try to combine each pair of insns joined by a logical link.    We also try to combine triples of insns A, B and C when    C has a link back to B and B has a link back to A.     LOG_LINKS does not have links for use of the CC0.  They don't    need to, because the insn that sets the CC0 is always immediately    before the insn that tests it.  So we always regard a branch    insn as having a logical link to the preceding insn.  The same is true    for an insn explicitly using CC0.     We check (with use_crosses_set_p) to avoid combining in such a way    as to move a computation to a place where its value would be different.     Combination is done by mathematically substituting the previous    insn(s) values for the regs they set into the expressions in    the later insns that refer to these regs.  If the result is a valid insn    for our target machine, according to the machine description,    we install it, delete the earlier insns, and update the data flow    information (LOG_LINKS and REG_NOTES) for what we did.     There are a few exceptions where the dataflow information created by    flow.c aren't completely updated:     - reg_live_length is not updated    - reg_n_refs is not adjusted in the rare case when a register is      no longer required in a computation    - there are extremely rare cases (see distribute_regnotes) when a      REG_DEAD note is lost    - a LOG_LINKS entry that refers to an insn with multiple SETs may be      removed because there is no way to know which register it was       linking     To simplify substitution, we combine only when the earlier insn(s)    consist of only a single assignment.  To simplify updating afterward,    we never combine when a subroutine call appears in the middle.     Since we do not represent assignments to CC0 explicitly except when that    is all an insn does, there is no LOG_LINKS entry in an insn that uses    the condition code for the insn that set the condition code.    Fortunately, these two insns must be consecutive.    Therefore, every JUMP_INSN is taken to have an implicit logical link    to the preceding insn.  This is not quite right, since non-jumps can    also use the condition code; but in practice such insns would not    combine anyway.  */
+comment|/* This module is essentially the "combiner" phase of the U. of Arizona    Portable Optimizer, but redone to work on our list-structured    representation for RTL instead of their string representation.     The LOG_LINKS of each insn identify the most recent assignment    to each REG used in the insn.  It is a list of previous insns,    each of which contains a SET for a REG that is used in this insn    and not used or set in between.  LOG_LINKs never cross basic blocks.    They were set up by the preceding pass (lifetime analysis).     We try to combine each pair of insns joined by a logical link.    We also try to combine triples of insns A, B and C when    C has a link back to B and B has a link back to A.     LOG_LINKS does not have links for use of the CC0.  They don't    need to, because the insn that sets the CC0 is always immediately    before the insn that tests it.  So we always regard a branch    insn as having a logical link to the preceding insn.  The same is true    for an insn explicitly using CC0.     We check (with use_crosses_set_p) to avoid combining in such a way    as to move a computation to a place where its value would be different.     Combination is done by mathematically substituting the previous    insn(s) values for the regs they set into the expressions in    the later insns that refer to these regs.  If the result is a valid insn    for our target machine, according to the machine description,    we install it, delete the earlier insns, and update the data flow    information (LOG_LINKS and REG_NOTES) for what we did.     There are a few exceptions where the dataflow information created by    flow.c aren't completely updated:     - reg_live_length is not updated    - reg_n_refs is not adjusted in the rare case when a register is      no longer required in a computation    - there are extremely rare cases (see distribute_regnotes) when a      REG_DEAD note is lost    - a LOG_LINKS entry that refers to an insn with multiple SETs may be      removed because there is no way to know which register it was      linking     To simplify substitution, we combine only when the earlier insn(s)    consist of only a single assignment.  To simplify updating afterward,    we never combine when a subroutine call appears in the middle.     Since we do not represent assignments to CC0 explicitly except when that    is all an insn does, there is no LOG_LINKS entry in an insn that uses    the condition code for the insn that set the condition code.    Fortunately, these two insns must be consecutive.    Therefore, every JUMP_INSN is taken to have an implicit logical link    to the preceding insn.  This is not quite right, since non-jumps can    also use the condition code; but in practice such insns would not    combine anyway.  */
 end_comment
 
 begin_include
@@ -351,7 +351,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This is the value of undobuf.num_undo when we started processing this     substitution.  This will prevent gen_rtx_combine from re-used a piece    from the previous expression.  Doing so can produce circular rtl    structures.  */
+comment|/* This is the value of undobuf.num_undo when we started processing this    substitution.  This will prevent gen_rtx_combine from re-used a piece    from the previous expression.  Doing so can produce circular rtl    structures.  */
 end_comment
 
 begin_decl_stmt
@@ -1866,7 +1866,7 @@ name|nonzero_sign_valid
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Compute the mapping from uids to cuids.      Cuids are numbers assigned to insns, like uids,      except that cuids increase monotonically through the code.        Scan all SETs and see if we can deduce anything about what      bits are known to be zero for some registers and how many copies      of the sign bit are known to exist for those registers.       Also set any known values so that we can use it while searching      for what bits are known to be set.  */
+comment|/* Compute the mapping from uids to cuids.      Cuids are numbers assigned to insns, like uids,      except that cuids increase monotonically through the code.       Scan all SETs and see if we can deduce anything about what      bits are known to be zero for some registers and how many copies      of the sign bit are known to exist for those registers.       Also set any known values so that we can use it while searching      for what bits are known to be set.  */
 name|label_tick
 operator|=
 literal|1
@@ -2910,7 +2910,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Called via note_stores.  If X is a pseudo that is used in more than    one basic block, is narrower that HOST_BITS_PER_WIDE_INT, and is being    set, record what bits are known zero.  If we are clobbering X,    ignore this "set" because the clobbered value won't be used.      If we are setting only a portion of X and we can't figure out what    portion, assume all bits will be used since we don't know what will    be happening.     Similarly, set how many bits of X are known to be copies of the sign bit    at all locations in the function.  This is the smallest number implied     by any set of X.  */
+comment|/* Called via note_stores.  If X is a pseudo that is used in more than    one basic block, is narrower that HOST_BITS_PER_WIDE_INT, and is being    set, record what bits are known zero.  If we are clobbering X,    ignore this "set" because the clobbered value won't be used.     If we are setting only a portion of X and we can't figure out what    portion, assume all bits will be used since we don't know what will    be happening.     Similarly, set how many bits of X are known to be copies of the sign bit    at all locations in the function.  This is the smallest number implied    by any set of X.  */
 end_comment
 
 begin_function
@@ -3129,7 +3129,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|SHORT_IMMEDIATES_SIGN_EXTEND
-comment|/* If X is narrower than a word and SRC is a non-negative 	     constant that would appear negative in the mode of X, 	     sign-extend it for use in reg_nonzero_bits because some 	     machines (maybe most) will actually do the sign-extension 	     and this is the conservative approach.   	     ??? For 2.5, try to tighten up the MD files in this regard 	     instead of this kludge.  */
+comment|/* If X is narrower than a word and SRC is a non-negative 	     constant that would appear negative in the mode of X, 	     sign-extend it for use in reg_nonzero_bits because some 	     machines (maybe most) will actually do the sign-extension 	     and this is the conservative approach.  	     ??? For 2.5, try to tighten up the MD files in this regard 	     instead of this kludge.  */
 if|if
 condition|(
 name|GET_MODE_BITSIZE
@@ -3314,7 +3314,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* See if INSN can be combined into I3.  PRED and SUCC are optionally    insns that were previously combined into I3 or that will be combined    into the merger of INSN and I3.     Return 0 if the combination is not allowed for any reason.     If the combination is allowed, *PDEST will be set to the single     destination of INSN and *PSRC to the single source, and this function    will return 1.  */
+comment|/* See if INSN can be combined into I3.  PRED and SUCC are optionally    insns that were previously combined into I3 or that will be combined    into the merger of INSN and I3.     Return 0 if the combination is not allowed for any reason.     If the combination is allowed, *PDEST will be set to the single    destination of INSN and *PSRC to the single source, and this function    will return 1.  */
 end_comment
 
 begin_function
@@ -3403,7 +3403,7 @@ operator|==
 name|i3
 operator|)
 decl_stmt|;
-comment|/* Can combine only if previous insn is a SET of a REG, a SUBREG or CC0.      or a PARALLEL consisting of such a SET and CLOBBERs.        If INSN has CLOBBER parallel parts, ignore them for our processing.      By definition, these happen during the execution of the insn.  When it      is merged with another insn, all bets are off.  If they are, in fact,      needed and aren't also supplied in I3, they may be added by      recog_for_combine.  Otherwise, it won't match.        We can also ignore a SET whose SET_DEST is mentioned in a REG_UNUSED      note.       Get the source and destination of INSN.  If more than one, can't       combine.  */
+comment|/* Can combine only if previous insn is a SET of a REG, a SUBREG or CC0.      or a PARALLEL consisting of such a SET and CLOBBERs.       If INSN has CLOBBER parallel parts, ignore them for our processing.      By definition, these happen during the execution of the insn.  When it      is merged with another insn, all bets are off.  If they are, in fact,      needed and aren't also supplied in I3, they may be added by      recog_for_combine.  Otherwise, it won't match.       We can also ignore a SET whose SET_DEST is mentioned in a REG_UNUSED      note.       Get the source and destination of INSN.  If more than one, can't      combine.  */
 if|if
 condition|(
 name|GET_CODE
@@ -4299,7 +4299,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* LOC is the location within I3 that contains its pattern or the component    of a PARALLEL of the pattern.  We validate that it is valid for combining.     One problem is if I3 modifies its output, as opposed to replacing it    entirely, we can't allow the output to contain I2DEST or I1DEST as doing    so would produce an insn that is not equivalent to the original insns.     Consider:           (set (reg:DI 101) (reg:DI 100)) 	 (set (subreg:SI (reg:DI 101) 0)<foo>)     This is NOT equivalent to:           (parallel [(set (subreg:SI (reg:DI 100) 0)<foo>) 	 	    (set (reg:DI 101) (reg:DI 100))])     Not only does this modify 100 (in which case it might still be valid    if 100 were dead in I2), it sets 101 to the ORIGINAL value of 100.      We can also run into a problem if I2 sets a register that I1    uses and I1 gets directly substituted into I3 (not via I2).  In that    case, we would be getting the wrong value of I2DEST into I3, so we    must reject the combination.  This case occurs when I2 and I1 both    feed into I3, rather than when I1 feeds into I2, which feeds into I3.    If I1_NOT_IN_SRC is non-zero, it means that finding I1 in the source    of a SET must prevent combination from occurring.     On machines where SMALL_REGISTER_CLASSES is defined, we don't combine    if the destination of a SET is a hard register that isn't a user    variable.     Before doing the above check, we first try to expand a field assignment    into a set of logical operations.     If PI3_DEST_KILLED is non-zero, it is a pointer to a location in which    we place a register that is both set and used within I3.  If more than one    such register is detected, we fail.     Return 1 if the combination is valid, zero otherwise.  */
+comment|/* LOC is the location within I3 that contains its pattern or the component    of a PARALLEL of the pattern.  We validate that it is valid for combining.     One problem is if I3 modifies its output, as opposed to replacing it    entirely, we can't allow the output to contain I2DEST or I1DEST as doing    so would produce an insn that is not equivalent to the original insns.     Consider:           (set (reg:DI 101) (reg:DI 100)) 	 (set (subreg:SI (reg:DI 101) 0)<foo>)     This is NOT equivalent to:           (parallel [(set (subreg:SI (reg:DI 100) 0)<foo>) 	 	    (set (reg:DI 101) (reg:DI 100))])     Not only does this modify 100 (in which case it might still be valid    if 100 were dead in I2), it sets 101 to the ORIGINAL value of 100.     We can also run into a problem if I2 sets a register that I1    uses and I1 gets directly substituted into I3 (not via I2).  In that    case, we would be getting the wrong value of I2DEST into I3, so we    must reject the combination.  This case occurs when I2 and I1 both    feed into I3, rather than when I1 feeds into I2, which feeds into I3.    If I1_NOT_IN_SRC is non-zero, it means that finding I1 in the source    of a SET must prevent combination from occurring.     On machines where SMALL_REGISTER_CLASSES is defined, we don't combine    if the destination of a SET is a hard register that isn't a user    variable.     Before doing the above check, we first try to expand a field assignment    into a set of logical operations.     If PI3_DEST_KILLED is non-zero, it is a pointer to a location in which    we place a register that is both set and used within I3.  If more than one    such register is detected, we fail.     Return 1 if the combination is valid, zero otherwise.  */
 end_comment
 
 begin_function
@@ -4534,7 +4534,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* If DEST is used in I3, it is being killed in this insn, 	 so record that for later.  	 Never add REG_DEAD notes for the FRAME_POINTER_REGNUM or the 	 STACK_POINTER_REGNUM, since these are always considered to be 	 live.  Similarly for ARG_POINTER_REGNUM if it is fixed.  */
+comment|/* If DEST is used in I3, it is being killed in this insn, 	 so record that for later. 	 Never add REG_DEAD notes for the FRAME_POINTER_REGNUM or the 	 STACK_POINTER_REGNUM, since these are always considered to be 	 live.  Similarly for ARG_POINTER_REGNUM if it is fixed.  */
 if|if
 condition|(
 name|pi3dest_killed
@@ -4697,7 +4697,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Try to combine the insns I1 and I2 into I3.    Here I1 and I2 appear earlier than I3.    I1 can be zero; then we combine just I2 into I3.      It we are combining three insns and the resulting insn is not recognized,    try splitting it into two insns.  If that happens, I2 and I3 are retained    and I1 is pseudo-deleted by turning it into a NOTE.  Otherwise, I1 and I2    are pseudo-deleted.     Return 0 if the combination does not work.  Then nothing is changed.     If we did the combination, return the insn at which combine should    resume scanning.  */
+comment|/* Try to combine the insns I1 and I2 into I3.    Here I1 and I2 appear earlier than I3.    I1 can be zero; then we combine just I2 into I3.     It we are combining three insns and the resulting insn is not recognized,    try splitting it into two insns.  If that happens, I2 and I3 are retained    and I1 is pseudo-deleted by turning it into a NOTE.  Otherwise, I1 and I2    are pseudo-deleted.     Return 0 if the combination does not work.  Then nothing is changed.    If we did the combination, return the insn at which combine should    resume scanning.  */
 end_comment
 
 begin_function
@@ -7111,7 +7111,7 @@ name|new_i3_notes
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If we were combining three insns and the result is a simple SET      with no ASM_OPERANDS that wasn't recognized, try to split it into two      insns.  There are two ways to do this.  It can be split using a       machine-specific method (like when you have an addition of a large      constant) or by combine in the function find_split_point.  */
+comment|/* If we were combining three insns and the result is a simple SET      with no ASM_OPERANDS that wasn't recognized, try to split it into two      insns.  There are two ways to do this.  It can be split using a      machine-specific method (like when you have an addition of a large      constant) or by combine in the function find_split_point.  */
 if|if
 condition|(
 name|i1
@@ -9071,7 +9071,7 @@ name|NULL_RTX
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* We now know that we can do this combination.  Merge the insns and       update the status of registers and LOG_LINKS.  */
+comment|/* We now know that we can do this combination.  Merge the insns and      update the status of registers and LOG_LINKS.  */
 block|{
 name|rtx
 name|i3notes
@@ -9772,7 +9772,7 @@ argument_list|,
 name|elim_i1
 argument_list|)
 expr_stmt|;
-comment|/* Distribute any notes added to I2 or I3 by recog_for_combine.  We        know these are REG_UNUSED and want them to go to the desired insn,        so we always pass it as i3.  We have not counted the notes in         reg_n_deaths yet, so we need to do so now.  */
+comment|/* Distribute any notes added to I2 or I3 by recog_for_combine.  We        know these are REG_UNUSED and want them to go to the desired insn,        so we always pass it as i3.  We have not counted the notes in        reg_n_deaths yet, so we need to do so now.  */
 if|if
 condition|(
 name|newi2pat
@@ -10176,7 +10176,7 @@ literal|0
 decl_stmt|,
 name|set
 decl_stmt|;
-comment|/* The insn that used to set this register doesn't exist, and 	   this life of the register may not exist either.  See if one of 	   I3's links points to an insn that sets I2DEST.  If it does,  	   that is now the last known value for I2DEST. If we don't update 	   this and I2 set the register to a value that depended on its old 	   contents, we will get confused.  If this insn is used, thing 	   will be set correctly in combine_instructions.  */
+comment|/* The insn that used to set this register doesn't exist, and 	   this life of the register may not exist either.  See if one of 	   I3's links points to an insn that sets I2DEST.  If it does, 	   that is now the last known value for I2DEST. If we don't update 	   this and I2 set the register to a value that depended on its old 	   contents, we will get confused.  If this insn is used, thing 	   will be set correctly in combine_instructions.  */
 for|for
 control|(
 name|link
@@ -10505,7 +10505,7 @@ argument_list|,
 name|set_nonzero_bits_and_sign_copies
 argument_list|)
 expr_stmt|;
-comment|/* If I3 is now an unconditional jump, ensure that it has a         BARRIER following it since it may have initially been a        conditional jump.  It may also be the last nonnote insn.  */
+comment|/* If I3 is now an unconditional jump, ensure that it has a        BARRIER following it since it may have initially been a        conditional jump.  It may also be the last nonnote insn.  */
 if|if
 condition|(
 operator|(
@@ -12897,7 +12897,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Throughout X, replace FROM with TO, and return the result.    The result is TO if X is FROM;    otherwise the result is X, but its contents may have been modified.    If they were modified, a record was made in undobuf so that    undo_all will (among other things) return X to its original state.     If the number of changes necessary is too much to record to undo,    the excess changes are not made, so the result is invalid.    The changes already made can still be undone.    undobuf.num_undo is incremented for such changes, so by testing that    the caller can tell whether the result is valid.     `n_occurrences' is incremented each time FROM is replaced.        IN_DEST is non-zero if we are processing the SET_DEST of a SET.     UNIQUE_COPY is non-zero if each substitution must be unique.  We do this    by copying if `n_occurrences' is non-zero.  */
+comment|/* Throughout X, replace FROM with TO, and return the result.    The result is TO if X is FROM;    otherwise the result is X, but its contents may have been modified.    If they were modified, a record was made in undobuf so that    undo_all will (among other things) return X to its original state.     If the number of changes necessary is too much to record to undo,    the excess changes are not made, so the result is invalid.    The changes already made can still be undone.    undobuf.num_undo is incremented for such changes, so by testing that    the caller can tell whether the result is valid.     `n_occurrences' is incremented each time FROM is replaced.     IN_DEST is non-zero if we are processing the SET_DEST of a SET.     UNIQUE_COPY is non-zero if each substitution must be unique.  We do this    by copying if `n_occurrences' is non-zero.  */
 end_comment
 
 begin_function
@@ -13004,7 +13004,7 @@ name|to
 operator|)
 return|;
 block|}
-comment|/* If X and FROM are the same register but different modes, they will      not have been seen as equal above.  However, flow.c will make a       LOG_LINKS entry for that case.  If we do nothing, we will try to      rerecognize our original insn and, when it succeeds, we will      delete the feeding insn, which is incorrect.       So force this insn not to match in this (rare) case.  */
+comment|/* If X and FROM are the same register but different modes, they will      not have been seen as equal above.  However, flow.c will make a      LOG_LINKS entry for that case.  If we do nothing, we will try to      rerecognize our original insn and, when it succeeds, we will      delete the feeding insn, which is incorrect.       So force this insn not to match in this (rare) case.  */
 if|if
 condition|(
 operator|!
@@ -13436,7 +13436,7 @@ operator|++
 expr_stmt|;
 block|}
 else|else
-comment|/* If we are in a SET_DEST, suppress most cases unless we 	       have gone inside a MEM, in which case we want to 	       simplify the address.  We assume here that things that 	       are actually part of the destination have their inner 	       parts in the first expression.  This is true for SUBREG,  	       STRICT_LOW_PART, and ZERO_EXTRACT, which are the only 	       things aside from REG and MEM that should appear in a 	       SET_DEST.  */
+comment|/* If we are in a SET_DEST, suppress most cases unless we 	       have gone inside a MEM, in which case we want to 	       simplify the address.  We assume here that things that 	       are actually part of the destination have their inner 	       parts in the first expression.  This is true for SUBREG, 	       STRICT_LOW_PART, and ZERO_EXTRACT, which are the only 	       things aside from REG and MEM that should appear in a 	       SET_DEST.  */
 name|new
 operator|=
 name|subst
@@ -14118,7 +14118,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If this is a simple operation applied to an IF_THEN_ELSE, try       applying it to the arms of the IF_THEN_ELSE.  This often simplifies      things.  Check for cases where both arms are testing the same      condition.       Don't do anything if all operands are very simple.  */
+comment|/* If this is a simple operation applied to an IF_THEN_ELSE, try      applying it to the arms of the IF_THEN_ELSE.  This often simplifies      things.  Check for cases where both arms are testing the same      condition.       Don't do anything if all operands are very simple.  */
 if|if
 condition|(
 operator|(
@@ -14363,7 +14363,7 @@ operator|&
 name|cop1
 argument_list|)
 decl_stmt|;
-comment|/* Simplify the alternative arms; this may collapse the true and  	     false arms to store-flag values.  */
+comment|/* Simplify the alternative arms; this may collapse the true and 	     false arms to store-flag values.  */
 name|true
 operator|=
 name|subst
@@ -19147,7 +19147,7 @@ argument_list|,
 name|op1
 argument_list|)
 return|;
-comment|/* Otherwise, keep this operation, but maybe change its operands.   	     This also converts (ne (compare FOO BAR) 0) to (ne FOO BAR).  */
+comment|/* Otherwise, keep this operation, but maybe change its operands. 	     This also converts (ne (compare FOO BAR) 0) to (ne FOO BAR).  */
 name|SUBST
 argument_list|(
 name|XEXP
@@ -22575,7 +22575,7 @@ name|src
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If we have (set x (subreg:m1 (op:m2 ...) 0)) with OP being some operation,      and X being a REG or (subreg (reg)), we may be able to convert this to      (set (subreg:m2 x) (op)).        We can always do this if M1 is narrower than M2 because that means that      we only care about the low bits of the result.       However, on machines without WORD_REGISTER_OPERATIONS defined, we cannot      perform a narrower operation that requested since the high-order bits will      be undefined.  On machine where it is defined, this transformation is safe      as long as M1 and M2 have the same number of words.  */
+comment|/* If we have (set x (subreg:m1 (op:m2 ...) 0)) with OP being some operation,      and X being a REG or (subreg (reg)), we may be able to convert this to      (set (subreg:m2 x) (op)).       We can always do this if M1 is narrower than M2 because that means that      we only care about the low bits of the result.       However, on machines without WORD_REGISTER_OPERATIONS defined, we cannot      perform a narrower operation that requested since the high-order bits will      be undefined.  On machine where it is defined, this transformation is safe      as long as M1 and M2 have the same number of words.  */
 if|if
 condition|(
 name|GET_CODE
@@ -23896,7 +23896,7 @@ condition|)
 return|return
 name|op1
 return|;
-comment|/* In the following group of tests (and those in case IOR below), 	 we start with some combination of logical operations and apply 	 the distributive law followed by the inverse distributive law. 	 Most of the time, this results in no change.  However, if some of 	 the operands are the same or inverses of each other, simplifications 	 will result.  	 For example, (and (ior A B) (not B)) can occur as the result of 	 expanding a bit field assignment.  When we apply the distributive 	 law to this, we get (ior (and (A (not B))) (and (B (not B)))), 	 which then simplifies to (and (A (not B))).   	 If we have (and (ior A B) C), apply the distributive law and then 	 the inverse distributive law to see if things simplify.  */
+comment|/* In the following group of tests (and those in case IOR below), 	 we start with some combination of logical operations and apply 	 the distributive law followed by the inverse distributive law. 	 Most of the time, this results in no change.  However, if some of 	 the operands are the same or inverses of each other, simplifications 	 will result.  	 For example, (and (ior A B) (not B)) can occur as the result of 	 expanding a bit field assignment.  When we apply the distributive 	 law to this, we get (ior (and (A (not B))) (and (B (not B)))), 	 which then simplifies to (and (A (not B))).  	 If we have (and (ior A B) C), apply the distributive law and then 	 the inverse distributive law to see if things simplify.  */
 if|if
 condition|(
 name|GET_CODE
@@ -25146,7 +25146,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* We consider ZERO_EXTRACT, SIGN_EXTRACT, and SIGN_EXTEND as "compound    operations" because they can be replaced with two more basic operations.    ZERO_EXTEND is also considered "compound" because it can be replaced with    an AND operation, which is simpler, though only one operation.     The function expand_compound_operation is called with an rtx expression    and will convert it to the appropriate shifts and AND operations,     simplifying at each stage.     The function make_compound_operation is called to convert an expression    consisting of shifts and ANDs into the equivalent compound expression.    It is the inverse of this function, loosely speaking.  */
+comment|/* We consider ZERO_EXTRACT, SIGN_EXTRACT, and SIGN_EXTEND as "compound    operations" because they can be replaced with two more basic operations.    ZERO_EXTEND is also considered "compound" because it can be replaced with    an AND operation, which is simpler, though only one operation.     The function expand_compound_operation is called with an rtx expression    and will convert it to the appropriate shifts and AND operations,    simplifying at each stage.     The function make_compound_operation is called to convert an expression    consisting of shifts and ANDs into the equivalent compound expression.    It is the inverse of this function, loosely speaking.  */
 end_comment
 
 begin_function
@@ -25436,7 +25436,7 @@ return|return
 name|x
 return|;
 block|}
-comment|/* If we reach here, we want to return a pair of shifts.  The inner      shift is a left shift of BITSIZE - POS - LEN bits.  The outer      shift is a right shift of BITSIZE - LEN bits.  It is arithmetic or      logical depending on the value of UNSIGNEDP.       If this was a ZERO_EXTEND or ZERO_EXTRACT, this pair of shifts will be      converted into an AND of a shift.       We must check for the case where the left shift would have a negative      count.  This can happen in a case like (x>> 31)& 255 on machines      that can't shift by a constant.  On those machines, we would first      combine the shift with the AND to produce a variable-position       extraction.  Then the constant of 31 would be substituted in to produce      a such a position.  */
+comment|/* If we reach here, we want to return a pair of shifts.  The inner      shift is a left shift of BITSIZE - POS - LEN bits.  The outer      shift is a right shift of BITSIZE - LEN bits.  It is arithmetic or      logical depending on the value of UNSIGNEDP.       If this was a ZERO_EXTEND or ZERO_EXTRACT, this pair of shifts will be      converted into an AND of a shift.       We must check for the case where the left shift would have a negative      count.  This can happen in a case like (x>> 31)& 255 on machines      that can't shift by a constant.  On those machines, we would first      combine the shift with the AND to produce a variable-position      extraction.  Then the constant of 31 would be substituted in to produce      a such a position.  */
 name|modewidth
 operator|=
 name|GET_MODE_BITSIZE
@@ -26162,7 +26162,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Return an RTX for a reference to LEN bits of INNER.  If POS_RTX is nonzero,    it is an RTX that represents a variable starting position; otherwise,    POS is the (constant) starting bit position (counted from the LSB).     INNER may be a USE.  This will occur when we started with a bitfield    that went outside the boundary of the object in memory, which is    allowed on most machines.  To isolate this case, we produce a USE    whose mode is wide enough and surround the MEM with it.  The only    code that understands the USE is this routine.  If it is not removed,    it will cause the resulting insn not to match.     UNSIGNEDP is non-zero for an unsigned reference and zero for a     signed reference.     IN_DEST is non-zero if this is a reference in the destination of a    SET.  This is used when a ZERO_ or SIGN_EXTRACT isn't needed.  If non-zero,    a STRICT_LOW_PART will be used, if zero, ZERO_EXTEND or SIGN_EXTEND will    be used.     IN_COMPARE is non-zero if we are in a COMPARE.  This means that a    ZERO_EXTRACT should be built even for bits starting at bit 0.     MODE is the desired mode of the result (if IN_DEST == 0).  */
+comment|/* Return an RTX for a reference to LEN bits of INNER.  If POS_RTX is nonzero,    it is an RTX that represents a variable starting position; otherwise,    POS is the (constant) starting bit position (counted from the LSB).     INNER may be a USE.  This will occur when we started with a bitfield    that went outside the boundary of the object in memory, which is    allowed on most machines.  To isolate this case, we produce a USE    whose mode is wide enough and surround the MEM with it.  The only    code that understands the USE is this routine.  If it is not removed,    it will cause the resulting insn not to match.     UNSIGNEDP is non-zero for an unsigned reference and zero for a    signed reference.     IN_DEST is non-zero if this is a reference in the destination of a    SET.  This is used when a ZERO_ or SIGN_EXTRACT isn't needed.  If non-zero,    a STRICT_LOW_PART will be used, if zero, ZERO_EXTEND or SIGN_EXTEND will    be used.     IN_COMPARE is non-zero if we are in a COMPARE.  This means that a    ZERO_EXTRACT should be built even for bits starting at bit 0.     MODE is the desired mode of the result (if IN_DEST == 0).  */
 end_comment
 
 begin_function
@@ -26507,7 +26507,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* If INNER is a MEM, make a new MEM that encompasses just the desired 	 field.  If the original and current mode are the same, we need not 	 adjust the offset.  Otherwise, we do if bytes big endian.    	 If INNER is not a MEM, get a piece consisting of the just the field 	 of interest (in this case POS must be 0).  */
+comment|/* If INNER is a MEM, make a new MEM that encompasses just the desired 	 field.  If the original and current mode are the same, we need not 	 adjust the offset.  Otherwise, we do if bytes big endian.  	 If INNER is not a MEM, get a piece consisting of the just the field 	 of interest (in this case POS must be 0).  */
 if|if
 condition|(
 name|GET_CODE
@@ -26698,7 +26698,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* If this extraction is going into the destination of a SET,  	 make a STRICT_LOW_PART unless we made a MEM.  */
+comment|/* If this extraction is going into the destination of a SET, 	 make a STRICT_LOW_PART unless we made a MEM.  */
 if|if
 condition|(
 name|in_dest
@@ -29461,7 +29461,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* See if X can be simplified knowing that we will only refer to it in    MODE and will only refer to those bits that are nonzero in MASK.    If other bits are being computed or if masking operations are done    that select a superset of the bits in MASK, they can sometimes be    ignored.     Return a possibly simplified expression, but always convert X to    MODE.  If X is a CONST_INT, AND the CONST_INT with MASK.     Also, if REG is non-zero and X is a register equal in value to REG,     replace X with REG.     If JUST_SELECT is nonzero, don't optimize by noticing that bits in MASK    are all off in X.  This is used when X will be complemented, by either    NOT, NEG, or XOR.  */
+comment|/* See if X can be simplified knowing that we will only refer to it in    MODE and will only refer to those bits that are nonzero in MASK.    If other bits are being computed or if masking operations are done    that select a superset of the bits in MASK, they can sometimes be    ignored.     Return a possibly simplified expression, but always convert X to    MODE.  If X is a CONST_INT, AND the CONST_INT with MASK.     Also, if REG is non-zero and X is a register equal in value to REG,    replace X with REG.     If JUST_SELECT is nonzero, don't optimize by noticing that bits in MASK    are all off in X.  This is used when X will be complemented, by either    NOT, NEG, or XOR.  */
 end_comment
 
 begin_function
@@ -33386,7 +33386,7 @@ argument_list|)
 operator|)
 condition|)
 empty_stmt|;
-comment|/* If X is known to be either 0 or -1, those are the true and       false values when testing X.  */
+comment|/* If X is known to be either 0 or -1, those are the true and      false values when testing X.  */
 elseif|else
 if|if
 condition|(
@@ -36139,7 +36139,7 @@ return|;
 ifndef|#
 directive|ifndef
 name|WORD_REGISTER_OPERATIONS
-comment|/* If MODE is wider than X, but both are a single word for both the host      and target machines, we can compute this from which bits of the       object might be nonzero in its own mode, taking into account the fact      that on many CISC machines, accessing an object in a wider mode      causes the high-order bits to become undefined.  So they are      not known to be zero.  */
+comment|/* If MODE is wider than X, but both are a single word for both the host      and target machines, we can compute this from which bits of the      object might be nonzero in its own mode, taking into account the fact      that on many CISC machines, accessing an object in a wider mode      causes the high-order bits to become undefined.  So they are      not known to be zero.  */
 if|if
 condition|(
 name|GET_MODE
@@ -36369,7 +36369,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|SHORT_IMMEDIATES_SIGN_EXTEND
-comment|/* If X is narrower than MODE and TEM is a non-negative 	     constant that would appear negative in the mode of X, 	     sign-extend it for use in reg_nonzero_bits because some 	     machines (maybe most) will actually do the sign-extension 	     and this is the conservative approach.   	     ??? For 2.5, try to tighten up the MD files in this regard 	     instead of this kludge.  */
+comment|/* If X is narrower than MODE and TEM is a non-negative 	     constant that would appear negative in the mode of X, 	     sign-extend it for use in reg_nonzero_bits because some 	     machines (maybe most) will actually do the sign-extension 	     and this is the conservative approach.  	     ??? For 2.5, try to tighten up the MD files in this regard 	     instead of this kludge.  */
 if|if
 condition|(
 name|GET_MODE_BITSIZE
@@ -39496,7 +39496,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* This function is called from `simplify_shift_const' to merge two    outer operations.  Specifically, we have already found that we need    to perform operation *POP0 with constant *PCONST0 at the outermost    position.  We would now like to also perform OP1 with constant CONST1    (with *POP0 being done last).     Return 1 if we can do the operation and update *POP0 and *PCONST0 with    the resulting operation.  *PCOMP_P is set to 1 if we would need to     complement the innermost operand, otherwise it is unchanged.     MODE is the mode in which the operation will be done.  No bits outside    the width of this mode matter.  It is assumed that the width of this mode    is smaller than or equal to HOST_BITS_PER_WIDE_INT.     If *POP0 or OP1 are NIL, it means no operation is required.  Only NEG, PLUS,    IOR, XOR, and AND are supported.  We may set *POP0 to SET if the proper    result is simply *PCONST0.     If the resulting operation cannot be expressed as one operation, we    return 0 and do not change *POP0, *PCONST0, and *PCOMP_P.  */
+comment|/* This function is called from `simplify_shift_const' to merge two    outer operations.  Specifically, we have already found that we need    to perform operation *POP0 with constant *PCONST0 at the outermost    position.  We would now like to also perform OP1 with constant CONST1    (with *POP0 being done last).     Return 1 if we can do the operation and update *POP0 and *PCONST0 with    the resulting operation.  *PCOMP_P is set to 1 if we would need to    complement the innermost operand, otherwise it is unchanged.     MODE is the mode in which the operation will be done.  No bits outside    the width of this mode matter.  It is assumed that the width of this mode    is smaller than or equal to HOST_BITS_PER_WIDE_INT.     If *POP0 or OP1 are NIL, it means no operation is required.  Only NEG, PLUS,    IOR, XOR, and AND are supported.  We may set *POP0 to SET if the proper    result is simply *PCONST0.     If the resulting operation cannot be expressed as one operation, we    return 0 and do not change *POP0, *PCONST0, and *PCOMP_P.  */
 end_comment
 
 begin_function
@@ -40804,7 +40804,7 @@ break|break;
 case|case
 name|ASHIFTRT
 case|:
-comment|/* If we are extracting just the sign bit of an arithmetic right  	     shift, that shift is not needed.  */
+comment|/* If we are extracting just the sign bit of an arithmetic right 	     shift, that shift is not needed.  */
 if|if
 condition|(
 name|code
@@ -41027,7 +41027,7 @@ name|ASHIFTRT
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* If this was (ashiftrt (ashift foo C1) C2) and FOO has more 		 than C1 high-order bits equal to the sign bit, we can convert 		 this to either an ASHIFT or a ASHIFTRT depending on the 		 two counts.   		 We cannot do this if VAROP's mode is not SHIFT_MODE.  */
+comment|/* If this was (ashiftrt (ashift foo C1) C2) and FOO has more 		 than C1 high-order bits equal to the sign bit, we can convert 		 this to either an ASHIFT or a ASHIFTRT depending on the 		 two counts.  		 We cannot do this if VAROP's mode is not SHIFT_MODE.  */
 if|if
 condition|(
 name|code
@@ -41182,7 +41182,7 @@ operator|)
 operator|)
 condition|)
 break|break;
-comment|/* To compute the mask to apply after the shift, shift the 		 nonzero bits of the inner shift the same way the  		 outer shift will.  */
+comment|/* To compute the mask to apply after the shift, shift the 		 nonzero bits of the inner shift the same way the 		 outer shift will.  */
 name|mask_rtx
 operator|=
 name|GEN_INT
@@ -41283,7 +41283,7 @@ name|count
 operator|-=
 name|first_count
 expr_stmt|;
-comment|/* If COUNT is positive, the new shift is usually CODE,  		 except for the two exceptions below, in which case it is 		 FIRST_CODE.  If the count is negative, FIRST_CODE should 		 always be used  */
+comment|/* If COUNT is positive, the new shift is usually CODE, 		 except for the two exceptions below, in which case it is 		 FIRST_CODE.  If the count is negative, FIRST_CODE should 		 always be used  */
 if|if
 condition|(
 name|count
@@ -44321,7 +44321,7 @@ argument_list|(
 name|op0
 argument_list|)
 decl_stmt|;
-comment|/* Strip the COMPARE from (REL_OP (compare X Y) 0) to get  	 just (REL_OP X Y). */
+comment|/* Strip the COMPARE from (REL_OP (compare X Y) 0) to get 	 just (REL_OP X Y). */
 if|if
 condition|(
 name|GET_CODE
@@ -45972,7 +45972,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* Do some canonicalizations based on the comparison code.  We prefer 	 comparisons against zero and then prefer equality comparisons.   	 If we can reduce the size of a constant, we will do that too.  */
+comment|/* Do some canonicalizations based on the comparison code.  We prefer 	 comparisons against zero and then prefer equality comparisons. 	 If we can reduce the size of a constant, we will do that too.  */
 switch|switch
 condition|(
 name|code
@@ -46503,7 +46503,7 @@ block|{
 case|case
 name|ZERO_EXTRACT
 case|:
-comment|/* If we are extracting a single bit from a variable position in 	     a constant that has only a single bit set and are comparing it 	     with zero, we can convert this into an equality comparison  	     between the position and the location of the single bit.  We can't 	     do this if bit endian and we don't have an extzv since we then 	     can't know what mode to use for the endianness adjustment.  */
+comment|/* If we are extracting a single bit from a variable position in 	     a constant that has only a single bit set and are comparing it 	     with zero, we can convert this into an equality comparison 	     between the position and the location of the single bit.  We can't 	     do this if bit endian and we don't have an extzv since we then 	     can't know what mode to use for the endianness adjustment.  */
 if|#
 directive|if
 operator|!
@@ -47042,7 +47042,7 @@ break|break;
 case|case
 name|SIGN_EXTEND
 case|:
-comment|/* Can simplify (compare (zero/sign_extend FOO) CONST) 	     to (compare FOO CONST) if CONST fits in FOO's mode and we  	     are either testing inequality or have an unsigned comparison 	     with ZERO_EXTEND or a signed comparison with SIGN_EXTEND.  */
+comment|/* Can simplify (compare (zero/sign_extend FOO) CONST) 	     to (compare FOO CONST) if CONST fits in FOO's mode and we 	     are either testing inequality or have an unsigned comparison 	     with ZERO_EXTEND or a signed comparison with SIGN_EXTEND.  */
 if|if
 condition|(
 operator|!
@@ -51628,7 +51628,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Function called via note_stores from reg_dead_at_p.     If DEST is within [reg_dead_rengno, reg_dead_endregno), set     reg_dead_flag to 1 if X is a CLOBBER and to -1 it is a SET.  */
+comment|/* Function called via note_stores from reg_dead_at_p.     If DEST is within [reg_dead_rengno, reg_dead_endregno), set    reg_dead_flag to 1 if X is a CLOBBER and to -1 it is a SET.  */
 end_comment
 
 begin_function
@@ -52409,7 +52409,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* For each register (hardware or pseudo) used within expression X, if its    death is in an instruction with cuid between FROM_CUID (inclusive) and    TO_INSN (exclusive), put a REG_DEAD note for that register in the    list headed by PNOTES.      This is done when X is being merged by combination into TO_INSN.  These    notes will then be distributed as needed.  */
+comment|/* For each register (hardware or pseudo) used within expression X, if its    death is in an instruction with cuid between FROM_CUID (inclusive) and    TO_INSN (exclusive), put a REG_DEAD note for that register in the    list headed by PNOTES.     This is done when X is being merged by combination into TO_INSN.  These    notes will then be distributed as needed.  */
 end_comment
 
 begin_function
@@ -53896,7 +53896,7 @@ operator|==
 name|elim_i1
 condition|)
 break|break;
-comment|/* If the register is used in both I2 and I3 and it dies in I3,  	     we might have added another reference to it.  If reg_n_refs 	     was 2, bump it to 3.  This has to be correct since the  	     register must have been set somewhere.  The reason this is 	     done is because local-alloc.c treats 2 references as a  	     special case.  */
+comment|/* If the register is used in both I2 and I3 and it dies in I3, 	     we might have added another reference to it.  If reg_n_refs 	     was 2, bump it to 3.  This has to be correct since the 	     register must have been set somewhere.  The reason this is 	     done is because local-alloc.c treats 2 references as a 	     special case.  */
 if|if
 condition|(
 name|place
@@ -54064,7 +54064,7 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-comment|/* Move the notes and links of TEM elsewhere. 			   This might delete other dead insns recursively.  			   First set the pattern to something that won't use 			   any register.  */
+comment|/* Move the notes and links of TEM elsewhere. 			   This might delete other dead insns recursively. 			   First set the pattern to something that won't use 			   any register.  */
 name|PATTERN
 argument_list|(
 name|tem
@@ -54206,7 +54206,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* If the register is set or already dead at PLACE, we needn't do 	     anything with this note if it is still a REG_DEAD note.    	     Note that we cannot use just `dead_or_set_p' here since we can 	     convert an assignment to a register into a bit-field assignment. 	     Therefore, we must also omit the note if the register is the  	     target of a bitfield assignment.  */
+comment|/* If the register is set or already dead at PLACE, we needn't do 	     anything with this note if it is still a REG_DEAD note.  	     Note that we cannot use just `dead_or_set_p' here since we can 	     convert an assignment to a register into a bit-field assignment. 	     Therefore, we must also omit the note if the register is the 	     target of a bitfield assignment.  */
 if|if
 condition|(
 name|place
@@ -54886,7 +54886,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* If the insn that this link points to is a NOTE or isn't a single 	 set, ignore it.  In the latter case, it isn't clear what we 	 can do other than ignore the link, since we can't tell which  	 register it was for.  Such links wouldn't be used by combine 	 anyway.  	 It is not possible for the destination of the target of the link to 	 have been changed by combine.  The only potential of this is if we 	 replace I3, I2, and I1 by I3 and I2.  But in that case the 	 destination of I2 also remains unchanged.  */
+comment|/* If the insn that this link points to is a NOTE or isn't a single 	 set, ignore it.  In the latter case, it isn't clear what we 	 can do other than ignore the link, since we can't tell which 	 register it was for.  Such links wouldn't be used by combine 	 anyway.  	 It is not possible for the destination of the target of the link to 	 have been changed by combine.  The only potential of this is if we 	 replace I3, I2, and I1 by I3 and I2.  But in that case the 	 destination of I2 also remains unchanged.  */
 if|if
 condition|(
 name|GET_CODE

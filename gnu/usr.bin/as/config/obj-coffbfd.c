@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* coff object file format with bfd    Copyright (C) 1989, 1990, 1991, 1992 Free Software Foundation, Inc.        This file is part of GAS.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* coff object file format with bfd    Copyright (C) 1989, 1990, 1991, 1992 Free Software Foundation, Inc.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
-comment|/*      How does this releate to the rest of GAS ?      Well, all the other files in gas are more or less a black box. It   takes care of opening files, parsing command lines, stripping blanks   etc etc. This module gets a chance to register what it wants to do by   saying that it is interested in various pseduo ops. The other big   change is write_object_file. This runs through all the data   structures that gas builds, and outputs the file in the format of our   choice.      Hacked for BFDness by steve chamberlain      This object module now supports the Hitachi H8/300 and the AMD 29k      sac@cygnus.com   */
+comment|/*    How does this releate to the rest of GAS ?    Well, all the other files in gas are more or less a black box. It   takes care of opening files, parsing command lines, stripping blanks   etc etc. This module gets a chance to register what it wants to do by   saying that it is interested in various pseduo ops. The other big   change is write_object_file. This runs through all the data   structures that gas builds, and outputs the file in the format of our   choice.    Hacked for BFDness by steve chamberlain    This object module now supports the Hitachi H8/300 and the AMD 29k    sac@cygnus.com   */
 end_comment
 
 begin_include
@@ -38,7 +38,7 @@ file|"../bfd/libbfd.h"
 end_include
 
 begin_comment
-comment|/* This vector is used to turn an internal segment into a section #    suitable for insertion into a coff symbol table     */
+comment|/* This vector is used to turn an internal segment into a section #    suitable for insertion into a coff symbol table    */
 end_comment
 
 begin_decl_stmt
@@ -139,7 +139,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Add 4 to the real value to get the index and compensate the    negatives. This vector is used by S_GET_SEGMENT to turn a coff    section number into a segment number     */
+comment|/* Add 4 to the real value to get the index and compensate the    negatives. This vector is used by S_GET_SEGMENT to turn a coff    section number into a segment number    */
 end_comment
 
 begin_decl_stmt
@@ -744,11 +744,11 @@ comment|/* obj_pseudo_table */
 end_comment
 
 begin_comment
-comment|/* Section stuff         We allow more than just the standard 3 sections, infact, we allow    10 sections, (though the usual three have to be there).        This structure performs the mappings for us:        */
+comment|/* Section stuff     We allow more than just the standard 3 sections, infact, we allow    10 sections, (though the usual three have to be there).     This structure performs the mappings for us:     */
 end_comment
 
 begin_comment
-comment|/* OBS stuff     static struct internal_scnhdr bss_section_header;    struct internal_scnhdr data_section_header;    struct internal_scnhdr text_section_header;        const segT N_TYPE_seg[32] =    {        };        */
+comment|/* OBS stuff    static struct internal_scnhdr bss_section_header;    struct internal_scnhdr data_section_header;    struct internal_scnhdr text_section_header;     const segT N_TYPE_seg[32] =    {     };     */
 end_comment
 
 begin_define
@@ -1656,7 +1656,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/* run through a frag chain and write out the data to go with it, fill    in the scnhdrs with the info on the file postions     */
+comment|/* run through a frag chain and write out the data to go with it, fill    in the scnhdrs with the info on the file postions    */
 end_comment
 
 begin_decl_stmt
@@ -8492,7 +8492,7 @@ block|}
 comment|/* generic error checking */
 block|}
 comment|/* not a bit fix */
-comment|/* once this fix has been applied, we don't have to output anything  		       nothing more need be done -*/
+comment|/* once this fix has been applied, we don't have to output anything 		       nothing more need be done -*/
 name|md_apply_fix
 argument_list|(
 name|fixP

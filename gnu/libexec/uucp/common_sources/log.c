@@ -21,7 +21,7 @@ name|char
 name|log_rcsid
 index|[]
 init|=
-literal|"$Id: log.c,v 1.54 1994/04/17 02:28:24 ian Rel $"
+literal|"$Id: log.c,v 1.2 1994/05/07 18:08:47 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1185,7 +1185,7 @@ name|char
 modifier|*
 name|zfile
 decl_stmt|;
-comment|/* We want to write to .Log/program/system, e.g.  	 	       .Log/uucico/uunet.  The system name may not be set.  */
+comment|/* We want to write to .Log/program/system, e.g. 	       .Log/uucico/uunet.  The system name may not be set.  */
 if|if
 condition|(
 name|zLsystem

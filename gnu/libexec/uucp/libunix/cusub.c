@@ -21,7 +21,7 @@ name|char
 name|cusub_rcsid
 index|[]
 init|=
-literal|"$Id: cusub.c,v 1.19 1994/01/30 21:09:20 ian Rel $"
+literal|"$Id: cusub.c,v 1.2 1994/05/07 18:10:14 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -67,7 +67,7 @@ comment|/* Count of possible values */
 end_comment
 
 begin_comment
-comment|/* The stab_section_info chain remembers info from the ELF symbol table,    while psymtabs are being built for the other symbol tables in the     objfile.  It is destroyed at the complation of psymtab-reading.    Any info that was used from it has been copied into psymtabs.  */
+comment|/* The stab_section_info chain remembers info from the ELF symbol table,    while psymtabs are being built for the other symbol tables in the    objfile.  It is destroyed at the complation of psymtab-reading.    Any info that was used from it has been copied into psymtabs.  */
 end_comment
 
 begin_struct

@@ -1813,7 +1813,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* -finhibit-size-directive inhibits output of .size for ELF.    This is used only for compiling crtstuff.c,     and it may be extended to other effects    needed for crtstuff.c on other systems.  */
+comment|/* -finhibit-size-directive inhibits output of .size for ELF.    This is used only for compiling crtstuff.c,    and it may be extended to other effects    needed for crtstuff.c on other systems.  */
 end_comment
 
 begin_decl_stmt
@@ -13335,7 +13335,7 @@ name|write_symbols
 operator|=
 name|DBX_DEBUG
 expr_stmt|;
-comment|/* Always enable extensions for -ggdb or -gstabs+,  		 always disable for -gstabs. 		 For plain -g, use system-specific default.  */
+comment|/* Always enable extensions for -ggdb or -gstabs+, 		 always disable for -gstabs. 		 For plain -g, use system-specific default.  */
 if|if
 condition|(
 name|write_symbols
@@ -13479,7 +13479,7 @@ name|write_symbols
 operator|=
 name|DWARF_DEBUG
 expr_stmt|;
-comment|/* Always enable extensions for -ggdb or -gdwarf+,  		 always disable for -gdwarf. 		 For plain -g, use system-specific default.  */
+comment|/* Always enable extensions for -ggdb or -gdwarf+, 		 always disable for -gdwarf. 		 For plain -g, use system-specific default.  */
 if|if
 condition|(
 name|write_symbols

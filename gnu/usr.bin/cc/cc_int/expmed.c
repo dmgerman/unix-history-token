@@ -209,7 +209,7 @@ value|(((x) + (y) - 1) / (y))
 end_define
 
 begin_comment
-comment|/* Non-zero means divides or modulus operations are relatively cheap for    powers of two, so don't use branches; emit the operation instead.     Usually, this will mean that the MD file will emit non-branch    sequences.  */
+comment|/* Non-zero means divides or modulus operations are relatively cheap for    powers of two, so don't use branches; emit the operation instead.    Usually, this will mean that the MD file will emit non-branch    sequences.  */
 end_comment
 
 begin_decl_stmt
@@ -7638,7 +7638,7 @@ name|methods1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* We used to try extzv here for logical right shifts, but that was 	 only useful for one machine, the VAX, and caused poor code  	 generation there for lshrdi3, so the code was deleted and a 	 define_expand for lshrsi3 was added to vax.md.  */
+comment|/* We used to try extzv here for logical right shifts, but that was 	 only useful for one machine, the VAX, and caused poor code 	 generation there for lshrdi3, so the code was deleted and a 	 define_expand for lshrsi3 was added to vax.md.  */
 block|}
 if|if
 condition|(
@@ -16822,7 +16822,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Emit a store-flags instruction for comparison CODE on OP0 and OP1    and storing in TARGET.  Normally return TARGET.    Return 0 if that cannot be done.     MODE is the mode to use for OP0 and OP1 should they be CONST_INTs.  If    it is VOIDmode, they cannot both be CONST_INT.       UNSIGNEDP is for the case where we have to widen the operands    to perform the operation.  It says to use zero-extension.     NORMALIZEP is 1 if we should convert the result to be either zero    or one one.  Normalize is -1 if we should convert the result to be    either zero or -1.  If NORMALIZEP is zero, the result will be left    "raw" out of the scc insn.  */
+comment|/* Emit a store-flags instruction for comparison CODE on OP0 and OP1    and storing in TARGET.  Normally return TARGET.    Return 0 if that cannot be done.     MODE is the mode to use for OP0 and OP1 should they be CONST_INTs.  If    it is VOIDmode, they cannot both be CONST_INT.     UNSIGNEDP is for the case where we have to widen the operands    to perform the operation.  It says to use zero-extension.     NORMALIZEP is 1 if we should convert the result to be either zero    or one one.  Normalize is -1 if we should convert the result to be    either zero or -1.  If NORMALIZEP is zero, the result will be left    "raw" out of the scc insn.  */
 end_comment
 
 begin_function
@@ -16965,7 +16965,7 @@ name|code
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* For some comparisons with 1 and -1, we can convert this to       comparisons with zero.  This will often produce more opportunities for      store-flag insns. */
+comment|/* For some comparisons with 1 and -1, we can convert this to      comparisons with zero.  This will often produce more opportunities for      store-flag insns. */
 switch|switch
 condition|(
 name|code
@@ -17355,7 +17355,7 @@ else|:
 name|const_true_rtx
 operator|)
 return|;
-comment|/* If the code of COMPARISON doesn't match CODE, something is 	 wrong; we can no longer be sure that we have the operation.   	 We could handle this case, but it should not happen.  */
+comment|/* If the code of COMPARISON doesn't match CODE, something is 	 wrong; we can no longer be sure that we have the operation. 	 We could handle this case, but it should not happen.  */
 if|if
 condition|(
 name|GET_CODE
@@ -17653,7 +17653,7 @@ else|else
 name|abort
 argument_list|()
 expr_stmt|;
-comment|/* If we were converting to a smaller mode, do the  	     conversion now.  */
+comment|/* If we were converting to a smaller mode, do the 	     conversion now.  */
 if|if
 condition|(
 name|target_mode
@@ -17812,7 +17812,7 @@ return|return
 name|tem
 return|;
 block|}
-comment|/* Some other cases we can do are EQ, NE, LE, and GT comparisons with       the constant zero.  Reject all other comparisons at this point.  Only      do LE and GT if branches are expensive since they are expensive on      2-operand machines.  */
+comment|/* Some other cases we can do are EQ, NE, LE, and GT comparisons with      the constant zero.  Reject all other comparisons at this point.  Only      do LE and GT if branches are expensive since they are expensive on      2-operand machines.  */
 if|if
 condition|(
 name|BRANCH_COST
@@ -18063,7 +18063,7 @@ operator|==
 name|NE
 condition|)
 block|{
-comment|/* For EQ or NE, one way to do the comparison is to apply an operation 	 that converts the operand into a positive number if it is non-zero 	 or zero if it was originally zero.  Then, for EQ, we subtract 1 and 	 for NE we negate.  This puts the result in the sign bit.  Then we 	 normalize with a shift, if needed.   	 Two operations that can do the above actions are ABS and FFS, so try 	 them.  If that doesn't work, and MODE is smaller than a full word, 	 we can use zero-extension to the wider mode (an unsigned conversion) 	 as the operation.  */
+comment|/* For EQ or NE, one way to do the comparison is to apply an operation 	 that converts the operand into a positive number if it is non-zero 	 or zero if it was originally zero.  Then, for EQ, we subtract 1 and 	 for NE we negate.  This puts the result in the sign bit.  Then we 	 normalize with a shift, if needed.  	 Two operations that can do the above actions are ABS and FFS, so try 	 them.  If that doesn't work, and MODE is smaller than a full word, 	 we can use zero-extension to the wider mode (an unsigned conversion) 	 as the operation.  */
 if|if
 condition|(
 name|abs_optab

@@ -45,7 +45,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Compress files with zip algorithm and 'compress' interface.  * See usage() and help() functions below for all options.  * Outputs:  *        file.gz:   compressed file with same mode, owner, and utimes  *     or stdout with -c option or if stdin used as input.  * If the output file name had to be truncated, the original name is kept  * in the compressed file.  * On MSDOS, file.tmp -> file.tmz. On VMS, file.tmp -> file.tmp-gz.  *  * Using gz on MSDOS would create too many file name conflicts. For  * example, foo.txt -> foo.tgz (.tgz must be reserved as shorthand for  * tar.gz). Similarly, foo.dir and foo.doc would both be mapped to foo.dgz.  * I also considered 12345678.txt -> 12345txt.gz but this truncates the name  * too heavily. There is no ideal solution given the MSDOS 8+3 limitation.   *  * For the meaning of all compilation flags, see comments in Makefile.in.  */
+comment|/* Compress files with zip algorithm and 'compress' interface.  * See usage() and help() functions below for all options.  * Outputs:  *        file.gz:   compressed file with same mode, owner, and utimes  *     or stdout with -c option or if stdin used as input.  * If the output file name had to be truncated, the original name is kept  * in the compressed file.  * On MSDOS, file.tmp -> file.tmz. On VMS, file.tmp -> file.tmp-gz.  *  * Using gz on MSDOS would create too many file name conflicts. For  * example, foo.txt -> foo.tgz (.tgz must be reserved as shorthand for  * tar.gz). Similarly, foo.dir and foo.doc would both be mapped to foo.dgz.  * I also considered 12345678.txt -> 12345txt.gz but this truncates the name  * too heavily. There is no ideal solution given the MSDOS 8+3 limitation.  *  * For the meaning of all compilation flags, see comments in Makefile.in.  */
 end_comment
 
 begin_ifdef
@@ -60,7 +60,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gzip.c,v 0.24 1993/06/24 10:52:07 jloup Exp $"
+literal|"$Id: gzip.c,v 1.3 1993/10/14 00:32:48 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 

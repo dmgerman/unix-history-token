@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * Polk's hash list manager.  So cool.  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *  * Polk's hash list manager.  So cool.  */
 end_comment
 
 begin_include
@@ -778,7 +778,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * insert item p at end of list "list" (maybe hash it too) if hashing and it  * already exists, return -1 and don't actually put it in the list  *   * return 0 on success  */
+comment|/*  * insert item p at end of list "list" (maybe hash it too) if hashing and it  * already exists, return -1 and don't actually put it in the list  *  * return 0 on success  */
 end_comment
 
 begin_function

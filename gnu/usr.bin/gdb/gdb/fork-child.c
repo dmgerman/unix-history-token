@@ -497,7 +497,7 @@ comment|/* exec is said to fail if the executable is open.  */
 name|close_exec_file
 argument_list|()
 expr_stmt|;
-comment|/* Retain a copy of our environment variables, since the child will      replace the value of  environ  and if we're vforked, we have to       restore it.  */
+comment|/* Retain a copy of our environment variables, since the child will      replace the value of  environ  and if we're vforked, we have to      restore it.  */
 name|save_our_env
 operator|=
 name|environ

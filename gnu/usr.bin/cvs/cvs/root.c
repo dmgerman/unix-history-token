@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Mark D. Baushke  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * Name of Root  *   * Determine the path to the CVSROOT and set "Root" accordingly.  * If this looks like of modified clone of Name_Repository() in  * repos.c, it is...   */
+comment|/*  * Copyright (c) 1992, Mark D. Baushke  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *  * Name of Root  *  * Determine the path to the CVSROOT and set "Root" accordingly.  * If this looks like of modified clone of Name_Repository() in  * repos.c, it is...  */
 end_comment
 
 begin_include

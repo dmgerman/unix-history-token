@@ -3235,7 +3235,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Function to give error message if member initialization specification    is erroneous.  FIELD is the member we decided to initialize.    TYPE is the type for which the initialization is being performed.    FIELD must be a member of TYPE, or the base type from which FIELD    comes must not need a constructor.        MEMBER_NAME is the name of the member.  */
+comment|/* Function to give error message if member initialization specification    is erroneous.  FIELD is the member we decided to initialize.    TYPE is the type for which the initialization is being performed.    FIELD must be a member of TYPE, or the base type from which FIELD    comes must not need a constructor.     MEMBER_NAME is the name of the member.  */
 end_comment
 
 begin_function

@@ -1318,7 +1318,7 @@ name|char_map
 operator|=
 literal|0
 expr_stmt|;
-comment|/*  	 * force requery of fonts 	 */
+comment|/* 	 * force requery of fonts 	 */
 name|dw
 operator|->
 name|dvi
@@ -1473,7 +1473,7 @@ name|tem
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  	 * force requery of fonts 	 */
+comment|/* 	 * force requery of fonts 	 */
 name|dw
 operator|->
 name|dvi
@@ -1610,7 +1610,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static char * MapXNameToDviName (dw, x_name) 	DviWidget	dw; 	char		*x_name; { 	DviFontMap	*fm; 	 	for (fm = dw->dvi.font_map; fm; fm=fm->next) 		if (!strcmp (fm->x_name, x_name)) 			return fm->dvi_name; 	return 0; }
+unit|static char * MapXNameToDviName (dw, x_name) 	DviWidget	dw; 	char		*x_name; { 	DviFontMap	*fm;  	for (fm = dw->dvi.font_map; fm; fm=fm->next) 		if (!strcmp (fm->x_name, x_name)) 			return fm->dvi_name; 	return 0; }
 endif|#
 directive|endif
 end_endif

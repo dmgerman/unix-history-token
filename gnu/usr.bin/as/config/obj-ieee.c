@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* obj-format for ieee-695 records.    Copyright (C) 1991, 1992 Free Software Foundation, Inc.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA. */
+comment|/* obj-format for ieee-695 records.    Copyright (C) 1991, 1992 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA. */
 end_comment
 
 begin_comment
-comment|/*    created by      steve chamberlain steve@cygnus.com   */
+comment|/*   created by    steve chamberlain steve@cygnus.com   */
 end_comment
 
 begin_comment
@@ -840,7 +840,7 @@ name|from
 operator|->
 name|fx_offset
 expr_stmt|;
-comment|/* If we know the symbol which we want to relocate to, turn this 			       reloaction into a section relative.  			        			       If this relocation is pcrelative, and we know the 			       destination, we still want to keep the relocation - since 			       the linker might relax some of the bytes, but it stops 			       being pc relative and turns into an absolute relocation. 			        			       */
+comment|/* If we know the symbol which we want to relocate to, turn this 			       reloaction into a section relative.  			       If this relocation is pcrelative, and we know the 			       destination, we still want to keep the relocation - since 			       the linker might relax some of the bytes, but it stops 			       being pc relative and turns into an absolute relocation.  			       */
 if|if
 condition|(
 name|s
@@ -2034,7 +2034,7 @@ literal|0
 block|}
 block|,
 literal|0
-block|, 	 }
+block|,  }
 decl_stmt|;
 end_decl_stmt
 

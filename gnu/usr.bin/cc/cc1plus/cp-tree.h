@@ -2971,7 +2971,7 @@ value|(TYPE_LANG_SPECIFIC(NODE)->type_flags.has_default_ctor)
 end_define
 
 begin_comment
-comment|/* Nonzero means the type declared a ctor as private or protected.  We    use this to make sure we don't try to generate a copy ctor for a     class that has a member of type NODE.  */
+comment|/* Nonzero means the type declared a ctor as private or protected.  We    use this to make sure we don't try to generate a copy ctor for a    class that has a member of type NODE.  */
 end_comment
 
 begin_define

@@ -1119,7 +1119,7 @@ value|(0x4000)
 end_define
 
 begin_comment
-comment|/* section will be padded with no-op instructions wherever padding is necessary and there is a 					 									     word of contiguous bytes 									     beginning on a word boundary. */
+comment|/* section will be padded with no-op instructions wherever padding is necessary and there is a  									     word of contiguous bytes 									     beginning on a word boundary. */
 end_comment
 
 begin_define

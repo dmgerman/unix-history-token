@@ -4,7 +4,7 @@ comment|/* This file contains code for X-CHESS.    Copyright (C) 1986 Free Softw
 end_comment
 
 begin_comment
-comment|/* RCS Info: $Revision: 1.4 $ on $Date: 86/11/26 12:09:47 $  *           $Source: /users/faustus/xchess/RCS/clock.c,v $  * Copyright (c) 1986 Wayne A. Christopher, U. C. Berkeley CAD Group  *	Permission is granted to do anything with this code except sell it  *	or remove this message.  *  * Do stuff with the clocks.  The way things work is as follows.  We call  * clock_init to draw the clocks initially, but they don't actually start  * running until we call clock_switch for the first time.  */
+comment|/* RCS Info: $Revision: 1.1.1.1 $ on $Date: 1993/06/12 14:41:08 $  *           $Source: /home/ncvs/src/gnu/games/chess/Xchess/clock.c,v $  * Copyright (c) 1986 Wayne A. Christopher, U. C. Berkeley CAD Group  *	Permission is granted to do anything with this code except sell it  *	or remove this message.  *  * Do stuff with the clocks.  The way things work is as follows.  We call  * clock_init to draw the clocks initially, but they don't actually start  * running until we call clock_switch for the first time.  */
 end_comment
 
 begin_include

@@ -4,7 +4,7 @@ comment|/*  * array.c - routines for associative arrays.  */
 end_comment
 
 begin_comment
-comment|/*   * Copyright (C) 1986, 1988, 1989, 1991, 1992, 1993 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Progamming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with GAWK; see the file COPYING.  If not, write to  * the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/*  * Copyright (C) 1986, 1988, 1989, 1991, 1992, 1993 the Free Software Foundation, Inc.  *  * This file is part of GAWK, the GNU implementation of the  * AWK Progamming Language.  *  * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *  * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with GAWK; see the file COPYING.  If not, write to  * the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
@@ -611,7 +611,7 @@ name|defined
 argument_list|(
 name|VAXC
 argument_list|)
-comment|/*	  * [This was an implementation of "Duff's Device", but it has been  * redone, separating the switch for extra iterations from the loop.  * This is necessary because the DEC VAX-C compiler is STOOPID.]  */
+comment|/*  * [This was an implementation of "Duff's Device", but it has been  * redone, separating the switch for extra iterations from the loop.  * This is necessary because the DEC VAX-C compiler is STOOPID.]  */
 switch|switch
 condition|(
 name|len
@@ -917,7 +917,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * test whether the array element symbol[subs] exists or not   */
+comment|/*  * test whether the array element symbol[subs] exists or not  */
 end_comment
 
 begin_function
@@ -1038,7 +1038,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * SYMBOL is the address of the node (or other pointer) being dereferenced.  * SUBS is a number or string used as the subscript.   *  * Find SYMBOL[SUBS] in the assoc array.  Install it with value "" if it  * isn't there. Returns a pointer ala get_lhs to where its value is stored   */
+comment|/*  * SYMBOL is the address of the node (or other pointer) being dereferenced.  * SUBS is a number or string used as the subscript.  *  * Find SYMBOL[SUBS] in the assoc array.  Install it with value "" if it  * isn't there. Returns a pointer ala get_lhs to where its value is stored  */
 end_comment
 
 begin_function

@@ -2421,7 +2421,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Read a line from the stream "instream" without command line editing.     It prints PRROMPT once at the start.    Action is compatible with "readline", e.g. space for the result is     malloc'd and should be freed by the caller.     A NULL return means end of file.  */
+comment|/* Read a line from the stream "instream" without command line editing.     It prints PRROMPT once at the start.    Action is compatible with "readline", e.g. space for the result is    malloc'd and should be freed by the caller.     A NULL return means end of file.  */
 end_comment
 
 begin_function
@@ -5862,7 +5862,7 @@ name|comname
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* If the rest of the commands will be case insensitive, this one       should behave in the same manner. */
+comment|/* If the rest of the commands will be case insensitive, this one      should behave in the same manner. */
 for|for
 control|(
 name|tem

@@ -106,7 +106,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Flag that determines how we map names.  This takes several values, and  * is set with the -h switch.  A value of zero implies names should be   * upper case, and the presence of the -h switch inhibits the case hack.  * No -h switch at all sets vms_name_mapping to 0, and allows case hacking.  * A value of 2 (set with -h2) implies names should be  * all lower case, with no case hack.  A value of 3 (set with -h3) implies  * that case should be preserved.  */
+comment|/* Flag that determines how we map names.  This takes several values, and  * is set with the -h switch.  A value of zero implies names should be  * upper case, and the presence of the -h switch inhibits the case hack.  * No -h switch at all sets vms_name_mapping to 0, and allows case hacking.  * A value of 2 (set with -h2) implies names should be  * all lower case, with no case hack.  A value of 3 (set with -h3) implies  * that case should be preserved.  */
 end_comment
 
 begin_comment
@@ -1446,7 +1446,7 @@ name|sy_frag
 operator|->
 name|fr_address
 expr_stmt|;
-comment|/* OK, here is how we decide which symbols go out into the 	     brave new symtab.  Symbols that do are: 	     	     * symbols with no name (stabd's?) 	     * symbols with debug info in their N_TYPE 	     	     Symbols that don't are: 	     * symbols that are registers 	     * symbols with \1 as their 3rd character (numeric labels) 	     * "local labels" as defined by S_LOCAL_NAME(name) 	     if the -L switch was passed to gas. 	     	     All other symbols are output.  We complain if a deleted 	     symbol was marked external.  */
+comment|/* OK, here is how we decide which symbols go out into the 	     brave new symtab.  Symbols that do are:  	     * symbols with no name (stabd's?) 	     * symbols with debug info in their N_TYPE  	     Symbols that don't are: 	     * symbols that are registers 	     * symbols with \1 as their 3rd character (numeric labels) 	     * "local labels" as defined by S_LOCAL_NAME(name) 	     if the -L switch was passed to gas.  	     All other symbols are output.  We complain if a deleted 	     symbol was marked external.  */
 if|if
 condition|(
 operator|!
@@ -17260,7 +17260,7 @@ block|}
 ifndef|#
 directive|ifndef
 name|gxx_bug_fixed
-comment|/*     * The g++ compiler does not write out external references to vtables    * correctly.  Check for this and holler if we see it happening.    * If that compiler bug is ever fixed we can remove this.    */
+comment|/*    * The g++ compiler does not write out external references to vtables    * correctly.  Check for this and holler if we see it happening.    * If that compiler bug is ever fixed we can remove this.    */
 for|for
 control|(
 name|sp

@@ -21,7 +21,7 @@ name|char
 name|_uuconf_vport_rcsid
 index|[]
 init|=
-literal|"$Id: vport.c,v 1.7 1994/01/30 21:14:29 ian Rel $"
+literal|"$Id: vport.c,v 1.2 1994/05/07 18:13:22 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -345,7 +345,7 @@ name|UUCONF_ERROR_ERRNO
 expr_stmt|;
 break|break;
 block|}
-comment|/* An entry in L-devices is 	  	 type device dial-device baud dialer 	  	 The type (normally "ACU") is treated as the name.  */
+comment|/* An entry in L-devices is  	 type device dial-device baud dialer  	 The type (normally "ACU") is treated as the name.  */
 comment|/* If there aren't enough entries, ignore the line; this 	 should probably do something more useful.  */
 if|if
 condition|(

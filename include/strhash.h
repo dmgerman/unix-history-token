@@ -12,11 +12,11 @@ name|_STRHASH_H_INCLUDE
 end_define
 
 begin_comment
-comment|/* $Header: /home/ncvs/src/usr.bin/dmenu/hash.h,v 1.2 1995/03/21 06:39:04 jkh Exp $ */
+comment|/* $Header: /home/ncvs/src/include/strhash.h,v 1.1 1995/03/26 10:12:53 jkh Exp $ */
 end_comment
 
 begin_comment
-comment|/*  *  *                      Copyright 1990  *               Terry Jones& Jordan Hubbard  *  *		  PCS Computer Systeme, GmbH.  *	             Munich, West Germany  *  *  *  All rights reserved.  *   *  This is unsupported software and is subject to change without notice.  *  the author makes no representations about the suitability of this software  *  for any purpose. It is supplied "as is" without express or implied  *  warranty.  *   *  Permission to use, copy, modify, and distribute this software and its  *  documentation for any purpose and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both that  *  copyright notice and this permission notice appear in supporting  *  documentation, and that the name of the author not be used in  *  advertising or publicity pertaining to distribution of the software  *  without specific, written prior permission.  *  */
+comment|/*  *  *                      Copyright 1990  *               Terry Jones& Jordan Hubbard  *  *		  PCS Computer Systeme, GmbH.  *	             Munich, West Germany  *  *  *  All rights reserved.  *  *  This is unsupported software and is subject to change without notice.  *  the author makes no representations about the suitability of this software  *  for any purpose. It is supplied "as is" without express or implied  *  warranty.  *  *  Permission to use, copy, modify, and distribute this software and its  *  documentation for any purpose and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both that  *  copyright notice and this permission notice appear in supporting  *  documentation, and that the name of the author not be used in  *  advertising or publicity pertaining to distribution of the software  *  without specific, written prior permission.  *  */
 end_comment
 
 begin_comment

@@ -779,7 +779,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Signed multiply with result  				   one machine mode wider than args */
+comment|/* Signed multiply with result 				   one machine mode wider than args */
 end_comment
 
 begin_decl_stmt

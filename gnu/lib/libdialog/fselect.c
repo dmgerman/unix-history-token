@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * program:	fselect.c  * author:	Marc van Kempen (wmbfmk@urc.tue.nl)  * Desc:	File selection routine   *  * Copyright (c) 1995, Marc van Kempen  *  * All rights reserved.  *  * This software may be used, modified, copied, distributed, and  * sold, in both source and binary form provided that the above  * copyright and these terms are retained, verbatim, as the first  * lines of this file.  Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with  * its use.  *   */
+comment|/*  * program:	fselect.c  * author:	Marc van Kempen (wmbfmk@urc.tue.nl)  * Desc:	File selection routine  *  * Copyright (c) 1995, Marc van Kempen  *  * All rights reserved.  *  * This software may be used, modified, copied, distributed, and  * sold, in both source and binary form provided that the above  * copyright and these terms are retained, verbatim, as the first  * lines of this file.  Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with  * its use.  *  */
 end_comment
 
 begin_include
@@ -69,7 +69,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*   * Functions  */
+comment|/*  * Functions  */
 end_comment
 
 begin_function
@@ -244,7 +244,7 @@ name|int
 modifier|*
 name|nf
 parameter_list|)
-comment|/*  * Desc: return the filenames in<dir> as an arry in   *<names>, the # of entries in<nf>, memory allocated  *	 to *names should be freed when done.  */
+comment|/*  * Desc: return the filenames in<dir> as an arry in  *<names>, the # of entries in<nf>, memory allocated  *	 to *names should be freed when done.  */
 block|{
 name|int
 name|nd
@@ -445,7 +445,7 @@ name|dialog_dselect_old
 parameter_list|(
 name|void
 parameter_list|)
-comment|/*  * Desc: starting from the current directory,   *	 choose a new current directory   */
+comment|/*  * Desc: starting from the current directory,  *	 choose a new current directory  */
 block|{
 name|DirList
 modifier|*
@@ -1157,7 +1157,7 @@ parameter_list|,
 name|int
 name|is_fselect
 parameter_list|)
-comment|/*  * Desc: choose a file from the directory<dir>, which  *	 initially display files with the mask<filemask>   * pre:<dir> is the initial directory  *	 only files corresponding to the mask<fmask> are displayed  * post: returns NULL if no file was selected  *       else returns pointer to filename, space is allocated, should  *       be freed after use.  */
+comment|/*  * Desc: choose a file from the directory<dir>, which  *	 initially display files with the mask<filemask>  * pre:<dir> is the initial directory  *	 only files corresponding to the mask<fmask> are displayed  * post: returns NULL if no file was selected  *       else returns pointer to filename, space is allocated, should  *       be freed after use.  */
 block|{
 name|DirList
 modifier|*

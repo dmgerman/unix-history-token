@@ -788,7 +788,7 @@ name|psymtab_language
 operator|=
 name|tmp_language
 expr_stmt|;
-comment|/* In C++, one may expect the same filename to come round many 	       times, when code is coming alternately from the main file 	       and from inline functions in other files. So I check to see 	       if this is a file we've seen before -- either the main 	       source file, or a previously included file. 	        	       This seems to be a lot of time to be spending on N_SOL, but 	       things like "break c-exp.y:435" need to work (I 	       suppose the psymtab_include_list could be hashed or put 	       in a binary tree, if profiling shows this is a major hog).  */
+comment|/* In C++, one may expect the same filename to come round many 	       times, when code is coming alternately from the main file 	       and from inline functions in other files. So I check to see 	       if this is a file we've seen before -- either the main 	       source file, or a previously included file.  	       This seems to be a lot of time to be spending on N_SOL, but 	       things like "break c-exp.y:435" need to work (I 	       suppose the psymtab_include_list could be hashed or put 	       in a binary tree, if profiling shows this is a major hog).  */
 if|if
 condition|(
 name|pst

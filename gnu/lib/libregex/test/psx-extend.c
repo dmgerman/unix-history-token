@@ -1894,7 +1894,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Same as above, but with no `*'s in alternatives.       test_match ("(a|b)*c", "c");		/* `*' after group.  */
+comment|/* Same as above, but with no `*'s in alternatives.    test_match ("(a|b)*c", "c");		/* `*' after group.  */
 name|TEST_REGISTERS
 argument_list|(
 literal|"(a|b)*c"

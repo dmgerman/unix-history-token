@@ -21,7 +21,7 @@ name|char
 name|protf_rcsid
 index|[]
 init|=
-literal|"$Id: protf.c,v 1.31 1994/01/30 21:01:46 ian Rel $"
+literal|"$Id: protf.c,v 1.2 1994/05/07 18:13:45 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -21,7 +21,7 @@ name|char
 name|_uuconf_cmdarg_rcsid
 index|[]
 init|=
-literal|"$Id: cmdarg.c,v 1.4 1994/01/30 21:14:29 ian Rel $"
+literal|"$Id: cmdarg.c,v 1.2 1994/05/07 18:12:02 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 

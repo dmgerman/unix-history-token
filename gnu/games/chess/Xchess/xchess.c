@@ -4,7 +4,7 @@ comment|/* This file contains code for X-CHESS.    Copyright (C) 1986 Free Softw
 end_comment
 
 begin_comment
-comment|/* RCS Info: $Revision: 1.2 $ on $Date: 89/04/28 08:44:02 $  *           $Source: /usr/local/src/source/X.V11R3/contrib/games/xchess/Xchess/RCS/xchess.c,v $  * Copyright (c) 1986 Wayne A. Christopher, U. C. Berkeley CAD Group  *	Permission is granted to do anything with this code except sell it  *	or remove this message.  */
+comment|/* RCS Info: $Revision: 1.1.1.1 $ on $Date: 1993/06/12 14:41:09 $  *           $Source: /home/ncvs/src/gnu/games/chess/Xchess/xchess.c,v $  * Copyright (c) 1986 Wayne A. Christopher, U. C. Berkeley CAD Group  *	Permission is granted to do anything with this code except sell it  *	or remove this message.  */
 end_comment
 
 begin_define

@@ -1427,7 +1427,7 @@ decl_stmt|;
 name|rtx
 name|first_nonparm_insn
 decl_stmt|;
-comment|/* Make and emit a return-label if we have not already done so.       Do this before recording the bounds on label numbers. */
+comment|/* Make and emit a return-label if we have not already done so.      Do this before recording the bounds on label numbers. */
 if|if
 condition|(
 name|return_label
@@ -2897,7 +2897,7 @@ operator|=
 operator|*
 name|px
 expr_stmt|;
-comment|/* If this is a CONST_DOUBLE, don't try to fix things up in       CONST_DOUBLE_MEM, because this is an infinite recursion.  */
+comment|/* If this is a CONST_DOUBLE, don't try to fix things up in      CONST_DOUBLE_MEM, because this is an infinite recursion.  */
 if|if
 condition|(
 name|GET_CODE
@@ -2982,7 +2982,7 @@ argument_list|)
 operator|=
 literal|1
 expr_stmt|;
-comment|/* If the MEM was in a different mode than the constant (perhaps we 	 were only looking at the low-order part), surround it with a  	 SUBREG so we can save both modes.  */
+comment|/* If the MEM was in a different mode than the constant (perhaps we 	 were only looking at the low-order part), surround it with a 	 SUBREG so we can save both modes.  */
 if|if
 condition|(
 name|GET_MODE
@@ -3691,7 +3691,7 @@ break|break;
 case|case
 name|MEM
 case|:
-comment|/* A MEM is usually allowed to be shared if its address is constant 	 or is a constant plus one of the special registers.  	 We do not allow sharing of addresses that are either a special 	 register or the sum of a constant and a special register because 	 it is possible for unshare_all_rtl to copy the address, into memory 	 that won't be saved.  Although the MEM can safely be shared, and 	 won't be copied there, the address itself cannot be shared, and may 	 need to be copied.   	 There are also two exceptions with constants: The first is if the 	 constant is a LABEL_REF or the sum of the LABEL_REF 	 and an integer.  This case can happen if we have an inline 	 function that supplies a constant operand to the call of another 	 inline function that uses it in a switch statement.  In this case, 	 we will be replacing the LABEL_REF, so we have to replace this MEM 	 as well.  	 The second case is if we have a (const (plus (address ..) ...)). 	 In that case we need to put back the address of the constant pool 	 entry.  */
+comment|/* A MEM is usually allowed to be shared if its address is constant 	 or is a constant plus one of the special registers.  	 We do not allow sharing of addresses that are either a special 	 register or the sum of a constant and a special register because 	 it is possible for unshare_all_rtl to copy the address, into memory 	 that won't be saved.  Although the MEM can safely be shared, and 	 won't be copied there, the address itself cannot be shared, and may 	 need to be copied.  	 There are also two exceptions with constants: The first is if the 	 constant is a LABEL_REF or the sum of the LABEL_REF 	 and an integer.  This case can happen if we have an inline 	 function that supplies a constant operand to the call of another 	 inline function that uses it in a switch statement.  In this case, 	 we will be replacing the LABEL_REF, so we have to replace this MEM 	 as well.  	 The second case is if we have a (const (plus (address ..) ...)). 	 In that case we need to put back the address of the constant pool 	 entry.  */
 if|if
 condition|(
 name|CONSTANT_ADDRESS_P
@@ -8316,7 +8316,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* When arguments grow downward, the virtual incoming  		 args pointer points to the top of the argument block, 		 so the remapped location better do the same. */
+comment|/* When arguments grow downward, the virtual incoming 		 args pointer points to the top of the argument block, 		 so the remapped location better do the same. */
 ifdef|#
 directive|ifdef
 name|ARGS_GROW_DOWNWARD
@@ -10272,7 +10272,7 @@ name|new
 init|=
 literal|0
 decl_stmt|;
-comment|/* We can't call subst_constants on&SUBREG_REG (x) because any 	     constant or SUBREG wouldn't be valid inside our SUBEG.  Instead, 	     see what is inside, try to form the new SUBREG and see if that is 	     valid.  We handle two cases: extracting a full word in an  	     integral mode and extracting the low part.  */
+comment|/* We can't call subst_constants on&SUBREG_REG (x) because any 	     constant or SUBREG wouldn't be valid inside our SUBEG.  Instead, 	     see what is inside, try to form the new SUBREG and see if that is 	     valid.  We handle two cases: extracting a full word in an 	     integral mode and extracting the low part.  */
 name|subst_constants
 argument_list|(
 operator|&

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* uusnap.c    (c) 1992 Heiko W.Rupp hwr@pilhuhn.ka.sub.org    uusnap is a tool to display the activities of the connected    systems.     Put a file uusnap.systems in NEWCONFIGDIR (see Makefile), in which    the systems, you want to monitor are listed, one on a single line.    The sequence of the files there determine the sequence of the    listing.     At the moment it only works with taylor config and taylor dirs     compile it form the Makefile or:    cc -c -g -pipe -O  -I. -I. -DNEWCONFIGLIB=\"/usr/local/lib/uucp\" uusnap.c    cc  -o uusnap uusnap.o     For this, uusnap.[ch] must be in the same directory as uucp.h and so.     uusnap must have read access to SPOOLDIR/.Status in order to work. */
+comment|/* uusnap.c    (c) 1992 Heiko W.Rupp hwr@pilhuhn.ka.sub.org    uusnap is a tool to display the activities of the connected    systems.     Put a file uusnap.systems in NEWCONFIGDIR (see Makefile), in which    the systems, you want to monitor are listed, one on a single line.    The sequence of the files there determine the sequence of the    listing.     At the moment it only works with taylor config and taylor dirs     compile it form the Makefile or:    cc -c -g -pipe -O  -I. -I. -DNEWCONFIGLIB=\"/usr/local/lib/uucp\" uusnap.c    cc  -o uusnap uusnap.o    For this, uusnap.[ch] must be in the same directory as uucp.h and so.     uusnap must have read access to SPOOLDIR/.Status in order to work. */
 end_comment
 
 begin_define
@@ -57,7 +57,7 @@ name|char
 name|uusnap_rcsid
 index|[]
 init|=
-literal|"$Id: uusnap.c,v 1.9 92/05/05 22:51:50 hwr Exp Locker: hwr $"
+literal|"$Id: uusnap.c,v 1.2 1994/05/07 18:09:40 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 

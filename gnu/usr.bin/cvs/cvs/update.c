@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * "update" updates the version in the present directory with respect to the RCS  * repository.  The present version must have been created by "checkout". The  * user can keep up-to-date by calling "update" whenever he feels like it.  *   * The present version can be committed by "commit", but this keeps the version  * in tact.  *   * Arguments following the options are taken to be file names to be updated,  * rather than updating the entire directory.  *   * Modified or non-existent RCS files are checked out and reported as U  *<user_file>  *   * Modified user files are reported as M<user_file>.  If both the RCS file and  * the user file have been modified, the user file is replaced by the result  * of rcsmerge, and a backup file is written for the user in .#file.version.  * If this throws up irreconcilable differences, the file is reported as C  *<user_file>, and as M<user_file> otherwise.  *   * Files added but not yet committed are reported as A<user_file>. Files  * removed but not yet committed are reported as R<user_file>.  *   * If the current directory contains subdirectories that hold concurrent  * versions, these are updated too.  If the -d option was specified, new  * directories added to the repository are automatically created and updated  * as well.  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *  * "update" updates the version in the present directory with respect to the RCS  * repository.  The present version must have been created by "checkout". The  * user can keep up-to-date by calling "update" whenever he feels like it.  *  * The present version can be committed by "commit", but this keeps the version  * in tact.  *  * Arguments following the options are taken to be file names to be updated,  * rather than updating the entire directory.  *  * Modified or non-existent RCS files are checked out and reported as U  *<user_file>  *  * Modified user files are reported as M<user_file>.  If both the RCS file and  * the user file have been modified, the user file is replaced by the result  * of rcsmerge, and a backup file is written for the user in .#file.version.  * If this throws up irreconcilable differences, the file is reported as C  *<user_file>, and as M<user_file> otherwise.  *  * Files added but not yet committed are reported as A<user_file>. Files  * removed but not yet committed are reported as R<user_file>.  *  * If the current directory contains subdirectories that hold concurrent  * versions, these are updated too.  If the -d option was specified, new  * directories added to the repository are automatically created and updated  * as well.  */
 end_comment
 
 begin_include
@@ -1176,7 +1176,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is the callback proc for update.  It is called for each file in each  * directory by the recursion code.  The current directory is the local  * instantiation.  file is the file name we are to operate on. update_dir is  * set to the path relative to where we started (for pretty printing).  * repository is the repository. entries and srcfiles are the pre-parsed  * entries and source control files.  *   * This routine decides what needs to be done for each file and does the  * appropriate magic for checkout  */
+comment|/*  * This is the callback proc for update.  It is called for each file in each  * directory by the recursion code.  The current directory is the local  * instantiation.  file is the file name we are to operate on. update_dir is  * set to the path relative to where we started (for pretty printing).  * repository is the repository. entries and srcfiles are the pre-parsed  * entries and source control files.  *  * This routine decides what needs to be done for each file and does the  * appropriate magic for checkout  */
 end_comment
 
 begin_function
@@ -1260,7 +1260,7 @@ condition|(
 name|pipeout
 condition|)
 block|{
-comment|/* 	 * We just return success without doing anything if any of the really 	 * funky cases occur 	 *  	 * If there is still a valid RCS file, do a regular checkout type 	 * operation 	 */
+comment|/* 	 * We just return success without doing anything if any of the really 	 * funky cases occur 	 * 	 * If there is still a valid RCS file, do a regular checkout type 	 * operation 	 */
 switch|switch
 condition|(
 name|status
@@ -4512,13 +4512,13 @@ directive|if
 literal|0
 block|dome {
 comment|/* special handling when two revisions are specified */
-block|if (join_rev1&& join_rev2) 	{ 	    rev = RCS_getversion (vers->srcfile, join_rev2, date_rev2, 1); 	    if (rev == NULL) 	    { 		if (!quiet&& date_rev2 == NULL) 		    error (0, 0, 			   "cannot find revision %s in file %s", join_rev2, file); 		return; 	    } 	     	    baserev = RCS_getversion (vers->srcfile, join_rev1, date_rev1, 1); 	    if (baserev == NULL) 	    { 		if (!quiet&& date_rev1 == NULL) 		    error (0, 0, 			   "cannot find revision %s in file %s", join_rev1, file); 		free (rev); 		return; 	    }
+block|if (join_rev1&& join_rev2) 	{ 	    rev = RCS_getversion (vers->srcfile, join_rev2, date_rev2, 1); 	    if (rev == NULL) 	    { 		if (!quiet&& date_rev2 == NULL) 		    error (0, 0, 			   "cannot find revision %s in file %s", join_rev2, file); 		return; 	    }  	    baserev = RCS_getversion (vers->srcfile, join_rev1, date_rev1, 1); 	    if (baserev == NULL) 	    { 		if (!quiet&& date_rev1 == NULL) 		    error (0, 0, 			   "cannot find revision %s in file %s", join_rev1, file); 		free (rev); 		return; 	    }
 comment|/* 	     * nothing to do if: 	     *	second revision matches our BASE revision (vn_user)&& 	     *	both revisions are on the same branch 	     */
 block|if (strcmp (vers->vn_user, rev) == 0&& 		numdots (baserev) == numdots (rev)) 	    {
 comment|/* might be the same branch.  take a real look */
-block|char *dot = strrchr (baserev, '.'); 		int len = (dot - baserev) + 1; 		 		if (strncmp (baserev, rev, len) == 0) 		    return; 	    } 	} 	else 	{ 	    rev = RCS_getversion (vers->srcfile, join_rev1, date_rev1, 1); 	    if (rev == NULL) 		return; 	    if (strcmp (rev, vers->vn_user) == 0)
+block|char *dot = strrchr (baserev, '.'); 		int len = (dot - baserev) + 1;  		if (strncmp (baserev, rev, len) == 0) 		    return; 	    } 	} 	else 	{ 	    rev = RCS_getversion (vers->srcfile, join_rev1, date_rev1, 1); 	    if (rev == NULL) 		return; 	    if (strcmp (rev, vers->vn_user) == 0)
 comment|/* no merge necessary */
-block|{ 		free (rev); 		return; 	    } 	     	    baserev = RCS_whatbranch (file, join_rev1, srcfiles); 	    if (baserev) 	    { 		char *cp;
+block|{ 		free (rev); 		return; 	    }  	    baserev = RCS_whatbranch (file, join_rev1, srcfiles); 	    if (baserev) 	    { 		char *cp;
 comment|/* we get a branch -- turn it into a revision, or NULL if trunk */
 block|if ((cp = strrchr (baserev, '.')) == NULL) 		{ 		    free (baserev); 		    baserev = (char *) NULL; 		} 		else 		    *cp = '\0'; 	    } 	} 	if (baserev&& strcmp (baserev, rev) == 0) 	{
 comment|/* they match -> nothing to do */

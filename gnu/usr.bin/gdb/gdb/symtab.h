@@ -870,7 +870,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* A partial_symbol records the name, namespace, and address class of    symbols whose types we have not parsed yet.  For functions, it also    contains their memory address, so we can find them from a PC value.    Each partial_symbol sits in a partial_symtab, all of which are chained    on a  partial symtab list and which points to the corresponding     normal symtab once the partial_symtab has been referenced.  */
+comment|/* A partial_symbol records the name, namespace, and address class of    symbols whose types we have not parsed yet.  For functions, it also    contains their memory address, so we can find them from a PC value.    Each partial_symbol sits in a partial_symtab, all of which are chained    on a  partial symtab list and which points to the corresponding    normal symtab once the partial_symtab has been referenced.  */
 end_comment
 
 begin_struct
@@ -1040,7 +1040,7 @@ value|(secoff->offsets[whichone])
 end_define
 
 begin_comment
-comment|/* Each source file or header is represented by a struct symtab.     These objects are chained through the `next' field.  */
+comment|/* Each source file or header is represented by a struct symtab.    These objects are chained through the `next' field.  */
 end_comment
 
 begin_struct
@@ -1283,7 +1283,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* The virtual function table is now an array of structures which have the    form { int16 offset, delta; void *pfn; }.      In normal virtual function tables, OFFSET is unused.    DELTA is the amount which is added to the apparent object's base    address in order to point to the actual object to which the    virtual function should be applied.    PFN is a pointer to the virtual function.     Note that this macro is g++ specific (FIXME). */
+comment|/* The virtual function table is now an array of structures which have the    form { int16 offset, delta; void *pfn; }.     In normal virtual function tables, OFFSET is unused.    DELTA is the amount which is added to the apparent object's base    address in order to point to the actual object to which the    virtual function should be applied.    PFN is a pointer to the virtual function.     Note that this macro is g++ specific (FIXME). */
 end_comment
 
 begin_define

@@ -969,7 +969,7 @@ block|}
 empty_stmt|;
 block|}
 empty_stmt|;
-comment|/*    * Add the posix modes     */
+comment|/*    * Add the posix modes    */
 if|if
 condition|(
 name|MAYBE_ADD_CE_ENTRY
@@ -1871,7 +1871,7 @@ block|}
 comment|/* while nchar */
 block|}
 comment|/* Is a symbolic link */
-comment|/*     * Add in the Rock Ridge TF time field    */
+comment|/*    * Add in the Rock Ridge TF time field    */
 if|if
 condition|(
 name|MAYBE_ADD_CE_ENTRY
@@ -2034,7 +2034,7 @@ name|ipnt
 operator|+=
 literal|7
 expr_stmt|;
-comment|/*     * Add in the Rock Ridge RE time field    */
+comment|/*    * Add in the Rock Ridge RE time field    */
 if|if
 condition|(
 name|deep_opt
@@ -2094,7 +2094,7 @@ operator|)
 expr_stmt|;
 block|}
 empty_stmt|;
-comment|/*     * Add in the Rock Ridge PL record, if required.    */
+comment|/*    * Add in the Rock Ridge PL record, if required.    */
 if|if
 condition|(
 name|deep_opt
@@ -2171,7 +2171,7 @@ operator|)
 expr_stmt|;
 block|}
 empty_stmt|;
-comment|/*     * Add in the Rock Ridge CL field, if required.    */
+comment|/*    * Add in the Rock Ridge CL field, if required.    */
 if|if
 condition|(
 name|deep_opt
@@ -2706,7 +2706,7 @@ empty_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/*     * Add in the Rock Ridge CE field, if required.  We use  this for the    * extension record that is stored in the root directory.    */
+comment|/*    * Add in the Rock Ridge CE field, if required.  We use  this for the    * extension record that is stored in the root directory.    */
 if|if
 condition|(
 name|deep_opt

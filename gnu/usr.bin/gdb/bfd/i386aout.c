@@ -4,7 +4,7 @@ comment|/* BFD back-end for i386 a.out binaries.    Copyright 1990, 1991, 1992 F
 end_comment
 
 begin_comment
-comment|/* The only 386 aout system we have here is GO32 from DJ.     These numbers make BFD work with that. If your aout 386 system    doesn't work with these, we'll have to split them into different    files.  Send me (sac@cygnus.com) the runes to make it work on your    system, and I'll stick it in for the next release.  */
+comment|/* The only 386 aout system we have here is GO32 from DJ.    These numbers make BFD work with that. If your aout 386 system    doesn't work with these, we'll have to split them into different    files.  Send me (sac@cygnus.com) the runes to make it work on your    system, and I'll stick it in for the next release.  */
 end_comment
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* This file is aout.h     Copyright (C) 1987-1992 Free Software Foundation, Inc.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* This file is aout.h     Copyright (C) 1987-1992 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_ifndef
@@ -973,7 +973,7 @@ value|0340
 end_define
 
 begin_comment
-comment|/* The following type indicates the definition of a symbol as being    an indirect reference to another symbol.  The other symbol    appears as an undefined reference, immediately following this symbol.        Indirection is asymmetrical.  The other symbol's value will be used    to satisfy requests for the indirect symbol, but not vice versa.    If the other symbol does not have a definition, libraries will    be searched to find a definition.  */
+comment|/* The following type indicates the definition of a symbol as being    an indirect reference to another symbol.  The other symbol    appears as an undefined reference, immediately following this symbol.     Indirection is asymmetrical.  The other symbol's value will be used    to satisfy requests for the indirect symbol, but not vice versa.    If the other symbol does not have a definition, libraries will    be searched to find a definition.  */
 end_comment
 
 begin_define
@@ -995,7 +995,7 @@ value|0xc
 end_define
 
 begin_comment
-comment|/* The following symbols refer to set elements.    All the N_SET[ATDB] symbols with the same name form one set.    Space is allocated for the set in the text section, and each set    element's value is stored into one word of the space.    The first word of the space is the length of the set (number of elements).        The address of the set is made into an N_SETV symbol    whose name is the same as the name of the set.    This symbol acts like a N_DATA global symbol    in that it can satisfy undefined external references.  */
+comment|/* The following symbols refer to set elements.    All the N_SET[ATDB] symbols with the same name form one set.    Space is allocated for the set in the text section, and each set    element's value is stored into one word of the space.    The first word of the space is the length of the set (number of elements).     The address of the set is made into an N_SETV symbol    whose name is the same as the name of the set.    This symbol acts like a N_DATA global symbol    in that it can satisfy undefined external references.  */
 end_comment
 
 begin_comment
@@ -1080,7 +1080,7 @@ comment|/* This structure describes a single relocation to be performed.    The 
 end_comment
 
 begin_comment
-comment|/* The following enum and struct were borrowed from SunOS's    /usr/include/sun4/a.out.h  and extended to handle    other machines.  It is currently used on SPARC and AMD 29000.        reloc_ext_bytes is how it looks on disk.  reloc_info_extended is    how we might process it on a native host.  */
+comment|/* The following enum and struct were borrowed from SunOS's    /usr/include/sun4/a.out.h  and extended to handle    other machines.  It is currently used on SPARC and AMD 29000.     reloc_ext_bytes is how it looks on disk.  reloc_info_extended is    how we might process it on a native host.  */
 end_comment
 
 begin_struct
@@ -1242,7 +1242,7 @@ name|unsigned
 label|:
 literal|2
 expr_stmt|;
-comment|/*  RS/6000 compiler does not support enum bitfield  	    enum reloc_type r_type:5; */
+comment|/*  RS/6000 compiler does not support enum bitfield 	    enum reloc_type r_type:5; */
 name|enum
 name|reloc_type
 name|r_type

@@ -288,7 +288,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Pointer to array of target architecture structures; the size of the    array; the current index into the array; the allocated size of the     array.  */
+comment|/* Pointer to array of target architecture structures; the size of the    array; the current index into the array; the allocated size of the    array.  */
 end_comment
 
 begin_decl_stmt
@@ -1516,7 +1516,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Remove a target_ops vector from the stack, wherever it may be.     Return how many times it was removed (0 or 1 unless bug).  */
+comment|/* Remove a target_ops vector from the stack, wherever it may be.    Return how many times it was removed (0 or 1 unless bug).  */
 end_comment
 
 begin_function
@@ -2161,7 +2161,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Move memory to or from the targets.  Iterate until all of it has    been moved, if necessary.  The top target gets priority; anything    it doesn't want, is offered to the next one down, etc.  Note the    business with curlen:  if an early target says "no, but I have a    boundary overlapping this xfer" then we shorten what we offer to    the subsequent targets so the early guy will get a chance at the    tail before the subsequent ones do.      Result is 0 or errno value.  */
+comment|/* Move memory to or from the targets.  Iterate until all of it has    been moved, if necessary.  The top target gets priority; anything    it doesn't want, is offered to the next one down, etc.  Note the    business with curlen:  if an early target says "no, but I have a    boundary overlapping this xfer" then we shorten what we offer to    the subsequent targets so the early guy will get a chance at the    tail before the subsequent ones do.     Result is 0 or errno value.  */
 end_comment
 
 begin_function

@@ -8,7 +8,7 @@ comment|/* The target dependent definitions should be defined here only.  * The 
 end_comment
 
 begin_comment
-comment|/* $Id: tailor.h,v 0.18 1993/06/14 19:32:20 jloup Exp $ */
+comment|/* $Id: tailor.h,v 1.3 1993/10/14 00:33:08 nate Exp $ */
 end_comment
 
 begin_if

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* as.h - global header file    Copyright (C) 1987, 1990, 1991, 1992 Free Software Foundation, Inc.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* as.h - global header file    Copyright (C) 1987, 1990, 1991, 1992 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
-comment|/*  * $Id: as.h,v 1.2 1993/11/03 00:51:11 paul Exp $  */
+comment|/*  * $Id: as.h,v 1.3 1994/12/23 22:36:01 nate Exp $  */
 end_comment
 
 begin_define
@@ -691,7 +691,7 @@ comment|/* frags.c */
 end_comment
 
 begin_comment
-comment|/*  * A code fragment (frag) is some known number of chars, followed by some  * unknown number of chars. Typically the unknown number of chars is an  * instruction address whose size is yet unknown. We always know the greatest  * possible size the unknown number of chars may become, and reserve that  * much room at the end of the frag.  * Once created, frags do not change address during assembly.  * We chain the frags in (a) forward-linked list(s). The object-file address  * of the 1st char of a frag is generally not known until after relax().  * Many things at assembly time describe an address by {object-file-address  * of a particular frag}+offset.    BUG: it may be smarter to have a single pointer off to various different  notes for different frag kinds. See how code pans   */
+comment|/*  * A code fragment (frag) is some known number of chars, followed by some  * unknown number of chars. Typically the unknown number of chars is an  * instruction address whose size is yet unknown. We always know the greatest  * possible size the unknown number of chars may become, and reserve that  * much room at the end of the frag.  * Once created, frags do not change address during assembly.  * We chain the frags in (a) forward-linked list(s). The object-file address  * of the 1st char of a frag is generally not known until after relax().  * Many things at assembly time describe an address by {object-file-address  * of a particular frag}+offset.   BUG: it may be smarter to have a single pointer off to various different  notes for different frag kinds. See how code pans  */
 end_comment
 
 begin_struct

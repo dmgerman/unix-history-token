@@ -5795,7 +5795,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* When a function is declared with an initializer,    do the right thing.  Currently, there are two possibilities:     class B    {     public:      // initialization possibility #1.      virtual void f () = 0;      int g ();    };        class D1 : B    {     public:      int d1;      // error, no f ();    };        class D2 : B    {     public:      int d2;      void f ();    };        class D3 : B    {     public:      int d3;      // initialization possibility #2      void f () = B::f;    };  */
+comment|/* When a function is declared with an initializer,    do the right thing.  Currently, there are two possibilities:     class B    {     public:      // initialization possibility #1.      virtual void f () = 0;      int g ();    };     class D1 : B    {     public:      int d1;      // error, no f ();    };     class D2 : B    {     public:      int d2;      void f ();    };     class D3 : B    {     public:      int d3;      // initialization possibility #2      void f () = B::f;    };  */
 end_comment
 
 begin_function
@@ -5933,7 +5933,7 @@ literal|0
 comment|/* Mark this function as being "defined".  */
 block|DECL_INITIAL (decl) = error_mark_node;
 comment|/* pure virtual destructors must be defined. */
-comment|/* pure virtual needs to be defined (as abort) only when put in  	 vtbl. For wellformed call, it should be itself. pr4737 */
+comment|/* pure virtual needs to be defined (as abort) only when put in 	 vtbl. For wellformed call, it should be itself. pr4737 */
 block|if (!DESTRUCTOR_NAME_P (DECL_ASSEMBLER_NAME (decl))) 	{ 	  extern tree abort_fndecl;
 comment|/* Give this node rtl from `abort'.  */
 block|DECL_RTL (decl) = DECL_RTL (abort_fndecl); 	}

@@ -21,7 +21,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* This module provides definitions used for creating and adding to    the symbol table.  These routines are called from various symbol-    file-reading routines.       They originated in dbxread.c of gdb-4.2, and were split out to    make xcoffread.c more maintainable by sharing code.     Variables declared in this file can be defined by #define-ing    the name EXTERN to null.  It is used to declare variables that    are normally extern, but which get defined in a single module    using this technique.  */
+comment|/* This module provides definitions used for creating and adding to    the symbol table.  These routines are called from various symbol-    file-reading routines.     They originated in dbxread.c of gdb-4.2, and were split out to    make xcoffread.c more maintainable by sharing code.     Variables declared in this file can be defined by #define-ing    the name EXTERN to null.  It is used to declare variables that    are normally extern, but which get defined in a single module    using this technique.  */
 end_comment
 
 begin_ifndef

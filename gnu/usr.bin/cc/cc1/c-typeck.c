@@ -2092,7 +2092,7 @@ condition|)
 return|return
 literal|1
 return|;
-comment|/* Treat an enum type as the integer type of the same width and       signedness.  */
+comment|/* Treat an enum type as the integer type of the same width and      signedness.  */
 if|if
 condition|(
 name|TREE_CODE
@@ -2629,7 +2629,7 @@ comment|/* Subroutines of `comptypes'.  */
 end_comment
 
 begin_comment
-comment|/* Return 1 if two function types F1 and F2 are compatible.    If either type specifies no argument types,    the other must specify a fixed number of self-promoting arg types.    Otherwise, if one type specifies only the number of arguments,     the other must specify that number of self-promoting arg types.    Otherwise, the argument types must match.  */
+comment|/* Return 1 if two function types F1 and F2 are compatible.    If either type specifies no argument types,    the other must specify a fixed number of self-promoting arg types.    Otherwise, if one type specifies only the number of arguments,    the other must specify that number of self-promoting arg types.    Otherwise, the argument types must match.  */
 end_comment
 
 begin_function
@@ -6371,7 +6371,7 @@ name|array
 argument_list|)
 argument_list|)
 argument_list|)
-comment|/* This was added by rms on 16 Nov 91. 	       It fixes  vol struct foo *a;  a->elts[1]  	       in an inline function. 	       Hope it doesn't break something else.  */
+comment|/* This was added by rms on 16 Nov 91. 	       It fixes  vol struct foo *a;  a->elts[1] 	       in an inline function. 	       Hope it doesn't break something else.  */
 operator||
 name|TREE_THIS_VOLATILE
 argument_list|(
@@ -21967,7 +21967,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* At the end of an implicit or explicit brace level,     finish up that level of constructor.    If we were outputting the elements as they are read, return 0    from inner levels (process_init_element ignores that),    but return error_mark_node from the outermost level    (that's what we want to put in DECL_INITIAL).    Otherwise, return a CONSTRUCTOR expression.  */
+comment|/* At the end of an implicit or explicit brace level,    finish up that level of constructor.    If we were outputting the elements as they are read, return 0    from inner levels (process_init_element ignores that),    but return error_mark_node from the outermost level    (that's what we want to put in DECL_INITIAL).    Otherwise, return a CONSTRUCTOR expression.  */
 end_comment
 
 begin_function

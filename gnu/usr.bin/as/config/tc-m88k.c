@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* m88k.c -- Assembler for the Motorola 88000    Contributed by Devon Bowen of Buffalo University    and Torbjorn Granlund of the Swedish Institute of Computer Science.    Copyright (C) 1989-1992 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* m88k.c -- Assembler for the Motorola 88000    Contributed by Devon Bowen of Buffalo University    and Torbjorn Granlund of the Swedish Institute of Computer Science.    Copyright (C) 1989-1992 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_include
@@ -5000,7 +5000,7 @@ comment|/* comment */
 end_comment
 
 begin_comment
-comment|/* Translate internal representation of relocation info to target format.        On m88k: first 4 bytes are normal unsigned long address,    next three bytes are index, most sig. byte first.    Byte 7 is broken up with bit 7 as external,    	bits 6, 5,& 4 unused, and the lower four bits as relocation 	type.    Next 4 bytes are long addend. */
+comment|/* Translate internal representation of relocation info to target format.     On m88k: first 4 bytes are normal unsigned long address,    next three bytes are index, most sig. byte first.    Byte 7 is broken up with bit 7 as external,    	bits 6, 5,& 4 unused, and the lower four bits as relocation 	type.    Next 4 bytes are long addend. */
 end_comment
 
 begin_function

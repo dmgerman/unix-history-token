@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Declarations of internal format of MIPS ECOFF symbols.    Originally contributed by MIPS Computer Systems and Third Eye Software.    Changes contributed by Cygnus Support are in the public domain.       This file is just aggregated with the files that make up the GNU    release; it is not considered part of GAS, GDB, or other GNU    programs.  */
+comment|/* Declarations of internal format of MIPS ECOFF symbols.    Originally contributed by MIPS Computer Systems and Third Eye Software.    Changes contributed by Cygnus Support are in the public domain.     This file is just aggregated with the files that make up the GNU    release; it is not considered part of GAS, GDB, or other GNU    programs.  */
 end_comment
 
 begin_comment
@@ -24,11 +24,11 @@ comment|/* (C) Copyright 1984 by Third Eye Software, Inc.  *  * Third Eye Softwa
 end_comment
 
 begin_comment
-comment|/*   * This file contains the definition of the Third Eye Symbol Table.  *  * Symbols are assumed to be in 'encounter order' - i.e. the order that  * the things they represent were encountered by the compiler/assembler/loader.  * EXCEPT for globals!	These are assumed to be bunched together,  * probably right after the last 'normal' symbol.  Globals ARE sorted  * in ascending order.  *  * -----------------------------------------------------------------------  * A brief word about Third Eye naming/use conventions:  *  * All arrays and index's are 0 based.  * All "ifooMax" values are the highest legal value PLUS ONE. This makes  * them good for allocating arrays, etc. All checks are "ifoo< ifooMax".  *  * "isym"	Index into the SYMbol table.  * "ipd"	Index into the Procedure Descriptor array.  * "ifd"	Index into the File Descriptor array.  * "iss"	Index into String Space.  * "cb"		Count of Bytes.  * "rgPd"	array whose domain is "0..ipdMax-1" and RanGe is PDR.  * "rgFd"	array whose domain is "0..ifdMax-1" and RanGe is FDR.  */
+comment|/*  * This file contains the definition of the Third Eye Symbol Table.  *  * Symbols are assumed to be in 'encounter order' - i.e. the order that  * the things they represent were encountered by the compiler/assembler/loader.  * EXCEPT for globals!	These are assumed to be bunched together,  * probably right after the last 'normal' symbol.  Globals ARE sorted  * in ascending order.  *  * -----------------------------------------------------------------------  * A brief word about Third Eye naming/use conventions:  *  * All arrays and index's are 0 based.  * All "ifooMax" values are the highest legal value PLUS ONE. This makes  * them good for allocating arrays, etc. All checks are "ifoo< ifooMax".  *  * "isym"	Index into the SYMbol table.  * "ipd"	Index into the Procedure Descriptor array.  * "ifd"	Index into the File Descriptor array.  * "iss"	Index into String Space.  * "cb"		Count of Bytes.  * "rgPd"	array whose domain is "0..ipdMax-1" and RanGe is PDR.  * "rgFd"	array whose domain is "0..ifdMax-1" and RanGe is FDR.  */
 end_comment
 
 begin_comment
-comment|/*   * Symbolic Header (HDR) structure.  * As long as all the pointers are set correctly,  * we don't care WHAT order the various sections come out in!  *  * A file produced solely for the use of CDB will probably NOT have  * any instructions or data areas in it, as these are available  * in the original.  */
+comment|/*  * Symbolic Header (HDR) structure.  * As long as all the pointers are set correctly,  * we don't care WHAT order the various sections come out in!  *  * A file produced solely for the use of CDB will probably NOT have  * any instructions or data areas in it, as these are available  * in the original.  */
 end_comment
 
 begin_typedef
@@ -163,7 +163,7 @@ comment|/*  * The FDR and PDR structures speed mapping of address<-> name.  * Th
 end_comment
 
 begin_comment
-comment|/*   * File Descriptor  *  * There is one of these for EVERY FILE, whether compiled with  * full debugging symbols or not.  The name of a file should be  * the path name given to the compiler.	 This allows the user  * to simply specify the names of the directories where the COMPILES  * were done, and we will be able to find their files.  * A field whose comment starts with "R - " indicates that it will be  * setup at runtime.  */
+comment|/*  * File Descriptor  *  * There is one of these for EVERY FILE, whether compiled with  * full debugging symbols or not.  The name of a file should be  * the path name given to the compiler.	 This allows the user  * to simply specify the names of the directories where the COMPILES  * were done, and we will be able to find their files.  * A field whose comment starts with "R - " indicates that it will be  * setup at runtime.  */
 end_comment
 
 begin_typedef
@@ -325,7 +325,7 @@ value|-1
 end_define
 
 begin_comment
-comment|/*   * Procedure Descriptor  *  * There is one of these for EVERY TEXT LABEL.  * If a procedure is in a file with full symbols, then isym  * will point to the PROC symbols, else it will point to the  * global symbol for the label.  */
+comment|/*  * Procedure Descriptor  *  * There is one of these for EVERY TEXT LABEL.  * If a procedure is in a file with full symbols, then isym  * will point to the PROC symbols, else it will point to the  * global symbol for the label.  */
 end_comment
 
 begin_typedef
@@ -981,7 +981,7 @@ value|-1
 end_define
 
 begin_comment
-comment|/*  * Optimization symbols  *  * Optimization symbols contain some overlap information with the normal  * symbol table. In particular, the proc information  * is somewhat redundant but necessary to easily find the other information  * present.   *  * All of the offsets are relative to the beginning of the last otProc  */
+comment|/*  * Optimization symbols  *  * Optimization symbols contain some overlap information with the normal  * symbol table. In particular, the proc information  * is somewhat redundant but necessary to easily find the other information  * present.  *  * All of the offsets are relative to the beginning of the last otProc  */
 end_comment
 
 begin_typedef
@@ -1212,7 +1212,7 @@ comment|/* Dense numbers  *  * Rather than use file index, symbol index pairs to
 end_comment
 
 begin_comment
-comment|/*  * The following table defines the meaning of each SYM field as  * a function of the "st". (scD/B == scData OR scBss)  *  * Note: the value "isymMac" is used by symbols that have the concept  * of enclosing a block of related information.	 This value is the  * isym of the first symbol AFTER the end associated with the primary  * symbol. For example if a procedure was at isym==90 and had an  * isymMac==155, the associated end would be at isym==154, and the  * symbol at 155 would probably (although not necessarily) be the  * symbol for the next procedure.  This allows rapid skipping over  * internal information of various sorts. "stEnd"s ALWAYS have the  * isym of the primary symbol that started the block.  *   ST		SC	VALUE		INDEX --------	------	--------	------ stFile		scText	address		isymMac stLabel		scText	address		--- stGlobal	scD/B	address		iaux stStatic	scD/B	address		iaux stParam		scAbs	offset		iaux stLocal		scAbs	offset		iaux stProc		scText	address		iaux	(isymMac is first AUX) stStaticProc	scText	address		iaux	(isymMac is first AUX)  stMember	scNil	ordinal		---	(if member of enum) 	(mipsread thinks the case below has a bit, not byte, offset.) stMember	scNil	byte offset	iaux	(if member of struct/union) stMember	scBits	bit offset	iaux	(bit field spec)  stBlock		scText	address		isymMac (text block) 	(the code seems to think that rather than scNil, we see scInfo for 	 the two cases below.) stBlock		scNil	cb		isymMac (struct/union member define) stBlock		scNil	cMembers	isymMac (enum member define)  	(New types added by SGI to simplify things:) stStruct	scInfo	cb		isymMac (struct type define) stUnion		scInfo	cb		isymMac (union  type define) stEnum		scInfo	cMembers	isymMac (enum   type define)  stEnd		scText	address		isymStart stEnd		scNil	-------		isymStart (struct/union/enum)  stTypedef	scNil	-------		iaux stRegReloc	sc???	value		old register number stForward	sc???	new address	isym to original symbol  stConstant	scInfo	value		--- (scalar) stConstant	scInfo	iss		--- (complex, e.g. string)   *  */
+comment|/*  * The following table defines the meaning of each SYM field as  * a function of the "st". (scD/B == scData OR scBss)  *  * Note: the value "isymMac" is used by symbols that have the concept  * of enclosing a block of related information.	 This value is the  * isym of the first symbol AFTER the end associated with the primary  * symbol. For example if a procedure was at isym==90 and had an  * isymMac==155, the associated end would be at isym==154, and the  * symbol at 155 would probably (although not necessarily) be the  * symbol for the next procedure.  This allows rapid skipping over  * internal information of various sorts. "stEnd"s ALWAYS have the  * isym of the primary symbol that started the block.  *  ST		SC	VALUE		INDEX --------	------	--------	------ stFile		scText	address		isymMac stLabel		scText	address		--- stGlobal	scD/B	address		iaux stStatic	scD/B	address		iaux stParam		scAbs	offset		iaux stLocal		scAbs	offset		iaux stProc		scText	address		iaux	(isymMac is first AUX) stStaticProc	scText	address		iaux	(isymMac is first AUX)  stMember	scNil	ordinal		---	(if member of enum) 	(mipsread thinks the case below has a bit, not byte, offset.) stMember	scNil	byte offset	iaux	(if member of struct/union) stMember	scBits	bit offset	iaux	(bit field spec)  stBlock		scText	address		isymMac (text block) 	(the code seems to think that rather than scNil, we see scInfo for 	 the two cases below.) stBlock		scNil	cb		isymMac (struct/union member define) stBlock		scNil	cMembers	isymMac (enum member define)  	(New types added by SGI to simplify things:) stStruct	scInfo	cb		isymMac (struct type define) stUnion		scInfo	cb		isymMac (union  type define) stEnum		scInfo	cMembers	isymMac (enum   type define)  stEnd		scText	address		isymStart stEnd		scNil	-------		isymStart (struct/union/enum)  stTypedef	scNil	-------		iaux stRegReloc	sc???	value		old register number stForward	sc???	new address	isym to original symbol  stConstant	scInfo	value		--- (scalar) stConstant	scInfo	iss		--- (complex, e.g. string)   *  */
 end_comment
 
 begin_endif

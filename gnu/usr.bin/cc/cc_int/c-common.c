@@ -3967,7 +3967,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* "If the space and + flags both appear,  	     the space flag will be ignored."  */
+comment|/* "If the space and + flags both appear, 	     the space flag will be ignored."  */
 if|if
 condition|(
 name|index

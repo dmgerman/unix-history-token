@@ -138,7 +138,7 @@ name|EXTERN
 end_undef
 
 begin_comment
-comment|/* The routines that read and process a complete stabs for a C struct or     C++ class pass lists of data member fields and lists of member function    fields in an instance of a field_info structure, as defined below.    This is part of some reorganization of low level C++ support and is    expected to eventually go away... (FIXME) */
+comment|/* The routines that read and process a complete stabs for a C struct or    C++ class pass lists of data member fields and lists of member function    fields in an instance of a field_info structure, as defined below.    This is part of some reorganization of low level C++ support and is    expected to eventually go away... (FIXME) */
 end_comment
 
 begin_struct
@@ -1649,7 +1649,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* for all the stabs in a given stab vector, build appropriate types     and fix their symbols in given symbol vector. */
+comment|/* for all the stabs in a given stab vector, build appropriate types    and fix their symbols in given symbol vector. */
 end_comment
 
 begin_function
@@ -1700,7 +1700,7 @@ condition|(
 name|stabs
 condition|)
 block|{
-comment|/* for all the stab entries, find their corresponding symbols and  	 patch their types! */
+comment|/* for all the stab entries, find their corresponding symbols and 	 patch their types! */
 for|for
 control|(
 name|ii
@@ -3087,7 +3087,7 @@ literal|0
 comment|/* This code doesn't work -- it needs to realloc and can't.  */
 comment|/* Attempt to set up to record a function prototype... */
 block|struct type *new = alloc_type (objfile);
-comment|/* Generate a template for the type of this function.  The  	     types of the arguments will be added as we read the symbol  	     table. */
+comment|/* Generate a template for the type of this function.  The 	     types of the arguments will be added as we read the symbol 	     table. */
 block|*new = *lookup_function_type (SYMBOL_TYPE(sym)); 	  SYMBOL_TYPE(sym) = new; 	  TYPE_OBJFILE (new) = objfile; 	  in_function_type = new;
 else|#
 directive|else
@@ -3482,7 +3482,7 @@ name|defined
 argument_list|(
 name|BELIEVE_PCC_PROMOTION_TYPE
 argument_list|)
-comment|/* This macro is defined on machines (e.g. sparc) where 	   we should believe the type of a PCC 'short' argument, 	   but shouldn't believe the address (the address is 	   the address of the corresponding int). 	    	   My guess is that this correction, as opposed to changing 	   the parameter to an 'int' (as done below, for PCC 	   on most machines), is the right thing to do 	   on all machines, but I don't want to risk breaking 	   something that already works.  On most PCC machines, 	   the sparc problem doesn't come up because the calling 	   function has to zero the top bytes (not knowing whether 	   the called function wants an int or a short), so there 	   is little practical difference between an int and a short 	   (except perhaps what happens when the GDB user types 	   "print short_arg = 0x10000;").  	    	   Hacked for SunOS 4.1 by gnu@cygnus.com.  In 4.1, the compiler 	   actually produces the correct address (we don't need to fix it 	   up).  I made this code adapt so that it will offset the symbol 	   if it was pointing at an int-aligned location and not 	   otherwise.  This way you can use the same gdb for 4.0.x and 	   4.1 systems. 	    	   If the parameter is shorter than an int, and is integral 	   (e.g. char, short, or unsigned equivalent), and is claimed to 	   be passed on an integer boundary, don't believe it!  Offset the 	   parameter's address to the tail-end of that integer.  */
+comment|/* This macro is defined on machines (e.g. sparc) where 	   we should believe the type of a PCC 'short' argument, 	   but shouldn't believe the address (the address is 	   the address of the corresponding int).  	   My guess is that this correction, as opposed to changing 	   the parameter to an 'int' (as done below, for PCC 	   on most machines), is the right thing to do 	   on all machines, but I don't want to risk breaking 	   something that already works.  On most PCC machines, 	   the sparc problem doesn't come up because the calling 	   function has to zero the top bytes (not knowing whether 	   the called function wants an int or a short), so there 	   is little practical difference between an int and a short 	   (except perhaps what happens when the GDB user types 	   "print short_arg = 0x10000;").  	   Hacked for SunOS 4.1 by gnu@cygnus.com.  In 4.1, the compiler 	   actually produces the correct address (we don't need to fix it 	   up).  I made this code adapt so that it will offset the symbol 	   if it was pointing at an int-aligned location and not 	   otherwise.  This way you can use the same gdb for 4.0.x and 	   4.1 systems.  	   If the parameter is shorter than an int, and is integral 	   (e.g. char, short, or unsigned equivalent), and is claimed to 	   be passed on an integer boundary, don't believe it!  Offset the 	   parameter's address to the tail-end of that integer.  */
 if|if
 condition|(
 name|TYPE_LENGTH
@@ -4257,7 +4257,7 @@ name|symbol_obstack
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* The semantics of C++ state that "struct foo { ... }" also defines  	 a typedef for "foo".  Unfortunately, cfront never makes the typedef 	 when translating C++ into C.  We make the typedef here so that 	 "ptype foo" works as expected for cfront translated code.  */
+comment|/* The semantics of C++ state that "struct foo { ... }" also defines 	 a typedef for "foo".  Unfortunately, cfront never makes the typedef 	 when translating C++ into C.  We make the typedef here so that 	 "ptype foo" works as expected for cfront translated code.  */
 elseif|else
 if|if
 condition|(
@@ -4685,7 +4685,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* When passing structures to a function, some systems sometimes pass      the address in a register, not the structure itself.        If REG_STRUCT_HAS_ADDR yields non-zero we have to convert LOC_REGPARM      to LOC_REGPARM_ADDR for structures and unions.  */
+comment|/* When passing structures to a function, some systems sometimes pass      the address in a register, not the structure itself.       If REG_STRUCT_HAS_ADDR yields non-zero we have to convert LOC_REGPARM      to LOC_REGPARM_ADDR for structures and unions.  */
 if|if
 condition|(
 name|SYMBOL_CLASS
@@ -10885,7 +10885,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Read the description of a structure (or union type) and return an object    describing the type.     PP points to a character pointer that points to the next unconsumed token    in the the stabs string.  For example, given stabs "A:T4=s4a:1,0,32;;",    *PP will point to "4a:1,0,32;;".     TYPE points to an incomplete type that needs to be filled in.     OBJFILE points to the current objfile from which the stabs information is    being read.  (Note that it is redundant in that TYPE also contains a pointer    to this same objfile, so it might be a good idea to eliminate it.  FIXME).     */
+comment|/* Read the description of a structure (or union type) and return an object    describing the type.     PP points to a character pointer that points to the next unconsumed token    in the the stabs string.  For example, given stabs "A:T4=s4a:1,0,32;;",    *PP will point to "4a:1,0,32;;".     TYPE points to an incomplete type that needs to be filled in.     OBJFILE points to the current objfile from which the stabs information is    being read.  (Note that it is redundant in that TYPE also contains a pointer    to this same objfile, so it might be a good idea to eliminate it.  FIXME).    */
 end_comment
 
 begin_function

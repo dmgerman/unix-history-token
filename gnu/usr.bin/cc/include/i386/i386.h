@@ -805,7 +805,7 @@ value|{							\     if (flag_pic)					\       {							\ 	fixed_regs[PIC_OFFSET_T
 end_define
 
 begin_comment
-comment|/* Return number of consecutive hard regs needed starting at reg REGNO    to hold something of mode MODE.    This is ordinarily the length in words of a value of mode MODE    but can be less for certain modes in special long registers.     Actually there are no two word move instructions for consecutive     registers.  And only registers 0-3 may have mov byte instructions    applied to them.    */
+comment|/* Return number of consecutive hard regs needed starting at reg REGNO    to hold something of mode MODE.    This is ordinarily the length in words of a value of mode MODE    but can be less for certain modes in special long registers.     Actually there are no two word move instructions for consecutive    registers.  And only registers 0-3 may have mov byte instructions    applied to them.    */
 end_comment
 
 begin_define
@@ -1717,7 +1717,7 @@ comment|/* EXIT_IGNORE_STACK should be nonzero if, when returning from a functio
 end_comment
 
 begin_comment
-comment|/* Note on the 386 it might be more efficient not to define this since     we have to restore it ourselves from the frame pointer, in order to    use pop */
+comment|/* Note on the 386 it might be more efficient not to define this since    we have to restore it ourselves from the frame pointer, in order to    use pop */
 end_comment
 
 begin_define
@@ -2177,7 +2177,7 @@ value|{									\   rtx orig_x = (X);							\   (X) = legitimize_address (X, OLD
 end_define
 
 begin_comment
-comment|/* Nonzero if the constant value X is a legitimate general operand    when generating PIC code.  It is given that flag_pic is on and     that X satisfies CONSTANT_P or is a CONST_DOUBLE.  */
+comment|/* Nonzero if the constant value X is a legitimate general operand    when generating PIC code.  It is given that flag_pic is on and    that X satisfies CONSTANT_P or is a CONST_DOUBLE.  */
 end_comment
 
 begin_define
@@ -2930,7 +2930,7 @@ value|fprintf (FILE, "%s %s%d\n", ASM_LONG, LPREFIX, VALUE)
 end_define
 
 begin_comment
-comment|/* This is how to output an element of a case-vector that is relative.    We don't use these on the 386 yet, because the ATT assembler can't do    forward reference the differences.    */
+comment|/* This is how to output an element of a case-vector that is relative.    We don't use these on the 386 yet, because the ATT assembler can't do    forward reference the differences.  */
 end_comment
 
 begin_define

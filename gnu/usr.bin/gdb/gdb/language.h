@@ -455,7 +455,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* language_mode ==     language_mode_auto:   current_language automatically set upon selection 			 of scope (e.g. stack frame)    language_mode_manual: current_language set only by user.  */
+comment|/* language_mode ==    language_mode_auto:   current_language automatically set upon selection 			 of scope (e.g. stack frame)    language_mode_manual: current_language set only by user.  */
 end_comment
 
 begin_enum
@@ -475,7 +475,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* These macros define the behaviour of the expression     evaluator.  */
+comment|/* These macros define the behaviour of the expression    evaluator.  */
 end_comment
 
 begin_comment

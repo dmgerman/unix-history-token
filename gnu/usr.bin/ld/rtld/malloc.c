@@ -28,7 +28,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: malloc.c,v 1.2 1994/06/15 22:41:13 rich Exp $"
+literal|"$Id: malloc.c,v 1.3 1995/03/04 17:46:24 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_comment
-comment|/*  * malloc.c (Caltech) 2/21/82  * Chris Kingsley, kingsley@cit-20.  *  * This is a very fast storage allocator.  It allocates blocks of a small   * number of different sizes, and keeps free lists of each size.  Blocks that  * don't exactly fit are passed up to the next larger size.  In this   * implementation, the available sizes are 2^n-4 (or 2^n-10) bytes long.  * This is designed for use in a virtual memory environment.  */
+comment|/*  * malloc.c (Caltech) 2/21/82  * Chris Kingsley, kingsley@cit-20.  *  * This is a very fast storage allocator.  It allocates blocks of a small  * number of different sizes, and keeps free lists of each size.  Blocks that  * don't exactly fit are passed up to the next larger size.  In this  * implementation, the available sizes are 2^n-4 (or 2^n-10) bytes long.  * This is designed for use in a virtual memory environment.  */
 end_comment
 
 begin_include
@@ -1660,7 +1660,7 @@ name|MSTATS
 end_ifdef
 
 begin_comment
-comment|/*  * mstats - print out statistics about malloc  *   * Prints two lines of numbers, one showing the length of the free list  * for each size category, the second showing the number of mallocs -  * frees for each size category.  */
+comment|/*  * mstats - print out statistics about malloc  *  * Prints two lines of numbers, one showing the length of the free list  * for each size category, the second showing the number of mallocs -  * frees for each size category.  */
 end_comment
 
 begin_macro

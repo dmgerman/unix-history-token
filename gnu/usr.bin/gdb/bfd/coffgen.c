@@ -1304,7 +1304,7 @@ comment|/* This nasty code looks at the symbol to decide whether or 	   not it i
 if|#
 directive|if
 literal|0
-block|if (0&& symbase->symbol.name[9] == '$')  	{ 	    bfd_constructor_entry(abfd,  				 (asymbol **)location, 				  symbase->symbol.name[10] == 'I' ? 				  "CTOR" : "DTOR"); 	}
+block|if (0&& symbase->symbol.name[9] == '$') 	{ 	    bfd_constructor_entry(abfd, 				 (asymbol **)location, 				  symbase->symbol.name[10] == 'I' ? 				  "CTOR" : "DTOR"); 	}
 endif|#
 directive|endif
 operator|*
@@ -3789,7 +3789,7 @@ block|{
 if|#
 directive|if
 literal|0
-comment|/* 13 april 92. sac  	     I've been told this, but still need proof:> The second bug is also in `bfd/coffcode.h'.  This bug> causes the linker to screw up the pc-relocations for> all the line numbers in COFF code.  This bug isn't only> specific to A29K implementations, but affects all> systems using COFF format binaries.  Note that in COFF> object files, the line number core offsets output by> the assembler are relative to the start of each> procedure, not to the start of the .text section.  This> patch relocates the line numbers relative to the> `native->u.syment.n_value' instead of the section> virtual address.> modular!olson@cs.arizona.edu (Jon Olson) 	     */
+comment|/* 13 april 92. sac 	     I've been told this, but still need proof:> The second bug is also in `bfd/coffcode.h'.  This bug> causes the linker to screw up the pc-relocations for> all the line numbers in COFF code.  This bug isn't only> specific to A29K implementations, but affects all> systems using COFF format binaries.  Note that in COFF> object files, the line number core offsets output by> the assembler are relative to the start of each> procedure, not to the start of the .text section.  This> patch relocates the line numbers relative to the> `native->u.syment.n_value' instead of the section> virtual address.> modular!olson@cs.arizona.edu (Jon Olson) 	     */
 block|lineno[count].u.offset += native->u.syment.n_value;
 else|#
 directive|else
@@ -5347,7 +5347,7 @@ return|return
 name|NULL
 return|;
 block|}
-comment|/* Seek to the beginning of the `.debug' section and read it.       Save the current position first; it is needed by our caller.      Then read debug section and reset the file pointer.  */
+comment|/* Seek to the beginning of the `.debug' section and read it.      Save the current position first; it is needed by our caller.      Then read debug section and reset the file pointer.  */
 name|position
 operator|=
 name|bfd_tell

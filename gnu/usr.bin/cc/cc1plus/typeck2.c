@@ -5274,7 +5274,7 @@ return|return
 name|error_mark_node
 return|;
 block|}
-comment|/* Prepare to evaluate as a call to a constructor.  If this expression      is actually used, for example, 	       return X (arg1, arg2, ...); 	       then the slot being initialized will be filled in.  */
+comment|/* Prepare to evaluate as a call to a constructor.  If this expression      is actually used, for example,       return X (arg1, arg2, ...);       then the slot being initialized will be filled in.  */
 if|if
 condition|(
 name|name
@@ -5471,7 +5471,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* The following assertion fails in cases where we are initializing        a static member variable of a particular instance of a template        class with a call to a constructor of the given instance, as in:                TMPL<int> object = TMPL<int>();                Curiously, the assertion does not fail if we do the same thing        for a static member of a non-template class, as in:                T object = T();                I can't see why we should care here whether or not the initializer        expression involves a call to `new', so for the time being, it        seems best to just avoid doing this assertion.  */
+comment|/* The following assertion fails in cases where we are initializing        a static member variable of a particular instance of a template        class with a call to a constructor of the given instance, as in:         TMPL<int> object = TMPL<int>();         Curiously, the assertion does not fail if we do the same thing        for a static member of a non-template class, as in:         T object = T();         I can't see why we should care here whether or not the initializer        expression involves a call to `new', so for the time being, it        seems best to just avoid doing this assertion.  */
 block|my_friendly_assert (TREE_CALLS_NEW (TREE_VALUE (parm)), 323);
 endif|#
 directive|endif
@@ -5642,7 +5642,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/* Print out a language-specific error message for    (Pascal) case or (C) switch statements.    CODE tells what sort of message to print.     TYPE is the type of the switch index expression.    NEW is the new value that we were trying to add.    OLD is the old value that stopped us from adding it.  */
+comment|/* Print out a language-specific error message for    (Pascal) case or (C) switch statements.    CODE tells what sort of message to print.    TYPE is the type of the switch index expression.    NEW is the new value that we were trying to add.    OLD is the old value that stopped us from adding it.  */
 end_comment
 
 begin_endif

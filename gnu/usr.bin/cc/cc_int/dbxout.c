@@ -1443,7 +1443,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Output a line number symbol entry into output stream FILE,     for source file FILENAME and line number LINENO.  */
+comment|/* Output a line number symbol entry into output stream FILE,    for source file FILENAME and line number LINENO.  */
 end_comment
 
 begin_function
@@ -6553,7 +6553,7 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
-comment|/* Don't mention a variable at all      if it was completely optimized into nothingness.            If the decl was from an inline function, then it's rtl      is not identically the rtl that was used in this      particular compilation.  */
+comment|/* Don't mention a variable at all      if it was completely optimized into nothingness.       If the decl was from an inline function, then it's rtl      is not identically the rtl that was used in this      particular compilation.  */
 if|if
 condition|(
 name|GET_CODE

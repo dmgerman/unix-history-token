@@ -4,7 +4,7 @@ comment|/* storage.c:  Code and data storage manipulations.  This includes label
 end_comment
 
 begin_comment
-comment|/*  This file is part of bc written for MINIX.     Copyright (C) 1991, 1992 Free Software Foundation, Inc.      This program is free software; you can redistribute it and/or modify     it under the terms of the GNU General Public License as published by     the Free Software Foundation; either version 2 of the License , or     (at your option) any later version.      This program is distributed in the hope that it will be useful,     but WITHOUT ANY WARRANTY; without even the implied warranty of     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     GNU General Public License for more details.      You should have received a copy of the GNU General Public License     along with this program; see the file COPYING.  If not, write to     the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.      You may contact the author by:        e-mail:  phil@cs.wwu.edu       us-mail:  Philip A. Nelson                 Computer Science Department, 9062                 Western Washington University                 Bellingham, WA 98226-9062         *************************************************************************/
+comment|/*  This file is part of bc written for MINIX.     Copyright (C) 1991, 1992 Free Software Foundation, Inc.      This program is free software; you can redistribute it and/or modify     it under the terms of the GNU General Public License as published by     the Free Software Foundation; either version 2 of the License , or     (at your option) any later version.      This program is distributed in the hope that it will be useful,     but WITHOUT ANY WARRANTY; without even the implied warranty of     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     GNU General Public License for more details.      You should have received a copy of the GNU General Public License     along with this program; see the file COPYING.  If not, write to     the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.      You may contact the author by:        e-mail:  phil@cs.wwu.edu       us-mail:  Philip A. Nelson                 Computer Science Department, 9062                 Western Washington University                 Bellingham, WA 98226-9062  *************************************************************************/
 end_comment
 
 begin_include
@@ -1625,7 +1625,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Store the top of the execution stack into VAR_NAME.      This includes the special variables ibase, obase, and scale. */
+comment|/* Store the top of the execution stack into VAR_NAME.    This includes the special variables ibase, obase, and scale. */
 end_comment
 
 begin_function
@@ -1934,7 +1934,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Store the top of the execution stack into array VAR_NAME.     VAR_NAME is the name of an array, and the next to the top    of stack for the index into the array. */
+comment|/* Store the top of the execution stack into array VAR_NAME.    VAR_NAME is the name of an array, and the next to the top    of stack for the index into the array. */
 end_comment
 
 begin_function

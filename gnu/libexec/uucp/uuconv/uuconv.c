@@ -21,7 +21,7 @@ name|char
 name|uuconv_rcsid
 index|[]
 init|=
-literal|"$Id: uuconv.c,v 1.22 1994/03/29 01:09:32 ian Rel $"
+literal|"$Id: uuconv.c,v 1.2 1994/05/07 18:14:06 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 

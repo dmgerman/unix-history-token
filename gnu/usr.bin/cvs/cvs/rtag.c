@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * Rtag  *   * Add or delete a symbolic name to an RCS file, or a collection of RCS files.  * Uses the modules database, if necessary.  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *  * Rtag  *  * Add or delete a symbolic name to an RCS file, or a collection of RCS files.  * Uses the modules database, if necessary.  */
 end_comment
 
 begin_include
@@ -1610,7 +1610,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * If -d is specified, "force_tag_match" is set, so that this call to  * Version_Number() will return a NULL version string if the symbolic  * tag does not exist in the RCS file.  *   * If the -r flag was used, numtag is set, and we only delete the  * symtag from files that have numtag.  *   * This is done here because it's MUCH faster than just blindly calling  * "rcs" to remove the tag... trust me.  */
+comment|/*  * If -d is specified, "force_tag_match" is set, so that this call to  * Version_Number() will return a NULL version string if the symbolic  * tag does not exist in the RCS file.  *  * If the -r flag was used, numtag is set, and we only delete the  * symtag from files that have numtag.  *  * This is done here because it's MUCH faster than just blindly calling  * "rcs" to remove the tag... trust me.  */
 end_comment
 
 begin_function

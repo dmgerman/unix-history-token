@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * Patch  *   * Create a Larry Wall format "patch" file between a previous release and the  * current head of a module, or between two releases.  Can specify the  * release as either a date or a revision number.  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *  * Patch  *  * Create a Larry Wall format "patch" file between a previous release and the  * current head of a module, or between two releases.  Can specify the  * release as either a date or a revision number.  */
 end_comment
 
 begin_include

@@ -8,7 +8,7 @@ comment|/*  * 80386 instruction printer by Pace Willisson (pace@prep.ai.mit.edu)
 end_comment
 
 begin_comment
-comment|/*  * The main tables describing the instructions is essentially a copy  * of the "Opcode Map" chapter (Appendix A) of the Intel 80386  * Programmers Manual.  Usually, there is a capital letter, followed  * by a small letter.  The capital letter tell the addressing mode,  * and the small letter tells about the operand size.  Refer to   * the Intel manual for details.  */
+comment|/*  * The main tables describing the instructions is essentially a copy  * of the "Opcode Map" chapter (Appendix A) of the Intel 80386  * Programmers Manual.  Usually, there is a capital letter, followed  * by a small letter.  The capital letter tell the addressing mode,  * and the small letter tells about the operand size.  Refer to  * the Intel manual for details.  */
 end_comment
 
 begin_include
@@ -4108,7 +4108,7 @@ block|,
 block|{
 literal|"(bad)"
 block|}
-block|,   }
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -6074,7 +6074,7 @@ argument_list|,
 name|obuf
 argument_list|)
 expr_stmt|;
-comment|/* enter instruction is printed with operands in the    * same order as the intel book; everything else    * is printed in reverse order     */
+comment|/* enter instruction is printed with operands in the    * same order as the intel book; everything else    * is printed in reverse order    */
 if|if
 condition|(
 name|enter_instruction

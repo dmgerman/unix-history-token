@@ -4,7 +4,7 @@ comment|/* Version of sigsetmask.c    Copyright 1991, 1992 Free Software Foundat
 end_comment
 
 begin_comment
-comment|/* Set the current signal mask to the set provided, and return the     previous value */
+comment|/* Set the current signal mask to the set provided, and return the    previous value */
 end_comment
 
 begin_define

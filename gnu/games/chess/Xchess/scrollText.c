@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * A Scrollable Text Output Window  *  * David Harrison   * University of California,  Berkeley  * 1986  *  * The following is an implementation for a scrollable text output  * system.  It handles exposure events only (other interactions are  * under user control).  For scrolling,  a always present scroll bar  * is implemented.  It detects size changes and compensates accordingly.  */
+comment|/*  * A Scrollable Text Output Window  *  * David Harrison  * University of California,  Berkeley  * 1986  *  * The following is an implementation for a scrollable text output  * system.  It handles exposure events only (other interactions are  * under user control).  For scrolling,  a always present scroll bar  * is implemented.  It detects size changes and compensates accordingly.  */
 end_comment
 
 begin_include
@@ -3104,7 +3104,7 @@ decl_stmt|;
 name|Window
 name|w
 decl_stmt|;
-comment|/*  * This routine clears a scrollable text window.  It resets the current  * writing position to the upper left hand corner of the screen.   * NOTE:  THIS ALSO CLEARS THE CONTENTS OF THE TEXT WINDOW BUFFER AND  * RESETS THE SCROLL BAR.  Returns 0 if the window is not a text window.  * This should be used *instead* of XClear.  */
+comment|/*  * This routine clears a scrollable text window.  It resets the current  * writing position to the upper left hand corner of the screen.  * NOTE:  THIS ALSO CLEARS THE CONTENTS OF THE TEXT WINDOW BUFFER AND  * RESETS THE SCROLL BAR.  Returns 0 if the window is not a text window.  * This should be used *instead* of XClear.  */
 block|{
 name|struct
 name|txtWin
@@ -5512,7 +5512,7 @@ operator|->
 name|h
 condition|)
 block|{
-comment|/*  		       * General approach:  "unscroll" the last line up 		       * and then call ScrollDown to do the right thing. 		       */
+comment|/* 		       * General approach:  "unscroll" the last line up 		       * and then call ScrollDown to do the right thing. 		       */
 name|textInfo
 operator|->
 name|endLine
@@ -5672,7 +5672,7 @@ modifier|*
 name|str
 decl_stmt|;
 comment|/* 0 terminated string */
-comment|/*  * This routine writes a string to the specified text window.  * The following notes apply:  *   - Text is always appended to the end of the text buffer.  *   - If the scroll bar is positioned such that the end of the  *     text is not visible,  an automatic scroll to the bottom  *     will be done before the appending of text.  *   - Non-printable ASCII characters are not displayed.  *   - The '\n' character causes the current text position to  *     advance one line and start at the left.  *   - Tabs are not supported.  *   - Lines too long for the screen will be wrapped and a line wrap  *     indication will be drawn.  *   - Backspace clears the previous character.  It will do the right  *     thing if asked to backspace past a wrapped line.  *   - A new font can be chosen using the sequence '^F<digit>' where  *<digit> is 0-7.  The directive will be ignored if  *     there is no font in the specified slot.  * Returns 0 if something went wrong.    */
+comment|/*  * This routine writes a string to the specified text window.  * The following notes apply:  *   - Text is always appended to the end of the text buffer.  *   - If the scroll bar is positioned such that the end of the  *     text is not visible,  an automatic scroll to the bottom  *     will be done before the appending of text.  *   - Non-printable ASCII characters are not displayed.  *   - The '\n' character causes the current text position to  *     advance one line and start at the left.  *   - Tabs are not supported.  *   - Lines too long for the screen will be wrapped and a line wrap  *     indication will be drawn.  *   - Backspace clears the previous character.  It will do the right  *     thing if asked to backspace past a wrapped line.  *   - A new font can be chosen using the sequence '^F<digit>' where  *<digit> is 0-7.  The directive will be ignored if  *     there is no font in the specified slot.  * Returns 0 if something went wrong.  */
 block|{
 specifier|register
 name|int
@@ -6710,7 +6710,7 @@ decl_stmt|;
 name|Window
 name|w
 decl_stmt|;
-comment|/*  * Repaints the given scrollable text window.  The routine repaints  * the entire window.  For handling exposure events,  the TxtFilter   * routine should be used.  */
+comment|/*  * Repaints the given scrollable text window.  The routine repaints  * the entire window.  For handling exposure events,  the TxtFilter  * routine should be used.  */
 block|{
 name|struct
 name|txtWin

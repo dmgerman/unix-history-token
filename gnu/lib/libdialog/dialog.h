@@ -110,7 +110,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*   * Attribute names  */
+comment|/*  * Attribute names  */
 end_comment
 
 begin_define

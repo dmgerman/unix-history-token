@@ -42,7 +42,7 @@ name|IEEE_FLOAT
 end_define
 
 begin_comment
-comment|/* number of traps that happen between exec'ing the shell   * to run an inferior, and when we finally get to   * the inferior code.  This is 2 on most implementations.  */
+comment|/* number of traps that happen between exec'ing the shell  * to run an inferior, and when we finally get to  * the inferior code.  This is 2 on most implementations.  */
 end_comment
 
 begin_ifndef
@@ -217,7 +217,7 @@ comment|/* Initializer for an array of names of registers.    There should be NU
 end_comment
 
 begin_comment
-comment|/* the order of the first 8 registers must match the compiler's   * numbering scheme (which is the same as the 386 scheme)  * also, this table must match regmap in i386-pinsn.c.  */
+comment|/* the order of the first 8 registers must match the compiler's  * numbering scheme (which is the same as the 386 scheme)  * also, this table must match regmap in i386-pinsn.c.  */
 end_comment
 
 begin_define
@@ -662,7 +662,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* this is   *   call 11223344 (32 bit relative)  *   int3  */
+comment|/* this is  *   call 11223344 (32 bit relative)  *   int3  */
 end_comment
 
 begin_define

@@ -297,7 +297,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Initialize for caller-save.     Look at all the hard registers that are used by a call and for which    regclass.c has not already excluded from being used across a call.     Ensure that we can find a mode to save the register and that there is a     simple insn to save and restore the register.  This latter check avoids    problems that would occur if we tried to save the MQ register of some    machines directly into memory.  */
+comment|/* Initialize for caller-save.     Look at all the hard registers that are used by a call and for which    regclass.c has not already excluded from being used across a call.     Ensure that we can find a mode to save the register and that there is a    simple insn to save and restore the register.  This latter check avoids    problems that would occur if we tried to save the MQ register of some    machines directly into memory.  */
 end_comment
 
 begin_function
@@ -919,7 +919,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Allocate save areas for any hard registers that might need saving.    We take a conservative approach here and look for call-clobbered hard    registers that are assigned to pseudos that cross calls.  This may    overestimate slightly (especially if some of these registers are later    used as spill registers), but it should not be significant.     Then perform register elimination in the addresses of the save area    locations; return 1 if all eliminated addresses are strictly valid.    We assume that our caller has set up the elimination table to the    worst (largest) possible offsets.     Set *PCHANGED to 1 if we had to allocate some memory for the save area.       Future work:       In the fallback case we should iterate backwards across all possible      modes for the save, choosing the largest available one instead of       falling back to the smallest mode immediately.  (eg TF -> DF -> SF).       We do not try to use "move multiple" instructions that exist      on some machines (such as the 68k moveml).  It could be a win to try       and use them when possible.  The hard part is doing it in a way that is      machine independent since they might be saving non-consecutive       registers. (imagine caller-saving d0,d1,a0,a1 on the 68k) */
+comment|/* Allocate save areas for any hard registers that might need saving.    We take a conservative approach here and look for call-clobbered hard    registers that are assigned to pseudos that cross calls.  This may    overestimate slightly (especially if some of these registers are later    used as spill registers), but it should not be significant.     Then perform register elimination in the addresses of the save area    locations; return 1 if all eliminated addresses are strictly valid.    We assume that our caller has set up the elimination table to the    worst (largest) possible offsets.     Set *PCHANGED to 1 if we had to allocate some memory for the save area.     Future work:       In the fallback case we should iterate backwards across all possible      modes for the save, choosing the largest available one instead of      falling back to the smallest mode immediately.  (eg TF -> DF -> SF).       We do not try to use "move multiple" instructions that exist      on some machines (such as the 68k moveml).  It could be a win to try      and use them when possible.  The hard part is doing it in a way that is      machine independent since they might be saving non-consecutive      registers. (imagine caller-saving d0,d1,a0,a1 on the 68k) */
 end_comment
 
 begin_function
@@ -1691,7 +1691,7 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* When we reach a call, we need to save all registers that are 		 live, call-used, not fixed, and not already saved.  We must 		 test at this point because registers that die in a CALL_INSN 		 are not live across the call and likewise for registers that 		 are born in the CALL_INSN. 		  		 If registers are filled with parameters for this function, 		 and some of these are also being set by this function, then 		 they will not appear to die (no REG_DEAD note for them), 		 to check if in fact they do, collect the set registers in 		 hard_regs_live first.  */
+comment|/* When we reach a call, we need to save all registers that are 		 live, call-used, not fixed, and not already saved.  We must 		 test at this point because registers that die in a CALL_INSN 		 are not live across the call and likewise for registers that 		 are born in the CALL_INSN.  		 If registers are filled with parameters for this function, 		 and some of these are also being set by this function, then 		 they will not appear to die (no REG_DEAD note for them), 		 to check if in fact they do, collect the set registers in 		 hard_regs_live first.  */
 if|if
 condition|(
 name|code
@@ -2665,7 +2665,7 @@ decl_stmt|;
 name|int
 name|ok
 decl_stmt|;
-comment|/* See if we can save several registers with a single instruction.   	 Work backwards to the single register case.  */
+comment|/* See if we can save several registers with a single instruction. 	 Work backwards to the single register case.  */
 for|for
 control|(
 name|i

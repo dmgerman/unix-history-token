@@ -4,7 +4,7 @@ comment|/* This file contains code for X-CHESS.    Copyright (C) 1986 Free Softw
 end_comment
 
 begin_comment
-comment|/* RCS Info: $Revision: 1.2 $ on $Date: 86/11/23 17:17:59 $  *           $Source: /users/faustus/xchess/RCS/parse.c,v $  * Copyright (c) 1986 Wayne A. Christopher, U. C. Berkeley CAD Group  *	Permission is granted to do anything with this code except sell it  *	or remove this message.  *  * Parse a sequence of chess moves...  */
+comment|/* RCS Info: $Revision: 1.1.1.1 $ on $Date: 1993/06/12 14:41:06 $  *           $Source: /home/ncvs/src/gnu/games/chess/Xchess/parse.c,v $  * Copyright (c) 1986 Wayne A. Christopher, U. C. Berkeley CAD Group  *	Permission is granted to do anything with this code except sell it  *	or remove this message.  *  * Parse a sequence of chess moves...  */
 end_comment
 
 begin_include
@@ -693,7 +693,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Parse a move.  The move format accepted is as follows -  *	move:		spec-spec  *	capture:	specxspec  *	kcastle:	2 o's  *	qcastle:	3 o's  * A spec is either piece/pos, piece, or just pos.  A pos consists of a column  * name followed by a row number.  If the column name is kr, kn, kb, k, q,  * qb, qn, or qr, then the row number is according to the english system,  * or if it is a-h then it is according to the international system.  *   *** As of now the spec must include the position.  */
+comment|/* Parse a move.  The move format accepted is as follows -  *	move:		spec-spec  *	capture:	specxspec  *	kcastle:	2 o's  *	qcastle:	3 o's  * A spec is either piece/pos, piece, or just pos.  A pos consists of a column  * name followed by a row number.  If the column name is kr, kn, kb, k, q,  * qb, qn, or qr, then the row number is according to the english system,  * or if it is a-h then it is according to the international system.  *  *** As of now the spec must include the position.  */
 end_comment
 
 begin_function

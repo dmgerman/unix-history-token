@@ -21,7 +21,7 @@ name|char
 name|xqtfil_rcsid
 index|[]
 init|=
-literal|"$Id: xqtfil.c,v 1.7 1994/01/30 21:09:20 ian Rel $"
+literal|"$Id: xqtfil.c,v 1.2 1994/05/07 18:11:42 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -21,7 +21,7 @@ name|char
 name|uustat_rcsid
 index|[]
 init|=
-literal|"$Id: uustat.c,v 1.44 1994/01/30 20:59:40 ian Rel $"
+literal|"$Id: uustat.c,v 1.2 1994/05/07 18:14:24 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -107,7 +107,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Manufacture a node containing the footnotes of this node, and    return the manufactured node.  If NODE has no footnotes, return a     NULL pointer. */
+comment|/* Manufacture a node containing the footnotes of this node, and    return the manufactured node.  If NODE has no footnotes, return a    NULL pointer. */
 end_comment
 
 begin_function

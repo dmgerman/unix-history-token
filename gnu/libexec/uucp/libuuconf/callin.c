@@ -21,7 +21,7 @@ name|char
 name|_uuconf_callin_rcsid
 index|[]
 init|=
-literal|"$Id: callin.c,v 1.8 1994/03/29 01:18:20 ian Rel $"
+literal|"$Id: callin.c,v 1.2 1994/05/07 18:11:58 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $RCSfile: malloc.c,v $$Revision: 1.2 $$Date: 1993/08/24 17:57:39 $  *  * $Log: malloc.c,v $  * Revision 1.2  1993/08/24  17:57:39  nate  * Fix for ALIGN macros in PERL that conflict with 4.4 macros  *  * Revision 1.1.1.1  1993/08/23  21:30:11  nate  * PERL!  *  * Revision 4.0.1.4  92/06/08  14:28:38  lwall  * patch20: removed implicit int declarations on functions  * patch20: hash tables now split only if the memory is available to do so  * patch20: realloc(0, size) now does malloc in case library routines call it  *   * Revision 4.0.1.3  91/11/05  17:57:40  lwall  * patch11: safe malloc code now integrated into Perl's malloc when possible  *   * Revision 4.0.1.2  91/06/07  11:20:45  lwall  * patch4: many, many itty-bitty portability fixes  *   * Revision 4.0.1.1  91/04/11  17:48:31  lwall  * patch1: Configure now figures out malloc ptr type  *   * Revision 4.0  91/03/20  01:28:52  lwall  * 4.0 baseline.  *   */
+comment|/* $RCSfile: malloc.c,v $$Revision: 1.1.1.1 $$Date: 1994/09/10 06:27:54 $  *  * $Log: malloc.c,v $  * Revision 1.1.1.1  1994/09/10  06:27:54  gclarkii  * Initial import of Perl 4.046 bmaked  *  * Revision 1.2  1993/08/24  17:57:39  nate  * Fix for ALIGN macros in PERL that conflict with 4.4 macros  *  * Revision 1.1.1.1  1993/08/23  21:30:11  nate  * PERL!  *  * Revision 4.0.1.4  92/06/08  14:28:38  lwall  * patch20: removed implicit int declarations on functions  * patch20: hash tables now split only if the memory is available to do so  * patch20: realloc(0, size) now does malloc in case library routines call it  *  * Revision 4.0.1.3  91/11/05  17:57:40  lwall  * patch11: safe malloc code now integrated into Perl's malloc when possible  *  * Revision 4.0.1.2  91/06/07  11:20:45  lwall  * patch4: many, many itty-bitty portability fixes  *  * Revision 4.0.1.1  91/04/11  17:48:31  lwall  * patch1: Configure now figures out malloc ptr type  *  * Revision 4.0  91/03/20  01:28:52  lwall  * 4.0 baseline.  *  */
 end_comment
 
 begin_ifndef
@@ -41,7 +41,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * malloc.c (Caltech) 2/21/82  * Chris Kingsley, kingsley@cit-20.  *  * This is a very fast storage allocator.  It allocates blocks of a small   * number of different sizes, and keeps free lists of each size.  Blocks that  * don't exactly fit are passed up to the next larger size.  In this   * implementation, the available sizes are 2^n-4 (or 2^n-12) bytes long.  * This is designed for use in a program that uses vast quantities of memory,  * but bombs when it runs out.   */
+comment|/*  * malloc.c (Caltech) 2/21/82  * Chris Kingsley, kingsley@cit-20.  *  * This is a very fast storage allocator.  It allocates blocks of a small  * number of different sizes, and keeps free lists of each size.  Blocks that  * don't exactly fit are passed up to the next larger size.  In this  * implementation, the available sizes are 2^n-4 (or 2^n-12) bytes long.  * This is designed for use in a program that uses vast quantities of memory,  * but bombs when it runs out.  */
 end_comment
 
 begin_include
@@ -955,7 +955,7 @@ literal|3
 expr_stmt|;
 else|#
 directive|else
-comment|/* take 16k unless the block is bigger than that  	   (80286s like large segments!), probably good on the atari too */
+comment|/* take 16k unless the block is bigger than that 	   (80286s like large segments!), probably good on the atari too */
 name|rnu
 operator|=
 operator|(
@@ -2011,7 +2011,7 @@ name|MSTATS
 end_ifdef
 
 begin_comment
-comment|/*  * mstats - print out statistics about malloc  *   * Prints two lines of numbers, one showing the length of the free list  * for each size category, the second showing the number of mallocs -  * frees for each size category.  */
+comment|/*  * mstats - print out statistics about malloc  *  * Prints two lines of numbers, one showing the length of the free list  * for each size category, the second showing the number of mallocs -  * frees for each size category.  */
 end_comment
 
 begin_function

@@ -721,7 +721,7 @@ operator|&
 name|CP_IFMT
 condition|)
 block|{
-comment|/* HP/UX cpio creates archives that look just like ordinary  		 archives, but for devices it sets major = 0, minor = 1, and  		 puts the actual major/minor number in the filesize field.  */
+comment|/* HP/UX cpio creates archives that look just like ordinary 		 archives, but for devices it sets major = 0, minor = 1, and 		 puts the actual major/minor number in the filesize field.  */
 case|case
 name|CP_IFCHR
 case|:
@@ -1991,7 +1991,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* This file is linked to another file already in the  		         archive, so write it out as a hard link. */
+comment|/* This file is linked to another file already in the 		         archive, so write it out as a hard link. */
 name|file_hdr
 operator|.
 name|c_mode
@@ -3199,7 +3199,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* When writing newc and crc format archives we defer multiply linked    files until we have seen all of the links to the file.  If a file    has links to it that aren't going into the archive, then we will    never see the "last" link to the file, so at the end we just write     all of the leftover defered files into the archive.  */
+comment|/* When writing newc and crc format archives we defer multiply linked    files until we have seen all of the links to the file.  If a file    has links to it that aren't going into the archive, then we will    never see the "last" link to the file, so at the end we just write    all of the leftover defered files into the archive.  */
 end_comment
 
 begin_function

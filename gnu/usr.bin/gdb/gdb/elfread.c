@@ -1529,7 +1529,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* FIXME:  Solaris2 shared libraries include lots of 		     odd "absolute" and "undefined" symbols, that play  		     hob with actions like finding what function the PC 		     is in.  Ignore them if they aren't text, data, or bss.  */
+comment|/* FIXME:  Solaris2 shared libraries include lots of 		     odd "absolute" and "undefined" symbols, that play 		     hob with actions like finding what function the PC 		     is in.  Ignore them if they aren't text, data, or bss.  */
 comment|/* ms_type = mst_unknown; */
 continue|continue;
 comment|/* Skip this symbol. */
@@ -1583,7 +1583,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Scan and build partial symbols for a symbol file.    We have been initialized by a call to elf_symfile_init, which     currently does nothing.     SECTION_OFFSETS is a set of offsets to apply to relocate the symbols    in each section.  We simplify it down to a single offset for all    symbols.  FIXME.     MAINLINE is true if we are reading the main symbol    table (as opposed to a shared lib or dynamically loaded file).     This function only does the minimum work necessary for letting the    user "name" things symbolically; it does not read the entire symtab.    Instead, it reads the external and static symbols and puts them in partial    symbol tables.  When more extensive information is requested of a    file, the corresponding partial symbol table is mutated into a full    fledged symbol table by going back and reading the symbols    for real.     We look for sections with specific names, to tell us what debug    format to look for:  FIXME!!!     dwarf_build_psymtabs() builds psymtabs for DWARF symbols;    elfstab_build_psymtabs() handles STABS symbols;    mdebug_build_psymtabs() handles ECOFF debugging information.     Note that ELF files have a "minimal" symbol table, which looks a lot    like a COFF symbol table, but has only the minimal information necessary    for linking.  We process this also, and use the information to    build gdb's minimal symbol table.  This gives us some minimal debugging    capability even for files compiled without -g.  */
+comment|/* Scan and build partial symbols for a symbol file.    We have been initialized by a call to elf_symfile_init, which    currently does nothing.     SECTION_OFFSETS is a set of offsets to apply to relocate the symbols    in each section.  We simplify it down to a single offset for all    symbols.  FIXME.     MAINLINE is true if we are reading the main symbol    table (as opposed to a shared lib or dynamically loaded file).     This function only does the minimum work necessary for letting the    user "name" things symbolically; it does not read the entire symtab.    Instead, it reads the external and static symbols and puts them in partial    symbol tables.  When more extensive information is requested of a    file, the corresponding partial symbol table is mutated into a full    fledged symbol table by going back and reading the symbols    for real.     We look for sections with specific names, to tell us what debug    format to look for:  FIXME!!!     dwarf_build_psymtabs() builds psymtabs for DWARF symbols;    elfstab_build_psymtabs() handles STABS symbols;    mdebug_build_psymtabs() handles ECOFF debugging information.     Note that ELF files have a "minimal" symbol table, which looks a lot    like a COFF symbol table, but has only the minimal information necessary    for linking.  We process this also, and use the information to    build gdb's minimal symbol table.  This gives us some minimal debugging    capability even for files compiled without -g.  */
 end_comment
 
 begin_function
@@ -1710,7 +1710,7 @@ operator|)
 name|objfile
 argument_list|)
 expr_stmt|;
-comment|/* Process the normal ELF symbol table first.  This may write some       chain of info into the dbx_symfile_info in objfile->sym_stab_info,      which can later be used by elfstab_offset_sections.  */
+comment|/* Process the normal ELF symbol table first.  This may write some      chain of info into the dbx_symfile_info in objfile->sym_stab_info,      which can later be used by elfstab_offset_sections.  */
 comment|/* FIXME, should take a section_offsets param, not just an offset.  */
 name|offset
 operator|=

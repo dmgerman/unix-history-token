@@ -74,7 +74,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Return the number of slots filled in the current     delayed branch sequence (we don't count the insn needing the    delay slot).   Zero if not in a delayed branch sequence.  */
+comment|/* Return the number of slots filled in the current    delayed branch sequence (we don't count the insn needing the    delay slot).   Zero if not in a delayed branch sequence.  */
 end_comment
 
 begin_decl_stmt

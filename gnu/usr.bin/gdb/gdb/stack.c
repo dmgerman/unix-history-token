@@ -5304,7 +5304,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|add_cmd ("backtrace-limit", class_stack, set_backtrace_limit_command,  	   "Specify maximum number of frames for \"backtrace\" to print by default.",&setlist);   add_info ("backtrace-limit", backtrace_limit_info, 	    "The maximum number of frames for \"backtrace\" to print by default.");
+block|add_cmd ("backtrace-limit", class_stack, set_backtrace_limit_command, 	   "Specify maximum number of frames for \"backtrace\" to print by default.",&setlist);   add_info ("backtrace-limit", backtrace_limit_info, 	    "The maximum number of frames for \"backtrace\" to print by default.");
 endif|#
 directive|endif
 block|}

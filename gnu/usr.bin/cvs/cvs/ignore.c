@@ -38,7 +38,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Ignore file section.  *   *	"!" may be included any time to reset the list (i.e. ignore nothing);  *	"*" may be specified to ignore everything.  It stays as the first  *	    element forever, unless a "!" clears it out.  */
+comment|/*  * Ignore file section.  *  *	"!" may be included any time to reset the list (i.e. ignore nothing);  *	"*" may be specified to ignore everything.  It stays as the first  *	    element forever, unless a "!" clears it out.  */
 end_comment
 
 begin_decl_stmt

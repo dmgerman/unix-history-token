@@ -538,7 +538,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * Definitions for the CVS Administrative directory and the files it contains.  * Here as #define's to make changing the names a simple task.  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *  * Definitions for the CVS Administrative directory and the files it contains.  * Here as #define's to make changing the names a simple task.  */
 end_comment
 
 begin_define
@@ -1025,7 +1025,7 @@ comment|/* More files to ignore */
 end_comment
 
 begin_comment
-comment|/*  * If the beginning of the Repository matches the following string, strip it  * so that the output to the logfile does not contain a full pathname.  *   * If the CVSROOT environment variable is set, it overrides this define.  */
+comment|/*  * If the beginning of the Repository matches the following string, strip it  * so that the output to the logfile does not contain a full pathname.  *  * If the CVSROOT environment variable is set, it overrides this define.  */
 end_comment
 
 begin_define
@@ -1159,7 +1159,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * a struct vers_ts contains all the information about a file including the  * user and rcs file names, and the version checked out and the head.  *   * this is usually obtained from a call to Version_TS which takes a tag argument  * for the RCS file if desired  */
+comment|/*  * a struct vers_ts contains all the information about a file including the  * user and rcs file names, and the version checked out and the head.  *  * this is usually obtained from a call to Version_TS which takes a tag argument  * for the RCS file if desired  */
 end_comment
 
 begin_struct
@@ -1170,7 +1170,7 @@ name|char
 modifier|*
 name|vn_user
 decl_stmt|;
-comment|/* rcs version user file derives from 					 * it can have the following special 					 * values:  					 *    empty = no user file	 					 *    0 = user file is new 					 *    -vers = user file to be removed */
+comment|/* rcs version user file derives from 					 * it can have the following special 					 * values: 					 *    empty = no user file 					 *    0 = user file is new 					 *    -vers = user file to be removed */
 name|char
 modifier|*
 name|vn_rcs
@@ -1190,7 +1190,7 @@ name|char
 modifier|*
 name|options
 decl_stmt|;
-comment|/* opts from Entries file  					 * (keyword expansion)	 */
+comment|/* opts from Entries file 					 * (keyword expansion)	 */
 name|char
 modifier|*
 name|ts_conflict

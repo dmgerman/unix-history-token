@@ -190,7 +190,7 @@ value|{ if (quit_flag) quit (); }
 end_define
 
 begin_comment
-comment|/* Command classes are top-level categories into which commands are broken    down for "help" purposes.      Notes on classes: class_alias is for alias commands which are not    abbreviations of the original command.  class-pseudo is for commands    which are not really commands nor help topics ("stop").  */
+comment|/* Command classes are top-level categories into which commands are broken    down for "help" purposes.    Notes on classes: class_alias is for alias commands which are not    abbreviations of the original command.  class-pseudo is for commands    which are not really commands nor help topics ("stop").  */
 end_comment
 
 begin_enum
@@ -2158,7 +2158,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Assorted functions we can declare, now that const and volatile are     defined.  */
+comment|/* Assorted functions we can declare, now that const and volatile are    defined.  */
 end_comment
 
 begin_decl_stmt

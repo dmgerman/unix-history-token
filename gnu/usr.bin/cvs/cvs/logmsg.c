@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  */
 end_comment
 
 begin_include
@@ -38,7 +38,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* this is slightly dangerous, since it could conflict with other systems'  *  own prototype.    */
+comment|/* this is slightly dangerous, since it could conflict with other systems'  *  own prototype.  */
 end_comment
 
 begin_if
@@ -680,7 +680,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Builds a temporary file using setup_tmpfile() and invokes the user's  * editor on the file.  The header garbage in the resultant file is then  * stripped and the log message is stored in the "message" argument.  *   * rcsinfo - is the name of a file containing lines tacked onto the end of the  * RCS info offered to the user for editing. If specified, the '-m' flag to  * "commit" is disabled -- users are forced to run the editor.  *   */
+comment|/*  * Builds a temporary file using setup_tmpfile() and invokes the user's  * editor on the file.  The header garbage in the resultant file is then  * stripped and the log message is stored in the "message" argument.  *  * rcsinfo - is the name of a file containing lines tacked onto the end of the  * RCS info offered to the user for editing. If specified, the '-m' flag to  * "commit" is disabled -- users are forced to run the editor.  *  */
 end_comment
 
 begin_function

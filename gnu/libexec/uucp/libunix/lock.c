@@ -21,7 +21,7 @@ name|char
 name|lock_rcsid
 index|[]
 init|=
-literal|"$Id: lock.c,v 1.15 1994/01/30 21:09:20 ian Rel $"
+literal|"$Id: lock.c,v 1.2 1994/05/07 18:10:40 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 

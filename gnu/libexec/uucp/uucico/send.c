@@ -21,7 +21,7 @@ name|char
 name|send_rcsid
 index|[]
 init|=
-literal|"$Id: send.c,v 1.2 1994/05/07 18:13:57 ache Exp $"
+literal|"$Id: send.c,v 1.3 1994/11/06 10:17:13 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 

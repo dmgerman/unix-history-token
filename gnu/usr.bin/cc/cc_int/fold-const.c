@@ -8189,7 +8189,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Similar to operand_equal_p, but see if ARG0 might have been made by    shorten_compare from ARG1 when ARG1 was being compared with OTHER.      When in doubt, return 0.  */
+comment|/* Similar to operand_equal_p, but see if ARG0 might have been made by    shorten_compare from ARG1 when ARG1 was being compared with OTHER.     When in doubt, return 0.  */
 end_comment
 
 begin_function
@@ -10712,7 +10712,7 @@ name|mask
 argument_list|)
 argument_list|)
 return|;
-comment|/* Otherwise, we are handling the constant case. See if the constant is too      big for the field.  Warn and return a tree of for 0 (false) if so.  We do      this not only for its own sake, but to avoid having to test for this      error case below.  If we didn't, we might generate wrong code.       For unsigned fields, the constant shifted right by the field length should      be all zero.  For signed fields, the high-order bits should agree with       the sign bit.  */
+comment|/* Otherwise, we are handling the constant case. See if the constant is too      big for the field.  Warn and return a tree of for 0 (false) if so.  We do      this not only for its own sake, but to avoid having to test for this      error case below.  If we didn't, we might generate wrong code.       For unsigned fields, the constant shifted right by the field length should      be all zero.  For signed fields, the high-order bits should agree with      the sign bit.  */
 if|if
 condition|(
 name|lunsignedp
@@ -11057,7 +11057,7 @@ decl_stmt|;
 name|int
 name|precision
 decl_stmt|;
-comment|/* All the optimizations using this function assume integer fields.        There are problems with FP fields since the type_for_size call      below can fail for, e.g., XFmode.  */
+comment|/* All the optimizations using this function assume integer fields.      There are problems with FP fields since the type_for_size call      below can fail for, e.g., XFmode.  */
 if|if
 condition|(
 operator|!
@@ -12037,7 +12037,7 @@ decl_stmt|,
 name|rhs
 decl_stmt|;
 block|{
-comment|/* If this is the "or" of two comparisons, we can do something if we      the comparisons are NE_EXPR.  If this is the "and", we can do something      if the comparisons are EQ_EXPR.  I.e.,       	(a->b == 2&& a->c == 4) can become (a->new == NEW).       WANTED_CODE is this operation code.  For single bit fields, we can      convert EQ_EXPR to NE_EXPR so we need not reject the "wrong"      comparison for one-bit fields.  */
+comment|/* If this is the "or" of two comparisons, we can do something if we      the comparisons are NE_EXPR.  If this is the "and", we can do something      if the comparisons are EQ_EXPR.  I.e.,      	(a->b == 2&& a->c == 4) can become (a->new == NEW).       WANTED_CODE is this operation code.  For single bit fields, we can      convert EQ_EXPR to NE_EXPR so we need not reject the "wrong"      comparison for one-bit fields.  */
 name|enum
 name|tree_code
 name|wanted_code
@@ -14343,7 +14343,7 @@ operator|=
 name|tem
 expr_stmt|;
 block|}
-comment|/* Now WINS is set as described above,      ARG0 is the first operand of EXPR,      and ARG1 is the second operand (if it has more than one operand).       First check for cases where an arithmetic operation is applied to a      compound, conditional, or comparison operation.  Push the arithmetic      operation inside the compound or conditional to see if any folding      can then be done.  Convert comparison to conditional for this purpose.      The also optimizes non-constant cases that used to be done in      expand_expr.       Before we do that, see if this is a BIT_AND_EXPR or a BIT_OR_EXPR,      one of the operands is a comparison and the other is a comparison, a      BIT_AND_EXPR with the constant 1, or a truth value.  In that case, the      code below would make the expression more complex.  Change it to a      TRUTH_{AND,OR}_EXPR.  Likewise, convert a similar NE_EXPR to       TRUTH_XOR_EXPR and an EQ_EXPR to the inversion of a TRUTH_XOR_EXPR.  */
+comment|/* Now WINS is set as described above,      ARG0 is the first operand of EXPR,      and ARG1 is the second operand (if it has more than one operand).       First check for cases where an arithmetic operation is applied to a      compound, conditional, or comparison operation.  Push the arithmetic      operation inside the compound or conditional to see if any folding      can then be done.  Convert comparison to conditional for this purpose.      The also optimizes non-constant cases that used to be done in      expand_expr.       Before we do that, see if this is a BIT_AND_EXPR or a BIT_OR_EXPR,      one of the operands is a comparison and the other is a comparison, a      BIT_AND_EXPR with the constant 1, or a truth value.  In that case, the      code below would make the expression more complex.  Change it to a      TRUTH_{AND,OR}_EXPR.  Likewise, convert a similar NE_EXPR to      TRUTH_XOR_EXPR and an EQ_EXPR to the inversion of a TRUTH_XOR_EXPR.  */
 if|if
 condition|(
 operator|(
@@ -15598,7 +15598,7 @@ case|case
 name|FIX_TRUNC_EXPR
 case|:
 comment|/* Other kinds of FIX are not handled properly by fold_convert.  */
-comment|/* In addition to the cases of two conversions in a row  	 handled below, if we are converting something to its own 	 type via an object of identical or wider precision, neither 	 conversion is needed.  */
+comment|/* In addition to the cases of two conversions in a row 	 handled below, if we are converting something to its own 	 type via an object of identical or wider precision, neither 	 conversion is needed.  */
 if|if
 condition|(
 operator|(
@@ -15731,7 +15731,7 @@ argument_list|,
 literal|0
 argument_list|)
 return|;
-comment|/* Two conversions in a row are not needed unless: 	 - the intermediate type is narrower than both initial and final, or 	 - the intermediate type and innermost type differ in signedness, 	   and the outermost type is wider than the intermediate, or 	 - the initial type is a pointer type and the precisions of the 	   intermediate and final types differ, or 	 - the final type is a pointer type and the precisions of the  	  initial and intermediate types differ.  */
+comment|/* Two conversions in a row are not needed unless: 	 - the intermediate type is narrower than both initial and final, or 	 - the intermediate type and innermost type differ in signedness, 	   and the outermost type is wider than the intermediate, or 	 - the initial type is a pointer type and the precisions of the 	   intermediate and final types differ, or 	 - the final type is a pointer type and the precisions of the 	  initial and intermediate types differ.  */
 if|if
 condition|(
 operator|(
@@ -18027,7 +18027,7 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-comment|/* Fold&x -&x.  This can happen from&x.foo -&x.  	 This is unsafe for certain floats even in non-IEEE formats. 	 In IEEE, it is unsafe because it does wrong for NaNs. 	 Also note that operand_equal_p is always false if an operand 	 is volatile.  */
+comment|/* Fold&x -&x.  This can happen from&x.foo -&x. 	 This is unsafe for certain floats even in non-IEEE formats. 	 In IEEE, it is unsafe because it does wrong for NaNs. 	 Also note that operand_equal_p is always false if an operand 	 is volatile.  */
 if|if
 condition|(
 operator|(
@@ -23798,7 +23798,7 @@ argument_list|,
 literal|2
 argument_list|)
 argument_list|)
-comment|/* If we try to convert TREE_OPERAND (t, 0) to our type, the 	     call to fold will try to move the conversion inside  	     a COND, which will recurse.  In that case, the COND_EXPR 	     is probably the best choice, so leave it alone.  */
+comment|/* If we try to convert TREE_OPERAND (t, 0) to our type, the 	     call to fold will try to move the conversion inside 	     a COND, which will recurse.  In that case, the COND_EXPR 	     is probably the best choice, so leave it alone.  */
 operator|&&
 name|type
 operator|==

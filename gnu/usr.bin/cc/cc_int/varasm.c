@@ -4420,7 +4420,7 @@ label|:
 ifdef|#
 directive|ifdef
 name|XCOFF_DEBUGGING_INFO
-comment|/* Unfortunately, the IBM assembler cannot handle stabx before the actual      declaration.  When something like ".stabx  "aa:S-2",aa,133,0" is emitted       and `aa' hasn't been output yet, the assembler generates a stab entry with      a value of zero, in addition to creating an unnecessary external entry      for `aa'.  Hence, we must postpone dbxout_symbol to here at the end.  */
+comment|/* Unfortunately, the IBM assembler cannot handle stabx before the actual      declaration.  When something like ".stabx  "aa:S-2",aa,133,0" is emitted      and `aa' hasn't been output yet, the assembler generates a stab entry with      a value of zero, in addition to creating an unnecessary external entry      for `aa'.  Hence, we must postpone dbxout_symbol to here at the end.  */
 comment|/* File-scope global variables are output here.  */
 if|if
 condition|(

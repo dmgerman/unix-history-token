@@ -21,7 +21,7 @@ name|char
 name|uucico_rcsid
 index|[]
 init|=
-literal|"$Id: uucico.c,v 1.2 1994/05/07 18:14:02 ache Exp $"
+literal|"$Id: uucico.c,v 1.3 1994/05/25 20:14:52 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 

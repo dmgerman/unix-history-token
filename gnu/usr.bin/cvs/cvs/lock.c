@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * Set Lock  *   * Lock file support for CVS.  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *  * Set Lock  *  * Lock file support for CVS.  */
 end_comment
 
 begin_include
@@ -1971,7 +1971,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|CVS_FUDGELOCKS
-comment|/* 		 * If the create time of the file is more than CVSLCKAGE  		 * seconds ago, try to clean-up the lock file, and if 		 * successful, re-open the directory and try again. 		 */
+comment|/* 		 * If the create time of the file is more than CVSLCKAGE 		 * seconds ago, try to clean-up the lock file, and if 		 * successful, re-open the directory and try again. 		 */
 if|if
 condition|(
 name|now

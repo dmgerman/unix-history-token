@@ -21,7 +21,7 @@ name|char
 name|_uuconf_errstr_rcsid
 index|[]
 init|=
-literal|"$Id: errstr.c,v 1.3 1994/01/30 21:14:29 ian Rel $"
+literal|"$Id: errstr.c,v 1.2 1994/05/07 18:12:12 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 

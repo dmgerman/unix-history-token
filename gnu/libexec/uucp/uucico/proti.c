@@ -21,7 +21,7 @@ name|char
 name|proti_rcsid
 index|[]
 init|=
-literal|"$Id: proti.c,v 1.29 1994/03/26 03:39:05 ian Rel $"
+literal|"$Id: proti.c,v 1.2 1994/05/07 18:13:48 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 

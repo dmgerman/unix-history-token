@@ -4,7 +4,7 @@ comment|/* Coherent tty locking support.  This file was contributed by Bob    He
 end_comment
 
 begin_comment
-comment|/* The bottom part of this file is lock.c.  * This is a hacked lock.c. A full lock.c can be found in the libmisc sources   * under /usr/src/misc.tar.Z.  *  * These are for checking for the existence of locks:  * lockexist(resource)  * lockttyexist(ttyname)  */
+comment|/* The bottom part of this file is lock.c.  * This is a hacked lock.c. A full lock.c can be found in the libmisc sources  * under /usr/src/misc.tar.Z.  *  * These are for checking for the existence of locks:  * lockexist(resource)  * lockttyexist(ttyname)  */
 end_comment
 
 begin_include

@@ -21,7 +21,7 @@ name|char
 name|work_rcsid
 index|[]
 init|=
-literal|"$Id: work.c,v 1.15 1994/01/30 21:09:20 ian Rel $"
+literal|"$Id: work.c,v 1.2 1994/05/07 18:11:41 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 

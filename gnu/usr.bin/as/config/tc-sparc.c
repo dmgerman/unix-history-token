@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-sparc.c -- Assemble for the SPARC    Copyright (C) 1989, 1990, 1991, 1992 Free Software Foundation, Inc.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA. */
+comment|/* tc-sparc.c -- Assemble for the SPARC    Copyright (C) 1989, 1990, 1991, 1992 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA. */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tc-sparc.c,v 1.2 1993/12/12 17:02:13 jkh Exp $"
+literal|"$Id: tc-sparc.c,v 1.3 1994/12/23 22:37:40 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4684,7 +4684,7 @@ comment|/* getExpression() */
 end_comment
 
 begin_comment
-comment|/*   This is identical to the md_atof in m68k.c.  I think this is right,   but I'm not sure.      Turn a string in input_line_pointer into a floating point constant of type   type, and store the appropriate bytes in *litP.  The number of LITTLENUMS   emitted is stored in *sizeP. An error message is returned, or NULL on OK.   */
+comment|/*   This is identical to the md_atof in m68k.c.  I think this is right,   but I'm not sure.    Turn a string in input_line_pointer into a floating point constant of type   type, and store the appropriate bytes in *litP.  The number of LITTLENUMS   emitted is stored in *sizeP. An error message is returned, or NULL on OK.   */
 end_comment
 
 begin_comment
@@ -5975,7 +5975,7 @@ comment|/* md_create_short_jump() */
 end_comment
 
 begin_comment
-comment|/* Translate internal representation of relocation info to target format.        On sparc: first 4 bytes are normal unsigned long address, next three    bytes are index, most sig. byte first.  Byte 7 is broken up with    bit 7 as external, bits 6& 5 unused, and the lower    five bits as relocation type.  Next 4 bytes are long addend. */
+comment|/* Translate internal representation of relocation info to target format.     On sparc: first 4 bytes are normal unsigned long address, next three    bytes are index, most sig. byte first.  Byte 7 is broken up with    bit 7 as external, bits 6& 5 unused, and the lower    five bits as relocation type.  Next 4 bytes are long addend. */
 end_comment
 
 begin_comment
@@ -6991,7 +6991,7 @@ comment|/* comment */
 end_comment
 
 begin_comment
-comment|/*  * md_parse_option  *	Invocation line includes a switch not recognized by the base assembler.  *	See if it's a processor-specific option.  These are:  *  *	-bump  *		Warn on architecture bumps.  See also -A.  *  *	-Av6, -Av7, -Av8  *		Select the architecture.  Instructions or features not  *		supported by the selected architecture cause fatal errors.  *  *		The default is to start at v6, and bump the architecture up  *		whenever an instruction is seen at a higher level.  *  *		If -bump is specified, a warning is printing when bumping to  *		higher levels.  *  *		If an architecture is specified, all instructions must match  *		that architecture.  Any higher level instructions are flagged  *		as errors.   *  *		if both an architecture and -bump are specified, the  *		architecture starts at the specified level, but bumps are  *		warnings.  *  */
+comment|/*  * md_parse_option  *	Invocation line includes a switch not recognized by the base assembler.  *	See if it's a processor-specific option.  These are:  *  *	-bump  *		Warn on architecture bumps.  See also -A.  *  *	-Av6, -Av7, -Av8  *		Select the architecture.  Instructions or features not  *		supported by the selected architecture cause fatal errors.  *  *		The default is to start at v6, and bump the architecture up  *		whenever an instruction is seen at a higher level.  *  *		If -bump is specified, a warning is printing when bumping to  *		higher levels.  *  *		If an architecture is specified, all instructions must match  *		that architecture.  Any higher level instructions are flagged  *		as errors.  *  *		if both an architecture and -bump are specified, the  *		architecture starts at the specified level, but bumps are  *		warnings.  *  */
 end_comment
 
 begin_function

@@ -4,7 +4,7 @@ comment|/* Yet Another Try at encapsulating bsd object files in coff.    Copyrig
 end_comment
 
 begin_comment
-comment|/*  * We only use the coff headers to tell the kernel  * how to exec the file.  Therefore, the only fields that need to   * be filled in are the scnptr and vaddr for the text and data  * sections, and the vaddr for the bss.  As far as coff is concerned,  * there is no symbol table, relocation, or line numbers.  *  * A normal bsd header (struct exec) is placed after the coff headers,  * and before the real text.  I defined a the new fields 'a_machtype'  * and a_flags.  If a_machtype is M_386, and a_flags& A_ENCAP is  * true, then the bsd header is preceeded by a coff header.  Macros  * like N_TXTOFF and N_TXTADDR use this field to find the bsd header.  *   * The only problem is to track down the bsd exec header.  The  * macros HEADER_OFFSET, etc do this.  */
+comment|/*  * We only use the coff headers to tell the kernel  * how to exec the file.  Therefore, the only fields that need to  * be filled in are the scnptr and vaddr for the text and data  * sections, and the vaddr for the bss.  As far as coff is concerned,  * there is no symbol table, relocation, or line numbers.  *  * A normal bsd header (struct exec) is placed after the coff headers,  * and before the real text.  I defined a the new fields 'a_machtype'  * and a_flags.  If a_machtype is M_386, and a_flags& A_ENCAP is  * true, then the bsd header is preceeded by a coff header.  Macros  * like N_TXTOFF and N_TXTADDR use this field to find the bsd header.  *  * The only problem is to track down the bsd exec header.  The  * macros HEADER_OFFSET, etc do this.  */
 end_comment
 
 begin_define
@@ -230,7 +230,7 @@ comment|/* Describe the characteristics of the BSD header    that appears inside
 end_comment
 
 begin_comment
-comment|/* Encapsulated coff files that are linked ZMAGIC have a text segment    offset just past the header (and a matching TXTADDR), excluding    the headers from the text segment proper but keeping the physical    layout and the virtual memory layout page-aligned.     Non-encapsulated a.out files that are linked ZMAGIC have a text    segment that starts at 0 and an N_TXTADR similarly offset to 0.    They too are page-aligned with each other, but they include the    a.out header as part of the text.      The _N_HDROFF gets sizeof struct exec added to it, so we have    to compensate here.  See<a.out.gnu.h>.  */
+comment|/* Encapsulated coff files that are linked ZMAGIC have a text segment    offset just past the header (and a matching TXTADDR), excluding    the headers from the text segment proper but keeping the physical    layout and the virtual memory layout page-aligned.     Non-encapsulated a.out files that are linked ZMAGIC have a text    segment that starts at 0 and an N_TXTADR similarly offset to 0.    They too are page-aligned with each other, but they include the    a.out header as part of the text.     The _N_HDROFF gets sizeof struct exec added to it, so we have    to compensate here.  See<a.out.gnu.h>.  */
 end_comment
 
 begin_undef

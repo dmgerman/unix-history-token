@@ -47,7 +47,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: deflate.c,v 0.15 1993/06/24 10:53:53 jloup Exp $"
+literal|"$Id: deflate.c,v 1.3 1993/10/14 00:32:29 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: lib.c,v 1.12 1995/03/04 17:46:08 nate Exp $	- library routines  */
+comment|/*  * $Id: lib.c,v 1.14 1995/04/07 05:08:28 nate Exp $	- library routines  */
 end_comment
 
 begin_include

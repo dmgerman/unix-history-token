@@ -104,7 +104,7 @@ index|[
 name|MAX_RECOG_OPERANDS
 index|]
 struct|;
-comment|/* Record the last thing assigned to pc.  This is used for folded       conditional branch insns.  */
+comment|/* Record the last thing assigned to pc.  This is used for folded      conditional branch insns.  */
 name|rtx
 name|last_pc_value
 decl_stmt|;

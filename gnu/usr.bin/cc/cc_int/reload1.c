@@ -3556,7 +3556,7 @@ name|did_elimination
 init|=
 literal|0
 decl_stmt|;
-comment|/* To compute the number of reload registers of each class  		 needed for an insn, we must similate what choose_reload_regs 		 can do.  We do this by splitting an insn into an "input" and 		 an "output" part.  RELOAD_OTHER reloads are used in both.  		 The input part uses those reloads, RELOAD_FOR_INPUT reloads, 		 which must be live over the entire input section of reloads, 		 and the maximum of all the RELOAD_FOR_INPUT_ADDRESS and 		 RELOAD_FOR_OPERAND_ADDRESS reloads, which conflict with the 		 inputs.  		 The registers needed for output are RELOAD_OTHER and 		 RELOAD_FOR_OUTPUT, which are live for the entire output 		 portion, and the maximum of all the RELOAD_FOR_OUTPUT_ADDRESS 		 reloads for each operand.  		 The total number of registers needed is the maximum of the 		 inputs and outputs.  */
+comment|/* To compute the number of reload registers of each class 		 needed for an insn, we must similate what choose_reload_regs 		 can do.  We do this by splitting an insn into an "input" and 		 an "output" part.  RELOAD_OTHER reloads are used in both. 		 The input part uses those reloads, RELOAD_FOR_INPUT reloads, 		 which must be live over the entire input section of reloads, 		 and the maximum of all the RELOAD_FOR_INPUT_ADDRESS and 		 RELOAD_FOR_OPERAND_ADDRESS reloads, which conflict with the 		 inputs.  		 The registers needed for output are RELOAD_OTHER and 		 RELOAD_FOR_OUTPUT, which are live for the entire output 		 portion, and the maximum of all the RELOAD_FOR_OUTPUT_ADDRESS 		 reloads for each operand.  		 The total number of registers needed is the maximum of the 		 inputs and outputs.  */
 struct|struct
 name|needs
 block|{
@@ -6309,7 +6309,7 @@ name|something_changed
 condition|)
 break|break;
 comment|/* Not all needs are met; must spill some hard regs.  */
-comment|/* Put all registers spilled so far back in potential_reload_regs, but 	 put them at the front, since we've already spilled most of the 	 psuedos in them (we might have left some pseudos unspilled if they 	 were in a block that didn't need any spill registers of a conflicting 	 class.  We used to try to mark off the need for those registers, 	 but doing so properly is very complex and reallocating them is the 	 simpler approach.  First, "pack" potential_reload_regs by pushing  	 any nonnegative entries towards the end.  That will leave room  	 for the registers we already spilled.  	 Also, undo the marking of the spill registers from the last time 	 around in FORBIDDEN_REGS since we will be probably be allocating 	 them again below.  	 ??? It is theoretically possible that we might end up not using one 	 of our previously-spilled registers in this allocation, even though 	 they are at the head of the list.  It's not clear what to do about 	 this, but it was no better before, when we marked off the needs met 	 by the previously-spilled registers.  With the current code, globals 	 can be allocated into these registers, but locals cannot.  */
+comment|/* Put all registers spilled so far back in potential_reload_regs, but 	 put them at the front, since we've already spilled most of the 	 psuedos in them (we might have left some pseudos unspilled if they 	 were in a block that didn't need any spill registers of a conflicting 	 class.  We used to try to mark off the need for those registers, 	 but doing so properly is very complex and reallocating them is the 	 simpler approach.  First, "pack" potential_reload_regs by pushing 	 any nonnegative entries towards the end.  That will leave room 	 for the registers we already spilled.  	 Also, undo the marking of the spill registers from the last time 	 around in FORBIDDEN_REGS since we will be probably be allocating 	 them again below.  	 ??? It is theoretically possible that we might end up not using one 	 of our previously-spilled registers in this allocation, even though 	 they are at the head of the list.  It's not clear what to do about 	 this, but it was no better before, when we marked off the needs met 	 by the previously-spilled registers.  With the current code, globals 	 can be allocated into these registers, but locals cannot.  */
 if|if
 condition|(
 name|n_spills
@@ -11111,7 +11111,7 @@ return|;
 case|case
 name|MULT
 case|:
-comment|/* If this is the product of an eliminable register and a  	 constant, apply the distribute law and move the constant out 	 so that we have (plus (mult ..) ..).  This is needed in order 	 to keep load-address insns valid.   This case is pathalogical. 	 We ignore the possibility of overflow here.  */
+comment|/* If this is the product of an eliminable register and a 	 constant, apply the distribute law and move the constant out 	 so that we have (plus (mult ..) ..).  This is needed in order 	 to keep load-address insns valid.   This case is pathalogical. 	 We ignore the possibility of overflow here.  */
 if|if
 condition|(
 name|GET_CODE
@@ -13576,7 +13576,7 @@ name|old_asm_operands_vec
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Replace the body of this insn with a substituted form.  If we changed      something, return non-zero.         If we are replacing a body that was a (set X (plus Y Z)), try to      re-recognize the insn.  We do this in case we had a simple addition      but now can do this as a load-address.  This saves an insn in this      common case. */
+comment|/* Replace the body of this insn with a substituted form.  If we changed      something, return non-zero.       If we are replacing a body that was a (set X (plus Y Z)), try to      re-recognize the insn.  We do this in case we had a simple addition      but now can do this as a load-address.  This saves an insn in this      common case. */
 name|new_body
 operator|=
 name|eliminate_regs
@@ -14520,7 +14520,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Find all paradoxical subregs within X and update reg_max_ref_width.     Also mark any hard registers used to store user variables as    forbidden from being used for spill registers.  */
+comment|/* Find all paradoxical subregs within X and update reg_max_ref_width.    Also mark any hard registers used to store user variables as    forbidden from being used for spill registers.  */
 end_comment
 
 begin_function
@@ -16248,7 +16248,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMALL_REGISTER_CLASSES
-comment|/* Merge any reloads that we didn't combine for fear of  		 increasing the number of spill registers needed but now 		 discover can be safely merged.  */
+comment|/* Merge any reloads that we didn't combine for fear of 		 increasing the number of spill registers needed but now 		 discover can be safely merged.  */
 name|merge_assigned_reloads
 argument_list|(
 name|insn
@@ -18640,7 +18640,7 @@ comment|/* Since a RELOAD_OTHER reload claims the reg for the entire insn, 	 its
 return|return
 literal|1
 return|;
-comment|/* If this use is for part of the insn, 	 its value reaches if no subsequent part uses the same register.  	 Just like the above function, don't try to do this with lots 	 of fallthroughs.  */
+comment|/* If this use is for part of the insn, 	 its value reaches if no subsequent part uses the same register. 	 Just like the above function, don't try to do this with lots 	 of fallthroughs.  */
 case|case
 name|RELOAD_FOR_OTHER_ADDRESS
 case|:
@@ -18864,7 +18864,7 @@ return|;
 case|case
 name|RELOAD_FOR_INPUT
 case|:
-comment|/* Similar to input address, except we start at the next operand for 	 both input and input address and we do not check for  	 RELOAD_FOR_OPERAND_ADDRESS and RELOAD_FOR_INSN since these 	 would conflict.  */
+comment|/* Similar to input address, except we start at the next operand for 	 both input and input address and we do not check for 	 RELOAD_FOR_OPERAND_ADDRESS and RELOAD_FOR_INSN since these 	 would conflict.  */
 for|for
 control|(
 name|i
@@ -19485,7 +19485,7 @@ name|pass
 operator|++
 control|)
 block|{
-comment|/* I is the index in spill_regs. 	 We advance it round-robin between insns to use all spill regs 	 equally, so that inherited reloads have a chance 	 of leapfrogging each other.  Don't do this, however, when we have 	 group needs and failure would be fatal; if we only have a relatively 	 small number of spill registers, and more than one of them has 	 group needs, then by starting in the middle, we may end up  	 allocating the first one in such a way that we are not left with 	 sufficient groups to handle the rest.  */
+comment|/* I is the index in spill_regs. 	 We advance it round-robin between insns to use all spill regs 	 equally, so that inherited reloads have a chance 	 of leapfrogging each other.  Don't do this, however, when we have 	 group needs and failure would be fatal; if we only have a relatively 	 small number of spill registers, and more than one of them has 	 group needs, then by starting in the middle, we may end up 	 allocating the first one in such a way that we are not left with 	 sufficient groups to handle the rest.  */
 if|if
 condition|(
 name|noerror
@@ -22735,7 +22735,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* If SMALL_REGISTER_CLASSES are defined, we may not have merged two    reloads of the same item for fear that we might not have enough reload    registers. However, normally they will get the same reload register    and hence actually need not be loaded twice.       Here we check for the most common case of this phenomenon: when we have    a number of reloads for the same object, each of which were allocated    the same reload_reg_rtx, that reload_reg_rtx is not used for any other    reload, and is not modified in the insn itself.  If we find such,    merge all the reloads and set the resulting reload to RELOAD_OTHER.    This will not increase the number of spill registers needed and will    prevent redundant code.  */
+comment|/* If SMALL_REGISTER_CLASSES are defined, we may not have merged two    reloads of the same item for fear that we might not have enough reload    registers. However, normally they will get the same reload register    and hence actually need not be loaded twice.     Here we check for the most common case of this phenomenon: when we have    a number of reloads for the same object, each of which were allocated    the same reload_reg_rtx, that reload_reg_rtx is not used for any other    reload, and is not modified in the insn itself.  If we find such,    merge all the reloads and set the resulting reload to RELOAD_OTHER.    This will not increase the number of spill registers needed and will    prevent redundant code.  */
 end_comment
 
 begin_ifdef
@@ -24629,7 +24629,7 @@ block|}
 block|}
 block|}
 block|}
-comment|/* If we still need a secondary reload register, check 		     to see if it is being used as a scratch or intermediate 		     register and generate code appropriately.  If we need 		     a scratch register, use REAL_OLDEQUIV since the form of 		     the insn may depend on the actual address if it is  		     a MEM.  */
+comment|/* If we still need a secondary reload register, check 		     to see if it is being used as a scratch or intermediate 		     register and generate code appropriately.  If we need 		     a scratch register, use REAL_OLDEQUIV since the form of 		     the insn may depend on the actual address if it is 		     a MEM.  */
 if|if
 condition|(
 name|second_reload_reg
@@ -26779,7 +26779,7 @@ index|[
 name|r
 index|]
 expr_stmt|;
-comment|/* If NREGNO is a hard register, it may occupy more than 		 one register.  If it does, say what is in the  		 rest of the registers assuming that both registers 		 agree on how many words the object takes.  If not, 		 invalidate the subsequent registers.  */
+comment|/* If NREGNO is a hard register, it may occupy more than 		 one register.  If it does, say what is in the 		 rest of the registers assuming that both registers 		 agree on how many words the object takes.  If not, 		 invalidate the subsequent registers.  */
 if|if
 condition|(
 name|nregno
@@ -27263,7 +27263,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Emit code to perform a reload from IN (which may be a reload register) to    OUT (which may also be a reload register).  IN or OUT is from operand    OPNUM with reload type TYPE.      Returns first insn emitted.  */
+comment|/* Emit code to perform a reload from IN (which may be a reload register) to    OUT (which may also be a reload register).  IN or OUT is from operand    OPNUM with reload type TYPE.     Returns first insn emitted.  */
 end_comment
 
 begin_function

@@ -2209,7 +2209,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Allocate a stack slot of SIZE bytes and return a MEM rtx for it    with machine mode MODE.        ALIGN controls the amount of alignment for the address of the slot:    0 means according to MODE,    -1 means use BIGGEST_ALIGNMENT and round size to multiple of that,    positive specifies alignment boundary in bits.     We do not round to stack_boundary here.  */
+comment|/* Allocate a stack slot of SIZE bytes and return a MEM rtx for it    with machine mode MODE.     ALIGN controls the amount of alignment for the address of the slot:    0 means according to MODE,    -1 means use BIGGEST_ALIGNMENT and round size to multiple of that,    positive specifies alignment boundary in bits.     We do not round to stack_boundary here.  */
 end_comment
 
 begin_function
@@ -5656,7 +5656,7 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* See if we have to do anything to INSN now that VAR is in 		 memory.  If it needs to be loaded into a pseudo, use a single 		 pseudo for the entire insn in case there is a MATCH_DUP 		 between two operands.  We pass a pointer to the head of 		 a list of struct fixup_replacements.  If fixup_var_refs_1 		 needs to allocate pseudos or replacement MEMs (for SUBREGs), 		 it will record them in this list. 		  		 If it allocated a pseudo for any replacement, we copy into 		 it here.  */
+comment|/* See if we have to do anything to INSN now that VAR is in 		 memory.  If it needs to be loaded into a pseudo, use a single 		 pseudo for the entire insn in case there is a MATCH_DUP 		 between two operands.  We pass a pointer to the head of 		 a list of struct fixup_replacements.  If fixup_var_refs_1 		 needs to allocate pseudos or replacement MEMs (for SUBREGs), 		 it will record them in this list.  		 If it allocated a pseudo for any replacement, we copy into 		 it here.  */
 name|fixup_var_refs_1
 argument_list|(
 name|var
@@ -5894,7 +5894,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* VAR is a MEM that used to be a pseudo register with mode PROMOTED_MODE.    See if the rtx expression at *LOC in INSN needs to be changed.       REPLACEMENTS is a pointer to a list head that starts out zero, but may    contain a list of original rtx's and replacements. If we find that we need    to modify this insn by replacing a memory reference with a pseudo or by    making a new MEM to implement a SUBREG, we consult that list to see if    we have already chosen a replacement. If none has already been allocated,    we allocate it and update the list.  fixup_var_refs_insns will copy VAR    or the SUBREG, as appropriate, to the pseudo.  */
+comment|/* VAR is a MEM that used to be a pseudo register with mode PROMOTED_MODE.    See if the rtx expression at *LOC in INSN needs to be changed.     REPLACEMENTS is a pointer to a list head that starts out zero, but may    contain a list of original rtx's and replacements. If we find that we need    to modify this insn by replacing a memory reference with a pseudo or by    making a new MEM to implement a SUBREG, we consult that list to see if    we have already chosen a replacement. If none has already been allocated,    we allocate it and update the list.  fixup_var_refs_insns will copy VAR    or the SUBREG, as appropriate, to the pseudo.  */
 end_comment
 
 begin_function
@@ -5985,7 +5985,7 @@ operator|==
 name|x
 condition|)
 block|{
-comment|/* If we already have a replacement, use it.  Otherwise,  	     try to fix up this address in case it is invalid.  */
+comment|/* If we already have a replacement, use it.  Otherwise, 	     try to fix up this address in case it is invalid.  */
 name|replacement
 operator|=
 name|find_fixup_replacement
@@ -6624,7 +6624,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* If this SUBREG makes VAR wider, it has become a paradoxical 	     SUBREG with VAR in memory, but these aren't allowed at this  	     stage of the compilation.  So load VAR into a pseudo and take 	     a SUBREG of that pseudo.  */
+comment|/* If this SUBREG makes VAR wider, it has become a paradoxical 	     SUBREG with VAR in memory, but these aren't allowed at this 	     stage of the compilation.  So load VAR into a pseudo and take 	     a SUBREG of that pseudo.  */
 if|if
 condition|(
 name|GET_MODE_SIZE
@@ -7653,7 +7653,7 @@ operator|>=
 literal|0
 condition|)
 return|return;
-comment|/* INSN is not valid, but we know that we want to 	       copy SET_SRC (x) to SET_DEST (x) in some way.  So 	       we generate the move and see whether it requires more 	       than one insn.  If it does, we emit those insns and 	       delete INSN.  Otherwise, we an just replace the pattern  	       of INSN; we have already verified above that INSN has 	       no other function that to do X.  */
+comment|/* INSN is not valid, but we know that we want to 	       copy SET_SRC (x) to SET_DEST (x) in some way.  So 	       we generate the move and see whether it requires more 	       than one insn.  If it does, we emit those insns and 	       delete INSN.  Otherwise, we an just replace the pattern 	       of INSN; we have already verified above that INSN has 	       no other function that to do X.  */
 name|pat
 operator|=
 name|gen_move_insn
@@ -8356,7 +8356,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Do fixup_memory_subreg on all (SUBREG (MEM ...) ...) contained in X.    Replace subexpressions of X in place.    If X itself is a (SUBREG (MEM ...) ...), return the replacement expression.    Otherwise return X, with its contents possibly altered.     If any insns must be emitted to compute NEWADDR, put them before INSN.      UNCRITICAL is as in fixup_memory_subreg.  */
+comment|/* Do fixup_memory_subreg on all (SUBREG (MEM ...) ...) contained in X.    Replace subexpressions of X in place.    If X itself is a (SUBREG (MEM ...) ...), return the replacement expression.    Otherwise return X, with its contents possibly altered.     If any insns must be emitted to compute NEWADDR, put them before INSN.     UNCRITICAL is as in fixup_memory_subreg.  */
 end_comment
 
 begin_function
@@ -9747,7 +9747,7 @@ name|ACCUMULATE_OUTGOING_ARGS
 end_ifdef
 
 begin_comment
-comment|/* The bottom of the stack points to the actual arguments.  If    REG_PARM_STACK_SPACE is defined, this includes the space for the register    parameters.  However, if OUTGOING_REG_PARM_STACK space is not defined,    stack space for register parameters is not pushed by the caller, but     rather part of the fixed stack areas and hence not included in    `current_function_outgoing_args_size'.  Nevertheless, we must allow    for it when allocating stack dynamic objects.  */
+comment|/* The bottom of the stack points to the actual arguments.  If    REG_PARM_STACK_SPACE is defined, this includes the space for the register    parameters.  However, if OUTGOING_REG_PARM_STACK space is not defined,    stack space for register parameters is not pushed by the caller, but    rather part of the fixed stack areas and hence not included in    `current_function_outgoing_args_size'.  Nevertheless, we must allow    for it when allocating stack dynamic objects.  */
 end_comment
 
 begin_if
@@ -10383,7 +10383,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Given a pointer to a piece of rtx and an optional pointer to the    containing object, instantiate any virtual registers present in it.     If EXTRA_INSNS, we always do the replacement and generate    any extra insns before OBJECT.  If it zero, we do nothing if replacement    is not valid.     Return 1 if we either had nothing to do or if we were able to do the    needed replacement.  Return 0 otherwise; we only return zero if     EXTRA_INSNS is zero.     We first try some simple transformations to avoid the creation of extra    pseudos.  */
+comment|/* Given a pointer to a piece of rtx and an optional pointer to the    containing object, instantiate any virtual registers present in it.     If EXTRA_INSNS, we always do the replacement and generate    any extra insns before OBJECT.  If it zero, we do nothing if replacement    is not valid.     Return 1 if we either had nothing to do or if we were able to do the    needed replacement.  Return 0 otherwise; we only return zero if    EXTRA_INSNS is zero.     We first try some simple transformations to avoid the creation of extra    pseudos.  */
 end_comment
 
 begin_function
@@ -11383,7 +11383,7 @@ goto|;
 case|case
 name|MEM
 case|:
-comment|/* Most cases of MEM that convert to valid addresses have already been 	 handled by our scan of regno_reg_rtx.  The only special handling we 	 need here is to make a copy of the rtx to ensure it isn't being 	 shared if we have to change it to a pseudo.   	 If the rtx is a simple reference to an address via a virtual register, 	 it can potentially be shared.  In such cases, first try to make it 	 a valid address, which can also be shared.  Otherwise, copy it and 	 proceed normally.   	 First check for common cases that need no processing.  These are 	 usually due to instantiation already being done on a previous instance 	 of a shared rtx.  */
+comment|/* Most cases of MEM that convert to valid addresses have already been 	 handled by our scan of regno_reg_rtx.  The only special handling we 	 need here is to make a copy of the rtx to ensure it isn't being 	 shared if we have to change it to a pseudo.  	 If the rtx is a simple reference to an address via a virtual register, 	 it can potentially be shared.  In such cases, first try to make it 	 a valid address, which can also be shared.  Otherwise, copy it and 	 proceed normally.  	 First check for common cases that need no processing.  These are 	 usually due to instantiation already being done on a previous instance 	 of a shared rtx.  */
 name|temp
 operator|=
 name|XEXP
@@ -12647,7 +12647,7 @@ comment|/* This is used for the arg pointer when referring to stack args.  */
 name|rtx
 name|internal_arg_pointer
 decl_stmt|;
-comment|/* This is a dummy PARM_DECL that we used for the function result if       the function returns a structure.  */
+comment|/* This is a dummy PARM_DECL that we used for the function result if      the function returns a structure.  */
 name|tree
 name|function_result_decl
 init|=
@@ -14296,7 +14296,7 @@ block|}
 endif|#
 directive|endif
 comment|/* FUNCTION_ARG_CALLEE_COPIES */
-comment|/* In any case, record the parm's desired stack location 	     in case we later discover it must live in the stack.   	     If it is a COMPLEX value, store the stack location for both 	     halves.  */
+comment|/* In any case, record the parm's desired stack location 	     in case we later discover it must live in the stack.  	     If it is a COMPLEX value, store the stack location for both 	     halves.  */
 if|if
 condition|(
 name|GET_CODE
@@ -15310,7 +15310,7 @@ comment|/* Compute the size and offset from the start of the stacked arguments f
 end_comment
 
 begin_comment
-comment|/*  offset_ptr will be negative for ARGS_GROW_DOWNWARD case;      initial_offset_ptr is positive because locate_and_pad_parm's     callers pass in the total size of args so far as     initial_offset_ptr. arg_size_ptr is always positive.*/
+comment|/*  offset_ptr will be negative for ARGS_GROW_DOWNWARD case;     initial_offset_ptr is positive because locate_and_pad_parm's     callers pass in the total size of args so far as     initial_offset_ptr. arg_size_ptr is always positive.*/
 end_comment
 
 begin_function
@@ -19796,7 +19796,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Generate RTL for the end of the current function.    FILENAME and LINE are the current position in the source file.      It is up to language-specific callers to do cleanups for parameters--    or else, supply 1 for END_BINDINGS and we will call expand_end_bindings.  */
+comment|/* Generate RTL for the end of the current function.    FILENAME and LINE are the current position in the source file.     It is up to language-specific callers to do cleanups for parameters--    or else, supply 1 for END_BINDINGS and we will call expand_end_bindings.  */
 end_comment
 
 begin_function

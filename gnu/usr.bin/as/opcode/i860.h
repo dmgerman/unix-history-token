@@ -92,7 +92,7 @@ comment|/*    All i860 opcodes are 32 bits, except for the pseudoinstructions   
 end_comment
 
 begin_comment
-comment|/* The order of the opcodes in this table is significant:        * The assembler requires that all instances of the same mnemonic must be    consecutive.  If they aren't, the assembler will bomb at runtime.     * The disassembler should not care about the order of the opcodes.  */
+comment|/* The order of the opcodes in this table is significant:     * The assembler requires that all instances of the same mnemonic must be    consecutive.  If they aren't, the assembler will bomb at runtime.     * The disassembler should not care about the order of the opcodes.  */
 end_comment
 
 begin_decl_stmt

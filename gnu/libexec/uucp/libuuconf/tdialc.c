@@ -21,7 +21,7 @@ name|char
 name|_uuconf_tdialc_rcsid
 index|[]
 init|=
-literal|"$Id: tdialc.c,v 1.4 1994/01/30 21:14:29 ian Rel $"
+literal|"$Id: tdialc.c,v 1.2 1994/05/07 18:13:02 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -83,7 +83,7 @@ comment|/* Format: */
 end_comment
 
 begin_comment
-comment|/* A precompiled file starts with a series of #define and #undef  statements:     #define MAC DEF     ---   Indicates MAC must be defined with defn DEF     #define MAC         ---   Indicates MAC must be defined with any defn     #undef MAC          ---   Indicates MAC cannot be defined  These preconditions must be true for a precompiled file to be used.   The preconditions section is null terminated. */
+comment|/* A precompiled file starts with a series of #define and #undef  statements:     #define MAC DEF     ---   Indicates MAC must be defined with defn DEF     #define MAC         ---   Indicates MAC must be defined with any defn     #undef MAC          ---   Indicates MAC cannot be defined  These preconditions must be true for a precompiled file to be used. The preconditions section is null terminated. */
 end_comment
 
 begin_comment
@@ -143,7 +143,7 @@ comment|/* included regardless in the included output).  */
 end_comment
 
 begin_comment
-comment|/* A file, then, looks like this:    Precondition 1   Precondition 2   .    .   .<NUL>   Number of strings     STRINGDEF     String . . .<NUL>     Number of keys       KEYDEF       Key . . .<NUL>       KEYDEF        Key . . .<NUL>       .       .       .     STRINGDEF     String . . .<NUL>     Number of keys       KEYDEF       Key . . .<NUL>       .       .       .     .     .     .  */
+comment|/* A file, then, looks like this:    Precondition 1   Precondition 2   .   .   .<NUL>   Number of strings     STRINGDEF     String . . .<NUL>     Number of keys       KEYDEF       Key . . .<NUL>       KEYDEF       Key . . .<NUL>       .       .       .     STRINGDEF     String . . .<NUL>     Number of keys       KEYDEF       Key . . .<NUL>       .       .       .     .     .     .  */
 end_comment
 
 end_unit

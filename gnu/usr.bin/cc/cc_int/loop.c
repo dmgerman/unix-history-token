@@ -4,7 +4,7 @@ comment|/* Move constant computations out of loops.    Copyright (C) 1987, 88, 8
 end_comment
 
 begin_comment
-comment|/* This is the loop optimization pass of the compiler.    It finds invariant computations within loops and moves them    to the beginning of the loop.  Then it identifies basic and     general induction variables.  Strength reduction is applied to the general    induction variables, and induction variable elimination is applied to    the basic induction variables.     It also finds cases where    a register is set within the loop by zero-extending a narrower value    and changes these to zero the entire register once before the loop    and merely copy the low part within the loop.     Most of the complexity is in heuristics to decide when it is worth    while to do these things.  */
+comment|/* This is the loop optimization pass of the compiler.    It finds invariant computations within loops and moves them    to the beginning of the loop.  Then it identifies basic and    general induction variables.  Strength reduction is applied to the general    induction variables, and induction variable elimination is applied to    the basic induction variables.     It also finds cases where    a register is set within the loop by zero-extending a narrower value    and changes these to zero the entire register once before the loop    and merely copy the low part within the loop.     Most of the complexity is in heuristics to decide when it is worth    while to do these things.  */
 end_comment
 
 begin_include
@@ -444,7 +444,7 @@ comment|/* When INSN is libcall, this is an EXPR_LIST 				   of any registers us
 name|int
 name|consec
 decl_stmt|;
-comment|/* Number of consecutive following insns  				   that must be moved with this one.  */
+comment|/* Number of consecutive following insns 				   that must be moved with this one.  */
 name|int
 name|regno
 decl_stmt|;
@@ -1653,7 +1653,7 @@ argument_list|(
 name|nregs
 argument_list|)
 expr_stmt|;
-comment|/* Determine whether this loop starts with a jump down to a test at      the end.  This will occur for a small number of loops with a test      that is too complex to duplicate in front of the loop.       We search for the first insn or label in the loop, skipping NOTEs.      However, we must be careful not to skip past a NOTE_INSN_LOOP_BEG      (because we might have a loop executed only once that contains a      loop which starts with a jump to its exit test) or a NOTE_INSN_LOOP_END      (in case we have a degenerate loop).       Note that if we mistakenly think that a loop is entered at the top      when, in fact, it is entered at the exit test, the only effect will be      slightly poorer optimization.  Making the opposite error can generate      incorrect code.  Since very few loops now start with a jump to the       exit test, the code here to detect that case is very conservative.  */
+comment|/* Determine whether this loop starts with a jump down to a test at      the end.  This will occur for a small number of loops with a test      that is too complex to duplicate in front of the loop.       We search for the first insn or label in the loop, skipping NOTEs.      However, we must be careful not to skip past a NOTE_INSN_LOOP_BEG      (because we might have a loop executed only once that contains a      loop which starts with a jump to its exit test) or a NOTE_INSN_LOOP_END      (in case we have a degenerate loop).       Note that if we mistakenly think that a loop is entered at the top      when, in fact, it is entered at the exit test, the only effect will be      slightly poorer optimization.  Making the opposite error can generate      incorrect code.  Since very few loops now start with a jump to the      exit test, the code here to detect that case is very conservative.  */
 for|for
 control|(
 name|p
@@ -1829,7 +1829,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* If SCAN_START was an insn created by loop, we don't know its luid      as required by loop_reg_used_before_p.  So skip such loops.  (This      test may never be true, but it's best to play it safe.)        Also, skip loops where we do not start scanning at a label.  This      test also rejects loops starting with a JUMP_INSN that failed the      test above.  */
+comment|/* If SCAN_START was an insn created by loop, we don't know its luid      as required by loop_reg_used_before_p.  So skip such loops.  (This      test may never be true, but it's best to play it safe.)       Also, skip loops where we do not start scanning at a label.  This      test also rejects loops starting with a JUMP_INSN that failed the      test above.  */
 if|if
 condition|(
 name|INSN_UID
@@ -2492,7 +2492,7 @@ name|set
 argument_list|)
 argument_list|)
 decl_stmt|;
-comment|/* A potential lossage is where we have a case where two insns 		 can be combined as long as they are both in the loop, but 		 we move one of them outside the loop.  For large loops, 		 this can lose.  The most common case of this is the address 		 of a function being called.    		 Therefore, if this register is marked as being used exactly 		 once if we are in a loop with calls (a "large loop"), see if 		 we can replace the usage of this register with the source 		 of this SET.  If we can, delete this insn.   		 Don't do this if P has a REG_RETVAL note or if we have 		 SMALL_REGISTER_CLASSES and SET_SRC is a hard register.  */
+comment|/* A potential lossage is where we have a case where two insns 		 can be combined as long as they are both in the loop, but 		 we move one of them outside the loop.  For large loops, 		 this can lose.  The most common case of this is the address 		 of a function being called.  		 Therefore, if this register is marked as being used exactly 		 once if we are in a loop with calls (a "large loop"), see if 		 we can replace the usage of this register with the source 		 of this SET.  If we can, delete this insn.  		 Don't do this if P has a REG_RETVAL note or if we have 		 SMALL_REGISTER_CLASSES and SET_SRC is a hard register.  */
 if|if
 condition|(
 name|reg_single_usage
@@ -4315,7 +4315,7 @@ name|rtx
 name|temp
 decl_stmt|;
 comment|/* If first insn of libcall sequence, skip to end.  */
-comment|/* Do this at start of loop, since INSN is guaranteed to  	 be an insn here.  */
+comment|/* Do this at start of loop, since INSN is guaranteed to 	 be an insn here.  */
 if|if
 condition|(
 name|GET_CODE
@@ -7108,7 +7108,7 @@ decl_stmt|,
 name|temp
 decl_stmt|;
 comment|/* If first insn of libcall sequence, skip to end. */
-comment|/* Do this at start of loop, since p is guaranteed to  			 be an insn here.  */
+comment|/* Do this at start of loop, since p is guaranteed to 			 be an insn here.  */
 if|if
 condition|(
 name|GET_CODE
@@ -8997,7 +8997,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* Now scan all insn's in the function.  If any JUMP_INSN branches into a      loop that it is not contained within, that loop is marked invalid.      If any INSN or CALL_INSN uses a label's address, then the loop containing      that label is marked invalid, because it could be jumped into from      anywhere.       Also look for blocks of code ending in an unconditional branch that      exits the loop.  If such a block is surrounded by a conditional       branch around the block, move the block elsewhere (see below) and      invert the jump to point to the code block.  This may eliminate a      label in our loop and will simplify processing by both us and a      possible second cse pass.  */
+comment|/* Now scan all insn's in the function.  If any JUMP_INSN branches into a      loop that it is not contained within, that loop is marked invalid.      If any INSN or CALL_INSN uses a label's address, then the loop containing      that label is marked invalid, because it could be jumped into from      anywhere.       Also look for blocks of code ending in an unconditional branch that      exits the loop.  If such a block is surrounded by a conditional      branch around the block, move the block elsewhere (see below) and      invert the jump to point to the code block.  This may eliminate a      label in our loop and will simplify processing by both us and a      possible second cse pass.  */
 for|for
 control|(
 name|insn
@@ -11171,7 +11171,7 @@ operator|==
 name|SET
 condition|)
 block|{
-comment|/* Don't count SET_DEST if it is a REG; otherwise count things 	 in SET_DEST because if a register is partially modified, it won't 	 show up as a potential movable so we don't care how USAGE is set  	 for it.  */
+comment|/* Don't count SET_DEST if it is a REG; otherwise count things 	 in SET_DEST because if a register is partially modified, it won't 	 show up as a potential movable so we don't care how USAGE is set 	 for it.  */
 if|if
 condition|(
 name|GET_CODE
@@ -12464,7 +12464,7 @@ argument_list|(
 name|Pmode
 argument_list|)
 expr_stmt|;
-comment|/* Save insn immediately after the loop_end.  Insns inserted after loop_end      must be put before this insn, so that they will appear in the right      order (i.e. loop order).        If loop_end is the end of the current function, then emit a       NOTE_INSN_DELETED after loop_end and set end_insert_before to the      dummy note insn.  */
+comment|/* Save insn immediately after the loop_end.  Insns inserted after loop_end      must be put before this insn, so that they will appear in the right      order (i.e. loop order).       If loop_end is the end of the current function, then emit a      NOTE_INSN_DELETED after loop_end and set end_insert_before to the      dummy note insn.  */
 if|if
 condition|(
 name|NEXT_INSN
@@ -14856,7 +14856,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Rescan all givs.  If a giv is the same as a giv not reduced, mark it 	 as not reduced. 	  	 For each giv register that can be reduced now: if replaceable, 	 substitute reduced reg wherever the old giv occurs; 	 else add new move insn "giv_reg = reduced_reg".  	 Also check for givs whose first use is their definition and whose 	 last use is the definition of another giv.  If so, it is likely 	 dead and should not be used to eliminate a biv.  */
+comment|/* Rescan all givs.  If a giv is the same as a giv not reduced, mark it 	 as not reduced.  	 For each giv register that can be reduced now: if replaceable, 	 substitute reduced reg wherever the old giv occurs; 	 else add new move insn "giv_reg = reduced_reg".  	 Also check for givs whose first use is their definition and whose 	 last use is the definition of another giv.  If so, it is likely 	 dead and should not be used to eliminate a biv.  */
 for|for
 control|(
 name|v
@@ -15247,7 +15247,7 @@ name|maybe_dead
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Try to eliminate the biv, if it is a candidate. 	 This won't work if ! all_reduced, 	 since the givs we planned to use might not have been reduced.  	 We have to be careful that we didn't initially think we could eliminate 	 this biv because of a giv that we now think may be dead and shouldn't 	 be used as a biv replacement.    	 Also, there is the possibility that we may have a giv that looks 	 like it can be used to eliminate a biv, but the resulting insn 	 isn't valid.  This can happen, for example, on the 88k, where a  	 JUMP_INSN can compare a register only with zero.  Attempts to 	 replace it with a compare with a constant will fail.  	 Note that in cases where this call fails, we may have replaced some 	 of the occurrences of the biv with a giv, but no harm was done in 	 doing so in the rare cases where it can occur.  */
+comment|/* Try to eliminate the biv, if it is a candidate. 	 This won't work if ! all_reduced, 	 since the givs we planned to use might not have been reduced.  	 We have to be careful that we didn't initially think we could eliminate 	 this biv because of a giv that we now think may be dead and shouldn't 	 be used as a biv replacement.  	 Also, there is the possibility that we may have a giv that looks 	 like it can be used to eliminate a biv, but the resulting insn 	 isn't valid.  This can happen, for example, on the 88k, where a 	 JUMP_INSN can compare a register only with zero.  Attempts to 	 replace it with a compare with a constant will fail.  	 Note that in cases where this call fails, we may have replaced some 	 of the occurrences of the biv with a giv, but no harm was done in 	 doing so in the rare cases where it can occur.  */
 if|if
 condition|(
 name|all_reduced
@@ -16725,7 +16725,7 @@ operator|)
 condition|)
 block|{
 comment|/* Now check that there are no assignments to the biv within the 	     giv's lifetime.  This requires two separate checks.  */
-comment|/* Check each biv update, and fail if any are between the first 	     and last use of the giv. 	      	     If this loop contains an inner loop that was unrolled, then 	     the insn modifying the biv may have been emitted by the loop 	     unrolling code, and hence does not have a valid luid.  Just 	     mark the biv as not replaceable in this case.  It is not very 	     useful as a biv, because it is used in two different loops. 	     It is very unlikely that we would be able to optimize the giv 	     using this biv anyways.  */
+comment|/* Check each biv update, and fail if any are between the first 	     and last use of the giv.  	     If this loop contains an inner loop that was unrolled, then 	     the insn modifying the biv may have been emitted by the loop 	     unrolling code, and hence does not have a valid luid.  Just 	     mark the biv as not replaceable in this case.  It is not very 	     useful as a biv, because it is used in two different loops. 	     It is very unlikely that we would be able to optimize the giv 	     using this biv anyways.  */
 name|v
 operator|->
 name|replaceable
@@ -17944,7 +17944,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Check whether an insn is an increment legitimate for a basic induction var.    X is the source of insn P, or a part of it.    MODE is the mode in which X should be interpreted.     DEST_REG is the putative biv, also the destination of the insn.    We accept patterns of these forms:      REG = REG + INVARIANT (includes REG = REG - CONSTANT)      REG = INVARIANT + REG     If X is suitable, we return 1, set *MULT_VAL to CONST1_RTX,    and store the additive term into *INC_VAL.     If X is an assignment of an invariant into DEST_REG, we set    *MULT_VAL to CONST0_RTX, and store the invariant into *INC_VAL.     We also want to detect a BIV when it corresponds to a variable    whose mode was promoted via PROMOTED_MODE.  In that case, an increment    of the variable may be a PLUS that adds a SUBREG of that variable to    an invariant and then sign- or zero-extends the result of the PLUS    into the variable.     Most GIVs in such cases will be in the promoted mode, since that is the    probably the natural computation mode (and almost certainly the mode    used for addresses) on the machine.  So we view the pseudo-reg containing    the variable as the BIV, as if it were simply incremented.     Note that treating the entire pseudo as a BIV will result in making    simple increments to any GIVs based on it.  However, if the variable    overflows in its declared mode but not its promoted mode, the result will    be incorrect.  This is acceptable if the variable is signed, since     overflows in such cases are undefined, but not if it is unsigned, since    those overflows are defined.  So we only check for SIGN_EXTEND and    not ZERO_EXTEND.     If we cannot find a biv, we return 0.  */
+comment|/* Check whether an insn is an increment legitimate for a basic induction var.    X is the source of insn P, or a part of it.    MODE is the mode in which X should be interpreted.     DEST_REG is the putative biv, also the destination of the insn.    We accept patterns of these forms:      REG = REG + INVARIANT (includes REG = REG - CONSTANT)      REG = INVARIANT + REG     If X is suitable, we return 1, set *MULT_VAL to CONST1_RTX,    and store the additive term into *INC_VAL.     If X is an assignment of an invariant into DEST_REG, we set    *MULT_VAL to CONST0_RTX, and store the invariant into *INC_VAL.     We also want to detect a BIV when it corresponds to a variable    whose mode was promoted via PROMOTED_MODE.  In that case, an increment    of the variable may be a PLUS that adds a SUBREG of that variable to    an invariant and then sign- or zero-extends the result of the PLUS    into the variable.     Most GIVs in such cases will be in the promoted mode, since that is the    probably the natural computation mode (and almost certainly the mode    used for addresses) on the machine.  So we view the pseudo-reg containing    the variable as the BIV, as if it were simply incremented.     Note that treating the entire pseudo as a BIV will result in making    simple increments to any GIVs based on it.  However, if the variable    overflows in its declared mode but not its promoted mode, the result will    be incorrect.  This is acceptable if the variable is signed, since    overflows in such cases are undefined, but not if it is unsigned, since    those overflows are defined.  So we only check for SIGN_EXTEND and    not ZERO_EXTEND.     If we cannot find a biv, we return 0.  */
 end_comment
 
 begin_function
@@ -18953,7 +18953,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Given an expression, X, try to form it as a linear function of a biv.    We will canonicalize it to be of the form    	(plus (mult (BIV) (invar_1)) 	      (invar_2))    with possible degeneracies.     The invariant expressions must each be of a form that can be used as a    machine operand.  We surround then with a USE rtx (a hack, but localized    and certainly unambiguous!) if not a CONST_INT for simplicity in this    routine; it is the caller's responsibility to strip them.     If no such canonicalization is possible (i.e., two biv's are used or an    expression that is neither invariant nor a biv or giv), this routine    returns 0.     For a non-zero return, the result will have a code of CONST_INT, USE,    REG (for a BIV), PLUS, or MULT.  No other codes will occur.       *BENEFIT will be incremented by the benefit of any sub-giv encountered.  */
+comment|/* Given an expression, X, try to form it as a linear function of a biv.    We will canonicalize it to be of the form    	(plus (mult (BIV) (invar_1)) 	      (invar_2))    with possible degeneracies.     The invariant expressions must each be of a form that can be used as a    machine operand.  We surround then with a USE rtx (a hack, but localized    and certainly unambiguous!) if not a CONST_INT for simplicity in this    routine; it is the caller's responsibility to strip them.     If no such canonicalization is possible (i.e., two biv's are used or an    expression that is neither invariant nor a biv or giv), this routine    returns 0.     For a non-zero return, the result will have a code of CONST_INT, USE,    REG (for a BIV), PLUS, or MULT.  No other codes will occur.     *BENEFIT will be incremented by the benefit of any sub-giv encountered.  */
 end_comment
 
 begin_function
@@ -20158,7 +20158,7 @@ decl_stmt|;
 name|rtx
 name|set
 decl_stmt|;
-comment|/* Indicate that this is a giv so that we can update the value produced in      each insn of the multi-insn sequence.        This induction structure will be used only by the call to      general_induction_var below, so we can allocate it on our stack.      If this is a giv, our caller will replace the induct var entry with      a new induction structure.  */
+comment|/* Indicate that this is a giv so that we can update the value produced in      each insn of the multi-insn sequence.       This induction structure will be used only by the call to      general_induction_var below, so we can allocate it on our stack.      If this is a giv, our caller will replace the induct var entry with      a new induction structure.  */
 name|struct
 name|induction
 modifier|*
@@ -20504,7 +20504,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Return an rtx, if any, that expresses giv G2 as a function of the register    represented by G1.  If no such expression can be found, or it is clear that    it cannot possibly be a valid address, 0 is returned.      To perform the computation, we note that    	G1 = a * v + b		and 	G2 = c * v + d    where `v' is the biv.     So G2 = (c/a) * G1 + (d - b*c/a)  */
+comment|/* Return an rtx, if any, that expresses giv G2 as a function of the register    represented by G1.  If no such expression can be found, or it is clear that    it cannot possibly be a valid address, 0 is returned.     To perform the computation, we note that    	G1 = a * v + b		and 	G2 = c * v + d    where `v' is the biv.     So G2 = (c/a) * G1 + (d - b*c/a)  */
 end_comment
 
 begin_ifdef

@@ -1247,7 +1247,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Look up a coff type-number index.  Return the address of the slot    where the type for that index is stored.    The type-number is in INDEX.      This can be used for finding the type associated with that index    or for associating a new type with the index.  */
+comment|/* Look up a coff type-number index.  Return the address of the slot    where the type for that index is stored.    The type-number is in INDEX.     This can be used for finding the type associated with that index    or for associating a new type with the index.  */
 end_comment
 
 begin_function
@@ -5729,8 +5729,8 @@ if|#
 directive|if
 literal|0
 comment|/* FIXME:  This has NOT been tested.  The DBX version has.. */
-comment|/* Generate a template for the type of this function.  The  	  types of the arguments will be added as we read the symbol  	  table. */
-block|struct type *new = (struct type *) 		    obstack_alloc (&objfile->symbol_obstack, sizeof (struct type));                memcpy (new, lookup_function_type (decode_function_type (cs, cs->c_type, aux)), 		      sizeof(struct type));        SYMBOL_TYPE (sym) = new;        in_function_type = SYMBOL_TYPE(sym);
+comment|/* Generate a template for the type of this function.  The 	  types of the arguments will be added as we read the symbol 	  table. */
+block|struct type *new = (struct type *) 		    obstack_alloc (&objfile->symbol_obstack, sizeof (struct type));         memcpy (new, lookup_function_type (decode_function_type (cs, cs->c_type, aux)), 		      sizeof(struct type));        SYMBOL_TYPE (sym) = new;        in_function_type = SYMBOL_TYPE(sym);
 else|#
 directive|else
 name|SYMBOL_TYPE

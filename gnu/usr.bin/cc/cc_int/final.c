@@ -360,7 +360,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Nonzero means this function is a leaf function, with no function calls.     This variable exists to be examined in FUNCTION_PROLOGUE    and FUNCTION_EPILOGUE.  Always zero, unless set by some action.  */
+comment|/* Nonzero means this function is a leaf function, with no function calls.    This variable exists to be examined in FUNCTION_PROLOGUE    and FUNCTION_EPILOGUE.  Always zero, unless set by some action.  */
 end_comment
 
 begin_decl_stmt
@@ -2081,7 +2081,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Return the number of slots filled in the current     delayed branch sequence (we don't count the insn needing the    delay slot).   Zero if not in a delayed branch sequence.  */
+comment|/* Return the number of slots filled in the current    delayed branch sequence (we don't count the insn needing the    delay slot).   Zero if not in a delayed branch sequence.  */
 end_comment
 
 begin_ifdef

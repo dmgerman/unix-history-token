@@ -21,7 +21,7 @@ name|char
 name|tli_rcsid
 index|[]
 init|=
-literal|"$Id: tli.c,v 1.15 1994/01/30 20:59:40 ian Rel $"
+literal|"$Id: tli.c,v 1.2 1994/05/07 18:09:03 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 

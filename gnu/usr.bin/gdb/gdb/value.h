@@ -181,7 +181,7 @@ value|(val)->lazy
 end_define
 
 begin_comment
-comment|/* VALUE_CONTENTS and VALUE_CONTENTS_RAW both return the address of    the gdb buffer used to hold a copy of the contents of the lval.      VALUE_CONTENTS is used when the contents of the buffer are needed --    it uses value_fetch_lazy() to load the buffer from the process being     debugged if it hasn't already been loaded.  VALUE_CONTENTS_RAW is     used when data is being stored into the buffer, or when it is     certain that the contents of the buffer are valid.  */
+comment|/* VALUE_CONTENTS and VALUE_CONTENTS_RAW both return the address of    the gdb buffer used to hold a copy of the contents of the lval.    VALUE_CONTENTS is used when the contents of the buffer are needed --    it uses value_fetch_lazy() to load the buffer from the process being    debugged if it hasn't already been loaded.  VALUE_CONTENTS_RAW is    used when data is being stored into the buffer, or when it is    certain that the contents of the buffer are valid.  */
 end_comment
 
 begin_define

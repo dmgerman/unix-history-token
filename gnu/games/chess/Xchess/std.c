@@ -4,7 +4,7 @@ comment|/* This file contains code for X-CHESS.    Copyright (C) 1986 Free Softw
 end_comment
 
 begin_comment
-comment|/* RCS Info: $Revision: 1.2 $ on $Date: 1994/01/07 11:10:42 $  *           $Source: /home/ncvs/src/gnu/games/chess/Xchess/std.c,v $  * Copyright (c) 1985 Wayne A. Christopher, U. C. Berkeley CAD Group  *  * Utility routines.  */
+comment|/* RCS Info: $Revision: 1.3 $ on $Date: 1994/11/04 02:11:33 $  *           $Source: /home/ncvs/src/gnu/games/chess/Xchess/std.c,v $  * Copyright (c) 1985 Wayne A. Christopher, U. C. Berkeley CAD Group  *  * Utility routines.  */
 end_comment
 
 begin_include
@@ -290,7 +290,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* Malloc num bytes and initialize to zero. Fatal error if the space can't  * be malloc'd.   */
+comment|/* Malloc num bytes and initialize to zero. Fatal error if the space can't  * be malloc'd.  */
 end_comment
 
 begin_function

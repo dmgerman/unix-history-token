@@ -3534,7 +3534,7 @@ literal|0
 end_if
 
 begin_endif
-unit|struct try_type {   tree *node_var;   char unsigned_flag;   char long_flag;   char long_long_flag; };  struct try_type type_sequence[] =  {   {&integer_type_node, 0, 0, 0},   {&unsigned_type_node, 1, 0, 0},   {&long_integer_type_node, 0, 1, 0},   {&long_unsigned_type_node, 1, 1, 0},   {&long_long_integer_type_node, 0, 1, 1},   {&long_long_unsigned_type_node, 1, 1, 1} };
+unit|struct try_type {   tree *node_var;   char unsigned_flag;   char long_flag;   char long_long_flag; };  struct try_type type_sequence[] = {   {&integer_type_node, 0, 0, 0},   {&unsigned_type_node, 1, 0, 0},   {&long_integer_type_node, 0, 1, 0},   {&long_unsigned_type_node, 1, 1, 0},   {&long_long_integer_type_node, 0, 1, 1},   {&long_long_unsigned_type_node, 1, 1, 1} };
 endif|#
 directive|endif
 end_endif

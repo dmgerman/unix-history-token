@@ -735,7 +735,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Check to see if either argument is a structure.  This is called so    we know whether to go ahead with the normal binop or look for a     user defined function instead.     For now, we do not overload the `=' operator.  */
+comment|/* Check to see if either argument is a structure.  This is called so    we know whether to go ahead with the normal binop or look for a    user defined function instead.     For now, we do not overload the `=' operator.  */
 end_comment
 
 begin_function
@@ -844,7 +844,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Check to see if argument is a structure.  This is called so    we know whether to go ahead with the normal unop or look for a     user defined function instead.     For now, we do not overload the `&' operator.  */
+comment|/* Check to see if argument is a structure.  This is called so    we know whether to go ahead with the normal unop or look for a    user defined function instead.     For now, we do not overload the `&' operator.  */
 end_comment
 
 begin_function
@@ -914,7 +914,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* We know either arg1 or arg2 is a structure, so try to find the right    user defined function.  Create an argument vector that calls     arg1.operator @ (arg1,arg2) and return that value (where '@' is any    binary operator which is legal for GNU C++).     OP is the operatore, and if it is BINOP_ASSIGN_MODIFY, then OTHEROP    is the opcode saying how to modify it.  Otherwise, OTHEROP is    unused.  */
+comment|/* We know either arg1 or arg2 is a structure, so try to find the right    user defined function.  Create an argument vector that calls    arg1.operator @ (arg1,arg2) and return that value (where '@' is any    binary operator which is legal for GNU C++).     OP is the operatore, and if it is BINOP_ASSIGN_MODIFY, then OTHEROP    is the opcode saying how to modify it.  Otherwise, OTHEROP is    unused.  */
 end_comment
 
 begin_function
@@ -1517,7 +1517,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* We know that arg1 is a structure, so try to find a unary user    defined operator that matches the operator in question.      Create an argument vector that calls arg1.operator @ (arg1)    and return that value (where '@' is (almost) any unary operator which    is legal for GNU C++).  */
+comment|/* We know that arg1 is a structure, so try to find a unary user    defined operator that matches the operator in question.    Create an argument vector that calls arg1.operator @ (arg1)    and return that value (where '@' is (almost) any unary operator which    is legal for GNU C++).  */
 end_comment
 
 begin_function
@@ -1861,7 +1861,7 @@ decl_stmt|;
 name|char
 name|inchar
 decl_stmt|;
-comment|/* First figure out if we are dealing with two values to be concatenated      or a repeat count and a value to be repeated.  INVAL1 is set to the      first of two concatenated values, or the repeat count.  INVAL2 is set      to the second of the two concatenated values or the value to be       repeated. */
+comment|/* First figure out if we are dealing with two values to be concatenated      or a repeat count and a value to be repeated.  INVAL1 is set to the      first of two concatenated values, or the repeat count.  INVAL2 is set      to the second of the two concatenated values or the value to be      repeated. */
 if|if
 condition|(
 name|TYPE_CODE

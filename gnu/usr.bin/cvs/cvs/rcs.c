@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * The routines contained in this file do all the rcs file parsing and  * manipulation  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *  * The routines contained in this file do all the rcs file parsing and  * manipulation  */
 end_comment
 
 begin_include
@@ -2379,7 +2379,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * getrcskey - fill in the key and value from the rcs file the algorithm is  *             as follows   *  *    o skip whitespace o fill in key with everything up to next white   *      space or semicolon   *    o if key == "desc" then key and data are NULL and return -1   *    o if key wasn't terminated by a semicolon, skip white space and fill   *      in value with everything up to a semicolon o compress all whitespace  *      down to a single space   *    o if a word starts with @, do funky rcs processing  *    o strip whitespace off end of value or set value to NULL if it empty   *    o return 0 since we found something besides "desc"  */
+comment|/*  * getrcskey - fill in the key and value from the rcs file the algorithm is  *             as follows  *  *    o skip whitespace o fill in key with everything up to next white  *      space or semicolon  *    o if key == "desc" then key and data are NULL and return -1  *    o if key wasn't terminated by a semicolon, skip white space and fill  *      in value with everything up to a semicolon o compress all whitespace  *      down to a single space  *    o if a word starts with @, do funky rcs processing  *    o strip whitespace off end of value or set value to NULL if it empty  *    o return 0 since we found something besides "desc"  */
 end_comment
 
 begin_decl_stmt
@@ -3461,7 +3461,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Version Number  *   * Returns the requested version number of the RCS file, satisfying tags and/or  * dates, and walking branches, if necessary.  *   * The result is returned; null-string if error.  */
+comment|/*  * Version Number  *  * Returns the requested version number of the RCS file, satisfying tags and/or  * dates, and walking branches, if necessary.  *  * The result is returned; null-string if error.  */
 end_comment
 
 begin_function
@@ -3642,7 +3642,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find the revision for a specific tag.  * If force_tag_match is set, return NULL if an exact match is not  * possible otherwise return RCS_head ().  We are careful to look for  * and handle "magic" revisions specially.  *   * If the matched tag is a branch tag, find the head of the branch.  */
+comment|/*  * Find the revision for a specific tag.  * If force_tag_match is set, return NULL if an exact match is not  * possible otherwise return RCS_head ().  We are careful to look for  * and handle "magic" revisions specially.  *  * If the matched tag is a branch tag, find the head of the branch.  */
 end_comment
 
 begin_function
@@ -6196,7 +6196,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Lookup the specified revision in the ,v file and return, in the date  * argument, the date specified for the revision *minus one second*, so that  * the logically previous revision will be found later.  *   * Returns zero on failure, RCS revision time as a Unix "time_t" on success.  */
+comment|/*  * Lookup the specified revision in the ,v file and return, in the date  * argument, the date specified for the revision *minus one second*, so that  * the logically previous revision will be found later.  *  * Returns zero on failure, RCS revision time as a Unix "time_t" on success.  */
 end_comment
 
 begin_function

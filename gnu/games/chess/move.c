@@ -1864,7 +1864,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*    Find Bishop and Rook mobility, XRAY attacks, and pins. Increment the     hung[] array if a pin is found.  */
+comment|/*    Find Bishop and Rook mobility, XRAY attacks, and pins. Increment the    hung[] array if a pin is found. */
 end_comment
 
 begin_block

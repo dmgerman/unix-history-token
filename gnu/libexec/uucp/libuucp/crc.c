@@ -665,7 +665,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * IUPDC32 macro derived from article Copyright (C) 1986 Stephen Satchell.   *  NOTE: First argument must be in range 0 to 255.  *        Second argument is referenced twice.  *   * Programmers may incorporate any or all code into their programs,   * giving proper credit within the source. Publication of the   * source routines is permitted so long as proper credit is given   * to Stephen Satchell, Satchell Evaluations and Chuck Forsberg,   * Omen Technology.  */
+comment|/*  * IUPDC32 macro derived from article Copyright (C) 1986 Stephen Satchell.  *  NOTE: First argument must be in range 0 to 255.  *        Second argument is referenced twice.  *  * Programmers may incorporate any or all code into their programs,  * giving proper credit within the source. Publication of the  * source routines is permitted so long as proper credit is given  * to Stephen Satchell, Satchell Evaluations and Chuck Forsberg,  * Omen Technology.  */
 end_comment
 
 begin_define

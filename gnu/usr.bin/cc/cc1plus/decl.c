@@ -1496,7 +1496,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* For each binding contour we allocate a binding_level structure  * which records the names defined in that contour.  * Contours include:  *  0) the global one  *  1) one for each function definition,  *     where internal declarations of the parameters appear.  *  2) one for each compound statement,  *     to record its declarations.  *  * The current meaning of a name can be found by searching the levels from  * the current one out to the global one.  *  * Off to the side, may be the class_binding_level.  This exists  * only to catch class-local declarations.  It is otherwise  * nonexistent.  *   * Also there may be binding levels that catch cleanups that  * must be run when exceptions occur.  */
+comment|/* For each binding contour we allocate a binding_level structure  * which records the names defined in that contour.  * Contours include:  *  0) the global one  *  1) one for each function definition,  *     where internal declarations of the parameters appear.  *  2) one for each compound statement,  *     to record its declarations.  *  * The current meaning of a name can be found by searching the levels from  * the current one out to the global one.  *  * Off to the side, may be the class_binding_level.  This exists  * only to catch class-local declarations.  It is otherwise  * nonexistent.  *  * Also there may be binding levels that catch cleanups that  * must be run when exceptions occur.  */
 end_comment
 
 begin_comment
@@ -1541,7 +1541,7 @@ name|binding_level
 modifier|*
 name|level_chain
 decl_stmt|;
-comment|/* Number of decls in `names' that have incomplete         structure or union types.  */
+comment|/* Number of decls in `names' that have incomplete        structure or union types.  */
 name|unsigned
 name|short
 name|n_incomplete
@@ -5446,7 +5446,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Push a definition of struct, union or enum tag "name".    into binding_level "b".   "type" should be the type node,     We assume that the tag "name" is not already defined.     Note that the definition may really be just a forward reference.    In that case, the TYPE_SIZE will be a NULL_TREE.     C++ gratuitously puts all these tags in the name space. */
+comment|/* Push a definition of struct, union or enum tag "name".    into binding_level "b".   "type" should be the type node,    We assume that the tag "name" is not already defined.     Note that the definition may really be just a forward reference.    In that case, the TYPE_SIZE will be a NULL_TREE.     C++ gratuitously puts all these tags in the name space. */
 end_comment
 
 begin_comment
@@ -10400,7 +10400,7 @@ name|b
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Multiple external decls of the same identifier ought to match.  	 We get warnings about inline functions where they are defined. 	 We get warnings about other functions from push_overloaded_decl. 	  	 Avoid duplicate warnings where they are used.  */
+comment|/* Multiple external decls of the same identifier ought to match.  	 We get warnings about inline functions where they are defined. 	 We get warnings about other functions from push_overloaded_decl.  	 Avoid duplicate warnings where they are used.  */
 if|if
 condition|(
 name|TREE_PUBLIC
@@ -20684,7 +20684,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|tree tmpl = UPT_TEMPLATE (type); 	       	      fprintf (stderr, "%s:%d: adding ", __FILE__, __LINE__); 	      print_node_brief (stderr, "", DECL_NAME (tem), 0); 	      fprintf (stderr, " to class %s\n", 		       IDENTIFIER_POINTER (DECL_NAME (tmpl)));               DECL_TEMPLATE_MEMBERS (tmpl)                 = perm_tree_cons (DECL_NAME (tem), tem, 				  DECL_TEMPLATE_MEMBERS (tmpl)); 	      return tem;
+block|tree tmpl = UPT_TEMPLATE (type);  	      fprintf (stderr, "%s:%d: adding ", __FILE__, __LINE__); 	      print_node_brief (stderr, "", DECL_NAME (tem), 0); 	      fprintf (stderr, " to class %s\n", 		       IDENTIFIER_POINTER (DECL_NAME (tmpl)));               DECL_TEMPLATE_MEMBERS (tmpl)                 = perm_tree_cons (DECL_NAME (tem), tem, 				  DECL_TEMPLATE_MEMBERS (tmpl)); 	      return tem;
 else|#
 directive|else
 name|sorry
@@ -21707,7 +21707,7 @@ condition|(
 name|asmspec
 condition|)
 block|{
-comment|/* This must override the asm specifier which was placed 	     by grokclassfn.  Lay this out fresh. 	      	     @@ Should emit an error if this redefines an asm-specified 	     @@ name, or if we have already used the function's name.  */
+comment|/* This must override the asm specifier which was placed 	     by grokclassfn.  Lay this out fresh.  	     @@ Should emit an error if this redefines an asm-specified 	     @@ name, or if we have already used the function's name.  */
 name|DECL_RTL
 argument_list|(
 name|TREE_TYPE
@@ -38646,7 +38646,7 @@ argument_list|(
 name|integer_type_node
 argument_list|)
 expr_stmt|;
-comment|/*      *  The following code is unnecessary since the function       *  type_promotes_to deals correctly with promotion of enums of       *  underlying unsigned types to signed integer types.      *  Moreover, it causes an enum bitfield to require one more bit of      *  storage than defined by the ANSI/ISO C++ resolution section r.7.2      *  which defines the range of an enum.       */
+comment|/*      *  The following code is unnecessary since the function      *  type_promotes_to deals correctly with promotion of enums of      *  underlying unsigned types to signed integer types.      *  Moreover, it causes an enum bitfield to require one more bit of      *  storage than defined by the ANSI/ISO C++ resolution section r.7.2      *  which defines the range of an enum.      */
 if|#
 directive|if
 literal|0
@@ -40805,7 +40805,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-comment|/* Now fill in DECL_REFERENCE_SLOT for any of the parm decls. 		     A parameter is assumed not to have any side effects. 		     If this should change for any reason, then this 		     will have to wrap the bashed reference type in a save_expr. 		      		     Also, if the parameter type is declared to be an X 		     and there is an X(X&) constructor, we cannot lay it 		     into the stack (any more), so we make this parameter 		     look like it is really of reference type.  Functions 		     which pass parameters to this function will know to 		     create a temporary in their frame, and pass a reference 		     to that.  */
+comment|/* Now fill in DECL_REFERENCE_SLOT for any of the parm decls. 		     A parameter is assumed not to have any side effects. 		     If this should change for any reason, then this 		     will have to wrap the bashed reference type in a save_expr.  		     Also, if the parameter type is declared to be an X 		     and there is an X(X&) constructor, we cannot lay it 		     into the stack (any more), so we make this parameter 		     look like it is really of reference type.  Functions 		     which pass parameters to this function will know to 		     create a temporary in their frame, and pass a reference 		     to that.  */
 if|if
 condition|(
 name|TREE_CODE

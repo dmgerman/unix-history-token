@@ -12,7 +12,7 @@ comment|/* Copyright (C) 1982, 1988, 1989 Walter Tichy    Copyright 1990, 1991 b
 end_comment
 
 begin_comment
-comment|/* $Log: rcskeep.c,v $  * Revision 5.4  1991/08/19  03:13:55  eggert  * Tune.  *  * Revision 5.3  1991/04/21  11:58:25  eggert  * Shorten names to keep them distinct on shortname hosts.  *  * Revision 5.2  1990/10/04  06:30:20  eggert  * Parse time zone offsets; future RCS versions may output them.  *  * Revision 5.1  1990/09/20  02:38:56  eggert  * ci -k now checks dates more thoroughly.  *  * Revision 5.0  1990/08/22  08:12:53  eggert  * Retrieve old log message if there is one.  * Don't require final newline.  * Remove compile-time limits; use malloc instead.  Tune.  * Permit dates past 1999/12/31.  Ansify and Posixate.  *  * Revision 4.6  89/05/01  15:12:56  narten  * changed copyright header to reflect current distribution rules  *   * Revision 4.5  88/08/09  19:13:03  eggert  * Remove lint and speed up by making FILE *fp local, not global.  *   * Revision 4.4  87/12/18  11:44:21  narten  * more lint cleanups (Guy Harris)  *   * Revision 4.3  87/10/18  10:35:50  narten  * Updating version numbers. Changes relative to 1.1 actually relative  * to 4.1  *   * Revision 1.3  87/09/24  14:00:00  narten  * Sources now pass through lint (if you ignore printf/sprintf/fprintf   * warnings)  *   * Revision 1.2  87/03/27  14:22:29  jenkins  * Port to suns  *   * Revision 4.1  83/05/10  16:26:44  wft  * Added new markers Id and RCSfile; extraction added.  * Marker matching with trymatch().  *   * Revision 3.2  82/12/24  12:08:26  wft  * added missing #endif.  *  * Revision 3.1  82/12/04  13:22:41  wft  * Initial revision.  *  */
+comment|/* $Log: rcskeep.c,v $  * Revision 1.1.1.1  1993/06/18  04:22:13  jkh  * Updated GNU utilities  *  * Revision 5.4  1991/08/19  03:13:55  eggert  * Tune.  *  * Revision 5.3  1991/04/21  11:58:25  eggert  * Shorten names to keep them distinct on shortname hosts.  *  * Revision 5.2  1990/10/04  06:30:20  eggert  * Parse time zone offsets; future RCS versions may output them.  *  * Revision 5.1  1990/09/20  02:38:56  eggert  * ci -k now checks dates more thoroughly.  *  * Revision 5.0  1990/08/22  08:12:53  eggert  * Retrieve old log message if there is one.  * Don't require final newline.  * Remove compile-time limits; use malloc instead.  Tune.  * Permit dates past 1999/12/31.  Ansify and Posixate.  *  * Revision 4.6  89/05/01  15:12:56  narten  * changed copyright header to reflect current distribution rules  *  * Revision 4.5  88/08/09  19:13:03  eggert  * Remove lint and speed up by making FILE *fp local, not global.  *  * Revision 4.4  87/12/18  11:44:21  narten  * more lint cleanups (Guy Harris)  *  * Revision 4.3  87/10/18  10:35:50  narten  * Updating version numbers. Changes relative to 1.1 actually relative  * to 4.1  *  * Revision 1.3  87/09/24  14:00:00  narten  * Sources now pass through lint (if you ignore printf/sprintf/fprintf  * warnings)  *  * Revision 1.2  87/03/27  14:22:29  jenkins  * Port to suns  *  * Revision 4.1  83/05/10  16:26:44  wft  * Added new markers Id and RCSfile; extraction added.  * Marker matching with trymatch().  *  * Revision 3.2  82/12/24  12:08:26  wft  * added missing #endif.  *  * Revision 3.1  82/12/04  13:22:41  wft  * Initial revision.  *  */
 end_comment
 
 begin_comment
@@ -34,7 +34,7 @@ name|libId
 argument_list|(
 argument|keepId
 argument_list|,
-literal|"$Id: rcskeep.c,v 5.4 1991/08/19 03:13:55 eggert Exp $"
+literal|"$Id: rcskeep.c,v 1.1.1.1 1993/06/18 04:22:13 jkh Exp $"
 argument_list|)
 end_macro
 

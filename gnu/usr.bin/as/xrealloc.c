@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* xrealloc.c - new memory or bust     Copyright (C) 1987, 1990, 1991, 1992 Free Software Foundation, Inc.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* xrealloc.c - new memory or bust     Copyright (C) 1987, 1990, 1991, 1992 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
-comment|/*       NAME   xrealloc () - get more memory or bust   INDEX   xrealloc () uses realloc ()   SYNOPSIS   char   *my_memory;      my_memory = xrealloc (my_memory, 42);   / * my_memory gets (perhaps new) address of 42 chars * /      DESCRIPTION      Use xrealloc () as an "error-free" realloc ().It does almost the same   job.  When it cannot honour your request for memory it BOMBS your   program with a "virtual memory exceeded" message.  Realloc() returns   NULL and does not bomb your program.      SEE ALSO   realloc ()   */
+comment|/*    NAME   xrealloc () - get more memory or bust   INDEX   xrealloc () uses realloc ()   SYNOPSIS   char   *my_memory;    my_memory = xrealloc (my_memory, 42);   / * my_memory gets (perhaps new) address of 42 chars * /    DESCRIPTION    Use xrealloc () as an "error-free" realloc ().It does almost the same   job.  When it cannot honour your request for memory it BOMBS your   program with a "virtual memory exceeded" message.  Realloc() returns   NULL and does not bomb your program.    SEE ALSO   realloc ()   */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: xrealloc.c,v 1.3 1993/10/02 20:58:03 pk Exp $"
+literal|"$Id: xrealloc.c,v 1.2 1993/11/03 00:52:34 paul Exp $"
 decl_stmt|;
 end_decl_stmt
 

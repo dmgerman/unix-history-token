@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * Various useful functions for the CVS support code.  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *  * Various useful functions for the CVS support code.  */
 end_comment
 
 begin_include
@@ -1667,7 +1667,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Compare "file1" to "file2". Return non-zero if they don't compare exactly.  *   * mallocs a buffer large enough to hold the entire file and does two reads to  * load the buffer and calls memcmp to do the cmp. This is reasonable, since  * source files are typically not too large.  */
+comment|/*  * Compare "file1" to "file2". Return non-zero if they don't compare exactly.  *  * mallocs a buffer large enough to hold the entire file and does two reads to  * load the buffer and calls memcmp to do the cmp. This is reasonable, since  * source files are typically not too large.  */
 end_comment
 
 begin_comment
@@ -2309,7 +2309,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * To exec a program under CVS, first call run_setup() to setup any initial  * arguments.  The options to run_setup are essentially like printf(). The  * arguments will be parsed into whitespace separated words and added to the  * global run_argv list.  *   * Then, optionally call run_arg() for each additional argument that you'd like  * to pass to the executed program.  *   * Finally, call run_exec() to execute the program with the specified arguments.  * The execvp() syscall will be used, so that the PATH is searched correctly.  * File redirections can be performed in the call to run_exec().  */
+comment|/*  * To exec a program under CVS, first call run_setup() to setup any initial  * arguments.  The options to run_setup are essentially like printf(). The  * arguments will be parsed into whitespace separated words and added to the  * global run_argv list.  *  * Then, optionally call run_arg() for each additional argument that you'd like  * to pass to the executed program.  *  * Finally, call run_exec() to execute the program with the specified arguments.  * The execvp() syscall will be used, so that the PATH is searched correctly.  * File redirections can be performed in the call to run_exec().  */
 end_comment
 
 begin_decl_stmt
@@ -2382,7 +2382,7 @@ modifier|...
 parameter_list|)
 else|#
 directive|else
-function|void  run_setup
+function|void run_setup
 parameter_list|(
 name|fmt
 parameter_list|,
@@ -2613,7 +2613,7 @@ modifier|...
 parameter_list|)
 else|#
 directive|else
-function|void  run_args
+function|void run_args
 parameter_list|(
 name|fmt
 parameter_list|,

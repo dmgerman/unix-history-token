@@ -346,7 +346,7 @@ name|int
 name|pw_lock
 parameter_list|()
 block|{
-comment|/*  	 * If the master password file doesn't exist, the system is hosed. 	 * Might as well try to build one.  Set the close-on-exec bit so 	 * that users can't get at the encrypted passwords while editing. 	 * Open should allow flock'ing the file; see 4.4BSD.	XXX 	 */
+comment|/* 	 * If the master password file doesn't exist, the system is hosed. 	 * Might as well try to build one.  Set the close-on-exec bit so 	 * that users can't get at the encrypted passwords while editing. 	 * Open should allow flock'ing the file; see 4.4BSD.	XXX 	 */
 name|lockfd
 operator|=
 name|open

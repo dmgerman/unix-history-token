@@ -17785,7 +17785,7 @@ return|;
 case|case
 name|REAL_CST
 case|:
-comment|/* If optimized, generate immediate CONST_DOUBLE 	 which will be turned into memory by reload if necessary.        	 We used to force a register so that loop.c could see it.  But 	 this does not allow gen_* patterns to perform optimizations with 	 the constants.  It also produces two insns in cases like "x = 1.0;". 	 On most machines, floating-point constants are not permitted in 	 many insns, so we'd end up copying it to a register in any case.  	 Now, we do the copying in expand_binop, if appropriate.  */
+comment|/* If optimized, generate immediate CONST_DOUBLE 	 which will be turned into memory by reload if necessary.  	 We used to force a register so that loop.c could see it.  But 	 this does not allow gen_* patterns to perform optimizations with 	 the constants.  It also produces two insns in cases like "x = 1.0;". 	 On most machines, floating-point constants are not permitted in 	 many insns, so we'd end up copying it to a register in any case.  	 Now, we do the copying in expand_binop, if appropriate.  */
 return|return
 name|immed_real_const
 argument_list|(
@@ -22585,7 +22585,7 @@ operator|&
 name|constant_term
 argument_list|)
 expr_stmt|;
-comment|/* CONSTANT_TERM and XEXP (op1, 1) are known to be constant, so 	     their sum should be a constant.  Form it into OP1, since the  	     result we want will then be OP0 + OP1.  */
+comment|/* CONSTANT_TERM and XEXP (op1, 1) are known to be constant, so 	     their sum should be a constant.  Form it into OP1, since the 	     result we want will then be OP0 + OP1.  */
 name|temp
 operator|=
 name|simplify_binary_operation
@@ -25258,7 +25258,7 @@ return|return
 name|target
 return|;
 block|}
-comment|/* If we are not to produce a result, we have no target.  Otherwise, 	   if a target was specified use it; it will not be used as an 	   intermediate target unless it is safe.  If no target, use a  	   temporary.  */
+comment|/* If we are not to produce a result, we have no target.  Otherwise, 	   if a target was specified use it; it will not be used as an 	   intermediate target unless it is safe.  If no target, use a 	   temporary.  */
 if|if
 condition|(
 name|ignore
@@ -28208,7 +28208,7 @@ expr_stmt|;
 name|end_sequence
 argument_list|()
 expr_stmt|;
-comment|/* Conjugate should appear as a single unit  	   If TARGET is a CONCAT, we got insns like RD = RS, ID = - IS, 	   each with a separate pseudo as destination. 	   It's not correct for flow to treat them as a unit.  */
+comment|/* Conjugate should appear as a single unit 	   If TARGET is a CONCAT, we got insns like RD = RS, ID = - IS, 	   each with a separate pseudo as destination. 	   It's not correct for flow to treat them as a unit.  */
 if|if
 condition|(
 name|GET_CODE
@@ -29057,7 +29057,7 @@ if|#
 directive|if
 literal|0
 comment|/* FIXME: the XXXX_STMT codes have been removed in GCC2, but 	 how are they handled instead? */
-block|case LET_STMT:              TREE_USED (exp) = 1;       bc_expand_expr (STMT_BODY (exp));       return;
+block|case LET_STMT:        TREE_USED (exp) = 1;       bc_expand_expr (STMT_BODY (exp));       return;
 endif|#
 directive|endif
 case|case
@@ -33982,7 +33982,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Return the offset of register REGNO into the block returned by     __builtin_apply_args.  This is not declared static, since it is    needed in objc-act.c. */
+comment|/* Return the offset of register REGNO into the block returned by    __builtin_apply_args.  This is not declared static, since it is    needed in objc-act.c. */
 end_comment
 
 begin_function

@@ -4,7 +4,7 @@ comment|/* Table of opcodes for the sparc. 	Copyright 1989, 1991, 1992 Free Soft
 end_comment
 
 begin_comment
-comment|/*  * $Id: sparc.h,v 1.1 1993/11/03 00:56:11 paul Exp $  */
+comment|/*  * $Id: sparc.h,v 1.2 1994/12/23 22:37:45 nate Exp $  */
 end_comment
 
 begin_comment
@@ -140,7 +140,7 @@ comment|/*  All sparc opcodes are 32 bits, except for the `set' instruction (rea
 end_comment
 
 begin_comment
-comment|/* The order of the opcodes in this table is significant: 	 	* The assembler requires that all instances of the same mnemonic must 	be consecutive.	If they aren't, the assembler will bomb at runtime.  	* The disassembler should not care about the order of the opcodes.  */
+comment|/* The order of the opcodes in this table is significant:  	* The assembler requires that all instances of the same mnemonic must 	be consecutive.	If they aren't, the assembler will bomb at runtime.  	* The disassembler should not care about the order of the opcodes.  */
 end_comment
 
 begin_define
@@ -17034,7 +17034,7 @@ literal|0
 block|,
 name|v6
 block|}
-block|,        }
+block|,    }
 decl_stmt|;
 end_decl_stmt
 

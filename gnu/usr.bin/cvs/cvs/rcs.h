@@ -4,7 +4,7 @@ comment|/* $CVSid: @(#)rcs.h 1.18 94/09/23 $	 */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * RCS source control definitions needed by rcs.c and friends  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *  * RCS source control definitions needed by rcs.c and friends  */
 end_comment
 
 begin_define

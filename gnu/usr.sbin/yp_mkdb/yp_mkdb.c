@@ -4,7 +4,7 @@ comment|/*     YPS-0.2, NIS-Server for Linux     Copyright (C) 1994  Tobias Rebe
 end_comment
 
 begin_comment
-comment|/*  * $Id: yp_mkdb.c,v 1.1 1995/01/31 08:43:07 wpaul Exp $  */
+comment|/*  * $Id: yp_mkdb.c,v 1.2 1995/03/31 19:45:13 wpaul Exp $  */
 end_comment
 
 begin_define

@@ -4,7 +4,7 @@ comment|/* Basic 80960 instruction formats.  *  * The 'COJ' instructions are act
 end_comment
 
 begin_comment
-comment|/* $Id: i960.h,v 1.1 1993/10/02 21:00:44 pk Exp $ */
+comment|/* $Id: i960.h,v 1.1 1993/11/03 00:55:56 paul Exp $ */
 end_comment
 
 begin_define
@@ -117,7 +117,7 @@ value|0x2000
 end_define
 
 begin_comment
-comment|/* Generate the 12-bit opcode for a REG format instruction by placing the   * high 8 bits in instruction bits 24-31, the low 4 bits in instruction bits  * 7-10.  */
+comment|/* Generate the 12-bit opcode for a REG format instruction by placing the  * high 8 bits in instruction bits 24-31, the low 4 bits in instruction bits  * 7-10.  */
 end_comment
 
 begin_define

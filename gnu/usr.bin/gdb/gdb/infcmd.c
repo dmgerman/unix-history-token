@@ -2931,7 +2931,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* We have both a space and an equals.  If the space is before the 	 equals, walk forward over the spaces til we see a nonspace  	 (possibly the equals). */
+comment|/* We have both a space and an equals.  If the space is before the 	 equals, walk forward over the spaces til we see a nonspace 	 (possibly the equals). */
 if|if
 condition|(
 name|p

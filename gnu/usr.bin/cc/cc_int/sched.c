@@ -3673,7 +3673,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Functions to compute memory dependencies.     Since we process the insns in execution order, we can build tables    to keep track of what registers are fixed (and not aliased), what registers    are varying in known ways, and what registers are varying in unknown    ways.     If both memory references are volatile, then there must always be a    dependence between the two references, since their order can not be    changed.  A volatile and non-volatile reference can be interchanged    though.      A MEM_IN_STRUCT reference at a non-QImode varying address can never    conflict with a non-MEM_IN_STRUCT reference at a fixed address.   We must    allow QImode aliasing because the ANSI C standard allows character    pointers to alias anything.  We are assuming that characters are    always QImode here.  */
+comment|/* Functions to compute memory dependencies.     Since we process the insns in execution order, we can build tables    to keep track of what registers are fixed (and not aliased), what registers    are varying in known ways, and what registers are varying in unknown    ways.     If both memory references are volatile, then there must always be a    dependence between the two references, since their order can not be    changed.  A volatile and non-volatile reference can be interchanged    though.     A MEM_IN_STRUCT reference at a non-QImode varying address can never    conflict with a non-MEM_IN_STRUCT reference at a fixed address.   We must    allow QImode aliasing because the ANSI C standard allows character    pointers to alias anything.  We are assuming that characters are    always QImode here.  */
 end_comment
 
 begin_comment
@@ -11386,7 +11386,7 @@ block|{
 name|rtx
 name|link
 decl_stmt|;
-comment|/* The number of registers killed after scheduling must be the same as the      number of registers killed before scheduling.  The number of REG_DEAD      notes may not be conserved, i.e. two SImode hard register REG_DEAD notes      might become one DImode hard register REG_DEAD note, but the number of      registers killed will be conserved.            We carefully remove REG_DEAD notes from the dead_notes list, so that      there will be none left at the end.  If we run out early, then there      is a bug somewhere in flow, combine and/or sched.  */
+comment|/* The number of registers killed after scheduling must be the same as the      number of registers killed before scheduling.  The number of REG_DEAD      notes may not be conserved, i.e. two SImode hard register REG_DEAD notes      might become one DImode hard register REG_DEAD note, but the number of      registers killed will be conserved.       We carefully remove REG_DEAD notes from the dead_notes list, so that      there will be none left at the end.  If we run out early, then there      is a bug somewhere in flow, combine and/or sched.  */
 if|if
 condition|(
 name|dead_notes
@@ -11912,7 +11912,7 @@ operator|)
 expr_stmt|;
 block|}
 block|}
-comment|/* If it wasn't live before we started, then add a REG_DEAD note. 	   We must check the previous lifetime info not the current info, 	   because we may have to execute this code several times, e.g. 	   once for a clobber (which doesn't add a note) and later 	   for a use (which does add a note). 	    	   Always make the register live.  We must do this even if it was 	   live before, because this may be an insn which sets and uses 	   the same register, in which case the register has already been 	   killed, so we must make it live again.  	   Global registers are always live, and should never have a REG_DEAD 	   note added for them, so none of the code below applies to them.  */
+comment|/* If it wasn't live before we started, then add a REG_DEAD note. 	   We must check the previous lifetime info not the current info, 	   because we may have to execute this code several times, e.g. 	   once for a clobber (which doesn't add a note) and later 	   for a use (which does add a note).  	   Always make the register live.  We must do this even if it was 	   live before, because this may be an insn which sets and uses 	   the same register, in which case the register has already been 	   killed, so we must make it live again.  	   Global registers are always live, and should never have a REG_DEAD 	   note added for them, so none of the code below applies to them.  */
 if|if
 condition|(
 name|regno

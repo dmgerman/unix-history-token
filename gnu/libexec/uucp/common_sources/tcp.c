@@ -21,7 +21,7 @@ name|char
 name|tcp_rcsid
 index|[]
 init|=
-literal|"$Id: tcp.c,v 1.34 1994/01/30 21:01:46 ian Rel $"
+literal|"$Id: tcp.c,v 1.2 1994/05/07 18:09:01 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -769,7 +769,7 @@ name|reserved
 decl_stmt|;
 comment|/* --------- The remaining fields are for internal use only. --------- */
 comment|/* --------- But! they should be initialized to 0.	       --------- */
-comment|/* NODEC is the number of nodes in the NFA with non-epsilon    * orx transitions.     */
+comment|/* NODEC is the number of nodes in the NFA with non-epsilon    * orx transitions.    */
 name|int
 name|nodec
 decl_stmt|;
@@ -788,7 +788,7 @@ name|struct
 name|rx_hash
 name|set_list_memo
 decl_stmt|;
-comment|/* The instruction table is indexed by the enum of instructions defined in     * rxrun.h.  The values in the table are used to fill in the `inx'    * slot of instruction frames (see rxrun.h).    */
+comment|/* The instruction table is indexed by the enum of instructions defined in    * rxrun.h.  The values in the table are used to fill in the `inx'    * slot of instruction frames (see rxrun.h).    */
 name|void
 modifier|*
 modifier|*
@@ -818,7 +818,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* An RX NFA may contain epsilon edges labeled with side effects.  * These side effects represent match actions that can not normally be  * defined in a `pure' NFA; for example, recording the location at  * which a paren is crossed in a register structure.    *  * A matcher is supposed to find a particular path  * through the NFA (such as leftmost-longest), and then to execute the  * side effects along that path.  Operationally, the space of paths is  * searched and side effects are carried out incrementally, and with  * backtracking.  *  * As the NFA is manipulated during matching sets of side effects.  * Simple lists are used to hold side effect lists.   */
+comment|/* An RX NFA may contain epsilon edges labeled with side effects.  * These side effects represent match actions that can not normally be  * defined in a `pure' NFA; for example, recording the location at  * which a paren is crossed in a register structure.  *  * A matcher is supposed to find a particular path  * through the NFA (such as leftmost-longest), and then to execute the  * side effects along that path.  Operationally, the space of paths is  * searched and side effects are carried out incrementally, and with  * backtracking.  *  * As the NFA is manipulated during matching sets of side effects.  * Simple lists are used to hold side effect lists.  */
 end_comment
 
 begin_typedef
@@ -1077,13 +1077,13 @@ begin_enum
 enum|enum
 name|rx_opcode
 block|{
-comment|/*     * BACKTRACK_POINT is invoked when a transition results in more    * than one possible future.    *    * There is one occurence of this instruction per transition_class    * structure; that occurence is only ever executed if the     * transition_class contains a list of more than 1 edge.    */
+comment|/*    * BACKTRACK_POINT is invoked when a transition results in more    * than one possible future.    *    * There is one occurence of this instruction per transition_class    * structure; that occurence is only ever executed if the    * transition_class contains a list of more than 1 edge.    */
 name|rx_backtrack_point
 init|=
 literal|0
 block|,
 comment|/* data is (struct transition_class *) */
-comment|/*     * RX_DO_SIDE_EFFECTS evaluates the side effects of an epsilon path.    * There is one occurence of this instruction per rx_distinct_future.    * This instruction is skipped if a rx_distinct_future has no side effects.    */
+comment|/*    * RX_DO_SIDE_EFFECTS evaluates the side effects of an epsilon path.    * There is one occurence of this instruction per rx_distinct_future.    * This instruction is skipped if a rx_distinct_future has no side effects.    */
 name|rx_do_side_effects
 init|=
 name|rx_backtrack_point
@@ -1091,7 +1091,7 @@ operator|+
 literal|1
 block|,
 comment|/* data is (struct rx_distinct_future *) */
-comment|/*     * RX_CACHE_MISS instructions are stored in rx_distinct_futures whose    * destination superstate has been reclaimed (or was never built).    * It recomputes the destination superstate.    * RX_CACHE_MISS is also stored in a superstate transition table before    * any of its edges have been built.    */
+comment|/*    * RX_CACHE_MISS instructions are stored in rx_distinct_futures whose    * destination superstate has been reclaimed (or was never built).    * It recomputes the destination superstate.    * RX_CACHE_MISS is also stored in a superstate transition table before    * any of its edges have been built.    */
 name|rx_cache_miss
 init|=
 name|rx_do_side_effects
@@ -1099,7 +1099,7 @@ operator|+
 literal|1
 block|,
 comment|/* data is (struct rx_distinct_future *) */
-comment|/*     * RX_NEXT_CHAR is called to consume the next character and take the    * corresponding transition.  This is the only instruction that uses     * the DATA field of the instruction frame instead of DATA_2.    * (see EXPLORE_FUTURE in regex.c).    */
+comment|/*    * RX_NEXT_CHAR is called to consume the next character and take the    * corresponding transition.  This is the only instruction that uses    * the DATA field of the instruction frame instead of DATA_2.    * (see EXPLORE_FUTURE in regex.c).    */
 name|rx_next_char
 init|=
 name|rx_cache_miss
@@ -1115,7 +1115,7 @@ operator|+
 literal|1
 block|,
 comment|/* no data */
-comment|/*     * RX_ERROR_INX is stored only in places that should never be executed.    */
+comment|/*    * RX_ERROR_INX is stored only in places that should never be executed.    */
 name|rx_error_inx
 init|=
 name|rx_backtrack
@@ -1162,7 +1162,7 @@ comment|/*  If the instruction is `rx_next_char' then data is valid.  Otherwise 
 end_comment
 
 begin_endif
-unit|struct rx_inx  {   void * inx;   void * data;   void * data_2; };
+unit|struct rx_inx {   void * inx;   void * data;   void * data_2; };
 endif|#
 directive|endif
 end_endif
@@ -1245,7 +1245,7 @@ value|(++(CON)->refs)
 end_define
 
 begin_comment
-comment|/* Every character occurs in at most one super edge per super-state.  * But, that edge might have more than one option, indicating a point  * of non-determinism.   */
+comment|/* Every character occurs in at most one super edge per super-state.  * But, that edge might have more than one option, indicating a point  * of non-determinism.  */
 end_comment
 
 begin_struct
@@ -1277,7 +1277,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* A superstate is a set of nfa states (RX_SUPERSET) along  * with a transition table.  Superstates are built on demand and reclaimed  * without warning.  To protect a superstate, use LOCK_SUPERSTATE.  *  * Joe Keane thought of calling these superstates and several people  * have commented on what a good name it is for what they do.   */
+comment|/* A superstate is a set of nfa states (RX_SUPERSET) along  * with a transition table.  Superstates are built on demand and reclaimed  * without warning.  To protect a superstate, use LOCK_SUPERSTATE.  *  * Joe Keane thought of calling these superstates and several people  * have commented on what a good name it is for what they do.  */
 end_comment
 
 begin_struct
@@ -1498,7 +1498,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* You use this to control the allocation of superstate data   * during matching.  Most of it should be initialized to 0.  *  * A MORECORE function is necessary.  It should allocate  * a new block of memory or return 0.  * A default that uses malloc is called `rx_morecore'.  *  * The number of SUPERSTATES_ALLOWED indirectly limits how much memory  * the system will try to allocate.  The default is 128.  Batch style  * applications that are very regexp intensive should use as high a number  * as possible without thrashing.  *   * The LOCAL_CSET_SIZE is the number of characters in a character set.  * It is therefore the number of entries in a superstate transition table.  * Generally, it should be 256.  If your character set has 16 bits,   * it is better to translate your regexps into equivalent 8 bit patterns.  */
+comment|/* You use this to control the allocation of superstate data  * during matching.  Most of it should be initialized to 0.  *  * A MORECORE function is necessary.  It should allocate  * a new block of memory or return 0.  * A default that uses malloc is called `rx_morecore'.  *  * The number of SUPERSTATES_ALLOWED indirectly limits how much memory  * the system will try to allocate.  The default is 128.  Batch style  * applications that are very regexp intensive should use as high a number  * as possible without thrashing.  *  * The LOCAL_CSET_SIZE is the number of characters in a character set.  * It is therefore the number of entries in a superstate transition table.  * Generally, it should be 256.  If your character set has 16 bits,  * it is better to translate your regexps into equivalent 8 bit patterns.  */
 end_comment
 
 begin_struct
@@ -1509,7 +1509,7 @@ name|struct
 name|rx_hash_rules
 name|superset_hash_rules
 decl_stmt|;
-comment|/* Objects are allocated by incrementing a pointer that     * scans across rx_blocklists.    */
+comment|/* Objects are allocated by incrementing a pointer that    * scans across rx_blocklists.    */
 name|struct
 name|rx_blocklist
 modifier|*
@@ -1786,7 +1786,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/* Back_check should advance the position it is passed   * over rparen - lparen characters and return pass iff  * the characters starting at POS match those indexed  * by [LPAREN..RPAREN].  *  * If a continuation is returned, then the reentering call to  * a search function will retry the back_check.  */
+comment|/* Back_check should advance the position it is passed  * over rparen - lparen characters and return pass iff  * the characters starting at POS match those indexed  * by [LPAREN..RPAREN].  *  * If a continuation is returned, then the reentering call to  * a search function will retry the back_check.  */
 end_comment
 
 begin_ifdef
@@ -1943,7 +1943,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* regex.h  *   * The remaining declarations replace regex.h.  */
+comment|/* regex.h  *  * The remaining declarations replace regex.h.  */
 end_comment
 
 begin_comment
@@ -2113,7 +2113,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/* These hold paramaters for the kinds of side effects that are possible  * in the supported pattern languages.  These include things like the   * numeric bounds of {} operators and the index of paren registers for   * subexpression measurement or backreferencing.  */
+comment|/* These hold paramaters for the kinds of side effects that are possible  * in the supported pattern languages.  These include things like the  * numeric bounds of {} operators and the index of paren registers for  * subexpression measurement or backreferencing.  */
 end_comment
 
 begin_struct
@@ -2187,7 +2187,7 @@ name|least_subs
 range|:
 literal|1
 decl_stmt|;
-comment|/* If set, and returning registers, return 				 * as few values as possible.  Only  				 * backreferenced groups and group 0 (the whole 				 * match) will be returned. 				 */
+comment|/* If set, and returning registers, return 				 * as few values as possible.  Only 				 * backreferenced groups and group 0 (the whole 				 * match) will be returned. 				 */
 comment|/* If true, this says that the matcher should keep registers on its    * backtracking stack.  For many patterns, we can easily determine that    * this isn't necessary.    */
 name|unsigned
 name|int
@@ -2216,7 +2216,7 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* Anchored to char position 0? */
-comment|/* If REGS_UNALLOCATED, allocate space in the `regs' structure    * for `max (RE_NREGS, re_nsub + 1)' groups.    * If REGS_REALLOCATE, reallocate space if necessary.    * If REGS_FIXED, use what's there.      */
+comment|/* If REGS_UNALLOCATED, allocate space in the `regs' structure    * for `max (RE_NREGS, re_nsub + 1)' groups.    * If REGS_REALLOCATE, reallocate space if necessary.    * If REGS_FIXED, use what's there.    */
 define|#
 directive|define
 name|REGS_UNALLOCATED
@@ -2241,7 +2241,7 @@ name|char
 modifier|*
 name|translate
 decl_stmt|;
-comment|/* If this is a valid pointer, it tells rx not to store the extents of     * certain subexpressions (those corresponding to non-zero entries).    * Passing 0x1 is the same as passing an array of all ones.  Passing 0x0    * is the same as passing an array of all zeros.    * The array should contain as many entries as their are subexps in the     * regexp.    */
+comment|/* If this is a valid pointer, it tells rx not to store the extents of    * certain subexpressions (those corresponding to non-zero entries).    * Passing 0x1 is the same as passing an array of all ones.  Passing 0x0    * is the same as passing an array of all zeros.    * The array should contain as many entries as their are subexps in the    * regexp.    */
 name|char
 modifier|*
 name|syntax_parens
@@ -2406,7 +2406,7 @@ value|(1)
 end_define
 
 begin_comment
-comment|/* If this bit is not set, then + and ? are operators, and \+ and \? are      literals.     If set, then \+ and \? are operators and + and ? are literals.  */
+comment|/* If this bit is not set, then + and ? are operators, and \+ and \? are      literals.    If set, then \+ and \? are operators and + and ? are literals.  */
 end_comment
 
 begin_define
@@ -2428,7 +2428,7 @@ value|(RE_BK_PLUS_QM<< 1)
 end_define
 
 begin_comment
-comment|/* If this bit is set, then ^ and $ are always anchors (outside bracket      expressions, of course).    If this bit is not set, then it depends:         ^  is an anchor if it is at the beginning of a regular            expression or after an open-group or an alternation operator;         $  is an anchor if it is at the end of a regular expression, or            before a close-group or an alternation operator.       This bit could be (re)combined with RE_CONTEXT_INDEP_OPS, because    POSIX draft 11.2 says that * etc. in leading positions is undefined.    We already implemented a previous draft which made those constructs    invalid, though, so we haven't changed the code back.  */
+comment|/* If this bit is set, then ^ and $ are always anchors (outside bracket      expressions, of course).    If this bit is not set, then it depends:         ^  is an anchor if it is at the beginning of a regular            expression or after an open-group or an alternation operator;         $  is an anchor if it is at the end of a regular expression, or            before a close-group or an alternation operator.     This bit could be (re)combined with RE_CONTEXT_INDEP_OPS, because    POSIX draft 11.2 says that * etc. in leading positions is undefined.    We already implemented a previous draft which made those constructs    invalid, though, so we haven't changed the code back.  */
 end_comment
 
 begin_define
@@ -2439,7 +2439,7 @@ value|(RE_CHAR_CLASSES<< 1)
 end_define
 
 begin_comment
-comment|/* If this bit is set, then special characters are always special      regardless of where they are in the pattern.    If this bit is not set, then special characters are special only in      some contexts; otherwise they are ordinary.  Specifically,       * + ? and intervals are only special when not after the beginning,      open-group, or alternation operator.  */
+comment|/* If this bit is set, then special characters are always special      regardless of where they are in the pattern.    If this bit is not set, then special characters are special only in      some contexts; otherwise they are ordinary.  Specifically,      * + ? and intervals are only special when not after the beginning,      open-group, or alternation operator.  */
 end_comment
 
 begin_define
@@ -2494,7 +2494,7 @@ value|(RE_DOT_NOT_NULL<< 1)
 end_define
 
 begin_comment
-comment|/* If this bit is set, either \{...\} or {...} defines an      interval, depending on RE_NO_BK_BRACES.     If not set, \{, \}, {, and } are literals.  */
+comment|/* If this bit is set, either \{...\} or {...} defines an      interval, depending on RE_NO_BK_BRACES.    If not set, \{, \}, {, and } are literals.  */
 end_comment
 
 begin_define
@@ -2560,7 +2560,7 @@ value|(RE_NO_BK_PARENS<< 1)
 end_define
 
 begin_comment
-comment|/* If this bit is set, then | is an alternation operator, and \| is literal.     If not set, then \| is an alternation operator, and | is literal.  */
+comment|/* If this bit is set, then | is an alternation operator, and \| is literal.    If not set, then \| is an alternation operator, and | is literal.  */
 end_comment
 
 begin_define
@@ -2848,7 +2848,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* If `regs_allocated' is REGS_UNALLOCATED in the pattern buffer,  * `re_match_2' returns information about at least this many registers  * the first time a `regs' structure is passed.   *  * Also, this is the greatest number of backreferenced subexpressions  * allowed in a pattern being matched without caller-supplied registers.  */
+comment|/* If `regs_allocated' is REGS_UNALLOCATED in the pattern buffer,  * `re_match_2' returns information about at least this many registers  * the first time a `regs' structure is passed.  *  * Also, this is the greatest number of backreferenced subexpressions  * allowed in a pattern being matched without caller-supplied registers.  */
 end_comment
 
 begin_ifndef
@@ -2894,7 +2894,7 @@ name|RX_WANT_RX_DEFS
 end_ifdef
 
 begin_comment
-comment|/* This is decls to the interesting subsystems and lower layers  * of rx.  Everything which doesn't have a public counterpart in   * regex.c is declared here.  */
+comment|/* This is decls to the interesting subsystems and lower layers  * of rx.  Everything which doesn't have a public counterpart in  * regex.c is declared here.  */
 end_comment
 
 begin_ifdef
@@ -4891,7 +4891,7 @@ name|char
 modifier|*
 name|counter_stack_sp
 decl_stmt|;
-comment|/* A frame is used to save the matchers state when it crosses a     * backtracking point.  The `stk_' fields correspond to variables    * in re_search_2 (just strip off thes `stk_').  They are documented    * tere.    */
+comment|/* A frame is used to save the matchers state when it crosses a    * backtracking point.  The `stk_' fields correspond to variables    * in re_search_2 (just strip off thes `stk_').  They are documented    * tere.    */
 name|struct
 name|rx_superstate
 modifier|*
@@ -4914,7 +4914,7 @@ decl_stmt|;
 name|int
 name|stk_test_ret
 decl_stmt|;
-comment|/* This is the list of options left to explore at the backtrack    * point for which this frame was created.     */
+comment|/* This is the list of options left to explore at the backtrack    * point for which this frame was created.    */
 name|struct
 name|rx_distinct_future
 modifier|*
@@ -5068,7 +5068,7 @@ name|int
 modifier|*
 name|best_rpspace
 decl_stmt|;
-comment|/* values, we still need space to store 				 * them.  Normally, this memoryis unused 				 * and the space pointed to by REGS is  				 * used instead. 				 */
+comment|/* values, we still need space to store 				 * them.  Normally, this memoryis unused 				 * and the space pointed to by REGS is 				 * used instead. 				 */
 name|int
 name|last_l
 decl_stmt|;
@@ -5086,7 +5086,7 @@ name|int
 modifier|*
 name|best_rparen
 decl_stmt|;
-comment|/* assignments.  				 * This may point to the same mem as 				 * best_lpspace, or it might point to memory 				 * passed by the caller. 				 */
+comment|/* assignments. 				 * This may point to the same mem as 				 * best_lpspace, or it might point to memory 				 * passed by the caller. 				 */
 name|int
 name|best_last_l
 decl_stmt|;
@@ -5167,7 +5167,7 @@ name|enum
 name|rx_fastmap_entry
 name|fastmap_resume_pt
 decl_stmt|;
-comment|/**    ** state for test_match     **/
+comment|/**    ** state for test_match    **/
 comment|/* The current superNFA position of the matcher. */
 name|struct
 name|rx_superstate
@@ -5211,7 +5211,7 @@ name|rx_stack_chunk
 modifier|*
 name|free_chunks
 decl_stmt|;
-comment|/* To return from this function, set test_ret and     * `goto test_do_return'.    *    * Possible return values are:    *     1   --- end of string while the superNFA is still going    *     0   --- internal error (out of memory)    *	-1   --- search completed by reaching the superNFA fail state    *    -2   --- a match was found, maybe not the longest.    *    * When the search is complete (-1), best_last_r indicates whether    * a match was found.    *    * -2 is return only if search_state.first_found is non-zero.    *    * if search_state.first_found is non-zero, a return of -1 indicates no match,    * otherwise, best_last_r has to be checked.    */
+comment|/* To return from this function, set test_ret and    * `goto test_do_return'.    *    * Possible return values are:    *     1   --- end of string while the superNFA is still going    *     0   --- internal error (out of memory)    *	-1   --- search completed by reaching the superNFA fail state    *    -2   --- a match was found, maybe not the longest.    *    * When the search is complete (-1), best_last_r indicates whether    * a match was found.    *    * -2 is return only if search_state.first_found is non-zero.    *    * if search_state.first_found is non-zero, a return of -1 indicates no match,    * otherwise, best_last_r has to be checked.    */
 name|int
 name|test_ret
 decl_stmt|;
@@ -5224,7 +5224,7 @@ name|RX_DEBUG
 name|int
 name|backtrack_depth
 decl_stmt|;
-comment|/* There is a search tree with every node as set of deterministic    * transitions in the super nfa.  For every branch of a     * backtrack point is an edge in the tree.    * This counts up a pre-order of nodes in that tree.    * It's saved on the search stack and printed when debugging.     */
+comment|/* There is a search tree with every node as set of deterministic    * transitions in the super nfa.  For every branch of a    * backtrack point is an edge in the tree.    * This counts up a pre-order of nodes in that tree.    * It's saved on the search stack and printed when debugging.    */
 name|int
 name|line_no
 decl_stmt|;
@@ -5325,7 +5325,7 @@ operator|)
 name|rx_slowmap
 operator|)
 expr_stmt|;
-comment|/* Update the fastmap now if not correct already.     * When the regexp was compiled, the fastmap was computed    * and stored in a bitset.  This expands the bitset into a    * character array containing 1s and 0s.    */
+comment|/* Update the fastmap now if not correct already.    * When the regexp was compiled, the fastmap was computed    * and stored in a bitset.  This expands the bitset into a    * character array containing 1s and 0s.    */
 if|if
 condition|(
 operator|(
@@ -5490,7 +5490,7 @@ name|rx_fastmap_start
 case|:
 name|init_fastmap_sentinal
 label|:
-comment|/* For the sake of fast fastmapping, set a sentinal in the fastmap.        * This sentinal will trap the fastmap loop when it reaches the last        * valid character in a string half.        *        * This must be reset when the fastmap/search loop crosses a string         * boundry, and before returning to the caller.  So sometimes,        * the fastmap loop is restarted with `continue', othertimes by        * `goto init_fastmap_sentinal'.        */
+comment|/* For the sake of fast fastmapping, set a sentinal in the fastmap.        * This sentinal will trap the fastmap loop when it reaches the last        * valid character in a string half.        *        * This must be reset when the fastmap/search loop crosses a string        * boundry, and before returning to the caller.  So sometimes,        * the fastmap loop is restarted with `continue', othertimes by        * `goto init_fastmap_sentinal'.        */
 if|if
 condition|(
 name|search_state
@@ -5864,7 +5864,7 @@ case|:
 name|fastmap_hit_bound
 label|:
 block|{
-comment|/* If we hit a bound, it may be time to fetch another burst 	 * of string, or it may be time to return a continuation to   	 * the caller, or it might be time to fail. 	 */
+comment|/* If we hit a bound, it may be time to fetch another burst 	 * of string, or it may be time to return a continuation to  	 * the caller, or it might be time to fail. 	 */
 name|int
 name|burst_state
 decl_stmt|;
@@ -5914,7 +5914,7 @@ goto|;
 case|case
 name|rx_get_burst_no_more
 case|:
-comment|/* ...not a string split, simply no more string.  	     * 	     * When searching backward, running out of string 	     * is reason to quit. 	     * 	     * When searching forward, we allow the possibility 	     * of an (empty) match after the last character in the 	     * virtual string.  So, fall through to the matcher 	     */
+comment|/* ...not a string split, simply no more string. 	     * 	     * When searching backward, running out of string 	     * is reason to quit. 	     * 	     * When searching forward, we allow the possibility 	     * of an (empty) match after the last character in the 	     * virtual string.  So, fall through to the matcher 	     */
 return|return
 operator|(
 operator|(
@@ -5948,7 +5948,7 @@ name|emacs
 end_ifdef
 
 begin_comment
-comment|/* The `emacs' switch turns on certain matching commands  * that make sense only in Emacs.   */
+comment|/* The `emacs' switch turns on certain matching commands  * that make sense only in Emacs.  */
 end_comment
 
 begin_include
@@ -6020,7 +6020,7 @@ comment|/* not RX_RX_MEMDBUG */
 end_comment
 
 begin_comment
-comment|/* We used to test for `BSTRING' here, but only GCC and Emacs define  * `BSTRING', as far as I know, and neither of them use this code.    */
+comment|/* We used to test for `BSTRING' here, but only GCC and Emacs define  * `BSTRING', as far as I know, and neither of them use this code.  */
 end_comment
 
 begin_if
@@ -6255,7 +6255,7 @@ comment|/* not emacs */
 end_comment
 
 begin_comment
-comment|/* Test if at very beginning or at very end of the virtual concatenation  *  of `string1' and `string2'.  If only one string, it's `string2'.    */
+comment|/* Test if at very beginning or at very end of the virtual concatenation  *  of `string1' and `string2'.  If only one string, it's `string2'.  */
 end_comment
 
 begin_define
@@ -6277,7 +6277,7 @@ value|(   (total_size - 1)	 \    == ((search_state.test_pos.pos - search_state.t
 end_define
 
 begin_comment
-comment|/* Test if POS + 1 points to a character which is word-constituent.  We have  * two special cases to check for: if past the end of string1, look at  * the first character in string2; and if before the beginning of  * string2, look at the last character in string1.  *  * Assumes `string1' exists, so use in conjunction with AT_STRINGS_BEG ().    */
+comment|/* Test if POS + 1 points to a character which is word-constituent.  We have  * two special cases to check for: if past the end of string1, look at  * the first character in string2; and if before the beginning of  * string2, look at the last character in string1.  *  * Assumes `string1' exists, so use in conjunction with AT_STRINGS_BEG ().  */
 end_comment
 
 begin_define
@@ -6294,7 +6294,7 @@ value|(   SYNTAX (fetch_char(POS, OFF, app_closure, stop))			\    == Sword)
 end_define
 
 begin_comment
-comment|/* Test if the character at D and the one after D differ with respect  * to being word-constituent.    */
+comment|/* Test if the character at D and the one after D differ with respect  * to being word-constituent.  */
 end_comment
 
 begin_define
@@ -6770,7 +6770,7 @@ operator|=
 literal|0
 operator|)
 expr_stmt|;
-comment|/* figure the number of registers we may need for use in backreferences.        * the number here includes an element for register zero.          */
+comment|/* figure the number of registers we may need for use in backreferences.        * the number here includes an element for register zero.        */
 name|search_state
 operator|.
 name|num_regs
@@ -7335,7 +7335,7 @@ else|:
 name|rx_id_translation
 operator|)
 expr_stmt|;
-comment|/*        * two nfa's were compiled.          * `0' is complete.        * `1' faster but gets registers wrong and ends too soon.        */
+comment|/*        * two nfa's were compiled.        * `0' is complete.        * `1' faster but gets registers wrong and ends too soon.        */
 name|search_state
 operator|.
 name|nfa_choice
@@ -7470,7 +7470,7 @@ name|rx_nfa_state_set
 modifier|*
 name|start_nfa_set
 decl_stmt|;
-comment|/* we presume here that the nfa start state has only one 	 * possible future with no side effects.   	 */
+comment|/* we presume here that the nfa start state has only one 	 * possible future with no side effects. 	 */
 name|start_nfa_set
 operator|=
 name|rxb
@@ -7779,7 +7779,7 @@ case|:
 break|break;
 block|}
 block|}
-comment|/* now the fastmap loop has brought us to a plausible  	 * starting point for a match.  so, it's time to run the 	 * nfa and see if a match occured. 	 */
+comment|/* now the fastmap loop has brought us to a plausible 	 * starting point for a match.  so, it's time to run the 	 * nfa and see if a match occured. 	 */
 name|startpos
 operator|=
 operator|(
@@ -8295,7 +8295,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* This is while (1)...except that the body of the loop is interrupted       * by some alternative entry points.      */
+comment|/* This is while (1)...except that the body of the loop is interrupted      * by some alternative entry points.      */
 name|pseudo_while_1
 label|:
 switch|switch
@@ -8327,7 +8327,7 @@ case|:
 ifdef|#
 directive|ifdef
 name|RX_DEBUG
-comment|/* There is a search tree with every node as set of deterministic 	 * transitions in the super nfa.  For every branch of a  	 * backtrack point is an edge in the tree. 	 * This counts up a pre-order of nodes in that tree. 	 * It's saved on the search stack and printed when debugging.  	 */
+comment|/* There is a search tree with every node as set of deterministic 	 * transitions in the super nfa.  For every branch of a 	 * backtrack point is an edge in the tree. 	 * This counts up a pre-order of nodes in that tree. 	 * It's saved on the search stack and printed when debugging. 	 */
 name|search_state
 operator|.
 name|line_no
@@ -8344,7 +8344,7 @@ endif|#
 directive|endif
 name|top_of_cycle
 label|:
-comment|/* A superstate is basicly a transition table, indexed by  	 * characters from the string being tested, and containing  	 * RX_INX (`instruction frame') structures. 	 */
+comment|/* A superstate is basicly a transition table, indexed by 	 * characters from the string being tested, and containing 	 * RX_INX (`instruction frame') structures. 	 */
 name|search_state
 operator|.
 name|ifr
@@ -8378,7 +8378,7 @@ name|rx_inx
 modifier|*
 name|this_tr_table
 decl_stmt|;
-comment|/* The fastest route through the loop is when the instruction  	   * is RX_NEXT_CHAR.  This case is detected when SEARCH_STATE.IFR->DATA 	   * is non-zero.  In that case, it points to the next 	   * superstate.  	   * 	   * This allows us to not bother fetching the bytecode. 	   */
+comment|/* The fastest route through the loop is when the instruction 	   * is RX_NEXT_CHAR.  This case is detected when SEARCH_STATE.IFR->DATA 	   * is non-zero.  In that case, it points to the next 	   * superstate. 	   * 	   * This allows us to not bother fetching the bytecode. 	   */
 name|next_tr_table
 operator|=
 operator|(
@@ -8713,7 +8713,7 @@ name|data
 expr_stmt|;
 block|}
 comment|/* Fast loop through cached transition tables */
-comment|/* Here when we ran out of cached next-char transitions.  	   * So, it will be necessary to do a more expensive 	   * dispatch on the current instruction.  The superstate 	   * pointer is allowed to become invalid during next-char 	   * transitions -- now we must bring it up to date. 	   */
+comment|/* Here when we ran out of cached next-char transitions. 	   * So, it will be necessary to do a more expensive 	   * dispatch on the current instruction.  The superstate 	   * pointer is allowed to become invalid during next-char 	   * transitions -- now we must bring it up to date. 	   */
 name|search_state
 operator|.
 name|super
@@ -8892,7 +8892,7 @@ block|{
 case|case
 name|rx_do_side_effects
 case|:
-comment|/*  RX_DO_SIDE_EFFECTS occurs when we cross epsilon  	     *  edges associated with parentheses, backreferencing, etc. 	     */
+comment|/*  RX_DO_SIDE_EFFECTS occurs when we cross epsilon 	     *  edges associated with parentheses, backreferencing, etc. 	     */
 block|{
 name|struct
 name|rx_distinct_future
@@ -9830,7 +9830,7 @@ block|{
 case|case
 name|re_se_win
 case|:
-comment|/* This side effect indicates that we've  			   * found a match, though not necessarily the  			   * best match.  This is a fancy assignment to  			   * register 0 unless the caller didn't  			   * care about registers.  In which case, 			   * this stops the match. 			   */
+comment|/* This side effect indicates that we've 			   * found a match, though not necessarily the 			   * best match.  This is a fancy assignment to 			   * register 0 unless the caller didn't 			   * care about registers.  In which case, 			   * this stops the match. 			   */
 block|{
 name|int
 name|urhere
@@ -9974,7 +9974,7 @@ operator|.
 name|last_r
 expr_stmt|;
 block|}
-comment|/* If we're not reporting the match-length  			     * or other register info, we need look no 			     * further. 			     */
+comment|/* If we're not reporting the match-length 			     * or other register info, we need look no 			     * further. 			     */
 if|if
 condition|(
 name|search_state
@@ -10571,7 +10571,7 @@ case|case
 name|rx_backtrack_point
 case|:
 block|{
-comment|/* A backtrack point indicates that we've reached a 	       * non-determinism in the superstate NFA.  This is a 	       * loop that exhaustively searches the possibilities. 	       * 	       * A backtracking strategy is used.  We keep track of what 	       * registers are valid so we can erase side effects. 	       * 	       * First, make sure there is some stack space to hold  	       * our state. 	       */
+comment|/* A backtrack point indicates that we've reached a 	       * non-determinism in the superstate NFA.  This is a 	       * loop that exhaustively searches the possibilities. 	       * 	       * A backtracking strategy is used.  We keep track of what 	       * registers are valid so we can erase side effects. 	       * 	       * First, make sure there is some stack space to hold 	       * our state. 	       */
 name|struct
 name|rx_backtrack_frame
 modifier|*
@@ -10827,7 +10827,7 @@ index|]
 expr_stmt|;
 block|}
 block|}
-comment|/* Here is a while loop whose body is mainly a function 	       * call and some code to handle a return from that 	       * function. 	       * 	       * From here on for the rest of `case backtrack_point' it 	       * is unsafe to assume that the search_state copies of  	       * variables saved on the backtracking stack are valid 	       * -- so read their values from the backtracking stack. 	       * 	       * This lets us use one generation fewer stack saves in 	       * the call-graph of a search. 	       */
+comment|/* Here is a while loop whose body is mainly a function 	       * call and some code to handle a return from that 	       * function. 	       * 	       * From here on for the rest of `case backtrack_point' it 	       * is unsafe to assume that the search_state copies of 	       * variables saved on the backtracking stack are valid 	       * -- so read their values from the backtracking stack. 	       * 	       * This lets us use one generation fewer stack saves in 	       * the call-graph of a search. 	       */
 name|while_non_det_options
 label|:
 ifdef|#
@@ -11117,7 +11117,7 @@ goto|goto
 name|error_in_testing_match
 goto|;
 block|}
-comment|/* Returning from a recursive call to  	       * the test match block: 	       */
+comment|/* Returning from a recursive call to 	       * the test match block: 	       */
 name|bf
 operator|=
 operator|(
@@ -11227,7 +11227,7 @@ goto|goto
 name|test_do_return
 goto|;
 block|}
-comment|/* If a non-longest match was found and that is good  	       * enough, return immediately. 	       */
+comment|/* If a non-longest match was found and that is good 	       * enough, return immediately. 	       */
 if|if
 condition|(
 operator|(
@@ -11596,7 +11596,7 @@ goto|goto
 name|pseudo_while_1
 goto|;
 block|}
-comment|/* Healthy exits from the test-match loop do a       * `goto return_from_test_match'   On the other hand,       * we might end up here.      */
+comment|/* Healthy exits from the test-match loop do a      * `goto return_from_test_match'   On the other hand,      * we might end up here.      */
 name|error_in_testing_match
 label|:
 name|test_state
@@ -11822,7 +11822,7 @@ comment|/* RX_WANT_SE_DEFS */
 end_comment
 
 begin_comment
-comment|/* Integers are used to represent side effects.    *    * Simple side effects are given negative integer names by these enums.    *     * Non-negative names are reserved for complex effects.    *    * Complex effects are those that take arguments.  For example,     * a register assignment associated with a group is complex because    * it requires an argument to tell which group is being matched.    *     * The integer name of a complex effect is an index into rxb->se_params.    */
+comment|/* Integers are used to represent side effects.    *    * Simple side effects are given negative integer names by these enums.    *    * Non-negative names are reserved for complex effects.    *    * Complex effects are those that take arguments.  For example,    * a register assignment associated with a group is complex because    * it requires an argument to tell which group is being matched.    *    * The integer name of a complex effect is an index into rxb->se_params.    */
 end_comment
 
 begin_macro
@@ -12042,7 +12042,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* This fails except at the end of a line.     * It deserves to go here since it is typicly one of the last steps     * in a match.    */
+comment|/* This fails except at the end of a line.    * It deserves to go here since it is typicly one of the last steps    * in a match.    */
 end_comment
 
 begin_macro
@@ -12074,7 +12074,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* Complex effects.  These are used in the 'se' field of     * a struct re_se_params.  Indexes into the se array    * are stored as instructions on nfa edges.    */
+comment|/* Complex effects.  These are used in the 'se' field of    * a struct re_se_params.  Indexes into the se array    * are stored as instructions on nfa edges.    */
 end_comment
 
 begin_macro

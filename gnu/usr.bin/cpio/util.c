@@ -185,7 +185,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|BROKEN_LONG_TAPE_DRIVER
-comment|/* Some tape drivers seem to have a signed internal seek pointer and      they lose if it overflows and becomes negative (e.g. when writing       tapes> 2Gb).  Doing an lseek (des, 0, SEEK_SET) seems to reset the       seek pointer and prevent it from overflowing.  */
+comment|/* Some tape drivers seem to have a signed internal seek pointer and      they lose if it overflows and becomes negative (e.g. when writing      tapes> 2Gb).  Doing an lseek (des, 0, SEEK_SET) seems to reset the      seek pointer and prevent it from overflowing.  */
 if|if
 condition|(
 name|output_is_special
@@ -923,7 +923,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|BROKEN_LONG_TAPE_DRIVER
-comment|/* Some tape drivers seem to have a signed internal seek pointer and      they lose if it overflows and becomes negative (e.g. when writing       tapes> 4Gb).  Doing an lseek (des, 0, SEEK_SET) seems to reset the       seek pointer and prevent it from overflowing.  */
+comment|/* Some tape drivers seem to have a signed internal seek pointer and      they lose if it overflows and becomes negative (e.g. when writing      tapes> 4Gb).  Doing an lseek (des, 0, SEEK_SET) seems to reset the      seek pointer and prevent it from overflowing.  */
 if|if
 condition|(
 name|input_is_special
@@ -1301,7 +1301,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|BROKEN_LONG_TAPE_DRIVER
-comment|/* Some tape drivers seem to have a signed internal seek pointer and      they lose if it overflows and becomes negative (e.g. when writing       tapes> 4Gb).  Doing an lseek (des, 0, SEEK_SET) seems to reset the       seek pointer and prevent it from overflowing.  */
+comment|/* Some tape drivers seem to have a signed internal seek pointer and      they lose if it overflows and becomes negative (e.g. when writing      tapes> 4Gb).  Doing an lseek (des, 0, SEEK_SET) seems to reset the      seek pointer and prevent it from overflowing.  */
 if|if
 condition|(
 name|input_is_special
@@ -3595,7 +3595,7 @@ condition|)
 return|return
 name|input_name
 return|;
-comment|/* There was a `/' preceeded by a `+' in the pathname.  If it is a CDF       then we will need to copy the input pathname to our return      buffer so we can insert the extra `/'s.  Since we can't tell      yet whether or not it is a CDF we will just always copy the      string to the return buffer.  First we have to make sure the      buffer is large enough to hold the string and any number of      extra `/'s we might add.  */
+comment|/* There was a `/' preceeded by a `+' in the pathname.  If it is a CDF      then we will need to copy the input pathname to our return      buffer so we can insert the extra `/'s.  Since we can't tell      yet whether or not it is a CDF we will just always copy the      string to the return buffer.  First we have to make sure the      buffer is large enough to hold the string and any number of      extra `/'s we might add.  */
 name|n
 operator|=
 literal|2
@@ -3652,7 +3652,7 @@ operator|=
 name|n
 expr_stmt|;
 block|}
-comment|/* Clear the `/' after this component, so we can stat the pathname       up to and including this component.  */
+comment|/* Clear the `/' after this component, so we can stat the pathname      up to and including this component.  */
 operator|++
 name|p
 expr_stmt|;

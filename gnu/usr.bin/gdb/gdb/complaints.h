@@ -28,7 +28,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Root of the chain of complaints that have at some point been issued.     This is used to reset the counters, and/or report the total counts.  */
+comment|/* Root of the chain of complaints that have at some point been issued.    This is used to reset the counters, and/or report the total counts.  */
 end_comment
 
 begin_decl_stmt

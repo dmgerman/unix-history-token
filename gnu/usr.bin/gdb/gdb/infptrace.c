@@ -349,7 +349,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* This function simply calls ptrace with the given arguments.      It exists so that all calls to ptrace are isolated in this     machine-dependent file. */
+comment|/* This function simply calls ptrace with the given arguments.    It exists so that all calls to ptrace are isolated in this    machine-dependent file. */
 end_comment
 
 begin_function
@@ -1690,7 +1690,7 @@ comment|/* NOTE! I tried using PTRACE_READDATA, etc., to read and write memory  
 end_comment
 
 begin_comment
-comment|/* Copy LEN bytes to or from inferior's memory starting at MEMADDR    to debugger memory starting at MYADDR.   Copy to inferior if    WRITE is nonzero.       Returns the length copied, which is either the LEN argument or zero.    This xfer function does not do partial moves, since child_ops    doesn't allow memory operations to cross below us in the target stack    anyway.  */
+comment|/* Copy LEN bytes to or from inferior's memory starting at MEMADDR    to debugger memory starting at MYADDR.   Copy to inferior if    WRITE is nonzero.     Returns the length copied, which is either the LEN argument or zero.    This xfer function does not do partial moves, since child_ops    doesn't allow memory operations to cross below us in the target stack    anyway.  */
 end_comment
 
 begin_function

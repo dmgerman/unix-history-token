@@ -1690,7 +1690,7 @@ end_decl_stmt
 
 begin_function
 name|__END_DECLS
-comment|/*  * The __sfoo macros are here so that we can   * define function versions in the C library.  */
+comment|/*  * The __sfoo macros are here so that we can  * define function versions in the C library.  */
 define|#
 directive|define
 name|__sgetc

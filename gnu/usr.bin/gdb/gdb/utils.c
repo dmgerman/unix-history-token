@@ -3394,7 +3394,7 @@ argument_list|,
 literal|"\n\032\032prompt-for-continue\n"
 argument_list|)
 expr_stmt|;
-comment|/* We must do this *before* we call gdb_readline, else it will eventually      call us -- thinking that we're trying to print beyond the end of the       screen.  */
+comment|/* We must do this *before* we call gdb_readline, else it will eventually      call us -- thinking that we're trying to print beyond the end of the      screen.  */
 name|reinitialize_more_filter
 argument_list|()
 expr_stmt|;
@@ -3502,7 +3502,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Indicate that if the next sequence of characters overflows the line,    a newline should be inserted here rather than when it hits the end.     If INDENT is non-null, it is a string to be printed to indent the    wrapped part on the next line.  INDENT must remain accessible until    the next call to wrap_here() or until a newline is printed through    fputs_filtered().     If the line is already overfull, we immediately print a newline and    the indentation, and disable further wrapping.     If we don't know the width of lines, but we know the page height,    we must not wrap words, but should still keep track of newlines    that were explicitly printed.     INDENT should not contain tabs, as that will mess up the char count    on the next line.  FIXME.     This routine is guaranteed to force out any output which has been    squirreled away in the wrap_buffer, so wrap_here ((char *)0) can be    used to force out output from the wrap_buffer.  */
+comment|/* Indicate that if the next sequence of characters overflows the line,    a newline should be inserted here rather than when it hits the end.    If INDENT is non-null, it is a string to be printed to indent the    wrapped part on the next line.  INDENT must remain accessible until    the next call to wrap_here() or until a newline is printed through    fputs_filtered().     If the line is already overfull, we immediately print a newline and    the indentation, and disable further wrapping.     If we don't know the width of lines, but we know the page height,    we must not wrap words, but should still keep track of newlines    that were explicitly printed.     INDENT should not contain tabs, as that will mess up the char count    on the next line.  FIXME.     This routine is guaranteed to force out any output which has been    squirreled away in the wrap_buffer, so wrap_here ((char *)0) can be    used to force out output from the wrap_buffer.  */
 end_comment
 
 begin_function
@@ -3948,7 +3948,7 @@ name|stream
 argument_list|)
 expr_stmt|;
 comment|/* and eject it */
-comment|/* FIXME, this strlen is what prevents wrap_indent from 		     containing tabs.  However, if we recurse to print it 		     and count its chars, we risk trouble if wrap_indent is 		     longer than (the user settable) chars_per_line.  		     Note also that this can set chars_printed> chars_per_line 		     if we are printing a long string.  */
+comment|/* FIXME, this strlen is what prevents wrap_indent from 		     containing tabs.  However, if we recurse to print it 		     and count its chars, we risk trouble if wrap_indent is 		     longer than (the user settable) chars_per_line. 		     Note also that this can set chars_printed> chars_per_line 		     if we are printing a long string.  */
 name|chars_printed
 operator|=
 name|strlen
@@ -5119,7 +5119,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Do a strcmp() type operation on STRING1 and STRING2, ignoring any    differences in whitespace.  Returns 0 if they match, non-zero if they    don't (slightly different than strcmp()'s range of return values).        As an extra hack, string1=="FOO(ARGS)" matches string2=="FOO".    This "feature" is useful when searching for matching C++ function names    (such as if the user types 'break FOO', where FOO is a mangled C++    function). */
+comment|/* Do a strcmp() type operation on STRING1 and STRING2, ignoring any    differences in whitespace.  Returns 0 if they match, non-zero if they    don't (slightly different than strcmp()'s range of return values).     As an extra hack, string1=="FOO(ARGS)" matches string2=="FOO".    This "feature" is useful when searching for matching C++ function names    (such as if the user types 'break FOO', where FOO is a mangled C++    function). */
 end_comment
 
 begin_function

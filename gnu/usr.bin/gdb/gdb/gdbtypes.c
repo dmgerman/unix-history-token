@@ -1131,7 +1131,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Allocate a stub method whose return type is TYPE.      This apparently happens for speed of symbol reading, since parsing    out the arguments to the method is cpu-intensive, the way we are doing    it.  So, we will fill in arguments later.    This always returns a fresh type.   */
+comment|/* Allocate a stub method whose return type is TYPE.    This apparently happens for speed of symbol reading, since parsing    out the arguments to the method is cpu-intensive, the way we are doing    it.  So, we will fill in arguments later.    This always returns a fresh type.   */
 end_comment
 
 begin_function
@@ -2014,7 +2014,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Smash TYPE to be a type of members of DOMAIN with type TO_TYPE.     A MEMBER is a wierd thing -- it amounts to a typed offset into    a struct, e.g. "an int at offset 8".  A MEMBER TYPE doesn't    include the offset (that's the value of the MEMBER itself), but does    include the structure type into which it points (for some reason).     When "smashing" the type, we preserve the objfile that the    old type pointed to, since we aren't changing where the type is actually    allocated.  */
+comment|/* Smash TYPE to be a type of members of DOMAIN with type TO_TYPE.    A MEMBER is a wierd thing -- it amounts to a typed offset into    a struct, e.g. "an int at offset 8".  A MEMBER TYPE doesn't    include the offset (that's the value of the MEMBER itself), but does    include the structure type into which it points (for some reason).     When "smashing" the type, we preserve the objfile that the    old type pointed to, since we aren't changing where the type is actually    allocated.  */
 end_comment
 
 begin_function
@@ -2269,7 +2269,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Lookup a primitive type named NAME.     Return zero if NAME is not a primitive type.*/
+comment|/* Lookup a primitive type named NAME.    Return zero if NAME is not a primitive type.*/
 end_comment
 
 begin_function
@@ -3084,7 +3084,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Given a type TYPE, lookup the type of the component of type named NAME.       TYPE can be either a struct or union, or a pointer or reference to a struct or    union.  If it is a pointer or reference, its target type is automatically used.    Thus '.' and '->' are interchangable, as specified for the definitions of the    expression element types STRUCTOP_STRUCT and STRUCTOP_PTR.     If NOERR is nonzero, return zero if NAME is not suitably defined.    If NAME is the name of a baseclass type, return that type.  */
+comment|/* Given a type TYPE, lookup the type of the component of type named NAME.     TYPE can be either a struct or union, or a pointer or reference to a struct or    union.  If it is a pointer or reference, its target type is automatically used.    Thus '.' and '->' are interchangable, as specified for the definitions of the    expression element types STRUCTOP_STRUCT and STRUCTOP_PTR.     If NOERR is nonzero, return zero if NAME is not suitably defined.    If NAME is the name of a baseclass type, return that type.  */
 end_comment
 
 begin_function
@@ -3491,7 +3491,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Added by Bryan Boreham, Kewill, Sun Sep 17 18:07:17 1989.     If this is a stubbed struct (i.e. declared as struct foo *), see if    we can find a full definition in some other file. If so, copy this    definition, so we can use it in future.  There used to be a comment (but    not any code) that if we don't find a full definition, we'd set a flag    so we don't spend time in the future checking the same type.  That would    be a mistake, though--we might load in more symbols which contain a    full definition for the type.     This used to be coded as a macro, but I don't think it is called     often enough to merit such treatment.  */
+comment|/* Added by Bryan Boreham, Kewill, Sun Sep 17 18:07:17 1989.     If this is a stubbed struct (i.e. declared as struct foo *), see if    we can find a full definition in some other file. If so, copy this    definition, so we can use it in future.  There used to be a comment (but    not any code) that if we don't find a full definition, we'd set a flag    so we don't spend time in the future checking the same type.  That would    be a mistake, though--we might load in more symbols which contain a    full definition for the type.     This used to be coded as a macro, but I don't think it is called    often enough to merit such treatment.  */
 end_comment
 
 begin_decl_stmt

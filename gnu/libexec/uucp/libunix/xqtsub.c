@@ -21,7 +21,7 @@ name|char
 name|xqtsub_rcsid
 index|[]
 init|=
-literal|"$Id: xqtsub.c,v 1.14 1994/01/30 21:09:20 ian Rel $"
+literal|"$Id: xqtsub.c,v 1.2 1994/05/07 18:11:43 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 

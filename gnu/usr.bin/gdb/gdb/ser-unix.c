@@ -2118,7 +2118,7 @@ operator|*
 literal|10
 condition|)
 block|{
-comment|/* If c_cc is an 8-bit signed character, we can't go  	       bigger than this.  If it is always unsigned, we could use 	       25.  */
+comment|/* If c_cc is an 8-bit signed character, we can't go 	       bigger than this.  If it is always unsigned, we could use 	       25.  */
 name|scb
 operator|->
 name|current_timeout
@@ -2230,7 +2230,7 @@ operator|*
 literal|10
 condition|)
 block|{
-comment|/* If c_cc is an 8-bit signed character, we can't go  	       bigger than this.  If it is always unsigned, we could use 	       25.  */
+comment|/* If c_cc is an 8-bit signed character, we can't go 	       bigger than this.  If it is always unsigned, we could use 	       25.  */
 name|scb
 operator|->
 name|current_timeout

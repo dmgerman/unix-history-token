@@ -2782,7 +2782,7 @@ name|obstack
 operator|=
 name|saveable_obstack
 expr_stmt|;
-comment|/* PARM_DECLs go on the context of the parent. If this is a nested 	 function, then we must allocate the PARM_DECL on the parent's 	 obstack, so that they will live to the end of the parent's 	 closing brace.  This is neccesary in case we try to inline the 	 function into its parent.  	 PARM_DECLs of top-level functions do not have this problem.  However, 	 we allocate them where we put the FUNCTION_DECL for languauges such as 	 Ada that need to consult some flags in the PARM_DECLs of the function 	 when calling it.   	 See comment in restore_tree_status for why we can't put this 	 in function_obstack.  */
+comment|/* PARM_DECLs go on the context of the parent. If this is a nested 	 function, then we must allocate the PARM_DECL on the parent's 	 obstack, so that they will live to the end of the parent's 	 closing brace.  This is neccesary in case we try to inline the 	 function into its parent.  	 PARM_DECLs of top-level functions do not have this problem.  However, 	 we allocate them where we put the FUNCTION_DECL for languauges such as 	 Ada that need to consult some flags in the PARM_DECLs of the function 	 when calling it.  	 See comment in restore_tree_status for why we can't put this 	 in function_obstack.  */
 if|if
 condition|(
 name|code
@@ -4322,7 +4322,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Return a newly constructed INTEGER_CST node whose constant value    is specified by the two ints LOW and HI.    The TREE_TYPE is set to `int'.      This function should be used via the `build_int_2' macro.  */
+comment|/* Return a newly constructed INTEGER_CST node whose constant value    is specified by the two ints LOW and HI.    The TREE_TYPE is set to `int'.     This function should be used via the `build_int_2' macro.  */
 end_comment
 
 begin_function
@@ -7250,7 +7250,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* If the tree evaluates to a constant, then we don't want to hide that      fact (i.e. this allows further folding, and direct checks for constants).      However, a read-only object that has side effects cannot be bypassed.      Since it is no problem to reevaluate literals, we just return the       literal node. */
+comment|/* If the tree evaluates to a constant, then we don't want to hide that      fact (i.e. this allows further folding, and direct checks for constants).      However, a read-only object that has side effects cannot be bypassed.      Since it is no problem to reevaluate literals, we just return the      literal node. */
 if|if
 condition|(
 name|TREE_CONSTANT
@@ -8493,7 +8493,7 @@ argument_list|,
 name|r
 argument_list|)
 expr_stmt|;
-comment|/* If this is an anonymous field and the type of this field is 	       a UNION_TYPE or RECORD_TYPE with no elements, ignore it.  If 	       the type just has one element, treat that as the field.  	       But don't do this if we are processing a QUAL_UNION_TYPE.  */
+comment|/* If this is an anonymous field and the type of this field is 	       a UNION_TYPE or RECORD_TYPE with no elements, ignore it.  If 	       the type just has one element, treat that as the field. 	       But don't do this if we are processing a QUAL_UNION_TYPE.  */
 if|if
 condition|(
 name|TREE_CODE
@@ -13966,7 +13966,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Return OP, stripped of any conversions to wider types as much as is safe.    Converting the value back to OP's type makes a value equivalent to OP.     If FOR_TYPE is nonzero, we return a value which, if converted to    type FOR_TYPE, would be equivalent to converting OP to type FOR_TYPE.     If FOR_TYPE is nonzero, unaligned bit-field references may be changed to the    narrowest type that can hold the value, even if they don't exactly fit.    Otherwise, bit-field references are changed to a narrower type    only if they can be fetched directly from memory in that type.     OP must have integer, real or enumeral type.  Pointers are not allowed!     There are some cases where the obvious value we could return    would regenerate to OP if converted to OP's type,     but would not extend like OP to wider types.    If FOR_TYPE indicates such extension is contemplated, we eschew such values.    For example, if OP is (unsigned short)(signed char)-1,    we avoid returning (signed char)-1 if FOR_TYPE is int,    even though extending that to an unsigned short would regenerate OP,    since the result of extending (signed char)-1 to (int)    is different from (int) OP.  */
+comment|/* Return OP, stripped of any conversions to wider types as much as is safe.    Converting the value back to OP's type makes a value equivalent to OP.     If FOR_TYPE is nonzero, we return a value which, if converted to    type FOR_TYPE, would be equivalent to converting OP to type FOR_TYPE.     If FOR_TYPE is nonzero, unaligned bit-field references may be changed to the    narrowest type that can hold the value, even if they don't exactly fit.    Otherwise, bit-field references are changed to a narrower type    only if they can be fetched directly from memory in that type.     OP must have integer, real or enumeral type.  Pointers are not allowed!     There are some cases where the obvious value we could return    would regenerate to OP if converted to OP's type,    but would not extend like OP to wider types.    If FOR_TYPE indicates such extension is contemplated, we eschew such values.    For example, if OP is (unsigned short)(signed char)-1,    we avoid returning (signed char)-1 if FOR_TYPE is int,    even though extending that to an unsigned short would regenerate OP,    since the result of extending (signed char)-1 to (int)    is different from (int) OP.  */
 end_comment
 
 begin_function

@@ -1263,7 +1263,7 @@ argument|;   unsigned len;   struct type *elttype;   unsigned eltlen;
 comment|/* Position of the array element we are examining to see      whether it is repeated.  */
 argument|unsigned int rep1;
 comment|/* Number of repetitions we have detected so far.  */
-argument|unsigned int reps;          elttype = TYPE_TARGET_TYPE (type);   eltlen = TYPE_LENGTH (elttype);   len = TYPE_LENGTH (type) / eltlen;    annotate_array_section_begin (i, elttype);    for (; i< len&& things_printed< print_max; i++)     {       if (i !=
+argument|unsigned int reps;    elttype = TYPE_TARGET_TYPE (type);   eltlen = TYPE_LENGTH (elttype);   len = TYPE_LENGTH (type) / eltlen;    annotate_array_section_begin (i, elttype);    for (; i< len&& things_printed< print_max; i++)     {       if (i !=
 literal|0
 argument|) 	{ 	  if (prettyprint_arrays) 	    { 	      fprintf_filtered (stream,
 literal|",\n"
@@ -1281,7 +1281,7 @@ argument|* recurse));        rep1 = i +
 literal|1
 argument|;       reps =
 literal|1
-argument|;       while ((rep1< len)&&  	     !memcmp (valaddr + i * eltlen, valaddr + rep1 * eltlen, eltlen)) 	{ 	  ++reps; 	  ++rep1; 	}        if (reps> repeat_count_threshold) 	{ 	  val_print (elttype, valaddr + i * eltlen,
+argument|;       while ((rep1< len)&& 	     !memcmp (valaddr + i * eltlen, valaddr + rep1 * eltlen, eltlen)) 	{ 	  ++reps; 	  ++rep1; 	}        if (reps> repeat_count_threshold) 	{ 	  val_print (elttype, valaddr + i * eltlen,
 literal|0
 argument|, stream, format, 		     deref_ref, recurse +
 literal|1
@@ -1305,7 +1305,7 @@ argument|typelen;
 comment|/* Position of the array elem we are examining to see if it is repeated.  */
 argument|unsigned int rep1;
 comment|/* Number of repetitions we have detected so far.  */
-argument|unsigned int reps;        n = VALUE_REPETITIONS (val);   typelen = TYPE_LENGTH (VALUE_TYPE (val));   for (i =
+argument|unsigned int reps;    n = VALUE_REPETITIONS (val);   typelen = TYPE_LENGTH (VALUE_TYPE (val));   for (i =
 literal|0
 argument|; i< n&& things_printed< print_max; i++)     {       if (i !=
 literal|0
@@ -1313,11 +1313,11 @@ argument|) 	{ 	  fprintf_filtered (stream,
 literal|", "
 argument|); 	}       wrap_here (
 literal|""
-argument|);              rep1 = i +
+argument|);        rep1 = i +
 literal|1
 argument|;       reps =
 literal|1
-argument|;       while (rep1< n&& !memcmp (VALUE_CONTENTS (val) + typelen * i, 				  VALUE_CONTENTS (val) + typelen * rep1, 				  typelen)) 	{ 	  ++reps; 	  ++rep1; 	}              if (reps> repeat_count_threshold) 	{ 	  val_print (VALUE_TYPE (val), VALUE_CONTENTS (val) + typelen * i, 		     VALUE_ADDRESS (val) + typelen * i, stream, format,
+argument|;       while (rep1< n&& !memcmp (VALUE_CONTENTS (val) + typelen * i, 				  VALUE_CONTENTS (val) + typelen * rep1, 				  typelen)) 	{ 	  ++reps; 	  ++rep1; 	}        if (reps> repeat_count_threshold) 	{ 	  val_print (VALUE_TYPE (val), VALUE_CONTENTS (val) + typelen * i, 		     VALUE_ADDRESS (val) + typelen * i, stream, format,
 literal|1
 argument|,
 literal|0
@@ -1553,13 +1553,13 @@ argument|,
 literal|"print"
 argument|, no_class,
 literal|1
-argument|,&showlist);    add_alias_cmd (
+argument|,&showlist);   add_alias_cmd (
 literal|"pr"
 argument|,
 literal|"print"
 argument|, no_class,
 literal|1
-argument|,&showlist);     add_show_from_set     (add_set_cmd (
+argument|,&showlist);    add_show_from_set     (add_set_cmd (
 literal|"elements"
 argument|, no_class, var_uinteger, (char *)&print_max,
 literal|"Set limit on string chars or array elements to print.\n\ \"set print elements 0\" causes there to be no limit."
@@ -1579,7 +1579,7 @@ argument|,&setprintlist),&showprintlist);    add_show_from_set     (add_set_cmd 
 literal|"union"
 argument|, class_support, var_boolean, (char *)&unionprint,
 literal|"Set printing of unions interior to structures."
-argument|,&setprintlist),&showprintlist);      add_show_from_set     (add_set_cmd (
+argument|,&setprintlist),&showprintlist);    add_show_from_set     (add_set_cmd (
 literal|"array"
 argument|, class_support, var_boolean, 		  (char *)&prettyprint_arrays,
 literal|"Set prettyprinting of arrays."

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   ALPHA interface for CHESS       Revision: 4-25-88       Copyright (C) 1986, 1987, 1988 Free Software Foundation, Inc.   Copyright (c) 1988  John Stanback    This file is part of CHESS.    CHESS is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY.  No author or distributor   accepts responsibility to anyone for the consequences of using it   or for whether it serves any particular purpose or works at all,   unless he says so in writing.  Refer to the CHESS General Public   License for full details.    Everyone is granted permission to copy, modify and redistribute   CHESS, but only under the conditions described in the   CHESS General Public License.   A copy of this license is   supposed to have been given to you along with CHESS so you   can know your rights and responsibilities.  It should be in a   file named COPYING.  Among other things, the copyright notice   and this notice must be preserved on all copies. */
+comment|/*   ALPHA interface for CHESS    Revision: 4-25-88    Copyright (C) 1986, 1987, 1988 Free Software Foundation, Inc.   Copyright (c) 1988  John Stanback    This file is part of CHESS.    CHESS is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY.  No author or distributor   accepts responsibility to anyone for the consequences of using it   or for whether it serves any particular purpose or works at all,   unless he says so in writing.  Refer to the CHESS General Public   License for full details.    Everyone is granted permission to copy, modify and redistribute   CHESS, but only under the conditions described in the   CHESS General Public License.   A copy of this license is   supposed to have been given to you along with CHESS so you   can know your rights and responsibilities.  It should be in a   file named COPYING.  Among other things, the copyright notice   and this notice must be preserved on all copies. */
 end_comment
 
 begin_include
@@ -276,7 +276,7 @@ argument_list|()
 end_macro
 
 begin_comment
-comment|/*    Process the users command. If easy mode is OFF (the computer is     thinking on opponents time) and the program is out of book, then make     the 'hint' move on the board and call SelectMove() to find a response.     The user terminates the search by entering ^C (quit siqnal) before     entering a command. If the opponent does not make the hint move, then     set Sdepth to zero.  */
+comment|/*    Process the users command. If easy mode is OFF (the computer is    thinking on opponents time) and the program is out of book, then make    the 'hint' move on the board and call SelectMove() to find a response.    The user terminates the search by entering ^C (quit siqnal) before    entering a command. If the opponent does not make the hint move, then    set Sdepth to zero. */
 end_comment
 
 begin_block
@@ -1247,7 +1247,7 @@ argument_list|()
 end_macro
 
 begin_comment
-comment|/*     Set up a board position. Pieces are entered by typing the piece     followed by the location. For example, Nf3 will place a knight on     square f3.  */
+comment|/*    Set up a board position. Pieces are entered by typing the piece    followed by the location. For example, Nf3 will place a knight on    square f3. */
 end_comment
 
 begin_block
@@ -2667,7 +2667,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*     Determine the time that has passed since the search was started. If     the elapsed time exceeds the target (ResponseTime+ExtraTime) then set     timeout to true which will terminate the search.  */
+comment|/*    Determine the time that has passed since the search was started. If    the elapsed time exceeds the target (ResponseTime+ExtraTime) then set    timeout to true which will terminate the search. */
 end_comment
 
 begin_decl_stmt
@@ -3614,7 +3614,7 @@ argument_list|()
 end_macro
 
 begin_comment
-comment|/*    Read in the Opening Book file and parse the algebraic notation for a     move into an unsigned integer format indicating the from and to     square. Create a linked list of opening lines of play, with     entry->next pointing to the next line and entry->move pointing to a     chunk of memory containing the moves. More Opening lines of up to 256     half moves may be added to gnuchess.book.  */
+comment|/*    Read in the Opening Book file and parse the algebraic notation for a    move into an unsigned integer format indicating the from and to    square. Create a linked list of opening lines of play, with    entry->next pointing to the next line and entry->move pointing to a    chunk of memory containing the moves. More Opening lines of up to 256    half moves may be added to gnuchess.book. */
 end_comment
 
 begin_block

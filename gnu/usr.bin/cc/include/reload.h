@@ -440,7 +440,7 @@ comment|/* Functions from reload.c:  */
 end_comment
 
 begin_comment
-comment|/* Return a memory location that will be used to copy X in mode MODE.      If we haven't already made a location for this mode in this insn,    call find_reloads_address on the location being returned.  */
+comment|/* Return a memory location that will be used to copy X in mode MODE.    If we haven't already made a location for this mode in this insn,    call find_reloads_address on the location being returned.  */
 end_comment
 
 begin_decl_stmt

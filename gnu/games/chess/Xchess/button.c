@@ -4,7 +4,7 @@ comment|/* This file contains code for X-CHESS.    Copyright (C) 1986 Free Softw
 end_comment
 
 begin_comment
-comment|/* RCS Info: $Revision: 1.4 $ on $Date: 86/11/26 12:09:41 $  *           $Source: /users/faustus/xchess/RCS/button.c,v $  * Copyright (c) 1986 Wayne A. Christopher, U. C. Berkeley CAD Group  *	Permission is granted to do anything with this code except sell it  *	or remove this message.  *  * Do stuff with the buttons.  * The configuration we're using is:	Draw	Back	Pause  *					Resign	Fwd	Flip  *					Reset	Save	Easy (Switch)  */
+comment|/* RCS Info: $Revision: 1.1.1.1 $ on $Date: 1993/06/12 14:41:15 $  *           $Source: /home/ncvs/src/gnu/games/chess/Xchess/button.c,v $  * Copyright (c) 1986 Wayne A. Christopher, U. C. Berkeley CAD Group  *	Permission is granted to do anything with this code except sell it  *	or remove this message.  *  * Do stuff with the buttons.  * The configuration we're using is:	Draw	Back	Pause  *					Resign	Fwd	Flip  *					Reset	Save	Easy (Switch)  */
 end_comment
 
 begin_include

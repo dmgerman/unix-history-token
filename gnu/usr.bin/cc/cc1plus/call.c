@@ -5976,7 +5976,7 @@ decl_stmt|,
 name|parms
 decl_stmt|;
 block|{
-comment|/* Because this syntactic form does not allow      a pointer to a base class to be `stolen',      we need not protect the derived->base conversion      that happens here.            @@ But we do have to check access privileges later.  */
+comment|/* Because this syntactic form does not allow      a pointer to a base class to be `stolen',      we need not protect the derived->base conversion      that happens here.       @@ But we do have to check access privileges later.  */
 name|tree
 name|basename
 init|=
@@ -8934,7 +8934,7 @@ condition|(
 name|baselink
 condition|)
 block|{
-comment|/* We have a hit (of sorts). If the parameter list is 	     "error_mark_node", or some variant thereof, it won't 	     match any methods.  Since we have verified that the is 	     some method vaguely matching this one (in name at least), 	     silently return. 	      	     Don't stop for friends, however.  */
+comment|/* We have a hit (of sorts). If the parameter list is 	     "error_mark_node", or some variant thereof, it won't 	     match any methods.  Since we have verified that the is 	     some method vaguely matching this one (in name at least), 	     silently return.  	     Don't stop for friends, however.  */
 name|basetype_path
 operator|=
 name|TREE_PURPOSE

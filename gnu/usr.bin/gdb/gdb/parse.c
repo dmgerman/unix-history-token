@@ -259,7 +259,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Assign machine-independent names to certain registers     (unless overridden by the REGISTER_NAMES table) */
+comment|/* Assign machine-independent names to certain registers    (unless overridden by the REGISTER_NAMES table) */
 end_comment
 
 begin_ifdef
@@ -805,7 +805,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Add a string constant to the end of the expression.     String constants are stored by first writing an expression element    that contains the length of the string, then stuffing the string    constant itself into however many expression elements are needed    to hold it, and then writing another expression element that contains    the length of the string.  I.E. an expression element at each end of    the string records the string length, so you can skip over the     expression elements containing the actual string bytes from either    end of the string.  Note that this also allows gdb to handle    strings with embedded null bytes, as is required for some languages.     Don't be fooled by the fact that the string is null byte terminated,    this is strictly for the convenience of debugging gdb itself.  Gdb    Gdb does not depend up the string being null terminated, since the    actual length is recorded in expression elements at each end of the    string.  The null byte is taken into consideration when computing how    many expression elements are required to hold the string constant, of    course. */
+comment|/* Add a string constant to the end of the expression.     String constants are stored by first writing an expression element    that contains the length of the string, then stuffing the string    constant itself into however many expression elements are needed    to hold it, and then writing another expression element that contains    the length of the string.  I.E. an expression element at each end of    the string records the string length, so you can skip over the    expression elements containing the actual string bytes from either    end of the string.  Note that this also allows gdb to handle    strings with embedded null bytes, as is required for some languages.     Don't be fooled by the fact that the string is null byte terminated,    this is strictly for the convenience of debugging gdb itself.  Gdb    Gdb does not depend up the string being null terminated, since the    actual length is recorded in expression elements at each end of the    string.  The null byte is taken into consideration when computing how    many expression elements are required to hold the string constant, of    course. */
 end_comment
 
 begin_function

@@ -485,7 +485,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return 1 if X refers to a memory location whose address     cannot be compared reliably with constant addresses,    or if X refers to a BLKmode memory object.  */
+comment|/* Return 1 if X refers to a memory location whose address    cannot be compared reliably with constant addresses,    or if X refers to a BLKmode memory object.  */
 end_comment
 
 begin_function
@@ -7219,7 +7219,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Throughout the rtx X, replace many registers according to REG_MAP.    Return the replacement for X (which may be X with altered contents).    REG_MAP[R] is the replacement for register R, or 0 for don't replace.    NREGS is the length of REG_MAP; regs>= NREGS are not mapped.       We only support REG_MAP entries of REG or SUBREG.  Also, hard registers    should not be mapped to pseudos or vice versa since validate_change    is not called.     If REPLACE_DEST is 1, replacements are also done in destinations;    otherwise, only sources are replaced.  */
+comment|/* Throughout the rtx X, replace many registers according to REG_MAP.    Return the replacement for X (which may be X with altered contents).    REG_MAP[R] is the replacement for register R, or 0 for don't replace.    NREGS is the length of REG_MAP; regs>= NREGS are not mapped.     We only support REG_MAP entries of REG or SUBREG.  Also, hard registers    should not be mapped to pseudos or vice versa since validate_change    is not called.     If REPLACE_DEST is 1, replacements are also done in destinations;    otherwise, only sources are replaced.  */
 end_comment
 
 begin_function

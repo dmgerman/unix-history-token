@@ -1303,7 +1303,7 @@ comment|/* The middle letter e.g. get<b>short indicates Big or Little endian    
 end_comment
 
 begin_comment
-comment|/* FIXME: Should these take a count argument?    Answer (gnu@cygnus.com):  No, but perhaps they should be inline                              functions in swap.h #ifdef __GNUC__.                               Gprof them later and find out.  */
+comment|/* FIXME: Should these take a count argument?    Answer (gnu@cygnus.com):  No, but perhaps they should be inline                              functions in swap.h #ifdef __GNUC__.                              Gprof them later and find out.  */
 end_comment
 
 begin_comment

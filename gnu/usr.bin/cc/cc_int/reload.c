@@ -447,7 +447,7 @@ name|SECONDARY_MEMORY_NEEDED
 end_ifdef
 
 begin_comment
-comment|/* Save MEMs needed to copy from one class of registers to another.  One MEM    is used per mode, but normally only one or two modes are ever used.       We keep two versions, before and after register elimination.  The one     after register elimination is record separately for each operand.  This    is done in case the address is not valid to be sure that we separately    reload each.  */
+comment|/* Save MEMs needed to copy from one class of registers to another.  One MEM    is used per mode, but normally only one or two modes are ever used.     We keep two versions, before and after register elimination.  The one    after register elimination is record separately for each operand.  This    is done in case the address is not valid to be sure that we separately    reload each.  */
 end_comment
 
 begin_decl_stmt
@@ -1283,7 +1283,7 @@ operator|!=
 name|CODE_FOR_nothing
 condition|)
 block|{
-comment|/* If IN_P is non-zero, the reload register will be the output in  	 operand 0.  If IN_P is zero, the reload register will be the input 	 in operand 1.  Outputs should have an initial "=", which we must 	 skip.  */
+comment|/* If IN_P is non-zero, the reload register will be the output in 	 operand 0.  If IN_P is zero, the reload register will be the input 	 in operand 1.  Outputs should have an initial "=", which we must 	 skip.  */
 name|char
 name|insn_letter
 init|=
@@ -2367,7 +2367,7 @@ name|SECONDARY_MEMORY_NEEDED
 end_ifdef
 
 begin_comment
-comment|/* Return a memory location that will be used to copy X in mode MODE.      If we haven't already made a location for this mode in this insn,    call find_reloads_address on the location being returned.  */
+comment|/* Return a memory location that will be used to copy X in mode MODE.    If we haven't already made a location for this mode in this insn,    call find_reloads_address on the location being returned.  */
 end_comment
 
 begin_function
@@ -2469,7 +2469,7 @@ index|[
 name|opnum
 index|]
 return|;
-comment|/* If this is the first time we've tried to get a MEM for this mode,       allocate a new one.  `something_changed' in reload will get set      by noticing that the frame size has changed.  */
+comment|/* If this is the first time we've tried to get a MEM for this mode,      allocate a new one.  `something_changed' in reload will get set      by noticing that the frame size has changed.  */
 if|if
 condition|(
 name|secondary_memlocs
@@ -2848,7 +2848,7 @@ argument_list|(
 name|out
 argument_list|)
 expr_stmt|;
-comment|/* If IN is a pseudo register everywhere-equivalent to a constant, and       it is not in a hard register, reload straight from the constant,      since we want to get rid of such pseudo registers.      Often this is done earlier, but not always in find_reloads_address.  */
+comment|/* If IN is a pseudo register everywhere-equivalent to a constant, and      it is not in a hard register, reload straight from the constant,      since we want to get rid of such pseudo registers.      Often this is done earlier, but not always in find_reloads_address.  */
 if|if
 condition|(
 name|in
@@ -4501,7 +4501,7 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
-comment|/* We can use an existing reload if the class is right      and at least one of IN and OUT is a match      and the other is at worst neutral.      (A zero compared against anything is neutral.)        If SMALL_REGISTER_CLASSES, don't use existing reloads unless they are      for the same thing since that can cause us to need more reload registers      than we otherwise would.  */
+comment|/* We can use an existing reload if the class is right      and at least one of IN and OUT is a match      and the other is at worst neutral.      (A zero compared against anything is neutral.)       If SMALL_REGISTER_CLASSES, don't use existing reloads unless they are      for the same thing since that can cause us to need more reload registers      than we otherwise would.  */
 for|for
 control|(
 name|i
@@ -8131,7 +8131,7 @@ literal|0
 return|;
 name|slow
 label|:
-comment|/* Now we have disposed of all the cases       in which different rtx codes can match.  */
+comment|/* Now we have disposed of all the cases      in which different rtx codes can match.  */
 if|if
 condition|(
 name|code
@@ -8405,7 +8405,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Describe the range of registers or memory referenced by X.    If X is a register, set REG_FLAG and put the first register     number into START and the last plus one into END.    If X is a memory reference, put a base address into BASE     and a range of integer offsets into START and END.    If X is pushing on the stack, we can assume it causes no trouble,     so we set the SAFE field.  */
+comment|/* Describe the range of registers or memory referenced by X.    If X is a register, set REG_FLAG and put the first register    number into START and the last plus one into END.    If X is a memory reference, put a base address into BASE    and a range of integer offsets into START and END.    If X is pushing on the stack, we can assume it causes no trouble,    so we set the SAFE field.  */
 end_comment
 
 begin_function
@@ -10173,7 +10173,7 @@ index|]
 operator|=
 name|RELOAD_READ
 expr_stmt|;
-comment|/* Scan this operand's constraint to see if it is an output operand,  	 an in-out operand, is commutative, or should match another.  */
+comment|/* Scan this operand's constraint to see if it is an output operand, 	 an in-out operand, is commutative, or should match another.  */
 while|while
 condition|(
 name|c
@@ -10430,7 +10430,7 @@ block|}
 block|}
 block|}
 block|}
-comment|/* Examine each operand that is a memory reference or memory address      and reload parts of the addresses into index registers.      Also here any references to pseudo regs that didn't get hard regs      but are equivalent to constants get replaced in the insn itself      with those constants.  Nobody will ever see them again.        Finally, set up the preferred classes of each operand.  */
+comment|/* Examine each operand that is a memory reference or memory address      and reload parts of the addresses into index registers.      Also here any references to pseudo regs that didn't get hard regs      but are equivalent to constants get replaced in the insn itself      with those constants.  Nobody will ever see them again.       Finally, set up the preferred classes of each operand.  */
 for|for
 control|(
 name|i
@@ -10867,7 +10867,7 @@ argument_list|(
 name|address
 argument_list|)
 expr_stmt|;
-comment|/* If this is an output operand, we must output a CLOBBER 		 after INSN so find_equiv_reg knows REGNO is being written.  		 Mark this insn specially, do we can put our output reloads 		 after it.  */
+comment|/* If this is an output operand, we must output a CLOBBER 		 after INSN so find_equiv_reg knows REGNO is being written. 		 Mark this insn specially, do we can put our output reloads 		 after it.  */
 if|if
 condition|(
 name|modified
@@ -11215,7 +11215,7 @@ name|bad
 init|=
 literal|0
 decl_stmt|;
-comment|/* REJECT is a count of how undesirable this alternative says it is 	 if any reloading is required.  If the alternative matches exactly 	 then REJECT is ignored, but otherwise it gets this much 	 counted against it in addition to the reloading needed.  Each  	 ? counts three times here since we want the disparaging caused by 	 a bad register class to only count 1/3 as much.  */
+comment|/* REJECT is a count of how undesirable this alternative says it is 	 if any reloading is required.  If the alternative matches exactly 	 then REJECT is ignored, but otherwise it gets this much 	 counted against it in addition to the reloading needed.  Each 	 ? counts three times here since we want the disparaging caused by 	 a bad register class to only count 1/3 as much.  */
 name|int
 name|reject
 init|=
@@ -11345,7 +11345,7 @@ name|operand
 argument_list|)
 operator|==
 name|PLUS
-comment|/* We must force a reload of paradoxical SUBREGs 		     of a MEM because the alignment of the inner value 		     may not be enough to do the outer reference.  On 		     big-endian machines, it may also reference outside 		     the object.  		     On machines that extend byte operations and we have a 		     SUBREG where both the inner and outer modes are no wider 		     than a word and the inner mode is narrower, is integral, 		     and gets extended when loaded from memory, combine.c has 		     made assumptions about the behavior of the machine in such 		     register access.  If the data is, in fact, in memory we 		     must always load using the size assumed to be in the 		     register and let the insn do the different-sized  		     accesses.  */
+comment|/* We must force a reload of paradoxical SUBREGs 		     of a MEM because the alignment of the inner value 		     may not be enough to do the outer reference.  On 		     big-endian machines, it may also reference outside 		     the object.  		     On machines that extend byte operations and we have a 		     SUBREG where both the inner and outer modes are no wider 		     than a word and the inner mode is narrower, is integral, 		     and gets extended when loaded from memory, combine.c has 		     made assumptions about the behavior of the machine in such 		     register access.  If the data is, in fact, in memory we 		     must always load using the size assumed to be in the 		     register and let the insn do the different-sized 		     accesses.  */
 operator|||
 operator|(
 operator|(
@@ -13023,7 +13023,7 @@ name|bad
 operator|=
 literal|1
 expr_stmt|;
-comment|/* If this is a constant that is reloaded into the desired 		 class by copying it to memory first, count that as another 		 reload.  This is consistent with other code and is 		 required to avoid chosing another alternative when 		 the constant is moved into memory by this function on 		 an early reload pass.  Note that the test here is  		 precisely the same as in the code below that calls 		 force_const_mem.  */
+comment|/* If this is a constant that is reloaded into the desired 		 class by copying it to memory first, count that as another 		 reload.  This is consistent with other code and is 		 required to avoid chosing another alternative when 		 the constant is moved into memory by this function on 		 an early reload pass.  Note that the test here is 		 precisely the same as in the code below that calls 		 force_const_mem.  */
 if|if
 condition|(
 name|CONSTANT_P
@@ -13127,7 +13127,7 @@ name|bad
 operator|=
 literal|1
 expr_stmt|;
-comment|/* We prefer to reload pseudos over reloading other things, 		 since such reloads may be able to be eliminated later. 		 If we are reloading a SCRATCH, we won't be generating any 		 insns, just using a register, so it is also preferred.  		 So bump REJECT in other cases.  Don't do this in the 		 case where we are forcing a constant into memory and 		 it will then win since we don't want to have a different 		 alternative match then.  */
+comment|/* We prefer to reload pseudos over reloading other things, 		 since such reloads may be able to be eliminated later. 		 If we are reloading a SCRATCH, we won't be generating any 		 insns, just using a register, so it is also preferred. 		 So bump REJECT in other cases.  Don't do this in the 		 case where we are forcing a constant into memory and 		 it will then win since we don't want to have a different 		 alternative match then.  */
 if|if
 condition|(
 operator|!
@@ -13165,7 +13165,7 @@ name|reject
 operator|++
 expr_stmt|;
 block|}
-comment|/* If this operand is a pseudo register that didn't get a hard  	     reg and this alternative accepts some register, see if the 	     class that we want is a subset of the preferred class for this 	     register.  If not, but it intersects that class, use the 	     preferred class instead.  If it does not intersect the preferred 	     class, show that usage of this alternative should be discouraged; 	     it will be discouraged more still if the register is `preferred 	     or nothing'.  We do this because it increases the chance of 	     reusing our spill register in a later insn and avoiding a pair 	     of memory stores and loads.  	     Don't bother with this if this alternative will accept this 	     operand.  	     Don't do this for a multiword operand, since it is only a 	     small win and has the risk of requiring more spill registers, 	     which could cause a large loss.  	     Don't do this if the preferred class has only one register 	     because we might otherwise exhaust the class.  */
+comment|/* If this operand is a pseudo register that didn't get a hard 	     reg and this alternative accepts some register, see if the 	     class that we want is a subset of the preferred class for this 	     register.  If not, but it intersects that class, use the 	     preferred class instead.  If it does not intersect the preferred 	     class, show that usage of this alternative should be discouraged; 	     it will be discouraged more still if the register is `preferred 	     or nothing'.  We do this because it increases the chance of 	     reusing our spill register in a later insn and avoiding a pair 	     of memory stores and loads.  	     Don't bother with this if this alternative will accept this 	     operand.  	     Don't do this for a multiword operand, since it is only a 	     small win and has the risk of requiring more spill registers, 	     which could cause a large loss.  	     Don't do this if the preferred class has only one register 	     because we might otherwise exhaust the class.  */
 if|if
 condition|(
 operator|!
@@ -13222,7 +13222,7 @@ index|]
 argument_list|)
 condition|)
 block|{
-comment|/* Since we don't have a way of forming the intersection, 		     we just do something special if the preferred class 		     is a subset of the class we have; that's the most  		     common case anyway.  */
+comment|/* Since we don't have a way of forming the intersection, 		     we just do something special if the preferred class 		     is a subset of the class we have; that's the most 		     common case anyway.  */
 if|if
 condition|(
 name|reg_class_subset_p
@@ -14215,7 +14215,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/* If this is an earlyclobber operand, we need to widen the scope. 	 The reload must remain valid from the start of the insn being 	 reloaded until after the operand is stored into its destination. 	 We approximate this with RELOAD_OTHER even though we know that we 	 do not conflict with RELOAD_FOR_INPUT_ADDRESS reloads.  	 One special case that is worth checking is when we have an 	 output that is earlyclobber but isn't used past the insn (typically 	 a SCRATCH).  In this case, we only need have the reload live  	 through the insn itself, but not for any of our input or output 	 reloads.   	 In any case, anything needed to address this operand can remain 	 however they were previously categorized.  */
+comment|/* If this is an earlyclobber operand, we need to widen the scope. 	 The reload must remain valid from the start of the insn being 	 reloaded until after the operand is stored into its destination. 	 We approximate this with RELOAD_OTHER even though we know that we 	 do not conflict with RELOAD_FOR_INPUT_ADDRESS reloads.  	 One special case that is worth checking is when we have an 	 output that is earlyclobber but isn't used past the insn (typically 	 a SCRATCH).  In this case, we only need have the reload live 	 through the insn itself, but not for any of our input or output 	 reloads.  	 In any case, anything needed to address this operand can remain 	 however they were previously categorized.  */
 if|if
 condition|(
 name|goal_alternative_earlyclobber
@@ -14994,7 +14994,7 @@ operator|&&
 name|optimize
 condition|)
 block|{
-comment|/* For each non-matching operand that's a MEM or a pseudo-register  	   that didn't get a hard register, make an optional reload. 	   This may get done even if the insn needs no reloads otherwise.  */
+comment|/* For each non-matching operand that's a MEM or a pseudo-register 	   that didn't get a hard register, make an optional reload. 	   This may get done even if the insn needs no reloads otherwise.  */
 name|rtx
 name|operand
 init|=
@@ -15716,7 +15716,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-comment|/* Scan all the reloads and update their type.       If a reload is for the address of an operand and we didn't reload      that operand, change the type.  Similarly, change the operand number      of a reload when two operands match.  If a reload is optional, treat it      as though the operand isn't reloaded.       ??? This latter case is somewhat odd because if we do the optional      reload, it means the object is hanging around.  Thus we need only      do the address reload if the optional reload was NOT done.       Change secondary reloads to be the address type of their operand, not      the normal type.       If an operand's reload is now RELOAD_OTHER, change any      RELOAD_FOR_INPUT_ADDRESS reloads of that operand to      RELOAD_FOR_OTHER_ADDRESS.  */
+comment|/* Scan all the reloads and update their type.      If a reload is for the address of an operand and we didn't reload      that operand, change the type.  Similarly, change the operand number      of a reload when two operands match.  If a reload is optional, treat it      as though the operand isn't reloaded.       ??? This latter case is somewhat odd because if we do the optional      reload, it means the object is hanging around.  Thus we need only      do the address reload if the optional reload was NOT done.       Change secondary reloads to be the address type of their operand, not      the normal type.       If an operand's reload is now RELOAD_OTHER, change any      RELOAD_FOR_INPUT_ADDRESS reloads of that operand to      RELOAD_FOR_OTHER_ADDRESS.  */
 for|for
 control|(
 name|i
@@ -16905,7 +16905,7 @@ operator|==
 name|REG
 condition|)
 block|{
-comment|/* Check for SUBREG containing a REG that's equivalent to a constant.  	 If the constant has a known value, truncate it right now. 	 Similarly if we are extracting a single-word of a multi-word 	 constant.  If the constant is symbolic, allow it to be substituted 	 normally.  push_reload will strip the subreg later.  If the 	 constant is VOIDmode, abort because we will lose the mode of 	 the register (this should never happen because one of the cases 	 above should handle it).  */
+comment|/* Check for SUBREG containing a REG that's equivalent to a constant. 	 If the constant has a known value, truncate it right now. 	 Similarly if we are extracting a single-word of a multi-word 	 constant.  If the constant is symbolic, allow it to be substituted 	 normally.  push_reload will strip the subreg later.  If the 	 constant is VOIDmode, abort because we will lose the mode of 	 the register (this should never happen because one of the cases 	 above should handle it).  */
 specifier|register
 name|int
 name|regno
@@ -18314,7 +18314,7 @@ return|return
 literal|1
 return|;
 block|}
-comment|/* If we have an indexed stack slot, there are three possible reasons why      it might be invalid: The index might need to be reloaded, the address      might have been made by frame pointer elimination and hence have a      constant out of range, or both reasons might apply.         We can easily check for an index needing reload, but even if that is the      case, we might also have an invalid constant.  To avoid making the      conservative assumption and requiring two reloads, we see if this address      is valid when not interpreted strictly.  If it is, the only problem is      that the index needs a reload and find_reloads_address_1 will take care      of it.       There is still a case when we might generate an extra reload,      however.  In certain cases eliminate_regs will return a MEM for a REG      (see the code there for details).  In those cases, memory_address_p      applied to our address will return 0 so we will think that our offset      must be too large.  But it might indeed be valid and the only problem      is that a MEM is present where a REG should be.  This case should be      very rare and there doesn't seem to be any way to avoid it.       If we decide to do something here, it must be that      `double_reg_address_ok' is true and that this address rtl was made by      eliminate_regs.  We generate a reload of the fp/sp/ap + constant and      rework the sum so that the reload register will be added to the index.      This is safe because we know the address isn't shared.       We check for fp/ap/sp as both the first and second operand of the      innermost PLUS.  */
+comment|/* If we have an indexed stack slot, there are three possible reasons why      it might be invalid: The index might need to be reloaded, the address      might have been made by frame pointer elimination and hence have a      constant out of range, or both reasons might apply.       We can easily check for an index needing reload, but even if that is the      case, we might also have an invalid constant.  To avoid making the      conservative assumption and requiring two reloads, we see if this address      is valid when not interpreted strictly.  If it is, the only problem is      that the index needs a reload and find_reloads_address_1 will take care      of it.       There is still a case when we might generate an extra reload,      however.  In certain cases eliminate_regs will return a MEM for a REG      (see the code there for details).  In those cases, memory_address_p      applied to our address will return 0 so we will think that our offset      must be too large.  But it might indeed be valid and the only problem      is that a MEM is present where a REG should be.  This case should be      very rare and there doesn't seem to be any way to avoid it.       If we decide to do something here, it must be that      `double_reg_address_ok' is true and that this address rtl was made by      eliminate_regs.  We generate a reload of the fp/sp/ap + constant and      rework the sum so that the reload register will be added to the index.      This is safe because we know the address isn't shared.       We check for fp/ap/sp as both the first and second operand of the      innermost PLUS.  */
 elseif|else
 if|if
 condition|(
@@ -22851,7 +22851,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Nonzero if modifying X will affect IN.  If X is a register or a SUBREG,    we check if any register number in X conflicts with the relevant register    numbers.  If X is a constant, return 0.  If X is a MEM, return 1 iff IN    contains a MEM (we don't bother checking for memory addresses that can't    conflict because we expect this to be a rare case.      This function is similar to reg_overlap_mention_p in rtlanal.c except    that we look at equivalences for pseudos that didn't get hard registers.  */
+comment|/* Nonzero if modifying X will affect IN.  If X is a register or a SUBREG,    we check if any register number in X conflicts with the relevant register    numbers.  If X is a constant, return 0.  If X is a MEM, return 1 iff IN    contains a MEM (we don't bother checking for memory addresses that can't    conflict because we expect this to be a rare case.     This function is similar to reg_overlap_mention_p in rtlanal.c except    that we look at equivalences for pseudos that didn't get hard registers.  */
 end_comment
 
 begin_function

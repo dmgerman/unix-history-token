@@ -117,7 +117,7 @@ operator|*
 operator|)
 name|char_ptr
 expr_stmt|;
-comment|/* Bits 31, 24, 16, and 8 of this number are zero.  Call these bits      the "holes."  Note that there is a hole just to the left of      each byte, with an extra at the end:            bits:  01111110 11111110 11111110 11111111      bytes: AAAAAAAA BBBBBBBB CCCCCCCC DDDDDDDD        The 1-bits make sure that carries propagate to the next 0-bit.      The 0-bits provide holes for carries to fall into.  */
+comment|/* Bits 31, 24, 16, and 8 of this number are zero.  Call these bits      the "holes."  Note that there is a hole just to the left of      each byte, with an extra at the end:       bits:  01111110 11111110 11111110 11111111      bytes: AAAAAAAA BBBBBBBB CCCCCCCC DDDDDDDD       The 1-bits make sure that carries propagate to the next 0-bit.      The 0-bits provide holes for carries to fall into.  */
 name|magic_bits
 operator|=
 literal|0x7efefeff

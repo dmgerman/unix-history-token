@@ -729,7 +729,7 @@ if|#
 directive|if
 literal|0
 comment|/* This has the same value as N_BSLINE.  */
-block|case N_BROWS:       UNKNOWN_STAB ("N_BROWS");        abort ();
+block|case N_BROWS:       UNKNOWN_STAB ("N_BROWS");       abort ();
 endif|#
 directive|endif
 ifdef|#

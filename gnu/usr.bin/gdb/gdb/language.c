@@ -713,7 +713,7 @@ return|return;
 block|}
 block|}
 block|}
-comment|/* Reset the language (esp. the global string "language") to the       correct values. */
+comment|/* Reset the language (esp. the global string "language") to the      correct values. */
 name|err_lang
 operator|=
 name|savestring

@@ -2975,7 +2975,7 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Move the `this' pointer according to the offset.      VALUE_OFFSET (*arg1p) += offset;     */
+comment|/* Move the `this' pointer according to the offset.     VALUE_OFFSET (*arg1p) += offset;     */
 block|}
 return|return
 name|v

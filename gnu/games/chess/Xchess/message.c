@@ -4,7 +4,7 @@ comment|/* This file contains code for X-CHESS.    Copyright (C) 1986 Free Softw
 end_comment
 
 begin_comment
-comment|/* RCS Info: $Revision: 1.4 $ on $Date: 86/11/26 12:10:22 $  *           $Source: /users/faustus/xchess/RCS/message.c,v $  * Copyright (c) 1986 Wayne A. Christopher, U. C. Berkeley CAD Group  *	Permission is granted to do anything with this code except sell it  *	or remove this message.  *  * Do stuff with the message window.  Font 0 is the normal font, font 1  * is large, and font 2 is normal red.  */
+comment|/* RCS Info: $Revision: 1.1.1.1 $ on $Date: 1993/06/12 14:41:14 $  *           $Source: /home/ncvs/src/gnu/games/chess/Xchess/message.c,v $  * Copyright (c) 1986 Wayne A. Christopher, U. C. Berkeley CAD Group  *	Permission is granted to do anything with this code except sell it  *	or remove this message.  *  * Do stuff with the message window.  Font 0 is the normal font, font 1  * is large, and font 2 is normal red.  */
 end_comment
 
 begin_include

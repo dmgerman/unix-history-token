@@ -1354,7 +1354,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This command really has to deal with two things:  *     1) I want documentation on *this string* (usually called by  * "help commandname").  *     2) I want documentation on *this list* (usually called by  * giving a command that requires subcommands.  Also called by saying  * just "help".)  *  *   I am going to split this into two seperate comamnds, help_cmd and  * help_list.   */
+comment|/* This command really has to deal with two things:  *     1) I want documentation on *this string* (usually called by  * "help commandname").  *     2) I want documentation on *this list* (usually called by  * giving a command that requires subcommands.  Also called by saying  * just "help".)  *  *   I am going to split this into two seperate comamnds, help_cmd and  * help_list.  */
 end_comment
 
 begin_function
@@ -1427,7 +1427,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* There are three cases here.      If c->prefixlist is nonzero, we have a prefix command.      Print its documentation, then list its subcommands.            If c->function is nonzero, we really have a command.      Print its documentation and return.            If c->function is zero, we have a class name.      Print its documentation (as if it were a command)      and then set class to the number of this class      so that the commands in the class will be listed.  */
+comment|/* There are three cases here.      If c->prefixlist is nonzero, we have a prefix command.      Print its documentation, then list its subcommands.       If c->function is nonzero, we really have a command.      Print its documentation and return.       If c->function is zero, we have a class name.      Print its documentation (as if it were a command)      and then set class to the number of this class      so that the commands in the class will be listed.  */
 name|fputs_filtered
 argument_list|(
 name|c
@@ -2112,7 +2112,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* This routine takes a line of TEXT and a CLIST in which to start the    lookup.  When it returns it will have incremented the text pointer past    the section of text it matched, set *RESULT_LIST to point to the list in    which the last word was matched, and will return a pointer to the cmd    list element which the text matches.  It will return NULL if no match at    all was possible.  It will return -1 (cast appropriately, ick) if ambigous    matches are possible; in this case *RESULT_LIST will be set to point to    the list in which there are ambiguous choices (and *TEXT will be set to    the ambiguous text string).     If the located command was an abbreviation, this routine returns the base    command of the abbreviation.     It does no error reporting whatsoever; control will always return    to the superior routine.     In the case of an ambiguous return (-1), *RESULT_LIST will be set to point    at the prefix_command (ie. the best match) *or* (special case) will be NULL    if no prefix command was ever found.  For example, in the case of "info a",    "info" matches without ambiguity, but "a" could be "args" or "address", so    *RESULT_LIST is set to the cmd_list_element for "info".  So in this case    RESULT_LIST should not be interpeted as a pointer to the beginning of a    list; it simply points to a specific command.  In the case of an ambiguous    return *TEXT is advanced past the last non-ambiguous prefix (e.g.    "info t" can be "info types" or "info target"; upon return *TEXT has been    advanced past "info ").     If RESULT_LIST is NULL, don't set *RESULT_LIST (but don't otherwise    affect the operation).     This routine does *not* modify the text pointed to by TEXT.        If IGNORE_HELP_CLASSES is nonzero, ignore any command list elements which    are actually help classes rather than commands (i.e. the function field of    the struct cmd_list_element is NULL).  */
+comment|/* This routine takes a line of TEXT and a CLIST in which to start the    lookup.  When it returns it will have incremented the text pointer past    the section of text it matched, set *RESULT_LIST to point to the list in    which the last word was matched, and will return a pointer to the cmd    list element which the text matches.  It will return NULL if no match at    all was possible.  It will return -1 (cast appropriately, ick) if ambigous    matches are possible; in this case *RESULT_LIST will be set to point to    the list in which there are ambiguous choices (and *TEXT will be set to    the ambiguous text string).     If the located command was an abbreviation, this routine returns the base    command of the abbreviation.     It does no error reporting whatsoever; control will always return    to the superior routine.     In the case of an ambiguous return (-1), *RESULT_LIST will be set to point    at the prefix_command (ie. the best match) *or* (special case) will be NULL    if no prefix command was ever found.  For example, in the case of "info a",    "info" matches without ambiguity, but "a" could be "args" or "address", so    *RESULT_LIST is set to the cmd_list_element for "info".  So in this case    RESULT_LIST should not be interpeted as a pointer to the beginning of a    list; it simply points to a specific command.  In the case of an ambiguous    return *TEXT is advanced past the last non-ambiguous prefix (e.g.    "info t" can be "info types" or "info target"; upon return *TEXT has been    advanced past "info ").     If RESULT_LIST is NULL, don't set *RESULT_LIST (but don't otherwise    affect the operation).     This routine does *not* modify the text pointed to by TEXT.     If IGNORE_HELP_CLASSES is nonzero, ignore any command list elements which    are actually help classes rather than commands (i.e. the function field of    the struct cmd_list_element is NULL).  */
 end_comment
 
 begin_function
@@ -3152,7 +3152,7 @@ comment|/* Helper function for SYMBOL_COMPLETION_FUNCTION.  */
 end_comment
 
 begin_comment
-comment|/* Return a vector of char pointers which point to the different    possible completions in LIST of TEXT.       WORD points in the same buffer as TEXT, and completions should be    returned relative to this position.  For example, suppose TEXT is "foo"    and we want to complete to "foobar".  If WORD is "oo", return    "oobar"; if WORD is "baz/foo", return "baz/foobar".  */
+comment|/* Return a vector of char pointers which point to the different    possible completions in LIST of TEXT.     WORD points in the same buffer as TEXT, and completions should be    returned relative to this position.  For example, suppose TEXT is "foo"    and we want to complete to "foobar".  If WORD is "oo", return    "oobar"; if WORD is "baz/foo", return "baz/foobar".  */
 end_comment
 
 begin_function

@@ -4,7 +4,7 @@ comment|/* GNU DBM - DataBase Manager include file    Copyright 1989, 1991  Free
 end_comment
 
 begin_comment
-comment|/* You may contact the author by:        e-mail:  phil@wwu.edu       us-mail:  Philip A. Nelson                 Computer Science Department                 Western Washington University                 Bellingham, WA 98226         phone:  (206) 676-3035         *************************************************************************/
+comment|/* You may contact the author by:        e-mail:  phil@wwu.edu       us-mail:  Philip A. Nelson                 Computer Science Department                 Western Washington University                 Bellingham, WA 98226         phone:  (206) 676-3035  *************************************************************************/
 end_comment
 
 begin_comment

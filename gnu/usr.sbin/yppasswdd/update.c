@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * yppasswdd  * Copyright 1994 Olaf Kirch,<okir@monad.swb.de>  *  * This program is covered by the GNU General Public License, version 2.  * It is provided in the hope that it is useful. However, the author  * disclaims ALL WARRANTIES, expressed or implied. See the GPL for details.  */
+comment|/*  * yppasswdd  * Copyright 1994 Olaf Kirch,<okir@monad.swb.de>  *  * This program is covered by the GNU General Public License, version 2.  * It is provided in the hope that it is useful. However, the author  * disclaims ALL WARRANTIES, expressed or implied. See the GPL for details.  */
 end_comment
 
 begin_include

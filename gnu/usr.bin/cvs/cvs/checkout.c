@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * Create Version  *   * "checkout" creates a "version" of an RCS repository.  This version is owned  * totally by the user and is actually an independent copy, to be dealt with  * as seen fit.  Once "checkout" has been called in a given directory, it  * never needs to be called again.  The user can keep up-to-date by calling  * "update" when he feels like it; this will supply him with a merge of his  * own modifications and the changes made in the RCS original.  See "update"  * for details.  *   * "checkout" can be given a list of directories or files to be updated and in  * the case of a directory, will recursivley create any sub-directories that  * exist in the repository.  *   * When the user is satisfied with his own modifications, the present version  * can be committed by "commit"; this keeps the present version in tact,  * usually.  *   * The call is cvs checkout [options]<module-name>...  *   * "checkout" creates a directory ./CVS, in which it keeps its administration,  * in two files, Repository and Entries. The first contains the name of the  * repository.  The second contains one line for each registered file,  * consisting of the version number it derives from, its time stamp at  * derivation time and its name.  Both files are normal files and can be  * edited by the user, if necessary (when the repository is moved, e.g.)  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *  * Create Version  *  * "checkout" creates a "version" of an RCS repository.  This version is owned  * totally by the user and is actually an independent copy, to be dealt with  * as seen fit.  Once "checkout" has been called in a given directory, it  * never needs to be called again.  The user can keep up-to-date by calling  * "update" when he feels like it; this will supply him with a merge of his  * own modifications and the changes made in the RCS original.  See "update"  * for details.  *  * "checkout" can be given a list of directories or files to be updated and in  * the case of a directory, will recursivley create any sub-directories that  * exist in the repository.  *  * When the user is satisfied with his own modifications, the present version  * can be committed by "commit"; this keeps the present version in tact,  * usually.  *  * The call is cvs checkout [options]<module-name>...  *  * "checkout" creates a directory ./CVS, in which it keeps its administration,  * in two files, Repository and Entries. The first contains the name of the  * repository.  The second contains one line for each registered file,  * consisting of the version number it derives from, its time stamp at  * derivation time and its name.  Both files are normal files and can be  * edited by the user, if necessary (when the repository is moved, e.g.)  */
 end_comment
 
 begin_include
@@ -1262,7 +1262,7 @@ name|char
 modifier|*
 name|realdirs
 decl_stmt|;
-comment|/*      * OK, so we're doing the checkout! Our args are as follows:       *  argc,argv contain either dir or dir followed by a list of files       *  where contains where to put it (if supplied by checkout)       *  mwhere contains the module name or -d from module file       *  mfile says do only that part of the module      *  shorten = TRUE says shorten as much as possible       *  omodule is the original arg to do_module()      */
+comment|/*      * OK, so we're doing the checkout! Our args are as follows:      *  argc,argv contain either dir or dir followed by a list of files      *  where contains where to put it (if supplied by checkout)      *  mwhere contains the module name or -d from module file      *  mfile says do only that part of the module      *  shorten = TRUE says shorten as much as possible      *  omodule is the original arg to do_module()      */
 comment|/* set up the repository (maybe) for the bottom directory */
 operator|(
 name|void
@@ -1351,7 +1351,7 @@ argument_list|,
 name|mfile
 argument_list|)
 expr_stmt|;
-comment|/* 	     * Now we need to fill in the where correctly. if !shorten, tack 	     * the rest of the path onto where if where is filled in 	     * otherwise tack the rest of the path onto mwhere and make that 	     * the where 	     *  	     * If shorten is enabled, we might use mwhere to set where if  	     * nobody set it yet, so we'll need to setup mwhere as the last 	     * component of the path we are tacking onto repository 	     */
+comment|/* 	     * Now we need to fill in the where correctly. if !shorten, tack 	     * the rest of the path onto where if where is filled in 	     * otherwise tack the rest of the path onto mwhere and make that 	     * the where 	     * 	     * If shorten is enabled, we might use mwhere to set where if 	     * nobody set it yet, so we'll need to setup mwhere as the last 	     * component of the path we are tacking onto repository 	     */
 if|if
 condition|(
 operator|!
@@ -1471,7 +1471,7 @@ argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
-comment|/* 	     * At this point, if shorten is not enabled, we make where either 	     * where with mfile concatenated, or if where hadn't been set we 	     * set it to mwhere with mfile concatenated. 	     *  	     * If shorten is enabled and where hasn't been set yet, then where 	     * becomes mfile 	     */
+comment|/* 	     * At this point, if shorten is not enabled, we make where either 	     * where with mfile concatenated, or if where hadn't been set we 	     * set it to mwhere with mfile concatenated. 	     * 	     * If shorten is enabled and where hasn't been set yet, then where 	     * becomes mfile 	     */
 if|if
 condition|(
 operator|!

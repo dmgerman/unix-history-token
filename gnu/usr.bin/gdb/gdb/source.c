@@ -1834,7 +1834,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Open a file named STRING, searching path PATH (dir names sep by some char)    using mode MODE and protection bits PROT in the calls to open.     If TRY_CWD_FIRST, try to open ./STRING before searching PATH.    (ie pretend the first element of PATH is ".").  This also indicates    that a slash in STRING disables searching of the path (this is    so that "exec-file ./foo" or "symbol-file ./foo" insures that you    get that particular version of foo or an error message).     If FILENAMED_OPENED is non-null, set it to a newly allocated string naming    the actual file opened (this string will always start with a "/".  We    have to take special pains to avoid doubling the "/" between the directory    and the file, sigh!  Emacs gets confuzzed by this when we print the    source file name!!!      If a file is found, return the descriptor.    Otherwise, return -1, with errno set for the last name we tried to open.  */
+comment|/* Open a file named STRING, searching path PATH (dir names sep by some char)    using mode MODE and protection bits PROT in the calls to open.     If TRY_CWD_FIRST, try to open ./STRING before searching PATH.    (ie pretend the first element of PATH is ".").  This also indicates    that a slash in STRING disables searching of the path (this is    so that "exec-file ./foo" or "symbol-file ./foo" insures that you    get that particular version of foo or an error message).     If FILENAMED_OPENED is non-null, set it to a newly allocated string naming    the actual file opened (this string will always start with a "/".  We    have to take special pains to avoid doubling the "/" between the directory    and the file, sigh!  Emacs gets confuzzed by this when we print the    source file name!!!     If a file is found, return the descriptor.    Otherwise, return -1, with errno set for the last name we tried to open.  */
 end_comment
 
 begin_comment
@@ -2877,7 +2877,7 @@ name|cleanup
 modifier|*
 name|old_cleanups
 decl_stmt|;
-comment|/* st_size might be a large type, but we only support source files whose         size fits in an int.  */
+comment|/* st_size might be a large type, but we only support source files whose        size fits in an int.  */
 name|size
 operator|=
 operator|(
@@ -3090,7 +3090,7 @@ comment|/* Return the line number of character position POS in symtab S.  */
 end_comment
 
 begin_comment
-unit|int source_charpos_line (s, chr)     register struct symtab *s;     register int chr; {   register int line = 0;   register int *lnp;        if (s == 0 || s->line_charpos == 0) return 0;   lnp = s->line_charpos;
+unit|int source_charpos_line (s, chr)     register struct symtab *s;     register int chr; {   register int line = 0;   register int *lnp;    if (s == 0 || s->line_charpos == 0) return 0;   lnp = s->line_charpos;
 comment|/* Files are usually short, so sequential search is Ok */
 end_comment
 
@@ -3666,7 +3666,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*    C++   Print a list of files and line numbers which a user may choose from   in order to list a function which was specified ambiguously   (as with `list classname::overloadedfuncname', for example).   The vector in SALS provides the filenames and line numbers.   */
+comment|/*   C++   Print a list of files and line numbers which a user may choose from   in order to list a function which was specified ambiguously   (as with `list classname::overloadedfuncname', for example).   The vector in SALS provides the filenames and line numbers.   */
 end_comment
 
 begin_function

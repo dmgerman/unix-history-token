@@ -73,7 +73,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Should each complaint be self explanatory, or should we assume that    a series of complaints is being produced?     case 0:  self explanatory message.    case 1:  First message of a series that must start off with explanation.    case 2:  Subsequent message, when user already knows we are reading             symbols and we can just state our piece.  */
+comment|/* Should each complaint be self explanatory, or should we assume that    a series of complaints is being produced?    case 0:  self explanatory message.    case 1:  First message of a series that must start off with explanation.    case 2:  Subsequent message, when user already knows we are reading             symbols and we can just state our piece.  */
 end_comment
 
 begin_decl_stmt

@@ -4,7 +4,7 @@ comment|/* This is part of libio/iostream, providing -*- C++ -*- input/output. C
 end_comment
 
 begin_comment
-comment|/*    a very simple implementation of a class to output unix "plot"   format plotter files. See corresponding unix man pages for   more details.     written by Doug Lea (dl@rocky.oswego.edu)   converted to use iostream library by Per Bothner (bothner@cygnus.com) */
+comment|/*   a very simple implementation of a class to output unix "plot"   format plotter files. See corresponding unix man pages for   more details.    written by Doug Lea (dl@rocky.oswego.edu)   converted to use iostream library by Per Bothner (bothner@cygnus.com) */
 end_comment
 
 begin_ifndef
@@ -43,7 +43,7 @@ file|<fstream.h>
 end_include
 
 begin_comment
-comment|/*       Some plot libraries have the `box' command to draw boxes. Some don't.    `box' is included here via moves& lines to allow both possiblilties. */
+comment|/*    Some plot libraries have the `box' command to draw boxes. Some don't.    `box' is included here via moves& lines to allow both possiblilties. */
 end_comment
 
 begin_decl_stmt

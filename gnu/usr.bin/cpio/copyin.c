@@ -3324,7 +3324,7 @@ name|arf_crcascii
 operator|)
 condition|)
 block|{
-comment|/* (see comment above for how the newc and crc formats  			 store multiple links).  Now that we have the data  			 for this file, create any other links to it which 			 we defered.  */
+comment|/* (see comment above for how the newc and crc formats 			 store multiple links).  Now that we have the data 			 for this file, create any other links to it which 			 we defered.  */
 name|create_defered_links
 argument_list|(
 operator|&
@@ -5136,7 +5136,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* The newc and crc formats store multiply linked copies of the same file     in the archive only once.  The actual data is attached to the last link     in the archive, and the other links all have a filesize of 0.  When a     file in the archive has multiple links and a filesize of 0, its data is     probably "attatched" to another file in the archive, so we can't create    it right away.  We have to "defer" creating it until we have created    the file that has the data "attatched" to it.  We keep a list of the    "defered" links on deferments.  */
+comment|/* The newc and crc formats store multiply linked copies of the same file    in the archive only once.  The actual data is attached to the last link    in the archive, and the other links all have a filesize of 0.  When a    file in the archive has multiple links and a filesize of 0, its data is    probably "attatched" to another file in the archive, so we can't create    it right away.  We have to "defer" creating it until we have created    the file that has the data "attatched" to it.  We keep a list of the    "defered" links on deferments.  */
 end_comment
 
 begin_decl_stmt

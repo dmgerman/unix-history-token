@@ -801,7 +801,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Should we use malloc or alloca?  If REGEX_MALLOC is not defined, we    use `alloca' instead of `malloc'.  This is because using malloc in    re_search* or re_match* could cause memory leaks when C-g is used in    Emacs; also, malloc is slower and causes storage fragmentation.  On    the other hand, malloc is more portable, and easier to debug.          Because we sometimes use alloca, some routines have to be macros,    not functions -- `alloca'-allocated space disappears at the end of the    function it is called in.  */
+comment|/* Should we use malloc or alloca?  If REGEX_MALLOC is not defined, we    use `alloca' instead of `malloc'.  This is because using malloc in    re_search* or re_match* could cause memory leaks when C-g is used in    Emacs; also, malloc is slower and causes storage fragmentation.  On    the other hand, malloc is more portable, and easier to debug.     Because we sometimes use alloca, some routines have to be macros,    not functions -- `alloca'-allocated space disappears at the end of the    function it is called in.  */
 end_comment
 
 begin_ifdef
@@ -3367,7 +3367,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Fetch the next character in the uncompiled pattern---translating it     if necessary.  Also cast from a signed character in the constant    string passed to us by the user to an unsigned char that we can use    as an array index (in, e.g., `translate').  */
+comment|/* Fetch the next character in the uncompiled pattern---translating it    if necessary.  Also cast from a signed character in the constant    string passed to us by the user to an unsigned char that we can use    as an array index (in, e.g., `translate').  */
 end_comment
 
 begin_define
@@ -3848,7 +3848,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* `regex_compile' compiles PATTERN (of length SIZE) according to SYNTAX.    Returns one of error codes defined in `regex.h', or zero for success.     Assumes the `allocated' (and perhaps `buffer') and `translate'    fields are set in BUFP on entry.     If it succeeds, results are put in BUFP (if it returns an error, the    contents of BUFP are undefined):      `buffer' is the compiled pattern;      `syntax' is set to SYNTAX;      `used' is set to the length of the compiled pattern;      `fastmap_accurate' is zero;      `re_nsub' is the number of subexpressions in PATTERN;      `not_bol' and `not_eol' are zero;        The `fastmap' and `newline_anchor' fields are neither    examined nor set.  */
+comment|/* `regex_compile' compiles PATTERN (of length SIZE) according to SYNTAX.    Returns one of error codes defined in `regex.h', or zero for success.     Assumes the `allocated' (and perhaps `buffer') and `translate'    fields are set in BUFP on entry.     If it succeeds, results are put in BUFP (if it returns an error, the    contents of BUFP are undefined):      `buffer' is the compiled pattern;      `syntax' is set to SYNTAX;      `used' is set to the length of the compiled pattern;      `fastmap_accurate' is zero;      `re_nsub' is the number of subexpressions in PATTERN;      `not_bol' and `not_eol' are zero;     The `fastmap' and `newline_anchor' fields are neither    examined nor set.  */
 end_comment
 
 begin_function
@@ -4476,7 +4476,7 @@ condition|(
 name|many_times_ok
 condition|)
 block|{
-comment|/* More than one repetition is allowed, so put in at the                    end a backward relative jump from `b' to before the next                    jump we're going to put in below (which jumps from                    laststart to after this jump).                       But if we are at the `*' in the exact sequence `.*\n',                    insert an unconditional jump backwards to the .,                    instead of the beginning of the loop.  This way we only                    push a failure point once, instead of every time                    through the loop.  */
+comment|/* More than one repetition is allowed, so put in at the                    end a backward relative jump from `b' to before the next                    jump we're going to put in below (which jumps from                    laststart to after this jump).                     But if we are at the `*' in the exact sequence `.*\n',                    insert an unconditional jump backwards to the .,                    instead of the beginning of the loop.  This way we only                    push a failure point once, instead of every time                    through the loop.  */
 name|assert
 argument_list|(
 name|p
@@ -5063,7 +5063,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* If isn't a word bracketed by `[:' and:`]':                        undo the ending character, the letters, and leave                         the leading `:' and `[' (but set bits for them).  */
+comment|/* If isn't a word bracketed by `[:' and:`]':                        undo the ending character, the letters, and leave                        the leading `:' and `[' (but set bits for them).  */
 if|if
 condition|(
 name|c
@@ -5947,7 +5947,7 @@ name|b
 operator|+=
 literal|3
 expr_stmt|;
-comment|/* The alternative before this one has a jump after it                  which gets executed if it gets matched.  Adjust that                  jump so it will jump to this alternative's analogous                  jump (put in below, which in turn will jump to the next                  (if any) alternative's such jump, etc.).  The last such                  jump jumps to the correct final destination.  A picture:                           _____ _____                            |   | |   |                              |   v |   v                           a | b   | c                      If we are at `b', then fixup_alt_jump right now points to a                  three-byte space after `a'.  We'll put in the jump, set                  fixup_alt_jump to right after `b', and leave behind three                  bytes which we'll fill in when we get to after `c'.  */
+comment|/* The alternative before this one has a jump after it                  which gets executed if it gets matched.  Adjust that                  jump so it will jump to this alternative's analogous                  jump (put in below, which in turn will jump to the next                  (if any) alternative's such jump, etc.).  The last such                  jump jumps to the correct final destination.  A picture:                           _____ _____                           |   | |   |                           |   v |   v                          a | b   | c                   If we are at `b', then fixup_alt_jump right now points to a                  three-byte space after `a'.  We'll put in the jump, set                  fixup_alt_jump to right after `b', and leave behind three                  bytes which we'll fill in when we get to after `c'.  */
 if|if
 condition|(
 name|fixup_alt_jump
@@ -5996,7 +5996,7 @@ name|syntax
 operator|&
 name|RE_INTERVALS
 operator|)
-comment|/* If we're at `\{' and it's not the open-interval                          operator.  */
+comment|/* If we're at `\{' and it's not the open-interval                         operator.  */
 operator|||
 operator|(
 operator|(
@@ -6289,7 +6289,7 @@ name|b
 operator|+=
 literal|5
 expr_stmt|;
-comment|/* Code to initialize the lower bound.  Insert                          before the `succeed_n'.  The `5' is the last two                         bytes of this `set_number_at', plus 3 bytes of                         the following `succeed_n'.  */
+comment|/* Code to initialize the lower bound.  Insert                         before the `succeed_n'.  The `5' is the last two                         bytes of this `set_number_at', plus 3 bytes of                         the following `succeed_n'.  */
 name|insert_op2
 argument_list|(
 name|set_number_at
@@ -6314,7 +6314,7 @@ operator|>
 literal|1
 condition|)
 block|{
-comment|/* More than one repetition is allowed, so                             append a backward jump to the `succeed_n'                             that starts this interval.                                                          When we've reached this during matching,                             we'll have matched the interval once, so                             jump back only `upper_bound - 1' times.  */
+comment|/* More than one repetition is allowed, so                             append a backward jump to the `succeed_n'                             that starts this interval.                              When we've reached this during matching,                             we'll have matched the interval once, so                             jump back only `upper_bound - 1' times.  */
 name|STORE_JUMP2
 argument_list|(
 name|jump_n
@@ -6334,7 +6334,7 @@ name|b
 operator|+=
 literal|5
 expr_stmt|;
-comment|/* The location we want to set is the second                             parameter of the `jump_n'; that is `b-2' as                             an absolute address.  `laststart' will be                             the `set_number_at' we're about to insert;                             `laststart+3' the number to set, the source                             for the relative address.  But we are                             inserting into the middle of the pattern --                             so everything is getting moved up by 5.                             Conclusion: (b - 2) - (laststart + 3) + 5,                             i.e., b - laststart.                                                          We insert this at the beginning of the loop                             so that if we fail during matching, we'll                             reinitialize the bounds.  */
+comment|/* The location we want to set is the second                             parameter of the `jump_n'; that is `b-2' as                             an absolute address.  `laststart' will be                             the `set_number_at' we're about to insert;                             `laststart+3' the number to set, the source                             for the relative address.  But we are                             inserting into the middle of the pattern --                             so everything is getting moved up by 5.                             Conclusion: (b - 2) - (laststart + 3) + 5,                             i.e., b - laststart.                              We insert this at the beginning of the loop                             so that if we fail during matching, we'll                             reinitialize the bounds.  */
 name|insert_op2
 argument_list|(
 name|set_number_at
@@ -7461,7 +7461,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* Returns true if REGNUM is in one of COMPILE_STACK's elements and     false if it's not.  */
+comment|/* Returns true if REGNUM is in one of COMPILE_STACK's elements and    false if it's not.  */
 end_comment
 
 begin_function
@@ -7523,7 +7523,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Read the ending character of a range (in a bracket expression) from the    uncompiled pattern *P_PTR (which ends at PEND).  We assume the    starting character is in `P[-2]'.  (`P[-1]' is the character `-'.)    Then we set the translation of all bits between the starting and    ending characters (inclusive) in the compiled pattern B.        Return an error code.        We use these short variable names so we can use the same macros as    `regex_compile' itself.  */
+comment|/* Read the ending character of a range (in a bracket expression) from the    uncompiled pattern *P_PTR (which ends at PEND).  We assume the    starting character is in `P[-2]'.  (`P[-1]' is the character `-'.)    Then we set the translation of all bits between the starting and    ending characters (inclusive) in the compiled pattern B.     Return an error code.     We use these short variable names so we can use the same macros as    `regex_compile' itself.  */
 end_comment
 
 begin_function
@@ -7600,7 +7600,7 @@ condition|)
 return|return
 name|REG_ERANGE
 return|;
-comment|/* Even though the pattern is a signed `char *', we need to fetch      with unsigned char *'s; if the high bit of the pattern character      is set, the range endpoints will be negative if we fetch using a      signed char *.       We also want to fetch the endpoints without translating them; the       appropriate translation is done in the bit-setting loop below.  */
+comment|/* Even though the pattern is a signed `char *', we need to fetch      with unsigned char *'s; if the high bit of the pattern character      is set, the range endpoints will be negative if we fetch using a      signed char *.       We also want to fetch the endpoints without translating them; the      appropriate translation is done in the bit-setting loop below.  */
 name|range_start
 operator|=
 operator|(
@@ -7800,7 +7800,7 @@ value|do {									\     fail_stack.stack = (fail_stack_elt_t *)				\       REGE
 end_define
 
 begin_comment
-comment|/* Double the size of FAIL_STACK, up to approximately `re_max_failures' items.     Return 1 if succeeds, and 0 if either ran out of memory    allocating space for it or it was already too large.          REGEX_REALLOCATE requires `destination' be declared.   */
+comment|/* Double the size of FAIL_STACK, up to approximately `re_max_failures' items.     Return 1 if succeeds, and 0 if either ran out of memory    allocating space for it or it was already too large.     REGEX_REALLOCATE requires `destination' be declared.   */
 end_comment
 
 begin_define
@@ -7815,7 +7815,7 @@ value|((fail_stack).size> re_max_failures * MAX_FAILURE_ITEMS		\    ? 0									
 end_define
 
 begin_comment
-comment|/* Push PATTERN_OP on FAIL_STACK.      Return 1 if was able to do so and 0 if ran out of memory allocating    space to do so.  */
+comment|/* Push PATTERN_OP on FAIL_STACK.     Return 1 if was able to do so and 0 if ran out of memory allocating    space to do so.  */
 end_comment
 
 begin_define
@@ -7914,7 +7914,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Push the information about the state we will need    if we ever fail back to it.          Requires variables fail_stack, regstart, regend, reg_info, and    num_regs be declared.  DOUBLE_FAIL_STACK requires `destination' be    declared.        Does `return FAILURE_CODE' if runs out of memory.  */
+comment|/* Push the information about the state we will need    if we ever fail back to it.     Requires variables fail_stack, regstart, regend, reg_info, and    num_regs be declared.  DOUBLE_FAIL_STACK requires `destination' be    declared.     Does `return FAILURE_CODE' if runs out of memory.  */
 end_comment
 
 begin_define
@@ -8052,7 +8052,7 @@ value|((fail_stack).size - (fail_stack).avail)
 end_define
 
 begin_comment
-comment|/* Pops what PUSH_FAIL_STACK pushes.     We restore into the parameters, all of which should be lvalues:      STR -- the saved data position.      PAT -- the saved pattern position.      LOW_REG, HIGH_REG -- the highest and lowest active registers.      REGSTART, REGEND -- arrays of string positions.      REG_INFO -- array of information about each subexpression.        Also assumes the variables `fail_stack' and (if debugging), `bufp',    `pend', `string1', `size1', `string2', and `size2'.  */
+comment|/* Pops what PUSH_FAIL_STACK pushes.     We restore into the parameters, all of which should be lvalues:      STR -- the saved data position.      PAT -- the saved pattern position.      LOW_REG, HIGH_REG -- the highest and lowest active registers.      REGSTART, REGEND -- arrays of string positions.      REG_INFO -- array of information about each subexpression.     Also assumes the variables `fail_stack' and (if debugging), `bufp',    `pend', `string1', `size1', `string2', and `size2'.  */
 end_comment
 
 begin_define
@@ -8115,7 +8115,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* re_compile_fastmap computes a ``fastmap'' for the compiled pattern in    BUFP.  A fastmap records which of the (1<< BYTEWIDTH) possible    characters can start a string that matches the pattern.  This fastmap    is used by re_search to skip quickly over impossible starting points.     The caller must supply the address of a (1<< BYTEWIDTH)-byte data    area as BUFP->fastmap.        We set the `fastmap', `fastmap_accurate', and `can_be_null' fields in    the pattern buffer.     Returns 0 if we succeed, -2 if an internal error.   */
+comment|/* re_compile_fastmap computes a ``fastmap'' for the compiled pattern in    BUFP.  A fastmap records which of the (1<< BYTEWIDTH) possible    characters can start a string that matches the pattern.  This fastmap    is used by re_search to skip quickly over impossible starting points.     The caller must supply the address of a (1<< BYTEWIDTH)-byte data    area as BUFP->fastmap.     We set the `fastmap', `fastmap_accurate', and `can_be_null' fields in    the pattern buffer.     Returns 0 if we succeed, -2 if an internal error.   */
 end_comment
 
 begin_function
@@ -9188,7 +9188,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Using the compiled pattern in BUFP->buffer, first tries to match the    virtual concatenation of STRING1 and STRING2, starting first at index    STARTPOS, then at STARTPOS + 1, and so on.        STRING1 and STRING2 have length SIZE1 and SIZE2, respectively.        RANGE is how far to scan while trying to match.  RANGE = 0 means try    only at STARTPOS; in general, the last start tried is STARTPOS +    RANGE.        In REGS, return the indices of the virtual concatenation of STRING1    and STRING2 that matched the entire BUFP->buffer and its contained    subexpressions.        Do not consider matching one past the index STOP in the virtual    concatenation of STRING1 and STRING2.     We return either the position in the strings at which the match was    found, -1 if no match, or -2 if error (such as failure    stack overflow).  */
+comment|/* Using the compiled pattern in BUFP->buffer, first tries to match the    virtual concatenation of STRING1 and STRING2, starting first at index    STARTPOS, then at STARTPOS + 1, and so on.     STRING1 and STRING2 have length SIZE1 and SIZE2, respectively.     RANGE is how far to scan while trying to match.  RANGE = 0 means try    only at STARTPOS; in general, the last start tried is STARTPOS +    RANGE.     In REGS, return the indices of the virtual concatenation of STRING1    and STRING2 that matched the entire BUFP->buffer and its contained    subexpressions.     Do not consider matching one past the index STOP in the virtual    concatenation of STRING1 and STRING2.     We return either the position in the strings at which the match was    found, -1 if no match, or -2 if error (such as failure    stack overflow).  */
 end_comment
 
 begin_function
@@ -9715,7 +9715,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Structure for per-register (a.k.a. per-group) information.    This must not be longer than one word, because we push this value    onto the failure stack.  Other register information, such as the    starting and ending positions (which are addresses), and the list of    inner groups (which is a bits list) are maintained in separate    variables.          We are making a (strictly speaking) nonportable assumption here: that    the compiler will pack our bit fields into something that fits into    the type of `word', i.e., is something that fits into one item on the    failure stack.  */
+comment|/* Structure for per-register (a.k.a. per-group) information.    This must not be longer than one word, because we push this value    onto the failure stack.  Other register information, such as the    starting and ending positions (which are addresses), and the list of    inner groups (which is a bits list) are maintained in separate    variables.     We are making a (strictly speaking) nonportable assumption here: that    the compiler will pack our bit fields into something that fits into    the type of `word', i.e., is something that fits into one item on the    failure stack.  */
 end_comment
 
 begin_comment
@@ -10206,7 +10206,7 @@ comment|/* not emacs */
 end_comment
 
 begin_comment
-comment|/* re_match_2 matches the compiled pattern in BUFP against the    the (virtual) concatenation of STRING1 and STRING2 (of length SIZE1    and SIZE2, respectively).  We start matching at POS, and stop    matching at STOP.        If REGS is non-null and the `no_sub' field of BUFP is nonzero, we    store offsets for the substring each group matched in REGS.  See the    documentation for exactly how many groups we fill.     We return -1 if no match, -2 if an internal error (such as the    failure stack overflowing).  Otherwise, we return the length of the    matched substring.  */
+comment|/* re_match_2 matches the compiled pattern in BUFP against the    the (virtual) concatenation of STRING1 and STRING2 (of length SIZE1    and SIZE2, respectively).  We start matching at POS, and stop    matching at STOP.     If REGS is non-null and the `no_sub' field of BUFP is nonzero, we    store offsets for the substring each group matched in REGS.  See the    documentation for exactly how many groups we fill.     We return -1 if no match, -2 if an internal error (such as the    failure stack overflowing).  Otherwise, we return the length of the    matched substring.  */
 end_comment
 
 begin_function
@@ -10423,7 +10423,7 @@ name|reg_info
 init|=
 literal|0
 decl_stmt|;
-comment|/* The following record the register info as found in the above      variables when we find a match better than any we've seen before.       This happens as we backtrack through the failure points, which in      turn happens only if we have not yet matched the entire string. */
+comment|/* The following record the register info as found in the above      variables when we find a match better than any we've seen before.      This happens as we backtrack through the failure points, which in      turn happens only if we have not yet matched the entire string. */
 name|unsigned
 name|best_regs_set
 init|=
@@ -10832,7 +10832,7 @@ operator|-
 name|size1
 expr_stmt|;
 block|}
-comment|/* `p' scans through the pattern as `d' scans through the data.       `dend' is the end of the input string that `d' points within.  `d'      is advanced into the following input string whenever necessary, but      this happens before fetching; therefore, at the beginning of the      loop, `d' can be pointing at the end of a string, but it cannot      equal `string2'.  */
+comment|/* `p' scans through the pattern as `d' scans through the data.      `dend' is the end of the input string that `d' points within.  `d'      is advanced into the following input string whenever necessary, but      this happens before fetching; therefore, at the beginning of the      loop, `d' can be pointing at the end of a string, but it cannot      equal `string2'.  */
 if|if
 condition|(
 name|size1
@@ -12317,7 +12317,7 @@ operator|*
 name|p
 condition|)
 block|{
-comment|/* If this group ever matched anything, then restore                      what its registers were before trying this last                      failed match, e.g., with `(a*)*b' against `ab' for                      regstart[1], and, e.g., with `((a*)*(b*)*)*'                      against `aba' for regend[3].                                            Also restore the registers for inner groups for,                      e.g., `((a*)(b*))*' against `aba' (register 3 would                      otherwise get trashed).  */
+comment|/* If this group ever matched anything, then restore                      what its registers were before trying this last                      failed match, e.g., with `(a*)*b' against `ab' for                      regstart[1], and, e.g., with `((a*)*(b*)*)*'                      against `aba' for regend[3].                       Also restore the registers for inner groups for,                      e.g., `((a*)(b*))*' against `aba' (register 3 would                      otherwise get trashed).  */
 if|if
 condition|(
 name|EVER_MATCHED_SOMETHING
@@ -12802,7 +12802,7 @@ break|break;
 goto|goto
 name|fail
 goto|;
-comment|/* on_failure_keep_string_jump is used to optimize `.*\n'.  It            pushes NULL as the value for the string on the stack.  Then            `pop_failure_point' will keep the current value for the            string, instead of restoring it.  To see why, consider            matching `foo\nbar' against `.*\n'.  The .* matches the foo;            then the . fails against the \n.  But the next thing we want            to do is match the \n against the \n; if we restored the            string value, we would be back at the foo.                        Because this is used only in specific cases, we don't need to            check all the things that `on_failure_jump' does, to make            sure the right things get saved on the stack.  Hence we don't            share its code.  The only reason to push anything on the            stack at all is that otherwise we would have to change            `anychar's code to do something besides goto fail in this            case; that seems worse than this.  */
+comment|/* on_failure_keep_string_jump is used to optimize `.*\n'.  It            pushes NULL as the value for the string on the stack.  Then            `pop_failure_point' will keep the current value for the            string, instead of restoring it.  To see why, consider            matching `foo\nbar' against `.*\n'.  The .* matches the foo;            then the . fails against the \n.  But the next thing we want            to do is match the \n against the \n; if we restored the            string value, we would be back at the foo.             Because this is used only in specific cases, we don't need to            check all the things that `on_failure_jump' does, to make            sure the right things get saved on the stack.  Hence we don't            share its code.  The only reason to push anything on the            stack at all is that otherwise we would have to change            `anychar's code to do something besides goto fail in this            case; that seems worse than this.  */
 case|case
 name|on_failure_keep_string_jump
 case|:
@@ -12854,7 +12854,7 @@ literal|2
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* Uses of on_failure_jump:                     Each alternative starts with an on_failure_jump that points            to the beginning of the next alternative.  Each alternative            except the last ends with a jump that in effect jumps past            the rest of the alternatives.  (They really jump to the            ending jump of the following alternative, because tensioning            these jumps is a hassle.)             Repeats start with an on_failure_jump that points past both            the repetition text and either the following jump or            pop_failure_jump back to this on_failure_jump.  */
+comment|/* Uses of on_failure_jump:             Each alternative starts with an on_failure_jump that points            to the beginning of the next alternative.  Each alternative            except the last ends with a jump that in effect jumps past            the rest of the alternatives.  (They really jump to the            ending jump of the following alternative, because tensioning            these jumps is a hassle.)             Repeats start with an on_failure_jump that points past both            the repetition text and either the following jump or            pop_failure_jump back to this on_failure_jump.  */
 case|case
 name|on_failure_jump
 case|:
@@ -13012,7 +13012,7 @@ name|p2
 init|=
 name|p
 decl_stmt|;
-comment|/* Compare the beginning of the repeat with what in the                pattern follows its end. If we can establish that there                is nothing that they would both match, i.e., that we                would have to backtrack because of (as in, e.g., `a*a')                then we can change to pop_failure_jump, because we'll                never have to backtrack.                                This is not true in the case of alternatives: in                `(a|ab)*' we do need to backtrack to the `ab' alternative                (e.g., if the string was `ab').  But instead of trying to                detect that here, the alternative has put on a dummy                failure point which is what we will end up popping.  */
+comment|/* Compare the beginning of the repeat with what in the                pattern follows its end. If we can establish that there                is nothing that they would both match, i.e., that we                would have to backtrack because of (as in, e.g., `a*a')                then we can change to pop_failure_jump, because we'll                never have to backtrack.                 This is not true in the case of alternatives: in                `(a|ab)*' we do need to backtrack to the `ab' alternative                (e.g., if the string was `ab').  But instead of trying to                detect that here, the alternative has put on a dummy                failure point which is what we will end up popping.  */
 comment|/* Skip over open/close-group commands.  */
 while|while
 condition|(
@@ -13125,7 +13125,7 @@ name|p
 operator|+
 name|mcnt
 expr_stmt|;
-comment|/* p1[0] ... p1[2] are the `on_failure_jump' corresponding                    to the `maybe_finalize_jump' of this case.  Examine what                     follows.  */
+comment|/* p1[0] ... p1[2] are the `on_failure_jump' corresponding                    to the `maybe_finalize_jump' of this case.  Examine what                    follows.  */
 if|if
 condition|(
 operator|(
@@ -14284,7 +14284,7 @@ comment|/* Subroutine definitions for re_match_2.  */
 end_comment
 
 begin_comment
-comment|/* We are passed P pointing to a register number after a start_memory.        Return true if the pattern up to the corresponding stop_memory can    match the empty string, and false otherwise.        If we find the matching stop_memory, sets P to point to one past its number.    Otherwise, sets P to an undefined byte less than or equal to END.     We don't handle duplicates properly (yet).  */
+comment|/* We are passed P pointing to a register number after a start_memory.     Return true if the pattern up to the corresponding stop_memory can    match the empty string, and false otherwise.     If we find the matching stop_memory, sets P to point to one past its number.    Otherwise, sets P to an undefined byte less than or equal to END.     We don't handle duplicates properly (yet).  */
 end_comment
 
 begin_function
@@ -14371,7 +14371,7 @@ operator|>=
 literal|0
 condition|)
 block|{
-comment|/* Go through the on_failure_jumps of the alternatives,                  seeing if any of the alternatives cannot match nothing.                  The last alternative starts with only a jump,                  whereas the rest start with on_failure_jump and end                  with a jump, e.g., here is the pattern for `a|b|c':                   /on_failure_jump/0/6/exactn/1/a/jump_past_alt/0/6                  /on_failure_jump/0/6/exactn/1/b/jump_past_alt/0/3                  /exactn/1/c						                   So, we have to first go through the first (n-1)                  alternatives and then deal with the last one separately.  */
+comment|/* Go through the on_failure_jumps of the alternatives,                  seeing if any of the alternatives cannot match nothing.                  The last alternative starts with only a jump,                  whereas the rest start with on_failure_jump and end                  with a jump, e.g., here is the pattern for `a|b|c':                   /on_failure_jump/0/6/exactn/1/a/jump_past_alt/0/6                  /on_failure_jump/0/6/exactn/1/b/jump_past_alt/0/3                  /exactn/1/c                   So, we have to first go through the first (n-1)                  alternatives and then deal with the last one separately.  */
 comment|/* Deal with the first (n-1) alternatives, which start                  with an on_failure_jump (see above) that jumps to right                  past a jump_past_alt.  */
 while|while
 condition|(
@@ -14600,7 +14600,7 @@ operator|<
 name|end
 condition|)
 block|{
-comment|/* Skip over opcodes that can match nothing, and break when we get           to one that can't.  */
+comment|/* Skip over opcodes that can match nothing, and break when we get          to one that can't.  */
 switch|switch
 condition|(
 operator|(
@@ -14660,7 +14660,7 @@ comment|/* alt_match_null_string_p */
 end_comment
 
 begin_comment
-comment|/* Deals with the ops common to group_match_null_string_p and    alt_match_null_string_p.          Sets P to one after the op and its arguments, if any.  */
+comment|/* Deals with the ops common to group_match_null_string_p and    alt_match_null_string_p.     Sets P to one after the op and its arguments, if any.  */
 end_comment
 
 begin_function
@@ -15053,7 +15053,7 @@ comment|/* Entry points for GNU code.  */
 end_comment
 
 begin_comment
-comment|/* re_compile_pattern is the GNU regular expression compiler: it    compiles PATTERN (of length SIZE) and puts the result in BUFP.    Returns 0 if the pattern was valid, otherwise an error string.        Assumes the `allocated' (and perhaps `buffer') and `translate' fields    are set in BUFP on entry.        We call regex_compile to do the actual compilation.  */
+comment|/* re_compile_pattern is the GNU regular expression compiler: it    compiles PATTERN (of length SIZE) and puts the result in BUFP.    Returns 0 if the pattern was valid, otherwise an error string.     Assumes the `allocated' (and perhaps `buffer') and `translate' fields    are set in BUFP on entry.     We call regex_compile to do the actual compilation.  */
 end_comment
 
 begin_function
@@ -15572,7 +15572,7 @@ operator|&
 name|REG_NOSUB
 operator|)
 expr_stmt|;
-comment|/* POSIX says a null character in the pattern terminates it, so we       can use strlen here in compiling the pattern.  */
+comment|/* POSIX says a null character in the pattern terminates it, so we      can use strlen here in compiling the pattern.  */
 name|ret
 operator|=
 name|regex_compile
@@ -15610,7 +15610,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* regexec searches for a given pattern, specified by PREG, in the    string STRING.        If NMATCH is zero or REG_NOSUB was set in the cflags argument to    `regcomp', we ignore PMATCH.  Otherwise, we assume PMATCH has at    least NMATCH elements, and we set them to the offsets of the    corresponding matched substrings.        EFLAGS specifies `execution flags' which affect matching: if    REG_NOTBOL is set, then ^ does not match at the beginning of the    string; if REG_NOTEOL is set, then $ does not match at the end.        We return 0 if we find a match and REG_NOMATCH if not.  */
+comment|/* regexec searches for a given pattern, specified by PREG, in the    string STRING.     If NMATCH is zero or REG_NOSUB was set in the cflags argument to    `regcomp', we ignore PMATCH.  Otherwise, we assume PMATCH has at    least NMATCH elements, and we set them to the offsets of the    corresponding matched substrings.     EFLAGS specifies `execution flags' which affect matching: if    REG_NOTBOL is set, then ^ does not match at the beginning of the    string; if REG_NOTEOL is set, then $ does not match at the end.     We return 0 if we find a match and REG_NOMATCH if not.  */
 end_comment
 
 begin_function
@@ -15957,7 +15957,7 @@ index|]
 argument_list|)
 operator|)
 condition|)
-comment|/* Only error codes returned by the rest of the code should be passed         to this routine.  If we are given anything else, or if other regex        code generates an invalid error code, then the program has a bug.        Dump core so we can fix it.  */
+comment|/* Only error codes returned by the rest of the code should be passed        to this routine.  If we are given anything else, or if other regex        code generates an invalid error code, then the program has a bug.        Dump core so we can fix it.  */
 name|abort
 argument_list|()
 expr_stmt|;

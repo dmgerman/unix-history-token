@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cplus-dem.c,v 1.2 1993/08/01 18:46:58 mycroft Exp $"
+literal|"$Id: cplus-dem.c,v 1.3 1993/11/09 04:18:51 paul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,7 +33,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/* Demangler for GNU C++     Copyright (C) 1989 Free Software Foundation, Inc.    written by James Clark (jjc@jclark.uucp)        This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 1, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Demangler for GNU C++    Copyright (C) 1989 Free Software Foundation, Inc.    written by James Clark (jjc@jclark.uucp)     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 1, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
@@ -41,7 +41,7 @@ comment|/* This is for g++ 1.36.1 (November 6 version). It will probably    requ
 end_comment
 
 begin_comment
-comment|/* This file exports one function     char *cplus_demangle (const char *name)        If `name' is a mangled function name produced by g++, then    a pointer to a malloced string giving a C++ representation    of the name will be returned; otherwise NULL will be returned.    It is the caller's responsibility to free the string which    is returned.     For example,        cplus_demangle ("_foo__1Ai")        returns     "A::foo(int)"     This file imports xmalloc and xrealloc, which are like malloc and    realloc except that they generate a fatal error if there is no    available memory. */
+comment|/* This file exports one function     char *cplus_demangle (const char *name)     If `name' is a mangled function name produced by g++, then    a pointer to a malloced string giving a C++ representation    of the name will be returned; otherwise NULL will be returned.    It is the caller's responsibility to free the string which    is returned.     For example,     cplus_demangle ("_foo__1Ai")     returns     "A::foo(int)"     This file imports xmalloc and xrealloc, which are like malloc and    realloc except that they generate a fatal error if there is no    available memory. */
 end_comment
 
 begin_comment

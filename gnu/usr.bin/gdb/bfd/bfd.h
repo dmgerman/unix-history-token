@@ -4,7 +4,7 @@ comment|/* Main header file for the bfd library -- portable access to object fil
 end_comment
 
 begin_comment
-comment|/* bfd.h -- The only header file required by users of the bfd library   The bfd.h file is generated from bfd-in.h and various .c files; if you change it, your changes will probably be lost.  All the prototypes and definitions following the comment "THE FOLLOWING IS EXTRACTED FROM THE SOURCE" are extracted from the source files for BFD.  If you change it, someone oneday will extract it from the source again, and your changes will be lost.  To save yourself from this bind, change the definitions in the source in the bfd directory.  Type "make docs" and then "make headers" in that directory, and magically this file will change to reflect your changes.  If you don't have the tools to perform the extraction, then you are safe from someone on your system trampling over your header files. You should still maintain the equivalence between the source and this file though; every change you make to the .c file should be reflected here.  */
+comment|/* bfd.h -- The only header file required by users of the bfd library  The bfd.h file is generated from bfd-in.h and various .c files; if you change it, your changes will probably be lost.  All the prototypes and definitions following the comment "THE FOLLOWING IS EXTRACTED FROM THE SOURCE" are extracted from the source files for BFD.  If you change it, someone oneday will extract it from the source again, and your changes will be lost.  To save yourself from this bind, change the definitions in the source in the bfd directory.  Type "make docs" and then "make headers" in that directory, and magically this file will change to reflect your changes.  If you don't have the tools to perform the extraction, then you are safe from someone on your system trampling over your header files. You should still maintain the equivalence between the source and this file though; every change you make to the .c file should be reflected here.  */
 end_comment
 
 begin_ifndef
@@ -203,7 +203,7 @@ comment|/* A pointer to a position in a file.  */
 end_comment
 
 begin_comment
-comment|/* FIXME:  This should be using off_t from<sys/types.h>.    For now, try to avoid breaking stuff by not including<sys/types.h> here.    This will break on systems with 64-bit file offsets (e.g. 4.4BSD).    Probably the best long-term answer is to avoid using file_ptr AND off_t     in this header file, and to handle this in the BFD implementation    rather than in its interface.  */
+comment|/* FIXME:  This should be using off_t from<sys/types.h>.    For now, try to avoid breaking stuff by not including<sys/types.h> here.    This will break on systems with 64-bit file offsets (e.g. 4.4BSD).    Probably the best long-term answer is to avoid using file_ptr AND off_t    in this header file, and to handle this in the BFD implementation    rather than in its interface.  */
 end_comment
 
 begin_comment
@@ -4066,7 +4066,7 @@ comment|/* DEC Vax */
 name|bfd_arch_i960
 block|,
 comment|/* Intel 960 */
-comment|/* The order of the following is important.        lower number indicates a machine type that         only accepts a subset of the instructions        available to machines with higher numbers.        The exception is the "ca", which is        incompatible with all other machines except         "core". */
+comment|/* The order of the following is important.        lower number indicates a machine type that        only accepts a subset of the instructions        available to machines with higher numbers.        The exception is the "ca", which is        incompatible with all other machines except        "core". */
 define|#
 directive|define
 name|bfd_mach_i960_core
@@ -5462,7 +5462,7 @@ name|unsigned
 name|int
 name|section_count
 decl_stmt|;
-comment|/* Stuff only useful for object files:         The start address. */
+comment|/* Stuff only useful for object files:        The start address. */
 name|bfd_vma
 name|start_address
 decl_stmt|;

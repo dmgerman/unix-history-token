@@ -900,7 +900,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return a value with type TYPE located at ADDR.       Call value_at only if the data needs to be fetched immediately;    if we can be 'lazy' and defer the fetch, perhaps indefinately, call    value_at_lazy instead.  value_at_lazy simply records the address of    the data and sets the lazy-evaluation-required flag.  The lazy flag     is tested in the VALUE_CONTENTS macro, which is used if and when     the contents are actually required.  */
+comment|/* Return a value with type TYPE located at ADDR.     Call value_at only if the data needs to be fetched immediately;    if we can be 'lazy' and defer the fetch, perhaps indefinately, call    value_at_lazy instead.  value_at_lazy simply records the address of    the data and sets the lazy-evaluation-required flag.  The lazy flag    is tested in the VALUE_CONTENTS macro, which is used if and when    the contents are actually required.  */
 end_comment
 
 begin_function
@@ -3272,7 +3272,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Determine a function's address and its return type from its value.     Calls error() if the function is not valid for calling.  */
+comment|/* Determine a function's address and its return type from its value.    Calls error() if the function is not valid for calling.  */
 end_comment
 
 begin_function
@@ -4282,7 +4282,7 @@ directive|endif
 endif|#
 directive|endif
 comment|/* CALL_DUMMY_STACK_ADJUST */
-comment|/* Store the address at which the structure is supposed to be      written.  Note that this (and the code which reserved the space      above) assumes that gcc was used to compile this function.  Since      it doesn't cost us anything but space and if the function is pcc      it will ignore this value, we will make that assumption.       Also note that on some machines (like the sparc) pcc uses a       convention like gcc's.  */
+comment|/* Store the address at which the structure is supposed to be      written.  Note that this (and the code which reserved the space      above) assumes that gcc was used to compile this function.  Since      it doesn't cost us anything but space and if the function is pcc      it will ignore this value, we will make that assumption.       Also note that on some machines (like the sparc) pcc uses a      convention like gcc's.  */
 if|if
 condition|(
 name|struct_return

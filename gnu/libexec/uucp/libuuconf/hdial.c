@@ -21,7 +21,7 @@ name|char
 name|_uuconf_hdial_rcsid
 index|[]
 init|=
-literal|"$Id: hdial.c,v 1.4 1994/01/30 21:14:29 ian Rel $"
+literal|"$Id: hdial.c,v 1.2 1994/05/07 18:12:20 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 

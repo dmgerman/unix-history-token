@@ -37,7 +37,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  *	$Id: ld.c,v 1.25 1995/03/06 08:00:23 phk Exp $  */
+comment|/*  *	$Id: ld.c,v 1.26 1995/03/10 19:41:50 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -1697,7 +1697,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Analyze a command line argument. Return 0 if the argument is a filename.  * Return 1 if the argument is a option complete in itself. Return 2 if the  * argument is a option which uses an argument.  *   * Thus, the value is the number of consecutive arguments that are part of  * options.  */
+comment|/*  * Analyze a command line argument. Return 0 if the argument is a filename.  * Return 1 if the argument is a option complete in itself. Return 2 if the  * argument is a option which uses an argument.  *  * Thus, the value is the number of consecutive arguments that are part of  * options.  */
 end_comment
 
 begin_function
@@ -2656,7 +2656,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Record an option and arrange to act on it later. ARG should be the  * following command argument, which may or may not be used by this option.  *   * The `l' and `A' options are ignored here since they actually specify input  * files.  */
+comment|/*  * Record an option and arrange to act on it later. ARG should be the  * following command argument, which may or may not be used by this option.  *  * The `l' and `A' options are ignored here since they actually specify input  * files.  */
 end_comment
 
 begin_function
@@ -3293,7 +3293,7 @@ comment|/* Convenient functions for operating on one or all files being loaded. 
 end_comment
 
 begin_comment
-comment|/*  * Call FUNCTION on each input file entry. Do not call for entries for  * libraries; instead, call once for each library member that is being  * loaded.  *   * FUNCTION receives two arguments: the entry, and ARG.  */
+comment|/*  * Call FUNCTION on each input file entry. Do not call for entries for  * libraries; instead, call once for each library member that is being  * loaded.  *  * FUNCTION receives two arguments: the entry, and ARG.  */
 end_comment
 
 begin_decl_stmt
@@ -3520,7 +3520,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Call FUNCTION on each input file entry until it returns a non-zero value.  * Return this value. Do not call for entries for libraries; instead, call  * once for each library member that is being loaded.  *   * FUNCTION receives two arguments: the entry, and ARG.  It must be a function  * returning unsigned long (though this can probably be fudged).  */
+comment|/*  * Call FUNCTION on each input file entry until it returns a non-zero value.  * Return this value. Do not call for entries for libraries; instead, call  * once for each library member that is being loaded.  *  * FUNCTION receives two arguments: the entry, and ARG.  It must be a function  * returning unsigned long (though this can probably be fudged).  */
 end_comment
 
 begin_decl_stmt
@@ -5891,7 +5891,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Enter one global symbol in the hash table. LSP points to the `struct  * localsymbol' from the file that describes the global symbol.  NAME is the  * symbol's name. ENTRY is the file entry for the file the symbol comes from.  *   * LSP is put on the chain of all such structs that refer to the same symbol.  * This chain starts in the `refs' for symbols from relocatable objects. A  * backpointer to the global symbol is kept in LSP.  *  * Symbols from shared objects are linked through `soref'. For such symbols  * that's all we do at this stage, with the exception of the case where the  * symbol is a common. The `referenced' bit is only set for references from  * relocatable objects.  *  */
+comment|/*  * Enter one global symbol in the hash table. LSP points to the `struct  * localsymbol' from the file that describes the global symbol.  NAME is the  * symbol's name. ENTRY is the file entry for the file the symbol comes from.  *  * LSP is put on the chain of all such structs that refer to the same symbol.  * This chain starts in the `refs' for symbols from relocatable objects. A  * backpointer to the global symbol is kept in LSP.  *  * Symbols from shared objects are linked through `soref'. For such symbols  * that's all we do at this stage, with the exception of the case where the  * symbol is a common. The `referenced' bit is only set for references from  * relocatable objects.  *  */
 end_comment
 
 begin_function
@@ -7007,7 +7007,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Having entered all the global symbols and found the sizes of sections of  * all files to be linked, make all appropriate deductions from this data.  *   * We propagate global symbol values from definitions to references. We compute  * the layout of the output file and where each input file's contents fit  * into it.  *   * This is now done in several stages.  *  * 1) All global symbols are examined for definitions in relocatable (.o)  *    files. The symbols' type is set according to the definition found,  *    but its value can not yet be determined. In stead, we keep a pointer  *    to the file entry's localsymbol that bequeathed the global symbol with  *    its definition. Also, multiple (incompatible) definitions are checked  *    for in this pass. If no definition comes forward, the set of local  *    symbols originating from shared objects is searched for a definition.  *  * 2) Then the relocation information of each relocatable file is examined  *    for possible contributions to the RRS section.  *  * 3) When this is done, the sizes and start addresses are set of all segments  *    that will appear in the output file (including the RRS segment).  *  * 4) Finally, all symbols are relocated according according to the start  *    of the entry they are part of. Then global symbols are assigned their  *    final values. Also, space for commons and imported data are allocated  *    during this pass, if the link mode in effect so demands.  *  */
+comment|/*  * Having entered all the global symbols and found the sizes of sections of  * all files to be linked, make all appropriate deductions from this data.  *  * We propagate global symbol values from definitions to references. We compute  * the layout of the output file and where each input file's contents fit  * into it.  *  * This is now done in several stages.  *  * 1) All global symbols are examined for definitions in relocatable (.o)  *    files. The symbols' type is set according to the definition found,  *    but its value can not yet be determined. In stead, we keep a pointer  *    to the file entry's localsymbol that bequeathed the global symbol with  *    its definition. Also, multiple (incompatible) definitions are checked  *    for in this pass. If no definition comes forward, the set of local  *    symbols originating from shared objects is searched for a definition.  *  * 2) Then the relocation information of each relocatable file is examined  *    for possible contributions to the RRS section.  *  * 3) When this is done, the sizes and start addresses are set of all segments  *    that will appear in the output file (including the RRS segment).  *  * 4) Finally, all symbols are relocated according according to the start  *    of the entry they are part of. Then global symbols are assigned their  *    final values. Also, space for commons and imported data are allocated  *    during this pass, if the link mode in effect so demands.  *  */
 end_comment
 
 begin_function
@@ -8449,7 +8449,7 @@ name|reloc
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * Non-PIC relocations. 			 * If the definition comes from a shared object 			 * we need a relocation entry in RRS. 			 * 			 * If the .so definition is N_TEXT a jmpslot is 			 * allocated. 			 * 			 * If it is N_DATA we allocate an address in BSS (?) 			 * and arrange for the data to be copied at run-time. 			 * The symbol is temporarily marked with N_SIZE in 			 * the `defined' field, so we know what to do in 			 * pass2() and during actual relocation. We convert 			 * the type back to something real again when writing 			 * out the symbols. 			 *  			 */
+comment|/* 			 * Non-PIC relocations. 			 * If the definition comes from a shared object 			 * we need a relocation entry in RRS. 			 * 			 * If the .so definition is N_TEXT a jmpslot is 			 * allocated. 			 * 			 * If it is N_DATA we allocate an address in BSS (?) 			 * and arrange for the data to be copied at run-time. 			 * The symbol is temporarily marked with N_SIZE in 			 * the `defined' field, so we know what to do in 			 * pass2() and during actual relocation. We convert 			 * the type back to something real again when writing 			 * out the symbols. 			 * 			 */
 name|lsp
 operator|=
 operator|&

@@ -83,7 +83,7 @@ value|(1L)
 end_define
 
 begin_comment
-comment|/* If this bit is not set, then + and ? are operators, and \+ and \? are      literals.     If set, then \+ and \? are operators and + and ? are literals.  */
+comment|/* If this bit is not set, then + and ? are operators, and \+ and \? are      literals.    If set, then \+ and \? are operators and + and ? are literals.  */
 end_comment
 
 begin_define
@@ -105,7 +105,7 @@ value|(RE_BK_PLUS_QM<< 1)
 end_define
 
 begin_comment
-comment|/* If this bit is set, then ^ and $ are always anchors (outside bracket      expressions, of course).    If this bit is not set, then it depends:         ^  is an anchor if it is at the beginning of a regular            expression or after an open-group or an alternation operator;         $  is an anchor if it is at the end of a regular expression, or            before a close-group or an alternation operator.       This bit could be (re)combined with RE_CONTEXT_INDEP_OPS, because    POSIX draft 11.2 says that * etc. in leading positions is undefined.    We already implemented a previous draft which made those constructs    invalid, though, so we haven't changed the code back.  */
+comment|/* If this bit is set, then ^ and $ are always anchors (outside bracket      expressions, of course).    If this bit is not set, then it depends:         ^  is an anchor if it is at the beginning of a regular            expression or after an open-group or an alternation operator;         $  is an anchor if it is at the end of a regular expression, or            before a close-group or an alternation operator.     This bit could be (re)combined with RE_CONTEXT_INDEP_OPS, because    POSIX draft 11.2 says that * etc. in leading positions is undefined.    We already implemented a previous draft which made those constructs    invalid, though, so we haven't changed the code back.  */
 end_comment
 
 begin_define
@@ -116,7 +116,7 @@ value|(RE_CHAR_CLASSES<< 1)
 end_define
 
 begin_comment
-comment|/* If this bit is set, then special characters are always special      regardless of where they are in the pattern.    If this bit is not set, then special characters are special only in      some contexts; otherwise they are ordinary.  Specifically,       * + ? and intervals are only special when not after the beginning,      open-group, or alternation operator.  */
+comment|/* If this bit is set, then special characters are always special      regardless of where they are in the pattern.    If this bit is not set, then special characters are special only in      some contexts; otherwise they are ordinary.  Specifically,      * + ? and intervals are only special when not after the beginning,      open-group, or alternation operator.  */
 end_comment
 
 begin_define
@@ -171,7 +171,7 @@ value|(RE_DOT_NOT_NULL<< 1)
 end_define
 
 begin_comment
-comment|/* If this bit is set, either \{...\} or {...} defines an      interval, depending on RE_NO_BK_BRACES.     If not set, \{, \}, {, and } are literals.  */
+comment|/* If this bit is set, either \{...\} or {...} defines an      interval, depending on RE_NO_BK_BRACES.    If not set, \{, \}, {, and } are literals.  */
 end_comment
 
 begin_define
@@ -237,7 +237,7 @@ value|(RE_NO_BK_PARENS<< 1)
 end_define
 
 begin_comment
-comment|/* If this bit is set, then | is an alternation operator, and \| is literal.     If not set, then \| is an alternation operator, and | is literal.  */
+comment|/* If this bit is set, then | is an alternation operator, and \| is literal.    If not set, then \| is an alternation operator, and | is literal.  */
 end_comment
 
 begin_define

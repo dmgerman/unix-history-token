@@ -16,7 +16,7 @@ name|_DIRENT_H_
 end_define
 
 begin_comment
-comment|/*  * The kernel defines the format of directory entries returned by   * the getdirentries(2) system call.  */
+comment|/*  * The kernel defines the format of directory entries returned by  * the getdirentries(2) system call.  */
 end_comment
 
 begin_include

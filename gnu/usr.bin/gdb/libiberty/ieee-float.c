@@ -131,7 +131,7 @@ comment|/* We can't do anything useful with a NaN anyway, so ignore its      dif
 block|if (exponent == EXT_EXP_NAN) {
 comment|/* We have a NaN source.  */
 block|dto = 0.123456789;
-comment|/* Not much else useful to do -- we don't know if  			   the host system even *has* NaNs, nor how to 			   generate an innocuous one if it does.  */
+comment|/* Not much else useful to do -- we don't know if 			   the host system even *has* NaNs, nor how to 			   generate an innocuous one if it does.  */
 block|} else
 endif|#
 directive|endif

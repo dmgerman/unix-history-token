@@ -1205,7 +1205,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* FUNCTION	 	bfd_alloc_size  SYNOPSIS 	bfd_size_type bfd_alloc_size(bfd *abfd);  DESCRIPTION         Return the number of bytes in the obstacks connected to @var{abfd}.  */
+comment|/* FUNCTION 	bfd_alloc_size  SYNOPSIS 	bfd_size_type bfd_alloc_size(bfd *abfd);  DESCRIPTION         Return the number of bytes in the obstacks connected to @var{abfd}.  */
 end_comment
 
 begin_function

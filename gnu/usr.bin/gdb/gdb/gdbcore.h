@@ -71,7 +71,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Read "memory data" from whatever target or inferior we have.     Returns zero if successful, errno value if not.  EIO is used    for address out of bounds.  If breakpoints are inserted, returns    shadow contents, not the breakpoints themselves.  From breakpoint.c.  */
+comment|/* Read "memory data" from whatever target or inferior we have.    Returns zero if successful, errno value if not.  EIO is used    for address out of bounds.  If breakpoints are inserted, returns    shadow contents, not the breakpoints themselves.  From breakpoint.c.  */
 end_comment
 
 begin_decl_stmt

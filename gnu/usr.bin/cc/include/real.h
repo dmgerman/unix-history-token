@@ -1176,7 +1176,7 @@ comment|/* Defining REAL_IS_NOT_DOUBLE breaks certain initializations    when RE
 end_comment
 
 begin_comment
-comment|/* Now see if the host and target machines use the same format.     If not, define REAL_IS_NOT_DOUBLE (even if we end up representing    reals as doubles because we have no better way in this cross compiler.)    This turns off various optimizations that can happen when we know the    compiler's float format matches the target's float format.    */
+comment|/* Now see if the host and target machines use the same format.    If not, define REAL_IS_NOT_DOUBLE (even if we end up representing    reals as doubles because we have no better way in this cross compiler.)    This turns off various optimizations that can happen when we know the    compiler's float format matches the target's float format.    */
 end_comment
 
 begin_if

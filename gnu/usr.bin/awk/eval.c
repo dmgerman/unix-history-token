@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * eval.c - gawk parse tree interpreter   */
+comment|/*  * eval.c - gawk parse tree interpreter  */
 end_comment
 
 begin_comment
-comment|/*   * Copyright (C) 1986, 1988, 1989, 1991, 1992, 1993 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Progamming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with GAWK; see the file COPYING.  If not, write to  * the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/*  * Copyright (C) 1986, 1988, 1989, 1991, 1992, 1993 the Free Software Foundation, Inc.  *  * This file is part of GAWK, the GNU implementation of the  * AWK Progamming Language.  *  * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *  * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with GAWK; see the file COPYING.  If not, write to  * the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_include
@@ -846,7 +846,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Tree is a bunch of rules to run. Returns zero if it hit an exit()  * statement   */
+comment|/*  * Tree is a bunch of rules to run. Returns zero if it hit an exit()  * statement  */
 end_comment
 
 begin_function
@@ -1834,7 +1834,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-comment|/* 		 * Appears to be an expression statement.  Throw away the 		 * value.  		 */
+comment|/* 		 * Appears to be an expression statement.  Throw away the 		 * value. 		 */
 if|if
 condition|(
 name|do_lint
@@ -3232,7 +3232,7 @@ operator|==
 name|Node_line_range
 condition|)
 block|{
-comment|/* 		 * Node_line_range is kind of like Node_match, EXCEPT: the 		 * lnode field (more properly, the condpair field) is a node 		 * of a Node_cond_pair; whether we evaluate the lnode of that 		 * node or the rnode depends on the triggered word.  More 		 * precisely:  if we are not yet triggered, we tree_eval the 		 * lnode; if that returns true, we set the triggered word.  		 * If we are triggered (not ELSE IF, note), we tree_eval the 		 * rnode, clear triggered if it succeeds, and perform our 		 * action (regardless of success or failure).  We want to be 		 * able to begin and end on a single input record, so this 		 * isn't an ELSE IF, as noted above. 		 */
+comment|/* 		 * Node_line_range is kind of like Node_match, EXCEPT: the 		 * lnode field (more properly, the condpair field) is a node 		 * of a Node_cond_pair; whether we evaluate the lnode of that 		 * node or the rnode depends on the triggered word.  More 		 * precisely:  if we are not yet triggered, we tree_eval the 		 * lnode; if that returns true, we set the triggered word. 		 * If we are triggered (not ELSE IF, note), we tree_eval the 		 * rnode, clear triggered if it succeeds, and perform our 		 * action (regardless of success or failure).  We want to be 		 * able to begin and end on a single input record, so this 		 * isn't an ELSE IF, as noted above. 		 */
 if|if
 condition|(
 operator|!
@@ -3284,7 +3284,7 @@ return|return
 literal|1
 return|;
 block|}
-comment|/* 	 * Could just be J.random expression. in which case, null and 0 are 	 * false, anything else is true  	 */
+comment|/* 	 * Could just be J.random expression. in which case, null and 0 are 	 * false, anything else is true 	 */
 name|t1
 operator|=
 name|tree_eval
@@ -4779,7 +4779,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This returns a POINTER to a node pointer. get_lhs(ptr) is the current  * value of the var, or where to store the var's new value   */
+comment|/*  * This returns a POINTER to a node pointer. get_lhs(ptr) is the current  * value of the var, or where to store the var's new value  */
 end_comment
 
 begin_function

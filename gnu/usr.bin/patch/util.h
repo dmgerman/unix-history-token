@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: util.h,v 2.0 86/09/17 15:40:06 lwall Exp $  *  * $Log:	util.h,v $  * Revision 2.0  86/09/17  15:40:06  lwall  * Baseline for netwide release.  *   */
+comment|/* $Header: /home/ncvs/src/gnu/usr.bin/patch/util.h,v 1.1.1.1 1993/06/19 14:21:52 paul Exp $  *  * $Log: util.h,v $  * Revision 1.1.1.1  1993/06/19  14:21:52  paul  * b-maked patch-2.10  *  * Revision 2.0  86/09/17  15:40:06  lwall  * Baseline for netwide release.  *  */
 end_comment
 
 begin_comment

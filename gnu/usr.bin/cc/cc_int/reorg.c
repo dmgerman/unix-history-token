@@ -4,7 +4,7 @@ comment|/* Perform instruction reorganizations for delay slot filling.    Copyri
 end_comment
 
 begin_comment
-comment|/* Instruction reorganization pass.     This pass runs after register allocation and final jump    optimization.  It should be the last pass to run before peephole.    It serves primarily to fill delay slots of insns, typically branch    and call insns.  Other insns typically involve more complicated    interactions of data dependencies and resource constraints, and    are better handled by scheduling before register allocation (by the    function `schedule_insns').     The Branch Penalty is the number of extra cycles that are needed to    execute a branch insn.  On an ideal machine, branches take a single    cycle, and the Branch Penalty is 0.  Several RISC machines approach    branch delays differently:     The MIPS and AMD 29000 have a single branch delay slot.  Most insns    (except other branches) can be used to fill this slot.  When the    slot is filled, two insns execute in two cycles, reducing the    branch penalty to zero.     The Motorola 88000 conditionally exposes its branch delay slot,    so code is shorter when it is turned off, but will run faster    when useful insns are scheduled there.     The IBM ROMP has two forms of branch and call insns, both with and    without a delay slot.  Much like the 88k, insns not using the delay    slot can be shorted (2 bytes vs. 4 bytes), but will run slowed.     The SPARC always has a branch delay slot, but its effects can be    annulled when the branch is not taken.  This means that failing to    find other sources of insns, we can hoist an insn from the branch    target that would only be safe to execute knowing that the branch    is taken.     The HP-PA always has a branch delay slot.  For unconditional branches    its effects can be annulled when the branch is taken.  The effects     of the delay slot in a conditional branch can be nullified for forward    taken branches, or for untaken backward branches.  This means    we can hoist insns from the fall-through path for forward branches or    steal insns from the target of backward branches.     Three techniques for filling delay slots have been implemented so far:     (1) `fill_simple_delay_slots' is the simplest, most efficient way    to fill delay slots.  This pass first looks for insns which come    from before the branch and which are safe to execute after the    branch.  Then it searches after the insn requiring delay slots or,    in the case of a branch, for insns that are after the point at    which the branch merges into the fallthrough code, if such a point    exists.  When such insns are found, the branch penalty decreases    and no code expansion takes place.     (2) `fill_eager_delay_slots' is more complicated: it is used for    scheduling conditional jumps, or for scheduling jumps which cannot    be filled using (1).  A machine need not have annulled jumps to use    this strategy, but it helps (by keeping more options open).    `fill_eager_delay_slots' tries to guess the direction the branch    will go; if it guesses right 100% of the time, it can reduce the    branch penalty as much as `fill_simple_delay_slots' does.  If it    guesses wrong 100% of the time, it might as well schedule nops (or    on the m88k, unexpose the branch slot).  When    `fill_eager_delay_slots' takes insns from the fall-through path of    the jump, usually there is no code expansion; when it takes insns    from the branch target, there is code expansion if it is not the    only way to reach that target.     (3) `relax_delay_slots' uses a set of rules to simplify code that    has been reorganized by (1) and (2).  It finds cases where    conditional test can be eliminated, jumps can be threaded, extra    insns can be eliminated, etc.  It is the job of (1) and (2) to do a    good job of scheduling locally; `relax_delay_slots' takes care of    making the various individual schedules work well together.  It is    especially tuned to handle the control flow interactions of branch    insns.  It does nothing for insns with delay slots that do not    branch.     On machines that use CC0, we are very conservative.  We will not make    a copy of an insn involving CC0 since we want to maintain a 1-1    correspondence between the insn that sets and uses CC0.  The insns are    allowed to be separated by placing an insn that sets CC0 (but not an insn    that uses CC0; we could do this, but it doesn't seem worthwhile) in a    delay slot.  In that case, we point each insn at the other with REG_CC_USER    and REG_CC_SETTER notes.  Note that these restrictions affect very few    machines because most RISC machines with delay slots will not use CC0    (the RT is the only known exception at this point).     Not yet implemented:     The Acorn Risc Machine can conditionally execute most insns, so    it is profitable to move single insns into a position to execute    based on the condition code of the previous insn.     The HP-PA can conditionally nullify insns, providing a similar    effect to the ARM, differing mostly in which insn is "in charge".   */
+comment|/* Instruction reorganization pass.     This pass runs after register allocation and final jump    optimization.  It should be the last pass to run before peephole.    It serves primarily to fill delay slots of insns, typically branch    and call insns.  Other insns typically involve more complicated    interactions of data dependencies and resource constraints, and    are better handled by scheduling before register allocation (by the    function `schedule_insns').     The Branch Penalty is the number of extra cycles that are needed to    execute a branch insn.  On an ideal machine, branches take a single    cycle, and the Branch Penalty is 0.  Several RISC machines approach    branch delays differently:     The MIPS and AMD 29000 have a single branch delay slot.  Most insns    (except other branches) can be used to fill this slot.  When the    slot is filled, two insns execute in two cycles, reducing the    branch penalty to zero.     The Motorola 88000 conditionally exposes its branch delay slot,    so code is shorter when it is turned off, but will run faster    when useful insns are scheduled there.     The IBM ROMP has two forms of branch and call insns, both with and    without a delay slot.  Much like the 88k, insns not using the delay    slot can be shorted (2 bytes vs. 4 bytes), but will run slowed.     The SPARC always has a branch delay slot, but its effects can be    annulled when the branch is not taken.  This means that failing to    find other sources of insns, we can hoist an insn from the branch    target that would only be safe to execute knowing that the branch    is taken.     The HP-PA always has a branch delay slot.  For unconditional branches    its effects can be annulled when the branch is taken.  The effects    of the delay slot in a conditional branch can be nullified for forward    taken branches, or for untaken backward branches.  This means    we can hoist insns from the fall-through path for forward branches or    steal insns from the target of backward branches.     Three techniques for filling delay slots have been implemented so far:     (1) `fill_simple_delay_slots' is the simplest, most efficient way    to fill delay slots.  This pass first looks for insns which come    from before the branch and which are safe to execute after the    branch.  Then it searches after the insn requiring delay slots or,    in the case of a branch, for insns that are after the point at    which the branch merges into the fallthrough code, if such a point    exists.  When such insns are found, the branch penalty decreases    and no code expansion takes place.     (2) `fill_eager_delay_slots' is more complicated: it is used for    scheduling conditional jumps, or for scheduling jumps which cannot    be filled using (1).  A machine need not have annulled jumps to use    this strategy, but it helps (by keeping more options open).    `fill_eager_delay_slots' tries to guess the direction the branch    will go; if it guesses right 100% of the time, it can reduce the    branch penalty as much as `fill_simple_delay_slots' does.  If it    guesses wrong 100% of the time, it might as well schedule nops (or    on the m88k, unexpose the branch slot).  When    `fill_eager_delay_slots' takes insns from the fall-through path of    the jump, usually there is no code expansion; when it takes insns    from the branch target, there is code expansion if it is not the    only way to reach that target.     (3) `relax_delay_slots' uses a set of rules to simplify code that    has been reorganized by (1) and (2).  It finds cases where    conditional test can be eliminated, jumps can be threaded, extra    insns can be eliminated, etc.  It is the job of (1) and (2) to do a    good job of scheduling locally; `relax_delay_slots' takes care of    making the various individual schedules work well together.  It is    especially tuned to handle the control flow interactions of branch    insns.  It does nothing for insns with delay slots that do not    branch.     On machines that use CC0, we are very conservative.  We will not make    a copy of an insn involving CC0 since we want to maintain a 1-1    correspondence between the insn that sets and uses CC0.  The insns are    allowed to be separated by placing an insn that sets CC0 (but not an insn    that uses CC0; we could do this, but it doesn't seem worthwhile) in a    delay slot.  In that case, we point each insn at the other with REG_CC_USER    and REG_CC_SETTER notes.  Note that these restrictions affect very few    machines because most RISC machines with delay slots will not use CC0    (the RT is the only known exception at this point).     Not yet implemented:     The Acorn Risc Machine can conditionally execute most insns, so    it is profitable to move single insns into a position to execute    based on the condition code of the previous insn.     The HP-PA can conditionally nullify insns, providing a similar    effect to the ARM, differing mostly in which insn is "in charge".   */
 end_comment
 
 begin_include
@@ -3141,7 +3141,7 @@ argument_list|(
 name|insn
 argument_list|)
 expr_stmt|;
-comment|/* When a target threads its epilogue we might already have a       suitable return insn.  If so put a label before it for the      end_of_function_label.  */
+comment|/* When a target threads its epilogue we might already have a      suitable return insn.  If so put a label before it for the      end_of_function_label.  */
 if|if
 condition|(
 name|GET_CODE
@@ -3416,7 +3416,7 @@ argument_list|(
 name|insn
 argument_list|)
 decl_stmt|;
-comment|/* If INSN is followed by a BARRIER, delete the BARRIER since it will only      confuse further processing.  Update LAST in case it was the last insn.        We will put the BARRIER back in later.  */
+comment|/* If INSN is followed by a BARRIER, delete the BARRIER since it will only      confuse further processing.  Update LAST in case it was the last insn.      We will put the BARRIER back in later.  */
 if|if
 condition|(
 name|NEXT_INSN
@@ -4950,7 +4950,7 @@ name|flags
 operator|=
 literal|0
 expr_stmt|;
-comment|/* If insn is a conditional branch call mostly_true_jump to get      determine the branch prediction.         Non conditional branches are predicted as very likely taken.  */
+comment|/* If insn is a conditional branch call mostly_true_jump to get      determine the branch prediction.       Non conditional branches are predicted as very likely taken.  */
 if|if
 condition|(
 name|GET_CODE
@@ -5147,7 +5147,7 @@ return|;
 case|case
 name|BARRIER
 case|:
-comment|/* A BARRIER can either be after a JUMP_INSN or a CALL_INSN.  We  	     don't scan past JUMP_INSNs, so any barrier we find here must 	     have been after a CALL_INSN and hence mean the call doesn't 	     return.  */
+comment|/* A BARRIER can either be after a JUMP_INSN or a CALL_INSN.  We 	     don't scan past JUMP_INSNs, so any barrier we find here must 	     have been after a CALL_INSN and hence mean the call doesn't 	     return.  */
 return|return
 literal|2
 return|;
@@ -5360,7 +5360,7 @@ condition|(
 name|target_label
 condition|)
 block|{
-comment|/* If this is the test of a loop, it is very likely true.  We scan 	 backwards from the target label.  If we find a NOTE_INSN_LOOP_BEG 	 before the next real insn, we assume the branch is to the top of  	 the loop.  */
+comment|/* If this is the test of a loop, it is very likely true.  We scan 	 backwards from the target label.  If we find a NOTE_INSN_LOOP_BEG 	 before the next real insn, we assume the branch is to the top of 	 the loop.  */
 for|for
 control|(
 name|insn
@@ -5477,7 +5477,7 @@ return|return
 literal|2
 return|;
 block|}
-comment|/* If we couldn't figure out what this jump was, assume it won't be       taken.  This should be rare.  */
+comment|/* If we couldn't figure out what this jump was, assume it won't be      taken.  This should be rare.  */
 if|if
 condition|(
 name|condition
@@ -6903,7 +6903,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Similar to steal_delay_list_from_target except that SEQ is on the     fallthrough path of INSN.  Here we only do something if the delay insn    of SEQ is an unconditional branch.  In that case we steal its delay slot    for INSN since unconditional branches are much easier to fill.  */
+comment|/* Similar to steal_delay_list_from_target except that SEQ is on the    fallthrough path of INSN.  Here we only do something if the delay insn    of SEQ is an unconditional branch.  In that case we steal its delay slot    for INSN since unconditional branches are much easier to fill.  */
 end_comment
 
 begin_function
@@ -8216,7 +8216,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* Stop for an INSN or JUMP_INSN with delayed effects and its delay 	     slots because it is difficult to track its resource needs  	     correctly.  */
+comment|/* Stop for an INSN or JUMP_INSN with delayed effects and its delay 	     slots because it is difficult to track its resource needs 	     correctly.  */
 ifdef|#
 directive|ifdef
 name|INSN_SETS_ARE_DELAYED
@@ -8865,7 +8865,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* If the insn requiring the delay slot conflicts with INSN, we  	     must stop.  */
+comment|/* If the insn requiring the delay slot conflicts with INSN, we 	     must stop.  */
 if|if
 condition|(
 name|insn_sets_resource_p
@@ -9262,7 +9262,7 @@ block|{
 name|int
 name|b
 decl_stmt|;
-comment|/* Ignore if this was in a delay slot and it came from the target of       a branch.  */
+comment|/* Ignore if this was in a delay slot and it came from the target of      a branch.  */
 if|if
 condition|(
 name|INSN_FROM_TARGET_P
@@ -10125,7 +10125,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* Allocate a place to put our results and chain it into the  	 hash table.  */
+comment|/* Allocate a place to put our results and chain it into the 	 hash table.  */
 name|tinfo
 operator|=
 operator|(
@@ -11665,7 +11665,7 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
-comment|/* This insn needs, or can use, some delay slots.  SLOTS_TO_FILL 	 says how many.  After initialization, first try optimizing  	 call _foo		call _foo 	 nop			add %o7,.-L1,%o7 	 b,a L1 	 nop  	 If this case applies, the delay slot of the call is filled with 	 the unconditional jump.  This is done first to avoid having the 	 delay slot of the call filled in the backward scan.  Also, since 	 the unconditional jump is likely to also have a delay slot, that 	 insn must exist when it is subsequently scanned.  	 This is tried on each insn with delay slots as some machines 	 have insns which perform calls, but are not represented as  	 CALL_INSNs.  */
+comment|/* This insn needs, or can use, some delay slots.  SLOTS_TO_FILL 	 says how many.  After initialization, first try optimizing  	 call _foo		call _foo 	 nop			add %o7,.-L1,%o7 	 b,a L1 	 nop  	 If this case applies, the delay slot of the call is filled with 	 the unconditional jump.  This is done first to avoid having the 	 delay slot of the call filled in the backward scan.  Also, since 	 the unconditional jump is likely to also have a delay slot, that 	 insn must exist when it is subsequently scanned.  	 This is tried on each insn with delay slots as some machines 	 have insns which perform calls, but are not represented as 	 CALL_INSNs.  */
 name|slots_filled
 operator|=
 literal|0
@@ -11790,7 +11790,7 @@ name|prev
 expr_stmt|;
 block|}
 block|}
-comment|/* Now, scan backwards from the insn to search for a potential 	 delay-slot candidate.  Stop searching when a label or jump is hit.  	 For each candidate, if it is to go into the delay slot (moved 	 forward in execution sequence), it must not need or set any resources 	 that were set by later insns and must not set any resources that 	 are needed for those insns. 	  	 The delay slot insn itself sets resources unless it is a call 	 (in which case the called routine, not the insn itself, is doing 	 the setting).  */
+comment|/* Now, scan backwards from the insn to search for a potential 	 delay-slot candidate.  Stop searching when a label or jump is hit.  	 For each candidate, if it is to go into the delay slot (moved 	 forward in execution sequence), it must not need or set any resources 	 that were set by later insns and must not set any resources that 	 are needed for those insns.  	 The delay slot insn itself sets resources unless it is a call 	 (in which case the called routine, not the insn itself, is doing 	 the setting).  */
 if|if
 condition|(
 name|slots_filled
@@ -11887,7 +11887,7 @@ operator|==
 name|CLOBBER
 condition|)
 continue|continue;
-comment|/* Check for resource conflict first, to avoid unnecessary  		 splitting.  */
+comment|/* Check for resource conflict first, to avoid unnecessary 		 splitting.  */
 if|if
 condition|(
 operator|!
@@ -12951,7 +12951,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|DELAY_SLOTS_FOR_EPILOGUE
-comment|/* See if the epilogue needs any delay slots.  Try to fill them if so.      The only thing we can do is scan backwards from the end of the       function.  If we did this in a previous pass, it is incorrect to do it      again.  */
+comment|/* See if the epilogue needs any delay slots.  Try to fill them if so.      The only thing we can do is scan backwards from the end of the      function.  If we did this in a previous pass, it is incorrect to do it      again.  */
 if|if
 condition|(
 name|current_function_epilogue_delay_list
@@ -16993,7 +16993,7 @@ comment|/* Execute `final' once in prescan mode to delete any insns that won't b
 block|flag_no_peephole = 1;   final (first, 0, NO_DEBUG, 1, 1);   flag_no_peephole = old_flag_no_peephole;
 endif|#
 directive|endif
-comment|/* If the current function has no insns other than the prologue and       epilogue, then do not try to fill any delay slots.  */
+comment|/* If the current function has no insns other than the prologue and      epilogue, then do not try to fill any delay slots.  */
 if|if
 condition|(
 name|n_basic_blocks

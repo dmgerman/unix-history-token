@@ -1037,7 +1037,7 @@ value|((h)->header.a_syms = (v) * \ 					 sizeof(struct nlist))
 end_define
 
 begin_comment
-comment|/*   * Current means for getting the name of a segment.  * This will change for infinite-segments support (e.g. COFF).  */
+comment|/*  * Current means for getting the name of a segment.  * This will change for infinite-segments support (e.g. COFF).  */
 end_comment
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* i386.c -- Assemble code for the Intel 80386    Copyright (C) 1989, 1991, 1992 Free Software Foundation.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* i386.c -- Assemble code for the Intel 80386    Copyright (C) 1989, 1991, 1992 Free Software Foundation.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tc-i386.c,v 1.2 1993/11/30 20:57:41 jkh Exp $"
+literal|"$Id: tc-i386.c,v 1.3 1994/12/23 22:37:35 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -767,7 +767,7 @@ literal|0
 block|,
 literal|0
 block|}
-block|, 	 }
+block|,  }
 decl_stmt|;
 end_decl_stmt
 
@@ -2756,7 +2756,7 @@ operator|=
 name|save_stack
 expr_stmt|;
 comment|/* reset stack pointer */
-comment|/* Fist parse an opcode& call i386_operand for the operands. 	   We assume that the scrubber has arranged it so that line[0] is the valid  	   start of a (possibly prefixed) opcode. */
+comment|/* Fist parse an opcode& call i386_operand for the operands. 	   We assume that the scrubber has arranged it so that line[0] is the valid 	   start of a (possibly prefixed) opcode. */
 block|{
 specifier|register
 name|char
@@ -10408,7 +10408,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Apply a fixup (fixS) to segment data, once it has been determined    by our caller that we have all the info we need to fix it up.         On the 386, immediates, displacements, and data pointers are all in    the same (little-endian) format, so we don't need to care about which    we are handling.  */
+comment|/* Apply a fixup (fixS) to segment data, once it has been determined    by our caller that we have all the info we need to fix it up.     On the 386, immediates, displacements, and data pointers are all in    the same (little-endian) format, so we don't need to care about which    we are handling.  */
 end_comment
 
 begin_function
@@ -10589,7 +10589,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Not needed for coff since relocation structure does not     contain bitfields. */
+comment|/* Not needed for coff since relocation structure does not    contain bitfields. */
 end_comment
 
 begin_if
@@ -11640,7 +11640,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Parse an operand that is machine-specific.      We just return without modifying the expression if we have nothing    to do.  */
+comment|/* Parse an operand that is machine-specific.    We just return without modifying the expression if we have nothing    to do.  */
 end_comment
 
 begin_comment

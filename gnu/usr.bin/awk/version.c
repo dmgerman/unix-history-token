@@ -13,11 +13,11 @@ comment|/* 1.02		fixed /= += *= etc to return the new Left Hand Side instead 		o
 end_comment
 
 begin_comment
-comment|/* 1.03		Fixed split() to treat strings of space and tab as FS if 		the split char is ' '.  		Added -v option to print version number  		 		Fixed bug that caused rounding when printing large numbers  */
+comment|/* 1.03		Fixed split() to treat strings of space and tab as FS if 		the split char is ' '.  		Added -v option to print version number  		Fixed bug that caused rounding when printing large numbers  */
 end_comment
 
 begin_comment
-comment|/* 2.00beta	Incorporated the functionality of the "new" awk as described 		the book (reference not handy).  Extensively tested, but no  		doubt still buggy.  Badly needs tuning and cleanup, in 		particular in memory management which is currently almost 		non-existent. */
+comment|/* 2.00beta	Incorporated the functionality of the "new" awk as described 		the book (reference not handy).  Extensively tested, but no 		doubt still buggy.  Badly needs tuning and cleanup, in 		particular in memory management which is currently almost 		non-existent. */
 end_comment
 
 begin_comment

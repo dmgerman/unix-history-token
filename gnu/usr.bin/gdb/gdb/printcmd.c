@@ -4760,7 +4760,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Display a single auto-display.      Do nothing if the display cannot be printed in the current context,    or if the display is disabled. */
+comment|/* Display a single auto-display.    Do nothing if the display cannot be printed in the current context,    or if the display is disabled. */
 end_comment
 
 begin_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ns32k.c  -- Assemble on the National Semiconductor 32k series    Copyright (C) 1987, 1992 Free Software Foundation, Inc.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* ns32k.c  -- Assemble on the National Semiconductor 32k series    Copyright (C) 1987, 1992 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
@@ -374,7 +374,7 @@ comment|/* we don't want to support lowercase, do we */
 end_comment
 
 begin_comment
-comment|/* UPPERCASE denotes live names   * when an instruction is built, IIF is used as an intermidiate form to store  * the actual parts of the instruction. A ns32k machine instruction can  * be divided into a couple of sub PARTs. When an instruction is assembled  * the appropriate PART get an assignment. When an IIF has been completed it's  * converted to a FRAGment as specified in AS.H */
+comment|/* UPPERCASE denotes live names  * when an instruction is built, IIF is used as an intermidiate form to store  * the actual parts of the instruction. A ns32k machine instruction can  * be divided into a couple of sub PARTs. When an instruction is assembled  * the appropriate PART get an assignment. When an IIF has been completed it's  * converted to a FRAGment as specified in AS.H */
 end_comment
 
 begin_comment
@@ -501,7 +501,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* description of the PARTs in IIF   *object[n]:  * 0	total length in bytes of entries in iif  * 1	opcode  * 2	index_byte_a  * 3	index_byte_b  * 4	disp_a_1  * 5	disp_a_2  * 6	disp_b_1  * 7	disp_b_2  * 8	imm_a  * 9	imm_b  * 10	implied1  * 11	implied2  *   * For every entry there is a datalength in bytes. This is stored in size[n].  *	 0,	the objectlength is not explicitly given by the instruction  *		and the operand is undefined. This is a case for relaxation.  *		Reserve 4 bytes for the final object.  *  *	 1,	the entry contains one byte  *	 2,	the entry contains two bytes  *	 3,	the entry contains three bytes  *	 4,	the entry contains four bytes  *	etc  *  * Furthermore, every entry has a data type identifier in type[n].  *  * 	 0,	the entry is void, ignore it.  * 	 1,	the entry is a binary number.  *	 2,	the entry is a pointer at an expression.  *		Where expression may be as simple as a single '1',  *		and as complicated as  foo-bar+12,  * 		foo and bar may be undefined but suffixed by :{b|w|d} to  *		control the length of the object.  *  *	 3,	the entry is a pointer at a bignum struct  *  *  * The low-order-byte coresponds to low physical memory.  * Obviously a FRAGment must be created for each valid disp in PART whose  * datalength is undefined (to bad) .  * The case where just the expression is undefined is less severe and is  * handled by fix. Here the number of bytes in the objectfile is known.  * With this representation we simplify the assembly and separates the  * machine dependent/independent parts in a more clean way (said OE)  */
+comment|/* description of the PARTs in IIF  *object[n]:  * 0	total length in bytes of entries in iif  * 1	opcode  * 2	index_byte_a  * 3	index_byte_b  * 4	disp_a_1  * 5	disp_a_2  * 6	disp_b_1  * 7	disp_b_2  * 8	imm_a  * 9	imm_b  * 10	implied1  * 11	implied2  *  * For every entry there is a datalength in bytes. This is stored in size[n].  *	 0,	the objectlength is not explicitly given by the instruction  *		and the operand is undefined. This is a case for relaxation.  *		Reserve 4 bytes for the final object.  *  *	 1,	the entry contains one byte  *	 2,	the entry contains two bytes  *	 3,	the entry contains three bytes  *	 4,	the entry contains four bytes  *	etc  *  * Furthermore, every entry has a data type identifier in type[n].  *  * 	 0,	the entry is void, ignore it.  * 	 1,	the entry is a binary number.  *	 2,	the entry is a pointer at an expression.  *		Where expression may be as simple as a single '1',  *		and as complicated as  foo-bar+12,  * 		foo and bar may be undefined but suffixed by :{b|w|d} to  *		control the length of the object.  *  *	 3,	the entry is a pointer at a bignum struct  *  *  * The low-order-byte coresponds to low physical memory.  * Obviously a FRAGment must be created for each valid disp in PART whose  * datalength is undefined (to bad) .  * The case where just the expression is undefined is less severe and is  * handled by fix. Here the number of bytes in the objectfile is known.  * With this representation we simplify the assembly and separates the  * machine dependent/independent parts in a more clean way (said OE)  */
 end_comment
 
 begin_escape
@@ -1386,7 +1386,7 @@ value|(((x)<<2)+(y))
 end_define
 
 begin_comment
-comment|/* those are index's to relax groups in md_relax_table     ie it must be multiplied by 4 to point at a group start. Viz IND(x,y)    Se function relax_segment in write.c for more info */
+comment|/* those are index's to relax groups in md_relax_table    ie it must be multiplied by 4 to point at a group start. Viz IND(x,y)    Se function relax_segment in write.c for more info */
 end_comment
 
 begin_define
@@ -1791,7 +1791,7 @@ comment|/* not __STDC__ */
 end_comment
 
 begin_comment
-comment|/* Parses a general operand into an addressingmode struct         in:  pointer at operand in ascii form    pointer at addr_mode struct for result    the level of recursion. (always 0 or 1)        out: data in addr_mode struct    */
+comment|/* Parses a general operand into an addressingmode struct     in:  pointer at operand in ascii form    pointer at addr_mode struct for result    the level of recursion. (always 0 or 1)     out: data in addr_mode struct    */
 end_comment
 
 begin_function
@@ -3788,7 +3788,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* search struct for symbols     This function is used to get the short integer form of reg names    in the instructions lmr, smr, lpr, spr    return true if str is found in list */
+comment|/* search struct for symbols    This function is used to get the short integer form of reg names    in the instructions lmr, smr, lpr, spr    return true if str is found in list */
 end_comment
 
 begin_function
@@ -6935,7 +6935,7 @@ argument_list|,
 name|temp
 argument_list|)
 expr_stmt|;
-comment|/* we rewind none, some or all of the requested size we 							   requested by the first frag_more for this iif chunk. 							   Note: that we allocate 4 bytes to an object we NOT YET  							   know the size of, thus rem_size-4. 							   */
+comment|/* we rewind none, some or all of the requested size we 							   requested by the first frag_more for this iif chunk. 							   Note: that we allocate 4 bytes to an object we NOT YET 							   know the size of, thus rem_size-4. 							   */
 operator|(
 name|void
 operator|)
@@ -7537,7 +7537,7 @@ comment|/* md_number_to_chars() */
 end_comment
 
 begin_comment
-comment|/* This is a variant of md_numbers_to_chars. The reason for its' existence    is the fact that ns32k uses Huffman coded displacements. This implies    that the bit order is reversed in displacements and that they are prefixed    with a size-tag.        binary: msb->lsb    0xxxxxxx				byte    10xxxxxx xxxxxxxx			word    11xxxxxx xxxxxxxx xxxxxxxx xxxxxxxx	double word        This must be taken care of and we do it here! 		      */
+comment|/* This is a variant of md_numbers_to_chars. The reason for its' existence    is the fact that ns32k uses Huffman coded displacements. This implies    that the bit order is reversed in displacements and that they are prefixed    with a size-tag.     binary: msb->lsb    0xxxxxxx				byte    10xxxxxx xxxxxxxx			word    11xxxxxx xxxxxxxx xxxxxxxx xxxxxxxx	double word     This must be taken care of and we do it here!    */
 end_comment
 
 begin_function
@@ -8051,7 +8051,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Translate internal representation of relocation info into target format.        OVE: on a ns32k the twiddling continues at an even deeper level    here we have to distinguish between displacements and immediates.        The sequent has a bit for this. It also has a bit for relocobjects that    points at the target for a bsr (BranchSubRoutine) !?!?!?!        This md_ri.... is tailored for sequent.    */
+comment|/* Translate internal representation of relocation info into target format.     OVE: on a ns32k the twiddling continues at an even deeper level    here we have to distinguish between displacements and immediates.     The sequent has a bit for this. It also has a bit for relocobjects that    points at the target for a bsr (BranchSubRoutine) !?!?!?!     This md_ri.... is tailored for sequent.    */
 end_comment
 
 begin_ifdef
@@ -9081,7 +9081,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Apply a fixS (fixup of an instruction or data that we didn't have    enough info to complete immediately) to the data in a frag.        On the ns32k, everything is in a different format, so we have broken    out separate functions for each kind of thing we could be fixing.      They all get called from here.  */
+comment|/* Apply a fixS (fixup of an instruction or data that we didn't have    enough info to complete immediately) to the data in a frag.     On the ns32k, everything is in a different format, so we have broken    out separate functions for each kind of thing we could be fixing.    They all get called from here.  */
 end_comment
 
 begin_function
@@ -10191,7 +10191,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Parse an operand that is machine-specific.      We just return without modifying the expression if we have nothing    to do.  */
+comment|/* Parse an operand that is machine-specific.    We just return without modifying the expression if we have nothing    to do.  */
 end_comment
 
 begin_comment

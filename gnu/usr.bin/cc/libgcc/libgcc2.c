@@ -6182,7 +6182,7 @@ asm|asm ("	mov	r30,sp");
 end_asm
 
 begin_comment
-comment|/* recover stack and pass address to start  				   of data.  */
+comment|/* recover stack and pass address to start 				   of data.  */
 end_comment
 
 begin_endif

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-h8300.c -- Assemble code for the Hitachi H8/300    Copyright (C) 1991, 1992 Free Software Foundation.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* tc-h8300.c -- Assemble code for the Hitachi H8/300    Copyright (C) 1991, 1992 Free Software Foundation.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
-comment|/*    Written By Steve Chamberlain   sac@cygnus.com   */
+comment|/*   Written By Steve Chamberlain   sac@cygnus.com   */
 end_comment
 
 begin_include
@@ -202,7 +202,7 @@ value|0x20
 end_define
 
 begin_endif
-unit|struct reg_entry { 	char *name; 	char number; };  struct reg_entry reg_list[] = {  	"r0",WORD_REG +0, 	"r1",WORD_REG +1, 	"r2",WORD_REG +2, 	"r3",WORD_REG +3, 	"r4",WORD_REG +4, 	"r5",WORD_REG +5, 	"r6",WORD_REG +6, 	"r7",WORD_REG +7, 	"fp",WORD_REG +6, 	"sp",WORD_REG +7, 	"r0h",BYTE_REG + 0, 	"r0l",BYTE_REG + 1, 	"r1h",BYTE_REG + 2, 	"r1l",BYTE_REG + 3, 	"r2h",BYTE_REG + 4, 	"r2l",BYTE_REG + 5, 	"r3h",BYTE_REG + 6, 	"r3l",BYTE_REG + 7, 	"r4h",BYTE_REG + 8, 	"r4l",BYTE_REG + 9, 	"r5h",BYTE_REG + 10, 	"r5l",BYTE_REG + 11, 	"r6h",BYTE_REG + 12, 	"r6l",BYTE_REG + 13, 	"r7h",BYTE_REG + 14, 	"r7l",BYTE_REG + 15, 	"ccr",CCR_REG, 	0,0     } ;
+unit|struct reg_entry { 	char *name; 	char number; };  struct reg_entry reg_list[] = { 	"r0",WORD_REG +0, 	"r1",WORD_REG +1, 	"r2",WORD_REG +2, 	"r3",WORD_REG +3, 	"r4",WORD_REG +4, 	"r5",WORD_REG +5, 	"r6",WORD_REG +6, 	"r7",WORD_REG +7, 	"fp",WORD_REG +6, 	"sp",WORD_REG +7, 	"r0h",BYTE_REG + 0, 	"r0l",BYTE_REG + 1, 	"r1h",BYTE_REG + 2, 	"r1l",BYTE_REG + 3, 	"r2h",BYTE_REG + 4, 	"r2l",BYTE_REG + 5, 	"r3h",BYTE_REG + 6, 	"r3l",BYTE_REG + 7, 	"r4h",BYTE_REG + 8, 	"r4l",BYTE_REG + 9, 	"r5h",BYTE_REG + 10, 	"r5l",BYTE_REG + 11, 	"r6h",BYTE_REG + 12, 	"r6l",BYTE_REG + 13, 	"r7h",BYTE_REG + 14, 	"r7l",BYTE_REG + 15, 	"ccr",CCR_REG, 	0,0     } ;
 endif|#
 directive|endif
 end_endif
@@ -483,7 +483,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*   parse operands	   WREG r0,r1,r2,r3,r4,r5,r6,r7,fp,sp   r0l,r0h,..r7l,r7h   @WREG   @WREG+   @-WREG   #const      */
+comment|/*   parse operands   WREG r0,r1,r2,r3,r4,r5,r6,r7,fp,sp   r0l,r0h,..r7l,r7h   @WREG   @WREG+   @-WREG   #const    */
 end_comment
 
 begin_decl_stmt
@@ -989,7 +989,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/* The many forms of operand:        Rn			Register direct    @Rn			Register indirect    @(exp[:16], Rn)	Register indirect with displacement    @Rn+    @-Rn    @aa:8			absolute 8 bit    @aa:16			absolute 16 bit    @aa			absolute 16 bit        #xx[:size]		immediate data    @(exp:[8], pc)		pc rel    @@aa[:8]		memory indirect        */
+comment|/* The many forms of operand:     Rn			Register direct    @Rn			Register indirect    @(exp[:16], Rn)	Register indirect with displacement    @Rn+    @-Rn    @aa:8			absolute 8 bit    @aa:16			absolute 16 bit    @aa			absolute 16 bit     #xx[:size]		immediate data    @(exp:[8], pc)		pc rel    @@aa[:8]		memory indirect     */
 end_comment
 
 begin_decl_stmt

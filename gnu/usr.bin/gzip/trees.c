@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: trees.c,v 0.12 1993/06/10 13:27:54 jloup Exp $"
+literal|"$Id: trees.c,v 1.3 1993/10/14 00:33:11 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 

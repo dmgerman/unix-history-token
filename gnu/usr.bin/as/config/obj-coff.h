@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* coff object file format    Copyright (C) 1989, 1990, 1991, 1992 Free Software Foundation, Inc.        This file is part of GAS.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* coff object file format    Copyright (C) 1989, 1990, 1991, 1992 Free Software Foundation, Inc.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_define
@@ -41,7 +41,7 @@ file|"coff/a29k.h"
 end_include
 
 begin_comment
-comment|/* This internal_lineno crap is to stop namespace pollution from the bfd internal     coff headerfile. */
+comment|/* This internal_lineno crap is to stop namespace pollution from the bfd internal    coff headerfile. */
 end_comment
 
 begin_define
@@ -64,7 +64,7 @@ name|internal_lineno
 end_undef
 
 begin_comment
-comment|/*   #undef RELOC   #undef SYMENT   #undef AUXENT   #undef LINENO   #undef FILHDR   #undef SCNHDR   #define RELOC struct internal_reloc   #define SYMENT struct internal_syment   #define AUXENT union internal_auxent   #define SCNHDR struct internal_scnhdr   #define LINENO struct bfd_internal_lineno    #define AOUTHDR struct internal_aouthdr   #define FILHDR struct internal_filehdr   #define AOUTHDRSZ sizeof(struct external_aouthdr)   */
+comment|/*   #undef RELOC   #undef SYMENT   #undef AUXENT   #undef LINENO   #undef FILHDR   #undef SCNHDR   #define RELOC struct internal_reloc   #define SYMENT struct internal_syment   #define AUXENT union internal_auxent   #define SCNHDR struct internal_scnhdr   #define LINENO struct bfd_internal_lineno   #define AOUTHDR struct internal_aouthdr   #define FILHDR struct internal_filehdr   #define AOUTHDRSZ sizeof(struct external_aouthdr)   */
 end_comment
 
 begin_comment
@@ -621,7 +621,7 @@ comment|/* Symbol table macros and constants */
 end_comment
 
 begin_comment
-comment|/* Possible and usefull section number in symbol table   * The values of TEXT, DATA and BSS may not be portable.  */
+comment|/* Possible and usefull section number in symbol table  * The values of TEXT, DATA and BSS may not be portable.  */
 end_comment
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Getopt for GNU.     Copyright (C) 1987, 1989, 1992 Free Software Foundation, Inc.    (Modified by Douglas C. Schmidt for use with GNU G++.)  This file is part of the GNU C++ Library.  This library is free software; you can redistribute it and/or modify it under the terms of the GNU Library General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for more details. You should have received a copy of the GNU Library General Public License along with this library; if not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA. */
+comment|/* Getopt for GNU.    Copyright (C) 1987, 1989, 1992 Free Software Foundation, Inc.    (Modified by Douglas C. Schmidt for use with GNU G++.)  This file is part of the GNU C++ Library.  This library is free software; you can redistribute it and/or modify it under the terms of the GNU Library General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for more details. You should have received a copy of the GNU Library General Public License along with this library; if not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA. */
 end_comment
 
 begin_escape
@@ -58,13 +58,13 @@ name|GetOpt
 block|{
 name|private
 label|:
-comment|/* The next char to be scanned in the option-element      in which the last option character we returned was found.      This allows us to pick up the scan where we left off.               If this is zero, or a null string, it means resume the scan      by advancing to the next ARGV-element.  */
+comment|/* The next char to be scanned in the option-element      in which the last option character we returned was found.      This allows us to pick up the scan where we left off.       If this is zero, or a null string, it means resume the scan      by advancing to the next ARGV-element.  */
 specifier|static
 name|char
 modifier|*
 name|nextchar
 decl_stmt|;
-comment|/* Describe how to deal with options that follow non-option ARGV-elements.          UNSPECIFIED means the caller did not specify anything;     the default is then REQUIRE_ORDER if the environment variable     _OPTIONS_FIRST is defined, PERMUTE otherwise.            REQUIRE_ORDER means don't recognize them as options.     Stop option processing when the first non-option is seen.     This is what Unix does.                  PERMUTE is the default.  We permute the contents of `argv' as we scan,     so that eventually all the options are at the end.  This allows options     to be given in any order, even with programs that were not written to     expect this.              RETURN_IN_ORDER is an option available to programs that were written     to expect options and other ARGV-elements in any order and that care about     the ordering of the two.  We describe each non-option ARGV-element     as if it were the argument of an option with character code zero.     Using `-' as the first character of the list of option characters     requests this mode of operation.                          The special argument `--' forces an end of option-scanning regardless     of the value of `ordering'.  In the case of RETURN_IN_ORDER, only     `--' can cause `getopt' to return EOF with `optind' != ARGC.  */
+comment|/* Describe how to deal with options that follow non-option ARGV-elements.      UNSPECIFIED means the caller did not specify anything;     the default is then REQUIRE_ORDER if the environment variable     _OPTIONS_FIRST is defined, PERMUTE otherwise.      REQUIRE_ORDER means don't recognize them as options.     Stop option processing when the first non-option is seen.     This is what Unix does.      PERMUTE is the default.  We permute the contents of `argv' as we scan,     so that eventually all the options are at the end.  This allows options     to be given in any order, even with programs that were not written to     expect this.      RETURN_IN_ORDER is an option available to programs that were written     to expect options and other ARGV-elements in any order and that care about     the ordering of the two.  We describe each non-option ARGV-element     as if it were the argument of an option with character code zero.     Using `-' as the first character of the list of option characters     requests this mode of operation.      The special argument `--' forces an end of option-scanning regardless     of the value of `ordering'.  In the case of RETURN_IN_ORDER, only     `--' can cause `getopt' to return EOF with `optind' != ARGC.  */
 enum|enum
 name|OrderingEnum
 block|{
@@ -104,7 +104,7 @@ name|char
 modifier|*
 name|optarg
 decl_stmt|;
-comment|/* Index in ARGV of the next element to be scanned.      This is used for communication to and from the caller      and for communication between successive calls to `getopt'.      On entry to `getopt', zero means this is the first call; initialize.                 When `getopt' returns EOF, this is the index of the first of the      non-option elements that the caller should itself scan.                     Otherwise, `optind' communicates from one call to the next      how much of ARGV has been scanned so far.  */
+comment|/* Index in ARGV of the next element to be scanned.      This is used for communication to and from the caller      and for communication between successive calls to `getopt'.      On entry to `getopt', zero means this is the first call; initialize.       When `getopt' returns EOF, this is the index of the first of the      non-option elements that the caller should itself scan.       Otherwise, `optind' communicates from one call to the next      how much of ARGV has been scanned so far.  */
 name|int
 name|optind
 decl_stmt|;

@@ -21,7 +21,7 @@ name|char
 name|tstuu_rcsid
 index|[]
 init|=
-literal|"$Id: tstuu.c,v 1.81 1994/01/30 20:53:38 ian Rel $"
+literal|"$Id: tstuu.c,v 1.2 1994/05/07 18:08:16 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -2947,7 +2947,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* Simplify   if (...) x = a; else x = b; by converting it 	     to         x = b; if (...) x = a; 	     if B is sufficiently simple, the test doesn't involve X, 	     and nothing in the test modifies B or X.  	     If we have small register classes, we also can't do this if X 	     is a hard register.  	     If the "x = b;" insn has any REG_NOTES, we don't do this because 	     of the possibility that we are running after CSE and there is a 	     REG_EQUAL note that is only valid if the branch has already been 	     taken.  If we move the insn with the REG_EQUAL note, we may 	     fold the comparison to always be false in a later CSE pass. 	     (We could also delete the REG_NOTES when moving the insn, but it 	     seems simpler to not move it.)  An exception is that we can move 	     the insn if the only note is a REG_EQUAL or REG_EQUIV whose 	     value is the same as "b".  	     INSN is the branch over the `else' part.   	     We set:  	     TEMP to the jump insn preceding "x = a;" 	     TEMP1 to X 	     TEMP2 to the insn that sets "x = b;" 	     TEMP3 to the insn that sets "x = a;" 	     TEMP4 to the set of "x = b";  */
+comment|/* Simplify   if (...) x = a; else x = b; by converting it 	     to         x = b; if (...) x = a; 	     if B is sufficiently simple, the test doesn't involve X, 	     and nothing in the test modifies B or X.  	     If we have small register classes, we also can't do this if X 	     is a hard register.  	     If the "x = b;" insn has any REG_NOTES, we don't do this because 	     of the possibility that we are running after CSE and there is a 	     REG_EQUAL note that is only valid if the branch has already been 	     taken.  If we move the insn with the REG_EQUAL note, we may 	     fold the comparison to always be false in a later CSE pass. 	     (We could also delete the REG_NOTES when moving the insn, but it 	     seems simpler to not move it.)  An exception is that we can move 	     the insn if the only note is a REG_EQUAL or REG_EQUIV whose 	     value is the same as "b".  	     INSN is the branch over the `else' part.  	     We set:  	     TEMP to the jump insn preceding "x = a;" 	     TEMP1 to X 	     TEMP2 to the insn that sets "x = b;" 	     TEMP3 to the insn that sets "x = a;" 	     TEMP4 to the set of "x = b";  */
 if|if
 condition|(
 name|this_is_simplejump
@@ -4103,7 +4103,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Finally, handle the case where two insns are used to  	     compute EXP but a temporary register is used.  Here we must 	     ensure that the temporary register is not used anywhere else. */
+comment|/* Finally, handle the case where two insns are used to 	     compute EXP but a temporary register is used.  Here we must 	     ensure that the temporary register is not used anywhere else. */
 if|if
 condition|(
 operator|!
@@ -4613,7 +4613,7 @@ argument_list|)
 operator|==
 name|CONST_INT
 operator|)
-comment|/* Allow either form, but prefer the former if both apply.  		 There is no point in using the old value of TEMP1 if 		 it is a register, since cse will alias them.  It can 		 lose if the old value were a hard register since CSE 		 won't replace hard registers.  */
+comment|/* Allow either form, but prefer the former if both apply. 		 There is no point in using the old value of TEMP1 if 		 it is a register, since cse will alias them.  It can 		 lose if the old value were a hard register since CSE 		 won't replace hard registers.  */
 operator|&&
 operator|(
 operator|(
@@ -5069,7 +5069,7 @@ decl_stmt|;
 name|rtx
 name|seq
 decl_stmt|;
-comment|/* Put the store-flag insns in front of the first insn 		     used to compute the condition to ensure that we 		     use the same values of them as the current  		     comparison.  However, the remainder of the insns we 		     generate will be placed directly in front of the 		     jump insn, in case any of the pseudos we use 		     are modified earlier.  */
+comment|/* Put the store-flag insns in front of the first insn 		     used to compute the condition to ensure that we 		     use the same values of them as the current 		     comparison.  However, the remainder of the insns we 		     generate will be placed directly in front of the 		     jump insn, in case any of the pseudos we use 		     are modified earlier.  */
 name|seq
 operator|=
 name|get_insns
@@ -5369,7 +5369,7 @@ name|end_sequence
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* If branches are expensive, convert 	        if (foo) bar++;    to    bar += (foo != 0); 	     and similarly for "bar--;"   	     INSN is the conditional branch around the arithmetic.  We set:  	     TEMP is the arithmetic insn. 	     TEMP1 is the SET doing the arithmetic. 	     TEMP2 is the operand being incremented or decremented. 	     TEMP3 to the condition being tested. 	     TEMP4 to the earliest insn used to find the condition.  */
+comment|/* If branches are expensive, convert 	        if (foo) bar++;    to    bar += (foo != 0); 	     and similarly for "bar--;"  	     INSN is the conditional branch around the arithmetic.  We set:  	     TEMP is the arithmetic insn. 	     TEMP1 is the SET doing the arithmetic. 	     TEMP2 is the operand being incremented or decremented. 	     TEMP3 to the condition being tested. 	     TEMP4 to the earliest insn used to find the condition.  */
 if|if
 condition|(
 operator|(
@@ -10279,7 +10279,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Make sure ARG0 is one of the actual objects being compared.  If we      can't do this, we can't be sure the comparison can be reversed.        Handle cc0 and a MODE_CC register.  */
+comment|/* Make sure ARG0 is one of the actual objects being compared.  If we      can't do this, we can't be sure the comparison can be reversed.       Handle cc0 and a MODE_CC register.  */
 if|if
 condition|(
 operator|(
@@ -10413,7 +10413,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Given an rtx-code for a comparison, return the code    for the negated comparison.    WATCH OUT!  reverse_condition is not safe to use on a jump    that might be acting on the results of an IEEE floating point comparison,    because of the special treatment of non-signaling nans in comparisons.      Use can_reverse_comparison_p to be sure.  */
+comment|/* Given an rtx-code for a comparison, return the code    for the negated comparison.    WATCH OUT!  reverse_condition is not safe to use on a jump    that might be acting on the results of an IEEE floating point comparison,    because of the special treatment of non-signaling nans in comparisons.    Use can_reverse_comparison_p to be sure.  */
 end_comment
 
 begin_function
@@ -13719,7 +13719,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Invert the jump condition of rtx X contained in jump insn, INSN.      Return 1 if we can do so, 0 if we cannot find a way to do so that    matches a pattern.  */
+comment|/* Invert the jump condition of rtx X contained in jump insn, INSN.     Return 1 if we can do so, 0 if we cannot find a way to do so that    matches a pattern.  */
 end_comment
 
 begin_function
@@ -15276,7 +15276,7 @@ operator|==
 name|word_y
 return|;
 block|}
-comment|/* Now we have disposed of all the cases       in which different rtx codes can match.  */
+comment|/* Now we have disposed of all the cases      in which different rtx codes can match.  */
 if|if
 condition|(
 name|code
@@ -15994,7 +15994,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Called via note_stores on each insn between the target of the first     branch and the second branch.  It marks any changed registers.  */
+comment|/* Called via note_stores on each insn between the target of the first    branch and the second branch.  It marks any changed registers.  */
 end_comment
 
 begin_function
@@ -16949,7 +16949,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* This is like RTX_EQUAL_P except that it knows about our handling of    possibly equivalent registers and knows to consider volatile and    modified objects as not equal.        YINSN is the insn containing Y.  */
+comment|/* This is like RTX_EQUAL_P except that it knows about our handling of    possibly equivalent registers and knows to consider volatile and    modified objects as not equal.     YINSN is the insn containing Y.  */
 end_comment
 
 begin_function
@@ -17307,7 +17307,7 @@ expr_stmt|;
 name|num_same_regs
 operator|++
 expr_stmt|;
-comment|/* If this is the first time we are seeing a register on the `Y' 	     side, see if it is the last use.  If not, we can't thread the  	     jump, so mark it as not equivalent.  */
+comment|/* If this is the first time we are seeing a register on the `Y' 	     side, see if it is the last use.  If not, we can't thread the 	     jump, so mark it as not equivalent.  */
 if|if
 condition|(
 name|regno_last_uid

@@ -1550,7 +1550,7 @@ comment|/* from mem-break.c */
 end_comment
 
 begin_comment
-comment|/* Like target_read_memory() but if breakpoints are inserted, return    the shadow contents instead of the breakpoints themselves.     Read "memory data" from whatever target or inferior we have.     Returns zero if successful, errno value if not.  EIO is used    for address out of bounds.  If breakpoints are inserted, returns    shadow contents, not the breakpoints themselves.  From breakpoint.c.  */
+comment|/* Like target_read_memory() but if breakpoints are inserted, return    the shadow contents instead of the breakpoints themselves.     Read "memory data" from whatever target or inferior we have.    Returns zero if successful, errno value if not.  EIO is used    for address out of bounds.  If breakpoints are inserted, returns    shadow contents, not the breakpoints themselves.  From breakpoint.c.  */
 end_comment
 
 begin_function
@@ -4017,7 +4017,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Evaluate the expression EXP and return 1 if value is zero.    This is used inside a catch_errors to evaluate the breakpoint condition.     The argument is a "struct expression *" that has been cast to char * to     make it pass through catch_errors.  */
+comment|/* Evaluate the expression EXP and return 1 if value is zero.    This is used inside a catch_errors to evaluate the breakpoint condition.    The argument is a "struct expression *" that has been cast to char * to    make it pass through catch_errors.  */
 end_comment
 
 begin_function
@@ -8142,7 +8142,7 @@ comment|/* Set a breakpoint from a symtab and line.    If TEMPFLAG is nonzero, i
 end_comment
 
 begin_comment
-unit|void set_breakpoint (s, line, tempflag, addr_string)      struct symtab *s;      int line;      int tempflag;      char *addr_string; {   register struct breakpoint *b;   struct symtab_and_line sal;      sal.symtab = s;   sal.line = line;   sal.pc = 0;   resolve_sal_pc (&sal);
+unit|void set_breakpoint (s, line, tempflag, addr_string)      struct symtab *s;      int line;      int tempflag;      char *addr_string; {   register struct breakpoint *b;   struct symtab_and_line sal;    sal.symtab = s;   sal.line = line;   sal.pc = 0;   resolve_sal_pc (&sal);
 comment|/* Might error out */
 end_comment
 
@@ -9981,7 +9981,7 @@ name|found_memory_cnt
 init|=
 literal|0
 decl_stmt|;
-comment|/* Make sure all the intermediate values are in memory.  Also make sure      we found at least one memory expression.  Guards against watch 0x12345,      which is meaningless, but could cause errors if one tries to insert a       hardware watchpoint for the constant expression.  */
+comment|/* Make sure all the intermediate values are in memory.  Also make sure      we found at least one memory expression.  Guards against watch 0x12345,      which is meaningless, but could cause errors if one tries to insert a      hardware watchpoint for the constant expression.  */
 for|for
 control|(
 init|;
@@ -13115,7 +13115,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* Took this out (temporaliy at least), since it produces an extra       blank line at startup. This messes up the gdbtests. -PB */
+comment|/* Took this out (temporaliy at least), since it produces an extra      blank line at startup. This messes up the gdbtests. -PB */
 comment|/* Blank line to finish off all those mention() messages we just printed.  */
 block|printf_filtered ("\n");
 endif|#
@@ -13803,7 +13803,7 @@ argument_list|,
 name|other_type_used
 argument_list|)
 expr_stmt|;
-comment|/* we can consider of type is bp_hardware_watchpoint, convert to  	   bp_watchpoint in the following condition */
+comment|/* we can consider of type is bp_hardware_watchpoint, convert to 	   bp_watchpoint in the following condition */
 if|if
 condition|(
 name|target_resources_ok
@@ -14361,7 +14361,7 @@ argument_list|,
 name|other_type_used
 argument_list|)
 expr_stmt|;
-comment|/* we can consider of type is bp_hardware_watchpoint, convert to  	   bp_watchpoint in the following condition */
+comment|/* we can consider of type is bp_hardware_watchpoint, convert to 	   bp_watchpoint in the following condition */
 if|if
 condition|(
 name|target_resources_ok

@@ -2155,7 +2155,7 @@ argument_list|(
 name|fun_name
 argument_list|)
 expr_stmt|;
-comment|/* If the internal documentation string fails, there is a  	     serious problem with the associated command's documentation. 	     We croak so that it can be fixed immediately. */
+comment|/* If the internal documentation string fails, there is a 	     serious problem with the associated command's documentation. 	     We croak so that it can be fixed immediately. */
 if|if
 condition|(
 operator|!

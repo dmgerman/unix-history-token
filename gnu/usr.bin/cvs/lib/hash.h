@@ -4,7 +4,7 @@ comment|/* $CVSid: @(#)hash.h 1.23 94/10/07 $	 */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  */
 end_comment
 
 begin_comment

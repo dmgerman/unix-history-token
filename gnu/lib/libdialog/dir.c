@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  *  *	Program:	dir.c  *	Author:		Marc van Kempen  *	desc:		Directory routines, sorting and reading   *  * Copyright (c) 1995, Marc van Kempen  *  * All rights reserved.  *  * This software may be used, modified, copied, distributed, and  * sold, in both source and binary form provided that the above  * copyright and these terms are retained, verbatim, as the first  * lines of this file.  Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with  * its use.  *   ****************************************************************************/
+comment|/****************************************************************************  *  *	Program:	dir.c  *	Author:		Marc van Kempen  *	desc:		Directory routines, sorting and reading  *  * Copyright (c) 1995, Marc van Kempen  *  * All rights reserved.  *  * This software may be used, modified, copied, distributed, and  * sold, in both source and binary form provided that the above  * copyright and these terms are retained, verbatim, as the first  * lines of this file.  Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with  * its use.  *  ****************************************************************************/
 end_comment
 
 begin_include
@@ -254,7 +254,7 @@ name|d
 endif|#
 directive|endif
 argument_list|)
-comment|/*   *	desc:	allways include a directory entry<d>, except   *		for the current directory and other dot-files  *		keep '..' however.  *	pre:<d> points to a dirent  *	post:	returns TRUE if d->d_name != "." else FALSE  */
+comment|/*  *	desc:	allways include a directory entry<d>, except  *		for the current directory and other dot-files  *		keep '..' however.  *	pre:<d> points to a dirent  *	post:	returns TRUE if d->d_name != "." else FALSE  */
 block|{
 if|if
 condition|(
@@ -341,7 +341,7 @@ name|d
 endif|#
 directive|endif
 argument_list|)
-comment|/*   *	desc:	allways include a directory entry<d>, except   *		for the current directory  *	pre:<d> points to a dirent  *	post:	returns TRUE if d->d_name != "." else FALSE  */
+comment|/*  *	desc:	allways include a directory entry<d>, except  *		for the current directory  *	pre:<d> points to a dirent  *	post:	returns TRUE if d->d_name != "." else FALSE  */
 block|{
 if|if
 condition|(
@@ -400,7 +400,7 @@ name|d
 endif|#
 directive|endif
 argument_list|)
-comment|/*   *	desc:	allways include a directory entry<d>, except   *		for the current directory and the parent directory.  *		Also skip any other dot-files.  *	pre:<d> points to a dirent  *	post:	returns TRUE if d->d_name[0] != "." else FALSE  */
+comment|/*  *	desc:	allways include a directory entry<d>, except  *		for the current directory and the parent directory.  *		Also skip any other dot-files.  *	pre:<d> points to a dirent  *	post:	returns TRUE if d->d_name[0] != "." else FALSE  */
 block|{
 if|if
 condition|(
@@ -458,7 +458,7 @@ name|d
 endif|#
 directive|endif
 argument_list|)
-comment|/*   *	desc:	allways include a directory entry<d>, except   *		for the current directory and the parent directory  *	pre:<d> points to a dirent  *	post:	returns TRUE if d->d_name[0] != "." else FALSE  */
+comment|/*  *	desc:	allways include a directory entry<d>, except  *		for the current directory and the parent directory  *	pre:<d> points to a dirent  *	post:	returns TRUE if d->d_name[0] != "." else FALSE  */
 block|{
 if|if
 condition|(
@@ -2303,7 +2303,7 @@ parameter_list|,
 name|int
 name|n
 parameter_list|)
-comment|/*  * 	desc:	free the dirlist d  *	pre:	d != NULL   *	post:	memory allocated to d has been released  */
+comment|/*  * 	desc:	free the dirlist d  *	pre:	d != NULL  *	post:	memory allocated to d has been released  */
 block|{
 name|int
 name|i

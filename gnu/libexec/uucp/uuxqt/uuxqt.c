@@ -21,7 +21,7 @@ name|char
 name|uuxqt_rcsid
 index|[]
 init|=
-literal|"$Id: uuxqt.c,v 1.2 1994/05/07 18:14:43 ache Exp $"
+literal|"$Id: uuxqt.c,v 1.3 1994/10/22 03:51:36 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 

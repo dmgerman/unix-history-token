@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * builtin.c - Builtin functions and various utility procedures   */
+comment|/*  * builtin.c - Builtin functions and various utility procedures  */
 end_comment
 
 begin_comment
-comment|/*   * Copyright (C) 1986, 1988, 1989, 1991, 1992, 1993 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Progamming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with GAWK; see the file COPYING.  If not, write to  * the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/*  * Copyright (C) 1986, 1988, 1989, 1991, 1992, 1993 the Free Software Foundation, Inc.  *  * This file is part of GAWK, the GNU implementation of the  * AWK Progamming Language.  *  * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *  * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with GAWK; see the file COPYING.  If not, write to  * the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_include
@@ -1238,7 +1238,7 @@ parameter_list|(
 name|l
 parameter_list|)
 value|if((l)>ofre) {\     long olen = obufout - obuf;\     erealloc(obuf, char *, osiz*2, "format_tree");\     obufout = obuf + olen;\     ofre+=osiz;\     osiz*=2;\   }
-comment|/* 	 * Get the next arg to be formatted.  If we've run out of args, 	 * return "" (Null string)  	 */
+comment|/* 	 * Get the next arg to be formatted.  If we've run out of args, 	 * return "" (Null string) 	 */
 define|#
 directive|define
 name|parse_next_arg
@@ -3457,7 +3457,7 @@ name|cmd
 condition|)
 block|{
 comment|/* insure arg to system is zero-terminated */
-comment|/* 		 * From: David Trueman<emory!cs.dal.ca!david> 		 * To: arnold@cc.gatech.edu (Arnold Robbins) 		 * Date: 	Wed, 3 Nov 1993 12:49:41 -0400 		 *  		 * It may not be necessary to save the character, but 		 * I'm not sure.  It would normally be the field 		 * separator.  If the parse has not yet gone beyond 		 * that, it could mess up (although I doubt it).  If 		 * FIELDWIDTHS is being used, it might be the first 		 * character of the next field.  Unless someone wants 		 * to check it out exhaustively, I suggest saving it 		 * for now... 		 */
+comment|/* 		 * From: David Trueman<emory!cs.dal.ca!david> 		 * To: arnold@cc.gatech.edu (Arnold Robbins) 		 * Date: 	Wed, 3 Nov 1993 12:49:41 -0400 		 * 		 * It may not be necessary to save the character, but 		 * I'm not sure.  It would normally be the field 		 * separator.  If the parse has not yet gone beyond 		 * that, it could mess up (although I doubt it).  If 		 * FIELDWIDTHS is being used, it might be the first 		 * character of the next field.  Unless someone wants 		 * to check it out exhaustively, I suggest saving it 		 * for now... 		 */
 name|save
 operator|=
 name|cmd
@@ -5151,7 +5151,7 @@ operator|->
 name|stptr
 argument_list|)
 expr_stmt|;
-comment|/* 		 * create the result, copying in parts of the original 		 * string  		 */
+comment|/* 		 * create the result, copying in parts of the original 		 * string 		 */
 name|len
 operator|=
 name|matchstart

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * "import" checks in the vendor release located in the current directory into  * the CVS source repository.  The CVS vendor branch support is utilized.  *   * At least three arguments are expected to follow the options:  *	repository	Where the source belongs relative to the CVSROOT  *	VendorTag	Vendor's major tag  *	VendorReleTag	Tag for this particular release  *  * Additional arguments specify more Vendor Release Tags.  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *  * "import" checks in the vendor release located in the current directory into  * the CVS source repository.  The CVS vendor branch support is utilized.  *  * At least three arguments are expected to follow the options:  *	repository	Where the source belongs relative to the CVSROOT  *	VendorTag	Vendor's major tag  *	VendorReleTag	Tag for this particular release  *  * Additional arguments specify more Vendor Release Tags.  */
 end_comment
 
 begin_include
@@ -2033,7 +2033,7 @@ name|getpid
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The rcs file does have a revision on the vendor branch. Compare 	 * this revision with the import file; if they match exactly, there 	 * is no need to install the new import file as a new revision to the 	 * branch.  Just tag the revision with the new import tags. 	 *  	 * This is to try to cut down the number of "C" conflict messages for 	 * locally modified import source files. 	 */
+comment|/* 	 * The rcs file does have a revision on the vendor branch. Compare 	 * this revision with the import file; if they match exactly, there 	 * is no need to install the new import file as a new revision to the 	 * branch.  Just tag the revision with the new import tags. 	 * 	 * This is to try to cut down the number of "C" conflict messages for 	 * locally modified import source files. 	 */
 ifdef|#
 directive|ifdef
 name|HAVE_RCS5
@@ -4790,7 +4790,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is the recursive function that walks the argument directory looking  * for sub-directories that have CVS administration files in them and updates  * them recursively.  *   * Note that we do not follow symbolic links here, which is a feature!  */
+comment|/*  * This is the recursive function that walks the argument directory looking  * for sub-directories that have CVS administration files in them and updates  * them recursively.  *  * Note that we do not follow symbolic links here, which is a feature!  */
 end_comment
 
 begin_function

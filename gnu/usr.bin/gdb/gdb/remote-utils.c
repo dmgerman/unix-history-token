@@ -4,7 +4,7 @@ comment|/* Generic support for remote debugging interfaces.     Copyright 1993, 
 end_comment
 
 begin_comment
-comment|/*  This file actually contains two distinct logical "packages".  They     are packaged together in this one file because they are typically     used together.      The first package is an addition to the serial package.  The     addition provides reading and writing with debugging output and     timeouts based on user settable variables.  These routines are     intended to support serial port based remote backends.  These     functions are prefixed with sr_.      The second package is a collection of more or less generic     functions for use by remote backends.  They support user settable     variables for debugging, retries, and the like.       Todo:     * a pass through mode a la kermit or telnet.    * autobaud.    * ask remote to change his baud rate.    */
+comment|/*  This file actually contains two distinct logical "packages".  They     are packaged together in this one file because they are typically     used together.      The first package is an addition to the serial package.  The     addition provides reading and writing with debugging output and     timeouts based on user settable variables.  These routines are     intended to support serial port based remote backends.  These     functions are prefixed with sr_.      The second package is a collection of more or less generic     functions for use by remote backends.  They support user settable     variables for debugging, retries, and the like.     Todo:     * a pass through mode a la kermit or telnet.    * autobaud.    * ask remote to change his baud rate.    */
 end_comment
 
 begin_include

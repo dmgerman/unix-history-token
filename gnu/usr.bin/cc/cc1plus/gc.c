@@ -415,7 +415,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Predicate that returns non-zero iff FROM is safe from the GC.        If TO is nonzero, it means we know that FROM is being stored    in TO, which make make it safe.  */
+comment|/* Predicate that returns non-zero iff FROM is safe from the GC.     If TO is nonzero, it means we know that FROM is being stored    in TO, which make make it safe.  */
 end_comment
 
 begin_function
@@ -1081,7 +1081,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Not yet implemented. 	  	 Cons up a static variable that holds address and length info 	 and add that to ___ARR_LIST__.  */
+comment|/* Not yet implemented.  	 Cons up a static variable that holds address and length info 	 and add that to ___ARR_LIST__.  */
 name|my_friendly_abort
 argument_list|(
 literal|43

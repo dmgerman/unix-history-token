@@ -21,7 +21,7 @@ name|char
 name|uuchk_rcsid
 index|[]
 init|=
-literal|"$Id: uuchk.c,v 1.52 1994/05/02 03:43:02 ian Rel $"
+literal|"$Id: uuchk.c,v 1.2 1994/05/07 18:13:37 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 

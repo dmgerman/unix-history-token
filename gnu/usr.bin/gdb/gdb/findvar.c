@@ -2795,7 +2795,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Given a struct symbol for a variable,    and a stack frame id, read the value of the variable    and return a (pointer to a) struct value containing the value.     If the variable cannot be found, return a zero pointer.    If FRAME is NULL, use the selected_frame.  */
+comment|/* Given a struct symbol for a variable,    and a stack frame id, read the value of the variable    and return a (pointer to a) struct value containing the value.    If the variable cannot be found, return a zero pointer.    If FRAME is NULL, use the selected_frame.  */
 end_comment
 
 begin_function
@@ -4033,7 +4033,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Given a struct symbol for a variable or function,    and a stack frame id,     return a (pointer to a) struct value containing the properly typed    address.  */
+comment|/* Given a struct symbol for a variable or function,    and a stack frame id,    return a (pointer to a) struct value containing the properly typed    address.  */
 end_comment
 
 begin_function

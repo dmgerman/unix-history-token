@@ -4,7 +4,7 @@ comment|/* Generic BFD support for file formats.    Copyright (C) 1990, 91, 92, 
 end_comment
 
 begin_comment
-comment|/* SECTION 	File formats  	A format is a BFD concept of high level file contents type. The 	formats supported by BFD are:   	o<<bfd_object>>  	The BFD may contain data, symbols, relocations and debug info.  	o<<bfd_archive>>  	The BFD contains other BFDs and an optional index.  	o<<bfd_core>>  	The BFD contains the result of an executable core dump.   */
+comment|/* SECTION 	File formats  	A format is a BFD concept of high level file contents type. The 	formats supported by BFD are:  	o<<bfd_object>>  	The BFD may contain data, symbols, relocations and debug info.  	o<<bfd_archive>>  	The BFD contains other BFDs and an optional index.  	o<<bfd_core>>  	The BFD contains the result of an executable core dump.   */
 end_comment
 
 begin_include
@@ -38,7 +38,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* FUNCTION 	bfd_check_format  SYNOPSIS 	boolean bfd_check_format(bfd *abfd, bfd_format format);  DESCRIPTION 	Verify if the file attached to the BFD @var{abfd} is compatible 	with the format @var{format} (i.e., one of<<bfd_object>>,<<bfd_archive>> or<<bfd_core>>).  	If the BFD has been set to a specific target before the 	call, only the named target and format combination is 	checked. If the target has not been set, or has been set to<<default>>, then all the known target backends is 	interrogated to determine a match.  If the default target 	matches, it is used.  If not, exactly one target must recognize 	the file, or an error results.  	The function returns<<true>> on success, otherwise<<false>> 	with one of the following error codes:    	o<<bfd_error_invalid_operation>> - 	if<<format>> is not one of<<bfd_object>>,<<bfd_archive>> or<<bfd_core>>.  	o<<bfd_error_system_call>> - 	if an error occured during a read - even some file mismatches 	can cause bfd_error_system_calls.  	o<<file_not_recognised>> - 	none of the backends recognised the file format.  	o<<bfd_error_file_ambiguously_recognized>> - 	more than one backend recognised the file format. */
+comment|/* FUNCTION 	bfd_check_format  SYNOPSIS 	boolean bfd_check_format(bfd *abfd, bfd_format format);  DESCRIPTION 	Verify if the file attached to the BFD @var{abfd} is compatible 	with the format @var{format} (i.e., one of<<bfd_object>>,<<bfd_archive>> or<<bfd_core>>).  	If the BFD has been set to a specific target before the 	call, only the named target and format combination is 	checked. If the target has not been set, or has been set to<<default>>, then all the known target backends is 	interrogated to determine a match.  If the default target 	matches, it is used.  If not, exactly one target must recognize 	the file, or an error results.  	The function returns<<true>> on success, otherwise<<false>> 	with one of the following error codes:  	o<<bfd_error_invalid_operation>> - 	if<<format>> is not one of<<bfd_object>>,<<bfd_archive>> or<<bfd_core>>.  	o<<bfd_error_system_call>> - 	if an error occured during a read - even some file mismatches 	can cause bfd_error_system_calls.  	o<<file_not_recognised>> - 	none of the backends recognised the file format.  	o<<bfd_error_file_ambiguously_recognized>> - 	more than one backend recognised the file format. */
 end_comment
 
 begin_function
@@ -71,7 +71,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_check_format_matches  SYNOPSIS 	boolean bfd_check_format_matches(bfd *abfd, bfd_format format, char ***matching);  DESCRIPTION 	Like<<bfd_check_format>>, except when it returns false with<<bfd_errno>> set to<<bfd_error_file_ambiguously_recognized>>.  In that 	case, if @var{matching} is not NULL, it will be filled in with 	a NULL-terminated list of the names of the formats that matched, 	allocated with<<malloc>>. 	Then the user may choose a format and try again.  	When done with the list that @var{matching} points to, the caller 	should free it.   */
+comment|/* FUNCTION 	bfd_check_format_matches  SYNOPSIS 	boolean bfd_check_format_matches(bfd *abfd, bfd_format format, char ***matching);  DESCRIPTION 	Like<<bfd_check_format>>, except when it returns false with<<bfd_errno>> set to<<bfd_error_file_ambiguously_recognized>>.  In that 	case, if @var{matching} is not NULL, it will be filled in with 	a NULL-terminated list of the names of the formats that matched, 	allocated with<<malloc>>. 	Then the user may choose a format and try again.  	When done with the list that @var{matching} points to, the caller 	should free it. */
 end_comment
 
 begin_function
@@ -192,7 +192,7 @@ name|true
 else|:
 name|false
 return|;
-comment|/* Since the target type was defaulted, check them       all in the hope that one will be uniquely recognized.  */
+comment|/* Since the target type was defaulted, check them      all in the hope that one will be uniquely recognized.  */
 name|save_targ
 operator|=
 name|abfd
@@ -441,7 +441,7 @@ block|}
 name|match_count
 operator|++
 expr_stmt|;
-comment|/* If this is the default target, accept it, even if other targets 	 might match.  People who want those other targets have to set  	 the GNUTARGET variable.  */
+comment|/* If this is the default target, accept it, even if other targets 	 might match.  People who want those other targets have to set 	 the GNUTARGET variable.  */
 if|if
 condition|(
 name|temp

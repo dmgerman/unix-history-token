@@ -4,7 +4,7 @@ comment|/* BFD library -- caching of file descriptors.    Copyright 1990, 1991, 
 end_comment
 
 begin_comment
-comment|/* SECTION 	File caching  	The file caching mechanism is embedded within BFD and allows 	the application to open as many BFDs as it wants without 	regard to the underlying operating system's file descriptor 	limit (often as low as 20 open files).  The module in<<cache.c>> maintains a least recently used list of<<BFD_CACHE_MAX_OPEN>> files, and exports the name<<bfd_cache_lookup>>, which runs around and makes sure that 	the required BFD is open. If not, then it chooses a file to 	close, closes it and opens the one wanted, returning its file 	handle.   */
+comment|/* SECTION 	File caching  	The file caching mechanism is embedded within BFD and allows 	the application to open as many BFDs as it wants without 	regard to the underlying operating system's file descriptor 	limit (often as low as 20 open files).  The module in<<cache.c>> maintains a least recently used list of<<BFD_CACHE_MAX_OPEN>> files, and exports the name<<bfd_cache_lookup>>, which runs around and makes sure that 	the required BFD is open. If not, then it chooses a file to 	close, closes it and opens the one wanted, returning its file 	handle.  */
 end_comment
 
 begin_include
@@ -107,7 +107,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   INTERNAL_FUNCTION   	bfd_cache_lookup     DESCRIPTION  	Check to see if the required BFD is the same as the last one  	looked up. If so, then it can use the stream in the BFD with  	impunity, since it can't have changed since the last lookup;  	otherwise, it has to perform the complicated lookup function.     .#define bfd_cache_lookup(x) \   .    ((x)==bfd_last_cache? \   .      (FILE*)(bfd_last_cache->iostream): \   .       bfd_cache_lookup_worker(x))      */
+comment|/*   INTERNAL_FUNCTION   	bfd_cache_lookup    DESCRIPTION  	Check to see if the required BFD is the same as the last one  	looked up. If so, then it can use the stream in the BFD with  	impunity, since it can't have changed since the last lookup;  	otherwise, it has to perform the complicated lookup function.    .#define bfd_cache_lookup(x) \   .    ((x)==bfd_last_cache? \   .      (FILE*)(bfd_last_cache->iostream): \   .       bfd_cache_lookup_worker(x))    */
 end_comment
 
 begin_comment
@@ -701,7 +701,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* INTERNAL_FUNCTION 	bfd_cache_lookup_worker  SYNOPSIS 	FILE *bfd_cache_lookup_worker(bfd *abfd);  DESCRIPTION 	Called when the macro<<bfd_cache_lookup>> fails to find a 	quick answer.  Find a file descriptor for @var{abfd}.  If 	necessary, it open it.  If there are already more than<<BFD_CACHE_MAX_OPEN>> files open, it tries to close one first, to 	avoid running out of file descriptors.   */
+comment|/* INTERNAL_FUNCTION 	bfd_cache_lookup_worker  SYNOPSIS 	FILE *bfd_cache_lookup_worker(bfd *abfd);  DESCRIPTION 	Called when the macro<<bfd_cache_lookup>> fails to find a 	quick answer.  Find a file descriptor for @var{abfd}.  If 	necessary, it open it.  If there are already more than<<BFD_CACHE_MAX_OPEN>> files open, it tries to close one first, to 	avoid running out of file descriptors. */
 end_comment
 
 begin_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * Commit Files  *   * "commit" commits the present version to the RCS repository, AFTER  * having done a test on conflicts.  *  * The call is: cvs commit [options] files...  *   */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *  * Commit Files  *  * "commit" commits the present version to the RCS repository, AFTER  * having done a test on conflicts.  *  * The call is: cvs commit [options] files...  *  */
 end_comment
 
 begin_include
@@ -6067,7 +6067,7 @@ name|err
 init|=
 literal|0
 decl_stmt|;
-comment|/*      * For a specified, numeric revision of the form "1" or "1.1", (or when      * no revision is specified ""), definitely move the branch to the trunk      * before locking the RCS file.      *       * The assumption is that if there is more than one revision on the trunk,      * the head points to the trunk, not a branch... and as such, it's not      * necessary to move the head in this case.      */
+comment|/*      * For a specified, numeric revision of the form "1" or "1.1", (or when      * no revision is specified ""), definitely move the branch to the trunk      * before locking the RCS file.      *      * The assumption is that if there is more than one revision on the trunk,      * the head points to the trunk, not a branch... and as such, it's not      * necessary to move the head in this case.      */
 if|if
 condition|(
 name|rev

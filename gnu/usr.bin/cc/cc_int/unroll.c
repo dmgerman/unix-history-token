@@ -2070,7 +2070,7 @@ argument_list|(
 name|initial_value
 argument_list|)
 expr_stmt|;
-comment|/* Calculate the difference between the final and initial values. 	     Final value may be a (plus (reg x) (const_int 1)) rtx. 	     Let the following cse pass simplify this if initial value is 	     a constant.   	     We must copy the final and initial values here to avoid 	     improperly shared rtl.  */
+comment|/* Calculate the difference between the final and initial values. 	     Final value may be a (plus (reg x) (const_int 1)) rtx. 	     Let the following cse pass simplify this if initial value is 	     a constant.  	     We must copy the final and initial values here to avoid 	     improperly shared rtl.  */
 name|diff
 operator|=
 name|expand_binop
@@ -3229,7 +3229,7 @@ argument_list|,
 name|copy_end
 argument_list|)
 expr_stmt|;
-comment|/* Delete all of the original loop instructions.  Don't delete the       LOOP_BEG note, or the first code label in the loop.  */
+comment|/* Delete all of the original loop instructions.  Don't delete the      LOOP_BEG note, or the first code label in the loop.  */
 name|insn
 operator|=
 name|NEXT_INSN
@@ -4544,7 +4544,7 @@ name|giv_inc
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Check to see if this is a giv that has been combined with 	     some split address givs.  (Combined in the sense that  	     `combine_givs' in loop.c has put two givs in the same register.) 	     In this case, we must search all givs based on the same biv to 	     find the address givs.  Then split the address givs. 	     Do this before splitting the giv, since that may map the 	     SET_DEST to a new register.  */
+comment|/* Check to see if this is a giv that has been combined with 	     some split address givs.  (Combined in the sense that 	     `combine_givs' in loop.c has put two givs in the same register.) 	     In this case, we must search all givs based on the same biv to 	     find the address givs.  Then split the address givs. 	     Do this before splitting the giv, since that may map the 	     SET_DEST to a new register.  */
 if|if
 condition|(
 name|GET_CODE
@@ -8151,7 +8151,7 @@ comment|/* Should emit insns after the loop if possible, as the biv final value 
 comment|/* If the final value is non-zero, and the giv has not been reduced, 	 then must emit an instruction to set the final value.  */
 block|if (final_value&& !v->new_reg) 	{
 comment|/* Create a new register to hold the value of the giv, and then set 	     the giv to its final value before the loop start.  The giv is set 	     to its final value before loop start to ensure that this insn 	     will always be executed, no matter how we exit.  */
-block|tem = gen_reg_rtx (v->mode); 	  emit_insn_before (gen_move_insn (tem, v->dest_reg), loop_start); 	  emit_insn_before (gen_move_insn (v->dest_reg, final_value), 			    loop_start); 	   	  if (loop_dump_stream) 	    fprintf (loop_dump_stream, "Giv %d mapped to %d for split.\n", 		     REGNO (v->dest_reg), REGNO (tem)); 	   	  v->src_reg = tem; 	}
+block|tem = gen_reg_rtx (v->mode); 	  emit_insn_before (gen_move_insn (tem, v->dest_reg), loop_start); 	  emit_insn_before (gen_move_insn (v->dest_reg, final_value), 			    loop_start);  	  if (loop_dump_stream) 	    fprintf (loop_dump_stream, "Giv %d mapped to %d for split.\n", 		     REGNO (v->dest_reg), REGNO (tem));  	  v->src_reg = tem; 	}
 endif|#
 directive|endif
 comment|/* This giv is splittable.  If completely unrolling the loop, save the 	 giv's initial value.  Otherwise, save the constant zero for it.  */

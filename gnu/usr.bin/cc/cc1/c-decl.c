@@ -910,7 +910,7 @@ comment|/* Nonzero means make a BLOCK if this level has any subblocks.  */
 name|char
 name|keep_if_subblocks
 decl_stmt|;
-comment|/* Number of decls in `names' that have incomplete         structure or union types.  */
+comment|/* Number of decls in `names' that have incomplete        structure or union types.  */
 name|int
 name|n_incomplete
 decl_stmt|;
@@ -16547,7 +16547,7 @@ directive|if
 literal|0
 comment|/* This seems to be false.  We turn off temporary allocation 	 above in this function if -traditional. 	 And this code caused inconsistent results with prototypes: 	 callers would ignore them, and pass arguments wrong.  */
 comment|/* Omit the arg types if -traditional, since the arg types 	     and the list links might not be permanent.  */
-block|type = build_function_type (type, 				      flag_traditional  				      ? NULL_TREE : arg_types);
+block|type = build_function_type (type, 				      flag_traditional 				      ? NULL_TREE : arg_types);
 endif|#
 directive|endif
 comment|/* ANSI seems to say that `const int foo ();' 	     does not make the function foo const.  */

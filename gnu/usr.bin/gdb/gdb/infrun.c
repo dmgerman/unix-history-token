@@ -842,7 +842,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PREPARE_TO_PROCEED
-comment|/* In a multi-threaded task we may select another thread and then continue.            In this case the thread that stopped at a breakpoint will immediately      cause another stop, if it is not stepped over first. On the other hand,      if (ADDR != -1) we only want to single step over the breakpoint if we did      switch to another thread.       If we are single stepping, don't do any of the above.      (Note that in the current implementation single stepping another      thread after a breakpoint and then continuing will cause the original      breakpoint to be hit again, but you can always continue, so it's not      a big deal.)  */
+comment|/* In a multi-threaded task we may select another thread and then continue.       In this case the thread that stopped at a breakpoint will immediately      cause another stop, if it is not stepped over first. On the other hand,      if (ADDR != -1) we only want to single step over the breakpoint if we did      switch to another thread.       If we are single stepping, don't do any of the above.      (Note that in the current implementation single stepping another      thread after a breakpoint and then continuing will cause the original      breakpoint to be hit again, but you can always continue, so it's not      a big deal.)  */
 if|if
 condition|(
 operator|!
@@ -1887,7 +1887,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_STEPPABLE_WATCHPOINT
-comment|/* It may not be necessary to disable the watchpoint to stop over 	 it.  For example, the PA can (with some kernel cooperation)  	 single step over a watchpoint without disabling the watchpoint.  */
+comment|/* It may not be necessary to disable the watchpoint to stop over 	 it.  For example, the PA can (with some kernel cooperation) 	 single step over a watchpoint without disabling the watchpoint.  */
 if|if
 condition|(
 name|STOPPED_BY_WATCHPOINT
@@ -3250,7 +3250,7 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-comment|/* We aren't done stepping.  	 Optimize by setting the stepping range to the line. 	 (We might not be in the original line, but if we entered a 	 new line in mid-statement, we continue stepping.  This makes  	 things like for(;;) statements work better.)  */
+comment|/* We aren't done stepping.  	 Optimize by setting the stepping range to the line. 	 (We might not be in the original line, but if we entered a 	 new line in mid-statement, we continue stepping.  This makes 	 things like for(;;) statements work better.)  */
 if|if
 condition|(
 name|stop_func_end
@@ -5060,7 +5060,7 @@ name|stop_soon_quietly
 operator|=
 name|stop_soon_quietly
 expr_stmt|;
-comment|/* Save original bpstat chain here; replace it with copy of chain.       If caller's caller is walking the chain, they'll be happier if we      hand them back the original chain when restore_i_s is called.  */
+comment|/* Save original bpstat chain here; replace it with copy of chain.      If caller's caller is walking the chain, they'll be happier if we      hand them back the original chain when restore_i_s is called.  */
 name|inf_status
 operator|->
 name|stop_bpstat

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   C source for CHESS      Revision: 4-25-88    Copyright (C) 1986, 1987, 1988 Free Software Foundation, Inc.   Copyright (c) 1988   John Stanback    This file is part of CHESS.    CHESS is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY.  No author or distributor   accepts responsibility to anyone for the consequences of using it   or for whether it serves any particular purpose or works at all,   unless he says so in writing.  Refer to the CHESS General Public   License for full details.    Everyone is granted permission to copy, modify and redistribute   CHESS, but only under the conditions described in the   CHESS General Public License.   A copy of this license is   supposed to have been given to you along with CHESS so you   can know your rights and responsibilities.  It should be in a   file named COPYING.  Among other things, the copyright notice   and this notice must be preserved on all copies. */
+comment|/*   C source for CHESS    Revision: 4-25-88    Copyright (C) 1986, 1987, 1988 Free Software Foundation, Inc.   Copyright (c) 1988   John Stanback    This file is part of CHESS.    CHESS is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY.  No author or distributor   accepts responsibility to anyone for the consequences of using it   or for whether it serves any particular purpose or works at all,   unless he says so in writing.  Refer to the CHESS General Public   License for full details.    Everyone is granted permission to copy, modify and redistribute   CHESS, but only under the conditions described in the   CHESS General Public License.   A copy of this license is   supposed to have been given to you along with CHESS so you   can know your rights and responsibilities.  It should be in a   file named COPYING.  Among other things, the copyright notice   and this notice must be preserved on all copies. */
 end_comment
 
 begin_include
@@ -4081,7 +4081,7 @@ name|short
 modifier|*
 name|mv
 decl_stmt|;
-comment|/*    Compare the string 's' to the list of legal moves available for the     opponent. If a match is found, make the move on the board.  */
+comment|/*    Compare the string 's' to the list of legal moves available for the    opponent. If a match is found, make the move on the board. */
 block|{
 specifier|static
 name|short
@@ -5080,7 +5080,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*    Select a move by calling function search() at progressively deeper     ply until time is up or a mate or draw is reached. An alpha-beta     window of -90 to +90 points is set around the score returned from the     previous iteration. If Sdepth != 0 then the program has correctly     predicted the opponents move and the search will start at a depth of     Sdepth+1 rather than a depth of 1.  */
+comment|/*    Select a move by calling function search() at progressively deeper    ply until time is up or a mate or draw is reached. An alpha-beta    window of -90 to +90 points is set around the score returned from the    previous iteration. If Sdepth != 0 then the program has correctly    predicted the opponents move and the search will start at a depth of    Sdepth+1 rather than a depth of 1. */
 end_comment
 
 begin_block
@@ -6162,7 +6162,7 @@ argument_list|()
 end_macro
 
 begin_comment
-comment|/*    Go thru each of the opening lines of play and check for a match with     the current game listing. If a match occurs, generate a random number.     If this number is the largest generated so far then the next move in     this line becomes the current "candidate". After all lines are     checked, the candidate move is put at the top of the Tree[] array and     will be played by the program. Note that the program does not handle     book transpositions.  */
+comment|/*    Go thru each of the opening lines of play and check for a match with    the current game listing. If a match occurs, generate a random number.    If this number is the largest generated so far then the next move in    this line becomes the current "candidate". After all lines are    checked, the candidate move is put at the top of the Tree[] array and    will be played by the program. Note that the program does not handle    book transpositions. */
 end_comment
 
 begin_block
@@ -6429,7 +6429,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*    Perform an alpha-beta search to determine the score for the current     board position. If depth<= 0 only capturing moves, pawn promotions     and responses to check are generated and searched, otherwise all     moves are processed. The search depth is modified for check evasions,     certain re-captures and threats. Extensions may continue for up to 11     ply beyond the nominal search depth.  */
+comment|/*    Perform an alpha-beta search to determine the score for the current    board position. If depth<= 0 only capturing moves, pawn promotions    and responses to check are generated and searched, otherwise all    moves are processed. The search depth is modified for check evasions,    certain re-captures and threats. Extensions may continue for up to 11    ply beyond the nominal search depth. */
 end_comment
 
 begin_define
@@ -7638,7 +7638,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*    Compute an estimate of the score by adding the positional score from     the previous ply to the material difference. If this score falls     inside a window which is 180 points wider than the alpha-beta window     (or within a 50 point window during quiescence search) call     ScorePosition() to determine a score, otherwise return the estimated     score. If one side has only a king and the other either has no pawns     or no pieces then the function ScoreLoneKing() is called.  */
+comment|/*    Compute an estimate of the score by adding the positional score from    the previous ply to the material difference. If this score falls    inside a window which is 180 points wider than the alpha-beta window    (or within a 50 point window during quiescence search) call    ScorePosition() to determine a score, otherwise return the estimated    score. If one side has only a king and the other either has no pawns    or no pieces then the function ScoreLoneKing() is called. */
 end_comment
 
 begin_block
@@ -8049,7 +8049,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*     Look for the current board position in the transposition table. */
+comment|/*    Look for the current board position in the transposition table. */
 end_comment
 
 begin_block
@@ -8394,7 +8394,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*    Fill the array Tree[] with all available moves for side to play. Array     TrPnt[ply] contains the index into Tree[] of the first move at a ply.  */
+comment|/*    Fill the array Tree[] with all available moves for side to play. Array    TrPnt[ply] contains the index into Tree[] of the first move at a ply. */
 end_comment
 
 begin_block
@@ -8698,7 +8698,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*    Generate moves for a piece. The from square is mapped onto a special      board and offsets (taken from array Dir[]) are added to the mapped     location. The newly generated square is tested to see if it falls off     the board by ANDing the square with 88 HEX. Legal moves are linked     into the tree.  */
+comment|/*    Generate moves for a piece. The from square is mapped onto a special    board and offsets (taken from array Dir[]) are added to the mapped    location. The newly generated square is tested to see if it falls off    the board by ANDing the square with 88 HEX. Legal moves are linked    into the tree. */
 end_comment
 
 begin_block
@@ -9152,7 +9152,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*    Add a move to the tree.  Assign a bonus to order the moves    as follows:      1. Principle variation      2. Capture of last moved piece      3. Other captures (major pieces first)      4. Killer moves      5. "history" killers     */
+comment|/*    Add a move to the tree.  Assign a bonus to order the moves    as follows:      1. Principle variation      2. Capture of last moved piece      3. Other captures (major pieces first)      4. Killer moves      5. "history" killers */
 end_comment
 
 begin_block
@@ -10370,7 +10370,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*    Update Arrays board[], color[], and Pindex[] to reflect the new board     position obtained after making the move pointed to by node. Also     update miscellaneous stuff that changes when a move is made.  */
+comment|/*    Update Arrays board[], color[], and Pindex[] to reflect the new board    position obtained after making the move pointed to by node. Also    update miscellaneous stuff that changes when a move is made. */
 end_comment
 
 begin_block
@@ -11450,7 +11450,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*    hashbd contains a 32 bit "signature" of the board position. hashkey     contains a 16 bit code used to address the hash table. When a move is     made, XOR'ing the hashcode of moved piece on the from and to squares     with the hashbd and hashkey values keeps things current.  */
+comment|/*    hashbd contains a 32 bit "signature" of the board position. hashkey    contains a 16 bit code used to address the hash table. When a move is    made, XOR'ing the hashcode of moved piece on the from and to squares    with the hashbd and hashkey values keeps things current. */
 end_comment
 
 begin_block
@@ -11556,7 +11556,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*    Update the PieceList and Pindex arrays when a piece is captured or     when a capture is unmade.  */
+comment|/*    Update the PieceList and Pindex arrays when a piece is captured or    when a capture is unmade. */
 end_comment
 
 begin_block
@@ -11672,7 +11672,7 @@ argument_list|()
 end_macro
 
 begin_comment
-comment|/*    Scan thru the board seeing what's on each square. If a piece is found,     update the variables PieceCnt, PawnCnt, Pindex and PieceList. Also     determine the material for each side and set the hashkey and hashbd     variables to represent the current board position. Array     PieceList[side][indx] contains the location of all the pieces of     either side. Array Pindex[sq] contains the indx into PieceList for a     given square.  */
+comment|/*    Scan thru the board seeing what's on each square. If a piece is found,    update the variables PieceCnt, PawnCnt, Pindex and PieceList. Also    determine the material for each side and set the hashkey and hashbd    variables to represent the current board position. Array    PieceList[side][indx] contains the location of all the pieces of    either side. Array Pindex[sq] contains the indx into PieceList for a    given square. */
 end_comment
 
 begin_block
@@ -11945,7 +11945,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*      Find the best move in the tree between indexes p1 and p2. Swap the     best move into the p1 element.  */
+comment|/*    Find the best move in the tree between indexes p1 and p2. Swap the    best move into the p1 element. */
 end_comment
 
 begin_block
@@ -12238,7 +12238,7 @@ name|sq
 decl_stmt|,
 name|side
 decl_stmt|;
-comment|/*   See if any piece with color 'side' ataks sq.  First check for pawns   or king, then try other pieces. Array Dcode is used to check for   knight attacks or R,B,Q co-linearity.   */
+comment|/*   See if any piece with color 'side' ataks sq.  First check for pawns   or king, then try other pieces. Array Dcode is used to check for   knight attacks or R,B,Q co-linearity. */
 block|{
 specifier|register
 name|short
@@ -12900,7 +12900,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*    Perform normal static evaluation of board position. A score is     generated for each piece and these are summed to get a score for each     side.  */
+comment|/*    Perform normal static evaluation of board position. A score is    generated for each piece and these are summed to get a score for each    side. */
 end_comment
 
 begin_block
@@ -13295,7 +13295,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*     Static evaluation when loser has only a king and winner has no pawns    or no pieces. */
+comment|/*    Static evaluation when loser has only a king and winner has no pawns    or no pieces. */
 end_comment
 
 begin_block
@@ -15728,7 +15728,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*    Find Bishop and Rook mobility, XRAY attacks, and pins. Increment the     hung[] array if a pin is found.  */
+comment|/*    Find Bishop and Rook mobility, XRAY attacks, and pins. Increment the    hung[] array if a pin is found. */
 end_comment
 
 begin_block
@@ -16367,7 +16367,7 @@ argument_list|()
 end_macro
 
 begin_comment
-comment|/*    This is done one time before the search is started. Set up arrays     Mwpawn, Mbpawn, Mknight, Mbishop, Mking which are used in the     SqValue() function to determine the positional value of each piece.  */
+comment|/*    This is done one time before the search is started. Set up arrays    Mwpawn, Mbpawn, Mknight, Mbishop, Mking which are used in the    SqValue() function to determine the positional value of each piece. */
 end_comment
 
 begin_block
@@ -17890,7 +17890,7 @@ argument_list|()
 end_macro
 
 begin_comment
-comment|/*     If material balance has changed, determine the values for the     positional evaluation terms.  */
+comment|/*    If material balance has changed, determine the values for the    positional evaluation terms. */
 end_comment
 
 begin_block

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-vax.c - vax-specific -    Copyright (C) 1987, 1991, 1992 Free Software Foundation, Inc.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* tc-vax.c - vax-specific -    Copyright (C) 1987, 1991, 1992 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
@@ -167,7 +167,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  * For VAX, relative addresses of "just the right length" are easy.  * The branch displacement is always the last operand, even in  * synthetic instructions.  * For VAX, we encode the relax_substateTs (in e.g. fr_substate) as:  *  *		    4       3       2       1       0	     bit number  *	---/ /--+-------+-------+-------+-------+-------+  *		|     what state ?	|  how long ?	|  *	---/ /--+-------+-------+-------+-------+-------+  *  * The "how long" bits are 00=byte, 01=word, 10=long.  * This is a Un*x convention.  * Not all lengths are legit for a given value of (what state).  * The "how long" refers merely to the displacement length.  * The address usually has some constant bytes in it as well.  *    groups for VAX address relaxing.    1.	"foo" pc-relative.  length of byte, word, long    2a.	J<cond> where<cond> is a simple flag test.  length of byte, word, long.  VAX opcodes are:	(Hex)  bneq/bnequ	12  beql/beqlu	13  bgtr		14  bleq		15  bgeq		18  blss		19  bgtru		1a  blequ		1b  bvc		1c  bvs		1d  bgequ/bcc	1e  blssu/bcs	1f  Always, you complement 0th bit to reverse condition.  Always, 1-byte opcode, then 1-byte displacement.    2b.	J<cond> where cond tests a memory bit.  length of byte, word, long.  Vax opcodes are:	(Hex)  bbs		e0  bbc		e1  bbss		e2  bbcs		e3  bbsc		e4  bbcc		e5  bbssi		e6  bbcci		e7  Always, you complement 0th bit to reverse condition.  Always, 1-byte opcde, longword-address, byte-address, 1-byte-displacement    2c.	J<cond> where cond tests low-order memory bit  length of byte,word,long.  Vax opcodes are:	(Hex)  blbs		e8  blbc		e9  Always, you complement 0th bit to reverse condition.  Always, 1-byte opcode, longword-address, 1-byte displacement.    3.	Jbs/Jbr.  length of byte,word,long.  Vax opcodes are:	(Hex)  bsbb		10  brb		11  These are like (2) but there is no condition to reverse.  Always, 1 byte opcode, then displacement/absolute.    4a.	JacbX  length of word, long.  Vax opcodes are:	(Hex)  acbw		3d  acbf		4f  acbd		6f  abcb		9d  acbl		f1  acbg	      4ffd  acbh	      6ffd  Always, we cannot reverse the sense of the branch; we have a word  displacement.  The double-byte op-codes don't hurt: we never want to modify the  opcode, so we don't care how many bytes are between the opcode and  the operand.    4b.	JXobXXX  length of long, long, byte.  Vax opcodes are:	(Hex)  aoblss		f2  aobleq		f3  sobgeq		f4  sobgtr		f5  Always, we cannot reverse the sense of the branch; we have a byte  displacement.    The only time we need to modify the opcode is for class 2 instructions.  After relax() we may complement the lowest order bit of such instruction  to reverse sense of branch.    For class 2 instructions, we store context of "where is the opcode literal".  We can change an opcode's lowest order bit without breaking anything else.    We sometimes store context in the operand literal. This way we can figure out  after relax() what the original addressing mode was.  */
+comment|/*  * For VAX, relative addresses of "just the right length" are easy.  * The branch displacement is always the last operand, even in  * synthetic instructions.  * For VAX, we encode the relax_substateTs (in e.g. fr_substate) as:  *  *		    4       3       2       1       0	     bit number  *	---/ /--+-------+-------+-------+-------+-------+  *		|     what state ?	|  how long ?	|  *	---/ /--+-------+-------+-------+-------+-------+  *  * The "how long" bits are 00=byte, 01=word, 10=long.  * This is a Un*x convention.  * Not all lengths are legit for a given value of (what state).  * The "how long" refers merely to the displacement length.  * The address usually has some constant bytes in it as well.  *   groups for VAX address relaxing.   1.	"foo" pc-relative.  length of byte, word, long   2a.	J<cond> where<cond> is a simple flag test.  length of byte, word, long.  VAX opcodes are:	(Hex)  bneq/bnequ	12  beql/beqlu	13  bgtr		14  bleq		15  bgeq		18  blss		19  bgtru		1a  blequ		1b  bvc		1c  bvs		1d  bgequ/bcc	1e  blssu/bcs	1f  Always, you complement 0th bit to reverse condition.  Always, 1-byte opcode, then 1-byte displacement.   2b.	J<cond> where cond tests a memory bit.  length of byte, word, long.  Vax opcodes are:	(Hex)  bbs		e0  bbc		e1  bbss		e2  bbcs		e3  bbsc		e4  bbcc		e5  bbssi		e6  bbcci		e7  Always, you complement 0th bit to reverse condition.  Always, 1-byte opcde, longword-address, byte-address, 1-byte-displacement   2c.	J<cond> where cond tests low-order memory bit  length of byte,word,long.  Vax opcodes are:	(Hex)  blbs		e8  blbc		e9  Always, you complement 0th bit to reverse condition.  Always, 1-byte opcode, longword-address, 1-byte displacement.   3.	Jbs/Jbr.  length of byte,word,long.  Vax opcodes are:	(Hex)  bsbb		10  brb		11  These are like (2) but there is no condition to reverse.  Always, 1 byte opcode, then displacement/absolute.   4a.	JacbX  length of word, long.  Vax opcodes are:	(Hex)  acbw		3d  acbf		4f  acbd		6f  abcb		9d  acbl		f1  acbg	      4ffd  acbh	      6ffd  Always, we cannot reverse the sense of the branch; we have a word  displacement.  The double-byte op-codes don't hurt: we never want to modify the  opcode, so we don't care how many bytes are between the opcode and  the operand.   4b.	JXobXXX  length of long, long, byte.  Vax opcodes are:	(Hex)  aoblss		f2  aobleq		f3  sobgeq		f4  sobgtr		f5  Always, we cannot reverse the sense of the branch; we have a byte  displacement.   The only time we need to modify the opcode is for class 2 instructions.  After relax() we may complement the lowest order bit of such instruction  to reverse sense of branch.   For class 2 instructions, we store context of "where is the opcode literal".  We can change an opcode's lowest order bit without breaking anything else.   We sometimes store context in the operand literal. This way we can figure out  after relax() what the original addressing mode was.  */
 end_comment
 
 begin_escape
@@ -5879,7 +5879,7 @@ comment|/* md_convert_frag() */
 end_comment
 
 begin_comment
-comment|/* Translate internal format of relocation info into target format.        On vax: first 4 bytes are normal unsigned long, next three bytes    are symbolnum, least sig. byte first.  Last byte is broken up with    the upper nibble as nuthin, bit 3 as extern, bits 2& 1 as length, and    bit 0 as pcrel. */
+comment|/* Translate internal format of relocation info into target format.     On vax: first 4 bytes are normal unsigned long, next three bytes    are symbolnum, least sig. byte first.  Last byte is broken up with    the upper nibble as nuthin, bit 3 as extern, bits 2& 1 as length, and    bit 0 as pcrel. */
 end_comment
 
 begin_ifdef
@@ -9211,7 +9211,7 @@ directive|endif
 end_endif
 
 begin_else
-unit|static void     vip_op_1(bit,syms) int bit; char *syms; { 	unsigned char t; 	 	while (t= *syms++) 	    vip_metacharacters[t]|=bit; }
+unit|static void     vip_op_1(bit,syms) int bit; char *syms; { 	unsigned char t;  	while (t= *syms++) 	    vip_metacharacters[t]|=bit; }
 else|#
 directive|else
 end_else
@@ -10850,7 +10850,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*      Summary of vip_op outputs.      mode	reg	len	ndx   (Rn) => @Rn   {@}Rn			5+@	n	' '	optional   branch operand		0	-1	' '	-1   S^#foo			0	-1	's'	-1   -(Rn)			7	n	' '	optional   {@}(Rn)+		8+@	n	' '	optional   {@}#foo, no S^		8+@	PC	" i"	optional   {@}{q^}{(Rn)}		10+@+q	option	" bwl"	optional      */
+comment|/*    Summary of vip_op outputs.    mode	reg	len	ndx   (Rn) => @Rn   {@}Rn			5+@	n	' '	optional   branch operand		0	-1	' '	-1   S^#foo			0	-1	's'	-1   -(Rn)			7	n	' '	optional   {@}(Rn)+		8+@	n	' '	optional   {@}#foo, no S^		8+@	PC	" i"	optional   {@}{q^}{(Rn)}		10+@+q	option	" bwl"	optional    */
 end_comment
 
 begin_escape
@@ -11924,7 +11924,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Parse an operand that is machine-specific.      We just return without modifying the expression if we have nothing    to do.  */
+comment|/* Parse an operand that is machine-specific.    We just return without modifying the expression if we have nothing    to do.  */
 end_comment
 
 begin_comment
