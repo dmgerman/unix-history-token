@@ -229,14 +229,14 @@ begin_define
 define|#
 directive|define
 name|DIST_CRYPTO_SKERBEROS5
-value|0x0040
+value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_CRYPTO_ALL
-value|0x007F
+value|0x000F
 end_define
 
 begin_comment
