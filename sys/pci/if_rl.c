@@ -282,6 +282,14 @@ literal|"D-Link DFE-530TX+ 10/100BaseTX"
 block|}
 block|,
 block|{
+name|DLINK_VENDORID
+block|,
+name|DLINK_DEVICEID_690TXD
+block|,
+literal|"D-Link DFE-690TXD 10/100BaseTX"
+block|}
+block|,
+block|{
 name|NORTEL_VENDORID
 block|,
 name|ACCTON_DEVICEID_5030
@@ -3892,6 +3900,10 @@ operator|||
 name|rl_did
 operator|==
 name|DLINK_DEVICEID_530TXPLUS
+operator|||
+name|rl_did
+operator|==
+name|DLINK_DEVICEID_690TXD
 condition|)
 name|sc
 operator|->
