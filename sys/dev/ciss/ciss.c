@@ -3263,8 +3263,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-literal|1
-comment|/*bootverbose*/
+name|bootverbose
 condition|)
 name|ciss_printf
 argument_list|(
@@ -3745,8 +3744,7 @@ expr_stmt|;
 comment|/* print information */
 if|if
 condition|(
-literal|1
-comment|/*bootverbose*/
+name|bootverbose
 condition|)
 block|{
 name|ciss_printf
@@ -4459,8 +4457,7 @@ block|}
 comment|/*      * Save logical drive information.      */
 if|if
 condition|(
-literal|1
-comment|/*bootverbose*/
+name|bootverbose
 condition|)
 name|ciss_printf
 argument_list|(
@@ -5237,8 +5234,7 @@ goto|;
 comment|/*      * Print the drive's basic characteristics.      */
 if|if
 condition|(
-literal|1
-comment|/*bootverbose*/
+name|bootverbose
 condition|)
 block|{
 name|ciss_printf
