@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pc.c 3.23 %G%"
+literal|"@(#)pc.c 3.24 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1419,6 +1419,18 @@ operator|++
 index|]
 operator|=
 literal|"-p"
+expr_stmt|;
+if|if
+condition|(
+name|Jflag
+condition|)
+name|pc0args
+index|[
+name|pc0argx
+operator|++
+index|]
+operator|=
+literal|"-J"
 expr_stmt|;
 name|pc0args
 index|[
