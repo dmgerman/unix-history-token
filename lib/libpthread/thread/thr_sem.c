@@ -439,6 +439,9 @@ name|semid
 decl_stmt|;
 name|semid
 operator|=
+operator|(
+name|semid_t
+operator|)
 name|SEM_USER
 expr_stmt|;
 if|if
@@ -549,6 +552,11 @@ operator|-
 literal|1
 operator|)
 return|;
+name|curthread
+operator|=
+name|_get_curthread
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -561,11 +569,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|curthread
-operator|=
-name|_get_curthread
-argument_list|()
-expr_stmt|;
 name|_thr_cancel_enter
 argument_list|(
 name|curthread
@@ -629,8 +632,10 @@ operator|->
 name|nwaiters
 operator|++
 expr_stmt|;
-name|pthread_cleanup_push
+name|THR_CLEANUP_PUSH
 argument_list|(
+name|curthread
+argument_list|,
 name|decrease_nwaiters
 argument_list|,
 name|sem
@@ -655,8 +660,10 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-name|pthread_cleanup_pop
+name|THR_CLEANUP_POP
 argument_list|(
+name|curthread
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;

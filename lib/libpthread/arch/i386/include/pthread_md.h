@@ -28,7 +28,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kse.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/sysarch.h>
 end_include
 
 begin_include
@@ -229,7 +241,7 @@ name|KCB_GET32
 parameter_list|(
 name|name
 parameter_list|)
-value|({					\ 	__kcb_type(name) __result;				\ 								\ 	u_int __i;						\ 	__asm __volatile("movl %%gs:%1, %0"			\ 	    : "=r" (__i)					\ 	    : "m" (*(u_int *)(__kcb_offset(name))));		\ 	__result = *(__kcb_type(name) *)&__i;			\ 								\ 	__result;						\ })
+value|({					\ 	__kcb_type(name) __result;				\ 								\ 	u_int __i;						\ 	__asm __volatile("movl %%gs:%1, %0"			\ 	    : "=r" (__i)					\ 	    : "m" (*(u_int *)(__kcb_offset(name))));		\ 	__result = (__kcb_type(name))__i;			\ 								\ 	__result;						\ })
 end_define
 
 begin_comment
@@ -245,7 +257,7 @@ name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|({					\ 	__kcb_type(name) __val = (val);				\ 								\ 	u_int __i;						\ 	__i = *(u_int *)&__val;					\ 	__asm __volatile("movl %1,%%gs:%0"			\ 	    : "=m" (*(u_int *)(__kcb_offset(name)))		\ 	    : "r" (__i));					\ })
+value|({					\ 	__kcb_type(name) __val = (val);				\ 								\ 	u_int __i;						\ 	__i = (u_int)__val;					\ 	__asm __volatile("movl %1,%%gs:%0"			\ 	    : "=m" (*(u_int *)(__kcb_offset(name)))		\ 	    : "r" (__i));					\ })
 end_define
 
 begin_function
@@ -422,6 +434,9 @@ modifier|*
 name|kcb
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|COMPAT_32BIT
 name|int
 name|val
 decl_stmt|;
@@ -438,6 +453,15 @@ operator||
 literal|7
 expr_stmt|;
 asm|__asm __volatile("movl %0, %%gs" : : "r" (val));
+else|#
+directive|else
+name|_amd64_set_gsbase
+argument_list|(
+name|kcb
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

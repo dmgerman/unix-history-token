@@ -69,6 +69,26 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
+name|struct
+name|pthread_mutex_attr
+name|static_mutex_attr
+init|=
+name|PTHREAD_MUTEXATTR_STATIC_INITIALIZER
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|pthread_mutexattr_t
+name|static_mattr
+init|=
+operator|&
+name|static_mutex_attr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|pthread_mutex_t
 name|spinlock_static_lock
 decl_stmt|;
@@ -132,7 +152,7 @@ name|lck
 operator|->
 name|fname
 expr_stmt|;
-name|pthread_mutex_unlock
+name|_pthread_mutex_unlock
 argument_list|(
 operator|&
 name|extra
@@ -206,7 +226,7 @@ name|lck
 operator|->
 name|fname
 expr_stmt|;
-name|pthread_mutex_lock
+name|_pthread_mutex_lock
 argument_list|(
 operator|&
 name|extra
@@ -255,7 +275,7 @@ modifier|*
 name|lck
 parameter_list|)
 block|{
-name|pthread_mutex_lock
+name|_pthread_mutex_lock
 argument_list|(
 operator|&
 name|spinlock_static_lock
@@ -305,7 +325,7 @@ name|spinlock_count
 operator|++
 expr_stmt|;
 block|}
-name|pthread_mutex_unlock
+name|_pthread_mutex_unlock
 argument_list|(
 operator|&
 name|spinlock_static_lock
@@ -379,12 +399,13 @@ else|else
 block|{
 if|if
 condition|(
-name|pthread_mutex_init
+name|_pthread_mutex_init
 argument_list|(
 operator|&
 name|spinlock_static_lock
 argument_list|,
-name|NULL
+operator|&
+name|static_mattr
 argument_list|)
 condition|)
 name|PANIC
@@ -408,7 +429,7 @@ control|)
 block|{
 if|if
 condition|(
-name|pthread_mutex_init
+name|_pthread_mutex_init
 argument_list|(
 operator|&
 name|extra
@@ -418,7 +439,8 @@ index|]
 operator|.
 name|lock
 argument_list|,
-name|NULL
+operator|&
+name|static_mattr
 argument_list|)
 condition|)
 name|PANIC
