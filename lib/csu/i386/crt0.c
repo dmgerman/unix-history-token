@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: crt0.c,v 1.25.2.1 1997/05/25 20:23:59 jdp Exp $  */
+comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: crt0.c,v 1.30 1997/08/02 04:56:33 jdp Exp $  */
 end_comment
 
 begin_include
@@ -319,6 +319,13 @@ name|char
 modifier|*
 modifier|*
 name|environ
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ldso_version
 decl_stmt|;
 end_decl_stmt
 
@@ -804,9 +811,6 @@ name|entry
 function_decl|)
 parameter_list|()
 function_decl|;
-name|int
-name|ret
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1150,7 +1154,7 @@ sizeof|sizeof
 name|hdr
 operator|)
 expr_stmt|;
-name|ret
+name|ldso_version
 operator|=
 call|(
 modifier|*
@@ -1171,7 +1175,7 @@ name|crt_ldentry
 expr_stmt|;
 if|if
 condition|(
-name|ret
+name|ldso_version
 operator|==
 operator|-
 literal|1
@@ -1182,7 +1186,7 @@ name|NULL
 condition|)
 block|{
 comment|/* if version 4 not recognised, try version 3 */
-name|ret
+name|ldso_version
 operator|=
 call|(
 modifier|*
@@ -1204,7 +1208,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|ret
+name|ldso_version
 operator|==
 operator|-
 literal|1
@@ -1284,7 +1288,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|ret
+name|ldso_version
 operator|>=
 name|LDSO_VERSION_HAS_DLEXIT
 condition|)
@@ -1405,6 +1409,42 @@ condition|)
 return|return
 name|NULL
 return|;
+if|if
+condition|(
+name|ldso_version
+operator|>=
+name|LDSO_VERSION_HAS_DLSYM3
+condition|)
+block|{
+name|void
+modifier|*
+name|retaddr
+init|=
+operator|*
+operator|(
+operator|&
+name|fd
+operator|-
+literal|1
+operator|)
+decl_stmt|;
+comment|/* XXX - ABI/machine dependent */
+return|return
+call|(
+name|ld_entry
+operator|->
+name|dlsym3
+call|)
+argument_list|(
+name|fd
+argument_list|,
+name|name
+argument_list|,
+name|retaddr
+argument_list|)
+return|;
+block|}
+else|else
 return|return
 call|(
 name|ld_entry

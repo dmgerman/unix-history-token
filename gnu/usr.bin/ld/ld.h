@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	$Id: ld.h,v 1.16 1996/04/20 18:27:55 jdp Exp $  */
+comment|/*  *	$Id: ld.h,v 1.20 1997/02/22 15:46:21 peter Exp $  */
 end_comment
 
 begin_comment
@@ -230,6 +230,47 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEMANGLE_CPLUSPLUS
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|demangle
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|demangle
+parameter_list|(
+name|name
+parameter_list|)
+value|name
+end_define
 
 begin_endif
 endif|#

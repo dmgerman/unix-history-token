@@ -16,7 +16,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  * $Id: warnings.c,v 1.11 1996/07/12 19:08:29 jkh Exp $  */
+comment|/*  * $Id: warnings.c,v 1.15 1997/02/22 15:46:27 peter Exp $  */
 end_comment
 
 begin_include
@@ -155,6 +155,87 @@ name|int
 name|reported_undefineds
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEMANGLE_CPLUSPLUS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"demangle.h"
+end_include
+
+begin_function
+name|char
+modifier|*
+name|demangle
+parameter_list|(
+name|name
+parameter_list|)
+name|char
+modifier|*
+name|name
+decl_stmt|;
+block|{
+specifier|static
+name|char
+modifier|*
+name|saved_result
+init|=
+name|NULL
+decl_stmt|;
+if|if
+condition|(
+name|saved_result
+condition|)
+name|free
+argument_list|(
+name|saved_result
+argument_list|)
+expr_stmt|;
+name|saved_result
+operator|=
+name|cplus_demangle
+argument_list|(
+name|name
+index|[
+literal|0
+index|]
+operator|==
+literal|'_'
+condition|?
+name|name
+operator|+
+literal|1
+else|:
+name|name
+argument_list|,
+name|DMGL_PARAMS
+operator||
+name|DMGL_ANSI
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|saved_result
+condition|)
+return|return
+name|saved_result
+return|;
+else|else
+return|return
+name|name
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Print the filename of ENTRY on OUTFILE (a stdio stream),  * and then a newline.  */
@@ -503,9 +584,12 @@ name|outfile
 argument_list|,
 literal|"  %s: "
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -611,11 +695,14 @@ name|outfile
 argument_list|,
 literal|", aliased to %s"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|alias
 operator|->
 name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2067,9 +2154,12 @@ name|warnx
 argument_list|(
 literal|"internal error: `%s' N_EXT not set"
 argument_list|,
+name|demangle
+argument_list|(
 name|g
 operator|->
 name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -2218,13 +2308,14 @@ block|{
 name|char
 modifier|*
 name|nm
-decl_stmt|;
-name|nm
-operator|=
+init|=
+name|demangle
+argument_list|(
 name|g
 operator|->
 name|name
-expr_stmt|;
+argument_list|)
+decl_stmt|;
 name|errmsg
 operator|=
 operator|(
@@ -2259,19 +2350,6 @@ condition|?
 literal|"data"
 else|:
 literal|"text"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|nm
-operator|!=
-name|g
-operator|->
-name|name
-condition|)
-name|free
-argument_list|(
-name|nm
 argument_list|)
 expr_stmt|;
 block|}
@@ -2600,9 +2678,12 @@ name|warnx
 argument_list|(
 literal|"internal error: `%s' N_EXT not set"
 argument_list|,
+name|demangle
+argument_list|(
 name|g
 operator|->
 name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -2623,7 +2704,7 @@ if|#
 directive|if
 literal|0
 comment|/* Check for undefined shobj symbols */
-block|struct localsymbol	*lsp; 			register int		type;  			for (lsp = g->sorefs; lsp; lsp = lsp->next) { 				type = lsp->nzlist.nz_type; 				if ((type& N_EXT)&& 						type != (N_UNDF | N_EXT)) { 					break; 				} 			} 			if (type == (N_UNDF | N_EXT)) { 				fprintf(stderr, 					"Undefined symbol %s referenced from %s\n", 					g->name, 					get_file_name(entry)); 			}
+block|struct localsymbol	*lsp; 			register int		type;  			for (lsp = g->sorefs; lsp; lsp = lsp->next) { 				type = lsp->nzlist.nz_type; 				if ((type& N_EXT)&& 						type != (N_UNDF | N_EXT)) { 					break; 				} 			} 			if (type == (N_UNDF | N_EXT)) { 				fprintf(stderr, 					"Undefined symbol %s referenced from %s\n", 					demangle(g->name), 					get_file_name(entry)); 			}
 endif|#
 directive|endif
 continue|continue;
@@ -2791,9 +2872,12 @@ argument_list|(
 name|entry
 argument_list|)
 argument_list|,
+name|demangle
+argument_list|(
 name|g
 operator|->
 name|name
+argument_list|)
 argument_list|,
 name|np
 operator|->
@@ -2924,9 +3008,12 @@ argument_list|(
 name|entry
 argument_list|)
 argument_list|,
+name|demangle
+argument_list|(
 name|g
 operator|->
 name|name
+argument_list|)
 argument_list|,
 name|g
 operator|->
@@ -3043,9 +3130,12 @@ name|outfile
 argument_list|,
 name|errfmt
 argument_list|,
+name|demangle
+argument_list|(
 name|g
 operator|->
 name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fputc
@@ -3140,9 +3230,12 @@ name|outfile
 argument_list|,
 literal|"Undefined entry symbol `%s'\n"
 argument_list|,
+name|demangle
+argument_list|(
 name|entry_symbol
 operator|->
 name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|each_file

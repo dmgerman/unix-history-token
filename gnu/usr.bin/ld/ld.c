@@ -37,7 +37,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  *	$Id: ld.c,v 1.36 1996/10/01 01:22:23 peter Exp $  */
+comment|/*  *	$Id: ld.c,v 1.45 1997/05/13 10:23:46 dfr Exp $  */
 end_comment
 
 begin_comment
@@ -832,6 +832,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|flag_list_files
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 1 => print pathnames of files, don't link */
+end_comment
+
+begin_decl_stmt
+name|int
 name|list_warning_symbols
 decl_stmt|;
 end_decl_stmt
@@ -1317,6 +1327,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|list_files
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -1573,6 +1596,13 @@ name|argc
 argument_list|,
 name|argv
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flag_list_files
+condition|)
+name|list_files
+argument_list|()
 expr_stmt|;
 name|building_shared_object
 operator|=
@@ -1867,6 +1897,23 @@ condition|)
 return|return
 literal|1
 return|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+operator|&
+name|arg
+index|[
+literal|2
+index|]
+argument_list|,
+literal|"forcedynamic"
+argument_list|)
+condition|)
+return|return
+literal|1
+return|;
 case|case
 literal|'T'
 case|:
@@ -2075,6 +2122,16 @@ condition|(
 operator|!
 name|number_of_files
 condition|)
+block|{
+if|if
+condition|(
+name|flag_list_files
+condition|)
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|errx
 argument_list|(
 literal|1
@@ -2082,6 +2139,7 @@ argument_list|,
 literal|"No input files specified"
 argument_list|)
 expr_stmt|;
+block|}
 name|p
 operator|=
 name|file_table
@@ -2256,6 +2314,24 @@ name|strcmp
 argument_list|(
 name|string
 argument_list|,
+literal|"forcedynamic"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|link_mode
+operator||=
+name|DYNAMIC
+operator||
+name|FORCEDYNAMIC
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|string
+argument_list|,
 literal|"symbolic"
 argument_list|)
 operator|==
@@ -2335,6 +2411,37 @@ name|SILLYARCHIVE
 expr_stmt|;
 endif|#
 directive|endif
+block|}
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+name|i
+index|]
+operator|+
+literal|1
+argument_list|,
+literal|"assert"
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|string
+argument_list|,
+literal|"pure-text"
+argument_list|)
+condition|)
+name|link_mode
+operator||=
+name|WARNRRSTEXT
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2747,6 +2854,19 @@ name|swt
 operator|+
 literal|1
 argument_list|,
+literal|"Bforcedynamic"
+argument_list|)
+condition|)
+return|return;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|swt
+operator|+
+literal|1
+argument_list|,
 literal|"Bsymbolic"
 argument_list|)
 condition|)
@@ -3031,6 +3151,14 @@ name|add_cmdline_ref
 argument_list|(
 name|entry_symbol
 argument_list|)
+expr_stmt|;
+return|return;
+case|case
+literal|'f'
+case|:
+name|flag_list_files
+operator|=
+literal|1
 expr_stmt|;
 return|return;
 case|case
@@ -5915,9 +6043,12 @@ argument_list|(
 name|entry
 argument_list|)
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6476,9 +6607,12 @@ name|printf
 argument_list|(
 literal|"%s: not overridden by weak symbol from %s\n"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|,
 name|get_file_name
 argument_list|(
@@ -6989,9 +7123,12 @@ name|stderr
 argument_list|,
 literal|"symbol %s %s%s in "
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|,
 operator|(
 name|N_ISWEAK
@@ -7689,9 +7826,12 @@ literal|1
 argument_list|,
 literal|"internal error: global ref to set el %s with -r"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -8007,9 +8147,12 @@ literal|1
 argument_list|,
 literal|"internal error: digest_pass1,1: %s: undefined_global_sym_count = %d"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|,
 name|undefined_global_sym_count
 argument_list|)
@@ -8199,9 +8342,12 @@ name|printf
 argument_list|(
 literal|"pass1: SO definition for %s, type %x in %s at %#x\n"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|,
 name|sp
 operator|->
@@ -8270,9 +8416,12 @@ argument_list|,
 literal|"internal error: digest_pass1,2: "
 literal|"%s: undefined_global_sym_count = %d"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|,
 name|undefined_global_sym_count
 argument_list|)
@@ -8329,9 +8478,12 @@ argument_list|,
 literal|"internal error: digest_pass1,3: "
 literal|"%s: not a common: %x"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|,
 name|sp
 operator|->
@@ -8594,9 +8746,12 @@ name|stderr
 argument_list|,
 literal|"symbol %s has jmpslot in %s\n"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|,
 name|get_file_name
 argument_list|(
@@ -8785,9 +8940,12 @@ name|stderr
 argument_list|,
 literal|"symbol %s RRS entry in %s\n"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|,
 name|get_file_name
 argument_list|(
@@ -9505,9 +9663,12 @@ name|warnx
 argument_list|(
 literal|"pass2: %s: alias isn't"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sp
@@ -9878,9 +10039,12 @@ name|printf
 argument_list|(
 literal|"symbol %s assigned to location %#lx\n"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|,
 name|sp
 operator|->
@@ -9934,9 +10098,12 @@ literal|1
 argument_list|,
 literal|"%s: common isn't"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -9974,9 +10141,12 @@ literal|1
 argument_list|,
 literal|"%s: Bogus N_SIZE item"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -10122,9 +10292,12 @@ literal|"common"
 else|:
 literal|"data"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|,
 name|size
 argument_list|,
@@ -10492,6 +10665,13 @@ operator|(
 name|flags
 operator|&
 name|EX_DPMASK
+operator|)
+operator|&&
+operator|!
+operator|(
+name|link_mode
+operator|&
+name|FORCEDYNAMIC
 operator|)
 condition|)
 name|warnx
@@ -11746,9 +11926,12 @@ name|stderr
 argument_list|,
 literal|"symbol %s defined as %x in %s\n"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|,
 name|sp
 operator|->
@@ -11848,9 +12031,12 @@ literal|1
 argument_list|,
 literal|"Copy item isn't: %s"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|relocation
@@ -11908,9 +12094,12 @@ name|stderr
 argument_list|,
 literal|"symbol %s claims RRS in %s%s\n"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|,
 name|get_file_name
 argument_list|(
@@ -13659,9 +13848,12 @@ name|warnx
 argument_list|(
 literal|"symbol %s remains undefined"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -13817,9 +14009,12 @@ literal|1
 argument_list|,
 literal|"%s: N_INDR has value %#x"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|,
 name|sp
 operator|->
@@ -13927,9 +14122,12 @@ literal|1
 argument_list|,
 literal|"internal error: %s defined in mysterious way"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Allocate string table space for the symbol name. 		 */
@@ -14104,9 +14302,12 @@ literal|"writesym(#%d): %s, type %x\n"
 argument_list|,
 name|syms_written
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|,
 name|sp
 operator|->
@@ -15038,6 +15239,129 @@ argument_list|,
 literal|1
 argument_list|,
 name|fd
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|list_files
+parameter_list|()
+block|{
+name|int
+name|error
+decl_stmt|,
+name|i
+decl_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|number_of_files
+condition|;
+name|i
+operator|++
+control|)
+block|{
+specifier|register
+name|struct
+name|file_entry
+modifier|*
+name|entry
+init|=
+operator|&
+name|file_table
+index|[
+name|i
+index|]
+decl_stmt|;
+name|int
+name|fd
+decl_stmt|;
+if|if
+condition|(
+name|entry
+operator|->
+name|flags
+operator|&
+name|E_SEARCH_DIRS
+condition|)
+name|fd
+operator|=
+name|findlib
+argument_list|(
+name|entry
+argument_list|)
+expr_stmt|;
+else|else
+name|fd
+operator|=
+name|open
+argument_list|(
+name|entry
+operator|->
+name|filename
+argument_list|,
+name|O_RDONLY
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|<
+literal|0
+condition|)
+name|error
+operator|=
+literal|1
+expr_stmt|;
+else|else
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Print the name even if the file doesn't exist except in 		 * the -lfoo case.  This allows `ld -f' to work as well as 		 * possible when it is used to generate dependencies before 		 * the libraries exist. 		 */
+if|if
+condition|(
+name|fd
+operator|>=
+literal|0
+operator|||
+operator|!
+operator|(
+name|entry
+operator|->
+name|flags
+operator|&
+name|E_SEARCH_DIRS
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|entry
+operator|->
+name|filename
+argument_list|)
+expr_stmt|;
+block|}
+name|exit
+argument_list|(
+name|error
 argument_list|)
 expr_stmt|;
 block|}
