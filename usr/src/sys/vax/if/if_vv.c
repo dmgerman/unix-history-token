@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_vv.c	6.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_vv.c	6.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -495,6 +495,17 @@ name|NVV
 index|]
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|NOHOST
+value|0xffff
+end_define
+
+begin_comment
+comment|/* illegal host number */
+end_comment
 
 begin_comment
 comment|/*  * probe the interface to see that the registers exist, and then  * cause an interrupt to find its vector  */
@@ -1028,8 +1039,7 @@ name|unit
 argument_list|)
 operator|)
 operator|==
-operator|-
-literal|1
+name|NOHOST
 condition|)
 block|{
 name|vs
@@ -1315,7 +1325,7 @@ decl_stmt|;
 name|u_short
 name|shost
 init|=
-literal|0xffff
+name|NOHOST
 decl_stmt|;
 name|vs
 operator|=
@@ -1861,7 +1871,7 @@ if|if
 condition|(
 name|shost
 operator|==
-literal|0xffff
+name|NOHOST
 condition|)
 block|{
 name|shost
@@ -1977,7 +1987,7 @@ name|VV_RST
 expr_stmt|;
 name|shost
 operator|=
-literal|0xffff
+name|NOHOST
 expr_stmt|;
 goto|goto
 name|done
