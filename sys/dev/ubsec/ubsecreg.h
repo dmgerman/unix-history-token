@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*	$OpenBSD: ubsecreg.h,v 1.23 2002/05/08 23:05:28 jason Exp $	*/
+comment|/*	$OpenBSD: ubsecreg.h,v 1.27 2002/09/11 22:40:31 jason Exp $	*/
 end_comment
 
 begin_comment
@@ -364,7 +364,7 @@ value|0x01800000
 end_define
 
 begin_comment
-comment|/* RND mode */
+comment|/* RNG mode */
 end_comment
 
 begin_define
@@ -414,6 +414,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|BS_CTRL_SWNORM
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* 582[01], sw normalization */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|BS_CTRL_FRAG_M
 value|0x0000ffff
 end_define
@@ -421,6 +432,13 @@ end_define
 begin_comment
 comment|/* output fragment size mask */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|BS_CTRL_LITTLE_ENDIAN
+value|(BS_CTRL_BE32 | BS_CTRL_BE64)
+end_define
 
 begin_comment
 comment|/* BS_STAT - DMA Status */
@@ -500,7 +518,7 @@ value|0x02000000
 end_define
 
 begin_comment
-comment|/* MCR1 is completely empty */
+comment|/* 5821, MCR1 is empty */
 end_comment
 
 begin_define
@@ -511,7 +529,7 @@ value|0x01000000
 end_define
 
 begin_comment
-comment|/* MCR2 is completely empty */
+comment|/* 5821, MCR2 is empty */
 end_comment
 
 begin_comment
@@ -1104,7 +1122,7 @@ comment|/* N (bits) */
 name|u_int8_t
 name|me_N
 index|[
-literal|1024
+literal|2048
 operator|/
 literal|8
 index|]

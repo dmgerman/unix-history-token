@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*	$OpenBSD: ubsecvar.h,v 1.33 2002/05/15 15:15:42 jason Exp $	*/
+comment|/*	$OpenBSD: ubsecvar.h,v 1.35 2002/09/24 18:33:26 jason Exp $	*/
 end_comment
 
 begin_comment
@@ -267,6 +267,9 @@ name|me_modbits
 decl_stmt|;
 name|int
 name|me_shiftbits
+decl_stmt|;
+name|int
+name|me_normbits
 decl_stmt|;
 block|}
 struct|;
