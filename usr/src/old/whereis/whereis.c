@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)whereis.c	4.7 (Berkeley) %G%"
+literal|"@(#)whereis.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -105,15 +105,25 @@ name|srcdirs
 index|[]
 init|=
 block|{
-literal|"/usr/src/etc"
-block|,
 literal|"/usr/src/bin"
 block|,
 literal|"/usr/src/usr.bin"
 block|,
+literal|"/usr/src/etc"
+block|,
+literal|"/usr/src/ucb"
+block|,
 literal|"/usr/src/games"
 block|,
+literal|"/usr/src/usr.lib"
+block|,
 literal|"/usr/src/lib"
+block|,
+literal|"/usr/src/local"
+block|,
+literal|"/usr/src/new"
+block|,
+literal|"/usr/src/old"
 block|,
 literal|"/usr/src/lib/libc/gen"
 block|,
@@ -121,19 +131,21 @@ literal|"/usr/src/lib/libc/stdio"
 block|,
 literal|"/usr/src/lib/libc/sys"
 block|,
-literal|"/usr/src/ucb"
+literal|"/usr/src/lib/libc/net/common"
+block|,
+literal|"/usr/src/lib/libc/net/inet"
+block|,
+literal|"/usr/src/lib/libc/net/misc"
 block|,
 literal|"/usr/src/ucb/netser"
 block|,
+literal|"/usr/src/ucb/netser/misc"
+block|,
 literal|"/usr/src/ucb/arpanet"
 block|,
-literal|"/usr/src/usr.lib"
+literal|"/usr/src/ucb/pascal"
 block|,
-literal|"/usr/src/local"
-block|,
-literal|"/usr/src/new"
-block|,
-literal|"/usr/src/old"
+literal|"/usr/src/ucb/pascal/utilities"
 block|,
 literal|"/usr/src/undoc"
 block|,
@@ -1165,7 +1177,7 @@ name|print
 condition|)
 name|printf
 argument_list|(
-literal|" %s/%.14s"
+literal|" %s/%s"
 argument_list|,
 name|dir
 argument_list|,
@@ -1207,7 +1219,10 @@ specifier|register
 name|int
 name|i
 init|=
-literal|14
+name|strlen
+argument_list|(
+name|dp
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
