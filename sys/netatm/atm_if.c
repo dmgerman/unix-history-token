@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/bpf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -2447,6 +2453,16 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Add to BPF interface list 	 * DLT_ATM_RFC_1483 cannot be used because both NULL and LLC/SNAP could 	 * be provisioned 	 */
+name|bpfattach
+argument_list|(
+name|ifp
+argument_list|,
+name|DLT_ATM_CLIP
+argument_list|,
+name|T_ATM_LLC_MAX_LEN
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Add to physical interface list 	 */
 name|LINK2TAIL
 argument_list|(
@@ -2628,6 +2644,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Remove from BPF interface list 	 */
+name|bpfdetach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Mark interface down 	 */
 name|if_down
 argument_list|(
