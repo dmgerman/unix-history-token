@@ -3600,6 +3600,21 @@ literal|"=ftp://ftp2.es.freebsd.org"
 block|}
 block|,
 block|{
+literal|" Spain #3"
+block|,
+literal|"ftp3.es.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp3.es.freebsd.org"
+block|}
+block|,
+block|{
 literal|" Sweden"
 block|,
 literal|"ftp.se.freebsd.org"
