@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: control.h,v 1.6.2.2.2.6 2004/03/08 04:04:20 marka Exp $ */
+comment|/* $Id: control.h,v 1.6.2.2.2.6.6.1 2004/09/20 01:00:01 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -159,6 +159,13 @@ define|#
 directive|define
 name|NS_COMMAND_UNFREEZE
 value|"unfreeze"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NS_COMMAND_THAW
+value|"thaw"
 end_define
 
 begin_define
