@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwscroll.c	3.17 (Berkeley) %G%"
+literal|"@(#)wwscroll.c	3.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -455,8 +455,12 @@ condition|(
 name|nvis
 operator|<
 name|nvismax
+operator|/
+literal|2
 condition|)
-block|{ 	}
+block|{
+comment|/* not worth it */
+block|}
 elseif|else
 if|if
 condition|(
