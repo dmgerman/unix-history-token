@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.11.4.2 1996/02/23 15:26:05 phk Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.15 1996/02/23 15:47:52 phk Exp $  */
 end_comment
 
 begin_comment
@@ -208,8 +208,41 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IP_FW_F_ACCEPT
+name|IP_FW_F_IN
 value|0x004
+end_define
+
+begin_comment
+comment|/* Inbound 			      */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_F_OUT
+value|0x008
+end_define
+
+begin_comment
+comment|/* Outboun 			      */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_F_ACCEPT
+value|0x010
+end_define
+
+begin_comment
+comment|/* This is an accept rule	      */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_F_COUNT
+value|0x020
 end_define
 
 begin_comment
@@ -220,7 +253,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_PRN
-value|0x008
+value|0x040
 end_define
 
 begin_comment
@@ -231,7 +264,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_ICMPRPL
-value|0x010
+value|0x080
 end_define
 
 begin_comment
@@ -242,7 +275,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_SRNG
-value|0x020
+value|0x100
 end_define
 
 begin_comment
@@ -253,7 +286,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_DRNG
-value|0x040
+value|0x200
 end_define
 
 begin_comment
@@ -264,7 +297,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_IFNAME
-value|0x080
+value|0x400
 end_define
 
 begin_comment
@@ -274,8 +307,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IP_FW_F_FRAG
+value|0x800
+end_define
+
+begin_comment
+comment|/* Fragment			      */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IP_FW_F_MASK
-value|0x0FF
+value|0xFFF
 end_define
 
 begin_comment
@@ -342,7 +386,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|IP_FW_TCPF_PUSH
+name|IP_FW_TCPF_PSH
 value|TH_PUSH
 end_define
 

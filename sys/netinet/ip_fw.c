@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.14.4.5 1996/02/23 20:10:52 phk Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.30 1996/02/23 20:11:37 phk Exp $  */
 end_comment
 
 begin_comment
@@ -414,6 +414,9 @@ operator|(
 name|char
 operator|*
 name|txt
+operator|,
+name|int
+name|rule
 operator|,
 expr|struct
 name|ip
@@ -858,6 +861,9 @@ name|char
 modifier|*
 name|txt
 parameter_list|,
+name|int
+name|rule
+parameter_list|,
 name|struct
 name|ip
 modifier|*
@@ -938,7 +944,9 @@ condition|)
 return|return;
 name|printf
 argument_list|(
-literal|"ipfw: %s "
+literal|"ipfw: %d %s "
+argument_list|,
+name|rule
 argument_list|,
 name|txt
 argument_list|)
@@ -1288,22 +1296,6 @@ name|len
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * Handle fragmented packets, if the Fragment Offset is big enough 	 * to not harm essential stuff in the UDP/TCP header, even in the 	 * precense of IP options, we assume that it's OK. 	 */
-if|if
-condition|(
-operator|(
-name|ip
-operator|->
-name|ip_off
-operator|&
-name|IP_OFFMASK
-operator|)
-operator|>
-literal|1
-condition|)
-return|return
-literal|1
-return|;
 comment|/* 	 * ... else if non-zero, highly unusual and interesting, but  	 * we're not going to pass it... 	 */
 if|if
 condition|(
@@ -1314,18 +1306,28 @@ name|ip_off
 operator|&
 name|IP_OFFMASK
 operator|)
+operator|==
+literal|1
 condition|)
 block|{
 name|ipfw_report
 argument_list|(
 literal|"Refuse"
 argument_list|,
+operator|-
+literal|1
+argument_list|,
 name|ip
 argument_list|)
 expr_stmt|;
-goto|goto
-name|bad_packet
-goto|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 name|src
 operator|=
@@ -1451,15 +1453,7 @@ name|IP_FW_F_ALL
 expr_stmt|;
 break|break;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* 	 * If the fields are not valid, don't validate them 	 */
-block|if (len< ip->ip_len) { 		ipfw_report("Too Short", ip);
-comment|/* goto bad_packet; */
-block|}
-endif|#
-directive|endif
+comment|/* XXX Check that we have sufficient header for TCP analysis */
 comment|/* 	 * Go down the chain, looking for enlightment 	 */
 for|for
 control|(
@@ -1486,6 +1480,58 @@ name|chain
 operator|->
 name|rule
 expr_stmt|;
+comment|/* Check direction inbound */
+if|if
+condition|(
+operator|!
+name|dir
+operator|&&
+operator|!
+operator|(
+name|f
+operator|->
+name|fw_flg
+operator|&
+name|IP_FW_F_IN
+operator|)
+condition|)
+continue|continue;
+comment|/* Check direction outbound */
+if|if
+condition|(
+name|dir
+operator|&&
+operator|!
+operator|(
+name|f
+operator|->
+name|fw_flg
+operator|&
+name|IP_FW_F_OUT
+operator|)
+condition|)
+continue|continue;
+comment|/* Fragments */
+if|if
+condition|(
+operator|(
+name|f
+operator|->
+name|fw_flg
+operator|&
+name|IP_FW_F_FRAG
+operator|)
+operator|&&
+operator|!
+operator|(
+name|ip
+operator|->
+name|ip_off
+operator|&
+name|IP_OFFMASK
+operator|)
+condition|)
+continue|continue;
 comment|/* If src-addr doesn't match, not this rule. */
 if|if
 condition|(
@@ -1762,6 +1808,16 @@ condition|)
 goto|goto
 name|got_match
 goto|;
+comment|/* Fragments can't match past this point */
+if|if
+condition|(
+name|ip
+operator|->
+name|ip_off
+operator|&
+name|IP_OFFMASK
+condition|)
+continue|continue;
 comment|/* TCP, a little more checking */
 if|if
 condition|(
@@ -1846,14 +1902,6 @@ name|IP_FW_F_DRNG
 argument_list|)
 condition|)
 continue|continue;
-goto|goto
-name|got_match
-goto|;
-block|}
-comment|/* Just in case ... */
-goto|goto
-name|bad_packet
-goto|;
 name|got_match
 label|:
 name|f
@@ -1890,6 +1938,30 @@ name|ipfw_report
 argument_list|(
 literal|"Accept"
 argument_list|,
+name|f
+operator|->
+name|fw_number
+argument_list|,
+name|ip
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|f
+operator|->
+name|fw_flg
+operator|&
+name|IP_FW_F_COUNT
+condition|)
+name|ipfw_report
+argument_list|(
+literal|"Count"
+argument_list|,
+name|f
+operator|->
+name|fw_number
+argument_list|,
 name|ip
 argument_list|)
 expr_stmt|;
@@ -1897,6 +1969,10 @@ else|else
 name|ipfw_report
 argument_list|(
 literal|"Deny"
+argument_list|,
+name|f
+operator|->
+name|fw_number
 argument_list|,
 name|ip
 argument_list|)
@@ -1913,8 +1989,17 @@ condition|)
 return|return
 literal|1
 return|;
-name|bad_packet
-label|:
+if|if
+condition|(
+name|f
+operator|->
+name|fw_flg
+operator|&
+name|IP_FW_F_COUNT
+condition|)
+continue|continue;
+break|break;
+block|}
 comment|/* 	 * Don't icmp outgoing packets at all 	 */
 if|if
 condition|(
@@ -2245,31 +2330,6 @@ name|le_next
 control|)
 if|if
 condition|(
-name|ftmp
-operator|->
-name|fw_number
-operator|>
-name|fcp
-operator|->
-name|rule
-operator|->
-name|fw_number
-condition|)
-block|{
-name|LIST_INSERT_AFTER
-argument_list|(
-name|fcp
-argument_list|,
-name|fwc
-argument_list|,
-name|chain
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-elseif|else
-if|if
-condition|(
 name|fcp
 operator|->
 name|rule
@@ -2281,6 +2341,22 @@ name|u_short
 operator|)
 operator|-
 literal|1
+operator|||
+operator|(
+name|ftmp
+operator|->
+name|fw_number
+operator|&&
+name|fcp
+operator|->
+name|rule
+operator|->
+name|fw_number
+operator|>
+name|ftmp
+operator|->
+name|fw_number
+operator|)
 condition|)
 block|{
 if|if
@@ -2470,7 +2546,7 @@ name|M_IPFW
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+literal|0
 return|;
 block|}
 block|}
@@ -2585,6 +2661,30 @@ name|NULL
 operator|)
 return|;
 block|}
+comment|/* If neither In nor Out, then both */
+if|if
+condition|(
+operator|!
+operator|(
+name|frwl
+operator|->
+name|fw_flg
+operator|&
+operator|(
+name|IP_FW_F_IN
+operator||
+name|IP_FW_F_OUT
+operator|)
+operator|)
+condition|)
+name|frwl
+operator|->
+name|fw_flg
+operator||=
+name|IP_FW_F_IN
+operator||
+name|IP_FW_F_OUT
+expr_stmt|;
 if|if
 condition|(
 operator|(
