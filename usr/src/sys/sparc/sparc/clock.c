@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)clock.c	8.1 (Berkeley) %G%  *  * from: $Header: clock.c,v 1.17 92/11/26 03:04:47 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)clock.c	8.2 (Berkeley) %G%  *  * from: $Header: clock.c,v 1.17 92/11/26 03:04:47 torek Exp $ (LBL)  */
 end_comment
 
 begin_comment
@@ -444,7 +444,7 @@ name|cl_idprom
 operator|.
 name|id_hostid
 index|[
-literal|0
+literal|2
 index|]
 expr_stmt|;
 name|hostid
