@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   Copyright (c) 2001 Gary Jennejohn. All rights reserved.  *  *   Redistribution and use in source and binary forms, with or without  *   modification, are permitted provided that the following conditions  *   are met:  *  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the distribution.  *   3. Neither the name of the author nor the names of any co-contributors  *      may be used to endorse or promote products derived from this software  *      without specific prior written permission.  *   4. Altered versions must be plainly marked as such, and must not be  *      misrepresented as being the original software and/or documentation.  *     *   THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  *   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  *   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  *   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  *   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  *   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  *   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  *   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  *   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  *   SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ifpi2_pci.c: AVM Fritz!Card PCI hardware driver  *	--------------------------------------------------  *  *	$Id$  *  * $FreeBSD$  *  *  *---------------------------------------------------------------------------*/
+comment|/*  *   Copyright (c) 2001 Gary Jennejohn. All rights reserved.  *  *   Redistribution and use in source and binary forms, with or without  *   modification, are permitted provided that the following conditions  *   are met:  *  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the distribution.  *   3. Neither the name of the author nor the names of any co-contributors  *      may be used to endorse or promote products derived from this software  *      without specific prior written permission.  *   4. Altered versions must be plainly marked as such, and must not be  *      misrepresented as being the original software and/or documentation.  *     *   THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  *   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  *   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  *   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  *   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  *   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  *   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  *   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  *   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  *   SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ifpi2_pci.c: AVM Fritz!Card PCI hardware driver  *	--------------------------------------------------  *  *	$Id$  *  * $FreeBSD$  *  *      last edit-date: [Fri Jan 12 17:01:26 2001]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -2063,7 +2063,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"avma1pp2-%d: Error, unit> IFPI_MAXUNIT!\n"
+literal|"ifpi2-%d: Error, unit> IFPI_MAXUNIT!\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -2096,7 +2096,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"avma1pp2-%d: unknown device!?\n"
+literal|"ifpi2-%d: unknown device!?\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -2176,7 +2176,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"avma1pp2-%d: couldn't map IO port\n"
+literal|"ifpi2-%d: couldn't map IO port\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -2290,7 +2290,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"avma1pp2-%d: couldn't map interrupt\n"
+literal|"ifpi2-%d: couldn't map interrupt\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -2367,7 +2367,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"avma1pp2-%d: couldn't set up irq\n"
+literal|"ifpi2-%d: couldn't set up irq\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -2657,19 +2657,6 @@ index|[
 name|HSCX_CH_A
 index|]
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|mtx_initialized
-argument_list|(
-operator|&
-name|chan
-operator|->
-name|rx_queue
-operator|.
-name|ifq_mtx
-argument_list|)
-condition|)
 name|mtx_init
 argument_list|(
 operator|&
@@ -2681,24 +2668,9 @@ name|ifq_mtx
 argument_list|,
 literal|"i4b_avma1pp2_rx"
 argument_list|,
-name|NULL
-argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|mtx_initialized
-argument_list|(
-operator|&
-name|chan
-operator|->
-name|tx_queue
-operator|.
-name|ifq_mtx
-argument_list|)
-condition|)
 name|mtx_init
 argument_list|(
 operator|&
@@ -2709,8 +2681,6 @@ operator|.
 name|ifq_mtx
 argument_list|,
 literal|"i4b_avma1pp2_tx"
-argument_list|,
-name|NULL
 argument_list|,
 name|MTX_DEF
 argument_list|)
@@ -2725,19 +2695,6 @@ index|[
 name|HSCX_CH_B
 index|]
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|mtx_initialized
-argument_list|(
-operator|&
-name|chan
-operator|->
-name|rx_queue
-operator|.
-name|ifq_mtx
-argument_list|)
-condition|)
 name|mtx_init
 argument_list|(
 operator|&
@@ -2749,24 +2706,9 @@ name|ifq_mtx
 argument_list|,
 literal|"i4b_avma1pp2_rx"
 argument_list|,
-name|NULL
-argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|mtx_initialized
-argument_list|(
-operator|&
-name|chan
-operator|->
-name|tx_queue
-operator|.
-name|ifq_mtx
-argument_list|)
-condition|)
 name|mtx_init
 argument_list|(
 operator|&
@@ -2777,8 +2719,6 @@ operator|.
 name|ifq_mtx
 argument_list|,
 literal|"i4b_avma1pp2_tx"
-argument_list|,
-name|NULL
 argument_list|,
 name|MTX_DEF
 argument_list|)
