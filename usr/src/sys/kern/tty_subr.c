@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_subr.c	4.4	%G%	*/
+comment|/*	tty_subr.c	4.5	%G%	*/
 end_comment
 
 begin_include
@@ -2049,7 +2049,7 @@ end_block
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|notdef
+name|UCBIPC
 end_ifdef
 
 begin_decl_stmt
