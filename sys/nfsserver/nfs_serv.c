@@ -20277,7 +20277,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|nfsm_clget
+name|nfsm_clget_nolock
 expr_stmt|;
 if|if
 condition|(
