@@ -19,7 +19,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/* static char sccsid[] = "From: @(#)syslog.c	8.4 (Berkeley) 3/18/94"; */
+comment|/* static char sccsid[] = "@(#)syslog.c	8.5 (Berkeley) 4/29/95"; */
 end_comment
 
 begin_decl_stmt
@@ -29,7 +29,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslog.c,v 1.9.2.2 1998/03/05 22:19:54 brian Exp $"
+literal|"$Id: syslog.c,v 1.9.2.3 1998/03/06 02:12:55 brian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1323,23 +1323,7 @@ sizeof|sizeof
 name|SyslogAddr
 operator|.
 name|sun_path
-operator|-
-literal|1
 argument_list|)
-expr_stmt|;
-name|SyslogAddr
-operator|.
-name|sun_path
-index|[
-sizeof|sizeof
-name|SyslogAddr
-operator|.
-name|sun_path
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 name|connected
 operator|=
@@ -1386,8 +1370,6 @@ sizeof|sizeof
 name|SyslogAddr
 operator|.
 name|sun_path
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 name|connected

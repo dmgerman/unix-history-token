@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: create_chunk.c,v 1.24.2.3 1998/03/20 23:27:17 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: create_chunk.c,v 1.24.2.4 1998/03/21 00:32:20 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -1529,10 +1529,6 @@ operator|,
 name|cmaj
 operator|=
 literal|3
-operator|,
-name|p
-operator|+=
-literal|2
 expr_stmt|;
 elseif|else
 if|if
@@ -1554,10 +1550,6 @@ operator|,
 name|cmaj
 operator|=
 literal|13
-operator|,
-name|p
-operator|+=
-literal|2
 expr_stmt|;
 elseif|else
 if|if
@@ -1579,10 +1571,6 @@ operator|,
 name|cmaj
 operator|=
 literal|70
-operator|,
-name|p
-operator|+=
-literal|2
 expr_stmt|;
 elseif|else
 if|if
@@ -1604,10 +1592,28 @@ operator|,
 name|cmaj
 operator|=
 literal|87
-operator|,
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strncmp
+argument_list|(
 name|p
-operator|+=
-literal|3
+argument_list|,
+literal|"da"
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+comment|/* CAM support */
+name|bmaj
+operator|=
+literal|4
+operator|,
+name|cmaj
+operator|=
+literal|13
 expr_stmt|;
 else|else
 block|{
@@ -1622,6 +1628,10 @@ return|return
 literal|0
 return|;
 block|}
+name|p
+operator|+=
+literal|2
+expr_stmt|;
 if|if
 condition|(
 operator|!

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)devname.c	8.1 (Berkeley) 6/4/93"
+literal|"@(#)devname.c	8.2 (Berkeley) 4/29/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -171,7 +171,7 @@ name|failure
 condition|)
 return|return
 operator|(
-literal|"??"
+name|NULL
 operator|)
 return|;
 comment|/* 	 * Keys are a mode_t followed by a dev_t.  The former is the type of 	 * the file (mode& S_IFMT), the latter is the st_rdev field.  Be 	 * sure to clear any padding that may be found in bkey. 	 */
@@ -235,7 +235,7 @@ operator|,
 literal|0
 operator|)
 condition|?
-literal|"??"
+name|NULL
 else|:
 operator|(
 name|char

@@ -7005,8 +7005,11 @@ name|el
 operator|->
 name|el_outfile
 argument_list|,
-literal|"%ld\n"
+literal|"%lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|el
 operator|->
 name|el_tty

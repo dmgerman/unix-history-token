@@ -1142,12 +1142,6 @@ name|fts_rfd
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Free up the stream pointer. */
-name|free
-argument_list|(
-name|sp
-argument_list|)
-expr_stmt|;
 comment|/* Set errno and return. */
 if|if
 condition|(
@@ -1160,6 +1154,12 @@ operator|&&
 name|saved_errno
 condition|)
 block|{
+comment|/* Free up the stream pointer. */
+name|free
+argument_list|(
+name|sp
+argument_list|)
+expr_stmt|;
 name|errno
 operator|=
 name|saved_errno
@@ -1171,6 +1171,12 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/* Free up the stream pointer. */
+name|free
+argument_list|(
+name|sp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0

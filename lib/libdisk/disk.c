@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: disk.c,v 1.22.2.10 1998/05/15 21:18:59 obrien Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: disk.c,v 1.22.2.11 1998/05/19 11:16:41 obrien Exp $  *  */
 end_comment
 
 begin_include
@@ -1489,9 +1489,11 @@ literal|"wd"
 block|,
 literal|"sd"
 block|,
-literal|"wfd"
+literal|"da"
 block|,
 literal|"od"
+block|,
+literal|"wfd"
 block|,
 literal|0
 block|}
@@ -2039,7 +2041,7 @@ case|case
 literal|18
 case|:
 return|return
-literal|"Compaq Diags"
+literal|"Compaq Diagnostic"
 return|;
 case|case
 literal|84
@@ -2063,7 +2065,7 @@ case|case
 literal|115
 case|:
 return|return
-literal|"UnixWare"
+literal|"SCO UnixWare"
 return|;
 case|case
 literal|128
@@ -2147,13 +2149,6 @@ case|:
 return|return
 literal|"freebsd"
 return|;
-case|case
-literal|181
-case|:
-return|return
-literal|"freebsd"
-return|;
-comment|/* tweaked by boot mgr */
 default|default:
 return|return
 literal|"unknown"
