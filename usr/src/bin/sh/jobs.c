@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)jobs.c	5.2 (Berkeley) %G%"
+literal|"@(#)jobs.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -421,12 +421,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|JOBS
-end_if
-
 begin_comment
 comment|/*  * Turn job control on and off.  *  * Note:  This code assumes that the third arg to ioctl is a character  * pointer, which is true on Berkeley systems but not System V.  Since  * System V doesn't have job control yet, this isn't a problem now.  */
 end_comment
@@ -488,10 +482,10 @@ condition|)
 block|{
 name|out2str
 argument_list|(
-literal|"ash: can't access tty; job control turned off\n"
+literal|"sh: can't access tty; job control turned off\n"
 argument_list|)
 expr_stmt|;
-name|jflag
+name|mflag
 operator|=
 literal|0
 expr_stmt|;
@@ -537,6 +531,9 @@ condition|(
 literal|0
 condition|)
 do|;
+ifdef|#
+directive|ifdef
+name|OLD_TTY_DRIVER
 if|if
 condition|(
 name|ioctl
@@ -562,15 +559,17 @@ condition|)
 block|{
 name|out2str
 argument_list|(
-literal|"ash: need new tty driver to run job control; job control turned off\n"
+literal|"sh: need new tty driver to run job control; job control turned off\n"
 argument_list|)
 expr_stmt|;
-name|jflag
+name|mflag
 operator|=
 literal|0
 expr_stmt|;
 return|return;
 block|}
+endif|#
+directive|endif
 name|setsignal
 argument_list|(
 name|SIGTSTP
@@ -654,11 +653,6 @@ name|on
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -2586,7 +2580,7 @@ name|mode
 operator|!=
 name|FORK_NOJOB
 operator|&&
-name|jflag
+name|mflag
 condition|)
 block|{
 if|if
@@ -2816,7 +2810,7 @@ name|mode
 operator|!=
 name|FORK_NOJOB
 operator|&&
-name|jflag
+name|mflag
 condition|)
 block|{
 if|if
@@ -3775,11 +3769,6 @@ expr_stmt|;
 return|return
 name|wait3
 argument_list|(
-operator|(
-expr|union
-name|wait
-operator|*
-operator|)
 name|status
 argument_list|,
 name|flags
@@ -3986,6 +3975,13 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|n
+operator|==
+name|NULL
+condition|)
+return|return;
 switch|switch
 condition|(
 name|n
