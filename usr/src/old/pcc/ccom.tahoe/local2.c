@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)local2.c	1.4 (Berkeley) %G%"
+literal|"@(#)local2.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,6 +31,16 @@ include|#
 directive|include
 file|<ctype.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|putstr
+parameter_list|(
+name|s
+parameter_list|)
+value|fputs((s), stdout)
+end_define
 
 begin_ifdef
 ifdef|#
@@ -649,18 +659,18 @@ block|{
 case|case
 name|DOUBLE
 case|:
-name|printf
+name|putchar
 argument_list|(
-literal|"d"
+literal|'d'
 argument_list|)
 expr_stmt|;
 return|return;
 case|case
 name|FLOAT
 case|:
-name|printf
+name|putchar
 argument_list|(
-literal|"f"
+literal|'f'
 argument_list|)
 expr_stmt|;
 return|return;
@@ -670,9 +680,9 @@ case|:
 case|case
 name|UNSIGNED
 case|:
-name|printf
+name|putchar
 argument_list|(
-literal|"l"
+literal|'l'
 argument_list|)
 expr_stmt|;
 return|return;
@@ -682,9 +692,9 @@ case|:
 case|case
 name|USHORT
 case|:
-name|printf
+name|putchar
 argument_list|(
-literal|"w"
+literal|'w'
 argument_list|)
 expr_stmt|;
 return|return;
@@ -694,9 +704,9 @@ case|:
 case|case
 name|UCHAR
 case|:
-name|printf
+name|putchar
 argument_list|(
-literal|"b"
+literal|'b'
 argument_list|)
 expr_stmt|;
 return|return;
@@ -720,9 +730,9 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|printf
+name|putchar
 argument_list|(
-literal|"l"
+literal|'l'
 argument_list|)
 expr_stmt|;
 return|return;
@@ -990,7 +1000,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|putstr
 argument_list|(
 literal|"clr"
 argument_list|)
@@ -1000,9 +1010,9 @@ argument_list|(
 name|l
 argument_list|)
 expr_stmt|;
-name|printf
+name|putchar
 argument_list|(
-literal|"	"
+literal|'\t'
 argument_list|)
 expr_stmt|;
 name|adrput
@@ -1032,7 +1042,7 @@ operator|-
 literal|63
 condition|)
 block|{
-name|printf
+name|putstr
 argument_list|(
 literal|"mneg"
 argument_list|)
@@ -1065,14 +1075,9 @@ name|MOVAFASTER
 block|}
 else|else
 block|{
-name|printf
+name|putstr
 argument_list|(
-literal|"movab"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"	"
+literal|"movab\t"
 argument_list|)
 expr_stmt|;
 name|acon
@@ -1080,9 +1085,9 @@ argument_list|(
 name|r
 argument_list|)
 expr_stmt|;
-name|printf
+name|putchar
 argument_list|(
-literal|","
+literal|','
 argument_list|)
 expr_stmt|;
 name|adrput
@@ -1119,6 +1124,8 @@ name|r
 argument_list|)
 condition|)
 block|{
+name|putstr
+argument_list|(
 operator|!
 name|ISUNSIGNED
 argument_list|(
@@ -1129,13 +1136,8 @@ operator|.
 name|type
 argument_list|)
 condition|?
-name|printf
-argument_list|(
 literal|"cvt"
-argument_list|)
 else|:
-name|printf
-argument_list|(
 literal|"movz"
 argument_list|)
 expr_stmt|;
@@ -1144,9 +1146,9 @@ argument_list|(
 name|l
 argument_list|)
 expr_stmt|;
-name|printf
+name|putchar
 argument_list|(
-literal|"l"
+literal|'l'
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1176,7 +1178,7 @@ name|r
 argument_list|)
 condition|)
 block|{
-name|printf
+name|putstr
 argument_list|(
 literal|"mov"
 argument_list|)
@@ -1212,13 +1214,13 @@ operator|.
 name|type
 argument_list|)
 condition|)
-name|printf
+name|putstr
 argument_list|(
 literal|"movz"
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|putstr
 argument_list|(
 literal|"cvt"
 argument_list|)
@@ -1235,9 +1237,9 @@ argument_list|)
 expr_stmt|;
 name|ops
 label|:
-name|printf
+name|putchar
 argument_list|(
-literal|"	"
+literal|'\t'
 argument_list|)
 expr_stmt|;
 name|adrput
@@ -1245,9 +1247,9 @@ argument_list|(
 name|r
 argument_list|)
 expr_stmt|;
-name|printf
+name|putchar
 argument_list|(
-literal|","
+literal|','
 argument_list|)
 expr_stmt|;
 name|adrput
@@ -1312,14 +1314,14 @@ name|type
 operator|!=
 name|FLOAT
 condition|)
-name|printf
+name|putstr
 argument_list|(
 literal|"movl"
 argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|printf
+name|putstr
 argument_list|(
 name|ISUNSIGNED
 argument_list|(
@@ -1340,9 +1342,9 @@ argument_list|(
 name|r
 argument_list|)
 expr_stmt|;
-name|printf
+name|putchar
 argument_list|(
-literal|"l"
+literal|'l'
 argument_list|)
 expr_stmt|;
 block|}
@@ -1435,7 +1437,7 @@ argument_list|,
 literal|'A'
 argument_list|)
 expr_stmt|;
-name|printf
+name|putstr
 argument_list|(
 literal|"\n	"
 argument_list|)
@@ -1459,11 +1461,8 @@ operator|==
 literal|1
 condition|)
 block|{
-name|printf
+name|putstr
 argument_list|(
-literal|"%s"
-argument_list|,
-operator|(
 name|p
 operator|->
 name|in
@@ -1475,7 +1474,6 @@ condition|?
 literal|"inc"
 else|:
 literal|"dec"
-operator|)
 argument_list|)
 expr_stmt|;
 name|prtype
@@ -1487,9 +1485,9 @@ operator|.
 name|left
 argument_list|)
 expr_stmt|;
-name|printf
+name|putchar
 argument_list|(
-literal|"	"
+literal|'\t'
 argument_list|)
 expr_stmt|;
 name|adrput
@@ -1503,11 +1501,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
+name|putstr
 argument_list|(
-literal|"%s"
-argument_list|,
-operator|(
 name|p
 operator|->
 name|in
@@ -1519,7 +1514,6 @@ condition|?
 literal|"add"
 else|:
 literal|"sub"
-operator|)
 argument_list|)
 expr_stmt|;
 name|prtype
@@ -1531,7 +1525,7 @@ operator|.
 name|left
 argument_list|)
 expr_stmt|;
-name|printf
+name|putstr
 argument_list|(
 literal|"2	"
 argument_list|)
@@ -1545,9 +1539,9 @@ operator|.
 name|right
 argument_list|)
 expr_stmt|;
-name|printf
+name|putchar
 argument_list|(
-literal|","
+literal|','
 argument_list|)
 expr_stmt|;
 name|adrput
@@ -1617,7 +1611,7 @@ operator|==
 name|ASG
 name|LS
 condition|)
-name|printf
+name|putstr
 argument_list|(
 literal|"shll"
 argument_list|)
@@ -1638,13 +1632,13 @@ operator|.
 name|type
 argument_list|)
 condition|)
-name|printf
+name|putstr
 argument_list|(
 literal|"shrl"
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|putstr
 argument_list|(
 literal|"shar"
 argument_list|)
@@ -1935,7 +1929,7 @@ name|src
 parameter_list|,
 name|off
 parameter_list|)
-value|{ \ 	printf("\tmovb\t"); upput(src, off); putchar(','); \ 	upput(dst, off); putchar('\n'); \ }
+value|{ \ 	putstr("\tmovb\t"); upput(src, off); putchar(','); \ 	upput(dst, off); putchar('\n'); \ }
 end_define
 
 begin_define
@@ -1949,7 +1943,7 @@ name|src
 parameter_list|,
 name|off
 parameter_list|)
-value|{ \ 	printf("\tmovw\t"); upput(src, off); putchar(','); \ 	upput(dst, off); putchar('\n'); \ }
+value|{ \ 	putstr("\tmovw\t"); upput(src, off); putchar(','); \ 	upput(dst, off); putchar('\n'); \ }
 end_define
 
 begin_define
@@ -1963,7 +1957,7 @@ name|src
 parameter_list|,
 name|off
 parameter_list|)
-value|{ \ 	printf("\tmovl\t"); upput(src, off); putchar(','); \ 	upput(dst, off); putchar('\n'); \ }
+value|{ \ 	putstr("\tmovl\t"); upput(src, off); putchar(','); \ 	upput(dst, off); putchar('\n'); \ }
 end_define
 
 begin_comment
@@ -2130,7 +2124,7 @@ block|{
 case|case
 literal|1
 case|:
-name|printf
+name|putstr
 argument_list|(
 literal|"\tmovb\t"
 argument_list|)
@@ -2142,9 +2136,9 @@ argument_list|(
 name|r
 argument_list|)
 expr_stmt|;
-name|printf
+name|putchar
 argument_list|(
-literal|","
+literal|','
 argument_list|)
 expr_stmt|;
 name|adrput
@@ -2152,9 +2146,9 @@ argument_list|(
 name|l
 argument_list|)
 expr_stmt|;
-name|printf
+name|putchar
 argument_list|(
-literal|"\n"
+literal|'\n'
 argument_list|)
 expr_stmt|;
 name|werror
@@ -2194,14 +2188,14 @@ argument_list|,
 name|SZCHAR
 argument_list|)
 expr_stmt|;
-name|printf
+name|putstr
 argument_list|(
 literal|"\tmovb\t"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|printf
+name|putstr
 argument_list|(
 literal|"\tmovw\t"
 argument_list|)
@@ -2267,7 +2261,7 @@ operator|*
 name|SZCHAR
 argument_list|)
 expr_stmt|;
-name|printf
+name|putstr
 argument_list|(
 literal|"\tmovb\t"
 argument_list|)
@@ -2284,7 +2278,7 @@ argument_list|,
 name|SZSHORT
 argument_list|)
 expr_stmt|;
-name|printf
+name|putstr
 argument_list|(
 literal|"\tmovw\t"
 argument_list|)
@@ -2292,7 +2286,7 @@ expr_stmt|;
 block|}
 block|}
 else|else
-name|printf
+name|putstr
 argument_list|(
 literal|"\tmovl\t"
 argument_list|)
@@ -2338,7 +2332,7 @@ operator|*
 name|SZSHORT
 argument_list|)
 expr_stmt|;
-name|printf
+name|putstr
 argument_list|(
 literal|"\tmovw\t"
 argument_list|)
@@ -2369,7 +2363,7 @@ argument_list|,
 name|SZLONG
 argument_list|)
 expr_stmt|;
-name|printf
+name|putstr
 argument_list|(
 literal|"\tmovl\t"
 argument_list|)
@@ -2383,7 +2377,7 @@ default|default:
 name|movblk
 label|:
 comment|/* 		 * Can we ever get a register conflict with R1 here? 		 */
-name|printf
+name|putstr
 argument_list|(
 literal|"\tmovab\t"
 argument_list|)
@@ -2393,7 +2387,7 @@ argument_list|(
 name|l
 argument_list|)
 expr_stmt|;
-name|printf
+name|putstr
 argument_list|(
 literal|",r1\n\tmovab\t"
 argument_list|)
@@ -2556,10 +2550,8 @@ operator|==
 name|SZLONG
 condition|)
 block|{
-name|printf
+name|putstr
 argument_list|(
-literal|"%s"
-argument_list|,
 name|rname
 argument_list|(
 name|p
@@ -3998,10 +3990,8 @@ return|return;
 case|case
 name|REG
 case|:
-name|printf
+name|putstr
 argument_list|(
-literal|"%s"
-argument_list|,
 name|rname
 argument_list|(
 name|p
@@ -4108,9 +4098,9 @@ case|case
 name|ICON
 case|:
 comment|/* addressable value of the constant */
-name|printf
+name|putchar
 argument_list|(
-literal|"$"
+literal|'$'
 argument_list|)
 expr_stmt|;
 name|acon
@@ -4122,10 +4112,8 @@ return|return;
 case|case
 name|REG
 case|:
-name|printf
+name|putstr
 argument_list|(
-literal|"%s"
-argument_list|,
 name|rname
 argument_list|(
 name|p
@@ -4199,9 +4187,9 @@ name|flags
 operator|&
 literal|1
 condition|)
-name|printf
+name|putchar
 argument_list|(
-literal|"*"
+literal|'*'
 argument_list|)
 expr_stmt|;
 if|if
@@ -4312,7 +4300,7 @@ operator|.
 name|lval
 argument_list|)
 expr_stmt|;
-name|printf
+name|putstr
 argument_list|(
 literal|"(fp)"
 argument_list|)
@@ -4375,9 +4363,9 @@ name|STARNM
 argument_list|)
 condition|)
 block|{
-name|printf
+name|putchar
 argument_list|(
-literal|"*"
+literal|'*'
 argument_list|)
 expr_stmt|;
 name|adrput
@@ -4442,18 +4430,9 @@ operator|.
 name|lval
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
-elseif|else
-if|if
-condition|(
-name|p
-operator|->
-name|tn
-operator|.
-name|lval
-operator|==
-literal|0
-condition|)
+else|else
 block|{
 ifndef|#
 directive|ifndef
@@ -4471,10 +4450,8 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|printf
+name|putstr
 argument_list|(
-literal|"%s"
-argument_list|,
 name|p
 operator|->
 name|in
@@ -4484,38 +4461,22 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-block|}
-else|else
+if|if
+condition|(
+name|p
+operator|->
+name|tn
+operator|.
+name|lval
+operator|!=
+literal|0
+condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|FLEXNAMES
-name|printf
+name|putchar
 argument_list|(
-literal|"%.8s+"
-argument_list|,
-name|p
-operator|->
-name|in
-operator|.
-name|name
+literal|'+'
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|printf
-argument_list|(
-literal|"%s+"
-argument_list|,
-name|p
-operator|->
-name|in
-operator|.
-name|name
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|printf
 argument_list|(
 name|CONFMT
@@ -4527,6 +4488,7 @@ operator|.
 name|lval
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_block

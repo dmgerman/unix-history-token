@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)local.c	1.2 (Berkeley) %G%"
+literal|"@(#)local.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2471,17 +2471,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%d"
+literal|"%d\n"
 comment|/*CONFMT*/
 argument_list|,
 name|off
 operator|/
 name|SZCHAR
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)code.c	1.2 (Berkeley) %G%"
+literal|"@(#)code.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,6 +43,16 @@ include|#
 directive|include
 file|<stab.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|putstr
+parameter_list|(
+name|s
+parameter_list|)
+value|fputs((s), stdout)
+end_define
 
 begin_decl_stmt
 name|int
@@ -343,7 +353,7 @@ block|{
 case|case
 name|PROG
 case|:
-name|printf
+name|putstr
 argument_list|(
 literal|"	.text\n"
 argument_list|)
@@ -358,7 +368,7 @@ case|:
 case|case
 name|ADATA
 case|:
-name|printf
+name|putstr
 argument_list|(
 literal|"	.data\n"
 argument_list|)
@@ -367,7 +377,7 @@ break|break;
 case|case
 name|STRNG
 case|:
-name|printf
+name|putstr
 argument_list|(
 literal|"	.data	1\n"
 argument_list|)
@@ -376,7 +386,7 @@ break|break;
 case|case
 name|ISTRNG
 case|:
-name|printf
+name|putstr
 argument_list|(
 literal|"	.data	2\n"
 argument_list|)
@@ -385,7 +395,7 @@ break|break;
 case|case
 name|STAB
 case|:
-name|printf
+name|putstr
 argument_list|(
 literal|"	.stab\n"
 argument_list|)
@@ -522,12 +532,12 @@ comment|/* label for return area */
 ifndef|#
 directive|ifndef
 name|LCOMM
-name|printf
+name|putstr
 argument_list|(
 literal|"	.data\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|putstr
 argument_list|(
 literal|"	.align	2\n"
 argument_list|)
@@ -554,7 +564,7 @@ operator|/
 name|SZCHAR
 argument_list|)
 expr_stmt|;
-name|printf
+name|putstr
 argument_list|(
 literal|"	.text\n"
 argument_list|)
@@ -863,7 +873,7 @@ index|[
 name|curftn
 index|]
 expr_stmt|;
-name|printf
+name|putstr
 argument_list|(
 literal|"	.align	1\n"
 argument_list|)
@@ -999,17 +1009,17 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|printf
+name|putstr
 argument_list|(
 literal|"	callf	$8,mcount\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|putstr
 argument_list|(
 literal|"	.data\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|putstr
 argument_list|(
 literal|"	.align	2\n"
 argument_list|)
@@ -1021,7 +1031,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|printf
+name|putstr
 argument_list|(
 literal|"	.text\n"
 argument_list|)
@@ -1114,7 +1124,7 @@ block|)
 empty_stmt|;
 else|#
 directive|else
-name|printf
+name|putstr
 argument_list|(
 literal|"	movl"
 argument_list|)
@@ -1450,7 +1460,7 @@ name|i
 operator|!=
 literal|0
 condition|)
-name|printf
+name|putstr
 argument_list|(
 literal|"\"\n"
 argument_list|)
@@ -1464,7 +1474,7 @@ name|i
 operator|==
 literal|0
 condition|)
-name|printf
+name|putstr
 argument_list|(
 literal|"\t.ascii\t\""
 argument_list|)
@@ -1559,7 +1569,7 @@ name|i
 operator|==
 literal|077
 condition|)
-name|printf
+name|putstr
 argument_list|(
 literal|"\"\n"
 argument_list|)
@@ -1585,9 +1595,9 @@ name|i
 operator|!=
 literal|0
 condition|)
-name|printf
+name|putchar
 argument_list|(
-literal|"\n"
+literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
@@ -1600,15 +1610,15 @@ name|i
 operator|==
 literal|0
 condition|)
-name|printf
+name|putstr
 argument_list|(
 literal|"	.byte	"
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|putchar
 argument_list|(
-literal|","
+literal|','
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1624,9 +1634,9 @@ name|i
 operator|==
 literal|07
 condition|)
-name|printf
+name|putchar
 argument_list|(
-literal|"\n"
+literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
@@ -2019,7 +2029,7 @@ name|getlab
 argument_list|()
 expr_stmt|;
 comment|/* already in r0 */
-name|printf
+name|putstr
 argument_list|(
 literal|"	casel	r0,$"
 argument_list|)
@@ -2036,7 +2046,7 @@ operator|.
 name|sval
 argument_list|)
 expr_stmt|;
-name|printf
+name|putstr
 argument_list|(
 literal|",$"
 argument_list|)
@@ -2234,7 +2244,7 @@ name|i
 control|)
 block|{
 comment|/* already in r0 */
-name|printf
+name|putstr
 argument_list|(
 literal|"	cmpl	r0,$"
 argument_list|)
@@ -2467,7 +2477,7 @@ operator|>
 name|limit
 condition|)
 return|return;
-name|printf
+name|putstr
 argument_list|(
 literal|"	cmpl	r0,$"
 argument_list|)
