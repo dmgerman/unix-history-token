@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: option.c,v 1.3 1997/07/29 06:42:33 charnier Exp $"
+literal|"$Id: option.c,v 1.4 1998/07/25 05:56:49 hoek Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -145,13 +145,6 @@ begin_decl_stmt
 name|char
 modifier|*
 name|firstsearch
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|sc_height
 decl_stmt|;
 end_decl_stmt
 
