@@ -2947,7 +2947,7 @@ block|{
 define|#
 directive|define
 name|ES1371_BINTSUMM_OFF
-value|0x07
+value|0x04
 name|bus_space_write_4
 argument_list|(
 name|es
@@ -2960,7 +2960,12 @@ name|sh
 argument_list|,
 name|ES1371_BINTSUMM_OFF
 argument_list|,
-literal|0x20
+literal|0x20000000
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|20000
 argument_list|)
 expr_stmt|;
 if|if
