@@ -2163,7 +2163,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RL_GMEDIASTAT_1000MPS
+name|RL_GMEDIASTAT_1000MBPS
 value|0x10
 end_define
 
