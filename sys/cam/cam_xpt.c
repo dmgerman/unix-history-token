@@ -4040,7 +4040,7 @@ condition|(
 name|cmd
 condition|)
 block|{
-comment|/* 	 * For the transport layer CAMIOCOMMAND ioctl, we really only want 	 * to accept CCB types that don't quite make sense to send through a 	 * passthrough driver. 	 */
+comment|/* 	 * For the transport layer CAMIOCOMMAND ioctl, we really only want 	 * to accept CCB types that don't quite make sense to send through a 	 * passthrough driver. XPT_PATH_INQ is an exception to this, as stated 	 * in the CAM spec. 	 */
 case|case
 name|CAMIOCOMMAND
 case|:
@@ -4109,6 +4109,9 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* FALLTHROUGH */
+case|case
+name|XPT_PATH_INQ
+case|:
 case|case
 name|XPT_SCAN_LUN
 case|:
@@ -4481,6 +4484,17 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
+case|case
+name|XPT_ENG_INQ
+case|:
+case|case
+name|XPT_ENG_EXEC
+case|:
+name|error
+operator|=
+name|ENOTSUP
+expr_stmt|;
+break|break;
 default|default:
 name|error
 operator|=
