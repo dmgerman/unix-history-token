@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: file.c,v 1.24.2.6 1998/09/11 07:27:18 jkh Exp $"
+literal|"$Id: file.c,v 1.24.2.7 1998/10/09 00:01:34 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -123,7 +123,7 @@ name|sb
 decl_stmt|;
 if|if
 condition|(
-name|lstat
+name|stat
 argument_list|(
 name|fname
 argument_list|,
