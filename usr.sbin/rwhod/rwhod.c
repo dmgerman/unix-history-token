@@ -887,7 +887,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"rwhod: udp/who: unknown service\n"
+literal|"udp/who: unknown service"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -910,7 +910,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"rwhod: %s: %m\n"
+literal|"%s: %m"
 argument_list|,
 name|_PATH_RWHODIR
 argument_list|)
