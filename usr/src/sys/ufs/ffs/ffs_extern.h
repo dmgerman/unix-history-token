@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_extern.h	7.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_extern.h	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_struct_decl
@@ -146,10 +146,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX */
-end_comment
-
 begin_decl_stmt
 name|int
 name|ffs_blkfree
@@ -202,10 +198,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_decl_stmt
 name|void
@@ -299,10 +291,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -410,10 +398,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX */
-end_comment
-
 begin_decl_stmt
 name|int
 name|ffs_realloccg
@@ -458,10 +442,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -553,10 +533,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX */
-end_comment
-
 begin_decl_stmt
 name|int
 name|ffs_unmount
@@ -605,12 +581,8 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX */
-end_comment
-
 begin_decl_stmt
-name|void
+name|int
 name|ffs_vfree
 name|__P
 argument_list|(
@@ -622,10 +594,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -640,10 +608,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -676,10 +640,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_function_decl
 name|int
