@@ -1892,6 +1892,9 @@ case|case
 name|NTO
 case|:
 case|case
+name|NFROMTO
+case|:
+case|case
 name|NAPPEND
 case|:
 name|expandarg
