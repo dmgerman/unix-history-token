@@ -1108,6 +1108,18 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_COPY_PKTHDR
+parameter_list|(
+name|to
+parameter_list|,
+name|from
+parameter_list|)
+value|m_copy_pkthdr(to, from)
+end_define
+
+begin_define
+define|#
+directive|define
 name|m_getclr
 value|m_get_clrd
 end_define
@@ -1201,22 +1213,6 @@ parameter_list|(
 name|m
 parameter_list|)
 value|(!((m)->m_flags& M_RDONLY)&& (!((m)->m_flags  \& M_EXT) || !MEXT_IS_REF(m)))
-end_define
-
-begin_comment
-comment|/*-  * Copy mbuf pkthdr from "from" to "to".  * "from" must have M_PKTHDR set, and "to" must be empty.  * aux pointer will be moved to "to".  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_COPY_PKTHDR
-parameter_list|(
-name|to
-parameter_list|,
-name|from
-parameter_list|)
-value|do {					\ 	struct mbuf *_mfrom = (from);					\ 	struct mbuf *_mto = (to);					\ 									\ 	_mto->m_data = _mto->m_pktdat;					\ 	_mto->m_flags = _mfrom->m_flags& M_COPYFLAGS;			\ 	_mto->m_pkthdr = _mfrom->m_pkthdr;				\ 	_mfrom->m_pkthdr.aux = NULL;					\ } while (0)
 end_define
 
 begin_comment
@@ -1968,6 +1964,23 @@ name|mbuf
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|m_copy_pkthdr
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|to
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|from
 parameter_list|)
 function_decl|;
 end_function_decl
