@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chmod.c	5.10 (Berkeley) %G%"
+literal|"@(#)chmod.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -443,10 +443,10 @@ name|statb
 operator|.
 name|st_mode
 argument_list|)
+argument_list|)
 operator|&&
 operator|!
 name|fflag
-argument_list|)
 condition|)
 name|error
 argument_list|(
