@@ -3772,6 +3772,15 @@ operator|->
 name|sotype
 operator|==
 name|SOCK_DGRAM
+operator|&&
+operator|!
+operator|(
+name|nfsargsp
+operator|->
+name|flags
+operator|&
+name|NFSMNT_NOCONN
+operator|)
 condition|)
 block|{
 comment|/* 		 * Use connect(), to match what the kernel does. This 		 * catches cases where the server responds from the 		 * wrong source address. 		 */
