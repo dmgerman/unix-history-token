@@ -10,13 +10,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|"less.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"less.h"
+file|<signal.h>
 end_include
 
 begin_include
@@ -263,6 +263,23 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|OS2
+comment|/* The __open() system call translates "/dev/tty" to "con". */
+if|if
+condition|(
+name|__open
+argument_list|(
+literal|"/dev/tty"
+argument_list|,
+name|OPEN_READ
+argument_list|)
+operator|<
+literal|0
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 name|open
@@ -274,6 +291,8 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+endif|#
+directive|endif
 name|dup
 argument_list|(
 name|inp

@@ -268,6 +268,17 @@ end_comment
 begin_decl_stmt
 name|public
 name|int
+name|no_keypad
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Disable sending ks/ke termcap strings */
+end_comment
+
+begin_decl_stmt
+name|public
+name|int
 name|twiddle
 decl_stmt|;
 end_decl_stmt
@@ -937,8 +948,22 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|optname
+name|keypad_optname
+init|=
+block|{
+literal|"no-keypad"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/*  * Table of all options and their semantics.  */
+comment|/*  * Table of all options and their semantics.  *  * For BOOL and TRIPLE options, odesc[0], odesc[1], odesc[2] are  * the description of the option when set to 0, 1 or 2, respectively.  * For NUMBER options, odesc[0] is the prompt to use when entering  * a new value, and odesc[1] is the description, which should contain   * one %d which is replaced by the value of the number.  * For STRING options, odesc[0] is the prompt to use when entering  * a new value, and odesc[1], if not NULL, is the set of characters  * that are valid in the string.  */
 end_comment
 
 begin_decl_stmt
@@ -1084,7 +1109,7 @@ name|opt_D
 block|,
 literal|"color desc: "
 block|,
-name|NULL
+literal|"Ddknsu0123456789."
 block|,
 name|NULL
 block|}
@@ -1690,20 +1715,19 @@ block|,
 operator|&
 name|x_optname
 block|,
-name|NUMBER
+name|STRING
 operator||
 name|REPAINT
 block|,
-literal|8
-block|,
-operator|&
-name|tabstop
+literal|0
 block|,
 name|NULL
 block|,
+name|opt_x
+block|,
 literal|"Tab stops: "
 block|,
-literal|"Tab stops every %d spaces"
+literal|"0123456789,"
 block|,
 name|NULL
 block|}
@@ -1862,6 +1886,30 @@ block|,
 literal|"Horizontal shift: "
 block|,
 literal|"Horizontal shift %d positions"
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|'.'
+block|,
+operator|&
+name|keypad_optname
+block|,
+name|BOOL
+operator||
+name|NO_TOGGLE
+block|,
+name|OPT_OFF
+block|,
+operator|&
+name|no_keypad
+block|,
+name|NULL
+block|,
+literal|"Use keypad mode"
+block|,
+literal|"Don't use keypad mode"
 block|,
 name|NULL
 block|}
@@ -2226,6 +2274,9 @@ operator|=
 operator|(
 name|len
 operator|==
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|oname

@@ -640,6 +640,9 @@ if|if
 condition|(
 name|cmd_col
 operator|+
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|p
@@ -923,6 +926,9 @@ if|if
 condition|(
 name|cmd_col
 operator|+
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|p
@@ -938,6 +944,9 @@ if|if
 condition|(
 name|cmd_col
 operator|+
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|p
@@ -1025,6 +1034,9 @@ name|cmd_col
 operator|<
 name|prompt_col
 operator|+
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|p
