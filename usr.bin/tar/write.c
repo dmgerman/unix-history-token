@@ -5671,6 +5671,10 @@ operator|)
 name|bsdtar
 expr_stmt|;
 comment|/* UNUSED */
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|pwent
 operator|=
 name|getpwuid
@@ -5802,6 +5806,10 @@ operator|)
 name|bsdtar
 expr_stmt|;
 comment|/* UNUSED */
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|grent
 operator|=
 name|getgrgid
