@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.39 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.40 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.39 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.40 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -541,6 +541,15 @@ name|protocol
 operator|=
 name|NULL
 expr_stmt|;
+name|sendinghost
+operator|=
+name|macvalue
+argument_list|(
+literal|'s'
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
 name|gothello
 operator|=
 name|FALSE
@@ -884,16 +893,11 @@ argument_list|,
 name|inp
 argument_list|)
 expr_stmt|;
-name|define
-argument_list|(
-literal|'s'
-argument_list|,
+name|sendinghost
+operator|=
 name|newstr
 argument_list|(
 name|p
-argument_list|)
-argument_list|,
-name|e
 argument_list|)
 expr_stmt|;
 if|if
@@ -937,12 +941,7 @@ name|NULL
 condition|)
 name|p
 operator|=
-name|macvalue
-argument_list|(
-literal|'s'
-argument_list|,
-name|e
-argument_list|)
+name|RealHostName
 expr_stmt|;
 name|message
 argument_list|(
@@ -974,23 +973,13 @@ block|{
 comment|/* set sending host to our known value */
 if|if
 condition|(
-name|macvalue
-argument_list|(
-literal|'s'
-argument_list|,
-name|e
-argument_list|)
+name|sendinghost
 operator|==
 name|NULL
 condition|)
-name|define
-argument_list|(
-literal|'s'
-argument_list|,
+name|sendinghost
+operator|=
 name|RealHostName
-argument_list|,
-name|e
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1082,6 +1071,15 @@ argument_list|(
 literal|'r'
 argument_list|,
 name|protocol
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+name|define
+argument_list|(
+literal|'s'
+argument_list|,
+name|sendinghost
 argument_list|,
 name|e
 argument_list|)
