@@ -382,6 +382,13 @@ name|mtype
 decl_stmt|,
 name|error
 decl_stmt|;
+name|int
+name|flags
+init|=
+name|uap
+operator|->
+name|flags
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -429,8 +436,6 @@ directive|endif
 comment|/* 	 * Make sure one of the sharing types is specified 	 */
 name|mtype
 operator|=
-name|uap
-operator|->
 name|flags
 operator|&
 name|MAP_TYPE
@@ -467,8 +472,6 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|uap
-operator|->
 name|flags
 operator|&
 name|MAP_FIXED
@@ -534,8 +537,6 @@ operator|==
 literal|0
 operator|&&
 operator|(
-name|uap
-operator|->
 name|flags
 operator|&
 name|MAP_FIXED
@@ -682,8 +683,6 @@ literal|0
 operator|||
 operator|(
 operator|(
-name|uap
-operator|->
 name|flags
 operator|&
 name|MAP_SHARED
@@ -713,6 +712,35 @@ operator|(
 name|EACCES
 operator|)
 return|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|MAP_SHARED
+operator|)
+operator|&&
+operator|(
+name|fp
+operator|->
+name|f_flag
+operator|&
+name|FWRITE
+operator|)
+operator|==
+literal|0
+condition|)
+name|flags
+operator|=
+operator|(
+name|flags
+operator|&
+operator|~
+name|MAP_SHARED
+operator|)
+operator||
+name|MAP_PRIVATE
+expr_stmt|;
 name|handle
 operator|=
 operator|(
@@ -802,8 +830,6 @@ name|size
 argument_list|,
 name|prot
 argument_list|,
-name|uap
-operator|->
 name|flags
 argument_list|,
 name|handle
@@ -2097,6 +2123,20 @@ goto|goto
 name|out
 goto|;
 block|}
+comment|/* 		 * The object of unnamed anonymous regions was just created 		 * find it for pager_cache. 		 */
+if|if
+condition|(
+name|handle
+operator|==
+name|NULL
+condition|)
+name|object
+operator|=
+name|vm_object_lookup
+argument_list|(
+name|pager
+argument_list|)
+expr_stmt|;
 comment|/* 		 * The object of unnamed anonymous regions was just created 		 * find it for pager_cache. 		 */
 if|if
 condition|(
