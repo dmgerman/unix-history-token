@@ -600,9 +600,9 @@ argument_list|,
 name|PLIST_CWD
 argument_list|)
 expr_stmt|;
-name|putchar
+name|puts
 argument_list|(
-literal|'\014'
+name|InfoPrefix
 argument_list|)
 expr_stmt|;
 block|}
