@@ -577,6 +577,7 @@ name|pr_rthdr
 name|__P
 argument_list|(
 operator|(
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
