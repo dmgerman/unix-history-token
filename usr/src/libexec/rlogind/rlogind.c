@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	5.42 (Berkeley) %G%"
+literal|"@(#)rlogind.c	5.43 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -308,16 +308,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|SUPERUSER
-parameter_list|(
-name|pwd
-parameter_list|)
-value|((pwd)->pw_uid == 0)
-end_define
 
 begin_decl_stmt
 specifier|extern
@@ -1011,6 +1001,20 @@ condition|(
 name|use_kerberos
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|hostok
+condition|)
+name|fatal
+argument_list|(
+name|f
+argument_list|,
+literal|"krlogind: Host address mismatch."
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|retval
 operator|=
 name|do_krb_login
@@ -1029,8 +1033,6 @@ condition|(
 name|retval
 operator|==
 literal|0
-operator|&&
-name|hostok
 condition|)
 name|authenticated
 operator|++
@@ -1050,21 +1052,6 @@ name|krb_err_txt
 index|[
 name|retval
 index|]
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|!
-name|hostok
-condition|)
-name|fatal
-argument_list|(
-name|f
-argument_list|,
-literal|"krlogind: Host address mismatch."
 argument_list|,
 literal|0
 argument_list|)
@@ -2954,17 +2941,6 @@ argument_list|,
 literal|"Terminal type too long"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|getuid
-argument_list|()
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
 name|pwd
 operator|=
 name|getpwnam
@@ -2984,16 +2960,27 @@ operator|-
 literal|1
 operator|)
 return|;
+if|if
+condition|(
+name|pwd
+operator|->
+name|pw_uid
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 return|return
 operator|(
 name|ruserok
 argument_list|(
 name|host
 argument_list|,
-name|SUPERUSER
-argument_list|(
-name|pwd
-argument_list|)
+literal|0
 argument_list|,
 name|rusername
 argument_list|,
