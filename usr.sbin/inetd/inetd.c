@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.41 1998/11/04 19:39:46 phk Exp $"
+literal|"$Id: inetd.c,v 1.42 1998/12/11 17:06:16 dillon Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3196,6 +3196,11 @@ name|sigaction
 operator|*
 operator|)
 literal|0
+argument_list|)
+expr_stmt|;
+name|sigsetmask
+argument_list|(
+literal|0L
 argument_list|)
 expr_stmt|;
 name|execv
