@@ -2156,6 +2156,10 @@ block|, 	}
 block|;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|HAVE_GETBOOTFILE
+specifier|static
 name|char
 operator|*
 name|kernels
@@ -2178,7 +2182,10 @@ literal|"/netbsd"
 block|,
 name|NULL
 block|}
-block|; 	struct
+block|;
+endif|#
+directive|endif
+block|struct
 name|stat
 name|stbuf
 block|;
