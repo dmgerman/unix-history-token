@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.66 1995/12/03 18:35:28 bde Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.67 1995/12/07 12:45:36 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -130,27 +130,13 @@ file|<i386/isa/isa.h>
 end_include
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|void
 name|init_pv_entries
 name|__P
 argument_list|(
 operator|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|pmap_copy_on_write
-name|__P
-argument_list|(
-operator|(
-name|vm_offset_t
-name|pa
 operator|)
 argument_list|)
 decl_stmt|;
@@ -183,7 +169,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|void
 name|pmap_remove_all
 name|__P
@@ -197,7 +183,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|void
 name|pmap_remove_entry
 name|__P
@@ -347,6 +333,7 @@ value|(protection_codes[p])
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|protection_codes
 index|[
@@ -356,6 +343,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|pmap
 name|kernel_pmap_store
@@ -389,16 +377,6 @@ comment|/* PA of last available physical page */
 end_comment
 
 begin_decl_stmt
-name|vm_size_t
-name|mem_size
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* memory size in bytes */
-end_comment
-
-begin_decl_stmt
 name|vm_offset_t
 name|virtual_avail
 decl_stmt|;
@@ -419,6 +397,7 @@ comment|/* VA of last avail page (end of kernel AS) */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|boolean_t
 name|pmap_initialized
 init|=
@@ -431,14 +410,14 @@ comment|/* Has pmap_init completed? */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|vm_offset_t
 name|vm_first_phys
-decl_stmt|,
-name|vm_last_phys
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nkpt
 decl_stmt|;
@@ -468,7 +447,12 @@ begin_decl_stmt
 name|pt_entry_t
 modifier|*
 name|CMAP1
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|pt_entry_t
 modifier|*
 name|CMAP2
 decl_stmt|,
@@ -478,6 +462,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|pv_entry_t
 name|pv_table
 decl_stmt|;
@@ -487,13 +472,19 @@ begin_decl_stmt
 name|caddr_t
 name|CADDR1
 decl_stmt|,
-name|CADDR2
-decl_stmt|,
 name|ptvmmap
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|caddr_t
+name|CADDR2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|pt_entry_t
 modifier|*
 name|msgbufmap
@@ -1015,6 +1006,7 @@ comment|/*  * find the vm_page_t of a pte (only) given va of pte and pmap  */
 end_comment
 
 begin_function
+specifier|static
 name|__inline
 name|vm_page_t
 name|pmap_pte_vm_page
@@ -1658,74 +1650,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	Create and return a physical map.  *  *	If the size specified for the map  *	is zero, the map is an actual physical  *	map, and may be referenced by the  *	hardware.  *  *	If the size specified is non-zero,  *	the map will be used in software only, and  *	is bounded by that size.  *  */
-end_comment
-
-begin_function
-name|pmap_t
-name|pmap_create
-parameter_list|(
-name|size
-parameter_list|)
-name|vm_size_t
-name|size
-decl_stmt|;
-block|{
-specifier|register
-name|pmap_t
-name|pmap
-decl_stmt|;
-comment|/* 	 * Software use map does not need a pmap 	 */
-if|if
-condition|(
-name|size
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-name|pmap
-operator|=
-operator|(
-name|pmap_t
-operator|)
-name|malloc
-argument_list|(
-sizeof|sizeof
-expr|*
-name|pmap
-argument_list|,
-name|M_VMPMAP
-argument_list|,
-name|M_WAITOK
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|pmap
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|pmap
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|pmap_pinit
-argument_list|(
-name|pmap
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|pmap
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Initialize a preallocated and zeroed pmap structure,  * such as one in a vmspace structure.  */
 end_comment
 
@@ -1823,6 +1747,7 @@ comment|/*  * grow the number of kernel page table entries, if needed  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|vm_page_t
 name|nkpg
 decl_stmt|;
@@ -2272,24 +2197,28 @@ comment|/*  * Data for the pv entry allocation mechanism  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pv_freelistcnt
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|pv_entry_t
 name|pv_freelist
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|vm_offset_t
 name|pvva
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|npvvapg
 decl_stmt|;
@@ -2686,6 +2615,7 @@ comment|/*  * If it is the first entry on the list, it is actually  * in the hea
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|pmap_remove_entry
 parameter_list|(
@@ -3373,6 +3303,7 @@ comment|/*  *	Routine:	pmap_remove_all  *	Function:  *		Removes this physical pa
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|pmap_remove_all
 parameter_list|(
@@ -6365,32 +6296,6 @@ name|pa
 operator|)
 argument_list|,
 name|PG_U
-argument_list|,
-name|FALSE
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  *	Routine:	pmap_copy_on_write  *	Function:  *		Remove write privileges from all  *		physical maps for this physical page.  */
-end_comment
-
-begin_function
-name|void
-name|pmap_copy_on_write
-parameter_list|(
-name|vm_offset_t
-name|pa
-parameter_list|)
-block|{
-name|pmap_changebit
-argument_list|(
-operator|(
-name|pa
-operator|)
-argument_list|,
-name|PG_RW
 argument_list|,
 name|FALSE
 argument_list|)
