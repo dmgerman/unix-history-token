@@ -936,7 +936,7 @@ name|char
 name|extra_symbol_chars
 index|[]
 init|=
-literal|"*%-(@"
+literal|"*%-(@["
 decl_stmt|;
 end_decl_stmt
 
@@ -951,7 +951,7 @@ name|char
 name|extra_symbol_chars
 index|[]
 init|=
-literal|"*%-("
+literal|"*%-(["
 decl_stmt|;
 end_decl_stmt
 
@@ -10851,12 +10851,6 @@ name|base_opcode
 operator|==
 literal|0xfbe
 operator|)
-condition|)
-if|if
-condition|(
-name|i
-operator|.
-name|suffix
 operator|&&
 name|i
 operator|.
@@ -11301,7 +11295,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Incorrect register `%%%s' used with`%c' suffix"
+literal|"Incorrect register `%%%s' used with `%c' suffix"
 argument_list|)
 argument_list|,
 name|i
@@ -11631,7 +11625,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Incorrect register `%%%s' used with`%c' suffix"
+literal|"Incorrect register `%%%s' used with `%c' suffix"
 argument_list|)
 argument_list|,
 name|i
@@ -11742,7 +11736,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Incorrect register `%%%s' used with`%c' suffix"
+literal|"Incorrect register `%%%s' used with `%c' suffix"
 argument_list|)
 argument_list|,
 name|i
@@ -11922,7 +11916,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Incorrect register `%%%s' used with`%c' suffix"
+literal|"Incorrect register `%%%s' used with `%c' suffix"
 argument_list|)
 argument_list|,
 name|i
@@ -12103,7 +12097,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Incorrect register `%%%s' used with`%c' suffix"
+literal|"Incorrect register `%%%s' used with `%c' suffix"
 argument_list|)
 argument_list|,
 name|i
@@ -14983,10 +14977,6 @@ decl_stmt|;
 name|int
 name|size
 decl_stmt|;
-name|fixS
-modifier|*
-name|fixP
-decl_stmt|;
 if|if
 condition|(
 name|i
@@ -15195,8 +15185,6 @@ name|tm
 operator|.
 name|base_opcode
 expr_stmt|;
-name|fixP
-operator|=
 name|fix_new_exp
 argument_list|(
 name|frag_now
@@ -15236,12 +15224,6 @@ literal|0
 index|]
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|fixP
-operator|->
-name|fx_pcrel_adjust
-operator|=
-name|size
 expr_stmt|;
 block|}
 end_function
@@ -16177,10 +16159,6 @@ operator|)
 operator|!=
 literal|0
 decl_stmt|;
-name|fixS
-modifier|*
-name|fixP
-decl_stmt|;
 comment|/* The PC relative address is computed relative 		 to the instruction boundary, so in case immediate 		 fields follows, we need to adjust the value.  */
 if|if
 condition|(
@@ -16372,8 +16350,6 @@ argument_list|(
 name|size
 argument_list|)
 expr_stmt|;
-name|fixP
-operator|=
 name|fix_new_exp
 argument_list|(
 name|frag_now
@@ -16413,16 +16389,6 @@ name|n
 index|]
 argument_list|)
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|pcrel
-condition|)
-name|fixP
-operator|->
-name|fx_pcrel_adjust
-operator|=
-name|size
 expr_stmt|;
 block|}
 block|}
@@ -20410,10 +20376,6 @@ decl_stmt|;
 name|int
 name|old_fr_fix
 decl_stmt|;
-name|fixS
-modifier|*
-name|fixP
-decl_stmt|;
 if|if
 condition|(
 name|fragP
@@ -20488,8 +20450,6 @@ name|fr_fix
 operator|+=
 name|size
 expr_stmt|;
-name|fixP
-operator|=
 name|fix_new
 argument_list|(
 name|fragP
@@ -20511,28 +20471,26 @@ argument_list|,
 name|reloc_type
 argument_list|)
 expr_stmt|;
-name|fixP
-operator|->
-name|fx_pcrel_adjust
-operator|=
-name|size
-expr_stmt|;
 break|break;
 case|case
 name|COND_JUMP86
 case|:
 if|if
 condition|(
-name|no_cond_jump_promotion
-condition|)
-goto|goto
-name|relax_guess
-goto|;
-if|if
-condition|(
 name|size
 operator|==
 literal|2
+operator|&&
+operator|(
+operator|!
+name|no_cond_jump_promotion
+operator|||
+name|fragP
+operator|->
+name|fr_var
+operator|!=
+name|NO_RELOC
+operator|)
 condition|)
 block|{
 comment|/* Negate the condition, and branch past an 		 unconditional jump.  */
@@ -20567,8 +20525,6 @@ literal|2
 operator|+
 literal|2
 expr_stmt|;
-name|fixP
-operator|=
 name|fix_new
 argument_list|(
 name|fragP
@@ -20592,12 +20548,6 @@ argument_list|,
 name|reloc_type
 argument_list|)
 expr_stmt|;
-name|fixP
-operator|->
-name|fx_pcrel_adjust
-operator|=
-name|size
-expr_stmt|;
 break|break;
 block|}
 comment|/* Fall through.  */
@@ -20607,10 +20557,43 @@ case|:
 if|if
 condition|(
 name|no_cond_jump_promotion
+operator|&&
+name|fragP
+operator|->
+name|fr_var
+operator|==
+name|NO_RELOC
 condition|)
-goto|goto
-name|relax_guess
-goto|;
+block|{
+name|fragP
+operator|->
+name|fr_fix
+operator|+=
+literal|1
+expr_stmt|;
+name|fix_new
+argument_list|(
+name|fragP
+argument_list|,
+name|old_fr_fix
+argument_list|,
+literal|1
+argument_list|,
+name|fragP
+operator|->
+name|fr_symbol
+argument_list|,
+name|fragP
+operator|->
+name|fr_offset
+argument_list|,
+literal|1
+argument_list|,
+name|BFD_RELOC_8_PCREL
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 comment|/* This changes the byte-displacement jump 0x7N 	     to the (d)word-displacement jump 0x0f,0x8N.  */
 name|opcode
 index|[
@@ -20640,8 +20623,6 @@ literal|1
 operator|+
 name|size
 expr_stmt|;
-name|fixP
-operator|=
 name|fix_new
 argument_list|(
 name|fragP
@@ -20664,12 +20645,6 @@ literal|1
 argument_list|,
 name|reloc_type
 argument_list|)
-expr_stmt|;
-name|fixP
-operator|->
-name|fx_pcrel_adjust
-operator|=
-name|size
 expr_stmt|;
 break|break;
 default|default:
@@ -20695,8 +20670,6 @@ operator|-
 name|old_fr_fix
 return|;
 block|}
-name|relax_guess
-label|:
 comment|/* Guess size depending on current relax state.  Initially the relax      state will correspond to a short jump and we return 1, because      the variable part of the frag (the branch offset) is one byte      long.  However, we can relax a section more than once and in that      case we must either set fr_subtype back to the unrelaxed state,      or return the value for the appropriate branch.  */
 return|return
 name|md_relax_table
@@ -21774,6 +21747,13 @@ operator|->
 name|fx_no_overflow
 operator|=
 literal|1
+expr_stmt|;
+comment|/* Remember value for tc_gen_reloc.  */
+name|fixP
+operator|->
+name|fx_addnumber
+operator|=
+name|value
 expr_stmt|;
 name|value
 operator|=
@@ -23811,6 +23791,13 @@ block|}
 comment|/* Use the rela in 64bit mode.  */
 else|else
 block|{
+if|if
+condition|(
+operator|!
+name|fixp
+operator|->
+name|fx_pcrel
+condition|)
 name|rel
 operator|->
 name|addend
@@ -23819,20 +23806,60 @@ name|fixp
 operator|->
 name|fx_offset
 expr_stmt|;
-if|if
+else|else
+switch|switch
 condition|(
-name|fixp
-operator|->
-name|fx_pcrel
+name|code
 condition|)
+block|{
+case|case
+name|BFD_RELOC_X86_64_PLT32
+case|:
+case|case
+name|BFD_RELOC_X86_64_GOT32
+case|:
+case|case
+name|BFD_RELOC_X86_64_GOTPCREL
+case|:
 name|rel
 operator|->
 name|addend
-operator|-=
+operator|=
 name|fixp
 operator|->
-name|fx_pcrel_adjust
+name|fx_offset
+operator|-
+name|fixp
+operator|->
+name|fx_size
 expr_stmt|;
+break|break;
+default|default:
+name|rel
+operator|->
+name|addend
+operator|=
+operator|(
+name|section
+operator|->
+name|vma
+operator|-
+name|fixp
+operator|->
+name|fx_size
+operator|+
+name|fixp
+operator|->
+name|fx_addnumber
+operator|+
+name|md_pcrel_from
+argument_list|(
+name|fixp
+argument_list|)
+operator|)
+expr_stmt|;
+break|break;
+block|}
 block|}
 name|rel
 operator|->
