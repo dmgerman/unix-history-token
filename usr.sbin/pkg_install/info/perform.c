@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.7 1994/10/04 16:07:46 jkh Exp $"
+literal|"$Id: perform.c,v 1.8 1994/10/14 05:55:57 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -362,8 +362,9 @@ return|return
 literal|1
 return|;
 block|}
-name|home
-operator|=
+operator|(
+name|void
+operator|)
 name|make_playpen
 argument_list|(
 name|PlayPen
