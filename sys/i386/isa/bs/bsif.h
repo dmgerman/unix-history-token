@@ -305,6 +305,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/pmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/clock.h>
 end_include
 
@@ -329,13 +335,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
+file|<machine/dvcfg.h>
 end_include
 
 begin_include
@@ -525,19 +525,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/bs/ccbque.h>
+file|<i386/isa/ccbque.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/bs/dvcfg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/bs/scsi_dvcfg.h>
+file|<i386/isa/scsi_dvcfg.h>
 end_include
 
 begin_include
