@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)files.c	4.12 (Berkeley) 86/01/09"
+literal|"@(#)files.c	4.13 (Berkeley) 86/07/24"
 decl_stmt|;
 end_decl_stmt
 
@@ -2319,17 +2319,9 @@ name|objhead
 operator|.
 name|a_data
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|vax
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|pdp11
 name|skip
 operator|+=
 name|objhead
