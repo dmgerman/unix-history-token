@@ -78,12 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_param.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/pmap.h>
 end_include
 
@@ -366,8 +360,7 @@ name|kva
 decl_stmt|;
 name|int
 name|error
-decl_stmt|;
-name|int
+decl_stmt|,
 name|writing
 decl_stmt|;
 name|GIANT_REQUIRED
@@ -834,16 +827,36 @@ name|uap
 parameter_list|)
 block|{
 name|struct
+name|iovec
+name|iov
+decl_stmt|;
+name|struct
+name|uio
+name|uio
+decl_stmt|;
+comment|/* 	 * XXX this obfuscation is to reduce stack usage, but the register 	 * structs may be too large to put on the stack anyway. 	 */
+union|union
+block|{
+name|struct
+name|dbreg
+name|dbreg
+decl_stmt|;
+name|struct
+name|fpreg
+name|fpreg
+decl_stmt|;
+name|struct
+name|reg
+name|reg
+decl_stmt|;
+block|}
+name|r
+union|;
+name|struct
 name|proc
 modifier|*
 name|curp
-init|=
-name|td
-operator|->
-name|td_proc
-decl_stmt|;
-name|struct
-name|proc
+decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
@@ -852,39 +865,21 @@ name|thread
 modifier|*
 name|td2
 decl_stmt|;
-name|struct
-name|iovec
-name|iov
-decl_stmt|;
-name|struct
-name|uio
-name|uio
-decl_stmt|;
-union|union
-block|{
-name|struct
-name|reg
-name|reg
-decl_stmt|;
-name|struct
-name|dbreg
-name|dbreg
-decl_stmt|;
-name|struct
-name|fpreg
-name|fpreg
-decl_stmt|;
-block|}
-name|r
-union|;
 name|int
 name|error
-init|=
-literal|0
-decl_stmt|;
-name|int
+decl_stmt|,
 name|write
 decl_stmt|;
+name|curp
+operator|=
+name|td
+operator|->
+name|td_proc
+expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 name|write
 operator|=
 literal|0
@@ -979,7 +974,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * Don't debug system processes! 	 */
+comment|/* 	 * System processes can't be debugged. 	 */
 if|if
 condition|(
 operator|(
@@ -1411,17 +1406,15 @@ case|:
 case|case
 name|PT_DETACH
 case|:
+comment|/* XXX uap->data is used even in the PT_STEP case. */
 if|if
 condition|(
-operator|(
 name|uap
 operator|->
 name|req
 operator|!=
 name|PT_STEP
-operator|)
 operator|&&
-operator|(
 operator|(
 name|unsigned
 operator|)
@@ -1430,7 +1423,6 @@ operator|->
 name|data
 operator|>=
 name|NSIG
-operator|)
 condition|)
 return|return
 operator|(
@@ -1814,7 +1806,7 @@ name|uio_segflg
 operator|=
 name|UIO_SYSSPACE
 expr_stmt|;
-comment|/* ie: the uap */
+comment|/* i.e.: the uap */
 name|uio
 operator|.
 name|uio_rw
@@ -2309,7 +2301,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * stopevent()  * Stop a process because of a debugging event;  * stay stopped until p->p_step is cleared  * (cleared by PIOCCONT in procfs).  *  * Must be called with the proc struct mutex held.  */
+comment|/*  * Stop a process because of a debugging event;  * stay stopped until p->p_step is cleared  * (cleared by PIOCCONT in procfs).  */
 end_comment
 
 begin_function
