@@ -4,7 +4,7 @@ comment|/* crypto/des/enc_read.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1997 Eric Young (eay@mincom.oz.au)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@mincom.oz.au).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@mincom.oz.au).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@mincom.oz.au)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@mincom.oz.au)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  *   * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -47,10 +47,6 @@ begin_comment
 comment|/* This has some uglies in it but it works - even over sockets. */
 end_comment
 
-begin_comment
-comment|/*extern int errno;*/
-end_comment
-
 begin_decl_stmt
 name|int
 name|des_rw_mode
@@ -59,44 +55,31 @@ name|DES_PCBC_MODE
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_comment
+comment|/*  * WARNINGS:  *  *  -  The data format used by des_enc_write() and des_enc_read()  *     has a cryptographic weakness: When asked to write more  *     than MAXWRITE bytes, des_enc_write will split the data  *     into several chunks that are all encrypted  *     using the same IV.  So don't use these functions unless you  *     are sure you know what you do (in which case you might  *     not want to use them anyway).  *  *  -  This code cannot handle non-blocking sockets.  *  *  -  This function uses an internal state and thus cannot be  *     used on multiple files.  */
+end_comment
+
+begin_function
 name|int
 name|des_enc_read
 parameter_list|(
-name|fd
-parameter_list|,
-name|buf
-parameter_list|,
-name|len
-parameter_list|,
-name|sched
-parameter_list|,
-name|iv
-parameter_list|)
 name|int
 name|fd
-decl_stmt|;
-name|char
+parameter_list|,
+name|void
 modifier|*
 name|buf
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|,
 name|des_key_schedule
 name|sched
-decl_stmt|;
-function_decl|des_cblock
-parameter_list|(
-function_decl|*iv
-end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_block
+parameter_list|,
+name|des_cblock
+modifier|*
+name|iv
+parameter_list|)
 block|{
 comment|/* data to be unencrypted */
 name|int
@@ -114,6 +97,7 @@ name|NULL
 decl_stmt|;
 comment|/* extra unencrypted data  	 * for when a block of 100 comes in but is des_read one byte at 	 * a time. */
 specifier|static
+name|unsigned
 name|char
 modifier|*
 name|unnet
@@ -133,6 +117,7 @@ init|=
 literal|0
 decl_stmt|;
 specifier|static
+name|unsigned
 name|char
 modifier|*
 name|tmpbuf
@@ -163,10 +148,6 @@ condition|)
 block|{
 name|tmpbuf
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|BSIZE
@@ -194,11 +175,6 @@ condition|)
 block|{
 name|net
 operator|=
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|BSIZE
@@ -226,10 +202,6 @@ condition|)
 block|{
 name|unnet
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|BSIZE
@@ -276,10 +248,6 @@ name|unnet_start
 index|]
 operator|)
 argument_list|,
-operator|(
-name|unsigned
-name|int
-operator|)
 name|unnet_left
 argument_list|)
 expr_stmt|;
@@ -309,10 +277,6 @@ name|unnet_start
 index|]
 operator|)
 argument_list|,
-operator|(
-name|unsigned
-name|int
-operator|)
 name|len
 argument_list|)
 expr_stmt|;
@@ -368,15 +332,14 @@ name|net_num
 index|]
 operator|)
 argument_list|,
-operator|(
-name|unsigned
-name|int
-operator|)
 name|HDRSIZE
 operator|-
 name|net_num
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|EINTR
 if|if
 condition|(
 operator|(
@@ -393,6 +356,8 @@ name|EINTR
 operator|)
 condition|)
 continue|continue;
+endif|#
+directive|endif
 if|if
 condition|(
 name|i
@@ -491,15 +456,14 @@ name|net_num
 index|]
 operator|)
 argument_list|,
-operator|(
-name|unsigned
-name|int
-operator|)
 name|rnum
 operator|-
 name|net_num
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|EINTR
 if|if
 condition|(
 operator|(
@@ -516,6 +480,8 @@ name|EINTR
 operator|)
 condition|)
 continue|continue;
+endif|#
+directive|endif
 if|if
 condition|(
 name|i
@@ -548,16 +514,8 @@ name|DES_PCBC_MODE
 condition|)
 name|des_pcbc_encrypt
 argument_list|(
-operator|(
-name|des_cblock
-operator|*
-operator|)
 name|net
 argument_list|,
-operator|(
-name|des_cblock
-operator|*
-operator|)
 name|unnet
 argument_list|,
 name|num
@@ -572,16 +530,8 @@ expr_stmt|;
 else|else
 name|des_cbc_encrypt
 argument_list|(
-operator|(
-name|des_cblock
-operator|*
-operator|)
 name|net
 argument_list|,
-operator|(
-name|des_cblock
-operator|*
-operator|)
 name|unnet
 argument_list|,
 name|num
@@ -599,10 +549,6 @@ name|buf
 argument_list|,
 name|unnet
 argument_list|,
-operator|(
-name|unsigned
-name|int
-operator|)
 name|len
 argument_list|)
 expr_stmt|;
@@ -612,9 +558,6 @@ name|len
 expr_stmt|;
 name|unnet_left
 operator|=
-operator|(
-name|int
-operator|)
 name|num
 operator|-
 name|len
@@ -643,16 +586,8 @@ name|DES_PCBC_MODE
 condition|)
 name|des_pcbc_encrypt
 argument_list|(
-operator|(
-name|des_cblock
-operator|*
-operator|)
 name|net
 argument_list|,
-operator|(
-name|des_cblock
-operator|*
-operator|)
 name|tmpbuf
 argument_list|,
 name|num
@@ -667,16 +602,8 @@ expr_stmt|;
 else|else
 name|des_cbc_encrypt
 argument_list|(
-operator|(
-name|des_cblock
-operator|*
-operator|)
 name|net
 argument_list|,
-operator|(
-name|des_cblock
-operator|*
-operator|)
 name|tmpbuf
 argument_list|,
 name|num
@@ -695,10 +622,6 @@ name|buf
 argument_list|,
 name|tmpbuf
 argument_list|,
-operator|(
-name|unsigned
-name|int
-operator|)
 name|num
 argument_list|)
 expr_stmt|;
@@ -713,16 +636,8 @@ name|DES_PCBC_MODE
 condition|)
 name|des_pcbc_encrypt
 argument_list|(
-operator|(
-name|des_cblock
-operator|*
-operator|)
 name|net
 argument_list|,
-operator|(
-name|des_cblock
-operator|*
-operator|)
 name|buf
 argument_list|,
 name|num
@@ -737,16 +652,8 @@ expr_stmt|;
 else|else
 name|des_cbc_encrypt
 argument_list|(
-operator|(
-name|des_cblock
-operator|*
-operator|)
 name|net
 argument_list|,
-operator|(
-name|des_cblock
-operator|*
-operator|)
 name|buf
 argument_list|,
 name|num
@@ -761,15 +668,10 @@ expr_stmt|;
 block|}
 block|}
 return|return
-operator|(
-operator|(
-name|int
-operator|)
 name|num
-operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

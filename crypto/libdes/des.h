@@ -4,7 +4,7 @@ comment|/* crypto/des/des.h */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1997 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1997 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  *   * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -39,26 +39,39 @@ directive|error
 error|DES is disabled.
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|_KERBEROS_DES_H
-error|#
-directive|error
-literal|<openssl/des.h>
-error|replaces<kerberos/des.h>.
+comment|/* If this is set to 'unsigned int' on a DEC Alpha, this gives about a  * %20 speed up (longs are 8 bytes, int's are 4). */
+ifndef|#
+directive|ifndef
+name|DES_LONG
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__alpha
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sparcv9
+argument_list|)
+define|#
+directive|define
+name|DES_LONG
+value|unsigned int
+else|#
+directive|else
+comment|/* Not a 64 bit machine */
+define|#
+directive|define
+name|DES_LONG
+value|unsigned long
+endif|#
+directive|endif
 endif|#
 directive|endif
 include|#
 directive|include
 file|<stdio.h>
-include|#
-directive|include
-file|<openssl/opensslconf.h>
-comment|/* DES_LONG */
-include|#
-directive|include
-file|<openssl/e_os2.h>
-comment|/* OPENSSL_EXTERN */
 typedef|typedef
 name|unsigned
 name|char
@@ -207,21 +220,42 @@ name|n
 parameter_list|)
 define|\
 value|des_ede3_ofb64_encrypt((i),(o),(l),(k1),(k2),(k1),(iv),(n))
-name|OPENSSL_EXTERN
+specifier|extern
 name|int
 name|des_check_key
 decl_stmt|;
 comment|/* defaults to false */
-name|OPENSSL_EXTERN
+specifier|extern
 name|int
 name|des_rw_mode
 decl_stmt|;
 comment|/* defaults to DES_PCBC_MODE */
-name|OPENSSL_EXTERN
+specifier|extern
 name|int
 name|des_set_weak_key_flag
 decl_stmt|;
 comment|/* set the weak key flag */
+define|#
+directive|define
+name|C_Block
+value|des_cblock
+define|#
+directive|define
+name|Key_schedule
+value|des_key_schedule
+ifdef|#
+directive|ifdef
+name|KERBEROS
+define|#
+directive|define
+name|ENCRYPT
+value|DES_ENCRYPT
+define|#
+directive|define
+name|DECRYPT
+value|DES_DECRYPT
+endif|#
+directive|endif
 specifier|const
 name|char
 modifier|*
@@ -852,6 +886,26 @@ modifier|*
 name|ret
 parameter_list|)
 function_decl|;
+name|void
+name|des_init_random_number_generator
+parameter_list|(
+name|des_cblock
+modifier|*
+name|seed
+parameter_list|)
+function_decl|;
+name|void
+name|des_rand_data
+parameter_list|(
+name|unsigned
+name|char
+modifier|*
+name|data
+parameter_list|,
+name|int
+name|size
+parameter_list|)
+function_decl|;
 name|int
 name|des_read_password
 parameter_list|(
@@ -1060,6 +1114,14 @@ name|verify
 parameter_list|)
 function_decl|;
 comment|/* Extra functions from Mark Murray<mark@grondar.za> */
+name|int
+name|des_new_random_key
+parameter_list|(
+name|des_cblock
+modifier|*
+name|key
+parameter_list|)
+function_decl|;
 name|void
 name|des_cblock_print_file
 parameter_list|(
