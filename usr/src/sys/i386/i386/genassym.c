@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)genassym.c	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)genassym.c	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -420,6 +420,13 @@ argument_list|(
 literal|"#define\tUSRPTSIZE %d\n"
 argument_list|,
 name|USRPTSIZE
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tUSRIOSIZE %d\n"
+argument_list|,
+name|USRIOSIZE
 argument_list|)
 expr_stmt|;
 name|printf
@@ -859,6 +866,16 @@ argument_list|,
 name|pcb
 operator|->
 name|pcb_sigc
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tPCB_IML %d\n"
+argument_list|,
+operator|&
+name|pcb
+operator|->
+name|pcb_iml
 argument_list|)
 expr_stmt|;
 name|printf
