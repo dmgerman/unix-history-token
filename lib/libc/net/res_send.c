@@ -34,7 +34,7 @@ name|char
 name|orig_rcsid
 index|[]
 init|=
-literal|"From: Id: res_send.c,v 8.13 1997/06/01 20:34:37 vixie Exp"
+literal|"From: Id: res_send.c,v 8.14 1998/04/07 04:59:46 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_send.c,v 1.18 1997/06/28 04:19:52 peter Exp $"
+literal|"$Id: res_send.c,v 1.10.2.3 1997/06/28 07:47:05 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -631,7 +631,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* int  * res_nameinquery(name, type, class, buf, eom)  *	look for (name,type,class) in the query section of packet (buf,eom)  * returns:  *	-1 : format error  *	0  : not found  *>0 : found  * author:  *	paul vixie, 29may94  */
+comment|/* int  * res_nameinquery(name, type, class, buf, eom)  *	look for (name,type,class) in the query section of packet (buf,eom)  * requires:  *	buf + HFIXESDZ<= eom  * returns:  *	-1 : format error  *	0  : not found  *>0 : found  * author:  *	paul vixie, 29may94  */
 end_comment
 
 begin_function
@@ -753,6 +753,22 @@ name|cp
 operator|+=
 name|n
 expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|+
+literal|2
+operator|*
+name|INT16SZ
+operator|>
+name|eom
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 name|ttype
 operator|=
 name|_getshort
@@ -875,6 +891,26 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
+name|buf1
+operator|+
+name|HFIXEDSZ
+operator|>
+name|eom1
+operator|||
+name|buf2
+operator|+
+name|HFIXEDSZ
+operator|>
+name|eom2
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+if|if
+condition|(
 name|qdcount
 operator|!=
 name|ntohs
@@ -951,6 +987,22 @@ name|cp
 operator|+=
 name|n
 expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|+
+literal|2
+operator|*
+name|INT16SZ
+operator|>
+name|eom1
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 name|ttype
 operator|=
 name|_getshort
@@ -1094,6 +1146,24 @@ literal|1
 condition|)
 block|{
 comment|/* errno should have been set by res_init() in this case. */
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|anssiz
+operator|<
+name|HFIXEDSZ
+condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -1768,6 +1838,50 @@ name|len
 operator|=
 name|resplen
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|<
+name|HFIXEDSZ
+condition|)
+block|{
+comment|/* 				 * Undersized message. 				 */
+name|Dprint
+argument_list|(
+name|_res
+operator|.
+name|options
+operator|&
+name|RES_DEBUG
+argument_list|,
+operator|(
+name|stdout
+operator|,
+literal|";; undersized: %d\n"
+operator|,
+name|len
+operator|)
+argument_list|)
+expr_stmt|;
+name|terrno
+operator|=
+name|EMSGSIZE
+expr_stmt|;
+name|badns
+operator||=
+operator|(
+literal|1
+operator|<<
+name|ns
+operator|)
+expr_stmt|;
+name|res_close
+argument_list|()
+expr_stmt|;
+goto|goto
+name|next_ns
+goto|;
+block|}
 name|cp
 operator|=
 name|ans
@@ -2413,6 +2527,29 @@ literal|0
 expr_stmt|;
 name|wait
 label|:
+if|if
+condition|(
+name|s
+operator|<
+literal|0
+condition|)
+block|{
+name|Perror
+argument_list|(
+name|stderr
+argument_list|,
+literal|"s out-of-bounds"
+argument_list|,
+name|EMFILE
+argument_list|)
+expr_stmt|;
+name|res_close
+argument_list|()
+expr_stmt|;
+goto|goto
+name|next_ns
+goto|;
+block|}
 name|dsmasklen
 operator|=
 name|howmany
@@ -2661,6 +2798,50 @@ name|gotsomewhere
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|resplen
+operator|<
+name|HFIXEDSZ
+condition|)
+block|{
+comment|/* 				 * Undersized message. 				 */
+name|Dprint
+argument_list|(
+name|_res
+operator|.
+name|options
+operator|&
+name|RES_DEBUG
+argument_list|,
+operator|(
+name|stdout
+operator|,
+literal|";; undersized: %d\n"
+operator|,
+name|resplen
+operator|)
+argument_list|)
+expr_stmt|;
+name|terrno
+operator|=
+name|EMSGSIZE
+expr_stmt|;
+name|badns
+operator||=
+operator|(
+literal|1
+operator|<<
+name|ns
+operator|)
+expr_stmt|;
+name|res_close
+argument_list|()
+expr_stmt|;
+goto|goto
+name|next_ns
+goto|;
+block|}
 if|if
 condition|(
 name|hp
