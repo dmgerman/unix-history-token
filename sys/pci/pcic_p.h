@@ -52,6 +52,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCI_DEVICE_ID_PCIC_TI1211
+value|0xac1e104cul
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCI_DEVICE_ID_PCIC_TI1220
 value|0xac17104cul
 end_define
@@ -61,6 +68,13 @@ define|#
 directive|define
 name|PCI_DEVICE_ID_PCIC_TI1221
 value|0xac19104cul
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_DEVICE_ID_PCIC_TI1225
+value|0xac1c104cul
 end_define
 
 begin_define
@@ -82,13 +96,6 @@ define|#
 directive|define
 name|PCI_DEVICE_ID_PCIC_TI1251B
 value|0xac1f104cul
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCI_DEVICE_ID_PCIC_TI1225
-value|0xac1c104cul
 end_define
 
 begin_define
@@ -205,6 +212,13 @@ define|#
 directive|define
 name|CLPD6832_LEGACY_16BIT_IOADDR
 value|0x0044
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLPD6832_LEGACY_16BIT_IOENABLE
+value|0x0001
 end_define
 
 begin_define
@@ -896,6 +910,17 @@ end_define
 
 begin_comment
 comment|/* Legacy 16bit I/O address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CB_PCI_LEGACY16_IOENABLE
+value|0x01
+end_define
+
+begin_comment
+comment|/* Enable Legacy 16bit I/O address */
 end_comment
 
 end_unit

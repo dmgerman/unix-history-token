@@ -143,7 +143,7 @@ argument_list|,
 name|io_port
 operator|&
 operator|~
-name|PCI_MAP_IO
+name|CLPD6832_LEGACY_16BIT_IOENABLE
 argument_list|,
 literal|4
 argument_list|)
@@ -161,7 +161,7 @@ literal|4
 argument_list|)
 operator|&
 operator|~
-name|PCI_MAP_IO
+name|CLPD6832_LEGACY_16BIT_IOENABLE
 expr_stmt|;
 comment|/* 	 * Configure the first I/O window to contain CLPD6832_NUM_REGS 	 * words and deactivate the second by setting the limit lower 	 * than the base. 	 */
 name|pci_write_config
@@ -229,7 +229,7 @@ name|pci_write_config
 argument_list|(
 name|dev
 argument_list|,
-name|PCI_COMMAND_STATUS_REG
+name|PCIR_COMMAND
 argument_list|,
 name|CLPD6832_COMMAND_DEFAULTS
 argument_list|,
@@ -651,7 +651,7 @@ literal|2
 argument_list|)
 operator|&
 operator|~
-name|PCI_MAP_IO
+name|CB_PCI_LEGACY16_IOENABLE
 expr_stmt|;
 if|if
 condition|(
@@ -663,7 +663,7 @@ name|iobase
 operator|=
 literal|0x3e0
 operator||
-name|PCI_MAP_IO
+name|CB_PCI_LEGACY16_IOENABLE
 expr_stmt|;
 name|pci_write_config
 argument_list|(
@@ -688,7 +688,7 @@ literal|2
 argument_list|)
 operator|&
 operator|~
-name|PCI_MAP_IO
+name|CB_PCI_LEGACY16_IOENABLE
 expr_stmt|;
 block|}
 name|PRVERB
@@ -747,7 +747,7 @@ name|PCI_DEVICE_ID_PCIC_CLPD6832
 case|:
 name|desc
 operator|=
-literal|"Cirrus Logic PD6832 PCI/CardBus Bridge"
+literal|"Cirrus Logic PD6832 PCI-CardBus Bridge"
 expr_stmt|;
 break|break;
 case|case
@@ -764,6 +764,14 @@ case|:
 name|desc
 operator|=
 literal|"TI PCI-1131 PCI-CardBus Bridge"
+expr_stmt|;
+break|break;
+case|case
+name|PCI_DEVICE_ID_PCIC_TI1211
+case|:
+name|desc
+operator|=
+literal|"TI PCI-1211 PCI-CardBus Bridge"
 expr_stmt|;
 break|break;
 case|case
@@ -973,29 +981,29 @@ name|command
 decl_stmt|;
 comment|/* Init. CardBus/PC-card controllers as 16-bit PC-card controllers */
 comment|/* Place any per "slot" initialization here */
-comment|/* 	 * In sys/pci/pcireg.h, PCI_COMMAND_STATUS_REG must be separated 	 * PCI_COMMAND_REG(0x04) and PCI_STATUS_REG(0x06). 	 * Takeshi Shibagaki(shiba@jp.freebsd.org). 	 */
+comment|/* 	 * In sys/pci/pcireg.h, PCIR_COMMAND must be separated 	 * PCI_COMMAND_REG(0x04) and PCI_STATUS_REG(0x06). 	 * Takeshi Shibagaki(shiba@jp.freebsd.org). 	 */
 name|command
 operator|=
 name|pci_read_config
 argument_list|(
 name|dev
 argument_list|,
-name|PCI_COMMAND_STATUS_REG
+name|PCIR_COMMAND
 argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
 name|command
 operator||=
-name|PCI_COMMAND_IO_ENABLE
+name|PCIM_CMD_PORTEN
 operator||
-name|PCI_COMMAND_MEM_ENABLE
+name|PCIM_CMD_MEMEN
 expr_stmt|;
 name|pci_write_config
 argument_list|(
 name|dev
 argument_list|,
-name|PCI_COMMAND_STATUS_REG
+name|PCIR_COMMAND
 argument_list|,
 name|command
 argument_list|,
@@ -1014,10 +1022,16 @@ case|case
 name|PCI_DEVICE_ID_PCIC_TI1131
 case|:
 case|case
+name|PCI_DEVICE_ID_PCIC_TI1211
+case|:
+case|case
 name|PCI_DEVICE_ID_PCIC_TI1220
 case|:
 case|case
 name|PCI_DEVICE_ID_PCIC_TI1221
+case|:
+case|case
+name|PCI_DEVICE_ID_PCIC_TI1225
 case|:
 case|case
 name|PCI_DEVICE_ID_PCIC_TI1250
@@ -1027,9 +1041,6 @@ name|PCI_DEVICE_ID_PCIC_TI1251
 case|:
 case|case
 name|PCI_DEVICE_ID_PCIC_TI1251B
-case|:
-case|case
-name|PCI_DEVICE_ID_PCIC_TI1225
 case|:
 case|case
 name|PCI_DEVICE_ID_PCIC_TI1410
