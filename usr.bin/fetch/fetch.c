@@ -2506,14 +2506,13 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* XXX badly out of synch */
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: fetch [-1AFHMPRabdlmnpqrstv] [-o outputfile] [-S bytes]\n"
+literal|"Usage: fetch [-146AFMPRUadlmnpqrsv] [-o outputfile] [-S bytes]\n"
 literal|"             [-B bytes] [-T seconds] [-w seconds]\n"
-literal|"             [-f file -h host [-c dir] | URL ...]\n"
+literal|"             [-h host -f file [-c dir] | URL ...]\n"
 argument_list|)
 expr_stmt|;
 block|}
