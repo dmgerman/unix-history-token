@@ -952,8 +952,13 @@ value|1
 comment|/* to be used for quirks */
 define|#
 directive|define
-name|SHUTTLE_EUSB
+name|ZIP_250
 value|2
+comment|/* to be used for quirks */
+define|#
+directive|define
+name|SHUTTLE_EUSB
+value|3
 name|unsigned
 name|char
 name|quirks
@@ -2331,6 +2336,49 @@ operator|->
 name|idVendor
 argument_list|)
 operator|==
+name|USB_VENDOR_INSYSTEM
+operator|&&
+name|UGETW
+argument_list|(
+name|dd
+operator|->
+name|idProduct
+argument_list|)
+operator|==
+name|USB_PRODUCT_INSYSTEM_USBCABLE
+condition|)
+block|{
+name|sc
+operator|->
+name|proto
+operator|=
+name|PROTO_ATAPI
+operator||
+name|PROTO_CBI
+expr_stmt|;
+name|sc
+operator|->
+name|quirks
+operator||=
+name|NO_TEST_UNIT_READY
+operator||
+name|NO_START_STOP
+expr_stmt|;
+return|return
+operator|(
+name|UMATCH_VENDOR_PRODUCT
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|UGETW
+argument_list|(
+name|dd
+operator|->
+name|idVendor
+argument_list|)
+operator|==
 name|USB_VENDOR_YEDATA
 operator|&&
 name|UGETW
@@ -2355,6 +2403,7 @@ argument_list|)
 operator|<
 literal|0x128
 condition|)
+block|{
 name|sc
 operator|->
 name|proto
@@ -2363,7 +2412,9 @@ name|PROTO_UFI
 operator||
 name|PROTO_CBI
 expr_stmt|;
+block|}
 else|else
+block|{
 if|#
 directive|if
 name|CBI_I
@@ -2387,6 +2438,7 @@ name|PROTO_CBI
 expr_stmt|;
 endif|#
 directive|endif
+block|}
 comment|/* 		 * Revisions< 1.28 do not have the TEST UNIT READY command 		 * Revisions == 1.28 have a broken TEST UNIT READY 		 */
 if|if
 condition|(
@@ -2419,7 +2471,7 @@ name|UMASS_FLOPPY_TRANSFER_SPEED
 expr_stmt|;
 return|return
 operator|(
-name|UMATCH_VENDOR_PRODUCT_REV
+name|UMATCH_VENDOR_PRODUCT
 operator|)
 return|;
 block|}
@@ -8758,7 +8810,7 @@ block|{
 name|printf
 argument_list|(
 literal|"%s:%d:%d:%d:func_code 0x%04x: "
-literal|"Invalid target\n"
+literal|"Invalid target (target needed)\n"
 argument_list|,
 name|DEVNAME_SIM
 argument_list|,
@@ -8830,7 +8882,7 @@ name|UDMASS_SCSI
 argument_list|,
 operator|(
 literal|"%s:%d:%d:%d:func_code 0x%04x: "
-literal|"Invalid target\n"
+literal|"Invalid target (no wildcard)\n"
 operator|,
 name|DEVNAME_SIM
 operator|,
