@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 89 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 92 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1380,13 +1380,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsConvertHandleToEntry  *  * PARAMETERS:  Handle          - Handle to be converted to an Node  *  * RETURN:      A Name table entry pointer  *  * DESCRIPTION: Convert a namespace handle to a real Node  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsMapHandleToNode  *  * PARAMETERS:  Handle          - Handle to be converted to an Node  *  * RETURN:      A Name table entry pointer  *  * DESCRIPTION: Convert a namespace handle to a real Node  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_NAMESPACE_NODE
 modifier|*
-name|AcpiNsConvertHandleToEntry
+name|AcpiNsMapHandleToNode
 parameter_list|(
 name|ACPI_HANDLE
 name|Handle
@@ -1848,6 +1848,10 @@ literal|"Parent of %p [%4.4s] is %p [%4.4s]\n"
 operator|,
 name|ChildNode
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|ChildNode
 operator|->
@@ -1855,6 +1859,10 @@ name|Name
 operator|,
 name|ParentNode
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|ParentNode
 operator|->
@@ -1887,6 +1895,10 @@ literal|"unable to find parent of %p (%4.4s)\n"
 operator|,
 name|ChildNode
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|ChildNode
 operator|->
@@ -2032,13 +2044,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetNextValidObject  *  * PARAMETERS:  Node       - Current table entry  *  * RETURN:      Next valid object in the table.  NULL if no more valid  *              objects  *  * DESCRIPTION: Find the next valid object within a name table.  *              Useful for implementing NULL-end-of-list loops.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetNextValidNode  *  * PARAMETERS:  Node       - Current table entry  *  * RETURN:      Next valid Node in the linked node list.  NULL if no more valid  *              nodess  *  * DESCRIPTION: Find the next valid node within a name table.  *              Useful for implementing NULL-end-of-list loops.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_NAMESPACE_NODE
 modifier|*
-name|AcpiNsGetNextValidObject
+name|AcpiNsGetNextValidNode
 parameter_list|(
 name|ACPI_NAMESPACE_NODE
 modifier|*

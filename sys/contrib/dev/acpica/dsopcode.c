@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsopcode - Dispatcher Op Region support and handling of  *                         "control" opcodes  *              $Revision: 55 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsopcode - Dispatcher Op Region support and handling of  *                         "control" opcodes  *              $Revision: 56 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -173,6 +173,10 @@ name|ACPI_DB_EXEC
 operator|,
 literal|"[%4.4s] BufferField JIT Init\n"
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|Node
 operator|->
@@ -610,24 +614,17 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"[%4.4s] OpRegion Init at AML %p[%x]\n"
+literal|"[%4.4s] OpRegion Init at AML %p\n"
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|Node
 operator|->
 name|Name
 operator|,
-name|ExtraDesc
-operator|->
-name|Extra
-operator|.
-name|AmlStart
-operator|,
-operator|*
-operator|(
-name|UINT32
-operator|*
-operator|)
 name|ExtraDesc
 operator|->
 name|Extra
@@ -1966,7 +1963,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"RgnObj %p Addr %8.8lX%8.8lX Len %X\n"
+literal|"RgnObj %p Addr %8.8X%8.8X Len %X\n"
 operator|,
 name|ObjDesc
 operator|,

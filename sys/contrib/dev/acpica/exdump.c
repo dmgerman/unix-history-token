@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exdump - Interpreter debug output routines  *              $Revision: 124 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exdump - Interpreter debug output routines  *              $Revision: 126 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -225,15 +225,6 @@ literal|10
 argument_list|)
 expr_stmt|;
 block|}
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_LOAD
-operator|,
-literal|""
-operator|)
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|Length
@@ -301,7 +292,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_LOAD
 operator|,
-literal|" [%ld]"
+literal|" [%d]"
 operator|,
 name|Value
 operator|)
@@ -416,31 +407,6 @@ argument_list|(
 name|EntryDesc
 argument_list|,
 name|ACPI_LV_INFO
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|AE_OK
-operator|)
-return|;
-block|}
-if|if
-condition|(
-name|AcpiTbSystemTablePointer
-argument_list|(
-name|EntryDesc
-argument_list|)
-condition|)
-block|{
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
-literal|"%p is an AML pointer\n"
-operator|,
-name|EntryDesc
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -669,13 +635,25 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|" value is [%ld]"
+literal|" value is [%8.8X%8.8x]"
 operator|,
+name|HIDWORD
+argument_list|(
 name|EntryDesc
 operator|->
 name|Integer
 operator|.
 name|Value
+argument_list|)
+operator|,
+name|LODWORD
+argument_list|(
+name|EntryDesc
+operator|->
+name|Integer
+operator|.
+name|Value
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -725,13 +703,25 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|" value is [%ld]"
+literal|" value is [%8.8X%8.8x]"
 operator|,
+name|HIDWORD
+argument_list|(
 name|EntryDesc
 operator|->
 name|Integer
 operator|.
 name|Value
+argument_list|)
+operator|,
+name|LODWORD
+argument_list|(
+name|EntryDesc
+operator|->
+name|Integer
+operator|.
+name|Value
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -754,7 +744,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"Reference.Node->Name %x\n"
+literal|"Reference.Node->Name %X\n"
 operator|,
 name|EntryDesc
 operator|->
@@ -872,10 +862,6 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-name|Length
-condition|?
-literal|" %02x"
-else|:
 literal|" %02x"
 operator|,
 operator|*
@@ -1146,13 +1132,25 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|" base %p Length %X\n"
+literal|" base %8.8X%8.8X Length %X\n"
 operator|,
+name|HIDWORD
+argument_list|(
 name|EntryDesc
 operator|->
 name|Region
 operator|.
 name|Address
+argument_list|)
+operator|,
+name|LODWORD
+argument_list|(
+name|EntryDesc
+operator|->
+name|Region
+operator|.
+name|Address
+argument_list|)
 operator|,
 name|EntryDesc
 operator|->
@@ -1256,7 +1254,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"RegionField: bits=%X  bitaccwidth=%X lock=%X update=%X at byte=%lX bit=%X of below:\n"
+literal|"RegionField: bits=%X  bitaccwidth=%X lock=%X update=%X at byte=%X bit=%X of below:\n"
 operator|,
 name|EntryDesc
 operator|->
@@ -1327,7 +1325,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"BufferField: %X bits at byte %lX bit %X of \n"
+literal|"BufferField: %X bits at byte %X bit %X of \n"
 operator|,
 name|EntryDesc
 operator|->
@@ -1429,7 +1427,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"Method(%X) @ %p:%lX\n"
+literal|"Method(%X) @ %p:%X\n"
 operator|,
 name|EntryDesc
 operator|->
@@ -1789,6 +1787,10 @@ literal|"%20s : %4.4s\n"
 argument_list|,
 literal|"Name"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|Node
 operator|->

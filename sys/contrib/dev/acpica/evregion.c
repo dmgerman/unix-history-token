@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evregion - ACPI AddressSpace (OpRegion) handler dispatch  *              $Revision: 110 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evregion - ACPI AddressSpace (OpRegion) handler dispatch  *              $Revision: 113 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -298,27 +298,14 @@ literal|1
 index|]
 condition|)
 block|{
-name|AcpiUtRemoveReference
-argument_list|(
-name|Params
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_NO_MEMORY
-argument_list|)
-expr_stmt|;
-block|}
-name|Params
-index|[
-literal|2
-index|]
+name|Status
 operator|=
-name|NULL
+name|AE_NO_MEMORY
 expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+block|}
 comment|/*      *  Set up the parameter objects      */
 name|Params
 index|[
@@ -345,6 +332,13 @@ operator|.
 name|Value
 operator|=
 name|Function
+expr_stmt|;
+name|Params
+index|[
+literal|2
+index|]
+operator|=
+name|NULL
 expr_stmt|;
 comment|/*      *  Execute the method, no return value      */
 name|DEBUG_EXEC
@@ -388,15 +382,17 @@ name|AcpiUtRemoveReference
 argument_list|(
 name|Params
 index|[
-literal|0
+literal|1
 index|]
 argument_list|)
 expr_stmt|;
+name|Cleanup
+label|:
 name|AcpiUtRemoveReference
 argument_list|(
 name|Params
 index|[
-literal|1
+literal|0
 index|]
 argument_list|)
 expr_stmt|;
@@ -656,7 +652,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_OPREGION
 operator|,
-literal|"Addrhandler %p (%p), Address %8.8lX%8.8lX\n"
+literal|"Addrhandler %p (%p), Address %8.8X%8.8X\n"
 operator|,
 operator|&
 name|RegionObj
@@ -1271,7 +1267,7 @@ block|}
 comment|/* Convert and validate the device handle */
 name|Node
 operator|=
-name|AcpiNsConvertHandleToEntry
+name|AcpiNsMapHandleToNode
 argument_list|(
 name|ObjHandle
 argument_list|)

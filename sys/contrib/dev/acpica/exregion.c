@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exregion - ACPI default OpRegion (address space) handlers  *              $Revision: 59 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exregion - ACPI default OpRegion (address space) handlers  *              $Revision: 61 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -306,7 +306,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"IO %d (%d width) Address=%8.8lX%8.8lX\n"
+literal|"SystemMemory %d (%d width) Address=%8.8X%8.8X\n"
 operator|,
 name|Function
 operator|,
@@ -488,7 +488,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"IO %d (%d width) Address=%8.8lX%8.8lX\n"
+literal|"SystemIO %d (%d width) Address=%8.8X%8.8X\n"
 operator|,
 name|Function
 operator|,
@@ -637,7 +637,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"IO %d (%d) Seg(%04x) Bus(%04x) Dev(%04x) Func(%04x) Reg(%04x)\n"
+literal|"PciConfig %d (%d) Seg(%04x) Bus(%04x) Dev(%04x) Func(%04x) Reg(%04x)\n"
 operator|,
 name|Function
 operator|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acobject.h - Definition of ACPI_OPERAND_OBJECT  (Internal object only)  *       $Revision: 92 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acobject.h - Definition of ACPI_OPERAND_OBJECT  (Internal object only)  *       $Revision: 93 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -143,12 +143,8 @@ define|#
 directive|define
 name|ACPI_COMMON_BUFFER_INFO
 define|\
-value|UINT32                      Length; \     NATIVE_CHAR                 *Pointer;
+value|UINT32                      Length;
 end_define
-
-begin_comment
-comment|/* String value in AML stream or in allocated space */
-end_comment
 
 begin_comment
 comment|/******************************************************************************  *  * Individual Object Descriptors  *  *****************************************************************************/
@@ -203,6 +199,11 @@ comment|/* STRING - has length and pointer - Null terminated, ASCII characters o
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|ACPI_COMMON_BUFFER_INFO
+name|NATIVE_CHAR
+modifier|*
+name|Pointer
+decl_stmt|;
+comment|/* String value in AML stream or in allocated space */
 block|}
 name|ACPI_OBJECT_STRING
 typedef|;
@@ -215,6 +216,11 @@ comment|/* BUFFER - has length and pointer - not null terminated */
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|ACPI_COMMON_BUFFER_INFO
+name|UINT8
+modifier|*
+name|Pointer
+decl_stmt|;
+comment|/* Buffer value in AML stream or in allocated space */
 block|}
 name|ACPI_OBJECT_BUFFER
 typedef|;

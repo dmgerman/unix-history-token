@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbxface - AML Debugger external interfaces  *              $Revision: 43 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbxface - AML Debugger external interfaces  *              $Revision: 45 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -76,7 +76,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbSingleStep  *  * PARAMETERS:  WalkState       - Current walk  *              Op              - Current executing op  *              OpType          - Type of the current AML Opcode  *  * RETURN:      Status  *  * DESCRIPTION: Called just before execution of an AML opcode.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbSingleStep  *  * PARAMETERS:  WalkState       - Current walk  *              Op              - Current executing op  *              OpcodeClass     - Class of the current AML Opcode  *  * RETURN:      Status  *  * DESCRIPTION: Called just before execution of an AML opcode.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -91,8 +91,8 @@ name|ACPI_PARSE_OBJECT
 modifier|*
 name|Op
 parameter_list|,
-name|UINT8
-name|OpType
+name|UINT32
+name|OpcodeClass
 parameter_list|)
 block|{
 name|ACPI_PARSE_OBJECT
@@ -178,58 +178,22 @@ return|;
 block|}
 switch|switch
 condition|(
-name|OpType
+name|OpcodeClass
 condition|)
 block|{
 case|case
-name|OPTYPE_UNDEFINED
+name|AML_CLASS_UNKNOWN
 case|:
 case|case
-name|OPTYPE_CONSTANT
+name|AML_CLASS_ARGUMENT
 case|:
-comment|/* argument type only */
-case|case
-name|OPTYPE_LITERAL
-case|:
-comment|/* argument type only */
-case|case
-name|OPTYPE_DATA_TERM
-case|:
-comment|/* argument type only */
-case|case
-name|OPTYPE_LOCAL_VARIABLE
-case|:
-comment|/* argument type only */
-case|case
-name|OPTYPE_METHOD_ARGUMENT
-case|:
-comment|/* argument type only */
+comment|/* constants, literals, etc.  do nothing */
 return|return
 operator|(
 name|AE_OK
 operator|)
 return|;
 break|break;
-case|case
-name|OPTYPE_NAMED_OBJECT
-case|:
-switch|switch
-condition|(
-name|Op
-operator|->
-name|Opcode
-condition|)
-block|{
-case|case
-name|AML_INT_NAMEPATH_OP
-case|:
-return|return
-operator|(
-name|AE_OK
-operator|)
-return|;
-break|break;
-block|}
 block|}
 comment|/*      * Under certain debug conditions, display this opcode and its operands      */
 if|if

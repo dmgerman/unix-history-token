@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exconvrt - Object conversion routines  *              $Revision: 23 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exconvrt - Object conversion routines  *              $Revision: 24 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -488,7 +488,7 @@ block|{
 name|REPORT_ERROR
 argument_list|(
 operator|(
-literal|"ExDyadic2R/ConcatOp: Buffer allocation failure\n"
+literal|"ExConvertToBuffer: Buffer allocation failure\n"
 operator|)
 argument_list|)
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbinstal - ACPI table installation and removal  *              $Revision: 44 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbinstal - ACPI table installation and removal  *              $Revision: 45 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -272,6 +272,10 @@ name|ACPI_DB_INFO
 operator|,
 literal|"Found %4.4s\n"
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 name|AcpiGbl_AcpiTableData
 index|[
 name|i

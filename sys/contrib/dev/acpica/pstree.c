@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: pstree - Parser op tree manipulation/traversal/search  *              $Revision: 33 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: pstree - Parser op tree manipulation/traversal/search  *              $Revision: 35 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -88,12 +88,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_GET_OP_TYPE
-argument_list|(
 name|OpInfo
-argument_list|)
-operator|!=
-name|ACPI_OP_TYPE_OPCODE
+operator|->
+name|Class
+operator|==
+name|AML_CLASS_UNKNOWN
 condition|)
 block|{
 comment|/* Invalid opcode or ASCII character */
@@ -108,10 +107,11 @@ if|if
 condition|(
 operator|!
 operator|(
-name|ACPI_GET_OP_ARGS
-argument_list|(
 name|OpInfo
-argument_list|)
+operator|->
+name|Flags
+operator|&
+name|AML_HAS_ARGS
 operator|)
 condition|)
 block|{
@@ -205,12 +205,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_GET_OP_TYPE
-argument_list|(
 name|OpInfo
-argument_list|)
-operator|!=
-name|ACPI_OP_TYPE_OPCODE
+operator|->
+name|Class
+operator|==
+name|AML_CLASS_UNKNOWN
 condition|)
 block|{
 comment|/* Invalid opcode */
@@ -232,10 +231,11 @@ if|if
 condition|(
 operator|!
 operator|(
-name|ACPI_GET_OP_ARGS
-argument_list|(
 name|OpInfo
-argument_list|)
+operator|->
+name|Flags
+operator|&
+name|AML_HAS_ARGS
 operator|)
 condition|)
 block|{

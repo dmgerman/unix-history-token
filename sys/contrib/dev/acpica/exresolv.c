@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresolv - AML Interpreter object resolution  *              $Revision: 99 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresolv - AML Interpreter object resolution  *              $Revision: 101 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -352,7 +352,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"** Read from buffer %p byte %ld bit %d width %d addr %p mask %08lx val %08lx\n"
+literal|"** Read from buffer %p byte %d bit %d width %d addr %p mask %08X val %8.8X%8.8X\n"
 operator|,
 name|ObjDesc
 operator|->
@@ -386,11 +386,23 @@ name|Location
 operator|,
 name|Mask
 operator|,
+name|HIDWORD
+argument_list|(
 name|ResultDesc
 operator|->
 name|Integer
 operator|.
 name|Value
+argument_list|)
+operator|,
+name|LODWORD
+argument_list|(
+name|ResultDesc
+operator|->
+name|Integer
+operator|.
+name|Value
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -812,7 +824,7 @@ name|Integer
 operator|.
 name|Value
 operator|=
-name|ACPI_CA_VERSION
+name|ACPI_CA_SUPPORT_LEVEL
 expr_stmt|;
 break|break;
 block|}

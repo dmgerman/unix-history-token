@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acdebug.h - ACPI/AML debugger  *       $Revision: 49 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acdebug.h - ACPI/AML debugger  *       $Revision: 50 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -445,7 +445,7 @@ name|ACPI_PARSE_OBJECT
 modifier|*
 name|Op
 parameter_list|,
-name|UINT8
+name|UINT32
 name|OpType
 parameter_list|)
 function_decl|;

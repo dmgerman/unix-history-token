@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psfind - Parse tree search routine  *              $Revision: 29 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psfind - Parse tree search routine  *              $Revision: 30 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -708,6 +708,10 @@ name|ACPI_DB_PARSE
 operator|,
 literal|"[%4.4s] Found! Op=%p Opcode=%4.4X\n"
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|Name
 operator|,
@@ -781,6 +785,10 @@ name|ACPI_DB_PARSE
 operator|,
 literal|"[%4.4s] Not found, created Op=%p Opcode=%4.4X\n"
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|Name
 operator|,
@@ -838,6 +846,10 @@ name|ACPI_DB_PARSE
 operator|,
 literal|"[%4.4s] Found in parent tree! Op=%p Opcode=%4.4X\n"
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|Name
 operator|,
@@ -859,6 +871,10 @@ name|ACPI_DB_PARSE
 operator|,
 literal|"[%4.4s] Not found in parent=%p\n"
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|Name
 operator|,
@@ -878,6 +894,10 @@ name|ACPI_DB_PARSE
 operator|,
 literal|"Segment [%4.4s] Not Found in scope %p!\n"
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|Name
 operator|,

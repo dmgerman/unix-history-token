@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresop - AML Interpreter operand/object resolution  *              $Revision: 38 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresop - AML Interpreter operand/object resolution  *              $Revision: 41 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -222,12 +222,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_GET_OP_TYPE
-argument_list|(
 name|OpInfo
-argument_list|)
-operator|!=
-name|ACPI_OP_TYPE_OPCODE
+operator|->
+name|Class
+operator|==
+name|AML_CLASS_UNKNOWN
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -303,7 +302,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Internal - null stack entry at %X\n"
+literal|"Internal - null stack entry at %p\n"
 operator|,
 name|StackPtr
 operator|)
@@ -413,12 +412,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_GET_OP_TYPE
-argument_list|(
 name|OpInfo
-argument_list|)
-operator|!=
-name|ACPI_OP_TYPE_OPCODE
+operator|->
+name|Class
+operator|==
+name|AML_CLASS_UNKNOWN
 condition|)
 block|{
 name|return_ACPI_STATUS

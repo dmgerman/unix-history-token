@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsalloc - Namespace allocation and deletion utilities  *              $Revision: 57 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsalloc - Namespace allocation and deletion utilities  *              $Revision: 60 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -428,6 +428,10 @@ name|ACPI_DB_INFO
 operator|,
 literal|"[%4.4s] is a forward reference\n"
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|Node
 operator|->
@@ -496,6 +500,10 @@ name|ACPI_DB_NAMES
 operator|,
 literal|"%4.4s added to %p at %p\n"
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|Node
 operator|->
@@ -618,7 +626,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Found a grandchild! P=%X C=%X\n"
+literal|"Found a grandchild! P=%p C=%p\n"
 operator|,
 name|ParentNode
 operator|,
@@ -652,20 +660,12 @@ name|AcpiGbl_CurrentNodeCount
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*          * Detach an object if there is one          */
-if|if
-condition|(
-name|ChildNode
-operator|->
-name|Object
-condition|)
-block|{
+comment|/*          * Detach an object if there is one, then free the child node          */
 name|AcpiNsDetachObject
 argument_list|(
 name|ChildNode
 argument_list|)
 expr_stmt|;
-block|}
 name|ACPI_MEM_FREE
 argument_list|(
 name|ChildNode
@@ -712,10 +712,6 @@ modifier|*
 name|ParentNode
 parameter_list|)
 block|{
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|ObjDesc
-decl_stmt|;
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|ChildNode
@@ -752,10 +748,10 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/*          * Get the next typed object in this scope.          * Null returned if not found          */
+comment|/* Get the next node in this scope (NULL if none) */
 name|ChildNode
 operator|=
-name|AcpiNsGetNextObject
+name|AcpiNsGetNextNode
 argument_list|(
 name|ACPI_TYPE_ANY
 argument_list|,
@@ -769,34 +765,16 @@ condition|(
 name|ChildNode
 condition|)
 block|{
-comment|/*              * Found an object - detach and delete any attached              * object.              */
-name|ObjDesc
-operator|=
-name|AcpiNsGetAttachedObject
-argument_list|(
-name|ChildNode
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ObjDesc
-condition|)
-block|{
+comment|/* Found a child node - detach any attached object */
 name|AcpiNsDetachObject
 argument_list|(
 name|ChildNode
 argument_list|)
 expr_stmt|;
-name|AcpiUtRemoveReference
-argument_list|(
-name|ObjDesc
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Check if this object has any children */
+comment|/* Check if this node has any children */
 if|if
 condition|(
-name|AcpiNsGetNextObject
+name|AcpiNsGetNextNode
 argument_list|(
 name|ACPI_TYPE_ANY
 argument_list|,
@@ -806,7 +784,7 @@ literal|0
 argument_list|)
 condition|)
 block|{
-comment|/*                  * There is at least one child of this object,                  * visit the object                  */
+comment|/*                  * There is at least one child of this node,                  * visit the node                  */
 name|Level
 operator|++
 expr_stmt|;
@@ -822,7 +800,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/*              * No more children in this object.              * We will move up to the grandparent.              */
+comment|/*              * No more children of this parent node.              * Move up to the grandparent.              */
 name|Level
 operator|--
 expr_stmt|;
@@ -832,12 +810,12 @@ argument_list|(
 name|ParentNode
 argument_list|)
 expr_stmt|;
-comment|/* New "last child" is this parent object */
+comment|/* New "last child" is this parent node */
 name|ChildNode
 operator|=
 name|ParentNode
 expr_stmt|;
-comment|/* Now we can move up the tree to the grandparent */
+comment|/* Move up the tree to the grandparent */
 name|ParentNode
 operator|=
 name|AcpiNsGetParentObject
@@ -856,7 +834,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsRemoveReference  *  * PARAMETERS:  Node           - Named object whose reference count is to be  *                               decremented  *  * RETURN:      None.  *  * DESCRIPTION: Remove a Node reference.  Decrements the reference count  *              of all parent Nodes up to the root.  Any object along  *              the way that reaches zero references is freed.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsRemoveReference  *  * PARAMETERS:  Node           - Named node whose reference count is to be  *                               decremented  *  * RETURN:      None.  *  * DESCRIPTION: Remove a Node reference.  Decrements the reference count  *              of all parent Nodes up to the root.  Any node along  *              the way that reaches zero references is freed.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -876,7 +854,7 @@ decl_stmt|;
 name|FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
-comment|/*      * Decrement the reference count(s) of this object and all      * objects up to the root,  Delete anything with zero remaining references.      */
+comment|/*      * Decrement the reference count(s) of this node and all      * nodes up to the root,  Delete anything with zero remaining references.      */
 name|NextNode
 operator|=
 name|Node
@@ -886,13 +864,13 @@ condition|(
 name|NextNode
 condition|)
 block|{
-comment|/* Decrement the reference count on this object*/
+comment|/* Decrement the reference count on this node*/
 name|NextNode
 operator|->
 name|ReferenceCount
 operator|--
 expr_stmt|;
-comment|/* Delete the object if no more references */
+comment|/* Delete the node if no more references */
 if|if
 condition|(
 operator|!
@@ -901,7 +879,7 @@ operator|->
 name|ReferenceCount
 condition|)
 block|{
-comment|/* Delete all children and delete the object */
+comment|/* Delete all children and delete the node */
 name|AcpiNsDeleteChildren
 argument_list|(
 name|NextNode
@@ -944,10 +922,6 @@ decl_stmt|;
 name|UINT32
 name|Level
 decl_stmt|;
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|ObjDesc
-decl_stmt|;
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|ParentNode
@@ -969,7 +943,7 @@ name|Level
 operator|=
 literal|1
 expr_stmt|;
-comment|/*      * Traverse the tree of objects until we bubble back up      * to where we started.      */
+comment|/*      * Traverse the tree of nodes until we bubble back up      * to where we started.      */
 while|while
 condition|(
 name|Level
@@ -977,10 +951,10 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/*          * Get the next typed object in this scope.          * Null returned if not found          */
+comment|/* Get the next node in this scope (NULL if none) */
 name|ChildNode
 operator|=
-name|AcpiNsGetNextObject
+name|AcpiNsGetNextNode
 argument_list|(
 name|ACPI_TYPE_ANY
 argument_list|,
@@ -1003,35 +977,17 @@ operator|==
 name|OwnerId
 condition|)
 block|{
-comment|/*                  * Found an object - delete the object within                  * the Value field                  */
-name|ObjDesc
-operator|=
-name|AcpiNsGetAttachedObject
-argument_list|(
-name|ChildNode
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ObjDesc
-condition|)
-block|{
+comment|/* Found a child node - detach any attached object */
 name|AcpiNsDetachObject
 argument_list|(
 name|ChildNode
 argument_list|)
 expr_stmt|;
-name|AcpiUtRemoveReference
-argument_list|(
-name|ObjDesc
-argument_list|)
-expr_stmt|;
 block|}
-block|}
-comment|/* Check if this object has any children */
+comment|/* Check if this node has any children */
 if|if
 condition|(
-name|AcpiNsGetNextObject
+name|AcpiNsGetNextNode
 argument_list|(
 name|ACPI_TYPE_ANY
 argument_list|,
@@ -1041,7 +997,7 @@ literal|0
 argument_list|)
 condition|)
 block|{
-comment|/*                  * There is at least one child of this object,                  * visit the object                  */
+comment|/*                  * There is at least one child of this node,                  * visit the node                  */
 name|Level
 operator|++
 expr_stmt|;
@@ -1073,7 +1029,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/*              * No more children in this object.  Move up to grandparent.              */
+comment|/*              * No more children of this parent node.              * Move up to the grandparent.              */
 name|Level
 operator|--
 expr_stmt|;
@@ -1100,12 +1056,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* New "last child" is this parent object */
+comment|/* New "last child" is this parent node */
 name|ChildNode
 operator|=
 name|ParentNode
 expr_stmt|;
-comment|/* Now we can move up the tree to the grandparent */
+comment|/* Move up the tree to the grandparent */
 name|ParentNode
 operator|=
 name|AcpiNsGetParentObject

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: utdelete - object deletion and reference count utilities  *              $Revision: 78 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: utdelete - object deletion and reference count utilities  *              $Revision: 81 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -443,15 +443,6 @@ condition|(
 name|ObjPointer
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|AcpiTbSystemTablePointer
-argument_list|(
-name|ObjPointer
-argument_list|)
-condition|)
-block|{
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -468,7 +459,6 @@ argument_list|(
 name|ObjPointer
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* Only delete the object if it was dynamically allocated */
 if|if
@@ -945,31 +935,6 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|AcpiTbSystemTablePointer
-argument_list|(
-name|Object
-argument_list|)
-condition|)
-block|{
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
-literal|"**** Object %p points into an ACPI table\n"
-operator|,
-name|Object
-operator|)
-argument_list|)
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_OK
-argument_list|)
-expr_stmt|;
-block|}
 name|State
 operator|=
 name|AcpiUtCreateUpdateState
@@ -1366,12 +1331,10 @@ break|break;
 case|case
 name|ACPI_TYPE_REGION
 case|:
-comment|/* TBD: [Investigate]             AcpiUtUpdateRefCount (Object->Region.AddrHandler, Action);     */
-comment|/*             Status =                 AcpiUtCreateUpdateStateAndPush (Object->Region.AddrHandler,                                                 Action,&StateList);             if (ACPI_FAILURE (Status))             {                 return_ACPI_STATUS (Status);             } */
-break|break;
 case|case
 name|INTERNAL_TYPE_REFERENCE
 case|:
+comment|/* No subobjects */
 break|break;
 block|}
 comment|/*          * Now we can update the count in the main object.  This can only          * happen after we update the sub-objects in case this causes the          * main object to be deleted.          */
@@ -1466,6 +1429,25 @@ argument_list|,
 name|Object
 argument_list|)
 expr_stmt|;
+comment|/*      * Allow a NULL pointer to be passed in, just ignore it.  This saves      * each caller from having to check.  Also, ignore NS nodes.      *      */
+if|if
+condition|(
+operator|!
+name|Object
+operator|||
+operator|(
+name|VALID_DESCRIPTOR_TYPE
+argument_list|(
+name|Object
+argument_list|,
+name|ACPI_DESC_TYPE_NAMED
+argument_list|)
+operator|)
+condition|)
+block|{
+name|return_VOID
+expr_stmt|;
+block|}
 comment|/*      * Ensure that we have a valid object      */
 if|if
 condition|(

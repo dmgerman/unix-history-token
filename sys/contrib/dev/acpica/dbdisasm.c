@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbdisasm - parser op tree display routines  *              $Revision: 48 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbdisasm - parser op tree display routines  *              $Revision: 50 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -155,6 +155,10 @@ begin_function
 name|ACPI_STATUS
 name|AcpiPsDisplayObjectPathname
 parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|,
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|Op
@@ -231,6 +235,10 @@ begin_function
 name|ACPI_STATUS
 name|AcpiPsDisplayObjectPathname
 parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|,
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|Op
@@ -254,10 +262,17 @@ name|BufferSize
 init|=
 name|MAX_SHOW_ENTRY
 decl_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"  (Path "
-argument_list|)
+name|UINT32
+name|DebugLevel
+decl_stmt|;
+comment|/* Save current debug level so we don't get extraneous debug output */
+name|DebugLevel
+operator|=
+name|AcpiDbgLevel
+expr_stmt|;
+name|AcpiDbgLevel
+operator|=
+literal|0
 expr_stmt|;
 comment|/* Just get the Node out of the Op object */
 name|Node
@@ -272,12 +287,60 @@ operator|!
 name|Node
 condition|)
 block|{
-comment|/*          * No Named obj,  so we can't get the pathname since the object          * is not in the namespace.  This can happen during single          * stepping where a dynamic named object is *about* to be created.          */
-return|return
+comment|/* Node not defined in this scope, look it up */
+name|Status
+operator|=
+name|AcpiNsLookup
+argument_list|(
+name|WalkState
+operator|->
+name|ScopeInfo
+argument_list|,
+name|Op
+operator|->
+name|Value
+operator|.
+name|String
+argument_list|,
+name|ACPI_TYPE_ANY
+argument_list|,
+name|IMODE_EXECUTE
+argument_list|,
+name|NS_SEARCH_PARENT
+argument_list|,
+name|WalkState
+argument_list|,
+operator|&
 operator|(
-name|AE_OK
+name|Node
 operator|)
-return|;
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+comment|/*              * We can't get the pathname since the object              * is not in the namespace.  This can happen during single              * stepping where a dynamic named object is *about* to be created.              */
+name|AcpiOsPrintf
+argument_list|(
+literal|"  [Path not found]"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|Exit
+goto|;
+block|}
+comment|/* Save it for next time. */
+name|Op
+operator|->
+name|Node
+operator|=
+name|Node
+expr_stmt|;
 block|}
 comment|/* Convert NamedDesc/handle to a full pathname */
 name|Status
@@ -305,22 +368,27 @@ argument_list|(
 literal|"****Could not get pathname****)"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|Status
-operator|)
-return|;
+goto|goto
+name|Exit
+goto|;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"%s)"
+literal|"  (Path %s)"
 argument_list|,
 name|Buffer
 argument_list|)
 expr_stmt|;
+name|Exit
+label|:
+comment|/* Restore the debug level */
+name|AcpiDbgLevel
+operator|=
+name|DebugLevel
+expr_stmt|;
 return|return
 operator|(
-name|AE_OK
+name|Status
 operator|)
 return|;
 block|}
@@ -698,6 +766,8 @@ condition|)
 block|{
 name|AcpiPsDisplayObjectPathname
 argument_list|(
+name|WalkState
+argument_list|,
 name|Op
 argument_list|)
 expr_stmt|;

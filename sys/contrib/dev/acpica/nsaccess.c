@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 133 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 135 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -443,6 +443,12 @@ operator|->
 name|Common
 operator|.
 name|Type
+argument_list|)
+expr_stmt|;
+comment|/* Remove local reference to the object */
+name|AcpiUtRemoveReference
+argument_list|(
+name|ObjDesc
 argument_list|)
 expr_stmt|;
 block|}
@@ -939,6 +945,10 @@ name|ACPI_DB_NAMES
 operator|,
 literal|"%4.4s/"
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|Pathname
 index|[
@@ -1042,8 +1052,12 @@ argument_list|(
 operator|(
 name|ACPI_DB_NAMES
 operator|,
-literal|"Name [%4.4s] not found in scope %X\n"
+literal|"Name [%4.4s] not found in scope %p\n"
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|SimpleName
 operator|,
@@ -1120,6 +1134,10 @@ argument_list|(
 operator|(
 literal|"NsLookup: %4.4s, type %X, checking for type %X\n"
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|SimpleName
 operator|,
@@ -1181,7 +1199,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"Load mode=%X  ThisNode=%X\n"
+literal|"Load mode=%X  ThisNode=%p\n"
 operator|,
 name|InterpreterMode
 operator|,

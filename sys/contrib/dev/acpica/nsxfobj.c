@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsxfobj - Public interfaces to the ACPI subsystem  *                         ACPI Object oriented interfaces  *              $Revision: 93 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsxfobj - Public interfaces to the ACPI subsystem  *                         ACPI Object oriented interfaces  *              $Revision: 95 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -560,7 +560,7 @@ block|{
 comment|/* Start search at the beginning of the specified scope */
 name|ParentNode
 operator|=
-name|AcpiNsConvertHandleToEntry
+name|AcpiNsMapHandleToNode
 argument_list|(
 name|Parent
 argument_list|)
@@ -586,7 +586,7 @@ block|{
 comment|/* Convert and validate the handle */
 name|ChildNode
 operator|=
-name|AcpiNsConvertHandleToEntry
+name|AcpiNsMapHandleToNode
 argument_list|(
 name|Child
 argument_list|)
@@ -609,7 +609,7 @@ block|}
 comment|/* Internal function does the real work */
 name|Node
 operator|=
-name|AcpiNsGetNextObject
+name|AcpiNsGetNextNode
 argument_list|(
 operator|(
 name|ACPI_OBJECT_TYPE8
@@ -724,7 +724,7 @@ expr_stmt|;
 comment|/* Convert and validate the handle */
 name|Node
 operator|=
-name|AcpiNsConvertHandleToEntry
+name|AcpiNsMapHandleToNode
 argument_list|(
 name|Handle
 argument_list|)
@@ -825,7 +825,7 @@ expr_stmt|;
 comment|/* Convert and validate the handle */
 name|Node
 operator|=
-name|AcpiNsConvertHandleToEntry
+name|AcpiNsMapHandleToNode
 argument_list|(
 name|Handle
 argument_list|)
@@ -1044,7 +1044,7 @@ argument_list|)
 expr_stmt|;
 name|Node
 operator|=
-name|AcpiNsConvertHandleToEntry
+name|AcpiNsMapHandleToNode
 argument_list|(
 name|ObjHandle
 argument_list|)

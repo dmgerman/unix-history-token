@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psxface - Parser external interfaces  *              $Revision: 51 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psxface - Parser external interfaces  *              $Revision: 52 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -513,7 +513,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"Method returned ObjDesc=%X\n"
+literal|"Method returned ObjDesc=%p\n"
 operator|,
 operator|*
 name|ReturnObjDesc

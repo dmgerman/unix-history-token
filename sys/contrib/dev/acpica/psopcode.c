@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psopcode - Parser/Interpreter opcode information table  *              $Revision: 43 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psopcode - Parser/Interpreter opcode information table  *              $Revision: 49 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1835,7 +1835,7 @@ name|AmlOpInfo
 index|[]
 init|=
 block|{
-comment|/* Index           Name                 Parser Args               Interpreter Args              Flags */
+comment|/* Index           Name                 Parser Args               Interpreter Args                 Class                      Type                  Flags */
 comment|/* 00 */
 name|ACPI_OP
 argument_list|(
@@ -1845,11 +1845,11 @@ name|ARGP_ZERO_OP
 argument_list|,
 name|ARGI_ZERO_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_CONSTANT
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_ARGUMENT
+argument_list|,
+name|AML_TYPE_CONSTANT
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 01 */
@@ -1861,11 +1861,11 @@ name|ARGP_ONE_OP
 argument_list|,
 name|ARGI_ONE_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_CONSTANT
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_ARGUMENT
+argument_list|,
+name|AML_TYPE_CONSTANT
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 02 */
@@ -1877,10 +1877,10 @@ name|ARGP_ALIAS_OP
 argument_list|,
 name|ARGI_ALIAS_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_NAMED_OBJECT
-operator||
+name|AML_CLASS_NAMED_OBJECT
+argument_list|,
+name|AML_TYPE_NAMED_SIMPLE
+argument_list|,
 name|AML_HAS_ARGS
 operator||
 name|AML_NSOBJECT
@@ -1901,10 +1901,10 @@ name|ARGP_NAME_OP
 argument_list|,
 name|ARGI_NAME_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_NAMED_OBJECT
-operator||
+name|AML_CLASS_NAMED_OBJECT
+argument_list|,
+name|AML_TYPE_NAMED_COMPLEX
+argument_list|,
 name|AML_HAS_ARGS
 operator||
 name|AML_NSOBJECT
@@ -1925,11 +1925,11 @@ name|ARGP_BYTE_OP
 argument_list|,
 name|ARGI_BYTE_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_LITERAL
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_ARGUMENT
+argument_list|,
+name|AML_TYPE_LITERAL
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 05 */
@@ -1941,11 +1941,11 @@ name|ARGP_WORD_OP
 argument_list|,
 name|ARGI_WORD_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_LITERAL
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_ARGUMENT
+argument_list|,
+name|AML_TYPE_LITERAL
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 06 */
@@ -1957,11 +1957,11 @@ name|ARGP_DWORD_OP
 argument_list|,
 name|ARGI_DWORD_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_LITERAL
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_ARGUMENT
+argument_list|,
+name|AML_TYPE_LITERAL
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 07 */
@@ -1973,11 +1973,11 @@ name|ARGP_STRING_OP
 argument_list|,
 name|ARGI_STRING_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_LITERAL
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_ARGUMENT
+argument_list|,
+name|AML_TYPE_LITERAL
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 08 */
@@ -1989,10 +1989,10 @@ name|ARGP_SCOPE_OP
 argument_list|,
 name|ARGI_SCOPE_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_NAMED_OBJECT
-operator||
+name|AML_CLASS_NAMED_OBJECT
+argument_list|,
+name|AML_TYPE_NAMED_NO_OBJ
+argument_list|,
 name|AML_HAS_ARGS
 operator||
 name|AML_NSOBJECT
@@ -2013,10 +2013,10 @@ name|ARGP_BUFFER_OP
 argument_list|,
 name|ARGI_BUFFER_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_DATA_TERM
-operator||
+name|AML_CLASS_ARGUMENT
+argument_list|,
+name|AML_TYPE_DATA_TERM
+argument_list|,
 name|AML_HAS_ARGS
 argument_list|)
 block|,
@@ -2029,10 +2029,10 @@ name|ARGP_PACKAGE_OP
 argument_list|,
 name|ARGI_PACKAGE_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_DATA_TERM
-operator||
+name|AML_CLASS_ARGUMENT
+argument_list|,
+name|AML_TYPE_DATA_TERM
+argument_list|,
 name|AML_HAS_ARGS
 argument_list|)
 block|,
@@ -2045,10 +2045,10 @@ name|ARGP_METHOD_OP
 argument_list|,
 name|ARGI_METHOD_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_NAMED_OBJECT
-operator||
+name|AML_CLASS_NAMED_OBJECT
+argument_list|,
+name|AML_TYPE_NAMED_COMPLEX
+argument_list|,
 name|AML_HAS_ARGS
 operator||
 name|AML_NSOBJECT
@@ -2071,11 +2071,11 @@ name|ARGP_LOCAL0
 argument_list|,
 name|ARGI_LOCAL0
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_LOCAL_VARIABLE
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_ARGUMENT
+argument_list|,
+name|AML_TYPE_LOCAL_VARIABLE
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 0D */
@@ -2087,11 +2087,11 @@ name|ARGP_LOCAL1
 argument_list|,
 name|ARGI_LOCAL1
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_LOCAL_VARIABLE
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_ARGUMENT
+argument_list|,
+name|AML_TYPE_LOCAL_VARIABLE
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 0E */
@@ -2103,11 +2103,11 @@ name|ARGP_LOCAL2
 argument_list|,
 name|ARGI_LOCAL2
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_LOCAL_VARIABLE
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_ARGUMENT
+argument_list|,
+name|AML_TYPE_LOCAL_VARIABLE
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 0F */
@@ -2119,11 +2119,11 @@ name|ARGP_LOCAL3
 argument_list|,
 name|ARGI_LOCAL3
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_LOCAL_VARIABLE
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_ARGUMENT
+argument_list|,
+name|AML_TYPE_LOCAL_VARIABLE
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 10 */
@@ -2135,11 +2135,11 @@ name|ARGP_LOCAL4
 argument_list|,
 name|ARGI_LOCAL4
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_LOCAL_VARIABLE
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_ARGUMENT
+argument_list|,
+name|AML_TYPE_LOCAL_VARIABLE
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 11 */
@@ -2151,11 +2151,11 @@ name|ARGP_LOCAL5
 argument_list|,
 name|ARGI_LOCAL5
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_LOCAL_VARIABLE
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_ARGUMENT
+argument_list|,
+name|AML_TYPE_LOCAL_VARIABLE
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 12 */
@@ -2167,11 +2167,11 @@ name|ARGP_LOCAL6
 argument_list|,
 name|ARGI_LOCAL6
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_LOCAL_VARIABLE
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_ARGUMENT
+argument_list|,
+name|AML_TYPE_LOCAL_VARIABLE
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 13 */
@@ -2183,11 +2183,11 @@ name|ARGP_LOCAL7
 argument_list|,
 name|ARGI_LOCAL7
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_LOCAL_VARIABLE
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_ARGUMENT
+argument_list|,
+name|AML_TYPE_LOCAL_VARIABLE
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 14 */
@@ -2199,11 +2199,11 @@ name|ARGP_ARG0
 argument_list|,
 name|ARGI_ARG0
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_METHOD_ARGUMENT
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_ARGUMENT
+argument_list|,
+name|AML_TYPE_METHOD_ARGUMENT
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 15 */
@@ -2215,11 +2215,11 @@ name|ARGP_ARG1
 argument_list|,
 name|ARGI_ARG1
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_METHOD_ARGUMENT
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_ARGUMENT
+argument_list|,
+name|AML_TYPE_METHOD_ARGUMENT
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 16 */
@@ -2231,11 +2231,11 @@ name|ARGP_ARG2
 argument_list|,
 name|ARGI_ARG2
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_METHOD_ARGUMENT
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_ARGUMENT
+argument_list|,
+name|AML_TYPE_METHOD_ARGUMENT
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 17 */
@@ -2247,11 +2247,11 @@ name|ARGP_ARG3
 argument_list|,
 name|ARGI_ARG3
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_METHOD_ARGUMENT
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_ARGUMENT
+argument_list|,
+name|AML_TYPE_METHOD_ARGUMENT
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 18 */
@@ -2263,11 +2263,11 @@ name|ARGP_ARG4
 argument_list|,
 name|ARGI_ARG4
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_METHOD_ARGUMENT
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_ARGUMENT
+argument_list|,
+name|AML_TYPE_METHOD_ARGUMENT
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 19 */
@@ -2279,11 +2279,11 @@ name|ARGP_ARG5
 argument_list|,
 name|ARGI_ARG5
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_METHOD_ARGUMENT
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_ARGUMENT
+argument_list|,
+name|AML_TYPE_METHOD_ARGUMENT
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 1A */
@@ -2295,11 +2295,11 @@ name|ARGP_ARG6
 argument_list|,
 name|ARGI_ARG6
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_METHOD_ARGUMENT
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_ARGUMENT
+argument_list|,
+name|AML_TYPE_METHOD_ARGUMENT
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 1B */
@@ -2311,11 +2311,11 @@ name|ARGP_STORE_OP
 argument_list|,
 name|ARGI_STORE_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_MONADIC2R
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_1A_1T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_1A_1T_1R
 argument_list|)
 block|,
 comment|/* 1C */
@@ -2327,11 +2327,11 @@ name|ARGP_REF_OF_OP
 argument_list|,
 name|ARGI_REF_OF_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_MONADIC2
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_1A_0T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_1A_0T_1R
 argument_list|)
 block|,
 comment|/* 1D */
@@ -2343,11 +2343,13 @@ name|ARGP_ADD_OP
 argument_list|,
 name|ARGI_ADD_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_2A_1T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_2A_1T_1R
 operator||
-name|OPTYPE_DYADIC2R
-operator||
-name|AML_HAS_ARGS
+name|AML_MATH
 argument_list|)
 block|,
 comment|/* 1E */
@@ -2359,11 +2361,11 @@ name|ARGP_CONCAT_OP
 argument_list|,
 name|ARGI_CONCAT_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_DYADIC2R
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_2A_1T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_2A_1T_1R
 argument_list|)
 block|,
 comment|/* 1F */
@@ -2375,11 +2377,13 @@ name|ARGP_SUBTRACT_OP
 argument_list|,
 name|ARGI_SUBTRACT_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_2A_1T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_2A_1T_1R
 operator||
-name|OPTYPE_DYADIC2R
-operator||
-name|AML_HAS_ARGS
+name|AML_MATH
 argument_list|)
 block|,
 comment|/* 20 */
@@ -2391,11 +2395,11 @@ name|ARGP_INCREMENT_OP
 argument_list|,
 name|ARGI_INCREMENT_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_MONADIC2
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_1A_0T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_1A_0T_1R
 argument_list|)
 block|,
 comment|/* 21 */
@@ -2407,11 +2411,11 @@ name|ARGP_DECREMENT_OP
 argument_list|,
 name|ARGI_DECREMENT_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_MONADIC2
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_1A_0T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_1A_0T_1R
 argument_list|)
 block|,
 comment|/* 22 */
@@ -2423,11 +2427,13 @@ name|ARGP_MULTIPLY_OP
 argument_list|,
 name|ARGI_MULTIPLY_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_2A_1T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_2A_1T_1R
 operator||
-name|OPTYPE_DYADIC2R
-operator||
-name|AML_HAS_ARGS
+name|AML_MATH
 argument_list|)
 block|,
 comment|/* 23 */
@@ -2439,11 +2445,11 @@ name|ARGP_DIVIDE_OP
 argument_list|,
 name|ARGI_DIVIDE_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_DYADIC2R
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_2A_2T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_2A_2T_1R
 argument_list|)
 block|,
 comment|/* 24 */
@@ -2455,11 +2461,13 @@ name|ARGP_SHIFT_LEFT_OP
 argument_list|,
 name|ARGI_SHIFT_LEFT_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_2A_1T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_2A_1T_1R
 operator||
-name|OPTYPE_DYADIC2R
-operator||
-name|AML_HAS_ARGS
+name|AML_MATH
 argument_list|)
 block|,
 comment|/* 25 */
@@ -2471,11 +2479,13 @@ name|ARGP_SHIFT_RIGHT_OP
 argument_list|,
 name|ARGI_SHIFT_RIGHT_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_2A_1T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_2A_1T_1R
 operator||
-name|OPTYPE_DYADIC2R
-operator||
-name|AML_HAS_ARGS
+name|AML_MATH
 argument_list|)
 block|,
 comment|/* 26 */
@@ -2487,11 +2497,13 @@ name|ARGP_BIT_AND_OP
 argument_list|,
 name|ARGI_BIT_AND_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_2A_1T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_2A_1T_1R
 operator||
-name|OPTYPE_DYADIC2R
-operator||
-name|AML_HAS_ARGS
+name|AML_MATH
 argument_list|)
 block|,
 comment|/* 27 */
@@ -2503,11 +2515,13 @@ name|ARGP_BIT_NAND_OP
 argument_list|,
 name|ARGI_BIT_NAND_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_2A_1T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_2A_1T_1R
 operator||
-name|OPTYPE_DYADIC2R
-operator||
-name|AML_HAS_ARGS
+name|AML_MATH
 argument_list|)
 block|,
 comment|/* 28 */
@@ -2519,11 +2533,13 @@ name|ARGP_BIT_OR_OP
 argument_list|,
 name|ARGI_BIT_OR_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_2A_1T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_2A_1T_1R
 operator||
-name|OPTYPE_DYADIC2R
-operator||
-name|AML_HAS_ARGS
+name|AML_MATH
 argument_list|)
 block|,
 comment|/* 29 */
@@ -2535,11 +2551,13 @@ name|ARGP_BIT_NOR_OP
 argument_list|,
 name|ARGI_BIT_NOR_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_2A_1T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_2A_1T_1R
 operator||
-name|OPTYPE_DYADIC2R
-operator||
-name|AML_HAS_ARGS
+name|AML_MATH
 argument_list|)
 block|,
 comment|/* 2A */
@@ -2551,11 +2569,13 @@ name|ARGP_BIT_XOR_OP
 argument_list|,
 name|ARGI_BIT_XOR_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_2A_1T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_2A_1T_1R
 operator||
-name|OPTYPE_DYADIC2R
-operator||
-name|AML_HAS_ARGS
+name|AML_MATH
 argument_list|)
 block|,
 comment|/* 2B */
@@ -2567,11 +2587,11 @@ name|ARGP_BIT_NOT_OP
 argument_list|,
 name|ARGI_BIT_NOT_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_MONADIC2R
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_1A_1T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_1A_1T_1R
 argument_list|)
 block|,
 comment|/* 2C */
@@ -2583,11 +2603,11 @@ name|ARGP_FIND_SET_LEFT_BIT_OP
 argument_list|,
 name|ARGI_FIND_SET_LEFT_BIT_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_MONADIC2R
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_1A_1T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_1A_1T_1R
 argument_list|)
 block|,
 comment|/* 2D */
@@ -2599,11 +2619,11 @@ name|ARGP_FIND_SET_RIGHT_BIT_OP
 argument_list|,
 name|ARGI_FIND_SET_RIGHT_BIT_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_MONADIC2R
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_1A_1T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_1A_1T_1R
 argument_list|)
 block|,
 comment|/* 2E */
@@ -2615,11 +2635,11 @@ name|ARGP_DEREF_OF_OP
 argument_list|,
 name|ARGI_DEREF_OF_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_MONADIC2
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_1A_0T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_1A_0T_1R
 argument_list|)
 block|,
 comment|/* 2F */
@@ -2631,11 +2651,11 @@ name|ARGP_NOTIFY_OP
 argument_list|,
 name|ARGI_NOTIFY_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_DYADIC1
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_2A_0T_0R
+argument_list|,
+name|AML_FLAGS_EXEC_2A_0T_0R
 argument_list|)
 block|,
 comment|/* 30 */
@@ -2647,11 +2667,11 @@ name|ARGP_SIZE_OF_OP
 argument_list|,
 name|ARGI_SIZE_OF_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_MONADIC2
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_1A_0T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_1A_0T_1R
 argument_list|)
 block|,
 comment|/* 31 */
@@ -2663,11 +2683,11 @@ name|ARGP_INDEX_OP
 argument_list|,
 name|ARGI_INDEX_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_TRIADIC
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_2A_1T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_2A_1T_1R
 argument_list|)
 block|,
 comment|/* 32 */
@@ -2679,11 +2699,11 @@ name|ARGP_MATCH_OP
 argument_list|,
 name|ARGI_MATCH_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_HEXADIC
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_6A_0T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_6A_0T_1R
 argument_list|)
 block|,
 comment|/* 33 */
@@ -2695,10 +2715,10 @@ name|ARGP_CREATE_DWORD_FIELD_OP
 argument_list|,
 name|ARGI_CREATE_DWORD_FIELD_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_CREATE_FIELD
-operator||
+name|AML_CLASS_CREATE
+argument_list|,
+name|AML_TYPE_CREATE_FIELD
+argument_list|,
 name|AML_HAS_ARGS
 operator||
 name|AML_NSOBJECT
@@ -2719,10 +2739,10 @@ name|ARGP_CREATE_WORD_FIELD_OP
 argument_list|,
 name|ARGI_CREATE_WORD_FIELD_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_CREATE_FIELD
-operator||
+name|AML_CLASS_CREATE
+argument_list|,
+name|AML_TYPE_CREATE_FIELD
+argument_list|,
 name|AML_HAS_ARGS
 operator||
 name|AML_NSOBJECT
@@ -2743,10 +2763,10 @@ name|ARGP_CREATE_BYTE_FIELD_OP
 argument_list|,
 name|ARGI_CREATE_BYTE_FIELD_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_CREATE_FIELD
-operator||
+name|AML_CLASS_CREATE
+argument_list|,
+name|AML_TYPE_CREATE_FIELD
+argument_list|,
 name|AML_HAS_ARGS
 operator||
 name|AML_NSOBJECT
@@ -2767,10 +2787,10 @@ name|ARGP_CREATE_BIT_FIELD_OP
 argument_list|,
 name|ARGI_CREATE_BIT_FIELD_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_CREATE_FIELD
-operator||
+name|AML_CLASS_CREATE
+argument_list|,
+name|AML_TYPE_CREATE_FIELD
+argument_list|,
 name|AML_HAS_ARGS
 operator||
 name|AML_NSOBJECT
@@ -2791,11 +2811,11 @@ name|ARGP_TYPE_OP
 argument_list|,
 name|ARGI_TYPE_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_MONADIC2
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_1A_0T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_1A_0T_1R
 argument_list|)
 block|,
 comment|/* 38 */
@@ -2807,11 +2827,13 @@ name|ARGP_LAND_OP
 argument_list|,
 name|ARGI_LAND_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_2A_0T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_2A_0T_1R
 operator||
-name|OPTYPE_DYADIC2
-operator||
-name|AML_HAS_ARGS
+name|AML_LOGICAL
 argument_list|)
 block|,
 comment|/* 39 */
@@ -2823,11 +2845,13 @@ name|ARGP_LOR_OP
 argument_list|,
 name|ARGI_LOR_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_2A_0T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_2A_0T_1R
 operator||
-name|OPTYPE_DYADIC2
-operator||
-name|AML_HAS_ARGS
+name|AML_LOGICAL
 argument_list|)
 block|,
 comment|/* 3A */
@@ -2839,11 +2863,11 @@ name|ARGP_LNOT_OP
 argument_list|,
 name|ARGI_LNOT_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_MONADIC2
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_1A_0T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_1A_0T_1R
 argument_list|)
 block|,
 comment|/* 3B */
@@ -2855,11 +2879,13 @@ name|ARGP_LEQUAL_OP
 argument_list|,
 name|ARGI_LEQUAL_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_2A_0T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_2A_0T_1R
 operator||
-name|OPTYPE_DYADIC2
-operator||
-name|AML_HAS_ARGS
+name|AML_LOGICAL
 argument_list|)
 block|,
 comment|/* 3C */
@@ -2871,11 +2897,13 @@ name|ARGP_LGREATER_OP
 argument_list|,
 name|ARGI_LGREATER_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_2A_0T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_2A_0T_1R
 operator||
-name|OPTYPE_DYADIC2
-operator||
-name|AML_HAS_ARGS
+name|AML_LOGICAL
 argument_list|)
 block|,
 comment|/* 3D */
@@ -2887,11 +2915,13 @@ name|ARGP_LLESS_OP
 argument_list|,
 name|ARGI_LLESS_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_2A_0T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_2A_0T_1R
 operator||
-name|OPTYPE_DYADIC2
-operator||
-name|AML_HAS_ARGS
+name|AML_LOGICAL
 argument_list|)
 block|,
 comment|/* 3E */
@@ -2903,10 +2933,10 @@ name|ARGP_IF_OP
 argument_list|,
 name|ARGI_IF_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_CONTROL
-operator||
+name|AML_CLASS_CONTROL
+argument_list|,
+name|AML_TYPE_CONTROL
+argument_list|,
 name|AML_HAS_ARGS
 argument_list|)
 block|,
@@ -2919,10 +2949,10 @@ name|ARGP_ELSE_OP
 argument_list|,
 name|ARGI_ELSE_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_CONTROL
-operator||
+name|AML_CLASS_CONTROL
+argument_list|,
+name|AML_TYPE_CONTROL
+argument_list|,
 name|AML_HAS_ARGS
 argument_list|)
 block|,
@@ -2935,10 +2965,10 @@ name|ARGP_WHILE_OP
 argument_list|,
 name|ARGI_WHILE_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_CONTROL
-operator||
+name|AML_CLASS_CONTROL
+argument_list|,
+name|AML_TYPE_CONTROL
+argument_list|,
 name|AML_HAS_ARGS
 argument_list|)
 block|,
@@ -2951,11 +2981,11 @@ name|ARGP_NOOP_OP
 argument_list|,
 name|ARGI_NOOP_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_CONTROL
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_CONTROL
+argument_list|,
+name|AML_TYPE_CONTROL
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 42 */
@@ -2967,10 +2997,10 @@ name|ARGP_RETURN_OP
 argument_list|,
 name|ARGI_RETURN_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_CONTROL
-operator||
+name|AML_CLASS_CONTROL
+argument_list|,
+name|AML_TYPE_CONTROL
+argument_list|,
 name|AML_HAS_ARGS
 argument_list|)
 block|,
@@ -2983,11 +3013,11 @@ name|ARGP_BREAK_OP
 argument_list|,
 name|ARGI_BREAK_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_CONTROL
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_CONTROL
+argument_list|,
+name|AML_TYPE_CONTROL
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 44 */
@@ -2999,11 +3029,11 @@ name|ARGP_BREAK_POINT_OP
 argument_list|,
 name|ARGI_BREAK_POINT_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_CONTROL
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_CONTROL
+argument_list|,
+name|AML_TYPE_CONTROL
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 45 */
@@ -3015,11 +3045,11 @@ name|ARGP_ONES_OP
 argument_list|,
 name|ARGI_ONES_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_CONSTANT
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_ARGUMENT
+argument_list|,
+name|AML_TYPE_CONSTANT
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* Prefixed opcodes (Two-byte opcodes with a prefix op) */
@@ -3032,10 +3062,10 @@ name|ARGP_MUTEX_OP
 argument_list|,
 name|ARGI_MUTEX_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_NAMED_OBJECT
-operator||
+name|AML_CLASS_NAMED_OBJECT
+argument_list|,
+name|AML_TYPE_NAMED_SIMPLE
+argument_list|,
 name|AML_HAS_ARGS
 operator||
 name|AML_NSOBJECT
@@ -3056,12 +3086,10 @@ name|ARGP_EVENT_OP
 argument_list|,
 name|ARGI_EVENT_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_NAMED_OBJECT
-operator||
-name|AML_NO_ARGS
-operator||
+name|AML_CLASS_NAMED_OBJECT
+argument_list|,
+name|AML_TYPE_NAMED_SIMPLE
+argument_list|,
 name|AML_NSOBJECT
 operator||
 name|AML_NSOPCODE
@@ -3080,11 +3108,11 @@ name|ARGP_COND_REF_OF_OP
 argument_list|,
 name|ARGI_COND_REF_OF_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_MONADIC2R
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_1A_1T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_1A_1T_1R
 argument_list|)
 block|,
 comment|/* 49 */
@@ -3096,10 +3124,10 @@ name|ARGP_CREATE_FIELD_OP
 argument_list|,
 name|ARGI_CREATE_FIELD_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_CREATE_FIELD
-operator||
+name|AML_CLASS_CREATE
+argument_list|,
+name|AML_TYPE_CREATE_FIELD
+argument_list|,
 name|AML_HAS_ARGS
 operator||
 name|AML_NSOBJECT
@@ -3122,11 +3150,11 @@ name|ARGP_LOAD_OP
 argument_list|,
 name|ARGI_LOAD_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_RECONFIGURATION
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_1A_1T_0R
+argument_list|,
+name|AML_FLAGS_EXEC_1A_1T_0R
 argument_list|)
 block|,
 comment|/* 4B */
@@ -3138,11 +3166,11 @@ name|ARGP_STALL_OP
 argument_list|,
 name|ARGI_STALL_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_MONADIC1
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_1A_0T_0R
+argument_list|,
+name|AML_FLAGS_EXEC_1A_0T_0R
 argument_list|)
 block|,
 comment|/* 4C */
@@ -3154,11 +3182,11 @@ name|ARGP_SLEEP_OP
 argument_list|,
 name|ARGI_SLEEP_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_MONADIC1
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_1A_0T_0R
+argument_list|,
+name|AML_FLAGS_EXEC_1A_0T_0R
 argument_list|)
 block|,
 comment|/* 4D */
@@ -3170,11 +3198,11 @@ name|ARGP_ACQUIRE_OP
 argument_list|,
 name|ARGI_ACQUIRE_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_DYADIC2S
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_2A_0T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_2A_0T_1R
 argument_list|)
 block|,
 comment|/* 4E */
@@ -3186,11 +3214,11 @@ name|ARGP_SIGNAL_OP
 argument_list|,
 name|ARGI_SIGNAL_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_MONADIC1
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_1A_0T_0R
+argument_list|,
+name|AML_FLAGS_EXEC_1A_0T_0R
 argument_list|)
 block|,
 comment|/* 4F */
@@ -3202,11 +3230,11 @@ name|ARGP_WAIT_OP
 argument_list|,
 name|ARGI_WAIT_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_DYADIC2S
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_2A_0T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_2A_0T_1R
 argument_list|)
 block|,
 comment|/* 50 */
@@ -3218,11 +3246,11 @@ name|ARGP_RESET_OP
 argument_list|,
 name|ARGI_RESET_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_MONADIC1
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_1A_0T_0R
+argument_list|,
+name|AML_FLAGS_EXEC_1A_0T_0R
 argument_list|)
 block|,
 comment|/* 51 */
@@ -3234,11 +3262,11 @@ name|ARGP_RELEASE_OP
 argument_list|,
 name|ARGI_RELEASE_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_MONADIC1
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_1A_0T_0R
+argument_list|,
+name|AML_FLAGS_EXEC_1A_0T_0R
 argument_list|)
 block|,
 comment|/* 52 */
@@ -3250,11 +3278,11 @@ name|ARGP_FROM_BCD_OP
 argument_list|,
 name|ARGI_FROM_BCD_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_MONADIC2R
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_1A_1T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_1A_1T_1R
 argument_list|)
 block|,
 comment|/* 53 */
@@ -3266,11 +3294,11 @@ name|ARGP_TO_BCD_OP
 argument_list|,
 name|ARGI_TO_BCD_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_MONADIC2R
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_1A_1T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_1A_1T_1R
 argument_list|)
 block|,
 comment|/* 54 */
@@ -3282,11 +3310,11 @@ name|ARGP_UNLOAD_OP
 argument_list|,
 name|ARGI_UNLOAD_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_RECONFIGURATION
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_1A_0T_0R
+argument_list|,
+name|AML_FLAGS_EXEC_1A_0T_0R
 argument_list|)
 block|,
 comment|/* 55 */
@@ -3298,11 +3326,11 @@ name|ARGP_REVISION_OP
 argument_list|,
 name|ARGI_REVISION_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_CONSTANT
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_ARGUMENT
+argument_list|,
+name|AML_TYPE_CONSTANT
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 56 */
@@ -3314,11 +3342,11 @@ name|ARGP_DEBUG_OP
 argument_list|,
 name|ARGI_DEBUG_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_CONSTANT
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_ARGUMENT
+argument_list|,
+name|AML_TYPE_CONSTANT
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 57 */
@@ -3330,11 +3358,11 @@ name|ARGP_FATAL_OP
 argument_list|,
 name|ARGI_FATAL_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_TRIADIC
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_3A_0T_0R
+argument_list|,
+name|AML_FLAGS_EXEC_3A_0T_0R
 argument_list|)
 block|,
 comment|/* 58 */
@@ -3346,10 +3374,10 @@ name|ARGP_REGION_OP
 argument_list|,
 name|ARGI_REGION_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_NAMED_OBJECT
-operator||
+name|AML_CLASS_NAMED_OBJECT
+argument_list|,
+name|AML_TYPE_NAMED_COMPLEX
+argument_list|,
 name|AML_HAS_ARGS
 operator||
 name|AML_NSOBJECT
@@ -3372,10 +3400,10 @@ name|ARGP_FIELD_OP
 argument_list|,
 name|ARGI_FIELD_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_NAMED_OBJECT
-operator||
+name|AML_CLASS_NAMED_OBJECT
+argument_list|,
+name|AML_TYPE_NAMED_FIELD
+argument_list|,
 name|AML_HAS_ARGS
 operator||
 name|AML_NSOBJECT
@@ -3394,10 +3422,10 @@ name|ARGP_DEVICE_OP
 argument_list|,
 name|ARGI_DEVICE_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_NAMED_OBJECT
-operator||
+name|AML_CLASS_NAMED_OBJECT
+argument_list|,
+name|AML_TYPE_NAMED_NO_OBJ
+argument_list|,
 name|AML_HAS_ARGS
 operator||
 name|AML_NSOBJECT
@@ -3418,10 +3446,10 @@ name|ARGP_PROCESSOR_OP
 argument_list|,
 name|ARGI_PROCESSOR_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_NAMED_OBJECT
-operator||
+name|AML_CLASS_NAMED_OBJECT
+argument_list|,
+name|AML_TYPE_NAMED_SIMPLE
+argument_list|,
 name|AML_HAS_ARGS
 operator||
 name|AML_NSOBJECT
@@ -3442,10 +3470,10 @@ name|ARGP_POWER_RES_OP
 argument_list|,
 name|ARGI_POWER_RES_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_NAMED_OBJECT
-operator||
+name|AML_CLASS_NAMED_OBJECT
+argument_list|,
+name|AML_TYPE_NAMED_SIMPLE
+argument_list|,
 name|AML_HAS_ARGS
 operator||
 name|AML_NSOBJECT
@@ -3466,10 +3494,10 @@ name|ARGP_THERMAL_ZONE_OP
 argument_list|,
 name|ARGI_THERMAL_ZONE_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_NAMED_OBJECT
-operator||
+name|AML_CLASS_NAMED_OBJECT
+argument_list|,
+name|AML_TYPE_NAMED_NO_OBJ
+argument_list|,
 name|AML_HAS_ARGS
 operator||
 name|AML_NSOBJECT
@@ -3490,10 +3518,10 @@ name|ARGP_INDEX_FIELD_OP
 argument_list|,
 name|ARGI_INDEX_FIELD_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_NAMED_OBJECT
-operator||
+name|AML_CLASS_NAMED_OBJECT
+argument_list|,
+name|AML_TYPE_NAMED_FIELD
+argument_list|,
 name|AML_HAS_ARGS
 operator||
 name|AML_NSOBJECT
@@ -3512,10 +3540,10 @@ name|ARGP_BANK_FIELD_OP
 argument_list|,
 name|ARGI_BANK_FIELD_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_NAMED_OBJECT
-operator||
+name|AML_CLASS_NAMED_OBJECT
+argument_list|,
+name|AML_TYPE_NAMED_FIELD
+argument_list|,
 name|AML_HAS_ARGS
 operator||
 name|AML_NSOBJECT
@@ -3535,10 +3563,10 @@ name|ARGP_LNOTEQUAL_OP
 argument_list|,
 name|ARGI_LNOTEQUAL_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_BOGUS
-operator||
+name|AML_CLASS_INTERNAL
+argument_list|,
+name|AML_TYPE_BOGUS
+argument_list|,
 name|AML_HAS_ARGS
 argument_list|)
 block|,
@@ -3551,10 +3579,10 @@ name|ARGP_LLESSEQUAL_OP
 argument_list|,
 name|ARGI_LLESSEQUAL_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_BOGUS
-operator||
+name|AML_CLASS_INTERNAL
+argument_list|,
+name|AML_TYPE_BOGUS
+argument_list|,
 name|AML_HAS_ARGS
 argument_list|)
 block|,
@@ -3567,10 +3595,10 @@ name|ARGP_LGREATEREQUAL_OP
 argument_list|,
 name|ARGI_LGREATEREQUAL_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_BOGUS
-operator||
+name|AML_CLASS_INTERNAL
+argument_list|,
+name|AML_TYPE_BOGUS
+argument_list|,
 name|AML_HAS_ARGS
 argument_list|)
 block|,
@@ -3583,12 +3611,10 @@ name|ARGP_NAMEPATH_OP
 argument_list|,
 name|ARGI_NAMEPATH_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_LITERAL
-operator||
-name|AML_NO_ARGS
-operator||
+name|AML_CLASS_ARGUMENT
+argument_list|,
+name|AML_TYPE_LITERAL
+argument_list|,
 name|AML_NSOBJECT
 operator||
 name|AML_NSNODE
@@ -3603,10 +3629,10 @@ name|ARGP_METHODCALL_OP
 argument_list|,
 name|ARGI_METHODCALL_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_METHOD_CALL
-operator||
+name|AML_CLASS_METHOD_CALL
+argument_list|,
+name|AML_TYPE_METHOD_CALL
+argument_list|,
 name|AML_HAS_ARGS
 operator||
 name|AML_NSOBJECT
@@ -3623,11 +3649,11 @@ name|ARGP_BYTELIST_OP
 argument_list|,
 name|ARGI_BYTELIST_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_LITERAL
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_ARGUMENT
+argument_list|,
+name|AML_TYPE_LITERAL
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 66 */
@@ -3639,11 +3665,11 @@ name|ARGP_RESERVEDFIELD_OP
 argument_list|,
 name|ARGI_RESERVEDFIELD_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_BOGUS
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_INTERNAL
+argument_list|,
+name|AML_TYPE_BOGUS
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 67 */
@@ -3655,12 +3681,10 @@ name|ARGP_NAMEDFIELD_OP
 argument_list|,
 name|ARGI_NAMEDFIELD_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_BOGUS
-operator||
-name|AML_NO_ARGS
-operator||
+name|AML_CLASS_INTERNAL
+argument_list|,
+name|AML_TYPE_BOGUS
+argument_list|,
 name|AML_NSOBJECT
 operator||
 name|AML_NSOPCODE
@@ -3679,11 +3703,11 @@ name|ARGP_ACCESSFIELD_OP
 argument_list|,
 name|ARGI_ACCESSFIELD_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_BOGUS
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_INTERNAL
+argument_list|,
+name|AML_TYPE_BOGUS
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 69 */
@@ -3695,11 +3719,11 @@ name|ARGP_STATICSTRING_OP
 argument_list|,
 name|ARGI_STATICSTRING_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_BOGUS
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_INTERNAL
+argument_list|,
+name|AML_TYPE_BOGUS
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 6A */
@@ -3711,11 +3735,13 @@ name|ARG_NONE
 argument_list|,
 name|ARG_NONE
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_RETURN
-operator||
+name|AML_CLASS_RETURN_VALUE
+argument_list|,
+name|AML_TYPE_RETURN
+argument_list|,
 name|AML_HAS_ARGS
+operator||
+name|AML_HAS_RETVAL
 argument_list|)
 block|,
 comment|/* 6B */
@@ -3727,10 +3753,10 @@ name|ARG_NONE
 argument_list|,
 name|ARG_NONE
 argument_list|,
-name|ACPI_OP_TYPE_UNKNOWN
-operator||
-name|OPTYPE_BOGUS
-operator||
+name|AML_CLASS_UNKNOWN
+argument_list|,
+name|AML_TYPE_BOGUS
+argument_list|,
 name|AML_HAS_ARGS
 argument_list|)
 block|,
@@ -3743,10 +3769,10 @@ name|ARG_NONE
 argument_list|,
 name|ARG_NONE
 argument_list|,
-name|ACPI_OP_TYPE_ASCII
-operator||
-name|OPTYPE_BOGUS
-operator||
+name|AML_CLASS_ASCII
+argument_list|,
+name|AML_TYPE_BOGUS
+argument_list|,
 name|AML_HAS_ARGS
 argument_list|)
 block|,
@@ -3759,14 +3785,14 @@ name|ARG_NONE
 argument_list|,
 name|ARG_NONE
 argument_list|,
-name|ACPI_OP_TYPE_PREFIX
-operator||
-name|OPTYPE_BOGUS
-operator||
+name|AML_CLASS_PREFIX
+argument_list|,
+name|AML_TYPE_BOGUS
+argument_list|,
 name|AML_HAS_ARGS
 argument_list|)
 block|,
-comment|/* ACPI 2.0 (new) opcodes */
+comment|/* ACPI 2.0 opcodes */
 comment|/* 6E */
 name|ACPI_OP
 argument_list|(
@@ -3776,11 +3802,11 @@ name|ARGP_QWORD_OP
 argument_list|,
 name|ARGI_QWORD_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_LITERAL
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_ARGUMENT
+argument_list|,
+name|AML_TYPE_LITERAL
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 6F */
@@ -3792,10 +3818,10 @@ name|ARGP_VAR_PACKAGE_OP
 argument_list|,
 name|ARGI_VAR_PACKAGE_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_DATA_TERM
-operator||
+name|AML_CLASS_ARGUMENT
+argument_list|,
+name|AML_TYPE_DATA_TERM
+argument_list|,
 name|AML_HAS_ARGS
 operator||
 name|AML_DEFER
@@ -3810,11 +3836,11 @@ name|ARGP_CONCAT_RES_OP
 argument_list|,
 name|ARGI_CONCAT_RES_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_DYADIC2R
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_2A_1T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_2A_1T_1R
 argument_list|)
 block|,
 comment|/* 71 */
@@ -3826,11 +3852,11 @@ name|ARGP_MOD_OP
 argument_list|,
 name|ARGI_MOD_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_DYADIC2R
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_2A_1T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_2A_1T_1R
 argument_list|)
 block|,
 comment|/* 72 */
@@ -3842,10 +3868,10 @@ name|ARGP_CREATE_QWORD_FIELD_OP
 argument_list|,
 name|ARGI_CREATE_QWORD_FIELD_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_CREATE_FIELD
-operator||
+name|AML_CLASS_CREATE
+argument_list|,
+name|AML_TYPE_CREATE_FIELD
+argument_list|,
 name|AML_HAS_ARGS
 operator||
 name|AML_NSOBJECT
@@ -3866,11 +3892,11 @@ name|ARGP_TO_BUFFER_OP
 argument_list|,
 name|ARGI_TO_BUFFER_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_MONADIC2R
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_1A_1T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_1A_1T_1R
 argument_list|)
 block|,
 comment|/* 74 */
@@ -3882,11 +3908,11 @@ name|ARGP_TO_DEC_STR_OP
 argument_list|,
 name|ARGI_TO_DEC_STR_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_MONADIC2R
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_1A_1T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_1A_1T_1R
 argument_list|)
 block|,
 comment|/* 75 */
@@ -3898,11 +3924,11 @@ name|ARGP_TO_HEX_STR_OP
 argument_list|,
 name|ARGI_TO_HEX_STR_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_MONADIC2R
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_1A_1T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_1A_1T_1R
 argument_list|)
 block|,
 comment|/* 76 */
@@ -3914,11 +3940,11 @@ name|ARGP_TO_INTEGER_OP
 argument_list|,
 name|ARGI_TO_INTEGER_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_MONADIC2R
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_1A_1T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_1A_1T_1R
 argument_list|)
 block|,
 comment|/* 77 */
@@ -3930,11 +3956,11 @@ name|ARGP_TO_STRING_OP
 argument_list|,
 name|ARGI_TO_STRING_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_DYADIC2R
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_2A_1T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_2A_1T_1R
 argument_list|)
 block|,
 comment|/* 78 */
@@ -3946,11 +3972,11 @@ name|ARGP_COPY_OP
 argument_list|,
 name|ARGI_COPY_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_MONADIC2R
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_1A_1T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_1A_1T_1R
 argument_list|)
 block|,
 comment|/* 79 */
@@ -3962,11 +3988,11 @@ name|ARGP_MID_OP
 argument_list|,
 name|ARGI_MID_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_MONADIC2R
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_3A_1T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_3A_1T_1R
 argument_list|)
 block|,
 comment|/* 7A */
@@ -3978,11 +4004,11 @@ name|ARGP_CONTINUE_OP
 argument_list|,
 name|ARGI_CONTINUE_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_CONTROL
-operator||
-name|AML_NO_ARGS
+name|AML_CLASS_CONTROL
+argument_list|,
+name|AML_TYPE_CONTROL
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* 7B */
@@ -3994,11 +4020,11 @@ name|ARGP_LOAD_TABLE_OP
 argument_list|,
 name|ARGI_LOAD_TABLE_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_MONADIC2R
-operator||
-name|AML_HAS_ARGS
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_6A_0T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_6A_0T_1R
 argument_list|)
 block|,
 comment|/* 7C */
@@ -4010,19 +4036,11 @@ name|ARGP_DATA_REGION_OP
 argument_list|,
 name|ARGI_DATA_REGION_OP
 argument_list|,
-name|ACPI_OP_TYPE_OPCODE
-operator||
-name|OPTYPE_MONADIC2R
-operator||
-name|AML_HAS_ARGS
-operator||
-name|AML_NSOBJECT
-operator||
-name|AML_NSOPCODE
-operator||
-name|AML_NSNODE
-operator||
-name|AML_NAMED
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_1A_1T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_1A_1T_1R
 argument_list|)
 block|,  }
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exstore - AML Interpreter object store support  *              $Revision: 148 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstore - AML Interpreter object store support  *              $Revision: 150 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -70,7 +70,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExStore  *  * PARAMETERS:  *ValDesc            - Value to be stored  *              *DestDesc           - Where to store it.  Must be an NS node  *                                    or an ACPI_OPERAND_OBJECT of type  *                                    Reference; if the latter the descriptor  *                                    will be either reused or deleted.  *  * RETURN:      Status  *  * DESCRIPTION: Store the value described by ValDesc into the location  *              described by DestDesc.  Called by various interpreter  *              functions to store the result of an operation into  *              the destination operand.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExStore  *  * PARAMETERS:  *SourceDesc         - Value to be stored  *              *DestDesc           - Where to store it.  Must be an NS node  *                                    or an ACPI_OPERAND_OBJECT of type  *                                    Reference;   *  * RETURN:      Status  *  * DESCRIPTION: Store the value described by SourceDesc into the location  *              described by DestDesc.  Called by various interpreter  *              functions to store the result of an operation into  *              the destination operand.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -79,7 +79,7 @@ name|AcpiExStore
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
-name|ValDesc
+name|SourceDesc
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -112,7 +112,7 @@ comment|/* Validate parameters */
 if|if
 condition|(
 operator|!
-name|ValDesc
+name|SourceDesc
 operator|||
 operator|!
 name|DestDesc
@@ -149,7 +149,7 @@ name|Status
 operator|=
 name|AcpiExStoreObjectToNode
 argument_list|(
-name|ValDesc
+name|SourceDesc
 argument_list|,
 operator|(
 name|ACPI_NAMESPACE_NODE
@@ -193,7 +193,7 @@ argument_list|)
 expr_stmt|;
 name|DUMP_STACK_ENTRY
 argument_list|(
-name|ValDesc
+name|SourceDesc
 argument_list|)
 expr_stmt|;
 name|DUMP_STACK_ENTRY
@@ -239,7 +239,7 @@ name|Status
 operator|=
 name|AcpiExStoreObjectToNode
 argument_list|(
-name|ValDesc
+name|SourceDesc
 argument_list|,
 name|RefDesc
 operator|->
@@ -259,7 +259,7 @@ name|Status
 operator|=
 name|AcpiExStoreObjectToIndex
 argument_list|(
-name|ValDesc
+name|SourceDesc
 argument_list|,
 name|RefDesc
 argument_list|,
@@ -290,7 +290,7 @@ name|Reference
 operator|.
 name|Offset
 argument_list|,
-name|ValDesc
+name|SourceDesc
 argument_list|,
 name|WalkState
 argument_list|)
@@ -318,7 +318,7 @@ literal|"[ACPI Debug] %s: "
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(
-name|ValDesc
+name|SourceDesc
 operator|->
 name|Common
 operator|.
@@ -329,7 +329,7 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|ValDesc
+name|SourceDesc
 operator|->
 name|Common
 operator|.
@@ -349,7 +349,7 @@ operator|,
 operator|(
 name|UINT32
 operator|)
-name|ValDesc
+name|SourceDesc
 operator|->
 name|Integer
 operator|.
@@ -358,7 +358,7 @@ operator|,
 operator|(
 name|UINT32
 operator|)
-name|ValDesc
+name|SourceDesc
 operator|->
 name|Integer
 operator|.
@@ -380,7 +380,7 @@ operator|,
 operator|(
 name|UINT32
 operator|)
-name|ValDesc
+name|SourceDesc
 operator|->
 name|Buffer
 operator|.
@@ -399,7 +399,7 @@ name|ACPI_DB_DEBUG_OBJECT
 operator|,
 literal|"%s\n"
 operator|,
-name|ValDesc
+name|SourceDesc
 operator|->
 name|String
 operator|.
@@ -421,7 +421,7 @@ operator|,
 operator|(
 name|UINT32
 operator|)
-name|ValDesc
+name|SourceDesc
 operator|->
 name|Package
 operator|.
@@ -438,7 +438,7 @@ name|ACPI_DB_DEBUG_OBJECT
 operator|,
 literal|"@0x%p\n"
 operator|,
-name|ValDesc
+name|SourceDesc
 operator|)
 argument_list|)
 expr_stmt|;
@@ -502,18 +502,6 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* switch (RefDesc->Reference.Opcode) */
-comment|/* Always delete the reference descriptor object */
-if|if
-condition|(
-name|RefDesc
-condition|)
-block|{
-name|AcpiUtRemoveReference
-argument_list|(
-name|RefDesc
-argument_list|)
-expr_stmt|;
-block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -523,7 +511,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExStoreObjectToIndex  *  * PARAMETERS:  *ValDesc            - Value to be stored  *              *Node               - Named object to receive the value  *  * RETURN:      Status  *  * DESCRIPTION: Store the object to the named object.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExStoreObjectToIndex  *  * PARAMETERS:  *SourceDesc           - Value to be stored  *              *Node               - Named object to receive the value  *  * RETURN:      Status  *  * DESCRIPTION: Store the object to the named object.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -532,7 +520,7 @@ name|AcpiExStoreObjectToIndex
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
-name|ValDesc
+name|SourceDesc
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -593,7 +581,7 @@ operator|==
 name|ACPI_TYPE_PACKAGE
 condition|)
 block|{
-comment|/*              * The object at *(DestDesc->Reference.Where) is the              *  element within the package that is to be modified.              */
+comment|/*              * The object at *(DestDesc->Reference.Where) is the              * element within the package that is to be modified.              */
 name|ObjDesc
 operator|=
 operator|*
@@ -610,7 +598,7 @@ condition|(
 name|ObjDesc
 condition|)
 block|{
-comment|/*                  * If the Destination element is a package, we will delete                  *  that object and construct a new one.                  *                  * TBD: [Investigate] Should both the src and dest be required                  *      to be packages?                  *&& (ValDesc->Common.Type == ACPI_TYPE_PACKAGE)                  */
+comment|/*                  * If the Destination element is a package, we will delete                  *  that object and construct a new one.                  *                  * TBD: [Investigate] Should both the src and dest be required                  *      to be packages?                  *&& (SourceDesc->Common.Type == ACPI_TYPE_PACKAGE)                  */
 if|if
 condition|(
 name|ObjDesc
@@ -622,12 +610,7 @@ operator|==
 name|ACPI_TYPE_PACKAGE
 condition|)
 block|{
-comment|/*                      * Take away the reference for being part of a package and                      * delete                      */
-name|AcpiUtRemoveReference
-argument_list|(
-name|ObjDesc
-argument_list|)
-expr_stmt|;
+comment|/* Take away the reference for being part of a package */
 name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
@@ -645,12 +628,12 @@ operator|!
 name|ObjDesc
 condition|)
 block|{
-comment|/*                  * If the ObjDesc is NULL, it means that an uninitialized package                  * element has been used as a destination (this is OK), therefore,                  * we must create the destination element to match the type of the                  * source element NOTE: ValDesc can be of any type.                  */
+comment|/*                  * If the ObjDesc is NULL, it means that an uninitialized package                  * element has been used as a destination (this is OK), therefore,                  * we must create the destination element to match the type of the                  * source element NOTE: SourceDesccan be of any type.                  */
 name|ObjDesc
 operator|=
 name|AcpiUtCreateInternalObject
 argument_list|(
-name|ValDesc
+name|SourceDesc
 operator|->
 name|Common
 operator|.
@@ -685,7 +668,7 @@ name|Status
 operator|=
 name|AcpiUtCopyIpackageToIpackage
 argument_list|(
-name|ValDesc
+name|SourceDesc
 argument_list|,
 name|ObjDesc
 argument_list|,
@@ -712,7 +695,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*                  * Install the new descriptor into the package and add a                  * reference to the newly created descriptor for now being                  * part of the parent package                  */
+comment|/* Install the new descriptor into the package */
 operator|*
 operator|(
 name|DestDesc
@@ -723,11 +706,6 @@ name|Where
 operator|)
 operator|=
 name|ObjDesc
-expr_stmt|;
-name|AcpiUtAddReference
-argument_list|(
-name|ObjDesc
-argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -741,12 +719,12 @@ operator|.
 name|Type
 condition|)
 block|{
-comment|/*                  * The destination element is not a package, so we need to                  * convert the contents of the source (ValDesc) and copy into                  * the destination (ObjDesc)                  */
+comment|/*                  * The destination element is not a package, so we need to                  * convert the contents of the source (SourceDesc) and copy into                  * the destination (ObjDesc)                  */
 name|Status
 operator|=
 name|AcpiExStoreObjectToObject
 argument_list|(
-name|ValDesc
+name|SourceDesc
 argument_list|,
 name|ObjDesc
 argument_list|,
@@ -814,7 +792,7 @@ block|}
 comment|/*          * The assignment of the individual elements will be slightly          * different for each source type.          */
 switch|switch
 condition|(
-name|ValDesc
+name|SourceDesc
 operator|->
 name|Common
 operator|.
@@ -852,7 +830,7 @@ call|(
 name|UINT8
 call|)
 argument_list|(
-name|ValDesc
+name|SourceDesc
 operator|->
 name|Integer
 operator|.
@@ -891,7 +869,7 @@ case|:
 comment|/*              * Type is Buffer, the Length is in the structure.              * Just loop through the elements and assign each one in turn.              */
 name|Length
 operator|=
-name|ValDesc
+name|SourceDesc
 operator|->
 name|Buffer
 operator|.
@@ -913,7 +891,7 @@ control|)
 block|{
 name|Value
 operator|=
-name|ValDesc
+name|SourceDesc
 operator|->
 name|Buffer
 operator|.
@@ -945,7 +923,7 @@ case|:
 comment|/*              * Type is String, the Length is in the structure.              * Just loop through the elements and assign each one in turn.              */
 name|Length
 operator|=
-name|ValDesc
+name|SourceDesc
 operator|->
 name|String
 operator|.
@@ -967,7 +945,7 @@ control|)
 block|{
 name|Value
 operator|=
-name|ValDesc
+name|SourceDesc
 operator|->
 name|String
 operator|.
@@ -1002,7 +980,7 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Source must be Number/Buffer/String type, not %X\n"
 operator|,
-name|ValDesc
+name|SourceDesc
 operator|->
 name|Common
 operator|.

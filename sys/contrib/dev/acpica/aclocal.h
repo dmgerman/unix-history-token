@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 134 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 138 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -533,7 +533,8 @@ name|UINT32
 name|Name
 decl_stmt|;
 comment|/* ACPI Name, always 4 chars per ACPI spec */
-name|void
+name|union
+name|acpi_operand_obj
 modifier|*
 name|Object
 decl_stmt|;
@@ -811,6 +812,75 @@ block|}
 name|ACPI_NAMESTRING_INFO
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* Field creation info */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|RegionNode
+decl_stmt|;
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|FieldNode
+decl_stmt|;
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|RegisterNode
+decl_stmt|;
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|DataRegisterNode
+decl_stmt|;
+name|UINT32
+name|BankValue
+decl_stmt|;
+name|UINT32
+name|FieldBitPosition
+decl_stmt|;
+name|UINT32
+name|FieldBitLength
+decl_stmt|;
+name|UINT8
+name|FieldFlags
+decl_stmt|;
+name|UINT8
+name|FieldType
+decl_stmt|;
+block|}
+name|ACPI_CREATE_FIELD_INFO
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * Field flags: Bits 00 - 03 : AccessType (AnyAcc, ByteAcc, etc.)  *                   04      : LockRule (1 == Lock)  *                   05 - 06 : UpdateRule  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FIELD_ACCESS_TYPE_MASK
+value|0x0F
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIELD_LOCK_RULE_MASK
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIELD_UPDATE_RULE_MASK
+value|0x60
+end_define
 
 begin_comment
 comment|/*****************************************************************************  *  * Event typedefs and structs  *  ****************************************************************************/
@@ -1404,154 +1474,28 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*****************************************************************************  *  * Parser typedefs and structs  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * Interpreter typedefs and structs  *  ****************************************************************************/
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ACPI_OP_CLASS_MASK
-value|0x1F
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_OP_ARGS_MASK
-value|0x20
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_OP_TYPE_MASK
-value|0xC0
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_OP_TYPE_OPCODE
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_OP_TYPE_ASCII
-value|0x40
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_OP_TYPE_PREFIX
-value|0x80
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_OP_TYPE_UNKNOWN
-value|0xC0
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GET_OP_CLASS
+begin_typedef
+typedef|typedef
+name|ACPI_STATUS
+function_decl|(
+modifier|*
+name|ACPI_EXECUTE_OP
+function_decl|)
 parameter_list|(
-name|a
+name|struct
+name|acpi_walk_state
+modifier|*
+name|WalkState
 parameter_list|)
-value|((a)->Flags& ACPI_OP_CLASS_MASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GET_OP_ARGS
-parameter_list|(
-name|a
-parameter_list|)
-value|((a)->Flags& ACPI_OP_ARGS_MASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GET_OP_TYPE
-parameter_list|(
-name|a
-parameter_list|)
-value|((a)->Flags& ACPI_OP_TYPE_MASK)
-end_define
+function_decl|;
+end_typedef
 
 begin_comment
-comment|/*  * Flags byte: 0-4 (5 bits) = Opcode Class  (0x001F  *             5   (1 bit)  = Has arguments flag  *             6-7 (2 bits) = Reserved  */
+comment|/*****************************************************************************  *  * Parser typedefs and structs  *  ****************************************************************************/
 end_comment
-
-begin_define
-define|#
-directive|define
-name|AML_NO_ARGS
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|AML_HAS_ARGS
-value|0x0020
-end_define
-
-begin_define
-define|#
-directive|define
-name|AML_NSOBJECT
-value|0x0100
-end_define
-
-begin_define
-define|#
-directive|define
-name|AML_NSOPCODE
-value|0x0200
-end_define
-
-begin_define
-define|#
-directive|define
-name|AML_NSNODE
-value|0x0400
-end_define
-
-begin_define
-define|#
-directive|define
-name|AML_NAMED
-value|0x0800
-end_define
-
-begin_define
-define|#
-directive|define
-name|AML_DEFER
-value|0x1000
-end_define
-
-begin_define
-define|#
-directive|define
-name|AML_FIELD
-value|0x2000
-end_define
-
-begin_define
-define|#
-directive|define
-name|AML_CREATE
-value|0x4000
-end_define
 
 begin_comment
 comment|/*  * AML opcode, name, and argument layout  */
@@ -1573,7 +1517,15 @@ comment|/* Interpret time arguments */
 name|UINT16
 name|Flags
 decl_stmt|;
-comment|/* Opcode type, HasArgs flag */
+comment|/* Misc flags */
+name|UINT8
+name|Class
+decl_stmt|;
+comment|/* Opcode class */
+name|UINT8
+name|Type
+decl_stmt|;
+comment|/* Opcode type */
 ifdef|#
 directive|ifdef
 name|_OPCODE_NAMES

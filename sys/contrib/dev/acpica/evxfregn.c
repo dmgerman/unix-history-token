@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evxfregn - External Interfaces, ACPI Operation Regions and  *                         Address Spaces.  *              $Revision: 38 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evxfregn - External Interfaces, ACPI Operation Regions and  *                         Address Spaces.  *              $Revision: 40 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -160,7 +160,7 @@ expr_stmt|;
 comment|/* Convert and validate the device handle */
 name|Node
 operator|=
-name|AcpiNsConvertHandleToEntry
+name|AcpiNsMapHandleToNode
 argument_list|(
 name|Device
 argument_list|)
@@ -179,7 +179,7 @@ goto|goto
 name|UnlockAndExit
 goto|;
 block|}
-comment|/*      *  This registration is valid for only the types below      *  and the root.  This is where the default handlers      *  get placed.      */
+comment|/*      * This registration is valid for only the types below      * and the root.  This is where the default handlers      * get placed.      */
 if|if
 condition|(
 operator|(
@@ -308,7 +308,7 @@ goto|;
 break|break;
 block|}
 block|}
-comment|/*      *  If the caller hasn't specified a setup routine, use the default      */
+comment|/*      * If the caller hasn't specified a setup routine, use the default      */
 if|if
 condition|(
 operator|!
@@ -320,7 +320,7 @@ operator|=
 name|AcpiEvDefaultRegionSetup
 expr_stmt|;
 block|}
-comment|/*      *  Check for an existing internal object      */
+comment|/*      * Check for an existing internal object      */
 name|ObjDesc
 operator|=
 name|AcpiNsGetAttachedObject
@@ -333,7 +333,7 @@ condition|(
 name|ObjDesc
 condition|)
 block|{
-comment|/*          *  The object exists.          *  Make sure the handler is not already installed.          */
+comment|/*          * The object exists.          * Make sure the handler is not already installed.          */
 comment|/* check the address handler the user requested */
 name|HandlerObj
 operator|=
@@ -348,7 +348,7 @@ condition|(
 name|HandlerObj
 condition|)
 block|{
-comment|/*              *  We have an Address handler, see if user requested this              *  address space.              */
+comment|/*              * We have an Address handler, see if user requested this              * address space.              */
 if|if
 condition|(
 name|HandlerObj
@@ -368,7 +368,7 @@ goto|goto
 name|UnlockAndExit
 goto|;
 block|}
-comment|/*              *  Move through the linked list of handlers              */
+comment|/*              * Move through the linked list of handlers              */
 name|HandlerObj
 operator|=
 name|HandlerObj
@@ -502,7 +502,7 @@ name|ObjDesc
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      *  Now we can install the handler      *      *  At this point we know that there is no existing handler.      *  So, we just allocate the object for the handler and link it      *  into the list.      */
+comment|/*      * Now we can install the handler      *      * At this point we know that there is no existing handler.      * So, we just allocate the object for the handler and link it      * into the list.      */
 name|HandlerObj
 operator|=
 name|AcpiUtCreateInternalObject
@@ -595,7 +595,7 @@ name|Setup
 operator|=
 name|Setup
 expr_stmt|;
-comment|/*      *  Now walk the namespace finding all of the regions this      *  handler will manage.      *      *  We start at the device and search the branch toward      *  the leaf nodes until either the leaf is encountered or      *  a device is detected that has an address handler of the      *  same type.      *      *  In either case we back up and search down the remainder      *  of the branch      */
+comment|/*      * Now walk the namespace finding all of the regions this      * handler will manage.      *      * We start at the device and search the branch toward      * the leaf nodes until either the leaf is encountered or      * a device is detected that has an address handler of the      * same type.      *      * In either case we back up and search down the remainder      * of the branch      */
 name|Status
 operator|=
 name|AcpiNsWalkNamespace
@@ -615,7 +615,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/*      *  Place this handler 1st on the list      */
+comment|/*      * Place this handler 1st on the list      */
 name|HandlerObj
 operator|->
 name|Common
@@ -755,7 +755,7 @@ expr_stmt|;
 comment|/* Convert and validate the device handle */
 name|Node
 operator|=
-name|AcpiNsConvertHandleToEntry
+name|AcpiNsMapHandleToNode
 argument_list|(
 name|Device
 argument_list|)
@@ -788,7 +788,6 @@ operator|!
 name|ObjDesc
 condition|)
 block|{
-comment|/*          *  The object DNE.          */
 name|Status
 operator|=
 name|AE_NOT_EXIST
@@ -797,7 +796,7 @@ goto|goto
 name|UnlockAndExit
 goto|;
 block|}
-comment|/*      *  find the address handler the user requested      */
+comment|/*      * find the address handler the user requested      */
 name|HandlerObj
 operator|=
 name|ObjDesc
@@ -820,7 +819,7 @@ condition|(
 name|HandlerObj
 condition|)
 block|{
-comment|/*          *  We have a handler, see if user requested this one          */
+comment|/*          * We have a handler, see if user requested this one          */
 if|if
 condition|(
 name|HandlerObj
@@ -832,7 +831,7 @@ operator|==
 name|SpaceId
 condition|)
 block|{
-comment|/*              *  Got it, first dereference this in the Regions              */
+comment|/*              * Got it, first dereference this in the Regions              */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -869,7 +868,7 @@ condition|(
 name|RegionObj
 condition|)
 block|{
-comment|/*                  *  First disassociate the handler from the region.                  *                  *  NOTE: this doesn't mean that the region goes away                  *  The region is just inaccessible as indicated to                  *  the _REG method                  */
+comment|/*                  * First disassociate the handler from the region.                  *                  * NOTE: this doesn't mean that the region goes away                  * The region is just inaccessible as indicated to                  * the _REG method                  */
 name|AcpiEvDisassociateRegionFromHandler
 argument_list|(
 name|RegionObj
@@ -877,7 +876,7 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-comment|/*                  *  Walk the list, since we took the first region and it                  *  was removed from the list by the dissassociate call                  *  we just get the first item on the list again                  */
+comment|/*                  * Walk the list, since we took the first region and it                  * was removed from the list by the dissassociate call                  * we just get the first item on the list again                  */
 name|RegionObj
 operator|=
 name|HandlerObj
@@ -887,7 +886,7 @@ operator|.
 name|RegionList
 expr_stmt|;
 block|}
-comment|/*              *  Remove this Handler object from the list              */
+comment|/*              * Remove this Handler object from the list              */
 operator|*
 name|LastObjPtr
 operator|=
@@ -897,7 +896,7 @@ name|AddrHandler
 operator|.
 name|Next
 expr_stmt|;
-comment|/*              *  Now we can delete the handler object              */
+comment|/*              * Now we can delete the handler object              */
 name|AcpiUtRemoveReference
 argument_list|(
 name|HandlerObj
@@ -912,7 +911,7 @@ goto|goto
 name|UnlockAndExit
 goto|;
 block|}
-comment|/*          *  Move through the linked list of handlers          */
+comment|/*          * Move through the linked list of handlers          */
 name|LastObjPtr
 operator|=
 operator|&
@@ -931,7 +930,7 @@ operator|.
 name|Next
 expr_stmt|;
 block|}
-comment|/*      *  The handler does not exist      */
+comment|/*      * The handler does not exist      */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(

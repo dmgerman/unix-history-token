@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbcmds - debug commands and output routines  *              $Revision: 65 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbcmds - debug commands and output routines  *              $Revision: 66 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -959,6 +959,8 @@ name|AcpiNsDumpObjects
 argument_list|(
 name|ACPI_TYPE_ANY
 argument_list|,
+name|ACPI_DISPLAY_SUMMARY
+argument_list|,
 name|MaxDepth
 argument_list|,
 name|ACPI_UINT32_MAX
@@ -1057,6 +1059,8 @@ expr_stmt|;
 name|AcpiNsDumpObjects
 argument_list|(
 name|ACPI_TYPE_ANY
+argument_list|,
+name|ACPI_DISPLAY_SUMMARY
 argument_list|,
 name|MaxDepth
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: hwacpi - ACPI Hardware Initialization/Mode Interface  *              $Revision: 45 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: hwacpi - ACPI Hardware Initialization/Mode Interface  *              $Revision: 46 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -485,7 +485,7 @@ block|}
 comment|/* Give the platform some time to react */
 name|AcpiOsStall
 argument_list|(
-literal|5000
+literal|20000
 argument_list|)
 expr_stmt|;
 if|if

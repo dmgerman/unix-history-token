@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acnamesp.h - Namespace subcomponent prototypes and defines  *       $Revision: 107 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acnamesp.h - Namespace subcomponent prototypes and defines  *       $Revision: 110 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -276,7 +276,7 @@ end_function_decl
 begin_function_decl
 name|ACPI_NAMESPACE_NODE
 modifier|*
-name|AcpiNsGetNextObject
+name|AcpiNsGetNextNode
 parameter_list|(
 name|ACPI_OBJECT_TYPE8
 name|Type
@@ -554,6 +554,9 @@ name|AcpiNsDumpObjects
 parameter_list|(
 name|ACPI_OBJECT_TYPE8
 name|Type
+parameter_list|,
+name|UINT8
+name|DisplayType
 parameter_list|,
 name|UINT32
 name|MaxDepth
@@ -1028,7 +1031,7 @@ end_function_decl
 begin_function_decl
 name|ACPI_NAMESPACE_NODE
 modifier|*
-name|AcpiNsConvertHandleToEntry
+name|AcpiNsMapHandleToNode
 parameter_list|(
 name|ACPI_HANDLE
 name|Handle
@@ -1071,7 +1074,7 @@ end_function_decl
 begin_function_decl
 name|ACPI_NAMESPACE_NODE
 modifier|*
-name|AcpiNsGetNextValidObject
+name|AcpiNsGetNextValidNode
 parameter_list|(
 name|ACPI_NAMESPACE_NODE
 modifier|*

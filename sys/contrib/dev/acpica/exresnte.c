@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresnte - AML Interpreter object resolution  *              $Revision: 41 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresnte - AML Interpreter object resolution  *              $Revision: 43 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -76,7 +76,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExResolveNodeToValue  *  * PARAMETERS:  StackPtr        - Pointer to a location on a stack that contains  *                                a pointer to a Node  *              WalkState       - Current state  *  * RETURN:      Status  *  * DESCRIPTION: Resolve a Namespace node (AKA a "direct name pointer") to  *              a valued object  *  * Note: for some of the data types, the pointer attached to the Node  * can be either a pointer to an actual internal object or a pointer into the  * AML stream itself.  These types are currently:  *  *      ACPI_TYPE_INTEGER  *      ACPI_TYPE_STRING  *      ACPI_TYPE_BUFFER  *      ACPI_TYPE_MUTEX  *      ACPI_TYPE_PACKAGE  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExResolveNodeToValue  *  * PARAMETERS:  ObjectPtr       - Pointer to a location that contains  *                                a pointer to a NS node, and will recieve a  *                                pointer to the resolved object.  *              WalkState       - Current state.  Valid only if executing AML  *                                code.  NULL if simply resolving an object  *  * RETURN:      Status  *  * DESCRIPTION: Resolve a Namespace node to a valued object  *  * Note: for some of the data types, the pointer attached to the Node  * can be either a pointer to an actual internal object or a pointer into the  * AML stream itself.  These types are currently:  *  *      ACPI_TYPE_INTEGER  *      ACPI_TYPE_STRING  *      ACPI_TYPE_BUFFER  *      ACPI_TYPE_MUTEX  *      ACPI_TYPE_PACKAGE  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -86,7 +86,7 @@ parameter_list|(
 name|ACPI_NAMESPACE_NODE
 modifier|*
 modifier|*
-name|StackPtr
+name|ObjectPtr
 parameter_list|,
 name|ACPI_WALK_STATE
 modifier|*
@@ -100,7 +100,7 @@ name|AE_OK
 decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
-name|ValDesc
+name|SourceDesc
 decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -127,9 +127,9 @@ comment|/*      * The stack pointer points to a ACPI_NAMESPACE_NODE (Node).  Get
 name|Node
 operator|=
 operator|*
-name|StackPtr
+name|ObjectPtr
 expr_stmt|;
-name|ValDesc
+name|SourceDesc
 operator|=
 name|AcpiNsGetAttachedObject
 argument_list|(
@@ -151,11 +151,11 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"Entry=%p ValDesc=%p Type=%X\n"
+literal|"Entry=%p SourceDesc=%p Type=%X\n"
 operator|,
 name|Node
 operator|,
-name|ValDesc
+name|SourceDesc
 operator|,
 name|EntryType
 operator|)
@@ -190,7 +190,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|ValDesc
+name|SourceDesc
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -223,7 +223,7 @@ if|if
 condition|(
 name|ACPI_TYPE_PACKAGE
 operator|!=
-name|ValDesc
+name|SourceDesc
 operator|->
 name|Common
 operator|.
@@ -239,7 +239,7 @@ literal|"Object not a Package, type %s\n"
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(
-name|ValDesc
+name|SourceDesc
 operator|->
 name|Common
 operator|.
@@ -257,7 +257,7 @@ block|}
 comment|/* Return an additional reference to the object */
 name|ObjDesc
 operator|=
-name|ValDesc
+name|SourceDesc
 expr_stmt|;
 name|AcpiUtAddReference
 argument_list|(
@@ -272,7 +272,7 @@ if|if
 condition|(
 name|ACPI_TYPE_BUFFER
 operator|!=
-name|ValDesc
+name|SourceDesc
 operator|->
 name|Common
 operator|.
@@ -288,7 +288,7 @@ literal|"Object not a Buffer, type %s\n"
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(
-name|ValDesc
+name|SourceDesc
 operator|->
 name|Common
 operator|.
@@ -306,7 +306,7 @@ block|}
 comment|/* Return an additional reference to the object */
 name|ObjDesc
 operator|=
-name|ValDesc
+name|SourceDesc
 expr_stmt|;
 name|AcpiUtAddReference
 argument_list|(
@@ -321,7 +321,7 @@ if|if
 condition|(
 name|ACPI_TYPE_STRING
 operator|!=
-name|ValDesc
+name|SourceDesc
 operator|->
 name|Common
 operator|.
@@ -337,7 +337,7 @@ literal|"Object not a String, type %s\n"
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(
-name|ValDesc
+name|SourceDesc
 operator|->
 name|Common
 operator|.
@@ -355,7 +355,7 @@ block|}
 comment|/* Return an additional reference to the object */
 name|ObjDesc
 operator|=
-name|ValDesc
+name|SourceDesc
 expr_stmt|;
 name|AcpiUtAddReference
 argument_list|(
@@ -370,7 +370,7 @@ if|if
 condition|(
 name|ACPI_TYPE_INTEGER
 operator|!=
-name|ValDesc
+name|SourceDesc
 operator|->
 name|Common
 operator|.
@@ -386,7 +386,7 @@ literal|"Object not a Integer, type %s\n"
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(
-name|ValDesc
+name|SourceDesc
 operator|->
 name|Common
 operator|.
@@ -404,7 +404,7 @@ block|}
 comment|/* Return an additional reference to the object */
 name|ObjDesc
 operator|=
-name|ValDesc
+name|SourceDesc
 expr_stmt|;
 name|AcpiUtAddReference
 argument_list|(
@@ -429,11 +429,11 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"FieldRead Node=%p ValDesc=%p Type=%X\n"
+literal|"FieldRead Node=%p SourceDesc=%p Type=%X\n"
 operator|,
 name|Node
 operator|,
-name|ValDesc
+name|SourceDesc
 operator|,
 name|EntryType
 operator|)
@@ -443,7 +443,7 @@ name|Status
 operator|=
 name|AcpiExReadDataFromField
 argument_list|(
-name|ValDesc
+name|SourceDesc
 argument_list|,
 operator|&
 name|ObjDesc
@@ -475,7 +475,7 @@ case|:
 comment|/* Return an additional reference to the object */
 name|ObjDesc
 operator|=
-name|ValDesc
+name|SourceDesc
 expr_stmt|;
 name|AcpiUtAddReference
 argument_list|(
@@ -511,7 +511,7 @@ name|INTERNAL_TYPE_REFERENCE
 case|:
 switch|switch
 condition|(
-name|ValDesc
+name|SourceDesc
 operator|->
 name|Reference
 operator|.
@@ -547,7 +547,7 @@ name|AML_REVISION_OP
 case|:
 name|TempVal
 operator|=
-name|ACPI_CA_VERSION
+name|ACPI_CA_SUPPORT_LEVEL
 expr_stmt|;
 break|break;
 default|default:
@@ -558,7 +558,7 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Unsupported reference opcode %X\n"
 operator|,
-name|ValDesc
+name|SourceDesc
 operator|->
 name|Reference
 operator|.
@@ -600,7 +600,12 @@ name|Value
 operator|=
 name|TempVal
 expr_stmt|;
-comment|/* Truncate value if we are executing from a 32-bit ACPI table */
+comment|/*           * Truncate value if we are executing from a 32-bit ACPI table          * AND actually executing AML code.  If we are resolving          * an object in the namespace via an external call to the          * subsystem, we will have a null WalkState          */
+if|if
+condition|(
+name|WalkState
+condition|)
+block|{
 name|AcpiExTruncateFor32bitTable
 argument_list|(
 name|ObjDesc
@@ -608,6 +613,7 @@ argument_list|,
 name|WalkState
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 comment|/* Default case is for unknown types */
 default|default:
@@ -633,7 +639,7 @@ block|}
 comment|/* switch (EntryType) */
 comment|/* Put the object descriptor on the stack */
 operator|*
-name|StackPtr
+name|ObjectPtr
 operator|=
 operator|(
 name|void

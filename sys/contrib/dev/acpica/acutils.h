@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acutils.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 115 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acutils.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 117 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -884,51 +884,53 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|AcpiUtDebugPrint
-parameter_list|(
+argument_list|(
 name|UINT32
 name|RequestedDebugLevel
-parameter_list|,
+argument_list|,
 name|UINT32
 name|LineNumber
-parameter_list|,
+argument_list|,
 name|ACPI_DEBUG_PRINT_INFO
-modifier|*
+operator|*
 name|DbgInfo
-parameter_list|,
+argument_list|,
 name|char
-modifier|*
+operator|*
 name|Format
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|,
+operator|...
+argument_list|)
+name|ACPI_PRINTF_LIKE_FUNC
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|AcpiUtDebugPrintRaw
-parameter_list|(
+argument_list|(
 name|UINT32
 name|RequestedDebugLevel
-parameter_list|,
+argument_list|,
 name|UINT32
 name|LineNumber
-parameter_list|,
+argument_list|,
 name|ACPI_DEBUG_PRINT_INFO
-modifier|*
+operator|*
 name|DbgInfo
-parameter_list|,
+argument_list|,
 name|char
-modifier|*
+operator|*
 name|Format
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|,
+operator|...
+argument_list|)
+name|ACPI_PRINTF_LIKE_FUNC
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * UtDelete - Object deletion  */
@@ -1034,6 +1036,13 @@ define|#
 directive|define
 name|METHOD_NAME__BBN
 value|"_BBN"
+end_define
+
+begin_define
+define|#
+directive|define
+name|METHOD_NAME__PRT
+value|"_PRT"
 end_define
 
 begin_function_decl

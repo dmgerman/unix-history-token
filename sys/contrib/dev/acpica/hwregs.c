@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: hwregs - Read/write access functions for the various ACPI  *                       control and status registers.  *              $Revision: 109 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: hwregs - Read/write access functions for the various ACPI  *                       control and status registers.  *              $Revision: 110 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -1078,11 +1078,20 @@ argument_list|(
 operator|(
 name|ACPI_DB_IO
 operator|,
-literal|"PM2 control: Read %X from %p\n"
+literal|"PM2 control: Read %X from %8.8X%8.8X\n"
 operator|,
 name|RegisterValue
 operator|,
-name|ACPI_GET_ADDRESS
+name|HIDWORD
+argument_list|(
+name|AcpiGbl_FADT
+operator|->
+name|XPm2CntBlk
+operator|.
+name|Address
+argument_list|)
+operator|,
+name|LODWORD
 argument_list|(
 name|AcpiGbl_FADT
 operator|->
@@ -1125,15 +1134,27 @@ argument_list|(
 operator|(
 name|ACPI_DB_IO
 operator|,
-literal|"About to write %04X to %p\n"
+literal|"About to write %04X to %8.8X%8.8X\n"
 operator|,
 name|RegisterValue
 operator|,
+name|HIDWORD
+argument_list|(
 name|AcpiGbl_FADT
 operator|->
 name|XPm2CntBlk
 operator|.
 name|Address
+argument_list|)
+operator|,
+name|LODWORD
+argument_list|(
+name|AcpiGbl_FADT
+operator|->
+name|XPm2CntBlk
+operator|.
+name|Address
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1174,11 +1195,20 @@ argument_list|(
 operator|(
 name|ACPI_DB_IO
 operator|,
-literal|"PM_TIMER: Read %X from %p\n"
+literal|"PM_TIMER: Read %X from %8.8X%8.8X\n"
 operator|,
 name|RegisterValue
 operator|,
-name|ACPI_GET_ADDRESS
+name|HIDWORD
+argument_list|(
+name|AcpiGbl_FADT
+operator|->
+name|XPmTmrBlk
+operator|.
+name|Address
+argument_list|)
+operator|,
+name|LODWORD
 argument_list|(
 name|AcpiGbl_FADT
 operator|->
