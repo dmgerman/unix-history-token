@@ -1517,11 +1517,15 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|pw_scan
+name|__pw_scan
 argument_list|(
 name|buf
 argument_list|,
 name|pw
+argument_list|,
+name|_PWSCAN_WARN
+operator||
+name|_PWSCAN_MASTER
 argument_list|)
 operator|)
 return|;

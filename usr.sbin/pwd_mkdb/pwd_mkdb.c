@@ -3006,11 +3006,15 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|pw_scan
+name|__pw_scan
 argument_list|(
 name|line
 argument_list|,
 name|pw
+argument_list|,
+name|_PWSCAN_WARN
+operator||
+name|_PWSCAN_MASTER
 argument_list|)
 condition|)
 block|{

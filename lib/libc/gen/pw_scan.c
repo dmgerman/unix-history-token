@@ -110,6 +110,7 @@ comment|/*  * Some software assumes that IDs are short.  We should emit warnings
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pw_big_ids_warning
 init|=
@@ -120,21 +121,20 @@ end_decl_stmt
 
 begin_function
 name|int
-name|pw_scan
+name|__pw_scan
 parameter_list|(
-name|bp
-parameter_list|,
-name|pw
-parameter_list|)
 name|char
 modifier|*
 name|bp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|passwd
 modifier|*
 name|pw
-decl_stmt|;
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
 block|{
 name|uid_t
 name|id
@@ -334,6 +334,12 @@ operator|!=
 literal|'-'
 condition|)
 block|{
+if|if
+condition|(
+name|flags
+operator|&
+name|_PWSCAN_WARN
+condition|)
 name|warnx
 argument_list|(
 literal|"no uid for user %s"
@@ -373,6 +379,12 @@ operator|==
 name|ERANGE
 condition|)
 block|{
+if|if
+condition|(
+name|flags
+operator|&
+name|_PWSCAN_WARN
+condition|)
 name|warnx
 argument_list|(
 literal|"%s> max uid value (%u)"
@@ -395,6 +407,12 @@ operator|&&
 name|id
 condition|)
 block|{
+if|if
+condition|(
+name|flags
+operator|&
+name|_PWSCAN_WARN
+condition|)
 name|warnx
 argument_list|(
 literal|"root uid should be 0"
@@ -408,6 +426,10 @@ return|;
 block|}
 if|if
 condition|(
+name|flags
+operator|&
+name|_PWSCAN_WARN
+operator|&&
 name|pw_big_ids_warning
 operator|&&
 name|id
@@ -488,6 +510,12 @@ operator|==
 name|ERANGE
 condition|)
 block|{
+if|if
+condition|(
+name|flags
+operator|&
+name|_PWSCAN_WARN
+condition|)
 name|warnx
 argument_list|(
 literal|"%s> max gid value (%u)"
@@ -505,6 +533,10 @@ return|;
 block|}
 if|if
 condition|(
+name|flags
+operator|&
+name|_PWSCAN_WARN
+operator|&&
 name|pw_big_ids_warning
 operator|&&
 name|id
@@ -529,6 +561,13 @@ name|pw_gid
 operator|=
 name|id
 expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|_PWSCAN_MASTER
+condition|)
+block|{
 name|pw
 operator|->
 name|pw_class
@@ -639,6 +678,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -765,6 +805,12 @@ argument_list|()
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|flags
+operator|&
+name|_PWSCAN_WARN
+condition|)
 name|warnx
 argument_list|(
 literal|"warning, unknown root shell"
@@ -815,6 +861,12 @@ block|{
 comment|/* too many */
 name|fmt
 label|:
+if|if
+condition|(
+name|flags
+operator|&
+name|_PWSCAN_WARN
+condition|)
 name|warnx
 argument_list|(
 literal|"corrupted entry"
