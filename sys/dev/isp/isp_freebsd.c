@@ -13,11 +13,13 @@ directive|include
 file|<dev/isp/isp_freebsd.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SCSI_CAM
-end_ifdef
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|300004
+end_if
 
 begin_decl_stmt
 specifier|static

@@ -30,20 +30,40 @@ begin_define
 define|#
 directive|define
 name|ISP_PLATFORM_VERSION_MINOR
-value|96
+value|97
 end_define
 
 begin_include
 include|#
 directive|include
-file|"opt_scsi.h"
+file|<sys/param.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SCSI_CAM
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FreeBSD_version
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__FreeBSD_version
+value|226000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|300004
+end_if
 
 begin_include
 include|#
@@ -55,12 +75,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
 
 begin_include
 include|#
@@ -121,28 +135,6 @@ include|#
 directive|include
 file|<sys/kernel.h>
 end_include
-
-begin_comment
-comment|/*  * Now that __FreeBSD_version is in sys/param.h, we can  * automatically handle pre-3.0 cases.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__FreeBSD_version
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|__FreeBSD_version
-value|226000
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -745,7 +737,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !SCSI_CAM */
+comment|/* __FreeBSD_version>= 300004 */
 end_comment
 
 begin_endif

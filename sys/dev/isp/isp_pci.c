@@ -55,11 +55,13 @@ directive|include
 file|<pci/pcivar.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SCSI_CAM
-end_ifdef
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|300004
+end_if
 
 begin_include
 include|#
@@ -161,11 +163,13 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SCSI_CAM
-end_ifdef
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|300004
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -469,11 +473,13 @@ begin_comment
 comment|/* This distinguishing define is not right, but it does work */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SCSI_CAM
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|300004
+end_if
 
 begin_define
 define|#
@@ -654,9 +660,11 @@ decl_stmt|;
 name|bus_space_handle_t
 name|pci_sh
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SCSI_CAM
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|300004
 name|bus_dma_tag_t
 name|parent_dmat
 decl_stmt|;
@@ -1242,9 +1250,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-ifdef|#
-directive|ifdef
-name|SCSI_CAM
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|300004
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -1832,11 +1842,13 @@ block|}
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SCSI_CAM
-end_ifdef
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|300004
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -3679,7 +3691,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* SCSI_CAM */
+comment|/* __FreeBSD_version>= 300004 */
 end_comment
 
 begin_function
