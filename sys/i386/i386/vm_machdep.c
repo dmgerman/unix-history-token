@@ -457,9 +457,15 @@ operator|->
 name|ldt_len
 argument_list|)
 expr_stmt|;
-name|user_ldt_free
+if|if
+condition|(
+name|pcb_ldt
+operator|==
+name|NULL
+condition|)
+name|panic
 argument_list|(
-name|pcb1
+literal|"could not copy LDT"
 argument_list|)
 expr_stmt|;
 name|pcb1
@@ -469,6 +475,11 @@ operator|=
 name|pcb_ldt
 expr_stmt|;
 name|set_user_ldt
+argument_list|(
+name|pcb1
+argument_list|)
+expr_stmt|;
+name|user_ldt_free
 argument_list|(
 name|pcb1
 argument_list|)
