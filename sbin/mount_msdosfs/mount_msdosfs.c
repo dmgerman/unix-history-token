@@ -152,7 +152,7 @@ name|TRANSITION_PERIOD_HACK
 end_define
 
 begin_comment
-comment|/*  * XXX - no way to specify "foo=<bar>"-type options; that's what we'd  * want for "-u", "-g", "-m", "-L", "-D", and "-W".  */
+comment|/*  * XXX - no way to specify "foo=<bar>"-type options; that's what we'd  * want for "-u", "-g", "-m", "-M", "-L", "-D", and "-W".  */
 end_comment
 
 begin_decl_stmt
@@ -1517,27 +1517,33 @@ name|void
 name|usage
 parameter_list|()
 block|{
+ifdef|#
+directive|ifdef
+name|TRANSITION_PERIOD_HACK
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s\n%s\n%s\n"
+argument_list|,
+literal|"usage: mount_msdosfs [-o options] [-u user] [-g group] [-m mask] [-M mask]"
+literal|"                     [-s] [-l] [-9] [-L locale] [-D dos-codepage] [-W table]"
+literal|"                     bdev dir"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-ifdef|#
-directive|ifdef
-name|TRANSITION_PERIOD_HACK
-literal|"usage: mount_msdosfs [-o options] [-u user] [-g group] [-m mask] [-s] [-l]"
+literal|"usage: mount_msdosfs [-o options] [-u user] [-g group] [-m mask] [-M mask]"
 argument_list|,
-literal|"                     [-9] [-L locale] [-D dos-codepage] [-W table] bdev dir"
+literal|"                     [-s] [-l] [-9] [-L locale] [-D dos-codepage] bdev dir"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-literal|"usage: mount_msdosfs [-o options] [-u user] [-g group] [-m mask]"
-operator|,
-literal|"                     [-s] [-l] [-9] [-L locale] [-D dos-codepage] bdev dir"
-block|)
-function|;
 endif|#
 directive|endif
 name|exit
@@ -1546,9 +1552,6 @@ name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|int
 name|set_charset
 parameter_list|(
