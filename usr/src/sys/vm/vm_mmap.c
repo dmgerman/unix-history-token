@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_mmap.c 1.6 91/10/21$  *  *	@(#)vm_mmap.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_mmap.c 1.6 91/10/21$  *  *	@(#)vm_mmap.c	7.31 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -223,35 +223,6 @@ return|;
 block|}
 end_function
 
-begin_struct
-struct|struct
-name|mmap_args
-block|{
-name|caddr_t
-name|addr
-decl_stmt|;
-name|size_t
-name|len
-decl_stmt|;
-name|int
-name|prot
-decl_stmt|;
-name|int
-name|flags
-decl_stmt|;
-name|int
-name|fd
-decl_stmt|;
-name|long
-name|pad
-decl_stmt|;
-name|off_t
-name|pos
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_if
 if|#
 directive|if
@@ -328,6 +299,35 @@ begin_comment
 comment|/* COMPAT_43 || COMPAT_SUNOS */
 end_comment
 
+begin_struct
+struct|struct
+name|mmap_args
+block|{
+name|caddr_t
+name|addr
+decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
+name|int
+name|prot
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+name|int
+name|fd
+decl_stmt|;
+name|long
+name|pad
+decl_stmt|;
+name|off_t
+name|pos
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -336,7 +336,7 @@ end_ifdef
 
 begin_struct
 struct|struct
-name|osmmap_args
+name|ommap_args
 block|{
 name|caddr_t
 name|addr
@@ -362,7 +362,7 @@ end_struct
 
 begin_function
 name|int
-name|osmmap
+name|ommap
 parameter_list|(
 name|p
 parameter_list|,
@@ -377,7 +377,7 @@ name|p
 decl_stmt|;
 specifier|register
 name|struct
-name|osmmap_args
+name|ommap_args
 modifier|*
 name|uap
 decl_stmt|;
@@ -576,7 +576,7 @@ name|pos
 expr_stmt|;
 return|return
 operator|(
-name|smmap
+name|mmap
 argument_list|(
 name|p
 argument_list|,
@@ -597,7 +597,7 @@ end_endif
 
 begin_function
 name|int
-name|smmap
+name|mmap
 parameter_list|(
 name|p
 parameter_list|,
