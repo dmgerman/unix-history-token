@@ -2324,7 +2324,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|TCP_DROP_SYNFIN
-comment|/* 	 * If the drop_synfin option is enabled, drop all packets with 	 * both the SYN and FIN bits set. This prevents e.g. nmap from 	 * identifying the TCP/IP stack. 	 * 	 * This is incompatible with RFC1644 extensions (T/TCP). 	 */
+comment|/* 	 * If the drop_synfin option is enabled, drop all packets with 	 * both the SYN and FIN bits set. This prevents e.g. nmap from 	 * identifying the TCP/IP stack. 	 * 	 * This is a violation of the TCP specification. 	 */
 if|if
 condition|(
 name|drop_synfin
