@@ -4950,7 +4950,11 @@ name|PULLUP_TO
 argument_list|(
 name|hlen
 operator|+
-literal|14
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|tcphdr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|tcp
@@ -4998,7 +5002,11 @@ name|PULLUP_TO
 argument_list|(
 name|hlen
 operator|+
-literal|4
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|udphdr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|udp
@@ -5040,9 +5048,10 @@ name|PULLUP_TO
 argument_list|(
 name|hlen
 operator|+
-literal|2
+literal|4
 argument_list|)
 expr_stmt|;
+comment|/* type, code and checksum. */
 name|flags
 operator|=
 operator|(
@@ -5068,12 +5077,7 @@ name|icmp_type
 expr_stmt|;
 break|break ;
 default|default :
-name|src_port
-operator|=
-name|dst_port
-operator|=
-literal|0
-expr_stmt|;
+break|break;
 block|}
 undef|#
 directive|undef
