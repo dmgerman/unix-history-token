@@ -150,8 +150,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|NCP_NLS_SE
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
 name|NCP_NLS_KOI_866_NAME
 value|"koi2cp866"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NCP_NLS_SE_NAME
+value|"se"
 end_define
 
 begin_decl_stmt
