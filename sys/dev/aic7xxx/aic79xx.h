@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2000-2001 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx.h#47 $  *  * $FreeBSD$  */
+comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2000-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx.h#56 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -175,6 +175,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|QOUTFIFO_ENTRY_VALID
+value|0x8000
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOUTFIFO_ENTRY_VALID_LE
+value|(ahd_htole16(0x8000))
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCBID_IS_NULL
 parameter_list|(
 name|scbid
@@ -327,7 +341,7 @@ parameter_list|(
 name|tcl
 parameter_list|)
 define|\
-value|(tcl& (AHD_NUM_LUNS_NONPKT - 1))
+value|(tcl& (AHD_NUM_LUNS - 1))
 end_define
 
 begin_define
@@ -393,6 +407,65 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|AHD_BUILD_COL_IDX
+parameter_list|(
+name|target
+parameter_list|,
+name|lun
+parameter_list|)
+define|\
+value|(((lun)<< 4) | target)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHD_GET_SCB_COL_IDX
+parameter_list|(
+name|ahd
+parameter_list|,
+name|scb
+parameter_list|)
+define|\
+value|((SCB_GET_LUN(scb)<< 4) | SCB_GET_TARGET(ahd, scb))
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHD_SET_SCB_COL_IDX
+parameter_list|(
+name|scb
+parameter_list|,
+name|col_idx
+parameter_list|)
+define|\
+value|do {									\ 	(scb)->hscb->scsiid = ((col_idx)<< TID_SHIFT)& TID;		\ 	(scb)->hscb->lun = ((col_idx)>> 4)& (AHD_NUM_LUNS_NONPKT-1);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHD_COPY_SCB_COL_IDX
+parameter_list|(
+name|dst
+parameter_list|,
+name|src
+parameter_list|)
+define|\
+value|do {								\ 	dst->hscb->scsiid = src->hscb->scsiid;			\ 	dst->hscb->lun = src->hscb->lun;			\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHD_NEVER_COL_IDX
+value|0xFFFF
+end_define
+
 begin_comment
 comment|/**************************** Driver Constants ********************************/
 end_comment
@@ -453,14 +526,14 @@ value|512
 end_define
 
 begin_comment
-comment|/*  * The maximum number of concurrent transactions supported per driver instance.  * Sequencer Control Blocks (SCBs) store per-transaction information.  * We are limited to 510 because:  * 	1) SCB storage space holds us to at most 512.  *	2) Our input queue scheme requires one SCB to always be reserved  *	   in advance of queuing any SCBs.  This takes us down to 511.  *	3) To handle our output queue correctly on machines that only  * 	   support 32bit stores, we must clear the array 4 bytes at a  *	   time.  To avoid colliding with a DMA write from the sequencer,  *	   we must be sure that 2, 16bit slots are empty when we write to  * 	   clear the queue.  This restricts us to only 511 SCBs: 1 that  *	   just completed and the known additional empty slot in the queue  *	   that precedes it. #define AHD_MAX_QUEUE	510  */
+comment|/*  * The maximum number of concurrent transactions supported per driver instance.  * Sequencer Control Blocks (SCBs) store per-transaction information.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|AHD_MAX_QUEUE
-value|255
+value|AHD_SCB_MAX
 end_define
 
 begin_comment
@@ -471,14 +544,14 @@ begin_define
 define|#
 directive|define
 name|AHD_QIN_SIZE
-value|512
+value|AHD_MAX_QUEUE
 end_define
 
 begin_define
 define|#
 directive|define
 name|AHD_QOUT_SIZE
-value|512
+value|AHD_MAX_QUEUE
 end_define
 
 begin_define
@@ -491,25 +564,15 @@ parameter_list|)
 value|((x)& (AHD_QIN_SIZE-1))
 end_define
 
-begin_define
-define|#
-directive|define
-name|AHD_QOUT_WRAP
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)& (AHD_QOUT_SIZE-1))
-end_define
-
 begin_comment
-comment|/*  * The maximum amount of SCB storage we allocate in host memory.  This  * number should reflect the 1 additional SCB we require to handle our  * qinfifo mechanism.  */
+comment|/*  * The maximum amount of SCB storage we allocate in host memory.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|AHD_SCB_MAX_ALLOC
-value|(AHD_MAX_QUEUE+1)
+value|AHD_MAX_QUEUE
 end_define
 
 begin_comment
@@ -531,7 +594,7 @@ begin_define
 define|#
 directive|define
 name|AHD_BUSRESET_DELAY
-value|250
+value|25
 end_define
 
 begin_comment
@@ -561,6 +624,10 @@ block|,
 name|AHD_AIC7902
 init|=
 literal|0x0002
+block|,
+name|AHD_AIC7901A
+init|=
+literal|0x0003
 block|,
 name|AHD_PCI
 init|=
@@ -665,48 +732,40 @@ name|AHD_SCSIRST_BUG
 init|=
 literal|0x0020
 block|,
-name|AHD_PCIX_ARBITER_BUG
+name|AHD_PCIX_CHIPRST_BUG
 init|=
 literal|0x0040
 block|,
-name|AHD_PCIX_SPLIT_BUG
-init|=
-literal|0x0080
-block|,
-name|AHD_PCIX_CHIPRST_BUG
-init|=
-literal|0x0100
-block|,
 name|AHD_PCIX_MMAPIO_BUG
 init|=
-literal|0x0200
+literal|0x0080
 block|,
 comment|/* Bug workarounds that can be disabled on non-PCIX busses. */
 name|AHD_PCIX_BUG_MASK
 init|=
-name|AHD_PCIX_ARBITER_BUG
-operator||
-name|AHD_PCIX_SPLIT_BUG
-operator||
 name|AHD_PCIX_CHIPRST_BUG
 operator||
 name|AHD_PCIX_MMAPIO_BUG
 block|,
 name|AHD_LQO_ATNO_BUG
 init|=
-literal|0x0400
+literal|0x0100
 block|,
 name|AHD_AUTOFLUSH_BUG
 init|=
-literal|0x0800
+literal|0x0200
 block|,
 name|AHD_CLRLQO_AUTOCLR_BUG
 init|=
-literal|0x1000
+literal|0x0400
 block|,
 name|AHD_PKTIZED_STATUS_BUG
 init|=
-literal|0x2000
+literal|0x0800
+block|,
+name|AHD_PKT_LUN_BUG
+init|=
+literal|0x1000
 block|}
 name|ahd_bug
 typedef|;
@@ -812,6 +871,10 @@ comment|/* No SEEPROM but SCB had info. */
 name|AHD_CPQ_BOARD
 init|=
 literal|0x100000
+block|,
+name|AHD_RESET_POLL_ACTIVE
+init|=
+literal|0x200000
 block|}
 name|ahd_flag
 typedef|;
@@ -1053,12 +1116,20 @@ comment|/*44*/
 name|uint32_t
 name|hscb_busaddr
 decl_stmt|;
-comment|/******* Fields below are not Downloaded (Sequencer may use for scratch) ******/
+comment|/******* Long lun field only downloaded for full 8 byte lun support *******/
 comment|/*48*/
+name|uint8_t
+name|pkt_long_lun
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/******* Fields below are not Downloaded (Sequencer may use for scratch) ******/
+comment|/*56*/
 name|uint8_t
 name|spare
 index|[
-literal|16
+literal|8
 index|]
 decl_stmt|;
 block|}
@@ -1152,77 +1223,77 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
-name|SCB_FREE
+name|SCB_FLAG_NONE
 init|=
-literal|0x0000
+literal|0x00000
 block|,
 name|SCB_TRANSMISSION_ERROR
 init|=
-literal|0x0001
+literal|0x00001
 block|,
-comment|/* 					  * We detected a parity or CRC 					  * error that has effected the 					  * payload of the command.  This 					  * flag is checked when normal 					  * status is returned to catch 					  * the case of a target not 					  * responding to our attempt 					  * to report the error. 					  */
+comment|/* 					   * We detected a parity or CRC 					   * error that has effected the 					   * payload of the command.  This 					   * flag is checked when normal 					   * status is returned to catch 					   * the case of a target not 					   * responding to our attempt 					   * to report the error. 					   */
 name|SCB_OTHERTCL_TIMEOUT
 init|=
-literal|0x0002
+literal|0x00002
 block|,
-comment|/* 					  * Another device was active 					  * during the first timeout for 					  * this SCB so we gave ourselves 					  * an additional timeout period 					  * in case it was hogging the 					  * bus. 				          */
+comment|/* 					   * Another device was active 					   * during the first timeout for 					   * this SCB so we gave ourselves 					   * an additional timeout period 					   * in case it was hogging the 					   * bus. 				           */
 name|SCB_DEVICE_RESET
 init|=
-literal|0x0004
+literal|0x00004
 block|,
 name|SCB_SENSE
 init|=
-literal|0x0008
+literal|0x00008
 block|,
 name|SCB_CDB32_PTR
 init|=
-literal|0x0010
+literal|0x00010
 block|,
 name|SCB_RECOVERY_SCB
 init|=
-literal|0x0020
+literal|0x00020
 block|,
 name|SCB_AUTO_NEGOTIATE
 init|=
-literal|0x0040
+literal|0x00040
 block|,
 comment|/* Negotiate to achieve goal. */
 name|SCB_NEGOTIATE
 init|=
-literal|0x0080
+literal|0x00080
 block|,
 comment|/* Negotiation forced for command. */
 name|SCB_ABORT
 init|=
-literal|0x0100
-block|,
-name|SCB_UNTAGGEDQ
-init|=
-literal|0x0200
+literal|0x00100
 block|,
 name|SCB_ACTIVE
 init|=
-literal|0x0400
+literal|0x00400
 block|,
 name|SCB_TARGET_IMMEDIATE
 init|=
-literal|0x0800
+literal|0x00800
 block|,
 name|SCB_PACKETIZED
 init|=
-literal|0x1000
+literal|0x01000
 block|,
 name|SCB_EXPECT_PPR_BUSFREE
 init|=
-literal|0x2000
+literal|0x02000
 block|,
 name|SCB_PKT_SENSE
 init|=
-literal|0x4000
+literal|0x04000
 block|,
 name|SCB_CMDPHASE_ABORT
 init|=
-literal|0x8000
+literal|0x08000
+block|,
+name|SCB_ON_COL_LIST
+init|=
+literal|0x10000
 block|}
 name|scb_flag
 typedef|;
@@ -1245,6 +1316,12 @@ argument|scb
 argument_list|)
 name|sle
 expr_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|scb
+argument_list|)
+name|le
+expr_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
 argument|scb
@@ -1254,12 +1331,42 @@ expr_stmt|;
 block|}
 name|links
 union|;
+union|union
+block|{
+name|SLIST_ENTRY
+argument_list|(
+argument|scb
+argument_list|)
+name|sle
+expr_stmt|;
 name|LIST_ENTRY
 argument_list|(
 argument|scb
 argument_list|)
-name|pending_links
+name|le
 expr_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|scb
+argument_list|)
+name|tqe
+expr_stmt|;
+block|}
+name|links2
+union|;
+define|#
+directive|define
+name|pending_links
+value|links2.le
+define|#
+directive|define
+name|collision_links
+value|links2.le
+name|struct
+name|scb
+modifier|*
+name|col_scb
+decl_stmt|;
 name|ahd_io_ctx_t
 name|io_ctx
 decl_stmt|;
@@ -1321,18 +1428,51 @@ block|}
 struct|;
 end_struct
 
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|scb_tailq
+argument_list|,
+name|scb
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|scb_list
+argument_list|,
+name|scb
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|scb_data
 block|{
-name|SLIST_HEAD
-argument_list|(
-argument_list|,
-argument|scb
-argument_list|)
+comment|/* 	 * TAILQ of lists of free SCBs grouped by device 	 * collision domains. 	 */
+name|struct
+name|scb_tailq
 name|free_scbs
-expr_stmt|;
-comment|/* 					 * Pool of SCBs ready to be assigned 					 * commands to execute. 					 */
+decl_stmt|;
+comment|/* 	 * Per-device lists of SCBs whose tag ID would collide 	 * with an already active tag on the device. 	 */
+name|struct
+name|scb_list
+name|free_scb_lists
+index|[
+name|AHD_NUM_TARGETS
+operator|*
+name|AHD_NUM_LUNS_NONPKT
+index|]
+decl_stmt|;
+comment|/* 	 * SCBs that will not collide with any active device. 	 */
+name|struct
+name|scb_list
+name|any_dev_free_scb_list
+decl_stmt|;
+comment|/* 	 * Mapping from tag to SCB. 	 */
 name|struct
 name|scb
 modifier|*
@@ -1341,7 +1481,6 @@ index|[
 name|AHD_SCB_MAX
 index|]
 decl_stmt|;
-comment|/* 					 * Mapping from tag to SCB. 					 */
 comment|/* 	 * "Bus" addresses of our data structures. 	 */
 name|bus_dma_tag_t
 name|hscb_dmat
@@ -2461,16 +2600,6 @@ begin_comment
 comment|/*********************** Software Configuration Structure *********************/
 end_comment
 
-begin_expr_stmt
-name|TAILQ_HEAD
-argument_list|(
-name|scb_tailq
-argument_list|,
-name|scb
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_struct
 struct|struct
 name|ahd_suspend_channel_state
@@ -2685,9 +2814,9 @@ name|scb_data
 name|scb_data
 decl_stmt|;
 name|struct
-name|scb
+name|hardware_scb
 modifier|*
-name|next_queued_scb
+name|next_queued_hscb
 decl_stmt|;
 comment|/* 	 * SCBs that have been sent to the controller 	 */
 name|LIST_HEAD
@@ -2710,18 +2839,6 @@ name|saved_dst_mode
 decl_stmt|;
 name|ahd_mode
 name|saved_src_mode
-decl_stmt|;
-comment|/* 	 * Counting lock for deferring the release of additional 	 * untagged transactions from the untagged_queues.  When 	 * the lock is decremented to 0, all queues in the 	 * untagged_queues array are run. 	 */
-name|u_int
-name|untagged_queue_lock
-decl_stmt|;
-comment|/* 	 * Per-target queue of untagged-transactions.  The 	 * transaction at the head of the queue is the 	 * currently pending untagged transaction for the 	 * target.  The driver only allows a single untagged 	 * transaction per target. 	 */
-name|struct
-name|scb_tailq
-name|untagged_queues
-index|[
-name|AHD_NUM_TARGETS
-index|]
 decl_stmt|;
 comment|/* 	 * Platform specific data. 	 */
 name|struct
@@ -2790,6 +2907,9 @@ decl_stmt|;
 comment|/* Command Queues */
 name|uint16_t
 name|qoutfifonext
+decl_stmt|;
+name|uint16_t
+name|qoutfifonext_valid_tag
 decl_stmt|;
 name|uint16_t
 name|qinfifonext
@@ -3184,27 +3304,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ahd_set_disconnected_list
-parameter_list|(
-name|struct
-name|ahd_softc
-modifier|*
-name|ahd
-parameter_list|,
-name|u_int
-name|target
-parameter_list|,
-name|u_int
-name|lun
-parameter_list|,
-name|u_int
-name|scbid
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|ahd_busy_tcl
 parameter_list|(
 name|struct
@@ -3337,35 +3436,6 @@ parameter_list|(
 name|struct
 name|ahd_softc
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ahd_run_untagged_queues
-parameter_list|(
-name|struct
-name|ahd_softc
-modifier|*
-name|ahd
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ahd_run_untagged_queue
-parameter_list|(
-name|struct
-name|ahd_softc
-modifier|*
-name|ahd
-parameter_list|,
-name|struct
-name|scb_tailq
-modifier|*
-name|queue
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3607,6 +3677,40 @@ modifier|*
 parameter_list|,
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|scb
+modifier|*
+name|ahd_get_scb
+parameter_list|(
+name|struct
+name|ahd_softc
+modifier|*
+name|ahd
+parameter_list|,
+name|u_int
+name|col_idx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ahd_free_scb
+parameter_list|(
+name|struct
+name|ahd_softc
+modifier|*
+name|ahd
+parameter_list|,
+name|struct
+name|scb
+modifier|*
+name|scb
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4509,8 +4613,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|AHD_SHOW_SG
+value|0x0800
+end_define
+
+begin_define
+define|#
+directive|define
 name|AHD_DEBUG_SEQUENCER
-value|0x1000
+value|0x2000
 end_define
 
 begin_endif
@@ -4559,6 +4670,38 @@ name|struct
 name|ahd_softc
 modifier|*
 name|ahd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ahd_print_register
+parameter_list|(
+name|ahd_reg_parse_entry_t
+modifier|*
+name|table
+parameter_list|,
+name|u_int
+name|num_entries
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|u_int
+name|address
+parameter_list|,
+name|u_int
+name|value
+parameter_list|,
+name|u_int
+modifier|*
+name|cur_column
+parameter_list|,
+name|u_int
+name|wrap_point
 parameter_list|)
 function_decl|;
 end_function_decl
