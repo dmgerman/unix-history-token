@@ -785,7 +785,7 @@ begin_define
 define|#
 directive|define
 name|NBBY
-value|8U
+value|8
 end_define
 
 begin_comment
