@@ -507,11 +507,16 @@ break|break;
 case|case
 literal|'d'
 case|:
-name|strcpy
+name|strncpy
 argument_list|(
 name|prefix
 argument_list|,
 name|optarg
+argument_list|,
+sizeof|sizeof
+name|prefix
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 break|break;
