@@ -3580,6 +3580,16 @@ name|if_index
 argument_list|)
 expr_stmt|;
 comment|/* XXX grab lock first to avoid LOR */
+if|if
+condition|(
+name|rt_tables
+index|[
+name|AF_INET6
+index|]
+operator|!=
+name|NULL
+condition|)
+block|{
 name|RADIX_NODE_HEAD_LOCK
 argument_list|(
 name|rt_tables
@@ -3637,6 +3647,7 @@ name|AF_INET6
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
