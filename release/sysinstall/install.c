@@ -721,6 +721,9 @@ literal|"yes"
 argument_list|)
 expr_stmt|;
 comment|/* If we refuse to proceed, bail. */
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|msgYesNo
@@ -1090,6 +1093,9 @@ operator|-
 literal|1
 condition|)
 break|break;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|msgYesNo
@@ -1720,6 +1726,9 @@ argument_list|)
 condition|)
 block|{
 comment|/* Ask this now, before installFinal() tries do actually do any of it */
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1738,6 +1747,9 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1754,6 +1766,9 @@ argument_list|)
 expr_stmt|;
 comment|/* XXX Put whatever other nice configuration questions you'd like to ask the user here XXX */
 comment|/* Final menu of last resort */
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!

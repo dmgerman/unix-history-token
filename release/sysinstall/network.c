@@ -159,6 +159,9 @@ literal|4
 argument_list|)
 condition|)
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -551,6 +554,10 @@ if|if
 condition|(
 name|i
 condition|)
+block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Warning: Unable to down the %s interface properly"
@@ -560,6 +567,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 name|cp
 operator|=
 name|variable_get

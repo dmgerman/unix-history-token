@@ -4307,6 +4307,7 @@ operator|*
 name|ONE_MEG
 operator|)
 condition|)
+block|{
 name|msgConfirm
 argument_list|(
 literal|"Warning: This is smaller than the recommended size for a\n"
@@ -4316,6 +4317,7 @@ argument_list|,
 name|ROOT_MIN_SIZE
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|tmp
 operator|=
@@ -4866,6 +4868,9 @@ break|break;
 case|case
 literal|'U'
 case|:
+name|clear
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|msgYesNo
