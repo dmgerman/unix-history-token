@@ -2364,7 +2364,7 @@ name|AI_NUMERICHOST
 condition|)
 name|ERR
 argument_list|(
-name|EAI_NODATA
+name|EAI_NONAME
 argument_list|)
 expr_stmt|;
 if|if
