@@ -85,18 +85,18 @@ begin_function
 name|int
 name|devfs_add_fronts
 parameter_list|(
-name|devb_p
+name|devnm_p
 name|parent
 parameter_list|,
-name|devb_p
+name|devnm_p
 name|child
 parameter_list|)
 comment|/*proto*/
 block|{
-name|devf_p
+name|devnm_p
 name|newfp
 decl_stmt|;
-name|devf_p
+name|devnm_p
 name|falias
 decl_stmt|;
 name|DBPRINT
@@ -113,7 +113,7 @@ name|falias
 operator|=
 name|parent
 operator|->
-name|fronts
+name|next_front
 init|;
 name|falias
 condition|;
@@ -204,7 +204,7 @@ name|name
 parameter_list|)
 comment|/*proto*/
 block|{
-name|devf_p
+name|devnm_p
 name|newfp
 decl_stmt|;
 name|DBPRINT
@@ -369,12 +369,12 @@ parameter_list|(
 name|dn_p
 name|parent
 parameter_list|,
-name|devb_p
+name|devnm_p
 name|back
 parameter_list|,
-name|devf_p
+name|devnm_p
 modifier|*
-name|devf_pp
+name|devnm_pp
 parameter_list|,
 name|struct
 name|devfsmount
@@ -383,7 +383,7 @@ name|dvm
 parameter_list|)
 comment|/*proto*/
 block|{
-name|devf_p
+name|devnm_p
 name|newfp
 decl_stmt|;
 name|struct
@@ -391,14 +391,17 @@ name|devfsmount
 modifier|*
 name|dmt
 decl_stmt|;
-name|devb_p
+name|devnm_p
 name|newback
 decl_stmt|;
-name|devf_p
+name|devnm_p
 name|newfront
 decl_stmt|;
 name|int
 name|error
+decl_stmt|;
+name|dn_p
+name|dnp
 decl_stmt|;
 name|DBPRINT
 argument_list|(
@@ -434,8 +437,7 @@ name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-operator|*
-name|newfp
+name|devnm_t
 argument_list|)
 argument_list|,
 name|M_DEVFSFRONT
@@ -473,7 +475,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-comment|/*******************************************************\ 	* If we are creating an alias, Then we need to find the * 	* real object's file_node. (It must pre-exist)		*  	* this means that aliases have no front nodes...	* 	* In effect ALIAS back nodes are just place markers	* 	* Check the removal code for this! XXX			* 	\*******************************************************/
+comment|/*******************************************************\ 	* If we are creating an alias, Then we need to find the * 	* real object's file_node. (It must pre-exist)		*  	* this means that aliases have no front nodes...	* 	* In effect ALIAS back nodes are just place markers	* 	\*******************************************************/
 if|if
 condition|(
 name|back
@@ -537,6 +539,8 @@ break|break;
 case|case
 name|DEV_DIR
 case|:
+name|dnp
+operator|=
 name|newfp
 operator|->
 name|dnp
@@ -557,8 +561,6 @@ if|if
 condition|(
 operator|!
 operator|(
-name|newfp
-operator|->
 name|dnp
 operator|)
 condition|)
@@ -591,8 +593,6 @@ name|devnode_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|newfp
-operator|->
 name|dnp
 operator|->
 name|links
@@ -600,16 +600,12 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/*  EXTRA from '.' */
-name|newfp
-operator|->
 name|dnp
 operator|->
 name|links
 operator|++
 expr_stmt|;
 comment|/* wherever it is.....*/
-name|newfp
-operator|->
 name|dnp
 operator|->
 name|by
@@ -619,8 +615,6 @@ operator|.
 name|dirlast
 operator|=
 operator|&
-name|newfp
-operator|->
 name|dnp
 operator|->
 name|by
@@ -629,8 +623,6 @@ name|Dir
 operator|.
 name|dirlist
 expr_stmt|;
-name|newfp
-operator|->
 name|dnp
 operator|->
 name|by
@@ -641,8 +633,6 @@ name|dirlist
 operator|=
 name|NULL
 expr_stmt|;
-name|newfp
-operator|->
 name|dnp
 operator|->
 name|by
@@ -653,16 +643,12 @@ name|entrycount
 operator|=
 literal|0
 expr_stmt|;
-name|newfp
-operator|->
 name|dnp
 operator|->
 name|vn
 operator|=
 name|NULL
 expr_stmt|;
-name|newfp
-operator|->
 name|dnp
 operator|->
 name|vn_id
@@ -673,7 +659,7 @@ break|break;
 case|case
 name|DEV_SLNK
 case|:
-comment|/* should never happen */
+comment|/* should never happen XXX (hmm might)*/
 default|default:
 name|printf
 argument_list|(
@@ -806,9 +792,7 @@ comment|/*ok, ok?*/
 block|}
 else|else
 block|{
-comment|/* 		 * it's the root node, put in the dvm 		 * and link it to itself... 		 */
-name|newfp
-operator|->
+comment|/* 		 * it's the root node, put in the dvm 		 * and link it to itself... 		 * we know it's a DIR 		 */
 name|dnp
 operator|->
 name|by
@@ -821,16 +805,12 @@ name|newfp
 operator|->
 name|dnp
 expr_stmt|;
-name|newfp
-operator|->
 name|dnp
 operator|->
 name|links
 operator|++
 expr_stmt|;
 comment|/* extra for '..'*/
-name|newfp
-operator|->
 name|dnp
 operator|->
 name|dvm
@@ -854,7 +834,7 @@ operator|=
 operator|*
 name|back
 operator|->
-name|lastfront
+name|prev_frontp
 expr_stmt|;
 name|newfp
 operator|->
@@ -862,18 +842,18 @@ name|prev_frontp
 operator|=
 name|back
 operator|->
-name|lastfront
+name|prev_frontp
 expr_stmt|;
 operator|*
 name|back
 operator|->
-name|lastfront
+name|prev_frontp
 operator|=
 name|newfp
 expr_stmt|;
 name|back
 operator|->
-name|lastfront
+name|prev_frontp
 operator|=
 operator|&
 operator|(
@@ -889,6 +869,10 @@ operator|++
 expr_stmt|;
 name|newfp
 operator|->
+name|as
+operator|.
+name|front
+operator|.
 name|realthing
 operator|=
 name|back
@@ -915,7 +899,7 @@ name|dnp
 operator|->
 name|by
 operator|.
-name|BackDir
+name|Dir
 operator|.
 name|dirlist
 init|;
@@ -954,7 +938,7 @@ block|}
 block|}
 block|}
 operator|*
-name|devf_pp
+name|devnm_pp
 operator|=
 name|newfp
 expr_stmt|;
@@ -981,13 +965,13 @@ name|devfs_mp_p
 parameter_list|)
 comment|/*proto*/
 block|{
-name|devf_p
+name|devnm_p
 name|parent
 decl_stmt|;
-name|devf_p
+name|devnm_p
 name|new
 decl_stmt|;
-name|devb_p
+name|devnm_p
 name|realthing
 decl_stmt|;
 name|int
@@ -1048,7 +1032,7 @@ name|devfs_mp_p
 parameter_list|)
 comment|/*proto*/
 block|{
-name|devf_p
+name|devnm_p
 name|devfp
 decl_stmt|;
 name|DBPRINT
@@ -1084,7 +1068,7 @@ begin_function
 name|void
 name|devfs_remove_fronts
 parameter_list|(
-name|devb_p
+name|devnm_p
 name|devbp
 parameter_list|)
 comment|/*proto*/
@@ -1093,14 +1077,14 @@ while|while
 condition|(
 name|devbp
 operator|->
-name|fronts
+name|next_front
 condition|)
 block|{
 name|dev_free_front
 argument_list|(
 name|devbp
 operator|->
-name|fronts
+name|next_front
 argument_list|)
 expr_stmt|;
 block|}
@@ -1115,7 +1099,7 @@ begin_function
 name|void
 name|dev_free_front
 parameter_list|(
-name|devf_p
+name|devnm_p
 name|devfp
 parameter_list|)
 comment|/*proto*/
@@ -1127,7 +1111,7 @@ name|devfp
 operator|->
 name|parent
 decl_stmt|;
-name|devb_p
+name|devnm_p
 name|back
 decl_stmt|;
 name|DBPRINT
@@ -1273,6 +1257,10 @@ name|back
 operator|=
 name|devfp
 operator|->
+name|as
+operator|.
+name|front
+operator|.
 name|realthing
 condition|)
 comment|/* yes an assign */
@@ -1305,7 +1293,7 @@ else|else
 block|{
 name|back
 operator|->
-name|lastfront
+name|prev_frontp
 operator|=
 name|devfp
 operator|->
@@ -1452,7 +1440,7 @@ block|}
 end_function
 
 begin_comment
-comment|/***************************************************************\ *     Think about this: 					* * Though this routine uses a front node, it also uses a backing	* * node indirectly, via the 'realthing' link. This may prove bad	* * in the case of a user-added slink, where there migh not be a	* * backing node. (e.g. if a slink points out of the fs it CAN'T	* * have a backing node, unlike a hardlink which does..)		* * we are going to have to think very carefully about slinks..	* \***************************************************************/
+comment|/***************************************************************\ * given a dev_node, find the appropriate vnode if one is already* * associated, or get a new one an associate it with the dev_node* * need to check about vnode references.. should we increment it?* \***************************************************************/
 end_comment
 
 begin_function
@@ -1460,7 +1448,7 @@ name|int
 name|devfs_dntovn
 parameter_list|(
 name|dn_p
-name|front
+name|dnp
 parameter_list|,
 name|struct
 name|vnode
@@ -1485,7 +1473,7 @@ literal|0
 decl_stmt|;
 name|vn_p
 operator|=
-name|front
+name|dnp
 operator|->
 name|vn
 expr_stmt|;
@@ -1507,7 +1495,7 @@ name|vn_p
 operator|->
 name|v_id
 operator|!=
-name|front
+name|dnp
 operator|->
 name|vn_id
 condition|)
@@ -1547,7 +1535,7 @@ name|v_op
 operator|!=
 operator|*
 operator|(
-name|front
+name|dnp
 operator|->
 name|ops
 operator|)
@@ -1573,7 +1561,7 @@ operator|->
 name|v_data
 argument_list|)
 operator|!=
-name|front
+name|dnp
 condition|)
 block|{
 name|printf
@@ -1644,7 +1632,7 @@ name|getnewvnode
 argument_list|(
 name|VT_DEVFS
 argument_list|,
-name|front
+name|dnp
 operator|->
 name|dvm
 operator|->
@@ -1652,7 +1640,7 @@ name|mount
 argument_list|,
 operator|*
 operator|(
-name|front
+name|dnp
 operator|->
 name|ops
 operator|)
@@ -1663,13 +1651,13 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|front
+name|dnp
 operator|->
 name|vn
 operator|=
 name|vn_p
 expr_stmt|;
-name|front
+name|dnp
 operator|->
 name|vn_id
 operator|=
@@ -1691,7 +1679,7 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|front
+name|dnp
 operator|->
 name|type
 condition|)
@@ -1705,7 +1693,7 @@ name|DEV_DIR
 case|:
 if|if
 condition|(
-name|front
+name|dnp
 operator|->
 name|by
 operator|.
@@ -1713,7 +1701,7 @@ name|Dir
 operator|.
 name|parent
 operator|==
-name|front
+name|dnp
 condition|)
 block|{
 name|vn_p
@@ -1747,7 +1735,7 @@ name|checkalias
 argument_list|(
 name|vn_p
 argument_list|,
-name|front
+name|dnp
 operator|->
 name|by
 operator|.
@@ -1792,7 +1780,7 @@ name|checkalias
 argument_list|(
 name|vn_p
 argument_list|,
-name|front
+name|dnp
 operator|->
 name|by
 operator|.
@@ -1834,13 +1822,13 @@ name|vn_p
 operator|->
 name|v_mount
 operator|=
-name|front
+name|dnp
 operator|->
 name|dvm
 operator|->
 name|mount
 expr_stmt|;
-comment|/* Duplicated */
+comment|/* XXX Duplicated */
 operator|*
 name|vn_pp
 operator|=
@@ -1854,10 +1842,8 @@ operator|(
 name|void
 operator|*
 operator|)
-name|front
+name|dnp
 expr_stmt|;
-comment|/*XXX*/
-comment|/* maybe not.. I mean what if it's a dev... (vnode at back)*/
 block|}
 else|else
 block|{
@@ -1868,11 +1854,6 @@ expr_stmt|;
 block|}
 block|}
 return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
 end_function
 
 end_unit

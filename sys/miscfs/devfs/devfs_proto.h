@@ -48,9 +48,9 @@ name|typeinfo
 modifier|*
 name|by
 parameter_list|,
-name|devb_p
+name|devnm_p
 modifier|*
-name|devb_pp
+name|devnm_pp
 parameter_list|)
 comment|/*proto*/
 function_decl|;
@@ -60,7 +60,7 @@ begin_function_decl
 name|int
 name|dev_remove
 parameter_list|(
-name|devb_p
+name|devnm_p
 name|devbp
 parameter_list|)
 comment|/*proto*/
@@ -71,7 +71,7 @@ begin_function_decl
 name|int
 name|dev_touch
 parameter_list|(
-name|devb_p
+name|devnm_p
 name|key
 parameter_list|)
 comment|/* update the node for this dev */
@@ -113,7 +113,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|devb_p
+name|devnm_p
 name|dev_add
 parameter_list|(
 name|char
@@ -150,10 +150,10 @@ begin_function_decl
 name|int
 name|devfs_add_fronts
 parameter_list|(
-name|devb_p
+name|devnm_p
 name|parent
 parameter_list|,
-name|devb_p
+name|devnm_p
 name|child
 parameter_list|)
 comment|/*proto*/
@@ -182,12 +182,12 @@ parameter_list|(
 name|dn_p
 name|parent
 parameter_list|,
-name|devb_p
+name|devnm_p
 name|back
 parameter_list|,
-name|devf_p
+name|devnm_p
 modifier|*
-name|devf_pp
+name|devnm_pp
 parameter_list|,
 name|struct
 name|devfsmount
@@ -228,7 +228,7 @@ begin_function_decl
 name|void
 name|devfs_remove_fronts
 parameter_list|(
-name|devb_p
+name|devnm_p
 name|devbp
 parameter_list|)
 comment|/*proto*/
@@ -239,7 +239,7 @@ begin_function_decl
 name|void
 name|dev_free_front
 parameter_list|(
-name|devf_p
+name|devnm_p
 name|devfp
 parameter_list|)
 comment|/*proto*/
@@ -268,7 +268,7 @@ name|int
 name|devfs_dntovn
 parameter_list|(
 name|dn_p
-name|front
+name|dnp
 parameter_list|,
 name|struct
 name|vnode

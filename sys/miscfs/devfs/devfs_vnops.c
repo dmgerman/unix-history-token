@@ -2807,7 +2807,7 @@ decl_stmt|;
 name|dn_p
 name|dir_node
 decl_stmt|;
-name|devf_p
+name|devnm_p
 name|name_node
 decl_stmt|;
 name|char

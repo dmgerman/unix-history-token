@@ -84,7 +84,7 @@ file|"devfsdefs.h"
 end_include
 
 begin_decl_stmt
-name|devb_p
+name|devnm_p
 name|dev_root
 decl_stmt|;
 end_decl_stmt
@@ -115,7 +115,7 @@ name|devfs_back_init
 parameter_list|()
 comment|/*proto*/
 block|{
-name|devb_p
+name|devnm_p
 name|devbp
 decl_stmt|;
 name|dn_p
@@ -136,13 +136,13 @@ operator|(
 name|devbp
 operator|=
 operator|(
-name|devb_p
+name|devnm_p
 operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|devb_t
+name|devnm_t
 argument_list|)
 argument_list|,
 name|M_DEVFSBACK
@@ -160,7 +160,7 @@ name|devbp
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|devb_t
+name|devnm_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -238,7 +238,7 @@ name|dnp
 operator|->
 name|by
 operator|.
-name|BackDir
+name|Dir
 operator|.
 name|parent
 operator|=
@@ -255,12 +255,12 @@ name|dnp
 operator|->
 name|by
 operator|.
-name|BackDir
+name|Dir
 operator|.
 name|dirlist
 operator|=
 operator|(
-name|devb_p
+name|devnm_p
 operator|)
 literal|0
 expr_stmt|;
@@ -268,7 +268,7 @@ name|dnp
 operator|->
 name|by
 operator|.
-name|BackDir
+name|Dir
 operator|.
 name|dirlast
 operator|=
@@ -277,7 +277,7 @@ name|dnp
 operator|->
 name|by
 operator|.
-name|BackDir
+name|Dir
 operator|.
 name|dirlist
 expr_stmt|;
@@ -285,7 +285,7 @@ name|dnp
 operator|->
 name|by
 operator|.
-name|BackDir
+name|Dir
 operator|.
 name|myname
 operator|=
@@ -332,19 +332,19 @@ expr_stmt|;
 comment|/* 		 * and the list of layers 		 */
 name|devbp
 operator|->
-name|fronts
+name|next_front
 operator|=
 name|NULL
 expr_stmt|;
 name|devbp
 operator|->
-name|lastfront
+name|prev_frontp
 operator|=
 operator|&
 operator|(
 name|devbp
 operator|->
-name|fronts
+name|next_front
 operator|)
 expr_stmt|;
 comment|/* 		 * next time, we don't need to do all this 		 */
@@ -384,7 +384,7 @@ name|dn_pp
 parameter_list|)
 comment|/*proto*/
 block|{
-name|devb_p
+name|devnm_p
 name|devbp
 decl_stmt|;
 name|char
@@ -567,7 +567,7 @@ name|dirnode
 operator|->
 name|by
 operator|.
-name|BackDir
+name|Dir
 operator|.
 name|dirlist
 expr_stmt|;
@@ -709,16 +709,16 @@ name|typeinfo
 modifier|*
 name|by
 parameter_list|,
-name|devb_p
+name|devnm_p
 modifier|*
-name|devb_pp
+name|devnm_pp
 parameter_list|)
 comment|/*proto*/
 block|{
-name|devb_p
+name|devnm_p
 name|devbp
 decl_stmt|;
-name|devb_p
+name|devnm_p
 name|realthing
 decl_stmt|;
 comment|/* needed to create an alias */
@@ -806,13 +806,13 @@ operator|(
 name|devbp
 operator|=
 operator|(
-name|devb_p
+name|devnm_p
 operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|devb_t
+name|devnm_t
 argument_list|)
 argument_list|,
 name|M_DEVFSBACK
@@ -832,7 +832,7 @@ name|devbp
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|devb_t
+name|devnm_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -934,13 +934,13 @@ expr_stmt|;
 comment|/* 	 * And set up a new 'clones' list (empty) 	 */
 name|devbp
 operator|->
-name|lastfront
+name|prev_frontp
 operator|=
 operator|&
 operator|(
 name|devbp
 operator|->
-name|fronts
+name|next_front
 operator|)
 expr_stmt|;
 comment|/* 	 * Put it on the END of the linked list of directory entries 	 */
@@ -958,7 +958,7 @@ name|dirnode
 operator|->
 name|by
 operator|.
-name|BackDir
+name|Dir
 operator|.
 name|dirlast
 expr_stmt|;
@@ -988,7 +988,7 @@ name|dirnode
 operator|->
 name|by
 operator|.
-name|BackDir
+name|Dir
 operator|.
 name|dirlast
 operator|=
@@ -1003,7 +1003,7 @@ name|dirnode
 operator|->
 name|by
 operator|.
-name|BackDir
+name|Dir
 operator|.
 name|entrycount
 operator|++
@@ -1022,7 +1022,7 @@ name|dnp
 operator|->
 name|by
 operator|.
-name|BackDir
+name|Dir
 operator|.
 name|dirlast
 operator|=
@@ -1032,7 +1032,7 @@ name|dnp
 operator|->
 name|by
 operator|.
-name|BackDir
+name|Dir
 operator|.
 name|dirlist
 operator|)
@@ -1041,12 +1041,12 @@ name|dnp
 operator|->
 name|by
 operator|.
-name|BackDir
+name|Dir
 operator|.
 name|dirlist
 operator|=
 operator|(
-name|devb_p
+name|devnm_p
 operator|)
 literal|0
 expr_stmt|;
@@ -1054,7 +1054,7 @@ name|dnp
 operator|->
 name|by
 operator|.
-name|BackDir
+name|Dir
 operator|.
 name|parent
 operator|=
@@ -1067,7 +1067,7 @@ name|dnp
 operator|->
 name|by
 operator|.
-name|BackDir
+name|Dir
 operator|.
 name|myname
 operator|=
@@ -1230,16 +1230,28 @@ name|next
 operator|=
 name|realthing
 operator|->
+name|as
+operator|.
+name|back
+operator|.
 name|aliases
 expr_stmt|;
 name|realthing
 operator|->
+name|as
+operator|.
+name|back
+operator|.
 name|aliases
 operator|=
 name|devbp
 expr_stmt|;
 name|realthing
 operator|->
+name|as
+operator|.
+name|back
+operator|.
 name|alias_count
 operator|++
 expr_stmt|;
@@ -1255,7 +1267,7 @@ name|dirnode
 operator|->
 name|by
 operator|.
-name|BackDir
+name|Dir
 operator|.
 name|myname
 comment|/*XXX*/
@@ -1271,7 +1283,7 @@ name|retval
 return|;
 block|}
 operator|*
-name|devb_pp
+name|devnm_pp
 operator|=
 name|devbp
 expr_stmt|;
@@ -1289,12 +1301,12 @@ begin_function
 name|int
 name|dev_remove
 parameter_list|(
-name|devb_p
+name|devnm_p
 name|devbp
 parameter_list|)
 comment|/*proto*/
 block|{
-name|devb_p
+name|devnm_p
 name|alias
 decl_stmt|;
 name|DBPRINT
@@ -1345,6 +1357,10 @@ while|while
 condition|(
 name|devbp
 operator|->
+name|as
+operator|.
+name|back
+operator|.
 name|alias_count
 condition|)
 block|{
@@ -1352,10 +1368,18 @@ name|alias
 operator|=
 name|devbp
 operator|->
+name|as
+operator|.
+name|back
+operator|.
 name|aliases
 expr_stmt|;
 name|devbp
 operator|->
+name|as
+operator|.
+name|back
+operator|.
 name|aliases
 operator|=
 name|alias
@@ -1370,6 +1394,10 @@ name|next
 expr_stmt|;
 name|devbp
 operator|->
+name|as
+operator|.
+name|back
+operator|.
 name|alias_count
 operator|--
 expr_stmt|;
@@ -1419,7 +1447,7 @@ begin_function
 name|int
 name|dev_touch
 parameter_list|(
-name|devb_p
+name|devnm_p
 name|key
 parameter_list|)
 comment|/* update the node for this dev */
@@ -1698,7 +1726,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|devb_p
+name|devnm_p
 name|dev_add
 parameter_list|(
 name|char
@@ -1729,7 +1757,7 @@ name|perms
 parameter_list|)
 comment|/*proto*/
 block|{
-name|devb_p
+name|devnm_p
 name|new_dev
 decl_stmt|;
 name|dn_p

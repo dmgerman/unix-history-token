@@ -374,18 +374,9 @@ end_comment
 begin_typedef
 typedef|typedef
 name|struct
-name|dev_back
+name|dev_name
 modifier|*
-name|devb_p
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|struct
-name|dev_front
-modifier|*
-name|devf_p
+name|devnm_p
 typedef|;
 end_typedef
 
@@ -401,6 +392,7 @@ end_typedef
 begin_struct
 struct|struct
 name|devnode
+comment|/* the equivalent of an INODE */
 block|{
 name|u_short
 name|type
@@ -520,17 +512,17 @@ name|Ddev
 struct|;
 struct|struct
 block|{
-name|devf_p
+name|devnm_p
 name|dirlist
 decl_stmt|;
-name|devf_p
+name|devnm_p
 modifier|*
 name|dirlast
 decl_stmt|;
 name|dn_p
 name|parent
 decl_stmt|;
-name|devf_p
+name|devnm_p
 name|myname
 decl_stmt|;
 name|int
@@ -538,27 +530,6 @@ name|entrycount
 decl_stmt|;
 block|}
 name|Dir
-struct|;
-struct|struct
-block|{
-name|devb_p
-name|dirlist
-decl_stmt|;
-name|devb_p
-modifier|*
-name|dirlast
-decl_stmt|;
-name|dn_p
-name|parent
-decl_stmt|;
-name|devb_p
-name|myname
-decl_stmt|;
-name|int
-name|entrycount
-decl_stmt|;
-block|}
-name|BackDir
 struct|;
 struct|struct
 block|{
@@ -575,10 +546,10 @@ name|Slnk
 struct|;
 struct|struct
 block|{
-name|devb_p
+name|devnm_p
 name|realthing
 decl_stmt|;
-name|devb_p
+name|devnm_p
 name|next
 decl_stmt|;
 block|}
@@ -601,52 +572,78 @@ end_typedef
 
 begin_struct
 struct|struct
-name|dev_back
+name|dev_name
 block|{
-name|devb_p
+comment|/*-----------------------directory entry fields-------------*/
+name|char
+name|name
+index|[
+name|DEVMAXNAMESIZE
+index|]
+decl_stmt|;
+name|dn_p
+name|dnp
+decl_stmt|;
+comment|/* the "inode" (devnode) pointer */
+name|dn_p
+name|parent
+decl_stmt|;
+comment|/* backpointer to the directory itself */
+name|devnm_p
 name|next
 decl_stmt|;
 comment|/* next object in this directory */
-name|devb_p
+name|devnm_p
 modifier|*
 name|prevp
 decl_stmt|;
 comment|/* previous pointer in directory linked list */
-name|devb_p
+comment|/*-----------------------aliases or backing nodes----------*/
+union|union
+block|{
+struct|struct
+block|{
+name|devnm_p
 name|aliases
 decl_stmt|;
-comment|/* chain of aliases (kill if we are deleted)*/
+comment|/* aliase chain (kill with us)*/
 name|int
 name|alias_count
 decl_stmt|;
-comment|/* how many 'alias' nodes reference us. */
-name|devf_p
-name|fronts
+comment|/* # 'alias' nodes for us. */
+block|}
+name|back
+struct|;
+struct|struct
+block|{
+name|devnm_p
+name|realthing
+decl_stmt|;
+comment|/* ptr to the backing node */
+name|devnm_p
+name|file_node
+decl_stmt|;
+comment|/* our file node */
+block|}
+name|front
+struct|;
+block|}
+name|as
+union|;
+comment|/*-----------------------the front-back chain-------------*/
+name|devnm_p
+name|next_front
 decl_stmt|;
 comment|/* the linked list of all our front nodes */
-name|devf_p
+name|devnm_p
 modifier|*
-name|lastfront
+name|prev_frontp
 decl_stmt|;
 comment|/* the end of the front node chain */
 name|int
 name|frontcount
 decl_stmt|;
 comment|/* number of front nodes that reference us*/
-name|dn_p
-name|parent
-decl_stmt|;
-comment|/* backpointer to the directory itself */
-name|dn_p
-name|dnp
-decl_stmt|;
-comment|/* info a STAT would look at */
-name|char
-name|name
-index|[
-name|DEVMAXNAMESIZE
-index|]
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -654,83 +651,21 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|dev_back
-name|devb_t
+name|dev_name
+name|devnm_t
 typedef|;
 end_typedef
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|dev_back
-modifier|*
+name|devnm_p
 name|dev_root
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* always exists */
-end_comment
-
-begin_comment
 comment|/*  * Rules for front nodes:  * Dirs hava a strict 1:1 relationship with their OWN devnode  * Symlinks similarly  * Device Nodes ALWAYS point to the devnode that is linked  * to the Backing node. (with a ref count)  */
 end_comment
-
-begin_struct
-struct|struct
-name|dev_front
-block|{
-name|devf_p
-name|next
-decl_stmt|;
-comment|/* next item in this directory chain */
-name|devf_p
-modifier|*
-name|prevp
-decl_stmt|;
-comment|/* previous pointer in the directory */
-name|devf_p
-name|file_node
-decl_stmt|;
-comment|/* the file node this represents */
-name|devf_p
-name|next_front
-decl_stmt|;
-comment|/* pointer to next item for this object */
-name|devf_p
-modifier|*
-name|prev_frontp
-decl_stmt|;
-comment|/* previous pointer in object chain */
-name|devb_p
-name|realthing
-decl_stmt|;
-comment|/* backpointer to the backing object */
-name|dn_p
-name|parent
-decl_stmt|;
-comment|/* our PARENT directory node */
-name|dn_p
-name|dnp
-decl_stmt|;
-comment|/* info a STAT would look at */
-name|char
-name|name
-index|[
-name|DEVMAXNAMESIZE
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|dev_front
-name|devf_t
-typedef|;
-end_typedef
 
 begin_comment
 comment|/*  * DEVFS specific per/mount information, used to link a monted fs to a  * particular 'plane' of front nodes.  */
@@ -746,7 +681,7 @@ modifier|*
 name|mount
 decl_stmt|;
 comment|/* vfs mount struct for this fs	*/
-name|devf_p
+name|devnm_p
 name|plane_root
 decl_stmt|;
 comment|/* the root of this 'plane'	*/
@@ -769,10 +704,10 @@ literal|6
 index|]
 decl_stmt|;
 comment|/* = "devfs" if correct */
-name|devf_p
+name|devnm_p
 name|front
 decl_stmt|;
-name|devb_p
+name|devnm_p
 name|back
 decl_stmt|;
 block|}
