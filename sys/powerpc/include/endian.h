@@ -95,20 +95,6 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_typedef
-typedef|typedef
-name|u_int32_t
-name|in_addr_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|u_int16_t
-name|in_port_t
-typedef|;
-end_typedef
-
 begin_decl_stmt
 name|__BEGIN_DECLS
 name|in_addr_t

@@ -257,6 +257,13 @@ end_comment
 
 begin_typedef
 typedef|typedef
+name|u_int16_t
+name|in_port_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|u_int32_t
 name|ino_t
 typedef|;
