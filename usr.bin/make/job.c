@@ -6899,7 +6899,7 @@ condition|)
 block|{
 name|ecp
 operator|=
-name|Str_FindSubstring
+name|strstr
 argument_list|(
 name|cp
 argument_list|,
@@ -7019,7 +7019,7 @@ expr_stmt|;
 block|}
 name|ecp
 operator|=
-name|Str_FindSubstring
+name|strstr
 argument_list|(
 name|cp
 argument_list|,
