@@ -43,6 +43,8 @@ literal|" and connects it to the node at \"path\". The hooks used for the"
 literal|" connection are \"hook\" on the original node and \"peerhook\""
 literal|" on the new node."
 literal|" If \"path\" is omitted then \".\" is assumed."
+block|,
+block|{}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -65,6 +67,7 @@ name|struct
 name|ngm_mkpeer
 name|mkp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|path
