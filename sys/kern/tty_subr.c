@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1994, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: tty_subr.c,v 1.11 1995/07/11 19:39:54 bde Exp $  */
+comment|/*  * Copyright (C) 1994, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: tty_subr.c,v 1.10.4.1 1995/09/14 07:10:07 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -419,6 +419,31 @@ block|{
 name|int
 name|dcbr
 decl_stmt|;
+comment|/* 	 * Allow for wasted space at the head. 	 */
+if|if
+condition|(
+name|ccmax
+operator|!=
+literal|0
+condition|)
+name|ccmax
+operator|+=
+name|CBSIZE
+operator|-
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|ccreserved
+operator|!=
+literal|0
+condition|)
+name|ccreserved
+operator|+=
+name|CBSIZE
+operator|-
+literal|1
+expr_stmt|;
 name|clistp
 operator|->
 name|c_cbmax
