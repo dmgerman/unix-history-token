@@ -16,6 +16,13 @@ name|FREEBSD_AOUT
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|_AOUT_INCLUDE_
+value|1
+end_define
+
 begin_include
 include|#
 directive|include
@@ -61,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/imgact_aout.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vnode.h>
 end_include
 
@@ -68,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|<sys/linker.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/reloc.h>
 end_include
 
 begin_include
@@ -108,13 +127,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<a.out.h>
+file|<sys/nlist_aout.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<link.h>
+file|<sys/link_aout.h>
 end_include
 
 begin_typedef
