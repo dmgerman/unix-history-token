@@ -187,6 +187,9 @@ modifier|*
 name|c
 parameter_list|,
 name|int
+name|blkcnt
+parameter_list|,
+name|int
 name|blksz
 parameter_list|)
 function_decl|;
@@ -554,8 +557,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CHN_2NDBUFWHOLESIZE
-value|(CHN_2NDBUFBLKSIZE * CHN_2NDBUFBLKNUM)
+name|CHN_2NDBUFMAXSIZE
+value|(131072)
 end_define
 
 end_unit
