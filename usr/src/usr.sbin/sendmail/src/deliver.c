@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.85 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.86 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2930,6 +2930,15 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|#
+directive|if
+name|NAMED_BIND
+name|h_errno
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|rcode
 operator|=
 name|checkcompat
@@ -3393,6 +3402,15 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
+if|#
+directive|if
+name|NAMED_BIND
+name|h_errno
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|CurHostName
 operator|=
 name|m
