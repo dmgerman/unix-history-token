@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ar.c	5.4 (Berkeley) %G%"
+literal|"@(#)ar.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -310,7 +310,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|tmpnam
+name|tmp0nam
 init|=
 name|_PATH_TMP1
 decl_stmt|;
@@ -673,7 +673,7 @@ literal|'a'
 index|]
 condition|)
 block|{
-name|tmpnam
+name|tmp0nam
 operator|=
 literal|"vXXXXX"
 expr_stmt|;
@@ -1724,7 +1724,7 @@ name|tfnam
 operator|=
 name|mktemp
 argument_list|(
-name|tmpnam
+name|tmp0nam
 argument_list|)
 expr_stmt|;
 name|close
