@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhci.c,v 1.146 2001/11/20 21:12:46 augustss Exp $	*/
+comment|/*	$NetBSD: uhci.c,v 1.147 2001/11/21 02:38:36 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -4105,7 +4105,7 @@ expr_stmt|;
 name|bitmask_snprintf
 argument_list|(
 operator|(
-name|int
+name|u_int32_t
 operator|)
 name|le32toh
 argument_list|(
@@ -4129,7 +4129,7 @@ expr_stmt|;
 name|bitmask_snprintf
 argument_list|(
 operator|(
-name|int
+name|u_int32_t
 operator|)
 name|le32toh
 argument_list|(
