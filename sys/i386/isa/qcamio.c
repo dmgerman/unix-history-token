@@ -175,7 +175,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|LINUX
+name|__linux__
 end_ifdef
 
 begin_include
@@ -226,7 +226,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* LINUX */
+comment|/* __linux__ */
 end_comment
 
 begin_ifdef
