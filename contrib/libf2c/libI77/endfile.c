@@ -2,6 +2,12 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_include
 include|#
 directive|include
+file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"f2c.h"
 end_include
 
@@ -9,6 +15,18 @@ begin_include
 include|#
 directive|include
 file|"fio.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_ifdef
@@ -255,6 +273,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_FTRUNCATE
+end_ifndef
+
 begin_function
 specifier|static
 name|int
@@ -377,6 +401,15 @@ return|;
 block|}
 end_block
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined(HAVE_FTRUNCATE) */
+end_comment
+
 begin_function
 name|int
 ifdef|#
@@ -410,18 +443,23 @@ name|unit
 modifier|*
 name|b
 decl_stmt|;
+name|int
+name|rc
+decl_stmt|;
 name|FILE
 modifier|*
 name|bf
-decl_stmt|,
+decl_stmt|;
+ifndef|#
+directive|ifndef
+name|HAVE_FTRUNCATE
+name|FILE
 modifier|*
 name|tf
 decl_stmt|;
-name|int
-name|rc
-init|=
-literal|0
-decl_stmt|;
+endif|#
+directive|endif
+comment|/* !defined(HAVE_FTRUNCATE) */
 name|b
 operator|=
 operator|&
@@ -494,6 +532,13 @@ operator|(
 literal|0
 operator|)
 return|;
+ifndef|#
+directive|ifndef
+name|HAVE_FTRUNCATE
+name|rc
+operator|=
+literal|0
+expr_stmt|;
 name|fclose
 argument_list|(
 name|b
@@ -740,6 +785,36 @@ name|ufd
 operator|=
 name|bf
 expr_stmt|;
+else|#
+directive|else
+comment|/* !defined(HAVE_FTRUNCATE) */
+name|fflush
+argument_list|(
+name|b
+operator|->
+name|ufd
+argument_list|)
+expr_stmt|;
+name|rc
+operator|=
+name|ftruncate
+argument_list|(
+name|fileno
+argument_list|(
+name|b
+operator|->
+name|ufd
+argument_list|)
+argument_list|,
+operator|(
+name|off_t
+operator|)
+name|loc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* !defined(HAVE_FTRUNCATE) */
 if|if
 condition|(
 name|rc

@@ -5,7 +5,7 @@ name|char
 name|junk
 index|[]
 init|=
-literal|"\n@(#) LIBI77 VERSION pjw,dmg-mods 19991115\n"
+literal|"\n@(#) LIBI77 VERSION pjw,dmg-mods 20001205\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -18,7 +18,7 @@ name|char
 name|__G77_LIBI77_VERSION__
 index|[]
 init|=
-literal|"0.5.26 20000711 (prerelease)"
+literal|"0.5.26 20011023 (release)"
 decl_stmt|;
 end_decl_stmt
 
@@ -444,6 +444,42 @@ end_comment
 
 begin_comment
 comment|/*		makes the program run more slowly. */
+end_comment
+
+begin_comment
+comment|/* 20 April 2000: rsne.c, xwsne.c: tweaks that only matter if ftnint and */
+end_comment
+
+begin_comment
+comment|/*		ftnlen are of different fundamental types (different numbers */
+end_comment
+
+begin_comment
+comment|/*		of bits).  Since these files will not compile when this */
+end_comment
+
+begin_comment
+comment|/*		change matters, the above VERSION string remains unchanged. */
+end_comment
+
+begin_comment
+comment|/* 4 July 2000: adjustments to permit compilation by C++ compilers; */
+end_comment
+
+begin_comment
+comment|/*		VERSION string remains unchanged. NOT APPLIED FOR G77 */
+end_comment
+
+begin_comment
+comment|/* 5 Dec. 2000: lread.c: under namelist input, when reading a logical array, */
+end_comment
+
+begin_comment
+comment|/*		treat Tstuff= and Fstuff= as new assignments rather than as */
+end_comment
+
+begin_comment
+comment|/*		logical constants. */
 end_comment
 
 begin_comment

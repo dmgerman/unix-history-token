@@ -208,6 +208,9 @@ index|[
 literal|0
 index|]
 operator|=
+operator|(
+name|double
+operator|)
 name|t
 operator|.
 name|tms_utime
@@ -221,6 +224,9 @@ index|[
 literal|1
 index|]
 operator|=
+operator|(
+name|double
+operator|)
 name|t
 operator|.
 name|tms_stime

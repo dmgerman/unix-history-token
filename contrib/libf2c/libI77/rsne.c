@@ -2,6 +2,12 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_include
 include|#
 directive|include
+file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"f2c.h"
 end_include
 
@@ -1760,8 +1766,6 @@ name|ex
 decl_stmt|,
 name|no
 decl_stmt|,
-name|no1
-decl_stmt|,
 name|nomax
 decl_stmt|,
 name|size
@@ -1769,6 +1773,8 @@ decl_stmt|,
 name|span
 decl_stmt|;
 name|ftnint
+name|no1
+decl_stmt|,
 name|type
 decl_stmt|;
 name|char
@@ -1926,9 +1932,6 @@ name|getname
 argument_list|(
 name|buf
 argument_list|,
-operator|(
-name|int
-operator|)
 sizeof|sizeof
 argument_list|(
 name|buf
@@ -2213,9 +2216,6 @@ name|getname
 argument_list|(
 name|buf
 argument_list|,
-operator|(
-name|int
-operator|)
 sizeof|sizeof
 argument_list|(
 name|buf

@@ -228,7 +228,10 @@ index|[
 literal|0
 index|]
 operator|=
-operator|(
+call|(
+name|double
+call|)
+argument_list|(
 name|t
 operator|.
 name|tms_utime
@@ -236,7 +239,7 @@ operator|-
 name|t0
 operator|.
 name|tms_utime
-operator|)
+argument_list|)
 operator|/
 name|Hz
 expr_stmt|;
@@ -245,7 +248,10 @@ index|[
 literal|1
 index|]
 operator|=
-operator|(
+call|(
+name|double
+call|)
+argument_list|(
 name|t
 operator|.
 name|tms_stime
@@ -253,7 +259,7 @@ operator|-
 name|t0
 operator|.
 name|tms_stime
-operator|)
+argument_list|)
 operator|/
 name|Hz
 expr_stmt|;
