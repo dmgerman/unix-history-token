@@ -104,12 +104,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/pool.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sched.h>
 end_include
 
