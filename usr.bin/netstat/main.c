@@ -1076,11 +1076,6 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
-operator|*
-name|cp
-operator|=
-literal|'\0'
-expr_stmt|;
 break|break;
 block|}
 case|case
