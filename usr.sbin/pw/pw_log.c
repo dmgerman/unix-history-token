@@ -199,6 +199,7 @@ name|name
 operator|=
 literal|"unknown"
 expr_stmt|;
+comment|/* ISO 8601 International Standard Date format */
 name|strftime
 argument_list|(
 name|nfmt
@@ -206,7 +207,7 @@ argument_list|,
 sizeof|sizeof
 name|nfmt
 argument_list|,
-literal|"%d-%b-%Y %R "
+literal|"%Y-%m-%d %T "
 argument_list|,
 name|t
 argument_list|)

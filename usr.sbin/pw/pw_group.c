@@ -331,6 +331,10 @@ name|NULL
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|a_name
 operator|->
@@ -1237,6 +1241,10 @@ condition|(
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
