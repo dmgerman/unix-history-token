@@ -3555,7 +3555,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#define V(s)	V##s\n"
+literal|"#define V(s)\t__CONCAT(V,s)\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
