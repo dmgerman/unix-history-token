@@ -532,15 +532,6 @@ name|rerr
 modifier|*
 name|r
 decl_stmt|;
-specifier|register
-name|size_t
-name|siz
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|p
-decl_stmt|;
 for|for
 control|(
 name|r

@@ -3656,10 +3656,6 @@ name|p
 decl_stmt|;
 block|{
 specifier|register
-name|char
-name|c
-decl_stmt|;
-specifier|register
 name|cset
 modifier|*
 name|cs
@@ -4749,10 +4745,6 @@ decl_stmt|;
 specifier|register
 name|int
 name|len
-decl_stmt|;
-specifier|register
-name|char
-name|c
 decl_stmt|;
 while|while
 condition|(
