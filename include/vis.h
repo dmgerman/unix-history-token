@@ -312,6 +312,25 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|strunvisx
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|unvis
 name|__P
 argument_list|(
