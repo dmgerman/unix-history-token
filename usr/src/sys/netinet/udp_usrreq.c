@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993  *	Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)udp_usrreq.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993  *	Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)udp_usrreq.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1012,6 +1012,28 @@ operator|.
 name|udps_noport
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|m_flags
+operator|&
+operator|(
+name|M_BCAST
+operator||
+name|M_MCAST
+operator|)
+condition|)
+block|{
+name|udpstat
+operator|.
+name|udps_noportbcast
+operator|++
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
 operator|*
 name|ip
 operator|=
