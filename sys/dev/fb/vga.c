@@ -91,11 +91,22 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<machine/pc/bios.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -132,6 +143,31 @@ define|#
 directive|define
 name|VGA_DEBUG
 value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* machine/pc/bios.h has got too much i386-specific stuff in it */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BIOS_PADDRTOVADDR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|BIOS_PADDRTOVADDR
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x) - ISA_HOLE_START) + atdevbase)
 end_define
 
 begin_endif
@@ -629,11 +665,22 @@ directive|include
 file|<machine/clock.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<machine/pc/vesa.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -733,19 +780,11 @@ begin_comment
 comment|/* architecture dependent option */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__i386__
+end_ifndef
 
 begin_define
 define|#
@@ -7833,11 +7872,19 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__i386__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
 
 begin_comment
 comment|/* XXX */
@@ -10489,6 +10536,9 @@ condition|)
 block|{
 name|bcopy_fromio
 argument_list|(
+operator|(
+name|uintptr_t
+operator|)
 name|segment
 operator|+
 name|ch
@@ -10524,6 +10574,9 @@ control|)
 block|{
 name|bcopy_fromio
 argument_list|(
+operator|(
+name|uintptr_t
+operator|)
 name|segment
 operator|+
 name|c
@@ -10882,6 +10935,9 @@ name|bcopy_toio
 argument_list|(
 name|data
 argument_list|,
+operator|(
+name|uintptr_t
+operator|)
 name|segment
 operator|+
 name|ch
@@ -10917,6 +10973,9 @@ name|bcopy_toio
 argument_list|(
 name|data
 argument_list|,
+operator|(
+name|uintptr_t
+operator|)
 name|segment
 operator|+
 name|c

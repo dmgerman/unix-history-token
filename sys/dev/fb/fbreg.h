@@ -160,6 +160,94 @@ end_function_decl
 begin_elif
 elif|#
 directive|elif
+name|__amd64__
+end_elif
+
+begin_define
+define|#
+directive|define
+name|bcopy_io
+parameter_list|(
+name|s
+parameter_list|,
+name|d
+parameter_list|,
+name|c
+parameter_list|)
+value|bcopy((void *)(s), (void *)(d), (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|bcopy_toio
+parameter_list|(
+name|s
+parameter_list|,
+name|d
+parameter_list|,
+name|c
+parameter_list|)
+value|bcopy((void *)(s), (void *)(d), (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|bcopy_fromio
+parameter_list|(
+name|s
+parameter_list|,
+name|d
+parameter_list|,
+name|c
+parameter_list|)
+value|bcopy((void *)(s), (void *)(d), (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|bzero_io
+parameter_list|(
+name|d
+parameter_list|,
+name|c
+parameter_list|)
+value|bzero((void *)(d), (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|fill_io
+parameter_list|(
+name|p
+parameter_list|,
+name|d
+parameter_list|,
+name|c
+parameter_list|)
+value|fill((p), (void *)(d), (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|fillw_io
+parameter_list|(
+name|p
+parameter_list|,
+name|d
+parameter_list|,
+name|c
+parameter_list|)
+value|fillw((p), (void *)(d), (c))
+end_define
+
+begin_elif
+elif|#
+directive|elif
 name|__ia64__
 end_elif
 
@@ -331,7 +419,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !__i386__&& !__ia64__ */
+comment|/* !__i386__&& !__ia64__&& !__amd64__ */
 end_comment
 
 begin_define
