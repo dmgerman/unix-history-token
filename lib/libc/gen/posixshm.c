@@ -79,7 +79,7 @@ operator|)
 return|;
 name|fd
 operator|=
-name|open
+name|_open
 argument_list|(
 name|path
 argument_list|,
@@ -117,7 +117,7 @@ name|st_mode
 argument_list|)
 condition|)
 block|{
-name|close
+name|_close
 argument_list|(
 name|fd
 argument_list|)
@@ -135,7 +135,7 @@ return|;
 block|}
 if|if
 condition|(
-name|fcntl
+name|_fcntl
 argument_list|(
 name|fd
 argument_list|,
@@ -150,7 +150,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|close
+name|_close
 argument_list|(
 name|fd
 argument_list|)
