@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pmon.c	5.2 (Berkeley) %G%"
+literal|"@(#)pmon.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -516,8 +516,7 @@ if|if
 condition|(
 name|cp
 operator|==
-operator|-
-literal|1
+name|NULL
 condition|)
 name|pmnospac
 argument_list|()
@@ -541,8 +540,7 @@ if|if
 condition|(
 name|cp
 operator|==
-operator|-
-literal|1
+name|NULL
 condition|)
 name|pmnospac
 argument_list|()
