@@ -10,6 +10,35 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"card.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NCARD
+operator|>
+literal|0
+end_if
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/if_ed.c>
+end_include
+
+begin_comment
+comment|/* PCCARD version */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
 file|"bpf.h"
 end_include
 
@@ -178,13 +207,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/if_edreg.h>
+file|<dev/ed/if_edreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/if_edvar.h>
+file|<dev/ed/if_edvar.h>
 end_include
 
 begin_include
@@ -534,10 +563,14 @@ end_include
 begin_if
 if|#
 directive|if
-name|NCARDxx
+name|NCARD
 operator|>
 literal|0
 end_if
+
+begin_comment
+comment|/* broken pending pccard newbus fixes */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -823,7 +856,7 @@ end_decl_stmt
 begin_if
 if|#
 directive|if
-name|NCARDxx
+name|NCARD
 operator|>
 literal|0
 end_if
@@ -5747,7 +5780,7 @@ end_function
 begin_if
 if|#
 directive|if
-name|NCARDxx
+name|NCARD
 operator|>
 literal|0
 end_if
@@ -14129,6 +14162,15 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NCARD */
+end_comment
 
 end_unit
 

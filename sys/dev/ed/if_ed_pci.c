@@ -6,6 +6,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"card.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NCARD
+operator|==
+literal|0
+end_if
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -78,7 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/if_edvar.h>
+file|<dev/ed/if_edvar.h>
 end_include
 
 begin_struct
@@ -360,6 +374,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

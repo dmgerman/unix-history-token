@@ -196,7 +196,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/if_edreg.h>
+file|<dev/ed/if_edreg.h>
 end_include
 
 begin_comment
@@ -593,11 +593,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|"pci.h"
-end_include
+begin_define
+define|#
+directive|define
+name|NPCI
+value|0
+end_define
 
 begin_if
 if|#
