@@ -349,7 +349,7 @@ while|while
 condition|(
 operator|--
 name|p
-operator|>
+operator|>=
 name|path
 operator|&&
 operator|*
@@ -364,6 +364,13 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|path
+condition|)
+break|break;
 if|if
 condition|(
 name|rmdir
