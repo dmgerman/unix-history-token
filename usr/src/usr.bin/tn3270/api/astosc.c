@@ -229,6 +229,15 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
+name|this
+operator|->
+name|name
+operator|!=
+literal|0
+operator|)
+operator|&&
+operator|(
 name|ustrcmp
 argument_list|(
 name|this
@@ -239,6 +248,7 @@ name|string
 argument_list|)
 operator|==
 literal|0
+operator|)
 condition|)
 block|{
 return|return
