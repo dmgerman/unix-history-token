@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	quota.h	4.4	83/05/21	*/
+comment|/*	quota.h	4.5	83/05/24	*/
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|QUOTA
-end_ifdef
 
 begin_comment
 comment|/*  * MELBOURNE DISC QUOTAS  *  * Various junk to do with various quotas (etc) imposed upon  * the average user (big brother finally hits UNIX).  *  * The following structure exists in core for each logged on user.  * It contains global junk relevant to that user's quotas.  *  * The u_quota field of each user struct contains a pointer to  * the quota struct relevant to the current process, this is changed  * by 'setuid' sys call,&/or by the Q_SETUID quota() call.  */
@@ -86,6 +80,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|QUOTA
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -122,6 +122,11 @@ name|qfind
 argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -283,6 +288,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|QUOTA
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -423,6 +434,11 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Definitions for the 'quota' system call.  */
 end_comment
@@ -539,11 +555,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
