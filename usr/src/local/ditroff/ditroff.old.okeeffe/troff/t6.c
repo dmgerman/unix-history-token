@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	t6.c	1.4	(Berkeley)	83/11/09	*/
+comment|/*	t6.c	1.5	(Berkeley)	83/11/28	*/
 end_comment
 
 begin_include
@@ -1612,10 +1612,6 @@ goto|;
 block|}
 if|if
 condition|(
-name|i
-operator|==
-literal|'S'
-operator|||
 name|i
 operator|==
 literal|'0'
