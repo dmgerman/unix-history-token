@@ -80,7 +80,7 @@ parameter_list|,
 name|mi
 parameter_list|)
 define|\
-value|((__GNUC__> (ma)) || (__GNUC__ == (ma)&& __GNUC_MINOR__>= (mi)))
+value|(__GNUC__> (ma) || __GNUC__ == (ma)&& __GNUC_MINOR__>= (mi))
 end_define
 
 begin_else
