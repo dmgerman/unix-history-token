@@ -5313,11 +5313,21 @@ operator|==
 name|NULL
 condition|)
 break|break;
+comment|/* Associate the handle with the device_t and vice versa. */
 name|acpi_set_handle
 argument_list|(
 name|child
 argument_list|,
 name|handle
+argument_list|)
+expr_stmt|;
+name|AcpiAttachData
+argument_list|(
+name|handle
+argument_list|,
+name|acpi_fake_objhandler
+argument_list|,
+name|child
 argument_list|)
 expr_stmt|;
 comment|/* Check if the device can generate wake events. */
@@ -5396,6 +5406,27 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
+comment|/*  * AcpiAttachData() requires an object handler but never uses it.  This is a  * placeholder object handler so we can store a device_t in an ACPI_HANDLE.  */
+end_comment
+
+begin_function
+name|void
+name|acpi_fake_objhandler
+parameter_list|(
+name|ACPI_HANDLE
+name|h
+parameter_list|,
+name|UINT32
+name|fn
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|)
+block|{ }
 end_function
 
 begin_function
