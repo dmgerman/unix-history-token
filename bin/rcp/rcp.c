@@ -2884,8 +2884,6 @@ decl_stmt|;
 name|int
 name|amt
 decl_stmt|,
-name|count
-decl_stmt|,
 name|exists
 decl_stmt|,
 name|first
@@ -2897,6 +2895,9 @@ decl_stmt|,
 name|ofd
 decl_stmt|,
 name|omode
+decl_stmt|;
+name|size_t
+name|count
 decl_stmt|;
 name|int
 name|setimes
