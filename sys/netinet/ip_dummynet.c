@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.7.2.1 1999/03/24 12:45:45 luigi Exp $  */
+comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.7.2.2 1999/03/26 14:19:40 luigi Exp $  */
 end_comment
 
 begin_comment
@@ -658,9 +658,7 @@ name|pipe
 operator|->
 name|r_len_bytes
 operator|-=
-name|ip
-operator|->
-name|ip_len
+name|len
 expr_stmt|;
 comment|/* 	     * to add delay jitter, must act here. A lower value 	     * (bounded to 0) means lower delay. 	     */
 name|pkt
