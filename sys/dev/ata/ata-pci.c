@@ -564,6 +564,12 @@ return|return
 literal|"Intel ICH4 ATA100 controller"
 return|;
 case|case
+literal|0x24db8086
+case|:
+return|return
+literal|"Intel ICH5 ATA100 controller"
+return|;
+case|case
 literal|0x522910b9
 case|:
 if|if
