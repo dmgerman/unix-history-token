@@ -3,6 +3,10 @@ begin_comment
 comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.   *  * For copying and distribution information, please see the file  *<mit-copyright.h>.   *  * program to initialize the database,  reports error if database file  * already exists.   */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -165,9 +169,8 @@ literal|127
 expr_stmt|;
 else|#
 directive|else
-name|des_new_random_key
+name|des_random_key
 argument_list|(
-operator|&
 name|new_key
 argument_list|)
 expr_stmt|;
@@ -751,13 +754,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Initialize non shared random sequence */
-name|des_init_random_number_generator
-argument_list|(
-operator|&
-name|master_key
-argument_list|)
-expr_stmt|;
 comment|/* Maximum lifetime for changepw.kerberos (kadmin) tickets, 10 minutes */
 define|#
 directive|define

@@ -4,6 +4,10 @@ comment|/*    Copyright (C) 1989 by the Massachusetts Institute of Technology   
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  * Kerberos database administrator's tool.    *   * The default behavior of kadmin is if the -m option is given   * on the commandline, multiple requests are allowed to be given  * with one entry of the admin password (until the tickets expire).  */
 end_comment
 
@@ -1144,9 +1148,8 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|des_new_random_key
+name|des_random_key
 argument_list|(
-operator|&
 name|newkey
 argument_list|)
 expr_stmt|;
@@ -1572,14 +1575,6 @@ name|krbrlm
 argument_list|,
 operator|&
 name|c
-argument_list|)
-expr_stmt|;
-name|des_init_random_number_generator
-argument_list|(
-operator|&
-name|c
-operator|.
-name|session
 argument_list|)
 expr_stmt|;
 block|}

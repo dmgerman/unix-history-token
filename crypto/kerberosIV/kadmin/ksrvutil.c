@@ -4,6 +4,10 @@ comment|/*    Copyright (C) 1989 by the Massachusetts Institute of Technology   
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  * list and update contents of srvtab files  */
 end_comment
 
@@ -1194,8 +1198,9 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* NOENCRYPTION */
-name|des_new_random_key
+name|des_random_key
 argument_list|(
+operator|*
 name|new_key
 argument_list|)
 expr_stmt|;
@@ -2638,35 +2643,6 @@ condition|(
 name|change_this_key
 condition|)
 block|{
-comment|/* 		     * This is not a good choice of seed when/if the 		     * key has been compromised so we also use a 		     * random sequence number! 		     */
-name|des_init_random_number_generator
-argument_list|(
-operator|&
-name|old_key
-argument_list|)
-expr_stmt|;
-block|{
-name|des_cblock
-name|seqnum
-decl_stmt|;
-name|des_generate_random_block
-argument_list|(
-operator|&
-name|seqnum
-argument_list|)
-expr_stmt|;
-name|des_set_sequence_number
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-operator|&
-name|seqnum
-argument_list|)
-expr_stmt|;
-block|}
 comment|/*  		     * Pick a new key and determine whether or not 		     * it is safe to change 		     */
 if|if
 condition|(

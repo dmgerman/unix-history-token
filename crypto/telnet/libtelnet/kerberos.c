@@ -959,15 +959,7 @@ argument_list|,
 name|sched
 argument_list|)
 expr_stmt|;
-name|des_init_random_number_generator
-argument_list|(
-operator|&
-name|cred
-operator|.
-name|session
-argument_list|)
-expr_stmt|;
-name|des_new_random_key
+name|des_random_key
 argument_list|(
 operator|&
 name|session_key
@@ -1485,13 +1477,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * Initialize the random number generator since it's 		 * used later on by the encryption routine. 		 */
-name|des_init_random_number_generator
-argument_list|(
-operator|&
-name|session_key
-argument_list|)
-expr_stmt|;
 name|des_key_sched
 argument_list|(
 operator|&
