@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	6.2 (Berkeley) %G%"
+literal|"@(#)init.c	6.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1341,7 +1341,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Log a message and sleep for a while (to give someone an opportunity  * to read it and to save log or hardcopy output if the problem is chronic).  * We fork so that we can't block on I/O when writing the message,  * and so that init proper doesn't acquire another open file.  * If the fork fails, or the child can't finish, too bad.  */
+comment|/*  * Log a message and sleep for a while (to give someone an opportunity  * to read it and to save log or hardcopy output if the problem is chronic).  * NB: should send a message to the session logger to avoid blocking.  */
 end_comment
 
 begin_function
@@ -1406,18 +1406,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-operator|(
-name|pid
-operator|=
-name|fork
-argument_list|()
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
 name|vsyslog
 argument_list|(
 name|LOG_ALERT
@@ -1427,12 +1415,6 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
-name|_exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
 name|va_end
 argument_list|(
 name|ap
@@ -1443,31 +1425,11 @@ argument_list|(
 name|STALL_TIMEOUT
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|pid
-operator|!=
-operator|-
-literal|1
-condition|)
-name|waitpid
-argument_list|(
-name|pid
-argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
-literal|0
-argument_list|,
-name|WNOHANG
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Like stall(), but doesn't sleep.  * If cpp had variadic macros, the two functions could be #defines for another.  */
+comment|/*  * Like stall(), but doesn't sleep.  * If cpp had variadic macros, the two functions could be #defines for another.  * NB: should send a message to the session logger to avoid blocking.  */
 end_comment
 
 begin_decl_stmt
@@ -1529,14 +1491,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|fork
-argument_list|()
-operator|==
-literal|0
-condition|)
-block|{
 name|vsyslog
 argument_list|(
 name|LOG_ALERT
@@ -1546,12 +1500,6 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
-name|_exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
 name|va_end
 argument_list|(
 name|ap
@@ -1561,7 +1509,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/*  * Log a message, no forking, no waiting.  * We take care to close syslog's file descriptor, however.  */
+comment|/*  * Log an emergency message.  * NB: should send a message to the session logger to avoid blocking.  */
 end_comment
 
 begin_function
@@ -1635,20 +1583,6 @@ expr_stmt|;
 name|va_end
 argument_list|(
 name|ap
-argument_list|)
-expr_stmt|;
-name|closelog
-argument_list|()
-expr_stmt|;
-name|openlog
-argument_list|(
-literal|"init"
-argument_list|,
-name|LOG_CONS
-operator||
-name|LOG_ODELAY
-argument_list|,
-name|LOG_AUTH
 argument_list|)
 expr_stmt|;
 block|}
@@ -2028,7 +1962,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Close out the accounting files for a login session.  */
+comment|/*  * Close out the accounting files for a login session.  * NB: should send a message to the session logger to avoid blocking.  */
 end_comment
 
 begin_function
@@ -2044,11 +1978,6 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-name|fork
-argument_list|()
-operator|==
-literal|0
-operator|&&
 name|logout
 argument_list|(
 name|sp
@@ -2945,6 +2874,7 @@ operator|=
 name|AUTOBOOT
 expr_stmt|;
 comment|/* the default */
+comment|/* NB: should send a message to the session logger to avoid blocking. */
 name|logwtmp
 argument_list|(
 literal|"~"
@@ -2954,7 +2884,6 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 return|return
 operator|(
 name|state_func_t
@@ -4853,6 +4782,7 @@ name|se_flags
 operator||=
 name|SE_SHUTDOWN
 expr_stmt|;
+comment|/* NB: should send a message to the session logger to avoid blocking. */
 name|logwtmp
 argument_list|(
 literal|"~"
@@ -4862,7 +4792,6 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 name|logger_enable
 operator|=
 literal|0
