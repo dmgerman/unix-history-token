@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bad144.c	5.5 (Berkeley) %G%"
+literal|"@(#)bad144.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +45,12 @@ endif|#
 directive|endif
 endif|not lint
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
 
 begin_comment
 comment|/*  * bad144  *  * This program prints and/or initializes a bad block record for a pack,  * in the format used by the DEC standard 144.  * It can also add bad sector(s) to the record, moving the sector  * replacements as necessary.  *  * It is preferable to write the bad information with a standard formatter,  * but this program will do.  *   * RP06 sectors are marked as bad by inverting the format bit in the  * header; on other drives the valid-sector bit is cleared.  */
@@ -3402,6 +3408,61 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !vax */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_function
+name|main
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
+name|int
+name|argc
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|argv
+decl_stmt|;
+block|{
+name|fputs
+argument_list|(
+literal|"bad144 is a vax specific program.\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* vax */
+end_comment
 
 end_unit
 
