@@ -3189,8 +3189,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|Bt848_MAX_CARD
+name|CARD_AVER_MEDIA
 value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|Bt848_MAX_CARD
+value|7
 end_define
 
 begin_comment
@@ -3418,6 +3425,40 @@ block|,
 literal|1
 block|}
 block|}
+block|,
+comment|/* audio MUX values */
+comment|/* CARD_AVER_MEDIA */
+block|{
+literal|"AVer Media TV/FM"
+block|,
+comment|/* the 'name' */
+name|NULL
+block|,
+comment|/* the tuner */
+literal|0
+block|,
+comment|/* dbx is optional */
+literal|0
+block|,
+literal|0
+block|,
+comment|/* EEProm type */
+literal|0
+block|,
+comment|/* EEProm size */
+block|{
+literal|0x0c
+block|,
+literal|0x00
+block|,
+literal|0x0b
+block|,
+literal|0x0b
+block|,
+literal|1
+block|}
+block|}
+block|,
 comment|/* audio MUX values */
 block|}
 decl_stmt|;
