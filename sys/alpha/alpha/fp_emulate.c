@@ -1261,41 +1261,14 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* 	 * Dump the float registers into the pcb so we can get at 	 * them. 	 */
-if|if
-condition|(
-name|p
-operator|==
-name|fpcurproc
-condition|)
-block|{
-name|alpha_pal_wrfen
+comment|/* 	 * Dump the float registers into the pcb so we can get at 	 * them. We are potentially going to modify the fp state, so 	 * cancel fpcurproc too. 	 */
+name|alpha_fpstate_save
 argument_list|(
+name|p
+argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|savefpstate
-argument_list|(
-operator|&
-name|fpcurproc
-operator|->
-name|p_addr
-operator|->
-name|u_pcb
-operator|.
-name|pcb_fp
-argument_list|)
-expr_stmt|;
-name|alpha_pal_wrfen
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-name|fpcurproc
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 comment|/* 	 * Decode and execute the instruction. 	 */
 name|src
 operator|=

@@ -924,6 +924,20 @@ literal|0
 expr_stmt|;
 comment|/* XXX bogus -Wuninitialized warning */
 block|}
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
+name|user
+condition|)
+name|alpha_fpstate_check
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|entry
@@ -1196,55 +1210,10 @@ goto|goto
 name|dopanic
 goto|;
 block|}
-name|alpha_pal_wrfen
+name|alpha_fpstate_switch
 argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fpcurproc
-condition|)
-name|savefpstate
-argument_list|(
-operator|&
-name|fpcurproc
-operator|->
-name|p_addr
-operator|->
-name|u_pcb
-operator|.
-name|pcb_fp
-argument_list|)
-expr_stmt|;
-name|fpcurproc
-operator|=
 name|p
-expr_stmt|;
-name|restorefpstate
-argument_list|(
-operator|&
-name|fpcurproc
-operator|->
-name|p_addr
-operator|->
-name|u_pcb
-operator|.
-name|pcb_fp
 argument_list|)
-expr_stmt|;
-name|alpha_pal_wrfen
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-name|p
-operator|->
-name|p_md
-operator|.
-name|md_flags
-operator||=
-name|MDP_FPUSED
 expr_stmt|;
 goto|goto
 name|out
@@ -2058,6 +2027,16 @@ name|p
 operator|->
 name|p_sticks
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+name|alpha_fpstate_check
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|p
@@ -2881,15 +2860,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|dump_fp_regs
-parameter_list|()
-define|\
-value|if (p == fpcurproc) {						\ 		alpha_pal_wrfen(1);					\ 		savefpstate(&fpcurproc->p_addr->u_pcb.pcb_fp);		\ 		alpha_pal_wrfen(0);					\ 		fpcurproc = NULL;					\ 	}
-end_define
-
-begin_define
-define|#
-directive|define
 name|unaligned_load
 parameter_list|(
 name|storage
@@ -2949,7 +2919,7 @@ parameter_list|,
 name|mod
 parameter_list|)
 define|\
-value|dump_fp_regs();							\ 	unaligned_load(storage, frp, mod)
+value|alpha_fpstate_save(p, 1);					\ 	unaligned_load(storage, frp, mod)
 end_define
 
 begin_define
@@ -2962,7 +2932,7 @@ parameter_list|,
 name|mod
 parameter_list|)
 define|\
-value|dump_fp_regs();							\ 	unaligned_store(storage, frp, mod)
+value|alpha_fpstate_save(p, 0);					\ 	unaligned_store(storage, frp, mod)
 end_define
 
 begin_function
