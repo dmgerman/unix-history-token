@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: perform.c,v 1.45 1997/10/18 05:54:14 jkh Exp $"
+literal|"$Id: perform.c,v 1.46 1998/01/08 11:27:06 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1345,7 +1345,7 @@ name|Fake
 operator|&&
 name|vsystem
 argument_list|(
-literal|"sh -c %s %s INSTALL"
+literal|"sh -c \"./%s %s INSTALL\""
 argument_list|,
 name|REQUIRE_FNAME
 argument_list|,
@@ -1421,7 +1421,7 @@ name|Fake
 operator|&&
 name|vsystem
 argument_list|(
-literal|"sh -c %s %s PRE-INSTALL"
+literal|"sh -c \"./%s %s PRE-INSTALL\""
 argument_list|,
 name|INSTALL_FNAME
 argument_list|,
@@ -1582,7 +1582,7 @@ name|Fake
 operator|&&
 name|vsystem
 argument_list|(
-literal|"sh -c %s %s POST-INSTALL"
+literal|"sh -c \"./%s %s POST-INSTALL\""
 argument_list|,
 name|INSTALL_FNAME
 argument_list|,
