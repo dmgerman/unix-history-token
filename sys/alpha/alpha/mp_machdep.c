@@ -2042,6 +2042,10 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+name|mp_ncpus
+operator|>
+literal|1
+operator|&&
 name|smp_started
 operator|==
 literal|0
