@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parse.c	5.7 (Berkeley) %G%"
+literal|"@(#)parse.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,14 +32,12 @@ begin_include
 include|#
 directive|include
 file|"./indent_globs.h"
-include|;
 end_include
 
 begin_include
 include|#
 directive|include
 file|"./indent_codes.h"
-include|;
 end_include
 
 begin_macro
@@ -762,8 +760,7 @@ comment|/* cases should be one 							 * level down from 							 * switch */
 name|ps
 operator|.
 name|i_l_follow
-operator|+
-operator|=
+operator|+=
 name|ps
 operator|.
 name|case_indent
