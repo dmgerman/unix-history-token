@@ -950,10 +950,10 @@ decl_stmt|,
 name|i
 decl_stmt|,
 name|sz
-decl_stmt|,
-name|physbuf
 decl_stmt|;
-name|physbuf
+name|ch
+operator|->
+name|phys_buf
 operator|=
 name|vtophys
 argument_list|(
@@ -971,7 +971,9 @@ name|sc
 argument_list|,
 name|base
 argument_list|,
-name|physbuf
+name|ch
+operator|->
+name|phys_buf
 argument_list|,
 literal|4
 argument_list|)
