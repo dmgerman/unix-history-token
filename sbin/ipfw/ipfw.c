@@ -12298,7 +12298,7 @@ condition|)
 name|show_usage
 argument_list|(
 literal|"missing argument"
-literal|" for ``tcpflags''"
+literal|" for ``tcpoptions''"
 argument_list|)
 expr_stmt|;
 name|fill_tcpopts
