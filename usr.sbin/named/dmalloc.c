@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* dmalloc - debugging layer on top of malloc  * vix 25mar92 [fixed bug in round-up calcs in alloc()]  * vix 24mar92 [added size calcs, improved printout]  * vix 22mar92 [original work]  *  * $Id: dmalloc.c,v 8.1 1994/12/15 06:24:14 vixie Exp $  */
+comment|/* dmalloc - debugging layer on top of malloc  * vix 25mar92 [fixed bug in round-up calcs in alloc()]  * vix 24mar92 [added size calcs, improved printout]  * vix 22mar92 [original work]  *  * $Id: dmalloc.c,v 8.2 1995/12/06 20:34:38 vixie Exp $  */
 end_comment
 
 begin_comment
@@ -733,6 +733,16 @@ operator|+
 name|size
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|d
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|d
 operator|->
 name|size

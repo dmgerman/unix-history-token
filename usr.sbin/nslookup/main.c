@@ -49,7 +49,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 8.1 1994/12/15 06:24:31 vixie Exp $"
+literal|"$Id: main.c,v 8.2 1995/12/22 10:20:42 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -176,7 +176,7 @@ begin_define
 define|#
 directive|define
 name|ROOT_SERVER
-value|"ns.internic.net."
+value|"a.root-servers.net."
 end_define
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_glob.h,v 1.1.1.3 1995/10/23 09:26:16 peter Exp $  */
+comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_glob.h,v 8.6 1995/12/22 10:20:30 vixie Exp $  */
 end_comment
 
 begin_comment
@@ -265,6 +265,21 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* need to process finished zone transfers */
+end_comment
+
+begin_decl_stmt
+name|DECL
+name|int
+name|needendxfer
+name|INIT
+argument_list|(
+literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* need to reload secondary zone(s) */
 end_comment
 
@@ -415,13 +430,28 @@ comment|/*QRYLOG*/
 end_comment
 
 begin_comment
-comment|/* is this a root server that should therefore not recurse? */
+comment|/* should this server not recurse? */
 end_comment
 
 begin_decl_stmt
 name|DECL
 name|int
 name|NoRecurse
+name|INIT
+argument_list|(
+literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* should this server never fetch glue? */
+end_comment
+
+begin_decl_stmt
+name|DECL
+name|int
+name|NoFetchGlue
 name|INIT
 argument_list|(
 literal|0

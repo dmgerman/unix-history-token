@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* options.h - specify the conditionally-compiled features  * vix 28mar92 [moved out of the Makefile because they were getting too big]  *  * $Id: options.h,v 1.1.1.1 1995/10/23 09:26:10 peter Exp $  */
+comment|/* options.h - specify the conditionally-compiled features  * vix 28mar92 [moved out of the Makefile because they were getting too big]  *  * $Id: options.h,v 8.7 1995/12/29 21:08:13 vixie Exp $  */
 end_comment
 
 begin_comment
@@ -170,7 +170,7 @@ comment|/* negative caching (anant@isi.edu) */
 end_comment
 
 begin_comment
-comment|/*#define VALIDATE	/* validation procedure (anant@isi.edu) (DO NOT USE!)*/
+comment|/*#define VALIDATE	/* validation procedure (anant@isi.edu) (BUGGY!) */
 end_comment
 
 begin_comment
@@ -371,6 +371,16 @@ end_comment
 
 begin_comment
 comment|/*#define LOC_RR	/* support for (draft) LOC record parsing (ckd) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SORT_RESPONSE
+end_define
+
+begin_comment
+comment|/* should we try to sort responses optimally? (vix) */
 end_comment
 
 begin_comment

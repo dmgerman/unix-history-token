@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_sort.c,v 8.2 1995/06/29 09:26:17 vixie Exp $"
+literal|"$Id: ns_sort.c,v 8.3 1995/12/22 10:20:30 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,6 +140,12 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SORT_RESPONSE
+end_ifdef
 
 begin_function
 name|struct
@@ -675,6 +681,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

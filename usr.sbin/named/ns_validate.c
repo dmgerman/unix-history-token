@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<syslog.h>
 end_include
 
@@ -186,7 +192,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*****************************************************************  * validate() is called from dovalidate(). it takes as parameters,   * the domain name sought, the class, type etc. of record, the server  * that gave us the answer and the data it gave us  *  * it returns VALID if it is able to validate the record, INVALID if it cannot.  * furtehr VALID is split into VALID_CACHE if we need to cache this record  * since the domainname is not something we are authoritative for and  * VALID_NO_CACHE if the name is something we are authoritative for.  *  * pseudocode for function validate is as follows:  * validate(domain, server, type, class, data, dlen, rcode) {  *  *       if (dname or a higher level name not found in cache)  *          return INVALID;  *       if (NS records for "domain" found in cache){  *  *           if (we are authoritative)  /findns() returned NXDOMAIN;/  *              if (we did not have an exact match on names)  *                 =>the name does not exist in our database  *                 => data is bad: return INVALID  *              if (data agrees with what we have)  *                return VALID_NO_CACHE;  *              else return INVALID;  *      *          if (we are not authoritative) /findns() returned OK;/         *          if (address records for NS's found in cache){  *                       if ("server" = one of the addresses){  *                               return VALID_CACHE;  *                       }else{  *                          stick in queue of "to_validate" data;  *                          return (INVALID);  *                       }  *          else return INVALID;  *  * This performs the validation procedure described above. Checks  * for the longest component of the dname that has a NS record  * associated with it. At any stage, if no data is found, it implies  * that the name is bad (has an unknown domain identifier) thus, we  * return INVALID.  * If address of one of these servers matches the address of the server  * that returned us this data, we are happy!  *  * since findns will set needs_prime_cache if np = NULL is passed, we always  * reset it. will let ns_req do it when we are searching for ns records to  * query someone. hence in all the three cases of switch(findns())  *                                 we have needs_prime_cache = 0;  *****************************************************************************/
+comment|/*****************************************************************  * validate() is called from dovalidate(). it takes as parameters,   * the domain name sought, the class, type etc. of record, the server  * that gave us the answer and the data it gave us  *  * it returns VALID if it is able to validate the record, INVALID if it cannot.  * furtehr VALID is split into VALID_CACHE if we need to cache this record  * since the domainname is not something we are authoritative for and  * VALID_NO_CACHE if the name is something we are authoritative for.  *  * pseudocode for function validate is as follows:  * validate(domain, qdomain, server, type, class, data, dlen, rcode) {  *  *       if (dname or a higher level name not found in cache)  *          return INVALID;  *       if (NS records for "domain" found in cache){  *  *           if (we are authoritative)  /findns() returned NXDOMAIN;/  *              if (we did not have an exact match on names)  *                 =>the name does not exist in our database  *                 => data is bad: return INVALID  *              if (data agrees with what we have)  *                return VALID_NO_CACHE;  *              else return INVALID;  *      *          if (we are not authoritative) /findns() returned OK;/         *	    if (domain lives below the qdomain)  *		return VALID_CACHE;  *          if (address records for NS's found in cache){  *                       if ("server" = one of the addresses){  *                               return VALID_CACHE;  *                       }else{  *                          stick in queue of "to_validate" data;  *                          return (INVALID);  *                       }  *          else return INVALID;  *  * This performs the validation procedure described above. Checks  * for the longest component of the dname that has a NS record  * associated with it. At any stage, if no data is found, it implies  * that the name is bad (has an unknown domain identifier) thus, we  * return INVALID.  * If address of one of these servers matches the address of the server  * that returned us this data, we are happy!  *  * since findns will set needs_prime_cache if np = NULL is passed, we always  * reset it. will let ns_req do it when we are searching for ns records to  * query someone. hence in all the three cases of switch(findns())  *                                 we have needs_prime_cache = 0;  *****************************************************************************/
 end_comment
 
 begin_function
@@ -194,6 +200,8 @@ name|int
 name|validate
 parameter_list|(
 name|dname
+parameter_list|,
+name|qdomain
 parameter_list|,
 name|server
 parameter_list|,
@@ -215,33 +223,59 @@ parameter_list|)
 name|char
 modifier|*
 name|dname
+decl_stmt|,
+decl|*
+name|qdomain
 decl_stmt|;
+end_function
+
+begin_decl_stmt
 name|struct
 name|sockaddr_in
 modifier|*
 name|server
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|type
-decl_stmt|;
-name|int
+decl_stmt|,
 name|class
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|data
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|dlen
 decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|NCACHE
+end_ifdef
+
+begin_decl_stmt
 name|int
 name|rcode
 decl_stmt|;
+end_decl_stmt
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_block
 block|{
 name|struct
 name|namebuf
@@ -267,6 +301,7 @@ decl_stmt|;
 name|int
 name|count
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -401,26 +436,10 @@ name|np
 operator|==
 name|NULL
 condition|)
-block|{
 name|fname
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|malloc
-argument_list|(
-literal|1
-argument_list|)
+literal|""
 expr_stmt|;
-name|fname
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-block|}
 name|dprintf
 argument_list|(
 literal|5
@@ -462,25 +481,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|np
-operator|==
-name|NULL
-operator|&&
-name|fname
-operator|!=
-name|NULL
-condition|)
-name|free
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|fname
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|findns
@@ -680,7 +680,7 @@ argument_list|,
 operator|(
 name|ddt
 operator|,
-literal|"validate:found ns records:calling check_addr_ns\n"
+literal|"validate:found ns records\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -694,6 +694,13 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+name|samedomain
+argument_list|(
+name|dname
+argument_list|,
+name|qdomain
+argument_list|)
+operator|||
 name|check_addr_ns
 argument_list|(
 name|nsp
@@ -756,7 +763,7 @@ return|;
 block|}
 comment|/*switch*/
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*validate*/
@@ -1386,6 +1393,10 @@ operator|+=
 operator|(
 name|strlen
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|tdp
 argument_list|)
 operator|+
@@ -1555,7 +1566,7 @@ argument_list|,
 operator|(
 name|ddt
 operator|,
-literal|"check_addr_ns: s:[%s], db:0x%x, d:\"%s\"\n"
+literal|"check_addr_ns: s:[%s], db:0x%lx, d:\"%s\"\n"
 operator|,
 name|inet_ntoa
 argument_list|(
@@ -1563,6 +1574,9 @@ operator|*
 name|saddr
 argument_list|)
 operator|,
+operator|(
+name|u_long
+operator|)
 name|nsp
 operator|,
 name|dname
@@ -1806,6 +1820,7 @@ name|hashbuf
 modifier|*
 name|tmphtp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|dname
@@ -1827,8 +1842,11 @@ argument_list|,
 operator|(
 name|ddt
 operator|,
-literal|"check_in_tables(nsp=x%x,qp=x%x,'%s')\n"
+literal|"check_in_tables(nsp=x%lx, qp=x%x, '%s')\n"
 operator|,
+operator|(
+name|u_long
+operator|)
 name|nsp
 operator|,
 name|server
@@ -2069,6 +2087,7 @@ name|syslogdname
 parameter_list|,
 name|sysloginfo
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|servername
@@ -2077,10 +2096,12 @@ name|struct
 name|in_addr
 name|serveraddr
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|syslogdname
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|sysloginfo
@@ -2286,32 +2307,8 @@ index|]
 operator|.
 name|nsname
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|malloc
+name|savestr
 argument_list|(
-operator|(
-name|unsigned
-operator|)
-name|strlen
-argument_list|(
-name|servername
-argument_list|)
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|nameaddrlist
-index|[
-name|i
-index|]
-operator|.
-name|nsname
-argument_list|,
 name|servername
 argument_list|)
 expr_stmt|;
@@ -2326,32 +2323,8 @@ index|]
 operator|.
 name|nsname
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|malloc
+name|savestr
 argument_list|(
-operator|(
-name|unsigned
-operator|)
-name|strlen
-argument_list|(
-name|servername
-argument_list|)
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|nameaddrlist
-index|[
-name|firstNA
-index|]
-operator|.
-name|nsname
-argument_list|,
 name|servername
 argument_list|)
 expr_stmt|;
@@ -2483,6 +2456,8 @@ name|zone
 parameter_list|,
 name|flags
 parameter_list|,
+name|qdomain
+parameter_list|,
 name|server
 parameter_list|,
 name|VCode
@@ -2503,6 +2478,13 @@ decl_stmt|,
 name|zone
 decl_stmt|,
 name|flags
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|qdomain
 decl_stmt|;
 end_decl_stmt
 
@@ -3391,6 +3373,8 @@ name|validate
 argument_list|(
 name|dname
 argument_list|,
+name|qdomain
+argument_list|,
 name|server
 argument_list|,
 name|type
@@ -3482,14 +3466,27 @@ begin_comment
 comment|/******************************************************************   * This manages a data structure that stores all RRs that we were   * unable to validate. Am not sure exactly what purpose this might   * serve but until such time as we are sure it will not help, let   * me do it anyway.   *****************************************************************/
 end_comment
 
+begin_comment
+unit|static void stick_in_queue(dname, type, class, data) 	char *dname; 	int type; 	int class; 	char *data; { 	struct timeval tp; 	struct _TIMEZONE tzp; 	TO_Validate *tempVQ; 	u_long leasttime;  	if (validateQ == NULL) { 		validateQ = (TO_Validate *)malloc(sizeof(TO_Validate)); 		if (!validateQ) 			panic(errno, "malloc(validateQ)"); 		validateQ->type = type; 		validateQ->class = class; 		validateQ->dname = savestr(dname); 		validateQ->data = savestr(data);
+comment|/* XXX no \0 */
+end_comment
+
+begin_comment
+unit|gettimeofday(&tp,&tzp); 		validateQ->time = tp.tv_sec; 		VQcount = 1; 		validateQ->next = validateQ->prev = NULL; 		currentVQ = validateQ; 		return; 	} 	if (VQcount< MAXVQ) { 		tempVQ =(TO_Validate *)malloc(sizeof(TO_Validate)); 		if (!tempVQ) 			panic(errno, "malloc(tempVQ)"); 		tempVQ->type = type; 		tempVQ->class = class; 		tempVQ->dname = savestr(dname); 		tempVQ->data = savestr(data);
+comment|/* XXX no \0 */
+end_comment
+
 begin_endif
-unit|static void stick_in_queue(dname, type, class, data) 	char *dname; 	int type; 	int class; 	char *data; { 	struct timeval tp; 	struct _TIMEZONE tzp; 	TO_Validate *tempVQ; 	u_long leasttime;  	if (validateQ == NULL) { 		validateQ = (TO_Validate *)malloc(sizeof(TO_Validate)); 		validateQ->type = type; 		validateQ->class = class; 		validateQ->dname = malloc((unsigned)strlen(dname)+1); 		strcpy(validateQ->dname, dname); 		validateQ->data = malloc((unsigned)strlen(data)+1); 		strcpy(validateQ->data, data); 		gettimeofday(&tp,&tzp); 		validateQ->time = tp.tv_sec; 		VQcount = 1; 		validateQ->next = validateQ->prev = NULL; 		currentVQ = validateQ; 		return; 	} 	if (VQcount< MAXVQ) { 		tempVQ =(TO_Validate *)malloc(sizeof(TO_Validate)); 		tempVQ->type = type; 		tempVQ->class = class; 		tempVQ->dname = malloc((unsigned)strlen(dname)+1); 		strcpy(tempVQ->dname, dname); 		tempVQ->data = malloc((unsigned)strlen(data)+1); 		strcpy(tempVQ->data, data); 		gettimeofday(&tp,&tzp); 		tempVQ->time = tp.tv_sec; 		tempVQ->next = currentVQ->next; 		tempVQ->prev = currentVQ; 		if (currentVQ->next != NULL) 			currentVQ->next->prev = tempVQ; 		currentVQ->next = tempVQ; 		currentVQ = tempVQ; 		VQcount++; 		return; 	} 	gettimeofday(&tp,&tzp); 	leasttime = validateQ->time; 	currentVQ = validateQ; 	for (tempVQ = validateQ;  tempVQ != NULL;  tempVQ = tempVQ->next) { 		if (tp.tv_sec>= tempVQ->time +VQEXPIRY) { 			tempVQ->type = type; 			tempVQ->class = class; 			strcpy(tempVQ->dname, dname); 			strcpy(tempVQ->data, data); 			tempVQ->time = tp.tv_sec; 			currentVQ = tempVQ; 			return; 		} 		if (tempVQ->time< leasttime) { 			leasttime = tempVQ->time; 			currentVQ = tempVQ; 		} 	} 	currentVQ->type = type; 	currentVQ->class = class; 	strcpy(currentVQ->dname, dname); 	strcpy(currentVQ->data, data); 	currentVQ->time = tp.tv_sec; 	return; }
+unit|gettimeofday(&tp,&tzp); 		tempVQ->time = tp.tv_sec; 		tempVQ->next = currentVQ->next; 		tempVQ->prev = currentVQ; 		if (currentVQ->next != NULL) 			currentVQ->next->prev = tempVQ; 		currentVQ->next = tempVQ; 		currentVQ = tempVQ; 		VQcount++; 		return; 	} 	gettimeofday(&tp,&tzp); 	leasttime = validateQ->time; 	currentVQ = validateQ; 	for (tempVQ = validateQ;  tempVQ != NULL;  tempVQ = tempVQ->next) { 		if (tp.tv_sec>= tempVQ->time +VQEXPIRY) { 			tempVQ->type = type; 			tempVQ->class = class; 			strcpy(tempVQ->dname, dname); 			strcpy(tempVQ->data, data); 			tempVQ->time = tp.tv_sec; 			currentVQ = tempVQ; 			return; 		} 		if (tempVQ->time< leasttime) { 			leasttime = tempVQ->time; 			currentVQ = tempVQ; 		} 	} 	currentVQ->type = type; 	currentVQ->class = class; 	strcpy(currentVQ->dname, dname); 	strcpy(currentVQ->data, data); 	currentVQ->time = tp.tv_sec; 	return; }
 endif|#
 directive|endif
 end_endif
 
-begin_escape
-end_escape
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BAD_IDEA
+end_ifdef
 
 begin_comment
 comment|/* removes any INVALID RR's from the msg being returned, updates msglen to  * reflect the new message length.  */
@@ -3771,6 +3768,18 @@ name|int
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|RRlen
+condition|)
+name|panic
+argument_list|(
+name|errno
+argument_list|,
+literal|"malloc(RRlen)"
+argument_list|)
+expr_stmt|;
 name|hp
 operator|=
 operator|(
@@ -3851,7 +3860,7 @@ argument_list|,
 operator|(
 name|ddt
 operator|,
-literal|"dn_skipname() failed, bad record\n"
+literal|"dn_expand() failed, bad record\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5455,6 +5464,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*BAD_IDEA*/
+end_comment
 
 begin_endif
 endif|#

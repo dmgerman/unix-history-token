@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_update.c,v 8.6 1995/06/29 09:26:17 vixie Exp $"
+literal|"$Id: db_update.c,v 8.7 1995/12/06 20:34:38 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1215,7 +1215,6 @@ condition|)
 goto|goto
 name|skip
 goto|;
-comment|/* XXX: 				 * The next three clauses do not deal 				 * correctly with glue records. mpa. 				 */
 comment|/* if the new data is authorative  				 * remove any data for this domain with 				 * the same class that isn't as credable 				 */
 if|if
 condition|(
@@ -1237,28 +1236,14 @@ comment|/* better credibility and the old datum 					 * was not from a zone file
 goto|goto
 name|delete
 goto|;
+if|#
+directive|if
+literal|0
+comment|/* caught by findMyZone() now. */
 comment|/* if we have authoritative data for a 				 * node, don't add in other data. 				 */
-if|if
-condition|(
-name|dp
-operator|->
-name|d_cred
-operator|==
-name|DB_C_ZONE
-operator|&&
-name|newdp
-operator|->
-name|d_cred
-operator|<
-name|dp
-operator|->
-name|d_cred
-condition|)
-return|return
-operator|(
-name|AUTH
-operator|)
-return|;
+block|if (dp->d_cred == DB_C_ZONE&& 				    newdp->d_cred< dp->d_cred) 					return (AUTH);
+endif|#
+directive|endif
 comment|/* if the new data is authoritative but 				 * but isn't as credible, reject it. 				 */
 if|if
 condition|(

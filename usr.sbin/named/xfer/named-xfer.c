@@ -73,7 +73,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: named-xfer.c,v 8.9 1995/06/29 09:26:17 vixie Exp $"
+literal|"$Id: named-xfer.c,v 8.10 1995/12/06 20:34:38 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -216,11 +216,32 @@ directive|include
 file|<syslog.h>
 end_include
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|SVR4
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<math.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -778,6 +799,18 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ddtfile
+condition|)
+name|panic
+argument_list|(
+name|errno
+argument_list|,
+literal|"malloc(ddtfile)"
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SHORT_FNAMES
@@ -914,6 +947,18 @@ literal|".XXXXXX"
 argument_list|)
 operator|+
 literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|tmpname
+condition|)
+name|panic
+argument_list|(
+name|errno
+argument_list|,
+literal|"malloc(tmpname)"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1814,6 +1859,9 @@ operator|->
 name|z_addrcnt
 operator|)
 argument_list|)
+expr_stmt|;
+name|res_init
+argument_list|()
 expr_stmt|;
 name|_res
 operator|.
@@ -3201,11 +3249,9 @@ endif|#
 directive|endif
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_NOTICE
 argument_list|,
-literal|"%s from [%s], zone %s: rcode %d, aa %d, ancount %d, aucount %d\n"
-argument_list|,
-literal|"bad response to SOA query"
+literal|"[%s] %s for %s, SOA query got rcode %d, aa %d, ancount %d, aucount %d"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -3214,9 +3260,38 @@ operator|.
 name|sin_addr
 argument_list|)
 argument_list|,
+operator|(
+name|hp
+operator|->
+name|aa
+condition|?
+operator|(
+name|qdcount
+operator|==
+literal|1
+condition|?
+literal|"no SOA found"
+else|:
+literal|"bad response"
+operator|)
+else|:
+literal|"not authoritative"
+operator|)
+argument_list|,
 name|zp
 operator|->
 name|z_origin
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|?
+name|zp
+operator|->
+name|z_origin
+else|:
+literal|"."
 argument_list|,
 name|hp
 operator|->
@@ -5531,10 +5606,6 @@ operator|||
 name|class
 operator|!=
 name|curclass
-operator|||
-name|ttl
-operator|==
-literal|0
 condition|)
 return|return
 operator|(
@@ -6938,10 +7009,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|ttl
-operator|!=
-literal|0
-operator|&&
 name|ttl
 operator|!=
 name|minimum_ttl

@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: subr.c,v 8.3 1995/08/21 01:27:27 vixie Exp $"
+literal|"$Id: subr.c,v 8.4 1995/12/03 08:31:19 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -146,6 +146,12 @@ name|defined
 argument_list|(
 name|RISCOS_BSD
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__osf__
+argument_list|)
 specifier|extern
 name|FILE
 modifier|*
@@ -207,6 +213,12 @@ operator|!
 name|defined
 argument_list|(
 name|RISCOS_BSD
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__osf__
 argument_list|)
 name|yyrestart
 argument_list|(

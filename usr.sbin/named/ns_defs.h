@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_defs.h,v 8.2 1995/06/19 20:55:40 vixie Exp $  */
+comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_defs.h,v 8.4 1995/12/22 10:20:30 vixie Exp $  */
 end_comment
 
 begin_comment
@@ -236,6 +236,13 @@ begin_comment
 comment|/* How much to decay unused response times */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|USE_MINIMUM
+value|0xffffffff
+end_define
+
 begin_comment
 comment|/* sequence-space arithmetic */
 end_comment
@@ -250,6 +257,34 @@ parameter_list|,
 name|b
 parameter_list|)
 value|((int32_t)((a)-(b))> 0)
+end_define
+
+begin_comment
+comment|/* wildcard predicate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WILDCARD_P
+parameter_list|(
+name|str
+parameter_list|)
+value|(str[0] == '*'&& str[1] == '\0')
+end_define
+
+begin_comment
+comment|/* cheap garbage collection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FREE_ONCE
+parameter_list|(
+name|p
+parameter_list|)
+value|{ if (p) { free(p); p = NULL; } }
 end_define
 
 begin_comment
@@ -601,6 +636,28 @@ begin_comment
 comment|/* ALLOW_UPDATES */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|Z_XFER_ABORTED
+value|0x2000
+end_define
+
+begin_comment
+comment|/* zone transfer has been aborted */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Z_XFER_GONE
+value|0x4000
+end_define
+
+begin_comment
+comment|/* zone transfer process is gone */
+end_comment
+
 begin_comment
 comment|/* named_xfer exit codes */
 end_comment
@@ -827,9 +884,17 @@ modifier|*
 name|q_zquery
 decl_stmt|;
 comment|/* Zone query is about (Q_ZSERIAL) */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|LAME_DELEGATION
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|VALIDATE
+argument_list|)
 name|char
 name|q_domain
 index|[
