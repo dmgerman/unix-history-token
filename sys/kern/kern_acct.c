@@ -309,24 +309,6 @@ name|error
 decl_stmt|,
 name|flags
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|td
-operator|!=
-name|curthread
-condition|)
-name|panic
-argument_list|(
-literal|"acct"
-argument_list|)
-expr_stmt|;
-comment|/* XXXKSE DIAGNOSTIC */
 comment|/* Make sure that the caller is root. */
 name|error
 operator|=
@@ -339,9 +321,17 @@ if|if
 condition|(
 name|error
 condition|)
-goto|goto
-name|done2
-goto|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If accounting is to be started to a file, open that file for 	 * writing and make sure it's a 'normal'. 	 */
 if|if
 condition|(
