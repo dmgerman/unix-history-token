@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)popen.c	5.4 (Berkeley) %G%"
+literal|"@(#)popen.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -373,14 +373,15 @@ end_decl_stmt
 
 begin_block
 block|{
+name|long
+name|omask
+decl_stmt|;
 name|int
 name|child
 decl_stmt|,
 name|pid
 decl_stmt|,
 name|status
-decl_stmt|,
-name|omask
 decl_stmt|;
 name|child
 operator|=
