@@ -3392,8 +3392,8 @@ if|if
 condition|(
 operator|(
 name|lba
-operator|>
-literal|268435455
+operator|>=
+name|ATA_MAX_28BIT_LBA
 operator|||
 name|count
 operator|>

@@ -596,7 +596,7 @@ operator|)
 operator|&&
 name|lbasize48
 operator|>
-literal|268435455
+name|ATA_MAX_28BIT_LBA
 condition|)
 name|adp
 operator|->
