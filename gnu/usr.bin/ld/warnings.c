@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: warnings.c,v 1.3 1993/12/11 11:58:30 jkh Exp $  */
+comment|/*  * $Id: warnings.c,v 1.4 1993/12/22 23:28:12 jkh Exp $  */
 end_comment
 
 begin_include
@@ -2711,14 +2711,6 @@ endif|#
 directive|endif
 continue|continue;
 block|}
-if|if
-condition|(
-name|undefined_global_sym_count
-operator|==
-literal|0
-condition|)
-comment|/* No undefined symbols in rel files */
-continue|continue;
 name|dont_allow_symbol_name
 operator|=
 literal|0
