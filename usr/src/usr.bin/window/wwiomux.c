@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwiomux.c	3.19 (Berkeley) %G%"
+literal|"@(#)wwiomux.c	3.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,7 +53,7 @@ file|<fcntl.h>
 end_include
 
 begin_comment
-comment|/*  * Multiple window output handler.  * The idea is to copy window outputs to the terminal, via the  * display package.  We try to give the top most window highest  * priority.  The only return condition is when there is keyboard  * input or when a child process dies which are serviced by signal  * catchers (wwrint() and wwchild()).  * When there's nothing to do, we sleep in a select().  * This can be done better with interrupt driven io.  But that's  * not supported on ptys, yet.  * The history of this routine is interesting.  */
+comment|/*  * Multiple window output handler.  * The idea is to copy window outputs to the terminal, via the  * display package.  We try to give wwcurwin highest priority.  * The only return conditions are when there is keyboard input  * and when a child process dies, which are serviced by signal  * catchers (wwrint() and wwchild()).  * When there's nothing to do, we sleep in a select().  * This can be done better with interrupt driven io.  But that's  * not supported on ptys, yet.  * The history of this routine is interesting.  */
 end_comment
 
 begin_macro
@@ -597,6 +597,84 @@ operator|=
 name|c
 expr_stmt|;
 block|}
+comment|/* 		 * Try the current window first, if there is output 		 * then process it and go back to the top to try again. 		 * This can lead to starvation of the other windows, 		 * but presumably that what we want. 		 * Update will eventually happen when output from wwcurwin 		 * dies down. 		 */
+if|if
+condition|(
+operator|(
+name|w
+operator|=
+name|wwcurwin
+operator|)
+operator|!=
+literal|0
+operator|&&
+name|w
+operator|->
+name|ww_pty
+operator|>=
+literal|0
+operator|&&
+name|w
+operator|->
+name|ww_obq
+operator|>
+name|w
+operator|->
+name|ww_obp
+operator|&&
+operator|!
+name|w
+operator|->
+name|ww_stopped
+condition|)
+block|{
+name|n
+operator|=
+name|wwwrite
+argument_list|(
+name|w
+argument_list|,
+name|w
+operator|->
+name|ww_obp
+argument_list|,
+name|w
+operator|->
+name|ww_obq
+operator|-
+name|w
+operator|->
+name|ww_obp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|w
+operator|->
+name|ww_obp
+operator|+=
+name|n
+operator|)
+operator|==
+name|w
+operator|->
+name|ww_obq
+condition|)
+name|w
+operator|->
+name|ww_obq
+operator|=
+name|w
+operator|->
+name|ww_obp
+operator|=
+name|w
+operator|->
+name|ww_ob
+expr_stmt|;
+continue|continue;
+block|}
 for|for
 control|(
 name|w
@@ -688,12 +766,6 @@ condition|(
 name|wwinterrupt
 argument_list|()
 condition|)
-block|{
-name|wwclrintr
-argument_list|()
-expr_stmt|;
-return|return;
-block|}
 break|break;
 block|}
 block|}
