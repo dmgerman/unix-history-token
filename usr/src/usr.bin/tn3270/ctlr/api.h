@@ -290,7 +290,7 @@ modifier|*
 name|presentation_space
 decl_stmt|;
 block|}
-name|QuerySessionParmetersParms
+name|QuerySessionParametersParms
 typedef|;
 end_typedef
 
@@ -465,7 +465,7 @@ decl_stmt|,
 name|reserved
 decl_stmt|;
 name|int
-name|connector_task_id
+name|connectors_task_id
 decl_stmt|;
 block|}
 name|DisconnectFromKeyboardParms
