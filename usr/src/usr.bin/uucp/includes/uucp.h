@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uucp.h	5.7	85/06/23	*/
+comment|/*	uucp.h	5.8	85/06/24	*/
 end_comment
 
 begin_include
@@ -296,7 +296,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * We need a timer to write slowly to ventels.  * define INTERVALTIMER to use 4.2 bsd interval timer.  * define FASTTIMER if you have the nap() system call.  * define FTIME if you have the ftime() system call.  * define BUSYLOOP if you must do a busy loop.  * Look at uucpdelay() in condevs.c for details.  */
+comment|/*  * We need a timer to write slowly to ventels.  * define INTERVALTIMER to use 4.[23] bsd interval timer.  * define FASTTIMER if you have the nap() system call.  * define FTIME if you have the ftime() system call.  * define BUSYLOOP if you must do a busy loop.  * Look at uucpdelay() in condevs.c for details.  */
 end_comment
 
 begin_define
@@ -328,7 +328,17 @@ comment|/*#define	USG	/**/
 end_comment
 
 begin_comment
-comment|/*  * If you are running 4.2bsd, define BSD4_2  */
+comment|/*  * If you are running 4.3bsd, define BSD4_3 and BSD4_2  * If you are just running 4.2bsd, define BSD4_2  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BSD4_3
+end_define
+
+begin_comment
+comment|/**/
 end_comment
 
 begin_define
@@ -362,6 +372,37 @@ end_define
 begin_comment
 comment|/**/
 end_comment
+
+begin_comment
+comment|/*  * If you are running 4.3bsd, you are running the inetd  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BSD4_3
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|BSDINETD
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|BSDINETD
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|BSD4_3&& !BSDINETD
+end_endif
 
 begin_comment
 comment|/*#define VMSDTR	/* Turn on modem control on vms(works DTR) for 			   develcon and gandalf ports to gain access */
