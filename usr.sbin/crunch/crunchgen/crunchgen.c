@@ -4698,8 +4698,14 @@ name|fprintf
 argument_list|(
 name|outmk
 argument_list|,
-literal|"MAKE=env MAKEOBJDIRPREFIX=$(MAKEOBJDIRPREFIX) "
-literal|"make\n"
+literal|"MAKEENV=env MAKEOBJDIRPREFIX=$(MAKEOBJDIRPREFIX)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|outmk
+argument_list|,
+literal|"CRUNCHMAKE=$(MAKEENV) $(MAKE)\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4709,7 +4715,7 @@ name|fprintf
 argument_list|(
 name|outmk
 argument_list|,
-literal|"MAKE=make\n"
+literal|"CRUNCHMAKE=$(MAKE)\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5118,7 +5124,7 @@ name|fprintf
 argument_list|(
 name|outmk
 argument_list|,
-literal|"$(MAKE) obj&& "
+literal|"$(CRUNCHMAKE) obj&& "
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -5132,7 +5138,7 @@ name|fprintf
 argument_list|(
 name|outmk
 argument_list|,
-literal|"\t\t$(MAKE) $(BUILDOPTS) $(%s_OPTS) depend&&"
+literal|"\t\t$(CRUNCHMAKE) $(BUILDOPTS) $(%s_OPTS) depend&&"
 argument_list|,
 name|p
 operator|->
@@ -5150,7 +5156,7 @@ name|fprintf
 argument_list|(
 name|outmk
 argument_list|,
-literal|"\t\t$(MAKE) $(BUILDOPTS) $(%s_OPTS) "
+literal|"\t\t$(CRUNCHMAKE) $(BUILDOPTS) $(%s_OPTS) "
 literal|"$(%s_OBJS))"
 argument_list|,
 name|p
@@ -5184,7 +5190,7 @@ name|fprintf
 argument_list|(
 name|outmk
 argument_list|,
-literal|"\t(cd $(%s_SRCDIR)&& $(MAKE) $(BUILDOPTS) clean cleandepend)\n\n"
+literal|"\t(cd $(%s_SRCDIR)&& $(CRUNCHMAKE) $(BUILDOPTS) clean cleandepend)\n\n"
 argument_list|,
 name|p
 operator|->
