@@ -746,7 +746,7 @@ name|flags
 argument_list|,
 name|pipe
 argument_list|,
-name|USBD_DEFAULT_TIMEOUT
+name|USBD_DEFAULT_INTERVAL
 argument_list|)
 operator|)
 return|;
