@@ -147,7 +147,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"** %s: Unable to find an RSA implemenation shared library.\n"
+literal|"** %s: Unable to find an RSA implementation shared library.\n"
 argument_list|,
 name|sym
 argument_list|)
@@ -158,9 +158,9 @@ name|stderr
 argument_list|,
 literal|"** Install either the USA (%s) or International (%s)\n"
 argument_list|,
-name|RSAINTL_SHLIB
-argument_list|,
 name|RSAUSA_SHLIB
+argument_list|,
+name|RSAINTL_SHLIB
 argument_list|)
 expr_stmt|;
 name|fprintf
