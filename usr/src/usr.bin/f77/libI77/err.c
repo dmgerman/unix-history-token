@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_err[] = "@(#)err.c	1.4";  *  * file i/o error and initialization routines  */
+comment|/* char id_err[] = "@(#)err.c	1.5";  *  * file i/o error and initialization routines  */
 end_comment
 
 begin_include
@@ -1031,6 +1031,10 @@ end_macro
 
 begin_block
 block|{
+specifier|extern
+name|short
+name|init66_
+decl_stmt|;
 name|ini_std
 argument_list|(
 name|STDERR
@@ -1038,6 +1042,8 @@ argument_list|,
 name|stderr
 argument_list|,
 name|WRITE
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|ini_std
@@ -1047,6 +1053,8 @@ argument_list|,
 name|stdin
 argument_list|,
 name|READ
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|ini_std
@@ -1056,6 +1064,8 @@ argument_list|,
 name|stdout
 argument_list|,
 name|WRITE
+argument_list|,
+name|init66_
 argument_list|)
 expr_stmt|;
 block|}
