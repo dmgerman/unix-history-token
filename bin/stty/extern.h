@@ -99,10 +99,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|termios
-operator|*
-operator|,
-name|int
+name|info
 operator|*
 operator|,
 name|char
