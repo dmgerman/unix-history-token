@@ -587,6 +587,8 @@ literal|"        -l           Turn History logging off\n"
 block|,
 literal|"        -n           Do not execute anything that will change the disk\n"
 block|,
+literal|"        -R           Assume repository is read-only, such as CDROM\n"
+block|,
 literal|"        -t           Show trace of program execution -- Try with -n\n"
 block|,
 literal|"        -v           CVS version and copyright\n"
@@ -1752,7 +1754,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"+Qqrwtnlvb:T:e:d:Hfz:s:x"
+literal|"+QqrwtnRlvb:T:e:d:Hfz:s:x"
 argument_list|,
 name|long_options
 argument_list|,
@@ -1826,6 +1828,18 @@ case|case
 literal|'t'
 case|:
 name|trace
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'R'
+case|:
+name|readonlyfs
+operator|=
+name|TRUE
+expr_stmt|;
+name|logoff
 operator|=
 name|TRUE
 expr_stmt|;
