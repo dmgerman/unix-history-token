@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.22 1997/08/27 06:31:27 jkh Exp $"
+literal|"$Id: main.c,v 1.23 1997/09/29 03:53:51 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -602,6 +602,10 @@ name|char
 modifier|*
 name|optarg
 decl_stmt|;
+name|char
+modifier|*
+name|p
+decl_stmt|;
 name|int
 name|c
 decl_stmt|;
@@ -719,6 +723,29 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
+name|asprintf
+argument_list|(
+operator|&
+name|p
+argument_list|,
+literal|"${%s}"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|p
+condition|)
+name|Punt
+argument_list|(
+literal|"make: cannot allocate memory."
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|Lst_AtEnd
 argument_list|(
 name|variables
@@ -726,7 +753,7 @@ argument_list|,
 operator|(
 name|ClientData
 operator|)
-name|optarg
+name|p
 argument_list|)
 expr_stmt|;
 name|Var_Append
@@ -2862,8 +2889,10 @@ name|char
 modifier|*
 name|value
 init|=
-name|Var_Value
+name|Var_Subst
 argument_list|(
+name|NULL
+argument_list|,
 operator|(
 name|char
 operator|*
@@ -2875,8 +2904,7 @@ argument_list|)
 argument_list|,
 name|VAR_GLOBAL
 argument_list|,
-operator|&
-name|p1
+name|FALSE
 argument_list|)
 decl_stmt|;
 name|printf
@@ -2888,15 +2916,6 @@ condition|?
 name|value
 else|:
 literal|""
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|p1
-condition|)
-name|free
-argument_list|(
-name|p1
 argument_list|)
 expr_stmt|;
 block|}
