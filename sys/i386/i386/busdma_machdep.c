@@ -2371,6 +2371,10 @@ name|bus_addr_t
 modifier|*
 name|lastaddrp
 parameter_list|,
+name|bus_dma_segment_t
+modifier|*
+name|segs
+parameter_list|,
 name|int
 modifier|*
 name|segp
@@ -2379,10 +2383,6 @@ name|int
 name|first
 parameter_list|)
 block|{
-name|bus_dma_segment_t
-modifier|*
-name|segs
-decl_stmt|;
 name|bus_size_t
 name|sgsize
 decl_stmt|;
@@ -2409,12 +2409,6 @@ decl_stmt|;
 name|int
 name|seg
 decl_stmt|;
-name|segs
-operator|=
-name|dmat
-operator|->
-name|segments
-expr_stmt|;
 if|if
 condition|(
 name|map
@@ -3091,6 +3085,10 @@ argument_list|,
 operator|&
 name|lastaddr
 argument_list|,
+name|dmat
+operator|->
+name|segments
+argument_list|,
 operator|&
 name|nsegs
 argument_list|,
@@ -3165,17 +3163,22 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|CTR2
+name|CTR3
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
-literal|"bus_dmamap_load: tag %p tag flags 0x%x error 0"
+literal|"bus_dmamap_load: tag %p tag flags 0x%x error 0 "
+literal|"nsegs %d"
 argument_list|,
 name|dmat
 argument_list|,
 name|dmat
 operator|->
 name|flags
+argument_list|,
+name|nsegs
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -3320,6 +3323,10 @@ argument_list|,
 operator|&
 name|lastaddr
 argument_list|,
+name|dmat
+operator|->
+name|segments
+argument_list|,
 operator|&
 name|nsegs
 argument_list|,
@@ -3392,12 +3399,12 @@ name|error
 argument_list|)
 expr_stmt|;
 block|}
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
 literal|"bus_dmamap_load_mbuf: tag %p tag flags 0x%x "
-literal|"error %d"
+literal|"error %d nsegs %d"
 argument_list|,
 name|dmat
 argument_list|,
@@ -3406,6 +3413,10 @@ operator|->
 name|flags
 argument_list|,
 name|error
+argument_list|,
+name|nsegs
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -3623,6 +3634,10 @@ argument_list|,
 operator|&
 name|lastaddr
 argument_list|,
+name|dmat
+operator|->
+name|segments
+argument_list|,
 operator|&
 name|nsegs
 argument_list|,
@@ -3689,12 +3704,12 @@ name|error
 argument_list|)
 expr_stmt|;
 block|}
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_BUSDMA
 argument_list|,
 literal|"bus_dmamap_load_uio: tag %p tag flags 0x%x "
-literal|"error %d"
+literal|"error %d nsegs %d"
 argument_list|,
 name|dmat
 argument_list|,
@@ -3703,6 +3718,10 @@ operator|->
 name|flags
 argument_list|,
 name|error
+argument_list|,
+name|nsegs
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
