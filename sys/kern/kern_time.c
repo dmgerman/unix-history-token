@@ -1244,12 +1244,6 @@ operator|(
 name|EFAULT
 operator|)
 return|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|nanosleep1
@@ -1261,12 +1255,6 @@ name|rqt
 argument_list|,
 operator|&
 name|rmt
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 if|if
