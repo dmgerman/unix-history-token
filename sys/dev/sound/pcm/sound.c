@@ -4293,6 +4293,8 @@ literal|4096
 argument_list|,
 literal|0
 argument_list|)
+operator|==
+name|NULL
 condition|)
 return|return
 name|ENXIO

@@ -62,6 +62,11 @@ directive|define
 name|SBUF_OVERFLOWED
 value|0x00040000
 comment|/* sbuf overflowed */
+define|#
+directive|define
+name|SBUF_DYNSTRUCT
+value|0x00080000
+comment|/* sbuf must be freed */
 name|int
 name|s_flags
 decl_stmt|;
@@ -73,7 +78,9 @@ end_struct
 begin_function_decl
 name|__BEGIN_DECLS
 comment|/*  * API functions  */
-name|int
+name|struct
+name|sbuf
+modifier|*
 name|sbuf_new
 parameter_list|(
 name|struct
