@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.21 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.22 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.21 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.22 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1623,8 +1623,7 @@ name|hostent
 modifier|*
 name|hp
 decl_stmt|;
-name|struct
-name|sockaddr
+name|SOCKADDR
 name|sa
 decl_stmt|;
 name|int
@@ -1678,9 +1677,7 @@ name|sa
 operator|.
 name|sa_data
 argument_list|,
-name|sa
-operator|.
-name|sa_len
+name|salen
 argument_list|,
 name|sa
 operator|.
