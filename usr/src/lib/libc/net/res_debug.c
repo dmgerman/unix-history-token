@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_debug.c	5.5 (Berkeley) %G%"
+literal|"@(#)res_debug.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,6 +23,32 @@ begin_endif
 endif|#
 directive|endif
 endif|not lint
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|lint
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|DEBUG
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|DEBUG
+end_define
+
+begin_endif
+endif|#
+directive|endif
 end_endif
 
 begin_include
@@ -179,6 +205,9 @@ end_decl_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fp_query
 argument_list|(
 name|msg
@@ -186,6 +215,8 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -218,6 +249,9 @@ end_decl_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 specifier|register
 name|char
 modifier|*
@@ -704,6 +738,8 @@ condition|)
 return|return;
 block|}
 block|}
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -736,6 +772,9 @@ end_decl_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|char
 name|name
 index|[
@@ -811,6 +850,8 @@ operator|+
 name|n
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -847,6 +888,9 @@ end_decl_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|int
 name|type
 decl_stmt|,
@@ -1589,6 +1633,8 @@ operator|(
 name|cp
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -1626,6 +1672,9 @@ name|int
 name|type
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 switch|switch
 condition|(
 name|type
@@ -1830,6 +1879,8 @@ argument_list|)
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1848,6 +1899,9 @@ name|int
 name|class
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 switch|switch
 condition|(
 name|class
@@ -1894,6 +1948,8 @@ argument_list|)
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 block|}
 end_function
 

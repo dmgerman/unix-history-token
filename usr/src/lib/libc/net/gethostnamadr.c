@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	5.6 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -221,6 +221,9 @@ operator|<
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|_res
@@ -234,6 +237,8 @@ argument_list|(
 literal|"res_send failed\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|NULL
@@ -277,6 +282,9 @@ operator|==
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|_res
@@ -296,6 +304,8 @@ argument_list|,
 name|ancount
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|NULL
@@ -572,6 +582,9 @@ operator|!=
 name|T_A
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|_res
@@ -589,6 +602,8 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|cp
 operator|+=
 name|n
@@ -690,6 +705,9 @@ argument_list|)
 index|]
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|_res
@@ -705,6 +723,8 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 block|}
 name|bcopy
@@ -824,6 +844,9 @@ operator|<
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|_res
@@ -837,6 +860,8 @@ argument_list|(
 literal|"res_mkquery failed\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|NULL
@@ -939,6 +964,9 @@ operator|<
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|_res
@@ -952,6 +980,8 @@ argument_list|(
 literal|"res_mkquery failed\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|NULL
