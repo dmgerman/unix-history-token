@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: create_chunk.c,v 1.8 1995/05/03 22:36:50 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: create_chunk.c,v 1.9 1995/05/04 07:00:53 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -192,15 +192,6 @@ if|if
 condition|(
 name|c1
 operator|->
-name|type
-operator|==
-name|reserved
-condition|)
-continue|continue;
-if|if
-condition|(
-name|c1
-operator|->
 name|subtype
 operator|!=
 name|FS_SWAP
@@ -250,15 +241,6 @@ operator|->
 name|type
 operator|==
 name|unused
-condition|)
-continue|continue;
-if|if
-condition|(
-name|c1
-operator|->
-name|type
-operator|==
-name|reserved
 condition|)
 continue|continue;
 if|if
@@ -395,15 +377,6 @@ operator|->
 name|type
 operator|==
 name|unused
-condition|)
-continue|continue;
-if|if
-condition|(
-name|c1
-operator|->
-name|type
-operator|==
-name|reserved
 condition|)
 continue|continue;
 if|if
@@ -610,15 +583,6 @@ operator|->
 name|type
 operator|==
 name|unused
-condition|)
-continue|continue;
-if|if
-condition|(
-name|c1
-operator|->
-name|type
-operator|==
-name|reserved
 condition|)
 continue|continue;
 if|if
@@ -845,15 +809,6 @@ operator|->
 name|type
 operator|==
 name|unused
-condition|)
-continue|continue;
-if|if
-condition|(
-name|c2
-operator|->
-name|type
-operator|==
-name|reserved
 condition|)
 continue|continue;
 name|p
