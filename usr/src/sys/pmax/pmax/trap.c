@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.32 91/04/06$  *  *	@(#)trap.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.32 91/04/06$  *  *	@(#)trap.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -796,9 +796,10 @@ argument_list|(
 name|pa
 argument_list|)
 operator|->
-name|clean
-operator|=
-name|FALSE
+name|flags
+operator|&=
+operator|~
+name|PG_CLEAN
 expr_stmt|;
 endif|#
 directive|endif
@@ -844,6 +845,15 @@ operator|->
 name|pm_hash
 operator|==
 name|zero_pmap_hash
+operator|||
+name|cur_pmap
+operator|->
+name|pm_hash
+operator|==
+operator|(
+name|pmap_hash_t
+operator|)
+literal|0
 condition|)
 name|panic
 argument_list|(
@@ -1060,9 +1070,10 @@ argument_list|(
 name|pa
 argument_list|)
 operator|->
-name|clean
-operator|=
-name|FALSE
+name|flags
+operator|&=
+operator|~
+name|PG_CLEAN
 expr_stmt|;
 endif|#
 directive|endif
@@ -1197,7 +1208,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* check for fuswintr() or suswintr() getting a page fault */
+comment|/* 		 * It is an error for the kernel to access user space except 		 * through the copyin/copyout routines. 		 */
 if|if
 condition|(
 operator|(
@@ -1214,6 +1225,16 @@ operator|)
 operator|->
 name|pcb_onfault
 operator|)
+operator|==
+literal|0
+condition|)
+goto|goto
+name|err
+goto|;
+comment|/* check for fuswintr() or suswintr() getting a page fault */
+if|if
+condition|(
+name|i
 operator|==
 literal|4
 condition|)
@@ -1624,73 +1645,6 @@ operator|+
 name|T_USER
 case|:
 comment|/* misaligned or kseg access */
-if|if
-condition|(
-name|vadr
-operator|==
-name|KERNBASE
-condition|)
-block|{
-struct|struct
-name|args
-block|{
-name|int
-name|i
-index|[
-literal|1
-index|]
-decl_stmt|;
-block|}
-name|args
-struct|;
-name|int
-name|rval
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* 			 * Assume a signal handler is trying to return 			 * (see sendsig() and sigreturn()). We have to 			 * pop the sigframe struct to get the address of 			 * the sigcontext. 			 */
-name|args
-operator|.
-name|i
-index|[
-literal|0
-index|]
-operator|=
-name|p
-operator|->
-name|p_md
-operator|.
-name|md_regs
-index|[
-name|SP
-index|]
-operator|+
-literal|4
-operator|*
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sigreturn
-argument_list|(
-name|curproc
-argument_list|,
-operator|&
-name|args
-argument_list|,
-name|rval
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-comment|/* FALLTHROUGH */
 case|case
 name|T_ADDR_ERR_ST
 operator|+
@@ -3724,6 +3678,11 @@ name|p_flag
 operator|&
 name|SPROFIL
 condition|)
+block|{
+specifier|extern
+name|int
+name|psratio
+decl_stmt|;
 name|addupc_task
 argument_list|(
 name|p
@@ -3740,8 +3699,11 @@ name|p_sticks
 operator|-
 name|sticks
 argument_list|)
+operator|*
+name|psratio
 argument_list|)
 expr_stmt|;
+block|}
 name|curpri
 operator|=
 name|p
