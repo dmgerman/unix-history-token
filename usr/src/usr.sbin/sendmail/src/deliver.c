@@ -41,7 +41,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.26	%G%"
+literal|"@(#)deliver.c	3.27	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1998,15 +1998,36 @@ operator|->
 name|m_flags
 argument_list|)
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|expand
+argument_list|(
+literal|"$l"
+argument_list|,
+name|buf
+argument_list|,
+operator|&
+name|buf
+index|[
+sizeof|sizeof
+name|buf
+operator|-
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
 literal|"%s\n"
 argument_list|,
-name|FromLine
+name|buf
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* output all header lines */
 for|for
 control|(
