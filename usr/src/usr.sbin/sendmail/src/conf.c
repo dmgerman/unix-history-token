@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.18 (Berkeley) %G%"
+literal|"@(#)conf.c	6.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3770,9 +3770,37 @@ name|f_bfree
 operator|<
 name|MinBlocksFree
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ALERT
+argument_list|,
+literal|"%s: low on space (have %ld, need %ld)"
+argument_list|,
+name|QueueDir
+argument_list|,
+name|fs
+operator|.
+name|f_bfree
+argument_list|,
+name|MinBlocksFree
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|FALSE
 return|;
+block|}
 block|}
 elseif|else
 if|if
