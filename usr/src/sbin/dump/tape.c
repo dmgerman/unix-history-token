@@ -1,13 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tape.c	1.7 (Berkeley) %G%"
+literal|"@(#)tape.c	1.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -119,33 +130,17 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|i
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|TP_BSIZE
-condition|;
-name|i
-operator|++
-control|)
+name|bcopy
+argument_list|(
+name|dp
+argument_list|,
 name|tblock
 index|[
 name|trecno
 index|]
-index|[
-name|i
-index|]
-operator|=
-operator|*
-name|dp
-operator|++
+argument_list|,
+name|TP_BSIZE
+argument_list|)
 expr_stmt|;
 name|trecno
 operator|++
