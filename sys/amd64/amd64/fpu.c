@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 William Jolitz.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)npx.c	7.2 (Berkeley) 5/12/91  *	$Id: npx.c,v 1.15 1994/10/23 21:27:32 wollman Exp $  */
+comment|/*-  * Copyright (c) 1990 William Jolitz.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)npx.c	7.2 (Berkeley) 5/12/91  *	$Id: npx.c,v 1.16 1994/11/06 00:58:06 bde Exp $  */
 end_comment
 
 begin_include
@@ -62,6 +62,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/signalvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpu.h>
 end_include
 
@@ -75,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|<machine/trap.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/clock.h>
 end_include
 
 begin_include
@@ -372,15 +390,6 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
-specifier|extern
-name|struct
-name|gate_descriptor
-name|idt
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|int
 name|npxattach
@@ -521,27 +530,21 @@ begin_comment
 comment|/*  * Special interrupt handlers.  Someday intr0-intr15 will be used to count  * interrupts.  We'll still need a special exception 16 handler.  The busy  * latch stuff in probintr() can be moved to npxprobe().  */
 end_comment
 
-begin_function_decl
-name|void
+begin_decl_stmt
+name|inthand_t
 name|probeintr
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_asm
 asm|asm (" 	.text _probeintr: 	ss 	incl	_npx_intrs_while_probing 	pushl	%eax 	movb	$0x20,%al	# EOI (asm in strings loses cpp features) 	outb	%al,$0xa0	# IO_ICU2 	outb	%al,$0x20	#IO_ICU1 	movb	$0,%al 	outb	%al,$0xf0	# clear BUSY# latch 	popl	%eax 	iret ");
 end_asm
 
-begin_function_decl
-name|void
+begin_decl_stmt
+name|inthand_t
 name|probetrap
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_asm
 asm|asm (" 	.text _probetrap: 	ss 	incl	_npx_traps_while_probing 	fnclex 	iret ");
@@ -1285,13 +1288,65 @@ name|p
 operator|==
 name|npxproc
 condition|)
-block|{
-name|start_emulating
-argument_list|()
+name|npxsave
+argument_list|(
+operator|&
+name|curpcb
+operator|->
+name|pcb_savefpu
+argument_list|)
 expr_stmt|;
-name|npxproc
+if|if
+condition|(
+name|npx_exists
+condition|)
+block|{
+name|u_int
+name|masked_exceptions
+decl_stmt|;
+name|masked_exceptions
 operator|=
-name|NULL
+name|curpcb
+operator|->
+name|pcb_savefpu
+operator|.
+name|sv_env
+operator|.
+name|en_cw
+operator|&
+name|curpcb
+operator|->
+name|pcb_savefpu
+operator|.
+name|sv_env
+operator|.
+name|en_sw
+operator|&
+literal|0x7f
+expr_stmt|;
+comment|/* 		 * Overflow, divde by 0, and invalid operand would have 		 * caused a trap in 1.1.5. 		 */
+if|if
+condition|(
+name|masked_exceptions
+operator|&
+literal|0x0d
+condition|)
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"pid %d (%s) exited with masked floating point exceptions 0x%02x\n"
+argument_list|,
+name|p
+operator|->
+name|p_pid
+argument_list|,
+name|p
+operator|->
+name|p_comm
+argument_list|,
+name|masked_exceptions
+argument_list|)
 expr_stmt|;
 block|}
 block|}
