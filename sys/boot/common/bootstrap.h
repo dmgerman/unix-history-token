@@ -43,6 +43,10 @@ define|#
 directive|define
 name|DEVT_NET
 value|2
+define|#
+directive|define
+name|DEVT_CD
+value|3
 block|}
 struct|;
 end_struct
