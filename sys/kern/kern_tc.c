@@ -676,7 +676,7 @@ parameter_list|(
 name|foo
 parameter_list|)
 define|\
-value|static u_int foo; \ 	SYSCTL_UINT(_kern_timecounter, OID_AUTO, foo, CTLFLAG_RD,&foo, 0, "") \ 	struct __hack
+value|static u_int foo; \ 	SYSCTL_UINT(_kern_timecounter, OID_AUTO, foo, CTLFLAG_RD,&foo, 0, "");\ 	struct __hack
 end_define
 
 begin_expr_stmt
