@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2001 Charles Mott<cm@linktel.net>  * All rights res
 end_comment
 
 begin_comment
-comment|/*  * Alias_local.h contains the function prototypes for alias.c,  * alias_db.c, alias_util.c and alias_ftp.c, alias_irc.c (as well  * as any future add-ons).  It also includes macros, globals and  * struct definitions shared by more than one alias*.c file.  *  * This include file is intended to be used only within the aliasing  * software.  Outside world interfaces are defined in alias.h  *  * This software is placed into the public domain with no restrictions  * on its distribution.  *  * Initial version:  August, 1996  (cjm)      *  *<updated several times by original author and Eivind Eklund>  */
+comment|/*  * Alias_local.h contains the function prototypes for alias.c,  * alias_db.c, alias_util.c and alias_ftp.c, alias_irc.c (as well  * as any future add-ons).  It also includes macros, globals and  * struct definitions shared by more than one alias*.c file.  *  * This include file is intended to be used only within the aliasing  * software.  Outside world interfaces are defined in alias.h  *  * This software is placed into the public domain with no restrictions  * on its distribution.  *  * Initial version:  August, 1996  (cjm)  *  *<updated several times by original author and Eivind Eklund>  */
 end_comment
 
 begin_ifndef
