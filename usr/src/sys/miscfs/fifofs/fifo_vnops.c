@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fifo_vnops.c	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fifo_vnops.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -414,14 +414,6 @@ block|,
 comment|/* blkatoff */
 block|{
 operator|&
-name|vop_vget_desc
-block|,
-name|fifo_vget
-block|}
-block|,
-comment|/* vget */
-block|{
-operator|&
 name|vop_valloc_desc
 block|,
 name|fifo_valloc
@@ -513,6 +505,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_lookup_args
+comment|/* { 		struct vnode * a_dvp; 		struct vnode ** a_vpp; 		struct componentname * a_cnp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -553,6 +546,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_open_args
+comment|/* { 		struct vnode *a_vp; 		int  a_mode; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -560,12 +554,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_CLOSE
-expr_stmt|;
-name|USES_VOP_LOCK
-expr_stmt|;
-name|USES_VOP_UNLOCK
-expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -1101,6 +1089,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_read_args
+comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		int  a_ioflag; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1108,10 +1097,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_LOCK
-expr_stmt|;
-name|USES_VOP_UNLOCK
-expr_stmt|;
 specifier|register
 name|struct
 name|uio
@@ -1302,6 +1287,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_write_args
+comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		int  a_ioflag; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1309,10 +1295,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_LOCK
-expr_stmt|;
-name|USES_VOP_UNLOCK
-expr_stmt|;
 name|struct
 name|socket
 modifier|*
@@ -1447,6 +1429,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_ioctl_args
+comment|/* { 		struct vnode *a_vp; 		int  a_command; 		caddr_t  a_data; 		int  a_fflag; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1551,6 +1534,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_select_args
+comment|/* { 		struct vnode *a_vp; 		int  a_which; 		int  a_fflags; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1638,6 +1622,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_bmap_args
+comment|/* { 		struct vnode *a_vp; 		daddr_t  a_bn; 		struct vnode **a_vpp; 		daddr_t *a_bnp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1705,6 +1690,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_lock_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1734,6 +1720,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_unlock_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1767,6 +1754,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_close_args
+comment|/* { 		struct vnode *a_vp; 		int  a_fflag; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1927,6 +1915,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_print_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2038,6 +2027,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_advlock_args
+comment|/* { 		struct vnode *a_vp; 		caddr_t  a_id; 		int  a_op; 		struct flock *a_fl; 		int  a_flags; 	} */
 modifier|*
 name|ap
 decl_stmt|;
