@@ -2512,6 +2512,10 @@ name|sd
 modifier|*
 name|sd
 decl_stmt|;
+name|char
+modifier|*
+name|drivename
+decl_stmt|;
 name|sd
 operator|=
 operator|&
@@ -2551,6 +2555,35 @@ operator|)
 condition|)
 block|{
 comment|/* paranoia */
+name|drivename
+operator|=
+name|vinum_conf
+operator|.
+name|drive
+index|[
+name|sd
+operator|->
+name|driveno
+index|]
+operator|.
+name|label
+operator|.
+name|name
+expr_stmt|;
+comment|/* 	     * XXX We've seen cases of dead subdisks 	     * which don't have a drive.  If we let them 	     * through here, the drive name is null, so 	     * they get the drive named 'plex'. 	     * 	     * This is a breakage limiter, not a fix. 	     */
+if|if
+condition|(
+name|drivename
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+name|drivename
+operator|=
+literal|"*invalid*"
+expr_stmt|;
 if|if
 condition|(
 name|sd
@@ -2567,24 +2600,14 @@ name|configend
 operator|-
 name|s
 argument_list|,
-literal|"sd name %s drive %s plex %s state %s len %llus driveoffset %llus plexoffset %llds\n"
+literal|"sd name %s drive %s plex %s state %s "
+literal|"len %llus driveoffset %llus plexoffset %llds\n"
 argument_list|,
 name|sd
 operator|->
 name|name
 argument_list|,
-name|vinum_conf
-operator|.
-name|drive
-index|[
-name|sd
-operator|->
-name|driveno
-index|]
-operator|.
-name|label
-operator|.
-name|name
+name|drivename
 argument_list|,
 name|vinum_conf
 operator|.
@@ -2640,24 +2663,14 @@ name|configend
 operator|-
 name|s
 argument_list|,
-literal|"sd name %s drive %s state %s len %llus driveoffset %llus detached\n"
+literal|"sd name %s drive %s state %s "
+literal|"len %llus driveoffset %llus detached\n"
 argument_list|,
 name|sd
 operator|->
 name|name
 argument_list|,
-name|vinum_conf
-operator|.
-name|drive
-index|[
-name|sd
-operator|->
-name|driveno
-index|]
-operator|.
-name|label
-operator|.
-name|name
+name|drivename
 argument_list|,
 name|sd_state
 argument_list|(
