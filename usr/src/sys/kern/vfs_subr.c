@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	8.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	8.15 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -205,7 +205,7 @@ name|bufremvn
 parameter_list|(
 name|bp
 parameter_list|)
-value|{  \ 	LIST_REMOVE(bp, b_vnbufs); \ 	(bp)->b_vnbufs.le_next = NOLIST; \ }
+value|{							\ 	LIST_REMOVE(bp, b_vnbufs);					\ 	(bp)->b_vnbufs.le_next = NOLIST;				\ }
 end_define
 
 begin_macro
@@ -241,12 +241,10 @@ begin_comment
 comment|/*  * Initialize the vnode management data structures.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|vntblinit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|TAILQ_INIT
 argument_list|(
@@ -261,26 +259,24 @@ name|mountlist
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Lock a filesystem.  * Used to prevent access to it while mounting and unmounting.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|vfs_lock
-argument_list|(
+parameter_list|(
 name|mp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|mount
-operator|*
+modifier|*
 name|mp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 while|while
 condition|(
@@ -297,7 +293,7 @@ name|mnt_flag
 operator||=
 name|MNT_MWAIT
 expr_stmt|;
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -305,6 +301,10 @@ operator|)
 name|mp
 argument_list|,
 name|PVFS
+argument_list|,
+literal|"vfslock"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -320,7 +320,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Unlock a locked filesystem.  * Panic if filesystem is not locked.  */
@@ -395,20 +395,18 @@ begin_comment
 comment|/*  * Mark a mount point as busy.  * Used to synchronize access and to delay unmounting.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|vfs_busy
-argument_list|(
+parameter_list|(
 name|mp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|mount
-operator|*
+modifier|*
 name|mp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 while|while
 condition|(
@@ -425,7 +423,7 @@ name|mnt_flag
 operator||=
 name|MNT_MPWANT
 expr_stmt|;
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -436,6 +434,10 @@ operator|->
 name|mnt_flag
 argument_list|,
 name|PVFS
+argument_list|,
+literal|"vfsbusy"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -464,26 +466,24 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Free a busy filesystem.  * Panic if filesystem is not busy.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|vfs_unbusy
-argument_list|(
+parameter_list|(
 name|mp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|mount
-operator|*
+modifier|*
 name|mp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -538,7 +538,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Lookup a mount point by filesystem identifier.  */
@@ -966,7 +966,8 @@ begin_comment
 comment|/*  * Return the next vnode from the free list.  */
 end_comment
 
-begin_expr_stmt
+begin_decl_stmt
+name|int
 name|getnewvnode
 argument_list|(
 name|tag
@@ -977,11 +978,11 @@ name|vops
 argument_list|,
 name|vpp
 argument_list|)
-expr|enum
+decl|enum
 name|vtagtype
 name|tag
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -1445,31 +1446,26 @@ begin_comment
 comment|/*  * Move a vnode from one mount queue to another.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|insmntque
-argument_list|(
+parameter_list|(
 name|vp
-argument_list|,
+parameter_list|,
 name|mp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|vnode
-operator|*
+modifier|*
 name|vp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|mount
 modifier|*
 name|mp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 comment|/* 	 * Delete from old mount point vnode list, if on one. 	 */
 if|if
@@ -1611,26 +1607,24 @@ name|v_mntvnodes
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Update outstanding I/O count and do wakeup if requested.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|vwakeup
-argument_list|(
+parameter_list|(
 name|bp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|buf
-operator|*
+modifier|*
 name|bp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1654,13 +1648,9 @@ operator|->
 name|b_vp
 condition|)
 block|{
-name|vp
-operator|->
-name|v_numoutput
-operator|--
-expr_stmt|;
 if|if
 condition|(
+operator|--
 name|vp
 operator|->
 name|v_numoutput
@@ -1699,7 +1689,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"vwakeup: neg numoutput"
+literal|"vwakeup: neg numoutput 2"
 argument_list|)
 expr_stmt|;
 name|vp
@@ -1723,7 +1713,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Flush out and invalidate all buffers associated with a vnode.  * Called with the underlying object locked.  */
@@ -2106,31 +2096,26 @@ begin_comment
 comment|/*  * Associate a buffer with a vnode.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|bgetvp
-argument_list|(
+parameter_list|(
 name|vp
-argument_list|,
+parameter_list|,
 name|bp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|vnode
-operator|*
+modifier|*
 name|vp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|buf
 modifier|*
 name|bp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -2195,26 +2180,24 @@ name|v_cleanblkhd
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Disassociate a buffer from a vnode.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|brelvp
-argument_list|(
+parameter_list|(
 name|bp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|buf
-operator|*
+modifier|*
 name|bp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|struct
 name|vnode
@@ -2278,37 +2261,32 @@ name|vp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Reassign a buffer from one vnode to another.  * Used to assign file specific control information  * (indirect blocks) to the vnode to which they belong.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|reassignbuf
-argument_list|(
+parameter_list|(
 name|bp
-argument_list|,
+parameter_list|,
 name|newvp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|buf
-operator|*
+modifier|*
 name|bp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|vnode
 modifier|*
 name|newvp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2378,37 +2356,29 @@ name|listheadp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Create a vnode for a block device.  * Used for root filesystem, argdev, and swap areas.  * Also used for memory file system special devices.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|bdevvp
-argument_list|(
-argument|dev
-argument_list|,
-argument|vpp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dev
+parameter_list|,
+name|vpp
+parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|vnode
 modifier|*
 modifier|*
 name|vpp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2462,7 +2432,7 @@ block|{
 operator|*
 name|vpp
 operator|=
-literal|0
+name|NULLVP
 expr_stmt|;
 return|return
 operator|(
@@ -2520,7 +2490,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Check to see if the new vnode represents a special device  * for which we already have a vnode (either because of  * bdevvp() or because of a different vnode representing  * the same block device). If such an alias exists, deallocate  * the existing contents and return the aliased vnode. The  * caller is responsible for filling it with its new contents.  */
@@ -2811,28 +2781,23 @@ begin_comment
 comment|/*  * Grab a particular vnode from the free list, increment its  * reference count and lock it. The vnode lock bit is set the  * vnode is being eliminated in vgone. The process is awakened  * when the transition is completed, and an error returned to  * indicate that the vnode is no longer usable (possibly having  * been changed to a new file system type).  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|vget
-argument_list|(
+parameter_list|(
 name|vp
-argument_list|,
+parameter_list|,
 name|lockflag
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|vnode
-operator|*
+modifier|*
 name|vp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|lockflag
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 comment|/* 	 * If the vnode is in the process of being cleaned out for 	 * another use, we wait for the cleaning to finish and then 	 * return failure. Cleaning is determined either by checking 	 * that the VXLOCK flag is set, or that the use count is 	 * zero with the back pointer set to show that it has been 	 * removed from the free list by getnewvnode. The VXLOCK 	 * flag may not have been set yet because vclean is blocked in 	 * the VOP_LOCK call waiting for the VOP_INACTIVE to complete. 	 */
 if|if
@@ -2874,7 +2839,7 @@ name|v_flag
 operator||=
 name|VXWANT
 expr_stmt|;
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -2882,6 +2847,10 @@ operator|)
 name|vp
 argument_list|,
 name|PINOD
+argument_list|,
+literal|"vget"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -3005,7 +2974,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|int
@@ -3435,40 +3404,29 @@ endif|#
 directive|endif
 end_endif
 
-begin_macro
+begin_function
+name|int
 name|vflush
-argument_list|(
-argument|mp
-argument_list|,
-argument|skipvp
-argument_list|,
-argument|flags
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|mp
+parameter_list|,
+name|skipvp
+parameter_list|,
+name|flags
+parameter_list|)
 name|struct
 name|mount
 modifier|*
 name|mp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|vnode
 modifier|*
 name|skipvp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|flags
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -3700,7 +3658,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Disassociate the underlying file system from a vnode.  */
@@ -3942,7 +3900,7 @@ name|v_flag
 operator||=
 name|VXWANT
 expr_stmt|;
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -3950,6 +3908,10 @@ operator|)
 name|vp
 argument_list|,
 name|PINOD
+argument_list|,
+literal|"vgoneall"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4080,7 +4042,7 @@ name|v_flag
 operator||=
 name|VXWANT
 expr_stmt|;
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -4088,6 +4050,10 @@ operator|)
 name|vp
 argument_list|,
 name|PINOD
+argument_list|,
+literal|"vgone"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4464,40 +4430,29 @@ begin_comment
 comment|/*  * Lookup a vnode by device number.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|vfinddev
-argument_list|(
-argument|dev
-argument_list|,
-argument|type
-argument_list|,
-argument|vpp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dev
+parameter_list|,
+name|type
+parameter_list|,
+name|vpp
+parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|enum
 name|vtype
 name|type
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|vnode
 modifier|*
 modifier|*
 name|vpp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -4558,26 +4513,24 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Calculate the total number of references to a special device.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|vcount
-argument_list|(
+parameter_list|(
 name|vp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|vnode
-operator|*
+modifier|*
 name|vp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -4693,7 +4646,7 @@ name|count
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Print out a description of a vnode.  */
@@ -4975,12 +4928,10 @@ begin_comment
 comment|/*  * List all of the locked vnodes in the system.  * Called when debugging the kernel.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|printlockedvnodes
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -5062,7 +5013,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
@@ -5098,30 +5049,22 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|sysctl_vnode
-argument_list|(
-argument|where
-argument_list|,
-argument|sizep
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|where
+parameter_list|,
+name|sizep
+parameter_list|)
 name|char
 modifier|*
 name|where
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|size_t
 modifier|*
 name|sizep
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -5378,7 +5321,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Check to see if a filesystem is mounted on a block device.  */
