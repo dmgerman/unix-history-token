@@ -1923,21 +1923,6 @@ case|:
 case|case
 name|MRT_DEL_MFC
 case|:
-name|bzero
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|mfc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|mfc
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* zero out all fields */
 comment|/* 	 * select data size depending on API version. 	 */
 if|if
 condition|(
