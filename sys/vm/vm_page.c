@@ -5386,8 +5386,13 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-comment|/* XXX KDM find out if giant is required here. */
-name|GIANT_REQUIRED
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_page_queue_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -5396,15 +5401,10 @@ operator|->
 name|cow
 condition|)
 block|{
-name|atomic_subtract_int
-argument_list|(
-operator|&
 name|m
 operator|->
 name|cow
-argument_list|,
-literal|1
-argument_list|)
+operator|--
 expr_stmt|;
 comment|/*  		 * let vm_fault add back write permission  lazily 		 */
 block|}
@@ -5420,18 +5420,18 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-comment|/* XXX KDM find out if giant is required here */
-name|GIANT_REQUIRED
-expr_stmt|;
-name|atomic_add_int
+name|mtx_assert
 argument_list|(
 operator|&
+name|vm_page_queue_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|m
 operator|->
 name|cow
-argument_list|,
-literal|1
-argument_list|)
+operator|++
 expr_stmt|;
 name|vm_page_protect
 argument_list|(
