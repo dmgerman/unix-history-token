@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)slcompress.c	7.3 (Berkeley) %G%  *  *			THIS CODE IS NOT FOR DISTRIBUTION!  *	KEEP YOUR GRUBBY HANDS OFF UNLESS AUTHORIZED BY VAN JACOBSON TO COPY!  *			ASK SAM, MIKE, OR BILL ABOUT IT.  *  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Copyright (c) 1988, 1989 by Van Jacobson, Lawrence Berkeley Laboratory  * All rights reserved.  */
+comment|/*  *	@(#)slcompress.c	7.4 (Berkeley) %G%  *  *			THIS CODE IS NOT FOR DISTRIBUTION!  *	KEEP YOUR GRUBBY HANDS OFF UNLESS AUTHORIZED BY VAN JACOBSON TO COPY!  *			ASK SAM, MIKE, OR BILL ABOUT IT.  *  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Copyright (c) 1988, 1989 by Van Jacobson, Lawrence Berkeley Laboratory  * All rights reserved.  */
 end_comment
 
 begin_include
@@ -1958,38 +1958,24 @@ return|;
 block|}
 if|if
 condition|(
-name|len
-operator|&&
-operator|(
 operator|(
 name|int
 operator|)
 name|cp
 operator|&
-operator|~
 literal|3
-operator|)
-operator|!=
-operator|(
-name|int
-operator|)
-name|cp
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|bcopy
+if|if
+condition|(
+name|len
+operator|>
+literal|0
+condition|)
+name|BCOPY
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|cp
 argument_list|,
-call|(
-name|caddr_t
-call|)
-argument_list|(
 operator|(
 name|int
 operator|)
@@ -1997,7 +1983,6 @@ name|cp
 operator|&
 operator|~
 literal|3
-argument_list|)
 argument_list|,
 name|len
 argument_list|)
