@@ -1829,7 +1829,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|td
+name|child
 operator|->
 name|td_proc
 operator|->
