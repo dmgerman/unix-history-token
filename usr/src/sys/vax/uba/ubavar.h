@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubavar.h	4.18	81/03/09	*/
+comment|/*	ubavar.h	4.19	81/08/31	*/
 end_comment
 
 begin_comment
@@ -74,6 +74,10 @@ name|int
 name|uh_zvcnt
 decl_stmt|;
 comment|/* number of 0 vectors */
+name|int
+name|uh_errcnt
+decl_stmt|;
+comment|/* number of errors */
 name|short
 name|uh_users
 decl_stmt|;
