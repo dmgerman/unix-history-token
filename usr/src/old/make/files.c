@@ -5,9 +5,15 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)files.c	4.8 (Berkeley) 83/06/30"
+literal|"@(#)files.c	4.9 (Berkeley) 84/03/21"
 decl_stmt|;
 end_decl_stmt
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
 
 begin_comment
 comment|/* UNIX DEPENDENT PROCEDURES */
@@ -748,6 +754,17 @@ operator|=
 name|copys
 argument_list|(
 name|dirname
+argument_list|)
+expr_stmt|;
+name|fcntl
+argument_list|(
+name|dirf
+operator|->
+name|dd_fd
+argument_list|,
+name|F_SETFD
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

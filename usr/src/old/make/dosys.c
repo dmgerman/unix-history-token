@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dosys.c	4.7 (Berkeley) 83/06/22"
+literal|"@(#)dosys.c	4.8 (Berkeley) 84/03/21"
 decl_stmt|;
 end_decl_stmt
 
@@ -195,9 +195,6 @@ argument_list|(
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-name|doclose
-argument_list|()
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SHELLENV
@@ -345,63 +342,6 @@ operator|(
 name|status
 operator|)
 return|;
-block|}
-end_block
-
-begin_macro
-name|doclose
-argument_list|()
-end_macro
-
-begin_comment
-comment|/* Close open directory files before exec'ing */
-end_comment
-
-begin_block
-block|{
-specifier|register
-name|struct
-name|dirhdr
-modifier|*
-name|od
-decl_stmt|;
-for|for
-control|(
-name|od
-operator|=
-name|firstod
-init|;
-name|od
-condition|;
-name|od
-operator|=
-name|od
-operator|->
-name|nxtopendir
-control|)
-if|if
-condition|(
-name|od
-operator|->
-name|dirfc
-operator|!=
-name|NULL
-condition|)
-block|{
-name|closedir
-argument_list|(
-name|od
-operator|->
-name|dirfc
-argument_list|)
-expr_stmt|;
-name|od
-operator|->
-name|dirfc
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 block|}
 end_block
 
@@ -570,7 +510,7 @@ condition|(
 operator|(
 name|waitpid
 operator|=
-name|fork
+name|vfork
 argument_list|()
 operator|)
 operator|==
@@ -581,9 +521,6 @@ name|enbint
 argument_list|(
 name|SIG_DFL
 argument_list|)
-expr_stmt|;
-name|doclose
-argument_list|()
 expr_stmt|;
 name|enbint
 argument_list|(
