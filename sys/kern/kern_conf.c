@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -201,6 +207,182 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* Define a dead_cdevsw for use when devices leave unexpectedly. */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|enxio
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
+end_function
+
+begin_define
+define|#
+directive|define
+name|dead_open
+value|(d_open_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|dead_close
+value|(d_close_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|dead_read
+value|(d_read_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|dead_write
+value|(d_write_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|dead_ioctl
+value|(d_ioctl_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|dead_poll
+value|nopoll
+end_define
+
+begin_define
+define|#
+directive|define
+name|dead_mmap
+value|nommap
+end_define
+
+begin_function
+specifier|static
+name|void
+name|dead_strategy
+parameter_list|(
+name|struct
+name|bio
+modifier|*
+name|bp
+parameter_list|)
+block|{
+name|biofinish
+argument_list|(
+name|bp
+argument_list|,
+name|NULL
+argument_list|,
+name|ENXIO
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_define
+define|#
+directive|define
+name|dead_dump
+value|(d_dump_t *)enxio
+end_define
+
+begin_function
+specifier|static
+name|int
+name|dead_psize
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_define
+define|#
+directive|define
+name|dead_kqfilter
+value|(d_kqfilter_t *)enxio
+end_define
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|cdevsw
+name|dead_cdevsw
+init|=
+block|{
+comment|/* open */
+name|dead_open
+block|,
+comment|/* close */
+name|dead_close
+block|,
+comment|/* read */
+name|dead_read
+block|,
+comment|/* write */
+name|dead_write
+block|,
+comment|/* ioctl */
+name|dead_ioctl
+block|,
+comment|/* poll */
+name|dead_poll
+block|,
+comment|/* mmap */
+name|dead_mmap
+block|,
+comment|/* strategy */
+name|dead_strategy
+block|,
+comment|/* name */
+literal|"dead"
+block|,
+comment|/* maj */
+literal|255
+block|,
+comment|/* dump */
+name|dead_dump
+block|,
+comment|/* psize */
+name|dead_psize
+block|,
+comment|/* flags */
+literal|0
+block|,
+comment|/* kqfilter */
+name|dead_kqfilter
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|struct
 name|cdevsw
@@ -224,22 +406,10 @@ operator|->
 name|si_devsw
 operator|)
 return|;
-if|if
-condition|(
-name|dev
-operator|->
-name|si_devsw
-condition|)
 return|return
 operator|(
-name|dev
-operator|->
-name|si_devsw
-operator|)
-return|;
-return|return
-operator|(
-name|NULL
+operator|&
+name|dead_cdevsw
 operator|)
 return|;
 block|}
