@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * THIS SOFTWARE IS PROVIDED BY THE WRITERS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE WRITERS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * written by julian elischer (julian@tfs.com)  *  *	@(#)readMBR.c	8.5 (tfs) 1/21/94  * $Id: readMBR.c,v 1.1 1994/10/27 20:44:50 jkh Exp $  */
+comment|/*  *  * THIS SOFTWARE IS PROVIDED BY THE WRITERS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE WRITERS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * written by julian elischer (julian@tfs.com)  *  *	@(#)readMBR.c	8.5 (tfs) 1/21/94  * $Id: readMBR.c,v 1.2 1994/10/28 12:41:55 jkh Exp $  */
 end_comment
 
 begin_include
@@ -366,12 +366,36 @@ literal|0xaa
 operator|)
 condition|)
 block|{
-name|msg
-operator|=
-literal|"Disk has no Fdisk partitions"
+name|printf
+argument_list|(
+literal|"disk doesn't have an MBR\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dp
+condition|)
+name|bzero
+argument_list|(
+name|bp
+operator|->
+name|b_un
+operator|.
+name|b_addr
+operator|+
+name|DOSPARTOFF
+argument_list|,
+name|NDOSPART
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|dp
+argument_list|)
+argument_list|)
 expr_stmt|;
 goto|goto
-name|bad
+name|hrumpf
 goto|;
 block|}
 if|if
@@ -708,6 +732,8 @@ operator|=
 literal|8
 expr_stmt|;
 block|}
+name|hrumpf
+label|:
 name|bp
 operator|->
 name|b_flags
