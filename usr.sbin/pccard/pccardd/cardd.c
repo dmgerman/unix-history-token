@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cardd.c,v 1.13.2.5 1998/02/07 20:33:06 nate Exp $"
+literal|"$Id: cardd.c,v 1.13.2.6 1998/03/02 19:01:21 guido Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1143,7 +1143,15 @@ name|sp
 operator|->
 name|io
 operator|.
+name|addr
+operator|+
+name|sp
+operator|->
+name|io
+operator|.
 name|size
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
