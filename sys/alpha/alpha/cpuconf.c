@@ -573,10 +573,7 @@ begin_define
 define|#
 directive|define
 name|api_up1000_init
-parameter_list|(
-name|n
-parameter_list|)
-value|platform_not_configured((n) + API_ST_BASE)
+value|platform_not_configured
 end_define
 
 begin_endif
