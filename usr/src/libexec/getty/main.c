@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.8 (Berkeley) %G%"
+literal|"@(#)main.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2361,9 +2361,6 @@ begin_block
 block|{
 name|char
 modifier|*
-name|ttyn
-decl_stmt|,
-modifier|*
 name|slash
 decl_stmt|;
 name|char
@@ -2380,13 +2377,9 @@ decl_stmt|;
 specifier|extern
 name|char
 modifier|*
-name|ttyname
-argument_list|()
-decl_stmt|,
-modifier|*
 name|rindex
-argument_list|()
-decl_stmt|;
+parameter_list|()
+function_decl|;
 while|while
 condition|(
 operator|*
@@ -2420,13 +2413,6 @@ block|{
 case|case
 literal|'t'
 case|:
-name|ttyn
-operator|=
-name|ttyname
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 name|slash
 operator|=
 name|rindex
