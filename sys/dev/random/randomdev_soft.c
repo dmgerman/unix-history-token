@@ -233,7 +233,7 @@ block|,
 operator|.
 name|seeded
 operator|=
-literal|0
+literal|1
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -535,7 +535,7 @@ name|random_systat
 operator|.
 name|seeded
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|random_check_boolean
 argument_list|,

@@ -409,11 +409,9 @@ name|EWOULDBLOCK
 expr_stmt|;
 else|else
 block|{
-comment|/* No complaints please. This is temporary! */
 name|printf
 argument_list|(
-literal|"Entropy device is blocking. "
-literal|"Dance fandango on keyboard to unblock.\n"
+literal|"Entropy device is blocking.\n"
 argument_list|)
 expr_stmt|;
 name|error
