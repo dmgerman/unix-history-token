@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_swap.c	6.3	84/08/29	*/
+comment|/*	vm_swap.c	6.4	85/01/29	*/
 end_comment
 
 begin_include
@@ -518,7 +518,6 @@ name|ENXIO
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Search starting at second table entry, 	 * since first (primary swap area) is freed at boot. 	 */
 for|for
 control|(
 name|sp
@@ -526,7 +525,7 @@ operator|=
 operator|&
 name|swdevt
 index|[
-literal|1
+literal|0
 index|]
 init|;
 name|sp
@@ -573,7 +572,7 @@ name|u
 operator|.
 name|u_error
 operator|=
-name|ENODEV
+name|EINVAL
 expr_stmt|;
 block|}
 end_block
