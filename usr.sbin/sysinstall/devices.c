@@ -314,22 +314,6 @@ block|,
 block|{
 name|DEVICE_TYPE_DISK
 block|,
-literal|"fla%d"
-block|,
-literal|"M-Systems DiskOnChip Flash devicee"
-block|,
-literal|102
-block|,
-literal|65538
-block|,
-literal|8
-block|,
-literal|16
-block|}
-block|,
-block|{
-name|DEVICE_TYPE_DISK
-block|,
 literal|"afd%d"
 block|,
 literal|"ATAPI/IDE floppy device"
