@@ -794,12 +794,7 @@ end_endif
 begin_if
 if|#
 directive|if
-name|SOLARIS
-operator|||
-name|defined
-argument_list|(
-name|__sgi
-argument_list|)
+name|USE_MUTEX
 end_if
 
 begin_decl_stmt

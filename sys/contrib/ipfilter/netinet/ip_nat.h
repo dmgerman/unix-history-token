@@ -518,6 +518,12 @@ name|defined
 argument_list|(
 name|__sgi
 argument_list|)
+operator|||
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|500043
+operator|)
 name|kmutex_t
 name|nat_lock
 decl_stmt|;
