@@ -825,6 +825,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CLOCK_MONOTONIC
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|TIMER_RELTIME
 value|0x0
 end_define
