@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.64 (Berkeley) %G%"
+literal|"@(#)main.c	8.65 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1161,7 +1161,7 @@ begin_define
 define|#
 directive|define
 name|OPTIONS
-value|"B:b:C:cd:e:F:f:h:Iimno:p:q:r:sTtvX:x"
+value|"B:b:C:cd:e:F:f:h:IimnO:o:p:q:r:sTtvX:x"
 end_define
 
 begin_endif
@@ -1182,7 +1182,7 @@ begin_define
 define|#
 directive|define
 name|OPTIONS
-value|"B:b:C:cd:e:F:f:h:IiM:mno:p:q:r:sTtvX:"
+value|"B:b:C:cd:e:F:f:h:IiM:mnO:o:p:q:r:sTtvX:"
 end_define
 
 begin_endif
@@ -1203,7 +1203,7 @@ begin_define
 define|#
 directive|define
 name|OPTIONS
-value|"B:b:C:cd:e:F:f:h:IimnOo:p:q:r:sTtvX:"
+value|"B:b:C:cd:e:F:f:h:IimnO:o:p:q:r:sTtvX:"
 end_define
 
 begin_endif
@@ -1221,7 +1221,7 @@ begin_define
 define|#
 directive|define
 name|OPTIONS
-value|"B:b:C:cd:e:F:f:h:Iimno:p:q:r:sTtvX:"
+value|"B:b:C:cd:e:F:f:h:IimnO:o:p:q:r:sTtvX:"
 end_define
 
 begin_endif
@@ -2549,6 +2549,24 @@ argument_list|,
 name|optarg
 operator|+
 literal|1
+argument_list|,
+name|FALSE
+argument_list|,
+name|TRUE
+argument_list|,
+name|CurEnv
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'O'
+case|:
+comment|/* set option (long form) */
+name|setoption
+argument_list|(
+literal|' '
+argument_list|,
+name|optarg
 argument_list|,
 name|FALSE
 argument_list|,
