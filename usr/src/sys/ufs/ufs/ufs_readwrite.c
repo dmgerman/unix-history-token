@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_readwrite.c	8.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_readwrite.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -47,8 +47,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|READ_S
+value|"lfs_read"
+end_define
+
+begin_define
+define|#
+directive|define
 name|WRITE
 value|lfs_write
+end_define
+
+begin_define
+define|#
+directive|define
+name|WRITE_S
+value|"lfs_write"
 end_define
 
 begin_define
@@ -108,8 +122,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|READ_S
+value|"ffs_read"
+end_define
+
+begin_define
+define|#
+directive|define
 name|WRITE
 value|ffs_write
+end_define
+
+begin_define
+define|#
+directive|define
+name|WRITE_S
+value|"ffs_write"
 end_define
 
 begin_endif
@@ -234,7 +262,7 @@ name|panic
 argument_list|(
 literal|"%s: mode"
 argument_list|,
-name|READ
+name|READ_S
 argument_list|)
 expr_stmt|;
 if|if
@@ -265,7 +293,7 @@ name|panic
 argument_list|(
 literal|"%s: short symlink"
 argument_list|,
-name|READ
+name|READ_S
 argument_list|)
 expr_stmt|;
 block|}
@@ -286,9 +314,13 @@ name|VDIR
 condition|)
 name|panic
 argument_list|(
-literal|"%s: type"
+literal|"%s: type %d"
 argument_list|,
-name|READ
+name|READ_S
+argument_list|,
+name|vp
+operator|->
+name|v_type
 argument_list|)
 expr_stmt|;
 endif|#
@@ -830,7 +862,7 @@ name|panic
 argument_list|(
 literal|"%s: mode"
 argument_list|,
-name|WRITE
+name|WRITE_S
 argument_list|)
 expr_stmt|;
 endif|#
@@ -904,7 +936,7 @@ name|panic
 argument_list|(
 literal|"%s: nonsync dir write"
 argument_list|,
-name|WRITE
+name|WRITE_S
 argument_list|)
 expr_stmt|;
 break|break;
@@ -913,7 +945,7 @@ name|panic
 argument_list|(
 literal|"%s: type"
 argument_list|,
-name|WRITE
+name|WRITE_S
 argument_list|)
 expr_stmt|;
 block|}
