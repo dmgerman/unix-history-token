@@ -1000,14 +1000,14 @@ name|p
 argument_list|(
 name|tcps_cachedrtt
 argument_list|,
-literal|"\t\t%d connection%s upcated cached RTT on close\n"
+literal|"\t\t%d connection%s updated cached RTT on close\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_cachedrttvar
 argument_list|,
-literal|"\t\t%d connection%s upcated cached RTT variance on close\n"
+literal|"\t\t%d connection%s updated cached RTT variance on close\n"
 argument_list|)
 expr_stmt|;
 name|p
