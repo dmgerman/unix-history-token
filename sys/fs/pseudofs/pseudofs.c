@@ -1706,7 +1706,7 @@ name|MODULE_VERSION
 argument_list|(
 name|pseudofs
 argument_list|,
-literal|3
+literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
