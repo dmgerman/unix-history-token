@@ -1891,6 +1891,13 @@ name|de_dir
 operator|=
 name|dd
 expr_stmt|;
+name|devfs_rules_apply
+argument_list|(
+name|dm
+argument_list|,
+name|de
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -2258,6 +2265,9 @@ expr_stmt|;
 name|devfs_present
 operator|=
 literal|1
+expr_stmt|;
+name|devfs_rules_init
+argument_list|()
 expr_stmt|;
 block|}
 end_function
