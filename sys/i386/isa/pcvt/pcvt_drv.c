@@ -1360,14 +1360,10 @@ operator|==
 literal|0
 condition|)
 block|{
-if|#
-directive|if
-operator|!
-operator|(
-name|PCVT_FREEBSD
-operator|>
-literal|114
-operator|)
+ifdef|#
+directive|ifdef
+name|TS_WOPEN
+comment|/* not (FreeBSD-1.1.5 or FreeBSD some time after 2.0.5) */
 name|tp
 operator|->
 name|t_state
@@ -1376,7 +1372,6 @@ name|TS_WOPEN
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !(PCVT_FREEBSD> 114) */
 name|ttychars
 argument_list|(
 name|tp
