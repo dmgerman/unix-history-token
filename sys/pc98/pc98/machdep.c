@@ -5297,28 +5297,8 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Hook to idle the CPU when possible.  In the SMP case we default to  * off because a halted cpu will not currently pick up a new thread in the  * run queue until the next timer tick.  If turned on this will result in  * approximately a 4.2% loss in real time performance in buildworld tests  * (but improves user and sys times oddly enough), and saves approximately  * 5% in power consumption on an idle machine (tests w/2xCPU 1.1GHz P3).  *  * XXX we need to have a cpu mask of idle cpus and generate an IPI or  * otherwise generate some sort of interrupt to wake up cpus sitting in HLT.  * Then we can have our cake and eat it too.  */
+comment|/*  * Hook to idle the CPU when possible.  In the SMP case we default to  * off because a halted cpu will not currently pick up a new thread in the  * run queue until the next timer tick.  If turned on this will result in  * approximately a 4.2% loss in real time performance in buildworld tests  * (but improves user and sys times oddly enough), and saves approximately  * 5% in power consumption on an idle machine (tests w/2xCPU 1.1GHz P3).  *  * XXX we need to have a cpu mask of idle cpus and generate an IPI or  * otherwise generate some sort of interrupt to wake up cpus sitting in HLT.  * Then we can have our cake and eat it too.  *  * XXX I'm turning it on for SMP as well by default for now.  It seems to  * help lock contention somewhat, and this is critical for HTT. -Peter  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|int
-name|cpu_idle_hlt
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_decl_stmt
 specifier|static
@@ -5328,11 +5308,6 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -5366,6 +5341,17 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|SMP
+if|if
+condition|(
+name|mp_grab_cpu_hlt
+argument_list|()
+condition|)
+return|return;
+endif|#
+directive|endif
 if|if
 condition|(
 name|cpu_idle_hlt
@@ -13220,30 +13206,6 @@ end_endif
 begin_comment
 comment|/* DDB */
 end_comment
-
-begin_function
-name|intptr_t
-name|casuptr
-parameter_list|(
-name|intptr_t
-modifier|*
-name|p
-parameter_list|,
-name|intptr_t
-name|old
-parameter_list|,
-name|intptr_t
-name|new
-parameter_list|)
-block|{
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
-end_function
 
 end_unit
 
