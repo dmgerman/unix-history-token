@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)func.c 1.7 %G%"
+literal|"@(#)func.c 1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,6 +77,11 @@ name|struct
 name|nl
 modifier|*
 name|p1
+decl_stmt|;
+name|struct
+name|nl
+modifier|*
+name|tempnlp
 decl_stmt|;
 specifier|register
 name|int
@@ -911,6 +916,20 @@ return|return
 name|NIL
 return|;
 block|}
+name|tempnlp
+operator|=
+name|p1
+operator|->
+name|class
+operator|==
+name|TYPE
+condition|?
+name|p1
+operator|->
+name|type
+else|:
+name|p1
+expr_stmt|;
 if|if
 condition|(
 name|isa
@@ -946,7 +965,7 @@ argument_list|,
 operator|(
 name|int
 operator|)
-name|p1
+name|tempnlp
 operator|->
 name|range
 index|[
@@ -956,7 +975,7 @@ argument_list|,
 operator|(
 name|int
 operator|)
-name|p1
+name|tempnlp
 operator|->
 name|range
 index|[
@@ -976,14 +995,14 @@ literal|3
 argument_list|,
 name|op
 argument_list|,
-name|p1
+name|tempnlp
 operator|->
 name|range
 index|[
 literal|0
 index|]
 argument_list|,
-name|p1
+name|tempnlp
 operator|->
 name|range
 index|[
@@ -1009,7 +1028,7 @@ argument_list|,
 operator|(
 name|int
 operator|)
-name|p1
+name|tempnlp
 operator|->
 name|range
 index|[
@@ -1019,7 +1038,7 @@ argument_list|,
 operator|(
 name|int
 operator|)
-name|p1
+name|tempnlp
 operator|->
 name|range
 index|[

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pcfunc.c 1.7 %G%"
+literal|"@(#)pcfunc.c 1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1724,11 +1724,25 @@ argument_list|,
 name|RREQ
 argument_list|)
 expr_stmt|;
+name|tempnlp
+operator|=
+name|p1
+operator|->
+name|class
+operator|==
+name|TYPE
+condition|?
+name|p1
+operator|->
+name|type
+else|:
+name|p1
+expr_stmt|;
 name|putleaf
 argument_list|(
 name|P2ICON
 argument_list|,
-name|p1
+name|tempnlp
 operator|->
 name|range
 index|[
@@ -1753,7 +1767,7 @@ name|putleaf
 argument_list|(
 name|P2ICON
 argument_list|,
-name|p1
+name|tempnlp
 operator|->
 name|range
 index|[
