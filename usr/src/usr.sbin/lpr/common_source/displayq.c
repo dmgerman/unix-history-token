@@ -1036,13 +1036,18 @@ name|queue
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
 if|if
 condition|(
 operator|!
 name|sendtorem
 condition|)
 block|{
+if|if
+condition|(
+name|nitems
+operator|==
+literal|0
+condition|)
 name|puts
 argument_list|(
 literal|"no entries"
