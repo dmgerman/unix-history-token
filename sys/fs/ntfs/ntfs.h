@@ -1147,13 +1147,11 @@ name|ntfs_bpbl
 value|(daddr_t)((ntmp)->ntm_bps)
 end_define
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|300000
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MALLOC_DECLARE
+end_ifdef
 
 begin_expr_stmt
 name|MALLOC_DECLARE
