@@ -135,6 +135,12 @@ argument_list|(
 literal|"vidcontrol -m on"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|!=
+name|NULL
+condition|)
 name|vsystem
 argument_list|(
 literal|"moused -t %s -p %s %s"
@@ -144,6 +150,16 @@ argument_list|,
 name|port
 argument_list|,
 name|flags
+argument_list|)
+expr_stmt|;
+else|else
+name|vsystem
+argument_list|(
+literal|"moused -t %s -p %s"
+argument_list|,
+name|type
+argument_list|,
+name|port
 argument_list|)
 expr_stmt|;
 name|ret
