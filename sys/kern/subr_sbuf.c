@@ -354,6 +354,7 @@ specifier|static
 name|void
 name|_assert_sbuf_integrity
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fun
@@ -423,6 +424,7 @@ specifier|static
 name|void
 name|_assert_sbuf_state
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fun
