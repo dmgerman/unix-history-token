@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_subr.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_subr.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -59,7 +59,7 @@ begin_function
 name|int
 name|lfs_blkatoff
 parameter_list|(
-name|ip
+name|vp
 parameter_list|,
 name|offset
 parameter_list|,
@@ -68,9 +68,9 @@ parameter_list|,
 name|bpp
 parameter_list|)
 name|struct
-name|inode
+name|vnode
 modifier|*
-name|ip
+name|vp
 decl_stmt|;
 name|off_t
 name|offset
@@ -94,6 +94,11 @@ modifier|*
 name|fs
 decl_stmt|;
 name|struct
+name|inode
+modifier|*
+name|ip
+decl_stmt|;
+name|struct
 name|buf
 modifier|*
 name|bp
@@ -106,6 +111,13 @@ name|bsize
 decl_stmt|,
 name|error
 decl_stmt|;
+name|ip
+operator|=
+name|VTOI
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|fs
 operator|=
 name|ip
@@ -139,10 +151,7 @@ name|error
 operator|=
 name|bread
 argument_list|(
-name|ITOV
-argument_list|(
-name|ip
-argument_list|)
+name|vp
 argument_list|,
 name|lbn
 argument_list|,
