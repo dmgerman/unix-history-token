@@ -45,13 +45,11 @@ directive|include
 file|<i386/ibcs2/ibcs2_syscall.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|bsd_to_ibcs2_sig
-index|[]
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<i386/ibcs2/ibcs2_signal.h>
+end_include
 
 begin_decl_stmt
 specifier|extern
@@ -110,7 +108,7 @@ name|ibcs2_sysent
 block|,
 literal|0xFF
 block|,
-name|NSIG
+name|IBCS2_SIGTBLSZ
 block|,
 name|bsd_to_ibcs2_sig
 block|,

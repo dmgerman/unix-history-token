@@ -64,7 +64,7 @@ name|sigemptyset
 parameter_list|(
 name|s
 parameter_list|)
-value|bzero((s), sizeof(*(s)))
+value|SIGEMPTYSET(*(s))
 end_define
 
 begin_define
@@ -76,7 +76,7 @@ name|s
 parameter_list|,
 name|n
 parameter_list|)
-value|(*(s)& sigmask(n))
+value|SIGISMEMBER(*(s), n)
 end_define
 
 begin_define
@@ -88,7 +88,7 @@ name|s
 parameter_list|,
 name|n
 parameter_list|)
-value|(*(s) |= sigmask(n))
+value|SIGADDSET(*(s), n)
 end_define
 
 begin_define
@@ -212,12 +212,11 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|bsd_to_ibcs2_sig
-index|[]
+index|[
+name|IBCS2_SIGTBLSZ
+index|]
 init|=
 block|{
-literal|0
-block|,
-comment|/* 0 */
 name|IBCS2_SIGHUP
 block|,
 comment|/* 1 */
@@ -311,6 +310,8 @@ comment|/* 30 */
 name|IBCS2_SIGUSR2
 block|,
 comment|/* 31 */
+literal|0
+comment|/* 32 */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -319,12 +320,11 @@ begin_decl_stmt
 specifier|static
 name|int
 name|ibcs2_to_bsd_sig
-index|[]
+index|[
+name|IBCS2_SIGTBLSZ
+index|]
 init|=
 block|{
-literal|0
-block|,
-comment|/* 0 */
 name|SIGHUP
 block|,
 comment|/* 1 */
@@ -418,6 +418,8 @@ comment|/* 30 */
 literal|0
 block|,
 comment|/* 31 */
+literal|0
+comment|/* 32 */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -457,8 +459,8 @@ operator|=
 literal|1
 init|;
 name|i
-operator|<
-name|IBCS2_NSIG
+operator|<=
+name|IBCS2_SIGTBLSZ
 condition|;
 name|i
 operator|++
@@ -478,7 +480,10 @@ name|newsig
 operator|=
 name|ibcs2_to_bsd_sig
 index|[
+name|_SIG_IDX
+argument_list|(
 name|i
+argument_list|)
 index|]
 expr_stmt|;
 if|if
@@ -533,8 +538,8 @@ operator|=
 literal|1
 init|;
 name|i
-operator|<
-name|NSIG
+operator|<=
+name|IBCS2_SIGTBLSZ
 condition|;
 name|i
 operator|++
@@ -554,7 +559,10 @@ name|newsig
 operator|=
 name|bsd_to_ibcs2_sig
 index|[
+name|_SIG_IDX
+argument_list|(
 name|i
+argument_list|)
 index|]
 expr_stmt|;
 if|if
@@ -897,16 +905,19 @@ argument_list|(
 operator|&
 name|sa
 argument_list|,
-name|signum
+name|sig
 argument_list|)
 operator|=
 name|ibcs2_to_bsd_sig
 index|[
+name|_SIG_IDX
+argument_list|(
 name|SCARG
 argument_list|(
 name|uap
 argument_list|,
 name|sig
+argument_list|)
 argument_list|)
 index|]
 expr_stmt|;
@@ -915,7 +926,7 @@ argument_list|(
 operator|&
 name|sa
 argument_list|,
-name|nsa
+name|act
 argument_list|)
 operator|=
 name|nbsa
@@ -925,7 +936,7 @@ argument_list|(
 operator|&
 name|sa
 argument_list|,
-name|osa
+name|oact
 argument_list|)
 operator|=
 name|obsa
@@ -1049,6 +1060,8 @@ name|signum
 init|=
 name|ibcs2_to_bsd_sig
 index|[
+name|_SIG_IDX
+argument_list|(
 name|IBCS2_SIGNO
 argument_list|(
 name|SCARG
@@ -1056,6 +1069,7 @@ argument_list|(
 name|uap
 argument_list|,
 name|sig
+argument_list|)
 argument_list|)
 argument_list|)
 index|]
@@ -1168,7 +1182,7 @@ name|IBCS2_SIGHOLD_MASK
 case|:
 block|{
 name|struct
-name|sigprocmask_args
+name|osigprocmask_args
 name|sa
 decl_stmt|;
 name|SCARG
@@ -1195,7 +1209,7 @@ name|signum
 argument_list|)
 expr_stmt|;
 return|return
-name|sigprocmask
+name|osigprocmask
 argument_list|(
 name|p
 argument_list|,
@@ -1294,7 +1308,7 @@ argument_list|(
 operator|&
 name|sa_args
 argument_list|,
-name|signum
+name|sig
 argument_list|)
 operator|=
 name|signum
@@ -1304,7 +1318,7 @@ argument_list|(
 operator|&
 name|sa_args
 argument_list|,
-name|nsa
+name|act
 argument_list|)
 operator|=
 name|nbsa
@@ -1314,7 +1328,7 @@ argument_list|(
 operator|&
 name|sa_args
 argument_list|,
-name|osa
+name|oact
 argument_list|)
 operator|=
 name|obsa
@@ -1492,13 +1506,12 @@ name|int
 operator|)
 name|IBCS2_SIG_HOLD
 expr_stmt|;
+name|SIGDELSET
+argument_list|(
 name|p
 operator|->
 name|p_sigmask
-operator|&=
-operator|~
-name|sigmask
-argument_list|(
+argument_list|,
 name|signum
 argument_list|)
 expr_stmt|;
@@ -1512,7 +1525,7 @@ name|IBCS2_SIGRELSE_MASK
 case|:
 block|{
 name|struct
-name|sigprocmask_args
+name|osigprocmask_args
 name|sa
 decl_stmt|;
 name|SCARG
@@ -1539,7 +1552,7 @@ name|signum
 argument_list|)
 expr_stmt|;
 return|return
-name|sigprocmask
+name|osigprocmask
 argument_list|(
 name|p
 argument_list|,
@@ -1580,7 +1593,7 @@ argument_list|(
 operator|&
 name|sa_args
 argument_list|,
-name|signum
+name|sig
 argument_list|)
 operator|=
 name|signum
@@ -1590,7 +1603,7 @@ argument_list|(
 operator|&
 name|sa_args
 argument_list|,
-name|nsa
+name|act
 argument_list|)
 operator|=
 name|bsa
@@ -1600,7 +1613,7 @@ argument_list|(
 operator|&
 name|sa_args
 argument_list|,
-name|osa
+name|oact
 argument_list|)
 operator|=
 name|NULL
@@ -1685,10 +1698,22 @@ case|case
 name|IBCS2_SIGPAUSE_MASK
 case|:
 block|{
+name|osigset_t
+name|mask
+decl_stmt|;
 name|struct
-name|sigsuspend_args
+name|osigsuspend_args
 name|sa
 decl_stmt|;
+name|SIG2OSIG
+argument_list|(
+name|p
+operator|->
+name|p_sigmask
+argument_list|,
+name|mask
+argument_list|)
+expr_stmt|;
 name|SCARG
 argument_list|(
 operator|&
@@ -1697,9 +1722,7 @@ argument_list|,
 name|mask
 argument_list|)
 operator|=
-name|p
-operator|->
-name|p_sigmask
+name|mask
 operator|&
 operator|~
 name|sigmask
@@ -1708,7 +1731,7 @@ name|signum
 argument_list|)
 expr_stmt|;
 return|return
-name|sigsuspend
+name|osigsuspend
 argument_list|(
 name|p
 argument_list|,
@@ -1882,25 +1905,34 @@ block|{
 case|case
 name|IBCS2_SIG_BLOCK
 case|:
+name|SIGSETOR
+argument_list|(
 name|p
 operator|->
 name|p_sigmask
-operator||=
+argument_list|,
 name|bss
-operator|&
-operator|~
-name|sigcantmask
+argument_list|)
+expr_stmt|;
+name|SIG_CANTMASK
+argument_list|(
+name|p
+operator|->
+name|p_sigmask
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|IBCS2_SIG_UNBLOCK
 case|:
+name|SIGSETNAND
+argument_list|(
 name|p
 operator|->
 name|p_sigmask
-operator|&=
-operator|~
+argument_list|,
 name|bss
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1911,9 +1943,13 @@ operator|->
 name|p_sigmask
 operator|=
 name|bss
-operator|&
-operator|~
-name|sigcantmask
+expr_stmt|;
+name|SIG_CANTMASK
+argument_list|(
+name|p
+operator|->
+name|p_sigmask
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:
@@ -1966,10 +2002,15 @@ operator|=
 name|p
 operator|->
 name|p_siglist
-operator|&
+expr_stmt|;
+name|SIGSETAND
+argument_list|(
+name|bss
+argument_list|,
 name|p
 operator|->
 name|p_sigmask
+argument_list|)
 expr_stmt|;
 name|bsd_to_ibcs2_sigset
 argument_list|(
@@ -2028,8 +2069,11 @@ decl_stmt|;
 name|sigset_t
 name|bss
 decl_stmt|;
+name|osigset_t
+name|mask
+decl_stmt|;
 name|struct
-name|sigsuspend_args
+name|osigsuspend_args
 name|sa
 decl_stmt|;
 name|int
@@ -2073,6 +2117,13 @@ operator|&
 name|bss
 argument_list|)
 expr_stmt|;
+name|SIG2OSIG
+argument_list|(
+name|bss
+argument_list|,
+name|mask
+argument_list|)
+expr_stmt|;
 name|SCARG
 argument_list|(
 operator|&
@@ -2081,10 +2132,10 @@ argument_list|,
 name|mask
 argument_list|)
 operator|=
-name|bss
+name|mask
 expr_stmt|;
 return|return
-name|sigsuspend
+name|osigsuspend
 argument_list|(
 name|p
 argument_list|,
@@ -2116,9 +2167,21 @@ name|uap
 decl_stmt|;
 block|{
 name|struct
-name|sigsuspend_args
+name|osigsuspend_args
 name|bsa
 decl_stmt|;
+name|osigset_t
+name|mask
+decl_stmt|;
+name|SIG2OSIG
+argument_list|(
+name|p
+operator|->
+name|p_sigmask
+argument_list|,
+name|mask
+argument_list|)
+expr_stmt|;
 name|SCARG
 argument_list|(
 operator|&
@@ -2127,12 +2190,10 @@ argument_list|,
 name|mask
 argument_list|)
 operator|=
-name|p
-operator|->
-name|p_sigmask
+name|mask
 expr_stmt|;
 return|return
-name|sigsuspend
+name|osigsuspend
 argument_list|(
 name|p
 argument_list|,
@@ -2192,11 +2253,14 @@ argument_list|)
 operator|=
 name|ibcs2_to_bsd_sig
 index|[
+name|_SIG_IDX
+argument_list|(
 name|SCARG
 argument_list|(
 name|uap
 argument_list|,
 name|signo
+argument_list|)
 argument_list|)
 index|]
 expr_stmt|;

@@ -269,7 +269,14 @@ begin_define
 define|#
 directive|define
 name|SVR4_NSIG
-value|32
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|SVR4_SIGTBLSZ
+value|31
 end_define
 
 begin_define
@@ -409,6 +416,44 @@ define|#
 directive|define
 name|SVR4_SIG_SETMASK
 value|3
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|bsd_to_svr4_sig
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|svr4_to_bsd_sig
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|SVR4_BSD2SVR4_SIG
+parameter_list|(
+name|sig
+parameter_list|)
+define|\
+value|(((sig)<= SVR4_SIGTBLSZ) ? bsd_to_svr4_sig[_SIG_IDX(sig)] : sig)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SVR4_SVR42BSD_SIG
+parameter_list|(
+name|sig
+parameter_list|)
+define|\
+value|(((sig)<= SVR4_SIGTBLSZ) ? svr4_to_bsd_sig[_SIG_IDX(sig)] : sig)
 end_define
 
 begin_typedef
@@ -640,7 +685,8 @@ name|sig_t
 parameter_list|,
 name|int
 parameter_list|,
-name|int
+name|sigset_t
+modifier|*
 parameter_list|,
 name|u_long
 parameter_list|)

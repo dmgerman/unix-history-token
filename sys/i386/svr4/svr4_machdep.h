@@ -250,7 +250,8 @@ expr|struct
 name|svr4_ucontext
 operator|*
 operator|,
-name|int
+name|sigset_t
+operator|*
 operator|,
 name|int
 operator|)

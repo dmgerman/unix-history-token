@@ -294,14 +294,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|bsd_to_svr4_sig
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_if
 if|#
 directive|if
@@ -448,9 +440,11 @@ name|svr4_ucontext
 modifier|*
 name|uc
 decl_stmt|;
-name|int
+name|sigset_t
+modifier|*
 name|mask
-decl_stmt|,
+decl_stmt|;
+name|int
 name|oonstack
 decl_stmt|;
 block|{
@@ -831,7 +825,6 @@ directive|endif
 comment|/* 	 * Set the signal mask 	 */
 name|bsd_to_svr4_sigset
 argument_list|(
-operator|&
 name|mask
 argument_list|,
 operator|&
@@ -922,7 +915,7 @@ name|psp
 operator|->
 name|ps_sigstk
 decl_stmt|;
-name|int
+name|sigset_t
 name|mask
 decl_stmt|;
 comment|/* 	 * XXX: 	 * Should we check the value of flags to determine what to restore? 	 * What to do with uc_link? 	 * What to do with floating point stuff? 	 * Should we bother with the rest of the registers that we 	 * set to 0 right now? 	 */
@@ -1271,9 +1264,13 @@ operator|->
 name|p_sigmask
 operator|=
 name|mask
-operator|&
-operator|~
-name|sigcantmask
+expr_stmt|;
+name|SIG_CANTMASK
+argument_list|(
+name|p
+operator|->
+name|p_sigmask
+argument_list|)
 expr_stmt|;
 block|}
 return|return
@@ -1619,7 +1616,9 @@ name|catcher
 decl_stmt|;
 name|int
 name|sig
-decl_stmt|,
+decl_stmt|;
+name|sigset_t
+modifier|*
 name|mask
 decl_stmt|;
 name|u_long
@@ -1691,16 +1690,14 @@ operator|&&
 operator|!
 name|oonstack
 operator|&&
-operator|(
+name|SIGISMEMBER
+argument_list|(
 name|psp
 operator|->
 name|ps_sigonstack
-operator|&
-name|sigmask
-argument_list|(
+argument_list|,
 name|sig
 argument_list|)
-operator|)
 condition|)
 block|{
 name|fp

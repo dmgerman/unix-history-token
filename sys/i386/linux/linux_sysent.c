@@ -2020,7 +2020,7 @@ block|}
 block|,
 comment|/* 178 = linux_rt_sigqueueinfo */
 block|{
-literal|0
+literal|2
 block|,
 operator|(
 name|sy_call_t

@@ -229,22 +229,6 @@ file|<svr4/svr4_util.h>
 end_include
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|bsd_to_svr4_sig
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|svr4_to_bsd_sig
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|bsd_to_svr4_errno
 index|[
@@ -491,7 +475,7 @@ name|svr4_sysent
 block|,
 literal|0xff
 block|,
-name|NSIG
+name|SVR4_SIGTBLSZ
 block|,
 name|bsd_to_svr4_sig
 block|,

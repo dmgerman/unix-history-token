@@ -698,9 +698,12 @@ name|IBCS2_STOPCODE
 argument_list|(
 name|bsd_to_ibcs2_sig
 index|[
+name|_SIG_IDX
+argument_list|(
 name|WSTOPSIG
 argument_list|(
 name|status
+argument_list|)
 argument_list|)
 index|]
 argument_list|)
@@ -717,9 +720,12 @@ name|status
 operator|=
 name|bsd_to_ibcs2_sig
 index|[
+name|_SIG_IDX
+argument_list|(
 name|WTERMSIG
 argument_list|(
 name|status
+argument_list|)
 argument_list|)
 index|]
 expr_stmt|;

@@ -496,14 +496,6 @@ end_expr_stmt
 begin_expr_stmt
 name|DUMMY
 argument_list|(
-name|rt_sigsuspend
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|DUMMY
-argument_list|(
 name|pread
 argument_list|)
 expr_stmt|;
