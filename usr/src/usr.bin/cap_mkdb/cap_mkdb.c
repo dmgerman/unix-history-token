@@ -187,6 +187,34 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|HASHINFO
+name|openinfo
+init|=
+block|{
+literal|4096
+block|,
+comment|/* bsize */
+literal|16
+block|,
+comment|/* ffactor */
+literal|256
+block|,
+comment|/* nelem */
+literal|2048
+operator|*
+literal|1024
+block|,
+comment|/* cachesize */
+name|NULL
+block|,
+comment|/* hash() */
+literal|0
+comment|/* lorder */
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Mkcapdb creates a capability hash database for quick retrieval of capability  * records.  The database contains 2 types of entries: records and references  * marked by the first byte in the data.  A record entry contains the actual  * capability record whereas a reference contains the name (key) under which  * the correct record is stored.  */
 end_comment
@@ -343,7 +371,8 @@ name|DEFFILEMODE
 argument_list|,
 name|DB_HASH
 argument_list|,
-name|NULL
+operator|&
+name|openinfo
 argument_list|)
 operator|)
 operator|==
