@@ -206,6 +206,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SNICHOST
+value|"whois.6bone.net"
+end_define
+
+begin_define
+define|#
+directive|define
 name|WHOIS_PORT
 value|43
 end_define
@@ -355,7 +362,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"adgh:impQrR"
+literal|"adgh:impQrR6"
 argument_list|)
 operator|)
 operator|!=
@@ -448,6 +455,14 @@ case|:
 name|host
 operator|=
 name|RUNICHOST
+expr_stmt|;
+break|break;
+case|case
+literal|'6'
+case|:
+name|host
+operator|=
+name|SNICHOST
 expr_stmt|;
 break|break;
 case|case
@@ -1351,7 +1366,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: whois [-adgimpQrR] [-h hostname] name ...\n"
+literal|"usage: whois [-adgimpQrR6] [-h hostname] name ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
