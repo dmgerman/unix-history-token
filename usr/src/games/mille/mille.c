@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mille.c	5.6 (Berkeley) %G%"
+literal|"@(#)mille.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -211,33 +211,6 @@ expr_stmt|;
 name|initscr
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|attron
-define|#
-directive|define
-name|CA
-value|cursor_address
-endif|#
-directive|endif
-if|if
-condition|(
-operator|!
-name|CA
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Sorry.  Need cursor addressing to play mille\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|delwin
 argument_list|(
 name|stdscr
