@@ -8,7 +8,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)main.c 1.12 %G%"
+literal|"@(#)main.c 1.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6951,11 +6951,18 @@ name|b_flags
 operator|&
 name|B_ERROR
 condition|)
+block|{
+name|brelse
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 name|cgp
 operator|=
 name|bp
