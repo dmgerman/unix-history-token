@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.8 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.9 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.8 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.9 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -914,8 +914,8 @@ expr_stmt|;
 comment|/* force a sending host even if no HELO given */
 if|if
 condition|(
-name|RealHostName
-operator|!=
+name|sendinghost
+operator|==
 name|NULL
 operator|&&
 name|macvalue
@@ -981,6 +981,12 @@ operator|>
 literal|0
 condition|)
 break|break;
+if|if
+condition|(
+name|sendinghost
+operator|!=
+name|NULL
+condition|)
 name|define
 argument_list|(
 literal|'s'
