@@ -3163,14 +3163,14 @@ name|rx_fifo_limit
 operator|=
 literal|8
 expr_stmt|;
-comment|/* rx fifo threshold */
+comment|/* rx fifo threshold (32 bytes) */
 name|cbp
 operator|->
 name|tx_fifo_limit
 operator|=
 literal|0
 expr_stmt|;
-comment|/* tx fifo threshold */
+comment|/* tx fifo threshold (0 bytes) */
 name|cbp
 operator|->
 name|adaptive_ifs
@@ -3182,23 +3182,23 @@ name|cbp
 operator|->
 name|rx_dma_bytecount
 operator|=
-literal|16
+literal|0
 expr_stmt|;
 comment|/* (no) rx DMA max */
 name|cbp
 operator|->
 name|tx_dma_bytecount
 operator|=
-literal|16
+literal|0
 expr_stmt|;
 comment|/* (no) tx DMA max */
 name|cbp
 operator|->
 name|dma_bce
 operator|=
-literal|1
+literal|0
 expr_stmt|;
-comment|/* (enable) dma max counters */
+comment|/* (disable) dma max counters */
 name|cbp
 operator|->
 name|late_scb
@@ -3219,7 +3219,7 @@ name|ci_int
 operator|=
 literal|0
 expr_stmt|;
-comment|/* (do) interrupt on CU not active */
+comment|/* interrupt on CU not active */
 name|cbp
 operator|->
 name|save_bf
@@ -3309,7 +3309,7 @@ name|cbp
 operator|->
 name|crscdt
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 comment|/* (CRS only) */
 name|cbp
