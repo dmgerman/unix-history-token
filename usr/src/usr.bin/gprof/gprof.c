@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gprof.c	1.15 (Berkeley) %G%"
+literal|"@(#)gprof.c	1.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1499,27 +1499,33 @@ name|highpc
 expr_stmt|;
 name|lowpc
 operator|=
+operator|(
+name|unsigned
+name|long
+operator|)
 name|h
 operator|.
 name|lowpc
-operator|-
-operator|(
+operator|/
+sizeof|sizeof
+argument_list|(
 name|UNIT
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
 name|highpc
 operator|=
+operator|(
+name|unsigned
+name|long
+operator|)
 name|h
 operator|.
 name|highpc
-operator|-
-operator|(
+operator|/
+sizeof|sizeof
+argument_list|(
 name|UNIT
-operator|*
-operator|)
-literal|0
+argument_list|)
 expr_stmt|;
 name|sampbytes
 operator|=
