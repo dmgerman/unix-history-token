@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/ad1848.c  *   * Driver for Microsoft Sound System/Windows Sound System (mss)  * -compatible boards. This includes:  *   * AD1848, CS4248, CS423x, OPTi931, Yamaha SA2 and many others.  *  * Copyright Luigi Rizzo, 1997  * Copyright by Hannu Savolainen 1994, 1995  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer  *    in the documentation and/or other materials provided with the  *    distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS''  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A  * PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR  * OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *   * Full data sheets in PDF format for the MSS-compatible chips  * are available at  *  *	http://www.crystal.com/ for the CS42XX series, or  *	http://www.opti.com/	for the OPTi931  */
+comment|/*  * sound/ad1848.c  *   * Driver for Microsoft Sound System/Windows Sound System (mss)  * -compatible boards. This includes:  *   * AD1848, CS4248, CS423x, OPTi931, Yamaha SA2 and many others.  *  * Copyright Luigi Rizzo, 1997,1998  * Copyright by Hannu Savolainen 1994, 1995  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer  *    in the documentation and/or other materials provided with the  *    distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS''  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A  * PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR  * OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *   * Full data sheets in PDF format for the MSS-compatible chips  * are available at  *  *	http://www.crystal.com/ for the CS42XX series, or  *	http://www.opti.com/	for the OPTi931  */
 end_comment
 
 begin_include
@@ -5821,6 +5821,8 @@ condition|(
 name|d
 operator|.
 name|flags
+operator|&
+name|DV_PNP_SBCODEC
 condition|)
 block|{
 comment|/*** use sb-compatible codec ***/
@@ -6499,6 +6501,8 @@ operator|=
 name|d
 operator|.
 name|flags
+operator|&
+name|DV_PNP_SBCODEC
 condition|?
 name|sb_op_desc
 else|:
@@ -6607,6 +6611,8 @@ condition|(
 name|d
 operator|.
 name|flags
+operator|&
+name|DV_PNP_SBCODEC
 condition|)
 block|{
 comment|/* sb-compatible codec */

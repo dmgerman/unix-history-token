@@ -1,15 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* uncomment the next line for -current with select->poll changes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USE_POLL
-end_define
-
-begin_comment
 comment|/*  * sound.h  *  * include file for kernel sources, sound driver.  *   * Copyright by Hannu Savolainen 1995  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
@@ -188,11 +178,9 @@ begin_comment
 comment|/* for DELAY */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_POLL
-end_ifdef
+begin_comment
+comment|/* To minimize changes with the code in 2.2.X */
+end_comment
 
 begin_include
 include|#
@@ -206,11 +194,6 @@ directive|define
 name|d_select_t
 value|d_poll_t
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_else
 else|#
@@ -758,189 +741,6 @@ comment|/* Number of supported devices */
 end_comment
 
 begin_comment
-comment|/*  * Supported card ID numbers (were in soundcard.h...)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_ADLIB
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_SB
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_PAS
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_GUS
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_MPU401
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_SB16
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_SB16MIDI
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_UART6850
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_GUS16
-value|9
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_MSS
-value|10
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_PSS
-value|11
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_SSCAPE
-value|12
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_PSS_MPU
-value|13
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_PSS_MSS
-value|14
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_SSCAPE_MSS
-value|15
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_TRXPRO
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_TRXPRO_SB
-value|17
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_TRXPRO_MPU
-value|18
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_MAD16
-value|19
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_MAD16_MPU
-value|20
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_CS4232
-value|21
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_CS4232_MPU
-value|22
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_MAUI
-value|23
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_PSEUDO_MSS
-value|24
-end_define
-
-begin_comment
-comment|/* MSS without WSS regs.*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_AWE32
-value|25
-end_define
-
-begin_comment
 comment|/*  * values used in bd_id for the mss boards  */
 end_comment
 
@@ -1039,33 +839,11 @@ begin_comment
 comment|/*  * TODO: add some card classes rather than specific types.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<i386/isa/snd/soundcard.h>
+file|<machine/soundcard.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|</sys/i386/isa/snd/soundcard.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * many variables should be reduced to a range. Here define a macro  */
@@ -1641,30 +1419,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * functions in isa.c  */
-end_comment
-
-begin_function_decl
-name|int
-name|isa_dmastatus
-parameter_list|(
-name|int
-name|chan
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|isa_dmastop
-parameter_list|(
-name|int
-name|chan
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  *      DMA buffer calls  */
 end_comment
 
@@ -2122,6 +1876,17 @@ end_comment
 begin_comment
 comment|/* almost all modern cards do not have this set of registers,      * so it is better to make this the default behaviour      */
 end_comment
+
+begin_comment
+comment|/*  * the following flags are for PnP cards only and are undocumented  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DV_PNP_SBCODEC
+value|0x1
+end_define
 
 begin_endif
 endif|#

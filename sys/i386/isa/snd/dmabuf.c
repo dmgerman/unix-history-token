@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/snd/ulaw.h>
+file|<i386/isa/sound/ulaw.h>
 end_include
 
 begin_define
@@ -605,11 +605,13 @@ name|bufsize
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|n
 operator|=
 name|buf
 operator|->
 name|uio_resid
+operator|)
 condition|)
 block|{
 name|l
@@ -3049,7 +3051,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"timeout flushing dbuf_out.chan, cnt 0x%x flags 0x%08x\n"
+literal|"timeout flushing dbuf_out.chan, cnt 0x%x flags 0x%08lx\n"
 argument_list|,
 name|b
 operator|->
