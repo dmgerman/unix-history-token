@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.9	83/11/29	*/
+comment|/*	defs.h	4.10	84/02/09	*/
 end_comment
 
 begin_include
@@ -70,7 +70,7 @@ file|<netinet/in.h>
 end_include
 
 begin_comment
-comment|/*  * The version number should be changed whenever the protocols change.  */
+comment|/*  * The version number should be changed whenever the protocol changes.  */
 end_comment
 
 begin_define
@@ -182,13 +182,6 @@ name|OPTION
 value|13
 end_define
 
-begin_define
-define|#
-directive|define
-name|VAR
-value|14
-end_define
-
 begin_comment
 comment|/* lexical definitions */
 end_comment
@@ -245,13 +238,6 @@ define|#
 directive|define
 name|GAVSIZ
 value|NCARGS / 6
-end_define
-
-begin_define
-define|#
-directive|define
-name|NSTAMPS
-value|15
 end_define
 
 begin_comment
@@ -325,6 +311,31 @@ name|E_ALL
 value|0x7
 end_define
 
+begin_comment
+comment|/* actions for lookup() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOOKUP
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|INSERT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|REPLACE
+value|2
+end_define
+
 begin_define
 define|#
 directive|define
@@ -347,27 +358,78 @@ end_define
 
 begin_struct
 struct|struct
-name|block
+name|namelist
+block|{
+comment|/* for making lists of strings */
+name|char
+modifier|*
+name|n_name
+decl_stmt|;
+name|struct
+name|namelist
+modifier|*
+name|n_next
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|subcmd
 block|{
 name|short
-name|b_type
+name|sc_type
 decl_stmt|;
+comment|/* type - INSTALL,NOTIFY,EXCEPT,SPECIAL */
 name|short
-name|b_options
+name|sc_options
 decl_stmt|;
 name|char
 modifier|*
-name|b_name
+name|sc_name
 decl_stmt|;
 name|struct
-name|block
+name|namelist
 modifier|*
-name|b_next
+name|sc_args
 decl_stmt|;
 name|struct
-name|block
+name|subcmd
 modifier|*
-name|b_args
+name|sc_next
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|cmd
+block|{
+name|int
+name|c_type
+decl_stmt|;
+comment|/* type - ARROW,DCOLON */
+name|char
+modifier|*
+name|c_name
+decl_stmt|;
+comment|/* hostname or time stamp file name */
+name|struct
+name|namelist
+modifier|*
+name|c_files
+decl_stmt|;
+name|struct
+name|subcmd
+modifier|*
+name|c_cmds
+decl_stmt|;
+name|struct
+name|cmd
+modifier|*
+name|c_next
 decl_stmt|;
 block|}
 struct|;
@@ -420,7 +482,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|errs
+name|nerrs
 decl_stmt|;
 end_decl_stmt
 
@@ -539,7 +601,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|struct
-name|block
+name|namelist
 modifier|*
 name|except
 decl_stmt|;
@@ -582,8 +644,34 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+name|char
+modifier|*
+name|makestr
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
-name|block
+name|namelist
+modifier|*
+name|makenl
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|subcmd
+modifier|*
+name|makesubcmd
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|namelist
 modifier|*
 name|lookup
 parameter_list|()
@@ -592,16 +680,7 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|block
-modifier|*
-name|makeblock
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|block
+name|namelist
 modifier|*
 name|expand
 parameter_list|()

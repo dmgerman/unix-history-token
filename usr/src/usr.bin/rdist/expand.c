@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)expand.c	4.9 (Berkeley) 83/12/19"
+literal|"@(#)expand.c	4.10 (Berkeley) 84/02/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,7 +51,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|which
 decl_stmt|;
@@ -62,9 +61,8 @@ comment|/* bit mask of types to expand */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
-name|argc
+name|eargc
 decl_stmt|;
 end_decl_stmt
 
@@ -73,11 +71,10 @@ comment|/* expanded arg count */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 modifier|*
-name|argv
+name|eargv
 decl_stmt|;
 end_decl_stmt
 
@@ -86,7 +83,6 @@ comment|/* expanded arg vectors */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 name|path
@@ -94,7 +90,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 name|pathp
@@ -102,7 +97,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 name|lastpathp
@@ -110,7 +104,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 name|tilde
@@ -122,7 +115,6 @@ comment|/* "~user" if not expanding tilde, else "" */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 name|tpathp
@@ -130,14 +122,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|nleft
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|expany
 decl_stmt|;
@@ -148,7 +138,6 @@ comment|/* any expansions done? */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 name|entp
@@ -156,7 +145,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 modifier|*
@@ -172,22 +160,13 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|struct
-name|block
-modifier|*
-name|copy
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Take a list of names and expand any macros, etc.  * wh = E_VARS if expanding variables.  * wh = E_SHELL if expanding shell characters.  * wh = E_TILDE if expanding `~'.  * or any of these or'ed together.  */
 end_comment
 
 begin_function
 name|struct
-name|block
+name|namelist
 modifier|*
 name|expand
 parameter_list|(
@@ -196,7 +175,7 @@ parameter_list|,
 name|wh
 parameter_list|)
 name|struct
-name|block
+name|namelist
 modifier|*
 name|list
 decl_stmt|;
@@ -206,9 +185,9 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
-name|block
+name|namelist
 modifier|*
-name|bp
+name|nl
 decl_stmt|,
 modifier|*
 name|prev
@@ -293,18 +272,18 @@ name|tilde
 operator|=
 literal|""
 expr_stmt|;
-name|argc
+name|eargc
 operator|=
 literal|0
 expr_stmt|;
-name|argv
+name|eargv
 operator|=
 name|sortbase
 operator|=
 name|argvbuf
 expr_stmt|;
 operator|*
-name|argv
+name|eargv
 operator|=
 literal|0
 expr_stmt|;
@@ -314,45 +293,31 @@ name|NCARGS
 operator|-
 literal|4
 expr_stmt|;
-comment|/* 	 * Walk the block list and expand names into argv[]; 	 */
+comment|/* 	 * Walk the name list and expand names into eargv[]; 	 */
 for|for
 control|(
-name|bp
+name|nl
 operator|=
 name|list
 init|;
-name|bp
+name|nl
 operator|!=
 name|NULL
 condition|;
-name|bp
+name|nl
 operator|=
-name|bp
+name|nl
 operator|->
-name|b_next
+name|n_next
 control|)
-block|{
 name|expstr
 argument_list|(
-name|bp
+name|nl
 operator|->
-name|b_name
+name|n_name
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|bp
-operator|->
-name|b_name
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* 	 * Take expanded list of names from argv[] and build a block list. 	 */
+comment|/* 	 * Take expanded list of names from eargv[] and build a new list. 	 */
 name|list
 operator|=
 name|prev
@@ -367,51 +332,24 @@ literal|0
 init|;
 name|n
 operator|<
-name|argc
+name|eargc
 condition|;
 name|n
 operator|++
 control|)
 block|{
-name|bp
+name|nl
 operator|=
-name|ALLOC
+name|makenl
 argument_list|(
-name|block
+name|NULL
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bp
-operator|==
-name|NULL
-condition|)
-name|fatal
-argument_list|(
-literal|"ran out of memory\n"
-argument_list|)
-expr_stmt|;
-name|bp
+name|nl
 operator|->
-name|b_type
+name|n_name
 operator|=
-name|NAME
-expr_stmt|;
-name|bp
-operator|->
-name|b_next
-operator|=
-name|bp
-operator|->
-name|b_args
-operator|=
-name|NULL
-expr_stmt|;
-name|bp
-operator|->
-name|b_name
-operator|=
-name|argv
+name|eargv
 index|[
 name|n
 index|]
@@ -426,19 +364,19 @@ name|list
 operator|=
 name|prev
 operator|=
-name|bp
+name|nl
 expr_stmt|;
 else|else
 block|{
 name|prev
 operator|->
-name|b_next
+name|n_next
 operator|=
-name|bp
+name|nl
 expr_stmt|;
 name|prev
 operator|=
-name|bp
+name|nl
 expr_stmt|;
 block|}
 block|}
@@ -492,7 +430,7 @@ name|cp1
 decl_stmt|;
 specifier|register
 name|struct
-name|block
+name|namelist
 modifier|*
 name|tp
 decl_stmt|;
@@ -509,7 +447,7 @@ decl_stmt|;
 name|int
 name|savec
 decl_stmt|,
-name|oargc
+name|oeargc
 decl_stmt|;
 specifier|extern
 name|char
@@ -675,13 +613,7 @@ name|savec
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|tp
-operator|=
-name|tp
-operator|->
-name|b_args
-operator|)
 operator|!=
 name|NULL
 condition|)
@@ -697,7 +629,7 @@ name|tp
 operator|=
 name|tp
 operator|->
-name|b_next
+name|n_next
 control|)
 block|{
 name|sprintf
@@ -710,7 +642,7 @@ name|s
 argument_list|,
 name|tp
 operator|->
-name|b_name
+name|n_name
 argument_list|,
 name|tail
 argument_list|)
@@ -993,9 +925,9 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
-name|oargc
+name|oeargc
 operator|=
-name|argc
+name|eargc
 expr_stmt|;
 name|expany
 operator|=
@@ -1008,9 +940,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|argc
+name|eargc
 operator|!=
-name|oargc
+name|oeargc
 condition|)
 name|sort
 argument_list|()
@@ -1048,9 +980,9 @@ modifier|*
 name|ap
 init|=
 operator|&
-name|argv
+name|eargv
 index|[
-name|argc
+name|eargc
 index|]
 decl_stmt|;
 name|p1
@@ -2591,7 +2523,7 @@ operator|<=
 literal|0
 operator|||
 operator|++
-name|argc
+name|eargc
 operator|>=
 name|GAVSIZ
 condition|)
@@ -2600,16 +2532,16 @@ argument_list|(
 literal|"Arguments too long\n"
 argument_list|)
 expr_stmt|;
-name|argv
+name|eargv
 index|[
-name|argc
+name|eargc
 index|]
 operator|=
 literal|0
 expr_stmt|;
-name|argv
+name|eargv
 index|[
-name|argc
+name|eargc
 operator|-
 literal|1
 index|]

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)server.c	4.14 (Berkeley) 84/01/04"
+literal|"@(#)server.c	4.15 (Berkeley) 84/02/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -125,6 +125,13 @@ begin_comment
 comment|/* log file for mailing changes */
 end_comment
 
+begin_function_decl
+name|int
+name|cleanup
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Server routine to read requests and process them.  * Commands are:  *	Tname	- Transmit file if out of date  *	Vname	- Verify if file out of date or not  *	Qname	- Query if file exists. Return mtime& size if it does.  */
 end_comment
@@ -147,6 +154,45 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+name|signal
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|cleanup
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|cleanup
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGQUIT
+argument_list|,
+name|cleanup
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGTERM
+argument_list|,
+name|cleanup
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|cleanup
+argument_list|)
+expr_stmt|;
+name|rem
+operator|=
+literal|0
+expr_stmt|;
 name|oumask
 operator|=
 name|umask
@@ -236,7 +282,7 @@ argument_list|)
 operator|!=
 literal|1
 condition|)
-name|lostconn
+name|cleanup
 argument_list|()
 expr_stmt|;
 block|}
@@ -608,7 +654,7 @@ directive|endif
 case|case
 literal|'\1'
 case|:
-name|errs
+name|nerrs
 operator|++
 expr_stmt|;
 continue|continue;
@@ -937,9 +983,9 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|block
+name|subcmd
 modifier|*
-name|c
+name|sc
 decl_stmt|;
 name|struct
 name|stat
@@ -957,7 +1003,7 @@ name|i
 decl_stmt|;
 specifier|extern
 name|struct
-name|block
+name|subcmd
 modifier|*
 name|special
 decl_stmt|;
@@ -1515,26 +1561,26 @@ name|dospecial
 label|:
 for|for
 control|(
-name|c
+name|sc
 operator|=
 name|special
 init|;
-name|c
+name|sc
 operator|!=
 name|NULL
 condition|;
-name|c
+name|sc
 operator|=
-name|c
+name|sc
 operator|->
-name|b_next
+name|sc_next
 control|)
 block|{
 if|if
 condition|(
-name|c
+name|sc
 operator|->
-name|b_type
+name|sc_type
 operator|!=
 name|SPECIAL
 condition|)
@@ -1544,9 +1590,9 @@ condition|(
 operator|!
 name|inlist
 argument_list|(
-name|c
+name|sc
 operator|->
-name|b_args
+name|sc_args
 argument_list|,
 name|target
 argument_list|)
@@ -1558,9 +1604,9 @@ name|lfp
 argument_list|,
 literal|"special \"%s\"\n"
 argument_list|,
-name|c
+name|sc
 operator|->
-name|b_name
+name|sc_name
 argument_list|)
 expr_stmt|;
 if|if
@@ -1579,9 +1625,9 @@ name|buf
 argument_list|,
 literal|"S%s\n"
 argument_list|,
-name|c
+name|sc
 operator|->
-name|b_name
+name|sc_name
 argument_list|)
 expr_stmt|;
 if|if
@@ -2090,7 +2136,7 @@ argument_list|)
 operator|!=
 literal|1
 condition|)
-name|lostconn
+name|cleanup
 argument_list|()
 expr_stmt|;
 block|}
@@ -2134,7 +2180,7 @@ return|;
 case|case
 literal|'\1'
 case|:
-name|errs
+name|nerrs
 operator|++
 expr_stmt|;
 if|if
@@ -4618,7 +4664,7 @@ argument_list|)
 operator|!=
 literal|1
 condition|)
-name|lostconn
+name|cleanup
 argument_list|()
 expr_stmt|;
 block|}
@@ -4784,7 +4830,7 @@ case|:
 case|case
 literal|'\2'
 case|:
-name|errs
+name|nerrs
 operator|++
 expr_stmt|;
 if|if
@@ -5181,7 +5227,7 @@ argument_list|)
 operator|!=
 literal|1
 condition|)
-name|lostconn
+name|cleanup
 argument_list|()
 expr_stmt|;
 block|}
@@ -6173,7 +6219,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|errs
+name|nerrs
 operator|++
 expr_stmt|;
 name|strcpy
@@ -6314,7 +6360,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|errs
+name|nerrs
 operator|++
 expr_stmt|;
 name|strcpy
@@ -6466,7 +6512,7 @@ argument_list|)
 operator|!=
 literal|1
 condition|)
-name|lostconn
+name|cleanup
 argument_list|()
 expr_stmt|;
 block|}
@@ -6542,7 +6588,7 @@ case|:
 case|case
 literal|'\2'
 case|:
-name|errs
+name|nerrs
 operator|++
 expr_stmt|;
 if|if
@@ -6624,34 +6670,29 @@ block|}
 block|}
 end_block
 
+begin_comment
+comment|/*  * Remove temporary files and do any cleanup operations before exiting.  */
+end_comment
+
 begin_macro
-name|lostconn
+name|cleanup
 argument_list|()
 end_macro
 
 begin_block
 block|{
-if|if
-condition|(
-operator|!
-name|iamremote
-condition|)
-block|{
-name|fflush
+operator|(
+name|void
+operator|)
+name|unlink
 argument_list|(
-name|stdout
+name|tmpfile
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|exit
 argument_list|(
-name|stderr
-argument_list|,
-literal|"rdist: lost connection\n"
+literal|1
 argument_list|)
-expr_stmt|;
-block|}
-name|cleanup
-argument_list|()
 expr_stmt|;
 block|}
 end_block
