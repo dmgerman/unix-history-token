@@ -9290,7 +9290,8 @@ name|auth_enable
 name|P
 argument_list|(
 operator|(
-name|int
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|,
@@ -9298,7 +9299,8 @@ name|auth_disable
 name|P
 argument_list|(
 operator|(
-name|int
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|,
@@ -9485,6 +9487,24 @@ name|authlist
 modifier|*
 name|c
 decl_stmt|;
+if|if
+condition|(
+name|argc
+operator|<
+literal|2
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Need an argument to 'auth' command.  'auth ?' for help.\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|c
 operator|=
 operator|(
@@ -9833,7 +9853,7 @@ block|,
 block|{
 literal|"type"
 block|,
-literal|"Set encryptiong type. ('encrypt type ?' for more)"
+literal|"Set encryption type. ('encrypt type ?' for more)"
 block|,
 name|EncryptType
 block|,
@@ -10073,6 +10093,24 @@ name|encryptlist
 modifier|*
 name|c
 decl_stmt|;
+if|if
+condition|(
+name|argc
+operator|<
+literal|2
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Need an argument to 'encrypt' command.  'encrypt ?' for help.\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|c
 operator|=
 operator|(
