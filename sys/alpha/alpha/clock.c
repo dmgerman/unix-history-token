@@ -2607,6 +2607,12 @@ literal|8
 operator|)
 argument_list|)
 expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|clock_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2648,12 +2654,6 @@ name|period
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|clock_lock
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
