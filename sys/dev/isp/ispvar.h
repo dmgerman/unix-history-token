@@ -1960,14 +1960,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|ISP_ROLE_INITIATOR
+name|ISP_ROLE_TARGET
 value|0x1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ISP_ROLE_TARGET
+name|ISP_ROLE_INITIATOR
 value|0x2
 end_define
 
@@ -2773,7 +2773,10 @@ name|ISPCTL_RUN_MBOXCMD
 block|,
 comment|/* run a mailbox command */
 name|ISPCTL_TOGGLE_TMODE
+block|,
 comment|/* toggle target mode */
+name|ISPCTL_GET_PDB
+comment|/* get a single port database entry */
 block|}
 name|ispctl_t
 typedef|;
