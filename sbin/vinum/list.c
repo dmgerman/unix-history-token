@@ -6320,7 +6320,23 @@ name|preferred_plex
 operator|>=
 literal|0
 condition|)
+block|{
 comment|/* preferences, */
+name|get_plex_info
+argument_list|(
+operator|&
+name|plex
+argument_list|,
+name|vol
+operator|.
+name|plex
+index|[
+name|vol
+operator|.
+name|preferred_plex
+index|]
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|of
@@ -6333,18 +6349,12 @@ name|vol
 operator|.
 name|name
 argument_list|,
-name|vinum_conf
-operator|.
 name|plex
-index|[
-name|vol
-operator|.
-name|preferred_plex
-index|]
 operator|.
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 comment|/* default round-robin */
 name|fprintf
@@ -6469,6 +6479,36 @@ argument_list|,
 name|vol
 operator|.
 name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|vol
+operator|.
+name|preferred_plex
+operator|>=
+literal|0
+operator|)
+comment|/* has a preferred plex */
+operator|&&
+name|vol
+operator|.
+name|plex
+index|[
+name|vol
+operator|.
+name|preferred_plex
+index|]
+operator|==
+name|i
+condition|)
+comment|/* and it's us */
+name|fprintf
+argument_list|(
+name|of
+argument_list|,
+literal|"preferred "
 argument_list|)
 expr_stmt|;
 block|}
