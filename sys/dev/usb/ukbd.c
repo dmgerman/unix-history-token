@@ -146,6 +146,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kbio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/kbd/kbdreg.h>
 end_include
 
@@ -1021,12 +1027,6 @@ begin_include
 include|#
 directive|include
 file|<machine/limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kbio.h>
 end_include
 
 begin_define
