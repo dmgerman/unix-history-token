@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)param.h	8.2 (Berkeley) 1/21/94  * $Id: param.h,v 1.10 1995/12/05 21:03:13 bde Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)param.h	8.2 (Berkeley) 1/21/94  * $Id: param.h,v 1.11 1996/01/30 23:01:04 mpp Exp $  */
 end_comment
 
 begin_ifndef
@@ -846,6 +846,120 @@ directive|define
 name|FSCALE
 value|(1<<FSHIFT)
 end_define
+
+begin_comment
+comment|/*  * rfork() options.  *  * XXX currently, operations without RFPROC set are not supported.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RFNAMEG
+value|(1<<0)
+end_define
+
+begin_comment
+comment|/* UNIMPL new plan9 `name space' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RFENVG
+value|(1<<1)
+end_define
+
+begin_comment
+comment|/* UNIMPL copy plan9 `env space' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RFFDG
+value|(1<<2)
+end_define
+
+begin_comment
+comment|/* copy fd table */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RFNOTEG
+value|(1<<3)
+end_define
+
+begin_comment
+comment|/* UNIMPL create new plan9 `note group' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RFPROC
+value|(1<<4)
+end_define
+
+begin_comment
+comment|/* change child (else changes curproc) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RFMEM
+value|(1<<5)
+end_define
+
+begin_comment
+comment|/* share `address space' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RFNOWAIT
+value|(1<<6)
+end_define
+
+begin_comment
+comment|/* UNIMPL parent need not wait() on child */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RFCNAMEG
+value|(1<<10)
+end_define
+
+begin_comment
+comment|/* UNIMPL zero plan9 `name space' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RFCENVG
+value|(1<<11)
+end_define
+
+begin_comment
+comment|/* UNIMPL zero plan9 `env space' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RFCFDG
+value|(1<<12)
+end_define
+
+begin_comment
+comment|/* zero fd table */
+end_comment
 
 begin_endif
 endif|#

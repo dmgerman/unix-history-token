@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: shm.h,v 1.6 1995/08/30 00:33:35 bde Exp $ */
+comment|/* $Id: shm.h,v 1.7 1996/01/30 23:01:19 mpp Exp $ */
 end_comment
 
 begin_comment
@@ -208,8 +208,6 @@ operator|,
 expr|struct
 name|proc
 operator|*
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;

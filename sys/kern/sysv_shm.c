@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_shm.c,v 1.16 1995/12/26 16:03:32 joerg Exp $ */
+comment|/*	$Id: sysv_shm.c,v 1.17 1996/01/05 16:38:03 wollman Exp $ */
 end_comment
 
 begin_comment
@@ -3133,8 +3133,6 @@ parameter_list|(
 name|p1
 parameter_list|,
 name|p2
-parameter_list|,
-name|isvfork
 parameter_list|)
 name|struct
 name|proc
@@ -3145,12 +3143,6 @@ decl|*
 name|p2
 decl_stmt|;
 end_function
-
-begin_decl_stmt
-name|int
-name|isvfork
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
