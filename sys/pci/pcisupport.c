@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.3 1994/10/15 23:27:39 se Exp $ ** **  Device driver for INTEL PCI chipsets. ** **  386bsd / FreeBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	wolf@dentaro.gun.de	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.4 1994/10/17 21:11:31 phk Exp $ ** **  Device driver for INTEL PCI chipsets. ** **  386bsd / FreeBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	wolf@dentaro.gun.de	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_escape
@@ -852,61 +852,61 @@ block|,
 block|{
 literal|0x50
 block|,
-literal|0xe0
+literal|0xe3
 block|,
-literal|0x80
+literal|0x82
 block|,
 name|M_EQ
 block|,
-literal|"Pentium"
+literal|"Pentium, 60MHz"
 block|}
 block|,
 block|{
 literal|0x50
 block|,
-literal|0xe0
+literal|0xe3
 block|,
-literal|0x80
+literal|0x83
+block|,
+name|M_EQ
+block|,
+literal|"Pentium, 66MHz"
+block|}
+block|,
+block|{
+literal|0x50
+block|,
+literal|0xe3
+block|,
+literal|0xa2
+block|,
+name|M_EQ
+block|,
+literal|"Pentium, 90MHz"
+block|}
+block|,
+block|{
+literal|0x50
+block|,
+literal|0xe3
+block|,
+literal|0xa3
+block|,
+name|M_EQ
+block|,
+literal|"Pentium, 100MHz"
+block|}
+block|,
+block|{
+literal|0x50
+block|,
+literal|0xc2
+block|,
+literal|0x82
 block|,
 name|M_NE
 block|,
-literal|"???"
-block|}
-block|,
-block|{
-literal|0x50
-block|,
-literal|0x02
-block|,
-literal|0x00
-block|,
-name|M_EQ
-block|,
-literal|", ???MHz"
-block|}
-block|,
-block|{
-literal|0x50
-block|,
-literal|0x03
-block|,
-literal|0x02
-block|,
-name|M_EQ
-block|,
-literal|", 60MHz"
-block|}
-block|,
-block|{
-literal|0x50
-block|,
-literal|0x03
-block|,
-literal|0x03
-block|,
-name|M_EQ
-block|,
-literal|", 66MHz"
+literal|"(unknown)"
 block|}
 block|,
 block|{
