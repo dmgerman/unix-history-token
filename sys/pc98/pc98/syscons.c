@@ -15714,7 +15714,9 @@ name|info
 operator|.
 name|vi_width
 operator|/
-literal|8
+name|info
+operator|.
+name|vi_cwidth
 expr_stmt|;
 name|scp
 operator|->
@@ -15767,7 +15769,9 @@ name|scp
 operator|->
 name|xsize
 operator|*
-literal|8
+name|info
+operator|.
+name|vi_cwidth
 expr_stmt|;
 name|scp
 operator|->
