@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * rmail: front end for mail to stack up those stupid>From ... remote from ...  * lines and make a correct return address.  This works with the -f option  * to /usr/lib/sendmail so it won't work on systems without sendmail.  * However, it ought to be easy to modify a standard /bin/mail to do the  * same thing.  *  * NOTE: Rmail is SPECIFICALLY INTENDED for ERNIE COVAX because of its  * physical position as a gateway between the uucp net and the arpanet.  * By default, other sites will probably want /bin/rmail to be a link  * to /bin/mail, as it was intended by BTL.  However, other than the  * (somewhat annoying) loss of information about when the mail was  * originally sent, rmail should work OK on other systems running uucp.  * If you don't run uucp you don't even need any rmail.  */
+comment|/* ** rmail: front end for mail to stack up those stupid>From ... remote from ... ** lines and make a correct return address.  This works with the -f option ** to /usr/lib/sendmail so it won't work on systems without sendmail. ** However, it ought to be easy to modify a standard /bin/mail to do the ** same thing. */
 end_comment
 
 begin_decl_stmt
@@ -9,7 +9,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)rmail.c	3.4	%G%"
+literal|"@(#)rmail.c	3.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -132,6 +132,12 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|uf
+decl_stmt|;
+comment|/* ptr into ufrom */
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -250,6 +256,10 @@ name|cp
 operator|=
 name|lbuf
 expr_stmt|;
+name|uf
+operator|=
+name|ufrom
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -273,10 +283,51 @@ name|cp
 operator|==
 name|NULL
 condition|)
+block|{
+specifier|register
+name|char
+modifier|*
+name|p
+init|=
+name|rindex
+argument_list|(
+name|uf
+argument_list|,
+literal|'!'
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|sys
+argument_list|,
+name|uf
+argument_list|)
+expr_stmt|;
+name|uf
+operator|=
+name|p
+operator|+
+literal|1
+expr_stmt|;
+break|break;
+block|}
 name|cp
 operator|=
 literal|"remote from somewhere"
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -308,6 +359,12 @@ literal|0
 condition|)
 break|break;
 block|}
+if|if
+condition|(
+name|cp
+operator|!=
+name|NULL
+condition|)
 operator|(
 name|void
 operator|)
@@ -345,7 +402,7 @@ name|printf
 argument_list|(
 literal|"ufrom='%s', sys='%s', from now '%s'\n"
 argument_list|,
-name|ufrom
+name|uf
 argument_list|,
 name|sys
 argument_list|,
