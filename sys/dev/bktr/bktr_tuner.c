@@ -629,11 +629,11 @@ block|}
 block|,
 comment|/* band-switch crosspoints */
 block|{
-literal|0xa0
+literal|0xa7
 block|,
-literal|0x90
+literal|0x97
 block|,
-literal|0x30
+literal|0x37
 block|,
 literal|0x00
 block|}
@@ -819,11 +819,11 @@ block|}
 block|,
 comment|/* band-switch crosspoints */
 block|{
-literal|0xa0
+literal|0xa7
 block|,
-literal|0x90
+literal|0x97
 block|,
-literal|0x30
+literal|0x37
 block|,
 literal|0xa4
 block|}
