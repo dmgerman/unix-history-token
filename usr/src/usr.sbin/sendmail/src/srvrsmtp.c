@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.25 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.26 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.25 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.26 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1758,6 +1758,12 @@ operator|->
 name|e_xfp
 argument_list|)
 expr_stmt|;
+name|id
+operator|=
+name|e
+operator|->
+name|e_id
+expr_stmt|;
 comment|/* send to all recipients */
 name|sendall
 argument_list|(
@@ -1795,7 +1801,9 @@ name|HoldErrs
 condition|)
 name|message
 argument_list|(
-literal|"250 Ok"
+literal|"250 %s OK"
+argument_list|,
+name|id
 argument_list|)
 expr_stmt|;
 else|else
