@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)socketvar.h	7.21 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)socketvar.h	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -145,7 +145,7 @@ struct|;
 define|#
 directive|define
 name|SB_MAX
-value|(64*1024)
+value|(256*1024)
 comment|/* default for max chars in sockbuf */
 define|#
 directive|define
