@@ -401,11 +401,14 @@ begin_decl_stmt
 name|EXTERN
 name|int
 name|oia_modified
+decl_stmt|,
+comment|/* Has the oia been modified */
+name|ps_modified
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Has the oia been modified */
+comment|/* Has the presentation space been modified */
 end_comment
 
 begin_endif
