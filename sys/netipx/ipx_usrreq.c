@@ -1466,6 +1466,9 @@ name|struct
 name|ipx
 name|ioptval
 decl_stmt|;
+name|long
+name|seq
+decl_stmt|;
 name|error
 operator|=
 literal|0
@@ -1537,6 +1540,7 @@ name|IPXP_RAWOUT
 expr_stmt|;
 name|get_flags
 label|:
+comment|/* Unlocked read. */
 name|soptval
 operator|=
 name|ipxp
@@ -1580,6 +1584,11 @@ name|ipx_tc
 operator|=
 literal|0
 expr_stmt|;
+name|IPX_LOCK
+argument_list|(
+name|ipxp
+argument_list|)
+expr_stmt|;
 name|ioptval
 operator|.
 name|ipx_pt
@@ -1604,6 +1613,11 @@ name|ipxp
 operator|->
 name|ipxp_laddr
 expr_stmt|;
+name|IPX_UNLOCK
+argument_list|(
+name|ipxp
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|sooptcopyout
@@ -1621,6 +1635,19 @@ break|break;
 case|case
 name|SO_SEQNO
 case|:
+name|IPX_LIST_LOCK
+argument_list|()
+expr_stmt|;
+name|seq
+operator|=
+name|ipx_pexseq
+expr_stmt|;
+name|ipx_pexseq
+operator|++
+expr_stmt|;
+name|IPX_LIST_UNLOCK
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|sooptcopyout
@@ -1628,14 +1655,11 @@ argument_list|(
 name|sopt
 argument_list|,
 operator|&
-name|ipx_pexseq
+name|seq
 argument_list|,
 sizeof|sizeof
-name|ipx_pexseq
+name|seq
 argument_list|)
-expr_stmt|;
-name|ipx_pexseq
-operator|++
 expr_stmt|;
 break|break;
 default|default:
@@ -1712,6 +1736,11 @@ condition|(
 name|error
 condition|)
 break|break;
+name|IPX_LOCK
+argument_list|(
+name|ipxp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|optval
@@ -1729,6 +1758,11 @@ name|ipxp_flags
 operator|&=
 operator|~
 name|mask
+expr_stmt|;
+name|IPX_UNLOCK
+argument_list|(
+name|ipxp
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1755,6 +1789,7 @@ condition|(
 name|error
 condition|)
 break|break;
+comment|/* Unlocked write. */
 name|ipxp
 operator|->
 name|ipxp_dpt
