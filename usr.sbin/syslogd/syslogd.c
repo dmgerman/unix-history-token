@@ -575,8 +575,6 @@ name|char
 name|f_hname
 index|[
 name|MAXHOSTNAMELEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 name|struct
@@ -629,8 +627,6 @@ name|char
 name|f_prevhost
 index|[
 name|MAXHOSTNAMELEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 comment|/* host from which recd. */
@@ -984,8 +980,6 @@ name|char
 name|LocalHostName
 index|[
 name|MAXHOSTNAMELEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -7161,8 +7155,6 @@ name|char
 name|host
 index|[
 name|MAXHOSTNAMELEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 name|dprintf
@@ -7616,6 +7608,8 @@ init|;
 name|i
 operator|<
 name|MAXHOSTNAMELEN
+operator|-
+literal|1
 condition|;
 name|i
 operator|++
