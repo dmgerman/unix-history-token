@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.34	82/03/15	*/
+comment|/*	uipc_socket.c	4.35	82/03/19	*/
 end_comment
 
 begin_include
@@ -493,6 +493,16 @@ condition|)
 goto|goto
 name|discard
 goto|;
+if|if
+condition|(
+name|exiting
+condition|)
+name|so
+operator|->
+name|so_options
+operator||=
+name|SO_KEEPALIVE
+expr_stmt|;
 if|if
 condition|(
 name|so
