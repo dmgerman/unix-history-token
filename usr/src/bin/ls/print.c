@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.5 (Berkeley) %G%"
+literal|"@(#)print.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -492,7 +492,6 @@ name|lstat
 operator|.
 name|st_flags
 expr_stmt|;
-comment|/* add fudge factors to max name length */
 if|if
 condition|(
 name|f_inode
@@ -517,22 +516,29 @@ name|maxlen
 operator|+=
 literal|1
 expr_stmt|;
-comment|/* one tab after maxlen */
+define|#
+directive|define
+name|TAB
+value|8
 name|colwidth
 operator|=
-operator|(
 name|maxlen
 operator|+
-literal|9
-operator|)
+name|TAB
+operator|+
+literal|1
 operator|&
 operator|~
-literal|0x7
+operator|(
+name|TAB
+operator|-
+literal|1
+operator|)
 expr_stmt|;
 name|numcols
 operator|=
 operator|(
-literal|80
+name|termwidth
 operator|+
 name|colwidth
 operator|-
