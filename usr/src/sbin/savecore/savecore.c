@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	savecore.c	4.1	81/04/02  * savecore dirname  *	Written by Michael Toy (UCB)  *	Program meant to be called from the /etc/rc file for saving the  * dump of a crashed system.  If the core file has not already been saved  * then save it in dirname (if there is at least minfree blocks on the  * device the directory is on.)  *	1) Make certain "dirname" exists  *	2) Get dumpdev and dumplo from vmunix/kmem  *	3) Find dump device name get time from core image  *	4) Look in "dirname" generate a name se  *		vmunix.n  *		vmcore.n  *	5) Check in "dirname"/minfree to be certain there is space  *	6) Make entry in shutdown log with date and cause of crash  */
+comment|/*  *	savecore.c	4.2	81/04/03  * savecore dirname  *	Written by Michael Toy (UCB)  *	Program meant to be called from the /etc/rc file for saving the  * dump of a crashed system.  If the core file has not already been saved  * then save it in dirname (if there is at least minfree blocks on the  * device the directory is on.)  *	1) Make certain "dirname" exists  *	2) Get dumpdev and dumplo from vmunix/kmem  *	3) Find dump device name get time from core image  *	4) Look in "dirname" generate a name se  *		vmunix.n  *		vmcore.n  *	5) Check in "dirname"/minfree to be certain there is space  *	6) Make entry in shutdown log with date and cause of crash  */
 end_comment
 
 begin_include
@@ -1411,13 +1411,21 @@ block|{
 name|int
 name|dumpfd
 decl_stmt|;
+name|time_t
+name|clobber
+init|=
+operator|(
+name|time_t
+operator|)
+literal|0
+decl_stmt|;
 name|dumpfd
 operator|=
 name|Open
 argument_list|(
 name|ddname
 argument_list|,
-literal|0
+literal|2
 argument_list|)
 expr_stmt|;
 name|Lseek
@@ -1448,6 +1456,36 @@ name|dumptime
 argument_list|,
 sizeof|sizeof
 name|dumptime
+argument_list|)
+expr_stmt|;
+name|Lseek
+argument_list|(
+name|dumpfd
+argument_list|,
+name|dumplo
+operator|+
+name|ok
+argument_list|(
+name|nl
+index|[
+name|X_TIME
+index|]
+operator|.
+name|n_value
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|Write
+argument_list|(
+name|dumpfd
+argument_list|,
+operator|&
+name|clobber
+argument_list|,
+sizeof|sizeof
+name|clobber
 argument_list|)
 expr_stmt|;
 name|close
