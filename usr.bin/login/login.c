@@ -3777,9 +3777,6 @@ case|case
 name|PAM_AUTH_ERR
 case|:
 case|case
-name|PAM_CRED_ERR
-case|:
-case|case
 name|PAM_USER_UNKNOWN
 case|:
 case|case
