@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)buf.h	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)buf.h	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -181,7 +181,7 @@ modifier|*
 name|b_proc
 decl_stmt|;
 comment|/* proc doing physical or swap I/O */
-name|int
+name|void
 function_decl|(
 modifier|*
 name|b_iodone
