@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)autoconf.c	7.1 (Berkeley) 5/9/91  *	$Id: autoconf.c,v 1.124 1999/05/31 11:25:39 phk Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)autoconf.c	7.1 (Berkeley) 5/9/91  *	$Id: autoconf.c,v 1.125 1999/06/01 18:56:10 phk Exp $  */
 end_comment
 
 begin_comment
@@ -1551,7 +1551,17 @@ operator|)
 operator|!=
 name|B_DEVMAGIC
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"No B_DEVMAGIC\n"
+argument_list|)
+expr_stmt|;
+name|setconf
+argument_list|()
+expr_stmt|;
 return|return;
+block|}
 name|majdev
 operator|=
 name|B_TYPE
@@ -1577,7 +1587,21 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"No bdevsw (majdev=%d bootdev=%08x)\n"
+argument_list|,
+name|majdev
+argument_list|,
+name|bootdev
+argument_list|)
+expr_stmt|;
+name|setconf
+argument_list|()
+expr_stmt|;
 return|return;
+block|}
 name|unit
 operator|=
 name|B_UNIT
@@ -1612,7 +1636,17 @@ name|slice
 operator|>=
 name|MAX_SLICES
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"bad slice\n"
+argument_list|)
+expr_stmt|;
+name|setconf
+argument_list|()
+expr_stmt|;
 return|return;
+block|}
 comment|/* 	 * XXX kludge for inconsistent unit numbering and lack of slice 	 * support for floppies. 	 */
 if|if
 condition|(
@@ -1930,6 +1964,13 @@ decl_stmt|;
 name|dev_t
 name|dev
 decl_stmt|;
+name|printf
+argument_list|(
+literal|"setrootbyname(\"%s\")\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 name|slice
 operator|=
 literal|0
@@ -2173,19 +2214,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|printf
-argument_list|(
-literal|"driver=%s, unit=%d, slice=%d, part=%d\n"
-argument_list|,
-name|name
-argument_list|,
-name|unit
-argument_list|,
-name|slice
-argument_list|,
-name|part
-argument_list|)
-expr_stmt|;
 name|rootdev
 operator|=
 name|makebdev
@@ -2200,6 +2228,21 @@ name|slice
 argument_list|,
 name|part
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"driver=%s, unit=%d, slice=%d, part=%d -> rootdev=%08x\n"
+argument_list|,
+name|name
+argument_list|,
+name|unit
+argument_list|,
+name|slice
+argument_list|,
+name|part
+argument_list|,
+name|rootdev
 argument_list|)
 expr_stmt|;
 return|return
@@ -2293,7 +2336,7 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
-literal|" %s"
+literal|" \"%s\""
 argument_list|,
 name|bdevsw
 argument_list|(
@@ -2306,7 +2349,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|" followed by a unit number...\n"
+literal|"\nfollowed by a unit number...\n"
 argument_list|)
 expr_stmt|;
 block|}
