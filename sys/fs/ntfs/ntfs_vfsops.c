@@ -3983,13 +3983,7 @@ decl_stmt|;
 name|ddprintf
 argument_list|(
 operator|(
-literal|"ntfs_fhtovp(): %s: %d\n"
-operator|,
-name|mp
-operator|->
-name|mnt_stat
-operator|->
-name|f_mntonname
+literal|"ntfs_fhtovp(): %d\n"
 operator|,
 name|ntfhp
 operator|->
@@ -4074,15 +4068,7 @@ decl_stmt|;
 name|ddprintf
 argument_list|(
 operator|(
-literal|"ntfs_fhtovp(): %s: %p\n"
-operator|,
-name|vp
-operator|->
-name|v_mount
-operator|->
-name|mnt_stat
-operator|->
-name|f_mntonname
+literal|"ntfs_fhtovp(): %p\n"
 operator|,
 name|vp
 operator|)
