@@ -1964,6 +1964,13 @@ operator|->
 name|ts_free
 argument_list|)
 expr_stmt|;
+name|MPASS
+argument_list|(
+name|ts
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|LIST_REMOVE
 argument_list|(
 name|ts
@@ -2135,6 +2142,13 @@ operator|&
 name|ts
 operator|->
 name|ts_free
+argument_list|)
+expr_stmt|;
+name|MPASS
+argument_list|(
+name|ts1
+operator|!=
+name|NULL
 argument_list|)
 expr_stmt|;
 name|LIST_REMOVE
