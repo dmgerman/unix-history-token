@@ -1726,6 +1726,17 @@ name|freeq
 operator|->
 name|b_next
 expr_stmt|;
+name|new
+operator|->
+name|b_next
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|(
+name|news
+operator|)
+return|;
 block|}
 end_function
 
