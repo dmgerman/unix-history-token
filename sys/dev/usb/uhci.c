@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhci.c,v 1.141 2001/10/24 21:04:04 augustss Exp $	*/
+comment|/*	$NetBSD: uhci.c,v 1.142 2001/10/25 02:08:13 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -545,7 +545,18 @@ end_struct
 begin_function_decl
 name|Static
 name|void
-name|uhci_busreset
+name|uhci_globalreset
+parameter_list|(
+name|uhci_softc_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Static
+name|void
+name|uhci_reset
 parameter_list|(
 name|uhci_softc_t
 modifier|*
@@ -1892,7 +1903,7 @@ end_function
 
 begin_function
 name|void
-name|uhci_busreset
+name|uhci_globalreset
 parameter_list|(
 name|uhci_softc_t
 modifier|*
@@ -1995,14 +2006,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|uhci_run
-argument_list|(
-name|sc
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* stop the controller */
 name|UWRITE2
 argument_list|(
 name|sc
@@ -2013,7 +2016,13 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* disable interrupts */
-name|uhci_busreset
+name|uhci_globalreset
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* reset the controller */
+name|uhci_reset
 argument_list|(
 name|sc
 argument_list|)
@@ -7518,22 +7527,82 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|void uhci_reset(uhci_softc_t *sc) { 	int n;  	UHCICMD(sc, UHCI_CMD_HCRESET);
+begin_function
+name|void
+name|uhci_reset
+parameter_list|(
+name|uhci_softc_t
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|int
+name|n
+decl_stmt|;
+name|UHCICMD
+argument_list|(
+name|sc
+argument_list|,
+name|UHCI_CMD_HCRESET
+argument_list|)
+expr_stmt|;
 comment|/* The reset bit goes low when the controller is done. */
-end_comment
-
-begin_endif
-unit|for (n = 0; n< UHCI_RESET_TIMEOUT&& 		    (UREAD2(sc, UHCI_CMD)& UHCI_CMD_HCRESET); n++) 		usb_delay_ms(&sc->sc_bus, 1); 	if (n>= UHCI_RESET_TIMEOUT) 		printf("%s: controller did not reset\n", 		       USBDEVNAME(sc->sc_bus.bdev)); }
-endif|#
-directive|endif
-end_endif
+for|for
+control|(
+name|n
+operator|=
+literal|0
+init|;
+name|n
+operator|<
+name|UHCI_RESET_TIMEOUT
+operator|&&
+operator|(
+name|UREAD2
+argument_list|(
+name|sc
+argument_list|,
+name|UHCI_CMD
+argument_list|)
+operator|&
+name|UHCI_CMD_HCRESET
+operator|)
+condition|;
+name|n
+operator|++
+control|)
+name|usb_delay_ms
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_bus
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|n
+operator|>=
+name|UHCI_RESET_TIMEOUT
+condition|)
+name|printf
+argument_list|(
+literal|"%s: controller did not reset\n"
+argument_list|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|bdev
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|usbd_status
