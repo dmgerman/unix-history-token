@@ -27,7 +27,6 @@ operator|:
 name|unknown
 name|host
 operator|\
-operator|\
 name|n
 literal|", argv[1]); 		exit(2); 	} 	bcopy(hp->h_addr,&name.sin_addr, hp->h_length); 	name.sin_family = AF_INET; 	name.sin_port = htons(atoi(argv[2])); 	/* Send message. */ 	if (sendto(sock, DATA, sizeof(DATA), 0,&name, sizeof(name))< 0) 		perror("
 name|sending
