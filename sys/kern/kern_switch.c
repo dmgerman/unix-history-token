@@ -369,7 +369,7 @@ name|ke_flags
 operator||=
 name|KEF_DIDRUN
 expr_stmt|;
-comment|/* 	 * Only allow non system threads to run in panic 	 * if they are the one we are tracing.  (I think.. [JRE]) 	 */
+comment|/* 	 * If we are in panic, only allow system threads, 	 * plus the one we are running in, to be run. 	 */
 if|if
 condition|(
 name|panicstr
@@ -398,9 +398,17 @@ operator|==
 literal|0
 operator|)
 condition|)
+block|{
+comment|/* note that it is no longer on the run queue */
+name|TD_SET_CAN_RUN
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 goto|goto
 name|retry
 goto|;
+block|}
 name|TD_SET_RUNNING
 argument_list|(
 name|td
