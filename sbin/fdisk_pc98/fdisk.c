@@ -218,13 +218,13 @@ name|disks
 index|[]
 init|=
 block|{
-literal|"/dev/rad0"
+literal|"/dev/ad0"
 block|,
-literal|"/dev/rwd0"
+literal|"/dev/wd0"
 block|,
-literal|"/dev/rda0"
+literal|"/dev/da0"
 block|,
-literal|"/dev/rod0"
+literal|"/dev/od0"
 block|,
 literal|0
 block|}
