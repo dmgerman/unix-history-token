@@ -957,6 +957,40 @@ case|case
 literal|0x1b
 case|:
 comment|/* Functionality state information */
+break|break;
+case|case
+literal|0x6f
+case|:
+switch|switch
+condition|(
+name|R_AL
+condition|)
+block|{
+case|case
+literal|0x00
+case|:
+comment|/* HP-Vectra or Video7 installation check */
+name|R_BX
+operator|=
+literal|0
+expr_stmt|;
+comment|/* nope, none of that */
+break|break;
+default|default:
+name|unknown_int3
+argument_list|(
+literal|0x10
+argument_list|,
+literal|0x6f
+argument_list|,
+name|R_AL
+argument_list|,
+name|REGS
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+break|break;
 case|case
 literal|0xef
 case|:
@@ -1015,11 +1049,13 @@ expr_stmt|;
 name|unknown
 label|:
 default|default:
-name|unknown_int2
+name|unknown_int3
 argument_list|(
 literal|0x10
 argument_list|,
 name|R_AH
+argument_list|,
+name|R_AL
 argument_list|,
 name|REGS
 argument_list|)

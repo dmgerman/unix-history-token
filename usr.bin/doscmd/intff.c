@@ -3027,7 +3027,7 @@ name|debug
 argument_list|(
 name|D_REDIR
 argument_list|,
-literal|"Drive %c beyond limit of %c)\n"
+literal|"Drive %c beyond limit of %c\n"
 argument_list|,
 name|drntol
 argument_list|(
@@ -3221,7 +3221,7 @@ name|debug
 argument_list|(
 name|D_REDIR
 argument_list|,
-literal|"redirector duplicate install ignored\n"
+literal|"redirector duplicate install ignored"
 argument_list|)
 expr_stmt|;
 return|return;

@@ -256,6 +256,16 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|int
+name|try_boot
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|setup_command
 parameter_list|(
@@ -1273,7 +1283,7 @@ condition|(
 operator|(
 name|fd
 operator|=
-name|disk_fd
+name|try_boot
 argument_list|(
 name|booting
 operator|=
@@ -1286,7 +1296,7 @@ condition|)
 comment|/* try A: */
 name|fd
 operator|=
-name|disk_fd
+name|try_boot
 argument_list|(
 name|booting
 operator|=
@@ -1299,7 +1309,7 @@ else|else
 block|{
 name|fd
 operator|=
-name|disk_fd
+name|try_boot
 argument_list|(
 name|booting
 argument_list|)
@@ -1312,53 +1322,13 @@ name|fd
 operator|<
 literal|0
 condition|)
-block|{
-comment|/* can we boot it? */
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Cannot boot from %c"
-argument_list|,
-name|drntol
-argument_list|(
-name|booting
-argument_list|)
+literal|"Failed to boot"
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* read bootblock */
-if|if
-condition|(
-name|read
-argument_list|(
-name|fd
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-literal|0x7c00
-argument_list|,
-literal|512
-argument_list|)
-operator|!=
-literal|512
-condition|)
-block|{
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"Short read on boot block from %c:"
-argument_list|,
-name|drntol
-argument_list|(
-name|booting
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* initialise registers for entry to bootblock */
 name|R_EFLAGS
 operator|=
@@ -1428,6 +1398,96 @@ literal|0x0000
 expr_stmt|;
 endif|#
 directive|endif
+block|}
+end_function
+
+begin_comment
+comment|/* ** try_boot ** ** try to read the boot sector from the specified disk */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|try_boot
+parameter_list|(
+name|int
+name|booting
+parameter_list|)
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|fd
+operator|=
+name|disk_fd
+argument_list|(
+name|booting
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|<
+literal|0
+condition|)
+block|{
+comment|/* can we boot it? */
+name|debug
+argument_list|(
+name|D_DISK
+argument_list|,
+literal|"Cannot boot from %c\n"
+argument_list|,
+name|drntol
+argument_list|(
+name|booting
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+comment|/* read bootblock */
+if|if
+condition|(
+name|read
+argument_list|(
+name|fd
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+literal|0x7c00
+argument_list|,
+literal|512
+argument_list|)
+operator|!=
+literal|512
+condition|)
+block|{
+name|debug
+argument_list|(
+name|D_DISK
+argument_list|,
+literal|"Short read on boot block from %c:\n"
+argument_list|,
+name|drntol
+argument_list|(
+name|booting
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+return|return
+name|fd
+return|;
 block|}
 end_function
 
