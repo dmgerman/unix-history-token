@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.49 1998/02/04 04:41:37 eivind Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.50 1998/02/13 06:49:15 bde Exp $  */
 end_comment
 
 begin_comment
@@ -164,19 +164,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/ethernet.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_arp.h>
 end_include
 
 begin_ifdef

@@ -86,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/raw_cb.h>
 end_include
 
@@ -99,12 +93,6 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_types.h>
 end_include
 
 begin_include
@@ -129,12 +117,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/if_ether.h>
 end_include
 
 begin_ifdef
