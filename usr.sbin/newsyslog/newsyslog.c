@@ -24,7 +24,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: newsyslog.c,v 1.14 1997/10/06 07:46:08 charnier Exp $"
+literal|"$Id: newsyslog.c,v 1.15 1997/11/30 18:58:18 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -379,6 +379,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* Don't do anything, just show it */
+end_comment
+
+begin_decl_stmt
+name|int
+name|force
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Force the tim no matter what*/
 end_comment
 
 begin_decl_stmt
@@ -907,6 +919,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|force
+operator|||
 operator|(
 operator|(
 name|ent
@@ -1157,7 +1171,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"nrvf:t:"
+literal|"nrvFf:t:"
 argument_list|)
 operator|)
 operator|!=
@@ -1198,6 +1212,13 @@ case|:
 name|conf
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'F'
+case|:
+name|force
+operator|++
 expr_stmt|;
 break|break;
 default|default:
