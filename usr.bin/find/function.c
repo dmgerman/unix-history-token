@@ -2275,6 +2275,31 @@ argument_list|)
 end_if
 
 begin_function
+name|int
+name|f_always_false
+parameter_list|(
+name|plan
+parameter_list|,
+name|entry
+parameter_list|)
+name|PLAN
+modifier|*
+name|plan
+decl_stmt|;
+name|FTSENT
+modifier|*
+name|entry
+decl_stmt|;
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 name|PLAN
 modifier|*
 name|c_fstype
@@ -2416,16 +2441,31 @@ return|;
 block|}
 break|break;
 block|}
-name|errx
+comment|/* 	 * We need to make filesystem checks for filesystems 	 * that exists but aren't in the kernel work. 	 */
+name|fprintf
 argument_list|(
-literal|1
+name|stderr
 argument_list|,
-literal|"%s: unknown file type"
+literal|"Warning: Unknown filesystem type %s\n"
 argument_list|,
 name|arg
 argument_list|)
 expr_stmt|;
-comment|/* NOTREACHED */
+name|free
+argument_list|(
+name|new
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|palloc
+argument_list|(
+name|N_FSTYPE
+argument_list|,
+name|f_always_false
+argument_list|)
+operator|)
+return|;
 block|}
 end_function
 
