@@ -176,6 +176,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|feeder_printchain
+parameter_list|(
+name|struct
+name|pcm_feeder
+modifier|*
+name|head
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
