@@ -3581,6 +3581,12 @@ begin_comment
 comment|/*  * This doesn't really belong here, but I can't think of a better  * place to put it.  */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|ifnet
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|linux_ifname
