@@ -278,7 +278,7 @@ name|Verbose
 condition|?
 literal|"v"
 else|:
-name|NULL
+literal|""
 argument_list|)
 operator|)
 operator|==
