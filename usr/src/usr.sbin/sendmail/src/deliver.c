@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.105 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.106 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8582,10 +8582,7 @@ operator|->
 name|e_dfp
 operator|==
 name|NULL
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|e
 operator|->
 name|e_df
@@ -8634,7 +8631,14 @@ name|q_paddr
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+if|if
+condition|(
+name|e
+operator|->
+name|e_dfp
+operator|==
+name|NULL
+condition|)
 block|{
 if|if
 condition|(
@@ -8674,15 +8678,8 @@ goto|goto
 name|endofmessage
 goto|;
 block|}
-block|}
 if|if
 condition|(
-name|e
-operator|->
-name|e_dfp
-operator|!=
-name|NULL
-operator|&&
 name|e
 operator|->
 name|e_dfino
