@@ -2713,13 +2713,6 @@ operator|++
 expr_stmt|;
 name|m
 operator|->
-name|flags
-operator||=
-name|PG_MAPPED
-expr_stmt|;
-comment|/* XXX this does not belong here */
-name|m
-operator|->
 name|wire_count
 operator|=
 literal|1
@@ -3707,14 +3700,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|vm_page_flag_set
-argument_list|(
-name|m
-argument_list|,
-name|PG_MAPPED
-argument_list|)
-expr_stmt|;
-comment|/* XXX this does not belong here */
 block|}
 end_function
 
