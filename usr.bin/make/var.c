@@ -6847,13 +6847,6 @@ block|}
 block|}
 block|}
 block|}
-name|Buf_AddByte
-argument_list|(
-name|buf
-argument_list|,
-literal|'\0'
-argument_list|)
-expr_stmt|;
 name|result
 operator|=
 operator|(
