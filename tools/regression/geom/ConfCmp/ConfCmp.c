@@ -711,6 +711,9 @@ condition|(
 name|e
 operator|!=
 name|b
+operator|||
+operator|*
+name|b
 condition|)
 name|sbuf_bcat
 argument_list|(
