@@ -28,30 +28,12 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/_lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/_mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/selinfo.h>
 end_include
 
 begin_comment
 comment|/* for struct selinfo */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<vm/uma.h>
-end_include
 
 begin_comment
 comment|/*  * Kernel structure per socket.  * Contains send and receive buffer queues,  * handle on protocol and pointer to protocol  * private data and error information.  */
@@ -63,12 +45,6 @@ name|u_quad_t
 name|so_gen_t
 typedef|;
 end_typedef
-
-begin_struct_decl
-struct_decl|struct
-name|accept_filter
-struct_decl|;
-end_struct_decl
 
 begin_comment
 comment|/*  * List of locks:  * (c)	const, inited in either socreate() or sonewconn()  * (m)	sb_mtx mutex  * (mr)	so_rcv.sb_mtx mutex  * (sg)	sigio_lock sx  * (sh)	sohead_lock sx  *  * Lock of so_rcv.sb_mtx can duplicate, provided that sohead_lock  * is exclusively locked.  *  * Brackets mean that this data is not protected yet.  */
@@ -163,7 +139,7 @@ name|sigio
 modifier|*
 name|so_sigio
 decl_stmt|;
-comment|/* [sg]	information for async I/O or 					   out of band data (SIGURG) */
+comment|/* [sg] information for async I/O or 					   out of band data (SIGURG) */
 name|u_long
 name|so_oobmark
 decl_stmt|;
@@ -762,7 +738,7 @@ name|sorwakeup_locked
 parameter_list|(
 name|so
 parameter_list|)
-value|do {						\ 					if (sb_notify(&(so)->so_rcv))		\ 						sowakeup((so),&(so)->so_rcv);	\ 				} while (0)
+value|do {					\ 					if (sb_notify(&(so)->so_rcv))	\ 						sowakeup((so),&(so)->so_rcv); \ 				} while (0)
 end_define
 
 begin_define
@@ -772,7 +748,7 @@ name|sorwakeup
 parameter_list|(
 name|so
 parameter_list|)
-value|do {						\ 					sorwakeup_locked(so);			\ 				} while (0)
+value|do {					\ 					sorwakeup_locked(so);		\ 				} while (0)
 end_define
 
 begin_define
@@ -782,7 +758,7 @@ name|sowwakeup_locked
 parameter_list|(
 name|so
 parameter_list|)
-value|do {						\ 					if (sb_notify(&(so)->so_snd))		\ 						sowakeup((so),&(so)->so_snd);	\ 				} while (0)
+value|do {					\ 					if (sb_notify(&(so)->so_snd))	\ 						sowakeup((so),&(so)->so_snd); \ 				} while (0)
 end_define
 
 begin_define
@@ -792,7 +768,7 @@ name|sowwakeup
 parameter_list|(
 name|so
 parameter_list|)
-value|do {						\ 					sowwakeup_locked(so);			\ 				} while (0)
+value|do {					\ 					sowwakeup_locked(so);		\ 				} while (0)
 end_define
 
 begin_ifdef
@@ -941,7 +917,6 @@ argument|accept_filter
 argument_list|)
 name|accf_next
 expr_stmt|;
-comment|/* next on the list */
 block|}
 struct|;
 end_struct
@@ -955,6 +930,14 @@ end_ifdef
 begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(
+name|M_ACCF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
 name|M_PCB
 argument_list|)
 expr_stmt|;
@@ -964,14 +947,6 @@ begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(
 name|M_SONAME
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_ACCF
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -997,7 +972,9 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|uma_zone_t
+name|struct
+name|uma_zone
+modifier|*
 name|socket_zone
 decl_stmt|;
 end_decl_stmt
@@ -1018,6 +995,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|filedesc
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|knote
 struct_decl|;
 end_struct_decl
 
@@ -1048,12 +1031,6 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|uio
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|knote
 struct_decl|;
 end_struct_decl
 
@@ -1595,6 +1572,38 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|socheckuid
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|,
+name|uid_t
+name|uid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|socheckproc
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|socket
 modifier|*
@@ -1749,6 +1758,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|soisconnected_locked
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|sofree
 parameter_list|(
 name|struct
@@ -1791,18 +1812,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|soisconnected
-parameter_list|(
-name|struct
-name|socket
-modifier|*
-name|so
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|soisconnected_locked
 parameter_list|(
 name|struct
 name|socket
@@ -2195,7 +2204,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* accept filter functions */
+comment|/*  * Accept filter functions (duh).  */
 end_comment
 
 begin_function_decl
@@ -2240,6 +2249,25 @@ directive|ifdef
 name|ACCEPT_FILTER_MOD
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSCTL_DECL
+end_ifdef
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_net_inet_accf
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|int
 name|accept_filt_generic_mod_event
@@ -2257,54 +2285,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-name|SYSCTL_DECL
-argument_list|(
-name|_net_inet_accf
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* ACCEPT_FILTER_MOD */
-end_comment
-
-begin_function_decl
-name|int
-name|socheckuid
-parameter_list|(
-name|struct
-name|socket
-modifier|*
-name|so
-parameter_list|,
-name|uid_t
-name|uid
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|socheckproc
-parameter_list|(
-name|struct
-name|socket
-modifier|*
-name|so
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_endif
 endif|#
