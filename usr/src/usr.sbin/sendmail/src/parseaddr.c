@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.22 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6011,6 +6011,35 @@ name|b
 operator|->
 name|q_user
 argument_list|)
+condition|)
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+comment|/* if we have good uids for both but the differ, these are different */
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|QGOODUID
+argument_list|,
+name|a
+operator|->
+name|q_flags
+operator|&
+name|b
+operator|->
+name|q_flags
+argument_list|)
+operator|&&
+name|a
+operator|->
+name|q_uid
+operator|!=
+name|b
+operator|->
+name|q_uid
 condition|)
 return|return
 operator|(
