@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_syscalls.c	6.5	84/09/04	*/
+comment|/*	uipc_syscalls.c	6.6	84/11/27	*/
 end_comment
 
 begin_include
@@ -1469,6 +1469,45 @@ condition|)
 goto|goto
 name|free4
 goto|;
+if|if
+condition|(
+name|uap
+operator|->
+name|type
+operator|==
+name|SOCK_DGRAM
+condition|)
+block|{
+comment|/* 		 * Datagram socket connection is asymmetric. 		 */
+name|u
+operator|.
+name|u_error
+operator|=
+name|soconnect2
+argument_list|(
+name|so2
+argument_list|,
+name|so1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|u
+operator|.
+name|u_error
+condition|)
+goto|goto
+name|free4
+goto|;
+block|}
+name|u
+operator|.
+name|u_r
+operator|.
+name|r_val1
+operator|=
+literal|0
+expr_stmt|;
 operator|(
 name|void
 operator|)
