@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trace.h	4.1	83/01/11	*/
+comment|/*	trace.h	4.2	83/01/31	*/
 end_comment
 
 begin_comment
@@ -77,6 +77,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|tracepackets
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* watch packets as they go by */
+end_comment
+
+begin_decl_stmt
+name|int
 name|tracing
 decl_stmt|;
 end_decl_stmt
@@ -115,11 +125,11 @@ name|TRACE_INPUT
 parameter_list|(
 name|ifp
 parameter_list|,
-name|from
+name|src
 parameter_list|,
 name|size
 parameter_list|)
-value|{ \ 	  if (tracing) { \ 		ifp = if_iflookup(from); \ 		if (ifp) \ 			trace(&ifp->int_input, from, packet, size, \ 				ifp->int_metric); \ 	  } \ 	}
+value|{ \ 	  if (tracing) { \ 		ifp = if_iflookup(src); \ 		if (ifp) \ 			trace(&ifp->int_input, src, packet, size, \ 				ifp->int_metric); \ 	  } \ 	  if (tracepackets) \ 		dumppacket(stdout, "from", src, packet, size); \ 	}
 end_define
 
 begin_define
@@ -129,11 +139,11 @@ name|TRACE_OUTPUT
 parameter_list|(
 name|ifp
 parameter_list|,
-name|to
+name|dst
 parameter_list|,
 name|size
 parameter_list|)
-value|{ \ 	  if (tracing) \ 		trace(&ifp->int_output, to, packet, size, ifp->int_metric); \ 	}
+value|{ \ 	  if (tracing) \ 		trace(&ifp->int_output, dst, packet, size, ifp->int_metric); \ 	  if (tracepackets) \ 		dumppacket(stdout, "to", dst, packet, size); \ 	}
 end_define
 
 end_unit
