@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	5.34 (Berkeley) %G%"
+literal|"@(#)rlogind.c	5.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,12 +55,6 @@ end_comment
 begin_comment
 comment|/*  * remote login server:  *	\0  *	remuser\0  *	locuser\0  *	terminal_type/speed\0  *	data  *  * Automatic login protocol is done here, using login -f upon success,  * unless OLD_LOGIN is defined (then done in login, ala 4.2/4.3BSD).  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#
@@ -95,7 +89,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/termios.h>
 end_include
 
 begin_include
@@ -119,24 +125,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sgtty.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netdb.h>
 end_include
 
@@ -150,6 +138,18 @@ begin_include
 include|#
 directive|include
 file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_ifndef
@@ -1391,7 +1391,7 @@ name|authenticated
 condition|)
 name|execl
 argument_list|(
-literal|"/bin/login"
+name|_PATH_LOGIN
 argument_list|,
 literal|"login"
 argument_list|,
@@ -1413,7 +1413,7 @@ expr_stmt|;
 else|else
 name|execl
 argument_list|(
-literal|"/bin/login"
+name|_PATH_LOGIN
 argument_list|,
 literal|"login"
 argument_list|,
@@ -1437,7 +1437,7 @@ name|fatalperror
 argument_list|(
 literal|2
 argument_list|,
-literal|"/bin/login"
+name|_PATH_LOGIN
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
