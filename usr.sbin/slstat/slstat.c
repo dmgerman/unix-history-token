@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: slstat.c,v 1.6.2.1 1996/11/05 20:17:27 phk Exp $"
+literal|"$Id: slstat.c,v 1.6.2.2 1996/11/12 09:11:51 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -158,10 +158,7 @@ name|usage
 name|__P
 argument_list|(
 operator|(
-specifier|const
-name|char
-operator|*
-name|argv0
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -334,22 +331,12 @@ operator|<=
 literal|0
 condition|)
 name|usage
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
+argument_list|()
 expr_stmt|;
 break|break;
 default|default:
 name|usage
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -400,12 +387,7 @@ operator|<
 literal|0
 condition|)
 name|usage
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|sprintf
 argument_list|(
@@ -476,12 +458,7 @@ expr_stmt|;
 block|}
 else|else
 name|usage
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|name
 index|[
@@ -708,22 +685,13 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|(
-name|argv0
-parameter_list|)
-specifier|const
-name|char
-modifier|*
-name|argv0
-decl_stmt|;
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-i interval] [-vr] [unit]\n"
-argument_list|,
-name|argv0
+literal|"usage: slstat [-i interval] [-vr] [unit]\n"
 argument_list|)
 expr_stmt|;
 name|exit
