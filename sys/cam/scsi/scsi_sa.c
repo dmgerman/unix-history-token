@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Implementation of SCSI Sequential Access Peripheral driver for CAM.  *  * Copyright (c) 1997 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_sa.c,v 1.14 1999/01/12 08:15:47 mjacob Exp $  */
+comment|/*  * Implementation of SCSI Sequential Access Peripheral driver for CAM.  *  * Copyright (c) 1997 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_sa.c,v 1.15 1999/01/16 04:02:31 mjacob Exp $  */
 end_comment
 
 begin_include
@@ -468,12 +468,7 @@ comment|/* force variable mode */
 name|SA_QUIRK_2FM
 init|=
 literal|0x08
-block|,
 comment|/* Two File Marks at EOD */
-name|SA_QUIRK_NORRLS
-init|=
-literal|0x10
-comment|/* Don't attempt RESERVE/RELEASE */
 block|}
 name|sa_quirks
 typedef|;
@@ -6368,7 +6363,7 @@ name|quirks
 operator|&
 name|SA_QUIRK_2FM
 operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
 block|{
@@ -9501,6 +9496,8 @@ name|ccb
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|sf
 decl_stmt|;
 name|softc
 operator|=
@@ -9516,7 +9513,6 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-operator|(
 name|action
 operator|==
 name|PR_ALLOW
@@ -9531,9 +9527,10 @@ name|SA_FLAG_TAPE_LOCKED
 operator|)
 operator|==
 literal|0
-operator|)
-operator|||
-operator|(
+condition|)
+return|return;
+if|if
+condition|(
 operator|(
 name|action
 operator|==
@@ -9549,11 +9546,28 @@ name|SA_FLAG_TAPE_LOCKED
 operator|)
 operator|!=
 literal|0
-operator|)
 condition|)
-block|{
 return|return;
-block|}
+if|if
+condition|(
+name|CAM_DEBUGGED
+argument_list|(
+name|periph
+operator|->
+name|path
+argument_list|,
+name|CAM_DEBUG_INFO
+argument_list|)
+condition|)
+name|sf
+operator|=
+literal|0
+expr_stmt|;
+else|else
+name|sf
+operator|=
+name|SF_QUIET_IR
+expr_stmt|;
 name|ccb
 operator|=
 name|cam_periph_getccb
@@ -9584,6 +9598,7 @@ argument_list|,
 literal|60000
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We can be quiet about illegal requests. 	 */
 name|error
 operator|=
 name|cam_periph_runccb
@@ -9592,7 +9607,7 @@ name|ccb
 argument_list|,
 name|saerror
 argument_list|,
-literal|0
+name|sf
 argument_list|,
 literal|0
 argument_list|,
@@ -10670,19 +10685,7 @@ name|periph
 operator|->
 name|softc
 expr_stmt|;
-if|if
-condition|(
-name|softc
-operator|->
-name|quirks
-operator|&
-name|SA_QUIRK_NORRLS
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+comment|/* 	 * We set SF_RETRY_UA, since this is often the first command run 	 * when a tape device is opened, and there may be a unit attention 	 * condition pending. 	 */
 if|if
 condition|(
 name|CAM_DEBUGGED
@@ -10739,7 +10742,6 @@ argument_list|,
 name|reserve
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We set SF_RETRY_UA, since this is often the first command run 	 * when a tape device is opened, and there may be a unit attention 	 * condition pending. 	 */
 name|error
 operator|=
 name|cam_periph_runccb
@@ -10802,12 +10804,6 @@ operator|==
 name|EINVAL
 condition|)
 block|{
-name|softc
-operator|->
-name|quirks
-operator||=
-name|SA_QUIRK_NORRLS
-expr_stmt|;
 name|error
 operator|=
 literal|0
