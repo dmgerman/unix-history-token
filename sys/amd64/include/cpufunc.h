@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Functions to provide access to special i386 instructions.  * XXX - bezillions more are defined in locore.s but are not declared anywhere.  *  *	$Id: cpufunc.h,v 1.5 1993/11/25 01:31:07 wollman Exp $  */
+comment|/*  * Functions to provide access to special i386 instructions.  * XXX - bezillions more are defined in locore.s but are not declared anywhere.  *  *	$Id: cpufunc.h,v 1.6 1993/12/19 00:50:14 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -981,7 +981,8 @@ parameter_list|(
 name|int
 comment|/*u_short*/
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 parameter_list|,
 name|size_t
 parameter_list|)
@@ -996,7 +997,8 @@ parameter_list|(
 name|int
 comment|/*u_short*/
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 parameter_list|,
 name|size_t
 parameter_list|)
@@ -1011,7 +1013,8 @@ parameter_list|(
 name|int
 comment|/*u_short*/
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 parameter_list|,
 name|size_t
 parameter_list|)
@@ -1026,7 +1029,8 @@ parameter_list|(
 name|int
 comment|/*u_short*/
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 parameter_list|,
 name|size_t
 parameter_list|)
