@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_rl.c,v 1.13 1998/10/07 22:51:30 wpaul Exp $  */
+comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_rl.c,v 1.14 1998/11/18 20:27:28 wpaul Exp $  */
 end_comment
 
 begin_comment
@@ -178,7 +178,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: if_rl.c,v 1.13 1998/10/07 22:51:30 wpaul Exp $"
+literal|"$Id: if_rl.c,v 1.14 1998/11/18 20:27:28 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -216,11 +216,11 @@ literal|"RealTek 8139 10/100BaseTX"
 block|}
 block|,
 block|{
-name|RT_VENDORID_ALT
+name|ACCTON_VENDORID
 block|,
-name|RT_DEVICEID_8139_ALT
+name|ACCTON_DEVICEID_5030
 block|,
-literal|"RealTek 8139 10/100BaseTX"
+literal|"Accton MPX 5030/5038 10/100BaseTX"
 block|}
 block|,
 block|{
@@ -6523,33 +6523,6 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-comment|/* 	 * There are two possible encapsulation mechanisms 	 * that we can use: an efficient one, and a very lossy 	 * one. The efficient one only happens very rarely, 	 * whereas the lossy one can and most likely will happen 	 * all the time. 	 * The efficient case happens if: 	 * - the packet fits in a single mbuf 	 * - the packet is 32-bit aligned within the mbuf data area 	 * In this case, we can DMA from the mbuf directly. 	 * The lossy case covers everything else. Bah. 	 */
-name|m
-operator|=
-name|m_head
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-operator|>
-name|MHLEN
-operator|||
-operator|(
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-name|u_int32_t
-argument_list|)
-operator|&
-literal|0x00000003
-operator|)
-condition|)
-block|{
 name|struct
 name|mbuf
 modifier|*
@@ -6557,6 +6530,11 @@ name|m_new
 init|=
 name|NULL
 decl_stmt|;
+comment|/* 	 * There are two possible encapsulation mechanisms 	 * that we can use: an efficient one, and a very lossy 	 * one. The efficient one only happens very rarely, 	 * whereas the lossy one can and most likely will happen 	 * all the time. 	 * The efficient case happens if: 	 * - the packet fits in a single mbuf 	 * - the packet is 32-bit aligned within the mbuf data area 	 * In this case, we can DMA from the mbuf directly. 	 * The lossy case covers everything else. Bah. 	 */
+name|m
+operator|=
+name|m_head
+expr_stmt|;
 name|MGETHDR
 argument_list|(
 name|m_new
@@ -6684,7 +6662,6 @@ name|m_head
 operator|=
 name|m_new
 expr_stmt|;
-block|}
 comment|/* Pad frames to at least 60 bytes. */
 if|if
 condition|(
@@ -6696,6 +6673,7 @@ name|len
 operator|<
 name|RL_MIN_FRAMELEN
 condition|)
+block|{
 name|m_head
 operator|->
 name|m_pkthdr
@@ -6712,6 +6690,17 @@ operator|.
 name|len
 operator|)
 expr_stmt|;
+name|m_head
+operator|->
+name|m_len
+operator|=
+name|m_head
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+expr_stmt|;
+block|}
 name|c
 operator|->
 name|rl_mbuf
