@@ -227,7 +227,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|(bus_space_write_1(viapm->st, viapm->sh, port, (u_char)val))
+value|(bus_space_write_1(viapm->st, viapm->sh, port, (u_char)(val)))
 end_define
 
 begin_define
