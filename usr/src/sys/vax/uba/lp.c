@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lp.c	4.19	81/07/09	*/
+comment|/*	lp.c	4.20	81/07/25	*/
 end_comment
 
 begin_include
@@ -429,6 +429,11 @@ name|lpsr
 operator|=
 literal|0
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_block
 
