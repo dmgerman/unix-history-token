@@ -54,6 +54,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -70,7 +76,7 @@ file|"local.h"
 end_include
 
 begin_comment
-comment|/*  * Various output routines call wsetup to be sure it is safe to write,  * because either _flags does not include __SWR, or _buf is NULL.  * _wsetup returns 0 if OK to write, nonzero otherwise.  */
+comment|/*  * Various output routines call wsetup to be sure it is safe to write,  * because either _flags does not include __SWR, or _buf is NULL.  * _wsetup returns 0 if OK to write; otherwise, it returns EOF and sets errno.  */
 end_comment
 
 begin_function
@@ -119,11 +125,17 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|errno
+operator|=
+name|EBADF
+expr_stmt|;
 return|return
 operator|(
 name|EOF
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|fp
