@@ -12,7 +12,7 @@ comment|/*  * Copyright (c) 1996 Charles M. Hannum.  All rights reserved.  * Cop
 end_comment
 
 begin_comment
-comment|/* $Id: bus.h,v 1.3 1998/05/06 01:45:47 gibbs Exp $ */
+comment|/* $Id: bus.h,v 1.4 1998/09/29 09:06:00 bde Exp $ */
 end_comment
 
 begin_ifndef
@@ -32,6 +32,43 @@ include|#
 directive|include
 file|<machine/cpufunc.h>
 end_include
+
+begin_comment
+comment|/*  * To remain compatible with NetBSD's interface, default to both memio and  * pio when neither of them is defined.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_I386_BUS_PIO_H_
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_I386_BUS_MEMIO_H_
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|_I386_BUS_PIO_H_
+end_define
+
+begin_define
+define|#
+directive|define
+name|_I386_BUS_MEMIO_H_
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Values for the i386 bus space tag, not to be used directly by MI code.  */
