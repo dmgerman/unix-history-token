@@ -80,25 +80,8 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
-specifier|static
-name|struct
-name|buf
-modifier|*
-name|getswbuf
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_expr_stmt
-specifier|static
-name|freeswbuf
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
-comment|/*  * This routine does device I/O for a user process.  *  * If the user has the proper access privilidges, the process is  * marked 'delayed unlock' and the pages involved in the I/O are  * faulted and locked. After the completion of the I/O, the pages  * are unlocked.  */
+comment|/*  * This routine does raw device I/O for a user process.  *  * If the user has the proper access privileges, the process is  * marked 'delayed unlock' and the pages involved in the I/O are  * faulted and locked. After the completion of the I/O, the pages  * are unlocked.  */
 end_comment
 
 begin_macro
