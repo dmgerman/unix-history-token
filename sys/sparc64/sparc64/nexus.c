@@ -977,15 +977,6 @@ parameter_list|)
 block|{
 name|char
 modifier|*
-name|name
-init|=
-name|nexus_get_name
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
-name|char
-modifier|*
 name|type
 decl_stmt|;
 if|if
@@ -995,7 +986,7 @@ name|type
 operator|=
 name|nexus_get_device_type
 argument_list|(
-name|dev
+name|child
 argument_list|)
 operator|)
 operator|==
@@ -1011,7 +1002,10 @@ name|dev
 argument_list|,
 literal|"<%s>, type %s (no driver attached)\n"
 argument_list|,
-name|name
+name|nexus_get_name
+argument_list|(
+name|child
+argument_list|)
 argument_list|,
 name|type
 argument_list|)
