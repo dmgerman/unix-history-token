@@ -1696,7 +1696,9 @@ name|de_uid
 operator|=
 name|dev
 operator|->
-name|si_uid
+name|si_devsw
+operator|->
+name|d_uid
 expr_stmt|;
 name|de
 operator|->
@@ -1704,7 +1706,9 @@ name|de_gid
 operator|=
 name|dev
 operator|->
-name|si_gid
+name|si_devsw
+operator|->
+name|d_gid
 expr_stmt|;
 name|de
 operator|->
@@ -1712,7 +1716,9 @@ name|de_mode
 operator|=
 name|dev
 operator|->
-name|si_mode
+name|si_devsw
+operator|->
+name|d_mode
 expr_stmt|;
 name|de
 operator|->

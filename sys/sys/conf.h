@@ -203,15 +203,6 @@ name|int
 name|si_iosize_max
 decl_stmt|;
 comment|/* maximum I/O size (for physio&al) */
-name|uid_t
-name|si_uid
-decl_stmt|;
-name|gid_t
-name|si_gid
-decl_stmt|;
-name|mode_t
-name|si_mode
-decl_stmt|;
 name|u_long
 name|si_usecount
 decl_stmt|;
@@ -719,8 +710,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|D_VERSION_01
+value|0x17032005
+end_define
+
+begin_comment
+comment|/* Add d_uid,gid,mode& kind */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|D_VERSION
-value|D_VERSION_00
+value|D_VERSION_01
 end_define
 
 begin_comment
@@ -822,6 +824,20 @@ decl_stmt|;
 name|d_spare2_t
 modifier|*
 name|d_spare2
+decl_stmt|;
+name|uid_t
+name|d_uid
+decl_stmt|;
+name|gid_t
+name|d_gid
+decl_stmt|;
+name|mode_t
+name|d_mode
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|d_kind
 decl_stmt|;
 comment|/* These fields should not be messed with by drivers */
 name|LIST_ENTRY
