@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Definitions for low level routines and data structures  * for the Advanced Systems Inc. SCSI controllers chips.  *  * Copyright (c) 1996-1997 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Definitions for low level routines and data structures  * for the Advanced Systems Inc. SCSI controllers chips.  *  * Copyright (c) 1996-1997, 1999-2000 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -135,6 +135,22 @@ block|{
 name|ADV_STATE_NONE
 init|=
 literal|0x00
+block|,
+name|ADV_RESOURCE_SHORTAGE
+init|=
+literal|0x01
+block|,
+name|ADV_IN_TIMEOUT
+init|=
+literal|0x02
+block|,
+name|ADV_BUSDMA_BLOCK
+init|=
+literal|0x04
+block|,
+name|ADV_BUSDMA_BLOCK_CLEARED
+init|=
+literal|0x08
 block|}
 name|adv_state
 typedef|;
@@ -159,10 +175,6 @@ block|,
 name|ACCB_RECOVERY_CCB
 init|=
 literal|0x04
-block|,
-name|ACCB_RELEASE_SIMQ
-init|=
-literal|0x08
 block|}
 name|adv_ccb_state
 typedef|;
@@ -177,6 +189,11 @@ name|state
 decl_stmt|;
 name|bus_dmamap_t
 name|dmamap
+decl_stmt|;
+name|union
+name|ccb
+modifier|*
+name|ccb
 decl_stmt|;
 name|SLIST_ENTRY
 argument_list|(
@@ -1182,7 +1199,6 @@ name|id
 parameter_list|)
 define|\
 value|(ep).scsi_id_dma_speed&= ~EEPROM_SCSI_ID_MASK; \ 		(ep).scsi_id_dma_speed |= ((id)& EEPROM_SCSI_ID_MASK)
-comment|/* XXX What about wide controllers??? */
 name|u_int8_t
 name|sdtr_data
 index|[
@@ -1671,7 +1687,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ADV_SCSIQ_D_CCBPTR
+name|ADV_SCSIQ_D_CINFO_IDX
 value|22
 end_define
 
@@ -1734,6 +1750,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ADV_SCSIQ_B_FIRST_SG_QK_QP
+value|48
+end_define
+
+begin_define
+define|#
+directive|define
 name|ADV_SCSIQ_B_SG_WK_QP
 value|49
 end_define
@@ -1748,7 +1771,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ADV_SCSIQ_W_REQ_COUNT
+name|ADV_SCSIQ_W_ALT_DC1
 value|52
 end_define
 
@@ -1964,6 +1987,13 @@ define|#
 directive|define
 name|ADV_HALT_SDTR_REJECTED
 value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADV_HALT_HOST_COPY_SG_LIST_TO_RISC
+value|0x2000
 end_define
 
 begin_define
@@ -2278,6 +2308,30 @@ decl_stmt|;
 name|bus_space_handle_t
 name|bsh
 decl_stmt|;
+name|struct
+name|cam_sim
+modifier|*
+name|sim
+decl_stmt|;
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|ccb_hdr
+argument_list|)
+name|pending_ccbs
+expr_stmt|;
+name|struct
+name|adv_ccb_info
+modifier|*
+name|ccb_infos
+decl_stmt|;
+name|SLIST_HEAD
+argument_list|(
+argument_list|,
+argument|adv_ccb_info
+argument_list|)
+name|free_ccb_infos
+expr_stmt|;
 name|bus_dma_tag_t
 name|parent_dmat
 decl_stmt|;
@@ -2444,31 +2498,15 @@ name|u_int8_t
 name|openings_needed
 decl_stmt|;
 name|u_int8_t
+name|ccb_infos_allocated
+decl_stmt|;
+name|u_int8_t
 modifier|*
 name|sdtr_period_tbl
 decl_stmt|;
 name|u_int8_t
 name|sdtr_period_tbl_size
 decl_stmt|;
-name|struct
-name|cam_sim
-modifier|*
-name|sim
-decl_stmt|;
-name|LIST_HEAD
-argument_list|(
-argument_list|,
-argument|ccb_hdr
-argument_list|)
-name|pending_ccbs
-expr_stmt|;
-name|SLIST_HEAD
-argument_list|(
-argument_list|,
-argument|adv_ccb_info
-argument_list|)
-name|free_ccb_infos
-expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -2591,9 +2629,9 @@ struct|struct
 name|adv_scsiq_2
 block|{
 name|u_int32_t
-name|ccb_ptr
+name|ccb_index
 decl_stmt|;
-comment|/* Pointer to our CCB */
+comment|/* Index to our CCB Info */
 name|u_int8_t
 name|target_ix
 decl_stmt|;
@@ -3257,12 +3295,15 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|adv_reset_chip_and_scsi_bus
+name|adv_reset_chip
 parameter_list|(
 name|struct
 name|adv_softc
 modifier|*
 name|adv
+parameter_list|,
+name|int
+name|reset_bus
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3411,6 +3452,18 @@ end_function_decl
 begin_function_decl
 name|int
 name|adv_stop_execution
+parameter_list|(
+name|struct
+name|adv_softc
+modifier|*
+name|adv
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|adv_stop_chip
 parameter_list|(
 name|struct
 name|adv_softc
@@ -3589,6 +3642,9 @@ name|struct
 name|adv_softc
 modifier|*
 name|adv
+parameter_list|,
+name|int
+name|initiate_reset
 parameter_list|)
 function_decl|;
 end_function_decl

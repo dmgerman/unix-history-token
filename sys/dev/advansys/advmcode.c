@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Downloadable microcode for Advanced Systems Inc. SCSI controllers  *  * $FreeBSD$  *  * Obtained from:  * advansys.c - Linux Host Driver for AdvanSys SCSI Adapters  *  * Copyright (c) 1995-1997 Advanced System Products, Inc.  * All Rights Reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that redistributions of source  * code retain the above copyright notice and this comment without  * modification.  *  */
+comment|/*  * Downloadable microcode for Advanced Systems Inc. SCSI controllers  *  * $FreeBSD$  *  * Obtained from:  * advansys.c - Linux Host Driver for AdvanSys SCSI Adapters  *  * Copyright (c) 1995-1999 Advanced System Products, Inc.  * All Rights Reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that redistributions of source  * code retain the above copyright notice and this comment without  * modification.  *  */
 end_comment
 
 begin_include
@@ -151,11 +151,11 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-literal|0x91
+literal|0xC3
 block|,
-literal|0x10
+literal|0x12
 block|,
-literal|0x0A
+literal|0x0D
 block|,
 literal|0x05
 block|,
@@ -217,7 +217,7 @@ literal|0x23
 block|,
 literal|0x00
 block|,
-literal|0x24
+literal|0x00
 block|,
 literal|0x00
 block|,
@@ -259,7 +259,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-literal|0xE2
+literal|0xE4
 block|,
 literal|0x88
 block|,
@@ -407,7 +407,7 @@ literal|0x00
 block|,
 literal|0x46
 block|,
-literal|0x17
+literal|0x15
 block|,
 literal|0xEE
 block|,
@@ -479,7 +479,7 @@ literal|0x00
 block|,
 literal|0xA3
 block|,
-literal|0xE2
+literal|0xDA
 block|,
 literal|0x01
 block|,
@@ -487,19 +487,11 @@ literal|0xA6
 block|,
 literal|0x97
 block|,
-literal|0xCE
+literal|0xC6
 block|,
 literal|0x81
 block|,
-literal|0x00
-block|,
-literal|0x33
-block|,
-literal|0x02
-block|,
-literal|0x00
-block|,
-literal|0xC0
+literal|0xC2
 block|,
 literal|0x88
 block|,
@@ -519,9 +511,9 @@ literal|0x01
 block|,
 literal|0xA1
 block|,
-literal|0x02
+literal|0xFE
 block|,
-literal|0x01
+literal|0x00
 block|,
 literal|0x4F
 block|,
@@ -535,7 +527,7 @@ literal|0x07
 block|,
 literal|0xA6
 block|,
-literal|0x0C
+literal|0x08
 block|,
 literal|0x01
 block|,
@@ -547,7 +539,7 @@ literal|0x03
 block|,
 literal|0x00
 block|,
-literal|0xC0
+literal|0xC2
 block|,
 literal|0x88
 block|,
@@ -555,19 +547,11 @@ literal|0x03
 block|,
 literal|0x03
 block|,
-literal|0x03
+literal|0x01
 block|,
 literal|0xDE
 block|,
-literal|0x00
-block|,
-literal|0x33
-block|,
-literal|0x05
-block|,
-literal|0x00
-block|,
-literal|0xC0
+literal|0xC2
 block|,
 literal|0x88
 block|,
@@ -595,7 +579,7 @@ literal|0x00
 block|,
 literal|0xA2
 block|,
-literal|0x80
+literal|0x78
 block|,
 literal|0x01
 block|,
@@ -607,11 +591,11 @@ literal|0x07
 block|,
 literal|0xA6
 block|,
-literal|0x2C
+literal|0x24
 block|,
 literal|0x01
 block|,
-literal|0x80
+literal|0x78
 block|,
 literal|0x81
 block|,
@@ -631,7 +615,7 @@ literal|0x07
 block|,
 literal|0xA6
 block|,
-literal|0x3C
+literal|0x34
 block|,
 literal|0x01
 block|,
@@ -643,7 +627,7 @@ literal|0x04
 block|,
 literal|0x00
 block|,
-literal|0xC0
+literal|0xC2
 block|,
 literal|0x88
 block|,
@@ -695,7 +679,7 @@ literal|0x15
 block|,
 literal|0x23
 block|,
-literal|0xF6
+literal|0xF8
 block|,
 literal|0x88
 block|,
@@ -723,7 +707,7 @@ literal|0x06
 block|,
 literal|0xA3
 block|,
-literal|0x6A
+literal|0x62
 block|,
 literal|0x01
 block|,
@@ -735,7 +719,7 @@ literal|0x0A
 block|,
 literal|0x00
 block|,
-literal|0xC0
+literal|0xC2
 block|,
 literal|0x88
 block|,
@@ -747,7 +731,7 @@ literal|0x07
 block|,
 literal|0xA3
 block|,
-literal|0x76
+literal|0x6E
 block|,
 literal|0x01
 block|,
@@ -759,7 +743,7 @@ literal|0x0B
 block|,
 literal|0x00
 block|,
-literal|0xC0
+literal|0xC2
 block|,
 literal|0x88
 block|,
@@ -779,7 +763,7 @@ literal|0x1A
 block|,
 literal|0x00
 block|,
-literal|0xC0
+literal|0xC2
 block|,
 literal|0x88
 block|,
@@ -787,7 +771,7 @@ literal|0x50
 block|,
 literal|0x04
 block|,
-literal|0x90
+literal|0x88
 block|,
 literal|0x81
 block|,
@@ -795,11 +779,11 @@ literal|0x06
 block|,
 literal|0xAB
 block|,
-literal|0x8A
+literal|0x82
 block|,
 literal|0x01
 block|,
-literal|0x90
+literal|0x88
 block|,
 literal|0x81
 block|,
@@ -811,7 +795,7 @@ literal|0x07
 block|,
 literal|0xA3
 block|,
-literal|0x9A
+literal|0x92
 block|,
 literal|0x01
 block|,
@@ -823,7 +807,7 @@ literal|0x00
 block|,
 literal|0xA3
 block|,
-literal|0x44
+literal|0x3C
 block|,
 literal|0x01
 block|,
@@ -831,7 +815,7 @@ literal|0x00
 block|,
 literal|0x05
 block|,
-literal|0x84
+literal|0x7C
 block|,
 literal|0x81
 block|,
@@ -863,7 +847,7 @@ literal|0xA1
 block|,
 literal|0x01
 block|,
-literal|0xC6
+literal|0xBE
 block|,
 literal|0x81
 block|,
@@ -895,7 +879,7 @@ literal|0x00
 block|,
 literal|0xA0
 block|,
-literal|0xBC
+literal|0xB4
 block|,
 literal|0x01
 block|,
@@ -919,7 +903,7 @@ literal|0x1B
 block|,
 literal|0x00
 block|,
-literal|0xC0
+literal|0xC2
 block|,
 literal|0x88
 block|,
@@ -947,7 +931,7 @@ literal|0x00
 block|,
 literal|0xA2
 block|,
-literal|0xDC
+literal|0xD4
 block|,
 literal|0x01
 block|,
@@ -959,7 +943,7 @@ literal|0x00
 block|,
 literal|0xA0
 block|,
-literal|0xE2
+literal|0xDA
 block|,
 literal|0x01
 block|,
@@ -995,7 +979,7 @@ literal|0x00
 block|,
 literal|0xA2
 block|,
-literal|0x08
+literal|0x00
 block|,
 literal|0x02
 block|,
@@ -1023,9 +1007,9 @@ literal|0x84
 block|,
 literal|0x97
 block|,
-literal|0x04
+literal|0xFC
 block|,
-literal|0x82
+literal|0x81
 block|,
 literal|0x08
 block|,
@@ -1099,7 +1083,7 @@ literal|0x03
 block|,
 literal|0xEE
 block|,
-literal|0x67
+literal|0x6B
 block|,
 literal|0xEB
 block|,
@@ -1107,7 +1091,7 @@ literal|0x11
 block|,
 literal|0x23
 block|,
-literal|0xF6
+literal|0xF8
 block|,
 literal|0x88
 block|,
@@ -1115,7 +1099,7 @@ literal|0x04
 block|,
 literal|0x98
 block|,
-literal|0xF4
+literal|0xF0
 block|,
 literal|0x80
 block|,
@@ -1131,7 +1115,7 @@ literal|0x07
 block|,
 literal|0xA4
 block|,
-literal|0x32
+literal|0x2A
 block|,
 literal|0x02
 block|,
@@ -1143,7 +1127,7 @@ literal|0x06
 block|,
 literal|0xA6
 block|,
-literal|0x3C
+literal|0x34
 block|,
 literal|0x02
 block|,
@@ -1155,9 +1139,9 @@ literal|0x4C
 block|,
 literal|0x04
 block|,
-literal|0xC0
+literal|0x46
 block|,
-literal|0x88
+literal|0x82
 block|,
 literal|0x04
 block|,
@@ -1167,7 +1151,7 @@ literal|0x03
 block|,
 literal|0xD8
 block|,
-literal|0xB2
+literal|0xB4
 block|,
 literal|0x98
 block|,
@@ -1175,7 +1159,7 @@ literal|0x6A
 block|,
 literal|0x96
 block|,
-literal|0x4E
+literal|0x46
 block|,
 literal|0x82
 block|,
@@ -1203,7 +1187,7 @@ literal|0x02
 block|,
 literal|0xA6
 block|,
-literal|0x78
+literal|0x6C
 block|,
 literal|0x02
 block|,
@@ -1211,7 +1195,7 @@ literal|0x07
 block|,
 literal|0xA6
 block|,
-literal|0x66
+literal|0x5A
 block|,
 literal|0x02
 block|,
@@ -1219,7 +1203,7 @@ literal|0x06
 block|,
 literal|0xA6
 block|,
-literal|0x6A
+literal|0x5E
 block|,
 literal|0x02
 block|,
@@ -1227,19 +1211,11 @@ literal|0x03
 block|,
 literal|0xA6
 block|,
-literal|0x6E
+literal|0x62
 block|,
 literal|0x02
 block|,
-literal|0x00
-block|,
-literal|0x33
-block|,
-literal|0x10
-block|,
-literal|0x00
-block|,
-literal|0xC0
+literal|0xC2
 block|,
 literal|0x88
 block|,
@@ -1247,7 +1223,7 @@ literal|0x7C
 block|,
 literal|0x95
 block|,
-literal|0x50
+literal|0x48
 block|,
 literal|0x82
 block|,
@@ -1255,7 +1231,7 @@ literal|0x60
 block|,
 literal|0x96
 block|,
-literal|0x50
+literal|0x48
 block|,
 literal|0x82
 block|,
@@ -1347,7 +1323,7 @@ literal|0x02
 block|,
 literal|0xA6
 block|,
-literal|0xB6
+literal|0xAA
 block|,
 literal|0x02
 block|,
@@ -1355,7 +1331,7 @@ literal|0x07
 block|,
 literal|0xA6
 block|,
-literal|0x66
+literal|0x5A
 block|,
 literal|0x02
 block|,
@@ -1363,7 +1339,7 @@ literal|0x06
 block|,
 literal|0xA6
 block|,
-literal|0x6A
+literal|0x5E
 block|,
 literal|0x02
 block|,
@@ -1379,7 +1355,7 @@ literal|0x01
 block|,
 literal|0xA6
 block|,
-literal|0xC0
+literal|0xB4
 block|,
 literal|0x02
 block|,
@@ -1387,7 +1363,7 @@ literal|0x00
 block|,
 literal|0xA6
 block|,
-literal|0xC0
+literal|0xB4
 block|,
 literal|0x02
 block|,
@@ -1399,7 +1375,7 @@ literal|0x12
 block|,
 literal|0x00
 block|,
-literal|0xC0
+literal|0xC2
 block|,
 literal|0x88
 block|,
@@ -1419,7 +1395,7 @@ literal|0x00
 block|,
 literal|0xA0
 block|,
-literal|0x98
+literal|0x8C
 block|,
 literal|0x02
 block|,
@@ -1475,7 +1451,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-literal|0xF6
+literal|0xEA
 block|,
 literal|0x82
 block|,
@@ -1491,7 +1467,7 @@ literal|0x18
 block|,
 literal|0xA0
 block|,
-literal|0xEE
+literal|0xE2
 block|,
 literal|0x02
 block|,
@@ -1499,7 +1475,7 @@ literal|0x04
 block|,
 literal|0x01
 block|,
-literal|0x9C
+literal|0xA2
 block|,
 literal|0xC8
 block|,
@@ -1511,7 +1487,7 @@ literal|0x1F
 block|,
 literal|0x00
 block|,
-literal|0xC0
+literal|0xC2
 block|,
 literal|0x88
 block|,
@@ -1543,7 +1519,7 @@ literal|0x01
 block|,
 literal|0xA6
 block|,
-literal|0x20
+literal|0x14
 block|,
 literal|0x03
 block|,
@@ -1551,7 +1527,7 @@ literal|0x00
 block|,
 literal|0xA6
 block|,
-literal|0x20
+literal|0x14
 block|,
 literal|0x03
 block|,
@@ -1559,7 +1535,7 @@ literal|0x07
 block|,
 literal|0xA6
 block|,
-literal|0x18
+literal|0x0C
 block|,
 literal|0x03
 block|,
@@ -1567,7 +1543,7 @@ literal|0x06
 block|,
 literal|0xA6
 block|,
-literal|0x1C
+literal|0x10
 block|,
 literal|0x03
 block|,
@@ -1583,7 +1559,7 @@ literal|0x02
 block|,
 literal|0xA6
 block|,
-literal|0x78
+literal|0x6C
 block|,
 literal|0x02
 block|,
@@ -1595,7 +1571,7 @@ literal|0x33
 block|,
 literal|0x00
 block|,
-literal|0xC0
+literal|0xC2
 block|,
 literal|0x88
 block|,
@@ -1603,7 +1579,7 @@ literal|0x7C
 block|,
 literal|0x95
 block|,
-literal|0xFA
+literal|0xEE
 block|,
 literal|0x82
 block|,
@@ -1611,7 +1587,7 @@ literal|0x60
 block|,
 literal|0x96
 block|,
-literal|0xFA
+literal|0xEE
 block|,
 literal|0x82
 block|,
@@ -1627,7 +1603,7 @@ literal|0x7E
 block|,
 literal|0x98
 block|,
-literal|0x60
+literal|0x64
 block|,
 literal|0xE4
 block|,
@@ -1635,7 +1611,7 @@ literal|0x04
 block|,
 literal|0x01
 block|,
-literal|0x29
+literal|0x2D
 block|,
 literal|0xC8
 block|,
@@ -1651,7 +1627,7 @@ literal|0x00
 block|,
 literal|0xA2
 block|,
-literal|0x60
+literal|0x54
 block|,
 literal|0x03
 block|,
@@ -1679,7 +1655,7 @@ literal|0x00
 block|,
 literal|0xA6
 block|,
-literal|0x22
+literal|0x16
 block|,
 literal|0x03
 block|,
@@ -1687,7 +1663,7 @@ literal|0x07
 block|,
 literal|0xA6
 block|,
-literal|0x58
+literal|0x4C
 block|,
 literal|0x03
 block|,
@@ -1703,7 +1679,7 @@ literal|0x06
 block|,
 literal|0xA6
 block|,
-literal|0x5C
+literal|0x50
 block|,
 literal|0x03
 block|,
@@ -1711,7 +1687,7 @@ literal|0x01
 block|,
 literal|0xA6
 block|,
-literal|0x22
+literal|0x16
 block|,
 literal|0x03
 block|,
@@ -1723,7 +1699,7 @@ literal|0x25
 block|,
 literal|0x00
 block|,
-literal|0xC0
+literal|0xC2
 block|,
 literal|0x88
 block|,
@@ -1731,7 +1707,7 @@ literal|0x7C
 block|,
 literal|0x95
 block|,
-literal|0x3E
+literal|0x32
 block|,
 literal|0x83
 block|,
@@ -1739,7 +1715,7 @@ literal|0x60
 block|,
 literal|0x96
 block|,
-literal|0x3E
+literal|0x32
 block|,
 literal|0x83
 block|,
@@ -1747,25 +1723,41 @@ literal|0x04
 block|,
 literal|0x01
 block|,
-literal|0x0C
+literal|0x10
 block|,
 literal|0xCE
 block|,
-literal|0x03
+literal|0x07
 block|,
 literal|0xC8
+block|,
+literal|0x05
+block|,
+literal|0x05
+block|,
+literal|0xEB
+block|,
+literal|0x04
 block|,
 literal|0x00
 block|,
 literal|0x33
 block|,
-literal|0x42
-block|,
 literal|0x00
+block|,
+literal|0x20
 block|,
 literal|0xC0
 block|,
-literal|0x88
+literal|0x20
+block|,
+literal|0x81
+block|,
+literal|0x62
+block|,
+literal|0x72
+block|,
+literal|0x83
 block|,
 literal|0x00
 block|,
@@ -1779,7 +1771,7 @@ literal|0xFF
 block|,
 literal|0xA2
 block|,
-literal|0x7E
+literal|0x7A
 block|,
 literal|0x03
 block|,
@@ -1795,7 +1787,7 @@ literal|0xB2
 block|,
 literal|0x01
 block|,
-literal|0x3A
+literal|0x2E
 block|,
 literal|0x83
 block|,
@@ -1811,7 +1803,7 @@ literal|0x00
 block|,
 literal|0xA2
 block|,
-literal|0x9E
+literal|0x9A
 block|,
 literal|0x03
 block|,
@@ -1843,7 +1835,7 @@ literal|0x01
 block|,
 literal|0xA6
 block|,
-literal|0x9A
+literal|0x96
 block|,
 literal|0x03
 block|,
@@ -1851,11 +1843,11 @@ literal|0x00
 block|,
 literal|0xA6
 block|,
-literal|0x9A
+literal|0x96
 block|,
 literal|0x03
 block|,
-literal|0x12
+literal|0x10
 block|,
 literal|0x84
 block|,
@@ -1871,7 +1863,7 @@ literal|0x01
 block|,
 literal|0xA6
 block|,
-literal|0xA8
+literal|0xA4
 block|,
 literal|0x03
 block|,
@@ -1879,15 +1871,15 @@ literal|0x00
 block|,
 literal|0xA6
 block|,
-literal|0xC0
+literal|0xBC
 block|,
 literal|0x03
 block|,
-literal|0x12
+literal|0x10
 block|,
 literal|0x84
 block|,
-literal|0xA6
+literal|0xA8
 block|,
 literal|0x98
 block|,
@@ -1899,7 +1891,7 @@ literal|0x01
 block|,
 literal|0xA6
 block|,
-literal|0xA8
+literal|0xA4
 block|,
 literal|0x03
 block|,
@@ -1907,11 +1899,11 @@ literal|0x07
 block|,
 literal|0xA6
 block|,
-literal|0xB6
+literal|0xB2
 block|,
 literal|0x03
 block|,
-literal|0xD8
+literal|0xD4
 block|,
 literal|0x83
 block|,
@@ -1919,7 +1911,7 @@ literal|0x7C
 block|,
 literal|0x95
 block|,
-literal|0xAC
+literal|0xA8
 block|,
 literal|0x83
 block|,
@@ -1931,11 +1923,11 @@ literal|0x2F
 block|,
 literal|0x00
 block|,
-literal|0xC0
+literal|0xC2
 block|,
 literal|0x88
 block|,
-literal|0xA6
+literal|0xA8
 block|,
 literal|0x98
 block|,
@@ -1947,7 +1939,7 @@ literal|0x00
 block|,
 literal|0xA6
 block|,
-literal|0xC0
+literal|0xBC
 block|,
 literal|0x03
 block|,
@@ -1955,11 +1947,11 @@ literal|0x07
 block|,
 literal|0xA6
 block|,
-literal|0xCE
+literal|0xCA
 block|,
 literal|0x03
 block|,
-literal|0xD8
+literal|0xD4
 block|,
 literal|0x83
 block|,
@@ -1967,7 +1959,7 @@ literal|0x7C
 block|,
 literal|0x95
 block|,
-literal|0xC4
+literal|0xC0
 block|,
 literal|0x83
 block|,
@@ -1979,7 +1971,7 @@ literal|0x26
 block|,
 literal|0x00
 block|,
-literal|0xC0
+literal|0xC2
 block|,
 literal|0x88
 block|,
@@ -2011,11 +2003,11 @@ literal|0xA1
 block|,
 literal|0x01
 block|,
-literal|0x12
+literal|0x10
 block|,
 literal|0x84
 block|,
-literal|0x06
+literal|0x07
 block|,
 literal|0xF0
 block|,
@@ -2023,13 +2015,17 @@ literal|0x06
 block|,
 literal|0xA4
 block|,
-literal|0xF6
+literal|0xF4
 block|,
 literal|0x03
 block|,
 literal|0x80
 block|,
 literal|0x6B
+block|,
+literal|0x80
+block|,
+literal|0x67
 block|,
 literal|0x05
 block|,
@@ -2047,7 +2043,7 @@ literal|0x03
 block|,
 literal|0xA6
 block|,
-literal|0x10
+literal|0x0E
 block|,
 literal|0x04
 block|,
@@ -2055,7 +2051,7 @@ literal|0x07
 block|,
 literal|0xA6
 block|,
-literal|0x08
+literal|0x06
 block|,
 literal|0x04
 block|,
@@ -2063,7 +2059,7 @@ literal|0x06
 block|,
 literal|0xA6
 block|,
-literal|0x0C
+literal|0x0A
 block|,
 literal|0x04
 block|,
@@ -2075,7 +2071,7 @@ literal|0x17
 block|,
 literal|0x00
 block|,
-literal|0xC0
+literal|0xC2
 block|,
 literal|0x88
 block|,
@@ -2083,7 +2079,7 @@ literal|0x7C
 block|,
 literal|0x95
 block|,
-literal|0xF6
+literal|0xF4
 block|,
 literal|0x83
 block|,
@@ -2091,7 +2087,7 @@ literal|0x60
 block|,
 literal|0x96
 block|,
-literal|0xF6
+literal|0xF4
 block|,
 literal|0x83
 block|,
@@ -2099,7 +2095,7 @@ literal|0x20
 block|,
 literal|0x84
 block|,
-literal|0x06
+literal|0x07
 block|,
 literal|0xF0
 block|,
@@ -2114,6 +2110,10 @@ block|,
 literal|0x80
 block|,
 literal|0x6B
+block|,
+literal|0x80
+block|,
+literal|0x67
 block|,
 literal|0x05
 block|,
@@ -2163,7 +2163,7 @@ literal|0x30
 block|,
 literal|0x00
 block|,
-literal|0xC0
+literal|0xC2
 block|,
 literal|0x88
 block|,
@@ -2239,7 +2239,7 @@ literal|0x18
 block|,
 literal|0x00
 block|,
-literal|0xC0
+literal|0xC2
 block|,
 literal|0x88
 block|,
@@ -2295,7 +2295,7 @@ literal|0x1D
 block|,
 literal|0x00
 block|,
-literal|0xC0
+literal|0xC2
 block|,
 literal|0x88
 block|,
@@ -2319,7 +2319,7 @@ literal|0x1E
 block|,
 literal|0x00
 block|,
-literal|0xC0
+literal|0xC2
 block|,
 literal|0x88
 block|,
@@ -2327,7 +2327,7 @@ literal|0x42
 block|,
 literal|0x23
 block|,
-literal|0xF6
+literal|0xF8
 block|,
 literal|0x88
 block|,
@@ -2383,7 +2383,7 @@ literal|0x42
 block|,
 literal|0x23
 block|,
-literal|0xF6
+literal|0xF8
 block|,
 literal|0x88
 block|,
@@ -2407,7 +2407,7 @@ literal|0x45
 block|,
 literal|0x23
 block|,
-literal|0xF6
+literal|0xF8
 block|,
 literal|0x88
 block|,
@@ -2423,7 +2423,7 @@ literal|0xC0
 block|,
 literal|0x04
 block|,
-literal|0xB2
+literal|0xB4
 block|,
 literal|0x98
 block|,
@@ -2443,7 +2443,7 @@ literal|0x81
 block|,
 literal|0x62
 block|,
-literal|0xF0
+literal|0xE8
 block|,
 literal|0x81
 block|,
@@ -2451,7 +2451,7 @@ literal|0x47
 block|,
 literal|0x23
 block|,
-literal|0xF6
+literal|0xF8
 block|,
 literal|0x88
 block|,
@@ -2467,7 +2467,7 @@ literal|0x04
 block|,
 literal|0x98
 block|,
-literal|0xB2
+literal|0xB4
 block|,
 literal|0x98
 block|,
@@ -2495,7 +2495,7 @@ literal|0x00
 block|,
 literal|0xA0
 block|,
-literal|0x08
+literal|0x00
 block|,
 literal|0x02
 block|,
@@ -2503,7 +2503,7 @@ literal|0x43
 block|,
 literal|0x23
 block|,
-literal|0xF6
+literal|0xF8
 block|,
 literal|0x88
 block|,
@@ -2547,7 +2547,7 @@ literal|0x27
 block|,
 literal|0x00
 block|,
-literal|0xC0
+literal|0xC2
 block|,
 literal|0x88
 block|,
@@ -2855,7 +2855,7 @@ literal|0x2D
 block|,
 literal|0x00
 block|,
-literal|0xC0
+literal|0xC2
 block|,
 literal|0x88
 block|,
@@ -3047,7 +3047,7 @@ literal|0x48
 block|,
 literal|0x23
 block|,
-literal|0xF6
+literal|0xF8
 block|,
 literal|0x88
 block|,
@@ -3139,7 +3139,7 @@ literal|0x37
 block|,
 literal|0x00
 block|,
-literal|0xC0
+literal|0xC2
 block|,
 literal|0x88
 block|,
@@ -3511,7 +3511,7 @@ literal|0x2A
 block|,
 literal|0x00
 block|,
-literal|0xC0
+literal|0xC2
 block|,
 literal|0x88
 block|,
@@ -3547,7 +3547,7 @@ literal|0x29
 block|,
 literal|0x00
 block|,
-literal|0xC0
+literal|0xC2
 block|,
 literal|0x88
 block|,
@@ -3635,7 +3635,7 @@ literal|0x2C
 block|,
 literal|0x00
 block|,
-literal|0xC0
+literal|0xC2
 block|,
 literal|0x88
 block|,
@@ -3683,7 +3683,7 @@ literal|0x3D
 block|,
 literal|0x00
 block|,
-literal|0xC0
+literal|0xC2
 block|,
 literal|0x88
 block|,
@@ -3987,7 +3987,7 @@ literal|0x07
 block|,
 literal|0x00
 block|,
-literal|0xC0
+literal|0xC2
 block|,
 literal|0x88
 block|,
@@ -4343,7 +4343,7 @@ literal|0x3E
 block|,
 literal|0x00
 block|,
-literal|0xC0
+literal|0xC2
 block|,
 literal|0x88
 block|,
@@ -4439,6 +4439,10 @@ literal|0x80
 block|,
 literal|0x3E
 block|,
+literal|0xB4
+block|,
+literal|0x3D
+block|,
 literal|0x00
 block|,
 literal|0x63
@@ -4479,7 +4483,7 @@ literal|0x00
 block|,
 literal|0xA0
 block|,
-literal|0xB2
+literal|0xB4
 block|,
 literal|0x08
 block|,
@@ -4527,7 +4531,7 @@ literal|0x13
 block|,
 literal|0x23
 block|,
-literal|0xF6
+literal|0xF8
 block|,
 literal|0x88
 block|,
@@ -4559,7 +4563,7 @@ literal|0x81
 block|,
 literal|0x62
 block|,
-literal|0xE0
+literal|0xE2
 block|,
 literal|0x88
 block|,
@@ -4595,7 +4599,7 @@ literal|0x41
 block|,
 literal|0x23
 block|,
-literal|0xF6
+literal|0xF8
 block|,
 literal|0x88
 block|,
@@ -4637,7 +4641,7 @@ begin_decl_stmt
 name|u_int32_t
 name|adv_mcode_chksum
 init|=
-literal|0x012B5442
+literal|0x012C453F
 decl_stmt|;
 end_decl_stmt
 
