@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.17	81/12/12	*/
+comment|/*	uipc_socket.c	4.18	81/12/12	*/
 end_comment
 
 begin_include
@@ -459,17 +459,6 @@ condition|)
 goto|goto
 name|discard
 goto|;
-name|printf
-argument_list|(
-literal|"soclose %x state %x\n"
-argument_list|,
-name|so
-argument_list|,
-name|so
-operator|->
-name|so_state
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|so
@@ -515,15 +504,6 @@ operator|.
 name|u_error
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"soclose disconnect error %d\n"
-argument_list|,
-name|u
-operator|.
-name|u_error
-argument_list|)
-expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -573,11 +553,6 @@ operator|&
 name|SS_ISCONNECTED
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"sleeping until not connected\n"
-argument_list|)
-expr_stmt|;
 name|sleep
 argument_list|(
 operator|(
@@ -872,13 +847,6 @@ operator|(
 name|caddr_t
 operator|)
 name|asa
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"PRU_ACCEPT returns error %d\n"
-argument_list|,
-name|error
 argument_list|)
 expr_stmt|;
 name|bad

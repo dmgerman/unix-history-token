@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_mbuf.c	1.21	81/12/12	*/
+comment|/*	uipc_mbuf.c	1.22	81/12/12	*/
 end_comment
 
 begin_include
@@ -184,19 +184,6 @@ argument_list|,
 name|npg
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"ncl %d how %d npg %d mbx %d\n"
-argument_list|,
-name|ncl
-argument_list|,
-name|how
-argument_list|,
-name|npg
-argument_list|,
-name|mbx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|mbx
@@ -257,19 +244,6 @@ operator|)
 name|m
 argument_list|,
 name|npg
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"m %x&Mbmap[mbx] %x\n"
-argument_list|,
-name|m
-argument_list|,
-operator|&
-name|Mbmap
-index|[
-name|mbx
-index|]
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -429,15 +403,6 @@ block|{
 name|COUNT
 argument_list|(
 name|M_PGFREE
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"m_pgfree %x %d\n"
-argument_list|,
-name|addr
-argument_list|,
-name|n
 argument_list|)
 expr_stmt|;
 block|}
@@ -1185,11 +1150,6 @@ operator|)
 return|;
 name|nospace
 label|:
-name|printf
-argument_list|(
-literal|"m_copy: no space\n"
-argument_list|)
-expr_stmt|;
 name|m_freem
 argument_list|(
 name|top
