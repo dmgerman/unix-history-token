@@ -595,10 +595,6 @@ name|signo
 name|__unused
 parameter_list|)
 block|{
-specifier|extern
-name|int
-name|Procfd
-decl_stmt|;
 name|ioctl
 argument_list|(
 name|Procfd

@@ -173,13 +173,6 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|Procfd
-decl_stmt|;
-end_decl_stmt
-
 begin_include
 include|#
 directive|include

@@ -236,5 +236,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|Procfd
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 
