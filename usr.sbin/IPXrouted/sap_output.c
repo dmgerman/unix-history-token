@@ -683,6 +683,7 @@ operator|++
 expr_stmt|;
 name|next
 label|:
+empty_stmt|;
 block|}
 if|if
 condition|(
