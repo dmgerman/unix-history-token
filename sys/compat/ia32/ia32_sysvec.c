@@ -213,19 +213,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<amd64/ia32/ia32_util.h>
+file|<compat/freebsd32/freebsd32_util.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<amd64/ia32/ia32_proto.h>
+file|<compat/freebsd32/freebsd32_proto.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<amd64/ia32/ia32_signal.h>
+file|<compat/ia32/ia32_signal.h>
 end_include
 
 begin_include
@@ -360,11 +360,11 @@ name|PAGE_SIZE
 block|,
 literal|0
 block|,
-name|IA32_USRSTACK
+name|FREEBSD32_USRSTACK
 block|,
-name|IA32_USRSTACK
+name|FREEBSD32_USRSTACK
 block|,
-name|IA32_PS_STRINGS
+name|FREEBSD32_PS_STRINGS
 block|,
 name|VM_PROT_ALL
 block|,
@@ -372,6 +372,16 @@ name|ia32_copyout_strings
 block|,
 name|ia32_setregs
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+name|freebsd32_emul_path
+index|[]
+init|=
+literal|"/compat/ia32"
 decl_stmt|;
 end_decl_stmt
 
@@ -454,7 +464,7 @@ modifier|*
 name|stack_base
 decl_stmt|;
 name|struct
-name|ia32_ps_strings
+name|freebsd32_ps_strings
 modifier|*
 name|arginfo
 decl_stmt|;
@@ -466,10 +476,10 @@ name|arginfo
 operator|=
 operator|(
 expr|struct
-name|ia32_ps_strings
+name|freebsd32_ps_strings
 operator|*
 operator|)
-name|IA32_PS_STRINGS
+name|FREEBSD32_PS_STRINGS
 expr_stmt|;
 name|szsigcode
 operator|=

@@ -254,7 +254,7 @@ specifier|extern
 specifier|const
 name|char
 modifier|*
-name|ia32_syscallnames
+name|freebsd32_syscallnames
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -924,7 +924,7 @@ operator|<
 name|SYS_MAXSYSCALL
 operator|)
 condition|?
-name|ia32_syscallnames
+name|freebsd32_syscallnames
 index|[
 name|code
 index|]

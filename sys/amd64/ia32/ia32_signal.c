@@ -200,19 +200,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<amd64/ia32/ia32_util.h>
+file|<compat/freebsd32/freebsd32_util.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<amd64/ia32/ia32_proto.h>
+file|<compat/freebsd32/freebsd32_proto.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<amd64/ia32/ia32_signal.h>
+file|<compat/ia32/ia32_signal.h>
 end_include
 
 begin_include
@@ -1393,7 +1393,7 @@ name|regs
 operator|->
 name|tf_rip
 operator|=
-name|IA32_PS_STRINGS
+name|FREEBSD32_PS_STRINGS
 operator|-
 name|sz_freebsd4_ia32_sigcode
 expr_stmt|;
@@ -2224,7 +2224,7 @@ name|regs
 operator|->
 name|tf_rip
 operator|=
-name|IA32_PS_STRINGS
+name|FREEBSD32_PS_STRINGS
 operator|-
 operator|*
 operator|(
@@ -2305,7 +2305,7 @@ end_comment
 
 begin_function
 name|int
-name|freebsd4_ia32_sigreturn
+name|freebsd4_freebsd32_sigreturn
 parameter_list|(
 name|td
 parameter_list|,
@@ -2317,8 +2317,8 @@ modifier|*
 name|td
 decl_stmt|;
 name|struct
-name|freebsd4_ia32_sigreturn_args
-comment|/* { 		const struct freebsd4_ucontext *sigcntxp; 	} */
+name|freebsd4_freebsd32_sigreturn_args
+comment|/* { 		const struct freebsd4_freebsd32_ucontext *sigcntxp; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -2424,7 +2424,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"freebsd4_ia32_sigreturn: eflags = 0x%x\n"
+literal|"freebsd4_freebsd32_sigreturn: eflags = 0x%x\n"
 argument_list|,
 name|eflags
 argument_list|)
@@ -2665,7 +2665,7 @@ end_comment
 
 begin_function
 name|int
-name|ia32_sigreturn
+name|freebsd32_sigreturn
 parameter_list|(
 name|td
 parameter_list|,
@@ -2677,8 +2677,8 @@ modifier|*
 name|td
 decl_stmt|;
 name|struct
-name|ia32_sigreturn_args
-comment|/* { 		const struct ia32_ucontext *sigcntxp; 	} */
+name|freebsd32_sigreturn_args
+comment|/* { 		const struct freebsd32_ucontext *sigcntxp; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -2786,7 +2786,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ia32_sigreturn: eflags = 0x%x\n"
+literal|"freebsd32_sigreturn: eflags = 0x%x\n"
 argument_list|,
 name|eflags
 argument_list|)

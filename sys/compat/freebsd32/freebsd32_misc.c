@@ -313,15 +313,6 @@ directive|include
 file|<compat/freebsd32/freebsd32_proto.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-name|freebsd32_emul_path
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * [ taken from the linux emulator ]  * Search an alternate path before passing pathname arguments on  * to system calls. Useful for keeping a separate 'emulation tree'.  *  * If cflag is set, we check if an attempt can be made to create  * the named file, i.e. we check if the directory it should  * be in exists.  */
 end_comment
