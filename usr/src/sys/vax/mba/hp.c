@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.12	81/02/23	*/
+comment|/*	hp.c	4.13	81/02/25	*/
 end_comment
 
 begin_include
@@ -1523,6 +1523,25 @@ return|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|hpaddr
+operator|->
+name|hper1
+operator|&
+name|HP_WLE
+condition|)
+name|printf
+argument_list|(
+literal|"hp%d is write locked\n"
+argument_list|,
+name|dkunit
+argument_list|(
+name|bp
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
 name|deverror
 argument_list|(
 name|bp
