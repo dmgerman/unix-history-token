@@ -238,7 +238,6 @@ name|defined
 argument_list|(
 name|__FAR__
 argument_list|)
-if|)
 end_if
 
 begin_if
