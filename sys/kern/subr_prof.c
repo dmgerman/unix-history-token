@@ -1961,12 +1961,6 @@ name|u_short
 name|v
 decl_stmt|;
 comment|/* Testing PS_PROFIL may be unnecessary, but is certainly safe. */
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1983,21 +1977,7 @@ name|ticks
 operator|==
 literal|0
 condition|)
-block|{
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 name|prof
 operator|=
 operator|&
