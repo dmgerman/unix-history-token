@@ -1071,6 +1071,7 @@ name|proto_flags
 operator||=
 name|CAM_ESF_PRINT_STATUS
 expr_stmt|;
+comment|/* FALLTHROUGH */
 default|default:
 break|break;
 block|}

@@ -12601,8 +12601,8 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* FALLTHROUGH */
 block|}
+comment|/* FALLTHROUGH */
 case|case
 name|XPT_TARGET_IO
 case|:
@@ -13064,8 +13064,8 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* 		 * If we weren't able to take care of the abort request 		 * in the XPT, pass the request down to the SIM for processing. 		 */
-comment|/* FALLTHROUGH */
 block|}
+comment|/* FALLTHROUGH */
 case|case
 name|XPT_ACCEPT_TARGET_IO
 case|:
@@ -13816,9 +13816,6 @@ name|ccb_dev_match
 modifier|*
 name|cdm
 decl_stmt|;
-name|int
-name|ret
-decl_stmt|;
 name|cdm
 operator|=
 operator|&
@@ -13946,8 +13943,6 @@ block|{
 case|case
 name|CAM_DEV_POS_EDT
 case|:
-name|ret
-operator|=
 name|xptedtmatch
 argument_list|(
 name|cdm
@@ -13957,8 +13952,6 @@ break|break;
 case|case
 name|CAM_DEV_POS_PDRV
 case|:
-name|ret
-operator|=
 name|xptperiphlistmatch
 argument_list|(
 name|cdm
@@ -24004,8 +23997,8 @@ name|action
 operator|=
 name|PROBE_SERIAL_NUM
 expr_stmt|;
-comment|/* FALLTHROUGH */
 block|}
+comment|/* FALLTHROUGH */
 case|case
 name|PROBE_SERIAL_NUM
 case|:
@@ -30014,11 +30007,6 @@ name|highpowerlist
 modifier|*
 name|hphead
 decl_stmt|;
-name|struct
-name|cam_ed
-modifier|*
-name|device
-decl_stmt|;
 name|union
 name|ccb
 modifier|*
@@ -30053,16 +30041,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|device
-operator|=
-name|send_ccb
-operator|->
-name|ccb_h
-operator|.
-name|path
-operator|->
-name|device
-expr_stmt|;
 name|STAILQ_REMOVE_HEAD
 argument_list|(
 name|hphead

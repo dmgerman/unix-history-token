@@ -1803,8 +1803,8 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* FALLTHROUGH */
 block|}
+comment|/* FALLTHROUGH */
 default|default:
 name|cam_periph_async
 argument_list|(
