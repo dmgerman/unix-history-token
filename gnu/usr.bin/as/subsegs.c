@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: subsegs.c,v 1.3 1993/10/02 20:57:54 pk Exp $"
+literal|"$Id: subsegs.c,v 1.2 1993/11/03 00:52:19 paul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -473,6 +473,25 @@ operator|&
 name|data_fix_tail
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|seg
+operator|==
+name|SEG_BSS
+condition|)
+block|{
+name|seg_fix_rootP
+operator|=
+operator|&
+name|bss_fix_root
+expr_stmt|;
+name|seg_fix_tailP
+operator|=
+operator|&
+name|bss_fix_tail
+expr_stmt|;
+block|}
 else|else
 block|{
 name|know
@@ -540,6 +559,10 @@ operator|||
 name|seg
 operator|==
 name|SEG_TEXT
+operator|||
+name|seg
+operator|==
+name|SEG_BSS
 argument_list|)
 expr_stmt|;
 endif|#
