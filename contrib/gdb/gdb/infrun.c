@@ -3512,6 +3512,19 @@ operator|&&
 name|prev_pc
 operator|!=
 name|stop_pc
+if|#
+directive|if
+literal|1
+operator|&&
+operator|!
+operator|(
+name|step_range_end
+operator|)
+operator|)
+operator|)
+condition|)
+else|#
+directive|else
 operator|&&
 operator|!
 operator|(
@@ -3529,9 +3542,16 @@ literal|16
 operator|)
 argument_list|)
 operator|)
-operator|)
-operator|)
-condition|)
+block|)
+end_function
+
+begin_endif
+unit|))
+endif|#
+directive|endif
+end_endif
+
+begin_expr_stmt
 name|write_pc_pid
 argument_list|(
 name|stop_pc
@@ -3541,22 +3561,22 @@ operator|->
 name|ptid
 argument_list|)
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
 begin_comment
+unit|}
 comment|/* Given an execution control state that has been freshly filled in    by an event from the inferior, figure out what it means and take    appropriate action.  */
 end_comment
 
-begin_function
-name|void
+begin_macro
+unit|void
 name|handle_inferior_event
-parameter_list|(
-name|struct
-name|execution_control_state
-modifier|*
-name|ecs
-parameter_list|)
+argument_list|(
+argument|struct execution_control_state *ecs
+argument_list|)
+end_macro
+
+begin_block
 block|{
 comment|/* NOTE: cagney/2003-03-28: If you're looking at this code and      thinking that the variable stepped_after_stopped_by_watchpoint      isn't used, then you're wrong!  The macro STOPPED_BY_WATCHPOINT,      defined in the file "config/pa/nm-hppah.h", accesses the variable      indirectly.  Mutter something rude about the HP merge.  */
 name|int
@@ -6690,7 +6710,7 @@ name|ecs
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/* Are we in the middle of stepping?  */
