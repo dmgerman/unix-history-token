@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  *  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00040  * --------------------         -----   ----------------------  *  * 10 Aug 92	Scott Burris		Fixed "delete from CD-ROM" bug  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -1817,11 +1821,14 @@ argument_list|)
 condition|)
 comment|/* illegal entry, stop */
 break|break;
+comment|/* 10 Aug 92*/
 if|if
 condition|(
 name|entryoffsetinblock
 operator|+
 name|reclen
+operator|-
+literal|1
 operator|>=
 name|imp
 operator|->
