@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)finger.c	5.8 (Berkeley) %G%"
+literal|"@(#)finger.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5665,15 +5665,6 @@ operator|&
 name|def
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"[%s]"
-argument_list|,
-name|hp
-operator|->
-name|h_name
-argument_list|)
-expr_stmt|;
 name|sp
 operator|=
 name|getservbyname
@@ -5757,11 +5748,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
 name|perror
 argument_list|(
 literal|"socket"
@@ -5773,6 +5759,20 @@ literal|1
 operator|)
 return|;
 block|}
+name|printf
+argument_list|(
+literal|"[%s]"
+argument_list|,
+name|hp
+operator|->
+name|h_name
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|connect
@@ -5795,11 +5795,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
 name|perror
 argument_list|(
 literal|"connect"
@@ -5816,9 +5811,9 @@ literal|1
 operator|)
 return|;
 block|}
-name|printf
+name|putchar
 argument_list|(
-literal|"\n"
+literal|'\n'
 argument_list|)
 expr_stmt|;
 if|if
