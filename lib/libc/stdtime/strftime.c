@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: strftime.c,v 1.3 1995/08/04 18:43:01 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -363,10 +363,9 @@ block|,
 comment|/* 	** x_fmt 	** Since the C language standard calls for 	** "date, using locale's date format," anything goes. 	** Using just numbers (as here) makes Quakers happier; 	** it's also compatible with SVR4. 	*/
 literal|"%m/%d/%y"
 block|,
-comment|/* 	** c_fmt 	** Note that 	**	"%a %b %d %H:%M:%S %Y" 	** is used by Solaris 2.3. 	*/
-literal|"%D %X"
+comment|/* 	** c_fmt (ctime-compatible) 	** Note that 	**	"%a %b %d %H:%M:%S %Y" 	** is used by Solaris 2.3. 	*/
+literal|"%a %b %e %X %Y"
 block|,
-comment|/* %m/%d/%y %H:%M:%S */
 comment|/* am */
 literal|"AM"
 block|,
@@ -374,7 +373,7 @@ comment|/* pm */
 literal|"PM"
 block|,
 comment|/* date_fmt */
-literal|"%a %b %e %H:%M:%S %Z %Y"
+literal|"%a %b %e %X %Z %Y"
 block|}
 decl_stmt|;
 end_decl_stmt
