@@ -455,7 +455,7 @@ if|if
 condition|(
 name|curthread
 operator|->
-name|specific_data
+name|specific
 operator|!=
 name|NULL
 condition|)

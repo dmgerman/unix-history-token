@@ -749,7 +749,7 @@ if|if
 condition|(
 name|thread
 operator|->
-name|specific_data
+name|specific
 operator|!=
 name|NULL
 condition|)
@@ -757,7 +757,7 @@ name|free
 argument_list|(
 name|thread
 operator|->
-name|specific_data
+name|specific
 argument_list|)
 expr_stmt|;
 if|if

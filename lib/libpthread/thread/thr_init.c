@@ -1224,7 +1224,7 @@ literal|0
 expr_stmt|;
 name|_thread_initial
 operator|->
-name|specific_data
+name|specific
 operator|=
 name|NULL
 expr_stmt|;

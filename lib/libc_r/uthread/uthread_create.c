@@ -600,7 +600,7 @@ expr_stmt|;
 comment|/* Initialise hooks in the thread structure: */
 name|new_thread
 operator|->
-name|specific_data
+name|specific
 operator|=
 name|NULL
 expr_stmt|;
