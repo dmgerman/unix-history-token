@@ -969,9 +969,9 @@ argument_list|(
 operator|(
 name|int
 operator|,
-name|int
+name|uid_t
 operator|,
-name|int
+name|gid_t
 operator|)
 argument_list|)
 decl_stmt|;
