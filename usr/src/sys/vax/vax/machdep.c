@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.22	81/03/06	*/
+comment|/*	machdep.c	4.23	81/03/08	*/
 end_comment
 
 begin_include
@@ -84,7 +84,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/uba.h"
+file|"../h/ubavar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/ubareg.h"
 end_include
 
 begin_include
@@ -180,7 +186,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"VAX/UNIX (Berkeley Version 4.22) 81/03/06 11:38:06 \n"
+literal|"VAX/UNIX (Berkeley Version 4.23) 81/03/08 16:18:25 \n"
 decl_stmt|;
 end_decl_stmt
 
