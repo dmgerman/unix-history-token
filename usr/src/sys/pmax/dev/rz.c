@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)rz.c	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)rz.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -97,12 +97,6 @@ begin_include
 include|#
 directive|include
 file|<sys/syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/ffs/fs.h>
 end_include
 
 begin_include
@@ -1140,6 +1134,8 @@ operator|->
 name|sc_flags
 operator||=
 name|RZF_NOERR
+operator||
+name|RZF_ALTCMD
 expr_stmt|;
 comment|/* see if the device is ready */
 for|for
@@ -1618,7 +1614,11 @@ operator|->
 name|sc_flags
 operator|&=
 operator|~
+operator|(
 name|RZF_NOERR
+operator||
+name|RZF_ALTCMD
+operator|)
 expr_stmt|;
 comment|/* find out how big a disk this is */
 name|sc
@@ -4742,18 +4742,6 @@ name|d_npartitions
 operator|=
 name|MAXPARTITIONS
 expr_stmt|;
-name|lp
-operator|->
-name|d_bbsize
-operator|=
-name|BBSIZE
-expr_stmt|;
-name|lp
-operator|->
-name|d_sbsize
-operator|=
-name|SBSIZE
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -5522,7 +5510,7 @@ parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
-name|int
+name|u_long
 name|cmd
 decl_stmt|;
 name|caddr_t

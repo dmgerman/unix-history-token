@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)tz.c	8.4 (Berkeley) %G%  *  * from: $Header: /sprite/src/kernel/dev/RCS/devSCSITape.c,  *	v 8.14 89/07/31 17:26:13 mendel Exp $ SPRITE (Berkeley)  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)tz.c	8.5 (Berkeley) %G%  *  * from: $Header: /sprite/src/kernel/dev/RCS/devSCSITape.c,  *	v 8.14 89/07/31 17:26:13 mendel Exp $ SPRITE (Berkeley)  */
 end_comment
 
 begin_comment
@@ -3636,7 +3636,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|u_long
 name|cmd
 decl_stmt|;
 end_decl_stmt

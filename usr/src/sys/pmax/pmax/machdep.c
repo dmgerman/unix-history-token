@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -125,6 +125,18 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/syscallargs.h>
 end_include
 
 begin_ifdef
@@ -2581,7 +2593,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Determine how many buffers to allocate. 	 * We allocate more buffer space than the BSD standard of 	 * using 10% of memory for the first 2 Meg, 5% of remaining. 	 * We just allocate a flat 10%.  Insure a minimum of 16 buffers. 	 * We allocate 1/2 as many swap buffer headers as file i/o buffers. 	 */
+comment|/* 	 * Determine how many buffers to allocate. 	 * We allocate more buffer space than the BSD standard of 	 * using 10% of memory for the first 2 Meg, 5% of remaining. 	 * We just allocate a flat 10%.  Ensure a minimum of 16 buffers. 	 * We allocate 1/2 as many swap buffer headers as file i/o buffers. 	 */
 if|if
 condition|(
 name|bufpages
@@ -3988,7 +4000,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|register_t
 name|retval
 index|[
 literal|2
@@ -4209,7 +4221,7 @@ name|sig
 decl_stmt|,
 name|mask
 decl_stmt|;
-name|unsigned
+name|u_long
 name|code
 decl_stmt|;
 block|{
@@ -4771,19 +4783,6 @@ begin_comment
 comment|/*  * System call to cleanup state after a signal  * has been taken.  Reset signal mask and  * stack state from context left by sendsig (above).  * Return to previous pc and psl as specified by  * context left by sendsig. Check carefully to  * make sure that the user has not modified the  * psl to gain improper priviledges or to cause  * a machine fault.  */
 end_comment
 
-begin_struct
-struct|struct
-name|sigreturn_args
-block|{
-name|struct
-name|sigcontext
-modifier|*
-name|sigcntxp
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -4810,13 +4809,14 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|sigreturn_args
+comment|/* { 		syscallarg(struct sigcontext *) sigcntxp; 	} */
 modifier|*
 name|uap
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|register_t
 modifier|*
 name|retval
 decl_stmt|;
@@ -4844,9 +4844,12 @@ name|error
 decl_stmt|;
 name|scp
 operator|=
+name|SCARG
+argument_list|(
 name|uap
-operator|->
+argument_list|,
 name|sigcntxp
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -5157,6 +5160,14 @@ end_expr_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 comment|/* take a snap shot before clobbering any registers */
 if|if
 condition|(
@@ -5260,8 +5271,7 @@ endif|#
 directive|endif
 name|sync
 argument_list|(
-operator|&
-name|proc0
+name|p
 argument_list|,
 operator|(
 name|void
@@ -5800,20 +5810,17 @@ begin_comment
 comment|/*  * Return the best possible estimate of the time in the timeval  * to which tvp points.  Unfortunately, we can't read the hardware registers.  * We guarantee that the time will be greater than the value obtained by a  * previous call.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|microtime
-argument_list|(
+parameter_list|(
 name|tvp
-argument_list|)
-specifier|register
-expr|struct
+parameter_list|)
+name|struct
 name|timeval
-operator|*
+modifier|*
 name|tvp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|int
 name|s
@@ -5920,7 +5927,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|initcpu
@@ -6474,6 +6481,13 @@ block|}
 block|,
 comment|/* Color Frame Buffer */
 block|{
+literal|"PMAGB-BA"
+block|,
+literal|"sfb"
+block|}
+block|,
+comment|/* Smart Frame Buffer */
+block|{
 literal|"PMAG-CA "
 block|,
 literal|"ga"
@@ -6543,6 +6557,55 @@ literal|"frc"
 block|}
 block|,
 comment|/* (*) maxine free-running counter */
+block|{
+literal|"PMAF-AA "
+block|,
+literal|"fza"
+block|}
+block|,
+comment|/* slow FDDI */
+block|{
+literal|"T3PKT   "
+block|,
+literal|"tt"
+block|}
+block|,
+comment|/* DECWRL turbochannel T3 */
+block|{
+literal|"T1D4PKT "
+block|,
+literal|"ds"
+block|}
+block|,
+comment|/* DECWRL turbochannel T1 */
+block|{
+literal|"FORE_ATM"
+block|,
+literal|"fa"
+block|}
+block|,
+comment|/* Fore t??-100 ATM */
+block|{
+literal|"LoFi    "
+block|,
+literal|"lofi"
+block|}
+block|,
+comment|/* DEC audio board */
+block|{
+literal|"AV01A-AA"
+block|,
+literal|"lofi"
+block|}
+block|,
+comment|/* DEC audio board */
+block|{
+literal|"AV01B-AA"
+block|,
+literal|"lofi"
+block|}
+block|,
+comment|/* DEC audio board */
 block|{
 literal|""
 block|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)conf.c	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)conf.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -88,7 +88,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|swstrategy
 name|__P
 argument_list|(
@@ -146,7 +146,7 @@ name|dev_type_strategy
 parameter_list|(
 name|n
 parameter_list|)
-value|int n __P((struct buf *))
+value|void n __P((struct buf *))
 end_define
 
 begin_define
@@ -157,7 +157,7 @@ parameter_list|(
 name|n
 parameter_list|)
 define|\
-value|int n __P((dev_t, int, caddr_t, int, struct proc *))
+value|int n __P((dev_t, u_long, caddr_t, int, struct proc *))
 end_define
 
 begin_comment
@@ -171,7 +171,7 @@ name|dev_type_dump
 parameter_list|(
 name|n
 parameter_list|)
-value|int n __P((dev_t))
+value|int n __P(())
 end_define
 
 begin_define
@@ -247,7 +247,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-value|{ \ 	dev_init(c,n,open), (dev_type_close((*))) nullop, \ 	dev_init(c,n,strategy), dev_init(c,n,ioctl), \ 	dev_init(c,n,dump), dev_size_init(c,n), 0 }
+value|{ \ 	dev_init(c,n,open), (dev_type_close((*))) nullop, \ 	dev_init(c,n,strategy), dev_init(c,n,ioctl), \ 	dev_init(c,n,dump), dev_size_init(c,n), D_DISK }
 end_define
 
 begin_define
@@ -259,7 +259,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), \ 	dev_init(c,n,strategy), dev_init(c,n,ioctl), \ 	dev_init(c,n,dump), 0, B_TAPE }
+value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), \ 	dev_init(c,n,strategy), dev_init(c,n,ioctl), \ 	dev_init(c,n,dump), 0, D_TAPE }
 end_define
 
 begin_define
@@ -267,7 +267,7 @@ define|#
 directive|define
 name|bdev_swap_init
 parameter_list|()
-value|{ \ 	(dev_type_open((*))) enodev, (dev_type_close((*))) enodev, \ 	swstrategy, (dev_type_ioctl((*))) enodev, \ 	(dev_type_dump((*))) enodev, 0, 0 }
+value|{ \ 	(dev_type_open((*))) enodev, (dev_type_close((*))) enodev, \ 	swstrategy, (dev_type_ioctl((*))) enodev, \ 	(dev_type_dump((*))) enodev, (dev_type_size((*))) enodev, 0 }
 end_define
 
 begin_define
@@ -468,7 +468,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-value|{ \ 	dev_init(c,n,open), (dev_type_close((*))) nullop, dev_init(c,n,read), \ 	dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) enodev, \ 	(dev_type_reset((*))) nullop, 0, seltrue, (dev_type_map((*))) enodev, \ 	dev_init(c,n,strategy) }
+value|{ \ 	dev_init(c,n,open), (dev_type_close((*))) nullop, dev_init(c,n,read), \ 	dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) enodev, \ 	(dev_type_reset((*))) nullop, 0, seltrue, (dev_type_map((*))) enodev, \ 	dev_init(c,n,strategy), D_DISK }
 end_define
 
 begin_comment
@@ -484,7 +484,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), rawread, \ 	rawwrite, dev_init(c,n,ioctl), (dev_type_stop((*))) enodev, \ 	(dev_type_reset((*))) nullop, 0, seltrue, (dev_type_map((*))) enodev, \ 	dev_init(c,n,strategy) }
+value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), rawread, \ 	rawwrite, dev_init(c,n,ioctl), (dev_type_stop((*))) enodev, \ 	(dev_type_reset((*))) nullop, 0, seltrue, (dev_type_map((*))) enodev, \ 	dev_init(c,n,strategy), D_TAPE }
 end_define
 
 begin_comment
@@ -500,7 +500,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \ 	dev_init(c,n,write), dev_init(c,n,ioctl), dev_init(c,n,stop), \ 	(dev_type_reset((*))) nullop, dev_tty_init(c,n), ttselect, \ 	(dev_type_map((*))) enodev, 0 }
+value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \ 	dev_init(c,n,write), dev_init(c,n,ioctl), dev_init(c,n,stop), \ 	(dev_type_reset((*))) nullop, dev_tty_init(c,n), ttselect, \ 	(dev_type_map((*))) enodev, 0, D_TTY }
 end_define
 
 begin_comment
@@ -516,7 +516,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \ 	dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) nullop, \ 	(dev_type_reset((*))) nullop, 0, dev_init(c,n,select), \ 	(dev_type_map((*))) enodev, 0 }
+value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \ 	dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) nullop, \ 	(dev_type_reset((*))) nullop, 0, dev_init(c,n,select), \ 	(dev_type_map((*))) enodev, 0, D_TTY }
 end_define
 
 begin_define
@@ -572,7 +572,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-value|{ \ 	dev_init(c,n,open), (dev_type_close((*))) nullop, dev_init(c,n,read), \ 	dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) nullop, \ 	(dev_type_reset((*))) nullop, 0, dev_init(c,n,select), \ 	(dev_type_map((*))) enodev, 0 }
+value|{ \ 	dev_init(c,n,open), (dev_type_close((*))) nullop, dev_init(c,n,read), \ 	dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) nullop, \ 	(dev_type_reset((*))) nullop, 0, dev_init(c,n,select), \ 	(dev_type_map((*))) enodev, 0, D_TTY }
 end_define
 
 begin_expr_stmt
@@ -678,7 +678,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \ 	dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) nullop, \ 	(dev_type_reset((*))) nullop, dev_tty_init(c,n), dev_init(c,n,select), \ 	(dev_type_map((*))) enodev, 0 }
+value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \ 	dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) nullop, \ 	(dev_type_reset((*))) nullop, dev_tty_init(c,n), dev_init(c,n,select), \ 	(dev_type_map((*))) enodev, 0, D_TTY }
 end_define
 
 begin_expr_stmt
@@ -798,7 +798,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-value|{ \ 	dev_init(c,n,open), (dev_type_close((*))) nullop, dev_init(c,n,read), \ 	dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) enodev, \ 	(dev_type_reset((*))) nullop, 0, seltrue, (dev_type_map((*))) enodev, \ 	0 }
+value|{ \ 	dev_init(c,n,open), (dev_type_close((*))) nullop, dev_init(c,n,read), \ 	dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) enodev, \ 	(dev_type_reset((*))) nullop, 0, seltrue, (dev_type_map((*))) enodev, \ 	(dev_type_strategy((*))) nullop, D_DISK }
 end_define
 
 begin_include
@@ -1145,8 +1145,8 @@ end_decl_stmt
 
 begin_block
 block|{
-if|if
-condition|(
+return|return
+operator|(
 name|major
 argument_list|(
 name|dev
@@ -1154,30 +1154,12 @@ argument_list|)
 operator|==
 literal|2
 operator|&&
-operator|(
 name|minor
 argument_list|(
 name|dev
 argument_list|)
-operator|==
-literal|0
-operator|||
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|1
-operator|)
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-return|return
-operator|(
-literal|0
+operator|<
+literal|2
 operator|)
 return|;
 block|}
@@ -1215,152 +1197,6 @@ operator|==
 literal|12
 operator|)
 return|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * Routine to determine if a device is a tty.  *  * A minimal stub routine can always return 0.  */
-end_comment
-
-begin_macro
-name|istty
-argument_list|(
-argument|dev
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|dev_t
-name|dev
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-switch|switch
-condition|(
-name|major
-argument_list|(
-name|dev
-argument_list|)
-condition|)
-block|{
-case|case
-literal|0
-case|:
-case|case
-literal|1
-case|:
-case|case
-literal|4
-case|:
-case|case
-literal|5
-case|:
-case|case
-literal|16
-case|:
-case|case
-literal|17
-case|:
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-default|default:
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-block|}
-end_block
-
-begin_comment
-comment|/*  * Routine to determine if a device is a disk.  *  * A minimal stub routine can always return 0.  */
-end_comment
-
-begin_macro
-name|isdisk
-argument_list|(
-argument|dev
-argument_list|,
-argument|type
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|dev_t
-name|dev
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|type
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-switch|switch
-condition|(
-name|major
-argument_list|(
-name|dev
-argument_list|)
-condition|)
-block|{
-case|case
-literal|0
-case|:
-case|case
-literal|2
-case|:
-if|if
-condition|(
-name|type
-operator|==
-name|VBLK
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-case|case
-literal|9
-case|:
-case|case
-literal|11
-case|:
-if|if
-condition|(
-name|type
-operator|==
-name|VCHR
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-comment|/* FALLTHROUGH */
-default|default:
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-comment|/* NOTREACHED */
 block|}
 end_block
 
