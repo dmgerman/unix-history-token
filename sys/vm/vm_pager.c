@@ -575,6 +575,18 @@ name|pbuf_mtx
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+specifier|static
+name|TAILQ_HEAD
+argument_list|(
+argument|swqueue
+argument_list|,
+argument|buf
+argument_list|)
+name|bswlist
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|void
 name|vm_pager_init
@@ -586,6 +598,12 @@ modifier|*
 modifier|*
 name|pgops
 decl_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|bswlist
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Initialize known pagers 	 */
 for|for
 control|(
@@ -1067,6 +1085,10 @@ begin_comment
 comment|/*  * initialize a physical buffer  */
 end_comment
 
+begin_comment
+comment|/*  * XXX This probably belongs in vfs_bio.c  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -1094,8 +1116,9 @@ name|bp
 operator|->
 name|b_qindex
 operator|=
-name|QUEUE_NONE
+literal|0
 expr_stmt|;
+comment|/* On no queue (QUEUE_NONE) */
 name|bp
 operator|->
 name|b_data

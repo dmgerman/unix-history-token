@@ -888,6 +888,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|buf_wmesg
@@ -1708,87 +1709,6 @@ comment|/* _KERNEL */
 end_comment
 
 begin_comment
-comment|/*  * Definitions for the buffer free lists.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BUFFER_QUEUES
-value|6
-end_define
-
-begin_comment
-comment|/* number of free buffer queues */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|QUEUE_NONE
-value|0
-end_define
-
-begin_comment
-comment|/* on no queue */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|QUEUE_LOCKED
-value|1
-end_define
-
-begin_comment
-comment|/* locked buffers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|QUEUE_CLEAN
-value|2
-end_define
-
-begin_comment
-comment|/* non-B_DELWRI buffers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|QUEUE_DIRTY
-value|3
-end_define
-
-begin_comment
-comment|/* B_DELWRI buffers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|QUEUE_EMPTYKVA
-value|4
-end_define
-
-begin_comment
-comment|/* empty buffer headers w/KVA assignment */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|QUEUE_EMPTY
-value|5
-end_define
-
-begin_comment
-comment|/* empty buffer headers */
-end_comment
-
-begin_comment
 comment|/*  * Zero out the buffer's data area.  */
 end_comment
 
@@ -1966,33 +1886,6 @@ end_decl_stmt
 begin_comment
 comment|/* Number of swap I/O buffer headers. */
 end_comment
-
-begin_extern
-extern|extern TAILQ_HEAD(swqueue
-operator|,
-extern|buf
-end_extern
-
-begin_expr_stmt
-unit|)
-name|bswlist
-expr_stmt|;
-end_expr_stmt
-
-begin_extern
-extern|extern TAILQ_HEAD(bqueues
-operator|,
-extern|buf
-end_extern
-
-begin_expr_stmt
-unit|)
-name|bufqueues
-index|[
-name|BUFFER_QUEUES
-index|]
-expr_stmt|;
-end_expr_stmt
 
 begin_struct_decl
 struct_decl|struct

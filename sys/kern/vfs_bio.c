@@ -218,13 +218,6 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|swqueue
-name|bswlist
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
 name|mtx
 name|buftimelock
 decl_stmt|;
@@ -1082,31 +1075,117 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Definitions for the buffer free lists.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUFFER_QUEUES
+value|6
+end_define
+
+begin_comment
+comment|/* number of free buffer queues */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QUEUE_NONE
+value|0
+end_define
+
+begin_comment
+comment|/* on no queue */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QUEUE_LOCKED
+value|1
+end_define
+
+begin_comment
+comment|/* locked buffers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QUEUE_CLEAN
+value|2
+end_define
+
+begin_comment
+comment|/* non-B_DELWRI buffers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QUEUE_DIRTY
+value|3
+end_define
+
+begin_comment
+comment|/* B_DELWRI buffers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QUEUE_EMPTYKVA
+value|4
+end_define
+
+begin_comment
+comment|/* empty buffer headers w/KVA assignment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QUEUE_EMPTY
+value|5
+end_define
+
+begin_comment
+comment|/* empty buffer headers */
+end_comment
+
+begin_comment
 comment|/* Queues for free buffers with various properties */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
-name|struct
-name|bqueues
+name|TAILQ_HEAD
+argument_list|(
+argument|bqueues
+argument_list|,
+argument|buf
+argument_list|)
 name|bufqueues
 index|[
 name|BUFFER_QUEUES
 index|]
-init|=
+operator|=
 block|{
 block|{
 literal|0
 block|}
 block|}
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Single global constant for BUF_WMESG, to avoid getting multiple references.  * buf_wmesg is referred from macros.  */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|buf_wmesg
@@ -1806,12 +1885,6 @@ name|int
 name|i
 decl_stmt|;
 name|GIANT_REQUIRED
-expr_stmt|;
-name|TAILQ_INIT
-argument_list|(
-operator|&
-name|bswlist
-argument_list|)
 expr_stmt|;
 name|LIST_INIT
 argument_list|(
