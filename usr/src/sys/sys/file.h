@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	file.h	4.14	82/11/13	*/
+comment|/*	file.h	4.15	83/05/27	*/
 end_comment
 
 begin_ifdef
@@ -25,59 +25,63 @@ name|short
 name|f_type
 decl_stmt|;
 comment|/* descriptor type */
-name|char
-name|f_nbhow
-decl_stmt|;
-comment|/* state from dnblock */
-name|char
-name|f_sighow
-decl_stmt|;
-comment|/* state from dsignal */
 name|short
 name|f_count
 decl_stmt|;
 comment|/* reference count */
-comment|/* begin XXX */
-name|struct
-name|inode
+name|short
+name|f_msgcount
+decl_stmt|;
+comment|/* references from message queue */
+struct|struct
+name|fileops
+block|{
+name|int
+function_decl|(
 modifier|*
-name|f_inode
+name|fo_rw
+function_decl|)
+parameter_list|()
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|fo_ioctl
+function_decl|)
+parameter_list|()
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|fo_select
+function_decl|)
+parameter_list|()
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|fo_stat
+function_decl|)
+parameter_list|()
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|fo_close
+function_decl|)
+parameter_list|()
+function_decl|;
+block|}
+modifier|*
+name|f_ops
+struct|;
+name|caddr_t
+name|f_data
 decl_stmt|;
 comment|/* inode */
-union|union
-block|{
-struct|struct
-name|f_in
-block|{
 name|off_t
-name|fi_offset
-decl_stmt|;
-block|}
-name|f_in
-struct|;
-struct|struct
-name|f_so
-block|{
-name|struct
-name|socket
-modifier|*
-name|fs_socket
-decl_stmt|;
-block|}
-name|f_so
-struct|;
-block|}
-name|f_un
-union|;
-define|#
-directive|define
 name|f_offset
-value|f_un.f_in.fi_offset
-define|#
-directive|define
-name|f_socket
-value|f_un.f_so.fs_socket
-comment|/* end XXX */
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -124,8 +128,15 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FOPEN
+value|(-1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|FREAD
-value|0x001
+value|00001
 end_define
 
 begin_comment
@@ -136,7 +147,7 @@ begin_define
 define|#
 directive|define
 name|FWRITE
-value|0x002
+value|00002
 end_define
 
 begin_comment
@@ -146,24 +157,112 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FNDELAY
+value|00004
+end_define
+
+begin_comment
+comment|/* no delay */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FAPPEND
-value|0x004
+value|00010
 end_define
 
 begin_comment
 comment|/* append on each write */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FMARK
+value|00020
+end_define
+
 begin_comment
-comment|/* the following defines the bits that users can set in f_flag */
+comment|/* mark during gc() */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|FMODES
-value|(FREAD|FWRITE|FAPPEND)
+name|FDEFER
+value|00040
 end_define
+
+begin_comment
+comment|/* defer for next gc pass */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FASYNC
+value|00100
+end_define
+
+begin_comment
+comment|/* signal pgrp when data ready */
+end_comment
+
+begin_comment
+comment|/* bits to save after open */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FMASK
+value|00117
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCNTLCANT
+value|(FREAD|FWRITE|FMARK|FDEFER)
+end_define
+
+begin_comment
+comment|/* open only modes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FCREAT
+value|01000
+end_define
+
+begin_comment
+comment|/* create if nonexistant */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FTRUNC
+value|02000
+end_define
+
+begin_comment
+comment|/* truncate to zero length */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FEXCL
+value|04000
+end_define
+
+begin_comment
+comment|/* error if already created */
+end_comment
 
 begin_endif
 endif|#
@@ -171,139 +270,29 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * User visible desriptor attributes.  * These are supplied at open or flock time.  * FRDONLY, FWRONLY, and FRDWR are  * converted to FREAD and FWRITE on open.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FRDONLY
-value|0x000
-end_define
-
-begin_comment
-comment|/* open for reading only */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FWRONLY
-value|0x001
-end_define
-
-begin_comment
-comment|/* open for writing only */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FRDWR
-value|0x002
-end_define
-
-begin_comment
-comment|/* open for reading and writing */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FAPPEND
-value|0x004
-end_define
-
-begin_comment
-comment|/* append on each write */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FSHLOCK
-value|0x008
-end_define
-
-begin_comment
-comment|/* apply shared lock */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FEXLOCK
-value|0x010
-end_define
-
-begin_comment
-comment|/* apply exclusive lock */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FUNLOCK
-value|0x100
-end_define
-
-begin_comment
-comment|/* release all locks */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FCREATE
-value|0x200
-end_define
-
-begin_comment
-comment|/* create file if nonexistant */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FTRUNCATE
-value|0x400
-end_define
-
-begin_comment
-comment|/* truncate file to size 0 on open */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FNBLOCK
-value|0x800
-end_define
-
-begin_comment
-comment|/* don't block on open */
+comment|/*  * User definitions.  */
 end_comment
 
 begin_comment
-comment|/* these are for 3.0 "compatibility" */
+comment|/*  * Open call.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|O_RDONLY
-value|FRDONLY
+value|000
 end_define
 
 begin_comment
-comment|/* open for read */
+comment|/* open for reading */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|O_WRONLY
-value|FWRONLY
+value|001
 end_define
 
 begin_comment
@@ -314,7 +303,7 @@ begin_define
 define|#
 directive|define
 name|O_RDWR
-value|FRDWR
+value|002
 end_define
 
 begin_comment
@@ -325,29 +314,29 @@ begin_define
 define|#
 directive|define
 name|O_NDELAY
-value|FNBLOCK
+value|004
 end_define
 
 begin_comment
-comment|/* non-blocking I/O */
+comment|/* non-blocking open */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|O_APPEND
-value|FAPPEND
+value|010
 end_define
 
 begin_comment
-comment|/* append */
+comment|/* append on each write */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|O_CREAT
-value|FCREATE
+value|FCREAT
 end_define
 
 begin_comment
@@ -358,7 +347,7 @@ begin_define
 define|#
 directive|define
 name|O_TRUNC
-value|FTRUNCATE
+value|FTRUNC
 end_define
 
 begin_comment
@@ -369,22 +358,59 @@ begin_define
 define|#
 directive|define
 name|O_EXCL
-value|FEXLOCK
+value|FEXCL
 end_define
 
 begin_comment
-comment|/* exclusive open */
+comment|/* error on create if file exists */
 end_comment
 
 begin_comment
-comment|/* flags supplied to access call */
+comment|/*  * Flock call.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|FACCESS_EXISTS
-value|0x0
+name|LOCK_SH
+value|1
+end_define
+
+begin_comment
+comment|/* shared lock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOCK_EX
+value|2
+end_define
+
+begin_comment
+comment|/* exclusive lock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOCK_UN
+value|4
+end_define
+
+begin_comment
+comment|/* unlock */
+end_comment
+
+begin_comment
+comment|/*  * Access call.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_OK
+value|0
 end_define
 
 begin_comment
@@ -394,8 +420,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FACCESS_EXECUTE
-value|0x1
+name|X_OK
+value|1
 end_define
 
 begin_comment
@@ -405,8 +431,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FACCESS_WRITE
-value|0x2
+name|W_OK
+value|2
 end_define
 
 begin_comment
@@ -416,8 +442,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FACCESS_READ
-value|0x4
+name|R_OK
+value|4
 end_define
 
 begin_comment
@@ -425,14 +451,14 @@ comment|/* readable by caller */
 end_comment
 
 begin_comment
-comment|/* flags supplies to lseek call */
+comment|/*  * Lseek call.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|FSEEK_ABSOLUTE
-value|0x0
+name|L_SET
+value|0
 end_define
 
 begin_comment
@@ -442,8 +468,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FSEEK_RELATIVE
-value|0x1
+name|L_INCR
+value|1
 end_define
 
 begin_comment
@@ -453,50 +479,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FSEEK_EOF
-value|0x2
+name|L_XTND
+value|2
 end_define
 
 begin_comment
 comment|/* relative to end of file */
 end_comment
 
-begin_comment
-comment|/* file types which may be specified to mknod */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FTYPE_CDEV
-value|0x2000
-end_define
-
-begin_comment
-comment|/* character special device */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FTYPE_DIR
-value|0x4000
-end_define
-
-begin_comment
-comment|/* directory */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FTYPE_BDEV
-value|0x8000
-end_define
-
-begin_comment
-comment|/* block special device */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
 
 begin_define
 define|#
@@ -509,6 +504,33 @@ name|fd
 parameter_list|)
 value|{ \ 	if ((unsigned)(fd)>= NOFILE || ((fp) = u.u_ofile[fd]) == NULL) { \ 		u.u_error = EBADF; \ 		return; \ 	} \ }
 end_define
+
+begin_define
+define|#
+directive|define
+name|DTYPE_INODE
+value|1
+end_define
+
+begin_comment
+comment|/* file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DTYPE_SOCKET
+value|2
+end_define
+
+begin_comment
+comment|/* communications endpoint */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
