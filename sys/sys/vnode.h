@@ -229,7 +229,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Reading or writing any of these items requires holding the appropriate lock.  *  * Lock reference:  * V		vnode lock  * I		inter lock  * F		freelist mutex  * M		mntvnodes mutex  * P		pollinfo lock  */
+comment|/*  * Reading or writing any of these items requires holding the appropriate lock.  *  * Lock reference:  *	f - freelist mutex  *	i - interlock  *	m - mntvnodes mutex  *	p - pollinfo lock  *	v - vnode lock  *  * XXX Not all fields are locked yet and some fields that are marked are not  * locked consistently.  This is a work in progress.  */
 end_comment
 
 begin_struct
@@ -240,37 +240,37 @@ name|struct
 name|mtx
 name|v_interlock
 decl_stmt|;
-comment|/* lock on usecount and flag */
+comment|/* lock for "i" things */
 name|u_long
 name|v_iflag
 decl_stmt|;
-comment|/* I vnode flags (see below) */
+comment|/* i vnode flags (see below) */
 name|int
 name|v_usecount
 decl_stmt|;
-comment|/* I ref count of users */
+comment|/* i ref count of users */
 name|int
 name|v_writecount
 decl_stmt|;
-comment|/* I ref count of writers */
+comment|/* i ref count of writers */
 name|long
 name|v_numoutput
 decl_stmt|;
-comment|/* I writes in progress */
+comment|/* i writes in progress */
 name|struct
 name|thread
 modifier|*
 name|v_vxproc
 decl_stmt|;
-comment|/* I thread owning VXLOCK */
+comment|/* i thread owning VXLOCK */
 name|int
 name|v_holdcnt
 decl_stmt|;
-comment|/* I page& buffer references */
+comment|/* i page& buffer references */
 name|u_long
 name|v_vflag
 decl_stmt|;
-comment|/* V vnode flags */
+comment|/* v vnode flags */
 name|u_long
 name|v_id
 decl_stmt|;
@@ -293,14 +293,14 @@ argument|vnode
 argument_list|)
 name|v_freelist
 expr_stmt|;
-comment|/* F vnode freelist */
+comment|/* f vnode freelist */
 name|TAILQ_ENTRY
 argument_list|(
 argument|vnode
 argument_list|)
 name|v_nmntvnodes
 expr_stmt|;
-comment|/* M vnodes for mount point */
+comment|/* m vnodes for mount point */
 name|struct
 name|buflists
 name|v_cleanblkhd
@@ -449,7 +449,7 @@ name|vpollinfo
 modifier|*
 name|v_pollinfo
 decl_stmt|;
-comment|/* P Poll events */
+comment|/* p Poll events */
 name|struct
 name|label
 name|v_label
