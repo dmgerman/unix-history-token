@@ -507,6 +507,13 @@ literal|1
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|len
+operator|!=
+literal|0
+condition|)
+block|{
 name|GET_SPACE_RET
 argument_list|(
 name|sp
@@ -600,6 +607,7 @@ condition|)
 goto|goto
 name|err
 goto|;
+block|}
 goto|goto
 name|done
 goto|;
