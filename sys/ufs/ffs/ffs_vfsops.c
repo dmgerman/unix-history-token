@@ -3461,6 +3461,31 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* XXX */
+comment|/* Enforce limit caused by vm object backing (32 bits vm_pindex_t). */
+if|if
+condition|(
+name|maxfilesize
+operator|>
+operator|(
+name|u_int64_t
+operator|)
+literal|0x80000000u
+operator|*
+name|PAGE_SIZE
+operator|-
+literal|1
+condition|)
+name|maxfilesize
+operator|=
+operator|(
+name|u_int64_t
+operator|)
+literal|0x80000000u
+operator|*
+name|PAGE_SIZE
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|fs
