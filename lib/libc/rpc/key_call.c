@@ -4,12 +4,37 @@ comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1986-1991 by Sun Microsystems Inc.   *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1986-1991 by Sun Microsystems Inc.   */
 end_comment
 
 begin_empty
 empty|#ident	"@(#)key_call.c	1.25	94/04/24 SMI"
 end_empty
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * key_call.c, Interface to keyserver  *  * setsecretkey(key) - set your secret key  * encryptsessionkey(agent, deskey) - encrypt a session key to talk to agent  * decryptsessionkey(agent, deskey) - decrypt ditto  * gendeskey(deskey) - generate a secure des key  */
@@ -1608,6 +1633,12 @@ name|tpconf
 operator|=
 name|NULL
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 if|if
 condition|(
 name|uname
@@ -1619,6 +1650,51 @@ operator|==
 operator|-
 literal|1
 condition|)
+else|#
+directive|else
+if|#
+directive|if
+name|defined
+argument_list|(
+name|i386
+argument_list|)
+if|if
+condition|(
+name|_nuname
+argument_list|(
+operator|&
+name|u
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|sparc
+argument_list|)
+if|if
+condition|(
+name|_uname
+argument_list|(
+operator|&
+name|u
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+else|#
+directive|else
+error|#
+directive|error
+error|Unknown architecture!
+endif|#
+directive|endif
+endif|#
+directive|endif
 block|{
 name|endnetconfig
 argument_list|(
