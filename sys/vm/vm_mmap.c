@@ -3276,6 +3276,9 @@ argument_list|,
 name|pindex
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 comment|/* 				 * if the page is resident, then gather information about 				 * it. 				 */
 if|if
 condition|(
@@ -3330,6 +3333,9 @@ name|MINCORE_REFERENCED_OTHER
 expr_stmt|;
 block|}
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 block|}
 comment|/* 			 * subyte may page fault.  In case it needs to modify 			 * the map, we release the lock. 			 */
 name|vm_map_unlock_read
