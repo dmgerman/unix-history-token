@@ -6046,6 +6046,16 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+comment|/* 		 * Special case ourself; we may be idle for extended periods 		 * of time and regardless reclaiming our state is wrong. 		 */
+if|if
+condition|(
+name|ni
+operator|==
+name|ic
+operator|->
+name|ic_bss
+condition|)
+continue|continue;
 name|ni
 operator|->
 name|ni_inact
