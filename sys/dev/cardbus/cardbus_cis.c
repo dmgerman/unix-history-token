@@ -3149,6 +3149,7 @@ specifier|const
 expr|struct
 name|resource_list_entry
 operator|*
+specifier|const
 operator|*
 operator|)
 name|b
@@ -3163,6 +3164,7 @@ specifier|const
 expr|struct
 name|resource_list_entry
 operator|*
+specifier|const
 operator|*
 operator|)
 name|a
