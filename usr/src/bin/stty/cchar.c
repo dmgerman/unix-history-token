@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cchar.c	8.2 (Berkeley) %G%"
+literal|"@(#)cchar.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -160,6 +160,14 @@ name|CLNEXT
 block|}
 block|,
 block|{
+literal|"min"
+block|,
+name|VMIN
+block|,
+name|CMIN
+block|}
+block|,
+block|{
 literal|"quit"
 block|,
 name|VQUIT
@@ -208,15 +216,7 @@ name|CSUSP
 block|}
 block|,
 block|{
-literal|"vmin"
-block|,
-name|VMIN
-block|,
-name|CMIN
-block|}
-block|,
-block|{
-literal|"vtime"
+literal|"time"
 block|,
 name|VTIME
 block|,
