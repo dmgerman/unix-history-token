@@ -956,13 +956,13 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-comment|/* Set the time to what it is right now. */
 name|time
 argument_list|(
 operator|&
 name|now
 argument_list|)
 expr_stmt|;
+comment|/* Used by routines in print.c. */
 if|if
 condition|(
 operator|(
@@ -1157,19 +1157,21 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|xkeep
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-comment|/* Neither -x nor -X */
 name|all
+operator|=
+name|dropgid
 operator|=
 name|_fmt
 operator|=
 name|nselectors
 operator|=
+name|optfatal
+operator|=
+literal|0
+expr_stmt|;
 name|prtheader
+operator|=
+name|showthreads
 operator|=
 name|wflag
 operator|=
@@ -1177,6 +1179,12 @@ name|xkeep_implied
 operator|=
 literal|0
 expr_stmt|;
+name|xkeep
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* Neither -x nor -X. */
 name|init_list
 argument_list|(
 operator|&
@@ -1282,23 +1290,11 @@ argument_list|,
 literal|"user"
 argument_list|)
 expr_stmt|;
-name|dropgid
-operator|=
-literal|0
-expr_stmt|;
-name|optfatal
-operator|=
-literal|0
-expr_stmt|;
 name|memf
 operator|=
 name|nlistf
 operator|=
 name|_PATH_DEVNULL
-expr_stmt|;
-name|showthreads
-operator|=
-literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -1420,18 +1416,17 @@ name|nselectors
 operator|++
 expr_stmt|;
 break|break;
-if|#
-directive|if
-literal|0
-comment|/* XXX - This SUSv3 option is still under debate. */
-comment|/* (it conflicts with the undocumented `-g' option) */
-block|case 'g': 			add_list(&pgrplist, optarg); 			xkeep_implied = 1; 			nselectors++; 			break;
-else|#
-directive|else
 case|case
 literal|'g'
 case|:
-comment|/* Historical BSD-ish (from SunOS) option */
+if|#
+directive|if
+literal|0
+comment|/* 			 * XXX - This SUSv3 behavior is still under debate 			 *	since it conflicts with the (undocumented) 			 *	`-g' option.  So we skip it for now. 			 */
+block|add_list(&pgrplist, optarg); 			xkeep_implied = 1; 			nselectors++; 			break;
+else|#
+directive|else
+comment|/* The historical BSD-ish (from SunOS) behavior. */
 break|break;
 comment|/* no-op */
 endif|#
@@ -1624,9 +1619,8 @@ break|break;
 if|#
 directive|if
 literal|0
-comment|/* XXX - This un-standard option is still under debate. */
 block|case 'R':
-comment|/* This is what SUSv3 defines as the `-U' option. */
+comment|/* 			 * XXX - This un-standard option is still under 			 *	debate.  This is what SUSv3 defines as 			 *	the `-U' option, and while it would be 			 *	nice to have, it could cause even more 			 *	confusion to implement it as `-R'. 			 */
 block|add_list(&ruidlist, optarg); 			xkeep_implied = 1; 			nselectors++; 			break;
 endif|#
 directive|endif
@@ -1649,10 +1643,8 @@ break|break;
 if|#
 directive|if
 literal|0
-comment|/* XXX - This non-standard option is still under debate. */
-comment|/* (it conflicts with `-s' in NetBSD) */
 block|case 's':
-comment|/* As seen on Solaris, Linux, IRIX. */
+comment|/* 			 * XXX - This non-standard option is still under 			 *	debate.  This *is* supported on Solaris, 			 *	Linux, and IRIX, but conflicts with `-s' 			 *	on NetBSD and maybe some older BSD's. 			 */
 block|add_list(&sesslist, optarg); 			xkeep_implied = 1; 			nselectors++; 			break;
 endif|#
 directive|endif
@@ -1857,14 +1849,14 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Error messages already printed */
+comment|/* Error messages already printed. */
 if|if
 condition|(
 name|xkeep
 operator|<
 literal|0
 condition|)
-comment|/* Neither -X nor -x was specified */
+comment|/* Neither -X nor -x was specified. */
 name|xkeep
 operator|=
 name|xkeep_implied
@@ -1892,13 +1884,11 @@ operator|*
 operator|++
 name|argv
 condition|)
-block|{
 name|memf
 operator|=
 operator|*
 name|argv
 expr_stmt|;
-block|}
 block|}
 endif|#
 directive|endif
@@ -2132,7 +2122,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* XXX - KERN_PROC_SESSION causes error in kvm_getprocs? */
+comment|/* 		 * XXX - KERN_PROC_SESSION causes error in kvm_getprocs? 		 *	For now, always do sid-matching in this routine. 		 */
 block|} else if (sesslist.count == 1) { 			what = KERN_PROC_SESSION | showthreads; 			flag = *sesslist.pids; 			nselectors = 0;
 endif|#
 directive|endif
@@ -2950,7 +2940,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* Do not add this value */
+comment|/* Do not add this value. */
 block|}
 comment|/* 	 * SUSv3 states that `ps -G grouplist' should match "real-group 	 * ID numbers", and does not mention group-names.  I do want to 	 * also support group-names, so this tries for a group-id first, 	 * and only tries for a name if that doesn't work.  This is the 	 * opposite order of what is done in addelem_uid(), but in 	 * practice the order would only matter for group-names which 	 * are all-numeric. 	 */
 name|grp
@@ -3054,7 +3044,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* Do not add this value */
+comment|/* Do not add this value. */
 block|}
 if|if
 condition|(
@@ -3103,7 +3093,7 @@ value|99999
 end_define
 
 begin_comment
-comment|/* Copy of PID_MAX from sys/proc.h */
+comment|/* Copy of PID_MAX from sys/proc.h. */
 end_comment
 
 begin_function
@@ -3234,7 +3224,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* Do not add this value */
+comment|/* Do not add this value. */
 block|}
 block|}
 if|if
@@ -3402,7 +3392,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* Do not add this value */
+comment|/* Do not add this value. */
 block|}
 if|if
 condition|(
@@ -3431,7 +3421,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* Do not add this value */
+comment|/* Do not add this value. */
 block|}
 if|if
 condition|(
@@ -3552,7 +3542,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* Do not add this value */
+comment|/* Do not add this value. */
 block|}
 name|pwd
 operator|=
@@ -3663,7 +3653,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* Do not add this value */
+comment|/* Do not add this value. */
 block|}
 if|if
 condition|(
@@ -3858,7 +3848,7 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|ADD_PS_LISTRESET
-comment|/* This is how the standard expects lists to be handled. */
+comment|/* 			 * This is how the standard expects lists to 			 * be handled. 			 */
 name|inf
 operator|->
 name|addelem
@@ -3870,7 +3860,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* 	 * This would add a simple non-standard-but-convienent feature. 	 * 	 * XXX - Adding this check increased the total size of `ps' by 	 *	3940 bytes on i386!  That's 12% of the entire program! 	 *	The `ps.o' file grew by only about 40 bytes, but the 	 *	final (stripped) executable in /bin/ps grew by 12%. 	 */
+comment|/* 			 * This would add a simple non-standard-but-convienent 			 * feature. 			 * 			 * XXX - The first time I tried to add this check, 			 *	it increased the total size of `ps' by 3940 			 *	bytes on i386!  That's 12% of the entire 			 *	program!  The `ps.o' file grew by only about 			 *	40 bytes, but the final (stripped) executable 			 *	in /bin/ps grew by 12%.  I have not had time 			 *	to investigate, so skip the feature for now. 			 */
 comment|/* 			 * We now have a single element.  Add it to the 			 * list, unless the element is ":".  In that case, 			 * reset the list so previous entries are ignored. 			 */
 if|if
 condition|(
