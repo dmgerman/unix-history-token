@@ -1737,7 +1737,6 @@ name|m_tag_link
 argument_list|)
 expr_stmt|;
 else|else
-block|{
 name|SLIST_INSERT_AFTER
 argument_list|(
 name|tprev
@@ -1751,7 +1750,6 @@ name|tprev
 operator|=
 name|t
 expr_stmt|;
-block|}
 block|}
 return|return
 literal|1
