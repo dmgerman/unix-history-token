@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trace.c	5.5 (Berkeley) %G%"
+literal|"@(#)trace.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,6 +42,12 @@ begin_include
 include|#
 directive|include
 file|"defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
 end_include
 
 begin_include
@@ -389,6 +395,52 @@ name|ftrace
 operator|!=
 name|NULL
 condition|)
+block|{
+name|int
+name|fd
+init|=
+name|open
+argument_list|(
+literal|"/dev/null"
+argument_list|,
+name|O_RDWR
+argument_list|)
+decl_stmt|;
+name|fprintf
+argument_list|(
+name|ftrace
+argument_list|,
+literal|"Tracing disabled\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|dup2
+argument_list|(
+name|fd
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|dup2
+argument_list|(
+name|fd
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 name|fclose
 argument_list|(
 name|ftrace
@@ -398,6 +450,7 @@ name|ftrace
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 name|traceactions
 operator|=
 literal|0
