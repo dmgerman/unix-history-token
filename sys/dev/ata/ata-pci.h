@@ -1092,6 +1092,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_SIS964
+value|0x09641039
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_SIS964_1
+value|0x01801039
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_VIA_ID
 value|0x1106
 end_define
@@ -1376,43 +1390,50 @@ end_define
 begin_define
 define|#
 directive|define
-name|SIS133NEW
+name|SISSATA
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|SIS133OLD
+name|SIS133NEW
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|SIS100NEW
+name|SIS133OLD
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|SIS100OLD
+name|SIS100NEW
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|SIS66
+name|SIS100OLD
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|SIS33
+name|SIS66
 value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIS33
+value|8
 end_define
 
 begin_define
