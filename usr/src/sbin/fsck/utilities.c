@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.29 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2299,17 +2299,6 @@ name|cp
 operator|-=
 name|len
 expr_stmt|;
-if|if
-condition|(
-name|cp
-operator|<
-operator|&
-name|namebuf
-index|[
-name|MAXNAMLEN
-index|]
-condition|)
-break|break;
 name|bcopy
 argument_list|(
 name|namebuf
@@ -2328,6 +2317,17 @@ name|cp
 operator|=
 literal|'/'
 expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|<
+operator|&
+name|namebuf
+index|[
+name|MAXNAMLEN
+index|]
+condition|)
+break|break;
 name|ino
 operator|=
 name|idesc
@@ -2345,19 +2345,12 @@ name|ino
 operator|!=
 name|ROOTINO
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|namebuf
-argument_list|,
-literal|"?"
-argument_list|)
+operator|*
+operator|--
+name|cp
+operator|=
+literal|'?'
 expr_stmt|;
-return|return;
-block|}
 name|bcopy
 argument_list|(
 name|cp
