@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)analyze.c	5.1 (Berkeley) %G%"
+literal|"@(#)analyze.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -318,11 +318,14 @@ name|p0br
 index|[
 name|ctopt
 argument_list|(
+name|btoc
+argument_list|(
 name|MAXTSIZ
 operator|+
 name|MAXDSIZ
 operator|+
 name|MAXSSIZ
+argument_list|)
 argument_list|)
 index|]
 index|[
