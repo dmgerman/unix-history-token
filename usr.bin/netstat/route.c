@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.21 1996/10/28 18:56:44 wollman Exp $"
+literal|"$Id: route.c,v 1.22 1996/12/10 17:11:53 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_dl.h>
 end_include
 
@@ -83,23 +89,11 @@ directive|include
 file|<net/if_types.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|KERNEL
-end_define
-
 begin_include
 include|#
 directive|include
 file|<net/route.h>
 end_include
-
-begin_undef
-undef|#
-directive|undef
-name|KERNEL
-end_undef
 
 begin_include
 include|#

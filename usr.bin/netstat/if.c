@@ -9,13 +9,18 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/* static char sccsid[] = "@(#)if.c	8.3 (Berkeley) 4/28/95"; */
+end_comment
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)if.c	8.3 (Berkeley) 4/28/95"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
 end_include
 
 begin_include
