@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	3.14	%G%"
+literal|"@(#)parseaddr.c	3.15	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2414,6 +2414,12 @@ operator|->
 name|q_flags
 operator|=
 literal|0
+expr_stmt|;
+name|a
+operator|->
+name|q_home
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* figure out what net/mailer to use */
 if|if

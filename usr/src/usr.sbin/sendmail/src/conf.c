@@ -27,7 +27,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	3.13	%G%"
+literal|"@(#)conf.c	3.14	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -174,6 +174,57 @@ block|,
 literal|"$f"
 block|,
 name|ProgArgv
+block|,
+name|NULL
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* user-private mailers -- must be #2 */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|PrivArgv
+index|[]
+init|=
+block|{
+literal|"...priv%mail"
+block|,
+literal|"$u"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mailer
+name|PrivMailer
+init|=
+block|{
+literal|"priv"
+block|,
+name|NULL
+block|,
+name|M_ROPT
+operator||
+name|M_NOHOST
+operator||
+name|M_STRIPQ
+operator||
+name|M_ARPAFMT
+block|,
+name|EX_UNAVAILABLE
+block|,
+literal|"$f"
+block|,
+name|PrivArgv
 block|,
 name|NULL
 block|, }
@@ -368,35 +419,29 @@ name|ProgMailer
 block|,
 comment|/* 1 -- must be 1 */
 operator|&
-name|BerkMailer
+name|PrivMailer
 block|,
-comment|/* 2 */
+comment|/* 2 -- must be 2 */
 operator|&
-name|ArpaMailer
+name|BerkMailer
 block|,
 comment|/* 3 */
 operator|&
-name|UucpMailer
+name|ArpaMailer
 block|,
 comment|/* 4 */
+operator|&
+name|UucpMailer
+block|,
+comment|/* 5 */
 name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|M_LOCAL
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|M_PROG
-value|1
-end_define
+begin_comment
+comment|/* offsets for arbitrary mailers */
+end_comment
 
 begin_define
 define|#
@@ -405,6 +450,10 @@ name|M_BERK
 value|2
 end_define
 
+begin_comment
+comment|/* berknet */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -412,12 +461,20 @@ name|M_ARPA
 value|3
 end_define
 
+begin_comment
+comment|/* arpanet */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|M_UUCP
 value|4
 end_define
+
+begin_comment
+comment|/* UUCPnet */
+end_comment
 
 begin_comment
 comment|/* **  Header info table **	Final (null) entry contains the flags used for any other field. */

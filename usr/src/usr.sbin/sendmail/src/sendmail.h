@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.18	%G% */
+comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.19	%G% */
 end_comment
 
 begin_include
@@ -125,6 +125,11 @@ name|short
 name|q_flags
 decl_stmt|;
 comment|/* status flags, see below */
+name|char
+modifier|*
+name|q_home
+decl_stmt|;
+comment|/* home dir (local mailer only) */
 name|struct
 name|address
 modifier|*
@@ -163,17 +168,6 @@ end_define
 
 begin_comment
 comment|/* this address is verified bad */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|QGOODADDR
-value|000004
-end_define
-
-begin_comment
-comment|/* this address is verified good */
 end_comment
 
 begin_comment
@@ -392,6 +386,47 @@ name|Mailer
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* special mailer numbers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_LOCAL
+value|0
+end_define
+
+begin_comment
+comment|/* local mailer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PROG
+value|1
+end_define
+
+begin_comment
+comment|/* program mailer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PRIVATE
+value|2
+end_define
+
+begin_comment
+comment|/* user's private mailer */
+end_comment
+
+begin_comment
+comment|/* mailers from 3 on are arbitrary */
+end_comment
 
 begin_comment
 comment|/* **  Header structure. **	This structure is used internally to store header items. */

@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)savemail.c	3.8	%G%"
+literal|"@(#)savemail.c	3.9	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -211,6 +211,13 @@ expr_stmt|;
 block|}
 block|}
 end_if
+
+begin_expr_stmt
+name|To
+operator|=
+name|NULL
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* 	**  If called from Eric Schmidt's network, do special mailback. 	**	Fundamentally, this is the mailback case except that 	**	it returns an OK exit status (assuming the return 	**	worked). 	*/
@@ -534,6 +541,13 @@ argument_list|()
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|p
+operator|=
+name|NULL
+expr_stmt|;
+end_expr_stmt
+
 begin_if
 if|if
 condition|(
@@ -541,8 +555,26 @@ name|From
 operator|.
 name|q_mailer
 operator|==
-literal|0
-operator|&&
+name|M_LOCAL
+condition|)
+block|{
+if|if
+condition|(
+name|From
+operator|.
+name|q_home
+operator|!=
+name|NULL
+condition|)
+name|p
+operator|=
+name|From
+operator|.
+name|q_home
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 operator|(
 name|pw
 operator|=
@@ -556,8 +588,6 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-block|{
-comment|/* user has a home directory */
 name|p
 operator|=
 name|pw
@@ -565,17 +595,23 @@ operator|->
 name|pw_dir
 expr_stmt|;
 block|}
-else|else
+end_if
+
+begin_if
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"Can't return mail to %s (pw=%u)"
+literal|"Can't return mail to %s"
 argument_list|,
 name|From
 operator|.
 name|q_paddr
-argument_list|,
-name|pw
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -605,18 +641,34 @@ name|NULL
 condition|)
 block|{
 comment|/* we have a home directory; open dead.letter */
-name|strcpy
+name|message
 argument_list|(
-name|buf
+literal|"050"
+argument_list|,
+literal|"Saving message in dead.letter"
+argument_list|)
+expr_stmt|;
+name|define
+argument_list|(
+literal|'z'
 argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|strcat
+name|expand
 argument_list|(
+literal|"$z/dead.letter"
+argument_list|,
 name|buf
 argument_list|,
-literal|"/dead.letter"
+operator|&
+name|buf
+index|[
+sizeof|sizeof
+name|buf
+operator|-
+literal|1
+index|]
 argument_list|)
 expr_stmt|;
 name|To
@@ -638,7 +690,7 @@ name|TRUE
 argument_list|,
 name|Mailer
 index|[
-literal|0
+name|M_LOCAL
 index|]
 argument_list|)
 expr_stmt|;
