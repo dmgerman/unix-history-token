@@ -131,7 +131,7 @@ begin_define
 define|#
 directive|define
 name|IOMMU_MAX_PRE
-value|BUS_SPACE_MAXSIZE
+value|(128 * 1024)
 end_define
 
 begin_define
