@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_fputc[] = @(#)fputc_.c	1.1";  *  * write a character to a logical unit bypassing formatted I/O  *  * calling sequence:  *	integer fputc  *	ierror = fputc (unit, char)  * where:  *	char will be sent to the logical unit  *	ierror will be 0 if successful; a system error code otherwise.  */
+comment|/* char id_fputc[] = @(#)fputc_.c	1.2";  *  * write a character to a logical unit bypassing formatted I/O  *  * calling sequence:  *	integer fputc  *	ierror = fputc (unit, char)  * where:  *	char will be sent to the logical unit  *	ierror will be 0 if successful; a system error code otherwise.  */
 end_comment
 
 begin_include
@@ -72,7 +72,7 @@ call|)
 argument_list|(
 name|errno
 operator|=
-name|F_ERARG
+name|F_ERUNIT
 argument_list|)
 operator|)
 return|;

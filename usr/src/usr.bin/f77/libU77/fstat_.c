@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_fstat[] = "@(#)fstat_.c	1.1";  *  * get file status  *  * calling sequence:  *	integer fstat, statb(11)  *	call fstat (name, statb)  * where:  *	'statb' will receive the stat structure for file 'name'.  */
+comment|/* char id_fstat[] = "@(#)fstat_.c	1.2";  *  * get file status  *  * calling sequence:  *	integer fstat, statb(11)  *	call fstat (name, statb)  * where:  *	'statb' will receive the stat structure for file 'name'.  */
 end_comment
 
 begin_include
@@ -78,7 +78,7 @@ call|)
 argument_list|(
 name|errno
 operator|=
-name|F_ERARG
+name|F_ERUNIT
 argument_list|)
 operator|)
 return|;

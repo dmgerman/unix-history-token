@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_fseek[] = "@(#)fseek_.c	1.1";  *  * position a file associated with a fortran logical unit  *  * calling sequence:  *	ierror = fseek(lunit, ioff, ifrom)  * where:  *	lunit is an open logical unit  *	ioff is an offset in bytes relative to the position specified by ifrom  *	ifrom	- 0 means 'beginning of the file'  *		- 1 means 'the current position'  *		- 2 means 'the end of the file'  *	ierror will be 0 if successful, a system error code otherwise.  */
+comment|/* char id_fseek[] = "@(#)fseek_.c	1.2";  *  * position a file associated with a fortran logical unit  *  * calling sequence:  *	ierror = fseek(lunit, ioff, ifrom)  * where:  *	lunit is an open logical unit  *	ioff is an offset in bytes relative to the position specified by ifrom  *	ifrom	- 0 means 'beginning of the file'  *		- 1 means 'the current position'  *		- 2 means 'the end of the file'  *	ierror will be 0 if successful, a system error code otherwise.  */
 end_comment
 
 begin_include
@@ -64,7 +64,21 @@ operator|*
 name|lu
 operator|>=
 name|MXUNIT
-operator|||
+condition|)
+return|return
+operator|(
+call|(
+name|long
+call|)
+argument_list|(
+name|errno
+operator|=
+name|F_ERUNIT
+argument_list|)
+operator|)
+return|;
+if|if
+condition|(
 operator|*
 name|from
 operator|<
