@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	3.7	%G%	*/
+comment|/*	param.h	3.8	%G%	*/
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ begin_define
 define|#
 directive|define
 name|NINODE
-value|250
+value|400
 end_define
 
 begin_comment
@@ -33,7 +33,7 @@ begin_define
 define|#
 directive|define
 name|NFILE
-value|225
+value|350
 end_define
 
 begin_comment
@@ -143,7 +143,7 @@ begin_define
 define|#
 directive|define
 name|NPROC
-value|150
+value|250
 end_define
 
 begin_comment
