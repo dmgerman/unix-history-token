@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: csh.c,v 1.10 1997/08/08 00:49:25 steve Exp $"
+literal|"$Id: csh.c,v 1.11 1997/10/07 16:27:48 eivind Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,7 +75,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -88,12 +88,6 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
 end_include
 
 begin_include
