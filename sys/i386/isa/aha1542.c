@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (Mostly) Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: aha1542.c,v 1.39 1995/01/08 13:41:28 dufault Exp $  */
+comment|/*  * (Mostly) Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: aha1542.c,v 1.40 1995/01/19 12:33:10 dufault Exp $  */
 end_comment
 
 begin_comment
@@ -2841,7 +2841,7 @@ operator|)
 name|PHYSTOKV
 argument_list|(
 operator|(
-name|_3btol
+name|scsi_3btou
 argument_list|(
 name|aha
 operator|->
@@ -3567,7 +3567,7 @@ name|xs
 operator|->
 name|datalen
 operator|-
-name|_3btol
+name|scsi_3btoi
 argument_list|(
 name|ccb
 operator|->
@@ -3599,7 +3599,7 @@ name|xs
 operator|->
 name|resid
 operator|=
-name|_3btol
+name|scsi_3btoi
 argument_list|(
 name|ccb
 operator|->
@@ -4592,7 +4592,7 @@ endif|#
 directive|endif
 comment|/*TUNE_1542*/
 comment|/* 	 * Initialize mail box  	 */
-name|lto3b
+name|scsi_uto3b
 argument_list|(
 name|KVTOPHYS
 argument_list|(
@@ -4701,7 +4701,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|lto3b
+name|scsi_uto3b
 argument_list|(
 name|KVTOPHYS
 argument_list|(
@@ -5053,7 +5053,7 @@ operator|)
 condition|)
 block|{
 comment|/* can use S/G only if not zero length */
-name|lto3b
+name|scsi_uto3b
 argument_list|(
 name|KVTOPHYS
 argument_list|(
@@ -5130,7 +5130,7 @@ name|AHA_NSEG
 operator|)
 condition|)
 block|{
-name|lto3b
+name|scsi_uto3b
 argument_list|(
 name|iovp
 operator|->
@@ -5141,7 +5141,7 @@ operator|->
 name|seg_addr
 argument_list|)
 expr_stmt|;
-name|lto3b
+name|scsi_uto3b
 argument_list|(
 name|iovp
 operator|->
@@ -5254,7 +5254,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* put in the base address */
-name|lto3b
+name|scsi_uto3b
 argument_list|(
 name|thisphys
 argument_list|,
@@ -5422,7 +5422,7 @@ name|bytes_this_seg
 operator|)
 argument_list|)
 expr_stmt|;
-name|lto3b
+name|scsi_uto3b
 argument_list|(
 name|bytes_this_seg
 argument_list|,
@@ -5439,7 +5439,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-name|lto3b
+name|scsi_uto3b
 argument_list|(
 name|seg
 operator|*
@@ -5507,7 +5507,7 @@ block|}
 else|else
 block|{
 comment|/* No data xfer, use non S/G values */
-name|lto3b
+name|scsi_uto3b
 argument_list|(
 literal|0
 argument_list|,
@@ -5516,7 +5516,7 @@ operator|->
 name|data_addr
 argument_list|)
 expr_stmt|;
-name|lto3b
+name|scsi_uto3b
 argument_list|(
 literal|0
 argument_list|,
@@ -5526,7 +5526,7 @@ name|data_length
 argument_list|)
 expr_stmt|;
 block|}
-name|lto3b
+name|scsi_uto3b
 argument_list|(
 literal|0
 argument_list|,
@@ -6225,7 +6225,7 @@ name|arg
 argument_list|)
 expr_stmt|;
 comment|/* 	 * put the test data into the buffer and calculate 	 * it's address. Read it onto the board 	 */
-name|lto3b
+name|scsi_uto3b
 argument_list|(
 name|KVTOPHYS
 argument_list|(

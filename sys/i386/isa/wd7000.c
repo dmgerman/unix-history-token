@@ -1443,7 +1443,7 @@ return|return
 name|TRY_AGAIN_LATER
 return|;
 block|}
-name|lto3b
+name|scsi_uto3b
 argument_list|(
 name|KVTOPHYS
 argument_list|(
@@ -1537,7 +1537,7 @@ else|:
 literal|12
 argument_list|)
 expr_stmt|;
-name|lto3b
+name|scsi_uto3b
 argument_list|(
 name|sxp
 operator|->
@@ -1607,7 +1607,7 @@ operator|->
 name|datalen
 argument_list|)
 expr_stmt|;
-name|lto3b
+name|scsi_uto3b
 argument_list|(
 name|sxp
 operator|->
@@ -1648,7 +1648,7 @@ literal|0x80
 else|:
 literal|0x00
 expr_stmt|;
-name|lto3b
+name|scsi_uto3b
 argument_list|(
 name|KVTOPHYS
 argument_list|(
@@ -1713,7 +1713,7 @@ index|]
 operator|=
 name|REQUEST_SENSE
 expr_stmt|;
-name|lto3b
+name|scsi_uto3b
 argument_list|(
 name|KVTOPHYS
 argument_list|(
@@ -1730,7 +1730,7 @@ operator|.
 name|data
 argument_list|)
 expr_stmt|;
-name|lto3b
+name|scsi_uto3b
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -2092,7 +2092,7 @@ expr|struct
 name|wds_cmd
 operator|*
 operator|)
-name|_3btol
+name|scsi_3btou
 argument_list|(
 name|in
 operator|->
@@ -2599,7 +2599,7 @@ name|sxp
 operator|=
 name|NULL
 expr_stmt|;
-name|lto3b
+name|scsi_uto3b
 argument_list|(
 name|KVTOPHYS
 argument_list|(
@@ -3254,7 +3254,7 @@ name|busoff_t
 operator|=
 literal|48
 expr_stmt|;
-name|lto3b
+name|scsi_uto3b
 argument_list|(
 name|KVTOPHYS
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.17 1995/01/19 12:41:35 dufault Exp $  */
+comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.18 1995/01/24 12:04:54 dufault Exp $  */
 end_comment
 
 begin_define
@@ -3592,13 +3592,13 @@ end_comment
 
 begin_function
 name|void
-name|lto3b
+name|scsi_uto3b
 parameter_list|(
 name|val
 parameter_list|,
 name|bytes
 parameter_list|)
-name|int
+name|u_int32
 name|val
 decl_stmt|;
 name|u_char
@@ -3641,12 +3641,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The reverse of lto3b  */
+comment|/*  * The reverse of scsi_uto3b  */
 end_comment
 
 begin_function
-name|int
-name|_3btol
+name|u_int32
+name|scsi_3btou
 parameter_list|(
 name|bytes
 parameter_list|)
@@ -3684,12 +3684,49 @@ operator|*
 name|bytes
 expr_stmt|;
 return|return
+name|rc
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * scsi_3btoi: scsi_3btou for twos complement signed integers:  */
+end_comment
+
+begin_function
+name|int32
+name|scsi_3btoi
+parameter_list|(
+name|bytes
+parameter_list|)
+name|u_char
+modifier|*
+name|bytes
+decl_stmt|;
+block|{
+name|u_int32
+name|rc
+init|=
+name|scsi_3btou
+argument_list|(
+name|bytes
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|rc
+operator|&
+literal|0x00800000
+condition|)
+name|rc
+operator||=
+literal|0xff000000
+expr_stmt|;
+return|return
 operator|(
-operator|(
-name|int
+name|int32
 operator|)
 name|rc
-operator|)
 return|;
 block|}
 end_function
