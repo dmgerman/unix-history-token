@@ -278,11 +278,7 @@ name|len
 operator||=
 literal|1
 operator|<<
-operator|(
-literal|14
-operator|-
 name|bit
-operator|)
 expr_stmt|;
 name|wc
 operator|=
