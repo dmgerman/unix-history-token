@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_ether.c	6.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_ether.c	6.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -89,7 +89,7 @@ begin_define
 define|#
 directive|define
 name|ARPTAB_BSIZ
-value|5
+value|9
 end_define
 
 begin_comment
@@ -1109,8 +1109,6 @@ name|struct
 name|arptab
 modifier|*
 name|at
-init|=
-literal|0
 decl_stmt|;
 comment|/* same as "merge" flag */
 name|struct
@@ -1129,6 +1127,15 @@ name|itaddr
 decl_stmt|,
 name|myaddr
 decl_stmt|;
+name|IF_ADJ
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|at
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|m
@@ -1915,7 +1922,8 @@ expr_stmt|;
 name|int
 name|oldest
 init|=
-literal|0
+operator|-
+literal|1
 decl_stmt|;
 specifier|register
 name|struct
