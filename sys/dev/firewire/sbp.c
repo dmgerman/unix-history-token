@@ -8102,9 +8102,11 @@ argument|) 		bus_dmamap_sync(ocb->sdev->target->sbp->dmat, ocb->dmamap, 			(ntoh
 literal|4
 argument|])& ORB_CMD_IN) ? 			BUS_DMASYNC_PREREAD : BUS_DMASYNC_PREWRITE); 	prev = sbp_enqueue_ocb(ocb->sdev, ocb); 	fwdma_sync(&ocb->sdev->dma, BUS_DMASYNC_PREWRITE); 	if (prev == NULL || (ocb->sdev->flags& ORB_LINK_DEAD) !=
 literal|0
-argument|) { 		ocb->sdev->flags&= ~ORB_LINK_DEAD; 		sbp_orb_pointer(ocb->sdev, ocb);  	} }  static void sbp_poll(struct cam_sim *sim) {
-comment|/* should call fwohci_intr? */
-argument|return; } static struct sbp_ocb * sbp_dequeue_ocb(struct sbp_dev *sdev, struct sbp_status *sbp_status) { 	struct sbp_ocb *ocb; 	struct sbp_ocb *next; 	int s = splfw()
+argument|) { 		ocb->sdev->flags&= ~ORB_LINK_DEAD; 		sbp_orb_pointer(ocb->sdev, ocb);  	} }  static void sbp_poll(struct cam_sim *sim) {        	struct sbp_softc *sbp; 	struct firewire_comm *fc;  	sbp = (struct sbp_softc *)sim->softc; 	fc = sbp->fd.fc;  	fc->poll(fc,
+literal|0
+argument|, -
+literal|1
+argument|);  	return; }  static struct sbp_ocb * sbp_dequeue_ocb(struct sbp_dev *sdev, struct sbp_status *sbp_status) { 	struct sbp_ocb *ocb; 	struct sbp_ocb *next; 	int s = splfw()
 argument_list|,
 argument|order =
 literal|0
