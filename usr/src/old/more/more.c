@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)more.c	4.9 (Berkeley) 83/02/14"
+literal|"@(#)more.c	4.10 (Berkeley) 83/02/17"
 decl_stmt|;
 end_decl_stmt
 
@@ -2237,7 +2237,7 @@ condition|(
 name|noscroll
 operator|&&
 name|num_lines
-operator|==
+operator|>=
 name|dlines
 condition|)
 block|{
