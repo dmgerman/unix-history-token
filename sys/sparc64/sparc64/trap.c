@@ -679,6 +679,11 @@ name|td
 operator|)
 condition|)
 block|{
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -688,7 +693,6 @@ expr_stmt|;
 name|thread_exit
 argument_list|()
 expr_stmt|;
-comment|/* XXXKSE need proc lock? */
 comment|/* NOTREACHED */
 block|}
 block|}
