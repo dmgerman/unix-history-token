@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.5 (Berkeley) %G%"
+literal|"@(#)main.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -123,6 +123,12 @@ begin_include
 include|#
 directive|include
 file|"nodes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"expand.h"
 end_include
 
 begin_include
@@ -1144,9 +1150,42 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
+name|struct
+name|strlist
+modifier|*
+name|sp
+decl_stmt|;
 name|exitstatus
 operator|=
 literal|0
+expr_stmt|;
+for|for
+control|(
+name|sp
+operator|=
+name|cmdenviron
+init|;
+name|sp
+condition|;
+name|sp
+operator|=
+name|sp
+operator|->
+name|next
+control|)
+name|setvareq
+argument_list|(
+name|savestr
+argument_list|(
+name|sp
+operator|->
+name|text
+argument_list|)
+argument_list|,
+name|VSTRFIXED
+operator||
+name|VTEXTFIXED
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
