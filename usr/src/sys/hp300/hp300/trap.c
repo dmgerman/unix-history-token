@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.28 89/09/25$  *  *	@(#)trap.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.32 91/04/06$  *  *	@(#)trap.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -215,6 +215,71 @@ name|TRAP_TYPES
 value|(sizeof trap_type / sizeof trap_type[0])
 end_define
 
+begin_comment
+comment|/*  * Size of various exception stack frames (minus the standard 8 bytes)  */
+end_comment
+
+begin_decl_stmt
+name|short
+name|exframesize
+index|[]
+init|=
+block|{
+name|FMT0SIZE
+block|,
+comment|/* type 0 - normal (68020/030/040) */
+name|FMT1SIZE
+block|,
+comment|/* type 1 - throwaway (68020/030/040) */
+name|FMT2SIZE
+block|,
+comment|/* type 2 - normal 6-word (68020/030/040) */
+operator|-
+literal|1
+block|,
+comment|/* type 3 - FP post-instruction (68040) */
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+comment|/* type 4-6 - undefined */
+operator|-
+literal|1
+block|,
+comment|/* type 7 - access error (68040) */
+literal|58
+block|,
+comment|/* type 8 - bus fault (68010) */
+name|FMT9SIZE
+block|,
+comment|/* type 9 - coprocessor mid-instruction (68020/030) */
+name|FMTASIZE
+block|,
+comment|/* type A - short bus fault (68020/030) */
+name|FMTBSIZE
+block|,
+comment|/* type B - long bus fault (68020/030) */
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+comment|/* type C-F - undefined */
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -419,6 +484,27 @@ name|copyfault
 label|:
 name|frame
 operator|.
+name|f_stackadj
+operator|=
+name|exframesize
+index|[
+name|frame
+operator|.
+name|f_format
+index|]
+expr_stmt|;
+name|frame
+operator|.
+name|f_format
+operator|=
+name|frame
+operator|.
+name|f_vector
+operator|=
+literal|0
+expr_stmt|;
+name|frame
+operator|.
 name|f_pc
 operator|=
 operator|(
@@ -431,13 +517,6 @@ operator|->
 name|u_pcb
 operator|.
 name|pcb_onfault
-expr_stmt|;
-name|frame
-operator|.
-name|f_stackadj
-operator|=
-operator|-
-literal|1
 expr_stmt|;
 return|return;
 case|case
@@ -1012,9 +1091,6 @@ specifier|extern
 name|vm_map_t
 name|kernel_map
 decl_stmt|;
-name|unsigned
-name|nss
-decl_stmt|;
 comment|/* 		 * It is only a kernel address space fault iff: 		 * 	1. (type& USER) == 0  and 		 * 	2. pcb_onfault not set or 		 *	3. pcb_onfault set but supervisor space data fault 		 * The last can occur during an exec() copyin where the 		 * argument space is lazy-allocated. 		 */
 if|if
 condition|(
@@ -1124,11 +1200,20 @@ goto|;
 block|}
 endif|#
 directive|endif
-comment|/* 		 * XXX: rude hack to make stack limits "work" 		 */
-name|nss
+name|rv
 operator|=
-literal|0
+name|vm_fault
+argument_list|(
+name|map
+argument_list|,
+name|va
+argument_list|,
+name|ftype
+argument_list|,
+name|FALSE
+argument_list|)
 expr_stmt|;
+comment|/* 		 * If this was a stack access we keep track of the maximum 		 * accessed stack size.  Also, if vm_fault gets a protection 		 * failure it is due to accessing the stack region outside 		 * the current limit and we need to reflect that as an access 		 * error. 		 */
 if|if
 condition|(
 operator|(
@@ -1145,6 +1230,16 @@ operator|!=
 name|kernel_map
 condition|)
 block|{
+if|if
+condition|(
+name|rv
+operator|==
+name|KERN_SUCCESS
+condition|)
+block|{
+name|unsigned
+name|nss
+decl_stmt|;
 name|nss
 operator|=
 name|clrnd
@@ -1164,41 +1259,29 @@ if|if
 condition|(
 name|nss
 operator|>
-name|btoc
-argument_list|(
-name|p
+name|vm
 operator|->
-name|p_rlimit
-index|[
-name|RLIMIT_STACK
-index|]
-operator|.
-name|rlim_cur
-argument_list|)
+name|vm_ssize
 condition|)
-block|{
+name|vm
+operator|->
+name|vm_ssize
+operator|=
+name|nss
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|rv
+operator|==
+name|KERN_PROTECTION_FAILURE
+condition|)
 name|rv
 operator|=
-name|KERN_FAILURE
+name|KERN_INVALID_ADDRESS
 expr_stmt|;
-goto|goto
-name|nogo
-goto|;
 block|}
-block|}
-name|rv
-operator|=
-name|vm_fault
-argument_list|(
-name|map
-argument_list|,
-name|va
-argument_list|,
-name|ftype
-argument_list|,
-name|FALSE
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|rv
@@ -1206,21 +1289,6 @@ operator|==
 name|KERN_SUCCESS
 condition|)
 block|{
-comment|/* 			 * XXX: continuation of rude stack hack 			 */
-if|if
-condition|(
-name|nss
-operator|>
-name|vm
-operator|->
-name|vm_ssize
-condition|)
-name|vm
-operator|->
-name|vm_ssize
-operator|=
-name|nss
-expr_stmt|;
 if|if
 condition|(
 name|type
@@ -1232,8 +1300,6 @@ goto|goto
 name|out
 goto|;
 block|}
-name|nogo
-label|:
 if|if
 condition|(
 name|type
@@ -2061,16 +2127,6 @@ name|p
 operator|=
 name|curproc
 expr_stmt|;
-comment|/* 	 * XXX the check for sigreturn ensures that we don't 	 * attempt to set up a call to a signal handler (sendsig) before 	 * we have cleaned up the stack from the last call (sigreturn). 	 * Allowing this seems to lock up the machine in certain scenarios. 	 * What should really be done is to clean up the signal handling 	 * so that this is not a problem. 	 */
-include|#
-directive|include
-file|"sys/syscall.h"
-if|if
-condition|(
-name|code
-operator|!=
-name|SYS_sigreturn
-condition|)
 while|while
 condition|(
 name|i
@@ -2122,12 +2178,6 @@ expr_stmt|;
 name|swtch
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|code
-operator|!=
-name|SYS_sigreturn
-condition|)
 while|while
 condition|(
 name|i
