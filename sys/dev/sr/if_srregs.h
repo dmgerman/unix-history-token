@@ -730,11 +730,11 @@ define|#
 directive|define
 name|SRC_GET8
 parameter_list|(
-name|base
+name|hc
 parameter_list|,
 name|off
 parameter_list|)
-value|(*hc->src_get8)(base,(uintptr_t)&off)
+value|(*hc->src_get8)(hc,(uintptr_t)&off)
 end_define
 
 begin_define
@@ -742,11 +742,11 @@ define|#
 directive|define
 name|SRC_GET16
 parameter_list|(
-name|base
+name|hc
 parameter_list|,
 name|off
 parameter_list|)
-value|(*hc->src_get16)(base,(uintptr_t)&off)
+value|(*hc->src_get16)(hc,(uintptr_t)&off)
 end_define
 
 begin_define
@@ -754,13 +754,13 @@ define|#
 directive|define
 name|SRC_PUT8
 parameter_list|(
-name|base
+name|hc
 parameter_list|,
 name|off
 parameter_list|,
 name|d
 parameter_list|)
-value|(*hc->src_put8)(base,(uintptr_t)&off,d)
+value|(*hc->src_put8)(hc,(uintptr_t)&off,d)
 end_define
 
 begin_define
@@ -768,13 +768,13 @@ define|#
 directive|define
 name|SRC_PUT16
 parameter_list|(
-name|base
+name|hc
 parameter_list|,
 name|off
 parameter_list|,
 name|d
 parameter_list|)
-value|(*hc->src_put16)(base,(uintptr_t)&off,d)
+value|(*hc->src_put16)(hc,(uintptr_t)&off,d)
 end_define
 
 begin_comment
@@ -796,9 +796,9 @@ define|#
 directive|define
 name|SRC_SET_ON
 parameter_list|(
-name|iobase
+name|hc
 parameter_list|)
-value|outb(iobase+SR_PCR,			     \ 					SR_PCR_MEM_WIN | inb(iobase+SR_PCR))
+value|sr_outb(hc, SR_PCR,			     \ 					SR_PCR_MEM_WIN | sr_inb(hc, SR_PCR))
 end_define
 
 begin_define
@@ -806,11 +806,11 @@ define|#
 directive|define
 name|SRC_SET_MEM
 parameter_list|(
-name|iobase
+name|hc
 parameter_list|,
 name|win
 parameter_list|)
-value|outb(iobase+SR_PSR, SRC_GET_WIN(win) |	     \ 					(inb(iobase+SR_PSR)& ~SR_PG_MSK))
+value|sr_outb(hc, SR_PSR, SRC_GET_WIN(win) |	     \ 					(sr_inb(hc, SR_PSR)& ~SR_PG_MSK))
 end_define
 
 begin_define
@@ -818,9 +818,9 @@ define|#
 directive|define
 name|SRC_SET_OFF
 parameter_list|(
-name|iobase
+name|hc
 parameter_list|)
-value|outb(iobase+SR_PCR,			     \ 					~SR_PCR_MEM_WIN& inb(iobase+SR_PCR))
+value|sr_outb(hc, SR_PCR,			     \ 					~SR_PCR_MEM_WIN& sr_inb(hc, SR_PCR))
 end_define
 
 begin_comment
@@ -863,9 +863,6 @@ name|u_int
 name|winmsk
 decl_stmt|;
 name|vm_offset_t
-name|sca_base
-decl_stmt|;
-name|vm_offset_t
 name|mem_pstart
 decl_stmt|;
 comment|/* start of buffer */
@@ -877,19 +874,22 @@ name|caddr_t
 name|mem_end
 decl_stmt|;
 comment|/* end of DP RAM */
-name|caddr_t
-name|plx_base
-decl_stmt|;
 name|sca_regs
 modifier|*
 name|sca
 decl_stmt|;
 comment|/* register array */
 name|bus_space_tag_t
-name|bt
+name|bt_ioport
+decl_stmt|;
+name|bus_space_tag_t
+name|bt_memory
 decl_stmt|;
 name|bus_space_handle_t
-name|bh
+name|bh_ioport
+decl_stmt|;
+name|bus_space_handle_t
+name|bh_memory
 decl_stmt|;
 name|int
 name|rid_ioport
@@ -937,8 +937,10 @@ modifier|*
 name|src_put8
 function_decl|)
 parameter_list|(
-name|u_int
-name|base
+name|struct
+name|sr_hardc
+modifier|*
+name|hc
 parameter_list|,
 name|u_int
 name|off
@@ -953,8 +955,10 @@ modifier|*
 name|src_put16
 function_decl|)
 parameter_list|(
-name|u_int
-name|base
+name|struct
+name|sr_hardc
+modifier|*
+name|hc
 parameter_list|,
 name|u_int
 name|off
@@ -969,8 +973,10 @@ modifier|*
 name|src_get8
 function_decl|)
 parameter_list|(
-name|u_int
-name|base
+name|struct
+name|sr_hardc
+modifier|*
+name|hc
 parameter_list|,
 name|u_int
 name|off
@@ -982,8 +988,10 @@ modifier|*
 name|src_get16
 function_decl|)
 parameter_list|(
-name|u_int
-name|base
+name|struct
+name|sr_hardc
+modifier|*
+name|hc
 parameter_list|,
 name|u_int
 name|off
@@ -1093,6 +1101,58 @@ name|device
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|sr_inb
+parameter_list|(
+name|hc
+parameter_list|,
+name|port
+parameter_list|)
+define|\
+value|bus_space_read_1((hc)->bt_ioport, (hc)->bh_ioport, (port))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sr_outb
+parameter_list|(
+name|hc
+parameter_list|,
+name|port
+parameter_list|,
+name|value
+parameter_list|)
+define|\
+value|bus_space_write_1((hc)->bt_ioport, (hc)->bh_ioport, (port), (value))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sr_read_fecr
+parameter_list|(
+name|hc
+parameter_list|)
+define|\
+value|bus_space_read_4((hc)->bt_memory, (hc)->bh_memory, SR_FECR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sr_write_fecr
+parameter_list|(
+name|hc
+parameter_list|,
+name|value
+parameter_list|)
+define|\
+value|bus_space_write_4((hc)->bt_memory, (hc)->bh_memory, SR_FECR, (value))
+end_define
 
 begin_endif
 endif|#

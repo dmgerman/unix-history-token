@@ -1373,9 +1373,6 @@ name|flags
 decl_stmt|;
 name|u_int
 name|fecr
-decl_stmt|,
-modifier|*
-name|fecrp
 decl_stmt|;
 name|struct
 name|sr_hardc
@@ -1586,24 +1583,12 @@ break|break;
 case|case
 name|SR_CRD_N2PCI
 case|:
-name|fecrp
-operator|=
-operator|(
-name|u_int
-operator|*
-operator|)
-operator|(
-name|hc
-operator|->
-name|sca_base
-operator|+
-name|SR_FECR
-operator|)
-expr_stmt|;
 name|fecr
 operator|=
-operator|*
-name|fecrp
+name|sr_read_fecr
+argument_list|(
+name|hc
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -2136,8 +2121,6 @@ condition|)
 name|SRC_SET_OFF
 argument_list|(
 name|hc
-operator|->
-name|iobase
 argument_list|)
 expr_stmt|;
 return|return
@@ -2330,6 +2313,28 @@ goto|goto
 name|errexit
 goto|;
 block|}
+name|hc
+operator|->
+name|bt_ioport
+operator|=
+name|rman_get_bustag
+argument_list|(
+name|hc
+operator|->
+name|res_ioport
+argument_list|)
+expr_stmt|;
+name|hc
+operator|->
+name|bh_ioport
+operator|=
+name|rman_get_bushandle
+argument_list|(
+name|hc
+operator|->
+name|res_ioport
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2508,6 +2513,28 @@ goto|goto
 name|errexit
 goto|;
 block|}
+name|hc
+operator|->
+name|bt_memory
+operator|=
+name|rman_get_bustag
+argument_list|(
+name|hc
+operator|->
+name|res_memory
+argument_list|)
+expr_stmt|;
+name|hc
+operator|->
+name|bh_memory
+operator|=
+name|rman_get_bushandle
+argument_list|(
+name|hc
+operator|->
+name|res_memory
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2895,8 +2922,6 @@ operator|=
 name|SRC_GET8
 argument_list|(
 name|hc
-operator|->
-name|sca_base
 argument_list|,
 name|sca
 operator|->
@@ -2908,8 +2933,6 @@ operator|=
 name|SRC_GET8
 argument_list|(
 name|hc
-operator|->
-name|sca_base
 argument_list|,
 name|sca
 operator|->
@@ -2921,8 +2944,6 @@ operator|=
 name|SRC_GET8
 argument_list|(
 name|hc
-operator|->
-name|sca_base
 argument_list|,
 name|sca
 operator|->
@@ -3166,8 +3187,6 @@ expr_stmt|;
 name|SRC_PUT16
 argument_list|(
 name|hc
-operator|->
-name|sca_base
 argument_list|,
 name|dmac
 operator|->
@@ -3179,8 +3198,6 @@ expr_stmt|;
 name|SRC_PUT16
 argument_list|(
 name|hc
-operator|->
-name|sca_base
 argument_list|,
 name|dmac
 operator|->
@@ -3193,8 +3210,6 @@ comment|/* 	 * Now we'll let the DMA status register know about this change 	 */
 name|SRC_PUT8
 argument_list|(
 name|hc
-operator|->
-name|sca_base
 argument_list|,
 name|dmac
 operator|->
@@ -3433,15 +3448,11 @@ block|{
 name|SRC_SET_ON
 argument_list|(
 name|hc
-operator|->
-name|iobase
 argument_list|)
 expr_stmt|;
 name|SRC_SET_MEM
 argument_list|(
 name|hc
-operator|->
-name|iobase
 argument_list|,
 name|sc
 operator|->
@@ -3494,8 +3505,6 @@ condition|)
 name|SRC_SET_OFF
 argument_list|(
 name|hc
-operator|->
-name|iobase
 argument_list|)
 expr_stmt|;
 if|#
@@ -3580,8 +3589,6 @@ condition|)
 name|SRC_SET_OFF
 argument_list|(
 name|hc
-operator|->
-name|iobase
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4579,8 +4586,6 @@ operator|=
 name|SRC_GET8
 argument_list|(
 name|hc
-operator|->
-name|sca_base
 argument_list|,
 name|msci
 operator|->
@@ -4592,8 +4597,6 @@ operator|=
 name|SRC_GET8
 argument_list|(
 name|hc
-operator|->
-name|sca_base
 argument_list|,
 name|msci
 operator|->
@@ -4605,8 +4608,6 @@ operator|=
 name|SRC_GET8
 argument_list|(
 name|hc
-operator|->
-name|sca_base
 argument_list|,
 name|msci
 operator|->
@@ -4618,8 +4619,6 @@ operator|=
 name|SRC_GET8
 argument_list|(
 name|hc
-operator|->
-name|sca_base
 argument_list|,
 name|dmac
 operator|->
@@ -4647,7 +4646,7 @@ endif|#
 directive|endif
 comment|/* NETGRAPH */
 literal|"ST0 %02x, ST1 %02x, ST3 %02x, DSR %02x.\n"
-argument|, 		       sc->unit, 		       got_st0, got_st1, got_st3, got_dsr);  	if (SRC_GET8(hc->sca_base, msci->st1)& SCA_ST1_UDRN) { 		SRC_PUT8(hc->sca_base, msci->cmd, SCA_CMD_TXABORT); 		SRC_PUT8(hc->sca_base, msci->cmd, SCA_CMD_TXENABLE); 		SRC_PUT8(hc->sca_base, msci->st1, SCA_ST1_UDRN); 	} 	sc->xmit_busy =
+argument|, 		       sc->unit, 		       got_st0, got_st1, got_st3, got_dsr);  	if (SRC_GET8(hc, msci->st1)& SCA_ST1_UDRN) { 		SRC_PUT8(hc, msci->cmd, SCA_CMD_TXABORT); 		SRC_PUT8(hc, msci->cmd, SCA_CMD_TXENABLE); 		SRC_PUT8(hc, msci->st1, SCA_ST1_UDRN); 	} 	sc->xmit_busy =
 literal|0
 argument|;
 ifndef|#
@@ -4673,7 +4672,7 @@ comment|/* restart transmitter */
 endif|#
 directive|endif
 comment|/* NETGRAPH */
-argument|}  static void sr_up(struct sr_softc *sc) { 	u_int *fecrp; 	struct sr_hardc *hc = sc->hc; 	sca_regs *sca = hc->sca; 	msci_channel *msci =&sca->msci[sc->scachan];
+argument|}  static void sr_up(struct sr_softc *sc) { 	struct sr_hardc *hc = sc->hc; 	sca_regs *sca = hc->sca; 	msci_channel *msci =&sca->msci[sc->scachan];
 if|#
 directive|if
 name|BUGGY
@@ -4685,21 +4684,23 @@ argument|, sc);
 endif|#
 directive|endif
 comment|/* 	 * Enable transmitter and receiver. Raise DTR and RTS. Enable 	 * interrupts. 	 * 	 * XXX What about using AUTO mode in msci->md0 ??? 	 */
-argument|SRC_PUT8(hc->sca_base, msci->ctl, 		 SRC_GET8(hc->sca_base, msci->ctl)& ~SCA_CTL_RTS);  	if (sc->scachan ==
+argument|SRC_PUT8(hc, msci->ctl, SRC_GET8(hc, msci->ctl)& ~SCA_CTL_RTS);  	if (sc->scachan ==
 literal|0
-argument|) 		switch (hc->cardtype) { 		case SR_CRD_N2: 			outb(hc->iobase + SR_MCR, 			     (inb(hc->iobase + SR_MCR)& ~SR_MCR_DTR0)); 			break; 		case SR_CRD_N2PCI: 			fecrp = (u_int *)(hc->sca_base + SR_FECR); 			*fecrp&= ~SR_FECR_DTR0; 			break; 		} 	else 		switch (hc->cardtype) { 		case SR_CRD_N2: 			outb(hc->iobase + SR_MCR, 			     (inb(hc->iobase + SR_MCR)& ~SR_MCR_DTR1)); 			break; 		case SR_CRD_N2PCI: 			fecrp = (u_int *)(hc->sca_base + SR_FECR); 			*fecrp&= ~SR_FECR_DTR1; 			break; 		}  	if (sc->scachan ==
+argument|) 		switch (hc->cardtype) { 		case SR_CRD_N2: 			sr_outb(hc, SR_MCR, 			    (sr_inb(hc, SR_MCR)& ~SR_MCR_DTR0)); 			break; 		case SR_CRD_N2PCI: 			sr_write_fecr(hc, sr_read_fecr(hc)& ~SR_FECR_DTR0); 			break; 		} 	else 		switch (hc->cardtype) { 		case SR_CRD_N2: 			sr_outb(hc, SR_MCR, 			    (sr_inb(hc, SR_MCR)& ~SR_MCR_DTR1)); 			break; 		case SR_CRD_N2PCI: 			sr_write_fecr(hc, sr_read_fecr(hc)& ~SR_FECR_DTR1); 			break; 		}  	if (sc->scachan ==
 literal|0
-argument|) { 		SRC_PUT8(hc->sca_base, sca->ier0, 			 SRC_GET8(hc->sca_base, sca->ier0) |
+argument|) { 		SRC_PUT8(hc, sca->ier0, SRC_GET8(hc, sca->ier0) |
 literal|0x000F
-argument|); 		SRC_PUT8(hc->sca_base, sca->ier1, 			 SRC_GET8(hc->sca_base, sca->ier1) |
+argument|); 		SRC_PUT8(hc, sca->ier1, SRC_GET8(hc, sca->ier1) |
 literal|0x000F
-argument|); 	} else { 		SRC_PUT8(hc->sca_base, sca->ier0, 			 SRC_GET8(hc->sca_base, sca->ier0) |
+argument|); 	} else { 		SRC_PUT8(hc, sca->ier0, SRC_GET8(hc, sca->ier0) |
 literal|0x00F0
-argument|); 		SRC_PUT8(hc->sca_base, sca->ier1, 			 SRC_GET8(hc->sca_base, sca->ier1) |
+argument|); 		SRC_PUT8(hc, sca->ier1, SRC_GET8(hc, sca->ier1) |
 literal|0x00F0
-argument|); 	}  	SRC_PUT8(hc->sca_base, msci->cmd, SCA_CMD_RXENABLE); 	inb(hc->iobase);
+argument|); 	}  	SRC_PUT8(hc, msci->cmd, SCA_CMD_RXENABLE); 	sr_inb(hc,
+literal|0
+argument|);
 comment|/* XXX slow it down a bit. */
-argument|SRC_PUT8(hc->sca_base, msci->cmd, SCA_CMD_TXENABLE);
+argument|SRC_PUT8(hc, msci->cmd, SCA_CMD_TXENABLE);
 ifndef|#
 directive|ifndef
 name|NETGRAPH
@@ -4720,7 +4721,7 @@ argument|;
 endif|#
 directive|endif
 comment|/* NETGRAPH */
-argument|}  static void sr_down(struct sr_softc *sc) { 	u_int *fecrp; 	struct sr_hardc *hc = sc->hc; 	sca_regs *sca = hc->sca; 	msci_channel *msci =&sca->msci[sc->scachan];
+argument|}  static void sr_down(struct sr_softc *sc) { 	struct sr_hardc *hc = sc->hc; 	sca_regs *sca = hc->sca; 	msci_channel *msci =&sca->msci[sc->scachan];
 if|#
 directive|if
 name|BUGGY
@@ -4741,19 +4742,21 @@ endif|#
 directive|endif
 comment|/* NETGRAPH */
 comment|/* 	 * Disable transmitter and receiver. Lower DTR and RTS. Disable 	 * interrupts. 	 */
-argument|SRC_PUT8(hc->sca_base, msci->cmd, SCA_CMD_RXDISABLE); 	inb(hc->iobase);
+argument|SRC_PUT8(hc, msci->cmd, SCA_CMD_RXDISABLE); 	sr_inb(hc,
+literal|0
+argument|);
 comment|/* XXX slow it down a bit. */
-argument|SRC_PUT8(hc->sca_base, msci->cmd, SCA_CMD_TXDISABLE);  	SRC_PUT8(hc->sca_base, msci->ctl, 		 SRC_GET8(hc->sca_base, msci->ctl) | SCA_CTL_RTS);  	if (sc->scachan ==
+argument|SRC_PUT8(hc, msci->cmd, SCA_CMD_TXDISABLE);  	SRC_PUT8(hc, msci->ctl, SRC_GET8(hc, msci->ctl) | SCA_CTL_RTS);  	if (sc->scachan ==
 literal|0
-argument|) 		switch (hc->cardtype) { 		case SR_CRD_N2: 			outb(hc->iobase + SR_MCR, 			     (inb(hc->iobase + SR_MCR) | SR_MCR_DTR0)); 			break; 		case SR_CRD_N2PCI: 			fecrp = (u_int *)(hc->sca_base + SR_FECR); 			*fecrp |= SR_FECR_DTR0; 			break; 		} 	else 		switch (hc->cardtype) { 		case SR_CRD_N2: 			outb(hc->iobase + SR_MCR, 			     (inb(hc->iobase + SR_MCR) | SR_MCR_DTR1)); 			break; 		case SR_CRD_N2PCI: 			fecrp = (u_int *)(hc->sca_base + SR_FECR); 			*fecrp |= SR_FECR_DTR1; 			break; 		}  	if (sc->scachan ==
+argument|) 		switch (hc->cardtype) { 		case SR_CRD_N2: 			sr_outb(hc, SR_MCR, sr_inb(hc, SR_MCR) | SR_MCR_DTR0); 			break; 		case SR_CRD_N2PCI: 			sr_write_fecr(hc, sr_read_fecr(hc) | SR_FECR_DTR0); 			break; 		} 	else 		switch (hc->cardtype) { 		case SR_CRD_N2: 			sr_outb(hc, SR_MCR, sr_inb(hc, SR_MCR) | SR_MCR_DTR1); 			break; 		case SR_CRD_N2PCI: 			sr_write_fecr(hc, sr_read_fecr(hc) | SR_FECR_DTR1); 			break; 		}  	if (sc->scachan ==
 literal|0
-argument|) { 		SRC_PUT8(hc->sca_base, sca->ier0, 			 SRC_GET8(hc->sca_base, sca->ier0)& ~
+argument|) { 		SRC_PUT8(hc, sca->ier0, SRC_GET8(hc, sca->ier0)& ~
 literal|0x0F
-argument|); 		SRC_PUT8(hc->sca_base, sca->ier1, 			 SRC_GET8(hc->sca_base, sca->ier1)& ~
+argument|); 		SRC_PUT8(hc, sca->ier1, SRC_GET8(hc, sca->ier1)& ~
 literal|0x0F
-argument|); 	} else { 		SRC_PUT8(hc->sca_base, sca->ier0, 			 SRC_GET8(hc->sca_base, sca->ier0)& ~
+argument|); 	} else { 		SRC_PUT8(hc, sca->ier0, SRC_GET8(hc, sca->ier0)& ~
 literal|0xF0
-argument|); 		SRC_PUT8(hc->sca_base, sca->ier1, 			 SRC_GET8(hc->sca_base, sca->ier1)& ~
+argument|); 		SRC_PUT8(hc, sca->ier1, SRC_GET8(hc, sca->ier1)& ~
 literal|0xF0
 argument|); 	} }
 comment|/*  * Initialize the card, allocate memory for the sr_softc structures  * and fill in the pointers.  */
@@ -4807,51 +4810,49 @@ argument|, hc);
 endif|#
 directive|endif
 comment|/* 	 * Do the wait registers. Set everything to 0 wait states. 	 */
-argument|SRC_PUT8(hc->sca_base, sca->pabr0,
+argument|SRC_PUT8(hc, sca->pabr0,
 literal|0
-argument|); 	SRC_PUT8(hc->sca_base, sca->pabr1,
+argument|); 	SRC_PUT8(hc, sca->pabr1,
 literal|0
-argument|); 	SRC_PUT8(hc->sca_base, sca->wcrl,
+argument|); 	SRC_PUT8(hc, sca->wcrl,
 literal|0
-argument|); 	SRC_PUT8(hc->sca_base, sca->wcrm,
+argument|); 	SRC_PUT8(hc, sca->wcrm,
 literal|0
-argument|); 	SRC_PUT8(hc->sca_base, sca->wcrh,
+argument|); 	SRC_PUT8(hc, sca->wcrh,
 literal|0
 argument|);
 comment|/* 	 * Configure the interrupt registers. Most are cleared until the 	 * interface is configured. 	 */
-argument|SRC_PUT8(hc->sca_base, sca->ier0,
+argument|SRC_PUT8(hc, sca->ier0,
 literal|0x00
 argument|);
 comment|/* MSCI interrupts. */
-argument|SRC_PUT8(hc->sca_base, sca->ier1,
+argument|SRC_PUT8(hc, sca->ier1,
 literal|0x00
 argument|);
 comment|/* DMAC interrupts */
-argument|SRC_PUT8(hc->sca_base, sca->ier2,
+argument|SRC_PUT8(hc, sca->ier2,
 literal|0x00
 argument|);
 comment|/* TIMER interrupts. */
-argument|SRC_PUT8(hc->sca_base, sca->itcr,
+argument|SRC_PUT8(hc, sca->itcr,
 literal|0x00
 argument|);
-comment|/* Use ivr and no intr 							 * ack */
-argument|SRC_PUT8(hc->sca_base, sca->ivr,
+comment|/* Use ivr and no intr ack */
+argument|SRC_PUT8(hc, sca->ivr,
 literal|0x40
 argument|);
 comment|/* Interrupt vector. */
-argument|SRC_PUT8(hc->sca_base, sca->imvr,
+argument|SRC_PUT8(hc, sca->imvr,
 literal|0x40
 argument|);
 comment|/* 	 * Configure the timers. XXX Later 	 */
 comment|/* 	 * Set the DMA channel priority to rotate between all four channels. 	 * 	 * Enable all dma channels. 	 */
-argument|SRC_PUT8(hc->sca_base, sca->pcr, SCA_PCR_PR2); 	SRC_PUT8(hc->sca_base, sca->dmer, SCA_DMER_EN); }
+argument|SRC_PUT8(hc, sca->pcr, SCA_PCR_PR2); 	SRC_PUT8(hc, sca->dmer, SCA_DMER_EN); }
 comment|/*  * Configure the msci  *  * NOTE: The serial port configuration is hardcoded at the moment.  */
 argument|static void sr_init_msci(struct sr_softc *sc) { 	int portndx;
 comment|/* on-board port number */
 argument|u_int mcr_v;
 comment|/* contents of modem control */
-argument|u_int *fecrp;
-comment|/* pointer for PCI's MCR i/o */
 argument|struct sr_hardc *hc = sc->hc; 	msci_channel *msci =&hc->sca->msci[sc->scachan];
 ifdef|#
 directive|ifdef
@@ -4882,9 +4883,9 @@ literal|"sr: sr_init_msci( sc=%08x)\n"
 argument|, sc);
 endif|#
 directive|endif
-argument|SRC_PUT8(hc->sca_base, msci->cmd, SCA_CMD_RESET); 	SRC_PUT8(hc->sca_base, msci->md0, SCA_MD0_CRC_1 | 		 SCA_MD0_CRC_CCITT | 		 SCA_MD0_CRC_ENABLE | 		 SCA_MD0_MODE_HDLC); 	SRC_PUT8(hc->sca_base, msci->md1, SCA_MD1_NOADDRCHK); 	SRC_PUT8(hc->sca_base, msci->md2, SCA_MD2_DUPLEX | SCA_MD2_NRZ);
+argument|SRC_PUT8(hc, msci->cmd, SCA_CMD_RESET); 	SRC_PUT8(hc, msci->md0, SCA_MD0_CRC_1 | SCA_MD0_CRC_CCITT | 	    SCA_MD0_CRC_ENABLE | SCA_MD0_MODE_HDLC); 	SRC_PUT8(hc, msci->md1, SCA_MD1_NOADDRCHK); 	SRC_PUT8(hc, msci->md2, SCA_MD2_DUPLEX | SCA_MD2_NRZ);
 comment|/* 	 * According to the manual I should give a reset after changing the 	 * mode registers. 	 */
-argument|SRC_PUT8(hc->sca_base, msci->cmd, SCA_CMD_RXRESET); 	SRC_PUT8(hc->sca_base, msci->ctl, SCA_CTL_IDLPAT | 		 SCA_CTL_UDRNC | 		 SCA_CTL_RTS);
+argument|SRC_PUT8(hc, msci->cmd, SCA_CMD_RXRESET); 	SRC_PUT8(hc, msci->ctl, SCA_CTL_IDLPAT | SCA_CTL_UDRNC | SCA_CTL_RTS);
 comment|/* 	 * XXX Later we will have to support different clock settings. 	 */
 argument|switch (sc->clk_cfg) { 	default:
 if|#
@@ -4910,7 +4911,7 @@ literal|"sr%d: External Clock Selected.\n"
 argument|, portndx);
 endif|#
 directive|endif
-argument|SRC_PUT8(hc->sca_base, msci->rxs, 			 SCA_RXS_CLK_RXC0 | SCA_RXS_DIV1); 		SRC_PUT8(hc->sca_base, msci->txs, 			 SCA_TXS_CLK_RX | SCA_TXS_DIV1); 		break;  	case SR_FLAGS_EXT_SEP_CLK:
+argument|SRC_PUT8(hc, msci->rxs, SCA_RXS_CLK_RXC0 | SCA_RXS_DIV1); 		SRC_PUT8(hc, msci->txs, SCA_TXS_CLK_RX | SCA_TXS_DIV1); 		break;  	case SR_FLAGS_EXT_SEP_CLK:
 if|#
 directive|if
 name|BUGGY
@@ -4921,7 +4922,7 @@ literal|"sr%d: Split Clocking Selected.\n"
 argument|, portndx);
 endif|#
 directive|endif
-argument|SRC_PUT8(hc->sca_base, msci->rxs, 			 SCA_RXS_CLK_RXC0 | SCA_RXS_DIV1); 		SRC_PUT8(hc->sca_base, msci->txs, 			 SCA_TXS_CLK_TXC | SCA_TXS_DIV1); 		break;  	case SR_FLAGS_INT_CLK:
+argument|SRC_PUT8(hc, msci->rxs, SCA_RXS_CLK_RXC0 | SCA_RXS_DIV1); 		SRC_PUT8(hc, msci->txs, SCA_TXS_CLK_TXC | SCA_TXS_DIV1); 		break;  	case SR_FLAGS_INT_CLK:
 if|#
 directive|if
 name|BUGGY
@@ -4936,9 +4937,9 @@ comment|/* 		 * XXX I do need some code to set the baud rate here! 		 */
 ifdef|#
 directive|ifdef
 name|N2_TEST_SPEED
-argument|switch (hc->cardtype) { 		case SR_CRD_N2PCI: 			fecrp = (u_int *)(hc->sca_base + SR_FECR); 			mcr_v = *fecrp; 			etcndx =
+argument|switch (hc->cardtype) { 		case SR_CRD_N2PCI: 			mcr_v = sr_read_fecr(hc); 			etcndx =
 literal|2
-argument|; 			break; 		case SR_CRD_N2: 		default: 			mcr_v = inb(hc->iobase + SR_MCR); 			etcndx =
+argument|; 			break; 		case SR_CRD_N2: 		default: 			mcr_v = sr_inb(hc, SR_MCR); 			etcndx =
 literal|0
 argument|; 		}  		fifo_v =
 literal|0x10
@@ -4971,7 +4972,7 @@ argument|; 		}
 comment|/* 		 * Now we mask in the enable clock output for the MCR: 		 */
 argument|mcr_v |= etc0vals[etcndx + portndx];
 comment|/* 		 * Now we'll program the registers with these speed- related 		 * contents... 		 */
-argument|SRC_PUT8(hc->sca_base, msci->tmc, tmc_v); 		SRC_PUT8(hc->sca_base, msci->trc0, fifo_v); 		SRC_PUT8(hc->sca_base, msci->rxs, SCA_RXS_CLK_INT + br_v); 		SRC_PUT8(hc->sca_base, msci->txs, SCA_TXS_CLK_INT + br_v);  		switch (hc->cardtype) { 		case SR_CRD_N2PCI: 			*fecrp = mcr_v; 			break; 		case SR_CRD_N2: 		default: 			outb(hc->iobase + SR_MCR, mcr_v); 		}
+argument|SRC_PUT8(hc, msci->tmc, tmc_v); 		SRC_PUT8(hc, msci->trc0, fifo_v); 		SRC_PUT8(hc, msci->rxs, SCA_RXS_CLK_INT + br_v); 		SRC_PUT8(hc, msci->txs, SCA_TXS_CLK_INT + br_v);  		switch (hc->cardtype) { 		case SR_CRD_N2PCI: 			sr_write_fecr(hc, mcr_v); 			break; 		case SR_CRD_N2: 		default: 			sr_outb(hc, SR_MCR, mcr_v); 		}
 if|#
 directive|if
 name|BUGGY
@@ -4986,36 +4987,36 @@ endif|#
 directive|endif
 else|#
 directive|else
-argument|SRC_PUT8(hc->sca_base, msci->rxs, 			 SCA_RXS_CLK_INT | SCA_RXS_DIV1); 		SRC_PUT8(hc->sca_base, msci->txs, 			 SCA_TXS_CLK_INT | SCA_TXS_DIV1);  		SRC_PUT8(hc->sca_base, msci->tmc,
+argument|SRC_PUT8(hc, msci->rxs, SCA_RXS_CLK_INT | SCA_RXS_DIV1); 		SRC_PUT8(hc, msci->txs, SCA_TXS_CLK_INT | SCA_TXS_DIV1);  		SRC_PUT8(hc, msci->tmc,
 literal|5
 argument|);  		if (portndx ==
 literal|0
-argument|) 			switch (hc->cardtype) { 			case SR_CRD_N2PCI: 				fecrp = (u_int *)(hc->sca_base + SR_FECR); 				*fecrp |= SR_FECR_ETC0; 				break; 			case SR_CRD_N2: 			default: 				mcr_v = inb(hc->iobase + SR_MCR); 				mcr_v |= SR_MCR_ETC0; 				outb(hc->iobase + SR_MCR, mcr_v); 			} 		else 			switch (hc->cardtype) { 			case SR_CRD_N2: 				mcr_v = inb(hc->iobase + SR_MCR); 				mcr_v |= SR_MCR_ETC1; 				outb(hc->iobase + SR_MCR, mcr_v); 				break; 			case SR_CRD_N2PCI: 				fecrp = (u_int *)(hc->sca_base + SR_FECR); 				*fecrp |= SR_FECR_ETC1; 				break; 			}
+argument|) 			switch (hc->cardtype) { 			case SR_CRD_N2PCI: 				sr_write_fecr(hc, 				    sr_read_fecr(hc) | SR_FECR_ETC0); 				break; 			case SR_CRD_N2: 			default: 				mcr_v = sr_inb(hc, SR_MCR); 				mcr_v |= SR_MCR_ETC0; 				sr_outb(hc, SR_MCR, mcr_v); 			} 		else 			switch (hc->cardtype) { 			case SR_CRD_N2: 				mcr_v = sr_inb(hc, SR_MCR); 				mcr_v |= SR_MCR_ETC1; 				sr_outb(hc, SR_MCR, mcr_v); 				break; 			case SR_CRD_N2PCI: 				sr_write_fecr(hc, 				    sr_read_fecr(hc) | SR_FECR_ETC1); 				break; 			}
 endif|#
 directive|endif
 argument|}
 comment|/* 	 * XXX Disable all interrupts for now. I think if you are using the 	 * dmac you don't use these interrupts. 	 */
-argument|SRC_PUT8(hc->sca_base, msci->ie0,
+argument|SRC_PUT8(hc, msci->ie0,
 literal|0
-argument|); 	SRC_PUT8(hc->sca_base, msci->ie1,
+argument|); 	SRC_PUT8(hc, msci->ie1,
 literal|0x0C
-argument|); 	SRC_PUT8(hc->sca_base, msci->ie2,
+argument|); 	SRC_PUT8(hc, msci->ie2,
 literal|0
-argument|); 	SRC_PUT8(hc->sca_base, msci->fie,
+argument|); 	SRC_PUT8(hc, msci->fie,
 literal|0
-argument|);  	SRC_PUT8(hc->sca_base, msci->sa0,
+argument|);  	SRC_PUT8(hc, msci->sa0,
 literal|0
-argument|); 	SRC_PUT8(hc->sca_base, msci->sa1,
+argument|); 	SRC_PUT8(hc, msci->sa1,
 literal|0
-argument|);  	SRC_PUT8(hc->sca_base, msci->idl,
+argument|);  	SRC_PUT8(hc, msci->idl,
 literal|0x7E
 argument|);
 comment|/* set flags value */
-argument|SRC_PUT8(hc->sca_base, msci->rrc,
+argument|SRC_PUT8(hc, msci->rrc,
 literal|0x0E
-argument|); 	SRC_PUT8(hc->sca_base, msci->trc0,
+argument|); 	SRC_PUT8(hc, msci->trc0,
 literal|0x10
-argument|); 	SRC_PUT8(hc->sca_base, msci->trc1,
+argument|); 	SRC_PUT8(hc, msci->trc1,
 literal|0x1F
 argument|); }
 comment|/*  * Configure the rx dma controller.  */
@@ -5038,7 +5039,7 @@ literal|"sr_init_rx_dmac(sc=%08x)\n"
 argument|, sc);
 endif|#
 directive|endif
-argument|hc = sc->hc; 	dmac =&hc->sca->dmac[DMAC_RXCH(sc->scachan)];  	if (hc->mempages) 		SRC_SET_MEM(hc->iobase, sc->rxdesc);
+argument|hc = sc->hc; 	dmac =&hc->sca->dmac[DMAC_RXCH(sc->scachan)];  	if (hc->mempages) 		SRC_SET_MEM(hc, sc->rxdesc);
 comment|/* 	 * This phase initializes the contents of the descriptor table 	 * needed to construct a circular buffer... 	 */
 argument|rxd = (sca_descriptor *)(hc->mem_start + (sc->rxdesc& hc->winmsk)); 	rxda_d = (uintptr_t) hc->mem_start - (sc->rxdesc& ~hc->winmsk);  	for (rxbuf = sc->rxstart; 	     rxbuf< sc->rxend; 	     rxbuf += SR_BUF_SIZ, rxd++) {
 comment|/* 		 * construct the circular chain... 		 */
@@ -5072,25 +5073,25 @@ argument|sc->rxhind =
 literal|0
 argument|;
 comment|/* 	 * We'll now configure the receiver's DMA logic... 	 */
-argument|SRC_PUT8(hc->sca_base, dmac->dsr,
+argument|SRC_PUT8(hc, dmac->dsr,
 literal|0
 argument|);
 comment|/* Disable DMA transfer */
-argument|SRC_PUT8(hc->sca_base, dmac->dcr, SCA_DCR_ABRT);
+argument|SRC_PUT8(hc, dmac->dcr, SCA_DCR_ABRT);
 comment|/* XXX maybe also SCA_DMR_CNTE */
-argument|SRC_PUT8(hc->sca_base, dmac->dmr, SCA_DMR_TMOD | SCA_DMR_NF); 	SRC_PUT16(hc->sca_base, dmac->bfl, SR_BUF_SIZ);  	cda_v = (u_short)((sc->rxdesc + hc->mem_pstart)&
+argument|SRC_PUT8(hc, dmac->dmr, SCA_DMR_TMOD | SCA_DMR_NF); 	SRC_PUT16(hc, dmac->bfl, SR_BUF_SIZ);  	cda_v = (u_short)((sc->rxdesc + hc->mem_pstart)&
 literal|0xffff
 argument|); 	sarb_v = (u_char)(((sc->rxdesc + hc->mem_pstart)>>
 literal|16
 argument|)&
 literal|0xff
-argument|);  	SRC_PUT16(hc->sca_base, dmac->cda, cda_v); 	SRC_PUT8(hc->sca_base, dmac->sarb, sarb_v);  	rxd = (sca_descriptor *)(uintptr_t)sc->rxstart;  	SRC_PUT16(hc->sca_base, dmac->eda, 		  (u_short)((uintptr_t)&rxd[sc->rxmax -
+argument|);  	SRC_PUT16(hc, dmac->cda, cda_v); 	SRC_PUT8(hc, dmac->sarb, sarb_v);  	rxd = (sca_descriptor *)(uintptr_t)sc->rxstart;  	SRC_PUT16(hc, dmac->eda, 	    (u_short)((uintptr_t)&rxd[sc->rxmax -
 literal|1
 argument|]&
 literal|0xffff
-argument|));  	SRC_PUT8(hc->sca_base, dmac->dir,
+argument|));  	SRC_PUT8(hc, dmac->dir,
 literal|0xF0
-argument|);   	SRC_PUT8(hc->sca_base, dmac->dsr, SCA_DSR_DE);
+argument|);  	SRC_PUT8(hc, dmac->dsr, SCA_DSR_DE);
 comment|/* Enable DMA */
 argument|}
 comment|/*  * Configure the TX DMA descriptors.  * Initialize the needed values and chain the descriptors.  */
@@ -5109,7 +5110,7 @@ literal|"sr_init_tx_dmac(sc=%08x)\n"
 argument|, sc);
 endif|#
 directive|endif
-argument|hc = sc->hc; 	dmac =&hc->sca->dmac[DMAC_TXCH(sc->scachan)];  	if (hc->mempages) 		SRC_SET_MEM(hc->iobase, sc->block[
+argument|hc = sc->hc; 	dmac =&hc->sca->dmac[DMAC_TXCH(sc->scachan)];  	if (hc->mempages) 		SRC_SET_MEM(hc, sc->block[
 literal|0
 argument|].txdesc);
 comment|/* 	 * Initialize the array of descriptors for transmission 	 */
@@ -5133,17 +5134,17 @@ argument|; 			txd->stat =
 literal|0
 argument|; 			x++; 		}  		txd--; 		txd->cp = (u_short)((blkp->txdesc + hc->mem_pstart)&
 literal|0xffff
-argument|);  		blkp->txtail = (uintptr_t)txd - (uintptr_t)hc->mem_start; 	}  	SRC_PUT8(hc->sca_base, dmac->dsr,
+argument|);  		blkp->txtail = (uintptr_t)txd - (uintptr_t)hc->mem_start; 	}  	SRC_PUT8(hc, dmac->dsr,
 literal|0
 argument|);
 comment|/* Disable DMA */
-argument|SRC_PUT8(hc->sca_base, dmac->dcr, SCA_DCR_ABRT); 	SRC_PUT8(hc->sca_base, dmac->dmr, SCA_DMR_TMOD | SCA_DMR_NF); 	SRC_PUT8(hc->sca_base, dmac->dir, 		 SCA_DIR_EOT | SCA_DIR_BOF | SCA_DIR_COF);  	sarb_v = (sc->block[
+argument|SRC_PUT8(hc, dmac->dcr, SCA_DCR_ABRT); 	SRC_PUT8(hc, dmac->dmr, SCA_DMR_TMOD | SCA_DMR_NF); 	SRC_PUT8(hc, dmac->dir, SCA_DIR_EOT | SCA_DIR_BOF | SCA_DIR_COF);  	sarb_v = (sc->block[
 literal|0
 argument|].txdesc + hc->mem_pstart)>>
 literal|16
 argument|; 	sarb_v&=
 literal|0x00ff
-argument|;  	SRC_PUT8(hc->sca_base, dmac->sarb, (u_char) sarb_v); }
+argument|;  	SRC_PUT8(hc, dmac->sarb, (u_char) sarb_v); }
 comment|/*  * Look through the descriptors to see if there is a complete packet  * available. Stop if we get to where the sca is busy.  *  * Return the length and status of the packet.  * Return nonzero if there is a packet available.  *  * NOTE:  * It seems that we get the interrupt a bit early. The updateing of  * descriptor values is not always completed when this is called.  */
 argument|static int sr_packet_avail(struct sr_softc *sc, int *len, u_char *rxstat) { 	int granules;
 comment|/* count of granules in pkt */
@@ -5158,7 +5159,7 @@ comment|/* starting descriptor */
 argument|hc = sc->hc;
 comment|/* get card's information */
 comment|/* 	 * set up starting descriptor by pulling that info from the DMA half 	 * of the HD chip... 	 */
-argument|wki = DMAC_RXCH(sc->scachan); 	wko = SRC_GET16(hc->sca_base, hc->sca->dmac[wki].cda);  	cda = (sca_descriptor *)(hc->mem_start + (wko& hc->winmsk));
+argument|wki = DMAC_RXCH(sc->scachan); 	wko = SRC_GET16(hc, hc->sca->dmac[wki].cda);  	cda = (sca_descriptor *)(hc->mem_start + (wko& hc->winmsk));
 if|#
 directive|if
 name|BUGGY
@@ -5170,7 +5171,7 @@ argument|, 	       wki, wko, cda);
 endif|#
 directive|endif
 comment|/* 	 * open the appropriate memory window and set our expectations... 	 */
-argument|if (hc->mempages) { 		SRC_SET_MEM(hc->iobase, sc->rxdesc); 		SRC_SET_ON(hc->iobase); 	} 	rxdesc = (sca_descriptor *) 	    (hc->mem_start + (sc->rxdesc& hc->winmsk)); 	endp = rxdesc; 	rxdesc =&rxdesc[sc->rxhind]; 	endp =&endp[sc->rxmax];  	*len =
+argument|if (hc->mempages) { 		SRC_SET_MEM(hc, sc->rxdesc); 		SRC_SET_ON(hc); 	} 	rxdesc = (sca_descriptor *) 	    (hc->mem_start + (sc->rxdesc& hc->winmsk)); 	endp = rxdesc; 	rxdesc =&rxdesc[sc->rxhind]; 	endp =&endp[sc->rxmax];  	*len =
 literal|0
 argument|;
 comment|/* reset result total length */
@@ -5232,9 +5233,9 @@ argument|hc = sc->hc;  	rxdata = sc->rxstart + (sc->rxhind * SR_BUF_SIZ); 	rxmax
 comment|/* 	 * Using the count of bytes in the received packet, we decrement it 	 * for each granule (controller by an SCA descriptor) to control the 	 * looping... 	 */
 argument|while (len) {
 comment|/* 		 * tlen gets the length of *this* granule... ...which is 		 * then copied to the target buffer. 		 */
-argument|tlen = (len< SR_BUF_SIZ) ? len : SR_BUF_SIZ;  		if (hc->mempages) 			SRC_SET_MEM(hc->iobase, rxdata);  		bcopy(hc->mem_start + (rxdata& hc->winmsk), 		      mtod(m, caddr_t) +off, 		      tlen);  		off += tlen; 		len -= tlen;
+argument|tlen = (len< SR_BUF_SIZ) ? len : SR_BUF_SIZ;  		if (hc->mempages) 			SRC_SET_MEM(hc, rxdata);  		bcopy(hc->mem_start + (rxdata& hc->winmsk), 		      mtod(m, caddr_t) +off, 		      tlen);  		off += tlen; 		len -= tlen;
 comment|/* 		 * now, return to the descriptor's window in DPRAM and reset 		 * the descriptor we've just suctioned... 		 */
-argument|if (hc->mempages) 			SRC_SET_MEM(hc->iobase, sc->rxdesc);  		rxdesc->len =
+argument|if (hc->mempages) 			SRC_SET_MEM(hc, sc->rxdesc);  		rxdesc->len =
 literal|0
 argument|; 		rxdesc->stat =
 literal|0xff
@@ -5256,9 +5257,9 @@ argument|;
 comment|/* count of packets flushed ??? */
 argument|u_char stat;
 comment|/* captured status byte from descr */
-argument|hc = sc->hc; 	cda = (sca_descriptor *)(hc->mem_start + 				 (SRC_GET16(hc->sca_base, 				  hc->sca->dmac[DMAC_RXCH(sc->scachan)].cda)& 				  hc->winmsk));
+argument|hc = sc->hc; 	cda = (sca_descriptor *)(hc->mem_start + (SRC_GET16(hc, 	    hc->sca->dmac[DMAC_RXCH(sc->scachan)].cda)& hc->winmsk));
 comment|/* 	 * loop until desc->stat == (0xff || EOM) Clear the status and 	 * length in the descriptor. Increment the descriptor. 	 */
-argument|if (hc->mempages) 		SRC_SET_MEM(hc->iobase, sc->rxdesc);  	rxdesc = (sca_descriptor *) 	    (hc->mem_start + (sc->rxdesc& hc->winmsk)); 	endp = rxdesc; 	rxdesc =&rxdesc[sc->rxhind]; 	endp =&endp[sc->rxmax];
+argument|if (hc->mempages) 		SRC_SET_MEM(hc, sc->rxdesc);  	rxdesc = (sca_descriptor *) 	    (hc->mem_start + (sc->rxdesc& hc->winmsk)); 	endp = rxdesc; 	rxdesc =&rxdesc[sc->rxhind]; 	endp =&endp[sc->rxmax];
 comment|/* 	 * allow loop, but abort it if we wrap completely... 	 */
 argument|while (rxdesc != cda) { 		loopcnt++;  		if (loopcnt> sc->rxmax) { 			printf(
 literal|"sr%d: eat pkt %d loop, cda %p, "
@@ -5273,7 +5274,7 @@ argument|; 		} 		if (single&& (stat == SCA_DESC_EOM)) 			break; 	}
 comment|/* 	 * Update the eda to the previous descriptor. 	 */
 argument|rxdesc = (sca_descriptor *)(uintptr_t)sc->rxdesc; 	rxdesc =&rxdesc[(sc->rxhind + sc->rxmax -
 literal|2
-argument|) % sc->rxmax];  	SRC_PUT16(hc->sca_base, 		  hc->sca->dmac[DMAC_RXCH(sc->scachan)].eda, 		  (u_short)(((uintptr_t)rxdesc + hc->mem_pstart)&
+argument|) % sc->rxmax];  	SRC_PUT16(hc, hc->sca->dmac[DMAC_RXCH(sc->scachan)].eda, 	    (u_short)(((uintptr_t)rxdesc + hc->mem_pstart)&
 literal|0xffff
 argument|)); }
 comment|/*  * While there is packets available in the rx buffer, read them out  * into mbufs and ship them off.  */
@@ -5322,7 +5323,7 @@ argument|ifp =&sc->ifsppp.pp_if;
 endif|#
 directive|endif
 comment|/* NETGRAPH */
-argument|if (hc->mempages) { 		SRC_SET_MEM(hc->iobase, sc->rxdesc); 		SRC_SET_ON(hc->iobase);
+argument|if (hc->mempages) { 		SRC_SET_MEM(hc, sc->rxdesc); 		SRC_SET_ON(hc);
 comment|/* enable shared memory */
 argument|} 	pkts =
 literal|0
@@ -5472,7 +5473,7 @@ argument|i = (len + SR_BUF_SIZ -
 literal|1
 argument|) / SR_BUF_SIZ; 			sc->rxhind = (sc->rxhind + i) % sc->rxmax;  			rxdesc = (sca_descriptor *)(uintptr_t)sc->rxdesc; 			rxndx = (sc->rxhind + sc->rxmax -
 literal|2
-argument|) % sc->rxmax; 			rxdesc =&rxdesc[rxndx];  			SRC_PUT16(hc->sca_base, 				  hc->sca->dmac[DMAC_RXCH(sc->scachan)].eda, 				  (u_short)(((uintptr_t)rxdesc + hc->mem_pstart)&
+argument|) % sc->rxmax; 			rxdesc =&rxdesc[rxndx];  			SRC_PUT16(hc, hc->sca->dmac[DMAC_RXCH(sc->scachan)].eda, 			    (u_short)(((uintptr_t)rxdesc + hc->mem_pstart)&
 literal|0xffff
 argument|));  		} else { 			int got_st3
 argument_list|,
@@ -5503,7 +5504,7 @@ argument|]++;
 endif|#
 directive|endif
 comment|/* NETGRAPH */
-argument|got_st3 = SRC_GET8(hc->sca_base, 				  hc->sca->msci[sc->scachan].st3); 			got_cda = SRC_GET16(hc->sca_base, 				  hc->sca->dmac[DMAC_RXCH(sc->scachan)].cda); 			got_eda = SRC_GET16(hc->sca_base, 				  hc->sca->dmac[DMAC_RXCH(sc->scachan)].eda);
+argument|got_st3 = SRC_GET8(hc, 				  hc->sca->msci[sc->scachan].st3); 			got_cda = SRC_GET16(hc, 				  hc->sca->dmac[DMAC_RXCH(sc->scachan)].cda); 			got_eda = SRC_GET16(hc, 				  hc->sca->dmac[DMAC_RXCH(sc->scachan)].eda);
 if|#
 directive|if
 name|BUGGY
@@ -5527,7 +5528,7 @@ literal|"sr%d: sr_get_packets() found %d packet(s)\n"
 argument|, 	       sc->unit, pkts);
 endif|#
 directive|endif
-argument|if (hc->mempages) 		SRC_SET_OFF(hc->iobase); }
+argument|if (hc->mempages) 		SRC_SET_OFF(hc); }
 comment|/*  * All DMA interrupts come here.  *  * Each channel has two interrupts.  * Interrupt A for errors and Interrupt B for normal stuff like end  * of transmit or receive dmas.  */
 argument|static void sr_dmac_intr(struct sr_hardc *hc, u_char isr1) { 	u_char dsr;
 comment|/* contents of DMA Stat Reg */
@@ -5570,7 +5571,7 @@ argument|if (isr1&
 literal|0x0C
 argument|) { 			dmac =&sca->dmac[DMAC_TXCH(mch)];
 comment|/* 			 * get the DMA Status Register contents and write 			 * back to reset interrupt... 			 */
-argument|dsr = SRC_GET8(hc->sca_base, dmac->dsr); 			SRC_PUT8(hc->sca_base, dmac->dsr, dsr);
+argument|dsr = SRC_GET8(hc, dmac->dsr); 			SRC_PUT8(hc, dmac->dsr, dsr);
 comment|/* 			 * Check for (& process) a Counter overflow 			 */
 argument|if (dsr& SCA_DSR_COF) { 				printf(
 literal|"sr%d: TX DMA Counter overflow, "
@@ -5643,8 +5644,6 @@ argument_list|,
 name|SRC_GET16
 argument_list|(
 name|hc
-operator|->
-name|sca_base
 argument_list|,
 name|dmac
 operator|->
@@ -5654,8 +5653,6 @@ argument_list|,
 name|SRC_GET16
 argument_list|(
 name|hc
-operator|->
-name|sca_base
 argument_list|,
 name|dmac
 operator|->
@@ -5808,8 +5805,6 @@ operator|=
 name|SRC_GET8
 argument_list|(
 name|hc
-operator|->
-name|sca_base
 argument_list|,
 name|dmac
 operator|->
@@ -5819,8 +5814,6 @@ expr_stmt|;
 name|SRC_PUT8
 argument_list|(
 name|hc
-operator|->
-name|sca_base
 argument_list|,
 name|dmac
 operator|->
@@ -5975,8 +5968,6 @@ argument_list|,
 name|SRC_GET16
 argument_list|(
 name|hc
-operator|->
-name|sca_base
 argument_list|,
 name|dmac
 operator|->
@@ -5986,8 +5977,6 @@ argument_list|,
 name|SRC_GET16
 argument_list|(
 name|hc
-operator|->
-name|sca_base
 argument_list|,
 name|dmac
 operator|->
@@ -6005,15 +5994,11 @@ block|{
 name|SRC_SET_ON
 argument_list|(
 name|hc
-operator|->
-name|iobase
 argument_list|)
 expr_stmt|;
 name|SRC_SET_MEM
 argument_list|(
 name|hc
-operator|->
-name|iobase
 argument_list|,
 name|sc
 operator|->
@@ -6092,8 +6077,6 @@ condition|)
 name|SRC_SET_OFF
 argument_list|(
 name|hc
-operator|->
-name|iobase
 argument_list|)
 expr_stmt|;
 block|}
@@ -6219,8 +6202,6 @@ argument_list|,
 name|SRC_GET16
 argument_list|(
 name|hc
-operator|->
-name|sca_base
 argument_list|,
 name|dmac
 operator|->
@@ -6230,8 +6211,6 @@ argument_list|,
 name|SRC_GET16
 argument_list|(
 name|hc
-operator|->
-name|sca_base
 argument_list|,
 name|dmac
 operator|->
@@ -6251,8 +6230,6 @@ condition|)
 name|SRC_SET_ON
 argument_list|(
 name|hc
-operator|->
-name|iobase
 argument_list|)
 expr_stmt|;
 name|sr_eat_packet
@@ -6291,8 +6268,6 @@ comment|/* NETGRAPH */
 name|SRC_PUT8
 argument_list|(
 name|hc
-operator|->
-name|sca_base
 argument_list|,
 name|sca
 operator|->
@@ -6309,8 +6284,6 @@ expr_stmt|;
 name|SRC_PUT8
 argument_list|(
 name|hc
-operator|->
-name|sca_base
 argument_list|,
 name|dmac
 operator|->
@@ -6362,8 +6335,6 @@ argument_list|,
 name|SRC_GET16
 argument_list|(
 name|hc
-operator|->
-name|sca_base
 argument_list|,
 name|dmac
 operator|->
@@ -6373,8 +6344,6 @@ argument_list|,
 name|SRC_GET16
 argument_list|(
 name|hc
-operator|->
-name|sca_base
 argument_list|,
 name|dmac
 operator|->
@@ -6384,8 +6353,6 @@ argument_list|,
 name|SRC_GET8
 argument_list|(
 name|hc
-operator|->
-name|sca_base
 argument_list|,
 name|dmac
 operator|->
@@ -6404,8 +6371,6 @@ condition|)
 name|SRC_SET_OFF
 argument_list|(
 name|hc
-operator|->
-name|iobase
 argument_list|)
 expr_stmt|;
 block|}
@@ -6871,8 +6836,6 @@ operator|=
 name|SRC_GET8
 argument_list|(
 name|hc
-operator|->
-name|sca_base
 argument_list|,
 name|msci
 operator|->
@@ -6884,8 +6847,6 @@ operator|=
 name|SRC_GET8
 argument_list|(
 name|hc
-operator|->
-name|sca_base
 argument_list|,
 name|msci
 operator|->
@@ -6897,8 +6858,6 @@ operator|=
 name|SRC_GET8
 argument_list|(
 name|hc
-operator|->
-name|sca_base
 argument_list|,
 name|msci
 operator|->
@@ -6910,8 +6869,6 @@ operator|=
 name|SRC_GET8
 argument_list|(
 name|hc
-operator|->
-name|sca_base
 argument_list|,
 name|msci
 operator|->
@@ -7049,8 +7006,6 @@ operator|=
 name|SRC_GET8
 argument_list|(
 name|hc
-operator|->
-name|sca_base
 argument_list|,
 name|msci
 operator|->
