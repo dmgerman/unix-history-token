@@ -136,16 +136,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/limits.h>
-end_include
-
-begin_comment
-comment|/* for UCHAR_MAX = typeof(p_priority)_MAX */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<vm/vm.h>
 end_include
 
@@ -1538,7 +1528,7 @@ name|curproc
 operator|->
 name|p_estcpu
 operator|=
-name|min
+name|ESTCPULIM
 argument_list|(
 name|curproc
 operator|->
@@ -1547,8 +1537,6 @@ operator|+
 name|p
 operator|->
 name|p_estcpu
-argument_list|,
-name|UCHAR_MAX
 argument_list|)
 expr_stmt|;
 block|}
