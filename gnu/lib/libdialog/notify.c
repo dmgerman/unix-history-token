@@ -25,6 +25,10 @@ name|msg
 parameter_list|)
 comment|/*   * Desc: display an error message  */
 block|{
+name|char
+modifier|*
+name|tmphlp
+decl_stmt|;
 name|WINDOW
 modifier|*
 name|w
@@ -59,6 +63,16 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|tmphlp
+operator|=
+name|get_helpline
+argument_list|()
+expr_stmt|;
+name|use_helpline
+argument_list|(
+literal|"Press enter to continue"
+argument_list|)
+expr_stmt|;
 name|dialog_msgbox
 argument_list|(
 literal|"Message"
@@ -72,6 +86,11 @@ operator|-
 literal|1
 argument_list|,
 name|TRUE
+argument_list|)
+expr_stmt|;
+name|restore_helpline
+argument_list|(
+name|tmphlp
 argument_list|)
 expr_stmt|;
 name|touchwin
