@@ -4826,17 +4826,19 @@ name|flags
 operator||=
 name|flags
 expr_stmt|;
-comment|/* 	 * Check the commands now so any attributes from .DEFAULT have a chance 	 * to migrate to the node. XXXHB: missing parantheses below? 	 */
+comment|/* 	 * Check the commands now so any attributes from .DEFAULT have a chance 	 * to migrate to the node. 	 */
 if|if
 condition|(
 operator|!
 name|compatMake
 operator|&&
+operator|(
 name|job
 operator|->
 name|flags
 operator|&
 name|JOB_FIRST
+operator|)
 condition|)
 block|{
 name|cmdsOK
