@@ -352,34 +352,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
+begin_decl_stmt
+name|cn_putc_t
 name|promcnputc
-parameter_list|(
-name|dev_t
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|int
+begin_decl_stmt
+name|cn_getc_t
 name|promcngetc
-parameter_list|(
-name|dev_t
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|int
+begin_decl_stmt
+name|cn_checkc_t
 name|promcncheckc
-parameter_list|(
-name|dev_t
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|u_int64_t

@@ -887,34 +887,23 @@ begin_comment
 comment|/*  * Console support  */
 end_comment
 
-begin_function_decl
-name|int
+begin_decl_stmt
+name|cn_getc_t
 name|zs_cngetc
-parameter_list|(
-name|dev_t
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|int
+begin_decl_stmt
+name|cn_checkc_t
 name|zs_cncheckc
-parameter_list|(
-name|dev_t
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|void
+begin_decl_stmt
+name|cn_putc_t
 name|zs_cnputc
-parameter_list|(
-name|dev_t
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1020,8 +1009,10 @@ begin_function
 name|int
 name|zs_cngetc
 parameter_list|(
-name|dev_t
-name|dev
+name|struct
+name|consdev
+modifier|*
+name|cp
 parameter_list|)
 block|{
 name|int
@@ -1039,7 +1030,9 @@ name|zs_console_addr
 argument_list|,
 name|minor
 argument_list|(
-name|dev
+name|cp
+operator|->
+name|cn_dev
 argument_list|)
 argument_list|)
 decl_stmt|;
@@ -1058,8 +1051,10 @@ begin_function
 name|int
 name|zs_cncheckc
 parameter_list|(
-name|dev_t
-name|dev
+name|struct
+name|consdev
+modifier|*
+name|cp
 parameter_list|)
 block|{
 name|int
@@ -1077,7 +1072,9 @@ name|zs_console_addr
 argument_list|,
 name|minor
 argument_list|(
-name|dev
+name|cp
+operator|->
+name|cn_dev
 argument_list|)
 argument_list|)
 decl_stmt|;
@@ -1096,8 +1093,10 @@ begin_function
 name|void
 name|zs_cnputc
 parameter_list|(
-name|dev_t
-name|dev
+name|struct
+name|consdev
+modifier|*
+name|cp
 parameter_list|,
 name|int
 name|c
@@ -1115,7 +1114,9 @@ name|zs_console_addr
 argument_list|,
 name|minor
 argument_list|(
-name|dev
+name|cp
+operator|->
+name|cn_dev
 argument_list|)
 argument_list|,
 name|c

@@ -62,7 +62,9 @@ typedef|typedef
 name|int
 name|cn_getc_t
 parameter_list|(
-name|dev_t
+name|struct
+name|consdev
+modifier|*
 parameter_list|)
 function_decl|;
 end_typedef
@@ -72,7 +74,9 @@ typedef|typedef
 name|int
 name|cn_checkc_t
 parameter_list|(
-name|dev_t
+name|struct
+name|consdev
+modifier|*
 parameter_list|)
 function_decl|;
 end_typedef
@@ -82,7 +86,9 @@ typedef|typedef
 name|void
 name|cn_putc_t
 parameter_list|(
-name|dev_t
+name|struct
+name|consdev
+modifier|*
 parameter_list|,
 name|int
 parameter_list|)
@@ -94,7 +100,9 @@ typedef|typedef
 name|void
 name|cn_dbctl_t
 parameter_list|(
-name|dev_t
+name|struct
+name|consdev
+modifier|*
 parameter_list|,
 name|int
 parameter_list|)
@@ -154,6 +162,11 @@ name|short
 name|cn_pri
 decl_stmt|;
 comment|/* pecking order; the higher the better */
+name|void
+modifier|*
+name|cn_arg
+decl_stmt|;
+comment|/* drivers method argument */
 block|}
 struct|;
 end_struct

@@ -2522,8 +2522,6 @@ operator|->
 name|cn_checkc
 argument_list|(
 name|cn
-operator|->
-name|cn_dev
 argument_list|)
 expr_stmt|;
 if|if
@@ -2607,8 +2605,6 @@ operator|->
 name|cn_putc
 argument_list|(
 name|cn
-operator|->
-name|cn_dev
 argument_list|,
 literal|'\r'
 argument_list|)
@@ -2618,8 +2614,6 @@ operator|->
 name|cn_putc
 argument_list|(
 name|cn
-operator|->
-name|cn_dev
 argument_list|,
 name|c
 argument_list|)
@@ -2782,8 +2776,6 @@ operator|->
 name|cn_dbctl
 argument_list|(
 name|cn
-operator|->
-name|cn_dev
 argument_list|,
 name|on
 argument_list|)

@@ -884,9 +884,7 @@ literal|0
 condition|)
 name|promcnputc
 argument_list|(
-name|tp
-operator|->
-name|t_dev
+name|NULL
 argument_list|,
 name|getc
 argument_list|(
@@ -1008,9 +1006,7 @@ name|c
 operator|=
 name|promcncheckc
 argument_list|(
-name|tp
-operator|->
-name|t_dev
+name|NULL
 argument_list|)
 operator|)
 operator|!=
