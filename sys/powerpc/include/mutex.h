@@ -64,6 +64,16 @@ define|\
 value|((alpha_pal_rdps()& ALPHA_PSL_IPL_MASK) == ALPHA_PSL_IPL_0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|mtx_intr_enable
+parameter_list|(
+name|mutex
+parameter_list|)
+value|(mutex)->mtx_saveintr = ALPHA_PSL_IPL_0
+end_define
+
 begin_comment
 comment|/*  * Assembly macros (for internal use only)  *--------------------------------------------------------------------------  */
 end_comment
