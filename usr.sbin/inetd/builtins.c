@@ -2066,9 +2066,6 @@ name|tv
 operator|.
 name|tv_sec
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|to
 operator|.
 name|tv_usec
@@ -2076,7 +2073,12 @@ operator|+=
 name|tv
 operator|.
 name|tv_usec
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|to
+operator|.
+name|tv_usec
 operator|>=
 literal|1000000
 condition|)
@@ -2444,7 +2446,7 @@ name|fport
 argument_list|,
 name|s
 argument_list|,
-name|errno
+name|EINVAL
 argument_list|)
 expr_stmt|;
 name|size
@@ -2550,7 +2552,7 @@ literal|1
 condition|)
 name|getcredfail
 operator|=
-literal|1
+name|errno
 expr_stmt|;
 break|break;
 ifdef|#
@@ -2642,7 +2644,7 @@ literal|1
 condition|)
 name|getcredfail
 operator|=
-literal|1
+name|errno
 expr_stmt|;
 break|break;
 endif|#
@@ -2651,7 +2653,7 @@ default|default:
 comment|/* should not reach here */
 name|getcredfail
 operator|=
-literal|1
+name|EAFNOSUPPORT
 expr_stmt|;
 break|break;
 block|}
@@ -2677,7 +2679,7 @@ name|fport
 argument_list|,
 name|s
 argument_list|,
-name|errno
+name|getcredfail
 argument_list|)
 expr_stmt|;
 name|usedfallback
@@ -2688,6 +2690,10 @@ block|}
 else|else
 block|{
 comment|/* Look up the pw to get the username */
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|pw
 operator|=
 name|getpwuid
@@ -2717,6 +2723,12 @@ argument_list|,
 name|s
 argument_list|,
 name|errno
+operator|!=
+literal|0
+condition|?
+name|errno
+else|:
+name|ENOENT
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If enabled, we check for a file named ".noident" in the user's 	 * home directory. If found, we return HIDDEN-USER. 	 */
@@ -2874,7 +2886,7 @@ operator|->
 name|pw_uid
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If we were to lstat() here, it would do no good, since it 		 * would introduce a race condition and could be defeated. 		 * Therefore, we open the file we have permissions to open 		 * and if it's not a regular file, we close it and end up 		 * returning the user's real username. 		 */
+comment|/* 		 * We can't stat() here since that would be a race 		 * condition. 		 * Therefore, we open the file we have permissions to open 		 * and if it's not a regular file, we close it and end up 		 * returning the user's real username. 		 */
 name|fakeid_fd
 operator|=
 name|open
@@ -2893,25 +2905,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|fakeid
-operator|=
-name|fdopen
-argument_list|(
 name|fakeid_fd
-argument_list|,
-literal|"r"
-argument_list|)
-operator|)
 operator|!=
-name|NULL
+operator|-
+literal|1
 operator|&&
 name|fstat
 argument_list|(
-name|fileno
-argument_list|(
-name|fakeid
-argument_list|)
+name|fakeid_fd
 argument_list|,
 operator|&
 name|sb
@@ -2926,6 +2927,19 @@ name|sb
 operator|.
 name|st_mode
 argument_list|)
+operator|&&
+operator|(
+name|fakeid
+operator|=
+name|fdopen
+argument_list|(
+name|fakeid_fd
+argument_list|,
+literal|"r"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|buf
@@ -2972,11 +2986,6 @@ goto|goto
 name|printit
 goto|;
 block|}
-name|fclose
-argument_list|(
-name|fakeid
-argument_list|)
-expr_stmt|;
 comment|/* 			 * Usually, the file will have the desired identity 			 * in the form "identity\n", so we use strcspn() to 			 * end the string (which fgets() doesn't do.) 			 */
 name|buf
 index|[
@@ -3049,6 +3058,10 @@ name|cp
 argument_list|)
 condition|)
 block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|pw
 operator|=
 name|getpwuid
@@ -3073,6 +3086,12 @@ argument_list|,
 name|s
 argument_list|,
 name|errno
+operator|!=
+literal|0
+condition|?
+name|errno
+else|:
+name|ENOENT
 argument_list|)
 expr_stmt|;
 name|cp
@@ -3090,6 +3109,18 @@ name|pw
 operator|->
 name|pw_name
 expr_stmt|;
+if|if
+condition|(
+name|fakeid
+operator|!=
+name|NULL
+condition|)
+name|fclose
+argument_list|(
+name|fakeid
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|fakeid_fd
