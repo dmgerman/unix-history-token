@@ -59,11 +59,35 @@ directive|include
 file|<sys/poll.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500005
+end_if
+
 begin_include
 include|#
 directive|include
 file|<sys/selinfo.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/select.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -2152,7 +2176,7 @@ name|aac_mntobj
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|AAC_LOCK_AQUIRE
+name|AAC_LOCK_ACQUIRE
 argument_list|(
 operator|&
 name|sc
@@ -9399,8 +9423,7 @@ parameter_list|,
 name|int
 name|fmt
 parameter_list|,
-name|struct
-name|thread
+name|d_thread_t
 modifier|*
 name|td
 parameter_list|)
@@ -9461,8 +9484,7 @@ parameter_list|,
 name|int
 name|fmt
 parameter_list|,
-name|struct
-name|thread
+name|d_thread_t
 modifier|*
 name|td
 parameter_list|)
@@ -9514,8 +9536,7 @@ parameter_list|,
 name|int
 name|flag
 parameter_list|,
-name|struct
-name|thread
+name|d_thread_t
 modifier|*
 name|td
 parameter_list|)
@@ -9877,8 +9898,7 @@ parameter_list|,
 name|int
 name|poll_events
 parameter_list|,
-name|struct
-name|thread
+name|d_thread_t
 modifier|*
 name|td
 parameter_list|)
@@ -9901,7 +9921,7 @@ name|revents
 operator|=
 literal|0
 expr_stmt|;
-name|AAC_LOCK_AQUIRE
+name|AAC_LOCK_ACQUIRE
 argument_list|(
 operator|&
 name|sc
@@ -10640,7 +10660,7 @@ argument_list|,
 name|co_link
 argument_list|)
 expr_stmt|;
-name|AAC_LOCK_AQUIRE
+name|AAC_LOCK_ACQUIRE
 argument_list|(
 operator|&
 name|sc
@@ -10719,7 +10739,7 @@ default|default:
 break|break;
 block|}
 comment|/* Copy the AIF data to the AIF queue for ioctl retrieval */
-name|AAC_LOCK_AQUIRE
+name|AAC_LOCK_ACQUIRE
 argument_list|(
 operator|&
 name|sc
@@ -11356,7 +11376,7 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
-name|AAC_LOCK_AQUIRE
+name|AAC_LOCK_ACQUIRE
 argument_list|(
 operator|&
 name|sc
@@ -11544,7 +11564,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|AAC_LOCK_AQUIRE
+name|AAC_LOCK_ACQUIRE
 argument_list|(
 operator|&
 name|sc

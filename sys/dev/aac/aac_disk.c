@@ -438,8 +438,7 @@ parameter_list|,
 name|int
 name|fmt
 parameter_list|,
-name|struct
-name|thread
+name|d_thread_t
 modifier|*
 name|td
 parameter_list|)
@@ -606,8 +605,7 @@ parameter_list|,
 name|int
 name|fmt
 parameter_list|,
-name|struct
-name|thread
+name|d_thread_t
 modifier|*
 name|td
 parameter_list|)
@@ -1013,12 +1011,14 @@ name|dumpstatus
 argument_list|(
 name|addr
 argument_list|,
-operator|(
+call|(
 name|off_t
-operator|)
+call|)
+argument_list|(
 name|count
 operator|*
 name|DEV_BSIZE
+argument_list|)
 argument_list|)
 operator|<
 literal|0
