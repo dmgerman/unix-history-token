@@ -15,11 +15,11 @@ directive|if
 literal|0
 end_if
 
-begin_else
+begin_endif
 unit|static char sccsid[] = "@(#)net.c	8.4 (Berkeley) 4/28/95";
-else|#
-directive|else
-end_else
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -37,20 +37,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
 
 begin_include
 include|#
@@ -67,19 +56,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in.h>
+file|<sys/uio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<arpa/inet.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netdb.h>
+file|<ctype.h>
 end_include
 
 begin_include
@@ -97,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<netdb.h>
 end_include
 
 begin_include
@@ -109,19 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
@@ -133,19 +104,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/uio.h>
+file|<unistd.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<limits.h>
+file|<utmp.h>
 end_include
 
 begin_include
