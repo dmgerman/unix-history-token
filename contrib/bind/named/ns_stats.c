@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_stats.c,v 8.7 1996/08/05 08:31:30 vixie Exp $"
+literal|"$Id: ns_stats.c,v 8.8 1996/09/22 00:13:10 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -791,17 +791,6 @@ name|resettime
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DMALLOC
-comment|/* malloc statistics */
-name|dmallocstats
-argument_list|(
-name|f
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* query type statistics */
 name|fprintf
 argument_list|(

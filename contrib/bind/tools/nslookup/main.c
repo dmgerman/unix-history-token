@@ -49,7 +49,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 8.3 1996/06/02 08:20:41 vixie Exp $"
+literal|"$Id: main.c,v 8.4 1996/11/11 06:36:54 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4019,6 +4019,23 @@ argument_list|)
 operator|)
 operator|!=
 name|NULL
+operator|&&
+operator|(
+name|strlen
+argument_list|(
+name|cp
+argument_list|)
+operator|+
+name|strlen
+argument_list|(
+name|_PATH_NSLOOKUPRC
+argument_list|)
+operator|)
+operator|<
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 condition|)
 block|{
 operator|(

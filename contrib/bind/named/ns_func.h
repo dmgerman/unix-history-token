@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ns_func.h - declarations for ns_*.c's externally visible functions  *  * $Id: ns_func.h,v 8.9 1996/05/20 15:10:01 vixie Exp $  */
+comment|/* ns_func.h - declarations for ns_*.c's externally visible functions  *  * $Id: ns_func.h,v 8.13 1996/11/11 06:36:49 vixie Exp $  */
 end_comment
 
 begin_comment
@@ -40,6 +40,16 @@ operator|,
 name|int
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|,
+name|delete_stale
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|namebuf
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -471,6 +481,12 @@ name|char
 operator|*
 name|dname
 operator|,
+name|int
+name|class
+operator|,
+name|int
+name|type
+operator|,
 expr|struct
 name|namebuf
 operator|*
@@ -604,6 +620,19 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|,
+name|nsfree
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|qinfo
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|,
 name|qfree
 name|__P
 argument_list|(
@@ -629,44 +658,22 @@ name|u_int16_t
 operator|)
 argument_list|)
 decl_stmt|,
-ifdef|#
-directive|ifdef
-name|DMALLOC
 modifier|*
-name|qnew_tagged
+name|qnew
 name|__P
 argument_list|(
 operator|(
-name|void
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|qnew
-parameter_list|()
-value|qnew_tagged(__FILE__, __LINE__)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-operator|*
-name|qnew
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* --from ns_forw.c-- */
@@ -1146,6 +1153,15 @@ name|transport
 operator|,
 expr|enum
 name|context
+operator|,
+specifier|const
+name|char
+operator|*
+name|owner
+operator|,
+expr|struct
+name|in_addr
+name|source
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1193,6 +1209,27 @@ end_decl_stmt
 
 begin_comment
 comment|/* --from ns_ncache.c-- */
+end_comment
+
+begin_comment
+comment|/* ++from ns_udp.c++ */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|ns_udp
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* --from ns_udp.c-- */
 end_comment
 
 begin_comment

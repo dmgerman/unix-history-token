@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_query.c,v 8.7 1996/08/05 08:31:35 vixie Exp $"
+literal|"$Id: res_query.c,v 8.9 1996/09/22 00:13:28 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -203,9 +203,10 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
-name|__hostalias
+name|hostalias
 name|__P
 argument_list|(
 operator|(
@@ -1125,11 +1126,7 @@ block|{
 name|char
 name|nbuf
 index|[
-literal|2
-operator|*
 name|MAXDNAME
-operator|+
-literal|2
 index|]
 decl_stmt|;
 specifier|const
@@ -1305,9 +1302,10 @@ block|}
 end_block
 
 begin_function
+specifier|const
 name|char
 modifier|*
-name|__hostalias
+name|hostalias
 parameter_list|(
 name|name
 parameter_list|)

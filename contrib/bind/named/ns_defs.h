@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_defs.h,v 8.6 1996/05/17 09:10:46 vixie Exp $  */
+comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_defs.h,v 8.8 1996/09/22 00:13:10 vixie Exp $  */
 end_comment
 
 begin_comment
@@ -574,59 +574,11 @@ begin_comment
 comment|/* backup file for xfer is temporary */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ALLOW_UPDATES
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|Z_DYNAMIC
-value|0x0400
-end_define
-
-begin_comment
-comment|/* allow dynamic updates */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|Z_DYNADDONLY
-value|0x0800
-end_define
-
-begin_comment
-comment|/* dynamic mode: add new data only */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|Z_CHANGED
-value|0x1000
-end_define
-
-begin_comment
-comment|/* zone has changed */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ALLOW_UPDATES */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|Z_XFER_ABORTED
-value|0x2000
+value|0x0400
 end_define
 
 begin_comment
@@ -637,7 +589,7 @@ begin_define
 define|#
 directive|define
 name|Z_XFER_GONE
-value|0x4000
+value|0x0800
 end_define
 
 begin_comment
@@ -870,26 +822,24 @@ modifier|*
 name|q_zquery
 decl_stmt|;
 comment|/* Zone query is about (Q_ZSERIAL) */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LAME_DELEGATION
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|VALIDATE
-argument_list|)
 name|char
+modifier|*
 name|q_domain
-index|[
-name|MAXDNAME
-index|]
 decl_stmt|;
-comment|/* domain for servers we are querying */
-endif|#
-directive|endif
+comment|/* domain of most enclosing zone cut */
+name|char
+modifier|*
+name|q_name
+decl_stmt|;
+comment|/* domain of query */
+name|u_int16_t
+name|q_class
+decl_stmt|;
+comment|/* class of query */
+name|u_int16_t
+name|q_type
+decl_stmt|;
+comment|/* type of query */
 ifdef|#
 directive|ifdef
 name|BIND_NOTIFY
