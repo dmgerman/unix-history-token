@@ -1,11 +1,33 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ubareg.h	6.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ubareg.h	6.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
 comment|/*  * VAX UNIBUS adapter registers  */
 end_comment
+
+begin_comment
+comment|/*  * size of unibus address space in pages  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UBAPAGES
+value|512
+end_define
+
+begin_comment
+comment|/*  * Number of UNIBUS map registers.  We can't use the last 8k of UNIBUS  * address space for i/o transfers since it is used by the devices,  * hence have slightly less than 256K of UNIBUS address space.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NUBMREG
+value|496
+end_define
 
 begin_ifndef
 ifndef|#
@@ -81,7 +103,7 @@ name|struct
 name|pte
 name|uba_map
 index|[
-literal|496
+name|NUBMREG
 index|]
 decl_stmt|;
 comment|/* unibus map register */
@@ -104,7 +126,15 @@ end_endif
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
 name|VAX780
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|VAX8600
+argument_list|)
 end_if
 
 begin_comment
@@ -494,7 +524,6 @@ end_comment
 begin_endif
 endif|#
 directive|endif
-endif|VAX780
 end_endif
 
 begin_comment
@@ -504,7 +533,15 @@ end_comment
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
 name|VAX780
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|VAX8600
+argument_list|)
 end_if
 
 begin_define
@@ -575,10 +612,25 @@ define|\
 value|((uba)->uba_dpr[bdp] |= UBADPR_BNE)
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|UBA_PURGE780
+parameter_list|(
+name|uba
+parameter_list|,
+name|bdp
+parameter_list|)
+end_define
+
 begin_endif
 endif|#
 directive|endif
-endif|VAX780
 end_endif
 
 begin_if
@@ -647,10 +699,25 @@ parameter_list|)
 value|{ \     ((uba)->uba_dpr[bdp] |= (UBADPR_PURGE|UBADPR_NXM|UBADPR_UCE)); \     DELAY(8); \ }
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|UBA_PURGE750
+parameter_list|(
+name|uba
+parameter_list|,
+name|bdp
+parameter_list|)
+end_define
+
 begin_endif
 endif|#
 directive|endif
-endif|VAX750
 end_endif
 
 begin_comment
@@ -662,9 +729,14 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|VAX8600
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|VAX780
 argument_list|)
-operator|&&
+operator|||
 name|defined
 argument_list|(
 name|VAX750
@@ -680,39 +752,7 @@ name|uba
 parameter_list|,
 name|bdp
 parameter_list|)
-value|{ \ 	switch (cpu) { \ 	case VAX_780: UBA_PURGE780((uba), (bdp)); break; \ 	case VAX_750: UBA_PURGE750((uba), (bdp)); break; \ 	} \ }
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|VAX780
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|VAX750
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|UBAPURGE
-parameter_list|(
-name|uba
-parameter_list|,
-name|bdp
-parameter_list|)
-value|{ \ 	if (cpu==VAX_780) { \ 		UBA_PURGE780((uba), (bdp)); \ 	} \ }
+value|{ \ 	switch (cpu) { \ 	case VAX_8600: case VAX_780: UBA_PURGE780((uba), (bdp)); break; \ 	case VAX_750: UBA_PURGE750((uba), (bdp)); break; \ 	} \ }
 end_define
 
 begin_endif
@@ -726,35 +766,9 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|VAX780
+name|VAX8600
 argument_list|)
 operator|&&
-name|defined
-argument_list|(
-name|VAX750
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|UBAPURGE
-parameter_list|(
-name|uba
-parameter_list|,
-name|bdp
-parameter_list|)
-value|{ \ 	if (cpu==VAX_750) { \ 		UBA_PURGE750((uba), (bdp)); \ 	} \ }
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
 operator|!
 name|defined
 argument_list|(
@@ -844,19 +858,15 @@ comment|/* shift to data path designator */
 end_comment
 
 begin_comment
-comment|/*  * Number of UNIBUS map registers.  We can't use the last 8k of UNIBUS  * address space for i/o transfers since it is used by the devices,  * hence have slightly less than 256K of UNIBUS address space.  */
+comment|/*  * Number of unibus buffered data paths and possible uba's per cpu type.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NUBMREG
-value|496
+name|NBDP8600
+value|15
 end_define
-
-begin_comment
-comment|/*  * Number of unibus buffered data paths and possible uba's per cpu type.  */
-end_comment
 
 begin_define
 define|#
@@ -886,29 +896,8 @@ name|MAXNBDP
 value|15
 end_define
 
-begin_define
-define|#
-directive|define
-name|NUBA780
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|NUBA750
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|NUBA730
-value|1
-end_define
-
 begin_comment
-comment|/*  * Symbolic addresses of UNIBUS memory for UBAs.  */
+comment|/*  * Symbolic BUS addresses for UBAs.  */
 end_comment
 
 begin_if
@@ -971,8 +960,39 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|VAX8600
+end_if
+
+begin_define
+define|#
+directive|define
+name|UMEMA8600
+parameter_list|(
+name|i
+parameter_list|)
+value|((u_short *)(0x20100000+(i)*0x40000))
+end_define
+
+begin_define
+define|#
+directive|define
+name|UMEMB8600
+parameter_list|(
+name|i
+parameter_list|)
+value|((u_short *)(0x22100000+(i)*0x40000))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * Macro to offset a UNIBUS device address, often expressed as  * something like 0172520 by forcing it into the last 8K of UNIBUS space.  */
+comment|/*  * Macro to offset a UNIBUS device address, often expressed as  * something like 0172520 by forcing it into the last 8K of UNIBUS memory  * space.  */
 end_comment
 
 begin_define
