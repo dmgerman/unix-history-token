@@ -62,6 +62,27 @@ argument_list|,
 literal|"fnum"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|f__units
+index|[
+operator|*
+name|lunit
+index|]
+operator|.
+name|ufd
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|114
+argument_list|,
+literal|"fnum"
+argument_list|)
+expr_stmt|;
 comment|/* f__units is a table of descriptions for the unit numbers (defined      in io.h).  Use file descriptor (ufd) and fileno rather than udev      field since udev is unix specific */
 return|return
 name|fileno

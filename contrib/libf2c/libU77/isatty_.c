@@ -71,6 +71,15 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|f__init
+operator|!=
+literal|1
+condition|)
+name|f_init
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
 operator|*
 name|lunit
 operator|>=
