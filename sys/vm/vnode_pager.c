@@ -1174,6 +1174,9 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 comment|/* 				 * XXX work around SMP data integrity race 				 * by unmapping the page from user processes. 				 * The garbage we just cleared may be mapped 				 * to a user process running on another cpu 				 * and this code is not running through normal 				 * I/O channels which handle SMP issues for 				 * us, so unmap page to synchronize all cpus. 				 * 				 * XXX should vm_pager_unmap_page() have 				 * dealt with this? 				 */
 name|pmap_remove_all
 argument_list|(
@@ -1203,6 +1206,9 @@ operator|->
 name|dirty
 operator|=
 name|VM_PAGE_BITS_ALL
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 block|}
 block|}
