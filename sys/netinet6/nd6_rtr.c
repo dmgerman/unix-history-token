@@ -6543,7 +6543,7 @@ name|pr
 operator|->
 name|ndpr_plen
 decl_stmt|;
-name|in6_len2mask
+name|in6_prefixlen2mask
 argument_list|(
 operator|&
 name|mask
