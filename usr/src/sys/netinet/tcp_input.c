@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_input.c 1.4 81/10/28 */
+comment|/* tcp_input.c 1.5 81/10/28 */
 end_comment
 
 begin_include
@@ -2938,13 +2938,16 @@ expr_stmt|;
 comment|/* 	 * Discard duplicate data already passed to user. 	 */
 if|if
 condition|(
+name|SEQ_LT
+argument_list|(
 name|n
 operator|->
 name|t_seq
-operator|<
+argument_list|,
 name|tp
 operator|->
 name|rcv_nxt
+argument_list|)
 condition|)
 block|{
 name|i
@@ -3017,13 +3020,16 @@ name|t_next
 control|)
 if|if
 condition|(
+name|SEQ_GT
+argument_list|(
 name|q
 operator|->
 name|t_seq
-operator|>
+argument_list|,
 name|n
 operator|->
 name|t_seq
+argument_list|)
 condition|)
 break|break;
 comment|/* 	 * If there is a preceding segment, it may provide some of 	 * our data already.  If so, drop the data from the incoming 	 * segment.  If it provides all of our data, drop us. 	 */
@@ -3041,6 +3047,7 @@ operator|)
 name|tp
 condition|)
 block|{
+comment|/* conversion to int (in i) handles seq wraparound */
 name|i
 operator|=
 name|q
@@ -3113,6 +3120,8 @@ operator|*
 operator|)
 name|tp
 operator|&&
+name|SEQ_GT
+argument_list|(
 name|n
 operator|->
 name|t_seq
@@ -3120,10 +3129,11 @@ operator|+
 name|n
 operator|->
 name|t_len
-operator|>
+argument_list|,
 name|q
 operator|->
 name|t_seq
+argument_list|)
 condition|)
 block|{
 name|i
@@ -3300,9 +3310,9 @@ name|q
 operator|==
 name|n
 condition|)
-name|printf
+name|panic
 argument_list|(
-literal|"tcp_text dropall\n"
+literal|"tcp_text dropall"
 argument_list|)
 expr_stmt|;
 name|q
@@ -3321,7 +3331,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * Advance rcv_next through newly 	 * completed sequence space and force ACK. 	 */
+comment|/* 	 * Advance rcv_next through 	 * newly completed sequence space 	 * and return forcing an ack. 	 */
 while|while
 condition|(
 name|n
@@ -3333,6 +3343,7 @@ operator|->
 name|rcv_nxt
 condition|)
 block|{
+comment|/* present data belongs here */
 name|tp
 operator|->
 name|rcv_nxt
@@ -3373,7 +3384,7 @@ expr_stmt|;
 return|return;
 name|dropseg
 label|:
-comment|/* don't set TC_NET_KEEP */
+comment|/* don't set TC_NET_KEEP, so that mbuf's will get dropped */
 return|return;
 block|}
 end_block
