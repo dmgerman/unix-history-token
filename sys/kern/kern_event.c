@@ -3046,7 +3046,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 			 * The user may change some filter values after the 			 * initial EV_ADD, but doing so will not reset any  			 * filter which have already been triggered. 			 */
+comment|/* 			 * The user may change some filter values after the 			 * initial EV_ADD, but doing so will not reset any  			 * filter which has already been triggered. 			 */
 name|kn
 operator|->
 name|kn_sfflags
