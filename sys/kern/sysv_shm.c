@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_shm.c,v 1.14 1995/12/14 08:31:54 phk Exp $ */
+comment|/*	$Id: sysv_shm.c,v 1.15 1995/12/15 05:00:31 peter Exp $ */
 end_comment
 
 begin_comment
@@ -2387,6 +2387,7 @@ name|EINVAL
 return|;
 if|if
 condition|(
+operator|(
 name|uap
 operator|->
 name|shmflg
@@ -2395,6 +2396,7 @@ operator|(
 name|IPC_CREAT
 operator||
 name|IPC_EXCL
+operator|)
 operator|)
 operator|==
 operator|(
