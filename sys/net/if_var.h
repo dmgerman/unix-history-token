@@ -749,7 +749,7 @@ define|#
 directive|define
 name|if_rawoutput
 parameter_list|(
-define|if, m, sa) if_output(if, m, sa, (struct rtentry *)0)
+define|if, m, sa) if_output(if, m, sa, (struct rtentry *)NULL)
 end_define
 
 begin_comment
@@ -891,7 +891,7 @@ name|ifq
 parameter_list|,
 name|m
 parameter_list|)
-value|do { 				\ 	(m) = (ifq)->ifq_head; 					\ 	if (m) { 						\ 		if (((ifq)->ifq_head = (m)->m_nextpkt) == 0) 	\ 			(ifq)->ifq_tail = NULL; 		\ 		(m)->m_nextpkt = NULL; 				\ 		(ifq)->ifq_len--; 				\ 	} 							\ } while (0)
+value|do { 				\ 	(m) = (ifq)->ifq_head; 					\ 	if (m) { 						\ 		if (((ifq)->ifq_head = (m)->m_nextpkt) == NULL)	\ 			(ifq)->ifq_tail = NULL; 		\ 		(m)->m_nextpkt = NULL; 				\ 		(ifq)->ifq_len--; 				\ 	} 							\ } while (0)
 end_define
 
 begin_define
