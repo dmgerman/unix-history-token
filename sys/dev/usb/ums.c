@@ -3190,8 +3190,7 @@ operator|->
 name|status
 operator|.
 name|dz
-operator|=
-comment|/* sc->status.dt */
+comment|/* = sc->status.dt */
 operator|=
 literal|0
 expr_stmt|;
