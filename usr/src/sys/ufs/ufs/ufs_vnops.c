@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.66 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.67 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -173,239 +173,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FIFO
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|vnodeops
-name|fifo_inodeops
-init|=
-block|{
-name|fifo_lookup
-block|,
-comment|/* lookup */
-name|fifo_create
-block|,
-comment|/* create */
-name|fifo_mknod
-block|,
-comment|/* mknod */
-name|fifo_open
-block|,
-comment|/* open */
-name|ufsfifo_close
-block|,
-comment|/* close */
-name|ufs_access
-block|,
-comment|/* access */
-name|ufs_getattr
-block|,
-comment|/* getattr */
-name|ufs_setattr
-block|,
-comment|/* setattr */
-name|ufsfifo_read
-block|,
-comment|/* read */
-name|ufsfifo_write
-block|,
-comment|/* write */
-name|fifo_ioctl
-block|,
-comment|/* ioctl */
-name|fifo_select
-block|,
-comment|/* select */
-name|fifo_mmap
-block|,
-comment|/* mmap */
-name|fifo_fsync
-block|,
-comment|/* fsync */
-name|fifo_seek
-block|,
-comment|/* seek */
-name|fifo_remove
-block|,
-comment|/* remove */
-name|fifo_link
-block|,
-comment|/* link */
-name|fifo_rename
-block|,
-comment|/* rename */
-name|fifo_mkdir
-block|,
-comment|/* mkdir */
-name|fifo_rmdir
-block|,
-comment|/* rmdir */
-name|fifo_symlink
-block|,
-comment|/* symlink */
-name|fifo_readdir
-block|,
-comment|/* readdir */
-name|fifo_readlink
-block|,
-comment|/* readlink */
-name|fifo_abortop
-block|,
-comment|/* abortop */
-name|ufs_inactive
-block|,
-comment|/* inactive */
-name|ufs_reclaim
-block|,
-comment|/* reclaim */
-name|ufs_lock
-block|,
-comment|/* lock */
-name|ufs_unlock
-block|,
-comment|/* unlock */
-name|fifo_bmap
-block|,
-comment|/* bmap */
-name|fifo_strategy
-block|,
-comment|/* strategy */
-name|ufs_print
-block|,
-comment|/* print */
-name|ufs_islocked
-block|,
-comment|/* islocked */
-name|fifo_advlock
-block|,
-comment|/* advlock */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* FIFO */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|vnodeops
-name|spec_inodeops
-init|=
-block|{
-name|spec_lookup
-block|,
-comment|/* lookup */
-name|spec_create
-block|,
-comment|/* create */
-name|spec_mknod
-block|,
-comment|/* mknod */
-name|spec_open
-block|,
-comment|/* open */
-name|ufsspec_close
-block|,
-comment|/* close */
-name|ufs_access
-block|,
-comment|/* access */
-name|ufs_getattr
-block|,
-comment|/* getattr */
-name|ufs_setattr
-block|,
-comment|/* setattr */
-name|ufsspec_read
-block|,
-comment|/* read */
-name|ufsspec_write
-block|,
-comment|/* write */
-name|spec_ioctl
-block|,
-comment|/* ioctl */
-name|spec_select
-block|,
-comment|/* select */
-name|spec_mmap
-block|,
-comment|/* mmap */
-name|spec_fsync
-block|,
-comment|/* fsync */
-name|spec_seek
-block|,
-comment|/* seek */
-name|spec_remove
-block|,
-comment|/* remove */
-name|spec_link
-block|,
-comment|/* link */
-name|spec_rename
-block|,
-comment|/* rename */
-name|spec_mkdir
-block|,
-comment|/* mkdir */
-name|spec_rmdir
-block|,
-comment|/* rmdir */
-name|spec_symlink
-block|,
-comment|/* symlink */
-name|spec_readdir
-block|,
-comment|/* readdir */
-name|spec_readlink
-block|,
-comment|/* readlink */
-name|spec_abortop
-block|,
-comment|/* abortop */
-name|ufs_inactive
-block|,
-comment|/* inactive */
-name|ufs_reclaim
-block|,
-comment|/* reclaim */
-name|ufs_lock
-block|,
-comment|/* lock */
-name|ufs_unlock
-block|,
-comment|/* unlock */
-name|spec_bmap
-block|,
-comment|/* bmap */
-name|spec_strategy
-block|,
-comment|/* strategy */
-name|ufs_print
-block|,
-comment|/* print */
-name|ufs_islocked
-block|,
-comment|/* islocked */
-name|spec_advlock
-block|,
-comment|/* advlock */
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 name|enum
 name|vtype
@@ -510,29 +277,13 @@ name|p
 decl_stmt|;
 block|{
 name|struct
-name|ufsmount
+name|vnode
 modifier|*
-name|ump
-decl_stmt|;
-name|struct
-name|inode
-modifier|*
-name|ip
+name|vp
 decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|ump
-operator|=
-name|VFSTOUFS
-argument_list|(
-name|ndp
-operator|->
-name|ni_dvp
-operator|->
-name|v_mount
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -553,7 +304,7 @@ argument_list|,
 name|ndp
 argument_list|,
 operator|&
-name|ip
+name|vp
 argument_list|)
 condition|)
 return|return
@@ -565,10 +316,7 @@ name|ndp
 operator|->
 name|ni_vp
 operator|=
-name|ITOV
-argument_list|(
-name|ip
-argument_list|)
+name|vp
 expr_stmt|;
 return|return
 operator|(
@@ -621,34 +369,18 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
-name|vnode
-modifier|*
-name|vp
-decl_stmt|;
-name|struct
 name|inode
 modifier|*
 name|ip
 decl_stmt|;
 name|struct
-name|ufsmount
+name|vnode
 modifier|*
-name|ump
+name|vp
 decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|ump
-operator|=
-name|VFSTOUFS
-argument_list|(
-name|ndp
-operator|->
-name|ni_dvp
-operator|->
-name|v_mount
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -669,7 +401,7 @@ argument_list|,
 name|ndp
 argument_list|,
 operator|&
-name|ip
+name|vp
 argument_list|)
 condition|)
 return|return
@@ -677,6 +409,13 @@ operator|(
 name|error
 operator|)
 return|;
+name|ip
+operator|=
+name|VTOI
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|ip
 operator|->
 name|i_flag
@@ -707,13 +446,6 @@ name|va_rdev
 expr_stmt|;
 block|}
 comment|/* 	 * Remove inode so that it will be reloaded by iget and 	 * checked to see if it is an alias of an existing entry 	 * in the inode cache. 	 */
-name|vp
-operator|=
-name|ITOV
-argument_list|(
-name|ip
-argument_list|)
-expr_stmt|;
 name|vput
 argument_list|(
 name|vp
@@ -1449,11 +1181,6 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
-name|struct
-name|ufsmount
-modifier|*
-name|ump
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1579,22 +1306,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|ip
-operator|=
-name|VTOI
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-name|ump
-operator|=
-name|VFSTOUFS
-argument_list|(
-name|vp
-operator|->
-name|v_mount
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|vap
@@ -1621,13 +1332,9 @@ if|if
 condition|(
 name|error
 operator|=
-call|(
-name|ump
-operator|->
-name|um_itrunc
-call|)
+name|VOP_TRUNCATE
 argument_list|(
-name|ip
+name|vp
 argument_list|,
 name|vap
 operator|->
@@ -1636,13 +1343,20 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-comment|/* XXX IO_SYNC? */
+comment|/* IO_SYNC? */
 return|return
 operator|(
 name|error
 operator|)
 return|;
 block|}
+name|ip
+operator|=
+name|VTOI
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vap
@@ -1733,13 +1447,9 @@ if|if
 condition|(
 name|error
 operator|=
-call|(
-name|ump
-operator|->
-name|um_iupdat
-call|)
+name|VOP_UPDATE
 argument_list|(
-name|ip
+name|vp
 argument_list|,
 operator|&
 name|vap
@@ -3122,11 +2832,6 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
-name|struct
-name|ufsmount
-modifier|*
-name|ump
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -3211,26 +2916,11 @@ name|i_flag
 operator||=
 name|ICHG
 expr_stmt|;
-name|ump
-operator|=
-name|VFSTOUFS
-argument_list|(
-name|ndp
-operator|->
-name|ni_dvp
-operator|->
-name|v_mount
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
-call|(
-name|ump
-operator|->
-name|um_iupdat
-call|)
+name|VOP_UPDATE
 argument_list|(
-name|ip
+name|vp
 argument_list|,
 operator|&
 name|time
@@ -3359,11 +3049,6 @@ decl_stmt|;
 name|struct
 name|dirtemplate
 name|dirbuf
-decl_stmt|;
-name|struct
-name|ufsmount
-modifier|*
-name|ump
 decl_stmt|;
 name|int
 name|doingdirectory
@@ -3650,26 +3335,13 @@ name|i_flag
 operator||=
 name|ICHG
 expr_stmt|;
-name|ump
+name|error
 operator|=
-name|VFSTOUFS
+name|VOP_UPDATE
 argument_list|(
 name|fndp
 operator|->
-name|ni_dvp
-operator|->
-name|v_mount
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-call|(
-name|ump
-operator|->
-name|um_iupdat
-call|)
-argument_list|(
-name|ip
+name|ni_vp
 argument_list|,
 operator|&
 name|time
@@ -3938,13 +3610,12 @@ if|if
 condition|(
 name|error
 operator|=
-call|(
-name|ump
-operator|->
-name|um_iupdat
-call|)
+name|VOP_UPDATE
+argument_list|(
+name|ITOV
 argument_list|(
 name|dp
+argument_list|)
 argument_list|,
 operator|&
 name|time
@@ -3989,16 +3660,15 @@ name|i_flag
 operator||=
 name|ICHG
 expr_stmt|;
-call|(
+operator|(
 name|void
-call|)
+operator|)
+name|VOP_UPDATE
 argument_list|(
-name|ump
-operator|->
-name|um_iupdat
-argument_list|)
+name|ITOV
 argument_list|(
 name|dp
+argument_list|)
 argument_list|,
 operator|&
 name|time
@@ -4228,12 +3898,9 @@ operator||=
 name|ICHG
 expr_stmt|;
 block|}
-name|vput
-argument_list|(
-name|ITOV
+name|ufs_iput
 argument_list|(
 name|dp
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Adjust the link count of the target to 		 * reflect the dirrewrite above.  If this is 		 * a directory it is empty and there are 		 * no links to it, so we can squash the inode and 		 * any space associated with it.  We disallowed 		 * renaming over top of a directory with links to 		 * it above, as the remaining link would point to 		 * a directory without "." or ".." entries. 		 */
@@ -4263,13 +3930,12 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-call|(
-name|ump
-operator|->
-name|um_itrunc
-call|)
+name|VOP_TRUNCATE
+argument_list|(
+name|ITOV
 argument_list|(
 name|xp
+argument_list|)
 argument_list|,
 operator|(
 name|u_long
@@ -4801,14 +4467,9 @@ modifier|*
 name|dp
 decl_stmt|;
 name|struct
-name|inode
+name|vnode
 modifier|*
-name|tip
-decl_stmt|;
-name|struct
-name|ufsmount
-modifier|*
-name|ump
+name|tvp
 decl_stmt|;
 name|struct
 name|vnode
@@ -4906,28 +4567,13 @@ operator||=
 name|IFDIR
 expr_stmt|;
 comment|/* 	 * Must simulate part of maknode here to acquire the inode, but 	 * not have it entered in the parent directory. The entry is made 	 * later after writing "." and ".." entries. 	 */
-name|ump
-operator|=
-name|VFSTOUFS
-argument_list|(
-name|ndp
-operator|->
-name|ni_dvp
-operator|->
-name|v_mount
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
 operator|=
-call|(
-name|ump
-operator|->
-name|um_ialloc
-call|)
+name|VOP_VALLOC
 argument_list|(
-name|dp
+name|dvp
 argument_list|,
 name|dmode
 argument_list|,
@@ -4936,7 +4582,7 @@ operator|->
 name|ni_cred
 argument_list|,
 operator|&
-name|tip
+name|tvp
 argument_list|)
 condition|)
 block|{
@@ -4962,7 +4608,10 @@ return|;
 block|}
 name|ip
 operator|=
-name|tip
+name|VTOI
+argument_list|(
+name|tvp
+argument_list|)
 expr_stmt|;
 name|ip
 operator|->
@@ -5023,13 +4672,9 @@ argument_list|,
 name|M_NAMEI
 argument_list|)
 expr_stmt|;
-call|(
-name|ump
-operator|->
-name|um_ifree
-call|)
+name|VOP_VFREE
 argument_list|(
-name|ip
+name|tvp
 argument_list|,
 name|ip
 operator|->
@@ -5090,13 +4735,12 @@ literal|2
 expr_stmt|;
 name|error
 operator|=
-call|(
-name|ump
-operator|->
-name|um_iupdat
-call|)
+name|VOP_UPDATE
+argument_list|(
+name|ITOV
 argument_list|(
 name|ip
+argument_list|)
 argument_list|,
 operator|&
 name|time
@@ -5123,13 +4767,12 @@ if|if
 condition|(
 name|error
 operator|=
-call|(
-name|ump
-operator|->
-name|um_iupdat
-call|)
+name|VOP_UPDATE
+argument_list|(
+name|ITOV
 argument_list|(
 name|dp
+argument_list|)
 argument_list|,
 operator|&
 name|time
@@ -5239,7 +4882,12 @@ if|if
 condition|(
 name|DIRBLKSIZ
 operator|>
-name|ump
+name|VFSTOUFS
+argument_list|(
+name|dvp
+operator|->
+name|v_mount
+argument_list|)
 operator|->
 name|um_mountp
 operator|->
@@ -5295,7 +4943,7 @@ expr_stmt|;
 block|}
 name|bad
 label|:
-comment|/* 	 * No need to do an explicit itrunc here, vrele will do this for us 	 * because we set the link count to 0. 	 */
+comment|/* 	 * No need to do an explicit VOP_TRUNCATE here, vrele will do this 	 * for us because we set the link count to 0. 	 */
 if|if
 condition|(
 name|error
@@ -5384,11 +5032,6 @@ decl_stmt|,
 modifier|*
 name|dp
 decl_stmt|;
-name|struct
-name|ufsmount
-modifier|*
-name|ump
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -5410,17 +5053,6 @@ operator|->
 name|ni_dvp
 argument_list|)
 expr_stmt|;
-name|ump
-operator|=
-name|VFSTOUFS
-argument_list|(
-name|ndp
-operator|->
-name|ni_dvp
-operator|->
-name|v_mount
-argument_list|)
-expr_stmt|;
 comment|/* 	 * No rmdir "." please. 	 */
 if|if
 condition|(
@@ -5431,10 +5063,9 @@ condition|)
 block|{
 name|vrele
 argument_list|(
-name|ITOV
-argument_list|(
-name|dp
-argument_list|)
+name|ndp
+operator|->
+name|ni_dvp
 argument_list|)
 expr_stmt|;
 name|ufs_iput
@@ -5510,10 +5141,9 @@ name|ICHG
 expr_stmt|;
 name|cache_purge
 argument_list|(
-name|ITOV
-argument_list|(
-name|dp
-argument_list|)
+name|ndp
+operator|->
+name|ni_dvp
 argument_list|)
 expr_stmt|;
 name|ufs_iput
@@ -5536,13 +5166,11 @@ literal|2
 expr_stmt|;
 name|error
 operator|=
-call|(
-name|ump
-operator|->
-name|um_itrunc
-call|)
+name|VOP_TRUNCATE
 argument_list|(
-name|ip
+name|ndp
+operator|->
+name|ni_vp
 argument_list|,
 operator|(
 name|u_long
@@ -5623,29 +5251,13 @@ name|p
 decl_stmt|;
 block|{
 name|struct
-name|inode
+name|vnode
 modifier|*
-name|ip
-decl_stmt|;
-name|struct
-name|ufsmount
-modifier|*
-name|ump
+name|vp
 decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|ump
-operator|=
-name|VFSTOUFS
-argument_list|(
-name|ndp
-operator|->
-name|ni_dvp
-operator|->
-name|v_mount
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -5661,7 +5273,7 @@ argument_list|,
 name|ndp
 argument_list|,
 operator|&
-name|ip
+name|vp
 argument_list|)
 condition|)
 return|return
@@ -5675,10 +5287,7 @@ name|vn_rdwr
 argument_list|(
 name|UIO_WRITE
 argument_list|,
-name|ITOV
-argument_list|(
-name|ip
-argument_list|)
+name|vp
 argument_list|,
 name|target
 argument_list|,
@@ -5714,9 +5323,9 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-name|ufs_iput
+name|vput
 argument_list|(
-name|ip
+name|vp
 argument_list|)
 expr_stmt|;
 return|return
@@ -6123,110 +5732,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get access to bmap  */
-end_comment
-
-begin_function
-name|int
-name|ufs_bmap
-parameter_list|(
-name|vp
-parameter_list|,
-name|bn
-parameter_list|,
-name|vpp
-parameter_list|,
-name|bnp
-parameter_list|)
-name|struct
-name|vnode
-modifier|*
-name|vp
-decl_stmt|;
-name|daddr_t
-name|bn
-decl_stmt|;
-name|struct
-name|vnode
-modifier|*
-modifier|*
-name|vpp
-decl_stmt|;
-name|daddr_t
-modifier|*
-name|bnp
-decl_stmt|;
-block|{
-name|struct
-name|inode
-modifier|*
-name|ip
-decl_stmt|;
-name|struct
-name|ufsmount
-modifier|*
-name|ump
-decl_stmt|;
-name|ip
-operator|=
-name|VTOI
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|vpp
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|vpp
-operator|=
-name|ip
-operator|->
-name|i_devvp
-expr_stmt|;
-if|if
-condition|(
-name|bnp
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-name|ump
-operator|=
-name|VFSTOUFS
-argument_list|(
-name|vp
-operator|->
-name|v_mount
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-call|(
-name|ump
-operator|->
-name|um_bmap
-call|)
-argument_list|(
-name|ip
-argument_list|,
-name|bn
-argument_list|,
-name|bnp
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Calculate the logical to physical mapping if not done already,  * then call the device strategy routine.  */
 end_comment
 
@@ -6256,11 +5761,6 @@ name|struct
 name|inode
 modifier|*
 name|ip
-decl_stmt|;
-name|struct
-name|ufsmount
-modifier|*
-name|ump
 decl_stmt|;
 name|struct
 name|vnode
@@ -6313,32 +5813,21 @@ operator|->
 name|b_lblkno
 condition|)
 block|{
-name|ump
-operator|=
-name|VFSTOUFS
-argument_list|(
-name|bp
-operator|->
-name|b_vp
-operator|->
-name|v_mount
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
 operator|=
-call|(
-name|ump
-operator|->
-name|um_bmap
-call|)
+name|VOP_BMAP
 argument_list|(
-name|ip
+name|bp
+operator|->
+name|b_vp
 argument_list|,
 name|bp
 operator|->
 name|b_lblkno
+argument_list|,
+name|NULL
 argument_list|,
 operator|&
 name|bp
@@ -7399,6 +6888,10 @@ name|ufs_vinit
 parameter_list|(
 name|mntp
 parameter_list|,
+name|specops
+parameter_list|,
+name|fifoops
+parameter_list|,
 name|vpp
 parameter_list|)
 name|struct
@@ -7407,11 +6900,25 @@ modifier|*
 name|mntp
 decl_stmt|;
 name|struct
+name|vnodeops
+modifier|*
+name|specops
+decl_stmt|,
+decl|*
+name|fifoops
+decl_stmt|;
+end_function
+
+begin_decl_stmt
+name|struct
 name|vnode
 modifier|*
 modifier|*
 name|vpp
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 name|struct
 name|inode
@@ -7465,8 +6972,7 @@ name|vp
 operator|->
 name|v_op
 operator|=
-operator|&
-name|spec_inodeops
+name|specops
 expr_stmt|;
 if|if
 condition|(
@@ -7484,7 +6990,7 @@ name|mntp
 argument_list|)
 condition|)
 block|{
-comment|/* Reinitialize aliased inode. */
+comment|/* 			 * Reinitialize aliased inode. 			 */
 name|vp
 operator|=
 name|nvp
@@ -7537,7 +7043,7 @@ argument_list|(
 name|nip
 argument_list|)
 expr_stmt|;
-comment|/* Discard unneeded inode. */
+comment|/* 			 * Discard unneeded inode. 			 */
 name|ip
 operator|->
 name|i_mode
@@ -7565,8 +7071,7 @@ name|vp
 operator|->
 name|v_op
 operator|=
-operator|&
-name|fifo_inodeops
+name|fifoops
 expr_stmt|;
 break|break;
 else|#
@@ -7579,13 +7084,6 @@ return|;
 endif|#
 directive|endif
 block|}
-name|VREF
-argument_list|(
-name|ip
-operator|->
-name|i_devvp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ip
@@ -7611,7 +7109,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Allocate a new inode.  */
@@ -7625,7 +7123,7 @@ name|mode
 parameter_list|,
 name|ndp
 parameter_list|,
-name|ipp
+name|vpp
 parameter_list|)
 name|int
 name|mode
@@ -7637,10 +7135,10 @@ modifier|*
 name|ndp
 decl_stmt|;
 name|struct
-name|inode
+name|vnode
 modifier|*
 modifier|*
-name|ipp
+name|vpp
 decl_stmt|;
 block|{
 specifier|register
@@ -7653,14 +7151,9 @@ modifier|*
 name|pdir
 decl_stmt|;
 name|struct
-name|inode
+name|vnode
 modifier|*
-name|tip
-decl_stmt|;
-name|struct
-name|ufsmount
-modifier|*
-name|ump
+name|tvp
 decl_stmt|;
 name|int
 name|error
@@ -7697,7 +7190,7 @@ expr_stmt|;
 endif|#
 directive|endif
 operator|*
-name|ipp
+name|vpp
 operator|=
 name|NULL
 expr_stmt|;
@@ -7715,28 +7208,15 @@ name|mode
 operator||=
 name|IFREG
 expr_stmt|;
-name|ump
-operator|=
-name|VFSTOUFS
-argument_list|(
-name|ndp
-operator|->
-name|ni_dvp
-operator|->
-name|v_mount
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
 operator|=
-call|(
-name|ump
-operator|->
-name|um_ialloc
-call|)
+name|VOP_VALLOC
 argument_list|(
-name|pdir
+name|ndp
+operator|->
+name|ni_dvp
 argument_list|,
 name|mode
 argument_list|,
@@ -7745,7 +7225,7 @@ operator|->
 name|ni_cred
 argument_list|,
 operator|&
-name|tip
+name|tvp
 argument_list|)
 condition|)
 block|{
@@ -7771,7 +7251,10 @@ return|;
 block|}
 name|ip
 operator|=
-name|tip
+name|VTOI
+argument_list|(
+name|tvp
+argument_list|)
 expr_stmt|;
 name|ip
 operator|->
@@ -7832,13 +7315,9 @@ argument_list|,
 name|M_NAMEI
 argument_list|)
 expr_stmt|;
-call|(
-name|ump
-operator|->
-name|um_ifree
-call|)
+name|VOP_VFREE
 argument_list|(
-name|ip
+name|tvp
 argument_list|,
 name|ip
 operator|->
@@ -7881,10 +7360,7 @@ name|i_mode
 operator|=
 name|mode
 expr_stmt|;
-name|ITOV
-argument_list|(
-name|ip
-argument_list|)
+name|tvp
 operator|->
 name|v_type
 operator|=
@@ -7943,13 +7419,9 @@ if|if
 condition|(
 name|error
 operator|=
-call|(
-name|ump
-operator|->
-name|um_iupdat
-call|)
+name|VOP_UPDATE
 argument_list|(
-name|ip
+name|tvp
 argument_list|,
 operator|&
 name|time
@@ -8004,9 +7476,9 @@ name|pdir
 argument_list|)
 expr_stmt|;
 operator|*
-name|ipp
+name|vpp
 operator|=
-name|ip
+name|tvp
 expr_stmt|;
 return|return
 operator|(
