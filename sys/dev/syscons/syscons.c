@@ -8541,6 +8541,21 @@ operator|++
 name|debugger
 expr_stmt|;
 comment|/* XXX */
+ifdef|#
+directive|ifdef
+name|DDB
+comment|/* unlock vty switching */
+name|sc_console
+operator|->
+name|sc
+operator|->
+name|flags
+operator|&=
+operator|~
+name|SC_SCRN_VTYLOCK
+expr_stmt|;
+endif|#
+directive|endif
 name|sc_switch_scr
 argument_list|(
 name|sc_console
