@@ -8038,7 +8038,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"acd%dt%d"
+literal|"acd%dt%02d"
 argument_list|,
 name|cdp
 operator|->
