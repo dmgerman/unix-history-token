@@ -1402,6 +1402,23 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|mac_create_mbuf_from_inpcb
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+name|inp
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|mac_create_mbuf_from_mbuf
 parameter_list|(
 name|struct
