@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (Mostly) Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *	$Id: aha1542.c,v 1.9 1993/10/12 07:15:28 rgrimes Exp $  */
+comment|/*  * (Mostly) Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *	$Id: aha1542.c,v 1.10 1993/10/13 16:34:10 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -679,6 +679,28 @@ end_define
 
 begin_comment
 comment|/* Echo command data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AHA_EXT_BIOS
+value|0x28
+end_define
+
+begin_comment
+comment|/* return extended bios info */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AHA_MBX_ENABLE
+value|0x29
+end_define
+
+begin_comment
+comment|/* enable mail box interface */
 end_comment
 
 begin_struct
@@ -1373,6 +1395,53 @@ name|u_char
 label|:
 literal|5
 expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|aha_inquire
+block|{
+name|u_char
+name|boardid
+decl_stmt|;
+comment|/* type of board */
+comment|/* 0x20 = BusLogic 545, but it gets 					   the command wrong, only returns 					   one byte */
+comment|/* 0x31 = AHA-1540 */
+comment|/* 0x41 = AHA-1540A/1542A/1542B */
+comment|/* 0x42 = AHA-1640 */
+comment|/* 0x43 = AHA-1542C */
+comment|/* 0x44 = AHA-1542CF */
+name|u_char
+name|spec_opts
+decl_stmt|;
+comment|/* special options ID */
+comment|/* 0x41 = Board is standard model */
+name|u_char
+name|revision_1
+decl_stmt|;
+comment|/* firmware revision [0-9A-Z] */
+name|u_char
+name|revision_2
+decl_stmt|;
+comment|/* firmware revision [0-9A-Z] */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|aha_extbios
+block|{
+name|u_char
+name|flags
+decl_stmt|;
+comment|/* Bit 3 == 1 extended bios enabled */
+name|u_char
+name|mailboxlock
+decl_stmt|;
+comment|/* mail box lock code to unlock it */
 block|}
 struct|;
 end_struct
@@ -3808,6 +3877,14 @@ name|struct
 name|aha_config
 name|conf
 decl_stmt|;
+name|struct
+name|aha_inquire
+name|inquire
+decl_stmt|;
+name|struct
+name|aha_extbios
+name|extbios
+decl_stmt|;
 comment|/***********************************************\ 	* reset board, If it doesn't respond, assume 	* 	* that it's not there.. good for the probe	* 	\***********************************************/
 name|outb
 argument_list|(
@@ -3879,7 +3956,168 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/***********************************************\ 	* Assume we have a board at this stage		* 	* setup dma channel from jumpers and save int	* 	* level						* 	\***********************************************/
+comment|/* 	 * Assume we have a board at this stage, do an adapter inquire 	 * to find out what type of controller it is 	 */
+name|aha_cmd
+argument_list|(
+name|unit
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|inquire
+argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+operator|&
+name|inquire
+argument_list|,
+name|AHA_INQUIRE
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AHADEBUG
+name|printf
+argument_list|(
+literal|"aha%d: inquire %x, %x, %x, %x\n"
+argument_list|,
+name|unit
+argument_list|,
+name|inquire
+operator|.
+name|boardid
+argument_list|,
+name|inquire
+operator|.
+name|spec_opts
+argument_list|,
+name|inquire
+operator|.
+name|revision_1
+argument_list|,
+name|inquire
+operator|.
+name|revision_2
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* AHADEBUG */
+comment|/* 	 * XXX The Buslogic 545S gets the AHA_INQUIRE command wrong, 	 * they only return one byte which causes us to print an error, 	 * so if the boardid comes back as 0x20, tell the user why they 	 * get the "cmd/data port empty" message 	 */
+if|if
+condition|(
+name|inquire
+operator|.
+name|boardid
+operator|==
+literal|0x20
+condition|)
+block|{
+comment|/* looks like a Buslogic 545 */
+name|printf
+argument_list|(
+literal|"aha%d: above cmd/data port empty do to Buslogic 545\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * If we are on a 1542C or 1542CF find out if the extended bios 	 * is enabled, if it is disable it, or else it will screw us up later 	 */
+if|if
+condition|(
+operator|(
+name|inquire
+operator|.
+name|boardid
+operator|==
+literal|0x43
+operator|)
+operator|||
+operator|(
+name|inquire
+operator|.
+name|boardid
+operator|==
+literal|0x44
+operator|)
+condition|)
+block|{
+name|aha_cmd
+argument_list|(
+name|unit
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|extbios
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|extbios
+argument_list|,
+name|AHA_EXT_BIOS
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AHADEBUG
+name|printf
+argument_list|(
+literal|"aha%d: extended bios flags %x\n"
+argument_list|,
+name|unit
+argument_list|,
+name|extbios
+operator|.
+name|flags
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* AHADEBUG */
+if|if
+condition|(
+name|extbios
+operator|.
+name|flags
+operator|&
+literal|0x8
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"aha%d: disabling bios enhanced features\n"
+argument_list|)
+expr_stmt|;
+name|aha_cmd
+argument_list|(
+name|unit
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|AHA_MBX_ENABLE
+argument_list|,
+literal|0
+argument_list|,
+name|extbios
+operator|.
+name|mailboxlock
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/***********************************************\ 	* Setup dma channel from jumpers and save int	* 	* level						* 	\***********************************************/
 ifdef|#
 directive|ifdef
 name|__386BSD__
