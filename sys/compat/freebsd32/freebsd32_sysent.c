@@ -3440,7 +3440,7 @@ operator|)
 name|nosys
 block|}
 block|,
-comment|/* 248 = nosys */
+comment|/* 248 = ntp_gettime */
 block|{
 literal|0
 block|,

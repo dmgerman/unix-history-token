@@ -757,7 +757,7 @@ block|,
 comment|/* 247 = nosys */
 literal|"#248"
 block|,
-comment|/* 248 = nosys */
+comment|/* 248 = ntp_gettime */
 literal|"#249"
 block|,
 comment|/* 249 = nosys */
