@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)chgrp.c	4.6 83/05/10"
+literal|"@(#)chgrp.c	4.7 83/11/23"
 decl_stmt|;
 end_decl_stmt
 
@@ -422,7 +422,7 @@ control|)
 block|{
 if|if
 condition|(
-name|stat
+name|lstat
 argument_list|(
 name|argv
 index|[
