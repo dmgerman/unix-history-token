@@ -256,8 +256,6 @@ block|{
 name|int
 name|retval
 decl_stmt|,
-name|cached_retval
-decl_stmt|,
 name|action
 decl_stmt|;
 comment|/* skip leading modules if they have already returned */
