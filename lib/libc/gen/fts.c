@@ -278,6 +278,9 @@ name|FTSENT
 operator|*
 operator|,
 name|int
+operator|,
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -321,18 +324,6 @@ parameter_list|(
 name|opt
 parameter_list|)
 value|(sp->fts_options |= (opt))
-end_define
-
-begin_define
-define|#
-directive|define
-name|CHDIR
-parameter_list|(
-name|sp
-parameter_list|,
-name|path
-parameter_list|)
-value|(!ISSET(FTS_NOCHDIR)&& chdir(path))
 end_define
 
 begin_define
@@ -1227,6 +1218,10 @@ modifier|*
 name|sp
 decl_stmt|;
 block|{
+name|struct
+name|stat
+name|sb
+decl_stmt|;
 specifier|register
 name|FTSENT
 modifier|*
@@ -1544,6 +1539,10 @@ name|p
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+name|p
+operator|->
+name|fts_accpath
 argument_list|)
 condition|)
 block|{
@@ -2016,13 +2015,17 @@ name|fts_flags
 operator|&
 name|FTS_DONTCHDIR
 operator|)
-condition|)
-block|{
-if|if
-condition|(
-name|CHDIR
+operator|&&
+name|fts_safe_changedir
 argument_list|(
 name|sp
+argument_list|,
+name|p
+operator|->
+name|fts_parent
+argument_list|,
+operator|-
+literal|1
 argument_list|,
 literal|".."
 argument_list|)
@@ -2038,7 +2041,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-block|}
 block|}
 name|p
 operator|->
@@ -2681,6 +2683,8 @@ name|dirfd
 argument_list|(
 name|dirp
 argument_list|)
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 block|{
@@ -3383,9 +3387,16 @@ operator|->
 name|fts_rfd
 argument_list|)
 else|:
-name|CHDIR
+name|fts_safe_changedir
 argument_list|(
 name|sp
+argument_list|,
+name|cur
+operator|->
+name|fts_parent
+argument_list|,
+operator|-
+literal|1
 argument_list|,
 literal|".."
 argument_list|)
@@ -4633,6 +4644,8 @@ parameter_list|,
 name|p
 parameter_list|,
 name|fd
+parameter_list|,
+name|path
 parameter_list|)
 name|FTS
 modifier|*
@@ -4644,6 +4657,10 @@ name|p
 decl_stmt|;
 name|int
 name|fd
+decl_stmt|;
+name|char
+modifier|*
+name|path
 decl_stmt|;
 block|{
 name|int
@@ -4684,9 +4701,7 @@ name|newfd
 operator|=
 name|open
 argument_list|(
-name|p
-operator|->
-name|fts_accpath
+name|path
 argument_list|,
 name|O_RDONLY
 argument_list|,
