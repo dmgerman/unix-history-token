@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vba.c	1.2	86/01/05	*/
+comment|/*	vba.c	1.3	86/01/24	*/
 end_comment
 
 begin_include
@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"syslog.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../tahoevba/vbavar.h"
 end_include
 
@@ -102,7 +108,7 @@ comment|/*  * Next piece of logic takes care of unusual cases when less (or more
 end_comment
 
 begin_comment
-comment|/*  * IO buffer preparation for possible buffered transfer.  * The relevant page table entries are kept in the 'buf' structure,  * for later use by the driver's 'start' routine or 'interrupt'  * routine, when user's data has to be moved to the intermediate  * buffer.  */
+comment|/*  * I/O buffer preparation for possible buffered transfer.  * The relevant page table entries are kept in the buf structure,  * for later use by the driver's start or interrupt routine  * when user's data has to be moved to the intermediate buffer.  */
 end_comment
 
 begin_expr_stmt
@@ -293,7 +299,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * This routine is usually called by the 'start' routine. It  * returns the physical address of the first byte for IO, to  * be presented to the controller. If intermediate buffering is  * needed and a write out is done, now is the time to get the  * original user's data in the buffer.  */
+comment|/*  * This routine is usually called by the start routine. It  * returns the physical address of the first byte for i/o, to  * be presented to the controller. If intermediate buffering is  * needed and a write out is done, now is the time to get the  * original user's data in the buffer.  */
 end_comment
 
 begin_macro
@@ -731,6 +737,33 @@ name|NBPG
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|bp
+operator|->
+name|b_resid
+operator|!=
+literal|0
+condition|)
+name|log
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"vbadone: dev %o bcount %d resid %d\n"
+argument_list|,
+name|bp
+operator|->
+name|b_dev
+argument_list|,
+name|bp
+operator|->
+name|b_bcount
+argument_list|,
+name|bp
+operator|->
+name|b_resid
+argument_list|)
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|v
@@ -750,12 +783,18 @@ operator|)
 operator|+
 name|utl
 argument_list|,
-operator|(
+call|(
 name|unsigned
-operator|)
+call|)
+argument_list|(
 name|bp
 operator|->
 name|b_bcount
+operator|-
+name|bp
+operator|->
+name|b_resid
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
