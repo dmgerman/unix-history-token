@@ -1523,83 +1523,6 @@ begin_comment
 comment|/*  * PF_ATM ioctls  */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-operator|(
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__INTEL_COMPILER
-argument_list|)
-operator|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|AIOCCFG
-value|_IOW(A, 128, struct atmcfgreq)
-end_define
-
-begin_comment
-comment|/* Configure i/f */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AIOCADD
-value|_IOW(A, 129, struct atmaddreq)
-end_define
-
-begin_comment
-comment|/* Add (e.g. PVC) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AIOCDEL
-value|_IOW(A, 130, struct atmdelreq)
-end_define
-
-begin_comment
-comment|/* Delete */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AIOCSET
-value|_IOW(A, 132, struct atmsetreq)
-end_define
-
-begin_comment
-comment|/* Set (e.g. net i/f) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AIOCINFO
-value|_IOWR(A, 133, struct atminfreq)
-end_define
-
-begin_comment
-comment|/* Show kernel info */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -1654,11 +1577,6 @@ end_define
 begin_comment
 comment|/* Show kernel info */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
