@@ -2663,6 +2663,9 @@ name|secpercyl
 argument_list|,
 literal|"disagrees with disk label"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|lp
 operator|->
 name|d_secpercyl

@@ -2369,7 +2369,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"minimum cylinders per group is %d\n"
+literal|"minimum cylinders per group is %ld\n"
 argument_list|,
 name|mincpg
 argument_list|)
@@ -2392,7 +2392,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"minimum cylinders per group is %d\n"
+literal|"minimum cylinders per group is %ld\n"
 argument_list|,
 name|mincpg
 argument_list|)
@@ -2473,7 +2473,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s groups must have a multiple of %d cylinders\n"
+literal|"%s groups must have a multiple of %ld cylinders\n"
 argument_list|,
 name|cpgflg
 condition|?
@@ -2650,7 +2650,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"panic (fs_cpg * fs_spc) % NSPF != 0"
+literal|"panic (fs_cpg * fs_spc) %% NSPF != 0"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2670,7 +2670,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cylinder groups must have at least %d cylinders\n"
+literal|"cylinder groups must have at least %ld cylinders\n"
 argument_list|,
 name|mincpg
 argument_list|)
@@ -3418,7 +3418,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"inode blocks/cyl group (%d)>= data blocks (%d)\n"
+literal|"inode blocks/cyl group (%ld)>= data blocks (%ld)\n"
 argument_list|,
 name|cgdmin
 argument_list|(
@@ -3440,6 +3440,10 @@ name|sblock
 operator|.
 name|fs_frag
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|sblock
 operator|.
 name|fs_fpg
@@ -3447,6 +3451,7 @@ operator|/
 name|sblock
 operator|.
 name|fs_frag
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3553,7 +3558,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"Warning: inode blocks/cyl group (%d)>= data blocks (%d) in last\n"
+literal|"Warning: inode blocks/cyl group (%ld)>= data blocks (%ld) in last\n"
 argument_list|,
 operator|(
 name|cgdmin
@@ -3586,7 +3591,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    cylinder group. This implies %d sector(s) cannot be allocated.\n"
+literal|"    cylinder group. This implies %ld sector(s) cannot be allocated.\n"
 argument_list|,
 name|i
 operator|*
@@ -4060,7 +4065,7 @@ name|sprintf
 argument_list|(
 name|tmpbuf
 argument_list|,
-literal|" %d,"
+literal|" %ld,"
 argument_list|,
 name|fsbtodb
 argument_list|(
@@ -7928,6 +7933,9 @@ name|printf
 argument_list|(
 literal|"seek error: %ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|bno
 argument_list|)
 expr_stmt|;
@@ -7964,6 +7972,9 @@ name|printf
 argument_list|(
 literal|"read error: %ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|bno
 argument_list|)
 expr_stmt|;
@@ -8068,6 +8079,9 @@ name|printf
 argument_list|(
 literal|"seek error: %ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|bno
 argument_list|)
 expr_stmt|;
@@ -8104,6 +8118,9 @@ name|printf
 argument_list|(
 literal|"write error: %ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|bno
 argument_list|)
 expr_stmt|;
