@@ -238,15 +238,15 @@ name|printf
 argument_list|(
 literal|"Changing %s password for %s.\n"
 argument_list|,
-name|pw
-operator|->
-name|pw_name
-argument_list|,
 name|nis
 condition|?
 literal|"YP"
 else|:
 literal|"local"
+argument_list|,
+name|pw
+operator|->
+name|pw_name
 argument_list|)
 expr_stmt|;
 if|if
