@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vars.h,v 1.7.2.12 1997/08/25 00:34:41 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vars.h,v 1.7.2.13 1997/09/05 23:07:44 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_ifndef
@@ -37,6 +37,13 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|CONF_NONE
+value|-1
+end_define
 
 begin_define
 define|#
@@ -139,8 +146,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAXCONFS
+name|ConfUtmp
 value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXCONFS
+value|11
 end_define
 
 begin_define
@@ -668,6 +682,16 @@ name|pppvars
 name|pppVars
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|Utmp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Are we in /etc/utmp ? */
+end_comment
 
 begin_decl_stmt
 name|int
