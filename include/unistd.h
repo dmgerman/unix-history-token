@@ -2109,14 +2109,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_extern
-extern|extern optreset;
-end_extern
-
-begin_comment
-comment|/* getopt(3) external variable */
-end_comment
-
 begin_decl_stmt
 specifier|extern
 name|char
@@ -2159,6 +2151,17 @@ end_endif
 
 begin_comment
 comment|/* !_POSIX_SOURCE */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|optreset
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* getopt(3) external variable */
 end_comment
 
 begin_macro
