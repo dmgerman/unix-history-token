@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tcopy.c	5.2 (Berkeley) %G%"
+literal|"@(#)tcopy.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -197,7 +197,7 @@ operator|<=
 literal|1
 operator|||
 name|argc
-operator|>=
+operator|>
 literal|3
 condition|)
 block|{
