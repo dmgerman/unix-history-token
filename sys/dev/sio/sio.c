@@ -3429,6 +3429,13 @@ block|}
 block|,
 comment|/* ROK0010 - Rockwell ? */
 block|{
+literal|0x1200b23d
+block|,
+name|NULL
+block|}
+block|,
+comment|/* RSS0012 - OMRON ME5614ISA */
+block|{
 literal|0x5002734a
 block|,
 name|NULL
