@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_de.c,v 1.55 1997/10/16 22:02:27 matt Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_de.c,v 1.54.2.9 1997/10/18 18:23:55 peter Exp $ */
+comment|/*	$Id: if_de.c,v 1.54.2.10 1997/10/25 14:33:16 phk Exp $ */
 end_comment
 
 begin_comment
@@ -2409,12 +2409,12 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
 name|tulip_init
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
