@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)dev.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)dev.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -26,6 +26,10 @@ include|#
 directive|include
 file|"saio.h"
 end_include
+
+begin_comment
+comment|/*  * NB: the value "io->i_ino.i_dev", used to offset the devsw[] array  * in the routines below, is munged by the vaxstand Makefile to work  * for certain boots.  */
+end_comment
 
 begin_expr_stmt
 name|devread
@@ -174,7 +178,15 @@ end_expr_stmt
 
 begin_block
 block|{
-return|return
+name|int
+name|ret
+decl_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|ret
+operator|=
 operator|(
 operator|*
 name|devsw
@@ -190,6 +202,118 @@ name|dv_open
 operator|)
 operator|(
 name|io
+operator|)
+operator|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|printf
+argument_list|(
+literal|"%s(%d,%d,%d,%d): "
+argument_list|,
+name|devsw
+index|[
+name|io
+operator|->
+name|i_ino
+operator|.
+name|i_dev
+index|]
+operator|.
+name|dv_name
+argument_list|,
+name|io
+operator|->
+name|i_adapt
+argument_list|,
+name|io
+operator|->
+name|i_ctlr
+argument_list|,
+name|io
+operator|->
+name|i_unit
+argument_list|,
+name|io
+operator|->
+name|i_part
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|ret
+condition|)
+block|{
+case|case
+name|EADAPT
+case|:
+name|printf
+argument_list|(
+literal|"bad adaptor\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ECTLR
+case|:
+name|printf
+argument_list|(
+literal|"bad controller\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|EUNIT
+case|:
+name|printf
+argument_list|(
+literal|"bad drive\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|EPART
+case|:
+name|printf
+argument_list|(
+literal|"bad partition\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ERDLAB
+case|:
+name|printf
+argument_list|(
+literal|"can't read disk label\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|EUNLAB
+case|:
+name|printf
+argument_list|(
+literal|"unlabeled\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ENXIO
+case|:
+default|default:
+name|printf
+argument_list|(
+literal|"bad device specification\n"
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|ret
 operator|)
 return|;
 block|}
