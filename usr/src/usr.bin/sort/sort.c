@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sort.c	4.10 (Berkeley) %G%"
+literal|"@(#)sort.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3519,6 +3519,12 @@ index|]
 operator|!=
 literal|'\n'
 condition|)
+if|if
+condition|(
+name|len
+operator|==
+name|L
+condition|)
 block|{
 name|diag
 argument_list|(
@@ -3550,6 +3556,42 @@ operator|--
 name|lp
 expr_stmt|;
 continue|continue;
+block|}
+else|else
+block|{
+name|diag
+argument_list|(
+literal|"missing newline before EOF in "
+argument_list|,
+name|f
+condition|?
+name|f
+else|:
+literal|"standard input"
+argument_list|)
+expr_stmt|;
+comment|/* be friendly, append a newline */
+operator|++
+name|len
+expr_stmt|;
+name|cp
+index|[
+name|len
+operator|-
+literal|2
+index|]
+operator|=
+literal|'\n'
+expr_stmt|;
+name|cp
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 block|}
 name|cp
 operator|+=
@@ -6226,49 +6268,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|blank
-end_ifndef
-
-begin_macro
-name|blank
-argument_list|(
-argument|c
-argument_list|)
-end_macro
-
-begin_block
-block|{
-if|if
-condition|(
-name|c
-operator|==
-literal|' '
-operator|||
-name|c
-operator|==
-literal|'\t'
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
