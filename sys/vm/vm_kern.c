@@ -634,8 +634,6 @@ decl_stmt|;
 name|vm_map_t
 name|result
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|size
 operator|=
 name|round_page
