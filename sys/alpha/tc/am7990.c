@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/device.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -608,30 +602,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Initialize ifnet structure. */
-name|snprintf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-operator|.
-name|dv_xname
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-operator|.
-name|dv_xname
-argument_list|)
-argument_list|,
-literal|"le%d"
-argument_list|,
-name|sc
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|->
 name|if_unit
@@ -825,11 +795,12 @@ name|printf
 argument_list|(
 literal|"%s: address %s\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -960,11 +931,12 @@ name|printf
 argument_list|(
 literal|"%s: %d receive buffers, %d transmit buffers\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|sc
 operator|->
@@ -1154,11 +1126,12 @@ name|sc
 operator|->
 name|rnd_source
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|RND_TYPE_NET
 argument_list|)
@@ -1963,11 +1936,12 @@ name|printf
 argument_list|(
 literal|"%s: card failed to initialize\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2485,11 +2459,12 @@ name|printf
 argument_list|(
 literal|"%s: invalid packet size %d; dropping\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|len
 argument_list|)
@@ -2794,11 +2769,12 @@ name|printf
 argument_list|(
 literal|"%s: framing error\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2813,11 +2789,12 @@ name|printf
 argument_list|(
 literal|"%s: crc mismatch\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2838,11 +2815,12 @@ name|printf
 argument_list|(
 literal|"%s: overflow\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2858,11 +2836,12 @@ name|printf
 argument_list|(
 literal|"%s: receive buffer error\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -2897,11 +2876,12 @@ name|printf
 argument_list|(
 literal|"%s: dropping chained buffer\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -3203,11 +3183,12 @@ name|printf
 argument_list|(
 literal|"%s: transmit buffer error\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -3223,11 +3204,12 @@ name|printf
 argument_list|(
 literal|"%s: underflow\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3286,11 +3268,12 @@ name|printf
 argument_list|(
 literal|"%s: lost carrier\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3320,11 +3303,12 @@ name|printf
 argument_list|(
 literal|"%s: excessive collisions, tdr %d\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|tmd
 operator|.
@@ -3495,11 +3479,12 @@ name|printf
 argument_list|(
 literal|"%s: am7990_intr entering with isr=%04x\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|isr
 argument_list|)
@@ -3568,11 +3553,12 @@ name|printf
 argument_list|(
 literal|"%s: babble\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3586,7 +3572,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if (isr& LE_C0_CERR) { 			printf("%s: collision error\n", sc->sc_dev.dv_xname); 			ifp->if_collisions++; 		}
+block|if (isr& LE_C0_CERR) { 			printf("%s: collision error\n", 				device_get_nameunit(sc->sc_dev)); 			ifp->if_collisions++; 		}
 endif|#
 directive|endif
 if|if
@@ -3603,11 +3589,12 @@ name|printf
 argument_list|(
 literal|"%s: missed packet\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3629,11 +3616,12 @@ name|printf
 argument_list|(
 literal|"%s: memory error\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|am7990_reset
@@ -3659,11 +3647,12 @@ name|printf
 argument_list|(
 literal|"%s: receiver disabled\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -3693,11 +3682,12 @@ name|printf
 argument_list|(
 literal|"%s: transmitter disabled\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -3795,11 +3785,12 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: device timeout\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|++
@@ -4808,11 +4799,12 @@ name|printf
 argument_list|(
 literal|"%s: receive buffer %d, len = %d\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|no
 argument_list|,
@@ -4823,11 +4815,12 @@ name|printf
 argument_list|(
 literal|"%s: status %04x\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 call|(
 modifier|*
@@ -4846,11 +4839,12 @@ name|printf
 argument_list|(
 literal|"%s: ladr %04x, hadr %02x, flags %02x, bcnt %04x, mcnt %04x\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|rmd
 operator|.
@@ -4912,11 +4906,12 @@ name|printf
 argument_list|(
 literal|"%s: dst %s"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -5013,11 +5008,12 @@ name|printf
 argument_list|(
 literal|"%s: transmit buffer %d, len = %d\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|no
 argument_list|,
@@ -5028,11 +5024,12 @@ name|printf
 argument_list|(
 literal|"%s: status %04x\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 call|(
 modifier|*
@@ -5051,11 +5048,12 @@ name|printf
 argument_list|(
 literal|"%s: ladr %04x, hadr %02x, flags %02x, bcnt %04x, mcnt %04x\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|tmd
 operator|.
@@ -5117,11 +5115,12 @@ name|printf
 argument_list|(
 literal|"%s: dst %s"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|,
 name|ether_sprintf
 argument_list|(

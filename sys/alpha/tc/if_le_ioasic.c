@@ -66,12 +66,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/device.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -533,17 +527,24 @@ name|printf
 argument_list|(
 literal|"%s: DMA area not set up\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|sc
 operator|->
 name|sc_dev
-operator|.
-name|dv_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
 name|ENXIO
 return|;
 block|}
+name|sc
+operator|->
+name|sc_dev
+operator|=
+name|dev
+expr_stmt|;
 name|sc
 operator|->
 name|unit

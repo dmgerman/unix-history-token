@@ -65,8 +65,7 @@ begin_struct
 struct|struct
 name|am7990_softc
 block|{
-name|struct
-name|device
+name|device_t
 name|sc_dev
 decl_stmt|;
 comment|/* base device glue */
