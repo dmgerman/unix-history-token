@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)login.c	4.25 (Berkeley) 83/05/23"
+literal|"@(#)login.c	4.26 (Berkeley) 83/05/23"
 decl_stmt|;
 end_decl_stmt
 
@@ -3268,7 +3268,57 @@ decl_stmt|;
 end_decl_stmt
 
 begin_block
-block|{  }
+block|{
+ifdef|#
+directive|ifdef
+name|LOGERR
+name|FILE
+modifier|*
+name|cons
+init|=
+name|fopen
+argument_list|(
+literal|"/dev/console"
+argument_list|,
+literal|"w"
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|cons
+operator|!=
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|cons
+argument_list|,
+name|fmt
+argument_list|,
+name|a1
+argument_list|,
+name|a2
+argument_list|,
+name|a3
+argument_list|)
+expr_stmt|;
+name|fputc
+argument_list|(
+literal|'\r'
+argument_list|,
+name|cons
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|cons
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+block|}
 end_block
 
 end_unit
