@@ -3726,7 +3726,7 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		     * XXX all the SBS_CANTSENDMORE checks previously 		     * done could be out of date.  We could have recieved 		     * a reset packet in an interrupt or maybe we slept 		     * while doing page faults in uiomove() etc. We could 		     * probably recheck again inside the splnet() protection 		     * here, but there are probably other places that this 		     * also happens.  We must rethink this. 		     */
+comment|/* 		     * XXX all the SBS_CANTSENDMORE checks previously 		     * done could be out of date.  We could have recieved 		     * a reset packet in an interrupt or maybe we slept 		     * while doing page faults in uiomove() etc. We could 		     * probably recheck again inside the locking protection 		     * here, but there are probably other places that this 		     * also happens.  We must rethink this. 		     */
 name|error
 operator|=
 call|(
