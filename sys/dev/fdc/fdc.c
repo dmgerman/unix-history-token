@@ -9483,11 +9483,6 @@ operator|(
 literal|0
 operator|)
 return|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
