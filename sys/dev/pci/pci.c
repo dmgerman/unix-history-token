@@ -504,36 +504,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|pci_cfg_restore
-parameter_list|(
-name|device_t
-parameter_list|,
-name|struct
-name|pci_devinfo
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|pci_cfg_save
-parameter_list|(
-name|device_t
-parameter_list|,
-name|struct
-name|pci_devinfo
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|device_method_t
@@ -9267,7 +9237,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|pci_cfg_restore
 parameter_list|(
@@ -9538,7 +9507,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|pci_cfg_save
 parameter_list|(
