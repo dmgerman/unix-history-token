@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_put.c	5.5 (Berkeley) %G%"
+literal|"@(#)rec_put.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -652,6 +652,14 @@ operator|>
 name|t
 operator|->
 name|bt_nrecs
+operator|||
+name|flags
+operator|==
+name|R_IAFTER
+operator|||
+name|flags
+operator|==
+name|R_IBEFORE
 condition|?
 name|SINSERT
 else|:
