@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.32	81/06/08	*/
+comment|/*	uba.c	4.33	81/06/30	*/
 end_comment
 
 begin_include
@@ -621,11 +621,18 @@ name|flags
 operator|&
 name|UBA_CANTWAIT
 condition|)
+block|{
+name|splx
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 name|uh
 operator|->
 name|uh_mrwant
@@ -687,6 +694,11 @@ argument_list|,
 name|npf
 argument_list|,
 name|reg
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|a
 argument_list|)
 expr_stmt|;
 return|return
