@@ -1385,6 +1385,24 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|sblock
+operator|.
+name|fs_clean
+operator|==
+literal|0
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"%s cannot be enabled until fsck is run"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 name|sblock
