@@ -2752,6 +2752,23 @@ operator|&
 name|ENP
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_flags
+operator|&
+name|IFF_PROMISC
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 comment|/* 				 * FRAM and CRC are valid only if ENP 				 * is set and OFLO is not. 				 */
 if|if
 condition|(
@@ -2768,7 +2785,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"lnc%d: Framming error\n"
+literal|"lnc%d: Framing error\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -2796,6 +2813,7 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* Drop packet */
