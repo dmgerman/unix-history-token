@@ -675,7 +675,7 @@ block|{
 comment|/* Return a timeout error: */
 name|errno
 operator|=
-name|EAGAIN
+name|ETIMEDOUT
 expr_stmt|;
 name|rval
 operator|=
