@@ -134,46 +134,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Macros allowing us to determine whether or not a given CPU's container  * should be configured during mb_init().  * XXX: Eventually we may want to provide hooks for CPU spinon/spinoff that  *      will allow us to configure the containers on spinon/spinoff. As it  *      stands, booting with CPU x disactivated and activating CPU x only  *      after bootup will lead to disaster and CPU x's container will be  *      uninitialized.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|CPU_ABSENT
-parameter_list|(
-name|x
-parameter_list|)
-value|((all_cpus& (1<< x)) == 0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|CPU_ABSENT
-parameter_list|(
-name|x
-parameter_list|)
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * The mbuf allocator is heavily based on Alfred Perlstein's  * (alfred@FreeBSD.org) "memcache" allocator which is itself based  * on concepts from several per-CPU memory allocators. The difference  * between this allocator and memcache is that, among other things:  *  * (i) We don't free back to the map from the free() routine - we leave the  *     option of implementing lazy freeing (from a kproc) in the future.   *  * (ii) We allocate from separate sub-maps of kmem_map, thus limiting the  *	maximum number of allocatable objects of a given type. Further,  *	we handle blocking on a cv in the case that the map is starved and  *	we have to rely solely on cached (circulating) objects.  *  * The mbuf allocator keeps all objects that it allocates in mb_buckets.  * The buckets keep a page worth of objects (an object can be an mbuf or an  * mbuf cluster) and facilitate moving larger sets of contiguous objects  * from the per-CPU lists to the main list for the given object. The buckets  * also have an added advantage in that after several moves from a per-CPU  * list to the main list and back to the per-CPU list, contiguous objects  * are kept together, thus trying to put the TLB cache to good use.  *  * The buckets are kept on singly-linked lists called "containers." A container  * is protected by a mutex lock in order to ensure consistency. The mutex lock  * itself is allocated seperately and attached to the container at boot time,  * thus allowing for certain containers to share the same mutex lock. Per-CPU  * containers for mbufs and mbuf clusters all share the same per-CPU  * lock whereas the "general system" containers (i.e. the "main lists") for  * these objects share one global lock.  *  */
 end_comment
 
@@ -554,6 +514,12 @@ begin_comment
 comment|/*  * Local macros for internal allocator structure manipulations.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -563,6 +529,26 @@ name|mb_lst
 parameter_list|)
 value|(mb_lst)->ml_cntlst[PCPU_GET(cpuid)]
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MB_GET_PCPU_LIST
+parameter_list|(
+name|mb_lst
+parameter_list|)
+value|(mb_lst)->ml_cntlst[0]
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

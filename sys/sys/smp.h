@@ -104,6 +104,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Macro allowing us to determine whether a CPU is absent at any given  * time, thus permitting us to configure sparse maps of cpuid-dependent  * (per-CPU) structures.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_ABSENT
+parameter_list|(
+name|x_cpu
+parameter_list|)
+value|((all_cpus& (1<< (x_cpu))) == 0)
+end_define
+
+begin_comment
 comment|/*  * Machine dependent functions used to initialize MP support.  *  * The cpu_mp_probe() should check to see if MP support is present and return  * zero if it is not or non-zero if it is.  If MP support is present, then  * cpu_mp_start() will be called so that MP can be enabled.  This function  * should do things such as startup secondary processors.  It should also  * setup mp_ncpus, all_cpus, and smp_cpus.  It should also ensure that  * smp_active and smp_started are initialized at the appropriate time.  * Once cpu_mp_start() returns, machine independent MP startup code will be  * executed and a simple message will be output to the console.  Finally,  * cpu_mp_announce() will be called so that machine dependent messages about  * the MP support may be output to the console if desired.  */
 end_comment
 
@@ -218,6 +232,25 @@ name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* SMP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_ABSENT
+parameter_list|(
+name|x_cpu
+parameter_list|)
+value|(0)
+end_define
 
 begin_endif
 endif|#
