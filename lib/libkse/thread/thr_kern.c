@@ -280,7 +280,6 @@ name|called_from_handler
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 		 * We're running on the signal stack; just call the 		 * kernel scheduler directly. 		 */
 name|DBG_MSG
 argument_list|(
 literal|"Entering scheduler due to signal\n"
