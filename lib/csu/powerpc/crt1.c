@@ -172,19 +172,16 @@ operator|*
 operator|,
 name|void
 argument_list|(
-argument|*
+operator|*
 argument_list|)
-name|__P
 argument_list|(
-operator|(
 name|void
-operator|)
 argument_list|)
-operator|,
+operator|)
+argument_list|,
 expr|struct
 name|ps_strings
 operator|*
-operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -218,35 +215,38 @@ begin_comment
 comment|/* The entry function. */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|_start
-parameter_list|(
+argument_list|(
 name|argc
-parameter_list|,
+argument_list|,
 name|argv
-parameter_list|,
+argument_list|,
 name|envp
-parameter_list|,
+argument_list|,
 name|obj
-parameter_list|,
+argument_list|,
 name|cleanup
-parameter_list|,
+argument_list|,
 name|ps_strings
-parameter_list|)
+argument_list|)
 name|int
 name|argc
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|,
-decl|*
+modifier|*
 modifier|*
 name|envp
 decl_stmt|;
-end_function_decl
+end_decl_stmt
 
 begin_decl_stmt
 specifier|const
@@ -261,22 +261,17 @@ begin_comment
 comment|/* from shared loader */
 end_comment
 
-begin_macro
+begin_function_decl
 name|void
-argument_list|(
-argument|*cleanup
-argument_list|)
-end_macro
-
-begin_expr_stmt
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|cleanup
+function_decl|)
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* from shared loader */
