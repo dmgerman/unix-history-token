@@ -413,6 +413,34 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Ensure that MSIZE doesn't break dtom() - it must be a power of 2 */
+end_comment
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+operator|(
+operator|(
+operator|(
+name|MSIZE
+operator|-
+literal|1
+operator|)
+operator|^
+name|MSIZE
+operator|)
+operator|+
+literal|1
+operator|)
+operator|>>
+literal|1
+operator|==
+name|MSIZE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * Initialize FreeBSD Network buffer allocation.  */
 end_comment
 
@@ -458,7 +486,9 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|UMA_ALIGN_PTR
+name|MSIZE
+operator|-
+literal|1
 argument_list|,
 name|UMA_ZONE_MAXBUCKET
 argument_list|)
