@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sort.c	4.3 (Berkeley) %G%"
+literal|"@(#)sort.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -739,7 +739,7 @@ literal|0133
 block|,
 literal|0134
 block|,
-literal|0134
+literal|0135
 block|,
 literal|0136
 block|,
