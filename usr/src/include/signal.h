@@ -53,6 +53,7 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
+specifier|const
 name|sys_signame
 index|[
 name|NSIG
@@ -64,6 +65,7 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
+specifier|const
 name|sys_siglist
 index|[
 name|NSIG
