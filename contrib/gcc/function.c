@@ -4,10 +4,6 @@ comment|/* Expands front end tree to back end RTL for GNU C-Compiler    Copyrigh
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/* This file handles the generation of rtl code from tree structure    at the level of the function as a whole.    It creates the rtl expressions for parameters and auto variables    and has full responsibility for allocating stack slots.     `expand_function_start' is called at the beginning of a function,    before the function body is parsed, and `expand_function_end' is    called after parsing the body.     Call `assign_stack_local' to allocate a stack slot for a local variable.    This is usually done during the RTL generation for the function body,    but it can also be done in the reload pass when a pseudo-register does    not get a hard register.     Call `put_var_into_stack' when you learn, belatedly, that a variable    previously given a pseudo-register must in fact go in the stack.    This function changes the DECL_RTL to be a stack slot instead of a reg    then scans all the RTL instructions so far generated to correct them.  */
 end_comment
 

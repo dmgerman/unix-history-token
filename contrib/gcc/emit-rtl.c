@@ -4,10 +4,6 @@ comment|/* Emit RTL for the GNU C-Compiler expander.    Copyright (C) 1987, 1988
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/* Middle-to-low level generation of rtx code and insns.     This file contains the functions `gen_rtx', `gen_reg_rtx'    and `gen_label_rtx' that are the usual ways of creating rtl    expressions for most purposes.     It also has the functions for creating insns and linking    them in the doubly-linked chain.     The patterns of the insns are created by machine-dependent    routines in insn-emit.c, which is generated automatically from    the machine description.  These routines use `gen_rtx' to make    the individual rtx's of the pattern; what is machine dependent    is the kind of rtx's they make and what arguments they use.  */
 end_comment
 

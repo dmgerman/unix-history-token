@@ -8,10 +8,6 @@ comment|/* As a special exception, if you include this header file into source  
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/*  * ISO C Standard:  7.17  Common definitions<stddef.h>  */
 end_comment
 

@@ -4,10 +4,6 @@ comment|/* Convert RTL to assembler code and output it, for GNU compiler.    Cop
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/* This is the final pass of the compiler.    It looks at the rtl code for a function and outputs assembler code.     Call `final_start_function' to output the assembler code for function entry,    `final' to output assembler code for some RTL code,    `final_end_function' to output assembler code for function exit.    If a function is compiled in several pieces, each piece is    output separately with `final'.     Some optimizations are also done at this level.    Move instructions that were made unnecessary by good register allocation    are detected and omitted from the output.  (Though most of these    are removed by the last jump pass.)     Instructions to set the condition codes are omitted when it can be    seen that the condition codes already had the desired values.     In some cases it is sufficient if the inherited condition codes    have related values, but this may require the following insn    (the one that tests the condition codes) to be modified.     The code for the function prologue and epilogue are generated    directly in assembler by the target functions function_prologue and    function_epilogue.  Those instructions never exist as rtl.  */
 end_comment
 

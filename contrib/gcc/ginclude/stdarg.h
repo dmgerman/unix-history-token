@@ -11,10 +11,6 @@ begin_comment
 comment|/*  * ISO C Standard:  7.15  Variable arguments<stdarg.h>  */
 end_comment
 
-begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
