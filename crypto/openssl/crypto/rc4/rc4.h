@@ -22,6 +22,33 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|NO_RC4
+end_ifdef
+
+begin_error
+error|#
+directive|error
+error|RC4 is disabled.
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<openssl/opensslconf.h>
+end_include
+
+begin_comment
+comment|/* RC4_INT */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__cplusplus
 end_ifdef
 
@@ -31,18 +58,6 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|NO_RC4
-error|#
-directive|error
-error|RC4 is disabled.
-endif|#
-directive|endif
-include|#
-directive|include
-file|<openssl/opensslconf.h>
-comment|/* RC4_INT */
 typedef|typedef
 struct|struct
 name|rc4_key_st

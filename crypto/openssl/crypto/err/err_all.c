@@ -159,6 +159,12 @@ directive|include
 file|<openssl/err.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/dso.h>
+end_include
+
 begin_function
 name|void
 name|ERR_load_crypto_strings
@@ -261,6 +267,9 @@ name|ERR_load_PKCS12_strings
 argument_list|()
 expr_stmt|;
 name|ERR_load_RAND_strings
+argument_list|()
+expr_stmt|;
+name|ERR_load_DSO_strings
 argument_list|()
 expr_stmt|;
 endif|#

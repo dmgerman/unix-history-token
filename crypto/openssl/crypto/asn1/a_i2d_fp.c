@@ -189,7 +189,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|n
 argument_list|)
@@ -283,7 +283,7 @@ operator|-=
 name|i
 expr_stmt|;
 block|}
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|b
 argument_list|)

@@ -35,17 +35,34 @@ directive|include
 file|"cryptlib.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_BIO
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<openssl/bio.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<openssl/lhash.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HEADER_BIO_H
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NO_BIO
+end_ifdef
 
 begin_function
 name|void

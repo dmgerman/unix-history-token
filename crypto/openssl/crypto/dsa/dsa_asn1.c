@@ -47,7 +47,7 @@ name|ret
 decl_stmt|;
 name|ret
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -137,7 +137,7 @@ operator|->
 name|s
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|r
 argument_list|)
@@ -181,7 +181,7 @@ name|rbs
 operator|.
 name|data
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|BN_num_bits
 argument_list|(
@@ -242,7 +242,7 @@ name|sbs
 operator|.
 name|data
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|BN_num_bits
 argument_list|(
@@ -265,7 +265,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|rbs
 operator|.
@@ -380,14 +380,14 @@ argument_list|,
 name|V_ASN1_SEQUENCE
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|rbs
 operator|.
 name|data
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|sbs
 operator|.

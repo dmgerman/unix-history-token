@@ -2093,7 +2093,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|SSL3_RT_MAX_PACKET_SIZE
 operator|+
@@ -2135,7 +2135,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|SSL3_RT_MAX_PACKET_SIZE
 argument_list|)

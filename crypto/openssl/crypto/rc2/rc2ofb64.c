@@ -27,6 +27,7 @@ begin_function
 name|void
 name|RC2_ofb64_encrypt
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*

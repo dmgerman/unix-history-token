@@ -990,7 +990,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|STACK_OF(SSL_CIPHER) *sk; 					SSL_CIPHER *c; 					int ne2,ne3;  					j=((p[0]&0x7f)<<8)|p[1]; 					if (j> (1024*4)) 						{ 						SSLerr(SSL_F_SSL23_GET_CLIENT_HELLO,SSL_R_RECORD_TOO_LARGE); 						goto err; 						}  					n=ssl23_read_bytes(s,j+2); 					if (n<= 0) return(n); 					p=s->packet;  					if ((buf=Malloc(n)) == NULL) 						{ 						SSLerr(SSL_F_SSL23_GET_CLIENT_HELLO,ERR_R_MALLOC_FAILURE); 						goto err; 						} 					memcpy(buf,p,n);  					p+=5; 					n2s(p,csl); 					p+=4;  					sk=ssl_bytes_to_cipher_list( 						s,p,csl,NULL); 					if (sk != NULL) 						{ 						ne2=ne3=0; 						for (j=0; j<sk_SSL_CIPHER_num(sk); j++) 							{ 							c=sk_SSL_CIPHER_value(sk,j); 							if (!SSL_C_IS_EXPORT(c)) 								{ 								if ((c->id>>24L) == 2L) 									ne2=1; 								else 									ne3=1; 								} 							} 						if (ne2&& !ne3) 							{ 							type=1; 							use_sslv2_strong=1; 							goto next_bit; 							} 						}
+block|STACK_OF(SSL_CIPHER) *sk; 					SSL_CIPHER *c; 					int ne2,ne3;  					j=((p[0]&0x7f)<<8)|p[1]; 					if (j> (1024*4)) 						{ 						SSLerr(SSL_F_SSL23_GET_CLIENT_HELLO,SSL_R_RECORD_TOO_LARGE); 						goto err; 						}  					n=ssl23_read_bytes(s,j+2); 					if (n<= 0) return(n); 					p=s->packet;  					if ((buf=OPENSSL_malloc(n)) == NULL) 						{ 						SSLerr(SSL_F_SSL23_GET_CLIENT_HELLO,ERR_R_MALLOC_FAILURE); 						goto err; 						} 					memcpy(buf,p,n);  					p+=5; 					n2s(p,csl); 					p+=4;  					sk=ssl_bytes_to_cipher_list( 						s,p,csl,NULL); 					if (sk != NULL) 						{ 						ne2=ne3=0; 						for (j=0; j<sk_SSL_CIPHER_num(sk); j++) 							{ 							c=sk_SSL_CIPHER_value(sk,j); 							if (!SSL_C_IS_EXPORT(c)) 								{ 								if ((c->id>>24L) == 2L) 									ne2=1; 								else 									ne3=1; 								} 							} 						if (ne2&& !ne3) 							{ 							type=1; 							use_sslv2_strong=1; 							goto next_bit; 							} 						}
 else|#
 directive|else
 name|SSLerr
@@ -1081,19 +1081,8 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-comment|/* major version */
-comment|/* We must look at client_version inside the Client Hello message 			 * to get the correct minor version: */
-name|v
-index|[
-literal|1
-index|]
-operator|=
-name|p
-index|[
-literal|10
-index|]
-expr_stmt|;
-comment|/* However if we have only a pathologically small fragment of the 			 * Client Hello message, we simply use the version from the 			 * record header -- this is incorrect but unlikely to fail in 			 * practice */
+comment|/* major version (= SSL3_VERSION_MAJOR) */
+comment|/* We must look at client_version inside the Client Hello message 			 * to get the correct minor version. 			 * However if we have only a pathologically small fragment of the 			 * Client Hello message, this would be difficult, we'd have 			 * to read at least one additional record to find out. 			 * This doesn't usually happen in real life, so we just complain 			 * for now. 			 */
 if|if
 condition|(
 name|p
@@ -1110,6 +1099,18 @@ index|]
 operator|<
 literal|6
 condition|)
+block|{
+name|SSLerr
+argument_list|(
+name|SSL_F_SSL23_GET_CLIENT_HELLO
+argument_list|,
+name|SSL_R_RECORD_TOO_SMALL
+argument_list|)
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
 name|v
 index|[
 literal|1
@@ -1117,9 +1118,10 @@ index|]
 operator|=
 name|p
 index|[
-literal|2
+literal|10
 index|]
 expr_stmt|;
+comment|/* minor version according to client_version */
 if|if
 condition|(
 name|v
@@ -1838,6 +1840,20 @@ name|SSL_OP_MSIE_SSLV2_RSA_PADDING
 operator|)
 operator|||
 name|use_sslv2_strong
+operator|||
+operator|(
+name|s
+operator|->
+name|options
+operator|&
+name|SSL_OP_NO_TLSv1
+operator|&&
+name|s
+operator|->
+name|options
+operator|&
+name|SSL_OP_NO_SSLv3
+operator|)
 condition|)
 name|s
 operator|->
@@ -1848,6 +1864,7 @@ operator|=
 literal|0
 expr_stmt|;
 else|else
+comment|/* reject SSL 2.0 session if client supports SSL 3.0 or TLS 1.0 			 * (SSL 3.0 draft/RFC 2246, App. E.2) */
 name|s
 operator|->
 name|s2
@@ -2147,7 +2164,7 @@ name|buf
 operator|!=
 name|buf_space
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|buf
 argument_list|)
@@ -2174,7 +2191,7 @@ name|buf
 operator|!=
 name|buf_space
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|buf
 argument_list|)

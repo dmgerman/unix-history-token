@@ -308,7 +308,7 @@ operator|(
 name|SSL_SESSION
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1138,7 +1138,7 @@ if|#
 directive|if
 literal|0
 comment|/* This is way too late. */
-comment|/* If a thread got the session, then 'swaped', and another got 	 * it and then due to a time-out decided to 'Free' it we could 	 * be in trouble.  So I'll increment it now, then double decrement 	 * later - am I speaking rubbish?. */
+comment|/* If a thread got the session, then 'swaped', and another got 	 * it and then due to a time-out decided to 'OPENSSL_free' it we could 	 * be in trouble.  So I'll increment it now, then double decrement 	 * later - am I speaking rubbish?. */
 block|CRYPTO_add(&ret->references,1,CRYPTO_LOCK_SSL_SESSION);
 endif|#
 directive|endif
@@ -1804,7 +1804,7 @@ name|ss
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|ss
 argument_list|)

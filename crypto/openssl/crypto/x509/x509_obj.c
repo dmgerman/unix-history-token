@@ -202,7 +202,7 @@ name|b
 operator|->
 name|data
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|b
 argument_list|)
@@ -993,7 +993,7 @@ name|b
 operator|->
 name|data
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|b
 argument_list|)

@@ -158,6 +158,7 @@ name|BIO
 modifier|*
 name|bio
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|buf
@@ -199,6 +200,7 @@ name|BIO
 modifier|*
 name|bio
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -335,7 +337,7 @@ name|b
 decl_stmt|;
 name|b
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 expr|*
@@ -441,7 +443,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|b
 operator|->
@@ -449,7 +451,7 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|b
 argument_list|)
@@ -1159,6 +1161,7 @@ name|BIO
 modifier|*
 name|bio
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|buf
@@ -1887,7 +1890,7 @@ operator|->
 name|buf
 condition|)
 block|{
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|b
 operator|->
@@ -2390,6 +2393,7 @@ name|BIO
 modifier|*
 name|bio
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -2498,7 +2502,7 @@ name|b1
 operator|->
 name|buf
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|b1
 operator|->
@@ -2551,7 +2555,7 @@ name|b2
 operator|->
 name|buf
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|b2
 operator|->

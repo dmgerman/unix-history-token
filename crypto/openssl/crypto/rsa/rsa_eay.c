@@ -352,7 +352,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|num
 argument_list|)
@@ -673,7 +673,7 @@ argument_list|,
 name|num
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|buf
 argument_list|)
@@ -792,7 +792,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|num
 argument_list|)
@@ -1174,7 +1174,7 @@ argument_list|,
 name|num
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|buf
 argument_list|)
@@ -1294,7 +1294,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|num
 argument_list|)
@@ -1712,7 +1712,7 @@ argument_list|,
 name|num
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|buf
 argument_list|)
@@ -1829,7 +1829,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|num
 argument_list|)
@@ -2097,7 +2097,7 @@ argument_list|,
 name|num
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|buf
 argument_list|)

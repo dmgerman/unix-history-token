@@ -11,6 +11,12 @@ directive|define
 name|HEADER_COMP_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<openssl/crypto.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -23,9 +29,6 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-include|#
-directive|include
-file|<openssl/crypto.h>
 typedef|typedef
 struct|struct
 name|comp_method_st

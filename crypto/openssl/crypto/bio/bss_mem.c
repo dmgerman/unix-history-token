@@ -40,6 +40,7 @@ name|BIO
 modifier|*
 name|h
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|buf
@@ -78,6 +79,7 @@ name|BIO
 modifier|*
 name|h
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -119,7 +121,7 @@ parameter_list|,
 name|long
 name|arg1
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|arg2
 parameter_list|)
@@ -662,11 +664,15 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
+name|ret
+operator|=
 name|b
 operator|->
 name|num
+expr_stmt|;
+if|if
+condition|(
+name|ret
 operator|!=
 literal|0
 condition|)
@@ -674,12 +680,6 @@ name|BIO_set_retry_read
 argument_list|(
 name|b
 argument_list|)
-expr_stmt|;
-name|ret
-operator|=
-name|b
-operator|->
-name|num
 expr_stmt|;
 block|}
 return|return
@@ -699,6 +699,7 @@ name|BIO
 modifier|*
 name|b
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|in
@@ -845,7 +846,7 @@ parameter_list|,
 name|long
 name|num
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|ptr
 parameter_list|)
@@ -898,6 +899,7 @@ name|flags
 operator|&
 name|BIO_FLAGS_MEM_RDONLY
 condition|)
+block|{
 name|bm
 operator|->
 name|data
@@ -910,6 +912,15 @@ name|bm
 operator|->
 name|length
 expr_stmt|;
+name|bm
+operator|->
+name|length
+operator|=
+name|bm
+operator|->
+name|max
+expr_stmt|;
+block|}
 else|else
 block|{
 name|memset
@@ -1321,6 +1332,7 @@ name|BIO
 modifier|*
 name|bp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str

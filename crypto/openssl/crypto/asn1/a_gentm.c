@@ -1017,7 +1017,7 @@ condition|)
 block|{
 name|p
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 literal|20
 argument_list|)
@@ -1041,7 +1041,7 @@ name|data
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|s
 operator|->

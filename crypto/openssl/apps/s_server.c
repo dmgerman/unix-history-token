@@ -1499,7 +1499,7 @@ operator|(
 name|EBCDIC_OUTBUFF
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1583,7 +1583,7 @@ name|ptr
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|a
 operator|->
@@ -1807,7 +1807,7 @@ name|num
 operator|=
 name|inl
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|wbuf
 argument_list|)
@@ -1818,7 +1818,7 @@ operator|(
 name|EBCDIC_OUTBUFF
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -4056,7 +4056,7 @@ condition|(
 operator|(
 name|buf
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|bufsize
 argument_list|)
@@ -5269,7 +5269,7 @@ argument_list|,
 name|bufsize
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|buf
 argument_list|)
@@ -5781,7 +5781,7 @@ name|total_bytes
 decl_stmt|;
 name|buf
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|bufsize
 argument_list|)
@@ -7368,7 +7368,7 @@ name|buf
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|buf
 argument_list|)

@@ -34,13 +34,17 @@ specifier|static
 name|int
 name|tr_cmp
 parameter_list|(
+specifier|const
 name|X509_TRUST
 modifier|*
+specifier|const
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|X509_TRUST
 modifier|*
+specifier|const
 modifier|*
 name|b
 parameter_list|)
@@ -240,13 +244,17 @@ specifier|static
 name|int
 name|tr_cmp
 parameter_list|(
+specifier|const
 name|X509_TRUST
 modifier|*
+specifier|const
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|X509_TRUST
 modifier|*
+specifier|const
 modifier|*
 name|b
 parameter_list|)
@@ -615,7 +623,7 @@ operator|!
 operator|(
 name|trtmp
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -651,7 +659,7 @@ argument_list|(
 name|idx
 argument_list|)
 expr_stmt|;
-comment|/* Free existing name if dynamic */
+comment|/* OPENSSL_free existing name if dynamic */
 if|if
 condition|(
 name|trtmp
@@ -660,7 +668,7 @@ name|flags
 operator|&
 name|X509_TRUST_DYNAMIC_NAME
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|trtmp
 operator|->
@@ -830,14 +838,14 @@ name|flags
 operator|&
 name|X509_TRUST_DYNAMIC_NAME
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|p
 operator|->
 name|name
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|p
 argument_list|)

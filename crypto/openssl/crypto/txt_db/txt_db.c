@@ -171,7 +171,7 @@ operator|(
 name|TXT_DB
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -231,7 +231,7 @@ name|LHASH
 operator|*
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -263,7 +263,7 @@ operator|*
 argument_list|)
 argument_list|()
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -493,7 +493,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|add
 operator|+
@@ -784,7 +784,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Malloc failure\n"
+literal|"OPENSSL_malloc failure\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -812,7 +812,7 @@ name|index
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|ret
 operator|->
@@ -827,7 +827,7 @@ name|qual
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|ret
 operator|->
@@ -840,7 +840,7 @@ name|ret
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|ret
 argument_list|)
@@ -1855,7 +1855,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|db
 operator|->
@@ -1871,7 +1871,7 @@ name|qual
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|db
 operator|->
@@ -1967,7 +1967,7 @@ index|]
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|p
 index|[
@@ -2029,7 +2029,7 @@ operator|!=
 name|NULL
 operator|)
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|p
 index|[
@@ -2039,7 +2039,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|sk_value
 argument_list|(
@@ -2060,7 +2060,7 @@ name|data
 argument_list|)
 expr_stmt|;
 block|}
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|db
 argument_list|)

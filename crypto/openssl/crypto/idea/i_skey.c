@@ -35,6 +35,7 @@ begin_function
 name|void
 name|idea_set_encrypt_key
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*

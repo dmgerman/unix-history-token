@@ -791,7 +791,7 @@ operator|!
 operator|(
 name|ext_der
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|ext_len
 argument_list|)
@@ -1288,7 +1288,7 @@ if|if
 condition|(
 name|ext_der
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|ext_der
 argument_list|)

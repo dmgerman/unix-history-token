@@ -1334,7 +1334,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* Divide h-l by d and return the result. */
+comment|/* Divide h,l by d and return the result. */
 end_comment
 
 begin_comment
@@ -1397,14 +1397,14 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|assert
+argument_list|(
 operator|(
 name|i
-operator|!=
+operator|==
 name|BN_BITS2
 operator|)
-operator|&&
+operator|||
 operator|(
 name|h
 operator|>
@@ -1415,36 +1415,8 @@ literal|1
 operator|<<
 name|i
 operator|)
-condition|)
-block|{
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|NO_STDIO
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|WIN16
-argument_list|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Division would overflow (%d)\n"
-argument_list|,
-name|i
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-name|abort
-argument_list|()
-expr_stmt|;
-block|}
 name|i
 operator|=
 name|BN_BITS2

@@ -19,6 +19,12 @@ directive|define
 name|HEADER_ASN1_MAC_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<openssl/asn1.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -31,9 +37,6 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-include|#
-directive|include
-file|<openssl/asn1.h>
 ifndef|#
 directive|ifndef
 name|ASN1_MAC_ERR_LIB
@@ -495,7 +498,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|if ((ret=(type *)Malloc(sizeof(type))) == NULL) \ 		{ c.line=__LINE__; goto err2; }
+value|if ((ret=(type *)OPENSSL_malloc(sizeof(type))) == NULL) \ 		{ c.line=__LINE__; goto err2; }
 define|#
 directive|define
 name|M_ASN1_New

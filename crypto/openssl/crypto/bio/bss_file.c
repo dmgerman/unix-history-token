@@ -73,6 +73,7 @@ name|BIO
 modifier|*
 name|h
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|buf
@@ -113,6 +114,7 @@ name|BIO
 modifier|*
 name|h
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -156,7 +158,7 @@ parameter_list|,
 name|long
 name|arg1
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|arg2
 parameter_list|)
@@ -593,6 +595,7 @@ name|BIO
 modifier|*
 name|b
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|in
@@ -672,7 +675,7 @@ parameter_list|,
 name|long
 name|num
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|ptr
 parameter_list|)
@@ -1251,6 +1254,7 @@ name|BIO
 modifier|*
 name|bp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str

@@ -247,7 +247,7 @@ operator|->
 name|notAfter
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|a
 argument_list|)

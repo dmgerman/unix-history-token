@@ -324,6 +324,38 @@ operator|(
 literal|"application verification failure"
 operator|)
 return|;
+case|case
+name|X509_V_ERR_SUBJECT_ISSUER_MISMATCH
+case|:
+return|return
+operator|(
+literal|"subject issuer mismatch"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_AKID_SKID_MISMATCH
+case|:
+return|return
+operator|(
+literal|"authority and subject key identifier mismatch"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_AKID_ISSUER_SERIAL_MISMATCH
+case|:
+return|return
+operator|(
+literal|"authority and issuer serial number mismatch"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_KEYUSAGE_NO_CERTSIGN
+case|:
+return|return
+operator|(
+literal|"key usage does not include certificate signing"
+operator|)
+return|;
 default|default:
 name|sprintf
 argument_list|(

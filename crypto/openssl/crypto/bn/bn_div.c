@@ -467,11 +467,11 @@ name|div_n
 expr_stmt|;
 name|wnum
 operator|.
-name|max
+name|dmax
 operator|=
 name|snum
 operator|->
-name|max
+name|dmax
 operator|+
 literal|1
 expr_stmt|;

@@ -313,12 +313,12 @@ name|X509
 modifier|*
 name|x
 parameter_list|,
-name|ASN1_UTCTIME
+name|ASN1_TIME
 modifier|*
 name|tm
 parameter_list|)
 block|{
-name|ASN1_UTCTIME
+name|ASN1_TIME
 modifier|*
 name|in
 decl_stmt|;
@@ -364,7 +364,7 @@ condition|)
 block|{
 name|in
 operator|=
-name|M_ASN1_UTCTIME_dup
+name|M_ASN1_TIME_dup
 argument_list|(
 name|tm
 argument_list|)
@@ -376,7 +376,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|M_ASN1_UTCTIME_free
+name|M_ASN1_TIME_free
 argument_list|(
 name|x
 operator|->
@@ -417,12 +417,12 @@ name|X509
 modifier|*
 name|x
 parameter_list|,
-name|ASN1_UTCTIME
+name|ASN1_TIME
 modifier|*
 name|tm
 parameter_list|)
 block|{
-name|ASN1_UTCTIME
+name|ASN1_TIME
 modifier|*
 name|in
 decl_stmt|;
@@ -468,7 +468,7 @@ condition|)
 block|{
 name|in
 operator|=
-name|M_ASN1_UTCTIME_dup
+name|M_ASN1_TIME_dup
 argument_list|(
 name|tm
 argument_list|)
@@ -480,7 +480,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|M_ASN1_UTCTIME_free
+name|M_ASN1_TIME_free
 argument_list|(
 name|x
 operator|->

@@ -643,7 +643,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|a
 argument_list|)
@@ -665,10 +665,8 @@ name|GENERAL_NAMES_new
 argument_list|()
 block|{
 return|return
-name|sk_GENERAL_NAME_new
-argument_list|(
-name|NULL
-argument_list|)
+name|sk_GENERAL_NAME_new_null
+argument_list|()
 return|;
 block|}
 end_expr_stmt
@@ -1013,7 +1011,7 @@ operator|->
 name|value
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|a
 argument_list|)

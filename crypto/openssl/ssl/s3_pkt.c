@@ -3470,6 +3470,18 @@ return|;
 block|}
 if|if
 condition|(
+operator|!
+operator|(
+name|s
+operator|->
+name|mode
+operator|&
+name|SSL_MODE_AUTO_RETRY
+operator|)
+condition|)
+block|{
+if|if
+condition|(
 name|s
 operator|->
 name|s3
@@ -3486,8 +3498,7 @@ name|BIO
 modifier|*
 name|bio
 decl_stmt|;
-comment|/* In the case where we try to read application data 					 * the first time, but we trigger an SSL handshake, we 					 * return -1 with the retry option set.  I do this 					 * otherwise renegotiation can cause nasty problems  					 * in the blocking world */
-comment|/* ? */
+comment|/* In the case where we try to read application data, 						 * but we trigger an SSL handshake, we return -1 with 						 * the retry option set.  Otherwise renegotiation may 						 * cause nasty problems in the blocking world */
 name|s
 operator|->
 name|rwstate
@@ -3517,6 +3528,7 @@ operator|-
 literal|1
 operator|)
 return|;
+block|}
 block|}
 block|}
 block|}
@@ -3702,8 +3714,11 @@ operator|+
 name|alert_descr
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|BIO_snprintf
 argument_list|(
+name|tmp
+argument_list|,
+sizeof|sizeof
 name|tmp
 argument_list|,
 literal|"%d"
@@ -3993,6 +4008,18 @@ return|;
 block|}
 if|if
 condition|(
+operator|!
+operator|(
+name|s
+operator|->
+name|mode
+operator|&
+name|SSL_MODE_AUTO_RETRY
+operator|)
+condition|)
+block|{
+if|if
+condition|(
 name|s
 operator|->
 name|s3
@@ -4009,8 +4036,7 @@ name|BIO
 modifier|*
 name|bio
 decl_stmt|;
-comment|/* In the case where we try to read application data 			 * the first time, but we trigger an SSL handshake, we 			 * return -1 with the retry option set.  I do this 			 * otherwise renegotiation can cause nasty problems  			 * in the blocking world */
-comment|/* ? */
+comment|/* In the case where we try to read application data, 				 * but we trigger an SSL handshake, we return -1 with 				 * the retry option set.  Otherwise renegotiation may 				 * cause nasty problems in the blocking world */
 name|s
 operator|->
 name|rwstate
@@ -4040,6 +4066,7 @@ operator|-
 literal|1
 operator|)
 return|;
+block|}
 block|}
 goto|goto
 name|start

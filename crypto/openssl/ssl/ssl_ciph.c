@@ -2798,7 +2798,7 @@ expr_stmt|;
 block|}
 name|number_uses
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 operator|(
 name|max_strength_bits
@@ -2929,7 +2929,7 @@ argument_list|,
 name|tail_p
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|number_uses
 argument_list|)
@@ -3680,7 +3680,7 @@ operator|(
 name|CIPHER_ORDER
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -3774,7 +3774,7 @@ name|SSL_CIPHER
 operator|*
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -3795,7 +3795,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|list
 argument_list|)
@@ -3931,7 +3931,7 @@ expr_stmt|;
 end_if
 
 begin_expr_stmt
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|ca_list
 argument_list|)
@@ -3950,7 +3950,7 @@ name|ok
 condition|)
 block|{
 comment|/* Rule processing failure */
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|list
 argument_list|)
@@ -3973,16 +3973,14 @@ condition|(
 operator|(
 name|cipherstack
 operator|=
-name|sk_SSL_CIPHER_new
-argument_list|(
-name|NULL
-argument_list|)
+name|sk_SSL_CIPHER_new_null
+argument_list|()
 operator|)
 operator|==
 name|NULL
 condition|)
 block|{
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|list
 argument_list|)
@@ -4054,7 +4052,7 @@ block|}
 end_for
 
 begin_expr_stmt
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|list
 argument_list|)
@@ -4615,11 +4613,15 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|len
+operator|=
+literal|128
+expr_stmt|;
 name|buf
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
-literal|128
+name|len
 argument_list|)
 expr_stmt|;
 if|if
@@ -4630,7 +4632,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-literal|"Malloc Error"
+literal|"OPENSSL_malloc Error"
 operator|)
 return|;
 block|}
@@ -4649,9 +4651,11 @@ return|;
 end_if
 
 begin_expr_stmt
-name|sprintf
+name|BIO_snprintf
 argument_list|(
 name|buf
+argument_list|,
+name|len
 argument_list|,
 name|format
 argument_list|,
@@ -4946,13 +4950,17 @@ specifier|static
 name|int
 name|sk_comp_cmp
 parameter_list|(
+specifier|const
 name|SSL_COMP
 modifier|*
+specifier|const
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|SSL_COMP
 modifier|*
+specifier|const
 modifier|*
 name|b
 parameter_list|)
@@ -5025,7 +5033,7 @@ operator|(
 name|SSL_COMP
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(

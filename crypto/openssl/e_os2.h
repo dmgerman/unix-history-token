@@ -15,6 +15,16 @@ directive|define
 name|HEADER_E_OS2_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<openssl/opensslconf.h>
+end_include
+
+begin_comment
+comment|/* OPENSSL_UNISTD */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -27,10 +37,6 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-include|#
-directive|include
-file|<openssl/opensslconf.h>
-comment|/* OPENSSL_UNISTD */
 ifdef|#
 directive|ifdef
 name|MSDOS

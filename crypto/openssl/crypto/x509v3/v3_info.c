@@ -259,7 +259,7 @@ argument_list|)
 expr_stmt|;
 name|ntmp
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -325,7 +325,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|vtmp
 operator|->
@@ -417,10 +417,8 @@ operator|!
 operator|(
 name|ainfo
 operator|=
-name|sk_ACCESS_DESCRIPTION_new
-argument_list|(
-name|NULL
-argument_list|)
+name|sk_ACCESS_DESCRIPTION_new_null
+argument_list|()
 operator|)
 condition|)
 block|{
@@ -574,7 +572,7 @@ operator|!
 operator|(
 name|objtmp
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|objlen
 operator|+
@@ -647,7 +645,7 @@ argument_list|,
 name|objtmp
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|objtmp
 argument_list|)
@@ -656,7 +654,7 @@ goto|goto
 name|err
 goto|;
 block|}
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|objtmp
 argument_list|)
@@ -901,7 +899,7 @@ operator|->
 name|location
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|a
 argument_list|)
@@ -921,10 +919,8 @@ argument|void
 argument_list|)
 block|{
 return|return
-name|sk_ACCESS_DESCRIPTION_new
-argument_list|(
-name|NULL
-argument_list|)
+name|sk_ACCESS_DESCRIPTION_new_null
+argument_list|()
 return|;
 block|}
 end_expr_stmt

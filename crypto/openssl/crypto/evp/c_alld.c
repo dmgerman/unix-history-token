@@ -57,6 +57,17 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
+name|NO_MD4
+name|EVP_add_digest
+argument_list|(
+name|EVP_md4
+argument_list|()
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
 name|NO_MD5
 name|EVP_add_digest
 argument_list|(

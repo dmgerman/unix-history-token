@@ -243,10 +243,21 @@ define|#
 directive|define
 name|SSL2_MAX_MASTER_KEY_LENGTH_IN_BITS
 value|256
+ifdef|#
+directive|ifdef
+name|MPE
+define|#
+directive|define
+name|SSL2_MAX_RECORD_LENGTH_2_BYTE_HEADER
+value|(unsigned int)29998
+else|#
+directive|else
 define|#
 directive|define
 name|SSL2_MAX_RECORD_LENGTH_2_BYTE_HEADER
 value|(unsigned int)32767
+endif|#
+directive|endif
 define|#
 directive|define
 name|SSL2_MAX_RECORD_LENGTH_3_BYTE_HEADER

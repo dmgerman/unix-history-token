@@ -159,7 +159,7 @@ name|NULL
 return|;
 name|tmp
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|ia5
 operator|->

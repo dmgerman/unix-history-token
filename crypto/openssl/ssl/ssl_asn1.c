@@ -199,7 +199,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* Note that I cheat in the following 2 assignments.  I know 	 * that if the ASN1_INTEGER passed to ASN1_INTEGER_set 	 * is> sizeof(long)+1, the buffer will not be re-Malloc()ed. 	 * This is a bit evil but makes things simple, no dynamic allocation 	 * to clean up :-) */
+comment|/* Note that I cheat in the following 2 assignments.  I know 	 * that if the ASN1_INTEGER passed to ASN1_INTEGER_set 	 * is> sizeof(long)+1, the buffer will not be re-OPENSSL_malloc()ed. 	 * This is a bit evil but makes things simple, no dynamic allocation 	 * to clean up :-) */
 name|a
 operator|.
 name|version
@@ -1178,7 +1178,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|ai
 operator|.
@@ -1231,7 +1231,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|ai
 operator|.
@@ -1603,7 +1603,7 @@ name|data
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|os
 operator|.
@@ -1643,7 +1643,7 @@ argument_list|(
 name|aip
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|ai
 operator|.
@@ -1706,7 +1706,7 @@ argument_list|(
 name|aip
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|ai
 operator|.
@@ -1835,7 +1835,7 @@ operator|.
 name|length
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|os
 operator|.
@@ -1895,7 +1895,7 @@ argument_list|(
 name|aip
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|ai
 operator|.

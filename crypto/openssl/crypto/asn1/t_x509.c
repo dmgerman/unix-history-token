@@ -1210,7 +1210,7 @@ name|m
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|m
 argument_list|)

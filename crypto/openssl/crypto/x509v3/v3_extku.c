@@ -391,10 +391,8 @@ operator|!
 operator|(
 name|extku
 operator|=
-name|sk_ASN1_OBJECT_new
-argument_list|(
-name|NULL
-argument_list|)
+name|sk_ASN1_OBJECT_new_null
+argument_list|()
 operator|)
 condition|)
 block|{

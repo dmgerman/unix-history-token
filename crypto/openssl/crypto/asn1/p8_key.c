@@ -203,7 +203,7 @@ name|ret
 init|=
 name|NULL
 decl_stmt|;
-name|M_ASN1_New_Malloc
+name|M_ASN1_New_OPENSSL_malloc
 argument_list|(
 name|ret
 argument_list|,
@@ -358,7 +358,7 @@ operator|->
 name|signature
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|a
 argument_list|)

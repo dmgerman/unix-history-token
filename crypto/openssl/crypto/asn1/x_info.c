@@ -57,7 +57,7 @@ operator|(
 name|X509_INFO
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -266,14 +266,14 @@ name|enc_data
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|x
 operator|->
 name|enc_data
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|x
 argument_list|)

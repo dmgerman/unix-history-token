@@ -428,7 +428,8 @@ if|if
 condition|(
 name|k
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
 block|{
 name|RSAerr

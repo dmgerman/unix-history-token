@@ -31,12 +31,6 @@ directive|include
 file|<string.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"openssl/e_os.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -98,6 +92,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<openssl/e_os.h>
+end_include
 
 begin_include
 include|#
@@ -383,7 +383,7 @@ name|ret
 init|=
 literal|0
 decl_stmt|,
-name|err
+name|rand_err
 init|=
 literal|0
 decl_stmt|;
@@ -403,18 +403,13 @@ argument_list|(
 name|O_CREAT
 argument_list|)
 operator|&&
-name|defined
-argument_list|(
-name|O_EXCL
-argument_list|)
-operator|&&
 operator|!
 name|defined
 argument_list|(
 name|WIN32
 argument_list|)
 comment|/* For some reason Win32 can't write to files created this way */
-comment|/* chmod(..., 0600) is too late to protect the file,          * permissions should be restrictive from the start */
+comment|/* chmod(..., 0600) is too late to protect the file, 	 * permissions should be restrictive from the start */
 name|int
 name|fd
 init|=
@@ -423,8 +418,6 @@ argument_list|(
 name|file
 argument_list|,
 name|O_CREAT
-operator||
-name|O_EXCL
 argument_list|,
 literal|0600
 argument_list|)
@@ -520,7 +513,7 @@ argument_list|)
 operator|<=
 literal|0
 condition|)
-name|err
+name|rand_err
 operator|=
 literal|1
 expr_stmt|;
@@ -573,7 +566,7 @@ name|tmpf
 decl_stmt|;
 name|tmpf
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -644,7 +637,7 @@ name|err
 label|:
 return|return
 operator|(
-name|err
+name|rand_err
 condition|?
 operator|-
 literal|1

@@ -23,6 +23,7 @@ begin_function
 name|void
 name|RC2_cbc_encrypt
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*
