@@ -21,6 +21,14 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|uwx_str_pool
+name|uwx_str_pool
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -41,7 +49,7 @@ name|malloc
 parameter_list|(
 name|sz
 parameter_list|)
-value|NULL
+value|((sz == sizeof(uwx_str_pool)) ?&uwx_str_pool : NULL)
 end_define
 
 begin_endif
