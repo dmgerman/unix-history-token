@@ -6,6 +6,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -38,32 +52,6 @@ include|#
 directive|include
 file|<netinet/in.h>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
 
 begin_comment
 comment|/*  * XXX<rpcsvc/yppasswd.h> does a typedef that makes 'yppasswd'  * a type of struct yppasswd. This leads to a namespace collision:  * gcc will not let you have a type called yppasswd and a function  * called yppasswd(). In order to get around this, we call the  * actual function _yppasswd() and put a macro called yppasswd()  * in yppasswd.h which calls the underlying function, thereby  * fooling gcc.  */
