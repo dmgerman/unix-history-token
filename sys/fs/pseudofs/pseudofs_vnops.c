@@ -131,11 +131,39 @@ directive|include
 file|<fs/pseudofs/pseudofs_internal.h>
 end_include
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PSEUDOFS_TRACE
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|pfs_trace
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_pfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|trace
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|pfs_trace
+argument_list|,
 literal|0
-end_if
+argument_list|,
+literal|"enable tracing of pseudofs vnode operations"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -145,7 +173,7 @@ parameter_list|(
 name|foo
 parameter_list|)
 define|\
-value|do { \ 		printf("pseudofs: %s(): line %d: ", __func__, __LINE__); \ 		printf foo ; \ 		printf("\n"); \ 	} while (0)
+value|do { \ 		if (pfs_trace) { \ 			printf("%s(): line %d: ", __func__, __LINE__); \ 			printf foo ; \ 			printf("\n"); \ 		} \ 	} while (0)
 end_define
 
 begin_define
@@ -156,7 +184,7 @@ parameter_list|(
 name|err
 parameter_list|)
 define|\
-value|do { \ 		printf("pseudofs: %s(): line %d: returning %d\n", \ 		    __func__, __LINE__, err); \ 		return (err); \ 	} while (0)
+value|do { \ 		if (pfs_trace) { \ 			printf("%s(): line %d: returning %d\n", \ 			    __func__, __LINE__, err); \ 		} \ 		return (err); \ 	} while (0)
 end_define
 
 begin_else
