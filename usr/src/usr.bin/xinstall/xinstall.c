@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xinstall.c	8.1 (Berkeley) %G%"
+literal|"@(#)xinstall.c	5.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -715,17 +715,17 @@ name|to_name
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Unlink now... avoid ETXTBSY errors later.  Try and turn 		 * off the append/immutable bits -- if we fail, go ahead, 		 * it might work. 		 */
+define|#
+directive|define
+name|NOCHANGEBITS
+value|(UF_IMMUTABLE | UF_APPEND | SF_IMMUTABLE | SF_APPEND)
 if|if
 condition|(
 name|to_sb
 operator|.
 name|st_flags
 operator|&
-operator|(
-name|UF_IMMUTABLE
-operator||
-name|UF_APPEND
-operator|)
+name|NOCHANGEBITS
 condition|)
 operator|(
 name|void
@@ -740,9 +740,7 @@ name|st_flags
 operator|&
 operator|~
 operator|(
-name|UF_APPEND
-operator||
-name|UF_IMMUTABLE
+name|NOCHANGEBITS
 operator|)
 argument_list|)
 expr_stmt|;
@@ -975,9 +973,7 @@ operator|.
 name|st_flags
 operator|&
 operator|(
-name|UF_APPEND
-operator||
-name|UF_IMMUTABLE
+name|NOCHANGEBITS
 operator|)
 condition|)
 operator|(
@@ -993,9 +989,7 @@ name|st_flags
 operator|&
 operator|~
 operator|(
-name|UF_APPEND
-operator||
-name|UF_IMMUTABLE
+name|NOCHANGEBITS
 operator|)
 argument_list|)
 expr_stmt|;
