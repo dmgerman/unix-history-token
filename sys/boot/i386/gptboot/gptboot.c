@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998 Robert Nordier  * All rights reserved.  *  * Re
 end_comment
 
 begin_comment
-comment|/*  *	$Id: boot2.c,v 1.9 1998/10/17 09:16:01 rnordier Exp $  */
+comment|/*  *	$Id: boot2.c,v 1.10 1998/10/17 09:50:09 rnordier Exp $  */
 end_comment
 
 begin_include
@@ -2257,6 +2257,15 @@ operator||
 literal|1
 operator|<<
 name|RBX_SERIAL
+expr_stmt|;
+name|opts
+operator|&=
+operator|~
+operator|(
+literal|1
+operator|<<
+name|RBX_PROBEKBD
+operator|)
 expr_stmt|;
 block|}
 name|ioctrl
