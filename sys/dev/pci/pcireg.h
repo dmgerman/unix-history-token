@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pcireg.h,v 1.3 1995/02/02 13:12:18 davidg Exp $ ** **  Names for PCI configuration space registers. ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pcireg.h,v 1.4 1995/02/02 22:01:40 se Exp $ ** **  Names for PCI configuration space registers. ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_ifndef
@@ -13,10 +13,8 @@ begin_define
 define|#
 directive|define
 name|__PCI_REG_H__
+value|"pl2 95/03/21"
 end_define
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* ** Device identification register; contains a vendor ID and a device ID. ** We have little need to distinguish the two parts. */
@@ -568,6 +566,165 @@ define|#
 directive|define
 name|PCI_MAP_IO_ADDRESS_MASK
 value|0xfffffffc
+end_define
+
+begin_comment
+comment|/* ** PCI-PCI bridge mapping registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_PCI_BRIDGE_BUS_REG
+value|0x18
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_PCI_BRIDGE_IO_REG
+value|0x1c
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_PCI_BRIDGE_MEM_REG
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_PCI_BRIDGE_PMEM_REG
+value|0x24
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_SUBORDINATE_BUS_MASK
+value|0x00ff0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_SECONDARY_BUS_MASK
+value|0x0000ff00
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_PRIMARY_BUS_MASK
+value|0x000000ff
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_SUBORDINATE_BUS_EXTRACT
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)> 16)& 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_SECONDARY_BUS_EXTRACT
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>  8)& 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_PRIMARY_BUS_EXTRACT
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)	  )& 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_PRIMARY_BUS_INSERT
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|(((x)& ~PCI_PRIMARY_BUS_MASK) | ((y)<<  0))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_SECONDARY_BUS_INSERT
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|(((x)& ~PCI_SECONDARY_BUS_MASK) | ((y)<<  8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_SUBORDINATE_BUS_INSERT
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|(((x)& ~PCI_SUBORDINATE_BUS_MASK) | ((y)<< 16))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_PPB_IOBASE_EXTRACT
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)<< 8)& 0xFF00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_PPB_IOLIMIT_EXTRACT
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)<< 0)& 0xFF00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_PPB_MEMBASE_EXTRACT
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)<< 16)& 0xFFFF0000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_PPB_MEMLIMIT_EXTRACT
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)<<  0)& 0xFFFF0000)
 end_define
 
 begin_comment

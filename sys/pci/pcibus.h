@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pcibus.h,v 1.2 1994/11/02 23:47:14 se Exp $ ** **  Declarations for pci bus driver. ** **  386bsd / FreeBSD ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pcibus.h,v 1.1 1995/02/01 22:56:47 se Exp $ ** **  Declarations for pci bus driver. ** **  FreeBSD ** **------------------------------------------------------------------------- ** ** Copyright (c) 1995 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_ifndef
@@ -13,13 +13,11 @@ begin_define
 define|#
 directive|define
 name|__PCI_BUS_H__
+value|"pl1 95/03/13"
 end_define
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/*----------------------------------------------------------------- ** **	The following functions are provided by the pci bios. **	They are used only by the pci configuration. ** **	pb_mode(): **		Probes for a pci system. **		Returns 1 or 2 for pci configuration mechanism. **		Returns 0 if no pci system. ** **	pb_tag(): **		Gets a handle for accessing the pci configuration **		space. **		This handle is given to the mapping functions (see **		above) or to the read/write functions. ** **	pb_read(): **		Read a long word from the pci configuration space. **		Requires a tag (from pcitag) and the register **		number (should be a long word aligned one). ** **	pb_write(): **		Writes a long word to the pci configuration space. **		Requires a tag (from pcitag), the register number **		(should be a long word aligned one), and a value. ** **	pb_regint(): **		Register an interupt handler for a pci device. **		Requires a tag (from pcitag), the handler function **		and it's argument, and an interupt mask. ** **----------------------------------------------------------------- */
+comment|/*----------------------------------------------------------------- ** **	The following functions are provided by the pci bios. **	They are used only by the pci configuration. ** **	pcibus_setup(): **		Probes for a pci system. **		Sets pci_maxdevice and pci_mechanism. ** **	pcibus_tag(): **		Creates a handle for pci configuration space access. **		This handle is given to the read/write functions. ** **	pcibus_ftag(): **		Creates a modified handle. ** **	pcibus_read(): **		Read a long word from the pci configuration space. **		Requires a tag (from pcitag) and the register **		number (should be a long word alligned one). ** **	pcibus_write(): **		Writes a long word to the pci configuration space. **		Requires a tag (from pcitag), the register number **		(should be a long word alligned one), and a value. ** **	pcibus_regirq(): **		Register an interupt handler for a pci device. **		Requires a tag (from pcitag), the register number **		(should be a long word alligned one), and a value. ** **----------------------------------------------------------------- */
 end_comment
 
 begin_struct
@@ -30,10 +28,10 @@ name|char
 modifier|*
 name|pb_name
 decl_stmt|;
-name|int
+name|void
 function_decl|(
 modifier|*
-name|pb_mode
+name|pb_setup
 function_decl|)
 parameter_list|(
 name|void
@@ -50,6 +48,19 @@ name|bus
 parameter_list|,
 name|u_char
 name|device
+parameter_list|,
+name|u_char
+name|func
+parameter_list|)
+function_decl|;
+name|pcici_t
+function_decl|(
+modifier|*
+name|pb_ftag
+function_decl|)
+parameter_list|(
+name|pcici_t
+name|tag
 parameter_list|,
 name|u_char
 name|func
@@ -84,34 +95,88 @@ name|u_long
 name|data
 parameter_list|)
 function_decl|;
+name|unsigned
+name|pb_maxirq
+decl_stmt|;
 name|int
 function_decl|(
 modifier|*
-name|pb_regint
+name|pb_iattach
 function_decl|)
 parameter_list|(
-name|pcici_t
-name|tag
-parameter_list|,
 name|int
+name|irq
+parameter_list|,
+name|void
 function_decl|(
 modifier|*
 name|func
 function_decl|)
 parameter_list|()
 parameter_list|,
-name|void
-modifier|*
+name|int
 name|arg
 parameter_list|,
 name|unsigned
 modifier|*
-name|mp
+name|maskp
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|pb_idetach
+function_decl|)
+parameter_list|(
+name|int
+name|irq
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|func
+function_decl|)
+parameter_list|()
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|pb_imaskinc
+function_decl|)
+parameter_list|(
+name|int
+name|irq
+parameter_list|,
+name|unsigned
+modifier|*
+name|maskptr
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|pb_imaskexc
+function_decl|)
+parameter_list|(
+name|int
+name|irq
+parameter_list|,
+name|unsigned
+modifier|*
+name|maskptr
 parameter_list|)
 function_decl|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|PCI_MAX_IRQ
+value|(16)
+end_define
 
 begin_comment
 comment|/* **	The following structure should be generated by the driver */

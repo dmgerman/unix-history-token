@@ -1,21 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.11 1995/03/02 23:29:44 se Exp $ ** **  Device driver for INTEL PCI chipsets. ** **  386bsd / FreeBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	wolf@dentaro.gun.de	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.12 1995/03/17 04:27:20 davidg Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|__PCISUPPORT_C_PATCHLEVEL__
-value|"pl2 95/02/27"
+name|__PCISUPPORT_C__
+value|"pl4 95/03/21"
 end_define
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/*========================================================== ** **      Include files ** **========================================================== */
-end_comment
 
 begin_include
 include|#
@@ -27,6 +20,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -44,6 +43,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pci/pcivar.h>
 end_include
 
@@ -52,24 +57,6 @@ include|#
 directive|include
 file|<pci/pcireg.h>
 end_include
-
-begin_function_decl
-specifier|extern
-name|void
-name|printf
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|bootverbose
-decl_stmt|;
-end_decl_stmt
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*--------------------------------------------------------- ** **	Intel chipsets for 486 / Pentium processor ** **--------------------------------------------------------- */
@@ -141,20 +128,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_function_decl
-specifier|static
-name|char
-name|confread
-parameter_list|(
-name|pcici_t
-name|config_id
-parameter_list|,
-name|int
-name|port
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_struct
 struct|struct
 name|condmsg
@@ -182,39 +155,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|M_EQ
-value|0
-end_define
-
-begin_comment
-comment|/* mask and return true if equal */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_NE
-value|1
-end_define
-
-begin_comment
-comment|/* mask and return true if not equal */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TRUE
-value|2
-end_define
-
-begin_comment
-comment|/* don't read config, always true */
-end_comment
-
 begin_function
 specifier|static
 name|char
@@ -228,6 +168,9 @@ name|pcidi_t
 name|type
 parameter_list|)
 block|{
+name|u_long
+name|data
+decl_stmt|;
 switch|switch
 condition|(
 name|type
@@ -265,6 +208,47 @@ operator|(
 literal|"Intel 82434LX PCI cache memory controller"
 operator|)
 return|;
+case|case
+literal|0x00011011
+case|:
+return|return
+operator|(
+literal|"DEC 21050 PCI-PCI bridge"
+operator|)
+return|;
+block|}
+empty_stmt|;
+comment|/* 	**	check classes 	*/
+name|data
+operator|=
+name|pci_conf_read
+argument_list|(
+name|tag
+argument_list|,
+name|PCI_CLASS_REG
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|data
+operator|&
+operator|(
+name|PCI_CLASS_MASK
+operator||
+name|PCI_SUBCLASS_MASK
+operator|)
+condition|)
+block|{
+case|case
+name|PCI_CLASS_BRIDGE
+operator||
+name|PCI_SUBCLASS_BRIDGE_PCI
+case|:
+return|return
+operator|(
+literal|"PCI-PCI bridge"
+operator|)
+return|;
 block|}
 empty_stmt|;
 return|return
@@ -279,7 +263,42 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|M_EQ
+value|0
+end_define
+
+begin_comment
+comment|/* mask and return true if equal */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_NE
+value|1
+end_define
+
+begin_comment
+comment|/* mask and return true if not equal */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRUE
+value|2
+end_define
+
+begin_comment
+comment|/* don't read config, always true */
+end_comment
+
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|condmsg
 name|conf82424zx
@@ -883,6 +902,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|condmsg
 name|conf82434lx
@@ -1487,6 +1508,7 @@ parameter_list|(
 name|pcici_t
 name|config_id
 parameter_list|,
+specifier|const
 name|struct
 name|condmsg
 modifier|*
@@ -1612,6 +1634,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|chipset_attach
 parameter_list|(
@@ -1624,16 +1647,17 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|!
 name|bootverbose
 condition|)
-block|{
+return|return;
 switch|switch
 condition|(
 name|pci_conf_read
 argument_list|(
 name|config_id
 argument_list|,
-literal|0
+name|PCI_ID_REG
 argument_list|)
 condition|)
 block|{
@@ -1695,171 +1719,10 @@ break|break;
 block|}
 empty_stmt|;
 block|}
-block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
-comment|/*--------------------------------------------------------- ** **	Catchall driver for pci-pci bridges. ** **--------------------------------------------------------- */
-end_comment
-
-begin_function_decl
-specifier|static
-name|char
-modifier|*
-name|ppb_probe
-parameter_list|(
-name|pcici_t
-name|tag
-parameter_list|,
-name|pcidi_t
-name|type
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|ppb_attach
-parameter_list|(
-name|pcici_t
-name|tag
-parameter_list|,
-name|int
-name|unit
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|static
-name|u_long
-name|ppb_count
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|pci_device
-name|ppb_device
-init|=
-block|{
-literal|"ppb"
-block|,
-name|ppb_probe
-block|,
-name|ppb_attach
-block|,
-operator|&
-name|ppb_count
-block|,
-name|NULL
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|DATA_SET
-argument_list|(
-name|pcidevice_set
-argument_list|,
-name|ppb_device
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_function
-specifier|static
-name|char
-modifier|*
-name|ppb_probe
-parameter_list|(
-name|pcici_t
-name|tag
-parameter_list|,
-name|pcidi_t
-name|type
-parameter_list|)
-block|{
-name|int
-name|data
-init|=
-name|pci_conf_read
-argument_list|(
-name|tag
-argument_list|,
-name|PCI_CLASS_REG
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-operator|(
-name|data
-operator|&
-operator|(
-name|PCI_CLASS_MASK
-operator||
-name|PCI_SUBCLASS_MASK
-operator|)
-operator|)
-operator|==
-operator|(
-name|PCI_CLASS_BRIDGE
-operator||
-name|PCI_SUBCLASS_BRIDGE_PCI
-operator|)
-condition|)
-return|return
-operator|(
-literal|"PCI-PCI bridge"
-operator|)
-return|;
-return|return
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|ppb_attach
-parameter_list|(
-name|pcici_t
-name|tag
-parameter_list|,
-name|int
-name|unit
-parameter_list|)
-block|{
-comment|/* 	**	XXX should read bus number from device 	*/
-operator|(
-name|void
-operator|)
-name|pci_map_bus
-argument_list|(
-name|tag
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/*--------------------------------------------------------- ** **	Catchall driver for VGA devices ** ** **	By Garrett Wollman **<wollman@halloran-eldar.lcs.mit.edu> ** **--------------------------------------------------------- */
+comment|/*--------------------------------------------------------- ** **	Catchall driver for VGA devices ** **	By Garrett Wollman **<wollman@halloran-eldar.lcs.mit.edu> ** **--------------------------------------------------------- */
 end_comment
 
 begin_function_decl
@@ -2020,7 +1883,7 @@ name|int
 name|unit
 parameter_list|)
 block|{
-comment|/* **	The assigned adresses may not be remapped, **	because certain values are assumed by the console driver. */
+comment|/* **	If the assigned addresses are remapped, **	the console driver has to be informed about the new address. */
 if|#
 directive|if
 literal|0
@@ -2029,9 +1892,6 @@ endif|#
 directive|endif
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*--------------------------------------------------------- ** **	Hook for loadable pci drivers ** **--------------------------------------------------------- */
@@ -2116,7 +1976,7 @@ name|pcidi_t
 name|type
 parameter_list|)
 block|{
-comment|/* 	**	Should try to load a matching driver. 	**	XXX Not yet! 	*/
+comment|/* 	**	Not yet! 	**	(Should try to load a matching driver) 	*/
 return|return
 operator|(
 operator|(
@@ -2140,11 +2000,8 @@ parameter_list|,
 name|int
 name|unit
 parameter_list|)
-block|{ }
+block|{}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*--------------------------------------------------------- ** **	Devices to ignore ** **--------------------------------------------------------- */
@@ -2268,7 +2125,7 @@ parameter_list|,
 name|int
 name|unit
 parameter_list|)
-block|{ }
+block|{}
 end_function
 
 end_unit
