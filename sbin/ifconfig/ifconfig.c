@@ -239,6 +239,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|mtu
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|nsellength
 init|=
 literal|1
@@ -309,6 +315,9 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|setifmetric
+argument_list|()
+decl_stmt|,
+name|setifmtu
 argument_list|()
 decl_stmt|,
 name|setifbroadaddr
@@ -586,6 +595,14 @@ name|setifflags
 block|}
 block|,
 block|{
+literal|"mtu"
+block|,
+name|NEXTARG
+block|,
+name|setifmtu
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -826,13 +843,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ifconfig interface\n%s%s%s%s%s"
+literal|"usage: ifconfig interface\n%s%s%s%s%s%s"
 argument_list|,
 literal|"\t[ af [ address [ dest_addr ] ] [ up ] [ down ]"
 argument_list|,
 literal|"[ netmask mask ] ]\n"
 argument_list|,
 literal|"\t[ metric n ]\n"
+argument_list|,
+literal|"\t[ mtu n ]\n"
 argument_list|,
 literal|"\t[ arp | -arp ]\n"
 argument_list|,
@@ -1058,6 +1077,35 @@ operator|=
 name|ifr
 operator|.
 name|ifr_metric
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|s
+argument_list|,
+name|SIOCGIFMTU
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|ifr
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|perror
+argument_list|(
+literal|"ioctl (SIOCGIFMTU)"
+argument_list|)
+expr_stmt|;
+else|else
+name|mtu
+operator|=
+name|ifr
+operator|.
+name|ifr_mtu
 expr_stmt|;
 if|if
 condition|(
@@ -1962,6 +2010,72 @@ block|}
 end_block
 
 begin_macro
+name|setifmtu
+argument_list|(
+argument|val
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|val
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|strncpy
+argument_list|(
+name|ifr
+operator|.
+name|ifr_name
+argument_list|,
+name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ifr
+operator|.
+name|ifr_name
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ifr
+operator|.
+name|ifr_mtu
+operator|=
+name|atoi
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|s
+argument_list|,
+name|SIOCSIFMTU
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|ifr
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|perror
+argument_list|(
+literal|"ioctl (set mtu)"
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
 name|setsnpaoffset
 argument_list|(
 argument|val
@@ -2050,6 +2164,17 @@ argument_list|(
 literal|" metric %d"
 argument_list|,
 name|metric
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mtu
+condition|)
+name|printf
+argument_list|(
+literal|" mtu %d"
+argument_list|,
+name|mtu
 argument_list|)
 expr_stmt|;
 name|putchar
