@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.3 (Berkeley) %G%"
+literal|"@(#)main.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -684,6 +684,11 @@ name|dups
 modifier|*
 name|dp
 decl_stmt|;
+name|struct
+name|zlncnt
+modifier|*
+name|zlnp
+decl_stmt|;
 name|devname
 operator|=
 name|filesys
@@ -1033,7 +1038,66 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|zlnhead
+operator|!=
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"The following zero link count inodes remain:"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|zlnp
+operator|=
+name|zlnhead
+init|;
+name|zlnp
+condition|;
+name|zlnp
+operator|=
+name|zlnp
+operator|->
+name|next
+control|)
+name|printf
+argument_list|(
+literal|" %d,"
+argument_list|,
+name|zlnp
+operator|->
+name|zlncnt
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 block|}
+block|}
+name|zlnhead
+operator|=
+operator|(
+expr|struct
+name|zlncnt
+operator|*
+operator|)
+literal|0
+expr_stmt|;
+name|duplist
+operator|=
+operator|(
+expr|struct
+name|dups
+operator|*
+operator|)
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|dfile

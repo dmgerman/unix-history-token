@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass4.c	5.1 (Berkeley) %G%"
+literal|"@(#)pass4.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -189,6 +189,29 @@ operator|==
 name|inumber
 condition|)
 block|{
+name|zlnp
+operator|->
+name|zlncnt
+operator|=
+name|zlnhead
+operator|->
+name|zlncnt
+expr_stmt|;
+name|zlnp
+operator|=
+name|zlnhead
+expr_stmt|;
+name|zlnhead
+operator|=
+name|zlnhead
+operator|->
+name|next
+expr_stmt|;
+name|free
+argument_list|(
+name|zlnp
+argument_list|)
+expr_stmt|;
 name|clri
 argument_list|(
 operator|&
@@ -359,7 +382,11 @@ name|duplist
 operator|->
 name|next
 expr_stmt|;
-comment|/* free(dlp); */
+name|free
+argument_list|(
+name|dlp
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 if|if
