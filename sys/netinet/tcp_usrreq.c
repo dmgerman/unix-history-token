@@ -831,7 +831,7 @@ specifier|const
 name|int
 name|inirw
 init|=
-name|INI_READ
+name|INI_WRITE
 decl_stmt|;
 name|COMMON_START
 argument_list|()
@@ -958,7 +958,7 @@ specifier|const
 name|int
 name|inirw
 init|=
-name|INI_READ
+name|INI_WRITE
 decl_stmt|;
 name|COMMON_START
 argument_list|()
@@ -1179,7 +1179,7 @@ specifier|const
 name|int
 name|inirw
 init|=
-name|INI_READ
+name|INI_WRITE
 decl_stmt|;
 name|COMMON_START
 argument_list|()
@@ -1275,7 +1275,7 @@ specifier|const
 name|int
 name|inirw
 init|=
-name|INI_READ
+name|INI_WRITE
 decl_stmt|;
 name|COMMON_START
 argument_list|()
