@@ -139,6 +139,13 @@ name|VFLAG
 value|0x20
 end_define
 
+begin_define
+define|#
+directive|define
+name|IFLAG
+value|0x40
+end_define
+
 begin_typedef
 typedef|typedef
 name|void
@@ -154,6 +161,8 @@ end_typedef
 
 begin_decl_stmt
 name|get_t
+name|get_ident
+decl_stmt|,
 name|get_platform
 decl_stmt|,
 name|get_hostname
@@ -167,6 +176,15 @@ decl_stmt|,
 name|get_version
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|native_ident
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -252,6 +270,9 @@ end_function_decl
 begin_decl_stmt
 name|char
 modifier|*
+name|ident
+decl_stmt|,
+modifier|*
 name|platform
 decl_stmt|,
 modifier|*
@@ -314,7 +335,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"amnprsv"
+literal|"aimnprsv"
 argument_list|)
 operator|)
 operator|!=
@@ -342,6 +363,14 @@ name|SFLAG
 operator||
 name|VFLAG
 operator|)
+expr_stmt|;
+break|break;
+case|case
+literal|'i'
+case|:
+name|flags
+operator||=
+name|IFLAG
 expr_stmt|;
 break|break;
 case|case
@@ -499,6 +528,13 @@ argument_list|,
 name|arch
 argument_list|)
 expr_stmt|;
+name|CHECK_ENV
+argument_list|(
+literal|"i"
+argument_list|,
+name|ident
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -577,6 +613,15 @@ argument_list|,
 name|PFLAG
 argument_list|,
 name|arch
+argument_list|)
+expr_stmt|;
+name|PRINT_FLAG
+argument_list|(
+name|flags
+argument_list|,
+name|IFLAG
+argument_list|,
+name|ident
 argument_list|)
 expr_stmt|;
 name|printf
@@ -786,6 +831,26 @@ name|NATIVE_SET
 expr_stmt|;
 end_expr_stmt
 
+begin_macro
+name|NATIVE_SYSCTL2_GET
+argument_list|(
+argument|ident
+argument_list|,
+argument|CTL_KERN
+argument_list|,
+argument|KERN_IDENT
+argument_list|)
+end_macro
+
+begin_block
+block|{ }
+end_block
+
+begin_expr_stmt
+name|NATIVE_SET
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|void
 name|usage
@@ -797,7 +862,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: uname [-amnprsv]\n"
+literal|"usage: uname [-aimnprsv]\n"
 argument_list|)
 expr_stmt|;
 name|exit
