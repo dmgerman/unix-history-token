@@ -872,7 +872,7 @@ name|SEGEX_IDX
 parameter_list|(
 name|s
 parameter_list|)
-value|((s)>>3)&0x1fff)
+value|(((s)>>3)&0x1fff)
 end_define
 
 begin_comment
