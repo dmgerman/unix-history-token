@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.4 (Berkeley) %G%"
+literal|"@(#)main.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -218,6 +218,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* the actual user id on this host */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|CommandLineArgs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* command line args for pid file */
 end_comment
 
 begin_comment
@@ -957,6 +968,105 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* save command line arguments */
+end_comment
+
+begin_expr_stmt
+name|i
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_for
+for|for
+control|(
+name|av
+operator|=
+name|argv
+init|;
+operator|*
+name|av
+operator|!=
+name|NULL
+condition|;
+control|)
+name|i
+operator|+=
+name|strlen
+argument_list|(
+operator|*
+name|av
+operator|++
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
+end_for
+
+begin_expr_stmt
+name|CommandLineArgs
+operator|=
+name|xalloc
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|p
+operator|=
+name|CommandLineArgs
+expr_stmt|;
+end_expr_stmt
+
+begin_for
+for|for
+control|(
+name|av
+operator|=
+name|argv
+init|;
+operator|*
+name|av
+operator|!=
+name|NULL
+condition|;
+control|)
+block|{
+if|if
+condition|(
+name|av
+operator|!=
+name|argv
+condition|)
+operator|*
+name|p
+operator|++
+operator|=
+literal|' '
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|p
+argument_list|,
+operator|*
+name|av
+operator|++
+argument_list|)
+expr_stmt|;
+name|p
+operator|+=
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+block|}
+end_for
 
 begin_comment
 comment|/* Handle any non-getoptable constructions. */

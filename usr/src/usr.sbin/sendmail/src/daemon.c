@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.3 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.4 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.3 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.4 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -560,6 +560,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
+specifier|extern
+name|char
+modifier|*
+name|CommandLineArgs
+decl_stmt|;
+comment|/* write the process id on line 1 */
 name|fprintf
 argument_list|(
 name|pidf
@@ -570,6 +576,17 @@ name|getpid
 argument_list|()
 argument_list|)
 expr_stmt|;
+comment|/* line 2 contains all command line flags */
+name|fprintf
+argument_list|(
+name|pidf
+argument_list|,
+literal|"%s\n"
+argument_list|,
+name|CommandLineArgs
+argument_list|)
+expr_stmt|;
+comment|/* flush and close */
 name|fclose
 argument_list|(
 name|pidf
