@@ -230,9 +230,9 @@ name|dev
 argument_list|,
 literal|0x50
 argument_list|,
-literal|2
-argument_list|,
 name|pmccfg
+argument_list|,
+literal|2
 argument_list|)
 expr_stmt|;
 block|}
@@ -264,9 +264,9 @@ name|dev
 argument_list|,
 literal|0x50
 argument_list|,
-literal|2
-argument_list|,
 name|pmccfg
+argument_list|,
+literal|2
 argument_list|)
 expr_stmt|;
 block|}
