@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	4.2	%G%	*/
+comment|/*	user.h	4.3	%G%	*/
 end_comment
 
 begin_ifdef
@@ -77,13 +77,6 @@ end_endif
 begin_comment
 comment|/*  * The user structure.  * One allocated per process.  * Contains all per process data  * that doesn't need to be referenced  * while the process is swapped.  * The user block is UPAGES*NBPG bytes  * long; resides at virtual user  * loc 0x80000000-UPAGES*NBPG; contains the system  * stack per user; is cross referenced  * with the proc structure for the  * same process.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|EXCLOSE
-value|01
-end_define
 
 begin_define
 define|#
@@ -240,6 +233,16 @@ name|NOFILE
 index|]
 decl_stmt|;
 comment|/* per-process flags of open files */
+define|#
+directive|define
+name|EXCLOSE
+value|01
+comment|/* auto-close on exec */
+define|#
+directive|define
+name|ISPORT
+value|02
+comment|/* is a port */
 name|label_t
 name|u_ssav
 decl_stmt|;
