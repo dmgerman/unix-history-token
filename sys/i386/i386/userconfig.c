@@ -1529,7 +1529,7 @@ block|,
 block|{
 literal|"sb"
 block|,
-literal|"VOXWARE Soundblaster PCM (SB, SBPro, SB16, ProAudio Spectrum)"
+literal|"VOXWARE Soundblaster PCM (SB/Pro/16, ProAudio Spectrum)"
 block|,
 literal|0
 block|,
@@ -1619,7 +1619,7 @@ block|,
 block|{
 literal|"opl"
 block|,
-literal|"VOXWARE OPL-2/3 FM, Soundblaster, SBPro, SB16, ProAudio Spectrum"
+literal|"VOXWARE OPL-2/3 FM, SB/Pro/16, ProAudio Spectrum"
 block|,
 literal|0
 block|,
