@@ -1481,7 +1481,7 @@ argument|, flcnt, rdcnt, wrcnt); 	(void)fflush(listf); 	flcnt =
 literal|0
 argument|; }
 comment|/*  * ar_drain()  *	drain any archive format independent padding from an archive read  *	from a socket or a pipe. This is to prevent the process on the  *	other side of the pipe from getting a SIGPIPE (pax will stop  *	reading an archive once a format dependent trailer is detected).  */
-argument|void ar_drain(void) { 	register int res; 	char drbuf[MAXBLK];
+argument|void ar_drain(void) { 	int res; 	char drbuf[MAXBLK];
 comment|/* 	 * we only drain from a pipe/socket. Other devices can be closed 	 * without reading up to end of file. We sure hope that pipe is closed 	 * on the other side so we will get an EOF. 	 */
 argument|if ((artyp != ISPIPE) || (lstrval<=
 literal|0
@@ -1533,7 +1533,7 @@ argument|, 		rdblksz, argv0); 	return(-
 literal|1
 argument|); }
 comment|/*  * ar_read()  *	read up to a specified number of bytes from the archive into the  *	supplied buffer. When dealing with tapes we may not always be able to  *	read what we want.  * Return:  *	Number of bytes in buffer. 0 for end of file, -1 for a read error.  */
-argument|int ar_read(register char *buf, register int cnt) { 	register int res =
+argument|int ar_read(char *buf, int cnt) { 	int res =
 literal|0
 argument|;
 comment|/* 	 * if last i/o was in error, no more reads until reset or new volume 	 */
@@ -1571,7 +1571,7 @@ argument|,
 literal|"End of archive volume %d reached"
 argument|, arvol); 	return(res); }
 comment|/*  * ar_write()  *	Write a specified number of bytes in supplied buffer to the archive  *	device so it appears as a single "block". Deals with errors and tries  *	to recover when faced with short writes.  * Return:  *	Number of bytes written. 0 indicates end of volume reached and with no  *	flaws (as best that can be detected). A -1 indicates an unrecoverable  *	error in the archive occured.  */
-argument|int ar_write(register char *buf, register int bsz) { 	register int res; 	off_t cpos;
+argument|int ar_write(char *buf, int bsz) { 	int res; 	off_t cpos;
 comment|/* 	 * do not allow pax to create a "bad" archive. Once a write fails on 	 * an archive volume prevent further writes to it. 	 */
 argument|if (lstrval<=
 literal|0
@@ -1759,7 +1759,7 @@ argument|; 	return(-
 literal|1
 argument|); }
 comment|/*  * ar_rev()  *	move the i/o position within the archive backwards the specified byte  *	count as supported by the device. With tapes drives we RESET rdblksz to  *	the PHYSICAL blocksize.  *	NOTE: We should only be called to move backwards so we can rewrite the  *	last records (the trailer) of an archive (APPEND).  * Return:  *	0 if moved the requested distance, -1 on complete failure  */
-argument|int ar_rev(off_t sksz) { 	off_t cpos; 	struct mtop mb; 	register int phyblk;
+argument|int ar_rev(off_t sksz) { 	off_t cpos; 	struct mtop mb; 	int phyblk;
 comment|/* 	 * make sure we do not have try to reverse on a flawed archive 	 */
 argument|if (lstrval<
 literal|0
@@ -1861,9 +1861,9 @@ argument|; 	return(
 literal|0
 argument|); }
 comment|/*  * get_phys()  *	Determine the physical block size on a tape drive. We need the physical  *	block size so we know how many bytes we skip over when we move with  *	mtio commands. We also make sure we are BEFORE THE TAPE FILEMARK when  *	return.  *	This is one really SLOW routine...  * Return:  *	physical block size if ok (ok> 0), -1 otherwise  */
-argument|static int get_phys(void) { 	register int padsz =
+argument|static int get_phys(void) { 	int padsz =
 literal|0
-argument|; 	register int res; 	register int phyblk; 	struct mtop mb; 	char scbuf[MAXBLK];
+argument|; 	int res; 	int phyblk; 	struct mtop mb; 	char scbuf[MAXBLK];
 comment|/* 	 * move to the file mark, and then back up one record and read it. 	 * this should tell us the physical record size the tape is using. 	 */
 argument|if (lstrval ==
 literal|1

@@ -334,7 +334,6 @@ name|int
 name|len
 parameter_list|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|pt

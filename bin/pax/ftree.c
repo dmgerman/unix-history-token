@@ -381,7 +381,6 @@ begin_function
 name|int
 name|ftree_add
 parameter_list|(
-specifier|register
 name|char
 modifier|*
 name|str
@@ -390,12 +389,10 @@ name|int
 name|chflg
 parameter_list|)
 block|{
-specifier|register
 name|FTREE
 modifier|*
 name|ft
 decl_stmt|;
-specifier|register
 name|int
 name|len
 decl_stmt|;
@@ -568,7 +565,6 @@ begin_function
 name|void
 name|ftree_sel
 parameter_list|(
-specifier|register
 name|ARCHD
 modifier|*
 name|arcn
@@ -642,12 +638,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|register
 name|FTREE
 modifier|*
 name|ft
 decl_stmt|;
-specifier|register
 name|int
 name|wban
 init|=
@@ -742,7 +736,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|pt
@@ -978,13 +971,11 @@ begin_function
 name|int
 name|next_file
 parameter_list|(
-specifier|register
 name|ARCHD
 modifier|*
 name|arcn
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|cnt
 decl_stmt|;
