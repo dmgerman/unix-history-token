@@ -192,7 +192,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Various supported device vendors/types and their names.  */
+comment|/*  * Various supported device vendors/products.  */
 end_comment
 
 begin_decl_stmt
@@ -207,64 +207,48 @@ block|{
 name|USB_VENDOR_ADMTEK
 block|,
 name|USB_PRODUCT_ADMTEK_PEGASUS
-block|,
-literal|"ADMtek AN986 Pegasus 10/100BaseTX"
 block|}
 block|,
 block|{
 name|USB_VENDOR_BILLIONTON
 block|,
 name|USB_PRODUCT_BILLIONTON_USB100
-block|,
-literal|"ADMtek AN986 Pegasus 10/100BaseTX"
 block|}
 block|,
 block|{
 name|USB_VENDOR_MELCO
 block|,
 name|USB_PRODUCT_MELCO_LUATX
-block|,
-literal|"ADMtek AN986 Pegasus 10/100BaseTX"
 block|}
 block|,
 block|{
 name|USB_VENDOR_DLINK
 block|,
 name|USB_PRODUCT_DLINK_DSB650TX
-block|,
-literal|"ADMtek AN986 Pegasus 10/100BaseTX"
 block|}
 block|,
 block|{
 name|USB_VENDOR_DLINK
 block|,
 name|USB_PRODUCT_DLINK_DSB650TX_PNA
-block|,
-literal|"ADMtek AN986 Pegasus 10/100BaseTX"
 block|}
 block|,
 block|{
 name|USB_VENDOR_SMC
 block|,
 name|USB_PRODUCT_SMC_2202USB
-block|,
-literal|"ADMtek AN986 Pegasus 10/100BaseTX"
 block|}
 block|,
 block|{
 name|USB_VENDOR_LINKSYS
 block|,
 name|USB_PRODUCT_LINKSYS_USB100TX
-block|,
-literal|"ADMtek AN986 Pegasus 10/100BaseTX"
 block|}
 block|,
 block|{
 literal|0
 block|,
 literal|0
-block|,
-name|NULL
 block|}
 block|}
 decl_stmt|;
@@ -2627,9 +2611,7 @@ while|while
 condition|(
 name|t
 operator|->
-name|aue_name
-operator|!=
-name|NULL
+name|aue_vid
 condition|)
 block|{
 if|if
@@ -2651,15 +2633,6 @@ operator|->
 name|aue_did
 condition|)
 block|{
-name|device_set_desc
-argument_list|(
-name|self
-argument_list|,
-name|t
-operator|->
-name|aue_name
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|UMATCH_VENDOR_PRODUCT
@@ -2777,6 +2750,37 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|usbd_set_config_no
+argument_list|(
+name|sc
+operator|->
+name|aue_udev
+argument_list|,
+name|AUE_CONFIG_NO
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"aue%d: getting interface handle failed\n"
+argument_list|,
+name|sc
+operator|->
+name|aue_unit
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+name|USB_ATTACH_ERROR_RETURN
+expr_stmt|;
+block|}
 name|t
 operator|=
 name|aue_devs
@@ -2785,9 +2789,7 @@ while|while
 condition|(
 name|t
 operator|->
-name|aue_name
-operator|!=
-name|NULL
+name|aue_vid
 condition|)
 block|{
 if|if
@@ -3163,7 +3165,7 @@ name|ifq_maxlen
 operator|=
 name|IFQ_MAXLEN
 expr_stmt|;
-comment|/* 	 * Do MII setup. 	 * NOTE: Doing this causes child devices to be attached to us, 	 * which we would normally disconnect at in the detach routine 	 * using device_delete_child(). However the USB code is set up 	 * such that when this driver is removed, all childred devices 	 * are removed as well. In effect, the USB code ends up detaching 	 * all of our children for us, so we don't have to do is ourselves 	 * in aue_detach(). It's important to point this out since if 	 * we *do* try to detach the child devices ourselves, we will 	 * end up getting the children deleted twice, which will crash 	 * the system. 	 */
+comment|/* 	 * Do MII setup. 	 * NOTE: Doing this causes child devices to be attached to us, 	 * which we would normally disconnect at in the detach routine 	 * using device_delete_child(). However the USB code is set up 	 * such that when this driver is removed, all children devices 	 * are removed as well. In effect, the USB code ends up detaching 	 * all of our children for us, so we don't have to do is ourselves 	 * in aue_detach(). It's important to point this out since if 	 * we *do* try to detach the child devices ourselves, we will 	 * end up getting the children deleted twice, which will crash 	 * the system. 	 */
 if|if
 condition|(
 name|mii_phy_probe
@@ -5058,10 +5060,8 @@ name|m_pkthdr
 operator|.
 name|len
 operator|>>
-literal|3
+literal|8
 argument_list|)
-operator|&
-literal|0xE0
 expr_stmt|;
 name|usbd_setup_xfer
 argument_list|(

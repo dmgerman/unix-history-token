@@ -466,6 +466,13 @@ name|CUE_CTL_WRITE
 value|0x02
 end_define
 
+begin_define
+define|#
+directive|define
+name|CUE_CONFIG_NO
+value|1
+end_define
+
 begin_comment
 comment|/*  * The interrupt endpoint is currently unused  * by the KLSI part.  */
 end_comment
@@ -507,10 +514,6 @@ name|cue_vid
 decl_stmt|;
 name|u_int16_t
 name|cue_did
-decl_stmt|;
-name|char
-modifier|*
-name|cue_name
 decl_stmt|;
 block|}
 struct|;

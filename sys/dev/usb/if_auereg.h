@@ -63,6 +63,13 @@ name|AUE_UR_WRITEREG
 value|0xF1
 end_define
 
+begin_define
+define|#
+directive|define
+name|AUE_CONFIG_NO
+value|1
+end_define
+
 begin_comment
 comment|/*  * Note that while the ADMtek technically has four  * endpoints, the control endpoint (endpoint 0) is  * regarded as special by the USB code and drivers  * don't have direct access to it. (We access it  * using usbd_do_request() when reading/writing  * registers.) Consequently, our endpoint indexes  * don't match those in the ADMtek Pegasus manual:  * we consider the RX data endpoint to be index 0  * and work up from there.  */
 end_comment
@@ -831,10 +838,6 @@ name|aue_vid
 decl_stmt|;
 name|u_int16_t
 name|aue_did
-decl_stmt|;
-name|char
-modifier|*
-name|aue_name
 decl_stmt|;
 block|}
 struct|;

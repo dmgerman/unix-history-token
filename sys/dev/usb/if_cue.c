@@ -170,7 +170,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Various supported device vendors/types and their names.  */
+comment|/*  * Various supported device vendors/products.  */
 end_comment
 
 begin_decl_stmt
@@ -185,24 +185,18 @@ block|{
 name|USB_VENDOR_CATC
 block|,
 name|USB_PRODUCT_CATC_NETMATE
-block|,
-literal|"CATC Netmate USB Ethernet"
 block|}
 block|,
 block|{
 name|USB_VENDOR_CATC
 block|,
 name|USB_PRODUCT_CATC_NETMATE2
-block|,
-literal|"CATC Netmate USB Ethernet"
 block|}
 block|,
 block|{
 literal|0
 block|,
 literal|0
-block|,
-name|NULL
 block|}
 block|}
 decl_stmt|;
@@ -2016,9 +2010,7 @@ while|while
 condition|(
 name|t
 operator|->
-name|cue_name
-operator|!=
-name|NULL
+name|cue_vid
 condition|)
 block|{
 if|if
@@ -2058,15 +2050,6 @@ operator|=
 name|usbd_find_quirk
 argument_list|(
 name|dd
-argument_list|)
-expr_stmt|;
-name|device_set_desc
-argument_list|(
-name|self
-argument_list|,
-name|t
-operator|->
-name|cue_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -2181,6 +2164,37 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|usbd_set_config_no
+argument_list|(
+name|sc
+operator|->
+name|cue_udev
+argument_list|,
+name|CUE_CONFIG_NO
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"cue%d: getting interface handle failed\n"
+argument_list|,
+name|sc
+operator|->
+name|cue_unit
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+name|USB_ATTACH_ERROR_RETURN
+expr_stmt|;
+block|}
 name|id
 operator|=
 name|usbd_get_interface_descriptor

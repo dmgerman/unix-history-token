@@ -182,7 +182,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Various supported device vendors/types and their names.  */
+comment|/*  * Various supported device vendors/products.  */
 end_comment
 
 begin_decl_stmt
@@ -197,96 +197,72 @@ block|{
 name|USB_VENDOR_AOX
 block|,
 name|USB_PRODUCT_AOX_USB101
-block|,
-literal|"KLSI USB ethernet"
 block|}
 block|,
 block|{
 name|USB_VENDOR_ADS
 block|,
 name|USB_PRODUCT_ADS_ENET
-block|,
-literal|"KLSI USB ethernet"
 block|}
 block|,
 block|{
 name|USB_VENDOR_ATEN
 block|,
 name|USB_PRODUCT_ATEN_UC10T
-block|,
-literal|"KLSI USB ethernet"
 block|}
 block|,
 block|{
 name|USB_VENDOR_NETGEAR
 block|,
 name|USB_PRODUCT_NETGEAR_EA101
-block|,
-literal|"KLSI USB ethernet"
 block|}
 block|,
 block|{
 name|USB_VENDOR_PERACOM
 block|,
 name|USB_PRODUCT_PERACOM_ENET
-block|,
-literal|"KLSI USB ethernet"
 block|}
 block|,
 block|{
 name|USB_VENDOR_PERACOM
 block|,
 name|USB_PRODUCT_PERACOM_ENET2
-block|,
-literal|"KLSI USB ethernet"
 block|}
 block|,
 block|{
 name|USB_VENDOR_ENTREGA
 block|,
 name|USB_PRODUCT_ENTREGA_E45
-block|,
-literal|"KLSI USB ethernet"
 block|}
 block|,
 block|{
 name|USB_VENDOR_3COM
 block|,
 name|USB_PRODUCT_3COM_3C19250
-block|,
-literal|"KLSI USB ethernet"
 block|}
 block|,
 block|{
 name|USB_VENDOR_COREGA
 block|,
 name|USB_PRODUCT_COREGA_USB_T
-block|,
-literal|"KLSI USB ethernet"
 block|}
 block|,
 block|{
 name|USB_VENDOR_DLINK
 block|,
 name|USB_PRODUCT_DLINK_DSB650C
-block|,
-literal|"KLSI USB ethernet"
 block|}
 block|,
 block|{
 name|USB_VENDOR_SMC
 block|,
 name|USB_PRODUCT_SMC_2102USB
-block|,
-literal|"KLSI USB ethernet"
 block|}
 block|,
 block|{
 literal|0
 block|,
 literal|0
-block|,
-name|NULL
 block|}
 block|}
 decl_stmt|;
@@ -1538,17 +1514,30 @@ modifier|*
 name|sc
 decl_stmt|;
 block|{
+if|if
+condition|(
 name|usbd_set_config_no
 argument_list|(
 name|sc
 operator|->
 name|kue_udev
 argument_list|,
-literal|1
+name|KUE_CONFIG_NO
 argument_list|,
 literal|0
 argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"kue%d: getting interface handle failed\n"
+argument_list|,
+name|sc
+operator|->
+name|kue_unit
+argument_list|)
 expr_stmt|;
+block|}
 comment|/* Wait a little while for the chip to get its brains in order. */
 name|DELAY
 argument_list|(
@@ -1617,9 +1606,7 @@ while|while
 condition|(
 name|t
 operator|->
-name|kue_name
-operator|!=
-name|NULL
+name|kue_vid
 condition|)
 block|{
 if|if
@@ -1660,15 +1647,6 @@ operator|=
 name|usbd_find_quirk
 argument_list|(
 name|dd
-argument_list|)
-expr_stmt|;
-name|device_set_desc
-argument_list|(
-name|self
-argument_list|,
-name|t
-operator|->
-name|kue_name
 argument_list|)
 expr_stmt|;
 return|return
