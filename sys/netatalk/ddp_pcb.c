@@ -2883,7 +2883,7 @@ name|sosend
 block|,
 name|soreceive
 block|,
-name|soselect
+name|sopoll
 block|}
 decl_stmt|;
 end_decl_stmt
