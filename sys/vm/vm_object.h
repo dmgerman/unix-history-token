@@ -52,7 +52,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  *	Types defined:  *  *	vm_object_t		Virtual memory object.  *  */
+comment|/*  *	Types defined:  *  *	vm_object_t		Virtual memory object.  *  * List of locks  *	(c)	const until freed  *  */
 end_comment
 
 begin_struct
@@ -108,7 +108,7 @@ comment|/* how many objects that this is a shadow for */
 name|int
 name|hash_rand
 decl_stmt|;
-comment|/* vm hash table randomizer	*/
+comment|/* (c) hash table randomizer */
 name|objtype_t
 name|type
 decl_stmt|;
@@ -120,7 +120,7 @@ comment|/* see below */
 name|u_short
 name|pg_color
 decl_stmt|;
-comment|/* color of first page in obj */
+comment|/* (c) color of first page in obj */
 name|u_short
 name|paging_in_progress
 decl_stmt|;
