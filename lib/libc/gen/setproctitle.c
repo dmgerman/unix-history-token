@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 Peter Wemm<peter@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, is permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Peter Wemm.  *  * $Id$  */
+comment|/*  * Copyright (c) 1995 Peter Wemm<peter@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, is permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Peter Wemm.  *  * $Id: setproctitle.c,v 1.5 1997/02/22 15:08:33 peter Exp $  */
 end_comment
 
 begin_include
@@ -135,7 +135,7 @@ begin_define
 define|#
 directive|define
 name|SPT_BUFSIZE
-value|2048
+value|128
 end_define
 
 begin_comment
@@ -153,6 +153,15 @@ end_decl_stmt
 begin_comment
 comment|/* is this defined in a .h anywhere? */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|ps_strings
+modifier|*
+name|ps_strings
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|void
@@ -211,11 +220,6 @@ name|mib
 index|[
 literal|2
 index|]
-decl_stmt|;
-name|struct
-name|ps_strings
-modifier|*
-name|ps_strings
 decl_stmt|;
 name|size_t
 name|len
@@ -335,10 +339,13 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|ps_strings
-operator|=
+operator|==
 name|NULL
-expr_stmt|;
+condition|)
+block|{
 name|mib
 index|[
 literal|0
@@ -389,6 +396,7 @@ name|ps_strings
 operator|=
 name|PS_STRINGS
 expr_stmt|;
+block|}
 comment|/* PS_STRINGS points to zeroed memory on a style #2 kernel */
 if|if
 condition|(
