@@ -1466,6 +1466,15 @@ argument_list|,
 name|cookiep
 argument_list|)
 return|;
+if|if
+condition|(
+name|irq
+operator|==
+name|NULL
+condition|)
+return|return
+name|ENODEV
+return|;
 name|error
 operator|=
 name|rman_activate_resource
