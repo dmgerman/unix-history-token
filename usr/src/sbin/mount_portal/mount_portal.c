@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount_portal.c	8.3 (Berkeley) %G%"
+literal|"@(#)mount_portal.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -837,9 +837,6 @@ block|}
 continue|continue;
 block|}
 comment|/* 		 * Now fork a new child to deal with the connection 		 */
-ifdef|#
-directive|ifdef
-name|notdef
 name|eagain
 label|:
 empty_stmt|;
@@ -915,16 +912,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-endif|#
-directive|endif
-name|activate
-argument_list|(
-operator|&
-name|q
-argument_list|,
-name|so2
-argument_list|)
-expr_stmt|;
 block|}
 name|syslog
 argument_list|(
