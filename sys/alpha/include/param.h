@@ -522,20 +522,6 @@ value|((x)<< DEV_BSHIFT)
 end_define
 
 begin_comment
-comment|/*  * Map a ``block device block'' to a file system block.  * This should be device dependent, and should use the bsize  * field from the disk label.  * For now though just use DEV_BSIZE.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|bdbtofsb
-parameter_list|(
-name|bn
-parameter_list|)
-value|((bn) / (BLKDEV_IOSIZE/DEV_BSIZE))
-end_define
-
-begin_comment
 comment|/*  * Mach derived conversion macros  */
 end_comment
 
