@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	4.11 82/11/15"
+literal|"@(#)telnetd.c	4.12 82/11/17"
 decl_stmt|;
 end_decl_stmt
 
@@ -537,7 +537,7 @@ name|s
 operator|=
 name|socket
 argument_list|(
-literal|0
+name|AF_INET
 argument_list|,
 name|SOCK_STREAM
 argument_list|,

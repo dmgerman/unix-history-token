@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	4.12 (Berkeley) %G%"
+literal|"@(#)telnet.c	4.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1085,7 +1085,7 @@ name|net
 operator|=
 name|socket
 argument_list|(
-literal|0
+name|AF_INET
 argument_list|,
 name|SOCK_STREAM
 argument_list|,
