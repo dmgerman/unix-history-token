@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)swapon.c	4.4 (Berkeley) %G%"
+literal|"@(#)swapon.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -178,6 +178,10 @@ name|sys_errlist
 index|[
 name|errno
 index|]
+argument_list|,
+name|fsp
+operator|->
+name|fs_spec
 argument_list|)
 expr_stmt|;
 name|stat
