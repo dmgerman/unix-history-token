@@ -917,6 +917,10 @@ argument_list|(
 name|Lastscore
 index|[
 name|myturn
+condition|?
+literal|1
+else|:
+literal|0
 index|]
 argument_list|,
 literal|'.'
@@ -927,6 +931,10 @@ expr_stmt|;
 name|Lastscore
 index|[
 name|myturn
+condition|?
+literal|1
+else|:
+literal|0
 index|]
 operator|=
 operator|*

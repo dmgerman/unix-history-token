@@ -118,10 +118,6 @@ name|void
 name|instructions
 parameter_list|()
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 name|struct
 name|stat
 name|sb
@@ -227,6 +223,7 @@ name|_PATH_MORE
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|pager
 operator|=
 name|rindex
@@ -235,6 +232,9 @@ name|path
 argument_list|,
 literal|'/'
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 operator|++
 name|pager

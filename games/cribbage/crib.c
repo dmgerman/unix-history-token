@@ -682,11 +682,6 @@ name|void
 name|gamescore
 parameter_list|()
 block|{
-specifier|extern
-name|int
-name|Lastscore
-index|[]
-decl_stmt|;
 if|if
 condition|(
 name|pgames
@@ -764,6 +759,10 @@ decl_stmt|;
 name|BOOLEAN
 name|compcrib
 decl_stmt|;
+name|compcrib
+operator|=
+name|FALSE
+expr_stmt|;
 name|makedeck
 argument_list|(
 name|deck
@@ -1992,6 +1991,8 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* sum of cards played */
+name|played
+operator|=
 name|mego
 operator|=
 name|ugo
