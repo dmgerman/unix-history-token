@@ -1524,16 +1524,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"malloc: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 name|nuids
@@ -2215,16 +2210,11 @@ argument_list|(
 name|uids
 argument_list|)
 expr_stmt|;
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"realloc: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"realloc"
 argument_list|)
 expr_stmt|;
 block|}
