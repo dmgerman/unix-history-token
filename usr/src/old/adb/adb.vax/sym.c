@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sym.c 4.2 %G%"
+literal|"@(#)sym.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -191,6 +191,7 @@ name|n_type
 operator|&
 name|N_STAB
 operator|||
+operator|!
 operator|(
 name|sp
 operator|->
@@ -198,8 +199,16 @@ name|n_type
 operator|&
 name|N_EXT
 operator|)
+operator|||
+name|sp
+operator|->
+name|n_type
 operator|==
-literal|0
+operator|(
+name|N_FN
+operator||
+name|N_EXT
+operator|)
 condition|)
 continue|continue;
 if|if
