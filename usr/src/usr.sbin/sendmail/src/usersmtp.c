@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.6 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.7 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.6 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.7 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2872,15 +2872,45 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+name|char
+modifier|*
+name|p
+init|=
+name|wbuf
+decl_stmt|;
+if|if
+condition|(
+name|e
+operator|->
+name|e_to
+operator|!=
+name|NULL
+condition|)
+block|{
 name|sprintf
 argument_list|(
-name|wbuf
+name|p
 argument_list|,
-literal|"%s... reply(%s) during %s"
+literal|"%s... "
 argument_list|,
 name|e
 operator|->
 name|e_to
+argument_list|)
+expr_stmt|;
+name|p
+operator|+=
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+block|}
+name|sprintf
+argument_list|(
+name|p
+argument_list|,
+literal|"reply(%s) during %s"
 argument_list|,
 name|mci
 operator|->
