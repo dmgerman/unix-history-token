@@ -444,6 +444,9 @@ index|[
 literal|32
 index|]
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|vfsname
 operator|=
 name|NULL
@@ -472,11 +475,22 @@ name|error
 operator|)
 return|;
 comment|/* don't complain */
+name|s
+operator|=
+name|splcam
+argument_list|()
+expr_stmt|;
+comment|/* Overkill, but annoying without it */
 name|printf
 argument_list|(
 literal|"Mounting root from %s\n"
 argument_list|,
 name|mountfrom
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 comment|/* parse vfs name and path */
