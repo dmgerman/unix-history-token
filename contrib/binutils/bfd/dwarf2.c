@@ -5726,6 +5726,14 @@ return|;
 block|}
 if|if
 condition|(
+name|unit
+operator|->
+name|first_child_die_ptr
+operator|<
+name|unit
+operator|->
+name|end_ptr
+operator|&&
 operator|!
 name|scan_unit_for_functions
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* GAS interface for targets using CGEN: Cpu tools GENerator.    Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* GAS interface for targets using CGEN: Cpu tools GENerator.    Copyright 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -55,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|"cgen.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"dwarf2dbg.h"
 end_include
 
 begin_comment
@@ -178,6 +184,9 @@ name|expP
 parameter_list|)
 name|int
 name|opindex
+decl_stmt|;
+name|int
+name|opinfo
 decl_stmt|;
 name|expressionS
 modifier|*
@@ -666,6 +675,13 @@ name|expr_jmp_buf
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|expr_jmp_buf_p
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Callback for cgen interface.  Parse the expression at *STRP.    The result is an error message or NULL for success (in which case    *STRP is advanced past the parsed text).    WANT is an indication of what the caller is looking for.    If WANT == CGEN_ASM_PARSE_INIT the caller is beginning to try to match    a table entry with the insn, reset the queued fixups counter.    An enum cgen_parse_operand_result is stored in RESULTP.    OPINDEX is the operand's table entry index.    OPINFO is something the caller chooses to help in reloc determination.    The resulting value is stored in VALUEP.  */
 end_comment
@@ -692,6 +708,7 @@ name|valueP
 parameter_list|)
 name|CGEN_CPU_DESC
 name|cd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|enum
 name|cgen_parse_operand_type
@@ -801,6 +818,10 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|expr_jmp_buf_p
+operator|=
+literal|0
+expr_stmt|;
 name|input_line_pointer
 operator|=
 operator|(
@@ -818,11 +839,19 @@ return|return
 literal|"illegal operand"
 return|;
 block|}
+name|expr_jmp_buf_p
+operator|=
+literal|1
+expr_stmt|;
 name|expression
 argument_list|(
 operator|&
 name|exp
 argument_list|)
+expr_stmt|;
+name|expr_jmp_buf_p
+operator|=
+literal|0
 expr_stmt|;
 operator|*
 name|strP
@@ -905,7 +934,7 @@ operator|=
 name|CGEN_PARSE_OPERAND_RESULT_REGISTER
 expr_stmt|;
 break|break;
-default|default :
+default|default:
 name|queue_fixup
 argument_list|(
 name|opindex
@@ -947,8 +976,14 @@ parameter_list|)
 name|expressionS
 modifier|*
 name|expressionP
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
+comment|/* Don't longjmp if we're not called from within cgen_parse_operand().  */
+if|if
+condition|(
+name|expr_jmp_buf_p
+condition|)
 name|longjmp
 argument_list|(
 name|expr_jmp_buf
@@ -1026,10 +1061,10 @@ argument_list|,
 name|CGEN_INSN_RELAX
 argument_list|)
 condition|)
+comment|/* These currently shouldn't get here.  */
 name|abort
 argument_list|()
 expr_stmt|;
-comment|/* These currently shouldn't get here.  */
 comment|/* Is there a relaxable insn with the relaxable operand needing a fixup?  */
 name|relax_operand
 operator|=
@@ -1106,6 +1141,17 @@ name|fragS
 modifier|*
 name|old_frag
 decl_stmt|;
+name|expressionS
+modifier|*
+name|exp
+decl_stmt|;
+name|symbolS
+modifier|*
+name|sym
+decl_stmt|;
+name|offsetT
+name|off
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|TC_CGEN_MAX_RELAX
@@ -1146,6 +1192,56 @@ name|old_frag
 operator|=
 name|frag_now
 expr_stmt|;
+name|exp
+operator|=
+operator|&
+name|fixups
+index|[
+name|relax_operand
+index|]
+operator|.
+name|exp
+expr_stmt|;
+name|sym
+operator|=
+name|exp
+operator|->
+name|X_add_symbol
+expr_stmt|;
+name|off
+operator|=
+name|exp
+operator|->
+name|X_add_number
+expr_stmt|;
+if|if
+condition|(
+name|exp
+operator|->
+name|X_op
+operator|!=
+name|O_constant
+operator|&&
+name|exp
+operator|->
+name|X_op
+operator|!=
+name|O_symbol
+condition|)
+block|{
+comment|/* Handle complex expressions.  */
+name|sym
+operator|=
+name|make_expr_symbol
+argument_list|(
+name|exp
+argument_list|)
+expr_stmt|;
+name|off
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|frag_var
 argument_list|(
 name|rs_machine_dependent
@@ -1162,23 +1258,9 @@ comment|/* FIXME: When we machine generate the relax table, 		   machine generat
 literal|1
 comment|/* subtype */
 argument_list|,
-name|fixups
-index|[
-name|relax_operand
-index|]
-operator|.
-name|exp
-operator|.
-name|X_add_symbol
+name|sym
 argument_list|,
-name|fixups
-index|[
-name|relax_operand
-index|]
-operator|.
-name|exp
-operator|.
-name|X_add_number
+name|off
 argument_list|,
 name|f
 argument_list|)
@@ -1278,6 +1360,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Emit DWARF2 debugging information.  */
+name|dwarf2_emit_insn
+argument_list|(
+name|byte_len
+argument_list|)
+expr_stmt|;
 comment|/* Create any fixups.  */
 for|for
 control|(
@@ -1440,6 +1528,7 @@ name|valueP
 decl_stmt|;
 name|segT
 name|seg
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -1459,7 +1548,7 @@ decl_stmt|;
 name|valueT
 name|value
 decl_stmt|;
-comment|/* canonical name, since used a lot */
+comment|/* Canonical name, since used a lot.  */
 name|CGEN_CPU_DESC
 name|cd
 init|=
@@ -1702,7 +1791,7 @@ name|insn
 argument_list|)
 argument_list|)
 decl_stmt|;
-comment|/* ??? 0 is passed for `pc' */
+comment|/* ??? 0 is passed for `pc'.  */
 name|errmsg
 operator|=
 name|CGEN_CPU_INSERT_OPERAND
@@ -1742,7 +1831,7 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-comment|/* ??? 0 is passed for `pc' */
+comment|/* ??? 0 is passed for `pc'.  */
 name|errmsg
 operator|=
 name|CGEN_CPU_INSERT_OPERAND
@@ -1905,7 +1994,19 @@ literal|4
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* FIXME: later add support for 64 bits.  */
+case|case
+name|BFD_RELOC_64
+case|:
+name|md_number_to_chars
+argument_list|(
+name|where
+argument_list|,
+name|value
+argument_list|,
+literal|8
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|as_bad_where
 argument_list|(
@@ -1970,6 +2071,7 @@ parameter_list|)
 name|asection
 modifier|*
 name|section
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|fixS
 modifier|*
@@ -2032,18 +2134,7 @@ name|fx_line
 argument_list|,
 name|_
 argument_list|(
-literal|"internal error: can't export reloc type %d (`%s')"
-argument_list|)
-argument_list|,
-name|fixP
-operator|->
-name|fx_r_type
-argument_list|,
-name|bfd_get_reloc_code_name
-argument_list|(
-name|fixP
-operator|->
-name|fx_r_type
+literal|"relocation is not supported"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2096,7 +2187,7 @@ operator|->
 name|fx_addsy
 argument_list|)
 expr_stmt|;
-comment|/* Use fx_offset for these cases */
+comment|/* Use fx_offset for these cases.  */
 if|if
 condition|(
 name|fixP

@@ -9655,6 +9655,16 @@ undef|#
 directive|undef
 name|PF
 comment|/* ctime implies '\n'.  */
+block|{
+name|time_t
+name|t
+init|=
+name|pe
+operator|->
+name|coff
+operator|.
+name|timestamp
+decl_stmt|;
 name|fprintf
 argument_list|(
 name|file
@@ -9664,14 +9674,11 @@ argument_list|,
 name|ctime
 argument_list|(
 operator|&
-name|pe
-operator|->
-name|coff
-operator|.
-name|timestamp
+name|t
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|fprintf
 argument_list|(
 name|file

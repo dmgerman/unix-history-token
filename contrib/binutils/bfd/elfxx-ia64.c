@@ -7327,7 +7327,7 @@ name|ret
 decl_stmt|;
 name|ret
 operator|=
-name|bfd_alloc
+name|bfd_zalloc
 argument_list|(
 name|abfd
 argument_list|,

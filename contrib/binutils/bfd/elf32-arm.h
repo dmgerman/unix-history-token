@@ -5099,6 +5099,10 @@ operator|+
 name|input_section
 operator|->
 name|output_offset
+operator|+
+name|rel
+operator|->
+name|r_offset
 operator|)
 expr_stmt|;
 name|value

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for SH opcodes.    Copyright (C) 1993, 94, 95, 96, 1997 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for SH opcodes.    Copyright 1993, 1994, 1995, 1997, 1999, 2000    Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_typedef
@@ -53,25 +53,33 @@ name|BRANCH_12
 block|,
 name|BRANCH_8
 block|,
-name|DISP_8
+name|IMM0_4
 block|,
-name|DISP_4
+name|IMM0_4BY2
 block|,
-name|IMM_4
+name|IMM0_4BY4
 block|,
-name|IMM_4BY2
+name|IMM1_4
 block|,
-name|IMM_4BY4
+name|IMM1_4BY2
+block|,
+name|IMM1_4BY4
 block|,
 name|PCRELIMM_8BY2
 block|,
 name|PCRELIMM_8BY4
 block|,
-name|IMM_8
+name|IMM0_8
 block|,
-name|IMM_8BY2
+name|IMM0_8BY2
 block|,
-name|IMM_8BY4
+name|IMM0_8BY4
+block|,
+name|IMM1_8
+block|,
+name|IMM1_8BY2
+block|,
+name|IMM1_8BY4
 block|,
 name|PPI
 block|,
@@ -92,6 +100,8 @@ block|,
 name|PDC
 block|,
 name|PPIC
+block|,
+name|REPEAT
 block|}
 name|sh_nibble_type
 typedef|;
@@ -112,6 +122,8 @@ block|,
 name|A_DEC_N
 block|,
 name|A_DISP_GBR
+block|,
+name|A_PC
 block|,
 name|A_DISP_PC
 block|,
@@ -422,7 +434,7 @@ name|HEX_7
 block|,
 name|REG_N
 block|,
-name|IMM_8
+name|IMM0_8
 block|}
 block|,
 name|arch_sh1_up
@@ -512,7 +524,7 @@ name|HEX_C
 block|,
 name|HEX_9
 block|,
-name|IMM_8
+name|IMM0_8
 block|}
 block|,
 name|arch_sh1_up
@@ -556,7 +568,7 @@ name|HEX_C
 block|,
 name|HEX_D
 block|,
-name|IMM_8
+name|IMM0_8
 block|}
 block|,
 name|arch_sh1_up
@@ -788,7 +800,7 @@ name|HEX_8
 block|,
 name|HEX_8
 block|,
-name|IMM_8
+name|IMM0_8
 block|}
 block|,
 name|arch_sh1_up
@@ -1640,7 +1652,7 @@ block|{
 literal|"ldre"
 block|,
 block|{
-name|A_BDISP8
+name|A_DISP_PC
 block|}
 block|,
 block|{
@@ -1648,7 +1660,7 @@ name|HEX_8
 block|,
 name|HEX_E
 block|,
-name|BRANCH_8
+name|PCRELIMM_8BY2
 block|}
 block|,
 name|arch_sh_dsp_up
@@ -1659,7 +1671,7 @@ block|{
 literal|"ldrs"
 block|,
 block|{
-name|A_BDISP8
+name|A_DISP_PC
 block|}
 block|,
 block|{
@@ -1667,7 +1679,7 @@ name|HEX_8
 block|,
 name|HEX_C
 block|,
-name|BRANCH_8
+name|PCRELIMM_8BY2
 block|}
 block|,
 name|arch_sh_dsp_up
@@ -2238,7 +2250,7 @@ name|HEX_E
 block|,
 name|REG_N
 block|,
-name|IMM_8
+name|IMM0_8
 block|}
 block|,
 name|arch_sh1_up
@@ -2353,7 +2365,7 @@ name|HEX_4
 block|,
 name|REG_M
 block|,
-name|IMM_4
+name|IMM0_4
 block|}
 block|,
 name|arch_sh1_up
@@ -2374,7 +2386,7 @@ name|HEX_C
 block|,
 name|HEX_4
 block|,
-name|IMM_8
+name|IMM0_8
 block|}
 block|,
 name|arch_sh1_up
@@ -2466,7 +2478,7 @@ name|HEX_0
 block|,
 name|REG_M
 block|,
-name|IMM_4
+name|IMM1_4
 block|}
 block|,
 name|arch_sh1_up
@@ -2487,7 +2499,7 @@ name|HEX_C
 block|,
 name|HEX_0
 block|,
-name|IMM_8
+name|IMM1_8
 block|}
 block|,
 name|arch_sh1_up
@@ -2510,7 +2522,7 @@ name|REG_N
 block|,
 name|REG_M
 block|,
-name|IMM_4BY4
+name|IMM1_4BY4
 block|}
 block|,
 name|arch_sh1_up
@@ -2602,7 +2614,7 @@ name|REG_N
 block|,
 name|REG_M
 block|,
-name|IMM_4BY4
+name|IMM0_4BY4
 block|}
 block|,
 name|arch_sh1_up
@@ -2623,7 +2635,7 @@ name|HEX_C
 block|,
 name|HEX_6
 block|,
-name|IMM_8BY4
+name|IMM0_8BY4
 block|}
 block|,
 name|arch_sh1_up
@@ -2734,7 +2746,7 @@ name|HEX_C
 block|,
 name|HEX_2
 block|,
-name|IMM_8BY4
+name|IMM1_8BY4
 block|}
 block|,
 name|arch_sh1_up
@@ -2826,7 +2838,7 @@ name|HEX_5
 block|,
 name|REG_M
 block|,
-name|IMM_4BY2
+name|IMM0_4BY2
 block|}
 block|,
 name|arch_sh1_up
@@ -2847,7 +2859,7 @@ name|HEX_C
 block|,
 name|HEX_5
 block|,
-name|IMM_8BY2
+name|IMM0_8BY2
 block|}
 block|,
 name|arch_sh1_up
@@ -2960,7 +2972,7 @@ name|HEX_1
 block|,
 name|REG_M
 block|,
-name|IMM_4BY2
+name|IMM1_4BY2
 block|}
 block|,
 name|arch_sh1_up
@@ -2981,7 +2993,7 @@ name|HEX_C
 block|,
 name|HEX_1
 block|,
-name|IMM_8BY2
+name|IMM1_8BY2
 block|}
 block|,
 name|arch_sh1_up
@@ -3335,7 +3347,7 @@ name|HEX_C
 block|,
 name|HEX_B
 block|,
-name|IMM_8
+name|IMM0_8
 block|}
 block|,
 name|arch_sh1_up
@@ -3379,7 +3391,7 @@ name|HEX_C
 block|,
 name|HEX_F
 block|,
-name|IMM_8
+name|IMM0_8
 block|}
 block|,
 name|arch_sh1_up
@@ -3608,7 +3620,57 @@ name|HEX_8
 block|,
 name|HEX_2
 block|,
-name|IMM_8
+name|IMM0_8
+block|}
+block|,
+name|arch_sh_dsp_up
+block|}
+block|,
+comment|/* repeat start end<REG_N>       	*/
+block|{
+literal|"repeat"
+block|,
+block|{
+name|A_DISP_PC
+block|,
+name|A_DISP_PC
+block|,
+name|A_REG_N
+block|}
+block|,
+block|{
+name|REPEAT
+block|,
+name|REG_N
+block|,
+name|HEX_1
+block|,
+name|HEX_4
+block|}
+block|,
+name|arch_sh_dsp_up
+block|}
+block|,
+comment|/* repeat start end #<imm>        	*/
+block|{
+literal|"repeat"
+block|,
+block|{
+name|A_DISP_PC
+block|,
+name|A_DISP_PC
+block|,
+name|A_IMM
+block|}
+block|,
+block|{
+name|REPEAT
+block|,
+name|HEX_2
+block|,
+name|IMM0_8
+block|,
+name|HEX_8
 block|}
 block|,
 name|arch_sh_dsp_up
@@ -4325,7 +4387,7 @@ block|,
 name|HEX_3
 block|}
 block|,
-name|arch_sh4_up
+name|arch_sh1_up
 block|}
 block|,
 comment|/* 0100nnnn00110010 stc.l SGR,@-<REG_N> */
@@ -5052,7 +5114,7 @@ name|HEX_C
 block|,
 name|HEX_3
 block|,
-name|IMM_8
+name|IMM0_8
 block|}
 block|,
 name|arch_sh1_up
@@ -5073,7 +5135,7 @@ name|HEX_C
 block|,
 name|HEX_8
 block|,
-name|IMM_8
+name|IMM0_8
 block|}
 block|,
 name|arch_sh1_up
@@ -5117,7 +5179,7 @@ name|HEX_C
 block|,
 name|HEX_C
 block|,
-name|IMM_8
+name|IMM0_8
 block|}
 block|,
 name|arch_sh1_up
@@ -5138,7 +5200,7 @@ name|HEX_C
 block|,
 name|HEX_A
 block|,
-name|IMM_8
+name|IMM0_8
 block|}
 block|,
 name|arch_sh1_up
@@ -5182,7 +5244,7 @@ name|HEX_C
 block|,
 name|HEX_E
 block|,
-name|IMM_8
+name|IMM0_8
 block|}
 block|,
 name|arch_sh1_up
@@ -5406,7 +5468,7 @@ name|SDT_REG_N
 block|,
 name|REG_M
 block|,
-name|HEX_1
+name|HEX_4
 block|}
 block|,
 name|arch_sh_dsp_up
@@ -5429,7 +5491,7 @@ name|SDT_REG_N
 block|,
 name|REG_M
 block|,
-name|HEX_2
+name|HEX_8
 block|}
 block|,
 name|arch_sh_dsp_up
@@ -5452,7 +5514,7 @@ name|SDT_REG_N
 block|,
 name|REG_M
 block|,
-name|HEX_3
+name|HEX_C
 block|}
 block|,
 name|arch_sh_dsp_up
@@ -5475,7 +5537,7 @@ name|SDT_REG_N
 block|,
 name|REG_M
 block|,
-name|HEX_4
+name|HEX_1
 block|}
 block|,
 name|arch_sh_dsp_up
@@ -5521,7 +5583,7 @@ name|SDT_REG_N
 block|,
 name|REG_M
 block|,
-name|HEX_6
+name|HEX_9
 block|}
 block|,
 name|arch_sh_dsp_up
@@ -5544,7 +5606,7 @@ name|SDT_REG_N
 block|,
 name|REG_M
 block|,
-name|HEX_7
+name|HEX_D
 block|}
 block|,
 name|arch_sh_dsp_up
@@ -5567,7 +5629,7 @@ name|SDT_REG_N
 block|,
 name|REG_M
 block|,
-name|HEX_8
+name|HEX_2
 block|}
 block|,
 name|arch_sh_dsp_up
@@ -5590,7 +5652,7 @@ name|SDT_REG_N
 block|,
 name|REG_M
 block|,
-name|HEX_9
+name|HEX_6
 block|}
 block|,
 name|arch_sh_dsp_up
@@ -5636,7 +5698,7 @@ name|SDT_REG_N
 block|,
 name|REG_M
 block|,
-name|HEX_B
+name|HEX_E
 block|}
 block|,
 name|arch_sh_dsp_up
@@ -5659,7 +5721,7 @@ name|SDT_REG_N
 block|,
 name|REG_M
 block|,
-name|HEX_C
+name|HEX_3
 block|}
 block|,
 name|arch_sh_dsp_up
@@ -5682,7 +5744,7 @@ name|SDT_REG_N
 block|,
 name|REG_M
 block|,
-name|HEX_D
+name|HEX_7
 block|}
 block|,
 name|arch_sh_dsp_up
@@ -5705,7 +5767,7 @@ name|SDT_REG_N
 block|,
 name|REG_M
 block|,
-name|HEX_E
+name|HEX_B
 block|}
 block|,
 name|arch_sh_dsp_up
@@ -6187,29 +6249,6 @@ block|,
 name|arch_sh_dsp_up
 block|}
 block|,
-comment|/* 10011000xxyynnnn prnd<DSP_REG_X>,<DSP_REG_N> */
-block|{
-literal|"prnd"
-block|,
-block|{
-name|DSP_REG_X
-block|,
-name|DSP_REG_N
-block|}
-block|,
-block|{
-name|PPI
-block|,
-name|PPI3
-block|,
-name|HEX_9
-block|,
-name|HEX_8
-block|}
-block|,
-name|arch_sh_dsp_up
-block|}
-block|,
 comment|/* 10101000xxyynnnn pabs<DSP_REG_Y>,<DSP_REG_N> */
 block|{
 literal|"pabs"
@@ -6226,6 +6265,29 @@ block|,
 name|PPI3
 block|,
 name|HEX_A
+block|,
+name|HEX_8
+block|}
+block|,
+name|arch_sh_dsp_up
+block|}
+block|,
+comment|/* 10011000xxyynnnn prnd<DSP_REG_X>,<DSP_REG_N> */
+block|{
+literal|"prnd"
+block|,
+block|{
+name|DSP_REG_X
+block|,
+name|DSP_REG_N
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|PPI3
+block|,
+name|HEX_9
 block|,
 name|HEX_8
 block|}
@@ -6292,27 +6354,6 @@ block|,
 name|arch_sh_dsp_up
 block|}
 block|,
-comment|/* 00000iiiiiiinnnn pshl #<imm>,<DSP_REG_N> */
-block|{
-literal|"pshl"
-block|,
-block|{
-name|A_IMM
-block|,
-name|DSP_REG_N
-block|}
-block|,
-block|{
-name|PPI
-block|,
-name|PSH
-block|,
-name|HEX_0
-block|}
-block|,
-name|arch_sh_dsp_up
-block|}
-block|,
 comment|/* 10000001xxyynnnn pshl<DSP_REG_X>,<DSP_REG_Y>,<DSP_REG_N> */
 block|{
 literal|"pshl"
@@ -6338,9 +6379,9 @@ block|,
 name|arch_sh_dsp_up
 block|}
 block|,
-comment|/* 00010iiiiiiinnnn psha #<imm>,<DSP_REG_N> */
+comment|/* 00000iiiiiiinnnn pshl #<imm>,<DSP_REG_N> */
 block|{
-literal|"psha"
+literal|"pshl"
 block|,
 block|{
 name|A_IMM
@@ -6353,7 +6394,7 @@ name|PPI
 block|,
 name|PSH
 block|,
-name|HEX_1
+name|HEX_0
 block|}
 block|,
 name|arch_sh_dsp_up
@@ -6377,6 +6418,27 @@ block|,
 name|PPIC
 block|,
 name|HEX_9
+block|,
+name|HEX_1
+block|}
+block|,
+name|arch_sh_dsp_up
+block|}
+block|,
+comment|/* 00010iiiiiiinnnn psha #<imm>,<DSP_REG_N> */
+block|{
+literal|"psha"
+block|,
+block|{
+name|A_IMM
+block|,
+name|DSP_REG_N
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|PSH
 block|,
 name|HEX_1
 block|}
@@ -6532,29 +6594,6 @@ block|,
 name|arch_sh_dsp_up
 block|}
 block|,
-comment|/* 10011001xxyynnnn pinc<DSP_REG_X>,<DSP_REG_N> */
-block|{
-literal|"pinc"
-block|,
-block|{
-name|DSP_REG_X
-block|,
-name|DSP_REG_N
-block|}
-block|,
-block|{
-name|PPI
-block|,
-name|PPIC
-block|,
-name|HEX_9
-block|,
-name|HEX_9
-block|}
-block|,
-name|arch_sh_dsp_up
-block|}
-block|,
 comment|/* 10101001xxyynnnn pdec<DSP_REG_Y>,<DSP_REG_N> */
 block|{
 literal|"pdec"
@@ -6571,6 +6610,29 @@ block|,
 name|PPIC
 block|,
 name|HEX_A
+block|,
+name|HEX_9
+block|}
+block|,
+name|arch_sh_dsp_up
+block|}
+block|,
+comment|/* 10011001xxyynnnn pinc<DSP_REG_X>,<DSP_REG_N> */
+block|{
+literal|"pinc"
+block|,
+block|{
+name|DSP_REG_X
+block|,
+name|DSP_REG_N
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|PPIC
+block|,
+name|HEX_9
 block|,
 name|HEX_9
 block|}
@@ -6691,29 +6753,6 @@ block|,
 name|arch_sh_dsp_up
 block|}
 block|,
-comment|/* 11011001xxyynnnn pcopy<DSP_REG_X>,<DSP_REG_N> */
-block|{
-literal|"pcopy"
-block|,
-block|{
-name|DSP_REG_X
-block|,
-name|DSP_REG_N
-block|}
-block|,
-block|{
-name|PPI
-block|,
-name|PPIC
-block|,
-name|HEX_D
-block|,
-name|HEX_9
-block|}
-block|,
-name|arch_sh_dsp_up
-block|}
-block|,
 comment|/* 11101001xxyynnnn pneg<DSP_REG_Y>,<DSP_REG_N> */
 block|{
 literal|"pneg"
@@ -6730,6 +6769,29 @@ block|,
 name|PPIC
 block|,
 name|HEX_E
+block|,
+name|HEX_9
+block|}
+block|,
+name|arch_sh_dsp_up
+block|}
+block|,
+comment|/* 11011001xxyynnnn pcopy<DSP_REG_X>,<DSP_REG_N> */
+block|{
+literal|"pcopy"
+block|,
+block|{
+name|DSP_REG_X
+block|,
+name|DSP_REG_N
+block|}
+block|,
+block|{
+name|PPI
+block|,
+name|PPIC
+block|,
+name|HEX_D
 block|,
 name|HEX_9
 block|}
