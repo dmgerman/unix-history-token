@@ -1499,24 +1499,9 @@ expr_stmt|;
 comment|/* NOTREACHED */
 block|}
 comment|/* 	 * This is the last thread. Just return to the user. 	 * We know that there is only one ksegrp too, as any others 	 * would have been discarded in previous calls to thread_exit(). 	 * Effectively we have left threading mode.. 	 * The only real thing left to do is ensure that the 	 * scheduler sets out concurrency back to 1 as that may be a 	 * resource leak otherwise. 	 * This is an A[PB]I issue.. what SHOULD we do? 	 * One possibility is to return to the user. It may not cope well. 	 * The other possibility would be to let the process exit. 	 */
-name|p
-operator|->
-name|p_flag
-operator|&=
-operator|~
-operator|(
-name|P_SA
-operator||
-name|P_HADTHREADS
-operator|)
-expr_stmt|;
-name|sched_set_concurrency
+name|thread_unthread
 argument_list|(
 name|td
-operator|->
-name|td_ksegrp
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin
