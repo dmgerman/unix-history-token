@@ -154,6 +154,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"mntopts.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pathnames.h"
 end_include
 
@@ -626,6 +632,8 @@ decl_stmt|,
 name|mntsize
 decl_stmt|,
 name|rval
+decl_stmt|,
+name|have_fstab
 decl_stmt|;
 name|char
 modifier|*
@@ -1060,6 +1068,14 @@ operator|&
 name|MNT_UPDATE
 condition|)
 block|{
+name|mntfromname
+operator|=
+name|NULL
+expr_stmt|;
+name|have_fstab
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1078,12 +1094,13 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"unknown special file or file system %s"
+literal|"not currently mounted %s"
 argument_list|,
 operator|*
 name|argv
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Only get the mntflags from fstab if both mntpoint 			 * and mntspec are identical. Also handle the special 			 * case where just '/' is mounted and 'spec' is not 			 * identical with the one from fstab ('/dev' is missing 			 * in the spec-string at boot-time). 			 */
 if|if
 condition|(
 operator|(
@@ -1100,12 +1117,94 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|fs
+operator|->
+name|fs_spec
+argument_list|,
+name|mntbuf
+operator|->
+name|f_mntfromname
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|fs
+operator|->
+name|fs_file
+argument_list|,
+name|mntbuf
+operator|->
+name|f_mntonname
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|have_fstab
+operator|=
+literal|1
+expr_stmt|;
+name|mntfromname
+operator|=
+name|mntbuf
+operator|->
+name|f_mntfromname
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|argv
+index|[
+literal|0
+index|]
+index|[
+literal|0
+index|]
+operator|==
+literal|'/'
+operator|&&
+name|argv
+index|[
+literal|0
+index|]
+index|[
+literal|1
+index|]
+operator|==
+literal|'\0'
+condition|)
+block|{
+name|fs
+operator|=
+name|getfsfile
+argument_list|(
+literal|"/"
+argument_list|)
+expr_stmt|;
+name|have_fstab
+operator|=
+literal|1
+expr_stmt|;
 name|mntfromname
 operator|=
 name|fs
 operator|->
 name|fs_spec
 expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|have_fstab
+condition|)
+block|{
 name|options
 operator|=
 name|update_options
@@ -1251,7 +1350,7 @@ break|break;
 case|case
 literal|2
 case|:
-comment|/* 		 * If -t flag has not been specified, and spec contains either 		 * a ':' or a '@' then assume that an NFS filesystem is being 		 * specified ala Sun. 		 */
+comment|/* 		 * If -t flag has not been specified, the path cannot be 		 * found, spec contains either a ':' or a '@', and the 		 * spec is not a file with those characters, then assume 		 * that an NFS filesystem is being specified ala Sun. 		 */
 if|if
 condition|(
 name|vfslist
@@ -1269,6 +1368,19 @@ literal|":@"
 argument_list|)
 operator|!=
 name|NULL
+operator|&&
+name|access
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
 condition|)
 name|vfstype
 operator|=
@@ -1800,10 +1912,6 @@ modifier|*
 name|edir
 decl_stmt|;
 name|struct
-name|stat
-name|sb
-decl_stmt|;
-name|struct
 name|statfs
 name|sf
 decl_stmt|;
@@ -1850,68 +1958,17 @@ name|name
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|realpath
+comment|/* resolve the mountpoint with realpath(3) */
+operator|(
+name|void
+operator|)
+name|checkpath
 argument_list|(
 name|name
 argument_list|,
 name|mntpath
 argument_list|)
-operator|!=
-name|NULL
-operator|&&
-name|stat
-argument_list|(
-name|mntpath
-argument_list|,
-operator|&
-name|sb
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|S_ISDIR
-argument_list|(
-name|sb
-operator|.
-name|st_mode
-argument_list|)
-condition|)
-block|{
-name|warnx
-argument_list|(
-literal|"%s: not a directory"
-argument_list|,
-name|mntpath
-argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-block|}
-else|else
-block|{
-name|warn
-argument_list|(
-literal|"%s"
-argument_list|,
-name|mntpath
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
 name|name
 operator|=
 name|mntpath
@@ -2531,15 +2588,12 @@ name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-name|int
-name|f
-decl_stmt|;
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s on %s"
+literal|"%s on %s (%s"
 argument_list|,
 name|sfp
 operator|->
@@ -2548,6 +2602,10 @@ argument_list|,
 name|sfp
 operator|->
 name|f_mntonname
+argument_list|,
+name|sfp
+operator|->
+name|f_fstypename
 argument_list|)
 expr_stmt|;
 name|flags
@@ -2560,10 +2618,6 @@ name|MNT_VISFLAGMASK
 expr_stmt|;
 for|for
 control|(
-name|f
-operator|=
-literal|0
-operator|,
 name|o
 operator|=
 name|optnames
@@ -2591,15 +2645,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s%s"
-argument_list|,
-operator|!
-name|f
-operator|++
-condition|?
-literal|" ("
-else|:
-literal|", "
+literal|", %s"
 argument_list|,
 name|o
 operator|->
@@ -2626,15 +2672,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%smounted by "
-argument_list|,
-operator|!
-name|f
-operator|++
-condition|?
-literal|" ("
-else|:
-literal|", "
+literal|", mounted by "
 argument_list|)
 expr_stmt|;
 if|if
@@ -2697,15 +2735,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%swrites: sync %ld async %ld"
-argument_list|,
-operator|!
-name|f
-operator|++
-condition|?
-literal|" ("
-else|:
-literal|", "
+literal|", writes: sync %ld async %ld"
 argument_list|,
 name|sfp
 operator|->
@@ -2721,13 +2751,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s\n"
-argument_list|,
-name|f
-condition|?
-literal|")"
-else|:
-literal|""
+literal|")\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2771,15 +2795,18 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+name|mntsize
+operator|-
+literal|1
 init|;
 name|i
-operator|<
-name|mntsize
+operator|>=
+literal|0
 condition|;
 name|i
-operator|++
+operator|--
 control|)
+block|{
 if|if
 condition|(
 name|strcmp
@@ -2819,6 +2846,7 @@ name|i
 index|]
 operator|)
 return|;
+block|}
 return|return
 operator|(
 name|NULL
@@ -3164,13 +3192,6 @@ argument_list|(
 literal|""
 argument_list|)
 return|;
-name|fstab
-operator|=
-name|strdup
-argument_list|(
-name|fstab
-argument_list|)
-expr_stmt|;
 comment|/* remove meta options from list */
 name|remopt
 argument_list|(
@@ -3272,11 +3293,6 @@ name|o
 argument_list|)
 expr_stmt|;
 block|}
-name|free
-argument_list|(
-name|fstab
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|cur

@@ -165,6 +165,12 @@ name|ch
 decl_stmt|,
 name|mntflags
 decl_stmt|;
+name|char
+name|mntpath
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
 name|struct
 name|vfsconf
 name|vfc
@@ -353,6 +359,20 @@ argument_list|,
 name|fsname
 argument_list|)
 expr_stmt|;
+comment|/* resolve the mountpoint with realpath(3) */
+operator|(
+name|void
+operator|)
+name|checkpath
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+name|mntpath
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mount
@@ -361,10 +381,7 @@ name|vfc
 operator|.
 name|vfc_name
 argument_list|,
-name|argv
-index|[
-literal|1
-index|]
+name|mntpath
 argument_list|,
 name|mntflags
 argument_list|,

@@ -186,6 +186,11 @@ name|fs_name
 decl_stmt|,
 modifier|*
 name|options
+decl_stmt|,
+name|mntpath
+index|[
+name|MAXPATHLEN
+index|]
 decl_stmt|;
 name|struct
 name|vfsconf
@@ -284,6 +289,31 @@ literal|1
 index|]
 expr_stmt|;
 comment|/* the mount point */
+comment|/* 	 * Resolve the mountpoint with realpath(3) and remove unnecessary 	 * slashes from the devicename if there are any. 	 */
+operator|(
+name|void
+operator|)
+name|checkpath
+argument_list|(
+name|fs_name
+argument_list|,
+name|mntpath
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|rmslashes
+argument_list|(
+name|args
+operator|.
+name|fspec
+argument_list|,
+name|args
+operator|.
+name|fspec
+argument_list|)
+expr_stmt|;
 define|#
 directive|define
 name|DEFAULT_ROOTUID
@@ -389,7 +419,7 @@ name|vfc
 operator|.
 name|vfc_name
 argument_list|,
-name|fs_name
+name|mntpath
 argument_list|,
 name|mntflags
 argument_list|,
