@@ -2355,6 +2355,17 @@ name|partitiontype
 operator|=
 name|fat
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|subtype
+operator|==
+name|SUBTYPE_EFI
+condition|)
+name|partitiontype
+operator|=
+name|efi
+expr_stmt|;
 else|else
 name|partitiontype
 operator|=

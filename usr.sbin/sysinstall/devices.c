@@ -2840,6 +2840,12 @@ name|c1
 operator|->
 name|type
 operator|==
+name|efi
+operator|||
+name|c1
+operator|->
+name|type
+operator|==
 name|extended
 condition|)
 block|{

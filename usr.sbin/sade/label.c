@@ -1357,6 +1357,12 @@ operator|->
 name|type
 operator|==
 name|fat
+operator|||
+name|c1
+operator|->
+name|type
+operator|==
+name|efi
 condition|)
 block|{
 name|label_chunk_info
