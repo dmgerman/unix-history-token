@@ -1015,6 +1015,14 @@ argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fgets

@@ -1495,7 +1495,6 @@ if|if
 condition|(
 name|fromatty
 condition|)
-block|{
 name|fputs
 argument_list|(
 name|prompt
@@ -1512,7 +1511,6 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|fgets
