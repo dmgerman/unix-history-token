@@ -124,18 +124,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<machine/pcb_ext.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/vm86.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm.h>
 end_include
 

@@ -40,12 +40,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/interrupt.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -89,12 +83,6 @@ begin_include
 include|#
 directive|include
 file|<machine/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/ipl.h>
 end_include
 
 begin_include
@@ -153,12 +141,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/icu.h>
-end_include
 
 begin_include
 include|#

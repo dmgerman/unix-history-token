@@ -260,18 +260,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cputypes.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/cputypes.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/globaldata.h>
 end_include
 

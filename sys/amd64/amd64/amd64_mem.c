@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ioccom.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -66,7 +60,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"machine/smp.h"
+file|<machine/smp.h>
 end_include
 
 begin_endif

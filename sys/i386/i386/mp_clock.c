@@ -3,23 +3,17 @@ begin_comment
 comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $FreeBSD$  *  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"opt_bus.h"
-end_include
+begin_comment
+comment|/* #include "opt_bus.h" */
+end_comment
 
-begin_include
-include|#
-directive|include
-file|"opt_pci.h"
-end_include
+begin_comment
+comment|/* #include "opt_pci.h" */
+end_comment
 
-begin_include
-include|#
-directive|include
-file|"opt_smp.h"
-end_include
+begin_comment
+comment|/* #include "opt_smp.h" */
+end_comment
 
 begin_include
 include|#
@@ -61,12 +55,6 @@ begin_include
 include|#
 directive|include
 file|<pci/pcivar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pci/pcireg.h>
 end_include
 
 begin_function_decl
