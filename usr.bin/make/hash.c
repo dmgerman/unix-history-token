@@ -72,7 +72,7 @@ value|8
 end_define
 
 begin_comment
-comment|/*  *---------------------------------------------------------  *  * Hash_InitTable --  *   * 	Set up the hash table t with a given number of buckets, or a  * 	reasonable default if the number requested is less than or  * 	equal to zero.  Hash tables will grow in size as needed.  *  *  * Results:  *	None.  *  * Side Effects:  *	Memory is allocated for the initial bucket area.  *  *---------------------------------------------------------  */
+comment|/*  *---------------------------------------------------------  *  * Hash_InitTable --  *  * 	Set up the hash table t with a given number of buckets, or a  * 	reasonable default if the number requested is less than or  * 	equal to zero.  Hash tables will grow in size as needed.  *  *  * Results:  *	None.  *  * Side Effects:  *	Memory is allocated for the initial bucket area.  *  *---------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -627,9 +627,6 @@ name|namehash
 operator|=
 name|h
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|strcpy
 argument_list|(
 name|e
@@ -761,9 +758,6 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-operator|(
-name|void
-operator|)
 name|write
 argument_list|(
 name|STDERR_FILENO
@@ -816,10 +810,12 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
+operator|(
 name|Hash_EnumNext
 argument_list|(
 name|searchPtr
 argument_list|)
+operator|)
 return|;
 block|}
 end_function

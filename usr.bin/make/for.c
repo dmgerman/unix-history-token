@@ -147,9 +147,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * For_Eval --  *	Evaluate the for loop in the passed line. The line  *	looks like this:  *	    .for<variable> in<varlist>  *  * Results:  *	TRUE: We found a for loop, or we are inside a for loop  *	FALSE: We did not find a for loop, or we found the end of the for  *	       for loop.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -256,7 +253,9 @@ index|]
 argument_list|)
 condition|)
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 name|ptr
 operator|+=
@@ -357,7 +356,9 @@ literal|"missing variable in for"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|Buf_Destroy
@@ -431,7 +432,9 @@ name|ptr
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|ptr
@@ -489,7 +492,7 @@ directive|define
 name|ADDWORD
 parameter_list|()
 define|\
-value|Buf_AddBytes(buf, ptr - wrd, (Byte *) wrd), \ 	Buf_AddByte(buf, (Byte) '\0'), \ 	Lst_AtFront(forLst, (void *) Buf_GetAll(buf,&varlen)), \ 	Buf_Destroy(buf, FALSE)
+value|Buf_AddBytes(buf, ptr - wrd, (Byte *)wrd), \ 	Buf_AddByte(buf, (Byte)'\0'), \ 	Lst_AtFront(forLst, (void *)Buf_GetAll(buf,&varlen)), \ 	Buf_Destroy(buf, FALSE)
 for|for
 control|(
 name|ptr
@@ -620,7 +623,9 @@ name|forLevel
 operator|++
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 elseif|else
@@ -715,7 +720,9 @@ literal|"for-less endfor"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -796,13 +803,17 @@ literal|'\n'
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 else|else
 block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -917,13 +928,12 @@ name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * For_Run --  *	Run the for loop, immitating the actions of an include file  *  * Results:  *	None.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */

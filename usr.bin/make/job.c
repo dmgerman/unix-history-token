@@ -249,7 +249,7 @@ name|FILENO
 parameter_list|(
 name|a
 parameter_list|)
-value|((unsigned) fileno(a))
+value|((unsigned)fileno(a))
 end_define
 
 begin_comment
@@ -328,7 +328,7 @@ comment|/* The job is stopped */
 end_comment
 
 begin_comment
-comment|/*  * tfile is used to build temp file names to store shell commands to  * execute.   */
+comment|/*  * tfile is used to build temp file names to store shell commands to  * execute.  */
 end_comment
 
 begin_decl_stmt
@@ -610,7 +610,7 @@ parameter_list|,
 name|gn
 parameter_list|)
 define|\
-value|(void) fprintf(fp, targFmt, gn->name);
+value|fprintf(fp, targFmt, gn->name);
 end_define
 
 begin_comment
@@ -758,7 +758,7 @@ parameter_list|,
 name|fun
 parameter_list|)
 define|\
-value|{							\ 		int sh = (int) ~0;				\ 		int mask = fun(sh);				\ 								\ 		for (sh = 0; ((mask>> sh)& 1) == 0; sh++)	\ 			continue;				\ 		*(st) = (*(st)& ~mask) | ((val)<< sh);	\ 	}
+value|{							\ 		int sh = (int)~0;				\ 		int mask = fun(sh);				\ 								\ 		for (sh = 0; ((mask>> sh)& 1) == 0; sh++)	\ 			continue;				\ 		*(st) = (*(st)& ~mask) | ((val)<< sh);	\ 	}
 end_define
 
 begin_define
@@ -1084,7 +1084,9 @@ name|signo
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1274,9 +1276,6 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|signal
 argument_list|(
 name|signo
@@ -1284,9 +1283,6 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|KILL
 argument_list|(
 name|getpid
@@ -1313,9 +1309,6 @@ operator|&
 name|signo
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|sigprocmask
 argument_list|(
 name|SIG_SETMASK
@@ -1374,6 +1367,7 @@ name|pid
 parameter_list|)
 block|{
 return|return
+operator|(
 operator|*
 operator|(
 name|int
@@ -1390,6 +1384,7 @@ name|job
 operator|)
 operator|->
 name|pid
+operator|)
 return|;
 block|}
 end_function
@@ -1535,11 +1530,15 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 define|#
@@ -1551,7 +1550,7 @@ parameter_list|,
 name|arg
 parameter_list|)
 define|\
-value|DEBUGF(JOB, (fmt, arg));			\    (void) fprintf(job->cmdFILE, fmt, arg);	\    (void) fflush(job->cmdFILE);
+value|DEBUGF(JOB, (fmt, arg));			\     fprintf(job->cmdFILE, fmt, arg);	\     fflush(job->cmdFILE);
 name|numCommands
 operator|+=
 literal|1
@@ -1989,7 +1988,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2037,9 +2038,6 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|postCommands
@@ -2106,9 +2104,6 @@ operator|->
 name|inPipe
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|close
 argument_list|(
 name|job
@@ -2124,9 +2119,6 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|close
 argument_list|(
 name|job
@@ -2137,9 +2129,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|(
-name|void
-operator|)
 name|close
 argument_list|(
 name|job
@@ -2256,9 +2245,6 @@ operator|!=
 name|stdout
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|fclose
 argument_list|(
 name|job
@@ -2453,9 +2439,6 @@ operator|->
 name|node
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|out
@@ -2533,9 +2516,6 @@ operator|->
 name|node
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|out
@@ -2595,9 +2575,6 @@ operator|->
 name|node
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|out
@@ -2617,9 +2594,6 @@ name|flags
 operator||=
 name|JOB_RESUME
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|stoppedJobs
@@ -2631,9 +2605,6 @@ operator|)
 name|job
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fflush
 argument_list|(
 name|out
@@ -2694,9 +2665,6 @@ operator|->
 name|node
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|out
@@ -2798,9 +2766,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|fflush
 argument_list|(
 name|out
@@ -2837,9 +2802,6 @@ operator|->
 name|node
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|out
@@ -2854,9 +2816,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|fflush
 argument_list|(
 name|out
@@ -3141,9 +3100,6 @@ operator|!
 name|silent
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stdout
@@ -3155,9 +3111,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -3282,9 +3235,6 @@ operator|==
 literal|1
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|lseek
 argument_list|(
 name|streamID
@@ -3297,9 +3247,6 @@ argument_list|,
 name|SEEK_SET
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|write
 argument_list|(
 name|streamID
@@ -3311,9 +3258,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|close
 argument_list|(
 name|streamID
@@ -3322,9 +3266,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stdout
@@ -3339,9 +3280,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -3488,9 +3426,6 @@ operator|&
 name|OP_OPTIONAL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stdout
@@ -3504,9 +3439,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -3519,9 +3451,6 @@ condition|(
 name|keepgoing
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stdout
@@ -3535,16 +3464,15 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fflush
 argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 else|else
@@ -3591,13 +3519,17 @@ name|name
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 block|}
 block|}
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 block|}
 end_function
@@ -3813,9 +3745,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fcntl
 argument_list|(
 literal|0
@@ -3825,9 +3754,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|lseek
 argument_list|(
 literal|0
@@ -3900,9 +3826,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * The output channels are marked close on exec. This bit was 	 * duplicated by the dup2 (on some systems), so we have to clear 	 * it before routing the shell's error output to the same place as 	 * its standard output. 	 */
-operator|(
-name|void
-operator|)
 name|fcntl
 argument_list|(
 literal|1
@@ -3944,17 +3867,11 @@ name|defined
 argument_list|(
 name|SYSV
 argument_list|)
-operator|(
-name|void
-operator|)
 name|setsid
 argument_list|()
 expr_stmt|;
 else|#
 directive|else
-operator|(
-name|void
-operator|)
 name|setpgid
 argument_list|(
 literal|0
@@ -3968,9 +3885,6 @@ directive|endif
 endif|#
 directive|endif
 comment|/* USE_PGRP */
-operator|(
-name|void
-operator|)
 name|execv
 argument_list|(
 name|shellPath
@@ -3978,9 +3892,6 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|write
 argument_list|(
 name|STDERR_FILENO
@@ -4170,9 +4081,6 @@ operator|!=
 name|stdout
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|fclose
 argument_list|(
 name|job
@@ -4193,9 +4101,6 @@ name|nJobs
 operator|+=
 literal|1
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|jobs
@@ -4297,9 +4202,6 @@ operator|)
 condition|)
 block|{
 comment|/* 	 * At least one of the flags doesn't have a minus before it, so 	 * merge them together. Have to do this because the *(&(@*#*&#$# 	 * Bourne shell thinks its second argument is a file to source. 	 * Grrrr. Note the ten-character limitation on the combined arguments. 	 */
-operator|(
-name|void
-operator|)
 name|sprintf
 argument_list|(
 name|args
@@ -4529,9 +4431,6 @@ literal|"holding\n"
 operator|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtFront
 argument_list|(
 name|stoppedJobs
@@ -4754,9 +4653,6 @@ literal|"table full\n"
 operator|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtFront
 argument_list|(
 name|stoppedJobs
@@ -5010,9 +4906,6 @@ name|DieHorribly
 argument_list|()
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|strcpy
 argument_list|(
 name|tfile
@@ -5082,9 +4975,6 @@ name|tfile
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|fcntl
 argument_list|(
 name|FILENO
@@ -5358,9 +5248,6 @@ name|cmdFILE
 operator|!=
 name|NULL
 condition|)
-operator|(
-name|void
-operator|)
 name|fclose
 argument_list|(
 name|job
@@ -5371,9 +5258,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|(
-name|void
-operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -5469,9 +5353,6 @@ block|}
 block|}
 else|else
 block|{
-operator|(
-name|void
-operator|)
 name|fflush
 argument_list|(
 name|job
@@ -5552,9 +5433,6 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fcntl
 argument_list|(
 name|job
@@ -5566,9 +5444,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fcntl
 argument_list|(
 name|job
@@ -5583,9 +5458,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stdout
@@ -5597,17 +5469,11 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fflush
 argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|strcpy
 argument_list|(
 name|job
@@ -5645,9 +5511,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fcntl
 argument_list|(
 name|job
@@ -5705,9 +5568,6 @@ name|flags
 operator||=
 name|JOB_RESTART
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|stoppedJobs
@@ -5851,9 +5711,6 @@ name|node
 expr_stmt|;
 block|}
 comment|/* 		 * The only way there wouldn't be a newline after 		 * this line is if it were the last in the buffer. 		 * however, since the non-printable comes after it, 		 * there must be a newline, so we don't print one. 		 */
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stdout
@@ -5863,9 +5720,6 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -5928,13 +5782,17 @@ block|}
 else|else
 block|{
 return|return
+operator|(
 name|cp
+operator|)
 return|;
 block|}
 block|}
 block|}
 return|return
+operator|(
 name|cp
+operator|)
 return|;
 block|}
 end_function
@@ -6316,9 +6174,6 @@ operator|->
 name|node
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stdout
@@ -6334,9 +6189,6 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -6354,9 +6206,6 @@ literal|1
 condition|)
 block|{
 comment|/* shift the remaining characters down */
-operator|(
-name|void
-operator|)
 name|memcpy
 argument_list|(
 name|job
@@ -6438,9 +6287,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stdout
@@ -6454,9 +6300,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -6536,9 +6379,6 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 comment|/* 		 * There's still more in that thar buffer. This time, though, 		 * we know there's no newline at the end, so we add one of 		 * our own free will. 		 */
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stdout
@@ -6548,9 +6388,6 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -6563,9 +6400,6 @@ operator|!=
 name|oendp
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stdout
@@ -6573,9 +6407,6 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -6583,17 +6414,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-operator|(
-name|void
-operator|)
 name|fclose
 argument_list|(
 name|oFILE
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|eunlink
 argument_list|(
 name|job
@@ -6776,9 +6601,6 @@ argument_list|(
 name|jnode
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_Remove
 argument_list|(
 name|stoppedJobs
@@ -6812,9 +6634,6 @@ argument_list|(
 name|jnode
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_Remove
 argument_list|(
 name|jobs
@@ -6904,7 +6723,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Job_CatchOutput --  *	Catch the output from our children, if we're using  *	pipes do so. Otherwise just block time until we get a  *	signal (most likely a SIGCHLD) since there's no point in  *	just spinning when there's nothing to do and the reaping  *	of a child can wait for a while.  *  * Results:  *	None  *  * Side Effects:  *	Output is read from pipes if we're piping.  * -----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Job_CatchOutput --  *	Catch the output from our children, if we're using  *	pipes do so. Otherwise just block time until we get a  *	signal(most likely a SIGCHLD) since there's no point in  *	just spinning when there's nothing to do and the reaping  *	of a child can wait for a while.  *  * Results:  *	None  *  * Side Effects:  *	Output is read from pipes if we're piping.  * -----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -6953,9 +6772,6 @@ name|job
 decl_stmt|;
 endif|#
 directive|endif
-operator|(
-name|void
-operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -7293,9 +7109,6 @@ modifier|*
 name|gn
 parameter_list|)
 block|{
-operator|(
-name|void
-operator|)
 name|JobStart
 argument_list|(
 name|gn
@@ -8030,9 +7843,6 @@ operator|!=
 name|SIG_IGN
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|sigaction
 argument_list|(
 name|SIGINT
@@ -8056,9 +7866,6 @@ operator|!=
 name|SIG_IGN
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|sigaction
 argument_list|(
 name|SIGHUP
@@ -8082,9 +7889,6 @@ operator|!=
 name|SIG_IGN
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|sigaction
 argument_list|(
 name|SIGQUIT
@@ -8108,9 +7912,6 @@ operator|!=
 name|SIG_IGN
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|sigaction
 argument_list|(
 name|SIGTERM
@@ -8141,9 +7942,6 @@ operator|!=
 name|SIG_IGN
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|sigaction
 argument_list|(
 name|SIGTSTP
@@ -8167,9 +7965,6 @@ operator|!=
 name|SIG_IGN
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|sigaction
 argument_list|(
 name|SIGTTOU
@@ -8193,9 +7988,6 @@ operator|!=
 name|SIG_IGN
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|sigaction
 argument_list|(
 name|SIGTTIN
@@ -8219,9 +8011,6 @@ operator|!=
 name|SIG_IGN
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|sigaction
 argument_list|(
 name|SIGWINCH
@@ -9535,9 +9324,6 @@ name|aborting
 operator|=
 name|ABORT_INTERRUPT
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_Open
 argument_list|(
 name|jobs
@@ -9904,9 +9690,6 @@ condition|(
 name|nJobs
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|Lst_Open
 argument_list|(
 name|jobs

@@ -284,17 +284,11 @@ operator|&
 name|STR_DOFREE
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 name|s1
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 name|s2
@@ -1122,7 +1116,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 if|if
@@ -1143,7 +1139,9 @@ name|w
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|w
+operator|)
 return|;
 block|}
 if|if
@@ -1193,7 +1191,9 @@ operator|!=
 name|m
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 comment|/* No match */
 if|if
@@ -1215,7 +1215,9 @@ name|w
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|w
+operator|)
 return|;
 block|}
 block|}
@@ -1245,7 +1247,9 @@ operator|-
 name|m
 expr_stmt|;
 return|return
+operator|(
 name|m
+operator|)
 return|;
 block|}
 do|while
@@ -1258,7 +1262,9 @@ literal|'\0'
 condition|)
 do|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function

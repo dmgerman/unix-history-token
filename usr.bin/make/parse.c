@@ -1021,9 +1021,6 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1045,9 +1042,6 @@ name|type
 operator|==
 name|PARSE_WARNING
 condition|)
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1055,9 +1049,6 @@ argument_list|,
 literal|"warning: "
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|vfprintf
 argument_list|(
 name|stderr
@@ -1072,9 +1063,6 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1082,9 +1070,6 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fflush
 argument_list|(
 name|stderr
@@ -1159,9 +1144,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|pgn
@@ -1182,9 +1164,6 @@ operator|==
 name|Not
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|cgn
@@ -1365,9 +1344,6 @@ name|OP_DOUBLEDEP
 operator||
 name|OP_INVISIBLE
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|gn
@@ -1476,9 +1452,6 @@ name|order
 condition|)
 block|{
 comment|/* 	 * XXX: This can cause loops, and loops can cause unmade targets, 	 * but checking is tedious, and the debugging output can show the 	 * problem 	 */
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|p
@@ -1492,9 +1465,6 @@ operator|)
 name|s
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|s
@@ -1509,12 +1479,16 @@ name|p
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 else|else
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -1642,9 +1616,6 @@ case|case
 name|Main
 case|:
 comment|/* 	 * If we have noted the existence of a .MAIN, it means we need 	 * to add the sources of said target to the list of things 	 * to create. The string 'src' is likely to be free, so we 	 * must make a new copy of it. Note that this will only be 	 * invoked if the user didn't specify a target on the command 	 * line. This is to allow #ifmake's to succeed, or something... 	 */
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|create
@@ -1690,9 +1661,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|predecessor
@@ -1706,9 +1674,6 @@ operator|)
 name|gn
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|gn
@@ -1860,9 +1825,6 @@ name|order
 operator|=
 name|waiting
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|allsrc
@@ -2512,9 +2474,6 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|paths
@@ -2569,9 +2528,6 @@ name|type
 operator||=
 name|OP_NOTMAIN
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|targets
@@ -2604,9 +2560,6 @@ operator||
 name|OP_TRANSFORM
 operator|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|targets
@@ -2729,9 +2682,6 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|paths
@@ -2800,9 +2750,6 @@ block|}
 else|else
 block|{
 comment|/* 		 * No wildcards, but we want to avoid code duplication, 		 * so create a list with the word on it. 		 */
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|curTargs
@@ -2866,9 +2813,6 @@ name|targName
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|targets
@@ -3858,7 +3802,9 @@ literal|'\0'
 case|:
 comment|/* 	     * end-of-line -- can't be a variable assignment. 	     */
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 case|case
 literal|' '
@@ -3917,7 +3863,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 comment|/* 			 * When an = operator [+?!:] is found, the next 			 * character must be an = or it ain't a valid 			 * assignment. 			 */
 if|if
@@ -3930,7 +3878,9 @@ operator|==
 literal|'='
 condition|)
 return|return
+operator|(
 name|haveName
+operator|)
 return|;
 ifdef|#
 directive|ifdef
@@ -3950,14 +3900,18 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|haveName
+operator|)
 return|;
 endif|#
 directive|endif
 block|}
 comment|/* 		     * This is the start of another word, so not assignment. 		     */
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 else|else
@@ -3974,7 +3928,9 @@ block|}
 break|break;
 block|}
 return|return
+operator|(
 name|haveName
+operator|)
 return|;
 block|}
 end_function
@@ -4500,9 +4456,6 @@ operator|&
 name|OP_HAS_COMMANDS
 operator|)
 condition|)
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|gn
@@ -5216,9 +5169,6 @@ name|IFile
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtFront
 argument_list|(
 name|includes
@@ -5283,9 +5233,6 @@ name|fullname
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Pop to previous file 	 */
-operator|(
-name|void
-operator|)
 name|ParseEOF
 argument_list|(
 literal|0
@@ -5368,9 +5315,6 @@ name|IFile
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtFront
 argument_list|(
 name|includes
@@ -5665,9 +5609,6 @@ name|IFile
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtFront
 argument_list|(
 name|includes
@@ -5732,9 +5673,6 @@ name|fullname
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Pop to previous file 	 */
-operator|(
-name|void
-operator|)
 name|ParseEOF
 argument_list|(
 literal|1
@@ -5829,9 +5767,6 @@ operator|.
 name|F
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|fclose
 argument_list|(
 name|curFile
@@ -5918,12 +5853,14 @@ operator|.
 name|F
 condition|)
 return|return
+operator|(
 name|fgetc
 argument_list|(
 name|curFile
 operator|.
 name|F
 argument_list|)
+operator|)
 return|;
 if|if
 condition|(
@@ -5939,6 +5876,7 @@ operator|->
 name|ptr
 condition|)
 return|return
+operator|(
 operator|*
 name|curFile
 operator|.
@@ -5946,9 +5884,12 @@ name|p
 operator|->
 name|ptr
 operator|++
+operator|)
 return|;
 return|return
+operator|(
 name|EOF
+operator|)
 return|;
 block|}
 end_function
@@ -6274,7 +6215,9 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|line
+operator|)
 return|;
 block|}
 end_function
@@ -7781,9 +7724,6 @@ operator|&
 name|OP_DOUBLEDEP
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|listmain
@@ -7808,9 +7748,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|listmain

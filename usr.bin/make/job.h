@@ -59,9 +59,6 @@ begin_comment
 comment|/* !USE_KQUEUE */
 end_comment
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  * Job Table definitions.  *  * Each job has several things associated with it:  *	1) The process id of the child shell  *	2) The graph node describing the target being made by this job  *	3) A LstNode for the first command to be saved after the job  *	   completes. This is NULL if there was no "..." in the job's  *	   commands.  *	4) An FILE* for writing out the commands. This is only  *	   used before the job is actually started.  *	5) A union of things used for handling the shell's output. Different  *	   parts of the union are used based on the value of the usePipes  *	   flag. If it is true, the output is being caught via a pipe and  *	   the descriptors of our pipe, an array in which output is line  *	   buffered and the current position in that buffer are all  *	   maintained for each job. If, on the other hand, usePipes is false,  *	   the output is routed to a temporary file and all that is kept  *	   is the name of the file and the descriptor open to the file.  *	6) A word of flags which determine how the module handles errors,  *	   echoing, etc. for the job  *  * The job "table" is kept as a linked Lst in 'jobs', with the number of  * active jobs maintained in the 'nJobs' variable. At no time will this  * exceed the value of 'maxJobs', initialized by the Job_Init function.  *  * When a job is finished, the Make_Update function is called on each of the  * parents of the node which was just remade. This takes care of the upward  * traversal of the dependency graph.  */
 end_comment
@@ -249,9 +246,6 @@ directive|define
 name|outFd
 value|output.o_file.of_outFd
 end_define
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  * Shell Specifications:  * Each shell type has associated with it the following information:  *	1) The string which must match the last character of the shell name  *	   for the shell to be considered of this type. The longest match  *	   wins.  *	2) A command to issue to turn off echoing of command lines  *	3) A command to issue to turn echoing back on again  *	4) What the shell prints, and its length, when given the echo-off  *	   command. This line will not be printed when received from the shell  *	5) A boolean to tell if the shell has the ability to control  *	   error checking for individual commands.  *	6) The string to turn this checking on.  *	7) The string to turn it off.  *	8) The command-flag to give to cause the shell to start echoing  *	   commands right away.  *	9) The command-flag to cause the shell to Lib_Exit when an error is  *	   detected in one of the commands.  *  * Some special stuff goes on if a shell doesn't have error control. In such  * a case, errCheck becomes a printf template for echoing the command,  * should echoing be on and ignErr becomes another printf template for  * executing the command while ignoring the return status. If either of these  * strings is empty when hasErrCtl is FALSE, the command will be executed  * anyway as is and if it causes an error, so be it.  */

@@ -477,9 +477,6 @@ argument_list|(
 name|signo
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|signal
 argument_list|(
 name|signo
@@ -487,9 +484,6 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|kill
 argument_list|(
 name|getpid
@@ -501,11 +495,8 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * shellneed --  *	  * Results:  *	Returns 1 if a specified line must be executed by the shell,  *	0 if it can be run via execve, and -1 if the command is a no-op.  *  * Side Effects:  *	None.  *	  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * shellneed --  *  * Results:  *	Returns 1 if a specified line must be executed by the shell,  *	0 if it can be run via execve, and -1 if the command is a no-op.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -583,9 +574,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Compat_RunCommand --  *	Execute the next command for a target. If the command returns an  *	error, the node's made field is set to ERROR and creation stops.  *	The node from which the command came is also given.  *  * Results:  *	0 if the command succeeded, 1 if an error occurred.  *  * Side Effects:  *	The node's 'made' field may be set to ERROR.  *  *-----------------------------------------------------------------------  */
@@ -808,9 +796,6 @@ name|ENDNode
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|ENDNode
@@ -1218,9 +1203,6 @@ argument_list|,
 name|av
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|write
 argument_list|(
 name|STDERR_FILENO
@@ -1239,9 +1221,6 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|write
 argument_list|(
 name|STDERR_FILENO
@@ -1251,9 +1230,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|write
 argument_list|(
 name|STDERR_FILENO
@@ -1272,9 +1248,6 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|write
 argument_list|(
 name|STDERR_FILENO
@@ -1290,7 +1263,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*       * we need to print out the command associated with this Gnode in      * Targ_PrintCmd from Targ_PrintGraph when debugging at level g2,      * in main(), Fatal() and DieHorribly(), therefore do not free it      * when debugging.       */
+comment|/*      * we need to print out the command associated with this Gnode in      * Targ_PrintCmd from Targ_PrintGraph when debugging at level g2,      * in main(), Fatal() and DieHorribly(), therefore do not free it      * when debugging.      */
 if|if
 condition|(
 operator|!
@@ -1512,9 +1485,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * CompatMake --  *	Make a target, given the parent, to abort if necessary.  *  * Results:  *	0  *  * Side Effects:  *	If an error is detected and not being ignored, the process exits.  *  *-----------------------------------------------------------------------  */
@@ -2187,9 +2157,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Compat_Run --  *	Start making again, given a list of target nodes.  *  * Results:  *	None.  *  * Side Effects:  *	Guess what?  *  *-----------------------------------------------------------------------  */

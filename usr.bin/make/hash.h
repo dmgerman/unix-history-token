@@ -143,7 +143,7 @@ name|h
 parameter_list|,
 name|val
 parameter_list|)
-value|((h)->clientData = (void *) (val))
+value|((h)->clientData = (void *)(val))
 end_define
 
 begin_comment
@@ -157,7 +157,7 @@ name|Hash_Size
 parameter_list|(
 name|n
 parameter_list|)
-value|(((n) + sizeof (int) - 1) / sizeof (int))
+value|(((n) + sizeof(int) - 1) / sizeof(int))
 end_define
 
 begin_function_decl

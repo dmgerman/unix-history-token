@@ -529,6 +529,7 @@ break|break;
 block|}
 block|}
 return|return
+operator|(
 name|wild
 operator|&&
 name|bracket
@@ -538,6 +539,7 @@ operator|&&
 name|brace
 operator|==
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -663,9 +665,6 @@ operator|)
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|expansions
@@ -1056,9 +1055,6 @@ literal|'\0'
 condition|)
 block|{
 comment|/* 	     * Hit the end w/o finding any wildcards, so stick the expansion 	     * on the end of the list. 	     */
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|expansions
@@ -2156,9 +2152,6 @@ literal|"failed. Trying subdirectories..."
 operator|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_Open
 argument_list|(
 name|path
@@ -2695,10 +2688,12 @@ name|OP_ARCHV
 condition|)
 block|{
 return|return
+operator|(
 name|Arch_MTime
 argument_list|(
 name|gn
 argument_list|)
+operator|)
 return|;
 block|}
 elseif|else
@@ -2865,10 +2860,12 @@ name|fullName
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|Arch_MemMTime
 argument_list|(
 name|gn
 argument_list|)
+operator|)
 return|;
 block|}
 else|else
@@ -3012,9 +3009,6 @@ name|refCount
 operator|+=
 literal|1
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|path
@@ -3169,9 +3163,6 @@ name|d_name
 argument_list|)
 condition|)
 continue|continue;
-operator|(
-name|void
-operator|)
 name|Hash_CreateEntry
 argument_list|(
 operator|&
@@ -3191,17 +3182,11 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|closedir
 argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|openDirectories
@@ -3219,9 +3204,6 @@ name|path
 operator|!=
 name|openDirectories
 condition|)
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|path
@@ -3458,9 +3440,6 @@ operator|)
 name|p
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_Remove
 argument_list|(
 name|openDirectories
@@ -3617,9 +3596,6 @@ name|refCount
 operator|+=
 literal|1
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|path1

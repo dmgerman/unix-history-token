@@ -105,9 +105,6 @@ name|ln
 operator|->
 name|nextPtr
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|ln
 operator|->
 name|useCount
@@ -127,9 +124,6 @@ argument_list|,
 name|d
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|ln
 operator|->
 name|useCount

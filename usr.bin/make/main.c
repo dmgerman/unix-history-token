@@ -1004,9 +1004,6 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|strcpy
 argument_list|(
 name|p
@@ -1014,9 +1011,6 @@ argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|envFirstVars
@@ -1054,9 +1048,6 @@ break|break;
 case|case
 literal|'f'
 case|:
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|makefiles
@@ -1387,9 +1378,6 @@ goto|goto
 name|rearg
 goto|;
 block|}
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|create
@@ -1546,15 +1534,21 @@ name|path
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|obpath
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1889,9 +1883,6 @@ name|rl
 operator|.
 name|rlim_max
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|setrlimit
 argument_list|(
 name|RLIMIT_NOFILE
@@ -2348,9 +2339,6 @@ name|pathp
 operator|=
 name|_PATH_OBJDIRPREFIX
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|snprintf
 argument_list|(
 name|mdpath
@@ -2393,9 +2381,6 @@ argument_list|)
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|snprintf
 argument_list|(
 name|mdpath
@@ -2451,9 +2436,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|(
-name|void
-operator|)
 name|snprintf
 argument_list|(
 name|mdpath
@@ -2561,9 +2543,6 @@ name|DEFAULT
 operator|=
 name|NULL
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|time
 argument_list|(
 operator|&
@@ -2862,9 +2841,6 @@ argument_list|,
 name|NULL
 argument_list|)
 condition|)
-operator|(
-name|void
-operator|)
 name|ReadMakefile
 argument_list|(
 literal|"Makefile"
@@ -2872,9 +2848,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|ReadMakefile
 argument_list|(
 literal|".depend"
@@ -3023,9 +2996,6 @@ operator|==
 literal|':'
 condition|)
 do|;
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 name|vpath
@@ -3114,9 +3084,6 @@ literal|3
 argument_list|)
 expr_stmt|;
 comment|/* This sprintf is safe, because of the malloc above */
-operator|(
-name|void
-operator|)
 name|sprintf
 argument_list|(
 name|p1
@@ -3444,9 +3411,6 @@ operator|!=
 literal|'/'
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|snprintf
 argument_list|(
 name|path
@@ -3675,9 +3639,6 @@ argument_list|,
 name|stream
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fclose
 argument_list|(
 name|stream
@@ -3850,9 +3811,6 @@ case|case
 literal|0
 case|:
 comment|/* 	 * Close input side of pipe 	 */
-operator|(
-name|void
-operator|)
 name|close
 argument_list|(
 name|fds
@@ -3862,9 +3820,6 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Duplicate the output stream to the shell's output, then 	 * shut the extra thing down. Note we don't fetch the error 	 * stream...why not? Why? 	 */
-operator|(
-name|void
-operator|)
 name|dup2
 argument_list|(
 name|fds
@@ -3875,9 +3830,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|close
 argument_list|(
 name|fds
@@ -3886,9 +3838,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|execv
 argument_list|(
 name|shellPath
@@ -3916,9 +3865,6 @@ name|bad
 goto|;
 default|default:
 comment|/* 	 * No need for the writing half 	 */
-operator|(
-name|void
-operator|)
 name|close
 argument_list|(
 name|fds
@@ -3998,9 +3944,6 @@ operator|)
 condition|)
 do|;
 comment|/* 	 * Close the input side of the pipe. 	 */
-operator|(
-name|void
-operator|)
 name|close
 argument_list|(
 name|fds
@@ -4140,7 +4083,9 @@ end_switch
 
 begin_return
 return|return
+operator|(
 name|res
+operator|)
 return|;
 end_return
 
@@ -4169,7 +4114,9 @@ end_expr_stmt
 
 begin_return
 return|return
+operator|(
 name|res
+operator|)
 return|;
 end_return
 
@@ -4186,9 +4133,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr

@@ -1058,9 +1058,6 @@ name|flags
 operator|=
 literal|0
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtFront
 argument_list|(
 name|ctxt
@@ -1074,9 +1071,6 @@ operator|)
 name|v
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|allVars
@@ -1823,7 +1817,9 @@ name|p
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|p
+operator|)
 return|;
 block|}
 else|else
@@ -2666,7 +2662,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 else|else
@@ -2704,7 +2702,9 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|cp
+operator|)
 return|;
 block|}
 block|}
@@ -2818,7 +2818,9 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ret
+operator|)
 return|;
 block|}
 end_function

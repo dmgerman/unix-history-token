@@ -509,9 +509,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * CondGetArg --  *	Find the argument of a built-in function.  parens is set to TRUE  *	if the arguments are bounded by parens.  *  * Results:  *	The length of the argument and the address of the argument.  *  * Side Effects:  *	The pointer is set to point to the closing parenthesis of the  *	function call.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -844,9 +841,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * CondDoDefined --  *	Handle the 'defined' function for conditionals.  *  * Results:  *	TRUE if the given variable is defined.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -937,9 +931,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * CondStrMatch --  *	Front-end for Str_Match so it returns 0 on match and non-zero  *	on mismatch. Callback function for CondDoMake via Lst_Find  *  * Results:  *	0 if string matches pattern  *  * Side Effects:  *	None  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -979,9 +970,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * CondDoMake --  *	Handle the 'make' function for conditionals.  *  * Results:  *	TRUE if the given target is being made.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
@@ -1062,9 +1050,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * CondDoExists --  *	See if the given file exists.  *  * Results:  *	TRUE if the file exists and FALSE if it does not.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
@@ -1157,9 +1142,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * CondDoTarget --  *	See if the given node exists and is an actual target.  *  * Results:  *	TRUE if the node exists as a target and FALSE if it does not.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -1251,9 +1233,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * CondCvtArg --  *	Convert the given number into a double. If the number begins  *	with 0x, it is interpreted as a hexadecimal integer  *	and converted to a double from there. All other strings just have  *	strtod called on them.  *  * Results:  *	Sets 'value' to double value of string.  *	Returns address of the first character after the last valid  *	character of the converted number.  *  * Side Effects:  *	Can change 'value' even if string is not a valid number.  *  *  *-----------------------------------------------------------------------  */
@@ -1411,14 +1390,13 @@ name|eptr
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|eptr
+operator|)
 return|;
 block|}
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * CondToken --  *	Return the next token from the input.  *  * Results:  *	A Token for the next lexical token in the stream.  *  * Side Effects:  *	condPushback will be set back to None if it is used.  *  *-----------------------------------------------------------------------  */
@@ -3140,9 +3118,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * CondT --  *	Parse a single term in the expression. This consists of a terminal  *	symbol or Not and a terminal symbol (not including the binary  *	operators):  *	    T -> defined(variable) | make(target) | exists(file) | symbol  *	    T -> ! T | ( E )  *  * Results:  *	True, False or Err.  *  * Side Effects:  *	Tokens are consumed.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -3268,9 +3243,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * CondF --  *	Parse a conjunctive factor (nice name, wot?)  *	    F -> T&& F | T  *  * Results:  *	True, False or Err  *  * Side Effects:  *	Tokens are consumed.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -3335,9 +3307,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|(
-name|void
-operator|)
 name|CondF
 argument_list|(
 name|FALSE
@@ -3362,9 +3331,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * CondE --  *	Main expression production.  *	    E -> F || E | F  *  * Results:  *	True, False or Err.  *  * Side Effects:  *	Tokens are, of course, consumed.  *  *-----------------------------------------------------------------------  */
@@ -3430,9 +3396,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|(
-name|void
-operator|)
 name|CondE
 argument_list|(
 name|FALSE
@@ -3457,9 +3420,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Cond_Eval --  *	Evaluate the conditional in the passed line. The line  *	looks like this:  *	    #<cond-type><expr>  *	where<cond-type> is any of if, ifmake, ifnmake, ifdef,  *	ifndef, elif, elifmake, elifnmake, elifdef, elifndef  *	and<expr> consists of&&, ||, !, make(target), defined(variable)  *	and parenthetical groupings thereof.  *  * Results:  *	COND_PARSE	if should parse lines after the conditional  *	COND_SKIP	if should skip lines after the conditional  *	COND_INVALID  	if not a valid conditional.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
@@ -4061,9 +4021,6 @@ return|;
 block|}
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Cond_End --  *	Make sure everything's clean at the end of a makefile.  *  * Results:  *	None.  *  * Side Effects:  *	Parse_Error will be called if open conditionals are around.  *  *-----------------------------------------------------------------------  */

@@ -1066,9 +1066,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * SuffInsert  --  *	Insert the suffix into the list keeping the list ordered by suffix  *	numbers.  *  * Results:  *	None  *  * Side Effects:  *	The reference count of the suffix is incremented  *-----------------------------------------------------------------------  */
 end_comment
@@ -1203,9 +1200,6 @@ literal|"at end of list\n"
 operator|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|l
@@ -1222,9 +1216,6 @@ operator|->
 name|refCount
 operator|++
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|s
@@ -1268,9 +1259,6 @@ name|sNum
 operator|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_Insert
 argument_list|(
 name|l
@@ -1289,9 +1277,6 @@ operator|->
 name|refCount
 operator|++
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|s
@@ -1717,9 +1702,6 @@ argument_list|(
 name|line
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|transforms
@@ -1789,9 +1771,6 @@ name|type
 operator|=
 name|OP_TRANSFORM
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|SuffParseTransform
 argument_list|(
 name|line
@@ -2404,9 +2383,6 @@ name|refCount
 operator|=
 literal|0
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|sufflist
@@ -3021,9 +2997,6 @@ name|children
 operator|+=
 literal|1
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|ls
@@ -3172,9 +3145,6 @@ name|children
 operator|+=
 literal|1
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|ls
@@ -3345,7 +3315,9 @@ name|FAILURE
 condition|)
 block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 ifdef|#
@@ -3587,7 +3559,9 @@ name|l
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|t
+operator|)
 return|;
 block|}
 end_function
@@ -3852,9 +3826,6 @@ name|targ
 operator|->
 name|node
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_Open
 argument_list|(
 name|t
@@ -4319,9 +4290,6 @@ name|sacrifice
 init|=
 name|cp
 decl_stmt|;
-operator|(
-name|void
-operator|)
 name|Arch_ParseArchive
 argument_list|(
 operator|&
@@ -4411,9 +4379,6 @@ argument_list|,
 name|TARG_CREATE
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|members
@@ -4549,9 +4514,6 @@ argument_list|,
 name|TARG_CREATE
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|members
@@ -4622,9 +4584,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|Lst_Append
 argument_list|(
 name|pgn
@@ -4647,9 +4606,6 @@ argument_list|(
 name|prevLN
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|gn
@@ -4916,9 +4872,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|Lst_Append
 argument_list|(
 name|pgn
@@ -4941,9 +4894,6 @@ argument_list|(
 name|prevLN
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|gn
@@ -5079,9 +5029,6 @@ name|NULL
 condition|)
 block|{
 comment|/* 	 * Not already linked, so form the proper links between the 	 * target and source. 	 */
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|tGn
@@ -5095,9 +5042,6 @@ operator|)
 name|sGn
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|sGn
@@ -5185,9 +5129,6 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * Not already linked, so form the proper links between the 		 * target and source. 		 */
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|tGn
@@ -5201,9 +5142,6 @@ operator|)
 name|gn
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|gn
@@ -5319,9 +5257,6 @@ name|children
 argument_list|)
 expr_stmt|;
 comment|/*      * Pass the buck to Make_HandleUse to apply the rule      */
-operator|(
-name|void
-operator|)
 name|Make_HandleUse
 argument_list|(
 name|gn
@@ -5363,9 +5298,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*      * Keep track of another parent to which this beast is transformed so      * the .IMPSRC variable can be set correctly for the parent.      */
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|sGn
@@ -5524,9 +5456,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|gn
@@ -5540,9 +5469,6 @@ operator|)
 name|mem
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|mem
@@ -6072,9 +5998,6 @@ name|target
 argument_list|)
 expr_stmt|;
 comment|/* 	     * Record the target so we can nuke it 	     */
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|targs
@@ -6250,9 +6173,6 @@ literal|"adding suffix rules\n"
 operator|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|targs

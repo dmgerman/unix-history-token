@@ -848,9 +848,6 @@ name|type
 operator||=
 name|OP_ARCHV
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|nodeLst
@@ -1055,9 +1052,6 @@ name|type
 operator||=
 name|OP_ARCHV
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|nodeLst
@@ -1157,9 +1151,6 @@ name|type
 operator||=
 name|OP_ARCHV
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|nodeLst
@@ -1309,7 +1300,7 @@ block|{
 define|#
 directive|define
 name|AR_MAX_NAME_LEN
-value|(sizeof(arh.ar_name)-1)
+value|(sizeof(arh.ar_name) - 1)
 name|FILE
 modifier|*
 name|arch
@@ -1803,9 +1794,6 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|strncpy
 argument_list|(
 name|memName
@@ -2115,9 +2103,6 @@ argument_list|(
 name|arch
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|archives
@@ -2309,8 +2294,10 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 comment|/* 	 * This is a table of archive names, so we build one for 	 * ourselves 	 */
@@ -2357,8 +2344,10 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|eptr
@@ -2425,7 +2414,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -2445,7 +2436,9 @@ operator|==
 literal|'\0'
 condition|)
 return|return
+operator|(
 literal|2
+operator|)
 return|;
 name|entry
 operator|=
@@ -2501,7 +2494,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|2
+operator|)
 return|;
 block|}
 if|if
@@ -2529,7 +2524,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|2
+operator|)
 return|;
 block|}
 name|DEBUGF
@@ -2551,9 +2548,6 @@ index|]
 operator|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|strncpy
 argument_list|(
 name|name
@@ -2577,7 +2571,9 @@ operator|=
 literal|'\0'
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -3254,9 +3250,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|fwrite
 argument_list|(
 operator|(
@@ -3361,9 +3354,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|fwrite
 argument_list|(
 operator|(
@@ -3416,7 +3406,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Arch_MTime --  *	Return the modification time of a member of an archive, given its  *	name.  *  * Results:  *	The modification time (seconds).  *  * Side Effects:  *	The mtime field of the given node is filled in with the value  *	returned by the function.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Arch_MTime --  *	Return the modification time of a member of an archive, given its  *	name.  *  * Results:  *	The modification time(seconds).  *  * Side Effects:  *	The mtime field of the given node is filled in with the value  *	returned by the function.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function

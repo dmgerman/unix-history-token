@@ -638,9 +638,6 @@ argument_list|,
 name|gn
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|allTargets
@@ -799,9 +796,6 @@ name|NULL
 condition|)
 block|{
 comment|/* 	     * Note: Lst_AtEnd must come before the Lst_Concat so the nodes 	     * are added to the list in the order in which they were 	     * encountered in the makefile. 	     */
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|nodes
@@ -822,9 +816,6 @@ operator|&
 name|OP_DOUBLEDEP
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|Lst_Concat
 argument_list|(
 name|nodes
@@ -885,11 +876,13 @@ if|if
 condition|(
 name|ignoreErrors
 operator|||
+operator|(
 name|gn
 operator|->
 name|type
 operator|&
 name|OP_IGNORE
+operator|)
 condition|)
 block|{
 return|return
@@ -926,11 +919,13 @@ if|if
 condition|(
 name|beSilent
 operator|||
+operator|(
 name|gn
 operator|->
 name|type
 operator|&
 name|OP_SILENT
+operator|)
 condition|)
 block|{
 return|return

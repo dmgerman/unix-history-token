@@ -207,6 +207,7 @@ name|cgn
 parameter_list|)
 block|{
 return|return
+operator|(
 name|Make_TimeStamp
 argument_list|(
 operator|(
@@ -221,12 +222,10 @@ operator|*
 operator|)
 name|cgn
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Make_OODate --  *	See if a given node is out of date with respect to its sources.  *	Used by Make_Run when deciding which nodes to place on the  *	toBeMade queue initially and by Make_Update to screen out USE and  *	EXEC nodes. In the latter case, however, any other sort of node  *	must be considered out-of-date since at least one of its children  *	will have been recreated.  *  * Results:  *	TRUE if the node is out of date. FALSE otherwise.  *  * Side Effects:  *	The mtime field of the node and the cmtime field of its parents  *	will/may be changed.  *-----------------------------------------------------------------------  */
@@ -264,9 +263,6 @@ operator|==
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|Dir_MTime
 argument_list|(
 name|gn
@@ -619,9 +615,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * MakeAddChild  --  *	Function used by Make_Run to add a child to the list l.  *	It will only add the child if its make field is FALSE.  *  * Results:  *	Always returns 0  *  * Side Effects:  *	The given list is extended  *-----------------------------------------------------------------------  */
 end_comment
@@ -675,9 +668,6 @@ name|OP_USE
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|Lst_EnQueue
 argument_list|(
 name|l
@@ -697,9 +687,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Make_HandleUse --  *	Function called by Make_Run and SuffApplyTransform on the downward  *	pass to handle .USE and transformation nodes. A callback function  *	for Lst_ForEach, it implements the .USE and transformation  *	functionality by copying the node's commands, type flags  *	and children to the parent node. Should be called before the  *	children are enqueued to be looked at by MakeAddChild.  *  *	A .USE node is much like an explicit transformation rule, except  *	its commands are always added to the target node, even if the  *	target already has commands.  *  * Results:  *	returns 0.  *  * Side Effects:  *	Children and commands may be added to the parent and the parent's  *	type may be changed.  *  *-----------------------------------------------------------------------  */
@@ -759,9 +746,6 @@ argument_list|)
 condition|)
 block|{
 comment|/* 	     * .USE or transformation and target has no commands -- append 	     * the child's commands to the parent. 	     */
-operator|(
-name|void
-operator|)
 name|Lst_Concat
 argument_list|(
 name|pgn
@@ -829,9 +813,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|pgn
@@ -841,9 +822,6 @@ argument_list|,
 name|gn
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
 name|gn
@@ -926,6 +904,7 @@ name|cgn
 parameter_list|)
 block|{
 return|return
+operator|(
 name|Make_HandleUse
 argument_list|(
 operator|(
@@ -940,12 +919,10 @@ operator|*
 operator|)
 name|cgn
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Make_Update  --  *	Perform update on the parents of a node. Used by JobFinish once  *	a node has been dealt with and by MakeStartJobs if it finds an  *	up-to-date node.  *  * Results:  *	Always returns 0  *  * Side Effects:  *	The unmade field of pgn is decremented and pgn may be placed on  *	the toBeMade queue if this field becomes 0.  *  * 	If the child was made, the parent's childMade field will be set true  *	and its cmtime set to now.  *  *	If the child wasn't made, the cmtime field of the parent will be  *	altered if the child's mtime is big enough.  *  *	Finally, if the child is the implied source for the parent, the  *	parent's IMPSRC variable is set appropriately.  *  *-----------------------------------------------------------------------  */
@@ -1190,9 +1167,6 @@ block|}
 block|}
 else|else
 block|{
-operator|(
-name|void
-operator|)
 name|Make_TimeStamp
 argument_list|(
 name|pgn
@@ -1212,9 +1186,6 @@ literal|0
 condition|)
 block|{
 comment|/* 		     * Queue the node up -- any unmade predecessors will 		     * be dealt with in MakeStartJobs. 		     */
-operator|(
-name|void
-operator|)
 name|Lst_EnQueue
 argument_list|(
 name|toBeMade
@@ -1326,9 +1297,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|Lst_EnQueue
 argument_list|(
 name|toBeMade
@@ -1442,9 +1410,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * MakeAddAllSrc --  *	Add a child's name to the ALLSRC and OODATE variables of the given  *	node. Called from Make_DoAllVar via Lst_ForEach. A child is added only  *	if it has not been given the .EXEC, .USE or .INVISIBLE attributes.  *	.EXEC and .USE children are very rarely going to be files, so...  *	A child is added to the OODATE variable if its modification time is  *	later than that of its parent, as defined by Make, except if the  *	parent is a .JOIN node. In that case, it is only added to the OODATE  *	variable if it was actually made (since .JOIN nodes don't have  *	modification times, the comparison is rather unfair...)..  *  * Results:  *	Always returns 0  *  * Side Effects:  *	The ALLSRC variable for the given node is extended.  *-----------------------------------------------------------------------  */
@@ -1643,9 +1608,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Make_DoAllVar --  *	Set up the ALLSRC and OODATE variables. Sad to say, it must be  *	done separately, rather than while traversing the graph. This is  *	because Make defined OODATE to contain all sources whose modification  *	times were later than that of the target, *not* those sources that  *	were out-of-date. Since in both compatibility and native modes,  *	the modification time of the parent isn't found until the child  *	has been dealt with, we have to wait until now to fill in the  *	variable. As for ALLSRC, the ordering is important and not  *	guaranteed when in native mode, so it must be set here, too.  *  * Results:  *	None  *  * Side Effects:  *	The ALLSRC and OODATE variables of the given node is filled in.  *	If the node is a .JOIN node, its TARGET variable will be set to  * 	match its ALLSRC variable.  *-----------------------------------------------------------------------  */
 end_comment
@@ -1754,9 +1716,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * MakeStartJobs --  *	Start as many jobs as possible.  *  * Results:  *	If the query flag was given to pmake, no job will be started,  *	but as soon as an out-of-date target is found, this function  *	returns TRUE. At all other times, this function returns FALSE.  *  * Side Effects:  *	Nodes are removed from the toBeMade queue and job table slots  *	are filled.  *  *-----------------------------------------------------------------------  */
@@ -1992,9 +1951,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * MakePrintStatus --  *	Print the status of a top-level node, viz. it being up-to-date  *	already or not created due to an error in a lower level.  *	Callback function for Make_Run via Lst_ForEach.  If gn->unmade is  *	nonzero and that is meant to imply a cycle in the graph, then  *	cycle is TRUE.  *  * Results:  *	Always returns 0.  *  * Side Effects:  *	A message may be printed.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -2175,9 +2131,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Make_Run --  *	Initialize the nodes to remake and the list of nodes which are  *	ready to be made by doing a breadth-first traversal of the graph  *	starting from the nodes in the given list. Once this traversal  *	is finished, all the 'leaves' of the graph are in the toBeMade  *	queue.  *	Using this queue and the Job module, work back up the graph,  *	calling on MakeStartJobs to keep the job table as full as  *	possible.  *  * Results:  *	TRUE if work was done. FALSE otherwise.  *  * Side Effects:  *	The make field of all nodes involved in the creation of the given  *	targets is set to 1. The toBeMade list is set to contain all the  *	'leaves' of these subgraphs.  *-----------------------------------------------------------------------  */
 end_comment
@@ -2309,9 +2262,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|(
-name|void
-operator|)
 name|Lst_EnQueue
 argument_list|(
 name|toBeMade
@@ -2349,9 +2299,6 @@ block|}
 else|else
 block|{
 comment|/* 	 * Initialization. At the moment, no jobs are running and until some 	 * get started, nothing will happen since the remaining upward 	 * traversal of the graph is performed by the routines in job.c upon 	 * the finishing of a job. So we fill the Job table as much as we can 	 * before going into our loop. 	 */
-operator|(
-name|void
-operator|)
 name|MakeStartJobs
 argument_list|()
 expr_stmt|;
@@ -2379,9 +2326,6 @@ operator|!
 name|usePipes
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|MakeStartJobs
 argument_list|()
 expr_stmt|;

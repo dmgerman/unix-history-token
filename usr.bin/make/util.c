@@ -141,9 +141,6 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|vfprintf
 argument_list|(
 name|stderr
@@ -158,9 +155,6 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fflush
 argument_list|(
 name|stderr
@@ -199,9 +193,6 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|vfprintf
 argument_list|(
 name|stderr
@@ -216,9 +207,6 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -226,9 +214,6 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fflush
 argument_list|(
 name|stderr
@@ -274,9 +259,6 @@ condition|)
 name|Job_Wait
 argument_list|()
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|vfprintf
 argument_list|(
 name|stderr
@@ -291,9 +273,6 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -301,9 +280,6 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fflush
 argument_list|(
 name|stderr
@@ -360,9 +336,6 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -370,9 +343,6 @@ argument_list|,
 literal|"make: "
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|vfprintf
 argument_list|(
 name|stderr
@@ -387,9 +357,6 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -397,9 +364,6 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fflush
 argument_list|(
 name|stderr
@@ -660,8 +624,10 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -678,15 +644,19 @@ operator|=
 name|EISDIR
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|unlink
 argument_list|(
 name|file
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -717,7 +687,9 @@ name|a
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

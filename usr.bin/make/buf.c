@@ -76,7 +76,7 @@ parameter_list|,
 name|nb
 parameter_list|)
 define|\
-value|if (bp->left< (nb)+1) {\ 	    int newSize = (bp)->size + max((nb)+1,BUF_ADD_INC); \ 	    Byte  *newBuf = (Byte *) erealloc((bp)->buffer, newSize); \ 	    \ 	    (bp)->inPtr = newBuf + ((bp)->inPtr - (bp)->buffer); \ 	    (bp)->outPtr = newBuf + ((bp)->outPtr - (bp)->buffer);\ 	    (bp)->buffer = newBuf;\ 	    (bp)->size = newSize;\ 	    (bp)->left = newSize - ((bp)->inPtr - (bp)->buffer);\ 	}
+value|if (bp->left< (nb)+1) {\ 	    int newSize = (bp)->size + max((nb) + 1, BUF_ADD_INC); \ 	    Byte  *newBuf = (Byte *)erealloc((bp)->buffer, newSize); \ 	    \ 	    (bp)->inPtr = newBuf + ((bp)->inPtr - (bp)->buffer); \ 	    (bp)->outPtr = newBuf + ((bp)->outPtr - (bp)->buffer);\ 	    (bp)->buffer = newBuf;\ 	    (bp)->size = newSize;\ 	    (bp)->left = newSize - ((bp)->inPtr - (bp)->buffer);\ 	}
 end_define
 
 begin_define
@@ -164,9 +164,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Buf_AddBytes --  *	Add a number of bytes to the buffer.  *  * Results:  *	None.  *  * Side Effects:  *	Guess what?  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -227,9 +224,6 @@ literal|0
 expr_stmt|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Buf_UngetByte --  *	Place the byte back at the beginning of the buffer.  *  * Results:  *	SUCCESS if the byte was added ok. FAILURE if not.  *  * Side Effects:  *	The byte is stuffed in the buffer and outPtr is decremented.  *  *-----------------------------------------------------------------------  */
@@ -440,9 +434,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Buf_UngetBytes --  *	Push back a series of bytes at the beginning of the buffer.  *  * Results:  *	None.  *  * Side Effects:  *	outPtr is decremented and the bytes copied into the buffer.  *  *-----------------------------------------------------------------------  */
@@ -671,9 +662,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Buf_GetByte --  *	Return the next byte from the buffer. Actually returns an integer.  *  * Results:  *	Returns BUF_ERROR if there's no byte in the buffer, or the byte  *	itself if there is one.  *  * Side Effects:  *	outPtr is incremented and both outPtr and inPtr will be reset if  *	the buffer is emptied.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -771,9 +759,6 @@ return|;
 block|}
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Buf_GetBytes --  *	Extract a number of bytes from the buffer.  *  * Results:  *	The number of bytes gotten.  *  * Side Effects:  *	The passed array is overwritten.  *  *-----------------------------------------------------------------------  */
@@ -882,9 +867,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Buf_GetAll --  *	Get all the available data at once.  *  * Results:  *	A pointer to the data and the number of bytes available.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -934,9 +916,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Buf_Discard --  *	Throw away bytes in a buffer.  *  * Results:  *	None.  *  * Side Effects:  *	The bytes are discarded.  *  *-----------------------------------------------------------------------  */
@@ -1006,9 +985,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Buf_Size --  *	Returns the number of bytes in the given buffer. Doesn't include  *	the null-terminating byte.  *  * Results:  *	The number of bytes.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -1034,9 +1010,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Buf_Init --  *	Initialize a buffer. If no initial size is given, a reasonable  *	default is used.  *  * Results:  *	A buffer to be given to other functions in this library.  *  * Side Effects:  *	The buffer is created, the space allocated and pointers  *	initialized.  *  *-----------------------------------------------------------------------  */
@@ -1130,9 +1103,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Buf_Destroy --  *	Destroy a buffer, and optionally free its data, too.  *  * Results:  *	None.  *  * Side Effects:  *	The buffer is freed.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -1176,9 +1146,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Buf_ReplaceLastByte --  *     Replace the last byte in a buffer.  *  * Results:  *     None.  *  * Side Effects:  *     If the buffer was empty intially, then a new byte will be added.  *     Otherwise, the last byte is overwritten.  *  *-----------------------------------------------------------------------  */
