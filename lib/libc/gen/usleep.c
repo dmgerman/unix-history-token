@@ -36,7 +36,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: usleep.c,v 1.20 1997/10/22 10:55:49 ache Exp $"
+literal|"$Id: usleep.c,v 1.21 1997/10/22 12:04:49 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,11 +76,6 @@ name|struct
 name|timespec
 name|time_to_sleep
 decl_stmt|;
-if|if
-condition|(
-name|useconds
-condition|)
-block|{
 name|time_to_sleep
 operator|.
 name|tv_nsec
@@ -102,6 +97,7 @@ operator|/
 literal|1000000
 expr_stmt|;
 return|return
+operator|(
 name|nanosleep
 argument_list|(
 operator|&
@@ -109,10 +105,7 @@ name|time_to_sleep
 argument_list|,
 name|NULL
 argument_list|)
-return|;
-block|}
-return|return
-literal|0
+operator|)
 return|;
 block|}
 end_function
