@@ -83,6 +83,12 @@ directive|include
 file|<netinet6/ip6_var.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RANDOM_IP_ID
+end_ifdef
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -808,6 +814,15 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* RANDOM_IP_ID */
+end_comment
 
 end_unit
 

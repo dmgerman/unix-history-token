@@ -1685,6 +1685,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RANDOM_IP_ID
+end_ifdef
+
 begin_decl_stmt
 name|u_int32_t
 name|ip6_randomid
@@ -1696,6 +1702,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
