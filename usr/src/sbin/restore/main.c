@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	3.12	(Berkeley)	83/08/11"
+literal|"@(#)main.c	3.13	(Berkeley)	84/02/07"
 decl_stmt|;
 end_decl_stmt
 
@@ -1290,6 +1290,14 @@ argument_list|)
 expr_stmt|;
 name|vflag
 operator|++
+expr_stmt|;
+break|break;
+comment|/* 	 * Just restore requested directory modes. 	 */
+case|case
+literal|'R'
+case|:
+name|setdirmodes
+argument_list|()
 expr_stmt|;
 break|break;
 comment|/* 	 * Turn on debugging. 	 */
