@@ -336,6 +336,8 @@ name|fpos_t
 name|target
 decl_stmt|,
 name|curoff
+decl_stmt|,
+name|ret
 decl_stmt|;
 name|size_t
 name|n
@@ -1034,6 +1036,9 @@ argument_list|(
 name|fp
 argument_list|)
 operator|||
+operator|(
+name|ret
+operator|=
 name|_sseek
 argument_list|(
 name|fp
@@ -1045,6 +1050,7 @@ name|offset
 argument_list|,
 name|whence
 argument_list|)
+operator|)
 operator|==
 name|POS_ERR
 condition|)
@@ -1096,9 +1102,7 @@ if|if
 condition|(
 name|ltest
 operator|&&
-name|fp
-operator|->
-name|_offset
+name|ret
 operator|>
 name|LONG_MAX
 condition|)
