@@ -217,6 +217,13 @@ begin_comment
 comment|/*****************************************************************************  * End of configurable parameters.  *****************************************************************************/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PCICISADEBUG
+value|1
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -227,8 +234,7 @@ begin_decl_stmt
 name|int
 name|pcicisa_debug
 init|=
-literal|0
-comment|/* XXX */
+name|PCICISADEBUG
 decl_stmt|;
 end_decl_stmt
 
@@ -889,10 +895,6 @@ name|i
 operator|=
 literal|0
 init|;
-name|res
-operator|==
-name|NULL
-operator|&&
 name|i
 operator|<
 literal|16
@@ -936,6 +938,13 @@ argument_list|,
 name|RF_ACTIVE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|res
+operator|!=
+name|NULL
+condition|)
+break|break;
 block|}
 if|if
 condition|(
@@ -974,7 +983,7 @@ name|SYS_RES_IRQ
 argument_list|,
 literal|0
 argument_list|,
-name|mem
+name|i
 argument_list|,
 literal|1
 argument_list|)
@@ -1072,9 +1081,9 @@ name|dev
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
-name|res
-argument_list|,
 name|rid
+argument_list|,
+name|res
 argument_list|)
 expr_stmt|;
 name|bus_set_resource
@@ -1094,6 +1103,20 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+else|else
+block|{
+name|bus_release_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_MEMORY
+argument_list|,
+name|rid
+argument_list|,
+name|res
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|res
@@ -1112,17 +1135,6 @@ return|return
 name|ENOMEM
 return|;
 block|}
-name|bus_release_resource
-argument_list|(
-name|dev
-argument_list|,
-name|SYS_RES_MEMORY
-argument_list|,
-name|rid
-argument_list|,
-name|res
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0

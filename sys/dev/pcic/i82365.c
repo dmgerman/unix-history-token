@@ -934,7 +934,7 @@ name|sc
 operator|->
 name|irq_res
 argument_list|,
-name|INTR_TYPE_NET
+name|INTR_TYPE_MISC
 argument_list|,
 name|pcic_intr
 argument_list|,
@@ -950,6 +950,13 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Cannot setup intr\n"
+argument_list|)
+expr_stmt|;
 name|pcic_deactivate
 argument_list|(
 name|dev
@@ -962,6 +969,11 @@ block|}
 block|}
 else|else
 block|{
+name|printf
+argument_list|(
+literal|"Polling not supported\n"
+argument_list|)
+expr_stmt|;
 comment|/* XXX Do polling */
 return|return
 operator|(
@@ -1269,9 +1281,18 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"pcic_attach (active) returns %d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 return|return
 name|error
 return|;
+block|}
 comment|/* now check for each controller/socket */
 comment|/* 	 * this could be done with a loop, but it would violate the 	 * abstraction...  --- unknown 	 * so? I don't see the abstraction... --imp 	 */
 name|count
