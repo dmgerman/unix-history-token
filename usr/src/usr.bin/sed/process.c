@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c	5.9 (Berkeley) %G%"
+literal|"@(#)process.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -975,7 +975,7 @@ case|case
 literal|'s'
 case|:
 name|sdone
-operator|=
+operator||=
 name|substitute
 argument_list|(
 name|cp
@@ -2109,8 +2109,6 @@ argument_list|)
 expr_stmt|;
 name|appendx
 operator|=
-literal|0
-expr_stmt|;
 name|sdone
 operator|=
 literal|0
