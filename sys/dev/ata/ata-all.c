@@ -335,16 +335,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|struct
-name|intr_config_hook
-modifier|*
-name|ata_delayed_attach
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|devclass_t
 name|ata_devclass
 decl_stmt|;
@@ -367,6 +357,17 @@ end_decl_stmt
 begin_comment
 comment|/* local vars */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|intr_config_hook
+modifier|*
+name|ata_delayed_attach
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -4425,6 +4426,28 @@ decl_stmt|;
 name|int
 name|ctlr
 decl_stmt|;
+if|if
+condition|(
+name|ata_delayed_attach
+condition|)
+block|{
+name|config_intrhook_disestablish
+argument_list|(
+name|ata_delayed_attach
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|ata_delayed_attach
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
+name|ata_delayed_attach
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 comment|/*      * run through all ata devices and look for real ATA& ATAPI devices      * using the hints we found in the early probe, this avoids some of      * the delays probing of non-exsistent devices can cause.      */
 for|for
 control|(
@@ -4540,28 +4563,6 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|ata_delayed_attach
-condition|)
-block|{
-name|config_intrhook_disestablish
-argument_list|(
-name|ata_delayed_attach
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|ata_delayed_attach
-argument_list|,
-name|M_TEMP
-argument_list|)
-expr_stmt|;
-name|ata_delayed_attach
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 block|}
 end_function
 
