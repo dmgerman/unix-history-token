@@ -23,6 +23,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_comment
+comment|/* XXX for mtree.h */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
 end_include
 
@@ -54,6 +64,22 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mtree.h"
+end_include
+
+begin_comment
+comment|/* XXX for extern.h */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
