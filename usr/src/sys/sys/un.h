@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	un.h	5.1	82/08/02	*/
+comment|/*	un.h	5.2	83/05/27	*/
 end_comment
 
 begin_comment
@@ -25,6 +25,24 @@ comment|/* path name */
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_function_decl
+name|int
+name|unp_discard
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

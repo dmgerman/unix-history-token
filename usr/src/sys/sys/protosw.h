@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	protosw.h	4.14	82/11/13	*/
+comment|/*	protosw.h	4.15	83/05/27	*/
 end_comment
 
 begin_comment
@@ -178,6 +178,17 @@ end_define
 
 begin_comment
 comment|/* want PRU_RCVD calls */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PR_RIGHTS
+value|0x10
+end_define
+
+begin_comment
+comment|/* passes capabilities */
 end_comment
 
 begin_comment

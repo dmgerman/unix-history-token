@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socket.h	4.26	83/05/18	*/
+comment|/*	socket.h	4.27	83/05/27	*/
 end_comment
 
 begin_comment
-comment|/*  * Externally visible attributes of sockets.  */
+comment|/*  * Definitions related to sockets: types, address families, options.  */
 end_comment
 
 begin_comment
-comment|/*  * Socket types.  *  * The kernel implement these abstract (session-layer) socket  * services, with extra protocol on top of network services  * if necessary.  */
+comment|/*  * Types  */
 end_comment
 
 begin_define
@@ -55,6 +55,17 @@ begin_comment
 comment|/* reliably-delivered message */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SOCK_SEQPACKET
+value|5
+end_define
+
+begin_comment
+comment|/* sequenced packet stream */
+end_comment
+
 begin_comment
 comment|/*  * Option flags per-socket.  */
 end_comment
@@ -78,7 +89,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* willing to accept connections */
+comment|/* socket has had listen() */
 end_comment
 
 begin_define
@@ -89,7 +100,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* allow local address reuse (gag) */
+comment|/* allow local address reuse */
 end_comment
 
 begin_define
@@ -114,15 +125,8 @@ begin_comment
 comment|/* just use interface addresses */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SO_NEWFDONCONN
-value|0x20
-end_define
-
 begin_comment
-comment|/* give new fd on connection */
+comment|/* 0x20 was SO_NEWFDONCONN */
 end_comment
 
 begin_define
@@ -159,171 +163,7 @@ comment|/* ~SO_LINGER */
 end_comment
 
 begin_comment
-comment|/*  * Generic socket protocol format.  *  * Each process is normally operating in a protocol family,  * whose protocols are used unless the process specifies otherwise.  * Most families supply protocols to the basic socket types.  When  * protocols are not present in the family, the higher level (roughly  * ISO session layer) code in the system layers on the protocols  * to support the socket types.  */
-end_comment
-
-begin_struct
-struct|struct
-name|sockproto
-block|{
-name|u_short
-name|sp_family
-decl_stmt|;
-comment|/* protocol family */
-name|u_short
-name|sp_protocol
-decl_stmt|;
-comment|/* protocol within family */
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|PF_UNSPEC
-value|0
-end_define
-
-begin_comment
-comment|/* unspecified */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PF_UNIX
-value|1
-end_define
-
-begin_comment
-comment|/* UNIX internal protocol */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PF_INET
-value|2
-end_define
-
-begin_comment
-comment|/* internetwork: UDP, TCP, etc. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PF_IMPLINK
-value|3
-end_define
-
-begin_comment
-comment|/* imp link protocols */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PF_PUP
-value|4
-end_define
-
-begin_comment
-comment|/* pup protocols: e.g. BSP */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PF_CHAOS
-value|5
-end_define
-
-begin_comment
-comment|/* mit CHAOS protocols */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PF_OISCP
-value|6
-end_define
-
-begin_comment
-comment|/* ois communication protocols */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PF_NBS
-value|7
-end_define
-
-begin_comment
-comment|/* nbs protocols */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PF_ECMA
-value|8
-end_define
-
-begin_comment
-comment|/* european computer manufacturers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PF_DATAKIT
-value|9
-end_define
-
-begin_comment
-comment|/* datakit protocols */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PF_CCITT
-value|10
-end_define
-
-begin_comment
-comment|/* CCITT protocols, X.25 etc */
-end_comment
-
-begin_comment
-comment|/*  * Generic socket address format.  *  * Each process is also operating in an address family, whose  * addresses are assigned unless otherwise requested.  The address  * family used affects address properties: whether addresses are  * externalized or internalized, location dependent or independent, etc.  * The address can be defined directly if it fits in 14 bytes, or  * a pointer and length can be given to variable length data.  * We give these as two different structures to allow initialization.  */
-end_comment
-
-begin_struct
-struct|struct
-name|sockaddr
-block|{
-name|u_short
-name|sa_family
-decl_stmt|;
-comment|/* address family */
-name|char
-name|sa_data
-index|[
-literal|14
-index|]
-decl_stmt|;
-comment|/* up to 14 bytes of direct address */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * The first few address families correspond to protocol  * families.  Address families unrelated to protocol families  * are also possible.  */
+comment|/*  * Address families.  */
 end_comment
 
 begin_define
@@ -395,12 +235,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AF_OISCP
+name|AF_NS
 value|6
 end_define
 
 begin_comment
-comment|/* ois communication protocols */
+comment|/* XEROX NS protocols */
 end_comment
 
 begin_define
@@ -450,9 +290,162 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AF_MAX
+name|AF_SNA
 value|11
 end_define
+
+begin_comment
+comment|/* IBM SNA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AF_MAX
+value|12
+end_define
+
+begin_comment
+comment|/*  * Structure used by kernel to store most  * addresses.  */
+end_comment
+
+begin_struct
+struct|struct
+name|sockaddr
+block|{
+name|u_short
+name|sa_family
+decl_stmt|;
+comment|/* address family */
+name|char
+name|sa_data
+index|[
+literal|14
+index|]
+decl_stmt|;
+comment|/* up to 14 bytes of direct address */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Structure used by kernel to pass protocol  * information in raw sockets.  */
+end_comment
+
+begin_struct
+struct|struct
+name|sockproto
+block|{
+name|u_short
+name|sp_family
+decl_stmt|;
+comment|/* address family */
+name|u_short
+name|sp_protocol
+decl_stmt|;
+comment|/* protocol */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Protocol families, same as address families for now.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PF_UNSPEC
+value|AF_UNSPEC
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_UNIX
+value|AF_UNIX
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_INET
+value|AF_INET
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_IMPLINK
+value|AF_IMPLINK
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_PUP
+value|AF_PUP
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_CHAOS
+value|AF_CHAOS
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_NS
+value|AF_NS
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_NBS
+value|AF_NBS
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_ECMA
+value|AF_ECMA
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_DATAKIT
+value|AF_DATAKIT
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_CCITT
+value|AF_CCITT
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_SNA
+value|AF_SNA
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_MAX
+value|12
+end_define
+
+begin_comment
+comment|/*  * Level number for (get/set)sockopt() to apply to socket itself.  */
+end_comment
 
 begin_define
 define|#
@@ -465,38 +458,93 @@ begin_comment
 comment|/* options for socket level */
 end_comment
 
+begin_comment
+comment|/*  * Maximum queue length specifiable by listen.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|SOF_OOB
+name|SOMAXCONN
+value|5
+end_define
+
+begin_comment
+comment|/*  * Message header for recvmsg and sendmsg calls.  */
+end_comment
+
+begin_struct
+struct|struct
+name|msghdr
+block|{
+name|caddr_t
+name|msg_name
+decl_stmt|;
+comment|/* optional address */
+name|int
+name|msg_namelen
+decl_stmt|;
+comment|/* size of address */
+name|struct
+name|iovec
+modifier|*
+name|msg_iov
+decl_stmt|;
+comment|/* scatter/gather array */
+name|int
+name|msg_iovlen
+decl_stmt|;
+comment|/* # elements in msg_iov */
+name|caddr_t
+name|msg_accrights
+decl_stmt|;
+comment|/* access rights sent/received */
+name|int
+name|msg_accrightslen
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|MSG_OOB
 value|0x1
 end_define
 
 begin_comment
-comment|/* send/recv out-of-band data */
+comment|/* process out-of-band data */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SOF_PREVIEW
+name|MSG_PEEK
 value|0x2
 end_define
 
 begin_comment
-comment|/* look at data, but don't read */
+comment|/* peek at incoming message */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SOF_DONTROUTE
+name|MSG_DONTROUTE
 value|0x4
 end_define
 
 begin_comment
-comment|/* send without routing data */
+comment|/* send without using routing tables */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MSG_MAXIOVLEN
+value|16
+end_define
 
 end_unit
 
