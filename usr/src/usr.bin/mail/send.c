@@ -42,7 +42,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)send.c	2.1 %G%"
+literal|"@(#)send.c	2.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1405,6 +1405,9 @@ operator|==
 literal|0
 condition|)
 block|{
+name|sigchild
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SIGTSTP
@@ -1466,7 +1469,7 @@ name|postage
 operator|=
 name|fopen
 argument_list|(
-literal|"/crp/kurt/postage"
+name|POSTAGE
 argument_list|,
 literal|"a"
 argument_list|)
