@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Filter command Interface  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: filter.c,v 1.12 1997/07/27 23:26:23 brian Exp $  *  *	TODO: Shoud send ICMP error message when we discard packets.  */
+comment|/*  *		PPP Filter command Interface  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: filter.c,v 1.6.2.5 1997/08/25 00:34:25 brian Exp $  *  *	TODO: Shoud send ICMP error message when we discard packets.  */
 end_comment
 
 begin_include
@@ -1711,7 +1711,7 @@ name|LogPrintf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"Parse: Src: %s"
+literal|"Parse: Src: %s\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -1725,7 +1725,7 @@ name|LogPrintf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"Parse: Src mask: %s "
+literal|"Parse: Src mask: %s\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -1739,7 +1739,7 @@ name|LogPrintf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"Parse: Dst: %s"
+literal|"Parse: Dst: %s\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(

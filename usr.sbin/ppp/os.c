@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP OS Layer Interface Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: os.c,v 1.23 1997/06/13 02:07:30 brian Exp $  *  */
+comment|/*  *	      PPP OS Layer Interface Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: os.c,v 1.7.2.12 1997/08/25 00:34:34 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -263,7 +263,7 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"socket: %s"
+literal|"SetIpDevice: socket(): %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -391,7 +391,7 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"ioctl(SIOCDIFADDR): %s"
+literal|"SetIpDevice: ioctl(SIOCDIFADDR): %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -701,7 +701,7 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"ioctl(SIFADDR): %s"
+literal|"SetIpDevice: ioctl(SIFADDR): %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -746,7 +746,7 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"ioctl(SIFDSTADDR): %s"
+literal|"SetIpDevice: ioctl(SIFDSTADDR): %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -794,7 +794,7 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"ioctl(SIFBRDADDR): %s"
+literal|"SetIpDevice: ioctl(SIFBRDADDR): %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -825,7 +825,7 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"ioctl(SIOCAIFADDR): %s"
+literal|"SetIpDevice: ioctl(SIOCAIFADDR): %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1289,7 +1289,7 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"socket: %s"
+literal|"OsInterfaceDown: socket: %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1330,7 +1330,7 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"ioctl(SIOCSIFFLAGS): %s"
+literal|"OsInterfaceDown: ioctl(SIOCSIFFLAGS): %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1450,7 +1450,7 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"ioctl(TUNSIFINFO): %s"
+literal|"OsSetInterfaceParams: ioctl(TUNSIFINFO): %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1734,7 +1734,7 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"socket: %s"
+literal|"OpenTunnel: socket(): %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1769,7 +1769,7 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"ioctl(SIOCGIFFLAGS): %s"
+literal|"OpenTunnel: ioctl(SIOCGIFFLAGS): %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1814,7 +1814,7 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"ioctl(SIOCSIFFLAGS): %s"
+literal|"OpenTunnel: ioctl(SIOCSIFFLAGS): %s\n"
 argument_list|,
 name|strerror
 argument_list|(

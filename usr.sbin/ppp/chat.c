@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  *  Most of codes are derived from chat.c by Karl Fox (karl@MorningStar.Com).  *  *	Chat -- a program for automatic session establishment (i.e. dial  *		the phone and log in).  *  *	This software is in the public domain.  *  *	Please send all bug reports, requests for information, etc. to:  *  *		Karl Fox<karl@MorningStar.Com>  *		Morning Star Technologies, Inc.  *		1760 Zollinger Road  *		Columbus, OH  43221  *		(614)451-1883  *  * $Id: chat.c,v 1.31 1997/08/17 22:47:07 brian Exp $  *  *  TODO:  *	o Support more UUCP compatible control sequences.  *	o Dialing shoud not block monitor process.  *	o Reading modem by select should be unified into main.c  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  *  Most of codes are derived from chat.c by Karl Fox (karl@MorningStar.Com).  *  *	Chat -- a program for automatic session establishment (i.e. dial  *		the phone and log in).  *  *	This software is in the public domain.  *  *	Please send all bug reports, requests for information, etc. to:  *  *		Karl Fox<karl@MorningStar.Com>  *		Morning Star Technologies, Inc.  *		1760 Zollinger Road  *		Columbus, OH  43221  *		(614)451-1883  *  * $Id: chat.c,v 1.11.2.15 1997/08/25 00:34:22 brian Exp $  *  *  TODO:  *	o Support more UUCP compatible control sequences.  *	o Dialing shoud not block monitor process.  *	o Reading modem by select should be unified into main.c  */
 end_comment
 
 begin_include
@@ -736,7 +736,7 @@ name|LogPrintf
 argument_list|(
 name|LogPHASE
 argument_list|,
-literal|"Phone: %s"
+literal|"Phone: %s\n"
 argument_list|,
 name|phone
 argument_list|)
@@ -938,7 +938,7 @@ name|LogPrintf
 argument_list|(
 name|LogCONNECT
 argument_list|,
-literal|"%s"
+literal|"%s\n"
 argument_list|,
 name|logbuff
 argument_list|)
@@ -962,7 +962,7 @@ name|LogPrintf
 argument_list|(
 name|LogCARRIER
 argument_list|,
-literal|"%s"
+literal|"%s\n"
 argument_list|,
 name|logbuff
 argument_list|)
@@ -1131,7 +1131,7 @@ name|LogPrintf
 argument_list|(
 name|LogCHAT
 argument_list|,
-literal|"Wait for (%d): %s --> %s"
+literal|"Wait for (%d): %s --> %s\n"
 argument_list|,
 name|TimeoutSec
 argument_list|,
@@ -1171,7 +1171,7 @@ name|LogPrintf
 argument_list|(
 name|LogCHAT
 argument_list|,
-literal|"Truncating String to %d character: %s"
+literal|"Truncating String to %d character: %s\n"
 argument_list|,
 name|IBSIZE
 argument_list|,
@@ -1275,7 +1275,7 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"select: %s"
+literal|"WaitForString: select(): %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1318,7 +1318,7 @@ name|LogPrintf
 argument_list|(
 name|LogCHAT
 argument_list|,
-literal|"Got: %s"
+literal|"Got: %s\n"
 argument_list|,
 name|inbuff
 argument_list|)
@@ -1327,7 +1327,7 @@ name|LogPrintf
 argument_list|(
 name|LogCHAT
 argument_list|,
-literal|"Can't get (%d)."
+literal|"Can't get (%d).\n"
 argument_list|,
 name|timeout
 operator|.
@@ -1503,7 +1503,7 @@ name|LogPrintf
 argument_list|(
 name|LogCHAT
 argument_list|,
-literal|"Abort: %s"
+literal|"Abort: %s\n"
 argument_list|,
 name|AbortStrings
 index|[
@@ -1553,7 +1553,7 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"read error: %s"
+literal|"read error: %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1735,7 +1735,7 @@ name|LogPrintf
 argument_list|(
 name|LogCHAT
 argument_list|,
-literal|"Abort: %s"
+literal|"Abort: %s\n"
 argument_list|,
 name|s1
 argument_list|)
@@ -1884,7 +1884,7 @@ name|LogPrintf
 argument_list|(
 name|LogCHAT
 argument_list|,
-literal|"Too long string to ExecStr: \"%s\""
+literal|"Too long string to ExecStr: \"%s\"\n"
 argument_list|,
 name|command
 argument_list|)
@@ -1920,7 +1920,7 @@ name|LogPrintf
 argument_list|(
 name|LogCHAT
 argument_list|,
-literal|"Unable to create pipe in ExecStr: %s"
+literal|"Unable to create pipe in ExecStr: %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2007,7 +2007,7 @@ name|LogPrintf
 argument_list|(
 name|LogCHAT
 argument_list|,
-literal|"dup2(fids[1], 1) in ExecStr: %s"
+literal|"dup2(fids[1], 1) in ExecStr: %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2050,7 +2050,7 @@ name|LogPrintf
 argument_list|(
 name|LogCHAT
 argument_list|,
-literal|"dup2(nb, 0) in ExecStr: %s"
+literal|"dup2(nb, 0) in ExecStr: %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2064,7 +2064,7 @@ name|LogPrintf
 argument_list|(
 name|LogCHAT
 argument_list|,
-literal|"exec: %s"
+literal|"exec: %s\n"
 argument_list|,
 name|command
 argument_list|)
@@ -2085,7 +2085,7 @@ name|LogPrintf
 argument_list|(
 name|LogCHAT
 argument_list|,
-literal|"setgid: %s"
+literal|"setgid: %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2114,7 +2114,7 @@ name|LogPrintf
 argument_list|(
 name|LogCHAT
 argument_list|,
-literal|"setuid: %s"
+literal|"setuid: %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2141,7 +2141,7 @@ name|LogPrintf
 argument_list|(
 name|LogCHAT
 argument_list|,
-literal|"execvp failed for (%d/%d): %s"
+literal|"execvp failed for (%d/%d): %s\n"
 argument_list|,
 name|pid
 argument_list|,
@@ -2395,32 +2395,28 @@ argument_list|,
 literal|"\\P"
 argument_list|)
 condition|)
-block|{
 comment|/* Do not log the password itself. */
 name|LogPrintf
 argument_list|(
 name|LogCHAT
 argument_list|,
-literal|"sending: %s"
+literal|"sending: %s\n"
 argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|LogPrintf
 argument_list|(
 name|LogCHAT
 argument_list|,
-literal|"sending: %s"
+literal|"sending: %s\n"
 argument_list|,
 name|buff
 operator|+
 literal|2
 argument_list|)
 expr_stmt|;
-block|}
 name|cp
 operator|=
 name|buff
@@ -2526,7 +2522,7 @@ name|LogPrintf
 argument_list|(
 name|LogCHAT
 argument_list|,
-literal|"Expecting %s"
+literal|"Expecting %s\n"
 argument_list|,
 name|str
 argument_list|)
