@@ -714,12 +714,45 @@ end_define
 begin_define
 define|#
 directive|define
+name|MCLFREE1
+parameter_list|(
+name|p
+parameter_list|)
+define|\
+value|do { \ 	  	if (--mclrefcnt[mtocl(p)] == 0) { \ 			((union mcluster *)(p))->mcl_next = mclfree; \ 			mclfree = (union mcluster *)(p); \ 			mbstat.m_clfree++; \ 	  	} \ 	  } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MCLFREE
 parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|MBUFLOCK ( \ 	  if (--mclrefcnt[mtocl(p)] == 0) { \ 		((union mcluster *)(p))->mcl_next = mclfree; \ 		mclfree = (union mcluster *)(p); \ 		mbstat.m_clfree++; \ 	  } \ 	)
+value|MBUFLOCK( \ 		MCLFREE1(p); \ 	)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MEXTFREE1
+parameter_list|(
+name|m
+parameter_list|)
+define|\
+value|do { \ 		if ((m)->m_ext.ext_free) \ 			(*((m)->m_ext.ext_free))((m)->m_ext.ext_buf, \ 		    	(m)->m_ext.ext_size); \ 		else { \ 			char *p = (m)->m_ext.ext_buf; \ 			MCLFREE1(p); \ 		} \ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MEXTFREE
+parameter_list|(
+name|m
+parameter_list|)
+define|\
+value|MBUFLOCK( \ 		MCLEXTFREE1(m); \ 	)
 end_define
 
 begin_comment
@@ -736,7 +769,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|MBUFLOCK(  \ 	  mbstat.m_mtypes[(m)->m_type]--; \ 	  if ((m)->m_flags& M_EXT) { \ 		if ((m)->m_ext.ext_free) \ 			(*((m)->m_ext.ext_free))((m)->m_ext.ext_buf, \ 			    (m)->m_ext.ext_size); \ 		else { \ 			char *p = (m)->m_ext.ext_buf; \ 			if (--mclrefcnt[mtocl(p)] == 0) { \ 				((union mcluster *)(p))->mcl_next = mclfree; \ 				mclfree = (union mcluster *)(p); \ 				mbstat.m_clfree++; \ 			} \ 		} \ 	  } \ 	  (n) = (m)->m_next; \ 	  (m)->m_type = MT_FREE; \ 	  mbstat.m_mtypes[MT_FREE]++; \ 	  (m)->m_next = mmbfree; \ 	  mmbfree = (m); \ 	)
+value|MBUFLOCK(  \ 	  mbstat.m_mtypes[(m)->m_type]--; \ 	  if ((m)->m_flags& M_EXT) { \ 		MEXTFREE1(m); \ 	  } \ 	  (n) = (m)->m_next; \ 	  (m)->m_type = MT_FREE; \ 	  mbstat.m_mtypes[MT_FREE]++; \ 	  (m)->m_next = mmbfree; \ 	  mmbfree = (m); \ 	)
 end_define
 
 begin_comment
