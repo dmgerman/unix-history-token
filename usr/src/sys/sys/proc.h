@@ -1,7 +1,67 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.3 (Berkeley) %G%  */
 end_comment
+
+begin_comment
+comment|/*  * One structure allocated per session.  */
+end_comment
+
+begin_struct
+struct|struct
+name|session
+block|{
+name|struct
+name|proc
+modifier|*
+name|s_leader
+decl_stmt|;
+comment|/* pointer to session leader */
+name|short
+name|s_count
+decl_stmt|;
+comment|/* number of pgrps in session */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * One structure allocated per process group.  */
+end_comment
+
+begin_struct
+struct|struct
+name|pgrp
+block|{
+name|struct
+name|pgrp
+modifier|*
+name|pg_hforw
+decl_stmt|;
+comment|/* forward link in hash bucket */
+name|struct
+name|proc
+modifier|*
+name|pg_mem
+decl_stmt|;
+comment|/* pointer to pgrp members */
+name|struct
+name|session
+modifier|*
+name|pg_session
+decl_stmt|;
+comment|/* pointer to session */
+name|pid_t
+name|pg_id
+decl_stmt|;
+comment|/* pgrp id */
+name|short
+name|pg_jobc
+decl_stmt|;
+comment|/* # procs qualifying pgrp for job control */
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * One structure allocated per active  * process. It contains all data needed  * about the process while the  * process may be swapped out.  * Other per process data (user.h)  * is swapped with the process.  */
@@ -94,15 +154,11 @@ name|uid_t
 name|p_uid
 decl_stmt|;
 comment|/* user id, used to direct tty signals */
-name|short
-name|p_pgrp
-decl_stmt|;
-comment|/* name of process group leader */
-name|short
+name|pid_t
 name|p_pid
 decl_stmt|;
 comment|/* unique process id */
-name|short
+name|pid_t
 name|p_ppid
 decl_stmt|;
 comment|/* process id of parent */
@@ -215,6 +271,26 @@ name|p_ysptr
 decl_stmt|;
 comment|/* pointer to younger siblings */
 name|struct
+name|pgrp
+modifier|*
+name|p_pgrp
+decl_stmt|;
+comment|/* pointer to process group */
+define|#
+directive|define
+name|p_session
+value|p_pgrp->pg_session
+define|#
+directive|define
+name|p_pgid
+value|p_pgrp->pg_id
+name|struct
+name|proc
+modifier|*
+name|p_pgrpnxt
+decl_stmt|;
+comment|/* pointer to next process in process group */
+name|struct
 name|itimerval
 name|p_realtimer
 decl_stmt|;
@@ -268,7 +344,7 @@ name|KERNEL
 end_ifdef
 
 begin_decl_stmt
-name|short
+name|pid_t
 name|pidhash
 index|[
 name|PIDHSZ
@@ -284,6 +360,30 @@ name|pfind
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|struct
+name|pgrp
+modifier|*
+name|pgrphash
+index|[
+name|PIDHSZ
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|struct
+name|pgrp
+modifier|*
+name|pgfind
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* find process group by id */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -367,6 +467,26 @@ end_decl_stmt
 begin_comment
 comment|/* bit mask summarizing non-empty qs's */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SESS_LEADER
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)->p_session->s_leader == (p))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PGRP_JOBC
+parameter_list|(
+name|p
+parameter_list|)
+value|(((p)->p_pgrp != (p)->p_pptr->p_pgrp)&& \ 			((p)->p_session == (p)->p_pptr->p_session))
+end_define
 
 begin_endif
 endif|#
@@ -713,6 +833,39 @@ end_define
 
 begin_comment
 comment|/* pte's for process have changed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STRCSYS
+value|0x2000000
+end_define
+
+begin_comment
+comment|/* tracing system calls */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STRCSYSI
+value|0x4000000
+end_define
+
+begin_comment
+comment|/* tracing system calls - inherited */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SEXEC
+value|0x8000000
+end_define
+
+begin_comment
+comment|/* process called exec */
 end_comment
 
 end_unit
