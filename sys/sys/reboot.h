@@ -231,6 +231,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RB_MULTIPLE
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* Use multiple consoles */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RB_BOOTINFO
 value|0x80000000
 end_define
