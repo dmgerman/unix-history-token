@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kbdcontrol.c,v 1.14 1998/05/05 19:02:01 des Exp $"
+literal|"$Id: kbdcontrol.c,v 1.15 1998/08/03 09:12:39 yokota Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1006,6 +1006,14 @@ operator||
 literal|0x100
 return|;
 case|case
+name|TSPSC
+case|:
+return|return
+name|SPSC
+operator||
+literal|0x100
+return|;
+case|case
 name|TACC
 case|:
 if|if
@@ -1942,6 +1950,19 @@ literal|" susp  "
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|SPSC
+operator||
+literal|0x100
+case|:
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" saver "
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 if|if
 condition|(
@@ -2741,6 +2762,15 @@ case|:
 name|printf
 argument_list|(
 literal|" SUSP, "
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|SPSC
+case|:
+name|printf
+argument_list|(
+literal|" SPSC, "
 argument_list|)
 expr_stmt|;
 break|break;
