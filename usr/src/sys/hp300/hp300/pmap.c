@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	8.4 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -827,6 +827,8 @@ end_decl_stmt
 
 begin_decl_stmt
 name|vm_map_t
+name|st_map
+decl_stmt|,
 name|pt_map
 decl_stmt|;
 end_decl_stmt
@@ -1759,6 +1761,30 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Allocate the segment table map 	 */
+name|s
+operator|=
+name|maxproc
+operator|*
+name|HP_STSIZE
+expr_stmt|;
+name|st_map
+operator|=
+name|kmem_suballoc
+argument_list|(
+name|kernel_map
+argument_list|,
+operator|&
+name|addr
+argument_list|,
+operator|&
+name|addr2
+argument_list|,
+name|s
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Slightly modified version of kmem_suballoc() to get page table 	 * map where we want it. 	 */
 name|addr
 operator|=
@@ -2430,9 +2456,9 @@ name|pm_stab
 operator|!=
 name|Segtabzero
 condition|)
-name|kmem_free
+name|kmem_free_wakeup
 argument_list|(
-name|kernel_map
+name|st_map
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -7501,9 +7527,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|kmem_free
+name|kmem_free_wakeup
 argument_list|(
-name|kernel_map
+name|st_map
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -8376,7 +8402,7 @@ operator|++
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Allocate a segment table if necessary.  Note that it is allocated 	 * from kernel_map and not pt_map.  This keeps user page tables 	 * aligned on segment boundaries in the kernel address space. 	 * The segment table is wired down.  It will be freed whenever the 	 * reference count drops to zero. 	 */
+comment|/* 	 * Allocate a segment table if necessary.  Note that it is allocated 	 * from a private map and not pt_map.  This keeps user page tables 	 * aligned on segment boundaries in the kernel address space. 	 * The segment table is wired down.  It will be freed whenever the 	 * reference count drops to zero. 	 */
 if|if
 condition|(
 name|pmap
@@ -8396,7 +8422,7 @@ operator|*
 operator|)
 name|kmem_alloc
 argument_list|(
-name|kernel_map
+name|st_map
 argument_list|,
 name|HP_STSIZE
 argument_list|)
