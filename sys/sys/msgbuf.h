@@ -43,6 +43,10 @@ modifier|*
 name|msg_ptr
 decl_stmt|;
 comment|/* pointer to buffer */
+name|u_int
+name|msg_cksum
+decl_stmt|;
+comment|/* checksum of contents */
 block|}
 struct|;
 end_struct
