@@ -178,10 +178,6 @@ file|<isa/rtc.h>
 end_include
 
 begin_comment
-comment|/* misuse a flag to identify format operation */
-end_comment
-
-begin_comment
 comment|/* configuration flags */
 end_comment
 
@@ -260,21 +256,6 @@ directive|define
 name|NUMDENS
 value|(NUMTYPES - 7)
 end_define
-
-begin_comment
-comment|/* These defines (-1) must match index for fd_types */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|F_TAPE_TYPE
-value|0x020
-end_define
-
-begin_comment
-comment|/* bit for fd_types to indicate tape */
-end_comment
 
 begin_define
 define|#
@@ -855,6 +836,13 @@ end_define
 begin_comment
 comment|/* 2 floppies */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_SEC_SIZE
+value|(128<< 3)
+end_define
 
 begin_comment
 comment|/***********************************************************************\ * Per controller structure.						* \***********************************************************************/
@@ -1534,16 +1522,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * named Fdopen() to avoid confusion with fdopen() in fd(4); the  * difference is now only meaningful for debuggers  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|d_open_t
 name|Fdopen
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* NOTE, not fdopen */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -1941,7 +1929,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * XXX:  		 * Cannot use fd_cmd the normal way here, since 		 * this might be an invalid command. Thus we send the 		 * first byte, and check for an early turn of data directon. 		 */
+comment|/* 		 * Cannot use fd_cmd the normal way here, since 		 * this might be an invalid command. Thus we send the 		 * first byte, and check for an early turn of data directon. 		 */
 if|if
 condition|(
 name|out_fdc
@@ -3826,7 +3814,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"cannot re-aquire resources\n"
+literal|"cannot re-acquire resources\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3906,8 +3894,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Acquire the DMA channel forever, The driver will do the rest */
-comment|/* XXX should integrate with rman */
+comment|/* 		 * Acquire the DMA channel forever, the driver will do 		 * the rest 		 * XXX should integrate with rman 		 */
 name|isa_dma_acquire
 argument_list|(
 name|fdc
@@ -3921,10 +3908,7 @@ name|fdc
 operator|->
 name|dmachan
 argument_list|,
-literal|128
-operator|<<
-literal|3
-comment|/* XXX max secsize */
+name|MAX_SEC_SIZE
 argument_list|)
 expr_stmt|;
 block|}
@@ -5470,7 +5454,7 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-literal|512
+literal|0
 argument_list|,
 name|DEVSTAT_NO_ORDERED_TAGS
 argument_list|,
@@ -5789,7 +5773,7 @@ condition|(
 name|needspecify
 condition|)
 block|{
-comment|/* 		 * XXX 		 * special case: since we have just woken up the FDC 		 * from its sleep, we silently assume the command will 		 * be accepted, and do not test for a timeout 		 */
+comment|/* 		 * we silently assume the command will be accepted 		 * after an FDC reset 		 * 		 * Steinbach's Guideline for Systems Programming: 		 * Never test for an error condition you don't know 		 * how to handle. 		 */
 operator|(
 name|void
 operator|)
@@ -6156,7 +6140,7 @@ operator|->
 name|fdout
 argument_list|)
 expr_stmt|;
-comment|/* XXX after a reset, silently believe the FDC will accept commands */
+comment|/* after a reset, silently believe the FDC will accept commands */
 operator|(
 name|void
 operator|)
