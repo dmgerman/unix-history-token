@@ -67,6 +67,14 @@ name|_thread_run
 operator|->
 name|sigmask
 expr_stmt|;
+comment|/* Combine the caller's mask with the current one: */
+name|_thread_run
+operator|->
+name|sigmask
+operator||=
+operator|*
+name|set
+expr_stmt|;
 comment|/* Wait for a signal: */
 name|_thread_kern_sched_state
 argument_list|(

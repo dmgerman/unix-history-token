@@ -12,6 +12,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -51,6 +63,9 @@ parameter_list|)
 block|{
 name|char
 name|c
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 name|pthread_t
 name|pthread
@@ -111,8 +126,112 @@ comment|/* Interval timer used for timeslicing: */
 case|case
 name|SIGVTALRM
 case|:
-comment|/* 			 * Don't add the signal to any thread.  Just want to 			 * call    			 */
-comment|/* the scheduler: */
+comment|/* 			 * Don't add the signal to any thread.  Just want to 			 * call the scheduler: 			 */
+break|break;
+comment|/* Child termination: */
+case|case
+name|SIGCHLD
+case|:
+comment|/* 			 * Enter a loop to process each thread in the linked 			 * list: 			 */
+for|for
+control|(
+name|pthread
+operator|=
+name|_thread_link_list
+init|;
+name|pthread
+operator|!=
+name|NULL
+condition|;
+name|pthread
+operator|=
+name|pthread
+operator|->
+name|nxt
+control|)
+block|{
+comment|/* 				 * Add the signal to the set of pending 				 * signals: 				 */
+name|pthread
+operator|->
+name|sigpend
+index|[
+name|sig
+index|]
+operator|+=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|pthread
+operator|->
+name|state
+operator|==
+name|PS_WAIT_WAIT
+condition|)
+block|{
+comment|/* Reset the error: */
+comment|/* There should be another flag so that this is not required! ### */
+name|_thread_seterrno
+argument_list|(
+name|pthread
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Change the state of the thread to run: */
+name|pthread
+operator|->
+name|state
+operator|=
+name|PS_RUNNING
+expr_stmt|;
+block|}
+block|}
+comment|/* 			 * Go through the file list and set all files 			 * to non-blocking again in case the child 			 * set some of them to block. Sigh. 			 */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|_thread_dtablesize
+condition|;
+name|i
+operator|++
+control|)
+block|{
+comment|/* Check if this file is used: */
+if|if
+condition|(
+name|_thread_fd_table
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* Set the file descriptor to non-blocking: */
+name|_thread_sys_fcntl
+argument_list|(
+name|i
+argument_list|,
+name|F_SETFL
+argument_list|,
+name|_thread_fd_table
+index|[
+name|i
+index|]
+operator|->
+name|flags
+operator||
+name|O_NONBLOCK
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 break|break;
 comment|/* Signals specific to the running thread: */
 case|case

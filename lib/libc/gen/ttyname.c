@@ -117,10 +117,21 @@ end_include
 
 begin_decl_stmt
 specifier|static
+name|struct
+name|pthread_mutex
+name|_ttyname_lockd
+init|=
+name|PTHREAD_MUTEX_INITIALIZER
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|pthread_mutex_t
 name|ttyname_lock
 init|=
-name|PTHREAD_MUTEX_INITIALIZER
+operator|&
+name|_ttyname_lockd
 decl_stmt|;
 end_decl_stmt
 

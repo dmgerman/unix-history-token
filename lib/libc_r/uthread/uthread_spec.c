@@ -55,14 +55,14 @@ name|struct
 name|pthread_key
 name|key_table
 index|[
-name|PTHREAD_DATAKEYS_MAX
+name|PTHREAD_KEYS_MAX
 index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_function
 name|int
-name|pthread_keycreate
+name|pthread_key_create
 parameter_list|(
 name|pthread_key_t
 modifier|*
@@ -93,7 +93,7 @@ operator|*
 name|key
 operator|)
 operator|<
-name|PTHREAD_DATAKEYS_MAX
+name|PTHREAD_KEYS_MAX
 condition|;
 operator|(
 operator|*
@@ -180,7 +180,7 @@ if|if
 condition|(
 name|key
 operator|<
-name|PTHREAD_DATAKEYS_MAX
+name|PTHREAD_KEYS_MAX
 condition|)
 block|{
 switch|switch
@@ -285,7 +285,7 @@ literal|0
 init|;
 name|itr
 operator|<
-name|_POSIX_THREAD_DESTRUTOR_ITERATIONS
+name|PTHREAD_DESTRUCTOR_ITERATIONS
 condition|;
 name|itr
 operator|++
@@ -299,7 +299,7 @@ literal|0
 init|;
 name|key
 operator|<
-name|PTHREAD_DATAKEYS_MAX
+name|PTHREAD_KEYS_MAX
 condition|;
 name|key
 operator|++
@@ -452,7 +452,7 @@ name|void
 operator|*
 argument_list|)
 operator|*
-name|PTHREAD_DATAKEYS_MAX
+name|PTHREAD_KEYS_MAX
 argument_list|)
 operator|)
 operator|!=
@@ -475,7 +475,7 @@ name|void
 operator|*
 argument_list|)
 operator|*
-name|PTHREAD_DATAKEYS_MAX
+name|PTHREAD_KEYS_MAX
 argument_list|)
 expr_stmt|;
 block|}
@@ -564,7 +564,7 @@ condition|(
 operator|(
 name|key
 operator|<
-name|PTHREAD_DATAKEYS_MAX
+name|PTHREAD_KEYS_MAX
 operator|)
 operator|&&
 operator|(
@@ -784,7 +784,7 @@ operator|&&
 operator|(
 name|key
 operator|<
-name|PTHREAD_DATAKEYS_MAX
+name|PTHREAD_KEYS_MAX
 operator|)
 operator|&&
 operator|(

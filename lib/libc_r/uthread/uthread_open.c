@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
 end_include
 
@@ -106,7 +112,7 @@ name|ap
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Open the file, forcing it to use non-blocking I/O operations: */
+comment|/* Open the file: */
 if|if
 condition|(
 operator|(
@@ -117,8 +123,6 @@ argument_list|(
 name|path
 argument_list|,
 name|flags
-operator||
-name|O_NONBLOCK
 argument_list|,
 name|mode
 argument_list|)
@@ -150,19 +154,6 @@ name|fd
 operator|=
 operator|-
 literal|1
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 		 * Save the file open flags so that they can be checked 		 * later:  		 */
-name|_thread_fd_table
-index|[
-name|fd
-index|]
-operator|->
-name|flags
-operator|=
-name|flags
 expr_stmt|;
 block|}
 comment|/* Unblock signals: */

@@ -51,6 +51,9 @@ name|enum
 name|pthread_mutextype
 name|type
 decl_stmt|;
+name|pthread_mutex_t
+name|pmutex
+decl_stmt|;
 name|int
 name|ret
 init|=
@@ -59,24 +62,51 @@ decl_stmt|;
 name|int
 name|status
 decl_stmt|;
-comment|/* Check if the mutex attributes specify some mutex other than fast: */
 if|if
 condition|(
-name|mutex_attr
-operator|!=
+name|mutex
+operator|==
 name|NULL
-operator|&&
-name|mutex_attr
-operator|->
-name|m_type
-operator|!=
-name|MUTEX_TYPE_FAST
 condition|)
 block|{
-comment|/* Check if the mutex type is out of range: */
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+name|ret
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Check if default mutex attributes: */
 if|if
 condition|(
 name|mutex_attr
+operator|==
+name|NULL
+operator|||
+operator|*
+name|mutex_attr
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* Default to a fast mutex: */
+name|type
+operator|=
+name|MUTEX_TYPE_FAST
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+operator|*
+name|mutex_attr
+operator|)
 operator|->
 name|m_type
 operator|>=
@@ -84,12 +114,9 @@ name|MUTEX_TYPE_MAX
 condition|)
 block|{
 comment|/* Return an invalid argument error: */
-name|_thread_seterrno
-argument_list|(
-name|_thread_run
-argument_list|,
+name|errno
+operator|=
 name|EINVAL
-argument_list|)
 expr_stmt|;
 name|ret
 operator|=
@@ -102,18 +129,12 @@ block|{
 comment|/* Use the requested mutex type: */
 name|type
 operator|=
+operator|(
+operator|*
 name|mutex_attr
+operator|)
 operator|->
 name|m_type
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-comment|/* Default to a fast mutex: */
-name|type
-operator|=
-name|MUTEX_TYPE_FAST
 expr_stmt|;
 block|}
 comment|/* Check no errors so far: */
@@ -124,8 +145,41 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|pmutex
+operator|=
+operator|(
+name|pthread_mutex_t
+operator|)
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pthread_mutex
+argument_list|)
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|errno
+operator|=
+name|ENOMEM
+expr_stmt|;
+name|ret
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* Reset the mutex flags: */
-name|mutex
+name|pmutex
 operator|->
 name|m_flags
 operator|=
@@ -155,7 +209,7 @@ case|case
 name|MUTEX_TYPE_COUNTING_FAST
 case|:
 comment|/* Reset the mutex count: */
-name|mutex
+name|pmutex
 operator|->
 name|m_data
 operator|.
@@ -167,12 +221,9 @@ break|break;
 comment|/* Trap invalid mutex types: */
 default|default:
 comment|/* Return an invalid argument error: */
-name|_thread_seterrno
-argument_list|(
-name|_thread_run
-argument_list|,
+name|errno
+operator|=
 name|EINVAL
-argument_list|)
 expr_stmt|;
 name|ret
 operator|=
@@ -181,39 +232,67 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+condition|)
+block|{
 comment|/* Initialise the rest of the mutex: */
 name|_thread_queue_init
 argument_list|(
 operator|&
-name|mutex
+name|pmutex
 operator|->
 name|m_queue
 argument_list|)
 expr_stmt|;
-name|mutex
+name|pmutex
 operator|->
 name|m_flags
 operator||=
 name|MUTEX_FLAGS_INITED
 expr_stmt|;
-name|mutex
+name|pmutex
 operator|->
 name|m_owner
 operator|=
 name|NULL
 expr_stmt|;
-name|mutex
+name|pmutex
 operator|->
 name|m_type
 operator|=
 name|type
 expr_stmt|;
+operator|*
+name|mutex
+operator|=
+name|pmutex
+expr_stmt|;
+block|}
+else|else
+block|{
+name|free
+argument_list|(
+name|pmutex
+argument_list|)
+expr_stmt|;
+operator|*
+name|mutex
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 comment|/* Unblock signals: */
 name|_thread_kern_sig_unblock
 argument_list|(
 name|status
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 block|}
 comment|/* Return the completion status: */
 return|return
@@ -241,6 +320,30 @@ decl_stmt|;
 name|int
 name|status
 decl_stmt|;
+if|if
+condition|(
+name|mutex
+operator|==
+name|NULL
+operator|||
+operator|*
+name|mutex
+operator|==
+name|NULL
+condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+name|ret
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* Block signals: */
 name|_thread_kern_sig_block
 argument_list|(
@@ -251,7 +354,10 @@ expr_stmt|;
 comment|/* Process according to mutex type: */
 switch|switch
 condition|(
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_type
 condition|)
@@ -267,7 +373,10 @@ case|case
 name|MUTEX_TYPE_COUNTING_FAST
 case|:
 comment|/* Reset the mutex count: */
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_data
 operator|.
@@ -279,12 +388,9 @@ break|break;
 comment|/* Trap undefined mutex types: */
 default|default:
 comment|/* Return an invalid argument error: */
-name|_thread_seterrno
-argument_list|(
-name|_thread_run
-argument_list|,
+name|errno
+operator|=
 name|EINVAL
-argument_list|)
 expr_stmt|;
 name|ret
 operator|=
@@ -297,18 +403,27 @@ comment|/* Clean up the mutex in case that others want to use it: */
 name|_thread_queue_init
 argument_list|(
 operator|&
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_queue
 argument_list|)
 expr_stmt|;
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_owner
 operator|=
 name|NULL
 expr_stmt|;
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_flags
 operator|=
@@ -320,6 +435,7 @@ argument_list|(
 name|status
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Return the completion status: */
 return|return
 operator|(
@@ -346,6 +462,30 @@ decl_stmt|;
 name|int
 name|status
 decl_stmt|;
+if|if
+condition|(
+name|mutex
+operator|==
+name|NULL
+operator|||
+operator|*
+name|mutex
+operator|==
+name|NULL
+condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+name|ret
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* Block signals: */
 name|_thread_kern_sig_block
 argument_list|(
@@ -356,7 +496,10 @@ expr_stmt|;
 comment|/* Process according to mutex type: */
 switch|switch
 condition|(
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_type
 condition|)
@@ -368,7 +511,10 @@ case|:
 comment|/* Check if this mutex is not locked: */
 if|if
 condition|(
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_owner
 operator|==
@@ -376,7 +522,10 @@ name|NULL
 condition|)
 block|{
 comment|/* Lock the mutex for the running thread: */
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_owner
 operator|=
@@ -386,12 +535,9 @@ block|}
 else|else
 block|{
 comment|/* Return a busy error: */
-name|_thread_seterrno
-argument_list|(
-name|_thread_run
-argument_list|,
+name|errno
+operator|=
 name|EBUSY
-argument_list|)
 expr_stmt|;
 name|ret
 operator|=
@@ -407,17 +553,23 @@ case|:
 comment|/* Check if this mutex is locked: */
 if|if
 condition|(
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_owner
 operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 			 * Check if the mutex is locked by the running 			 * thread:  			 */
+comment|/* 				 * Check if the mutex is locked by the running 				 * thread:  				 */
 if|if
 condition|(
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_owner
 operator|==
@@ -425,7 +577,10 @@ name|_thread_run
 condition|)
 block|{
 comment|/* Increment the lock count: */
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_data
 operator|.
@@ -436,12 +591,9 @@ block|}
 else|else
 block|{
 comment|/* Return a busy error: */
-name|_thread_seterrno
-argument_list|(
-name|_thread_run
-argument_list|,
+name|errno
+operator|=
 name|EBUSY
-argument_list|)
 expr_stmt|;
 name|ret
 operator|=
@@ -453,7 +605,10 @@ block|}
 else|else
 block|{
 comment|/* Lock the mutex for the running thread: */
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_owner
 operator|=
@@ -464,12 +619,9 @@ break|break;
 comment|/* Trap invalid mutex types: */
 default|default:
 comment|/* Return an invalid argument error: */
-name|_thread_seterrno
-argument_list|(
-name|_thread_run
-argument_list|,
+name|errno
+operator|=
 name|EINVAL
-argument_list|)
 expr_stmt|;
 name|ret
 operator|=
@@ -484,6 +636,7 @@ argument_list|(
 name|status
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Return the completion status: */
 return|return
 operator|(
@@ -510,6 +663,30 @@ decl_stmt|;
 name|int
 name|status
 decl_stmt|;
+if|if
+condition|(
+name|mutex
+operator|==
+name|NULL
+operator|||
+operator|*
+name|mutex
+operator|==
+name|NULL
+condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+name|ret
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* Block signals: */
 name|_thread_kern_sig_block
 argument_list|(
@@ -520,7 +697,10 @@ expr_stmt|;
 comment|/* Process according to mutex type: */
 switch|switch
 condition|(
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_type
 condition|)
@@ -529,10 +709,13 @@ comment|/* Fast mutexes do not check for any error conditions: */
 case|case
 name|MUTEX_TYPE_FAST
 case|:
-comment|/* 		 * Enter a loop to wait for the mutex to be locked by the 		 * current thread:  		 */
+comment|/* 			 * Enter a loop to wait for the mutex to be locked by the 			 * current thread:  			 */
 while|while
 condition|(
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_owner
 operator|!=
@@ -542,7 +725,10 @@ block|{
 comment|/* Check if the mutex is not locked: */
 if|if
 condition|(
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_owner
 operator|==
@@ -550,7 +736,10 @@ name|NULL
 condition|)
 block|{
 comment|/* Lock the mutex for this thread: */
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_owner
 operator|=
@@ -559,11 +748,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 				 * Join the queue of threads waiting to lock 				 * the mutex:  				 */
+comment|/* 					 * Join the queue of threads waiting to lock 					 * the mutex:  					 */
 name|_thread_queue_enq
 argument_list|(
 operator|&
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_queue
 argument_list|,
@@ -593,10 +785,13 @@ comment|/* Counting mutex: */
 case|case
 name|MUTEX_TYPE_COUNTING_FAST
 case|:
-comment|/* 		 * Enter a loop to wait for the mutex to be locked by the 		 * current thread:  		 */
+comment|/* 			 * Enter a loop to wait for the mutex to be locked by the 			 * current thread:  			 */
 while|while
 condition|(
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_owner
 operator|!=
@@ -606,7 +801,10 @@ block|{
 comment|/* Check if the mutex is not locked: */
 if|if
 condition|(
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_owner
 operator|==
@@ -614,14 +812,20 @@ name|NULL
 condition|)
 block|{
 comment|/* Lock the mutex for this thread: */
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_owner
 operator|=
 name|_thread_run
 expr_stmt|;
 comment|/* Reset the lock count for this mutex: */
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_data
 operator|.
@@ -632,11 +836,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 				 * Join the queue of threads waiting to lock 				 * the mutex:  				 */
+comment|/* 					 * Join the queue of threads waiting to lock 					 * the mutex:  					 */
 name|_thread_queue_enq
 argument_list|(
 operator|&
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_queue
 argument_list|,
@@ -662,7 +869,10 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Increment the lock count for this mutex: */
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_data
 operator|.
@@ -673,12 +883,9 @@ break|break;
 comment|/* Trap invalid mutex types: */
 default|default:
 comment|/* Return an invalid argument error: */
-name|_thread_seterrno
-argument_list|(
-name|_thread_run
-argument_list|,
+name|errno
+operator|=
 name|EINVAL
-argument_list|)
 expr_stmt|;
 name|ret
 operator|=
@@ -693,6 +900,7 @@ argument_list|(
 name|status
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Return the completion status: */
 return|return
 operator|(
@@ -719,6 +927,30 @@ decl_stmt|;
 name|int
 name|status
 decl_stmt|;
+if|if
+condition|(
+name|mutex
+operator|==
+name|NULL
+operator|||
+operator|*
+name|mutex
+operator|==
+name|NULL
+condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+name|ret
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* Block signals: */
 name|_thread_kern_sig_block
 argument_list|(
@@ -729,7 +961,10 @@ expr_stmt|;
 comment|/* Process according to mutex type: */
 switch|switch
 condition|(
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_type
 condition|)
@@ -741,7 +976,10 @@ case|:
 comment|/* Check if the running thread is not the owner of the mutex: */
 if|if
 condition|(
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_owner
 operator|!=
@@ -749,12 +987,9 @@ name|_thread_run
 condition|)
 block|{
 comment|/* Return an invalid argument error: */
-name|_thread_seterrno
-argument_list|(
-name|_thread_run
-argument_list|,
+name|errno
+operator|=
 name|EINVAL
-argument_list|)
 expr_stmt|;
 name|ret
 operator|=
@@ -762,19 +997,25 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-comment|/* 		 * Get the next thread from the queue of threads waiting on 		 * the mutex:  		 */
+comment|/* 			 * Get the next thread from the queue of threads waiting on 			 * the mutex:  			 */
 elseif|else
 if|if
 condition|(
 operator|(
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_owner
 operator|=
 name|_thread_queue_deq
 argument_list|(
 operator|&
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_queue
 argument_list|)
@@ -784,7 +1025,10 @@ name|NULL
 condition|)
 block|{
 comment|/* Allow the new owner of the mutex to run: */
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_owner
 operator|->
@@ -801,7 +1045,10 @@ case|:
 comment|/* Check if the running thread is not the owner of the mutex: */
 if|if
 condition|(
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_owner
 operator|!=
@@ -809,12 +1056,9 @@ name|_thread_run
 condition|)
 block|{
 comment|/* Return an invalid argument error: */
-name|_thread_seterrno
-argument_list|(
-name|_thread_run
-argument_list|,
+name|errno
+operator|=
 name|EINVAL
-argument_list|)
 expr_stmt|;
 name|ret
 operator|=
@@ -826,7 +1070,10 @@ comment|/* Check if there are still counts: */
 elseif|else
 if|if
 condition|(
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_data
 operator|.
@@ -834,7 +1081,10 @@ name|m_count
 condition|)
 block|{
 comment|/* Decrement the count: */
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_data
 operator|.
@@ -842,19 +1092,25 @@ name|m_count
 operator|--
 expr_stmt|;
 block|}
-comment|/* 		 * Get the next thread from the queue of threads waiting on 		 * the mutex:  		 */
+comment|/* 			 * Get the next thread from the queue of threads waiting on 			 * the mutex:  			 */
 elseif|else
 if|if
 condition|(
 operator|(
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_owner
 operator|=
 name|_thread_queue_deq
 argument_list|(
 operator|&
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_queue
 argument_list|)
@@ -864,7 +1120,10 @@ name|NULL
 condition|)
 block|{
 comment|/* Allow the new owner of the mutex to run: */
+operator|(
+operator|*
 name|mutex
+operator|)
 operator|->
 name|m_owner
 operator|->
@@ -877,12 +1136,9 @@ break|break;
 comment|/* Trap invalid mutex types: */
 default|default:
 comment|/* Return an invalid argument error: */
-name|_thread_seterrno
-argument_list|(
-name|_thread_run
-argument_list|,
+name|errno
+operator|=
 name|EINVAL
-argument_list|)
 expr_stmt|;
 name|ret
 operator|=
@@ -897,6 +1153,7 @@ argument_list|(
 name|status
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Return the completion status: */
 return|return
 operator|(

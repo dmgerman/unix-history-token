@@ -693,33 +693,6 @@ return|;
 block|}
 end_function
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/*  * Force our auto-initialization module to be pulled in from the library,  * by referencing a symbol that is defined in it.  *  * The auto-initialization module is a small C++ module.  It has a static  * constructor that calls _thread_init() automatically, at the beginning  * of program execution.  That eliminates the need for any special hooks  * in crt0.o.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|_thread_autoinit_dummy_decl
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-modifier|*
-name|_thread_autoinit_dummy_ref
-init|=
-operator|&
-name|_thread_autoinit_dummy_decl
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif

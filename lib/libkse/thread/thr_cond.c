@@ -51,14 +51,41 @@ name|enum
 name|pthread_cond_type
 name|type
 decl_stmt|;
+name|pthread_cond_t
+name|pcond
+decl_stmt|;
 name|int
 name|rval
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * Check if a pointer to a condition variable attribute structure was 	 * passed by the caller:  	 */
 if|if
 condition|(
+name|cond
+operator|==
+name|NULL
+condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+name|rval
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 		 * Check if a pointer to a condition variable attribute structure was 		 * passed by the caller:  		 */
+if|if
+condition|(
+name|cond_attr
+operator|!=
+name|NULL
+operator|&&
+operator|*
 name|cond_attr
 operator|!=
 name|NULL
@@ -67,7 +94,10 @@ block|{
 comment|/* Default to a fast condition variable: */
 name|type
 operator|=
+operator|(
+operator|*
 name|cond_attr
+operator|)
 operator|->
 name|c_type
 expr_stmt|;
@@ -95,12 +125,9 @@ break|break;
 comment|/* Trap invalid condition variable types: */
 default|default:
 comment|/* Return an invalid argument error: */
-name|_thread_seterrno
-argument_list|(
-name|_thread_run
-argument_list|,
+name|errno
+operator|=
 name|EINVAL
-argument_list|)
 expr_stmt|;
 name|rval
 operator|=
@@ -117,27 +144,67 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Initialise the condition variable structure: */
+if|if
+condition|(
+operator|(
+name|pcond
+operator|=
+operator|(
+name|pthread_cond_t
+operator|)
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pthread_cond
+argument_list|)
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|errno
+operator|=
+name|ENOMEM
+expr_stmt|;
+name|rval
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 				 * Initialise the condition variable 				 * structure: 				 */
 name|_thread_queue_init
 argument_list|(
 operator|&
-name|cond
+name|pcond
 operator|->
 name|c_queue
 argument_list|)
 expr_stmt|;
-name|cond
+name|pcond
 operator|->
 name|c_flags
 operator||=
 name|COND_FLAGS_INITED
 expr_stmt|;
-name|cond
+name|pcond
 operator|->
 name|c_type
 operator|=
 name|type
 expr_stmt|;
+operator|*
+name|cond
+operator|=
+name|pcond
+expr_stmt|;
+block|}
+block|}
 block|}
 comment|/* Return the completion status: */
 return|return
@@ -162,10 +229,37 @@ name|rval
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|cond
+operator|==
+name|NULL
+operator|||
+operator|*
+name|cond
+operator|==
+name|NULL
+condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+name|rval
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* Process according to condition variable type: */
 switch|switch
 condition|(
+operator|(
+operator|*
 name|cond
+operator|)
 operator|->
 name|c_type
 condition|)
@@ -179,12 +273,9 @@ break|break;
 comment|/* Trap invalid condition variable types: */
 default|default:
 comment|/* Return an invalid argument error: */
-name|_thread_seterrno
-argument_list|(
-name|_thread_run
-argument_list|,
+name|errno
+operator|=
 name|EINVAL
-argument_list|)
 expr_stmt|;
 name|rval
 operator|=
@@ -205,17 +296,35 @@ comment|/* Destroy the contents of the condition structure: */
 name|_thread_queue_init
 argument_list|(
 operator|&
+operator|(
+operator|*
 name|cond
+operator|)
 operator|->
 name|c_queue
 argument_list|)
 expr_stmt|;
+operator|(
+operator|*
 name|cond
+operator|)
 operator|->
 name|c_flags
 operator|=
 literal|0
 expr_stmt|;
+name|free
+argument_list|(
+operator|*
+name|cond
+argument_list|)
+expr_stmt|;
+operator|*
+name|cond
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 comment|/* Return the completion status: */
 return|return
@@ -247,6 +356,30 @@ decl_stmt|;
 name|int
 name|status
 decl_stmt|;
+if|if
+condition|(
+name|cond
+operator|==
+name|NULL
+operator|||
+operator|*
+name|cond
+operator|==
+name|NULL
+condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+name|rval
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* Block signals: */
 name|_thread_kern_sig_block
 argument_list|(
@@ -257,7 +390,10 @@ expr_stmt|;
 comment|/* Process according to condition variable type: */
 switch|switch
 condition|(
+operator|(
+operator|*
 name|cond
+operator|)
 operator|->
 name|c_type
 condition|)
@@ -270,7 +406,10 @@ comment|/* Queue the running thread for the condition variable: */
 name|_thread_queue_enq
 argument_list|(
 operator|&
+operator|(
+operator|*
 name|cond
+operator|)
 operator|->
 name|c_queue
 argument_list|,
@@ -311,12 +450,9 @@ break|break;
 comment|/* Trap invalid condition variable types: */
 default|default:
 comment|/* Return an invalid argument error: */
-name|_thread_seterrno
-argument_list|(
-name|_thread_run
-argument_list|,
+name|errno
+operator|=
 name|EINVAL
-argument_list|)
 expr_stmt|;
 name|rval
 operator|=
@@ -331,6 +467,7 @@ argument_list|(
 name|status
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Return the completion status: */
 return|return
 operator|(
@@ -367,6 +504,30 @@ decl_stmt|;
 name|int
 name|status
 decl_stmt|;
+if|if
+condition|(
+name|cond
+operator|==
+name|NULL
+operator|||
+operator|*
+name|cond
+operator|==
+name|NULL
+condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+name|rval
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* Block signals: */
 name|_thread_kern_sig_block
 argument_list|(
@@ -377,7 +538,10 @@ expr_stmt|;
 comment|/* Process according to condition variable type: */
 switch|switch
 condition|(
+operator|(
+operator|*
 name|cond
+operator|)
 operator|->
 name|c_type
 condition|)
@@ -387,6 +551,12 @@ case|case
 name|COND_TYPE_FAST
 case|:
 comment|/* Set the wakeup time: */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 name|_thread_run
 operator|->
 name|wakeup_time
@@ -407,6 +577,30 @@ name|abstime
 operator|->
 name|ts_nsec
 expr_stmt|;
+else|#
+directive|else
+name|_thread_run
+operator|->
+name|wakeup_time
+operator|.
+name|tv_sec
+operator|=
+name|abstime
+operator|->
+name|tv_sec
+expr_stmt|;
+name|_thread_run
+operator|->
+name|wakeup_time
+operator|.
+name|tv_nsec
+operator|=
+name|abstime
+operator|->
+name|tv_nsec
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Reset the timeout flag: */
 name|_thread_run
 operator|->
@@ -418,7 +612,10 @@ comment|/* Queue the running thread for the condition variable: */
 name|_thread_queue_enq
 argument_list|(
 operator|&
+operator|(
+operator|*
 name|cond
+operator|)
 operator|->
 name|c_queue
 argument_list|,
@@ -440,11 +637,14 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 			 * Cannot unlock the mutex, so remove the running 			 * thread from the condition variable queue:  			 */
+comment|/* 				 * Cannot unlock the mutex, so remove the running 				 * thread from the condition variable queue:  				 */
 name|_thread_queue_deq
 argument_list|(
 operator|&
+operator|(
+operator|*
 name|cond
+operator|)
 operator|->
 name|c_queue
 argument_list|)
@@ -482,7 +682,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{ 			}
+block|{ 				}
 comment|/* Check if the wait timed out: */
 elseif|else
 if|if
@@ -493,12 +693,9 @@ name|timeout
 condition|)
 block|{
 comment|/* Return a timeout error: */
-name|_thread_seterrno
-argument_list|(
-name|_thread_run
-argument_list|,
+name|errno
+operator|=
 name|EAGAIN
-argument_list|)
 expr_stmt|;
 name|rval
 operator|=
@@ -511,12 +708,9 @@ break|break;
 comment|/* Trap invalid condition variable types: */
 default|default:
 comment|/* Return an invalid argument error: */
-name|_thread_seterrno
-argument_list|(
-name|_thread_run
-argument_list|,
+name|errno
+operator|=
 name|EINVAL
-argument_list|)
 expr_stmt|;
 name|rval
 operator|=
@@ -531,6 +725,7 @@ argument_list|(
 name|status
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Return the completion status: */
 return|return
 operator|(
@@ -560,6 +755,30 @@ decl_stmt|;
 name|pthread_t
 name|pthread
 decl_stmt|;
+if|if
+condition|(
+name|cond
+operator|==
+name|NULL
+operator|||
+operator|*
+name|cond
+operator|==
+name|NULL
+condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+name|rval
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* Block signals: */
 name|_thread_kern_sig_block
 argument_list|(
@@ -570,7 +789,10 @@ expr_stmt|;
 comment|/* Process according to condition variable type: */
 switch|switch
 condition|(
+operator|(
+operator|*
 name|cond
+operator|)
 operator|->
 name|c_type
 condition|)
@@ -588,7 +810,10 @@ operator|=
 name|_thread_queue_deq
 argument_list|(
 operator|&
+operator|(
+operator|*
 name|cond
+operator|)
 operator|->
 name|c_queue
 argument_list|)
@@ -609,12 +834,9 @@ break|break;
 comment|/* Trap invalid condition variable types: */
 default|default:
 comment|/* Return an invalid argument error: */
-name|_thread_seterrno
-argument_list|(
-name|_thread_run
-argument_list|,
+name|errno
+operator|=
 name|EINVAL
-argument_list|)
 expr_stmt|;
 name|rval
 operator|=
@@ -629,6 +851,7 @@ argument_list|(
 name|status
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Return the completion status: */
 return|return
 operator|(
@@ -668,7 +891,10 @@ expr_stmt|;
 comment|/* Process according to condition variable type: */
 switch|switch
 condition|(
+operator|(
+operator|*
 name|cond
+operator|)
 operator|->
 name|c_type
 condition|)
@@ -686,7 +912,10 @@ operator|=
 name|_thread_queue_deq
 argument_list|(
 operator|&
+operator|(
+operator|*
 name|cond
+operator|)
 operator|->
 name|c_queue
 argument_list|)
@@ -707,12 +936,9 @@ break|break;
 comment|/* Trap invalid condition variable types: */
 default|default:
 comment|/* Return an invalid argument error: */
-name|_thread_seterrno
-argument_list|(
-name|_thread_run
-argument_list|,
+name|errno
+operator|=
 name|EINVAL
-argument_list|)
 expr_stmt|;
 name|rval
 operator|=

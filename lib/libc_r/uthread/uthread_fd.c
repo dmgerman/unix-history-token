@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -69,12 +75,9 @@ name|_thread_dtablesize
 condition|)
 block|{
 comment|/* Return a bad file descriptor error: */
-name|_thread_seterrno
-argument_list|(
-name|_thread_run
-argument_list|,
+name|errno
+operator|=
 name|EBADF
-argument_list|)
 expr_stmt|;
 name|ret
 operator|=
@@ -123,12 +126,9 @@ name|NULL
 condition|)
 block|{
 comment|/* Return a bad file descriptor error: */
-name|_thread_seterrno
-argument_list|(
-name|_thread_run
-argument_list|,
+name|errno
+operator|=
 name|EBADF
-argument_list|)
 expr_stmt|;
 name|ret
 operator|=
@@ -215,16 +215,6 @@ operator|=
 literal|0
 expr_stmt|;
 empty_stmt|;
-comment|/* Default the flags: */
-name|_thread_fd_table
-index|[
-name|fd
-index|]
-operator|->
-name|flags
-operator|=
-literal|0
-expr_stmt|;
 comment|/* Initialise the read/write queues: */
 name|_thread_queue_init
 argument_list|(
@@ -248,6 +238,83 @@ operator|->
 name|w_queue
 argument_list|)
 expr_stmt|;
+comment|/* Get the flags for the file: */
+if|if
+condition|(
+operator|(
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|flags
+operator|=
+name|_thread_sys_fcntl
+argument_list|(
+name|fd
+argument_list|,
+name|F_GETFL
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|ret
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* Make the file descriptor non-blocking: */
+block|}
+else|else
+block|{
+name|_thread_sys_fcntl
+argument_list|(
+name|fd
+argument_list|,
+name|F_SETFL
+argument_list|,
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|flags
+operator||
+name|O_NONBLOCK
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Check if one of the fcntl calls failed: */
+if|if
+condition|(
+name|ret
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+comment|/* Free the file descriptor table entry: */
+name|free
+argument_list|(
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+argument_list|)
+expr_stmt|;
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 comment|/* Unblock signals: */
 name|_thread_kern_sig_unblock

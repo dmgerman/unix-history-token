@@ -21,6 +21,12 @@ directive|include
 file|<fcntl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -56,9 +62,7 @@ block|{
 name|int
 name|fd
 decl_stmt|;
-name|int
-name|tmp_flags
-decl_stmt|;
+comment|/* Create a socket: */
 if|if
 condition|(
 operator|(
@@ -76,7 +80,10 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{ 	}
+block|{
+comment|/* Error creating socket. */
+comment|/* Initialise the entry in the file descriptor table: */
+block|}
 elseif|else
 if|if
 condition|(
@@ -97,40 +104,6 @@ name|fd
 operator|=
 operator|-
 literal|1
-expr_stmt|;
-block|}
-else|else
-block|{
-name|tmp_flags
-operator|=
-name|_thread_sys_fcntl
-argument_list|(
-name|fd
-argument_list|,
-name|F_GETFL
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|_thread_sys_fcntl
-argument_list|(
-name|fd
-argument_list|,
-name|F_SETFL
-argument_list|,
-name|tmp_flags
-operator||
-name|O_NONBLOCK
-argument_list|)
-expr_stmt|;
-name|_thread_fd_table
-index|[
-name|fd
-index|]
-operator|->
-name|flags
-operator|=
-name|tmp_flags
 expr_stmt|;
 block|}
 return|return

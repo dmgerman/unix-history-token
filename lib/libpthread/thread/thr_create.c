@@ -109,6 +109,9 @@ decl_stmt|;
 name|pthread_t
 name|new_thread
 decl_stmt|;
+name|pthread_attr_t
+name|pattr
+decl_stmt|;
 name|void
 modifier|*
 name|stack
@@ -156,13 +159,26 @@ condition|(
 name|attr
 operator|==
 name|NULL
+operator|||
+operator|*
+name|attr
+operator|==
+name|NULL
 condition|)
 block|{
 comment|/* Use the default thread attributes: */
-name|attr
+name|pattr
 operator|=
 operator|&
 name|pthread_attr_default
+expr_stmt|;
+block|}
+else|else
+block|{
+name|pattr
+operator|=
+operator|*
+name|attr
 expr_stmt|;
 block|}
 comment|/* Check if a stack was specified in the thread attributes: */
@@ -171,7 +187,7 @@ condition|(
 operator|(
 name|stack
 operator|=
-name|attr
+name|pattr
 operator|->
 name|stackaddr_attr
 operator|)
@@ -192,7 +208,7 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
-name|attr
+name|pattr
 operator|->
 name|stacksize_attr
 argument_list|)
@@ -269,7 +285,7 @@ name|arg
 expr_stmt|;
 if|if
 condition|(
-name|attr
+name|pattr
 operator|->
 name|suspend
 operator|==
@@ -616,7 +632,7 @@ name|new_thread
 operator|->
 name|stack
 operator|+
-name|attr
+name|pattr
 operator|->
 name|stacksize_attr
 operator|-
@@ -654,7 +670,7 @@ name|new_thread
 operator|->
 name|stack
 operator|+
-name|attr
+name|pattr
 operator|->
 name|stacksize_attr
 operator|-
@@ -679,7 +695,7 @@ name|new_thread
 operator|->
 name|stack
 operator|+
-name|attr
+name|pattr
 operator|->
 name|stacksize_attr
 operator|-
@@ -705,11 +721,12 @@ name|new_thread
 operator|->
 name|attr
 argument_list|,
-name|attr
+name|pattr
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|pthread_attr_t
+expr|struct
+name|pthread_attr
 argument_list|)
 argument_list|)
 expr_stmt|;
