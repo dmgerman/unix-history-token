@@ -1744,7 +1744,7 @@ begin_define
 define|#
 directive|define
 name|WI_NIC_3842_PCI_ATS_ID
-value|0x8018
+value|0x8019
 end_define
 
 begin_define
