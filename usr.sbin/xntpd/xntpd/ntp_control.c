@@ -1649,6 +1649,12 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|HAVE_UNAME
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|STR_SYSTEM
 end_ifndef
 
@@ -1701,6 +1707,34 @@ init|=
 name|STR_PROCESSOR
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/utsname.h>
+end_include
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|utsname
+name|utsname
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_UNAME */
+end_comment
 
 begin_comment
 comment|/*  * Trap structures.  We only allow a few of these, and send  * a copy of each async message to each live one.  Traps time  * out after an hour, it is up to the trap receipient to  * keep resetting it to avoid being timed out.  */
@@ -1780,7 +1814,7 @@ comment|/* REFCLK_NONE */
 name|CTL_SST_TS_UNSPEC
 block|,
 comment|/* REFCLK_LOCALCLOCK */
-name|CTL_SST_TS_HF
+name|CTL_SST_TS_UHF
 block|,
 comment|/* REFCLK_GPS_TRAK */
 name|CTL_SST_TS_HF
@@ -2164,6 +2198,13 @@ name|time_constant
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|pll_control
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Imported from the leap module  */
 end_comment
@@ -2341,6 +2382,18 @@ block|{
 name|int
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_UNAME
+name|uname
+argument_list|(
+operator|&
+name|utsname
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_UNAME */
 name|ctl_clr_stats
 argument_list|()
 expr_stmt|;
@@ -3523,7 +3576,8 @@ name|sys_peer
 operator|->
 name|sstclktype
 expr_stmt|;
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 name|sys_peer
@@ -3544,6 +3598,15 @@ operator|->
 name|refclktype
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|pps_control
+condition|)
+name|clock
+operator||=
+name|CTL_SST_TS_PPS
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|u_short
@@ -5825,6 +5888,9 @@ break|break;
 case|case
 name|CS_PROCESSOR
 case|:
+ifndef|#
+directive|ifndef
+name|HAVE_UNAME
 name|ctl_putstr
 argument_list|(
 name|sys_var
@@ -5844,10 +5910,39 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|ctl_putstr
+argument_list|(
+name|sys_var
+index|[
+name|CS_PROCESSOR
+index|]
+operator|.
+name|text
+argument_list|,
+name|utsname
+operator|.
+name|machine
+argument_list|,
+name|strlen
+argument_list|(
+name|utsname
+operator|.
+name|machine
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_UNAME */
 break|break;
 case|case
 name|CS_SYSTEM
 case|:
+ifndef|#
+directive|ifndef
+name|HAVE_UNAME
 name|ctl_putstr
 argument_list|(
 name|sys_var
@@ -5867,6 +5962,32 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|ctl_putstr
+argument_list|(
+name|sys_var
+index|[
+name|CS_SYSTEM
+index|]
+operator|.
+name|text
+argument_list|,
+name|utsname
+operator|.
+name|sysname
+argument_list|,
+name|strlen
+argument_list|(
+name|utsname
+operator|.
+name|sysname
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_UNAME */
 break|break;
 case|case
 name|CS_KEYID

@@ -857,12 +857,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|REQ_SET_MAXSKEW
+name|REQ_GET_KERNEL
 value|38
 end_define
 
 begin_comment
-comment|/* set the maximum skew factor */
+comment|/* get kernel pll/pps information */
 end_comment
 
 begin_define
@@ -874,17 +874,6 @@ end_define
 
 begin_comment
 comment|/* get clock debugging info */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REQ_SET_SELECT_CODE
-value|40
-end_define
-
-begin_comment
-comment|/* set selection algorithm */
 end_comment
 
 begin_define
@@ -933,6 +922,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|INFO_FLAG_MCLIENT
+value|0x8
+end_define
+
+begin_comment
+comment|/* danger */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|INFO_FLAG_BCLIENT
 value|0x10
 end_define
@@ -945,7 +945,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* SHARES BCLIENT bit - ok since mutually exclusive - Oh why ist flags a u_char ? */
+comment|/* danger */
 end_comment
 
 begin_define
@@ -1126,17 +1126,19 @@ name|unreach
 decl_stmt|;
 comment|/* peer.unreach */
 name|u_char
-name|trust
+name|flash
 decl_stmt|;
-comment|/* peer.trust */
+comment|/* peer.flash */
 name|u_char
-name|unused1
+name|ttl
 decl_stmt|;
+comment|/* peer.ttl */
 name|u_char
-name|unused2
+name|unused8
 decl_stmt|;
+comment|/* (obsolete) */
 name|u_char
-name|unused3
+name|unused9
 decl_stmt|;
 name|u_short
 name|associd
@@ -1215,13 +1217,32 @@ name|l_fp
 name|offset
 decl_stmt|;
 comment|/* peer.estoffset */
-name|U_LONG
-name|bdelay
-index|[
-name|NTP_SHIFT
-index|]
+name|u_fp
+name|selectdisp
 decl_stmt|;
-comment|/* broadcast delay filters */
+comment|/* peer select dispersion */
+name|LONG
+name|unused1
+decl_stmt|;
+comment|/* (obsolete) */
+name|LONG
+name|unused2
+decl_stmt|;
+name|LONG
+name|unused3
+decl_stmt|;
+name|LONG
+name|unused4
+decl_stmt|;
+name|LONG
+name|unused5
+decl_stmt|;
+name|LONG
+name|unused6
+decl_stmt|;
+name|LONG
+name|unused7
+decl_stmt|;
 name|U_LONG
 name|estbdelay
 decl_stmt|;
@@ -1410,21 +1431,26 @@ name|U_LONG
 name|poll
 decl_stmt|;
 comment|/* system poll interval */
-name|u_short
+name|u_char
 name|flags
 decl_stmt|;
 comment|/* system flags */
 name|u_char
-name|selection
+name|unused1
 decl_stmt|;
-comment|/* selection algorithm code */
+comment|/* unused */
 name|u_char
-name|unused
+name|unused2
 decl_stmt|;
+comment|/* unused */
+name|u_char
+name|unused3
+decl_stmt|;
+comment|/* unused */
 name|l_fp
 name|bdelay
 decl_stmt|;
-comment|/* default broadcast delay, a ts fraction */
+comment|/* default broadcast delay */
 name|l_fp
 name|authdelay
 decl_stmt|;
@@ -1432,7 +1458,7 @@ comment|/* default authentication delay */
 name|u_fp
 name|maxskew
 decl_stmt|;
-comment|/* maximum skew parameter (obsolete) */
+comment|/* (obsolete) */
 block|}
 struct|;
 end_struct
@@ -1484,6 +1510,7 @@ comment|/* packets dropped because of authorization */
 name|U_LONG
 name|wanderhold
 decl_stmt|;
+comment|/* (obsolete) */
 name|U_LONG
 name|limitrejected
 decl_stmt|;
@@ -1701,8 +1728,13 @@ name|flags
 decl_stmt|;
 comment|/* flags for this request */
 name|u_char
+name|ttl
+decl_stmt|;
+comment|/* time to live (multicast) */
+name|u_short
 name|unused
 decl_stmt|;
+comment|/* unused */
 name|U_LONG
 name|keyid
 decl_stmt|;
@@ -1779,6 +1811,13 @@ define|#
 directive|define
 name|SYS_FLAG_AUTHENTICATE
 value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYS_FLAG_MCLIENT
+value|0x4
 end_define
 
 begin_comment
@@ -2437,6 +2476,67 @@ name|times
 index|[
 name|NUMCBUGTIMES
 index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Structure used for returning kernel pll/PPS information  */
+end_comment
+
+begin_struct
+struct|struct
+name|info_kernel
+block|{
+name|LONG
+name|offset
+decl_stmt|;
+name|LONG
+name|freq
+decl_stmt|;
+name|LONG
+name|maxerror
+decl_stmt|;
+name|LONG
+name|esterror
+decl_stmt|;
+name|u_short
+name|status
+decl_stmt|;
+name|u_short
+name|shift
+decl_stmt|;
+name|LONG
+name|constant
+decl_stmt|;
+name|LONG
+name|precision
+decl_stmt|;
+name|LONG
+name|tolerance
+decl_stmt|;
+comment|/*  * Variables used only if PPS signal discipline is implemented  */
+name|LONG
+name|ppsfreq
+decl_stmt|;
+name|LONG
+name|jitter
+decl_stmt|;
+name|LONG
+name|stabil
+decl_stmt|;
+name|LONG
+name|jitcnt
+decl_stmt|;
+name|LONG
+name|calcnt
+decl_stmt|;
+name|LONG
+name|errcnt
+decl_stmt|;
+name|LONG
+name|stbcnt
 decl_stmt|;
 block|}
 struct|;

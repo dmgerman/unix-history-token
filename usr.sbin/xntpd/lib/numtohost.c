@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* numtohost.c,v 3.1 1993/07/06 01:08:40 jbj Exp  * numtohost - convert network number to host name.  */
+comment|/*  * numtohost - convert network number to host name.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"ntp_types.h"
-end_include
 
 begin_include
 include|#
@@ -24,13 +18,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lib_strbuf.h"
+file|"ntp_stdlib.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ntp_stdlib.h"
+file|"lib_strbuf.h"
 end_include
 
 begin_define

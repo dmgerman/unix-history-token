@@ -947,8 +947,59 @@ begin_comment
 comment|/*  * clock_parms - return the local clock tickadj and tick parameters  *  * Note that this version grovels about in /dev/kmem to determine  * these values.  This probably should be elsewhere.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SYS_UNIXWARE1
+argument_list|)
+end_if
+
 begin_comment
-comment|/* Define the following to be what the tick and tickadj variables are   * called in your kernel.   */
+comment|/*  * clock_parms - return the local clock tickadj and tick parameters  *  * The values set here were determined experimentally on a 486 system  * I'm not confident in them. - RAS  *  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|clock_parms
+parameter_list|(
+name|tickadj
+parameter_list|,
+name|tick
+parameter_list|)
+name|U_LONG
+modifier|*
+name|tickadj
+decl_stmt|;
+name|U_LONG
+modifier|*
+name|tick
+decl_stmt|;
+block|{
+operator|*
+name|tick
+operator|=
+literal|10000
+expr_stmt|;
+comment|/* microseconds */
+operator|*
+name|tickadj
+operator|=
+literal|80
+expr_stmt|;
+comment|/* microseconds */
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* SYS_UNIXWARE1 */
 end_comment
 
 begin_if
@@ -1505,6 +1556,15 @@ directive|undef
 name|N_NAME
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SYS_UNIXWARE1 */
+end_comment
 
 begin_endif
 endif|#

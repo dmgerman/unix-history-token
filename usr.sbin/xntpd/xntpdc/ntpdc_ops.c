@@ -989,24 +989,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|maxskew
-name|P
-argument_list|(
-operator|(
-expr|struct
-name|parse
-operator|*
-operator|,
-name|FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
 name|clkbug
 name|P
 argument_list|(
@@ -1043,7 +1025,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|setselect
+name|kerninfo
 name|P
 argument_list|(
 operator|(
@@ -1094,7 +1076,7 @@ block|,
 literal|""
 block|}
 block|,
-literal|"print list of peers the server knows about"
+literal|"display list of peers the server knows about"
 block|}
 block|,
 block|{
@@ -1122,7 +1104,7 @@ block|,
 literal|""
 block|}
 block|,
-literal|"print peer summary information"
+literal|"display peer summary information"
 block|}
 block|,
 block|{
@@ -1150,7 +1132,7 @@ block|,
 literal|""
 block|}
 block|,
-literal|"print peer summary info the way Dave Mills likes it"
+literal|"display peer summary info the way Dave Mills likes it"
 block|}
 block|,
 block|{
@@ -1184,7 +1166,7 @@ block|,
 literal|"peer4_addr"
 block|}
 block|,
-literal|"print detailed information for one or more peers"
+literal|"display detailed information for one or more peers"
 block|}
 block|,
 block|{
@@ -1218,7 +1200,7 @@ block|,
 literal|"peer4_addr"
 block|}
 block|,
-literal|"print statistical information for one or more peers"
+literal|"display statistical information for one or more peers"
 block|}
 block|,
 block|{
@@ -1248,7 +1230,7 @@ block|,
 literal|""
 block|}
 block|,
-literal|"print loop filter information"
+literal|"display loop filter information"
 block|}
 block|,
 block|{
@@ -1276,7 +1258,7 @@ block|,
 literal|""
 block|}
 block|,
-literal|"print local server information"
+literal|"display local server information"
 block|}
 block|,
 block|{
@@ -1304,7 +1286,7 @@ block|,
 literal|""
 block|}
 block|,
-literal|"print local server statistics"
+literal|"display local server statistics"
 block|}
 block|,
 block|{
@@ -1332,7 +1314,7 @@ block|,
 literal|""
 block|}
 block|,
-literal|"print peer memory usage statistics"
+literal|"display peer memory usage statistics"
 block|}
 block|,
 block|{
@@ -1360,7 +1342,7 @@ block|,
 literal|""
 block|}
 block|,
-literal|"print I/O subsystem statistics"
+literal|"display I/O subsystem statistics"
 block|}
 block|,
 block|{
@@ -1388,7 +1370,7 @@ block|,
 literal|""
 block|}
 block|,
-literal|"print event timer subsystem statistics"
+literal|"display event timer subsystem statistics"
 block|}
 block|,
 block|{
@@ -1549,7 +1531,7 @@ name|STR
 block|}
 block|,
 block|{
-literal|"bclient|auth"
+literal|"bclient|mclient|auth"
 block|,
 literal|"..."
 block|,
@@ -1558,7 +1540,7 @@ block|,
 literal|"..."
 block|}
 block|,
-literal|"set a system flag (bclient, authenticate)"
+literal|"set a system flag (bclient, mclient, auth)"
 block|}
 block|,
 block|{
@@ -1583,7 +1565,7 @@ name|STR
 block|}
 block|,
 block|{
-literal|"bclient|auth"
+literal|"bclient|mclient|auth"
 block|,
 literal|"..."
 block|,
@@ -1592,7 +1574,7 @@ block|,
 literal|"..."
 block|}
 block|,
-literal|"clear a system flag (bclient, authenticate)"
+literal|"clear a system flag (bclient, mclient, auth)"
 block|}
 block|,
 block|{
@@ -1620,7 +1602,7 @@ block|,
 literal|""
 block|}
 block|,
-literal|"print the server's restrict list"
+literal|"display the server's restrict list"
 block|}
 block|,
 block|{
@@ -1738,7 +1720,7 @@ block|,
 literal|""
 block|}
 block|,
-literal|"print data the server's monitor routines have collected"
+literal|"display data the server's monitor routines have collected"
 block|}
 block|,
 block|{
@@ -2014,7 +1996,7 @@ block|,
 literal|""
 block|}
 block|,
-literal|"obtain information concerning the state of the authentication code"
+literal|"display the state of the authentication code"
 block|}
 block|,
 block|{
@@ -2042,7 +2024,7 @@ block|,
 literal|""
 block|}
 block|,
-literal|"obtain information about traps set in server"
+literal|"display the traps set in the server"
 block|}
 block|,
 block|{
@@ -2190,7 +2172,7 @@ block|,
 literal|""
 block|}
 block|,
-literal|"obtain packet count statistics from the control module"
+literal|"display packet count statistics from the control module"
 block|}
 block|,
 block|{
@@ -2218,7 +2200,7 @@ block|,
 literal|""
 block|}
 block|,
-literal|"obtain information about the current leap second state"
+literal|"display the current leap second state"
 block|}
 block|,
 block|{
@@ -2252,7 +2234,7 @@ block|,
 literal|"address"
 block|}
 block|,
-literal|"obtain status information about the specified clock"
+literal|"display clock status information"
 block|}
 block|,
 block|{
@@ -2281,34 +2263,6 @@ literal|""
 block|}
 block|,
 literal|"set/change one of a clock's fudge factors"
-block|}
-block|,
-block|{
-literal|"maxskew"
-block|,
-name|maxskew
-block|,
-block|{
-name|STR
-block|,
-name|NO
-block|,
-name|NO
-block|,
-name|NO
-block|}
-block|,
-block|{
-literal|"maximum_skew"
-block|,
-literal|""
-block|,
-literal|""
-block|,
-literal|""
-block|}
-block|,
-literal|"set the server's maximum skew parameter"
 block|}
 block|,
 block|{
@@ -2342,7 +2296,7 @@ block|,
 literal|"address"
 block|}
 block|,
-literal|"obtain debugging information from the specified clock"
+literal|"display clock debugging information"
 block|}
 block|,
 block|{
@@ -2374,12 +2328,12 @@ literal|"set the server's advertised precision"
 block|}
 block|,
 block|{
-literal|"setselect"
+literal|"kerninfo"
 block|,
-name|setselect
+name|kerninfo
 block|,
 block|{
-name|UINT
+name|NO
 block|,
 name|NO
 block|,
@@ -2389,7 +2343,7 @@ name|NO
 block|}
 block|,
 block|{
-literal|"select_algorithm_number"
+literal|""
 block|,
 literal|""
 block|,
@@ -2398,7 +2352,7 @@ block|,
 literal|""
 block|}
 block|,
-literal|"change the selection weighting algorithm used by the server"
+literal|"display the kernel pll/pps variables"
 block|}
 block|,
 block|{
@@ -3003,7 +2957,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"     remote           local      st poll reach  delay   offset   disp\n"
+literal|"     remote           local      st poll reach  delay   offset    disp\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3013,7 +2967,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"======================================================================\n"
+literal|"=======================================================================\n"
 argument_list|)
 expr_stmt|;
 while|while
@@ -3200,7 +3154,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%c%-15.15s %-15.15s %2d %4d  %3o %7.7s %9.9s %6.6s\n"
+literal|"%c%-15.15s %-15.15s %2d %4d  %3o %7.7s %9.9s %7.7s\n"
 argument_list|,
 name|c
 argument_list|,
@@ -3237,7 +3191,7 @@ operator|->
 name|delay
 argument_list|)
 argument_list|,
-literal|4
+literal|5
 argument_list|)
 argument_list|,
 name|lfptoa
@@ -3257,7 +3211,7 @@ operator|->
 name|dispersion
 argument_list|)
 argument_list|,
-literal|4
+literal|5
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3457,7 +3411,7 @@ operator|->
 name|rootdelay
 argument_list|)
 argument_list|,
-literal|4
+literal|5
 argument_list|)
 argument_list|,
 name|ufptoa
@@ -3469,7 +3423,7 @@ operator|->
 name|rootdispersion
 argument_list|)
 argument_list|,
-literal|4
+literal|5
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3513,7 +3467,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"valid %d, reach %03o, unreach %d, trust %03o\n"
+literal|"valid %d, reach %03o, unreach %d, flash %03o, "
 argument_list|,
 name|pp
 operator|->
@@ -3529,7 +3483,35 @@ name|unreach
 argument_list|,
 name|pp
 operator|->
-name|trust
+name|flash
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"estbdelay %s, ttl %d\n"
+argument_list|,
+name|mfptoa
+argument_list|(
+literal|0
+argument_list|,
+name|ntohl
+argument_list|(
+name|pp
+operator|->
+name|estbdelay
+argument_list|)
+argument_list|,
+literal|5
+argument_list|)
+argument_list|,
+name|pp
+operator|->
+name|ttl
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3889,7 +3871,7 @@ name|i
 index|]
 argument_list|)
 argument_list|,
-literal|4
+literal|5
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3978,7 +3960,7 @@ argument_list|(
 operator|&
 name|tempts
 argument_list|,
-literal|5
+literal|6
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4089,126 +4071,6 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"bdelay filter:"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|NTP_SHIFT
-condition|;
-name|i
-operator|++
-control|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|" %-8.8s"
-argument_list|,
-name|mfptoa
-argument_list|(
-literal|0
-argument_list|,
-name|ntohl
-argument_list|(
-name|pp
-operator|->
-name|bdelay
-index|[
-name|i
-index|]
-argument_list|)
-argument_list|,
-literal|5
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|i
-operator|==
-operator|(
-name|NTP_SHIFT
-operator|>>
-literal|1
-operator|)
-operator|-
-literal|1
-condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"\n              "
-argument_list|)
-expr_stmt|;
-block|}
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"delay %s, estbdelay %s\n"
-argument_list|,
-name|fptoa
-argument_list|(
-name|HTONS_FP
-argument_list|(
-name|pp
-operator|->
-name|delay
-argument_list|)
-argument_list|,
-literal|4
-argument_list|)
-argument_list|,
-name|mfptoa
-argument_list|(
-literal|0
-argument_list|,
-name|ntohl
-argument_list|(
-name|pp
-operator|->
-name|estbdelay
-argument_list|)
-argument_list|,
-literal|4
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|HTONL_FP
 argument_list|(
 operator|&
@@ -4227,7 +4089,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"offset %s, dispersion %s\n"
+literal|"offset %s, delay %s, dispersion %s, selectdisp %s\n"
 argument_list|,
 name|lfptoa
 argument_list|(
@@ -4235,6 +4097,18 @@ operator|&
 name|tempts
 argument_list|,
 literal|6
+argument_list|)
+argument_list|,
+name|fptoa
+argument_list|(
+name|HTONS_FP
+argument_list|(
+name|pp
+operator|->
+name|delay
+argument_list|)
+argument_list|,
+literal|5
 argument_list|)
 argument_list|,
 name|ufptoa
@@ -4246,7 +4120,19 @@ operator|->
 name|dispersion
 argument_list|)
 argument_list|,
-literal|4
+literal|5
+argument_list|)
+argument_list|,
+name|ufptoa
+argument_list|(
+name|HTONS_FP
+argument_list|(
+name|pp
+operator|->
+name|selectdisp
+argument_list|)
+argument_list|,
+literal|5
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5649,23 +5535,6 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"select algorithm: %d\n"
-argument_list|,
-operator|(
-name|int
-operator|)
-name|is
-operator|->
-name|selection
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
 literal|"sync distance:    %s\n"
 argument_list|,
 name|fptoa
@@ -5677,7 +5546,7 @@ operator|->
 name|rootdelay
 argument_list|)
 argument_list|,
-literal|4
+literal|5
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5699,7 +5568,7 @@ operator|->
 name|rootdispersion
 argument_list|)
 argument_list|,
-literal|4
+literal|5
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5811,6 +5680,8 @@ operator|&
 operator|(
 name|INFO_FLAG_BCLIENT
 operator||
+name|INFO_FLAG_MCLIENT
+operator||
 name|INFO_FLAG_AUTHENABLE
 operator|)
 operator|)
@@ -5852,6 +5723,30 @@ argument_list|(
 name|fp
 argument_list|,
 literal|"bclient"
+argument_list|)
+expr_stmt|;
+name|res
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|is
+operator|->
+name|flags
+operator|&
+name|INFO_FLAG_MCLIENT
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"mclient"
 argument_list|)
 expr_stmt|;
 name|res
@@ -5949,28 +5844,6 @@ operator|&
 name|tempts
 argument_list|,
 literal|7
-argument_list|)
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"maximum skew:     %s\n"
-argument_list|,
-name|ufptoa
-argument_list|(
-name|NTOHS_FP
-argument_list|(
-name|is
-operator|->
-name|maxskew
-argument_list|)
-argument_list|,
-literal|4
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6258,23 +6131,6 @@ argument_list|(
 name|ss
 operator|->
 name|badauth
-argument_list|)
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"wander hold downs:      %d\n"
-argument_list|,
-name|ntohl
-argument_list|(
-name|ss
-operator|->
-name|wanderhold
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7910,6 +7766,29 @@ operator|.
 name|flags
 operator||=
 name|SYS_FLAG_BCLIENT
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|STREQ
+argument_list|(
+name|pcmd
+operator|->
+name|argval
+index|[
+name|items
+index|]
+operator|.
+name|string
+argument_list|,
+literal|"mclient"
+argument_list|)
+condition|)
+name|sys
+operator|.
+name|flags
+operator||=
+name|SYS_FLAG_MCLIENT
 expr_stmt|;
 elseif|else
 if|if
@@ -13238,152 +13117,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * maxskew - set the server's maximum skew parameter  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|maxskew
-parameter_list|(
-name|pcmd
-parameter_list|,
-name|fp
-parameter_list|)
-name|struct
-name|parse
-modifier|*
-name|pcmd
-decl_stmt|;
-name|FILE
-modifier|*
-name|fp
-decl_stmt|;
-block|{
-name|u_fp
-name|Xmaxskew
-decl_stmt|;
-name|l_fp
-name|tmp
-decl_stmt|;
-name|int
-name|items
-decl_stmt|;
-name|int
-name|itemsize
-decl_stmt|;
-name|char
-modifier|*
-name|dummy
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|atolfp
-argument_list|(
-name|pcmd
-operator|->
-name|argval
-index|[
-literal|0
-index|]
-operator|.
-name|string
-argument_list|,
-operator|&
-name|tmp
-argument_list|)
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"What the heck does %s mean?\n"
-argument_list|,
-name|pcmd
-operator|->
-name|argval
-index|[
-literal|0
-index|]
-operator|.
-name|string
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-name|Xmaxskew
-operator|=
-name|HTONS_FP
-argument_list|(
-name|LFPTOFP
-argument_list|(
-operator|&
-name|tmp
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|res
-operator|=
-name|doquery
-argument_list|(
-name|IMPL_XNTPD
-argument_list|,
-name|REQ_SET_MAXSKEW
-argument_list|,
-literal|1
-argument_list|,
-literal|1
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|u_fp
-argument_list|)
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|Xmaxskew
-argument_list|,
-operator|&
-name|items
-argument_list|,
-operator|&
-name|itemsize
-argument_list|,
-operator|&
-name|dummy
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|res
-operator|==
-literal|0
-condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"done!\n"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * clkbug - get and print clock debugging information  */
 end_comment
 
@@ -14044,13 +13777,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * setselect - change the server's selection algorithm  */
+comment|/*  * kerninfo - display the kernel pll/pps variables  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|setselect
+name|kerninfo
 parameter_list|(
 name|pcmd
 parameter_list|,
@@ -14066,8 +13799,10 @@ modifier|*
 name|fp
 decl_stmt|;
 block|{
-name|U_LONG
-name|select_code
+name|struct
+name|info_kernel
+modifier|*
+name|ik
 decl_stmt|;
 name|int
 name|items
@@ -14075,50 +13810,28 @@ decl_stmt|;
 name|int
 name|itemsize
 decl_stmt|;
-name|char
-modifier|*
-name|dummy
-decl_stmt|;
 name|int
 name|res
 decl_stmt|;
-name|select_code
-operator|=
-name|htonl
-argument_list|(
-name|pcmd
-operator|->
-name|argval
-index|[
-literal|0
-index|]
-operator|.
-name|uval
-argument_list|)
-expr_stmt|;
 name|res
 operator|=
 name|doquery
 argument_list|(
 name|IMPL_XNTPD
 argument_list|,
-name|REQ_SET_SELECT_CODE
+name|REQ_GET_KERNEL
 argument_list|,
-literal|1
+literal|0
 argument_list|,
-literal|1
+literal|0
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|U_LONG
-argument_list|)
+literal|0
 argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
-operator|&
-name|select_code
+name|NULL
 argument_list|,
 operator|&
 name|items
@@ -14126,16 +13839,53 @@ argument_list|,
 operator|&
 name|itemsize
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 operator|&
-name|dummy
+name|ik
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|res
+operator|!=
+literal|0
+operator|&&
+name|items
 operator|==
 literal|0
 condition|)
+return|return;
+if|if
+condition|(
+operator|!
+name|check1item
+argument_list|(
+name|items
+argument_list|,
+name|fp
+argument_list|)
+condition|)
+return|return;
+if|if
+condition|(
+operator|!
+name|checkitemsize
+argument_list|(
+name|itemsize
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|info_kernel
+argument_list|)
+argument_list|)
+condition|)
+return|return;
+comment|/* 	 * pll variables 	 */
 operator|(
 name|void
 operator|)
@@ -14143,10 +13893,317 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"done!\n"
+literal|"pll offset:           %d us\n"
+argument_list|,
+name|ntohl
+argument_list|(
+name|ik
+operator|->
+name|offset
+argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"pll frequency:        %s ppm\n"
+argument_list|,
+name|fptoa
+argument_list|(
+operator|(
+name|s_fp
+operator|)
+name|ntohl
+argument_list|(
+name|ik
+operator|->
+name|freq
+argument_list|)
+argument_list|,
+literal|3
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"maximum error:        %d us\n"
+argument_list|,
+name|ntohl
+argument_list|(
+name|ik
+operator|->
+name|maxerror
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"estimated error:      %d us\n"
+argument_list|,
+name|ntohl
+argument_list|(
+name|ik
+operator|->
+name|esterror
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"status:               %04x\n"
+argument_list|,
+name|ntohs
+argument_list|(
+name|ik
+operator|->
+name|status
+operator|&
+literal|0xffff
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"pll time constant:    %d\n"
+argument_list|,
+name|ntohl
+argument_list|(
+name|ik
+operator|->
+name|constant
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"precision:            %d us\n"
+argument_list|,
+name|ntohl
+argument_list|(
+name|ik
+operator|->
+name|precision
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"frequency tolerance:  %s ppm\n"
+argument_list|,
+name|fptoa
+argument_list|(
+operator|(
+name|s_fp
+operator|)
+name|ntohl
+argument_list|(
+name|ik
+operator|->
+name|tolerance
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * For backwards compatibility (ugh), we find the pps variables 	 * only if the shift member is nonzero. 	 */
+if|if
+condition|(
+operator|!
+name|ik
+operator|->
+name|shift
+condition|)
 return|return;
+comment|/* 	 * pps variables 	 */
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"pps frequency:        %s ppm\n"
+argument_list|,
+name|fptoa
+argument_list|(
+operator|(
+name|s_fp
+operator|)
+name|ntohl
+argument_list|(
+name|ik
+operator|->
+name|ppsfreq
+argument_list|)
+argument_list|,
+literal|3
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"pps stability:        %s ppm\n"
+argument_list|,
+name|fptoa
+argument_list|(
+operator|(
+name|s_fp
+operator|)
+name|ntohl
+argument_list|(
+name|ik
+operator|->
+name|stabil
+argument_list|)
+argument_list|,
+literal|3
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"pps jitter:           %d us\n"
+argument_list|,
+name|ntohl
+argument_list|(
+name|ik
+operator|->
+name|jitter
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"calibration interval: %d s\n"
+argument_list|,
+literal|1
+operator|<<
+name|ntohs
+argument_list|(
+name|ik
+operator|->
+name|shift
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"calibration cycles:   %d\n"
+argument_list|,
+name|ntohl
+argument_list|(
+name|ik
+operator|->
+name|calcnt
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"jitter exceeded:      %d\n"
+argument_list|,
+name|ntohl
+argument_list|(
+name|ik
+operator|->
+name|jitcnt
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"stability exceeded:   %d\n"
+argument_list|,
+name|ntohl
+argument_list|(
+name|ik
+operator|->
+name|stbcnt
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"calibration errors:   %d\n"
+argument_list|,
+name|ntohl
+argument_list|(
+name|ik
+operator|->
+name|errcnt
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

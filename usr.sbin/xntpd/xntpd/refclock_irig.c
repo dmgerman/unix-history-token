@@ -1899,9 +1899,16 @@ name|cp
 index|[
 literal|12
 index|]
-operator|!=
+operator|=
 literal|' '
 condition|)
+name|irig
+operator|->
+name|leap
+operator|=
+literal|0
+expr_stmt|;
+else|else
 name|irig
 operator|->
 name|leap

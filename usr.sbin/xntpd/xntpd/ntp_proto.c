@@ -316,16 +316,6 @@ end_comment
 
 begin_decl_stmt
 name|U_LONG
-name|sys_wanderhold
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* sys_peer held to prevent wandering */
-end_comment
-
-begin_decl_stmt
-name|U_LONG
 name|sys_limitrejected
 decl_stmt|;
 end_decl_stmt
@@ -458,11 +448,31 @@ name|peer_timer
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|peer
+operator|->
+name|hmode
+operator|!=
+name|MODE_BROADCAST
+operator|&&
 name|peer
 operator|->
 name|hmode
 operator|!=
 name|MODE_BCLIENT
+operator|)
+operator|||
+operator|(
+name|peer
+operator|->
+name|hmode
+operator|==
+name|MODE_BROADCAST
+operator|&&
+name|sys_leap
+operator|!=
+name|LEAP_NOTINSYNC
+operator|)
 condition|)
 block|{
 name|U_LONG
@@ -1143,6 +1153,23 @@ if|if
 condition|(
 name|peer
 operator|->
+name|hmode
+operator|==
+name|MODE_BCLIENT
+condition|)
+name|peer
+operator|->
+name|hpoll
+operator|=
+name|peer
+operator|->
+name|ppoll
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|peer
+operator|->
 name|flags
 operator|&
 name|FLAG_SYSPEER
@@ -1153,8 +1180,6 @@ name|hpoll
 operator|>
 name|sys_poll
 condition|)
-block|{
-comment|/* clamp it */
 name|peer
 operator|->
 name|hpoll
@@ -1168,33 +1193,7 @@ argument_list|,
 name|sys_poll
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|peer
-operator|->
-name|hmode
-operator|==
-name|MODE_BROADCAST
-operator|||
-name|peer
-operator|->
-name|hmode
-operator|==
-name|MODE_BCLIENT
-condition|)
-block|{
-comment|/* clamp it */
-name|peer
-operator|->
-name|hpoll
-operator|=
-name|peer
-operator|->
-name|minpoll
-expr_stmt|;
-block|}
-comment|/* 	 * Arrange for our next time out.  hpoll will be less than 	 * maxpoll for sure. 	 */
+comment|/* 	 * Arrange for our next timeout.  hpoll will be less than 	 * maxpoll for sure. 	 */
 if|if
 condition|(
 name|peer
@@ -1264,18 +1263,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static void ct_die(after) { 	syslog(LOG_ERR, "timers garbled (%s)", after?"after":"before"); 	abort(); }  void check_timers(after) {     	register int i; 	register struct event *p, *q;  	for (i = 0; i< TIMER_NSLOTS; i++) { 		p =&timerqueue[i]; 		if (p->event_time != 0) 			ct_die(after); 		do { 			q = p; 			if ((p = p->next) == 0) 				ct_die(after); 			if (p->prev != q) 				ct_die(after); 		} while (p->event_time != 0); 		if (p !=&timerqueue[i]) 			ct_die(after); 	} }
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * receive - Receive Procedure.  See section 3.4.2 in the specification.  */
@@ -1919,6 +1906,13 @@ break|break;
 case|case
 name|MODE_PASSIVE
 case|:
+ifdef|#
+directive|ifdef
+name|MCAST
+comment|/* process the packet to determine the rt-delay */
+endif|#
+directive|endif
+comment|/* MCAST */
 case|case
 name|MODE_SERVER
 case|:
@@ -1945,18 +1939,7 @@ case|case
 name|MODE_BROADCAST
 case|:
 comment|/* 			 * Sort of a repeat of the above... 			 */
-if|if
-condition|(
-operator|(
-specifier|restrict
-operator|&
-name|RES_NOPEER
-operator|)
-operator|||
-operator|!
-name|sys_bclient
-condition|)
-return|return;
+comment|/* 			if ((restrict& RES_NOPEER) || !sys_bclient) 				return; */
 name|mymode
 operator|=
 name|MODE_BCLIENT
@@ -1989,6 +1972,8 @@ argument_list|,
 name|NTP_MINDPOLL
 argument_list|,
 name|NTP_MAXPOLL
+argument_list|,
+literal|0
 argument_list|,
 name|hiskeyid
 argument_list|)
@@ -2403,6 +2388,8 @@ name|NTP_MINDPOLL
 argument_list|,
 name|NTP_MAXPOLL
 argument_list|,
+literal|0
+argument_list|,
 name|hiskeyid
 argument_list|)
 expr_stmt|;
@@ -2577,13 +2564,6 @@ operator|->
 name|processed
 operator|++
 expr_stmt|;
-name|peer
-operator|->
-name|rec
-operator|=
-operator|*
-name|recv_ts
-expr_stmt|;
 name|p_dist
 operator|=
 name|NTOHS_FP
@@ -2624,6 +2604,17 @@ operator|&
 name|p_xmt
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|PKT_MODE
+argument_list|(
+name|pkt
+operator|->
+name|li_vn_mode
+argument_list|)
+operator|!=
+name|MODE_BROADCAST
+condition|)
 name|NTOHL_FP
 argument_list|(
 operator|&
@@ -2634,6 +2625,20 @@ argument_list|,
 operator|&
 name|p_org
 argument_list|)
+expr_stmt|;
+else|else
+name|p_org
+operator|=
+name|peer
+operator|->
+name|rec
+expr_stmt|;
+name|peer
+operator|->
+name|rec
+operator|=
+operator|*
+name|recv_ts
 expr_stmt|;
 name|peer
 operator|->
@@ -2760,6 +2765,30 @@ name|l_uf
 operator|==
 literal|0
 operator|)
+condition|)
+name|peer
+operator|->
+name|flash
+operator||=
+name|TEST3
+expr_stmt|;
+comment|/* unsynchronized */
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|p_org
+operator|.
+name|l_ui
+operator|==
+literal|0
+operator|&&
+name|p_org
+operator|.
+name|l_uf
+operator|==
+literal|0
 condition|)
 name|peer
 operator|->
@@ -3240,18 +3269,7 @@ name|sys_precision
 operator|)
 operator|)
 expr_stmt|;
-if|if
-condition|(
-name|peer
-operator|->
-name|hmode
-operator|==
-name|MODE_BCLIENT
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|notdef
+comment|/* 	 * If broadcast mode, time of last reception has been fiddled 	 * to p_org, rather than originate timestamp. We use this to 	 * augment dispersion and previously calcuated estbdelay as 	 * the delay. We know NTP_SKEWFACTOR == 16, which accounts for 	 * the simplified ei calculation. 	 */
 if|if
 condition|(
 name|PKT_MODE
@@ -3261,26 +3279,9 @@ operator|->
 name|li_vn_mode
 argument_list|)
 operator|==
-name|MODE_CLIENT
+name|MODE_BROADCAST
 condition|)
 block|{
-comment|/* 			 * A client mode packet, used for delay computation. 			 * Give the data to the filter. 			 */
-name|bdelay_filter
-argument_list|(
-name|peer
-argument_list|,
-name|t23_ui
-argument_list|,
-name|t23_uf
-argument_list|,
-name|t10_ui
-argument_list|,
-name|t10_uf
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|M_ADDUF
 argument_list|(
 name|ci
@@ -3308,6 +3309,18 @@ name|peer
 operator|->
 name|estbdelay
 argument_list|)
+expr_stmt|;
+name|ei
+operator|+=
+name|peer
+operator|->
+name|rec
+operator|.
+name|l_ui
+operator|-
+name|p_org
+operator|.
+name|l_ui
 expr_stmt|;
 block|}
 else|else
@@ -3338,7 +3351,6 @@ operator|.
 name|l_uf
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Calculate di in t23 in full precision, then truncate 		 * to an s_fp. 		 */
 name|M_SUB
 argument_list|(
 name|t23_ui
@@ -3359,17 +3371,6 @@ argument_list|,
 name|t23_uf
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Calculate (t3 - t0) in t23 in full precision, convert 		 * to single, shift down by MAXSKEW and add to ei. 		 * We know NTP_SKEWFACTOR == 16 		 */
-if|#
-directive|if
-literal|0
-block|t23_ui = peer->rec.l_ui;
-comment|/* peer->rec == t0 */
-block|t23_uf = peer->rec.l_uf; 		M_SUB(t23_ui, t23_uf, p_org.l_ui, p_org.l_uf);
-comment|/*pkt->org==t3*/
-block|ei += (MFPTOFP(t23_ui, t23_uf)>> NTP_SKEWFACTOR);
-endif|#
-directive|endif
 name|ei
 operator|+=
 name|peer
@@ -3737,17 +3738,7 @@ operator|=
 name|peer
 operator|->
 name|dispersion
-expr_stmt|;
-if|if
-condition|(
-name|peer
-operator|->
-name|flags
-operator|&
-name|FLAG_PREFER
-condition|)
-name|sys_maxd
-operator|+=
+operator|+
 name|peer
 operator|->
 name|selectdisp
@@ -4117,6 +4108,12 @@ operator|->
 name|flags
 operator|&
 name|FLAG_REFCLOCK
+operator|||
+name|peer
+operator|->
+name|hmode
+operator|==
+name|MODE_BROADCAST
 condition|)
 return|return;
 comment|/* 	 * This routine * will randomly perturb the new peer.timer if 	 * requested, to try to prevent synchronization with the remote 	 * peer from occuring.  There are three options, based on the 	 * value of randomize: 	 * 	 * POLL_NOTRANDOM - essentially the spec algorithm.  If 	 * peer.timer is greater than the new polling interval, 	 * drop it to the new interval. 	 * 	 * POLL_RANDOMCHANGE - make changes randomly.  If peer.timer 	 * must be changed, based on the comparison about, randomly 	 * perturb the new value of peer.timer. 	 * 	 * POLL_MAKERANDOM - make next interval random.  Calculate 	 * a randomly perturbed poll interval.  If this value is 	 * less that peer.timer, update peer.timer. 	 */
@@ -4126,6 +4123,23 @@ name|peer
 operator|->
 name|hpoll
 expr_stmt|;
+if|if
+condition|(
+name|peer
+operator|->
+name|hmode
+operator|==
+name|MODE_BCLIENT
+condition|)
+name|peer
+operator|->
+name|hpoll
+operator|=
+name|peer
+operator|->
+name|ppoll
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 operator|(
@@ -4814,69 +4828,6 @@ operator|->
 name|filter_error
 expr_stmt|;
 comment|/* 		 * Find where he goes in, then shift everyone else down 		 */
-if|if
-condition|(
-name|peer
-operator|->
-name|hmode
-operator|==
-name|MODE_BCLIENT
-condition|)
-block|{
-specifier|register
-name|s_fp
-modifier|*
-name|soffsetp
-decl_stmt|;
-comment|/* 			 * Sort by offset.  The most positive offset 			 * should correspond to the minimum delay. 			 */
-name|soffsetp
-operator|=
-name|peer
-operator|->
-name|filter_soffset
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|NTP_SHIFT
-operator|-
-literal|1
-condition|;
-name|i
-operator|++
-control|)
-if|if
-condition|(
-name|errorp
-index|[
-name|ord
-index|[
-name|i
-index|]
-index|]
-operator|>=
-name|NTP_MAXDISPERSE
-operator|||
-name|sample_soffset
-operator|>=
-name|soffsetp
-index|[
-name|ord
-index|[
-name|i
-index|]
-index|]
-condition|)
-break|break;
-block|}
-else|else
-block|{
-comment|/* 			 * Sort by distance. 			 */
 for|for
 control|(
 name|i
@@ -4915,7 +4866,6 @@ index|]
 index|]
 condition|)
 break|break;
-block|}
 for|for
 control|(
 name|j
@@ -6918,13 +6868,9 @@ break|break;
 if|if
 condition|(
 name|i
-operator|<
+operator|>=
 name|nlist
 condition|)
-name|sys_wanderhold
-operator|++
-expr_stmt|;
-else|else
 name|sys_peer
 operator|=
 name|peer_list
@@ -8231,10 +8177,6 @@ name|sys_badauth
 operator|=
 literal|0
 expr_stmt|;
-name|sys_wanderhold
-operator|=
-literal|0
-expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_NOTICE
@@ -8262,7 +8204,7 @@ parameter_list|)
 name|int
 name|item
 decl_stmt|;
-name|LONG
+name|U_LONG
 name|value
 decl_stmt|;
 block|{
@@ -8285,7 +8227,7 @@ name|value
 expr_stmt|;
 if|if
 condition|(
-name|sys_bclient
+name|value
 condition|)
 name|io_setbclient
 argument_list|()
@@ -8294,6 +8236,52 @@ else|else
 name|io_unsetbclient
 argument_list|()
 expr_stmt|;
+break|break;
+case|case
+name|PROTO_MULTICAST_ADD
+case|:
+comment|/* 		 * Add multicast group address 		 */
+if|if
+condition|(
+operator|!
+name|sys_bclient
+condition|)
+block|{
+name|sys_bclient
+operator|=
+literal|1
+expr_stmt|;
+name|io_setbclient
+argument_list|()
+expr_stmt|;
+block|}
+ifdef|#
+directive|ifdef
+name|MCAST
+name|io_multicast_add
+argument_list|(
+name|value
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* MCAST */
+break|break;
+case|case
+name|PROTO_MULTICAST_DEL
+case|:
+comment|/* 		 * Delete multicast group address 		 */
+ifdef|#
+directive|ifdef
+name|MCAST
+name|io_multicast_del
+argument_list|(
+name|value
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* MCAST */
 break|break;
 case|case
 name|PROTO_PRECISION
@@ -8315,9 +8303,6 @@ name|sys_bdelay
 operator|=
 operator|(
 operator|(
-operator|(
-name|U_LONG
-operator|)
 name|value
 operator|)
 operator|+
@@ -8347,9 +8332,6 @@ name|sys_authdelay
 operator|=
 operator|(
 operator|(
-operator|(
-name|U_LONG
-operator|)
 name|value
 operator|)
 operator|+
@@ -8357,30 +8339,6 @@ literal|0x00000800
 operator|)
 operator|&
 literal|0xfffff000
-expr_stmt|;
-break|break;
-case|case
-name|PROTO_MAXSKEW
-case|:
-comment|/* 		 * Set the maximum skew value 		 */
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"proto_config: attempt to set maxskew (obsolete)"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|PROTO_SELECT
-case|:
-comment|/* 		 * Set the selection algorithm. 		 */
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"proto_config: attempt to set selection algorithm (obsolete)"
-argument_list|)
 expr_stmt|;
 break|break;
 default|default:
@@ -8435,10 +8393,6 @@ operator|=
 literal|0
 expr_stmt|;
 name|sys_badauth
-operator|=
-literal|0
-expr_stmt|;
-name|sys_wanderhold
 operator|=
 literal|0
 expr_stmt|;
