@@ -308,8 +308,6 @@ name|entropyfifo
 name|harvestfifo
 index|[
 name|ENTROPYSOURCE
-operator|+
-literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1318,10 +1316,6 @@ operator|||
 name|origin
 operator|==
 name|RANDOM_PURE
-operator|||
-name|origin
-operator|==
-name|ENTROPYSOURCE
 argument_list|,
 operator|(
 literal|"random_harvest_internal: origin %d invalid\n"
