@@ -47,7 +47,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	2.2	%G%"
+literal|"@(#)deliver.c	2.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -175,6 +175,15 @@ name|bool
 name|GotHdr
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|index
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* 	**  Compute receiving mailer, host, and to addreses. 	**	Do some initialization first.  To is the to address 	**	for error messages. 	*/
@@ -484,8 +493,19 @@ name|editfcn
 operator|==
 name|NULL
 operator|&&
+operator|(
 operator|!
 name|GotHdr
+operator|||
+name|flagset
+argument_list|(
+name|M_FHDR
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
+operator|)
 condition|)
 name|editfcn
 operator|=
@@ -1274,30 +1294,62 @@ modifier|*
 name|ctime
 parameter_list|()
 function_decl|;
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|index
+parameter_list|()
+function_decl|;
 specifier|extern
 name|char
 name|SentDate
 index|[]
 decl_stmt|;
-name|fprintf
+comment|/* output the header part */
+name|fgets
 argument_list|(
-name|fp
+name|buf
 argument_list|,
-literal|"From %s "
+sizeof|sizeof
+name|buf
 argument_list|,
-name|From
-operator|.
-name|q_paddr
+name|stdin
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|SentDate
-index|[
+name|strncmp
+argument_list|(
+name|buf
+argument_list|,
+literal|"From "
+argument_list|,
+literal|5
+argument_list|)
+operator|!=
 literal|0
+operator|||
+operator|(
+name|p
+operator|=
+name|index
+argument_list|(
+operator|&
+name|buf
+index|[
+literal|5
 index|]
+argument_list|,
+literal|' '
+argument_list|)
+operator|)
 operator|==
-literal|'\0'
+name|NULL
 condition|)
 block|{
 name|time
@@ -1310,7 +1362,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%s"
+literal|"From %s %s"
+argument_list|,
+name|From
+operator|.
+name|q_paddr
 argument_list|,
 name|ctime
 argument_list|(
@@ -1319,19 +1375,41 @@ name|tim
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|fputs
+argument_list|(
+name|buf
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%s"
+literal|"From %s %s"
 argument_list|,
-name|SentDate
+name|From
+operator|.
+name|q_paddr
+argument_list|,
+operator|&
+name|p
+index|[
+literal|1
+index|]
 argument_list|)
 expr_stmt|;
+comment|/* output the body */
 while|while
 condition|(
+operator|!
+name|ferror
+argument_list|(
+name|fp
+argument_list|)
+operator|&&
 name|fgets
 argument_list|(
 name|buf
@@ -1343,12 +1421,6 @@ name|stdin
 argument_list|)
 operator|!=
 name|NULL
-operator|&&
-operator|!
-name|ferror
-argument_list|(
-name|fp
-argument_list|)
 condition|)
 name|fputs
 argument_list|(

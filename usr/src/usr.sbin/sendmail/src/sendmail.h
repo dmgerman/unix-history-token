@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  DLVRMAIL.H -- Global definitions for delivermail. ** **	Most of these are actually allocated in globals.c ** **	@(#)sendmail.h	2.1	%G% */
+comment|/* **  DLVRMAIL.H -- Global definitions for delivermail. ** **	Most of these are actually allocated in globals.c ** **	@(#)sendmail.h	2.2	%G% */
 end_comment
 
 begin_include
@@ -193,6 +193,17 @@ end_define
 
 begin_comment
 comment|/* strip quote characters from user/host */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_FHDR
+value|0200
+end_define
+
+begin_comment
+comment|/* force good From line */
 end_comment
 
 begin_decl_stmt
