@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/disklabel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/reboot.h>
 end_include
 
@@ -1620,15 +1626,17 @@ name|psize
 operator|-
 name|Maxmem
 operator|*
+operator|(
 name|PAGE_SIZE
 operator|/
 name|DEV_BSIZE
+operator|)
 expr_stmt|;
 if|if
 condition|(
 name|newdumplo
-operator|<
-literal|0
+operator|<=
+name|LABELSECTOR
 condition|)
 return|return
 operator|(
