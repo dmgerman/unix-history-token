@@ -245,7 +245,7 @@ block|,
 block|{
 literal|""
 block|}
-block|,                    }
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -263,7 +263,7 @@ block|,
 block|{
 literal|""
 block|}
-block|,                    }
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -936,7 +936,7 @@ while|while
 condition|(
 name|pos_t
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 if|if
