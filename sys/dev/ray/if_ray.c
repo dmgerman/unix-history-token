@@ -7968,7 +7968,7 @@ name|RAY_RECERR
 argument_list|(
 name|sc
 argument_list|,
-literal|"bad length current 0x%x pktlen 0x%x"
+literal|"bad length current 0x%zx pktlen 0x%zx"
 argument_list|,
 name|fraglen
 operator|+
@@ -15380,6 +15380,9 @@ name|sc
 argument_list|,
 literal|"freeing free ccs 0x%02x"
 argument_list|,
+operator|(
+name|uint8_t
+operator|)
 name|RAY_CCS_INDEX
 argument_list|(
 name|ccs
