@@ -3042,6 +3042,9 @@ name|ia64_unwind_state
 modifier|*
 name|us
 parameter_list|,
+name|int
+name|rlen
+parameter_list|,
 name|u_int8_t
 modifier|*
 name|imask
@@ -3110,9 +3113,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|us
-operator|->
-name|us_pc
+name|rlen
 condition|;
 name|i
 operator|++
@@ -3136,9 +3137,13 @@ operator|(
 literal|2
 operator|*
 operator|(
+literal|3
+operator|-
+operator|(
 name|i
 operator|&
 literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -5870,6 +5875,8 @@ comment|/* P4 */
 name|parse_spill_mask
 argument_list|(
 name|us
+argument_list|,
+name|rlen
 argument_list|,
 name|p
 operator|+
