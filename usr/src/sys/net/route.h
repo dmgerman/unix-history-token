@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)route.h	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)route.h	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -193,10 +193,12 @@ name|rt_metrics
 name|rt_rmx
 decl_stmt|;
 comment|/* metrics used by rx'ing protocols */
-name|short
-name|rt_idle
+name|struct
+name|rtentry
+modifier|*
+name|rt_gwroute
 decl_stmt|;
-comment|/* easy to tell llayer still live */
+comment|/* implied entry for gatewayed routes */
 block|}
 struct|;
 end_struct
