@@ -1098,7 +1098,7 @@ operator|->
 name|sc_inqueue_mtx
 argument_list|)
 expr_stmt|;
-name|bioq_disksort
+name|bioq_insert_tail
 argument_list|(
 operator|&
 name|sc
@@ -1966,6 +1966,34 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"Invalid sector size."
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
+if|if
+condition|(
+operator|(
+name|ggio
+operator|->
+name|gctl_mediasize
+operator|%
+name|ggio
+operator|->
+name|gctl_sectorsize
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|G_GATE_DEBUG
+argument_list|(
+literal|1
+argument_list|,
+literal|"Invalid media size."
 argument_list|)
 expr_stmt|;
 return|return
@@ -2907,7 +2935,7 @@ operator|->
 name|sc_inqueue_mtx
 argument_list|)
 expr_stmt|;
-name|bioq_disksort
+name|bioq_insert_head
 argument_list|(
 operator|&
 name|sc
@@ -3154,7 +3182,7 @@ operator|->
 name|sc_inqueue_mtx
 argument_list|)
 expr_stmt|;
-name|bioq_disksort
+name|bioq_insert_head
 argument_list|(
 operator|&
 name|sc
