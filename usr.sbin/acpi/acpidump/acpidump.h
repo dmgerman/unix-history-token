@@ -690,6 +690,13 @@ name|dsdt_header
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|rflag
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

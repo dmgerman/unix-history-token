@@ -185,14 +185,14 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"usage:\t%s [-o dsdt_file_for_output]\n"
+literal|"usage:\t%s [-r] [-o dsdt_file_for_output]\n"
 argument_list|,
 name|progname
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%s [-f dsdt_file_for_input]\n"
+literal|"\t%s [-r] [-f dsdt_file_for_input]\n"
 argument_list|,
 name|progname
 argument_list|)
@@ -249,7 +249,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"f:o:h"
+literal|"f:o:hr"
 argument_list|)
 operator|)
 operator|!=
@@ -290,6 +290,13 @@ name|usage
 argument_list|(
 name|progname
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'r'
+case|:
+name|rflag
+operator|++
 expr_stmt|;
 break|break;
 default|default:
