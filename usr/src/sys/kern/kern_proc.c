@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.29	82/07/25	*/
+comment|/*	kern_proc.c	4.30	82/08/10	*/
 end_comment
 
 begin_include
@@ -2467,6 +2467,13 @@ name|i
 index|]
 argument_list|,
 literal|1
+argument_list|,
+name|u
+operator|.
+name|u_pofile
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
 name|u
@@ -2484,9 +2491,8 @@ name|u_pofile
 index|[
 name|i
 index|]
-operator|&=
-operator|~
-name|EXCLOSE
+operator|=
+literal|0
 expr_stmt|;
 block|}
 block|}
@@ -2602,12 +2608,6 @@ name|p
 decl_stmt|,
 modifier|*
 name|q
-decl_stmt|;
-specifier|register
-name|struct
-name|file
-modifier|*
-name|f
 decl_stmt|;
 specifier|register
 name|int
@@ -2821,6 +2821,10 @@ name|i
 operator|++
 control|)
 block|{
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* why was this like this? */
 name|f
 operator|=
 name|u
@@ -2846,6 +2850,47 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|closef
+argument_list|(
+name|u
+operator|.
+name|u_ofile
+index|[
+name|i
+index|]
+argument_list|,
+literal|1
+argument_list|,
+name|u
+operator|.
+name|u_pofile
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|u
+operator|.
+name|u_ofile
+index|[
+name|i
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+name|u
+operator|.
+name|u_pofile
+index|[
+name|i
+index|]
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|ilock
 argument_list|(
