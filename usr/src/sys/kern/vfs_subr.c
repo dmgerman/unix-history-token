@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.62 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.63 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -545,6 +545,31 @@ name|VNON
 expr_stmt|;
 name|vap
 operator|->
+name|va_size
+operator|=
+name|vap
+operator|->
+name|va_bytes
+operator|=
+name|VNOVAL
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_NOQUAD
+name|vap
+operator|->
+name|va_size_rsv
+operator|=
+name|vap
+operator|->
+name|va_bytes_rsv
+operator|=
+name|VNOVAL
+expr_stmt|;
+endif|#
+directive|endif
+name|vap
+operator|->
 name|va_mode
 operator|=
 name|vap
@@ -569,27 +594,11 @@ name|va_fileid
 operator|=
 name|vap
 operator|->
-name|va_size
-operator|=
-name|vap
-operator|->
-name|va_size_rsv
-operator|=
-name|vap
-operator|->
 name|va_blocksize
 operator|=
 name|vap
 operator|->
 name|va_rdev
-operator|=
-name|vap
-operator|->
-name|va_bytes
-operator|=
-name|vap
-operator|->
-name|va_bytes_rsv
 operator|=
 name|vap
 operator|->
