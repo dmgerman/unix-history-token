@@ -856,7 +856,7 @@ name|flag
 operator|&
 name|P_SINTR
 condition|)
-comment|/* interuptable (long) */
+comment|/* interruptable (long) */
 operator|*
 name|cp
 operator|=
