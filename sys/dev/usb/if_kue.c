@@ -2584,12 +2584,6 @@ name|kue_idx
 operator|=
 name|i
 expr_stmt|;
-name|c
-operator|->
-name|kue_accum
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|kue_newbuf
@@ -2796,7 +2790,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * A frame has been uploaded: pass the resulting mbuf chain up to  * the higher level protocols.  *  * Grrr. Receiving transfers larger than about 1152 bytes sometimes  * doesn't work. We get an incomplete frame. In order to avoid  * this, we queue up RX transfers that are shorter than a full sized  * frame. If the received frame is larger than our transfer size,  * we snag the rest of the data using a second transfer. Does this  * hurt performance? Yes. But after fighting with this stupid thing  * for three days, I'm willing to settle. I'd rather have reliable  * receive performance that fast but spotty performance.  */
+comment|/*  * A frame has been uploaded: pass the resulting mbuf chain up to  * the higher level protocols.  */
 end_comment
 
 begin_function
@@ -3512,7 +3506,7 @@ operator|%
 literal|64
 operator|)
 expr_stmt|;
-comment|/* 	 * The ADMtek documentation says that the packet length is 	 * supposed to be specified in the first two bytes of the 	 * transfer, however it actually seems to ignore this info 	 * and base the frame size on the bulk transfer length. 	 */
+comment|/* Frame length is specified in the first 2 bytes of the buffer. */
 name|c
 operator|->
 name|kue_buf

@@ -560,9 +560,6 @@ modifier|*
 name|kue_mbuf
 decl_stmt|;
 name|int
-name|kue_accum
-decl_stmt|;
-name|int
 name|kue_idx
 decl_stmt|;
 block|}
