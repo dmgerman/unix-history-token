@@ -411,6 +411,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -428,6 +434,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Local variables  */
@@ -2402,6 +2413,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+end_ifdef
+
 begin_comment
 comment|/*  * Print a SPANS CLS PDU  *   * Arguments:  *	clp	pointer to cls instance  *	m	pointer to pdu buffer chain  *	msg	pointer to message string  *  * Returns:  *	none  *  */
 end_comment
@@ -2460,6 +2477,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
