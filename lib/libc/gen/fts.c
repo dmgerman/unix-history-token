@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: fts.c,v 1.9 1997/08/02 00:13:49 millert Exp $	*/
-end_comment
-
-begin_comment
-comment|/*-  * Copyright (c) 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $OpenBSD: fts.c,v 1.22 1999/10/03 19:22:22 millert Exp $  */
 end_comment
 
 begin_if
@@ -22,15 +18,32 @@ name|lint
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)fts.c	8.6 (Berkeley) 8/14/94"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -189,7 +202,7 @@ operator|(
 name|FTS
 operator|*
 operator|,
-name|void
+name|FTSENT
 operator|*
 operator|)
 argument_list|)
@@ -513,6 +526,11 @@ name|fts_options
 operator|=
 name|options
 expr_stmt|;
+comment|/* Shush, GCC. */
+name|tmp
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* Logical walks turn on NOCHDIR; symbolic links are too hard. */
 if|if
 condition|(
@@ -792,7 +810,7 @@ name|fts_info
 operator|=
 name|FTS_INIT
 expr_stmt|;
-comment|/* 	 * If using chdir(2), grab a file descriptor pointing to dot to insure 	 * that we can get back here; this could be avoided for some paths, 	 * but almost certainly not worth the effort.  Slashes, symbolic links, 	 * and ".." are all fairly nasty problems.  Note, if we can't get the 	 * descriptor we run anyway, just more slowly. 	 */
+comment|/* 	 * If using chdir(2), grab a file descriptor pointing to dot to ensure 	 * that we can get back here; this could be avoided for some paths, 	 * but almost certainly not worth the effort.  Slashes, symbolic links, 	 * and ".." are all fairly nasty problems.  Note, if we can't get the 	 * descriptor we run anyway, just more slowly. 	 */
 if|if
 condition|(
 operator|!
@@ -1141,17 +1159,12 @@ operator|->
 name|fts_rfd
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Set errno and return. */
 if|if
 condition|(
-operator|!
-name|ISSET
-argument_list|(
-name|FTS_NOCHDIR
-argument_list|)
-operator|&&
 name|saved_errno
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/* Free up the stream pointer. */
@@ -1170,6 +1183,7 @@ operator|-
 literal|1
 operator|)
 return|;
+block|}
 block|}
 comment|/* Free up the stream pointer. */
 name|free
@@ -1348,6 +1362,7 @@ argument_list|(
 name|FTS_NOCHDIR
 argument_list|)
 condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -1388,6 +1403,7 @@ name|fts_flags
 operator||=
 name|FTS_SYMFOLLOW
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|p
@@ -1647,7 +1663,7 @@ argument_list|(
 name|tmp
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If reached the top, return to the original directory, and 		 * load the paths for the next root. 		 */
+comment|/* 		 * If reached the top, return to the original directory (or 		 * the root of the tree), and load the paths for the next root. 		 */
 if|if
 condition|(
 name|p
@@ -1745,6 +1761,7 @@ argument_list|(
 name|FTS_NOCHDIR
 argument_list|)
 condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -1785,6 +1802,7 @@ name|fts_flags
 operator||=
 name|FTS_SYMFOLLOW
 expr_stmt|;
+block|}
 name|p
 operator|->
 name|fts_instr
@@ -1879,7 +1897,7 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/* Nul terminate the pathname. */
+comment|/* NUL terminate the pathname. */
 name|sp
 operator|->
 name|fts_path
@@ -2412,7 +2430,7 @@ name|dirp
 decl_stmt|;
 name|void
 modifier|*
-name|adjaddr
+name|oldaddr
 decl_stmt|;
 name|int
 name|cderrno
@@ -2430,6 +2448,10 @@ decl_stmt|,
 name|oflag
 decl_stmt|,
 name|saved_errno
+decl_stmt|,
+name|nostat
+decl_stmt|,
+name|doadjust
 decl_stmt|;
 name|char
 modifier|*
@@ -2532,10 +2554,17 @@ name|type
 operator|==
 name|BNAMES
 condition|)
+block|{
 name|nlinks
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Be quiet about nostat, GCC. */
+name|nostat
+operator|=
+literal|0
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -2549,6 +2578,7 @@ argument_list|(
 name|FTS_PHYSICAL
 argument_list|)
 condition|)
+block|{
 name|nlinks
 operator|=
 name|cur
@@ -2566,12 +2596,23 @@ else|:
 literal|2
 operator|)
 expr_stmt|;
+name|nostat
+operator|=
+literal|1
+expr_stmt|;
+block|}
 else|else
+block|{
 name|nlinks
 operator|=
 operator|-
 literal|1
 expr_stmt|;
+name|nostat
+operator|=
+literal|0
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|notdef
@@ -2627,6 +2668,7 @@ name|type
 operator|==
 name|BREAD
 condition|)
+block|{
 if|if
 condition|(
 name|fts_safe_changedir
@@ -2688,24 +2730,13 @@ name|descend
 operator|=
 literal|1
 expr_stmt|;
+block|}
 else|else
 name|descend
 operator|=
 literal|0
 expr_stmt|;
 comment|/* 	 * Figure out the max file name length that can be stored in the 	 * current path -- the inner loop allocates more path as necessary. 	 * We really wouldn't have to do the maxlen calculations here, we 	 * could do them in fts_read before returning the path, but it's a 	 * lot easier here since the length is part of the dirent structure. 	 * 	 * If not changing directories set a pointer so that can just append 	 * each new name into the path. 	 */
-name|maxlen
-operator|=
-name|sp
-operator|->
-name|fts_pathlen
-operator|-
-name|cur
-operator|->
-name|fts_pathlen
-operator|-
-literal|1
-expr_stmt|;
 name|len
 operator|=
 name|NAPPEND
@@ -2736,6 +2767,25 @@ operator|=
 literal|'/'
 expr_stmt|;
 block|}
+else|else
+block|{
+comment|/* GCC, you're too verbose. */
+name|cp
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+name|len
+operator|++
+expr_stmt|;
+name|maxlen
+operator|=
+name|sp
+operator|->
+name|fts_pathlen
+operator|-
+name|len
+expr_stmt|;
 name|level
 operator|=
 name|cur
@@ -2745,9 +2795,9 @@ operator|+
 literal|1
 expr_stmt|;
 comment|/* Read the directory, attaching each entry to the `link' pointer. */
-name|adjaddr
+name|doadjust
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -2822,22 +2872,30 @@ condition|(
 name|dp
 operator|->
 name|d_namlen
-operator|>
+operator|>=
 name|maxlen
 condition|)
 block|{
+comment|/* include space for NUL */
+name|oldaddr
+operator|=
+name|sp
+operator|->
+name|fts_path
+expr_stmt|;
 if|if
 condition|(
 name|fts_palloc
 argument_list|(
 name|sp
 argument_list|,
-operator|(
-name|size_t
-operator|)
 name|dp
 operator|->
 name|d_namlen
+operator|+
+name|len
+operator|+
+literal|1
 argument_list|)
 condition|)
 block|{
@@ -2870,9 +2928,95 @@ argument_list|(
 name|dirp
 argument_list|)
 expr_stmt|;
+name|cur
+operator|->
+name|fts_info
+operator|=
+name|FTS_ERR
+expr_stmt|;
+name|SET
+argument_list|(
+name|FTS_STOP
+argument_list|)
+expr_stmt|;
 name|errno
 operator|=
 name|saved_errno
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+comment|/* Did realloc() change the pointer? */
+if|if
+condition|(
+name|oldaddr
+operator|!=
+name|sp
+operator|->
+name|fts_path
+condition|)
+block|{
+name|doadjust
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|ISSET
+argument_list|(
+name|FTS_NOCHDIR
+argument_list|)
+condition|)
+name|cp
+operator|=
+name|sp
+operator|->
+name|fts_path
+operator|+
+name|len
+expr_stmt|;
+block|}
+name|maxlen
+operator|=
+name|sp
+operator|->
+name|fts_pathlen
+operator|-
+name|len
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|len
+operator|+
+name|dp
+operator|->
+name|d_namlen
+operator|>=
+name|USHRT_MAX
+condition|)
+block|{
+comment|/* 			 * In an FTSENT, fts_pathlen is a u_short so it is 			 * possible to wraparound here.  If we do, free up 			 * the current structure and the structures already 			 * allocated, then error out with ENAMETOOLONG. 			 */
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|fts_lfree
+argument_list|(
+name|head
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|closedir
+argument_list|(
+name|dirp
+argument_list|)
 expr_stmt|;
 name|cur
 operator|->
@@ -2885,44 +3029,21 @@ argument_list|(
 name|FTS_STOP
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+name|ENAMETOOLONG
+expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
 block|}
-name|adjaddr
-operator|=
-name|sp
-operator|->
-name|fts_path
-expr_stmt|;
-name|maxlen
-operator|=
-name|sp
-operator|->
-name|fts_pathlen
-operator|-
-name|sp
-operator|->
-name|fts_cur
-operator|->
-name|fts_pathlen
-operator|-
-literal|1
-expr_stmt|;
-block|}
 name|p
 operator|->
-name|fts_pathlen
+name|fts_level
 operator|=
-name|len
-operator|+
-name|dp
-operator|->
-name|d_namlen
-operator|+
-literal|1
+name|level
 expr_stmt|;
 name|p
 operator|->
@@ -2934,9 +3055,13 @@ name|fts_cur
 expr_stmt|;
 name|p
 operator|->
-name|fts_level
+name|fts_pathlen
 operator|=
-name|level
+name|len
+operator|+
+name|dp
+operator|->
+name|d_namlen
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -3007,9 +3132,7 @@ directive|ifdef
 name|DT_DIR
 operator|||
 operator|(
-name|nlinks
-operator|>
-literal|0
+name|nostat
 operator|&&
 name|dp
 operator|->
@@ -3188,16 +3311,16 @@ argument_list|(
 name|dirp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If had to realloc the path, adjust the addresses for the rest 	 * of the tree. 	 */
+comment|/* 	 * If realloc() changed the address of the path, adjust the 	 * addresses for the rest of the tree and the dir list. 	 */
 if|if
 condition|(
-name|adjaddr
+name|doadjust
 condition|)
 name|fts_padjust
 argument_list|(
 name|sp
 argument_list|,
-name|adjaddr
+name|head
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If not changing directories, reset the path back to original 	 * state. 	 */
@@ -3216,6 +3339,10 @@ operator|==
 name|sp
 operator|->
 name|fts_pathlen
+operator|||
+name|nitems
+operator|==
+literal|0
 condition|)
 operator|--
 name|cp
@@ -3736,6 +3863,12 @@ operator|->
 name|fts_nitems
 condition|)
 block|{
+name|struct
+name|_ftsent
+modifier|*
+modifier|*
+name|a
+decl_stmt|;
 name|sp
 operator|->
 name|fts_nitems
@@ -3747,20 +3880,14 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|sp
-operator|->
-name|fts_array
+name|a
 operator|=
-name|reallocf
+name|realloc
 argument_list|(
 name|sp
 operator|->
 name|fts_array
 argument_list|,
-call|(
-name|size_t
-call|)
-argument_list|(
 name|sp
 operator|->
 name|fts_nitems
@@ -3771,12 +3898,30 @@ name|FTSENT
 operator|*
 argument_list|)
 argument_list|)
-argument_list|)
 operator|)
 operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|sp
+operator|->
+name|fts_array
+condition|)
+name|free
+argument_list|(
+name|sp
+operator|->
+name|fts_array
+argument_list|)
+expr_stmt|;
+name|sp
+operator|->
+name|fts_array
+operator|=
+name|NULL
+expr_stmt|;
 name|sp
 operator|->
 name|fts_nitems
@@ -3789,6 +3934,12 @@ name|head
 operator|)
 return|;
 block|}
+name|sp
+operator|->
+name|fts_array
+operator|=
+name|a
+expr_stmt|;
 block|}
 for|for
 control|(
@@ -3966,7 +4117,7 @@ operator|(
 name|NULL
 operator|)
 return|;
-comment|/* Copy the name plus the trailing NULL. */
+comment|/* Copy the name and guarantee NUL termination. */
 name|memmove
 argument_list|(
 name|p
@@ -3976,9 +4127,16 @@ argument_list|,
 name|name
 argument_list|,
 name|namelen
-operator|+
-literal|1
 argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|fts_name
+index|[
+name|namelen
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -4306,20 +4464,28 @@ name|fts_padjust
 parameter_list|(
 name|sp
 parameter_list|,
-name|addr
+name|head
 parameter_list|)
 name|FTS
 modifier|*
 name|sp
 decl_stmt|;
-name|void
+name|FTSENT
 modifier|*
-name|addr
+name|head
 decl_stmt|;
 block|{
 name|FTSENT
 modifier|*
 name|p
+decl_stmt|;
+name|char
+modifier|*
+name|addr
+init|=
+name|sp
+operator|->
+name|fts_path
 decl_stmt|;
 define|#
 directive|define
@@ -4446,6 +4612,8 @@ expr_stmt|;
 return|return
 operator|(
 name|max
+operator|+
+literal|1
 operator|)
 return|;
 block|}
