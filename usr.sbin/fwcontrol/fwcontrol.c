@@ -88,6 +88,7 @@ file|<unistd.h>
 end_include
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -149,6 +150,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|get_num_of_dev
 parameter_list|(
@@ -193,6 +195,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|list_dev
 parameter_list|(
@@ -284,6 +287,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|u_int32_t
 name|read_write_quad
 parameter_list|(
@@ -516,6 +520,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|send_phy_config
 parameter_list|(
@@ -728,6 +733,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|set_pri_req
 parameter_list|(
@@ -923,6 +929,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|parse_bus_info_block
 parameter_list|(
@@ -967,6 +974,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|get_crom
 parameter_list|(
@@ -1123,14 +1131,15 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|show_crom
-argument_list|(
-argument|u_int32_t *crom_buf
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|u_int32_t
+modifier|*
+name|crom_buf
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1278,6 +1287,15 @@ operator|->
 name|crc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dir
+operator|->
+name|crc_len
+operator|<
+literal|1
+condition|)
+return|return;
 while|while
 condition|(
 name|cc
@@ -1374,7 +1392,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_define
 define|#
@@ -1383,14 +1401,15 @@ name|DUMP_FORMAT
 value|"%08x %08x %08x %08x %08x %08x %08x %08x\n"
 end_define
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|dump_crom
-argument_list|(
-argument|u_int32_t *p
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|u_int32_t
+modifier|*
+name|p
+parameter_list|)
 block|{
 name|int
 name|len
@@ -1470,18 +1489,21 @@ literal|8
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|load_crom
-argument_list|(
-argument|char *filename
-argument_list|,
-argument|u_int32_t *p
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|char
+modifier|*
+name|filename
+parameter_list|,
+name|u_int32_t
+modifier|*
+name|p
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -1579,7 +1601,7 @@ literal|8
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
