@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pwd_mkdb.c	5.1 (Berkeley) %G%"
+literal|"@(#)pwd_mkdb.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1385,9 +1385,11 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%s.tmp"
+literal|"%s.tmp.%s"
 argument_list|,
 name|_PATH_MP_DB
+argument_list|,
+name|DBM_SUFFIX
 argument_list|)
 expr_stmt|;
 name|mv
@@ -1404,9 +1406,11 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%s.tmp"
+literal|"%s.tmp.%s"
 argument_list|,
 name|_PATH_SMP_DB
+argument_list|,
+name|DBM_SUFFIX
 argument_list|)
 expr_stmt|;
 name|mv
