@@ -3465,6 +3465,8 @@ operator|=
 name|time_second
 operator|-
 operator|(
+name|tz
+operator|.
 name|tz_minuteswest
 operator|*
 literal|60
@@ -7761,6 +7763,8 @@ operator|=
 name|time_second
 operator|-
 operator|(
+name|tz
+operator|.
 name|tz_minuteswest
 operator|*
 literal|60
@@ -7871,6 +7875,8 @@ operator|=
 name|time_second
 operator|-
 operator|(
+name|tz
+operator|.
 name|tz_minuteswest
 operator|*
 literal|60
@@ -8002,7 +8008,7 @@ literal|4
 argument_list|,
 name|sc
 argument_list|,
-literal|"cmd_hdr = %x %lx %x %x %x %x %zx\n %s"
+literal|"cmd_hdr = %x %lx %x %x %x %x %x\n %s"
 argument_list|,
 name|sc
 operator|->

@@ -97,36 +97,32 @@ name|cdevsw
 name|twa_cdevsw
 init|=
 block|{
-operator|.
-name|d_version
-operator|=
-name|D_VERSION
-block|,
-operator|.
-name|d_flags
-operator|=
-name|D_NEEDGIANT
-block|,
-operator|.
-name|d_open
-operator|=
 name|twa_open
 block|,
-operator|.
-name|d_close
-operator|=
 name|twa_close
 block|,
-operator|.
-name|d_ioctl
-operator|=
+name|noread
+block|,
+name|nowrite
+block|,
 name|twa_ioctl_wrapper
 block|,
-operator|.
-name|d_name
-operator|=
+name|nopoll
+block|,
+name|nommap
+block|,
+name|nostrategy
+block|,
 literal|"twa"
-block|, }
+block|,
+name|TWA_CDEV_MAJOR
+block|,
+name|nodump
+block|,
+name|nopsize
+block|,
+literal|0
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -1857,13 +1853,6 @@ comment|/* maxsegsize */
 name|BUS_DMA_ALLOCNOW
 argument_list|,
 comment|/* flags */
-name|busdma_lock_mutex
-argument_list|,
-comment|/* lockfunc */
-operator|&
-name|Giant
-argument_list|,
-comment|/* lockfuncarg */
 operator|&
 name|sc
 operator|->
@@ -3454,7 +3443,7 @@ name|twa_printf
 argument_list|(
 name|sc
 argument_list|,
-literal|"9K cmd = %x %x %x %x %x %x %x %x %jx\n"
+literal|"9K cmd = %x %x %x %x %x %x %x %x %x\n"
 argument_list|,
 name|cmd9k
 operator|->
@@ -3490,9 +3479,6 @@ name|sgl_entries
 argument_list|,
 name|cmd_phys_addr
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
 name|cmd9k
 operator|->
 name|sg_list
@@ -3697,7 +3683,7 @@ name|twa_printf
 argument_list|(
 name|sc
 argument_list|,
-literal|"cmdphys=0x%x data=%p length=0x%jx\n"
+literal|"cmdphys=0x%x data=%p length=0x%x\n"
 argument_list|,
 name|cmd_phys_addr
 argument_list|,
@@ -3705,9 +3691,6 @@ name|tr
 operator|->
 name|tr_data
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
 name|tr
 operator|->
 name|tr_length

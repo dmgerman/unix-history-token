@@ -22,12 +22,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/libkern.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -106,13 +100,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/pci/pcireg.h>
+file|<pci/pcireg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/pci/pcivar.h>
+file|<pci/pcivar.h>
 end_include
 
 begin_include

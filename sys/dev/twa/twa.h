@@ -15,14 +15,14 @@ begin_define
 define|#
 directive|define
 name|TWA_DRIVER_VERSION_STRING
-value|"2.50.00.000"
+value|"2.40.00.000"
 end_define
 
 begin_define
 define|#
 directive|define
 name|TWA_CDEV_MAJOR
-value|MAJOR_AUTO
+value|187
 end_define
 
 begin_define
