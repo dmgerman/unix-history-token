@@ -6361,22 +6361,6 @@ expr_stmt|;
 if|if
 condition|(
 name|e
-operator|==
-name|PAM_NEW_AUTHTOK_REQD
-condition|)
-block|{
-name|e
-operator|=
-name|pam_chauthtok
-argument_list|(
-name|pamh
-argument_list|,
-name|PAM_CHANGE_EXPIRED_AUTHTOK
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|e
 operator|!=
 name|PAM_SUCCESS
 condition|)
@@ -6385,7 +6369,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"pam_chauthtok: %s"
+literal|"pam_acct_mgmt: %s"
 argument_list|,
 name|pam_strerror
 argument_list|(
@@ -6395,20 +6379,6 @@ name|e
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|rval
-operator|=
-literal|1
-expr_stmt|;
-block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|e
-operator|!=
-name|PAM_SUCCESS
-condition|)
-block|{
 name|rval
 operator|=
 literal|1
