@@ -12815,6 +12815,15 @@ argument_list|,
 name|peernode
 argument_list|)
 expr_stmt|;
+name|SET_RETADDR
+argument_list|(
+name|item
+argument_list|,
+name|here
+argument_list|,
+name|retaddr
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
