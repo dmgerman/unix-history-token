@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: linux_genassym.c,v 1.6 1997/08/25 23:36:23 bde Exp $ */
+comment|/* $Id: linux_genassym.c,v 1.7 1998/02/01 18:47:56 bde Exp $ */
 end_comment
 
 begin_include
@@ -14,6 +14,30 @@ include|#
 directive|include
 file|<i386/linux/linux.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|offsetof
+parameter_list|(
+name|type
+parameter_list|,
+name|member
+parameter_list|)
+value|((size_t)(&((type *)0)->member))
+end_define
+
+begin_define
+define|#
+directive|define
+name|OS
+parameter_list|(
+name|s
+parameter_list|,
+name|m
+parameter_list|)
+value|((u_int)offsetof(struct s, m))
+end_define
 
 begin_decl_stmt
 name|int
@@ -48,78 +72,64 @@ name|int
 name|main
 parameter_list|()
 block|{
-name|struct
-name|linux_sigframe
-modifier|*
-name|linux_sigf
-init|=
-operator|(
-expr|struct
-name|linux_sigframe
-operator|*
-operator|)
-literal|0
-decl_stmt|;
-name|struct
-name|linux_sigcontext
-modifier|*
-name|linux_sc
-init|=
-operator|(
-expr|struct
-name|linux_sigcontext
-operator|*
-operator|)
-literal|0
-decl_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tLINUX_SIGF_HANDLER %d\n"
+literal|"#define\tLINUX_SIGF_HANDLER %u\n"
 argument_list|,
-operator|&
-name|linux_sigf
-operator|->
+name|OS
+argument_list|(
+name|linux_sigframe
+argument_list|,
 name|sf_handler
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tLINUX_SIGF_SC %d\n"
+literal|"#define\tLINUX_SIGF_SC %u\n"
 argument_list|,
-operator|&
-name|linux_sigf
-operator|->
+name|OS
+argument_list|(
+name|linux_sigframe
+argument_list|,
 name|sf_sc
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tLINUX_SC_FS %d\n"
+literal|"#define\tLINUX_SC_FS %u\n"
 argument_list|,
-operator|&
-name|linux_sc
-operator|->
+name|OS
+argument_list|(
+name|linux_sigcontext
+argument_list|,
 name|sc_fs
 argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tLINUX_SC_GS %d\n"
-argument_list|,
-operator|&
-name|linux_sc
-operator|->
-name|sc_gs
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tLINUX_SC_EFLAGS %d\n"
+literal|"#define\tLINUX_SC_GS %u\n"
 argument_list|,
-operator|&
-name|linux_sc
-operator|->
+name|OS
+argument_list|(
+name|linux_sigcontext
+argument_list|,
+name|sc_gs
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tLINUX_SC_EFLAGS %u\n"
+argument_list|,
+name|OS
+argument_list|(
+name|linux_sigcontext
+argument_list|,
 name|sc_eflags
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
