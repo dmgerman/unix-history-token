@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_subr.c,v 5.3 88/11/18 17:28:43 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_subr.c,v $  *	@(#)tp_subr.c	7.5 (Berkeley) %G%  *  * The main work of data transfer is done here.  * These routines are called from tp.trans.  * They include the routines that check the validity of acks and Xacks,  * (tp_goodack() and tp_goodXack() )  * take packets from socket buffers and send them (tp_send()),  * drop the data from the socket buffers (tp_sbdrop()),    * and put incoming packet data into socket buffers (tp_stash()).  */
+comment|/*   * ARGO TP  *  * $Header: tp_subr.c,v 5.3 88/11/18 17:28:43 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_subr.c,v $  *	@(#)tp_subr.c	7.6 (Berkeley) %G%  *  * The main work of data transfer is done here.  * These routines are called from tp.trans.  * They include the routines that check the validity of acks and Xacks,  * (tp_goodack() and tp_goodXack() )  * take packets from socket buffers and send them (tp_send()),  * drop the data from the socket buffers (tp_sbdrop()),    * and put incoming packet data into socket buffers (tp_stash()).  */
 end_comment
 
 begin_ifndef
@@ -411,7 +411,7 @@ name|ABS
 argument_list|(
 name|long
 argument_list|,
-name|base_rtv
+name|base_rtt
 operator|->
 name|tv_sec
 operator|-
@@ -439,7 +439,7 @@ name|ABS
 argument_list|(
 name|long
 argument_list|,
-name|base_rtv
+name|base_rtt
 operator|->
 name|tv_usec
 operator|-
