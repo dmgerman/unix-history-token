@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of
 end_comment
 
 begin_comment
-comment|/*  * Portions Copyright (c) 1996, 1998 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Portions Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_if
@@ -29,7 +29,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lcl_gr.c,v 1.20 1998/03/21 00:59:49 halley Exp $"
+literal|"$Id: lcl_gr.c,v 1.25 1999/10/13 17:11:19 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,6 +93,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/nameser.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<resolv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -141,7 +159,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"port_after.h"
+file|<isc/memcluster.h>
 end_include
 
 begin_include
@@ -154,6 +172,18 @@ begin_include
 include|#
 directive|include
 file|"lcl_p.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"irp_p.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"port_after.h"
 end_include
 
 begin_comment
@@ -377,7 +407,7 @@ operator|!
 operator|(
 name|gr
 operator|=
-name|malloc
+name|memget
 argument_list|(
 sizeof|sizeof
 expr|*
@@ -413,7 +443,7 @@ operator|!
 operator|(
 name|pvt
 operator|=
-name|malloc
+name|memget
 argument_list|(
 sizeof|sizeof
 expr|*
@@ -422,8 +452,12 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|free
+name|memput
 argument_list|(
+name|gr
+argument_list|,
+sizeof|sizeof
+expr|*
 name|gr
 argument_list|)
 expr_stmt|;
@@ -495,6 +529,18 @@ operator|->
 name|minimize
 operator|=
 name|gr_minimize
+expr_stmt|;
+name|gr
+operator|->
+name|res_get
+operator|=
+name|NULL
+expr_stmt|;
+name|gr
+operator|->
+name|res_set
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 operator|(
@@ -579,13 +625,21 @@ operator|->
 name|membuf
 argument_list|)
 expr_stmt|;
-name|free
+name|memput
 argument_list|(
+name|pvt
+argument_list|,
+sizeof|sizeof
+expr|*
 name|pvt
 argument_list|)
 expr_stmt|;
-name|free
+name|memput
 argument_list|(
+name|this
+argument_list|,
+sizeof|sizeof
+expr|*
 name|this
 argument_list|)
 expr_stmt|;
@@ -1258,8 +1312,6 @@ operator|->
 name|private
 decl_stmt|;
 name|size_t
-name|linelen
-decl_stmt|,
 name|n
 decl_stmt|;
 name|char
@@ -1280,16 +1332,16 @@ init|;
 condition|;
 control|)
 block|{
+if|if
+condition|(
+operator|(
 name|bp
 operator|=
 name|grnext
 argument_list|(
 name|pvt
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bp
+operator|)
 operator|==
 name|NULL
 condition|)
@@ -1446,6 +1498,16 @@ comment|/* We want this record. */
 break|break;
 block|}
 comment|/* 	 * Count commas to find out how many members there might be. 	 * Note that commas separate, so if there is one comma there 	 * can be two members (group:*:id:user1,user2).  Add another 	 * to account for the NULL terminator.  As above, allocate 	 * largest of INITIAL_NMEMB, or 2*n. 	 */
+name|n
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|!=
+name|NULL
+condition|)
 for|for
 control|(
 name|n
@@ -1470,15 +1532,16 @@ operator|!=
 name|NULL
 condition|;
 operator|++
-name|p
-operator|,
-operator|++
 name|n
 control|)
-operator|(
-name|void
-operator|)
-name|NULL
+name|p
+operator|+=
+name|strspn
+argument_list|(
+name|p
+argument_list|,
+literal|", "
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

@@ -4,7 +4,7 @@ comment|/*  * ++Copyright++ 1983, 1993  * -  * Copyright (c) 1983, 1993  *    Th
 end_comment
 
 begin_comment
-comment|/*  *	@(#)inet.h	8.1 (Berkeley) 6/2/93  *	$Id: inet.h,v 8.5 1997/01/29 08:48:09 vixie Exp $  */
+comment|/*  *	@(#)inet.h	8.1 (Berkeley) 6/2/93  *	$Id: inet.h,v 8.8 1999/05/14 18:16:54 vixie Exp $  */
 end_comment
 
 begin_ifndef
@@ -136,6 +136,20 @@ define|#
 directive|define
 name|inet_net_pton
 value|__inet_net_pton
+end_define
+
+begin_define
+define|#
+directive|define
+name|inet_cidr_ntop
+value|__inet_cidr_ntop
+end_define
+
+begin_define
+define|#
+directive|define
+name|inet_cidr_pton
+value|__inet_cidr_pton
 end_define
 
 begin_define
@@ -327,6 +341,56 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|inet_cidr_ntop
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+specifier|const
+name|void
+operator|*
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|,
+name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|inet_cidr_pton
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|void
+operator|*
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*const*/
+end_comment
 
 begin_decl_stmt
 name|char

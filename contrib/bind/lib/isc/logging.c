@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, 1997, 1998 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_if
@@ -21,11 +21,12 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: logging.c,v 8.18 1998/03/27 00:17:47 halley Exp $"
+literal|"$Id: logging.c,v 8.24 1999/10/13 16:39:34 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -600,14 +601,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
 name|regular
 condition|)
-name|version_rename
-argument_list|(
-name|chan
-argument_list|)
-expr_stmt|;
-else|else
 block|{
 name|syslog
 argument_list|(
@@ -1337,9 +1333,6 @@ name|FILE
 modifier|*
 name|stream
 decl_stmt|;
-name|int
-name|chan_level
-decl_stmt|;
 name|log_channel
 name|chan
 decl_stmt|;
@@ -1482,6 +1475,26 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_TIME_R
+name|localtime_r
+argument_list|(
+operator|(
+name|time_t
+operator|*
+operator|)
+operator|&
+name|tv
+operator|.
+name|tv_sec
+argument_list|,
+operator|&
+name|local_tm
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|local_tm
 operator|=
 name|localtime
@@ -1496,6 +1509,8 @@ operator|.
 name|tv_sec
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|local_tm
@@ -1885,7 +1900,33 @@ name|file
 operator|.
 name|max_size
 condition|)
+block|{
+comment|/* 					 * try to roll over the log files, 					 * ignoring all all return codes 					 * except the open (we don't want 					 * to write any more anyway) 					 */
+name|log_close_stream
+argument_list|(
+name|chan
+argument_list|)
+expr_stmt|;
+name|version_rename
+argument_list|(
+name|chan
+argument_list|)
+expr_stmt|;
+name|stream
+operator|=
+name|log_open_stream
+argument_list|(
+name|chan
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|stream
+operator|==
+name|NULL
+condition|)
 break|break;
+block|}
 block|}
 name|fprintf
 argument_list|(

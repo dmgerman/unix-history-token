@@ -4,11 +4,11 @@ comment|/*  * Copyright (c) 1983, 1989, 1993  *    The Regents of the University
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1996 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/*  *	$Id: nameser.h,v 8.16 1998/02/06 00:35:58 halley Exp $  */
+comment|/*  *	$Id: nameser.h,v 8.36 1999/10/15 19:49:08 vixie Exp $  */
 end_comment
 
 begin_ifndef
@@ -82,18 +82,14 @@ file|<sys/cdefs.h>
 end_include
 
 begin_comment
-comment|/*  * revision information.  this is the release date in YYYYMMDD format.  * it can change every day so the right thing to do with it is use it  * in preprocessor commands such as "#if (__NAMESER> 19931104)".  do not  * compare for equality; rather, use it to determine whether your libnameser.a  * is new enough to contain a certain feature.  */
-end_comment
-
-begin_comment
-comment|/* XXXRTH I made this bigger than __BIND in 4.9.5 T6B */
+comment|/*  * Revision information.  This is the release date in YYYYMMDD format.  * It can change every day so the right thing to do with it is use it  * in preprocessor commands such as "#if (__NAMESER> 19931104)".  Do not  * compare for equality; rather, use it to determine whether your libbind.a  * contains a new enough lib/nameser/ to support the feature you need.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|__NAMESER
-value|19961001
+value|19991006
 end_define
 
 begin_comment
@@ -470,12 +466,11 @@ index|[
 name|NS_MAXDNAME
 index|]
 decl_stmt|;
-comment|/* XXX need to malloc */
 name|u_int16_t
 name|type
 decl_stmt|;
 name|u_int16_t
-name|class
+name|rr_class
 decl_stmt|;
 name|u_int32_t
 name|ttl
@@ -514,7 +509,7 @@ name|ns_rr_type
 parameter_list|(
 name|rr
 parameter_list|)
-value|((rr).type + 0)
+value|((ns_type)((rr).type + 0))
 end_define
 
 begin_define
@@ -524,7 +519,7 @@ name|ns_rr_class
 parameter_list|(
 name|rr
 parameter_list|)
-value|((rr).class + 0)
+value|((ns_class)((rr).rr_class + 0))
 end_define
 
 begin_define
@@ -713,6 +708,19 @@ comment|/* Zone of record different from zone section */
 name|ns_r_max
 init|=
 literal|11
+block|,
+comment|/* The following are TSIG extended errors */
+name|ns_r_badsig
+init|=
+literal|16
+block|,
+name|ns_r_badkey
+init|=
+literal|17
+block|,
+name|ns_r_badtime
+init|=
+literal|18
 block|}
 name|ns_rcode
 typedef|;
@@ -744,82 +752,32 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * This RR-like structure is particular to UPDATE.  */
+comment|/*  * This structure is used for TSIG authenticated messages  */
 end_comment
 
 begin_struct
 struct|struct
-name|ns_updrec
+name|ns_tsig_key
 block|{
-name|struct
-name|ns_updrec
-modifier|*
-name|r_prev
+name|char
+name|name
+index|[
+name|NS_MAXDNAME
+index|]
+decl_stmt|,
+name|alg
+index|[
+name|NS_MAXDNAME
+index|]
 decl_stmt|;
-comment|/* prev record */
-name|struct
-name|ns_updrec
-modifier|*
-name|r_next
-decl_stmt|;
-comment|/* next record */
-name|u_int8_t
-name|r_section
-decl_stmt|;
-comment|/* ZONE/PREREQUISITE/UPDATE */
+name|unsigned
 name|char
 modifier|*
-name|r_dname
+name|data
 decl_stmt|;
-comment|/* owner of the RR */
-name|u_int16_t
-name|r_class
-decl_stmt|;
-comment|/* class number */
-name|u_int16_t
-name|r_type
-decl_stmt|;
-comment|/* type number */
-name|u_int32_t
-name|r_ttl
-decl_stmt|;
-comment|/* time to live */
-name|u_char
-modifier|*
-name|r_data
-decl_stmt|;
-comment|/* rdata fields as text string */
-name|u_int16_t
-name|r_size
-decl_stmt|;
-comment|/* size of r_data field */
 name|int
-name|r_opcode
+name|len
 decl_stmt|;
-comment|/* type of operation */
-comment|/* following fields for private use by the resolver/server routines */
-name|struct
-name|ns_updrec
-modifier|*
-name|r_grpnext
-decl_stmt|;
-comment|/* next record when grouped */
-name|struct
-name|databuf
-modifier|*
-name|r_dp
-decl_stmt|;
-comment|/* databuf to process */
-name|struct
-name|databuf
-modifier|*
-name|r_deldp
-decl_stmt|;
-comment|/* databuf's deleted/overwritten */
-name|u_int16_t
-name|r_zone
-decl_stmt|;
-comment|/* zone number on server */
 block|}
 struct|;
 end_struct
@@ -827,10 +785,94 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|ns_updrec
-name|ns_updrec
+name|ns_tsig_key
+name|ns_tsig_key
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*  * This structure is used for TSIG authenticated TCP messages  */
+end_comment
+
+begin_struct
+struct|struct
+name|ns_tcp_tsig_state
+block|{
+name|int
+name|counter
+decl_stmt|;
+name|struct
+name|dst_key
+modifier|*
+name|key
+decl_stmt|;
+name|void
+modifier|*
+name|ctx
+decl_stmt|;
+name|unsigned
+name|char
+name|sig
+index|[
+name|NS_PACKETSZ
+index|]
+decl_stmt|;
+name|int
+name|siglen
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|ns_tcp_tsig_state
+name|ns_tcp_tsig_state
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|NS_TSIG_FUDGE
+value|300
+end_define
+
+begin_define
+define|#
+directive|define
+name|NS_TSIG_TCP_COUNT
+value|100
+end_define
+
+begin_define
+define|#
+directive|define
+name|NS_TSIG_ALG_HMAC_MD5
+value|"HMAC-MD5.SIG-ALG.REG.INT"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NS_TSIG_ERROR_NO_TSIG
+value|-10
+end_define
+
+begin_define
+define|#
+directive|define
+name|NS_TSIG_ERROR_NO_SPACE
+value|-11
+end_define
+
+begin_define
+define|#
+directive|define
+name|NS_TSIG_ERROR_FORMERR
+value|-12
+end_define
 
 begin_comment
 comment|/*  * Currently defined type values for resources and queries.  */
@@ -841,6 +883,11 @@ typedef|typedef
 enum|enum
 name|__ns_type
 block|{
+name|ns_t_invalid
+init|=
+literal|0
+block|,
+comment|/* Cookie. */
 name|ns_t_a
 init|=
 literal|1
@@ -1016,7 +1063,41 @@ init|=
 literal|35
 block|,
 comment|/* Naming Authority PoinTeR */
-comment|/* Query type values which do not appear in resource records. */
+name|ns_t_kx
+init|=
+literal|36
+block|,
+comment|/* Key Exchange */
+name|ns_t_cert
+init|=
+literal|37
+block|,
+comment|/* Certification record */
+name|ns_t_a6
+init|=
+literal|38
+block|,
+comment|/* IPv6 address (deprecates AAAA) */
+name|ns_t_dname
+init|=
+literal|39
+block|,
+comment|/* Non-terminal DNAME (for IPv6) */
+name|ns_t_sink
+init|=
+literal|40
+block|,
+comment|/* Kitchen sink (experimentatl) */
+name|ns_t_opt
+init|=
+literal|41
+block|,
+comment|/* EDNS0 option (meta-RR) */
+name|ns_t_tsig
+init|=
+literal|250
+block|,
+comment|/* Transaction signature. */
 name|ns_t_ixfr
 init|=
 literal|251
@@ -1042,6 +1123,11 @@ init|=
 literal|255
 block|,
 comment|/* Wildcard match. */
+name|ns_t_zxfr
+init|=
+literal|256
+block|,
+comment|/* BIND-specific, nonstandard. */
 name|ns_t_max
 init|=
 literal|65536
@@ -1049,6 +1135,68 @@ block|}
 name|ns_type
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* Exclusively a QTYPE? (not also an RTYPE) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ns_t_qt_p
+parameter_list|(
+name|t
+parameter_list|)
+value|(ns_t_xfr_p(t) || (t) == ns_t_any || \ 		      (t) == ns_t_mailb || (t) == ns_t_maila)
+end_define
+
+begin_comment
+comment|/* Some kind of meta-RR? (not a QTYPE, but also not an RTYPE) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ns_t_mrr_p
+parameter_list|(
+name|t
+parameter_list|)
+value|((t) == ns_t_tsig || (t) == ns_t_opt)
+end_define
+
+begin_comment
+comment|/* Exclusively an RTYPE? (not also a QTYPE or a meta-RR) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ns_t_rr_p
+parameter_list|(
+name|t
+parameter_list|)
+value|(!ns_t_qt_p(t)&& !ns_t_mrr_p(t))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ns_t_udp_p
+parameter_list|(
+name|t
+parameter_list|)
+value|((t) != ns_t_axfr&& (t) != ns_t_zxfr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ns_t_xfr_p
+parameter_list|(
+name|t
+parameter_list|)
+value|((t) == ns_t_axfr || (t) == ns_t_ixfr || \ 		       (t) == ns_t_zxfr)
+end_define
 
 begin_comment
 comment|/*  * Values for class field  */
@@ -1059,12 +1207,21 @@ typedef|typedef
 enum|enum
 name|__ns_class
 block|{
+name|ns_c_invalid
+init|=
+literal|0
+block|,
+comment|/* Cookie. */
 name|ns_c_in
 init|=
 literal|1
 block|,
 comment|/* Internet. */
-comment|/* Class 2 unallocated/unsupported. */
+name|ns_c_2
+init|=
+literal|2
+block|,
+comment|/* unallocated/unsupported. */
 name|ns_c_chaos
 init|=
 literal|3
@@ -1095,7 +1252,74 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Flags field of the KEY RR rdata  */
+comment|/* DNSSEC constants. */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+name|__ns_key_types
+block|{
+name|ns_kt_rsa
+init|=
+literal|1
+block|,
+comment|/* key type RSA/MD5 */
+name|ns_kt_dh
+init|=
+literal|2
+block|,
+comment|/* Diffie Hellman */
+name|ns_kt_dsa
+init|=
+literal|3
+block|,
+comment|/* Digital Signature Standard (MANDATORY) */
+name|ns_kt_private
+init|=
+literal|254
+comment|/* Private key type starts with OID */
+block|}
+name|ns_key_types
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+name|__ns_cert_types
+block|{
+name|cert_t_pkix
+init|=
+literal|1
+block|,
+comment|/* PKIX (X.509v3) */
+name|cert_t_spki
+init|=
+literal|2
+block|,
+comment|/* SPKI */
+name|cert_t_pgp
+init|=
+literal|3
+block|,
+comment|/* PGP */
+name|cert_t_url
+init|=
+literal|253
+block|,
+comment|/* URL private type */
+name|cert_t_oid
+init|=
+literal|254
+comment|/* OID private type */
+block|}
+name|ns_cert_types
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Flags field of the KEY RR rdata. */
 end_comment
 
 begin_define
@@ -1182,7 +1406,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NS_KEY_EXPERIMENTAL
+name|NS_KEY_RESERVED2
 value|0x2000
 end_define
 
@@ -1193,7 +1417,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NS_KEY_RESERVED3
+name|NS_KEY_EXTENDED_FLAGS
 value|0x1000
 end_define
 
@@ -1215,18 +1439,40 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NS_KEY_USERACCOUNT
+name|NS_KEY_RESERVED5
 value|0x0400
 end_define
 
 begin_comment
-comment|/* key is assoc. with a user acct */
+comment|/* reserved - must be zero */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NS_KEY_ENTITY
+name|NS_KEY_NAME_TYPE
+value|0x0300
+end_define
+
+begin_comment
+comment|/* these bits determine the type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NS_KEY_NAME_USER
+value|0x0000
+end_define
+
+begin_comment
+comment|/* key is assoc. with user */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NS_KEY_NAME_ENTITY
 value|0x0200
 end_define
 
@@ -1237,7 +1483,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NS_KEY_ZONEKEY
+name|NS_KEY_NAME_ZONE
 value|0x0100
 end_define
 
@@ -1248,23 +1494,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NS_KEY_IPSEC
-value|0x0080
+name|NS_KEY_NAME_RESERVED
+value|0x0300
 end_define
 
 begin_comment
-comment|/* key is for IPSEC (host or user)*/
+comment|/* reserved meaning */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NS_KEY_EMAIL
+name|NS_KEY_RESERVED8
+value|0x0080
+end_define
+
+begin_comment
+comment|/* reserved - must be zero */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NS_KEY_RESERVED9
 value|0x0040
 end_define
 
 begin_comment
-comment|/* key is for email (MIME security) */
+comment|/* reserved - must be zero */
 end_comment
 
 begin_define
@@ -1304,8 +1561,19 @@ begin_define
 define|#
 directive|define
 name|NS_KEY_RESERVED_BITMASK
-value|( NS_KEY_RESERVED3 | \ 				  NS_KEY_RESERVED4 | \ 				  NS_KEY_RESERVED10 | \ 				  NS_KEY_RESERVED11 )
+value|( NS_KEY_RESERVED2 | \ 				  NS_KEY_RESERVED4 | \ 				  NS_KEY_RESERVED5 | \ 				  NS_KEY_RESERVED8 | \ 				  NS_KEY_RESERVED9 | \ 				  NS_KEY_RESERVED10 | \ 				  NS_KEY_RESERVED11 )
 end_define
+
+begin_define
+define|#
+directive|define
+name|NS_KEY_RESERVED_BITMASK2
+value|0xFFFF
+end_define
+
+begin_comment
+comment|/* no bits defined here */
+end_comment
 
 begin_comment
 comment|/* The Algorithm field of the KEY and SIG RR's is an integer, {1..254} */
@@ -1321,6 +1589,35 @@ end_define
 begin_comment
 comment|/* MD5 with RSA */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NS_ALG_DH
+value|2
+end_define
+
+begin_comment
+comment|/* Diffie Hellman KEY */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NS_ALG_DSA
+value|3
+end_define
+
+begin_comment
+comment|/* DSA KEY */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NS_ALG_DSS
+value|NS_ALG_DSA
+end_define
 
 begin_define
 define|#
@@ -1343,6 +1640,49 @@ end_define
 begin_comment
 comment|/* Key begins with OID giving alg */
 end_comment
+
+begin_comment
+comment|/* Protocol values  */
+end_comment
+
+begin_comment
+comment|/* value 0 is reserved */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NS_KEY_PROT_TLS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NS_KEY_PROT_EMAIL
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|NS_KEY_PROT_DNSSEC
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|NS_KEY_PROT_IPSEC
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|NS_KEY_PROT_ANY
+value|255
+end_define
 
 begin_comment
 comment|/* Signatures */
@@ -1386,6 +1726,41 @@ define|#
 directive|define
 name|NS_MD5RSA_MAX_BASE64
 value|(((NS_MD5RSA_MAX_BYTES+2)/3)*4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NS_MD5RSA_MIN_SIZE
+value|((NS_MD5RSA_MIN_BITS+7)/8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NS_MD5RSA_MAX_SIZE
+value|((NS_MD5RSA_MAX_BITS+7)/8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NS_DSA_SIG_SIZE
+value|41
+end_define
+
+begin_define
+define|#
+directive|define
+name|NS_DSA_MIN_SIZE
+value|213
+end_define
+
+begin_define
+define|#
+directive|define
+name|NS_DSA_MAX_BYTES
+value|405
 end_define
 
 begin_comment
@@ -1527,6 +1902,13 @@ parameter_list|)
 value|(p[(n)/NS_NXT_BITS]&   (0x80>>((n)%NS_NXT_BITS)))
 end_define
 
+begin_define
+define|#
+directive|define
+name|NS_NXT_MAX
+value|127
+end_define
+
 begin_comment
 comment|/*  * Inline versions of get/put short/long.  Pointer is advanced.  */
 end_comment
@@ -1540,7 +1922,7 @@ name|s
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register u_char *t_cp = (u_char *)(cp); \ 	(s) = ((u_int16_t)t_cp[0]<< 8) \ 	    | ((u_int16_t)t_cp[1]) \ 	    ; \ 	(cp) += NS_INT16SZ; \ }
+value|do { \ 	register u_char *t_cp = (u_char *)(cp); \ 	(s) = ((u_int16_t)t_cp[0]<< 8) \ 	    | ((u_int16_t)t_cp[1]) \ 	    ; \ 	(cp) += NS_INT16SZ; \ } while (0)
 end_define
 
 begin_define
@@ -1552,7 +1934,7 @@ name|l
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register u_char *t_cp = (u_char *)(cp); \ 	(l) = ((u_int32_t)t_cp[0]<< 24) \ 	    | ((u_int32_t)t_cp[1]<< 16) \ 	    | ((u_int32_t)t_cp[2]<< 8) \ 	    | ((u_int32_t)t_cp[3]) \ 	    ; \ 	(cp) += NS_INT32SZ; \ }
+value|do { \ 	register u_char *t_cp = (u_char *)(cp); \ 	(l) = ((u_int32_t)t_cp[0]<< 24) \ 	    | ((u_int32_t)t_cp[1]<< 16) \ 	    | ((u_int32_t)t_cp[2]<< 8) \ 	    | ((u_int32_t)t_cp[3]) \ 	    ; \ 	(cp) += NS_INT32SZ; \ } while (0)
 end_define
 
 begin_define
@@ -1564,7 +1946,7 @@ name|s
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register u_int16_t t_s = (u_int16_t)(s); \ 	register u_char *t_cp = (u_char *)(cp); \ 	*t_cp++ = t_s>> 8; \ 	*t_cp   = t_s; \ 	(cp) += NS_INT16SZ; \ }
+value|do { \ 	register u_int16_t t_s = (u_int16_t)(s); \ 	register u_char *t_cp = (u_char *)(cp); \ 	*t_cp++ = t_s>> 8; \ 	*t_cp   = t_s; \ 	(cp) += NS_INT16SZ; \ } while (0)
 end_define
 
 begin_define
@@ -1576,11 +1958,11 @@ name|l
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register u_int32_t t_l = (u_int32_t)(l); \ 	register u_char *t_cp = (u_char *)(cp); \ 	*t_cp++ = t_l>> 24; \ 	*t_cp++ = t_l>> 16; \ 	*t_cp++ = t_l>> 8; \ 	*t_cp   = t_l; \ 	(cp) += NS_INT32SZ; \ }
+value|do { \ 	register u_int32_t t_l = (u_int32_t)(l); \ 	register u_char *t_cp = (u_char *)(cp); \ 	*t_cp++ = t_l>> 24; \ 	*t_cp++ = t_l>> 16; \ 	*t_cp++ = t_l>> 8; \ 	*t_cp   = t_l; \ 	(cp) += NS_INT32SZ; \ } while (0)
 end_define
 
 begin_comment
-comment|/*  * ANSI C identifier hiding.  */
+comment|/*  * ANSI C identifier hiding for bind's lib/nameser.  */
 end_comment
 
 begin_define
@@ -1621,6 +2003,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ns_skiprr
+value|__ns_skiprr
+end_define
+
+begin_define
+define|#
+directive|define
 name|ns_parserr
 value|__ns_parserr
 end_define
@@ -1651,6 +2040,20 @@ define|#
 directive|define
 name|ns_parse_ttl
 value|__ns_parse_ttl
+end_define
+
+begin_define
+define|#
+directive|define
+name|ns_datetosecs
+value|__ns_datetosecs
+end_define
+
+begin_define
+define|#
+directive|define
+name|ns_name_ntol
+value|__ns_name_ntol
 end_define
 
 begin_define
@@ -1693,6 +2096,90 @@ define|#
 directive|define
 name|ns_name_uncompress
 value|__ns_name_uncompress
+end_define
+
+begin_define
+define|#
+directive|define
+name|ns_name_skip
+value|__ns_name_skip
+end_define
+
+begin_define
+define|#
+directive|define
+name|ns_sign
+value|__ns_sign
+end_define
+
+begin_define
+define|#
+directive|define
+name|ns_sign_tcp
+value|__ns_sign_tcp
+end_define
+
+begin_define
+define|#
+directive|define
+name|ns_sign_tcp_init
+value|__ns_sign_tcp_init
+end_define
+
+begin_define
+define|#
+directive|define
+name|ns_find_tsig
+value|__ns_find_tsig
+end_define
+
+begin_define
+define|#
+directive|define
+name|ns_verify
+value|__ns_verify
+end_define
+
+begin_define
+define|#
+directive|define
+name|ns_verify_tcp
+value|__ns_verify_tcp
+end_define
+
+begin_define
+define|#
+directive|define
+name|ns_verify_tcp_init
+value|__ns_verify_tcp_init
+end_define
+
+begin_define
+define|#
+directive|define
+name|ns_samedomain
+value|__ns_samedomain
+end_define
+
+begin_define
+define|#
+directive|define
+name|ns_subdomain
+value|__ns_subdomain
+end_define
+
+begin_define
+define|#
+directive|define
+name|ns_makecanon
+value|__ns_makecanon
+end_define
+
+begin_define
+define|#
+directive|define
+name|ns_samename
+value|__ns_samename
 end_define
 
 begin_decl_stmt
@@ -1768,6 +2255,28 @@ name|int
 operator|,
 name|ns_msg
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ns_skiprr
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|u_char
+operator|*
+operator|,
+specifier|const
+name|u_char
+operator|*
+operator|,
+name|ns_sect
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1898,6 +2407,44 @@ operator|*
 operator|,
 name|u_long
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int32_t
+name|ns_datetosecs
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|cp
+operator|,
+name|int
+operator|*
+name|errp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ns_name_ntol
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|u_char
+operator|*
+operator|,
+name|u_char
+operator|*
+operator|,
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2066,6 +2613,259 @@ operator|*
 operator|,
 specifier|const
 name|u_char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ns_sign
+name|__P
+argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|void
+operator|*
+operator|,
+specifier|const
+name|u_char
+operator|*
+operator|,
+name|int
+operator|,
+name|u_char
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|time_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ns_sign_tcp
+name|__P
+argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|ns_tcp_tsig_state
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ns_sign_tcp_init
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+specifier|const
+name|u_char
+operator|*
+operator|,
+name|int
+operator|,
+name|ns_tcp_tsig_state
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_char
+modifier|*
+name|ns_find_tsig
+name|__P
+argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|,
+name|u_char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ns_verify
+name|__P
+argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|void
+operator|*
+operator|,
+specifier|const
+name|u_char
+operator|*
+operator|,
+name|int
+operator|,
+name|u_char
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|time_t
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ns_verify_tcp
+name|__P
+argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|ns_tcp_tsig_state
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ns_verify_tcp_init
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+specifier|const
+name|u_char
+operator|*
+operator|,
+name|int
+operator|,
+name|ns_tcp_tsig_state
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ns_samedomain
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ns_subdomain
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ns_makecanon
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ns_samename
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
 operator|*
 operator|)
 argument_list|)

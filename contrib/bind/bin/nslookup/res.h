@@ -4,7 +4,7 @@ comment|/*  * ++Copyright++ 1985, 1989  * -  * Copyright (c) 1985, 1989  *    Th
 end_comment
 
 begin_comment
-comment|/*  *	@(#)res.h	5.10 (Berkeley) 6/1/90  *	$Id: res.h,v 8.4 1996/12/04 09:38:59 vixie Exp $  */
+comment|/*  *	@(#)res.h	5.10 (Berkeley) 6/1/90  *	$Id: res.h,v 8.5 1998/09/16 17:03:17 vixie Exp $  */
 end_comment
 
 begin_comment
@@ -218,6 +218,18 @@ specifier|extern
 name|unsigned
 name|short
 name|nsport
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Our resolver context.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|__res_state
+name|res
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, 1996, 1997, 1998 by Internet Software Consortium  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Copyright (c) 1995-1999 by Internet Software Consortium  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: eventlib.c,v 1.38 1998/03/20 23:26:24 halley Exp $"
+literal|"$Id: eventlib.c,v 1.44 1999/10/13 17:11:20 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -146,6 +152,10 @@ parameter_list|,
 name|struct
 name|timespec
 modifier|*
+parameter_list|,
+specifier|const
+name|sigset_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -171,9 +181,6 @@ block|{
 name|evContext_p
 modifier|*
 name|ctx
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 comment|/* Make sure the memory heap is initialized. */
 if|if
@@ -267,6 +274,14 @@ operator|->
 name|exNext
 argument_list|)
 expr_stmt|;
+name|FD_ZERO
+argument_list|(
+operator|&
+name|ctx
+operator|->
+name|nonblockBefore
+argument_list|)
+expr_stmt|;
 name|ctx
 operator|->
 name|fdMax
@@ -287,6 +302,14 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Invalidate {rd,wr,ex}Last. */
+name|ctx
+operator|->
+name|highestFD
+operator|=
+name|FD_SETSIZE
+operator|-
+literal|1
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|EVENTLIB_TIME_CHECKS
@@ -298,27 +321,19 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|FD_SETSIZE
-condition|;
-name|i
-operator|++
-control|)
+name|memset
+argument_list|(
 name|ctx
 operator|->
 name|fdTable
-index|[
-name|i
-index|]
-operator|=
-name|NULL
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+name|ctx
+operator|->
+name|fdTable
+argument_list|)
 expr_stmt|;
 comment|/* Streams. */
 name|ctx
@@ -1474,6 +1489,8 @@ operator|->
 name|exLast
 argument_list|,
 name|tp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|pselect_errno
@@ -3034,6 +3051,32 @@ block|}
 end_function
 
 begin_function
+name|int
+name|evHighestFD
+parameter_list|(
+name|evContext
+name|opaqueCtx
+parameter_list|)
+block|{
+name|evContext_p
+modifier|*
+name|ctx
+init|=
+name|opaqueCtx
+operator|.
+name|opaque
+decl_stmt|;
+return|return
+operator|(
+name|ctx
+operator|->
+name|highestFD
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 name|void
 name|evPrintf
 parameter_list|(
@@ -3111,6 +3154,10 @@ directive|ifdef
 name|NEED_PSELECT
 end_ifdef
 
+begin_comment
+comment|/* XXX needs to move to the porting library. */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -3135,6 +3182,11 @@ name|struct
 name|timespec
 modifier|*
 name|tsp
+parameter_list|,
+specifier|const
+name|sigset_t
+modifier|*
+name|sigmask
 parameter_list|)
 block|{
 name|struct
@@ -3143,6 +3195,9 @@ name|tv
 decl_stmt|,
 modifier|*
 name|tvp
+decl_stmt|;
+name|sigset_t
+name|sigs
 decl_stmt|;
 name|int
 name|n
@@ -3171,6 +3226,20 @@ name|tvp
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|sigmask
+condition|)
+name|sigprocmask
+argument_list|(
+name|SIG_SETMASK
+argument_list|,
+name|sigmask
+argument_list|,
+operator|&
+name|sigs
+argument_list|)
+expr_stmt|;
 name|n
 operator|=
 name|select
@@ -3184,6 +3253,20 @@ argument_list|,
 name|efds
 argument_list|,
 name|tvp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sigmask
+condition|)
+name|sigprocmask
+argument_list|(
+name|SIG_SETMASK
+argument_list|,
+operator|&
+name|sigs
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

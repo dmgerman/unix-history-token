@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Copyright (c) 1996,1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_if
@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet_net_pton.c,v 1.8 1996/11/21 10:28:12 vixie Exp $"
+literal|"$Id: inet_net_pton.c,v 1.11 1999/01/08 19:23:44 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<assert.h>
+file|<isc/assertions.h>
 end_include
 
 begin_include
@@ -235,7 +235,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static int  * inet_net_pton_ipv4(src, dst, size)  *	convert IPv4 network number from presentation to network format.  *	accepts hex octets, hex strings, decimal octets, and /CIDR.  *	"size" is in bytes and describes "dst".  * return:  *	number of bits, either imputed classfully or specified with /CIDR,  *	or -1 if some failure occurred (check errno).  ENOENT means it was  *	not an IPv4 network specification.  * note:  *	network byte order assumed.  this means 192.5.5.240/28 has  *	0x11110000 in its fourth octet.  * author:  *	Paul Vixie (ISC), June 1996  */
+comment|/*  * static int  * inet_net_pton_ipv4(src, dst, size)  *	convert IPv4 network number from presentation to network format.  *	accepts hex octets, hex strings, decimal octets, and /CIDR.  *	"size" is in bytes and describes "dst".  * return:  *	number of bits, either imputed classfully or specified with /CIDR,  *	or -1 if some failure occurred (check errno).  ENOENT means it was  *	not an IPv4 network specification.  * note:  *	network byte order assumed.  this means 192.5.5.240/28 has  *	0b11110000 in its fourth octet.  * author:  *	Paul Vixie (ISC), June 1996  */
 end_comment
 
 begin_function
@@ -348,11 +348,6 @@ condition|)
 goto|goto
 name|emsgsize
 goto|;
-operator|*
-name|dst
-operator|=
-literal|0
-operator|,
 name|dirty
 operator|=
 literal|0
@@ -409,7 +404,7 @@ argument_list|)
 operator|-
 name|xdigits
 expr_stmt|;
-name|assert
+name|INSIST
 argument_list|(
 name|n
 operator|>=
@@ -420,52 +415,90 @@ operator|<=
 literal|15
 argument_list|)
 expr_stmt|;
-operator|*
-name|dst
-operator||=
+if|if
+condition|(
+name|dirty
+operator|==
+literal|0
+condition|)
+name|tmp
+operator|=
+name|n
+expr_stmt|;
+else|else
+name|tmp
+operator|=
+operator|(
+name|tmp
+operator|<<
+literal|4
+operator|)
+operator||
 name|n
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|dirty
 operator|++
+name|dirty
+operator|==
+literal|2
 condition|)
-operator|*
-name|dst
-operator|<<=
-literal|4
-expr_stmt|;
-elseif|else
+block|{
 if|if
 condition|(
 name|size
 operator|--
-operator|>
+operator|<=
 literal|0
 condition|)
+goto|goto
+name|emsgsize
+goto|;
 operator|*
-operator|++
 name|dst
+operator|++
 operator|=
-literal|0
-operator|,
+operator|(
+name|u_char
+operator|)
+name|tmp
+expr_stmt|;
 name|dirty
 operator|=
 literal|0
 expr_stmt|;
-else|else
-goto|goto
-name|emsgsize
-goto|;
+block|}
 block|}
 if|if
 condition|(
 name|dirty
 condition|)
+block|{
+comment|/* Odd trailing nybble? */
+if|if
+condition|(
 name|size
 operator|--
+operator|<=
+literal|0
+condition|)
+goto|goto
+name|emsgsize
+goto|;
+operator|*
+name|dst
+operator|++
+operator|=
+call|(
+name|u_char
+call|)
+argument_list|(
+name|tmp
+operator|<<
+literal|4
+argument_list|)
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -505,7 +538,7 @@ argument_list|)
 operator|-
 name|digits
 expr_stmt|;
-name|assert
+name|INSIST
 argument_list|(
 name|n
 operator|>=
@@ -682,7 +715,7 @@ argument_list|)
 operator|-
 name|digits
 expr_stmt|;
-name|assert
+name|INSIST
 argument_list|(
 name|n
 operator|>=
@@ -733,15 +766,6 @@ literal|'\0'
 condition|)
 goto|goto
 name|enoent
-goto|;
-if|if
-condition|(
-name|bits
-operator|>
-literal|32
-condition|)
-goto|goto
-name|emsgsize
 goto|;
 if|if
 condition|(

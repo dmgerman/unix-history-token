@@ -15,6 +15,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -25,11 +26,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: skip.c,v 8.4 1997/04/25 00:27:19 vixie Exp $"
+literal|"$Id: skip.c,v 8.5 1999/10/13 16:39:20 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 

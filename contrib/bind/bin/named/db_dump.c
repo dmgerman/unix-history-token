@@ -17,6 +17,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -27,11 +28,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_dump.c,v 8.24 1998/02/13 19:49:09 halley Exp $"
+literal|"$Id: db_dump.c,v 8.40 1999/10/13 16:39:01 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,7 +59,7 @@ comment|/*  * Portions Copyright (c) 1995 by International Business Machines, In
 end_comment
 
 begin_comment
-comment|/*  * Portions Copyright (c) 1996, 1997 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Portions Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_include
@@ -88,6 +90,12 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/un.h>
 end_include
 
 begin_include
@@ -245,8 +253,12 @@ expr_stmt|;
 if|if
 condition|(
 name|zones
+operator|!=
+name|NULL
 operator|&&
 name|nzones
+operator|!=
+literal|0
 condition|)
 name|zt_dump
 argument_list|(
@@ -367,7 +379,7 @@ operator|=
 operator|&
 name|zones
 index|[
-literal|1
+literal|0
 index|]
 init|;
 name|zp
@@ -498,7 +510,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|";\tftime=%lu, xaddr=[%s], state=%04x, pid=%d\n"
+literal|";\tftime=%lu, xaddrcnt=%d, state=%04x, pid=%d\n"
 argument_list|,
 operator|(
 name|u_long
@@ -507,12 +519,9 @@ name|zp
 operator|->
 name|z_ftime
 argument_list|,
-name|inet_ntoa
-argument_list|(
 name|zp
 operator|->
-name|z_xaddr
-argument_list|)
+name|z_xaddrcnt
 argument_list|,
 name|zp
 operator|->
@@ -608,7 +617,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"; update source [%s]\n"
+literal|";\tupdate source [%s]\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -686,9 +695,6 @@ decl_stmt|;
 name|u_int32_t
 name|n
 decl_stmt|;
-name|u_int32_t
-name|addr
-decl_stmt|;
 name|int
 name|j
 decl_stmt|,
@@ -724,6 +730,9 @@ decl_stmt|;
 name|u_char
 modifier|*
 name|sigdata
+decl_stmt|,
+modifier|*
+name|certdata
 decl_stmt|;
 name|u_char
 modifier|*
@@ -1101,19 +1110,6 @@ operator|->
 name|d_ttl
 operator|!=
 name|USE_MINIMUM
-operator|&&
-name|dp
-operator|->
-name|d_ttl
-operator|!=
-name|zones
-index|[
-name|dp
-operator|->
-name|d_zone
-index|]
-operator|.
-name|z_minimum
 condition|)
 name|fprintf
 argument_list|(
@@ -1129,19 +1125,21 @@ operator|->
 name|d_ttl
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|tab
-condition|)
-operator|(
-name|void
-operator|)
-name|putc
+else|else
+name|fprintf
 argument_list|(
-literal|'\t'
-argument_list|,
 name|fp
+argument_list|,
+literal|"%d\t"
+argument_list|,
+name|zones
+index|[
+name|dp
+operator|->
+name|d_zone
+index|]
+operator|.
+name|z_minimum
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2517,10 +2515,17 @@ name|cp
 operator|++
 argument_list|)
 expr_stmt|;
-comment|/* Labels (8-bit decimal) (not saved in file) */
-comment|/* FIXME -- check value and print err if bad */
+comment|/* Labels (8-bit decimal) */
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"%d "
+argument_list|,
+operator|*
 name|cp
 operator|++
+argument_list|)
 expr_stmt|;
 comment|/* OTTL (u_long) */
 name|NS_GET32
@@ -2740,13 +2745,107 @@ name|fp
 argument_list|,
 literal|" %s"
 argument_list|,
-name|__p_type
+name|p_type
 argument_list|(
 name|n
 argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+break|break;
+case|case
+name|ns_t_cert
+case|:
+name|certdata
+operator|=
+name|cp
+expr_stmt|;
+name|NS_GET16
+argument_list|(
+name|n
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"%d "
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+comment|/* cert type */
+name|NS_GET16
+argument_list|(
+name|n
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"%d %d "
+argument_list|,
+name|n
+argument_list|,
+operator|*
+name|cp
+operator|++
+argument_list|)
+expr_stmt|;
+comment|/* tag& alg */
+comment|/* Certificate (base64 of any length) */
+name|i
+operator|=
+name|b64_ntop
+argument_list|(
+name|cp
+argument_list|,
+name|dp
+operator|->
+name|d_size
+operator|-
+operator|(
+name|cp
+operator|-
+name|certdata
+operator|)
+argument_list|,
+name|temp_base64
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|temp_base64
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|<
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"; BAD BASE64"
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"%s"
+argument_list|,
+name|temp_base64
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 name|fprintf
@@ -2816,6 +2915,77 @@ name|sep
 operator|=
 literal|" "
 expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|dp
+operator|->
+name|d_flags
+operator|&
+name|DB_F_LAME
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|time_t
+name|when
+decl_stmt|;
+name|getname
+argument_list|(
+name|np
+argument_list|,
+name|dname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dname
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|when
+operator|=
+name|db_lame_find
+argument_list|(
+name|dname
+argument_list|,
+name|dp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|when
+operator|!=
+literal|0
+operator|&&
+name|when
+operator|>
+name|tt
+operator|.
+name|tv_sec
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"%sLAME=%d"
+argument_list|,
+name|sep
+argument_list|,
+name|when
+operator|-
+name|tt
+operator|.
+name|tv_sec
+argument_list|)
+expr_stmt|;
+name|sep
+operator|=
+literal|" "
+expr_stmt|;
+block|}
 block|}
 name|eoln
 label|:

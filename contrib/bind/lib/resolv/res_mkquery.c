@@ -8,7 +8,7 @@ comment|/*  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *  
 end_comment
 
 begin_comment
-comment|/*  * Portions Copyright (c) 1996 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Portions Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_if
@@ -28,6 +28,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -38,11 +39,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_mkquery.c,v 8.9 1997/04/24 22:22:36 vixie Exp $"
+literal|"$Id: res_mkquery.c,v 8.12 1999/10/13 16:39:40 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -125,72 +127,68 @@ directive|define
 name|DEBUG
 end_define
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|_res_opcodes
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Form all types of queries.  * Returns the size of the result or -1.  */
 end_comment
 
 begin_function
 name|int
-name|res_mkquery
+name|res_nmkquery
 parameter_list|(
-name|op
+name|res_state
+name|statp
 parameter_list|,
-name|dname
-parameter_list|,
-name|class
-parameter_list|,
-name|type
-parameter_list|,
-name|data
-parameter_list|,
-name|datalen
-parameter_list|,
-name|newrr_in
-parameter_list|,
-name|buf
-parameter_list|,
-name|buflen
-parameter_list|)
 name|int
 name|op
-decl_stmt|;
+parameter_list|,
 comment|/* opcode of query */
 specifier|const
 name|char
 modifier|*
 name|dname
-decl_stmt|;
+parameter_list|,
 comment|/* domain name */
 name|int
 name|class
-decl_stmt|,
+parameter_list|,
+name|int
 name|type
-decl_stmt|;
+parameter_list|,
 comment|/* class and type of query */
 specifier|const
 name|u_char
 modifier|*
 name|data
-decl_stmt|;
+parameter_list|,
 comment|/* resource record data */
 name|int
 name|datalen
-decl_stmt|;
+parameter_list|,
 comment|/* length of data */
 specifier|const
 name|u_char
 modifier|*
 name|newrr_in
-decl_stmt|;
+parameter_list|,
 comment|/* new rr for modify or append */
 name|u_char
 modifier|*
 name|buf
-decl_stmt|;
+parameter_list|,
 comment|/* buffer to put query */
 name|int
 name|buflen
-decl_stmt|;
+parameter_list|)
 comment|/* size of buffer */
 block|{
 specifier|register
@@ -222,58 +220,37 @@ modifier|*
 modifier|*
 name|lastdnptr
 decl_stmt|;
-if|if
-condition|(
-operator|(
-name|_res
-operator|.
-name|options
-operator|&
-name|RES_INIT
-operator|)
-operator|==
-literal|0
-operator|&&
-name|res_init
-argument_list|()
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|h_errno
-operator|=
-name|NETDB_INTERNAL
-expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
 if|if
 condition|(
-name|_res
-operator|.
+name|statp
+operator|->
 name|options
 operator|&
 name|RES_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|";; res_mkquery(%d, %s, %d, %d)\n"
+literal|";; res_nmkquery(%s, %s, %s, %s)\n"
 argument_list|,
+name|_res_opcodes
+index|[
 name|op
+index|]
 argument_list|,
 name|dname
 argument_list|,
+name|p_class
+argument_list|(
 name|class
+argument_list|)
 argument_list|,
+name|p_type
+argument_list|(
 name|type
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -323,8 +300,8 @@ operator|=
 name|htons
 argument_list|(
 operator|++
-name|_res
-operator|.
+name|statp
+operator|->
 name|id
 argument_list|)
 expr_stmt|;
@@ -339,8 +316,8 @@ operator|->
 name|rd
 operator|=
 operator|(
-name|_res
-operator|.
+name|statp
+operator|->
 name|options
 operator|&
 name|RES_RECURSE
