@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1982 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)process.h 1.2 %G%"; */
+comment|/* static char sccsid[] = "@(#)process.h 1.3 %G%"; */
 end_comment
 
 begin_comment
@@ -53,7 +53,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* initialize for program arguments */
+comment|/* initialize program arguments */
+end_comment
+
+begin_expr_stmt
+name|setargs
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* special argument handling */
 end_comment
 
 begin_expr_stmt
