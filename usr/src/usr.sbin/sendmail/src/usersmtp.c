@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.1 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	6.2 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.1 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	6.2 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -179,12 +179,6 @@ begin_comment
 comment|/* **  SMTPINIT -- initialize SMTP. ** **	Opens the connection and sends the initial protocol. ** **	Parameters: **		m -- mailer to create connection to. **		pvp -- pointer to parameter vector to pass to **			the mailer. ** **	Returns: **		none. ** **	Side Effects: **		creates connection and sends initial protocol. */
 end_comment
 
-begin_decl_stmt
-name|jmp_buf
-name|CtxGreeting
-decl_stmt|;
-end_decl_stmt
-
 begin_macro
 name|smtpinit
 argument_list|(
@@ -229,11 +223,6 @@ name|EVENT
 modifier|*
 name|gte
 decl_stmt|;
-specifier|static
-name|int
-name|greettimeout
-parameter_list|()
-function_decl|;
 specifier|extern
 name|STAB
 modifier|*
@@ -246,6 +235,27 @@ modifier|*
 name|openmailer
 parameter_list|()
 function_decl|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|17
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"smtpinit "
+argument_list|)
+expr_stmt|;
+name|mci_dump
+argument_list|(
+name|mci
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	**  Open the connection to the mailer. 	*/
 name|SmtpError
 index|[
@@ -254,6 +264,13 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+name|CurHostName
+operator|=
+name|mci
+operator|->
+name|mci_host
+expr_stmt|;
+comment|/* XXX UGLY XXX */
 switch|switch
 condition|(
 name|mci
@@ -314,6 +331,8 @@ name|MCIS_OPENING
 case|:
 break|break;
 block|}
+name|SmtpPhase
+operator|=
 name|mci
 operator|->
 name|mci_phase
@@ -327,32 +346,8 @@ operator|=
 name|MCIS_OPENING
 expr_stmt|;
 comment|/* 	**  Get the greeting message. 	**	This should appear spontaneously.  Give it five minutes to 	**	happen. 	*/
-if|if
-condition|(
-name|setjmp
-argument_list|(
-name|CtxGreeting
-argument_list|)
-operator|!=
-literal|0
-condition|)
-goto|goto
-name|tempfail1
-goto|;
-name|gte
+name|SmtpPhase
 operator|=
-name|setevent
-argument_list|(
-operator|(
-name|time_t
-operator|)
-literal|300
-argument_list|,
-name|greettimeout
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|mci
 operator|->
 name|mci_phase
@@ -383,11 +378,11 @@ argument_list|,
 name|mci
 argument_list|,
 name|e
-argument_list|)
-expr_stmt|;
-name|clrevent
-argument_list|(
-name|gte
+argument_list|,
+operator|(
+name|time_t
+operator|)
+literal|300
 argument_list|)
 expr_stmt|;
 if|if
@@ -418,6 +413,8 @@ argument_list|,
 name|MyHostName
 argument_list|)
 expr_stmt|;
+name|SmtpPhase
+operator|=
 name|mci
 operator|->
 name|mci_phase
@@ -448,6 +445,8 @@ argument_list|,
 name|mci
 argument_list|,
 name|e
+argument_list|,
+name|ReadTimeout
 argument_list|)
 expr_stmt|;
 if|if
@@ -517,6 +516,8 @@ argument_list|,
 name|mci
 argument_list|,
 name|e
+argument_list|,
+name|ReadTimeout
 argument_list|)
 expr_stmt|;
 if|if
@@ -546,12 +547,28 @@ name|mci_exitstat
 operator|=
 name|EX_TEMPFAIL
 expr_stmt|;
+if|if
+condition|(
+name|mci
+operator|->
+name|mci_errno
+operator|==
+literal|0
+condition|)
 name|mci
 operator|->
 name|mci_errno
 operator|=
 name|errno
 expr_stmt|;
+if|if
+condition|(
+name|mci
+operator|->
+name|mci_state
+operator|!=
+name|MCIS_CLOSED
+condition|)
 name|smtpquit
 argument_list|(
 name|m
@@ -719,6 +736,8 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
+name|SmtpPhase
+operator|=
 name|mci
 operator|->
 name|mci_phase
@@ -749,6 +768,8 @@ argument_list|,
 name|mci
 argument_list|,
 name|e
+argument_list|,
+name|ReadTimeout
 argument_list|)
 expr_stmt|;
 if|if
@@ -858,20 +879,14 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
-specifier|static
-name|greettimeout
-argument_list|()
-block|{
-comment|/* timeout reading the greeting message */
-name|longjmp
-argument_list|(
-name|CtxGreeting
-argument_list|,
-literal|1
-argument_list|)
-block|; }
-comment|/* **  SMTPRCPT -- designate recipient. ** **	Parameters: **		to -- address of recipient. **		m -- the mailer we are sending to. ** **	Returns: **		exit status corresponding to recipient status. ** **	Side Effects: **		Sends the mail via SMTP. */
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  SMTPRCPT -- designate recipient. ** **	Parameters: **		to -- address of recipient. **		m -- the mailer we are sending to. **		mci -- the connection info for this transaction. **		e -- the envelope for this transaction. ** **	Returns: **		exit status corresponding to recipient status. ** **	Side Effects: **		Sends the mail via SMTP. */
+end_comment
+
+begin_macro
 name|smtprcpt
 argument_list|(
 argument|to
@@ -882,11 +897,14 @@ argument|mci
 argument_list|,
 argument|e
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|ADDRESS
-operator|*
+modifier|*
 name|to
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|register
@@ -929,6 +947,8 @@ operator|->
 name|q_user
 argument_list|)
 expr_stmt|;
+name|SmtpPhase
+operator|=
 name|mci
 operator|->
 name|mci_phase
@@ -959,6 +979,8 @@ argument_list|,
 name|mci
 argument_list|,
 name|e
+argument_list|,
+name|ReadTimeout
 argument_list|)
 expr_stmt|;
 if|if
@@ -1097,6 +1119,8 @@ argument_list|,
 name|mci
 argument_list|)
 expr_stmt|;
+name|SmtpPhase
+operator|=
 name|mci
 operator|->
 name|mci_phase
@@ -1127,6 +1151,8 @@ argument_list|,
 name|mci
 argument_list|,
 name|e
+argument_list|,
+name|ReadTimeout
 argument_list|)
 expr_stmt|;
 if|if
@@ -1244,6 +1270,8 @@ literal|">>> ."
 argument_list|)
 expr_stmt|;
 comment|/* check for the results of the transaction */
+name|SmtpPhase
+operator|=
 name|mci
 operator|->
 name|mci_phase
@@ -1274,6 +1302,8 @@ argument_list|,
 name|mci
 argument_list|,
 name|e
+argument_list|,
+name|ReadTimeout
 argument_list|)
 expr_stmt|;
 if|if
@@ -1415,6 +1445,8 @@ argument_list|,
 name|mci
 argument_list|,
 name|e
+argument_list|,
+name|ReadTimeout
 argument_list|)
 expr_stmt|;
 if|if
@@ -1526,6 +1558,8 @@ argument_list|,
 name|mci
 argument_list|,
 name|e
+argument_list|,
+name|ReadTimeout
 argument_list|)
 expr_stmt|;
 if|if
@@ -1625,6 +1659,8 @@ argument_list|,
 name|mci
 argument_list|,
 name|e
+argument_list|,
+name|ReadTimeout
 argument_list|)
 expr_stmt|;
 if|if
@@ -1655,7 +1691,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  REPLY -- read arpanet reply ** **	Parameters: **		m -- the mailer we are reading the reply from. ** **	Returns: **		reply code it reads. ** **	Side Effects: **		flushes the mail file. */
+comment|/* **  REPLY -- read arpanet reply ** **	Parameters: **		m -- the mailer we are reading the reply from. **		mci -- the mailer connection info structure. **		e -- the current envelope. **		timeout -- the timeout for reads. ** **	Returns: **		reply code it reads. ** **	Side Effects: **		flushes the mail file. */
 end_comment
 
 begin_macro
@@ -1666,6 +1702,8 @@ argument_list|,
 argument|mci
 argument_list|,
 argument|e
+argument_list|,
+argument|timeout
 argument_list|)
 end_macro
 
@@ -1692,6 +1730,14 @@ end_decl_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+name|mci
+operator|->
+name|mci_out
+operator|!=
+name|NULL
+condition|)
 operator|(
 name|void
 operator|)
@@ -1784,6 +1830,8 @@ argument_list|,
 name|mci
 operator|->
 name|mci_in
+argument_list|,
+name|timeout
 argument_list|)
 expr_stmt|;
 name|mci
@@ -1836,6 +1884,12 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* ECONNRESET */
+name|mci
+operator|->
+name|mci_errno
+operator|=
+name|errno
+expr_stmt|;
 name|message
 argument_list|(
 name|Arpa_TSyserr
