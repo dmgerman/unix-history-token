@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)startup.c	3.9 84/03/03"
+literal|"@(#)startup.c	3.10 84/04/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,12 @@ begin_include
 include|#
 directive|include
 file|"var.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"char.h"
 end_include
 
 begin_macro
@@ -223,7 +229,7 @@ end_macro
 
 begin_block
 block|{
-comment|/* try to use a good ordering to balance the tree */
+comment|/* try to use a random ordering to balance the tree */
 operator|(
 name|void
 operator|)
@@ -242,16 +248,6 @@ argument_list|(
 literal|"ncol"
 argument_list|,
 name|wwncol
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|var_setnum
-argument_list|(
-literal|"availmodes"
-argument_list|,
-name|wwavailmodes
 argument_list|)
 expr_stmt|;
 operator|(
@@ -312,6 +308,16 @@ argument_list|(
 literal|"term"
 argument_list|,
 name|wwterm
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|var_setnum
+argument_list|(
+literal|"modes"
+argument_list|,
+name|wwavailmodes
 argument_list|)
 expr_stmt|;
 block|}

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)error.c	3.7 84/03/03"
+literal|"@(#)error.c	3.8 84/04/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,12 @@ begin_include
 include|#
 directive|include
 file|"context.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"char.h"
 end_include
 
 begin_define
@@ -106,7 +112,7 @@ name|terse
 condition|)
 name|wwputc
 argument_list|(
-name|CTRL
+name|ctrl
 argument_list|(
 name|g
 argument_list|)

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd2.c	3.26 84/04/07"
+literal|"@(#)cmd2.c	3.27 84/04/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -167,12 +167,9 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"The escape character is %s, which gets you into command mode.\n\n"
+literal|"The escape character is %c, which gets you into command mode.\n\n"
 argument_list|,
-name|unctrl
-argument_list|(
 name|escapec
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

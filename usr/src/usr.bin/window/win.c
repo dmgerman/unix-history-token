@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)win.c	3.6 84/04/07"
+literal|"@(#)win.c	3.7 84/04/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ begin_include
 include|#
 directive|include
 file|"defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"char.h"
 end_include
 
 begin_comment
@@ -499,6 +505,18 @@ expr_stmt|;
 name|w
 operator|->
 name|ww_nointr
+operator|=
+literal|1
+expr_stmt|;
+name|w
+operator|->
+name|ww_noupdate
+operator|=
+literal|1
+expr_stmt|;
+name|w
+operator|->
+name|ww_unctrl
 operator|=
 literal|1
 expr_stmt|;
@@ -1040,6 +1058,13 @@ block|{
 name|int
 name|c
 decl_stmt|;
+name|char
+name|uc
+init|=
+name|w
+operator|->
+name|ww_unctrl
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1071,6 +1096,12 @@ argument_list|,
 literal|"[Type escape to abort, any other key to continue]"
 argument_list|)
 expr_stmt|;
+name|w
+operator|->
+name|ww_unctrl
+operator|=
+literal|0
+expr_stmt|;
 name|wwputs
 argument_list|(
 literal|"\033E"
@@ -1078,10 +1109,16 @@ argument_list|,
 name|w
 argument_list|)
 expr_stmt|;
+name|w
+operator|->
+name|ww_unctrl
+operator|=
+name|uc
+expr_stmt|;
 return|return
 name|c
 operator|==
-name|CTRL
+name|ctrl
 argument_list|(
 index|[
 argument_list|)
@@ -1117,6 +1154,19 @@ end_decl_stmt
 
 begin_block
 block|{
+name|char
+name|uc
+init|=
+name|w
+operator|->
+name|ww_unctrl
+decl_stmt|;
+name|w
+operator|->
+name|ww_unctrl
+operator|=
+literal|0
+expr_stmt|;
 name|front
 argument_list|(
 name|w
@@ -1160,6 +1210,12 @@ literal|0
 condition|)
 name|wwiomux
 argument_list|()
+expr_stmt|;
+name|w
+operator|->
+name|ww_unctrl
+operator|=
+name|uc
 expr_stmt|;
 return|return
 name|wwgetc

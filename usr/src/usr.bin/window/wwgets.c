@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwgets.c	3.4 84/03/03"
+literal|"@(#)wwgets.c	3.5 84/04/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ begin_include
 include|#
 directive|include
 file|"ww.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"char.h"
 end_include
 
 begin_macro
@@ -126,7 +132,7 @@ expr_stmt|;
 else|else
 name|wwputc
 argument_list|(
-name|CTRL
+name|ctrl
 argument_list|(
 name|g
 argument_list|)
@@ -259,7 +265,7 @@ literal|1
 condition|)
 name|wwputc
 argument_list|(
-name|CTRL
+name|ctrl
 argument_list|(
 name|g
 argument_list|)
@@ -330,11 +336,13 @@ operator|>=
 literal|0
 condition|;
 control|)
-name|wwputs
+name|wwwrite
 argument_list|(
+name|w
+argument_list|,
 literal|"\b \b"
 argument_list|,
-name|w
+literal|3
 argument_list|)
 expr_stmt|;
 block|}

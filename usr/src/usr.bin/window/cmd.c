@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd.c	3.26 84/04/07"
+literal|"@(#)cmd.c	3.27 84/04/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ begin_include
 include|#
 directive|include
 file|"defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"char.h"
 end_include
 
 begin_macro
@@ -107,55 +113,55 @@ case|case
 literal|'l'
 case|:
 case|case
-name|CTRL
+name|ctrl
 argument_list|(
 name|y
 argument_list|)
 case|:
 case|case
-name|CTRL
+name|ctrl
 argument_list|(
 name|e
 argument_list|)
 case|:
 case|case
-name|CTRL
+name|ctrl
 argument_list|(
 name|u
 argument_list|)
 case|:
 case|case
-name|CTRL
+name|ctrl
 argument_list|(
 name|d
 argument_list|)
 case|:
 case|case
-name|CTRL
+name|ctrl
 argument_list|(
 name|b
 argument_list|)
 case|:
 case|case
-name|CTRL
+name|ctrl
 argument_list|(
 name|f
 argument_list|)
 case|:
 case|case
-name|CTRL
+name|ctrl
 argument_list|(
 name|s
 argument_list|)
 case|:
 case|case
-name|CTRL
+name|ctrl
 argument_list|(
 name|q
 argument_list|)
 case|:
 case|case
-name|CTRL
+name|ctrl
 argument_list|(
 index|[
 argument_list|)
@@ -274,7 +280,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|CTRL
+name|ctrl
 argument_list|(
 operator|^
 argument_list|)
@@ -463,7 +469,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|CTRL
+name|ctrl
 argument_list|(
 name|e
 argument_list|)
@@ -477,7 +483,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|CTRL
+name|ctrl
 argument_list|(
 name|y
 argument_list|)
@@ -492,7 +498,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|CTRL
+name|ctrl
 argument_list|(
 name|d
 argument_list|)
@@ -512,7 +518,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|CTRL
+name|ctrl
 argument_list|(
 name|u
 argument_list|)
@@ -533,7 +539,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|CTRL
+name|ctrl
 argument_list|(
 name|f
 argument_list|)
@@ -551,7 +557,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|CTRL
+name|ctrl
 argument_list|(
 name|b
 argument_list|)
@@ -570,7 +576,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|CTRL
+name|ctrl
 argument_list|(
 name|s
 argument_list|)
@@ -596,7 +602,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|CTRL
+name|ctrl
 argument_list|(
 name|q
 argument_list|)
@@ -622,7 +628,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|CTRL
+name|ctrl
 argument_list|(
 name|l
 argument_list|)
@@ -639,7 +645,7 @@ argument_list|()
 expr_stmt|;
 break|break;
 case|case
-name|CTRL
+name|ctrl
 argument_list|(
 index|[
 argument_list|)
@@ -659,7 +665,7 @@ literal|1
 empty_stmt|;
 break|break;
 case|case
-name|CTRL
+name|ctrl
 argument_list|(
 name|z
 argument_list|)
@@ -737,7 +743,7 @@ name|terse
 condition|)
 name|wwputc
 argument_list|(
-name|CTRL
+name|ctrl
 argument_list|(
 name|g
 argument_list|)
@@ -927,7 +933,7 @@ literal|0
 condition|)
 name|wwputc
 argument_list|(
-name|CTRL
+name|ctrl
 argument_list|(
 name|g
 argument_list|)

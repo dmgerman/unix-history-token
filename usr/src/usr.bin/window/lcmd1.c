@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lcmd1.c	3.20 84/04/06"
+literal|"@(#)lcmd1.c	3.21 84/04/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -567,6 +567,26 @@ end_expr_stmt
 
 begin_block
 block|{
+name|char
+name|buf
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+name|escapec
+expr_stmt|;
+name|buf
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -576,10 +596,7 @@ name|v_str
 operator|=
 name|str_cpy
 argument_list|(
-name|unctrl
-argument_list|(
-name|escapec
-argument_list|)
+name|buf
 argument_list|)
 operator|)
 operator|==

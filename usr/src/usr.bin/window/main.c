@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	3.20 84/04/06"
+literal|"@(#)main.c	3.21 84/04/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"char.h"
 end_include
 
 begin_define
@@ -260,7 +266,7 @@ expr_stmt|;
 comment|/* compatible */
 name|escapec
 operator|=
-name|CTRL
+name|ctrl
 argument_list|(
 name|p
 argument_list|)
@@ -462,6 +468,12 @@ block|}
 name|cmdwin
 operator|->
 name|ww_nointr
+operator|=
+literal|1
+expr_stmt|;
+name|cmdwin
+operator|->
+name|ww_noupdate
 operator|=
 literal|1
 expr_stmt|;

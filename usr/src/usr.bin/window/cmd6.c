@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd6.c	3.8 84/03/03"
+literal|"@(#)cmd6.c	3.9 84/04/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,6 +30,12 @@ begin_include
 include|#
 directive|include
 file|"string.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"char.h"
 end_include
 
 begin_comment
@@ -165,7 +171,7 @@ break|break;
 default|default:
 name|wwputc
 argument_list|(
-name|CTRL
+name|ctrl
 argument_list|(
 name|g
 argument_list|)

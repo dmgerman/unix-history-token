@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ww.h	3.27 84/03/23	  */
+comment|/*  *	@(#)ww.h	3.28 84/04/08	  */
 end_comment
 
 begin_include
@@ -86,6 +86,7 @@ begin_struct
 struct|struct
 name|ww
 block|{
+comment|/* information for overlap */
 name|struct
 name|ww
 modifier|*
@@ -100,49 +101,11 @@ decl_stmt|;
 name|char
 name|ww_state
 decl_stmt|;
-comment|/* state of window creation */
-name|char
-name|ww_wstate
-decl_stmt|;
-comment|/* state for printing charcters */
-name|char
-name|ww_modes
-decl_stmt|;
-comment|/* current printing modes */
-name|char
-name|ww_insert
-range|:
-literal|1
-decl_stmt|;
-comment|/* insert mode, for printing */
-name|char
-name|ww_mapnl
-range|:
-literal|1
-decl_stmt|;
-comment|/* map \n to \r\n */
-name|char
-name|ww_hascursor
-range|:
-literal|1
-decl_stmt|;
-comment|/* has fake cursor */
-name|char
-name|ww_hasframe
-range|:
-literal|1
-decl_stmt|;
-comment|/* frame it */
-name|char
-name|ww_nointr
-range|:
-literal|1
-decl_stmt|;
-comment|/* wwwrite() not interruptable */
+comment|/* state of window */
 name|char
 name|ww_index
 decl_stmt|;
-comment|/* the index, for wwindex[] */
+comment|/* the window index, for wwindex[] */
 name|char
 name|ww_order
 decl_stmt|;
@@ -193,6 +156,43 @@ modifier|*
 name|ww_nvis
 decl_stmt|;
 comment|/* how many ww_buf chars are visible per row */
+comment|/* information for wwwrite() and company */
+name|char
+name|ww_wstate
+decl_stmt|;
+comment|/* state for outputting characters */
+name|char
+name|ww_modes
+decl_stmt|;
+comment|/* current display modes */
+name|char
+name|ww_insert
+decl_stmt|;
+comment|/* insert mode */
+name|char
+name|ww_mapnl
+decl_stmt|;
+comment|/* map \n to \r\n */
+name|char
+name|ww_noupdate
+decl_stmt|;
+comment|/* don't do updates in wwwrite() */
+name|char
+name|ww_unctrl
+decl_stmt|;
+comment|/* expand control characters */
+name|char
+name|ww_nointr
+decl_stmt|;
+comment|/* wwwrite() not interruptable */
+name|char
+name|ww_hascursor
+decl_stmt|;
+comment|/* has fake cursor */
+name|char
+name|ww_hasframe
+decl_stmt|;
+comment|/* frame it */
 comment|/* things for the window process and io */
 name|int
 name|ww_pty
@@ -237,7 +237,7 @@ name|char
 name|ww_center
 decl_stmt|;
 comment|/* center the label */
-name|int
+name|char
 name|ww_id
 decl_stmt|;
 comment|/* the user window id */
@@ -1285,15 +1285,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|ww
-modifier|*
-name|wwfind
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|wwchild
 parameter_list|()
@@ -1303,14 +1294,6 @@ end_function_decl
 begin_function_decl
 name|int
 name|wwsuspend
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|unctrl
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -1434,39 +1417,6 @@ parameter_list|,
 name|y
 parameter_list|)
 value|((x)> (y) ? (x) : (y))
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|CTRL
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CTRL
-parameter_list|(
-name|c
-parameter_list|)
-value|('c'&0x1f)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEL
-value|0x7f
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISCTRL
-parameter_list|(
-name|c
-parameter_list|)
-value|((c)< ' '& (c) != '\t' || (c)>= DEL)
 end_define
 
 begin_if

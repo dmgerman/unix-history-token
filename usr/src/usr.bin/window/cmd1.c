@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd1.c	3.22 84/03/23"
+literal|"@(#)cmd1.c	3.23 84/04/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ begin_include
 include|#
 directive|include
 file|"defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"char.h"
 end_include
 
 begin_macro
@@ -637,7 +643,7 @@ name|minrow
 expr_stmt|;
 break|break;
 case|case
-name|CTRL
+name|ctrl
 argument_list|(
 index|[
 argument_list|)
@@ -678,7 +684,7 @@ argument_list|)
 expr_stmt|;
 name|wwputc
 argument_list|(
-name|CTRL
+name|ctrl
 argument_list|(
 name|g
 argument_list|)
