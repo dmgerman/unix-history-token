@@ -942,12 +942,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|acpi_disabled
 argument_list|(
 literal|"asus"
 argument_list|)
-operator|&&
+operator|||
 name|ACPI_ID_PROBE
 argument_list|(
 name|device_get_parent
@@ -959,8 +958,14 @@ name|dev
 argument_list|,
 name|asus_ids
 argument_list|)
+operator|==
+name|NULL
 condition|)
-block|{
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|sc
 operator|=
 name|device_get_softc
@@ -1043,7 +1048,7 @@ name|Buf
 operator|.
 name|Pointer
 expr_stmt|;
-comment|/* 		 * The Samsung P30 returns a null-pointer from INIT, we 		 * can identify it from the 'ODEM' string in the DSDT. 		 */
+comment|/* 	 * The Samsung P30 returns a null-pointer from INIT, we 	 * can identify it from the 'ODEM' string in the DSDT. 	 */
 if|if
 condition|(
 name|Obj
@@ -1085,7 +1090,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Unsupported laptop\n"
+literal|"Unsupported (Samsung?) laptop\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsFree
@@ -1172,7 +1177,7 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-comment|/* 		 * Asus laptops are simply identified by name, easy! 		 */
+comment|/* 	 * Asus laptops are simply identified by name, easy! 	 */
 for|for
 control|(
 name|model
@@ -1190,7 +1195,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|strcmp
+name|strncmp
 argument_list|(
 name|Obj
 operator|->
@@ -1201,6 +1206,8 @@ argument_list|,
 name|model
 operator|->
 name|name
+argument_list|,
+literal|3
 argument_list|)
 operator|==
 literal|0
@@ -1212,11 +1219,9 @@ name|sb
 argument_list|,
 literal|"Asus %s Laptop Extras"
 argument_list|,
-name|Obj
+name|model
 operator|->
-name|String
-operator|.
-name|Pointer
+name|name
 argument_list|)
 expr_stmt|;
 name|sbuf_finish
@@ -1262,7 +1267,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"Unsupported Asus laptop detected: %s\n"
+literal|"Unsupported Asus laptop: %s\n"
 argument_list|,
 name|Obj
 operator|->
@@ -1298,7 +1303,6 @@ operator|.
 name|Pointer
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|ENXIO
