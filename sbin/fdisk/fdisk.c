@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fdisk.c,v 1.26 1998/11/06 03:43:21 alex Exp $"
+literal|"$Id: fdisk.c,v 1.27 1998/11/26 12:24:35 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -459,6 +459,19 @@ end_decl_stmt
 
 begin_comment
 comment|/* set active partition */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|b_flag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* replace boot code */
 end_comment
 
 begin_decl_stmt
@@ -1812,6 +1825,14 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|change_code
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|get_params_to_use
 parameter_list|()
 function_decl|;
@@ -2107,6 +2128,14 @@ case|case
 literal|'a'
 case|:
 name|a_flag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'b'
+case|:
+name|b_flag
 operator|=
 literal|1
 expr_stmt|;
@@ -2482,9 +2511,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|b_flag
+condition|)
+name|change_code
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
 name|u_flag
 operator|||
 name|a_flag
+operator|||
+name|b_flag
 condition|)
 block|{
 if|if
@@ -2555,7 +2593,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: fdisk {-a|-i|-u} [-f<config file> [-t] [-v]] [-{1,2,3,4}] [disk]\n"
+literal|"usage: fdisk {-a|-b|-i|-u} [-f configfile [-t] [-v]] [-{1,2,3,4}] [disk]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3593,6 +3631,25 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|void
+name|change_code
+parameter_list|()
+block|{
+if|if
+condition|(
+name|ok
+argument_list|(
+literal|"Do you want to change the boot code?"
+argument_list|)
+condition|)
+name|init_boot
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|get_params_to_use
 parameter_list|()
@@ -3879,6 +3936,8 @@ argument_list|(
 name|disk
 argument_list|,
 name|a_flag
+operator|||
+name|b_flag
 operator|||
 name|u_flag
 condition|?
