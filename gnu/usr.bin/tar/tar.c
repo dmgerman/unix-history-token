@@ -1349,7 +1349,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Total bytes written: %d\n"
+literal|"Total bytes written: %qu\n"
 argument_list|,
 name|tot_written
 argument_list|)
