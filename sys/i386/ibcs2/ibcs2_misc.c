@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -47,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -1817,6 +1829,29 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|MAC
+name|error
+operator|=
+name|mac_check_vnode_readdir
+argument_list|(
+name|td
+operator|->
+name|td_ucred
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+goto|goto
+name|out
+goto|;
+endif|#
+directive|endif
 comment|/* 	 * First we read into the malloc'ed buffer, then 	 * we massage it into user space, one record at a time. 	 */
 if|if
 condition|(
@@ -2640,6 +2675,29 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|MAC
+name|error
+operator|=
+name|mac_check_vnode_readdir
+argument_list|(
+name|td
+operator|->
+name|td_ucred
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+goto|goto
+name|out
+goto|;
+endif|#
+directive|endif
 comment|/* 	 * First we read into the malloc'ed buffer, then 	 * we massage it into user space, one record at a time. 	 */
 if|if
 condition|(
