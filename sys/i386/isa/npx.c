@@ -2793,6 +2793,20 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+comment|/* 	 * Discard pending exceptions in the !cpu_fxsr case so that unmasked 	 * ones don't cause a panic on the next frstor. 	 */
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
+if|if
+condition|(
+operator|!
+name|cpu_fxsr
+condition|)
+endif|#
+directive|endif
+name|fnclex
+argument_list|()
+expr_stmt|;
 name|td
 operator|=
 name|PCPU_GET
