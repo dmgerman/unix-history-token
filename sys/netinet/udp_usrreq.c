@@ -1613,6 +1613,13 @@ goto|goto
 name|bad
 goto|;
 block|}
+if|if
+condition|(
+name|blackhole
+condition|)
+goto|goto
+name|bad
+goto|;
 ifdef|#
 directive|ifdef
 name|ICMP_BANDLIM
@@ -1630,13 +1637,6 @@ name|bad
 goto|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|blackhole
-condition|)
-goto|goto
-name|bad
-goto|;
 operator|*
 name|ip
 operator|=
