@@ -231,7 +231,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|epstart_body
+name|epstart_locked
 parameter_list|(
 name|struct
 name|ifnet
@@ -243,7 +243,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|epinit_body
+name|epinit_locked
 parameter_list|(
 name|struct
 name|ep_softc
@@ -1088,23 +1088,9 @@ name|gone
 operator|=
 literal|0
 expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_mtx
-argument_list|,
-name|device_get_nameunit
+name|EP_LOCK_INIT
 argument_list|(
 name|sc
-operator|->
-name|dev
-argument_list|)
-argument_list|,
-name|MTX_NETWORK_LOCK
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|error
@@ -1139,12 +1125,9 @@ argument_list|,
 literal|"Unable to get Ethernet address!\n"
 argument_list|)
 expr_stmt|;
-name|mtx_destroy
+name|EP_LOCK_DESTORY
 argument_list|(
-operator|&
 name|sc
-operator|->
-name|sc_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -1577,6 +1560,11 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|EP_ASSERT_UNLOCKED
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|=
 operator|&
@@ -1641,12 +1629,9 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|mtx_destroy
+name|EP_LOCK_DESTORY
 argument_list|(
-operator|&
 name|sc
-operator|->
-name|sc_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -1679,7 +1664,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|epinit_body
+name|epinit_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -1699,7 +1684,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|epinit_body
+name|epinit_locked
 parameter_list|(
 name|struct
 name|ep_softc
@@ -1729,7 +1714,15 @@ operator|->
 name|gone
 condition|)
 return|return;
+name|EP_ASSERT_LOCKED
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|EP_BUSY_WAIT
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 name|GO_WINDOW
 argument_list|(
@@ -1840,6 +1833,9 @@ name|TX_RESET
 argument_list|)
 expr_stmt|;
 name|EP_BUSY_WAIT
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 comment|/* Window 1 is operating window */
 name|GO_WINDOW
@@ -2075,7 +2071,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|epstart_body
+name|epstart_locked
 argument_list|(
 name|ifp
 argument_list|)
@@ -2110,7 +2106,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|epstart_body
+name|epstart_locked
 argument_list|(
 name|ifp
 argument_list|)
@@ -2126,7 +2122,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|epstart_body
+name|epstart_locked
 parameter_list|(
 name|struct
 name|ifnet
@@ -2166,7 +2162,15 @@ operator|->
 name|gone
 condition|)
 return|return;
+name|EP_ASSERT_LOCKED
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|EP_BUSY_WAIT
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2792,7 +2796,7 @@ argument_list|,
 name|EP_W1_FREE_TX
 argument_list|)
 expr_stmt|;
-name|epstart_body
+name|epstart_locked
 argument_list|(
 name|ifp
 argument_list|)
@@ -2916,7 +2920,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-name|epinit_body
+name|epinit_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -3089,7 +3093,7 @@ argument_list|,
 name|EP_W1_FREE_TX
 argument_list|)
 expr_stmt|;
-name|epstart_body
+name|epstart_locked
 argument_list|(
 name|ifp
 argument_list|)
@@ -3787,6 +3791,9 @@ operator|=
 literal|0
 expr_stmt|;
 name|EP_BUSY_WAIT
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 name|CSR_WRITE_2
 argument_list|(
@@ -3850,6 +3857,9 @@ name|F_RX_FIRST
 argument_list|)
 expr_stmt|;
 name|EP_BUSY_WAIT
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 name|CSR_WRITE_2
 argument_list|(
@@ -4207,7 +4217,7 @@ expr_stmt|;
 block|}
 else|else
 comment|/* reinitialize card on any parameter change */
-name|epinit_body
+name|epinit_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -4409,6 +4419,9 @@ name|RX_DISCARD_TOP_PACK
 argument_list|)
 expr_stmt|;
 name|EP_BUSY_WAIT
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 name|CSR_WRITE_2
 argument_list|(
@@ -4443,6 +4456,9 @@ name|RX_RESET
 argument_list|)
 expr_stmt|;
 name|EP_BUSY_WAIT
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 name|CSR_WRITE_2
 argument_list|(
@@ -4454,6 +4470,9 @@ name|TX_RESET
 argument_list|)
 expr_stmt|;
 name|EP_BUSY_WAIT
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 name|CSR_WRITE_2
 argument_list|(

@@ -1304,6 +1304,9 @@ begin_define
 define|#
 directive|define
 name|EP_BUSY_WAIT
+parameter_list|(
+name|sc
+parameter_list|)
 value|while (CSR_READ_2(sc, EP_STATUS)& S_COMMAND_IN_PROGRESS)
 end_define
 

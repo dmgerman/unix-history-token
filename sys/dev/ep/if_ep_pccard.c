@@ -827,6 +827,9 @@ name|TX_RESET
 argument_list|)
 expr_stmt|;
 name|EP_BUSY_WAIT
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(

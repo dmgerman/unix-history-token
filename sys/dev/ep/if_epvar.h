@@ -409,5 +409,46 @@ parameter_list|)
 value|mtx_unlock(&(_sc)->sc_mtx)
 end_define
 
+begin_define
+define|#
+directive|define
+name|EP_LOCK_INIT
+parameter_list|(
+name|_sc
+parameter_list|)
+define|\
+value|mtx_init(&_sc->sc_mtx, device_get_nameunit(_sc->dev), \ 	    MTX_NETWORK_LOCK, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EP_LOCK_DESTORY
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_destroy(&_sc->sc_mtx);
+end_define
+
+begin_define
+define|#
+directive|define
+name|EP_ASSERT_LOCKED
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&_sc->sc_mtx, MA_OWNED);
+end_define
+
+begin_define
+define|#
+directive|define
+name|EP_ASSERT_UNLOCKED
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&_sc->sc_mtx, MA_NOTOWNED);
+end_define
+
 end_unit
 
