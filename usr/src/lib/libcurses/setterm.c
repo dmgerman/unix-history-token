@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Terminal initialization routines.  *  * %G% (Berkeley) @(#)setterm.c	1.4  */
+comment|/*  * Terminal initialization routines.  *  * %G% (Berkeley) @(#)setterm.c	1.5  */
 end_comment
 
 begin_undef
@@ -328,6 +328,14 @@ name|sg_flags
 operator|&=
 operator|~
 name|XTABS
+expr_stmt|;
+name|stty
+argument_list|(
+name|_tty_ch
+argument_list|,
+operator|&
+name|_tty
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
