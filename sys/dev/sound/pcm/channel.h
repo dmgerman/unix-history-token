@@ -872,13 +872,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|CHN_DEFAULT_HZ
-value|50
-end_define
-
-begin_define
-define|#
-directive|define
 name|CHANNEL_DECLARE
 parameter_list|(
 name|name
