@@ -1615,6 +1615,9 @@ name|struct
 name|changer_params
 name|data
 decl_stmt|;
+name|int
+name|picker
+decl_stmt|;
 comment|/* No arguments to this command. */
 operator|++
 name|argv
@@ -1762,6 +1765,40 @@ condition|?
 literal|"s"
 else|:
 literal|""
+argument_list|)
+expr_stmt|;
+comment|/* Get current picker from changer and display it. */
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|changer_fd
+argument_list|,
+name|CHIOGPICKER
+argument_list|,
+operator|&
+name|picker
+argument_list|)
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: CHIOGPICKER"
+argument_list|,
+name|changer_name
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"\n%s: current picker: %d\n"
+argument_list|,
+name|changer_name
+argument_list|,
+name|picker
 argument_list|)
 expr_stmt|;
 return|return
