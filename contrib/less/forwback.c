@@ -594,7 +594,11 @@ continue|continue;
 comment|/* 		 * If this is the first screen displayed and 		 * we hit an early EOF (i.e. before the requested 		 * number of lines), we "squish" the display down 		 * at the bottom of the screen. 		 * But don't do this if a + option or a -t option 		 * was given.  These options can cause us to 		 * start the display after the beginning of the file, 		 * and it is not appropriate to squish in that case. 		 */
 if|if
 condition|(
+operator|(
 name|first_time
+operator|||
+name|more_mode
+operator|)
 operator|&&
 name|pos
 operator|==
