@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)genassym.c	1.1 (Berkeley) %G%"
+literal|"@(#)genassym.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,73 +23,79 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"../tahoe/pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/vmmeter.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/vmparam.h"
+file|"vmmeter.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/buf.h"
+file|"vmparam.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/dir.h"
+file|"buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/user.h"
+file|"dir.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/cmap.h"
+file|"user.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/map.h"
+file|"cmap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/proc.h"
+file|"map.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/text.h"
+file|"proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/mbuf.h"
+file|"text.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/msgbuf.h"
+file|"mbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"msgbuf.h"
 end_include
 
 begin_function
