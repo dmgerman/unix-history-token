@@ -577,6 +577,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|eventhandler_tag
+name|clonetag
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -689,6 +696,8 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|clonetag
+operator|=
 name|EVENTHANDLER_REGISTER
 argument_list|(
 name|dev_clone
@@ -744,7 +753,7 @@ name|EVENTHANDLER_DEREGISTER
 argument_list|(
 name|dev_clone
 argument_list|,
-name|NULL
+name|clonetag
 argument_list|)
 expr_stmt|;
 for|for
