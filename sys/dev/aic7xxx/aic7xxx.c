@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Product specific probe and attach routines can be found in:  * i386/eisa/ahc_eisa.c	27/284X and aic7770 motherboard controllers  * pci/ahc_pci.c	3985, 3980, 3940, 2940, aic7895, aic7890,  *			aic7880, aic7870, aic7860, and aic7850 controllers  *  * Copyright (c) 1994, 1995, 1996, 1997, 1998, 1999 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Where this Software is combined with software released under the terms of   * the GNU Public License ("GPL") and the terms of the GPL would require the   * combined work to also be released under the terms of the GPL, the terms  * and conditions of this License will apply in addition to those of the  * GPL with the exception of any terms or conditions of this License that  * conflict with, or are expressly prohibited by, the GPL.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: aic7xxx.c,v 1.16.2.7 1999/05/07 00:43:26 ken Exp $  */
+comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Product specific probe and attach routines can be found in:  * i386/eisa/ahc_eisa.c	27/284X and aic7770 motherboard controllers  * pci/ahc_pci.c	3985, 3980, 3940, 2940, aic7895, aic7890,  *			aic7880, aic7870, aic7860, and aic7850 controllers  *  * Copyright (c) 1994, 1995, 1996, 1997, 1998, 1999 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Where this Software is combined with software released under the terms of   * the GNU Public License ("GPL") and the terms of the GPL would require the   * combined work to also be released under the terms of the GPL, the terms  * and conditions of this License will apply in addition to those of the  * GPL with the exception of any terms or conditions of this License that  * conflict with, or are expressly prohibited by, the GPL.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: aic7xxx.c,v 1.16.2.8 1999/05/16 00:08:45 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -1661,6 +1661,9 @@ name|offset
 parameter_list|,
 name|u_int
 name|type
+parameter_list|,
+name|int
+name|paused
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1690,6 +1693,9 @@ name|width
 parameter_list|,
 name|u_int
 name|type
+parameter_list|,
+name|int
+name|paused
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5634,6 +5640,9 @@ name|offset
 parameter_list|,
 name|u_int
 name|type
+parameter_list|,
+name|int
+name|paused
 parameter_list|)
 block|{
 name|struct
@@ -6178,8 +6187,7 @@ argument_list|,
 comment|/*force*/
 name|FALSE
 argument_list|,
-comment|/*paused*/
-name|active
+name|paused
 argument_list|)
 expr_stmt|;
 block|}
@@ -6210,6 +6218,9 @@ name|width
 parameter_list|,
 name|u_int
 name|type
+parameter_list|,
+name|int
+name|paused
 parameter_list|)
 block|{
 name|struct
@@ -6514,8 +6525,7 @@ argument_list|,
 comment|/*force*/
 name|FALSE
 argument_list|,
-comment|/*paused*/
-name|active
+name|paused
 argument_list|)
 expr_stmt|;
 block|}
@@ -13376,6 +13386,9 @@ argument_list|,
 name|AHC_TRANS_ACTIVE
 operator||
 name|AHC_TRANS_GOAL
+argument_list|,
+comment|/*paused*/
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|ahc_set_syncrate
@@ -13402,6 +13415,9 @@ comment|/*offset*/
 literal|0
 argument_list|,
 name|AHC_TRANS_ACTIVE
+argument_list|,
+comment|/*paused*/
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|tinfo
@@ -13533,6 +13549,9 @@ argument_list|,
 name|AHC_TRANS_ACTIVE
 operator||
 name|AHC_TRANS_GOAL
+argument_list|,
+comment|/*paused*/
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|printf
@@ -15146,6 +15165,9 @@ argument_list|,
 name|AHC_TRANS_ACTIVE
 operator||
 name|AHC_TRANS_GOAL
+argument_list|,
+comment|/*paused*/
+name|TRUE
 argument_list|)
 expr_stmt|;
 comment|/* 			 * See if we initiated Sync Negotiation 			 * and didn't have to fall down to async 			 * transfers. 			 */
@@ -15462,6 +15484,9 @@ argument_list|,
 name|AHC_TRANS_ACTIVE
 operator||
 name|AHC_TRANS_GOAL
+argument_list|,
+comment|/*paused*/
+name|TRUE
 argument_list|)
 expr_stmt|;
 comment|/* After a wide message, we are async */
@@ -15483,6 +15508,9 @@ comment|/*offset*/
 literal|0
 argument_list|,
 name|AHC_TRANS_ACTIVE
+argument_list|,
+comment|/*paused*/
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -16200,6 +16228,9 @@ argument_list|,
 name|MSG_EXT_WDTR_BUS_8_BIT
 argument_list|,
 name|AHC_TRANS_CUR
+argument_list|,
+comment|/*paused*/
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|ahc_set_syncrate
@@ -16220,6 +16251,9 @@ comment|/*offset*/
 literal|0
 argument_list|,
 name|AHC_TRANS_CUR
+argument_list|,
+comment|/*paused*/
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|found
@@ -20578,6 +20612,9 @@ operator|->
 name|bus_width
 argument_list|,
 name|update_type
+argument_list|,
+comment|/*paused*/
+name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -20803,6 +20840,9 @@ operator|->
 name|sync_offset
 argument_list|,
 name|update_type
+argument_list|,
+comment|/*paused*/
+name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -21683,11 +21723,6 @@ operator|=
 name|splcam
 argument_list|()
 expr_stmt|;
-name|pause_sequencer
-argument_list|(
-name|ahc
-argument_list|)
-expr_stmt|;
 name|ahc_set_width
 argument_list|(
 name|ahc
@@ -21702,6 +21737,9 @@ argument_list|,
 name|AHC_TRANS_GOAL
 operator||
 name|AHC_TRANS_CUR
+argument_list|,
+comment|/*paused*/
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|ahc_set_syncrate
@@ -21725,13 +21763,8 @@ argument_list|,
 name|AHC_TRANS_GOAL
 operator||
 name|AHC_TRANS_CUR
-argument_list|)
-expr_stmt|;
-name|unpause_sequencer
-argument_list|(
-name|ahc
 argument_list|,
-comment|/*unpause always*/
+comment|/*paused*/
 name|FALSE
 argument_list|)
 expr_stmt|;
@@ -26981,6 +27014,9 @@ argument_list|,
 name|MSG_EXT_WDTR_BUS_8_BIT
 argument_list|,
 name|AHC_TRANS_CUR
+argument_list|,
+comment|/*paused*/
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|ahc_set_syncrate
@@ -27002,6 +27038,9 @@ comment|/*offset*/
 literal|0
 argument_list|,
 name|AHC_TRANS_CUR
+argument_list|,
+comment|/*paused*/
+name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
