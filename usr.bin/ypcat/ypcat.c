@@ -238,7 +238,9 @@ operator|!=
 name|YP_TRUE
 condition|)
 return|return
+operator|(
 name|instatus
+operator|)
 return|;
 if|if
 condition|(
@@ -267,7 +269,9 @@ name|inval
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

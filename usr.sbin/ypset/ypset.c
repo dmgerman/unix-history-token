@@ -410,7 +410,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|YPERR_YPBIND
+operator|)
 return|;
 block|}
 name|client
@@ -458,7 +460,9 @@ name|client
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|YPERR_YPBIND
+operator|)
 return|;
 block|}
 name|clnt_destroy
@@ -467,7 +471,9 @@ name|client
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_block

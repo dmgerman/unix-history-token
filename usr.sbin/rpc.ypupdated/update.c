@@ -290,27 +290,24 @@ directive|ifdef
 name|YP
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|_openchild
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|FILE
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|FILE
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Determine if requester is allowed to update the given map,  * and update it if so. Returns the yp status, which is zero  * if there is no access violation.  */
@@ -1114,17 +1111,14 @@ directive|endif
 specifier|static
 name|int
 name|match
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/*  * Determine if requester is allowed to update the given map,  * and update it if so. Returns the status, which is zero  * if there is no access violation. This function updates  * the local file and then shuts up.  */
 name|int
 name|localupdate

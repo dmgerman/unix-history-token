@@ -235,7 +235,9 @@ operator|=
 name|YP_YPERR
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 if|if
@@ -265,7 +267,9 @@ operator|=
 name|YP_NOMORE
 expr_stmt|;
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 block|}
 name|status
@@ -476,7 +480,9 @@ condition|(
 name|r
 condition|)
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 break|break;
 case|case
@@ -500,7 +506,9 @@ operator|=
 name|YP_NOMORE
 expr_stmt|;
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 default|default:
 name|xdr_free
@@ -521,7 +529,9 @@ operator|=
 name|status
 expr_stmt|;
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 block|}
 block|}
