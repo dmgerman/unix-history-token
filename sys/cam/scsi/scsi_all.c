@@ -2736,6 +2736,26 @@ literal|"UNIT ATTENTION"
 block|}
 block|,
 block|{
+name|SSD_KEY_DATA_PROTECT
+block|,
+name|SS_FATAL
+operator||
+name|EACCES
+block|,
+literal|"DATA PROTECT"
+block|}
+block|,
+block|{
+name|SSD_KEY_BLANK_CHECK
+block|,
+name|SS_FATAL
+operator||
+name|ENOSPC
+block|,
+literal|"BLANK CHECK"
+block|}
+block|,
+block|{
 name|SSD_KEY_Vendor_Specific
 block|,
 name|SS_FATAL
