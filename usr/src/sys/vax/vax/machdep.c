@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	3.1	%H%	*/
+comment|/*	machdep.c	3.2	%H%	*/
 end_comment
 
 begin_include
@@ -189,7 +189,7 @@ name|coresw
 condition|)
 name|maxmem
 operator|=
-literal|2048
+literal|4096
 expr_stmt|;
 comment|/* 	 * Initialize maps. 	 */
 name|meminit
