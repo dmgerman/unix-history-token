@@ -931,7 +931,7 @@ argument_list|)
 expr_stmt|;
 name|warnx
 argument_list|(
-literal|"warning: %s truncated to %.*s\n"
+literal|"warning: %s truncated to %.*s"
 argument_list|,
 name|name
 argument_list|,
