@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/lib/libc/gen/crypt.c,v 1.3 1993/07/21 17:42:51 nate Exp $"
+literal|"$Header: /usr/chroot/CVS/386BSD/src/lib/libc/gen/crypt.c,v 1.4 1993/07/21 18:32:28 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -682,15 +682,27 @@ operator|=
 operator|*
 name|m
 operator|++
+expr_stmt|;
+name|t
+operator|=
+name|t
 operator|^
 operator|*
 name|m
 operator|++
+expr_stmt|;
+name|t
+operator|=
+name|t
 operator|^
 name|vector
 index|[
 literal|0
 index|]
+expr_stmt|;
+name|t
+operator|=
+name|t
 operator|^
 name|vector
 index|[
@@ -713,8 +725,10 @@ operator|&
 literal|1
 condition|)
 name|b
-operator|^=
+operator|=
 literal|1
+operator|-
+name|b
 expr_stmt|;
 name|t
 operator|>>=
