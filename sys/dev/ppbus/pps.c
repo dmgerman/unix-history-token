@@ -525,7 +525,7 @@ name|UID_ROOT
 argument_list|,
 name|GID_WHEEL
 argument_list|,
-literal|0644
+literal|0600
 argument_list|,
 name|PPS_NAME
 literal|"%d"
@@ -867,7 +867,7 @@ name|UID_ROOT
 argument_list|,
 name|GID_WHEEL
 argument_list|,
-literal|0644
+literal|0600
 argument_list|,
 name|PPS_NAME
 literal|"%db%d"
