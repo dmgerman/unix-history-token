@@ -635,7 +635,7 @@ name|zero
 init|=
 literal|0
 decl_stmt|;
-name|u_long
+name|uintptr_t
 name|irq
 decl_stmt|;
 name|lp

@@ -1291,7 +1291,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|u_long
+name|uintptr_t
 name|irq
 decl_stmt|;
 name|sc
