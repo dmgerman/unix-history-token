@@ -7138,7 +7138,7 @@ operator|&
 name|FNONBLOCK
 condition|)
 block|{
-comment|/* 		 * Unfortunately, physio(9) discards its ioflag 		 * argument, thus preventing us from seeing the 		 * IO_NDELAY bit.  So we need to keep track 		 * ourselves. 		 */
+comment|/* 		 * Unfortunately, physio(9) discards its ioflag 		 * argument, thus preventing us from seeing the 		 * O_NONBLOCK bit.  So we need to keep track 		 * ourselves. 		 */
 name|fd
 operator|->
 name|flags
