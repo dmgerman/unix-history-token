@@ -167,6 +167,19 @@ modifier|*
 name|cn_arg
 decl_stmt|;
 comment|/* drivers method argument */
+name|int
+name|cn_unit
+decl_stmt|;
+comment|/* some drivers prefer this */
+name|char
+name|cn_name
+index|[
+name|SPECNAMELEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* console (device) name */
 block|}
 struct|;
 end_struct
