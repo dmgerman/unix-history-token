@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*	@(#)esis.c	7.11 (Berkeley) %G% */
+comment|/*	@(#)esis.c	7.12 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -303,22 +303,25 @@ index|]
 decl_stmt|;
 name|int
 name|esis_input
-parameter_list|()
-function_decl|;
+argument_list|()
+decl_stmt|,
+name|isis_input
+argument_list|()
+decl_stmt|;
 name|int
 name|esis_config
-parameter_list|()
-function_decl|;
-name|int
+argument_list|()
+decl_stmt|,
 name|snpac_age
-parameter_list|()
-function_decl|;
+argument_list|()
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|ISO_X25ESIS
+name|int
 name|x25esis_input
-argument_list|()
-expr_stmt|;
+parameter_list|()
+function_decl|;
 endif|#
 directive|endif
 endif|ISO_X25ESIS
@@ -344,15 +347,6 @@ operator|=
 operator|&
 name|llinfo_llc
 expr_stmt|;
-name|clnl_protox
-index|[
-name|ISO9542_ESIS
-index|]
-operator|.
-name|clnl_input
-operator|=
-name|esis_input
-expr_stmt|;
 name|timeout
 argument_list|(
 name|snpac_age
@@ -376,6 +370,24 @@ literal|0
 argument_list|,
 name|hz
 argument_list|)
+expr_stmt|;
+name|clnl_protox
+index|[
+name|ISO9542_ESIS
+index|]
+operator|.
+name|clnl_input
+operator|=
+name|esis_input
+expr_stmt|;
+name|clnl_protox
+index|[
+name|ISO10589_ISIS
+index|]
+operator|.
+name|clnl_input
+operator|=
+name|isis_input
 expr_stmt|;
 ifdef|#
 directive|ifdef
