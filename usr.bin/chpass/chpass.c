@@ -566,6 +566,8 @@ operator|<
 literal|0
 condition|)
 block|{
+name|rebuild
+label|:
 name|fprintf
 argument_list|(
 name|stderr
@@ -651,11 +653,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+goto|goto
+name|rebuild
+goto|;
 block|}
 name|pw
 operator|->
