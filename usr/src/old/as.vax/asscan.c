@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asscan.c 4.5 %G%"
+literal|"@(#)asscan.c 4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4890,6 +4890,11 @@ operator|==
 literal|'\n'
 condition|)
 block|{
+name|yywarning
+argument_list|(
+literal|"New line embedded in a string constant."
+argument_list|)
+expr_stmt|;
 name|scanlineno
 operator|++
 expr_stmt|;
