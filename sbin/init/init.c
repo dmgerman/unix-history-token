@@ -4151,6 +4151,10 @@ condition|(
 name|errno
 operator|==
 name|ENXIO
+operator|||
+name|errno
+operator|==
+name|ENOENT
 condition|)
 block|{
 name|free_session
