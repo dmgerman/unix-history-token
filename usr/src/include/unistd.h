@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)unistd.h	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)unistd.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -808,6 +808,20 @@ directive|ifndef
 name|_POSIX_SOURCE
 end_ifndef
 
+begin_comment
+comment|/* structure timeval required for select() */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_comment
+comment|/* structure qelem required for insque() and remque() */
+end_comment
+
 begin_struct
 struct|struct
 name|qelem
@@ -832,38 +846,6 @@ comment|/* arbitrary amount of data */
 block|}
 struct|;
 end_struct
-
-begin_decl_stmt
-name|void
-name|insque
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|qelem
-operator|*
-operator|,
-expr|struct
-name|qelem
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|remque
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|qelem
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1240,6 +1222,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|insque
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|qelem
+operator|*
+operator|,
+expr|struct
+name|qelem
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|mknod
 name|__P
@@ -1303,6 +1303,22 @@ name|__P
 argument_list|(
 operator|(
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|psignal
+name|__P
+argument_list|(
+operator|(
+name|u_int
+operator|,
+specifier|const
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1413,6 +1429,20 @@ name|__P
 argument_list|(
 operator|(
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|remque
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|qelem
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
