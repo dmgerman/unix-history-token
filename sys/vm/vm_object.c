@@ -4870,11 +4870,6 @@ goto|goto
 name|retry
 goto|;
 block|}
-name|vm_page_busy
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 name|vm_page_rename
 argument_list|(
 name|m
