@@ -210,21 +210,6 @@ begin_comment
 comment|/* the message is a response */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NGF_STATIC
-value|0x00000002
-end_define
-
-begin_comment
-comment|/* Not malloc'd. Don't FREE */
-end_comment
-
-begin_comment
-comment|/* Only checked in generic message */
-end_comment
-
 begin_comment
 comment|/* Type of a unique node ID */
 end_comment

@@ -163,6 +163,10 @@ name|u_char
 name|promisc
 decl_stmt|;
 comment|/* promiscuous mode enabled */
+name|u_int
+name|flags
+decl_stmt|;
+comment|/* flags e.g. really die */
 block|}
 struct|;
 end_struct
@@ -1160,7 +1164,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * An Ethernet interface is being detached.  * Destroy its node.  */
+comment|/*  * An Ethernet interface is being detached.  * REALLY Destroy its node.  */
 end_comment
 
 begin_function
@@ -1183,8 +1187,14 @@ argument_list|(
 name|ifp
 argument_list|)
 decl_stmt|;
+specifier|const
 name|priv_p
 name|priv
+init|=
+name|NG_NODE_PRIVATE
+argument_list|(
+name|node
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -1194,12 +1204,13 @@ name|NULL
 condition|)
 comment|/* no node (why not?), ignore */
 return|return;
-name|ng_rmnode_self
+name|NG_NODE_REALLY_DIE
 argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-comment|/* break all links to other nodes */
+comment|/* Force real removal of node */
+comment|/* 	 * We can't assume the ifnet is still around when we run shutdown 	 * So zap it now. XXX We HOPE that anything running at this time 	 * handles it (as it should in the non netgraph case). 	 */
 name|IFP2NG
 argument_list|(
 name|ifp
@@ -1207,46 +1218,19 @@ argument_list|)
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* detach node from interface */
 name|priv
+operator|->
+name|ifp
 operator|=
-name|NG_NODE_PRIVATE
-argument_list|(
-name|node
-argument_list|)
-expr_stmt|;
-comment|/* free node private info */
-name|bzero
-argument_list|(
-name|priv
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|priv
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|FREE
-argument_list|(
-name|priv
-argument_list|,
-name|M_NETGRAPH
-argument_list|)
-expr_stmt|;
-name|NG_NODE_SET_PRIVATE
-argument_list|(
-name|node
-argument_list|,
 name|NULL
-argument_list|)
 expr_stmt|;
-name|NG_NODE_UNREF
+comment|/* XXX race if interrupted an output packet */
+name|ng_rmnode_self
 argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-comment|/* free node itself */
+comment|/* remove all netgraph parts */
 block|}
 end_function
 
@@ -2702,7 +2686,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Shutdown node. This resets the node but does not remove it.  * Actually it produces a new node. XXX The problem  is what to do when   * the node really DOES need to go away,  * or if our re-make of the node fails.  */
+comment|/*  * Shutdown node. This resets the node but does not remove it  * unless the REALLY_DIE flag is set.  */
 end_comment
 
 begin_function
@@ -2714,14 +2698,6 @@ name|node_p
 name|node
 parameter_list|)
 block|{
-name|char
-name|name
-index|[
-name|IFNAMSIZ
-operator|+
-literal|1
-index|]
-decl_stmt|;
 specifier|const
 name|priv_p
 name|priv
@@ -2758,85 +2734,42 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|node
+operator|->
+name|nd_flags
+operator|&
+name|NG_REALLY_DIE
+condition|)
+block|{
+comment|/* 		 * WE came here because the ethernet card is being unloaded, 		 * so stop being persistant. 		 * Actually undo all the things we did on creation. 		 * Assume the ifp has already been freed. 		 */
+name|NG_NODE_SET_PRIVATE
+argument_list|(
+name|node
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|FREE
+argument_list|(
+name|priv
+argument_list|,
+name|M_NETGRAPH
+argument_list|)
+expr_stmt|;
 name|NG_NODE_UNREF
 argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-name|snprintf
-argument_list|(
-name|name
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|name
-argument_list|)
-argument_list|,
-literal|"%s%d"
-argument_list|,
-name|priv
-operator|->
-name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|priv
-operator|->
-name|ifp
-operator|->
-name|if_unit
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ng_make_node_common
-argument_list|(
-operator|&
-name|ng_ether_typestruct
-argument_list|,
-operator|&
-name|node
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"%s: can't %s for %s\n"
-argument_list|,
-name|__FUNCTION__
-argument_list|,
-literal|"create node"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
+comment|/* free node itself */
 return|return
 operator|(
-name|ENOMEM
+literal|0
 operator|)
 return|;
 block|}
-comment|/* Allocate private data */
-name|NG_NODE_SET_PRIVATE
-argument_list|(
-name|node
-argument_list|,
-name|priv
-argument_list|)
-expr_stmt|;
-name|IFP2NG
-argument_list|(
-name|priv
-operator|->
-name|ifp
-argument_list|)
-operator|=
-name|node
-expr_stmt|;
 name|priv
 operator|->
 name|autoSrcAddr
@@ -2844,31 +2777,14 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* reset auto-src-addr flag */
-comment|/* Try to give the node the same name as the interface */
-if|if
-condition|(
-name|ng_name_node
-argument_list|(
 name|node
-argument_list|,
-name|name
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|log
-argument_list|(
-name|LOG_WARNING
-argument_list|,
-literal|"%s: can't name node %s\n"
-argument_list|,
-name|__FUNCTION__
-argument_list|,
-name|name
-argument_list|)
+operator|->
+name|nd_flags
+operator|&=
+operator|~
+name|NG_INVALID
 expr_stmt|;
-block|}
+comment|/* Signal ng_rmnode we are persisant */
 return|return
 operator|(
 literal|0

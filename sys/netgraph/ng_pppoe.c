@@ -443,6 +443,26 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* Depend on ng_ether so we can use the Ethernet parse type */
+end_comment
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|ng_pppoe
+argument_list|,
+name|ng_ether
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * States for the session state machine.  * These have no meaning if there is no hook attached yet.  */
 end_comment
 

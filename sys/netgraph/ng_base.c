@@ -653,9 +653,6 @@ specifier|static
 name|int
 name|ng_apply_item
 parameter_list|(
-name|node_p
-name|node
-parameter_list|,
 name|item_p
 name|item
 parameter_list|)
@@ -723,7 +720,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|ng_con_part2
 parameter_list|(
 name|node_p
@@ -744,7 +741,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|ng_con_part3
 parameter_list|(
 name|node_p
@@ -915,6 +912,16 @@ name|ng_rmnode
 parameter_list|(
 name|node_p
 name|node
+parameter_list|,
+name|hook_p
+name|dummy1
+parameter_list|,
+name|void
+modifier|*
+name|dummy2
+parameter_list|,
+name|int
+name|dummy3
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2634,6 +2641,16 @@ name|ng_rmnode
 parameter_list|(
 name|node_p
 name|node
+parameter_list|,
+name|hook_p
+name|dummy1
+parameter_list|,
+name|void
+modifier|*
+name|dummy2
+parameter_list|,
+name|int
+name|dummy3
 parameter_list|)
 block|{
 name|hook_p
@@ -2653,6 +2670,21 @@ operator|!=
 literal|0
 condition|)
 return|return;
+if|if
+condition|(
+name|node
+operator|==
+operator|&
+name|ng_deadnode
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"shutdown called on deadnode\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* Add an extra reference so it doesn't go away during this */
 name|NG_NODE_REF
 argument_list|(
@@ -2731,6 +2763,34 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|NG_NODE_IS_VALID
+argument_list|(
+name|node
+argument_list|)
+condition|)
+block|{
+comment|/* 			 * Well, blow me down if the node code hasn't declared 			 * that it doesn't want to die. 			 * Presumably it is a persistant node. 			 * If we REALLY want it to go away, 			 *  e.g. hardware going away, 			 * Our caller should set NG_REALLY_DIE in nd_flags. 			 */
+name|node
+operator|->
+name|nd_flags
+operator|&=
+operator|~
+operator|(
+name|NG_INVALID
+operator||
+name|NG_CLOSING
+operator|)
+expr_stmt|;
+name|NG_NODE_UNREF
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
+comment|/* Assume they still have theirs */
+return|return;
+block|}
 block|}
 else|else
 block|{
@@ -2740,17 +2800,6 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|NG_NODE_IS_VALID
-argument_list|(
-name|node
-argument_list|)
-condition|)
-block|{
-comment|/* 		 * Well, blow me down if the node code hasn't declared 		 * that it doesn't want to die. 		 * Presumably it is a persistant node. 		 * XXX we need a way to tell the node 		 * "No, really.. the hardware's going away.. REALLY die" 		 * We need a way 		 */
-return|return;
 block|}
 name|ng_unname
 argument_list|(
@@ -3427,7 +3476,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove a name from a node. This should only be called  * when shutting down and removing the node.  */
+comment|/*  * Remove a name from a node. This should only be called  * when shutting down and removing the node.  * IF we allow name changing this may be more resurected.  */
 end_comment
 
 begin_function
@@ -3437,18 +3486,7 @@ parameter_list|(
 name|node_p
 name|node
 parameter_list|)
-block|{
-name|bzero
-argument_list|(
-name|NG_NODE_NAME
-argument_list|(
-name|node
-argument_list|)
-argument_list|,
-name|NG_NODELEN
-argument_list|)
-expr_stmt|;
-block|}
+block|{ }
 end_function
 
 begin_comment
@@ -4340,7 +4378,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|ng_con_part3
 parameter_list|(
 name|node_p
@@ -4357,12 +4395,7 @@ name|int
 name|arg2
 parameter_list|)
 block|{
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
-comment|/* 	 * When we run, we know that the node 'node' is locked for us. 	 * Our caller has a reference on the hook. 	 * Our caller has a reference on the node. 	 * (In this case our caller is ng_apply_item() ). 	 * The peer hook has a reference on the hook. 	 */
+comment|/* 	 * When we run, we know that the node 'node' is locked for us. 	 * Our caller has a reference on the hook. 	 * Our caller has a reference on the node. 	 * (In this case our caller is ng_apply_item() ). 	 * The peer hook has a reference on the hook. 	 * We are all set up except for the final call to the node, and 	 * the clearing of the INVALID flag. 	 */
 if|if
 condition|(
 name|NG_HOOK_NODE
@@ -4375,11 +4408,7 @@ name|ng_deadnode
 condition|)
 block|{
 comment|/* 		 * The node must have been freed again since we last visited 		 * here. ng_destry_hook() has this effect but nothing else does. 		 * We should just release our references and 		 * free anything we can think of. 		 * Since we know it's been destroyed, and it's our caller 		 * that holds the references, just return. 		 */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return ;
 block|}
 if|if
 condition|(
@@ -4394,9 +4423,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
-name|error
-operator|=
 call|(
 modifier|*
 name|hook
@@ -4410,7 +4436,6 @@ call|)
 argument_list|(
 name|hook
 argument_list|)
-operator|)
 condition|)
 block|{
 name|ng_destroy_hook
@@ -4419,11 +4444,12 @@ name|hook
 argument_list|)
 expr_stmt|;
 comment|/* also zaps peer */
-return|return
-operator|(
-name|error
-operator|)
-return|;
+name|printf
+argument_list|(
+literal|"failed in ng_con_part3()\n"
+argument_list|)
+expr_stmt|;
+return|return ;
 block|}
 block|}
 comment|/* 	 *  XXX this is wrong for SMP. Possibly we need 	 * to separate out 'create' and 'invalid' flags. 	 * should only set flags on hooks we have locked under our node. 	 */
@@ -4434,17 +4460,13 @@ operator|&=
 operator|~
 name|HK_INVALID
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
+return|return ;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|ng_con_part2
 parameter_list|(
 name|node_p
@@ -4461,12 +4483,7 @@ name|int
 name|arg2
 parameter_list|)
 block|{
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
-comment|/* 	 * When we run, we know that the node 'node' is locked for us. 	 * Our caller has a reference on the hook. 	 * Our caller has a reference on the node. 	 * (In this case our caller is ng_apply_item() ). 	 * The peer hook has a reference on the hook. 	 * our node pointer points to the 'dead' node. 	 * First check the hook name is unique. 	 */
+comment|/* 	 * When we run, we know that the node 'node' is locked for us. 	 * Our caller has a reference on the hook. 	 * Our caller has a reference on the node. 	 * (In this case our caller is ng_apply_item() ). 	 * The peer hook has a reference on the hook. 	 * our node pointer points to the 'dead' node. 	 * First check the hook name is unique. 	 * Should not happen because we checked before queueing this. 	 */
 if|if
 condition|(
 name|ng_findhook
@@ -4491,11 +4508,12 @@ name|hook
 argument_list|)
 expr_stmt|;
 comment|/* should destroy peer too */
-return|return
-operator|(
-name|EEXIST
-operator|)
-return|;
+name|printf
+argument_list|(
+literal|"failed in ng_con_part2()\n"
+argument_list|)
+expr_stmt|;
+return|return ;
 block|}
 comment|/* 	 * Check if the node type code has something to say about it 	 * If it fails, the unref of the hook will also unref the attached node, 	 * however since that node is 'ng_deadnode' this will do nothing. 	 * The peer hook will also be destroyed. 	 */
 if|if
@@ -4511,9 +4529,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
-name|error
-operator|=
 call|(
 modifier|*
 name|node
@@ -4531,7 +4546,6 @@ name|hook
 operator|->
 name|hk_name
 argument_list|)
-operator|)
 condition|)
 block|{
 name|ng_destroy_hook
@@ -4540,11 +4554,12 @@ name|hook
 argument_list|)
 expr_stmt|;
 comment|/* should destroy peer too */
-return|return
-operator|(
-name|error
-operator|)
-return|;
+name|printf
+argument_list|(
+literal|"failed in ng_con_part2()\n"
+argument_list|)
+expr_stmt|;
+return|return ;
 block|}
 block|}
 comment|/* 	 * The 'type' agrees so far, so go ahead and link it in. 	 * We'll ask again later when we actually connect the hooks. 	 */
@@ -4598,9 +4613,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
-name|error
-operator|=
 call|(
 modifier|*
 name|hook
@@ -4614,7 +4626,6 @@ call|)
 argument_list|(
 name|hook
 argument_list|)
-operator|)
 condition|)
 block|{
 name|ng_destroy_hook
@@ -4623,15 +4634,16 @@ name|hook
 argument_list|)
 expr_stmt|;
 comment|/* also zaps peer */
-return|return
-operator|(
-name|error
-operator|)
-return|;
+name|printf
+argument_list|(
+literal|"failed in ng_con_part2(A)\n"
+argument_list|)
+expr_stmt|;
+return|return ;
 block|}
 block|}
-name|error
-operator|=
+if|if
+condition|(
 name|ng_send_fn
 argument_list|(
 name|hook
@@ -4651,7 +4663,21 @@ name|arg1
 argument_list|,
 name|arg2
 argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"failed in ng_con_part2(B)"
+argument_list|)
 expr_stmt|;
+name|ng_destroy_hook
+argument_list|(
+name|hook
+argument_list|)
+expr_stmt|;
+comment|/* also zaps peer */
+return|return ;
+block|}
 name|hook
 operator|->
 name|hk_flags
@@ -4660,11 +4686,7 @@ operator|~
 name|HK_INVALID
 expr_stmt|;
 comment|/* need both to be able to work */
-return|return
-operator|(
-name|error
-operator|)
-return|;
+return|return ;
 block|}
 end_function
 
@@ -4703,6 +4725,24 @@ decl_stmt|;
 name|hook_p
 name|hook2
 decl_stmt|;
+if|if
+condition|(
+name|ng_findhook
+argument_list|(
+name|node2
+argument_list|,
+name|name2
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+return|return
+operator|(
+name|EEXIST
+operator|)
+return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -4816,8 +4856,6 @@ name|NG_HOOKLEN
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Queue the function above. 	 * Procesing continues in that function in the lock context of 	 * the other node. 	 */
-name|error
-operator|=
 name|ng_send_fn
 argument_list|(
 name|node2
@@ -4845,7 +4883,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}
@@ -4932,6 +4970,12 @@ comment|/* gives us a ref */
 name|ng_rmnode
 argument_list|(
 name|node2
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -4960,6 +5004,12 @@ block|{
 name|ng_rmnode
 argument_list|(
 name|node2
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|ng_destroy_hook
@@ -5080,6 +5130,12 @@ comment|/* also zaps hook1 */
 name|ng_rmnode
 argument_list|(
 name|node2
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -5124,140 +5180,68 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Static version of shutdown message. we don't want to need resources  * to shut down (we may be doing it to release resources because we ran out.  */
+comment|/* Shut this node down as soon as everyone is clear of it */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|ng_mesg
-name|ng_msg_shutdown
-init|=
-block|{
-block|{
-name|NG_VERSION
-block|,
-comment|/* u_char */
-literal|0
-block|,
-comment|/* u_char spare */
-literal|0
-block|,
-comment|/* u_int16_t arglen */
-name|NGF_STATIC
-block|,
-comment|/* u_int32_t flags */
-literal|0
-block|,
-comment|/* u_int32_t token */
-name|NGM_GENERIC_COOKIE
-block|,
-comment|/* u_int32_t */
-name|NGM_SHUTDOWN
-block|,
-comment|/* u_int32_t */
-literal|"shutdown"
-block|}
-comment|/* u_char[16] */
-block|}
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* Should add arg "immediatly" to jump the queue */
+end_comment
 
 begin_function
 name|int
 name|ng_rmnode_self
 parameter_list|(
 name|node_p
-name|here
+name|node
 parameter_list|)
 block|{
-name|item_p
-name|item
+name|int
+name|error
 decl_stmt|;
-name|struct
-name|ng_mesg
-modifier|*
-name|msg
-decl_stmt|;
-comment|/* 	 * Use the static version to avoid needing 	 * memory allocation to succeed. 	 * The message is never written to and always the same. 	 */
-name|msg
-operator|=
-operator|&
-name|ng_msg_shutdown
-expr_stmt|;
-comment|/* 	 * Try get a queue item to send it with. 	 * Hopefully since it has a reserve, we can get one. 	 * If we can't we are screwed anyhow. 	 * Increase the chances by flushing our queue first. 	 * We may free an item, (if we were the hog). 	 * Work in progress is allowed to complete. 	 * We also pretty much ensure that we come straight 	 * back in to do the shutdown. It may be a good idea 	 * to hold a reference actually to stop it from all 	 * going up in smoke. 	 */
-comment|/*	ng_flush_input_queue(&here->nd_input_queue); will mask problem  */
-name|item
-operator|=
-name|ng_package_msg_self
-argument_list|(
-name|here
-argument_list|,
-name|NULL
-argument_list|,
-name|msg
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|item
+name|node
 operator|==
-name|NULL
-condition|)
-block|{
-comment|/* it would have freed the msg except static */
-comment|/* try again after flushing our queue */
-name|ng_flush_input_queue
-argument_list|(
 operator|&
-name|here
-operator|->
-name|nd_input_queue
-argument_list|)
-expr_stmt|;
-name|item
-operator|=
-name|ng_package_msg_self
-argument_list|(
-name|here
-argument_list|,
-name|NULL
-argument_list|,
-name|msg
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|item
-operator|==
-name|NULL
+name|ng_deadnode
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"failed to free node 0x%x\n"
-argument_list|,
-name|ng_node2ID
-argument_list|(
-name|here
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-name|ENOMEM
+literal|0
 operator|)
 return|;
-block|}
-block|}
+if|if
+condition|(
+name|node
+operator|->
+name|nd_flags
+operator|&
+name|NG_CLOSING
+condition|)
 return|return
 operator|(
-name|ng_snd_item
+literal|0
+operator|)
+return|;
+name|error
+operator|=
+name|ng_send_fn
 argument_list|(
-name|item
+name|node
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|ng_rmnode
+argument_list|,
+name|NULL
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
@@ -5265,7 +5249,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|ng_rmhook_part2
 parameter_list|(
 name|node_p
@@ -5287,11 +5271,7 @@ argument_list|(
 name|hook
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return ;
 block|}
 end_function
 
@@ -7165,7 +7145,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * MACRO WILL DO THE JOB OF CALLING ng_package_msg IN CALLER  * before we are called. The user code should have filled out the item  * correctly by this stage:  * Common:  *    reference to destination node.  *    Reference to destination rcv hook if relevant.  * Data:  *    pointer to mbuf  *    pointer to metadata  * Control_Message:  *    pointer to msg.  *    ID of original sender node. (return address)  *  * The nodes have several routines and macros to help with this task:  * ng_package_msg()  * ng_package_data() do much of the work.  * ng_retarget_msg  * ng_retarget_data  */
+comment|/*  * The module code should have filled out the item correctly by this stage:  * Common:  *    reference to destination node.  *    Reference to destination rcv hook if relevant.  * Data:  *    pointer to mbuf  *    pointer to metadata  * Control_Message:  *    pointer to msg.  *    ID of original sender node. (return address)  * Function:  *    Function pointer  *    void * argument  *    integer argument  *  * The nodes have several routines and macros to help with this task:  */
 end_comment
 
 begin_function
@@ -7182,16 +7162,18 @@ block|{
 name|hook_p
 name|hook
 init|=
+name|NGI_HOOK
+argument_list|(
 name|item
-operator|->
-name|el_hook
+argument_list|)
 decl_stmt|;
 name|node_p
 name|dest
 init|=
+name|NGI_NODE
+argument_list|(
 name|item
-operator|->
-name|el_dest
+argument_list|)
 decl_stmt|;
 name|int
 name|rw
@@ -7282,20 +7264,6 @@ case|case
 name|NGQF_DATA
 case|:
 comment|/* 		 * DATA MESSAGE 		 * Delivered to a node via a non-optional hook. 		 * Both should be present in the item even though 		 * the node is derivable from the hook. 		 * References are held on both by the item. 		 */
-ifdef|#
-directive|ifdef
-name|NETGRAPH_DEBUG
-name|_ngi_check
-argument_list|(
-name|item
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|CHECK_DATA_MBUF
 argument_list|(
 name|NGI_M
@@ -7673,8 +7641,6 @@ name|ierror
 operator|=
 name|ng_apply_item
 argument_list|(
-name|dest
-argument_list|,
 name|item
 argument_list|)
 expr_stmt|;
@@ -7732,7 +7698,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -7786,31 +7752,15 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|NETGRAPH_DEBUG
-name|_ngi_check
-argument_list|(
-name|item
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 		 * We have the appropriate lock, so run the item. 		 * When finished it will drop the lock accordingly 		 */
 name|ierror
 operator|=
 name|ng_apply_item
 argument_list|(
-name|dest
-argument_list|,
 name|item
 argument_list|)
 expr_stmt|;
@@ -7830,7 +7780,7 @@ block|}
 block|}
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -7845,13 +7795,13 @@ specifier|static
 name|int
 name|ng_apply_item
 parameter_list|(
-name|node_p
-name|node
-parameter_list|,
 name|item_p
 name|item
 parameter_list|)
 block|{
+name|node_p
+name|node
+decl_stmt|;
 name|hook_p
 name|hook
 decl_stmt|;
@@ -7877,29 +7827,22 @@ name|ng_rcvdata_t
 modifier|*
 name|rcvdata
 decl_stmt|;
+name|NGI_GET_HOOK
+argument_list|(
+name|item
+argument_list|,
 name|hook
-operator|=
-name|item
-operator|->
-name|el_hook
+argument_list|)
 expr_stmt|;
+comment|/* clears stored hook */
+name|NGI_GET_NODE
+argument_list|(
 name|item
-operator|->
-name|el_hook
-operator|=
-name|NULL
+argument_list|,
+name|node
+argument_list|)
 expr_stmt|;
-comment|/* so NG_FREE_ITEM doesn't NG_HOOK_UNREF() */
-comment|/* We already have the node.. assume responsibility */
-comment|/* And the reference */
-comment|/* node = item->el_dest; */
-name|item
-operator|->
-name|el_dest
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* same as for the hook above */
+comment|/* clears stored node */
 ifdef|#
 directive|ifdef
 name|NETGRAPH_DEBUG
@@ -7997,12 +7940,6 @@ condition|(
 name|hook
 condition|)
 block|{
-name|item
-operator|->
-name|el_hook
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|NG_HOOK_NOT_VALID
@@ -8011,7 +7948,7 @@ name|hook
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * If the hook has been zapped then we can't use it. 			 * Immediatly drop its reference. 			 * The message may not need it. 			 */
+comment|/* 				 * The hook has been zapped then we can't 				 * use it. Immediatly drop its reference. 				 * The message may not need it. 				 */
 name|NG_HOOK_UNREF
 argument_list|(
 name|hook
@@ -8162,13 +8099,25 @@ break|break;
 case|case
 name|NGQF_FN
 case|:
-comment|/* 		 *  We have to implicitly trust the hook, 		 * as some of these are used for system purposes 		 * where the hook is invalid. 		 */
+comment|/* 		 *  We have to implicitly trust the hook, 		 * as some of these are used for system purposes 		 * where the hook is invalid. In the case of 		 * the shutdown message we allow it to hit 		 * even if the node is invalid. 		 */
 if|if
 condition|(
+operator|(
 name|NG_NODE_NOT_VALID
 argument_list|(
 name|node
 argument_list|)
+operator|)
+operator|&&
+operator|(
+name|NGI_FN
+argument_list|(
+name|item
+argument_list|)
+operator|!=
+operator|&
+name|ng_rmnode
+operator|)
 condition|)
 block|{
 name|TRAP_ERROR
@@ -8180,8 +8129,6 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-name|error
-operator|=
 operator|(
 operator|*
 name|NGI_FN
@@ -8342,6 +8289,12 @@ case|:
 name|ng_rmnode
 argument_list|(
 name|here
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -10531,20 +10484,6 @@ expr_stmt|;
 if|if
 condition|(
 name|msg
-operator|&&
-operator|(
-operator|(
-name|msg
-operator|->
-name|header
-operator|.
-name|flags
-operator|&
-name|NGF_STATIC
-operator|)
-operator|==
-literal|0
-operator|)
 condition|)
 name|NG_FREE_MSG
 argument_list|(
@@ -11461,48 +11400,16 @@ name|NGQF_UNDEF
 case|:
 block|}
 comment|/* If we still have a node or hook referenced... */
-if|if
-condition|(
-name|item
-operator|->
-name|el_dest
-condition|)
-block|{
-name|NG_NODE_UNREF
+name|_NGI_CLR_NODE
 argument_list|(
 name|item
-operator|->
-name|el_dest
 argument_list|)
 expr_stmt|;
-name|item
-operator|->
-name|el_dest
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|item
-operator|->
-name|el_hook
-condition|)
-block|{
-name|NG_HOOK_UNREF
+name|_NGI_CLR_HOOK
 argument_list|(
 name|item
-operator|->
-name|el_hook
 argument_list|)
 expr_stmt|;
-name|item
-operator|->
-name|el_hook
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 name|item
 operator|->
 name|el_flags
@@ -11837,13 +11744,15 @@ name|fn
 operator|.
 name|fn_fn
 argument_list|,
+name|NGI_NODE
+argument_list|(
 name|item
-operator|->
-name|el_dest
+argument_list|)
 argument_list|,
+name|NGI_HOOK
+argument_list|(
 name|item
-operator|->
-name|el_hook
+argument_list|)
 argument_list|,
 name|item
 operator|->
@@ -11897,24 +11806,27 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|NGI_NODE
+argument_list|(
 name|item
-operator|->
-name|el_dest
+argument_list|)
 condition|)
 block|{
 name|printf
 argument_list|(
 literal|"node %p ([%x])\n"
 argument_list|,
+name|NGI_NODE
+argument_list|(
 name|item
-operator|->
-name|el_dest
+argument_list|)
 argument_list|,
 name|ng_node2ID
 argument_list|(
+name|NGI_NODE
+argument_list|(
 name|item
-operator|->
-name|el_dest
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -12222,7 +12134,7 @@ argument_list|(
 operator|&
 name|ng_worklist_mtx
 argument_list|,
-name|MTX_SPIN
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|node
@@ -12244,7 +12156,7 @@ argument_list|(
 operator|&
 name|ng_worklist_mtx
 argument_list|,
-name|MTX_SPIN
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 break|break;
@@ -12264,7 +12176,7 @@ argument_list|(
 operator|&
 name|ng_worklist_mtx
 argument_list|,
-name|MTX_SPIN
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 comment|/* 		 * We have the node. We also take over the reference 		 * that the list had on it. 		 * Now process as much as you can, until it won't 		 * let you have another item off the queue. 		 * All this time, keep the reference 		 * that lets us be sure that the node still exists. 		 * Let the reference go at the last minute. 		 */
@@ -12345,24 +12257,8 @@ argument_list|,
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NETGRAPH_DEBUG
-name|_ngi_check
-argument_list|(
-name|item
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|ng_apply_item
 argument_list|(
-name|node
-argument_list|,
 name|item
 argument_list|)
 expr_stmt|;
@@ -12386,7 +12282,7 @@ argument_list|(
 operator|&
 name|ng_worklist_mtx
 argument_list|,
-name|MTX_SPIN
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 if|if
@@ -12426,7 +12322,7 @@ argument_list|(
 operator|&
 name|ng_worklist_mtx
 argument_list|,
-name|MTX_SPIN
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}
@@ -12446,7 +12342,7 @@ argument_list|(
 operator|&
 name|ng_worklist_mtx
 argument_list|,
-name|MTX_SPIN
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 if|if
@@ -12490,7 +12386,7 @@ argument_list|(
 operator|&
 name|ng_worklist_mtx
 argument_list|,
-name|MTX_SPIN
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|schednetisr
@@ -12516,7 +12412,7 @@ define|#
 directive|define
 name|ITEM_DEBUG_CHECKS
 define|\
-value|do {								\ 		if (item->el_dest ) {					\ 			printf("item already has node");		\ 			Debugger("has node");				\ 			NG_NODE_UNREF(item->el_dest);			\ 			item->el_dest = NULL;				\ 		}							\ 		if (item->el_hook ) {					\ 			printf("item already has hook");		\ 			Debugger("has hook");				\ 			NG_HOOK_UNREF(item->el_hook);			\ 			item->el_hook = NULL;				\ 		}							\ 	} while (0)
+value|do {								\ 		if (NGI_NODE(item) ) {					\ 			printf("item already has node");		\ 			Debugger("has node");				\ 			NGI_CLR_NODE(item);				\ 		}							\ 		if (NGI_HOOK(item) ) {					\ 			printf("item already has hook");		\ 			Debugger("has hook");				\ 			NGI_CLR_HOOK(item);				\ 		}							\ 	} while (0)
 end_define
 
 begin_else
@@ -12648,27 +12544,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-operator|(
-name|msg
-operator|->
-name|header
-operator|.
-name|flags
-operator|&
-name|NGF_STATIC
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
 name|NG_FREE_MSG
 argument_list|(
 name|msg
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|NULL
@@ -12716,6 +12596,13 @@ begin_define
 define|#
 directive|define
 name|SET_RETADDR
+parameter_list|(
+name|item
+parameter_list|,
+name|here
+parameter_list|,
+name|retaddr
+parameter_list|)
 define|\
 value|do {
 comment|/* Data or fn items don't have retaddrs */
@@ -12741,6 +12628,12 @@ name|ng_ID_t
 name|retaddr
 parameter_list|)
 block|{
+name|hook_p
+name|peer
+decl_stmt|;
+name|node_p
+name|peernode
+decl_stmt|;
 name|ITEM_DEBUG_CHECKS
 expr_stmt|;
 comment|/* 	 * Quick sanity check.. 	 * Since a hook holds a reference on it's node, once we know 	 * that the peer is still connected (even if invalid,) we know 	 * that the peer node is present, though maybe invalid. 	 */
@@ -12798,9 +12691,7 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Transfer our interest to the other (peer) end. 	 */
-name|item
-operator|->
-name|el_hook
+name|peer
 operator|=
 name|NG_HOOK_PEER
 argument_list|(
@@ -12809,15 +12700,17 @@ argument_list|)
 expr_stmt|;
 name|NG_HOOK_REF
 argument_list|(
-name|item
-operator|->
-name|el_hook
+name|peer
 argument_list|)
 expr_stmt|;
-comment|/* Don't let it go while on the queue */
+name|NGI_SET_HOOK
+argument_list|(
 name|item
-operator|->
-name|el_dest
+argument_list|,
+name|peer
+argument_list|)
+expr_stmt|;
+name|peernode
 operator|=
 name|NG_PEER_NODE
 argument_list|(
@@ -12826,13 +12719,15 @@ argument_list|)
 expr_stmt|;
 name|NG_NODE_REF
 argument_list|(
-name|item
-operator|->
-name|el_dest
+name|peernode
 argument_list|)
 expr_stmt|;
-comment|/* Nor this */
-name|SET_RETADDR
+name|NGI_SET_NODE
+argument_list|(
+name|item
+argument_list|,
+name|peernode
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -12907,29 +12802,40 @@ name|error
 operator|)
 return|;
 block|}
+name|NGI_SET_NODE
+argument_list|(
 name|item
-operator|->
-name|el_dest
-operator|=
+argument_list|,
 name|dest
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|item
-operator|->
-name|el_hook
-operator|=
 name|hook
-operator|)
 condition|)
+block|{
 name|NG_HOOK_REF
 argument_list|(
 name|hook
 argument_list|)
 expr_stmt|;
 comment|/* don't let it go while on the queue */
+name|NGI_SET_HOOK
+argument_list|(
+name|item
+argument_list|,
+name|hook
+argument_list|)
+expr_stmt|;
+block|}
 name|SET_RETADDR
+argument_list|(
+name|item
+argument_list|,
+name|here
+argument_list|,
+name|retaddr
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -13004,19 +12910,26 @@ name|el_next
 operator|=
 name|NULL
 expr_stmt|;
+name|NGI_SET_NODE
+argument_list|(
 name|item
-operator|->
-name|el_dest
-operator|=
+argument_list|,
 name|dest
+argument_list|)
 expr_stmt|;
+name|NGI_CLR_HOOK
+argument_list|(
 name|item
-operator|->
-name|el_hook
-operator|=
-name|NULL
+argument_list|)
 expr_stmt|;
 name|SET_RETADDR
+argument_list|(
+name|item
+argument_list|,
+name|here
+argument_list|,
+name|retaddr
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -13062,27 +12975,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-operator|(
-name|msg
-operator|->
-name|header
-operator|.
-name|flags
-operator|&
-name|NGF_STATIC
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
 name|NG_FREE_MSG
 argument_list|(
 name|msg
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|NULL
@@ -13102,32 +12999,36 @@ name|el_next
 operator|=
 name|NULL
 expr_stmt|;
-name|item
-operator|->
-name|el_dest
-operator|=
-name|here
-expr_stmt|;
 name|NG_NODE_REF
 argument_list|(
 name|here
 argument_list|)
 expr_stmt|;
+name|NGI_SET_NODE
+argument_list|(
 name|item
-operator|->
-name|el_hook
-operator|=
-name|hook
+argument_list|,
+name|here
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|hook
 condition|)
+block|{
 name|NG_HOOK_REF
 argument_list|(
 name|hook
 argument_list|)
 expr_stmt|;
+name|NGI_SET_HOOK
+argument_list|(
+name|item
+argument_list|,
+name|hook
+argument_list|)
+expr_stmt|;
+block|}
 name|NGI_MSG
 argument_list|(
 name|item
@@ -13204,30 +13105,32 @@ name|NGQF_FN
 operator||
 name|NGQF_WRITER
 expr_stmt|;
-name|item
-operator|->
-name|el_dest
-operator|=
-name|node
-expr_stmt|;
 name|NG_NODE_REF
 argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
+name|NGI_SET_NODE
+argument_list|(
+name|item
+argument_list|,
+name|node
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-operator|(
-name|item
-operator|->
-name|el_hook
-operator|=
 name|hook
-operator|)
 condition|)
 block|{
 name|NG_HOOK_REF
 argument_list|(
+name|hook
+argument_list|)
+expr_stmt|;
+name|NGI_SET_HOOK
+argument_list|(
+name|item
+argument_list|,
 name|hook
 argument_list|)
 expr_stmt|;

@@ -1366,6 +1366,8 @@ name|struct
 name|ng_one2many_link
 modifier|*
 name|dst
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|error
@@ -1774,6 +1776,7 @@ directive|endif
 block|}
 block|}
 else|else
+block|{
 name|dst
 operator|=
 operator|&
@@ -1781,6 +1784,7 @@ name|priv
 operator|->
 name|one
 expr_stmt|;
+block|}
 comment|/* Update transmit stats */
 name|dst
 operator|->
