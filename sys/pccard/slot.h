@@ -218,7 +218,7 @@ begin_struct
 struct|struct
 name|pccard_devinfo
 block|{
-name|u_char
+name|uint8_t
 name|name
 index|[
 literal|128
@@ -228,22 +228,22 @@ name|int
 name|running
 decl_stmt|;
 comment|/* Current state of driver */
-name|u_char
+name|uint8_t
 name|misc
 index|[
-literal|128
+literal|116
 index|]
 decl_stmt|;
 comment|/* For any random info */
-name|u_int
+name|uint32_t
 name|manufacturer
 decl_stmt|;
 comment|/* Manufacturer ID */
-name|u_int
+name|uint32_t
 name|product
 decl_stmt|;
 comment|/* Product ID */
-name|u_int
+name|uint32_t
 name|prodext
 decl_stmt|;
 comment|/* Product ID (extended) */

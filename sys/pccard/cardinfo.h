@@ -454,25 +454,25 @@ name|int
 name|flags
 decl_stmt|;
 comment|/* Device flags */
-name|u_int
-name|manufacturer
-decl_stmt|;
-comment|/* Manufacturer ID */
-name|u_int
-name|product
-decl_stmt|;
-comment|/* Product ID */
-name|u_int
-name|prodext
-decl_stmt|;
-comment|/* Product ID (extended) */
-name|u_char
+name|uint8_t
 name|misc
 index|[
-literal|128
+literal|116
 index|]
 decl_stmt|;
 comment|/* For any random info */
+name|uint32_t
+name|manufacturer
+decl_stmt|;
+comment|/* Manufacturer ID */
+name|uint32_t
+name|product
+decl_stmt|;
+comment|/* Product ID */
+name|uint32_t
+name|prodext
+decl_stmt|;
+comment|/* Product ID (extended) */
 block|}
 struct|;
 end_struct
