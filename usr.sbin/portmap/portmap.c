@@ -920,7 +920,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: portmap [-dv]\n"
+literal|"usage: portmap [-dv] [-h bindip]\n"
 argument_list|)
 expr_stmt|;
 name|exit
