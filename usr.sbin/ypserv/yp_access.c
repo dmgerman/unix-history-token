@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<rpcsvc/ypxfrd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -129,7 +135,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yp_access.c,v 1.2 1996/05/01 02:39:54 wpaul Exp $"
+literal|"$Id: yp_access.c,v 1.9 1996/06/05 02:01:29 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -793,6 +799,38 @@ condition|)
 block|{
 if|if
 condition|(
+name|strchr
+argument_list|(
+name|map
+argument_list|,
+literal|'/'
+argument_list|)
+condition|)
+block|{
+name|yp_error
+argument_list|(
+literal|"embedded slash in map name \"%s\" -- \ possible spoof attempt from %s:%d"
+argument_list|,
+name|map
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|rqhost
+operator|->
+name|sin_addr
+argument_list|)
+argument_list|,
+name|ntohs
+argument_list|(
+name|rqhost
+operator|->
+name|sin_port
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 operator|(
 name|strstr
 argument_list|(
@@ -801,11 +839,33 @@ argument_list|,
 literal|"master.passwd."
 argument_list|)
 operator|||
+operator|(
+name|rqstp
+operator|->
+name|rq_prog
+operator|==
+name|YPPROG
+operator|&&
 name|rqstp
 operator|->
 name|rq_proc
 operator|==
 name|YPPROC_XFR
+operator|)
+operator|||
+operator|(
+name|rqstp
+operator|->
+name|rq_prog
+operator|==
+name|YPXFRD_FREEBSD_PROG
+operator|&&
+name|rqstp
+operator|->
+name|rq_proc
+operator|==
+name|YPXFRD_GETMAP
+operator|)
 operator|)
 operator|&&
 name|ntohs
@@ -814,15 +874,29 @@ name|rqhost
 operator|->
 name|sin_port
 argument_list|)
-operator|>
-literal|1023
+operator|>=
+name|IPPORT_RESERVED
 condition|)
 block|{
 name|yp_error
 argument_list|(
-literal|"Access to %s denied -- client not privileged"
+literal|"Access to %s denied -- client %s:%d \ not privileged"
 argument_list|,
 name|map
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|rqhost
+operator|->
+name|sin_addr
+argument_list|)
+argument_list|,
+name|ntohs
+argument_list|(
+name|rqhost
+operator|->
+name|sin_port
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
