@@ -488,9 +488,14 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|locale_nroff
+name|roff_dev
 init|=
-literal|" -Tascii"
+literal|"ascii"
+decl_stmt|,
+modifier|*
+name|roff_ldev
+init|=
+literal|"ascii"
 decl_stmt|;
 end_decl_stmt
 
@@ -511,8 +516,14 @@ name|lcode
 decl_stmt|;
 name|char
 modifier|*
-name|nroff
+name|ldev
 decl_stmt|;
+comment|/* roff device for localized manpages. */
+name|char
+modifier|*
+name|odev
+decl_stmt|;
+comment|/* roff device for original manpages. */
 block|}
 struct|;
 end_struct
@@ -528,18 +539,20 @@ block|{
 block|{
 literal|"KOI8-R"
 block|,
-literal|" -Tkoi8-r"
+literal|"koi8-r"
+block|,
+literal|"ascii"
 block|}
 block|,
 block|{
 literal|"ISO_8859-1"
 block|,
-literal|" -Tlatin1"
+literal|"latin1"
+block|,
+literal|"latin1"
 block|}
 block|,
 block|{
-name|NULL
-block|,
 name|NULL
 block|}
 block|}
@@ -2003,11 +2016,17 @@ operator|==
 literal|0
 condition|)
 block|{
-name|locale_nroff
+name|roff_ldev
 operator|=
 name|pltable
 operator|->
-name|nroff
+name|ldev
+expr_stmt|;
+name|roff_dev
+operator|=
+name|pltable
+operator|->
+name|odev
 expr_stmt|;
 break|break;
 block|}
@@ -4123,11 +4142,11 @@ argument_list|(
 name|lbuf
 argument_list|)
 argument_list|,
-literal|"%s%s"
+literal|"%s -T%s"
 argument_list|,
 name|NEQN
 argument_list|,
-name|locale_nroff
+name|roff_dev
 argument_list|)
 expr_stmt|;
 name|add_directive
@@ -4385,11 +4404,11 @@ argument_list|(
 name|lbuf
 argument_list|)
 argument_list|,
-literal|"%s%s"
+literal|"%s -T%s"
 argument_list|,
 name|NROFF
 argument_list|,
-name|locale_nroff
+name|roff_dev
 argument_list|)
 expr_stmt|;
 name|add_directive
@@ -6460,6 +6479,10 @@ index|[
 name|FILENAME_MAX
 index|]
 decl_stmt|;
+name|char
+modifier|*
+name|roff_odev
+decl_stmt|;
 endif|#
 directive|endif
 name|found
@@ -6525,6 +6548,14 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|roff_odev
+operator|=
+name|roff_dev
+expr_stmt|;
+name|roff_dev
+operator|=
+name|roff_ldev
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|buf
@@ -6606,6 +6637,10 @@ name|glob
 argument_list|)
 expr_stmt|;
 block|}
+name|roff_dev
+operator|=
+name|roff_odev
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -6717,6 +6752,14 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|roff_odev
+operator|=
+name|roff_dev
+expr_stmt|;
+name|roff_dev
+operator|=
+name|roff_ldev
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|buf
@@ -6800,6 +6843,10 @@ name|glob
 argument_list|)
 expr_stmt|;
 block|}
+name|roff_dev
+operator|=
+name|roff_odev
+expr_stmt|;
 block|}
 if|if
 condition|(
