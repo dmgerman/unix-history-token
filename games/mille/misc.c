@@ -46,22 +46,11 @@ directive|include
 file|"mille.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|unctrl
-end_ifndef
-
 begin_include
 include|#
 directive|include
-file|"unctrl.h"
+file|<unctrl.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#

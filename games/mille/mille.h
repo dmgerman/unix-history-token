@@ -673,6 +673,25 @@ parameter_list|()
 value|rand()
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SYSV
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -736,6 +755,27 @@ begin_endif
 endif|#
 directive|endif
 endif|SYSV
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|reg
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|reg
+end_define
+
+begin_comment
+comment|/* register */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
 end_endif
 
 begin_typedef
