@@ -6308,61 +6308,6 @@ argument_list|)
 expr_stmt|;
 comment|/* and add it to the name */
 block|}
-if|if
-condition|(
-name|plex
-operator|->
-name|organization
-operator|==
-name|plex_raid5
-condition|)
-block|{
-comment|/* RAID-5 plex, */
-name|plex
-operator|->
-name|lock
-operator|=
-operator|(
-expr|struct
-name|rangelock
-operator|*
-operator|)
-name|Malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|rangelock
-argument_list|)
-operator|*
-name|INITIAL_LOCKS
-argument_list|)
-expr_stmt|;
-comment|/* allocate lock table */
-name|bzero
-argument_list|(
-name|plex
-operator|->
-name|lock
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|rangelock
-argument_list|)
-operator|*
-name|INITIAL_LOCKS
-argument_list|)
-expr_stmt|;
-comment|/* zero it */
-name|plex
-operator|->
-name|alloclocks
-operator|=
-name|INITIAL_LOCKS
-expr_stmt|;
-comment|/* and note how many there are */
-block|}
 comment|/* Note the last plex we configured */
 name|current_plex
 operator|=

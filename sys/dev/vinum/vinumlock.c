@@ -841,6 +841,16 @@ argument_list|,
 name|INITIAL_LOCKS
 argument_list|)
 expr_stmt|;
+name|pos
+operator|=
+operator|&
+name|plex
+operator|->
+name|lock
+index|[
+name|newlock
+index|]
+expr_stmt|;
 while|while
 condition|(
 name|newlock
@@ -862,6 +872,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+else|else
 name|pos
 operator|=
 name|lock
