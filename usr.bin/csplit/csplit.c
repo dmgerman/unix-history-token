@@ -917,7 +917,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: csplit [-ks] [-f prefix] [-n number] file [args ...]\n"
+literal|"usage: csplit [-ks] [-f prefix] [-n number] file args ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
