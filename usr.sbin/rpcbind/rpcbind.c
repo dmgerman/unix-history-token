@@ -1709,6 +1709,17 @@ name|LOG_ERR
 argument_list|,
 literal|"cannot bind %s on %s: %m"
 argument_list|,
+operator|(
+name|hosts
+index|[
+name|nhostsbak
+index|]
+operator|==
+name|NULL
+operator|)
+condition|?
+literal|"*"
+else|:
 name|hosts
 index|[
 name|nhostsbak
