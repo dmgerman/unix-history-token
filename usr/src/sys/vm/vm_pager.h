@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)vm_pager.h	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)vm_pager.h	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -523,35 +523,37 @@ begin_comment
 comment|/*  * XXX compat with old interface  */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_decl_stmt
+name|int
 name|vm_pager_get
-parameter_list|(
-name|p
-parameter_list|,
-name|m
-parameter_list|,
-name|s
-parameter_list|)
-define|\
-value|({ \ 	vm_page_t ml[1]; \ 	ml[0] = (m); \ 	vm_pager_get_pages(p, ml, 1, s); \ })
-end_define
+name|__P
+argument_list|(
+operator|(
+name|vm_pager_t
+operator|,
+name|vm_page_t
+operator|,
+name|boolean_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_decl_stmt
+name|int
 name|vm_pager_put
-parameter_list|(
-name|p
-parameter_list|,
-name|m
-parameter_list|,
-name|s
-parameter_list|)
-define|\
-value|({ \ 	vm_page_t ml[1]; \ 	ml[0] = (m); \ 	vm_pager_put_pages(p, ml, 1, s); \ })
-end_define
+name|__P
+argument_list|(
+operator|(
+name|vm_pager_t
+operator|,
+name|vm_page_t
+operator|,
+name|boolean_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
