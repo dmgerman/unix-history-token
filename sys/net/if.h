@@ -15,6 +15,12 @@ directive|define
 name|_NET_IF_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -31,6 +37,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_comment
 comment|/*  *<net/if.h> does not depend on<sys/time.h> on most other systems.  This  * helps userland compatibility.  (struct timeval ifi_lastchange)  */
@@ -59,6 +71,11 @@ name|ifnet
 struct_decl|;
 end_struct_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Length of interface external name, including terminating '\0'.  * Note: this is the same size as a generic device's external name.  */
 end_comment
@@ -66,15 +83,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IFNAMSIZ
+name|IF_NAMESIZE
 value|16
 end_define
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
 directive|define
-name|IF_NAMESIZE
-value|IFNAMSIZ
+name|IFNAMSIZ
+value|IF_NAMESIZE
 end_define
 
 begin_define
@@ -87,6 +110,11 @@ end_define
 begin_comment
 comment|/* ifp->if_unit is only 15 bits */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -188,6 +216,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_comment
 comment|/*  * Structure used to query names of interface cloners.  */
@@ -1119,6 +1153,15 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __BSD_VISIBLE */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1167,7 +1210,8 @@ begin_struct
 struct|struct
 name|if_nameindex
 block|{
-name|u_int
+name|unsigned
+name|int
 name|if_index
 decl_stmt|;
 comment|/* 1, 2, ... */
@@ -1182,7 +1226,8 @@ end_struct
 
 begin_function_decl
 name|__BEGIN_DECLS
-name|u_int
+name|unsigned
+name|int
 name|if_nametoindex
 parameter_list|(
 specifier|const
@@ -1197,7 +1242,8 @@ name|char
 modifier|*
 name|if_indextoname
 parameter_list|(
-name|u_int
+name|unsigned
+name|int
 parameter_list|,
 name|char
 modifier|*
