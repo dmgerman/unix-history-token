@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	4.45	82/10/13	*/
+comment|/*	dz.c	4.46	82/10/17	*/
 end_comment
 
 begin_include
@@ -1260,15 +1260,11 @@ name|p_addr
 operator|==
 literal|0
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 name|tp
 operator|=
 operator|&
@@ -1358,15 +1354,11 @@ name|u_uid
 operator|!=
 literal|0
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|EBUSY
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 operator|(
 name|void
 operator|)
@@ -1424,6 +1416,8 @@ operator|)
 name|spl0
 argument_list|()
 expr_stmt|;
+return|return
+operator|(
 operator|(
 operator|*
 name|linesw
@@ -1440,7 +1434,8 @@ name|dev
 operator|,
 name|tp
 operator|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -2292,6 +2287,9 @@ name|device
 modifier|*
 name|dzaddr
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|tp
 operator|=
 operator|&
@@ -2300,7 +2298,7 @@ index|[
 name|unit
 index|]
 expr_stmt|;
-name|cmd
+name|error
 operator|=
 operator|(
 operator|*
@@ -2325,13 +2323,17 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|cmd
-operator|==
+name|error
+operator|>=
 literal|0
 condition|)
-return|return;
-if|if
-condition|(
+return|return
+operator|(
+name|error
+operator|)
+return|;
+name|error
+operator|=
 name|ttioctl
 argument_list|(
 name|tp
@@ -2342,6 +2344,12 @@ name|data
 argument_list|,
 name|flag
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|>=
+literal|0
 condition|)
 block|{
 if|if
@@ -2359,8 +2367,12 @@ argument_list|(
 name|unit
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
-else|else
 switch|switch
 condition|(
 name|cmd
@@ -2623,13 +2635,17 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENOTTY
-expr_stmt|;
+operator|)
+return|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 

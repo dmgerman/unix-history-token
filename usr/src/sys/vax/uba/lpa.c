@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lpa.c	4.7	82/10/10	*/
+comment|/*	lpa.c	4.8	82/10/17	*/
 end_comment
 
 begin_include
@@ -1202,15 +1202,11 @@ name|ui_alive
 operator|==
 literal|0
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 operator|(
 name|void
 operator|)
@@ -1319,6 +1315,11 @@ name|p_nice
 operator|=
 name|NICE
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -2342,27 +2343,7 @@ condition|(
 name|cmd
 operator|!=
 name|TIOCSETP
-condition|)
-block|{
-name|TRACER
-argument_list|(
-literal|"NOT TIOCSETP\n"
-argument_list|)
-expr_stmt|;
-comment|/* not valid */
-name|u
-operator|.
-name|u_error
-operator|=
-name|ENXIO
-expr_stmt|;
-return|return;
-block|}
-ifndef|#
-directive|ifndef
-name|NOMCODE
-if|if
-condition|(
+operator|||
 operator|(
 name|sc
 operator|->
@@ -2373,22 +2354,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-name|TRACER
-argument_list|(
-literal|"NO DMDT\n"
-argument_list|)
-expr_stmt|;
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-return|return;
-block|}
-endif|#
-directive|endif
+operator|)
+return|;
 name|iocb
 operator|=
 operator|(
@@ -2685,13 +2655,11 @@ argument_list|(
 literal|"USER BUFFER FAULT\n"
 argument_list|)
 expr_stmt|;
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|EFAULT
-expr_stmt|;
-return|return;
+operator|)
+return|;
 block|}
 name|sc
 operator|->
@@ -2740,7 +2708,6 @@ operator|.
 name|b_bcount
 argument_list|)
 expr_stmt|;
-comment|/*	sc->sc_ubabuf = ubasetup(ui->ui_ubanum,&sc->sc_ubuffer, UBA_NEEDBDP);*/
 name|sc
 operator|->
 name|sc_ubabuf
@@ -2942,6 +2909,11 @@ argument_list|(
 literal|"IOCTL OUT\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 

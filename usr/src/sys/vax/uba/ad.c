@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ad.c	4.5	82/10/10	*/
+comment|/*	ad.c	4.6	82/10/17	*/
 end_comment
 
 begin_include
@@ -230,6 +230,7 @@ name|br
 decl_stmt|,
 name|cvec
 decl_stmt|;
+comment|/* value-result */
 specifier|register
 name|struct
 name|addevice
@@ -274,6 +275,10 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|adattach
 argument_list|(
@@ -290,7 +295,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_block
-block|{ }
+block|{  }
 end_block
 
 begin_macro
@@ -364,15 +369,11 @@ name|ui_alive
 operator|==
 literal|0
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 name|adp
 operator|->
 name|ad_open
@@ -399,6 +400,11 @@ name|u
 operator|.
 name|u_uid
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -671,14 +677,18 @@ name|ad_softdata
 expr_stmt|;
 break|break;
 default|default:
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENOTTY
-expr_stmt|;
+operator|)
+return|;
 comment|/* Not a legal ioctl cmd. */
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 

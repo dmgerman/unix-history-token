@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dmf.c	4.9	82/10/13	*/
+comment|/*	dmf.c	4.10	82/10/17	*/
 end_comment
 
 begin_include
@@ -1331,15 +1331,11 @@ name|ui_alive
 operator|==
 literal|0
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 name|tp
 operator|=
 operator|&
@@ -1362,15 +1358,11 @@ name|u_uid
 operator|!=
 literal|0
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|EBUSY
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 name|addr
 operator|=
 operator|(
@@ -1657,6 +1649,8 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
 operator|(
 operator|*
 name|linesw
@@ -1673,7 +1667,8 @@ name|dev
 operator|,
 name|tp
 operator|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -2405,6 +2400,9 @@ name|device
 modifier|*
 name|dmfaddr
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|tp
 operator|=
 operator|&
@@ -2413,7 +2411,7 @@ index|[
 name|unit
 index|]
 expr_stmt|;
-name|cmd
+name|error
 operator|=
 operator|(
 operator|*
@@ -2438,13 +2436,17 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|cmd
-operator|==
+name|error
+operator|>=
 literal|0
 condition|)
-return|return;
-if|if
-condition|(
+return|return
+operator|(
+name|error
+operator|)
+return|;
+name|error
+operator|=
 name|ttioctl
 argument_list|(
 name|tp
@@ -2455,6 +2457,12 @@ name|data
 argument_list|,
 name|flag
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|>=
+literal|0
 condition|)
 block|{
 if|if
@@ -2472,8 +2480,12 @@ argument_list|(
 name|unit
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
-else|else
 switch|switch
 condition|(
 name|cmd
@@ -2622,13 +2634,17 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENOTTY
-expr_stmt|;
+operator|)
+return|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -4121,17 +4137,6 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|ubarelse
-argument_list|(
-name|uban
-argument_list|,
-operator|&
-name|dmf_ubinfo
-index|[
-name|uban
-index|]
-argument_list|)
-expr_stmt|;
 name|dmf_ubinfo
 index|[
 name|uban

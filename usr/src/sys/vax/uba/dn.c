@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dn.c	4.8	82/10/10	*/
+comment|/*	dn.c	4.9	82/10/17	*/
 end_comment
 
 begin_include
@@ -404,7 +404,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_block
-block|{}
+block|{  }
 end_block
 
 begin_comment
@@ -481,15 +481,11 @@ name|ui_alive
 operator|==
 literal|0
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 name|dialer
 operator|=
 name|DNREG
@@ -519,15 +515,11 @@ index|]
 operator|&
 name|PWI
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 name|dnreg
 operator|=
 operator|&
@@ -551,15 +543,11 @@ operator||
 name|CRQ
 operator|)
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|EBUSY
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 name|dp
 operator|->
 name|dn_reg
@@ -578,6 +566,11 @@ name|MENABLE
 operator||
 name|CRQ
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lp.c	4.29	82/10/10	*/
+comment|/*	lp.c	4.30	82/10/17	*/
 end_comment
 
 begin_include
@@ -61,18 +61,6 @@ begin_include
 include|#
 directive|include
 file|"../h/pte.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/ioctl.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/tty.h"
 end_include
 
 begin_include
@@ -577,15 +565,11 @@ name|ui_alive
 operator|==
 literal|0
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 name|lpaddr
 operator|=
 operator|(
@@ -605,15 +589,11 @@ name|lpsr
 operator|&
 name|ERROR
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|EIO
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 name|sc
 operator|->
 name|sc_state
@@ -693,6 +673,11 @@ argument_list|,
 literal|'\f'
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 

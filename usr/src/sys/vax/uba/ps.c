@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ps.c	4.6	82/10/10	*/
+comment|/*	ps.c	4.7	82/10/17	*/
 end_comment
 
 begin_comment
@@ -542,7 +542,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_block
-block|{ }
+block|{  }
 end_block
 
 begin_macro
@@ -619,15 +619,11 @@ name|ui_alive
 operator|==
 literal|0
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 name|psp
 operator|->
 name|ps_open
@@ -739,6 +735,11 @@ operator|->
 name|ui_addr
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -995,13 +996,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|EFAULT
-expr_stmt|;
-elseif|else
+operator|)
+return|;
 if|if
 condition|(
 name|n
@@ -1012,14 +1011,11 @@ name|n
 operator|>
 name|MAXAUTOREFRESH
 condition|)
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|EINVAL
-expr_stmt|;
-else|else
-block|{
+operator|)
+return|;
 for|for
 control|(
 name|i
@@ -1033,6 +1029,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 if|if
 condition|(
 operator|(
@@ -1048,16 +1045,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|EFAULT
-expr_stmt|;
-break|break;
-block|}
-else|else
+operator|)
+return|;
 name|psp
 operator|->
 name|ps_refresh
@@ -1069,14 +1061,7 @@ index|]
 operator|=
 name|arg
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|u
-operator|.
-name|u_error
-condition|)
-block|{
+block|}
 name|psp
 operator|->
 name|ps_refresh
@@ -1109,8 +1094,6 @@ name|mode
 operator|=
 name|WAITING_MAP
 expr_stmt|;
-block|}
-block|}
 break|break;
 case|case
 name|PSIOAUTOMAP
@@ -1130,13 +1113,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|EFAULT
-expr_stmt|;
-elseif|else
+operator|)
+return|;
 if|if
 condition|(
 name|n
@@ -1147,14 +1128,11 @@ name|n
 operator|>
 name|MAXAUTOMAP
 condition|)
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|EINVAL
-expr_stmt|;
-else|else
-block|{
+operator|)
+return|;
 for|for
 control|(
 name|i
@@ -1168,6 +1146,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 if|if
 condition|(
 operator|(
@@ -1183,16 +1162,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|EFAULT
-expr_stmt|;
-break|break;
-block|}
-else|else
+operator|)
+return|;
 name|psp
 operator|->
 name|ps_map
@@ -1204,13 +1178,7 @@ index|]
 operator|=
 name|arg
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|u
-operator|.
-name|u_error
-condition|)
+block|}
 if|if
 condition|(
 operator|(
@@ -1226,13 +1194,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|EFAULT
-expr_stmt|;
-else|else
+operator|)
+return|;
 name|psp
 operator|->
 name|ps_map
@@ -1241,14 +1207,6 @@ name|outputstart
 operator|=
 name|arg
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|u
-operator|.
-name|u_error
-condition|)
-block|{
 name|psp
 operator|->
 name|ps_map
@@ -1281,8 +1239,6 @@ name|mode
 operator|=
 name|WAITING_START
 expr_stmt|;
-block|}
-block|}
 break|break;
 case|case
 name|PSIOSINGLEREFRESH
@@ -1326,14 +1282,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|EFAULT
-expr_stmt|;
-else|else
-block|{
+operator|)
+return|;
 name|psp
 operator|->
 name|ps_dbuffer
@@ -1360,13 +1313,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|EFAULT
-expr_stmt|;
-elseif|else
+operator|)
+return|;
 if|if
 condition|(
 name|arg
@@ -1377,14 +1328,11 @@ name|arg
 operator|>
 name|MAXDBSIZE
 condition|)
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|EINVAL
-expr_stmt|;
-else|else
-block|{
+operator|)
+return|;
 name|psp
 operator|->
 name|ps_dbuffer
@@ -1430,7 +1378,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-block|}
 break|break;
 case|case
 name|PSIOSINGLEBUFFER
@@ -1458,8 +1405,13 @@ operator|!=
 name|RUNNING_RF
 condition|)
 comment|/* not running */
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* dont wait */
+comment|/* fall into ... */
 case|case
 name|PSSIOTOPREFRESH
 case|:
@@ -1526,8 +1478,13 @@ operator|!=
 name|RUNNING_MAP
 condition|)
 comment|/* not running */
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* dont wait */
+comment|/* fall into ... */
 case|case
 name|PSIOSTOPMAP
 case|:
@@ -1581,19 +1538,25 @@ argument_list|()
 expr_stmt|;
 break|break;
 default|default:
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENOTTY
-expr_stmt|;
-comment|/* Not a legal ioctl cmd. */
+operator|)
+return|;
 break|break;
-block|}
 block|}
 end_block
 
+begin_return
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+end_return
+
 begin_define
+unit|}
 define|#
 directive|define
 name|SAVEPSADDR
@@ -1609,18 +1572,15 @@ parameter_list|()
 value|{register int x,i;x=spl6();\ 		while(((i=psaddr->ps_iostat)&DIOREADY)==0);\ 		psaddr->ps_addr=savepsaddr;splx(x);}
 end_define
 
-begin_macro
-name|psclockintr
-argument_list|(
-argument|dev
-argument_list|)
-end_macro
-
-begin_decl_stmt
+begin_expr_stmt
+unit|psclockintr
+operator|(
+name|dev
+operator|)
 name|dev_t
 name|dev
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ct.c	4.10	82/10/10	*/
+comment|/*	ct.c	4.11	82/10/17	*/
 end_comment
 
 begin_include
@@ -393,15 +393,11 @@ operator|)
 operator|->
 name|sc_openf
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 name|sc
 operator|->
 name|sc_openf
@@ -414,6 +410,11 @@ name|ctcsr
 operator||=
 name|IENABLE
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 

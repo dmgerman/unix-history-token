@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uda.c	4.10	82/10/10	*/
+comment|/*	uda.c	4.11	82/10/17	*/
 end_comment
 
 begin_include
@@ -916,15 +916,11 @@ name|ui_alive
 operator|==
 literal|0
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 name|sc
 operator|=
 operator|&
@@ -985,15 +981,11 @@ name|sc_state
 operator|!=
 name|S_RUN
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|EIO
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 block|}
 name|splx
 argument_list|(
@@ -1001,6 +993,11 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|/* SHOULD PROBABLY FORCE AN ONLINE ATTEMPT 	   TO SEE IF DISK IS REALLY THERE */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -4594,19 +4591,11 @@ name|bp
 operator|->
 name|av_forw
 expr_stmt|;
-name|ubarelse
-argument_list|(
-name|uban
-argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
-operator|&
 name|bp
 operator|->
 name|b_ubinfo
-argument_list|)
+operator|=
+literal|0
 expr_stmt|;
 comment|/* 			 * Link the buffer onto the drive queue 			 */
 name|dp
