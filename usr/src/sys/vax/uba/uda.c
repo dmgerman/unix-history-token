@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * %sccs.include.redist.c%  *  *	@(#)uda.c	7.28 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * %sccs.include.redist.c%  *  *	@(#)uda.c	7.29 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1049,9 +1049,15 @@ name|int
 name|timeout
 decl_stmt|,
 name|tries
-decl_stmt|,
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|QBA
+name|int
 name|s
 decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|VAX750
@@ -1417,11 +1423,16 @@ condition|)
 goto|goto
 name|again
 goto|;
+ifdef|#
+directive|ifdef
+name|QBA
 name|splx
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -9825,6 +9836,55 @@ block|,
 comment|/* H=blk 15884 thru end */
 block|}
 struct|,
+name|rd54_sizes
+index|[
+literal|8
+index|]
+init|=
+block|{
+literal|15884
+block|,
+literal|0
+block|,
+comment|/* A=blk 0 thru 15883 */
+literal|33440
+block|,
+literal|15884
+block|,
+comment|/* B=blk 15884 thru 49323 */
+operator|-
+literal|1
+block|,
+literal|0
+block|,
+comment|/* C=blk 0 thru end */
+literal|130938
+block|,
+literal|49324
+block|,
+comment|/* D=blk 49324 thru 180261 */
+literal|130938
+block|,
+literal|180262
+block|,
+comment|/* E=blk 180262 thru 311199 (end) */
+literal|0
+block|,
+literal|0
+block|,
+comment|/* F=unused */
+literal|261876
+block|,
+literal|49324
+block|,
+comment|/* G=blk 49324 thru 311199 (end) */
+literal|0
+block|,
+literal|0
+block|,
+comment|/* H=unused */
+block|}
+struct|,
 name|rx50_sizes
 index|[
 literal|8
@@ -10093,6 +10153,48 @@ block|,
 literal|8
 block|,
 literal|963
+block|}
+block|,
+block|{
+name|MSCP_MKDRIVE2
+argument_list|(
+literal|'R'
+argument_list|,
+literal|'D'
+argument_list|,
+literal|32
+argument_list|)
+block|,
+literal|"rd54-from-rd32"
+block|,
+name|rd54_sizes
+block|,
+literal|17
+block|,
+literal|15
+block|,
+literal|1220
+block|}
+block|,
+block|{
+name|MSCP_MKDRIVE2
+argument_list|(
+literal|'R'
+argument_list|,
+literal|'D'
+argument_list|,
+literal|54
+argument_list|)
+block|,
+literal|"rd54"
+block|,
+name|rd54_sizes
+block|,
+literal|17
+block|,
+literal|15
+block|,
+literal|1220
 block|}
 block|,
 block|{
