@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	1.2 (Berkeley) %G%"
+literal|"@(#)print.c	1.2 (Berkeley) 4/11/84"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,8 +52,15 @@ end_decl_stmt
 
 begin_block
 block|{
-name|printf
+specifier|extern
+name|FILE
+modifier|*
+name|debugout
+decl_stmt|;
+name|fprintf
 argument_list|(
+name|debugout
+argument_list|,
 literal|"type is %d, l_user %s, r_user %s, r_tty %s\n"
 argument_list|,
 name|request
@@ -73,8 +80,10 @@ operator|->
 name|r_tty
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|debugout
+argument_list|,
 literal|"		id = %d\n"
 argument_list|,
 name|request
@@ -84,7 +93,7 @@ argument_list|)
 expr_stmt|;
 name|fflush
 argument_list|(
-name|stdout
+name|debugout
 argument_list|)
 expr_stmt|;
 block|}
@@ -106,8 +115,15 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|extern
+name|FILE
+modifier|*
+name|debugout
+decl_stmt|;
 name|printf
 argument_list|(
+name|debugout
+argument_list|,
 literal|"type is %d, answer is %d, id = %d\n\n"
 argument_list|,
 name|response
@@ -125,7 +141,7 @@ argument_list|)
 expr_stmt|;
 name|fflush
 argument_list|(
-name|stdout
+name|debugout
 argument_list|)
 expr_stmt|;
 block|}

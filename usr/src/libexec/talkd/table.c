@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)table.c	1.2 (Berkeley) %G%"
+literal|"@(#)table.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -165,6 +165,11 @@ name|TABLE_ENTRY
 modifier|*
 name|ptr
 decl_stmt|;
+specifier|extern
+name|FILE
+modifier|*
+name|debugout
+decl_stmt|;
 name|long
 name|current_time
 decl_stmt|;
@@ -188,8 +193,10 @@ condition|(
 name|debug
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|debugout
+argument_list|,
 literal|"Entering Look-Up with : \n"
 argument_list|)
 expr_stmt|;
@@ -234,15 +241,14 @@ if|if
 condition|(
 name|debug
 condition|)
-name|printf
+block|{
+name|fprintf
 argument_list|(
+name|debugout
+argument_list|,
 literal|"Deleting expired entry : \n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|debug
-condition|)
 name|print_request
 argument_list|(
 operator|&
@@ -251,6 +257,7 @@ operator|->
 name|request
 argument_list|)
 expr_stmt|;
+block|}
 name|delete
 argument_list|(
 name|ptr
@@ -351,6 +358,11 @@ name|TABLE_ENTRY
 modifier|*
 name|ptr
 decl_stmt|;
+specifier|extern
+name|FILE
+modifier|*
+name|debugout
+decl_stmt|;
 name|long
 name|current_time
 decl_stmt|;
@@ -375,8 +387,10 @@ condition|(
 name|debug
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|debugout
+argument_list|,
 literal|"Entering find_request with : \n"
 argument_list|)
 expr_stmt|;
@@ -422,8 +436,10 @@ condition|(
 name|debug
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|debugout
+argument_list|,
 literal|"Deleting expired entry : \n"
 argument_list|)
 expr_stmt|;
@@ -747,6 +763,11 @@ name|TABLE_ENTRY
 modifier|*
 name|ptr
 decl_stmt|;
+specifier|extern
+name|FILE
+modifier|*
+name|debugout
+decl_stmt|;
 name|ptr
 operator|=
 name|table
@@ -755,8 +776,10 @@ if|if
 condition|(
 name|debug
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|debugout
+argument_list|,
 literal|"Entering delete_invite with %d\n"
 argument_list|,
 name|id_num
@@ -849,13 +872,20 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|extern
+name|FILE
+modifier|*
+name|debugout
+decl_stmt|;
 if|if
 condition|(
 name|debug
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|debugout
+argument_list|,
 literal|"Deleting : "
 argument_list|)
 expr_stmt|;
