@@ -231,7 +231,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|ipreverse
 parameter_list|(
 name|char
@@ -539,10 +539,6 @@ decl_stmt|,
 name|qdcount
 decl_stmt|,
 name|haveanswer
-decl_stmt|,
-name|i
-decl_stmt|,
-name|nchar
 decl_stmt|;
 name|char
 name|aux
