@@ -88,13 +88,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/isa_device.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/pnp.h>
+file|<isa/pnpreg.h>
 end_include
 
 begin_define
@@ -2480,7 +2474,7 @@ argument_list|)
 condition|)
 block|{
 case|case
-name|COMP_DEVICE_ID
+name|PNP_TAG_COMPAT_DEVICE
 case|:
 name|compid
 operator|=
@@ -2514,7 +2508,7 @@ argument_list|)
 expr_stmt|;
 comment|/* FALLTHROUGH */
 case|case
-name|END_TAG
+name|PNP_TAG_END
 case|:
 name|idx
 operator|=
