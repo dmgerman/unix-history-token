@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mt.c	6.3	84/09/25	*/
+comment|/*	mt.c	6.4	85/03/13	*/
 end_comment
 
 begin_include
@@ -97,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|"uio.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tty.h"
 end_include
 
 begin_include
@@ -343,6 +349,12 @@ decl_stmt|;
 comment|/* text for tape error code */
 endif|#
 directive|endif
+name|struct
+name|tty
+modifier|*
+name|sc_ttyp
+decl_stmt|;
+comment|/* record user's tty for errors */
 block|}
 name|mu_softc
 index|[
@@ -1143,6 +1155,14 @@ operator|->
 name|sc_flags
 operator|=
 literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|sc_ttyp
+operator|=
+name|u
+operator|.
+name|u_ttyp
 expr_stmt|;
 return|return
 operator|(
@@ -2750,8 +2770,12 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|printf
+name|tprintf
 argument_list|(
+name|sc
+operator|->
+name|sc_ttyp
+argument_list|,
 literal|"mu%d: offline\n"
 argument_list|,
 name|MUUNIT
@@ -2789,8 +2813,12 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|printf
+name|tprintf
 argument_list|(
+name|sc
+operator|->
+name|sc_ttyp
+argument_list|,
 literal|"mu%d: offline (port selector)\n"
 argument_list|,
 name|MUUNIT
@@ -2812,8 +2840,12 @@ break|break;
 case|case
 name|MTER_FPT
 case|:
-name|printf
+name|tprintf
 argument_list|(
+name|sc
+operator|->
+name|sc_ttyp
+argument_list|,
 literal|"mu%d: no write ring\n"
 argument_list|,
 name|MUUNIT
@@ -2881,8 +2913,12 @@ operator|==
 literal|010
 condition|)
 block|{
-name|printf
+name|tprintf
 argument_list|(
+name|sc
+operator|->
+name|sc_ttyp
+argument_list|,
 literal|"mu%d: rn=%d bn=%d unreadable record\n"
 argument_list|,
 name|MUUNIT
@@ -2917,8 +2953,12 @@ comment|/* command.  To get the most recent copy, you have to	*/
 comment|/* do a sense at interrupt level, which requires nested	*/
 comment|/* error processing.  This is a bit messy, so leave	*/
 comment|/* well enough alone.					*/
-name|printf
+name|tprintf
 argument_list|(
+name|sc
+operator|->
+name|sc_ttyp
+argument_list|,
 literal|"mu%d: hard error (data transfer) rn=%d bn=%d mbsr=%b er=%o (octal) ds=%b\n"
 argument_list|,
 name|MUUNIT
@@ -3484,8 +3524,12 @@ comment|/* ignore "rewind started" interrupt */
 case|case
 name|MTER_NOTCAP
 case|:
-name|printf
+name|tprintf
 argument_list|(
+name|sc
+operator|->
+name|sc_ttyp
+argument_list|,
 literal|"mu%d: blank tape\n"
 argument_list|,
 name|MUUNIT
@@ -3638,8 +3682,12 @@ return|;
 case|case
 name|MTER_FPT
 case|:
-name|printf
+name|tprintf
 argument_list|(
+name|sc
+operator|->
+name|sc_ttyp
+argument_list|,
 literal|"mu%d: no write ring\n"
 argument_list|,
 name|MUUNIT
@@ -3711,8 +3759,12 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|printf
+name|tprintf
 argument_list|(
+name|sc
+operator|->
+name|sc_ttyp
+argument_list|,
 literal|"mu%d: offline\n"
 argument_list|,
 name|MUUNIT
@@ -3754,8 +3806,12 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|printf
+name|tprintf
 argument_list|(
+name|sc
+operator|->
+name|sc_ttyp
+argument_list|,
 literal|"mu%d: offline (port selector)\n"
 argument_list|,
 name|MUUNIT
@@ -3801,8 +3857,12 @@ name|done
 goto|;
 comment|/* fall through */
 default|default:
-name|printf
+name|tprintf
 argument_list|(
+name|sc
+operator|->
+name|sc_ttyp
+argument_list|,
 literal|"mu%d: hard error (non data transfer) rn=%d bn=%d er=%o (octal) ds=%b\n"
 argument_list|,
 name|MUUNIT

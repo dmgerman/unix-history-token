@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ht.c	6.3	84/08/29	*/
+comment|/*	ht.c	6.4	85/03/13	*/
 end_comment
 
 begin_include
@@ -97,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|"uio.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tty.h"
 end_include
 
 begin_include
@@ -316,6 +322,12 @@ decl_stmt|;
 name|int
 name|sc_slave
 decl_stmt|;
+name|struct
+name|tty
+modifier|*
+name|sc_ttyp
+decl_stmt|;
+comment|/* record user's tty for errors */
 block|}
 name|tu_softc
 index|[
@@ -796,6 +808,14 @@ operator|->
 name|sc_dens
 operator|=
 name|dens
+expr_stmt|;
+name|sc
+operator|->
+name|sc_ttyp
+operator|=
+name|u
+operator|.
+name|u_ttyp
 expr_stmt|;
 return|return
 operator|(
@@ -2080,8 +2100,12 @@ condition|)
 goto|goto
 name|noprint
 goto|;
-name|printf
+name|tprintf
 argument_list|(
+name|sc
+operator|->
+name|sc_ttyp
+argument_list|,
 literal|"tu%d: hard error bn%d mbsr=%b er=%b ds=%b\n"
 argument_list|,
 name|TUUNIT
@@ -2476,8 +2500,12 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|printf
+name|tprintf
 argument_list|(
+name|sc
+operator|->
+name|sc_ttyp
+argument_list|,
 literal|"tu%d: hard error bn%d er=%b ds=%b\n"
 argument_list|,
 name|TUUNIT
