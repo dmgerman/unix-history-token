@@ -1116,6 +1116,31 @@ begin_comment
 comment|/*  *      const int fd;                           -- open connection end point  *      const u_int sendsize;                   -- max send size  *      const u_int recvsize;                   -- max recv size  */
 end_comment
 
+begin_comment
+comment|/*  * Added for compatibility to old rpc 4.0. Obsoleted by svc_vc_create().  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|SVCXPRT
+modifier|*
+name|svcunix_create
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|u_int
+operator|,
+name|u_int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|extern
 name|SVCXPRT
@@ -1169,6 +1194,28 @@ end_decl_stmt
 begin_comment
 comment|/*  *      const int fd;                           -- open connection end point  *      const u_int sendsize;                   -- max send size  *      const u_int recvsize;                   -- max recv size  */
 end_comment
+
+begin_comment
+comment|/*  * Added for compatibility to old rpc 4.0. Obsoleted by svc_fd_create().  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|SVCXPRT
+modifier|*
+name|svcunixfd_create
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|u_int
+operator|,
+name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Memory based rpc (for speed check and testing)  */

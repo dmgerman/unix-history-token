@@ -1033,6 +1033,37 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Added for compatibility to old rpc 4.0. Obsoleted by clnt_vc_create().  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|CLIENT
+modifier|*
+name|clntunix_create
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|sockaddr_un
+operator|*
+operator|,
+name|u_long
+operator|,
+name|u_long
+operator|,
+name|int
+operator|*
+operator|,
+name|u_int
+operator|,
+name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  *	const int fd;				-- open file descriptor  *	const struct netbuf *svcaddr;		-- servers address  *	const rpcprog_t prog;			-- program number  *	const rpcvers_t vers;			-- version number  *	const u_int sendsz;			-- buffer recv size  *	const u_int recvsz;			-- buffer send size  */
 end_comment
 
