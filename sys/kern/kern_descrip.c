@@ -7989,8 +7989,6 @@ decl_stmt|,
 name|flags
 decl_stmt|,
 name|devnull
-decl_stmt|,
-name|extraref
 decl_stmt|;
 name|fdp
 operator|=
@@ -8011,6 +8009,19 @@ operator|(
 literal|0
 operator|)
 return|;
+name|KASSERT
+argument_list|(
+name|fdp
+operator|->
+name|fd_refcnt
+operator|==
+literal|1
+argument_list|,
+operator|(
+literal|"the fdtable should not be shared"
+operator|)
+argument_list|)
+expr_stmt|;
 name|devnull
 operator|=
 operator|-
@@ -8131,17 +8142,13 @@ literal|0
 condition|)
 block|{
 comment|/* 				 * Someone may have closed the entry in the 				 * file descriptor table, so check it hasn't 				 * changed before dropping the reference count. 				 */
-name|extraref
-operator|=
-literal|0
-expr_stmt|;
 name|FILEDESC_LOCK
 argument_list|(
 name|fdp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|fdp
 operator|->
 name|fd_ofiles
@@ -8150,8 +8157,12 @@ name|fd
 index|]
 operator|==
 name|fp
-condition|)
-block|{
+argument_list|,
+operator|(
+literal|"table not shared, how did it change?"
+operator|)
+argument_list|)
+expr_stmt|;
 name|fdp
 operator|->
 name|fd_ofiles
@@ -8168,11 +8179,6 @@ argument_list|,
 name|fd
 argument_list|)
 expr_stmt|;
-name|extraref
-operator|=
-literal|1
-expr_stmt|;
-block|}
 name|FILEDESC_UNLOCK
 argument_list|(
 name|fdp
@@ -8185,10 +8191,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|extraref
-condition|)
 name|fdrop
 argument_list|(
 name|fp
