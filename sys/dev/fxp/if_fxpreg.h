@@ -127,6 +127,17 @@ begin_comment
 comment|/* mdi control (4 bytes) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FXP_CSR_FLOWCONTROL
+value|0x19
+end_define
+
+begin_comment
+comment|/* flow control (2 bytes) */
+end_comment
+
 begin_comment
 comment|/*  * FOR REFERENCE ONLY, the old definition of FXP_CSR_SCB_RUSCUS:  *  *	volatile u_int8_t	:2,  *				scb_rus:4,  *				scb_cus:2;  */
 end_comment
@@ -228,6 +239,92 @@ directive|define
 name|FXP_SCB_CUS_ACTIVE
 value|2
 end_define
+
+begin_define
+define|#
+directive|define
+name|FXP_SCB_INTR_DISABLE
+value|0x01
+end_define
+
+begin_comment
+comment|/* Disable all interrupts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_SCB_INTR_SWI
+value|0x02
+end_define
+
+begin_comment
+comment|/* Generate SWI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_SCB_INTMASK_FCP
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|FXP_SCB_INTMASK_ER
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|FXP_SCB_INTMASK_RNR
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|FXP_SCB_INTMASK_CNA
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|FXP_SCB_INTMASK_FR
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|FXP_SCB_INTMASK_CXTNO
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|FXP_SCB_STATACK_FCP
+value|0x01
+end_define
+
+begin_comment
+comment|/* Flow Control Pause */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_SCB_STATACK_ER
+value|0x02
+end_define
+
+begin_comment
+comment|/* Early Receive */
+end_comment
 
 begin_define
 define|#
