@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_subr.c,v 1.84 2001/01/18 20:28:22 jdolecek Exp $	*/
+comment|/*	$NetBSD: usb_subr.c,v 1.86 2001/05/16 04:50:11 lukem Exp $	*/
 end_comment
 
 begin_comment
@@ -2493,14 +2493,6 @@ operator|->
 name|bLength
 control|)
 block|{
-name|ed
-operator|=
-operator|(
-name|usb_endpoint_descriptor_t
-operator|*
-operator|)
-name|p
-expr_stmt|;
 name|DPRINTFN
 argument_list|(
 literal|10
