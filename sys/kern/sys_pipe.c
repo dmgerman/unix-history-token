@@ -2889,6 +2889,8 @@ argument_list|(
 name|pmap
 argument_list|,
 name|addr
+argument_list|,
+name|VM_PROT_READ
 argument_list|)
 expr_stmt|;
 if|if
