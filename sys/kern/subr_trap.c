@@ -469,23 +469,15 @@ literal|"ast in kernel mode"
 operator|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|WITNESS
-if|if
-condition|(
-name|witness_list
+name|WITNESS_WARN
 argument_list|(
-name|td
-argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"Returning to user mode with mutex(s) held"
+name|WARN_PANIC
+argument_list|,
+name|NULL
+argument_list|,
+literal|"Returning to user mode"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|mtx_assert
 argument_list|(
 operator|&

@@ -4423,11 +4423,15 @@ name|req
 operator|->
 name|oldptr
 condition|)
-name|WITNESS_SLEEP
+name|WITNESS_WARN
 argument_list|(
-literal|1
+name|WARN_GIANTOK
+operator||
+name|WARN_SLEEPOK
 argument_list|,
 name|NULL
+argument_list|,
+literal|"sysctl_old_user()"
 argument_list|)
 expr_stmt|;
 if|if

@@ -945,9 +945,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|WITNESS_SLEEP
+name|WITNESS_WARN
 argument_list|(
-literal|1
+name|WARN_GIANTOK
+operator||
+name|WARN_SLEEPOK
 argument_list|,
 operator|&
 name|lkp
@@ -955,6 +957,12 @@ operator|->
 name|lk_interlock
 operator|->
 name|mtx_object
+argument_list|,
+literal|"Acquiring lockmgr lock \"%s\""
+argument_list|,
+name|lkp
+operator|->
+name|lk_wmesg
 argument_list|)
 expr_stmt|;
 if|if

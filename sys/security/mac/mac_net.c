@@ -1324,7 +1324,7 @@ value|do {					\ 	mtx_unlock(&mac_policy_list_lock);				\ } while (0)
 end_define
 
 begin_comment
-comment|/*  * We manually invoke WITNESS_SLEEP() to allow Witness to generate  * warnings even if we don't end up ever triggering the wait at  * run-time.  The consumer of the exclusive interface must not hold  * any locks (other than potentially Giant) since we may sleep for  * long (potentially indefinite) periods of time waiting for the  * framework to become quiescent so that a policy list change may  * be made.  */
+comment|/*  * We manually invoke WITNESS_WARN() to allow Witness to generate  * warnings even if we don't end up ever triggering the wait at  * run-time.  The consumer of the exclusive interface must not hold  * any locks (other than potentially Giant) since we may sleep for  * long (potentially indefinite) periods of time waiting for the  * framework to become quiescent so that a policy list change may  * be made.  */
 end_comment
 
 begin_define
@@ -1332,7 +1332,7 @@ define|#
 directive|define
 name|MAC_POLICY_LIST_EXCLUSIVE
 parameter_list|()
-value|do {				\ 	WITNESS_SLEEP(1, NULL);						\ 	mtx_lock(&mac_policy_list_lock);				\ 	while (mac_policy_list_busy != 0)				\ 		cv_wait(&mac_policy_list_not_busy,			\&mac_policy_list_lock);				\ } while (0)
+value|do {				\ 	WITNESS_WARN(WARN_GIANTOK | WARN_SLEEPOK, NULL,			\  	    "mac_policy_list_exclusive() at %s:%d", __FILE__, __LINE__);\ 	mtx_lock(&mac_policy_list_lock);				\ 	while (mac_policy_list_busy != 0)				\ 		cv_wait(&mac_policy_list_not_busy,			\&mac_policy_list_lock);				\ } while (0)
 end_define
 
 begin_define

@@ -7412,9 +7412,11 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|WITNESS_SLEEP
+name|WITNESS_WARN
 argument_list|(
-literal|1
+name|WARN_GIANTOK
+operator||
+name|WARN_SLEEPOK
 argument_list|,
 operator|&
 name|p
@@ -7422,6 +7424,8 @@ operator|->
 name|p_mtx
 operator|.
 name|mtx_object
+argument_list|,
+literal|"Checking for signals"
 argument_list|)
 expr_stmt|;
 for|for

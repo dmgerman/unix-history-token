@@ -512,14 +512,20 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|WITNESS_SLEEP
+name|WITNESS_WARN
 argument_list|(
-literal|0
+name|WARN_GIANTOK
+operator||
+name|WARN_SLEEPOK
 argument_list|,
 operator|&
 name|mtx
 operator|->
 name|mtx_object
+argument_list|,
+literal|"Sleeping on \"%s\""
+argument_list|,
+name|wmesg
 argument_list|)
 expr_stmt|;
 name|KASSERT

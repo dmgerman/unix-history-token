@@ -4327,26 +4327,19 @@ name|protosw
 modifier|*
 name|pr
 decl_stmt|;
-comment|/*  * XXX: Argh, we almost always trip here with witness turned on now-a-days  * XXX: because we often come in with Giant held. For now, there's no way  * XXX: to avoid this.  */
-ifdef|#
-directive|ifdef
-name|WITNESS
-name|KASSERT
+name|WITNESS_WARN
 argument_list|(
-name|witness_list
-argument_list|(
-name|curthread
-argument_list|)
-operator|==
-literal|0
+name|WARN_GIANTOK
+operator||
+name|WARN_SLEEPOK
+operator||
+name|WARN_PANIC
 argument_list|,
-operator|(
-literal|"mb_reclaim() called with locks held"
-operator|)
+name|NULL
+argument_list|,
+literal|"mb_reclaim()"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|mbstat
 operator|.
 name|m_drain

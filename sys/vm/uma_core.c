@@ -4865,11 +4865,19 @@ literal|"malloc(M_WAITOK) in interrupt context"
 operator|)
 argument_list|)
 expr_stmt|;
-name|WITNESS_SLEEP
+name|WITNESS_WARN
 argument_list|(
-literal|1
+name|WARN_GIANTOK
+operator||
+name|WARN_SLEEPOK
 argument_list|,
 name|NULL
+argument_list|,
+literal|"malloc() of \"%s\""
+argument_list|,
+name|zone
+operator|->
+name|uz_name
 argument_list|)
 expr_stmt|;
 block|}

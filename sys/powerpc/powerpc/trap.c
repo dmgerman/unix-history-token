@@ -2218,20 +2218,13 @@ argument_list|,
 name|code
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|WITNESS
-if|if
-condition|(
-name|witness_list
+name|WITNESS_WARN
 argument_list|(
-name|td
-argument_list|)
-condition|)
-block|{
-name|panic
-argument_list|(
-literal|"system call %s returning with mutex(s) held\n"
+name|WARN_PANIC
+argument_list|,
+name|NULL
+argument_list|,
+literal|"System call %s returning"
 argument_list|,
 name|syscallnames
 index|[
@@ -2239,9 +2232,6 @@ name|code
 index|]
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|mtx_assert
 argument_list|(
 operator|&
