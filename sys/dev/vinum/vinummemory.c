@@ -150,7 +150,7 @@ name|jb
 operator|->
 name|jb_esp
 operator|<
-literal|0xd0000000
+literal|0xc0000000
 operator|)
 operator|||
 operator|(
@@ -158,7 +158,7 @@ name|jb
 operator|->
 name|jb_ebp
 operator|<
-literal|0xd0000000
+literal|0xc0000000
 operator|)
 operator|||
 operator|(
@@ -166,7 +166,7 @@ name|jb
 operator|->
 name|jb_eip
 operator|<
-literal|0xe0000000
+literal|0xc0000000
 operator|)
 condition|)
 name|panic
@@ -181,6 +181,50 @@ argument_list|,
 name|retval
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* find the base name of a path name */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|basename
+parameter_list|(
+name|char
+modifier|*
+name|file
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|f
+init|=
+name|rindex
+argument_list|(
+name|file
+argument_list|,
+literal|'/'
+argument_list|)
+decl_stmt|;
+comment|/* chop off dirname if present */
+if|if
+condition|(
+name|f
+operator|==
+name|NULL
+condition|)
+return|return
+name|file
+return|;
+else|else
+return|return
+operator|++
+name|f
+return|;
+comment|/* skip the / */
 block|}
 end_function
 
@@ -545,29 +589,11 @@ name|char
 modifier|*
 name|f
 init|=
-name|rindex
+name|basename
 argument_list|(
 name|file
-argument_list|,
-literal|'/'
 argument_list|)
 decl_stmt|;
-comment|/* chop off dirname if present */
-if|if
-condition|(
-name|f
-operator|==
-name|NULL
-condition|)
-name|f
-operator|=
-name|file
-expr_stmt|;
-else|else
-name|f
-operator|++
-expr_stmt|;
-comment|/* skip the / */
 name|i
 operator|=
 name|malloccount
@@ -1033,14 +1059,11 @@ name|unsigned
 name|int
 name|ent
 init|=
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
-name|data
+name|m
+operator|->
+name|seq
 decl_stmt|;
-comment|/* 1st word is index */
+comment|/* index of entry to return */
 if|if
 condition|(
 name|ent
