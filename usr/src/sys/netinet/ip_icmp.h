@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_icmp.h	6.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_icmp.h	6.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -107,6 +107,12 @@ struct|;
 name|u_long
 name|id_mask
 decl_stmt|;
+name|char
+name|id_data
+index|[
+literal|1
+index|]
+decl_stmt|;
 block|}
 name|icmp_dun
 union|;
@@ -130,6 +136,10 @@ define|#
 directive|define
 name|icmp_mask
 value|icmp_dun.id_mask
+define|#
+directive|define
+name|icmp_data
+value|icmp_dun.id_data
 block|}
 struct|;
 end_struct
