@@ -944,6 +944,7 @@ name|DEBUG
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|u_char
 name|linux_debug_map
 index|[
@@ -961,6 +962,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|int
 name|linux_debug
 parameter_list|(
