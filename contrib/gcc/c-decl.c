@@ -1063,6 +1063,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Nonzero means do not warn that K&R style main() is not a function prototype.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|flag_bsd_no_warn_kr_main
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Nonzero means warn for non-prototype function decls    or non-prototyped defs without previous prototype.  */
 end_comment
 
@@ -1551,6 +1561,10 @@ name|flag_bsd_format
 operator|=
 literal|0
 expr_stmt|;
+name|flag_bsd_no_warn_kr_main
+operator|=
+literal|0
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -1640,6 +1654,10 @@ name|flag_bsd_format
 operator|=
 literal|0
 expr_stmt|;
+name|flag_bsd_no_warn_kr_main
+operator|=
+literal|0
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -1682,6 +1700,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|flag_bsd_format
+operator|=
+literal|0
+expr_stmt|;
+name|flag_bsd_no_warn_kr_main
 operator|=
 literal|0
 expr_stmt|;
@@ -1738,6 +1760,10 @@ name|flag_bsd_format
 operator|=
 literal|0
 expr_stmt|;
+name|flag_bsd_no_warn_kr_main
+operator|=
+literal|0
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -1784,6 +1810,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|flag_bsd_format
+operator|=
+literal|1
+expr_stmt|;
+name|flag_bsd_no_warn_kr_main
 operator|=
 literal|1
 expr_stmt|;
@@ -23984,6 +24014,26 @@ name|old_decl
 argument_list|)
 operator|)
 operator|)
+operator|)
+operator|&&
+operator|!
+operator|(
+name|flag_bsd_no_warn_kr_main
+operator|&&
+literal|0
+operator|==
+name|strcmp
+argument_list|(
+literal|"main"
+argument_list|,
+name|IDENTIFIER_POINTER
+argument_list|(
+name|DECL_NAME
+argument_list|(
+name|decl1
+argument_list|)
+argument_list|)
+argument_list|)
 operator|)
 condition|)
 name|warning
