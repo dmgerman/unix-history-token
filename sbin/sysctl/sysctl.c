@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: sysctl.c,v 1.15 1997/10/20 12:53:54 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -775,6 +775,10 @@ literal|"oid '%s' is type %d,"
 literal|" cannot set that"
 argument_list|,
 name|bufp
+argument_list|,
+name|kind
+operator|&
+name|CTLTYPE
 argument_list|)
 expr_stmt|;
 block|}
