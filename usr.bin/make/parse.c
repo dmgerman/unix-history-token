@@ -4618,6 +4618,18 @@ argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
+else|else
+name|Parse_Error
+argument_list|(
+name|PARSE_WARNING
+argument_list|,
+literal|"duplicate script for target \"%s\" ignored"
+argument_list|,
+name|gn
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
