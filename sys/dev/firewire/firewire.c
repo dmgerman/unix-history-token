@@ -2724,7 +2724,7 @@ name|UID_ROOT
 argument_list|,
 name|GID_OPERATOR
 argument_list|,
-literal|0770
+literal|0660
 argument_list|,
 literal|"fw%x"
 argument_list|,
@@ -2790,7 +2790,7 @@ name|UID_ROOT
 argument_list|,
 name|GID_OPERATOR
 argument_list|,
-literal|0770
+literal|0660
 argument_list|,
 literal|"fwmem%d"
 argument_list|,

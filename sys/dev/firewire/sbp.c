@@ -8807,7 +8807,7 @@ name|ccb_h
 operator|.
 name|status
 init|=
-name|CAM_TID_INVALID
+name|CAM_DEV_NOT_THERE
 decl_stmt|;
 name|xpt_done
 argument_list|(
@@ -8883,7 +8883,7 @@ name|ccb_h
 operator|.
 name|status
 init|=
-name|CAM_TID_INVALID
+name|CAM_DEV_NOT_THERE
 decl_stmt|;
 name|xpt_done
 argument_list|(
