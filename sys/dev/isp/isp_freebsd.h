@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp_freebsd.h,v 1.9.2.1 1999/05/11 05:57:24 mjacob Exp $ */
+comment|/* $Id: isp_freebsd.h,v 1.9.2.2 1999/07/03 01:47:14 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_6_2_99 */
+comment|/* release_6_5_99 */
 end_comment
 
 begin_comment
@@ -180,7 +180,7 @@ begin_define
 define|#
 directive|define
 name|ISP2100_SCRLEN
-value|0x1000
+value|0x100
 end_define
 
 begin_endif
