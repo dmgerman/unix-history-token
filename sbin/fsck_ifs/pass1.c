@@ -485,7 +485,18 @@ operator|<
 name|dp
 operator|->
 name|di_size
-comment|/* || 	    (mode == IFDIR&& dp->di_size> MAXDIRSIZE) */
+operator|||
+operator|(
+name|mode
+operator|==
+name|IFDIR
+operator|&&
+name|dp
+operator|->
+name|di_size
+operator|>
+name|MAXDIRSIZE
+operator|)
 condition|)
 block|{
 if|if
