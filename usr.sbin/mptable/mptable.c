@@ -1196,10 +1196,6 @@ decl_stmt|;
 name|int
 name|defaultConfig
 decl_stmt|;
-specifier|extern
-name|int
-name|optreset
-decl_stmt|;
 name|int
 name|ch
 decl_stmt|;
