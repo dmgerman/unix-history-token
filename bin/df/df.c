@@ -105,7 +105,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<inttypes.h>
+file|<stdint.h>
 end_include
 
 begin_include
@@ -286,22 +286,22 @@ begin_struct
 struct|struct
 name|maxwidths
 block|{
-name|size_t
+name|int
 name|mntfrom
 decl_stmt|;
-name|size_t
+name|int
 name|total
 decl_stmt|;
-name|size_t
+name|int
 name|used
 decl_stmt|;
-name|size_t
+name|int
 name|avail
 decl_stmt|;
-name|size_t
+name|int
 name|iused
 decl_stmt|;
-name|size_t
+name|int
 name|ifree
 decl_stmt|;
 block|}
@@ -419,7 +419,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|size_t
+name|int
 name|int64width
 parameter_list|(
 name|int64_t
@@ -540,13 +540,13 @@ end_function_decl
 begin_function
 specifier|static
 name|__inline
-name|u_int
-name|max
+name|int
+name|imax
 parameter_list|(
-name|u_int
+name|int
 name|a
 parameter_list|,
-name|u_int
+name|int
 name|b
 parameter_list|)
 block|{
@@ -1894,12 +1894,15 @@ name|mwp
 operator|->
 name|mntfrom
 operator|=
-name|max
+name|imax
 argument_list|(
 name|mwp
 operator|->
 name|mntfrom
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 literal|"Filesystem"
@@ -1927,6 +1930,9 @@ name|mwp
 operator|->
 name|avail
 operator|=
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|header
@@ -1950,15 +1956,12 @@ name|mwp
 operator|->
 name|total
 operator|=
-name|max
+name|imax
 argument_list|(
 name|mwp
 operator|->
 name|total
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|headerlen
 argument_list|)
 expr_stmt|;
@@ -1967,12 +1970,15 @@ name|mwp
 operator|->
 name|used
 operator|=
-name|max
+name|imax
 argument_list|(
 name|mwp
 operator|->
 name|used
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 literal|"Used"
@@ -1983,12 +1989,15 @@ name|mwp
 operator|->
 name|avail
 operator|=
-name|max
+name|imax
 argument_list|(
 name|mwp
 operator|->
 name|avail
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 literal|"Avail"
@@ -2002,36 +2011,24 @@ name|printf
 argument_list|(
 literal|"%-*s %-*s %*s %*s Capacity"
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|mwp
 operator|->
 name|mntfrom
 argument_list|,
 literal|"Filesystem"
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|mwp
 operator|->
 name|total
 argument_list|,
 name|header
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|mwp
 operator|->
 name|used
 argument_list|,
 literal|"Used"
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|mwp
 operator|->
 name|avail
@@ -2048,12 +2045,15 @@ name|mwp
 operator|->
 name|iused
 operator|=
-name|max
+name|imax
 argument_list|(
 name|mwp
 operator|->
 name|iused
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 literal|"  iused"
@@ -2064,12 +2064,15 @@ name|mwp
 operator|->
 name|ifree
 operator|=
-name|max
+name|imax
 argument_list|(
 name|mwp
 operator|->
 name|ifree
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 literal|"ifree"
@@ -2083,9 +2086,6 @@ name|printf
 argument_list|(
 literal|" %*s %*s %%iused"
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|mwp
 operator|->
 name|iused
@@ -2094,9 +2094,6 @@ literal|2
 argument_list|,
 literal|"iused"
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|mwp
 operator|->
 name|ifree
@@ -2121,9 +2118,6 @@ name|printf
 argument_list|(
 literal|"%-*s"
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|mwp
 operator|->
 name|mntfrom
@@ -2173,9 +2167,6 @@ name|printf
 argument_list|(
 literal|" %*jd %*jd %*jd"
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|mwp
 operator|->
 name|total
@@ -2196,9 +2187,6 @@ argument_list|,
 name|blocksize
 argument_list|)
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|mwp
 operator|->
 name|used
@@ -2217,9 +2205,6 @@ argument_list|,
 name|blocksize
 argument_list|)
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|mwp
 operator|->
 name|avail
@@ -2294,9 +2279,6 @@ name|printf
 argument_list|(
 literal|" %*jd %*jd %4.0f%% "
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|mwp
 operator|->
 name|iused
@@ -2306,9 +2288,6 @@ name|intmax_t
 operator|)
 name|used
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|mwp
 operator|->
 name|ifree
@@ -2413,12 +2392,15 @@ name|mwp
 operator|->
 name|mntfrom
 operator|=
-name|max
+name|imax
 argument_list|(
 name|mwp
 operator|->
 name|mntfrom
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|sfsp
@@ -2431,7 +2413,7 @@ name|mwp
 operator|->
 name|total
 operator|=
-name|max
+name|imax
 argument_list|(
 name|mwp
 operator|->
@@ -2461,7 +2443,7 @@ name|mwp
 operator|->
 name|used
 operator|=
-name|max
+name|imax
 argument_list|(
 name|mwp
 operator|->
@@ -2498,7 +2480,7 @@ name|mwp
 operator|->
 name|avail
 operator|=
-name|max
+name|imax
 argument_list|(
 name|mwp
 operator|->
@@ -2525,7 +2507,7 @@ name|mwp
 operator|->
 name|iused
 operator|=
-name|max
+name|imax
 argument_list|(
 name|mwp
 operator|->
@@ -2550,7 +2532,7 @@ name|mwp
 operator|->
 name|ifree
 operator|=
-name|max
+name|imax
 argument_list|(
 name|mwp
 operator|->
@@ -2568,19 +2550,19 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return the width in characters of the specified long. */
+comment|/* Return the width in characters of the specified value. */
 end_comment
 
 begin_function
 specifier|static
-name|size_t
+name|int
 name|int64width
 parameter_list|(
 name|int64_t
 name|val
 parameter_list|)
 block|{
-name|size_t
+name|int
 name|len
 decl_stmt|;
 name|len
