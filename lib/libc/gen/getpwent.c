@@ -2461,6 +2461,12 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|endgrent
+argument_list|()
+expr_stmt|;
+name|endnetgrent
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
