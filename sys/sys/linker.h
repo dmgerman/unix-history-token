@@ -215,6 +215,13 @@ argument_list|)
 name|modules
 expr_stmt|;
 comment|/* modules in this file */
+name|TAILQ_ENTRY
+argument_list|(
+argument|linker_file
+argument_list|)
+name|loaded
+expr_stmt|;
+comment|/* preload dependency support */
 block|}
 struct|;
 end_struct
@@ -259,17 +266,6 @@ comment|/* list of all file classes */
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/*  * The file which is currently loading.  Used to register modules with  * the files which contain them.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|linker_file_t
-name|linker_current_file
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * The "file" for the kernel.  */
@@ -419,18 +415,15 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Search the linker path for the module.  Return the full pathname in  * a malloc'ed buffer.  */
+comment|/*  * This routine is responsible for finding dependencies of userland  * initiated kldload(2)'s of files.  */
 end_comment
 
 begin_function_decl
-name|char
-modifier|*
-name|linker_search_path
+name|int
+name|linker_load_dependancies
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|filename
+name|linker_file_t
+name|lf
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -63,16 +63,17 @@ directive|include
 file|<sys/proc.h>
 end_include
 
-begin_define
-define|#
-directive|define
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
 name|M_MODULE
-value|M_TEMP
-end_define
-
-begin_comment
-comment|/* XXX */
-end_comment
+argument_list|,
+literal|"module"
+argument_list|,
+literal|"module data structures"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_typedef
 typedef|typedef
@@ -338,57 +339,15 @@ name|mod
 operator|==
 name|NULL
 condition|)
-block|{
-if|#
-directive|if
-literal|0
-block|panic("module_register_init: module named %s not found\n", data->name);
-else|#
-directive|else
-comment|/* temporary kludge until kernel `file' attachment registers modules */
-name|error
-operator|=
-name|module_register
-argument_list|(
-name|data
-argument_list|,
-name|linker_kernel_file
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
 name|panic
 argument_list|(
-literal|"module_register_init: register of module failed! %d"
+literal|"module_register_init: module named %s not found\n"
 argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
-name|mod
-operator|=
-name|module_lookupbyname
-argument_list|(
 name|data
 operator|->
 name|name
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mod
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"module_register_init: module STILL not found!"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
 name|error
 operator|=
 name|MOD_EVENT
@@ -616,16 +575,6 @@ name|newmod
 argument_list|,
 name|link
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|container
-operator|==
-name|NULL
-condition|)
-name|container
-operator|=
-name|linker_current_file
 expr_stmt|;
 if|if
 condition|(

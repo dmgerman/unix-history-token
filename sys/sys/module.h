@@ -15,6 +15,61 @@ directive|define
 name|_SYS_MODULE_H_
 end_define
 
+begin_comment
+comment|/*  * Module metadata types  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MDT_DEPEND
+value|1
+end_define
+
+begin_comment
+comment|/* argument is a module name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MDT_MODULE
+value|2
+end_define
+
+begin_comment
+comment|/* module declaration */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MDT_VERSION
+value|3
+end_define
+
+begin_comment
+comment|/* module version(s) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MDT_STRUCT_VERSION
+value|1
+end_define
+
+begin_comment
+comment|/* version of metadata structure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MDT_SETNAME
+value|"modmetadata_set"
+end_define
+
 begin_typedef
 typedef|typedef
 enum|enum
@@ -115,11 +170,115 @@ name|modspecific_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*  * Module dependency declarartion  */
+end_comment
+
+begin_struct
+struct|struct
+name|mod_depend
+block|{
+name|int
+name|md_ver_minimum
+decl_stmt|;
+name|int
+name|md_ver_preferred
+decl_stmt|;
+name|int
+name|md_ver_maximum
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Module version declaration  */
+end_comment
+
+begin_struct
+struct|struct
+name|mod_version
+block|{
+name|int
+name|mv_version
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|mod_metadata
+block|{
+name|int
+name|md_version
+decl_stmt|;
+comment|/* structure version MDTV_* */
+name|int
+name|md_type
+decl_stmt|;
+comment|/* type of entry MDT_* */
+name|void
+modifier|*
+name|md_data
+decl_stmt|;
+comment|/* specific data */
+name|char
+modifier|*
+name|md_cval
+decl_stmt|;
+comment|/* common string label */
+block|}
+struct|;
+end_struct
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/linker_set.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|MODULE_METADATA
+parameter_list|(
+name|uniquifier
+parameter_list|,
+name|type
+parameter_list|,
+name|data
+parameter_list|,
+name|cval
+parameter_list|)
+define|\
+value|static struct mod_metadata _mod_metadata ## uniquifier = {	\ 	MDT_STRUCT_VERSION,				\ 	type,						\ 	data,						\ 	cval						\     };							\     DATA_SET(modmetadata_set, _mod_metadata ## uniquifier)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MODULE_DEPEND
+parameter_list|(
+name|module
+parameter_list|,
+name|mdepend
+parameter_list|,
+name|vmin
+parameter_list|,
+name|vpref
+parameter_list|,
+name|vmax
+parameter_list|)
+define|\
+value|static struct mod_depend _ ##module ## _depend_on_ ## mdepend = {	\ 	vmin,					\ 	vpref,					\ 	vmax					\     };						\     MODULE_METADATA(_md_ ##module ## _on_ ##mdepend, MDT_DEPEND, \&_ ##module ## _depend_on_ ##mdepend, #mdepend)
+end_define
 
 begin_define
 define|#
@@ -135,7 +294,20 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|SYSINIT(name##module, sub, order, module_register_init,&data) \     struct __hack
+value|MODULE_METADATA(_md_ ##name, MDT_MODULE,&data, #name); \     SYSINIT(name##module, sub, order, module_register_init,&data) \     struct __hack
+end_define
+
+begin_define
+define|#
+directive|define
+name|MODULE_VERSION
+parameter_list|(
+name|module
+parameter_list|,
+name|version
+parameter_list|)
+define|\
+value|static struct mod_version _ ## module ## _version = {	\ 	version							\     };								\     MODULE_METADATA(_ ## module ## _version, MDT_VERSION, 	\& _ ## module ## _version, #module)
 end_define
 
 begin_function_decl
