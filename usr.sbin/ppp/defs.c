@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: defs.c,v 1.2 1997/11/11 22:58:10 brian Exp $  */
+comment|/*  * $Id: defs.c,v 1.3 1997/11/17 00:42:38 brian Exp $  */
 end_comment
 
 begin_include
@@ -288,6 +288,65 @@ expr_stmt|;
 return|return
 literal|1
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|DropClient
+parameter_list|()
+block|{
+name|FILE
+modifier|*
+name|oVarTerm
+decl_stmt|;
+if|if
+condition|(
+name|VarTerm
+operator|&&
+operator|!
+operator|(
+name|mode
+operator|&
+name|MODE_INTER
+operator|)
+condition|)
+block|{
+name|oVarTerm
+operator|=
+name|VarTerm
+expr_stmt|;
+name|VarTerm
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|oVarTerm
+condition|)
+name|fclose
+argument_list|(
+name|oVarTerm
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|netfd
+argument_list|)
+expr_stmt|;
+name|netfd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|LogPrintf
+argument_list|(
+name|LogPHASE
+argument_list|,
+literal|"Client connection closed.\n"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
