@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * the UCLA Ficus project.  *  * %sccs.include.redist.c%  *  *	@(#)umap_vfsops.c	8.6 (Berkeley) %G%  *  * @(#)null_vfsops.c       1.5 (Berkeley) 7/10/92  */
+comment|/*  * Copyright (c) 1992, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * the UCLA Ficus project.  *  * %sccs.include.redist.c%  *  *	@(#)umap_vfsops.c	8.7 (Berkeley) %G%  *  * @(#)null_vfsops.c       1.5 (Berkeley) 7/10/92  */
 end_comment
 
 begin_comment
@@ -895,11 +895,9 @@ name|umapm_rootvp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * And blow it away for future re-use 	 */
-name|VOP_REVOKE
+name|vgone
 argument_list|(
 name|umapm_rootvp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Finally, throw away the umap_mount structure 	 */

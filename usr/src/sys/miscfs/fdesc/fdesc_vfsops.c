@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vfsops.c	8.8 (Berkeley) %G%  *  * $Id: fdesc_vfsops.c,v 1.9 1993/04/06 15:28:33 jsp Exp $  */
+comment|/*  * Copyright (c) 1992, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vfsops.c	8.9 (Berkeley) %G%  *  * $Id: fdesc_vfsops.c,v 1.9 1993/04/06 15:28:33 jsp Exp $  */
 end_comment
 
 begin_comment
@@ -425,11 +425,9 @@ name|rootvp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * And blow it away for future re-use 	 */
-name|VOP_REVOKE
+name|vgone
 argument_list|(
 name|rootvp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Finally, throw away the fdescmount structure 	 */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, 1995 Jan-Simon Pendry  * Copyright (c) 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_vnops.c	8.15 (Berkeley) %G%  *  * From:  *	$Id: procfs_vnops.c,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
+comment|/*  * Copyright (c) 1993, 1995 Jan-Simon Pendry  * Copyright (c) 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_vnops.c	8.16 (Berkeley) %G%  *  * From:  *	$Id: procfs_vnops.c,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
 end_comment
 
 begin_comment
@@ -652,7 +652,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * _inactive is called when the pfsnode  * is vrele'd and the reference count goes  * to zero.  (vp) will be on the vnode free  * list, so to get it back vget() must be  * used.  *  * for procfs, check if the process is still  * alive and if it isn't then just throw away  * the vnode by calling VOP_REVOKE().  this may  * be overkill and a waste of time since the  * chances are that the process will still be  * there and PFIND is not free.  *  * (vp) is not locked on entry or exit.  */
+comment|/*  * _inactive is called when the pfsnode  * is vrele'd and the reference count goes  * to zero.  (vp) will be on the vnode free  * list, so to get it back vget() must be  * used.  *  * for procfs, check if the process is still  * alive and if it isn't then just throw away  * the vnode by calling vgone().  this may  * be overkill and a waste of time since the  * chances are that the process will still be  * there and PFIND is not free.  *  * (vp) is not locked on entry or exit.  */
 end_comment
 
 begin_macro
@@ -696,7 +696,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|VOP_REVOKE
+name|vgone
 argument_list|(
 name|ap
 operator|->

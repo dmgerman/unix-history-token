@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)portal_vfsops.c	8.9 (Berkeley) %G%  *  * $Id: portal_vfsops.c,v 1.5 1992/05/30 10:25:27 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)portal_vfsops.c	8.10 (Berkeley) %G%  *  * $Id: portal_vfsops.c,v 1.5 1992/05/30 10:25:27 jsp Exp jsp $  */
 end_comment
 
 begin_comment
@@ -702,11 +702,9 @@ name|rootvp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * And blow it away for future re-use 	 */
-name|VOP_REVOKE
+name|vgone
 argument_list|(
 name|rootvp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Shutdown the socket.  This will cause the select in the 	 * daemon to wake up, and then the accept will get ECONNABORTED 	 * which it interprets as a request to go and bury itself. 	 */
