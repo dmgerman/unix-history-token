@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.22	%G%	*/
+comment|/*	conf.c	4.23	%G%	*/
 end_comment
 
 begin_include
@@ -297,6 +297,9 @@ argument_list|()
 decl_stmt|,
 name|rkdump
 argument_list|()
+decl_stmt|,
+name|rkreset
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -337,6 +340,13 @@ begin_define
 define|#
 directive|define
 name|rkdump
+value|nodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|rkreset
 value|nodev
 end_define
 
@@ -1661,7 +1671,7 @@ name|nodev
 block|,
 name|nodev
 block|,
-name|nulldev
+name|rkreset
 block|,
 literal|0
 block|,
