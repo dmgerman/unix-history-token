@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)gmon.h	7.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)gmon.h	7.3 (Berkeley) %G%  */
+end_comment
+
+begin_comment
+comment|/*  * This structure must agree with that defined in lib/csu.gmon/gmon.h  */
 end_comment
 
 begin_struct
@@ -18,9 +22,28 @@ decl_stmt|;
 name|int
 name|ncnt
 decl_stmt|;
+name|int
+name|version
+decl_stmt|;
+name|int
+name|profrate
+decl_stmt|;
+name|int
+name|spare
+index|[
+literal|3
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|GMONVERSION
+value|0x00051879
+end_define
 
 begin_comment
 comment|/*      *	histogram counters are unsigned shorts (according to the kernel).      */
