@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.40 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.41 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.40 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.41 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -576,9 +576,19 @@ literal|0
 operator|&&
 name|InChild
 condition|)
+block|{
+name|QuickAbort
+operator|=
+name|FALSE
+expr_stmt|;
+name|SuprErrs
+operator|=
+name|TRUE
+expr_stmt|;
 name|finis
 argument_list|()
 expr_stmt|;
+block|}
 name|QuickAbort
 operator|=
 name|FALSE
@@ -1134,9 +1144,19 @@ if|if
 condition|(
 name|InChild
 condition|)
+block|{
+name|QuickAbort
+operator|=
+name|FALSE
+expr_stmt|;
+name|SuprErrs
+operator|=
+name|TRUE
+expr_stmt|;
 name|finis
 argument_list|()
 expr_stmt|;
+block|}
 break|break;
 block|}
 name|QuickAbort
