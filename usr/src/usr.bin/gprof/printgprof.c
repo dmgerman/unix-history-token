@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)printgprof.c	1.3 (Berkeley) %G%"
+literal|"@(#)printgprof.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -647,10 +647,6 @@ decl_stmt|;
 name|nltype
 modifier|*
 name|parentp
-decl_stmt|;
-name|nltype
-modifier|*
-name|childp
 decl_stmt|;
 comment|/* 	 *	Now, sort by time + childtime. 	 *	include the cycle headers hiding out past nl[nname]. 	 *	don't include the dummy hiding at nl[nname]. 	 */
 name|timesortnlp
@@ -1358,18 +1354,18 @@ if|if
 condition|(
 name|selfp
 operator|->
-name|index
+name|cycleno
 operator|!=
 literal|0
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\t[%d]"
+literal|"\t<cycle %d>"
 argument_list|,
 name|selfp
 operator|->
-name|index
+name|cycleno
 argument_list|)
 expr_stmt|;
 block|}
@@ -1377,18 +1373,18 @@ if|if
 condition|(
 name|selfp
 operator|->
-name|cycleno
+name|index
 operator|!=
 literal|0
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"<cycle %d>"
+literal|" [%d]"
 argument_list|,
 name|selfp
 operator|->
-name|cycleno
+name|index
 argument_list|)
 expr_stmt|;
 block|}
@@ -2016,7 +2012,7 @@ comment|/*      *	major sort is on time + childtime,      *	next is sort on ncal
 end_comment
 
 begin_function
-name|long
+name|int
 name|membercmp
 parameter_list|(
 name|this
