@@ -237,7 +237,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CPU_4
+name|CPU_P4
 value|16
 end_define
 
