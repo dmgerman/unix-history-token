@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	5.32 (Berkeley) %G%"
+literal|"@(#)envelope.c	5.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1153,11 +1153,13 @@ name|sprintf
 argument_list|(
 name|tbuf
 argument_list|,
-literal|"%02d%02d%02d%02d%02d"
+literal|"%04d%02d%02d%02d%02d"
 argument_list|,
 name|tm
 operator|->
 name|tm_year
+operator|+
+literal|1900
 argument_list|,
 name|tm
 operator|->
