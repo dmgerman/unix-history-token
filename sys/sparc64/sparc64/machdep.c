@@ -279,6 +279,10 @@ name|__globaldata
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * This needs not be aligned as the other user areas, provided that process 0  * does not have an fp state (which it doesn't normally).  * This constraint is only here for debugging.  */
+end_comment
+
 begin_decl_stmt
 name|char
 name|user0
@@ -287,6 +291,15 @@ name|UPAGES
 operator|*
 name|PAGE_SIZE
 index|]
+name|__attribute__
+argument_list|(
+operator|(
+name|aligned
+argument_list|(
+literal|64
+argument_list|)
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -1400,6 +1413,12 @@ name|p_frame
 operator|=
 name|tf
 expr_stmt|;
+name|tf
+operator|->
+name|tf_tstate
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Initialize the per-cpu pointer so we can set curproc. 	 */
 name|globaldata
 operator|=
@@ -1708,6 +1727,47 @@ name|u_long
 name|ps_strings
 parameter_list|)
 block|{
+name|struct
+name|pcb
+modifier|*
+name|pcb
+decl_stmt|;
+name|pcb
+operator|=
+operator|&
+name|p
+operator|->
+name|p_addr
+operator|->
+name|u_pcb
+expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
+name|fp_init_pcb
+argument_list|(
+name|pcb
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
+name|p
+operator|->
+name|p_frame
+operator|->
+name|tf_tstate
+operator|&=
+operator|~
+name|TSTATE_PEF
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 name|TODO
 expr_stmt|;
 block|}

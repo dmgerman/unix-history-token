@@ -15,10 +15,30 @@ directive|define
 name|_MACHINE_PCB_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<machine/fp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/pstate.h>
+end_include
+
+begin_comment
+comment|/* NOTE: pcb_fpstate must be aligned on a 64 byte boundary. */
+end_comment
+
 begin_struct
 struct|struct
 name|pcb
 block|{
+name|struct
+name|fpstate
+name|pcb_fpstate
+decl_stmt|;
 name|u_long
 name|pcb_fp
 decl_stmt|;

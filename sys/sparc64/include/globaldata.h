@@ -56,11 +56,6 @@ decl_stmt|;
 name|struct
 name|proc
 modifier|*
-name|gd_fpcurproc
-decl_stmt|;
-name|struct
-name|proc
-modifier|*
 name|gd_idleproc
 decl_stmt|;
 name|u_int

@@ -964,6 +964,16 @@ name|virtual_avail
 operator|+=
 name|PAGE_SIZE
 expr_stmt|;
+comment|/* 	 * Set the secondary context to be the kernel context (needed for 	 * fp block operations in the kernel). 	 */
+name|stxa
+argument_list|(
+name|AA_DMMU_SCXR
+argument_list|,
+name|ASI_DMMU
+argument_list|,
+name|TLB_CTX_KERNEL
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
