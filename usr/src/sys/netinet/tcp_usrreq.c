@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_usrreq.c 1.21 81/10/31 */
+comment|/* tcp_usrreq.c 1.22 81/10/31 */
 end_comment
 
 begin_include
@@ -2265,10 +2265,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_comment
-comment|/* BETTER VERSION OF THIS ROUTINE? */
-end_comment
-
 begin_expr_stmt
 name|tcp_prt
 argument_list|(
@@ -2291,11 +2287,83 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"TCP(%x) %s x %s"
+literal|"%x "
 argument_list|,
+operator|(
+operator|(
+name|int
+operator|)
 name|tdp
 operator|->
 name|td_tcb
+operator|)
+operator|&
+literal|0xffffff
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tdp
+operator|->
+name|td_inp
+operator|==
+name|INSEND
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"SEND #%x"
+argument_list|,
+name|tdp
+operator|->
+name|td_sno
+argument_list|)
+expr_stmt|;
+name|tdp
+operator|->
+name|td_lno
+operator|=
+name|ntohs
+argument_list|(
+name|tdp
+operator|->
+name|td_lno
+argument_list|)
+expr_stmt|;
+name|tdp
+operator|->
+name|td_wno
+operator|=
+name|ntohs
+argument_list|(
+name|tdp
+operator|->
+name|td_wno
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|tdp
+operator|->
+name|td_inp
+operator|==
+name|INRECV
+condition|)
+name|printf
+argument_list|(
+literal|"RCV #%x "
+argument_list|,
+name|tdp
+operator|->
+name|td_sno
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s.%s"
 argument_list|,
 name|tcpstates
 index|[
@@ -2334,7 +2402,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" --> %s"
+literal|" -> %s"
 argument_list|,
 name|tcpstates
 index|[
@@ -2356,53 +2424,134 @@ name|td_old
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* GROSS... DEPENDS ON SIGN EXTENSION OF CHARACTERS */
 if|if
 condition|(
 name|tdp
 operator|->
 name|td_new
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 name|printf
 argument_list|(
 literal|" (FAILED)"
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* GROSS... DEPENDS ON SIGN EXTENSION OF CHARACTERS */
 if|if
 condition|(
 name|tdp
 operator|->
-name|td_sno
+name|td_lno
 condition|)
-block|{
 name|printf
 argument_list|(
-literal|" sno %x ano %x win %d len %d flags %x"
-argument_list|,
-name|tdp
-operator|->
-name|td_sno
-argument_list|,
-name|tdp
-operator|->
-name|td_ano
-argument_list|,
-name|tdp
-operator|->
-name|td_wno
+literal|" len=%d"
 argument_list|,
 name|tdp
 operator|->
 name|td_lno
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tdp
+operator|->
+name|td_wno
+condition|)
+name|printf
+argument_list|(
+literal|" win=%d"
 argument_list|,
 name|tdp
 operator|->
-name|td_flg
+name|td_wno
 argument_list|)
 expr_stmt|;
-block|}
+if|if
+condition|(
+name|tdp
+operator|->
+name|td_flg
+operator|&
+name|TH_FIN
+condition|)
+name|printf
+argument_list|(
+literal|" FIN"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tdp
+operator|->
+name|td_flg
+operator|&
+name|TH_SYN
+condition|)
+name|printf
+argument_list|(
+literal|" SYN"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tdp
+operator|->
+name|td_flg
+operator|&
+name|TH_RST
+condition|)
+name|printf
+argument_list|(
+literal|" RST"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tdp
+operator|->
+name|td_flg
+operator|&
+name|TH_EOL
+condition|)
+name|printf
+argument_list|(
+literal|" EOL"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tdp
+operator|->
+name|td_flg
+operator|&
+name|TH_ACK
+condition|)
+name|printf
+argument_list|(
+literal|" ACK %x"
+argument_list|,
+name|tdp
+operator|->
+name|td_ano
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tdp
+operator|->
+name|td_flg
+operator|&
+name|TH_URG
+condition|)
+name|printf
+argument_list|(
+literal|" URG"
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\n"

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_output.c 4.6 81/10/31 */
+comment|/* tcp_output.c 4.7 81/10/31 */
 end_comment
 
 begin_include
@@ -553,21 +553,6 @@ name|snd_lst
 operator|++
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|tp
-operator|->
-name|snd_nxt
-operator|>=
-name|tp
-operator|->
-name|snd_lst
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 else|else
 block|{
@@ -684,6 +669,16 @@ operator|>=
 name|tp
 operator|->
 name|snd_lst
+operator|&&
+operator|(
+name|tp
+operator|->
+name|tc_flags
+operator|&
+name|TC_SND_FIN
+operator|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -789,6 +784,21 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|tp
+operator|->
+name|snd_nxt
+operator|>=
+name|tp
+operator|->
+name|snd_lst
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|tp
