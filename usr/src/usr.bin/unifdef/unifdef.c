@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)unifdef.c	4.2	(Berkeley)	%G%"
+literal|"@(#)unifdef.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,15 +29,15 @@ operator|-
 literal|') 	    break; 	if (*++cp1 == '
 name|i
 literal|') { 	    ignorethis = YES; 	    cp1++; 	} 	else 	    ignorethis = NO; 	if (   (   *cp1 == '
-name|d
+name|D
 literal|' 		|| *cp1 == '
-literal|u'
+literal|U'
 expr|)&& cp1[1] != '
 operator|\
 literal|0
 literal|' 	   ) { 	    if (nsyms>= MAXSYMS) { 		prname (); 		fprintf (stderr, "too many symbols.\n"); 		exit (2); 	    } 	    ignore[nsyms] = ignorethis; 	    true[nsyms] = *cp1 == '
-name|d
-literal|' ? YES : NO; 	    sym[nsyms++] =&cp1[1]; 	} 	else if (ignorethis) 	    goto unrec; 	else if (strcmp (&cp[1], "t") == 0) 	    text = YES; 	else if (strcmp (&cp[1], "l") == 0) 	    lnblank = YES; 	else if (strcmp (&cp[1], "c") == 0) 	    complement = YES; 	else {  unrec: 	    prname (); 	    fprintf (stderr, "unrecognized option: %s\n", cp); 	    goto usage; 	}     }     if (nsyms == 0) {  usage: 	fprintf (stderr, "\ Usage: %s [-l] [-t] [-c] [[-dsym] [-usym] [-idsym] [-iusym]]... [file]\n\     At least one arg from [-d -u -id -iu] is required\n", progname); 	exit (2);     }      if (argc> 1) { 	prname (); 	fprintf (stderr, "can only do one file.\n");     }     else if (argc == 1) { 	filename = *curarg; 	if ((input = fopen (filename, "r")) != NULL) { 	    pfile(); 	    fclose (input); 	} 	else { 	    prname (); 	    perror(*curarg); 	}     }     else { 	filename = "[stdin]"; 	input = stdin; 	pfile();     }      fflush (stdout);     exit (exitstat); }  /* types of input lines: */ #define PLAIN       0   /* ordinary line */ #define TRUE        1   /* a true  #ifdef of a symbol known to us */ #define FALSE       2   /* a false #ifdef of a symbol known to us */ #define OTHER       3   /* an #ifdef of a symbol not known to us */ #define ELSE        4   /* #else */ #define ENDIF       5   /* #endif */ #define LEOF        6   /* end of file */  char reject BSS;    /* 0 or 1: pass thru; 1 or 2: ignore comments */ int linenum BSS;    /* current line number */ int stqcline BSS;   /* start of current coment or quote */ char *errs[] = { #define NO_ERR      0 			"", #define END_ERR     1 			"", #define ELSE_ERR    2 			"Inappropriate else", #define ENDIF_ERR   3 			"Inappropriate endif", #define IEOF_ERR    4 			"Premature EOF in ifdef", #define CEOF_ERR    5 			"Premature EOF in comment", #define Q1EOF_ERR   6 			"Premature EOF in quoted character", #define Q2EOF_ERR   7 			"Premature EOF in quoted string" };  pfile () {     reject = 0;     doif (-1, NO, reject, 0);     return; }  doif (thissym, inif, prevreject, depth) register int thissym;   /* index of the symbol who was last ifdef'
+name|D
+literal|' ? YES : NO; 	    sym[nsyms++] =&cp1[1]; 	} 	else if (ignorethis) 	    goto unrec; 	else if (strcmp (&cp[1], "t") == 0) 	    text = YES; 	else if (strcmp (&cp[1], "l") == 0) 	    lnblank = YES; 	else if (strcmp (&cp[1], "c") == 0) 	    complement = YES; 	else {  unrec: 	    prname (); 	    fprintf (stderr, "unrecognized option: %s\n", cp); 	    goto usage; 	}     }     if (nsyms == 0) {  usage: 	fprintf (stderr, "\ Usage: %s [-l] [-t] [-c] [[-Dsym] [-Usym] [-idsym] [-iusym]]... [file]\n\     At least one arg from [-D -U -id -iu] is required\n", progname); 	exit (2);     }      if (argc> 1) { 	prname (); 	fprintf (stderr, "can only do one file.\n");     }     else if (argc == 1) { 	filename = *curarg; 	if ((input = fopen (filename, "r")) != NULL) { 	    pfile(); 	    fclose (input); 	} 	else { 	    prname (); 	    perror(*curarg); 	}     }     else { 	filename = "[stdin]"; 	input = stdin; 	pfile();     }      fflush (stdout);     exit (exitstat); }  /* types of input lines: */ #define PLAIN       0   /* ordinary line */ #define TRUE        1   /* a true  #ifdef of a symbol known to us */ #define FALSE       2   /* a false #ifdef of a symbol known to us */ #define OTHER       3   /* an #ifdef of a symbol not known to us */ #define ELSE        4   /* #else */ #define ENDIF       5   /* #endif */ #define LEOF        6   /* end of file */  char reject BSS;    /* 0 or 1: pass thru; 1 or 2: ignore comments */ int linenum BSS;    /* current line number */ int stqcline BSS;   /* start of current coment or quote */ char *errs[] = { #define NO_ERR      0 			"", #define END_ERR     1 			"", #define ELSE_ERR    2 			"Inappropriate else", #define ENDIF_ERR   3 			"Inappropriate endif", #define IEOF_ERR    4 			"Premature EOF in ifdef", #define CEOF_ERR    5 			"Premature EOF in comment", #define Q1EOF_ERR   6 			"Premature EOF in quoted character", #define Q2EOF_ERR   7 			"Premature EOF in quoted string" };  pfile () {     reject = 0;     doif (-1, NO, reject, 0);     return; }  doif (thissym, inif, prevreject, depth) register int thissym;   /* index of the symbol who was last ifdef'
 name|ed
 operator|*
 operator|/
