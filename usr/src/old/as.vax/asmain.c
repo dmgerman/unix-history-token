@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asmain.c 4.2 %G%"
+literal|"@(#)asmain.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -215,6 +215,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* current pass*/
+end_comment
+
+begin_decl_stmt
+name|int
+name|jxxxJUMP
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* in jxxxes that branch too far, use jmp instead of brw */
 end_comment
 
 begin_ifdef
@@ -978,6 +990,14 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'J'
+case|:
+name|jxxxJUMP
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1285,6 +1305,9 @@ expr_stmt|;
 block|}
 block|}
 name|inittmpfile
+argument_list|()
+expr_stmt|;
+name|initijxxx
 argument_list|()
 expr_stmt|;
 block|}

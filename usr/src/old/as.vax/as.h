@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1980 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* "@(#)as.h 4.3 %G%" */
+comment|/* "@(#)as.h 4.4 %G%" */
 end_comment
 
 begin_ifdef
@@ -1769,6 +1769,17 @@ end_decl_stmt
 
 begin_comment
 comment|/*use virtual memory temp file*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|jxxxJUMP
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*use jmp instead of brw for jxxx */
 end_comment
 
 begin_ifdef

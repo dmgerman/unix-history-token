@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asjxxx.c 4.2 %G%"
+literal|"@(#)asjxxx.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +45,13 @@ name|BRW
 value|0x31
 end_define
 
+begin_define
+define|#
+directive|define
+name|JMP
+value|0x17
+end_define
+
 begin_comment
 comment|/*  *	The number of bytes to add if the jxxx must be "exploded"  *	into the long form  */
 end_comment
@@ -52,24 +59,62 @@ end_comment
 begin_define
 define|#
 directive|define
-name|JBRFSIZE
+name|JBRDELTA
 value|1
 end_define
 
 begin_comment
-comment|/*goes to brw*/
+comment|/* brb<byte> ==> brw<byte><byte> */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|JXXXFSIZE
+name|JXXXDELTA
 value|3
 end_define
 
 begin_comment
-comment|/*goes to brb, brw<byte><byte> */
+comment|/* brb<byte> ==> brb<byte> brw<byte><byte> */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|JBRJDELTA
+value|d124
+end_define
+
+begin_comment
+comment|/* brb<byte> ==> jmp L^(pc)<byte>*d124 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JXXXJDELTA
+value|d124+2
+end_define
+
+begin_comment
+comment|/* brb<byte> ==> brb<byte> jmp L^(pc)<byte>*d124 */
+end_comment
+
+begin_decl_stmt
+name|int
+name|jbrfsize
+init|=
+name|JBRDELTA
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|jxxxfsize
+init|=
+name|JXXXDELTA
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  *	These variables are filled by asscan.c with the  *	last name encountered (a pointer buried in the intermediate file),  *	and the last jxxx symbol table entry encountered.  */
@@ -90,6 +135,33 @@ modifier|*
 name|lastjxxx
 decl_stmt|;
 end_decl_stmt
+
+begin_macro
+name|initijxxx
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|jbrfsize
+operator|=
+name|jxxxJUMP
+condition|?
+name|JBRJDELTA
+else|:
+name|JBRDELTA
+expr_stmt|;
+name|jxxxfsize
+operator|=
+name|jxxxJUMP
+condition|?
+name|JXXXJDELTA
+else|:
+name|JXXXDELTA
+expr_stmt|;
+comment|/* 	 *	Note: ifjxxxJUMP is set, then we do NOT do any tunnelling; 	 *	this was too complicated to figure out, and in the first 	 *	version of the assembler, tunnelling proved to be the hardest 	 *	to get to work! 	 */
+block|}
+end_block
 
 begin_comment
 comment|/*  *	Handle jxxx instructions  */
@@ -166,14 +238,14 @@ name|jumpfrom
 operator|->
 name|s_jxfear
 operator|=
-name|JBRFSIZE
+name|jbrfsize
 expr_stmt|;
 else|else
 name|jumpfrom
 operator|->
 name|s_jxfear
 operator|=
-name|JXXXFSIZE
+name|jxxxfsize
 expr_stmt|;
 if|if
 condition|(
@@ -302,7 +374,7 @@ name|tunnel
 operator|->
 name|s_jxfear
 operator|==
-name|JBRFSIZE
+name|jbrfsize
 operator|)
 operator|&&
 operator|(
@@ -385,6 +457,10 @@ expr_stmt|;
 block|}
 name|putins
 argument_list|(
+name|jxxxJUMP
+condition|?
+name|JMP
+else|:
 name|BRW
 argument_list|,
 name|aplast
@@ -798,7 +874,7 @@ name|jumpfrom
 operator|->
 name|s_jxfear
 operator|==
-name|JBRFSIZE
+name|jbrfsize
 comment|/*unconditional*/
 operator|||
 operator|(
@@ -872,15 +948,20 @@ operator|>
 name|MAXBYTE
 condition|)
 block|{
-comment|/* 				 *	This is an immediate lose! 				 * 				 *	We first attempt to tunnel 				 *	by finding an intervening jump that 				 *	has  the same destination. 				 *	The tunnel is always the first preceeding 				 *	jxxx instruction, so the displacement 				 *	to the tunnel is less than zero, and 				 *	its relative position will be unaffected 				 *	by future jxxx expansions. 				 */
+comment|/* 				 *	This is an immediate lose! 				 * 				 *	We first attempt to tunnel 				 *	by finding an intervening jump that 				 *	has  the same destination. 				 *	The tunnel is always the first preceeding 				 *	jxxx instruction, so the displacement 				 *	to the tunnel is less than zero, and 				 *	its relative position will be unaffected 				 *	by future jxxx expansions. 				 * 				 *	No tunnels if doing jumps... 				 */
 if|if
 condition|(
+operator|(
+operator|!
+name|jxxxJUMP
+operator|)
+operator|&&
 operator|(
 name|jumpfrom
 operator|->
 name|s_jxfear
 operator|>
-name|JBRFSIZE
+name|jbrfsize
 operator|)
 operator|&&
 operator|(
@@ -918,7 +999,7 @@ name|s_value
 operator|>=
 name|MINBYTE
 operator|+
-name|JXXXFSIZE
+name|jxxxfsize
 operator|)
 condition|)
 block|{
