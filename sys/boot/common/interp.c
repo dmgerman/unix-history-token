@@ -820,12 +820,23 @@ expr_stmt|;
 comment|/* Discard comments */
 if|if
 condition|(
+name|strncmp
+argument_list|(
 name|input
-index|[
-literal|0
-index|]
+operator|+
+name|strspn
+argument_list|(
+name|input
+argument_list|,
+literal|" "
+argument_list|)
+argument_list|,
+literal|"\\ "
+argument_list|,
+literal|2
+argument_list|)
 operator|==
-literal|'#'
+literal|0
 condition|)
 continue|continue;
 name|cp
