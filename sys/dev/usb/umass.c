@@ -1407,6 +1407,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+name|Static
 name|struct
 name|cam_sim
 modifier|*

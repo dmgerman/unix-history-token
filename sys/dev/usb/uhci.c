@@ -539,18 +539,15 @@ begin_comment
 comment|/*   * The uhci_intr_info free list can be global since they contain  * no dma specific data.  The other free lists do.  */
 end_comment
 
-begin_macro
+begin_decl_stmt
+name|Static
 name|LIST_HEAD
-argument_list|(
-argument_list|,
-argument|uhci_intr_info
+argument_list|(,
+name|uhci_intr_info
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|uhci_ii_free
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|Static
