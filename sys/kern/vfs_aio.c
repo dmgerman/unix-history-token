@@ -2437,12 +2437,17 @@ expr_stmt|;
 block|}
 comment|/* aiocbe is going away, we need to destroy any knotes */
 comment|/* XXXKSE Note the thread here is used to eventually find the 	 * owning process again, but it is also used to do a fo_close 	 * and that requires the thread. (but does it require the 	 * OWNING thread? (or maybe the running thread?) 	 * There is a semantic problem here... 	 */
-name|knlist_clear
+name|knlist_delete
 argument_list|(
 operator|&
 name|aiocbe
 operator|->
 name|klist
+argument_list|,
+name|FIRST_THREAD_IN_PROC
+argument_list|(
+name|p
+argument_list|)
 argument_list|,
 literal|0
 argument_list|)
