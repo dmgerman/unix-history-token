@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /b/source/CVS/src/sbin/fsck/pass5.c,v 1.3 1993/03/23 00:28:09 cgd Exp $"
+literal|"$Id: /home/cvs/386BSD/src/sbin/fsck/pass5.c,v 1.2 1993/07/22 16:51:58 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,6 +67,17 @@ include|#
 directive|include
 file|"fsck.h"
 end_include
+
+begin_comment
+comment|/*  * Allow time in cg summary data to be this number of seconds in the future.  * Currently we allow up to one day of slack because of problem that  * adjkerntz(8) can change the time by up to a day when it runs and adjusts  * the timezone.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIME_SLACK
+value|(60*60*24)
+end_define
 
 begin_macro
 name|pass5
@@ -654,6 +665,15 @@ name|fs
 operator|->
 name|fs_size
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|TIME_SLACK
+define|#
+directive|define
+name|TIME_SLACK
+value|0
+endif|#
+directive|endif
 if|if
 condition|(
 name|now
@@ -661,6 +681,8 @@ operator|>
 name|cg
 operator|->
 name|cg_time
+operator|-
+name|TIME_SLACK
 condition|)
 name|newcg
 operator|->
