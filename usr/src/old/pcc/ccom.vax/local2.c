@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)local2.c	1.20 (Berkeley) %G%"
+literal|"@(#)local2.c	1.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4369,7 +4369,35 @@ name|r
 argument_list|)
 operator|)
 return|;
-comment|/* 	case UNARY MUL: 		p = p->in.left; 		return( p->in.op != UNARY MUL&& shtemp(p) ); */
+case|case
+name|UNARY
+name|MUL
+case|:
+name|p
+operator|=
+name|p
+operator|->
+name|in
+operator|.
+name|left
+expr_stmt|;
+return|return
+operator|(
+name|p
+operator|->
+name|in
+operator|.
+name|op
+operator|!=
+name|UNARY
+name|MUL
+operator|&&
+name|shtemp
+argument_list|(
+name|p
+argument_list|)
+operator|)
+return|;
 block|}
 if|if
 condition|(
