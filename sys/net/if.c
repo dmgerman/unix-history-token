@@ -1914,6 +1914,14 @@ operator|->
 name|if_lastchange
 argument_list|)
 expr_stmt|;
+name|ifp
+operator|->
+name|if_data
+operator|.
+name|ifi_epoch
+operator|=
+name|time_second
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC

@@ -249,10 +249,19 @@ name|u_long
 name|ifi_hwassist
 decl_stmt|;
 comment|/* HW offload capabilities */
-name|u_long
-name|ifi_unused
+name|time_t
+name|ifi_epoch
 decl_stmt|;
-comment|/* XXX was ifi_xmittiming */
+comment|/* time of attach or stat reset */
+ifdef|#
+directive|ifdef
+name|__alpha__
+name|u_int
+name|ifi_timepad
+decl_stmt|;
+comment|/* time_t is int, not long on alpha */
+endif|#
+directive|endif
 name|struct
 name|timeval
 name|ifi_lastchange
