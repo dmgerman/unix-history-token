@@ -2368,7 +2368,7 @@ name|intbase
 operator|+
 name|i
 expr_stmt|;
-comment|/* 		 * Assume that pin 0 on the first I/O APIC is an ExtINT pin 		 * and that pins 1-15 are ISA interrupts.  Assume that all 		 * other pins are PCI interrupts. 		 */
+comment|/* 		 * Assume that pin 0 on the first I/O APIC is an ExtINT pin 		 * if mixed mode is enabled and an ISA interrupt if not. 		 * Assume that pins 1-15 are ISA interrupts and that all 		 * other pins are PCI interrupts. 		 */
 if|if
 condition|(
 name|intpin
@@ -2376,6 +2376,8 @@ operator|->
 name|io_vector
 operator|==
 literal|0
+operator|&&
+name|mixed_mode_enabled
 condition|)
 name|ioapic_set_extint
 argument_list|(
