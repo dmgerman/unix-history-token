@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)unix.c	5.10 (Berkeley) %G%"
+literal|"@(#)unix.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,6 +91,23 @@ include|#
 directive|include
 file|<sys/file.h>
 end_include
+
+begin_decl_stmt
+name|struct
+name|file
+modifier|*
+name|file
+decl_stmt|,
+modifier|*
+name|fileNFILE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nfile
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
