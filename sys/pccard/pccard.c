@@ -465,24 +465,6 @@ begin_comment
 comment|/* slot entries */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|slot
-modifier|*
-name|slot_list
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|slot_ctrl
-modifier|*
-name|cont_list
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  *	The driver interface for read/write uses a block  *	of memory in the ISA I/O memory space allocated via  *	an ioctl setting.  */
 end_comment
@@ -1294,16 +1276,6 @@ index|]
 operator|=
 name|slt
 expr_stmt|;
-name|slt
-operator|->
-name|next
-operator|=
-name|slot_list
-expr_stmt|;
-name|slot_list
-operator|=
-name|slt
-expr_stmt|;
 comment|/* 	 *	If this controller hasn't been seen before, then 	 *	link it into the list of controllers. 	 */
 if|if
 condition|(
@@ -1315,16 +1287,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ctrl
-operator|->
-name|next
-operator|=
-name|cont_list
-expr_stmt|;
-name|cont_list
-operator|=
-name|ctrl
-expr_stmt|;
 if|if
 condition|(
 name|ctrl

@@ -250,12 +250,6 @@ name|struct
 name|resource_list
 name|resources
 decl_stmt|;
-name|struct
-name|pccard_devinfo
-modifier|*
-name|next
-decl_stmt|;
-comment|/* List of drivers */
 block|}
 struct|;
 end_struct
@@ -284,16 +278,6 @@ name|int
 name|irq
 decl_stmt|;
 comment|/* IRQ allocated (0 = none) */
-name|int
-name|irqref
-decl_stmt|;
-comment|/* Reference count of driver IRQs */
-name|struct
-name|pccard_devinfo
-modifier|*
-name|devices
-decl_stmt|;
-comment|/* List of drivers attached */
 comment|/* 	 *	flags. 	 */
 name|unsigned
 name|int
@@ -363,12 +347,6 @@ name|int
 name|pwr_off_pending
 decl_stmt|;
 comment|/* Power status of slot */
-name|struct
-name|slot
-modifier|*
-name|next
-decl_stmt|;
-comment|/* Master list */
 block|}
 struct|;
 end_struct
@@ -410,53 +388,6 @@ name|card_event
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function
-specifier|static
-name|__inline__
-specifier|const
-name|char
-modifier|*
-name|pccard_get_name
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-block|{
-name|struct
-name|pccard_devinfo
-modifier|*
-name|devi
-init|=
-operator|(
-expr|struct
-name|pccard_devinfo
-operator|*
-operator|)
-name|device_get_ivars
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|devi
-condition|)
-return|return
-operator|(
-literal|"anonymous"
-operator|)
-return|;
-return|return
-operator|(
-name|devi
-operator|->
-name|name
-operator|)
-return|;
-block|}
-end_function
 
 begin_endif
 endif|#
