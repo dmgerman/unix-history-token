@@ -2300,26 +2300,6 @@ block|{
 comment|/* Doesn't already exist; try building the parent path. */
 if|if
 condition|(
-name|mkdirpath
-argument_list|(
-name|a
-argument_list|,
-name|p
-argument_list|,
-name|flags
-argument_list|)
-operator|!=
-name|ARCHIVE_OK
-condition|)
-return|return
-operator|(
-name|ARCHIVE_WARN
-operator|)
-return|;
-block|}
-comment|/* One final attempt to create the dir. */
-if|if
-condition|(
 name|mkdirpath_internal
 argument_list|(
 name|a
@@ -2336,6 +2316,35 @@ operator|(
 name|ARCHIVE_WARN
 operator|)
 return|;
+block|}
+comment|/* One final attempt to create the dir. */
+if|if
+condition|(
+name|mkdir
+argument_list|(
+name|path
+argument_list|,
+name|SECURE_DIR_MODE
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|archive_set_error
+argument_list|(
+name|a
+argument_list|,
+name|errno
+argument_list|,
+literal|"Can't create directory"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_WARN
+operator|)
+return|;
+block|}
 name|success
 label|:
 comment|/* Add this dir to the fixup list. */
