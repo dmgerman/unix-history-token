@@ -1350,7 +1350,7 @@ name|realname
 argument_list|,
 literal|12
 argument_list|,
-literal|"/dev/r%s"
+literal|"/dev/%s"
 argument_list|,
 name|argv
 index|[
