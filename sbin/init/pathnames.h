@@ -23,5 +23,12 @@ name|_PATH_RUNCOM
 value|"/etc/rc"
 end_define
 
+begin_define
+define|#
+directive|define
+name|_PATH_RUNDOWN
+value|"/etc/rc.shutdown"
+end_define
+
 end_unit
 
