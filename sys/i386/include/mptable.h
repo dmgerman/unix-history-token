@@ -46,10 +46,25 @@ else|#
 directive|else
 end_else
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|lint
+argument_list|)
+end_if
+
 begin_error
 error|#
 directive|error
 end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
