@@ -242,7 +242,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: sbpf.c,v 2.1.4.1 2001/06/26 10:43:22 darrenr Exp $"
+literal|"@(#)$Id: sbpf.c,v 2.1.4.2 2001/09/30 04:04:28 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -321,6 +321,11 @@ name|fd
 decl_stmt|,
 name|i
 decl_stmt|;
+name|fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 for|for
 control|(
 name|i

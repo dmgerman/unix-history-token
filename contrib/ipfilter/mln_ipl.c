@@ -1203,7 +1203,7 @@ argument_list|()
 expr_stmt|;
 name|error
 operator|=
-name|iplattach
+name|ipl_enable
 argument_list|()
 expr_stmt|;
 if|if

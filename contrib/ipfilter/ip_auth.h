@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1997-2001 by Darren Reed& Guido Van Rooij.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_auth.h,v 2.3.2.4 2001/07/18 14:57:08 darrenr Exp $  *  */
+comment|/*  * Copyright (C) 1997-2001 by Darren Reed& Guido Van Rooij.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_auth.h,v 2.3.2.5 2001/11/04 13:15:51 darrenr Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -244,6 +244,13 @@ name|defined
 argument_list|(
 name|__OpenBSD__
 argument_list|)
+operator|||
+expr|\
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|300003
+operator|)
 end_if
 
 begin_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  * $Id: kmem.h,v 2.2.2.2 2001/06/26 10:43:19 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  * $Id: kmem.h,v 2.2.2.4 2002/01/01 13:43:48 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -71,6 +71,9 @@ argument_list|(
 operator|(
 name|char
 operator|*
+operator|,
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -107,6 +110,21 @@ operator|,
 name|long
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|getifname
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

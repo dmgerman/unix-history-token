@@ -3,6 +3,23 @@ begin_comment
 comment|/*  * Copyright (C) 1998-2001 by Darren Reed& Guido van Rooij.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sgi
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/ptimers.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -121,12 +138,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/uio.h>
-end_include
 
 begin_ifndef
 ifndef|#
@@ -704,7 +715,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_auth.c,v 2.11.2.12 2001/07/18 14:57:08 darrenr Exp $"
+literal|"@(#)$Id: ip_auth.c,v 2.11.2.19 2002/04/23 14:57:27 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1720,7 +1731,7 @@ name|__OpenBSD__
 argument_list|)
 operator|||
 operator|(
-name|FreeBSD_version
+name|__FreeBSD_version
 operator|>=
 literal|300003
 operator|)
@@ -2085,23 +2096,11 @@ break|break;
 case|case
 name|SIOCATHST
 case|:
-name|READ_ENTER
-argument_list|(
-operator|&
-name|ipf_auth
-argument_list|)
-expr_stmt|;
 name|fr_authstats
 operator|.
 name|fas_faelist
 operator|=
 name|fae_list
-expr_stmt|;
-name|RWLOCK_EXIT
-argument_list|(
-operator|&
-name|ipf_auth
-argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -2236,6 +2235,12 @@ return|return
 literal|0
 return|;
 block|}
+name|RWLOCK_EXIT
+argument_list|(
+operator|&
+name|ipf_auth
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|_KERNEL
@@ -2293,12 +2298,6 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-name|RWLOCK_EXIT
-argument_list|(
-operator|&
-name|ipf_auth
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2473,6 +2472,7 @@ directive|if
 name|SOLARIS
 name|error
 operator|=
+operator|(
 name|fr_qout
 argument_list|(
 name|fra
@@ -2481,6 +2481,13 @@ name|fra_q
 argument_list|,
 name|m
 argument_list|)
+operator|==
+literal|0
+operator|)
+condition|?
+name|EINVAL
+else|:
+literal|0
 expr_stmt|;
 else|#
 directive|else
@@ -2525,6 +2532,19 @@ name|defined
 argument_list|(
 name|__OpenBSD__
 argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|IRIX
+argument_list|)
+operator|&&
+operator|(
+name|IRIX
+operator|>=
+literal|605
+operator|)
+operator|)
 name|error
 operator|=
 name|ip_output
@@ -2608,6 +2628,7 @@ directive|if
 name|SOLARIS
 name|error
 operator|=
+operator|(
 name|fr_qin
 argument_list|(
 name|fra
@@ -2616,6 +2637,13 @@ name|fra_q
 argument_list|,
 name|m
 argument_list|)
+operator|==
+literal|0
+operator|)
+condition|?
+name|EINVAL
+else|:
+literal|0
 expr_stmt|;
 else|#
 directive|else
@@ -2657,11 +2685,18 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|IRIX
+operator|<
+literal|605
 name|schednetisr
 argument_list|(
 name|NETISR_IP
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 endif|#
 directive|endif
@@ -2809,12 +2844,6 @@ name|error
 return|;
 block|}
 end_block
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_comment
 comment|/*  * Free all network buffer memory used to keep saved packets.  */
@@ -3070,6 +3099,11 @@ if|#
 directive|if
 operator|!
 name|SOLARIS
+operator|&&
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
 name|int
 name|s
 decl_stmt|;
@@ -3283,11 +3317,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

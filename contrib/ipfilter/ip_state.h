@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_state.h	1.3 1/12/96 (C) 1995 Darren Reed  * $Id: ip_state.h,v 2.13.2.4 2001/06/26 10:43:17 darrenr Exp $  */
+comment|/*  * Copyright (C) 1995-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_state.h	1.3 1/12/96 (C) 1995 Darren Reed  * $Id: ip_state.h,v 2.13.2.12 2002/03/25 11:14:55 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -171,8 +171,11 @@ decl_stmt|;
 name|u_32_t
 name|td_maxend
 decl_stmt|;
-name|u_short
+name|u_32_t
 name|td_maxwin
+decl_stmt|;
+name|u_char
+name|td_wscale
 decl_stmt|;
 block|}
 name|tcpdata_t
@@ -234,28 +237,21 @@ modifier|*
 modifier|*
 name|is_phnext
 decl_stmt|;
-name|u_long
-name|is_age
+name|struct
+name|ipstate
+modifier|*
+modifier|*
+name|is_me
 decl_stmt|;
-name|u_int
-name|is_pass
+name|frentry_t
+modifier|*
+name|is_rule
 decl_stmt|;
 name|U_QUAD_T
 name|is_pkts
 decl_stmt|;
 name|U_QUAD_T
 name|is_bytes
-decl_stmt|;
-name|void
-modifier|*
-name|is_ifp
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|frentry_t
-modifier|*
-name|is_rule
 decl_stmt|;
 name|union
 name|i6addr
@@ -265,6 +261,26 @@ name|union
 name|i6addr
 name|is_dst
 decl_stmt|;
+name|void
+modifier|*
+name|is_ifp
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|u_long
+name|is_age
+decl_stmt|;
+name|u_int
+name|is_frage
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* age from filter rule, forward& reverse */
+name|u_int
+name|is_pass
+decl_stmt|;
 name|u_char
 name|is_p
 decl_stmt|;
@@ -272,12 +288,27 @@ comment|/* Protocol */
 name|u_char
 name|is_v
 decl_stmt|;
+comment|/* IP version */
+name|u_char
+name|is_fsm
+decl_stmt|;
+comment|/* 1 = following FSM, 0 = not */
+name|u_char
+name|is_xxx
+decl_stmt|;
+comment|/* pad */
 name|u_int
 name|is_hv
 decl_stmt|;
+comment|/* hash value for this in the table */
+name|u_32_t
+name|is_rulen
+decl_stmt|;
+comment|/* rule number */
 name|u_32_t
 name|is_flags
 decl_stmt|;
+comment|/* flags for this structure */
 name|u_32_t
 name|is_opt
 decl_stmt|;
@@ -319,7 +350,7 @@ union|;
 name|char
 name|is_ifname
 index|[
-literal|2
+literal|4
 index|]
 index|[
 name|IFNAMSIZ
@@ -423,6 +454,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|is_swscale
+value|is_tcp.ts_data[0].td_wscale
+end_define
+
+begin_define
+define|#
+directive|define
+name|is_dwscale
+value|is_tcp.ts_data[1].td_wscale
+end_define
+
+begin_define
+define|#
+directive|define
 name|is_maxsend
 value|is_tcp.ts_data[0].td_maxend
 end_define
@@ -466,7 +511,7 @@ begin_define
 define|#
 directive|define
 name|is_ifpout
-value|is_ifp[1]
+value|is_ifp[2]
 end_define
 
 begin_define
@@ -730,7 +775,29 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|u_long
+name|fr_udpacktimeout
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
 name|fr_icmptimeout
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|fr_icmpacktimeout
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ipstate_t
+modifier|*
+name|ips_list
 decl_stmt|;
 end_decl_stmt
 
@@ -791,6 +858,10 @@ operator|,
 name|fr_info_t
 operator|*
 operator|,
+name|ipstate_t
+operator|*
+operator|*
+operator|,
 name|u_int
 operator|)
 argument_list|)
@@ -844,7 +915,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|int
 name|fr_tcp_age
 name|__P
 argument_list|(
@@ -857,6 +928,8 @@ operator|*
 operator|,
 name|fr_info_t
 operator|*
+operator|,
+name|int
 operator|,
 name|int
 operator|)

@@ -3,6 +3,23 @@ begin_comment
 comment|/*  * ipresend.c (C) 1995-1998 Darren Reed  *  * This was written to test what size TCP fragments would get through  * various TCP/IP packet filters, as used in IP firewalls.  In certain  * conditions, enough of the TCP header is missing for unpredictable  * results unless the filter is aware that this can happen.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sgi
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/ptimers.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -37,6 +54,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -144,7 +167,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipresend.c,v 2.1.4.2 2001/07/15 22:00:13 darrenr Exp $"
+literal|"@(#)$Id: ipresend.c,v 2.1.4.3 2002/02/22 15:32:57 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

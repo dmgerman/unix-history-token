@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_lfil.c,v 2.6.2.2 2001/07/18 14:57:09 darrenr Exp $"
+literal|"@(#)$Id: ip_lfil.c,v 2.6.2.4 2002/03/06 09:44:11 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,12 +89,6 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/uio.h>
 end_include
 
 begin_include
@@ -241,13 +235,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"netinet/ip_proxy.h"
+file|"netinet/ip_nat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netinet/ip_nat.h"
+file|"netinet/ip_proxy.h"
 end_include
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_frag.h	1.5 3/24/96  * $Id: ip_frag.h,v 2.4.2.5 2001/06/26 10:43:13 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_frag.h	1.5 3/24/96  * $Id: ip_frag.h,v 2.4.2.6 2002/01/01 15:09:38 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -281,6 +281,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_if
 if|#
 directive|if
@@ -375,6 +381,33 @@ end_endif
 
 begin_comment
 comment|/* (BSD>= 199306) || SOLARIS */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|ipfr_slowtimer
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
 end_comment
 
 begin_endif

@@ -3,6 +3,23 @@ begin_comment
 comment|/*  * (C)opyright 1992-1998 Darren Reed.  * (C)opyright 1997 Marc Boucher.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sgi
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/ptimers.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include

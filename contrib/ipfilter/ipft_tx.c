@@ -3,6 +3,23 @@ begin_comment
 comment|/*  * Copyright (C) 1995-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sgi
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/ptimers.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -248,7 +265,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipft_tx.c,v 2.3.2.4 2001/06/26 10:43:18 darrenr Exp $"
+literal|"@(#)$Id: ipft_tx.c,v 2.3.2.6 2002/03/13 03:55:15 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1624,11 +1641,7 @@ name|ip
 operator|->
 name|ip_len
 operator|+=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|icmp
-argument_list|)
+name|ICMPERR_IPICMPHLEN
 expr_stmt|;
 name|tx_proto
 operator|=

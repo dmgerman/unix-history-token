@@ -3,6 +3,23 @@ begin_comment
 comment|/*  * ip.c (C) 1995-1998 Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sgi
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/ptimers.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -169,7 +186,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip.c,v 2.1.4.3 2001/07/15 22:00:13 darrenr Exp $"
+literal|"@(#)$Id: ip.c,v 2.1.4.4 2002/02/22 15:32:57 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
