@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_timer.c	7.12 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_timer.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -215,6 +215,19 @@ condition|)
 name|panic
 argument_list|(
 literal|"tp_timerinit"
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|tp_ref
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|s
 argument_list|)
 expr_stmt|;
 name|tp_refinfo
@@ -447,7 +460,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * CALLED FROM:  *  the clock, every 500 ms  * FUNCTION and ARGUMENTS:  *  Look for open references with active timers.  *  If they exist, call the appropriate timer routines to update  *  the timers and possibly generate events.  *  (The E timers are done in other procedures; the C timers are  *  updated here, and events for them are generated here.)  */
+comment|/*  * CALLED FROM:  *  the clock, every 500 ms  * FUNCTION and ARGUMENTS:  *  Look for open references with active timers.  *  If they exist, call the appropriate timer routines to update  *  the timers and possibly generate events.  */
 end_comment
 
 begin_function
@@ -459,9 +472,6 @@ specifier|register
 name|u_int
 modifier|*
 name|cp
-decl_stmt|,
-modifier|*
-name|cpbase
 decl_stmt|;
 specifier|register
 name|struct
@@ -530,12 +540,6 @@ operator|<
 name|REF_OPEN
 condition|)
 continue|continue;
-name|cpbase
-operator|=
-name|tpcb
-operator|->
-name|tp_timer
-expr_stmt|;
 name|t
 operator|=
 name|TM_NTIMERS
@@ -543,24 +547,26 @@ expr_stmt|;
 comment|/* check the timers */
 for|for
 control|(
-name|cp
+name|t
 operator|=
-name|cpbase
-operator|+
-name|t
+literal|0
 init|;
-operator|(
-operator|--
 name|t
-operator|,
-operator|--
-name|cp
-operator|)
-operator|>=
-name|cpbase
+operator|<
+name|TM_NTIMERS
 condition|;
+name|t
+operator|++
 control|)
 block|{
+name|cp
+operator|=
+name|tpcb
+operator|->
+name|tp_timer
+operator|+
+name|t
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -605,9 +611,7 @@ argument_list|)
 decl_stmt|;
 name|tp_driver
 argument_list|(
-name|rp
-operator|->
-name|tpr_pcb
+name|tpcb
 argument_list|,
 operator|&
 name|E
@@ -730,12 +734,28 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * We transmitted new data, started timing it and the window 		 * got shrunk under us.  This can only happen if all data 		 * that they wanted us to send got acked, so don't 		 * bother shrinking the congestion windows, et. al. 		 * The retransmission timer should have been reset in goodack() 		 */
+name|IFDEBUG
+argument_list|(
+argument|D_ACKRECV
+argument_list|)
+name|printf
+argument_list|(
+literal|"tp_data_retrans: 0 window tpcb 0x%x una 0x%x\n"
+argument_list|,
+name|tpcb
+argument_list|,
+name|tpcb
+operator|->
+name|tp_snduna
+argument_list|)
+expr_stmt|;
+name|ENDDEBUG
 name|tpcb
 operator|->
 name|tp_rxtshift
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 name|tpcb
 operator|->
 name|tp_timer
@@ -756,6 +776,7 @@ name|tpcb
 operator|->
 name|tp_dt_ticks
 expr_stmt|;
+return|return;
 block|}
 name|rexmt
 operator|=
@@ -954,13 +975,6 @@ operator|&
 name|TPF_DELACK
 condition|)
 block|{
-name|t
-operator|->
-name|tp_flags
-operator|&=
-operator|~
-name|TPF_DELACK
-expr_stmt|;
 name|IncStat
 argument_list|(
 name|ts_Fdelack
@@ -976,14 +990,10 @@ argument_list|)
 expr_stmt|;
 name|t
 operator|->
-name|tp_timer
-index|[
-name|TM_sendack
-index|]
-operator|=
-name|t
-operator|->
-name|tp_keepalive_ticks
+name|tp_flags
+operator|&=
+operator|~
+name|TPF_DELACK
 expr_stmt|;
 block|}
 else|else
