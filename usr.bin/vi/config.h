@@ -367,11 +367,19 @@ comment|/* #undef HAVE_PERL_INTERP */
 end_comment
 
 begin_comment
+comment|/* XXX: SET IN Makefile CFLAGS */
+end_comment
+
+begin_comment
 comment|/* Define if your Perl is at least 5.003_01. */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_PERL_5_003_01 */
+end_comment
+
+begin_comment
+comment|/* XXX: SET IN Makefile CFLAGS */
 end_comment
 
 begin_comment
@@ -419,12 +427,13 @@ begin_comment
 comment|/* Define if you want to compile in the Tcl interpreter. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_TCL_INTERP
-value|1
-end_define
+begin_comment
+comment|/* #define HAVE_TCL_INTERP */
+end_comment
+
+begin_comment
+comment|/* XXX: SET IN Makefile CFLAGS */
+end_comment
 
 begin_comment
 comment|/* Define if your sprintf returns a pointer, not a length. */

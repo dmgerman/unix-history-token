@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.15 1996/09/14 02:59:46 bde Exp $"
+literal|"$Id: route.c,v 1.16 1996/10/27 17:42:14 fenner Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,12 +81,6 @@ begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mbuf.h>
 end_include
 
 begin_include
