@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)replace.c	5.5 (Berkeley) %G%"
+literal|"@(#)replace.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"archive.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_decl_stmt
@@ -273,17 +285,17 @@ control|)
 block|{
 if|if
 condition|(
+operator|*
+name|argv
+operator|&&
 operator|(
 name|file
 operator|=
-operator|*
-name|argv
-operator|)
-operator|&&
 name|files
 argument_list|(
 name|argv
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if
