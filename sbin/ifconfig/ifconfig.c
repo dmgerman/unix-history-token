@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ifconfig.c,v 1.32 1997/10/27 03:28:44 steve Exp $"
+literal|"$Id: ifconfig.c,v 1.33 1997/12/24 00:57:41 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 

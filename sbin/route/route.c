@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.26 1997/07/18 09:05:12 julian Exp $"
+literal|"$Id: route.c,v 1.27 1997/12/24 00:59:49 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
