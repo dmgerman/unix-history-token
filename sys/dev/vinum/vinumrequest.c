@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumrequest.c,v 1.23 1999/03/20 21:58:38 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998, 1999  *  Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumrequest.c,v 1.24 1999/07/05 01:53:14 grog Exp grog $  */
 end_comment
 
 begin_include
@@ -349,6 +349,32 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|rqip
+operator|->
+name|devmajor
+operator|=
+name|major
+argument_list|(
+name|info
+operator|.
+name|bp
+operator|->
+name|b_dev
+argument_list|)
+expr_stmt|;
+name|rqip
+operator|->
+name|devminor
+operator|=
+name|minor
+argument_list|(
+name|info
+operator|.
+name|bp
+operator|->
+name|b_dev
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|loginfo_iodone
@@ -380,6 +406,36 @@ argument_list|(
 expr|struct
 name|rqelement
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|rqip
+operator|->
+name|devmajor
+operator|=
+name|major
+argument_list|(
+name|info
+operator|.
+name|rqe
+operator|->
+name|b
+operator|.
+name|b_dev
+argument_list|)
+expr_stmt|;
+name|rqip
+operator|->
+name|devminor
+operator|=
+name|minor
+argument_list|(
+name|info
+operator|.
+name|rqe
+operator|->
+name|b
+operator|.
+name|b_dev
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1610,8 +1666,21 @@ name|active
 operator|--
 expr_stmt|;
 comment|/* one less active request */
-else|else
+elseif|else
+if|if
+condition|(
+operator|(
+name|rqe
+operator|->
+name|flags
+operator|&
+name|XFR_BAD_SUBDISK
+operator|)
+operator|==
+literal|0
+condition|)
 block|{
+comment|/* subdisk isn't bad, we can do it */
 if|if
 condition|(
 operator|(
@@ -1798,7 +1867,6 @@ name|b
 operator|)
 expr_stmt|;
 block|}
-comment|/* XXX Do we need caching?  Think about this more */
 block|}
 block|}
 name|splx
@@ -1813,7 +1881,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * define the low-level requests needed to perform a  * high-level I/O operation for a specific plex 'plexno'.  *  * Return 0 if all subdisks involved in the request are up, 1 if some  * subdisks are not up, and -1 if the request is at least partially  * outside the bounds of the subdisks.  *  * Modify the pointer *diskstart to point to the end address.  On  * read, return on the first bad subdisk, so that the caller  * (build_read_request) can try alternatives.  *  * On entry to this routine, the rqg structures are not assigned.  The  * assignment is performed by expandrq().  Strictly speaking, the  * elements rqe->sdno of all entries should be set to -1, since 0  * (from bzero) is a valid subdisk number.  We avoid this problem by  * initializing the ones we use, and not looking at the others (index  *>= rqg->requests).  */
+comment|/*  * define the low-level requests needed to perform a  * high-level I/O operation for a specific plex 'plexno'.  *  * Return REQUEST_OK if all subdisks involved in the request are up,  * REQUEST_DOWN if some subdisks are not up, and REQUEST_EOF if the  * request is at least partially outside the bounds of the subdisks.  *  * Modify the pointer *diskstart to point to the end address.  On  * read, return on the first bad subdisk, so that the caller  * (build_read_request) can try alternatives.  *  * On entry to this routine, the rqg structures are not assigned.  The  * assignment is performed by expandrq().  Strictly speaking, the  * elements rqe->sdno of all entries should be set to -1, since 0  * (from bzero) is a valid subdisk number.  We avoid this problem by  * initializing the ones we use, and not looking at the others (index  *>= rqg->requests).  */
 end_comment
 
 begin_function
@@ -1895,6 +1963,11 @@ operator|*
 name|diskaddr
 decl_stmt|;
 comment|/* remember where this transfer starts */
+name|enum
+name|requeststatus
+name|s
+decl_stmt|;
+comment|/* temp return value */
 name|bp
 operator|=
 name|rq
@@ -1926,6 +1999,11 @@ block|{
 case|case
 name|plex_concat
 case|:
+name|sd
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* (keep compiler quiet) */
 for|for
 control|(
 name|sdno
@@ -1957,7 +2035,21 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-operator|(
+operator|*
+name|diskaddr
+operator|<
+name|sd
+operator|->
+name|plexoffset
+condition|)
+comment|/* we must have a hole, */
+name|status
+operator|=
+name|REQUEST_DEGRADED
+expr_stmt|;
+comment|/* note the fact */
+if|if
+condition|(
 operator|*
 name|diskaddr
 operator|<
@@ -1970,56 +2062,9 @@ name|sd
 operator|->
 name|sectors
 operator|)
-operator|)
-comment|/* The request starts before the end of this */
-operator|&&
-operator|(
-name|diskend
-operator|>
-name|sd
-operator|->
-name|plexoffset
-operator|)
 condition|)
 block|{
-comment|/* subdisk and ends after the start of this sd */
-if|if
-condition|(
-name|sd
-operator|->
-name|state
-operator|!=
-name|sd_up
-condition|)
-block|{
-name|enum
-name|requeststatus
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|checksdstate
-argument_list|(
-name|sd
-argument_list|,
-name|rq
-argument_list|,
-operator|*
-name|diskaddr
-argument_list|,
-name|diskend
-argument_list|)
-expr_stmt|;
-comment|/* do we need to change state? */
-if|if
-condition|(
-name|s
-condition|)
-return|return
-name|s
-return|;
-comment|/* XXX get this right */
-block|}
+comment|/* the request starts in this subdisk */
 name|rqg
 operator|=
 name|allocrqg
@@ -2094,15 +2139,8 @@ expr_stmt|;
 comment|/* put in the subdisk number */
 name|plexoffset
 operator|=
-name|max
-argument_list|(
-name|sd
-operator|->
-name|plexoffset
-argument_list|,
 operator|*
 name|diskaddr
-argument_list|)
 expr_stmt|;
 comment|/* start offset in plex */
 name|rqe
@@ -2188,6 +2226,68 @@ name|sd
 operator|->
 name|driveno
 expr_stmt|;
+if|if
+condition|(
+name|sd
+operator|->
+name|state
+operator|!=
+name|sd_up
+condition|)
+block|{
+comment|/* *now* we find the sd is down */
+name|s
+operator|=
+name|checksdstate
+argument_list|(
+name|sd
+argument_list|,
+name|rq
+argument_list|,
+operator|*
+name|diskaddr
+argument_list|,
+name|diskend
+argument_list|)
+expr_stmt|;
+comment|/* do we need to change state? */
+if|if
+condition|(
+name|s
+operator|==
+name|REQUEST_DOWN
+condition|)
+block|{
+comment|/* down? */
+if|if
+condition|(
+name|rq
+operator|->
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_READ
+condition|)
+comment|/* read request, */
+return|return
+name|REQUEST_DEGRADED
+return|;
+comment|/* give up here */
+comment|/* 			 * If we're writing, don't give up 			 * because of a bad subdisk.  Go 			 * through to the bitter end, but note 			 * which ones we can't access. 			 */
+name|rqe
+operator|->
+name|flags
+operator|=
+name|XFR_BAD_SUBDISK
+expr_stmt|;
+name|status
+operator|=
+name|REQUEST_DEGRADED
+expr_stmt|;
+comment|/* can't do it all */
+block|}
+block|}
 operator|*
 name|diskaddr
 operator|+=
@@ -2196,6 +2296,21 @@ operator|->
 name|datalen
 expr_stmt|;
 comment|/* bump the address */
+if|if
+condition|(
+operator|(
+name|rqe
+operator|->
+name|flags
+operator|&
+name|XFR_BAD_SUBDISK
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* subdisk OK, */
+comment|/* 		     * We could build the buffer anyway, even if the 		     * subdisk is down, but it's a waste of time and 		     * space. 		     */
 if|if
 condition|(
 name|build_rq_buffer
@@ -2235,17 +2350,36 @@ return|;
 comment|/* can't do it */
 block|}
 block|}
+block|}
 if|if
 condition|(
 operator|*
 name|diskaddr
-operator|>
+operator|==
 name|diskend
 condition|)
 comment|/* we're finished, */
 break|break;
 comment|/* get out of here */
 block|}
+comment|/* 	 * We've got to the end of the plex.  Have we got to the end of 	 * the transfer?  It would seem that having an offset beyond the 	 * end of the subdisk is an error, but in fact it can happen if 	 * the volume has another plex of different size.  There's a valid 	 * question as to why you would want to do this, but currently 	 * it's allowed. 	 * 	 * In a previous version, I returned REQUEST_DOWN here.  I think 	 * REQUEST_EOF is more appropriate now. 	 */
+if|if
+condition|(
+name|diskend
+operator|>
+name|sd
+operator|->
+name|sectors
+operator|+
+name|sd
+operator|->
+name|plexoffset
+condition|)
+comment|/* pointing beyond EOF? */
+name|status
+operator|=
+name|REQUEST_EOF
+expr_stmt|;
 break|break;
 case|case
 name|plex_striped
@@ -2260,7 +2394,21 @@ name|diskend
 condition|)
 block|{
 comment|/* until we get it all sorted out */
-comment|/* 		 * The offset of the start address from 		 * the start of the stripe 		 */
+if|if
+condition|(
+operator|*
+name|diskaddr
+operator|>=
+name|plex
+operator|->
+name|length
+condition|)
+comment|/* beyond the end of the plex */
+return|return
+name|REQUEST_EOF
+return|;
+comment|/* can't continue */
+comment|/* The offset of the start address from the start of the stripe. */
 name|stripeoffset
 operator|=
 operator|*
@@ -2276,7 +2424,7 @@ operator|->
 name|subdisks
 operator|)
 expr_stmt|;
-comment|/* 		 * The plex-relative address of the 		 * start of the stripe 		 */
+comment|/* The plex-relative address of the start of the stripe. */
 name|stripebase
 operator|=
 operator|*
@@ -2284,7 +2432,7 @@ name|diskaddr
 operator|-
 name|stripeoffset
 expr_stmt|;
-comment|/* 		 * The number of the subdisk in which 		 * the start is located 		 */
+comment|/* The number of the subdisk in which the start is located. */
 name|sdno
 operator|=
 name|stripeoffset
@@ -2293,7 +2441,7 @@ name|plex
 operator|->
 name|stripesize
 expr_stmt|;
-comment|/* 		 * The offset from the beginning of the stripe 		 * on this subdisk 		 */
+comment|/* The offset from the beginning of the stripe on this subdisk. */
 name|blockoffset
 operator|=
 name|stripeoffset
@@ -2316,44 +2464,6 @@ index|]
 index|]
 expr_stmt|;
 comment|/* the subdisk in question */
-if|if
-condition|(
-name|sd
-operator|->
-name|state
-operator|!=
-name|sd_up
-condition|)
-block|{
-name|enum
-name|requeststatus
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|checksdstate
-argument_list|(
-name|sd
-argument_list|,
-name|rq
-argument_list|,
-operator|*
-name|diskaddr
-argument_list|,
-name|diskend
-argument_list|)
-expr_stmt|;
-comment|/* do we need to change state? */
-if|if
-condition|(
-name|s
-condition|)
-comment|/* give up? */
-return|return
-name|s
-return|;
-comment|/* yup */
-block|}
 name|rqg
 operator|=
 name|allocrqg
@@ -2512,21 +2622,97 @@ name|driveno
 expr_stmt|;
 if|if
 condition|(
+name|sd
+operator|->
+name|state
+operator|!=
+name|sd_up
+condition|)
+block|{
+comment|/* *now* we find the sd is down */
+name|s
+operator|=
+name|checksdstate
+argument_list|(
+name|sd
+argument_list|,
+name|rq
+argument_list|,
+operator|*
+name|diskaddr
+argument_list|,
+name|diskend
+argument_list|)
+expr_stmt|;
+comment|/* do we need to change state? */
+if|if
+condition|(
+name|s
+operator|==
+name|REQUEST_DOWN
+condition|)
+block|{
+comment|/* down? */
+if|if
+condition|(
+name|rq
+operator|->
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_READ
+condition|)
+comment|/* read request, */
+return|return
+name|REQUEST_DEGRADED
+return|;
+comment|/* give up here */
+comment|/* 			 * If we're writing, don't give up 			 * because of a bad subdisk.  Go through 			 * to the bitter end, but note which 			 * ones we can't access. 			 */
+name|rqe
+operator|->
+name|flags
+operator|=
+name|XFR_BAD_SUBDISK
+expr_stmt|;
+comment|/* yup */
+name|status
+operator|=
+name|REQUEST_DEGRADED
+expr_stmt|;
+comment|/* can't do it all */
+block|}
+block|}
+comment|/* 		 * It would seem that having an offset 		 * beyond the end of the subdisk is an 		 * error, but in fact it can happen if the 		 * volume has another plex of different 		 * size.  There's a valid question as to why 		 * you would want to do this, but currently 		 * it's allowed. 		 */
+if|if
+condition|(
 name|rqe
 operator|->
 name|sdoffset
-operator|>=
+operator|+
+name|rqe
+operator|->
+name|datalen
+operator|>
 name|sd
 operator|->
 name|sectors
 condition|)
 block|{
-comment|/* starts beyond the end of the subdisk? */
-name|deallocrqg
-argument_list|(
-name|rqg
-argument_list|)
+comment|/* ends beyond the end of the subdisk? */
+name|rqe
+operator|->
+name|datalen
+operator|=
+name|sd
+operator|->
+name|sectors
+operator|-
+name|rqe
+operator|->
+name|sdoffset
 expr_stmt|;
+comment|/* truncate */
 if|#
 directive|if
 name|VINUMDEBUG
@@ -2580,39 +2766,21 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-return|return
-name|REQUEST_EOF
-return|;
 block|}
-elseif|else
 if|if
 condition|(
+operator|(
 name|rqe
 operator|->
-name|sdoffset
-operator|+
-name|rqe
-operator|->
-name|datalen
-operator|>
-name|sd
-operator|->
-name|sectors
+name|flags
+operator|&
+name|XFR_BAD_SUBDISK
+operator|)
+operator|==
+literal|0
 condition|)
-comment|/* ends beyond the end of the subdisk? */
-name|rqe
-operator|->
-name|datalen
-operator|=
-name|sd
-operator|->
-name|sectors
-operator|-
-name|rqe
-operator|->
-name|sdoffset
-expr_stmt|;
-comment|/* yes, truncate */
+block|{
+comment|/* subdisk OK, */
 if|if
 condition|(
 name|build_rq_buffer
@@ -2651,6 +2819,7 @@ name|REQUEST_ENOMEM
 return|;
 comment|/* can't do it */
 block|}
+block|}
 operator|*
 name|diskaddr
 operator|+=
@@ -2661,13 +2830,25 @@ expr_stmt|;
 comment|/* look at the remainder */
 if|if
 condition|(
+operator|(
 operator|*
 name|diskaddr
 operator|<
 name|diskend
+operator|)
+comment|/* didn't finish the request on this stripe */
+operator|&&
+operator|(
+operator|*
+name|diskaddr
+operator|<
+name|plex
+operator|->
+name|length
+operator|)
 condition|)
 block|{
-comment|/* didn't finish the request on this stripe */
+comment|/* and there's more to come */
 name|plex
 operator|->
 name|multiblock
@@ -2694,6 +2875,24 @@ comment|/* another stripe as well */
 block|}
 block|}
 block|}
+break|break;
+comment|/* 	 * RAID5 is complicated enough to have 	 * its own function 	 */
+case|case
+name|plex_raid5
+case|:
+name|status
+operator|=
+name|bre5
+argument_list|(
+name|rq
+argument_list|,
+name|plexno
+argument_list|,
+name|diskaddr
+argument_list|,
+name|diskend
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 name|log
@@ -2788,6 +2987,10 @@ name|status
 init|=
 name|REQUEST_OK
 decl_stmt|;
+name|int
+name|plexmask
+decl_stmt|;
+comment|/* bit mask of plexes, for recovery */
 name|bp
 operator|=
 name|rq
@@ -2883,34 +3086,53 @@ continue|continue;
 case|case
 name|REQUEST_RECOVERED
 case|:
+comment|/* 	     * XXX FIXME if we have more than one plex, and we can 	     * satisfy the request from another, don't use the 	     * recovered request, since it's more expensive. 	     */
 name|recovered
 operator|=
 literal|1
 expr_stmt|;
 break|break;
 case|case
-name|REQUEST_EOF
-case|:
-case|case
 name|REQUEST_ENOMEM
 case|:
 return|return
 name|status
 return|;
-comment|/* 	     * if we get here, we have either had a failure or 	     * a RAID 5 recovery.  We don't want to use the 	     * recovery, because it's expensive, so first we 	     * check if we have alternatives 	     */
+comment|/* 	     * If we get here, our request is not complete.  Try 	     * to fill in the missing parts from another plex. 	     * This can happen multiple times in this function, 	     * and we reinitialize the plex mask each time, since 	     * we could have a hole in our plexes. 	     */
+case|case
+name|REQUEST_EOF
+case|:
 case|case
 name|REQUEST_DOWN
 case|:
 comment|/* can't access the plex */
-if|if
-condition|(
+case|case
+name|REQUEST_DEGRADED
+case|:
+comment|/* can't access the plex */
+name|plexmask
+operator|=
+operator|(
+operator|(
+literal|1
+operator|<<
 name|vol
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* and this is volume I/O */
-comment|/* 		 * Try to satisfy the request 		 * from another plex 		 */
+operator|->
+name|plexes
+operator|)
+operator|-
+literal|1
+operator|)
+comment|/* all plexes in the volume */
+operator|&
+operator|~
+operator|(
+literal|1
+operator|<<
+name|plexindex
+operator|)
+expr_stmt|;
+comment|/* except for the one we were looking at */
 for|for
 control|(
 name|plexno
@@ -2927,6 +3149,17 @@ name|plexno
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|plexmask
+operator|==
+literal|0
+condition|)
+comment|/* no plexes left to try */
+return|return
+name|REQUEST_DOWN
+return|;
+comment|/* failed */
 name|diskaddr
 operator|=
 name|startaddr
@@ -2939,12 +3172,16 @@ expr_stmt|;
 comment|/* and note where that was */
 if|if
 condition|(
+name|plexmask
+operator|&
+operator|(
+literal|1
+operator|<<
 name|plexno
-operator|!=
-name|plexindex
+operator|)
 condition|)
 block|{
-comment|/* don't try this plex again */
+comment|/* we haven't tried this plex yet */
 name|bre
 argument_list|(
 name|rq
@@ -2984,30 +3221,7 @@ comment|/* don't complain about it */
 break|break;
 block|}
 block|}
-if|if
-condition|(
-name|plexno
-operator|==
-operator|(
-name|vol
-operator|->
-name|plexes
-operator|-
-literal|1
-operator|)
-condition|)
-comment|/* couldn't satisfy the request */
-return|return
-name|REQUEST_DOWN
-return|;
-comment|/* failed */
 block|}
-block|}
-else|else
-return|return
-name|REQUEST_DOWN
-return|;
-comment|/* bad luck */
 block|}
 if|if
 condition|(
@@ -3455,6 +3669,71 @@ name|useroffset
 operator|*
 name|DEV_BSIZE
 expr_stmt|;
+comment|/*      * On a recovery read, we perform an XOR of      * all blocks to the user buffer.  To make      * this work, we first clean out the buffer      */
+if|if
+condition|(
+operator|(
+name|rqe
+operator|->
+name|flags
+operator|&
+operator|(
+name|XFR_RECOVERY_READ
+operator||
+name|XFR_BAD_SUBDISK
+operator|)
+operator|)
+operator|==
+operator|(
+name|XFR_RECOVERY_READ
+operator||
+name|XFR_BAD_SUBDISK
+operator|)
+condition|)
+block|{
+comment|/* bad subdisk of a recovery read */
+name|int
+name|length
+init|=
+name|rqe
+operator|->
+name|grouplen
+operator|<<
+name|DEV_BSHIFT
+decl_stmt|;
+comment|/* and count involved */
+name|char
+modifier|*
+name|data
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|rqe
+operator|->
+name|b
+operator|.
+name|b_data
+index|[
+name|rqe
+operator|->
+name|groupoffset
+operator|<<
+name|DEV_BSHIFT
+index|]
+decl_stmt|;
+comment|/* destination */
+name|bzero
+argument_list|(
+name|data
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+comment|/* clean it out */
+block|}
 return|return
 literal|0
 return|;
@@ -3849,6 +4128,26 @@ operator|=
 name|sdio_done
 expr_stmt|;
 comment|/* come here on completion */
+name|BUF_LOCKINIT
+argument_list|(
+operator|&
+name|sbp
+operator|->
+name|b
+argument_list|)
+expr_stmt|;
+comment|/* get a lock for the buffer */
+name|BUF_LOCK
+argument_list|(
+operator|&
+name|sbp
+operator|->
+name|b
+argument_list|,
+name|LK_EXCLUSIVE
+argument_list|)
+expr_stmt|;
+comment|/* and lock it */
 name|sbp
 operator|->
 name|b
