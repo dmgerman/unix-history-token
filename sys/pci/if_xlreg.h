@@ -2985,6 +2985,10 @@ comment|/* 3Com adapter info */
 name|bus_dma_tag_t
 name|xl_mtag
 decl_stmt|;
+name|bus_dmamap_t
+name|xl_tmpmap
+decl_stmt|;
+comment|/* spare DMA map */
 name|u_int8_t
 name|xl_unit
 decl_stmt|;
