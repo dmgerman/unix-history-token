@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -4998,9 +5004,10 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-name|ALLPROC_LOCK
+name|sx_slock
 argument_list|(
-name|AP_SHARED
+operator|&
+name|allproc_lock
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -5038,9 +5045,10 @@ literal|0
 argument_list|)
 condition|)
 block|{
-name|ALLPROC_LOCK
+name|sx_sunlock
 argument_list|(
-name|AP_RELEASE
+operator|&
+name|allproc_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -5048,9 +5056,10 @@ literal|1
 return|;
 block|}
 block|}
-name|ALLPROC_LOCK
+name|sx_sunlock
 argument_list|(
-name|AP_RELEASE
+operator|&
+name|allproc_lock
 argument_list|)
 expr_stmt|;
 if|if

@@ -118,6 +118,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/unistd.h>
 end_include
 
@@ -2131,9 +2137,10 @@ operator|==
 literal|1
 condition|)
 return|return;
-name|ALLPROC_LOCK
+name|sx_slock
 argument_list|(
-name|AP_SHARED
+operator|&
+name|allproc_lock
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -2215,9 +2222,10 @@ name|newdp
 expr_stmt|;
 block|}
 block|}
-name|ALLPROC_LOCK
+name|sx_sunlock
 argument_list|(
-name|AP_RELEASE
+operator|&
+name|allproc_lock
 argument_list|)
 expr_stmt|;
 if|if

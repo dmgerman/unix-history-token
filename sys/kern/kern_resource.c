@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/time.h>
 end_include
 
@@ -450,9 +456,10 @@ name|p_ucred
 operator|->
 name|cr_uid
 expr_stmt|;
-name|ALLPROC_LOCK
+name|sx_slock
 argument_list|(
-name|AP_SHARED
+operator|&
+name|allproc_lock
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -499,9 +506,10 @@ name|p
 operator|->
 name|p_nice
 expr_stmt|;
-name|ALLPROC_LOCK
+name|sx_sunlock
 argument_list|(
-name|AP_RELEASE
+operator|&
+name|allproc_lock
 argument_list|)
 expr_stmt|;
 break|break;
@@ -785,9 +793,10 @@ name|p_ucred
 operator|->
 name|cr_uid
 expr_stmt|;
-name|ALLPROC_LOCK
+name|sx_slock
 argument_list|(
-name|AP_SHARED
+operator|&
+name|allproc_lock
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -840,9 +849,10 @@ name|found
 operator|++
 expr_stmt|;
 block|}
-name|ALLPROC_LOCK
+name|sx_sunlock
 argument_list|(
-name|AP_RELEASE
+operator|&
+name|allproc_lock
 argument_list|)
 expr_stmt|;
 break|break;

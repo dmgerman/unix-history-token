@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -1217,9 +1223,10 @@ name|ppri
 operator|=
 name|INT_MIN
 expr_stmt|;
-name|ALLPROC_LOCK
+name|sx_slock
 argument_list|(
-name|AP_SHARED
+operator|&
+name|allproc_lock
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -1317,9 +1324,10 @@ name|sched_lock
 argument_list|)
 expr_stmt|;
 block|}
-name|ALLPROC_LOCK
+name|sx_sunlock
 argument_list|(
-name|AP_RELEASE
+operator|&
+name|allproc_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Nothing to do, back to sleep. 	 */
@@ -1533,9 +1541,10 @@ name|outpri2
 operator|=
 name|INT_MIN
 expr_stmt|;
-name|ALLPROC_LOCK
+name|sx_slock
 argument_list|(
-name|AP_SHARED
+operator|&
+name|allproc_lock
 argument_list|)
 expr_stmt|;
 name|retry
@@ -1865,9 +1874,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|ALLPROC_LOCK
+name|sx_sunlock
 argument_list|(
-name|AP_RELEASE
+operator|&
+name|allproc_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If we swapped something out, and another process needed memory, 	 * then wakeup the sched process. 	 */

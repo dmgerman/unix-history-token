@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -4115,9 +4121,10 @@ name|bigsize
 operator|=
 literal|0
 expr_stmt|;
-name|ALLPROC_LOCK
+name|sx_slock
 argument_list|(
-name|AP_SHARED
+operator|&
+name|allproc_lock
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -4254,9 +4261,10 @@ name|size
 expr_stmt|;
 block|}
 block|}
-name|ALLPROC_LOCK
+name|sx_sunlock
 argument_list|(
-name|AP_RELEASE
+operator|&
+name|allproc_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -5421,9 +5429,10 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* 		 * scan the processes for exceeding their rlimits or if 		 * process is swapped out -- deactivate pages 		 */
-name|ALLPROC_LOCK
+name|sx_slock
 argument_list|(
-name|AP_SHARED
+operator|&
+name|allproc_lock
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -5571,9 +5580,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|ALLPROC_LOCK
+name|sx_sunlock
 argument_list|(
-name|AP_RELEASE
+operator|&
+name|allproc_lock
 argument_list|)
 expr_stmt|;
 block|}

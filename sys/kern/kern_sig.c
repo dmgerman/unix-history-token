@@ -138,13 +138,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/syslog.h>
+file|<sys/stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/syslog.h>
 end_include
 
 begin_include
@@ -4525,9 +4531,10 @@ name|all
 condition|)
 block|{
 comment|/* 		 * broadcast 		 */
-name|ALLPROC_LOCK
+name|sx_slock
 argument_list|(
-name|AP_SHARED
+operator|&
+name|allproc_lock
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -4616,9 +4623,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|ALLPROC_LOCK
+name|sx_sunlock
 argument_list|(
-name|AP_RELEASE
+operator|&
+name|allproc_lock
 argument_list|)
 expr_stmt|;
 block|}

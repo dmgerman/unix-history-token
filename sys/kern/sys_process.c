@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/reg.h>
 end_include
 
@@ -605,9 +611,10 @@ case|case
 name|PT_TRACE_ME
 case|:
 comment|/* set my trace flag and "owner" so it can read/write me */
-name|PROCTREE_LOCK
+name|sx_xlock
 argument_list|(
-name|PT_EXCLUSIVE
+operator|&
+name|proctree_lock
 argument_list|)
 expr_stmt|;
 name|PROC_LOCK
@@ -636,9 +643,10 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|PROCTREE_LOCK
+name|sx_xunlock
 argument_list|(
-name|PT_RELEASE
+operator|&
+name|proctree_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -648,9 +656,10 @@ case|case
 name|PT_ATTACH
 case|:
 comment|/* security check done above */
-name|PROCTREE_LOCK
+name|sx_xlock
 argument_list|(
-name|PT_EXCLUSIVE
+operator|&
+name|proctree_lock
 argument_list|)
 expr_stmt|;
 name|PROC_LOCK
@@ -694,9 +703,10 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|PROCTREE_LOCK
+name|sx_xunlock
 argument_list|(
-name|PT_RELEASE
+operator|&
+name|proctree_lock
 argument_list|)
 expr_stmt|;
 name|uap
@@ -849,9 +859,10 @@ name|PT_DETACH
 condition|)
 block|{
 comment|/* reset process parent */
-name|PROCTREE_LOCK
+name|sx_xlock
 argument_list|(
-name|PT_EXCLUSIVE
+operator|&
+name|proctree_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -926,9 +937,10 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|PROCTREE_LOCK
+name|sx_xunlock
 argument_list|(
-name|PT_RELEASE
+operator|&
+name|proctree_lock
 argument_list|)
 expr_stmt|;
 comment|/* should we send SIGCHLD? */

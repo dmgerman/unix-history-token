@@ -205,9 +205,10 @@ case|case
 name|MOD_UNLOAD
 case|:
 comment|/* if this was an ELF module we'd use elf_brand_inuse()... */
-name|ALLPROC_LOCK
+name|sx_slock
 argument_list|(
-name|AP_SHARED
+operator|&
+name|allproc_lock
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -236,9 +237,10 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|ALLPROC_LOCK
+name|sx_sunlock
 argument_list|(
-name|AP_RELEASE
+operator|&
+name|allproc_lock
 argument_list|)
 expr_stmt|;
 default|default:

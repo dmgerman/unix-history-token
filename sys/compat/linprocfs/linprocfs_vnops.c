@@ -3392,9 +3392,10 @@ operator|==
 name|root_dir
 condition|)
 block|{
-name|ALLPROC_LOCK
+name|sx_slock
 argument_list|(
-name|AP_SHARED
+operator|&
+name|allproc_lock
 argument_list|)
 expr_stmt|;
 name|p
@@ -3561,9 +3562,10 @@ name|copied
 operator|++
 expr_stmt|;
 block|}
-name|ALLPROC_LOCK
+name|sx_sunlock
 argument_list|(
-name|AP_RELEASE
+operator|&
+name|allproc_lock
 argument_list|)
 expr_stmt|;
 block|}

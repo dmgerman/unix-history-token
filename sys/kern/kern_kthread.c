@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kthread.h>
 end_include
 
@@ -36,6 +30,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/resourcevar.h>
 end_include
 
@@ -43,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<sys/signalvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
 end_include
 
 begin_include
@@ -370,9 +382,10 @@ name|int
 name|ecode
 parameter_list|)
 block|{
-name|PROCTREE_LOCK
+name|sx_xlock
 argument_list|(
-name|PT_EXCLUSIVE
+operator|&
+name|proctree_lock
 argument_list|)
 expr_stmt|;
 name|PROC_LOCK
@@ -392,9 +405,10 @@ argument_list|(
 name|curproc
 argument_list|)
 expr_stmt|;
-name|PROCTREE_LOCK
+name|sx_xunlock
 argument_list|(
-name|PT_RELEASE
+operator|&
+name|proctree_lock
 argument_list|)
 expr_stmt|;
 name|exit1

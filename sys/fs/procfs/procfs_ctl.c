@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<miscfs/procfs/procfs.h>
 end_include
 
@@ -426,6 +432,8 @@ decl_stmt|;
 block|{
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
 comment|/* 	 * Authorization check: rely on normal debugging protection, except 	 * allow processes to disengage debugging on a process onto which 	 * they have previously attached, but no longer have permission to 	 * debug. 	 */
 if|if
@@ -464,9 +472,10 @@ operator|==
 name|PROCFS_CTL_ATTACH
 condition|)
 block|{
-name|PROCTREE_LOCK
+name|sx_xlock
 argument_list|(
-name|PT_EXCLUSIVE
+operator|&
+name|proctree_lock
 argument_list|)
 expr_stmt|;
 name|PROC_LOCK
@@ -484,21 +493,13 @@ operator|&
 name|P_TRACED
 condition|)
 block|{
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-name|PROCTREE_LOCK
-argument_list|(
-name|PT_RELEASE
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|EBUSY
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 comment|/* can't trace yourself! */
 if|if
@@ -512,21 +513,13 @@ operator|->
 name|p_pid
 condition|)
 block|{
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-name|PROCTREE_LOCK
-argument_list|(
-name|PT_RELEASE
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 comment|/* 		 * Go ahead and set the trace flag. 		 * Save the old parent (it's reset in 		 *   _DETACH, and also in kern_exit.c:wait4() 		 * Reparent the process so that the tracing 		 *   proc gets to see all the action. 		 * Stop the target. 		 */
 name|p
@@ -581,14 +574,17 @@ argument_list|,
 name|SIGSTOP
 argument_list|)
 expr_stmt|;
+name|out
+label|:
 name|PROC_UNLOCK
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|PROCTREE_LOCK
+name|sx_xunlock
 argument_list|(
-name|PT_RELEASE
+operator|&
+name|proctree_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -743,9 +739,10 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* give process back to original parent */
-name|PROCTREE_LOCK
+name|sx_xlock
 argument_list|(
-name|PT_EXCLUSIVE
+operator|&
+name|proctree_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -817,9 +814,10 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|PROCTREE_LOCK
+name|sx_xunlock
 argument_list|(
-name|PT_RELEASE
+operator|&
+name|proctree_lock
 argument_list|)
 expr_stmt|;
 name|wakeup
