@@ -719,6 +719,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|vm_object_split
+parameter_list|(
+name|vm_map_entry_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|vm_object_madvise
 parameter_list|(
 name|vm_object_t
