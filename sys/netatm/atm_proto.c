@@ -235,12 +235,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
 begin_expr_stmt
 name|DOMAIN_SET
 argument_list|(
@@ -248,11 +242,6 @@ name|atm
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#

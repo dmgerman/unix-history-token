@@ -404,17 +404,6 @@ name|Cmn_unit
 name|fu_cmn
 decl_stmt|;
 comment|/* Common unit stuff */
-ifdef|#
-directive|ifdef
-name|sun
-name|struct
-name|dev_info
-modifier|*
-name|fu_devinfo
-decl_stmt|;
-comment|/* Device node for this unit */
-endif|#
-directive|endif
 name|Fore_reg
 modifier|*
 name|fu_ctlreg

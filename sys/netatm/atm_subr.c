@@ -324,25 +324,6 @@ name|atm_init
 operator|=
 literal|1
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
-comment|/* 	 * Add ATM protocol family 	 */
-operator|(
-name|void
-operator|)
-name|protocol_family
-argument_list|(
-operator|&
-name|atmdomain
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|atm_intrq
 operator|.
 name|ifq_maxlen
@@ -361,9 +342,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 name|register_netisr
 argument_list|(
 name|NETISR_ATM
@@ -371,8 +349,6 @@ argument_list|,
 name|atm_intr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Initialize subsystems 	 */
 name|atm_aal5_init
 argument_list|()

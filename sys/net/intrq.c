@@ -57,27 +57,6 @@ directive|include
 file|<net/intrq.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__i386__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netatm/kern_include.h>
-end_include
-
-begin_comment
-comment|/* XXX overkill, fixme! */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * If the appropriate intrq_present variable is zero, don't use  * the queue (as it'll never get processed).  * When defined, each of the network stacks declares their own  * *intrq_present variable to be non-zero.  */
 end_comment
@@ -96,23 +75,12 @@ name|atintrq2_present
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NETISR_ATM
-end_ifdef
-
 begin_decl_stmt
 specifier|const
 name|int
 name|atmintrq_present
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|const
@@ -163,23 +131,12 @@ name|atintrq2
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NETISR_ATM
-end_ifdef
-
 begin_decl_stmt
 name|struct
 name|ifqueue
 name|atm_intrq
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|struct
@@ -242,9 +199,6 @@ name|queue
 index|[]
 init|=
 block|{
-ifdef|#
-directive|ifdef
-name|NETISR_ATM
 block|{
 name|AF_ATM
 block|,
@@ -257,8 +211,6 @@ block|,
 name|NETISR_ATM
 block|}
 block|,
-endif|#
-directive|endif
 block|{
 name|AF_INET
 block|,

@@ -128,12 +128,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
 begin_if
 if|#
 directive|if
@@ -199,24 +193,9 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __FreeBSD__ */
-end_comment
-
 begin_comment
 comment|/*  * Used by kernel to return number of claimed devices  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -265,15 +244,6 @@ name|eni_pci_device
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __FreeBSD__ */
-end_comment
 
 begin_comment
 comment|/*  * Called by kernel with PCI device_id which was read from the PCI  * register set. If the identified vendor is Efficient, see if we  * recognize the particular device. If so, return an identifying string,  * if not, return null.  *  * Arguments:  *	config_id	PCI config token  *	device_id	contents of PCI device ID register  *  * Returns:  *	string		Identifying string if we will handle this device  *	NULL		unrecognized vendor/device  *  */
@@ -1632,12 +1602,6 @@ return|return;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
 begin_if
 if|#
 directive|if
@@ -1765,15 +1729,6 @@ end_endif
 
 begin_comment
 comment|/* BSD< 199506 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __FreeBSD__ */
 end_comment
 
 end_unit
