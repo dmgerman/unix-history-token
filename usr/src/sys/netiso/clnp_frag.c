@@ -16,7 +16,7 @@ comment|/* $Source: /var/src/sys/netiso/RCS/clnp_frag.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)clnp_frag.c	7.5 (Berkeley) %G% */
+comment|/*	@(#)clnp_frag.c	7.6 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -40,18 +40,6 @@ endif|#
 directive|endif
 endif|lint
 end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ISO
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"types.h"
-end_include
 
 begin_include
 include|#
@@ -316,7 +304,7 @@ literal|0
 decl_stmt|;
 name|INCSTAT
 argument_list|(
-name|cns_frag
+name|cns_fragmented
 argument_list|)
 expr_stmt|;
 name|seg_part
@@ -660,6 +648,11 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
+name|INCSTAT
+argument_list|(
+name|cns_fragments
+argument_list|)
+expr_stmt|;
 block|}
 name|clnp
 operator|=
@@ -1035,6 +1028,11 @@ return|;
 block|}
 else|else
 block|{
+name|INCSTAT
+argument_list|(
+name|cns_cantfrag
+argument_list|)
+expr_stmt|;
 name|clnp_discard
 argument_list|(
 name|m
@@ -1207,6 +1205,11 @@ argument_list|)
 comment|/* || this src is a hog */
 condition|)
 block|{
+name|INCSTAT
+argument_list|(
+name|cns_fragdropped
+argument_list|)
+expr_stmt|;
 name|clnp_discard
 argument_list|(
 name|m
@@ -3027,12 +3030,6 @@ begin_endif
 endif|#
 directive|endif
 endif|TROLL
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-endif|ISO
 end_endif
 
 end_unit

@@ -16,7 +16,7 @@ comment|/* $Source: /var/src/sys/netiso/RCS/clnp_er.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)clnp_er.c	7.4 (Berkeley) %G% */
+comment|/*	@(#)clnp_er.c	7.5 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -40,18 +40,6 @@ endif|#
 directive|endif
 endif|lint
 end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ISO
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"types.h"
-end_include
 
 begin_include
 include|#
@@ -124,6 +112,12 @@ include|#
 directive|include
 file|"iso_pcb.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|CLNP_ER_CODES
+end_define
 
 begin_include
 include|#
@@ -257,7 +251,13 @@ expr_stmt|;
 name|ENDDEBUG
 name|INCSTAT
 parameter_list|(
-name|cns_errcvd
+name|cns_er_inhist
+index|[
+name|clnp_er_index
+argument_list|(
+name|reason
+argument_list|)
+index|]
 parameter_list|)
 function_decl|;
 switch|switch
@@ -271,11 +271,6 @@ case|:
 case|case
 name|GEN_PROTOERR
 case|:
-name|INCSTAT
-argument_list|(
-name|er_protoerr
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|GEN_BADCSUM
@@ -283,11 +278,6 @@ case|:
 name|cmd
 operator|=
 name|PRC_PARAMPROB
-expr_stmt|;
-name|INCSTAT
-argument_list|(
-name|er_badcsum
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -297,11 +287,6 @@ name|cmd
 operator|=
 name|PRC_QUENCH
 expr_stmt|;
-name|INCSTAT
-argument_list|(
-name|er_congest
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|GEN_HDRSYNTAX
@@ -309,11 +294,6 @@ case|:
 name|cmd
 operator|=
 name|PRC_PARAMPROB
-expr_stmt|;
-name|INCSTAT
-argument_list|(
-name|er_protoerr
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -323,11 +303,6 @@ name|cmd
 operator|=
 name|PRC_UNREACH_NEEDFRAG
 expr_stmt|;
-name|INCSTAT
-argument_list|(
-name|er_segneeded
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|GEN_INCOMPLETE
@@ -335,11 +310,6 @@ case|:
 name|cmd
 operator|=
 name|PRC_PARAMPROB
-expr_stmt|;
-name|INCSTAT
-argument_list|(
-name|er_reassfail
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -349,11 +319,6 @@ name|cmd
 operator|=
 name|PRC_PARAMPROB
 expr_stmt|;
-name|INCSTAT
-argument_list|(
-name|er_protoerr
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|ADDR_DESTUNREACH
@@ -362,11 +327,6 @@ name|cmd
 operator|=
 name|PRC_UNREACH_HOST
 expr_stmt|;
-name|INCSTAT
-argument_list|(
-name|er_dstunreach
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|ADDR_DESTUNKNOWN
@@ -374,11 +334,6 @@ case|:
 name|cmd
 operator|=
 name|PRC_UNREACH_PROTOCOL
-expr_stmt|;
-name|INCSTAT
-argument_list|(
-name|er_dstunreach
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -397,11 +352,6 @@ name|cmd
 operator|=
 name|PRC_UNREACH_SRCFAIL
 expr_stmt|;
-name|INCSTAT
-argument_list|(
-name|er_srcrterr
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|TTL_EXPTRANSIT
@@ -410,11 +360,6 @@ name|cmd
 operator|=
 name|PRC_TIMXCEED_INTRANS
 expr_stmt|;
-name|INCSTAT
-argument_list|(
-name|er_ttlexpired
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|TTL_EXPREASS
@@ -422,11 +367,6 @@ case|:
 name|cmd
 operator|=
 name|PRC_TIMXCEED_REASS
-expr_stmt|;
-name|INCSTAT
-argument_list|(
-name|er_ttlexpired
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -448,11 +388,6 @@ name|cmd
 operator|=
 name|PRC_PARAMPROB
 expr_stmt|;
-name|INCSTAT
-argument_list|(
-name|er_unsupported
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|REASS_INTERFERE
@@ -460,11 +395,6 @@ case|:
 name|cmd
 operator|=
 name|PRC_TIMXCEED_REASS
-expr_stmt|;
-name|INCSTAT
-argument_list|(
-name|er_reassfail
-argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -1302,6 +1232,20 @@ comment|/* send packet */
 end_comment
 
 begin_expr_stmt
+name|INCSTAT
+argument_list|(
+name|cns_er_outhist
+index|[
+name|clnp_er_index
+argument_list|(
+name|reason
+argument_list|)
+index|]
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 call|(
 name|void
 call|)
@@ -1367,12 +1311,61 @@ argument_list|)
 expr_stmt|;
 end_if
 
-begin_endif
-unit|}
-endif|#
-directive|endif
-endif|ISO
-end_endif
+begin_expr_stmt
+unit|}  clnp_er_index
+operator|(
+name|p
+operator|)
+name|u_char
+name|p
+expr_stmt|;
+end_expr_stmt
+
+begin_block
+block|{
+specifier|register
+name|u_char
+modifier|*
+name|cp
+init|=
+name|clnp_er_codes
+operator|+
+name|CLNP_ERRORS
+decl_stmt|;
+while|while
+condition|(
+name|cp
+operator|>
+name|clnp_er_codes
+condition|)
+block|{
+name|cp
+operator|--
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|cp
+operator|==
+name|p
+condition|)
+return|return
+operator|(
+name|cp
+operator|-
+name|clnp_er_codes
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|CLNP_ERRORS
+operator|+
+literal|1
+operator|)
+return|;
+block|}
+end_block
 
 end_unit
 

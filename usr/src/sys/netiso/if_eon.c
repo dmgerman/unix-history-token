@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*  * $Header: if_eon.c,v 1.4 88/07/19 15:53:59 hagens Exp $   * $Source: /usr/argo/sys/netiso/RCS/if_eon.c,v $   *	@(#)if_eon.c	7.4 (Berkeley) %G% *  *  *	EON rfc   *  Layer between IP and CLNL  *  * TODO:  * Put together a current rfc986 address format and get the right offset  * for the nsel  */
+comment|/*  * $Header: if_eon.c,v 1.4 88/07/19 15:53:59 hagens Exp $   * $Source: /usr/argo/sys/netiso/RCS/if_eon.c,v $   *	@(#)if_eon.c	7.5 (Berkeley) %G% *  *  *	EON rfc   *  Layer between IP and CLNL  *  * TODO:  * Put together a current rfc986 address format and get the right offset  * for the nsel  */
 end_comment
 
 begin_ifndef
@@ -115,7 +115,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/iftypes.h"
+file|"../net/if_types.h"
 end_include
 
 begin_include
@@ -211,6 +211,14 @@ include|#
 directive|include
 file|"eonvar.h"
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|timeval
+name|time
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -2210,6 +2218,17 @@ literal|"eonoutput \n"
 argument_list|)
 expr_stmt|;
 name|ENDDEBUG
+name|ifp
+operator|->
+name|if_lastchange
+init|=
+name|time
+decl_stmt|;
+name|ifp
+operator|->
+name|if_opackets
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|dst
@@ -2850,6 +2869,11 @@ name|ip_p
 operator|=
 name|IPPROTO_EON
 expr_stmt|;
+name|ifp
+operator|->
+name|if_obytes
+operator|+=
+operator|(
 name|iphdr
 operator|->
 name|ip_len
@@ -2868,6 +2892,7 @@ name|EONIPLEN
 operator|+
 name|datalen
 argument_list|)
+operator|)
 expr_stmt|;
 name|iphdr
 operator|->
@@ -3319,6 +3344,33 @@ decl_stmt|;
 block|}
 end_if
 
+begin_if
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|ifp
+operator|->
+name|if_oerrors
+operator|++
+expr_stmt|;
+name|ifp
+operator|->
+name|if_opackets
+operator|--
+expr_stmt|;
+name|ifp
+operator|->
+name|if_obytes
+operator|-=
+name|datalen
+operator|+
+name|EONIPLEN
+expr_stmt|;
+block|}
+end_if
+
 begin_return
 return|return
 name|error
@@ -3489,6 +3541,22 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+name|eonif
+operator|->
+name|if_ibytes
+operator|+=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+expr_stmt|;
+name|eonif
+operator|->
+name|if_lastchange
+operator|=
+name|time
+expr_stmt|;
 name|iphdr
 operator|=
 name|mtod
@@ -3764,8 +3832,13 @@ argument_list|)
 expr_stmt|;
 name|eonifp
 operator|->
-name|if_ierrors
+name|if_iqdrops
 operator|++
+expr_stmt|;
+name|eonifp
+operator|->
+name|if_ipackets
+operator|--
 expr_stmt|;
 name|splx
 argument_list|(

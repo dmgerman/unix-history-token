@@ -16,7 +16,7 @@ comment|/* $Source: /var/src/sys/netiso/RCS/clnp_output.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)clnp_output.c	7.4 (Berkeley) %G% */
+comment|/*	@(#)clnp_output.c	7.5 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -40,18 +40,6 @@ endif|#
 directive|endif
 endif|lint
 end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ISO
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"types.h"
-end_include
 
 begin_include
 include|#
@@ -1032,11 +1020,16 @@ literal|"clnp_output: packet dropped - flags unsupported\n"
 argument_list|)
 expr_stmt|;
 name|ENDDEBUG
-name|m_freem
+name|INCSTAT
 parameter_list|(
-name|m0
+name|cns_odropped
 parameter_list|)
 function_decl|;
+name|m_freem
+argument_list|(
+name|m0
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
@@ -1084,6 +1077,11 @@ argument_list|(
 name|m0
 argument_list|)
 expr_stmt|;
+name|INCSTAT
+argument_list|(
+name|cns_odropped
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENAMETOOLONG
@@ -1112,12 +1110,22 @@ argument_list|(
 name|m0
 argument_list|)
 expr_stmt|;
+name|INCSTAT
+argument_list|(
+name|cns_odropped
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOBUFS
 operator|)
 return|;
 block|}
+name|INCSTAT
+argument_list|(
+name|cns_sent
+argument_list|)
+expr_stmt|;
 name|m
 operator|->
 name|m_next
@@ -1695,11 +1703,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|INCSTAT
-argument_list|(
-name|cns_sent
-argument_list|)
-expr_stmt|;
 comment|/* 	 *	If small enough for interface, send directly 	 *	Fill in segmentation part of hdr if using the full protocol 	 */
 if|if
 condition|(
@@ -1951,6 +1954,22 @@ argument_list|)
 expr_stmt|;
 name|done
 label|:
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|clnp_stat
+operator|.
+name|cns_sent
+operator|--
+expr_stmt|;
+name|clnp_stat
+operator|.
+name|cns_odropped
+operator|++
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|error
@@ -1965,12 +1984,6 @@ name|clnp_ctloutput
 parameter_list|()
 block|{ }
 end_function
-
-begin_endif
-endif|#
-directive|endif
-endif|ISO
-end_endif
 
 end_unit
 

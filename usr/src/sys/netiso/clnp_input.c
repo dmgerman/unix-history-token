@@ -16,7 +16,7 @@ comment|/* $Source: /var/src/sys/netiso/RCS/clnp_input.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)clnp_input.c	7.6 (Berkeley) %G% */
+comment|/*	@(#)clnp_input.c	7.7 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -104,7 +104,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/iftypes.h"
+file|"../net/if_types.h"
 end_include
 
 begin_include
@@ -1934,6 +1934,11 @@ name|clnp_fixed
 operator|*
 argument_list|)
 expr_stmt|;
+name|INCSTAT
+argument_list|(
+name|cns_reassembled
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -1941,6 +1946,11 @@ return|return;
 block|}
 block|}
 comment|/* 	 *	give the packet to the higher layer 	 * 	 *	Note: the total length of packet 	 *	is the total length field of the segmentation part, 	 *	or, if absent, the segment length field of the 	 *	header. 	 */
+name|INCSTAT
+argument_list|(
+name|cns_delivered
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|clnp
@@ -2205,6 +2215,16 @@ name|cnf_type
 operator|&
 name|CNF_TYPE
 argument_list|)
+expr_stmt|;
+name|clnp_stat
+operator|.
+name|cns_delivered
+operator|--
+expr_stmt|;
+name|clnp_stat
+operator|.
+name|cns_noproto
+operator|++
 expr_stmt|;
 name|clnp_discard
 argument_list|(

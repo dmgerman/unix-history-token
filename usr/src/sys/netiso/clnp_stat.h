@@ -31,106 +31,118 @@ begin_struct
 struct|struct
 name|clnp_stat
 block|{
-name|u_short
+name|int
 name|cns_total
 decl_stmt|;
 comment|/* total pkts received */
-name|u_short
+name|int
 name|cns_toosmall
 decl_stmt|;
 comment|/* fixed part of header too small */
-name|u_short
+name|int
 name|cns_badhlen
 decl_stmt|;
 comment|/* header length is not reasonable */
-name|u_short
+name|int
 name|cns_badcsum
 decl_stmt|;
 comment|/* checksum on packet failed */
-name|u_short
+name|int
 name|cns_badaddr
 decl_stmt|;
 comment|/* address fields were not reasonable */
-name|u_short
-name|cns_noseg
-decl_stmt|;
-comment|/* segment information forgotten */
-name|u_short
-name|cns_badid
-decl_stmt|;
-comment|/* incorrect protocol id */
-name|u_short
+name|int
 name|cns_badvers
 decl_stmt|;
 comment|/* incorrect version */
-name|u_short
+name|int
+name|cns_noseg
+decl_stmt|;
+comment|/* segment information forgotten */
+name|int
+name|cns_noproto
+decl_stmt|;
+comment|/* incorrect protocol id */
+name|int
+name|cns_delivered
+decl_stmt|;
+comment|/* packets consumed by protocol */
+name|int
 name|cns_ttlexpired
 decl_stmt|;
 comment|/* ttl has expired */
-name|u_short
+name|int
 name|cns_forward
 decl_stmt|;
 comment|/* forwarded packets */
-name|u_short
-name|cns_errcvd
-decl_stmt|;
-comment|/* ER packets received */
-name|u_short
-name|cns_frag
-decl_stmt|;
-comment|/* fragments generated */
-name|u_short
+name|int
 name|cns_sent
 decl_stmt|;
 comment|/* total packets sent */
-name|u_short
+name|int
+name|cns_odropped
+decl_stmt|;
+comment|/* o.k. packets discarded, e.g. ENOBUFS */
+name|int
+name|cns_cantforward
+decl_stmt|;
+comment|/* non-forwarded packets */
+name|int
+name|cns_fragmented
+decl_stmt|;
+comment|/* packets fragmented */
+name|int
+name|cns_fragments
+decl_stmt|;
+comment|/* fragments received */
+name|int
+name|cns_fragdropped
+decl_stmt|;
+comment|/* fragments discarded */
+name|int
+name|cns_fragtimeout
+decl_stmt|;
+comment|/* fragments timed out */
+name|int
+name|cns_ofragments
+decl_stmt|;
+comment|/* fragments generated */
+name|int
+name|cns_cantfrag
+decl_stmt|;
+comment|/* fragmentation prohibited */
+name|int
+name|cns_reassembled
+decl_stmt|;
+comment|/* packets reconstructed */
+name|int
 name|cns_cachemiss
 decl_stmt|;
 comment|/* cache misses */
-name|u_short
+name|int
 name|cns_congest_set
 decl_stmt|;
 comment|/* congestion experienced bit set */
-name|u_short
+name|int
 name|cns_congest_rcvd
 decl_stmt|;
 comment|/* congestion experienced bit received */
-name|u_short
-name|er_protoerr
+name|int
+name|cns_er_inhist
+index|[
+name|CLNP_ERRORS
+operator|+
+literal|1
+index|]
 decl_stmt|;
-comment|/*	GEN_NOREAS 									GEN_PROTOERR 									GEN_HDRSYNTAX 									GEN_INCOMPLETE 									GEN_DUPOPT */
-name|u_short
-name|er_badcsum
+name|int
+name|cns_er_outhist
+index|[
+name|CLNP_ERRORS
+operator|+
+literal|1
+index|]
 decl_stmt|;
-comment|/*	GEN_BADCSUM */
-name|u_short
-name|er_congest
-decl_stmt|;
-comment|/*	GEN_CONGEST */
-name|u_short
-name|er_segneeded
-decl_stmt|;
-comment|/*	GEN_SEGNEEDED */
-name|u_short
-name|er_reassfail
-decl_stmt|;
-comment|/*	REASS_INTERFERE */
-name|u_short
-name|er_dstunreach
-decl_stmt|;
-comment|/*	ADDR_DESTUNREACH 									ADDR_DESTUNKNOWN */
-name|u_short
-name|er_srcrterr
-decl_stmt|;
-comment|/*	SRCRT_UNSPECERR 									SRCRT_SYNTAX 									SRCRT_UNKNOWNADDR 									SRCRT_BADPATH */
-name|u_short
-name|er_ttlexpired
-decl_stmt|;
-comment|/*	TTL_EXPTRANSIT 									TTL_EXPREASS */
-name|u_short
-name|er_unsupported
-decl_stmt|;
-comment|/*	DISC_UNSUPPOPT 									DISC_UNSUPPVERS 									DISC_UNSUPPSECURE 									DISC_UNSUPPSRCRT 									DISC_UNSUPPRECRT */
 block|}
 name|clnp_stat
 struct|;

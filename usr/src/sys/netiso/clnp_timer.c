@@ -16,7 +16,7 @@ comment|/* $Source: /usr/argo/sys/netiso/RCS/clnp_timer.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)clnp_timer.c	7.3 (Berkeley) %G% */
+comment|/*	@(#)clnp_timer.c	7.4 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -40,18 +40,6 @@ endif|#
 directive|endif
 endif|lint
 end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ISO
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"types.h"
-end_include
 
 begin_include
 include|#
@@ -197,6 +185,11 @@ name|cf
 operator|->
 name|cfr_next
 decl_stmt|;
+name|INCSTAT
+argument_list|(
+name|cns_fragdropped
+argument_list|)
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|cf
@@ -210,6 +203,11 @@ name|cf_next
 expr_stmt|;
 block|}
 comment|/* free the copy of the header */
+name|INCSTAT
+argument_list|(
+name|cns_fragdropped
+argument_list|)
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|cfh
@@ -342,6 +340,11 @@ argument_list|(
 name|cfh
 argument_list|)
 expr_stmt|;
+name|INCSTAT
+argument_list|(
+name|cns_fragtimeout
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -395,12 +398,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-endif|ISO
-end_endif
 
 end_unit
 
