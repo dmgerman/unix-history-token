@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)refresh.c	5.33 (Berkeley) %G%"
+literal|"@(#)refresh.c	5.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -951,8 +951,6 @@ block|{
 specifier|register
 name|int
 name|nlsp
-decl_stmt|,
-name|clsp
 decl_stmt|;
 comment|/* Last space in lines. */
 specifier|register
