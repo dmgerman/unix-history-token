@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslog.c	5.31 (Berkeley) %G%"
+literal|"@(#)syslog.c	5.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -614,7 +614,7 @@ name|void
 operator|)
 name|writev
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|,
 name|iov
 argument_list|,

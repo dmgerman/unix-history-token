@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)psignal.c	5.4 (Berkeley) %G%"
+literal|"@(#)psignal.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,7 +44,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_decl_stmt
@@ -125,7 +131,7 @@ name|void
 operator|)
 name|write
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|,
 name|s
 argument_list|,
@@ -137,7 +143,7 @@ name|void
 operator|)
 name|write
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|,
 literal|": "
 argument_list|,
@@ -150,7 +156,7 @@ name|void
 operator|)
 name|write
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|,
 name|c
 argument_list|,
@@ -165,7 +171,7 @@ name|void
 operator|)
 name|write
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|,
 literal|"\n"
 argument_list|,

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setjmperr.c	5.6 (Berkeley) %G%"
+literal|"@(#)setjmperr.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,7 +44,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<unistd.h>
 end_include
 
 begin_macro
@@ -57,13 +57,13 @@ block|{
 define|#
 directive|define
 name|ERRMSG
-value|"longjmp botch\n"
+value|"longjmp botch.\n"
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
-name|fileno
-argument_list|(
-name|stderr
-argument_list|)
+name|STDERR_FILENO
 argument_list|,
 name|ERRMSG
 argument_list|,
