@@ -2003,6 +2003,8 @@ operator|&
 name|sc
 operator|->
 name|sc_dma
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|UWRITE2
@@ -2027,6 +2029,8 @@ operator|&
 name|sc
 operator|->
 name|sc_dma
+argument_list|,
+literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3913,6 +3917,8 @@ operator|&
 name|xfer
 operator|->
 name|dmabuf
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|p
@@ -6493,9 +6499,9 @@ name|KERNADDR
 argument_list|(
 operator|&
 name|dma
-argument_list|)
-operator|+
+argument_list|,
 name|offs
+argument_list|)
 operator|)
 expr_stmt|;
 name|std
@@ -6506,9 +6512,9 @@ name|DMAADDR
 argument_list|(
 operator|&
 name|dma
-argument_list|)
-operator|+
+argument_list|,
 name|offs
+argument_list|)
 expr_stmt|;
 name|std
 operator|->
@@ -6752,9 +6758,9 @@ name|KERNADDR
 argument_list|(
 operator|&
 name|dma
-argument_list|)
-operator|+
+argument_list|,
 name|offs
+argument_list|)
 operator|)
 expr_stmt|;
 name|sqh
@@ -6765,9 +6771,9 @@ name|DMAADDR
 argument_list|(
 operator|&
 name|dma
-argument_list|)
-operator|+
+argument_list|,
 name|offs
+argument_list|)
 expr_stmt|;
 name|sqh
 operator|->
@@ -7429,11 +7435,11 @@ argument_list|(
 name|DMAADDR
 argument_list|(
 name|dma
-argument_list|)
-operator|+
+argument_list|,
 name|i
 operator|*
 name|maxp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|tog
@@ -9591,6 +9597,8 @@ operator|.
 name|ctl
 operator|.
 name|reqdma
+argument_list|,
+literal|0
 argument_list|)
 argument_list|,
 name|req
@@ -9679,6 +9687,8 @@ operator|.
 name|ctl
 operator|.
 name|reqdma
+argument_list|,
+literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -10387,6 +10397,8 @@ operator|&
 name|xfer
 operator|->
 name|dmabuf
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|status
@@ -13859,6 +13871,8 @@ operator|&
 name|xfer
 operator|->
 name|dmabuf
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 define|#

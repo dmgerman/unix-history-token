@@ -860,7 +860,7 @@ begin_define
 define|#
 directive|define
 name|DECLARE_USB_DMA_T
-value|typedef void * usb_dma_t
+value|typedef char * usb_dma_t
 end_define
 
 begin_comment

@@ -74,8 +74,10 @@ directive|define
 name|DMAADDR
 parameter_list|(
 name|dma
+parameter_list|,
+name|offset
 parameter_list|)
-value|((dma)->block->segs[0].ds_addr + (dma)->offs)
+value|((dma)->block->segs[0].ds_addr + (dma)->offs + (offset))
 end_define
 
 begin_define
@@ -84,8 +86,10 @@ directive|define
 name|KERNADDR
 parameter_list|(
 name|dma
+parameter_list|,
+name|offset
 parameter_list|)
-value|((void *)((dma)->block->kaddr + (dma)->offs))
+value|((void *)((dma)->block->kaddr + (dma)->offs) + (offset))
 end_define
 
 begin_decl_stmt
@@ -239,8 +243,10 @@ directive|define
 name|DMAADDR
 parameter_list|(
 name|dma
+parameter_list|,
+name|offset
 parameter_list|)
-value|(alpha_XXX_dmamap((vm_offset_t) *(dma)))
+value|(alpha_XXX_dmamap((vm_offset_t) *(dma) + (offset)))
 end_define
 
 begin_else
@@ -254,8 +260,10 @@ directive|define
 name|DMAADDR
 parameter_list|(
 name|dma
+parameter_list|,
+name|offset
 parameter_list|)
-value|(vtophys(*(dma)))
+value|(vtophys(*(dma) + (offset)))
 end_define
 
 begin_endif
@@ -269,8 +277,10 @@ directive|define
 name|KERNADDR
 parameter_list|(
 name|dma
+parameter_list|,
+name|offset
 parameter_list|)
-value|((void *) *(dma))
+value|((void *) (*(dma) + (offset)))
 end_define
 
 begin_endif

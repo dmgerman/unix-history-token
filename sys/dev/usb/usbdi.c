@@ -1261,6 +1261,8 @@ argument_list|(
 name|KERNADDR
 argument_list|(
 name|dmap
+argument_list|,
+literal|0
 argument_list|)
 argument_list|,
 name|xfer
@@ -1606,6 +1608,8 @@ operator|&
 name|xfer
 operator|->
 name|dmabuf
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 return|;
@@ -1721,6 +1725,8 @@ operator|&
 name|xfer
 operator|->
 name|dmabuf
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 return|;
@@ -3647,6 +3653,8 @@ argument_list|,
 name|KERNADDR
 argument_list|(
 name|dmap
+argument_list|,
+literal|0
 argument_list|)
 argument_list|,
 name|xfer

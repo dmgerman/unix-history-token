@@ -798,6 +798,16 @@ parameter_list|)
 value|((x)&~ 0xfff)
 end_define
 
+begin_define
+define|#
+directive|define
+name|OHCI_PAGE_MASK
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0xfff)
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
