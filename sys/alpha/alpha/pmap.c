@@ -1659,9 +1659,6 @@ operator|||
 name|ST_DEC_4100
 operator|)
 return|;
-return|return
-literal|0
-return|;
 block|}
 end_function
 
@@ -5011,14 +5008,6 @@ decl_stmt|;
 name|int
 name|rtval
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|m
@@ -5164,11 +5153,6 @@ name|pv
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 name|rtval
 return|;
@@ -5197,17 +5181,9 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 name|pv_entry_t
 name|pv
 decl_stmt|;
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 name|pv
 operator|=
 name|get_pv_entry
@@ -5269,11 +5245,6 @@ operator|++
 expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -5419,9 +5390,6 @@ name|NULL
 argument_list|)
 return|;
 block|}
-return|return
-literal|0
-return|;
 block|}
 end_function
 
@@ -5495,7 +5463,6 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5684,9 +5651,6 @@ name|pte
 decl_stmt|,
 name|tpte
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 if|#
 directive|if
 name|defined
@@ -5721,11 +5685,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -5944,11 +5903,6 @@ argument_list|(
 name|m
 argument_list|,
 name|PG_WRITEABLE
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -7421,9 +7375,6 @@ name|loops
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -7440,11 +7391,6 @@ condition|)
 return|return
 name|FALSE
 return|;
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Not found, check current mappings returning immediately if found. 	 */
 name|TAILQ_FOREACH
 argument_list|(
@@ -7464,11 +7410,6 @@ operator|==
 name|pmap
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 name|TRUE
 return|;
@@ -7484,11 +7425,6 @@ literal|16
 condition|)
 break|break;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|FALSE
@@ -7872,9 +7808,6 @@ decl_stmt|;
 name|int
 name|changed
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -7912,11 +7845,6 @@ literal|0
 operator|)
 condition|)
 return|return;
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 name|changed
 operator|=
 literal|0
@@ -8094,11 +8022,6 @@ argument_list|(
 name|m
 argument_list|,
 name|PG_WRITEABLE
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
