@@ -1,91 +1,132 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	from: @(#)kern_acct.c	7.18 (Berkeley) 5/11/91  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	from: @(#)kern_acct.c	8.1 (Berkeley) 6/14/93  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"namei.h"
+file|<sys/mount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"resourcevar.h"
+file|<sys/vnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/file.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|<sys/syslog.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"termios.h"
+file|<sys/kernel.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"tty.h"
-end_include
+begin_struct
+struct|struct
+name|acct_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
-begin_include
-include|#
-directive|include
-file|"vnode.h"
-end_include
+begin_macro
+name|acct
+argument_list|(
+argument|a1
+argument_list|,
+argument|a2
+argument_list|,
+argument|a3
+argument_list|)
+end_macro
 
-begin_include
-include|#
-directive|include
-file|"mount.h"
-end_include
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|a1
+decl_stmt|;
+end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|"kernel.h"
-end_include
+begin_decl_stmt
+name|struct
+name|acct_args
+modifier|*
+name|a2
+decl_stmt|;
+end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|"file.h"
-end_include
+begin_decl_stmt
+name|int
+modifier|*
+name|a3
+decl_stmt|;
+end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|"acct.h"
-end_include
+begin_block
+block|{
+comment|/* 	 * Body deleted. 	 */
+return|return
+operator|(
+name|ENOSYS
+operator|)
+return|;
+block|}
+end_block
 
-begin_include
-include|#
-directive|include
-file|"syslog.h"
-end_include
+begin_macro
+name|acct_process
+argument_list|(
+argument|a1
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|a1
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+comment|/* 	 * Body deleted. 	 */
+return|return;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Periodically check the file system to see if accounting  * should be turned on or off.  */
+end_comment
 
 begin_comment
 comment|/*  * Values associated with enabling and disabling accounting  */
@@ -116,20 +157,19 @@ comment|/* resume when free space risen to> 4% */
 end_comment
 
 begin_decl_stmt
-name|struct
-name|timeval
-name|chk
+name|int
+name|acctchkfreq
 init|=
-block|{
 literal|15
-block|,
-literal|0
-block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* frequency to check space for accounting */
+comment|/* frequency (in seconds) to check space */
+end_comment
+
+begin_comment
+comment|/*  * SHOULD REPLACE THIS WITH A DRIVER THAT CAN BE READ TO SIMPLIFY.  */
 end_comment
 
 begin_decl_stmt
@@ -140,10 +180,6 @@ name|acctp
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* file to which to do accounting */
-end_comment
-
 begin_decl_stmt
 name|struct
 name|vnode
@@ -153,88 +189,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* file to which to do accounting when space */
-end_comment
-
-begin_comment
-comment|/*  * Enable or disable process accounting.  *  * If a non-null filename is given, that file is used to store accounting  * records on process exit. If a null filename is given process accounting  * is suspended. If accounting is enabled, the system checks the amount  * of freespace on the filesystem at timeval intervals. If the amount of  * freespace is below acctsuspend percent, accounting is suspended. If  * accounting has been suspended, and freespace rises above acctresume,  * accounting is resumed.  */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
-name|sysacct
-argument_list|(
-argument|p
-argument_list|,
-argument|uap
-argument_list|,
-argument|retval
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
-end_decl_stmt
-
-begin_struct
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-block|}
-modifier|*
-name|uap
-struct|;
-end_struct
-
-begin_decl_stmt
-name|int
-modifier|*
-name|retval
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-comment|/* 	 * Body deleted. 	 */
-return|return
-operator|(
-name|ENOSYS
-operator|)
-return|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * Periodically check the file system to see if accounting  * should be turned on or off.  */
-end_comment
-
-begin_macro
+begin_function
+name|void
 name|acctwatch
-argument_list|(
-argument|resettime
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|timeval
+parameter_list|(
+name|a
+parameter_list|)
+name|void
 modifier|*
-name|resettime
+name|a
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|statfs
@@ -295,9 +262,10 @@ argument_list|,
 literal|"Accounting resumed\n"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 block|}
+else|else
+block|{
 if|if
 condition|(
 name|acctp
@@ -356,47 +324,20 @@ literal|"Accounting suspended\n"
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 name|timeout
 argument_list|(
 name|acctwatch
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
-name|resettime
+name|NULL
 argument_list|,
-name|hzto
-argument_list|(
-name|resettime
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * This routine calculates an accounting record for a process and,  * if accounting is enabled, writes it to the accounting file.  */
-end_comment
-
-begin_expr_stmt
-name|acct
-argument_list|(
-name|p
-argument_list|)
-specifier|register
-expr|struct
-name|proc
+name|acctchkfreq
 operator|*
-name|p
+name|hz
+argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_block
-block|{
-comment|/* 	 * Body deleted. 	 */
-return|return;
 block|}
-end_block
+end_function
 
 end_unit
 
