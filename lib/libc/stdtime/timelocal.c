@@ -111,6 +111,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|lc_time_T
 name|_time_localebuf
@@ -118,6 +119,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|_time_using_locale
 decl_stmt|;
@@ -147,6 +149,7 @@ value|(offsetof(struct lc_time_T, Ef_fmt) / sizeof(char *))
 end_define
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|struct
 name|lc_time_T
@@ -289,6 +292,34 @@ literal|"%B %e"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+name|struct
+name|lc_time_T
+modifier|*
+name|__get_current_time_locale
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|_time_using_locale
+condition|?
+operator|&
+name|_time_localebuf
+else|:
+operator|(
+expr|struct
+name|lc_time_T
+operator|*
+operator|)
+operator|&
+name|_C_time_locale
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 name|int
