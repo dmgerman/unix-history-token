@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Names.h - names and types used by ascmagic in file(1).  * These tokens are here because they can appear anywhere in  * the first HOWMANY bytes, while tokens in /etc/magic must  * appear at fixed offsets into the file. Don't make HOWMANY  * too high unless you have a very fast CPU.  *  * Copyright (c) Ian F. Darwin, 1987.  * Written by Ian F. Darwin.  *  * See LEGAL.NOTICE  *  * $Id: names.h,v 1.11 1993/09/16 21:14:20 christos Exp $  */
+comment|/*  * Names.h - names and types used by ascmagic in file(1).  * These tokens are here because they can appear anywhere in  * the first HOWMANY bytes, while tokens in /etc/magic must  * appear at fixed offsets into the file. Don't make HOWMANY  * too high unless you have a very fast CPU.  *  * Copyright (c) Ian F. Darwin, 1987.  * Written by Ian F. Darwin.  *  * See LEGAL.NOTICE  *  * $Id: names.h,v 1.12 1995/04/28 17:29:13 christos Exp $  */
 end_comment
 
 begin_comment
@@ -114,19 +114,19 @@ name|types
 index|[]
 init|=
 block|{
-literal|"c program text"
+literal|"C program text"
 block|,
-literal|"fortran program text"
+literal|"FORTRAN program text"
 block|,
 literal|"make commands text"
 block|,
-literal|"pl/1 program text"
+literal|"PL/1 program text"
 block|,
 literal|"assembler program text"
 block|,
 literal|"English text"
 block|,
-literal|"pascal program text"
+literal|"Pascal program text"
 block|,
 literal|"mail text"
 block|,
@@ -164,7 +164,7 @@ block|,
 name|L_C
 block|}
 block|,
-comment|/* must preced "The", "the", etc. */
+comment|/* must precede "The", "the", etc. */
 block|{
 literal|"#include"
 block|,
@@ -324,6 +324,12 @@ block|}
 block|,
 block|{
 literal|".globl"
+block|,
+name|L_MACH
+block|}
+block|,
+block|{
+literal|".text"
 block|,
 name|L_MACH
 block|}

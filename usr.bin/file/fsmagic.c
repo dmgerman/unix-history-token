@@ -131,7 +131,7 @@ name|char
 operator|*
 name|moduleid
 operator|=
-literal|"@(#)$Id: fsmagic.c,v 1.22 1993/02/19 12:09:04 ian Exp $"
+literal|"@(#)$Id: fsmagic.c,v 1.23 1995/01/21 21:03:35 christos Exp $"
 expr_stmt|;
 end_expr_stmt
 
@@ -615,6 +615,9 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|S_IFSOCK
+ifndef|#
+directive|ifndef
+name|__COHERENT__
 case|case
 name|S_IFSOCK
 case|:
@@ -628,6 +631,8 @@ expr_stmt|;
 return|return
 literal|1
 return|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 case|case
