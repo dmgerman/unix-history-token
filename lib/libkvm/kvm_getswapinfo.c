@@ -71,12 +71,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/ucred.h>
 end_include
 
