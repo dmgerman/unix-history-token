@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)reverse.c	5.1 (Berkeley) %G%"
+literal|"@(#)reverse.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -318,7 +318,11 @@ literal|0
 argument_list|)
 operator|)
 operator|==
-name|NULL
+operator|(
+name|caddr_t
+operator|)
+operator|-
+literal|1
 condition|)
 name|err
 argument_list|(

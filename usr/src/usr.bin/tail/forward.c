@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)forward.c	5.2 (Berkeley) %G%"
+literal|"@(#)forward.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -662,7 +662,11 @@ literal|0
 argument_list|)
 operator|)
 operator|==
-name|NULL
+operator|(
+name|caddr_t
+operator|)
+operator|-
+literal|1
 condition|)
 name|err
 argument_list|(
