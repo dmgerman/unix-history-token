@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parser1.c	3.16 %G%"
+literal|"@(#)parser1.c	3.17 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -195,7 +195,7 @@ argument_list|)
 return|;
 default|default:
 return|return
-name|p_command
+name|p_expression
 argument_list|(
 name|flag
 argument_list|)
@@ -408,7 +408,7 @@ block|}
 end_block
 
 begin_macro
-name|p_command
+name|p_expression
 argument_list|(
 argument|flag
 argument_list|)
@@ -442,31 +442,6 @@ condition|(
 name|token
 condition|)
 block|{
-case|case
-name|T_MOD
-case|:
-name|t
-operator|.
-name|v_type
-operator|=
-name|V_STR
-expr_stmt|;
-name|t
-operator|.
-name|v_str
-operator|=
-name|str_cpy
-argument_list|(
-literal|"%"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|s_gettok
-argument_list|()
-expr_stmt|;
-break|break;
 case|case
 name|T_NUM
 case|:

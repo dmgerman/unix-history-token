@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parser5.c	3.7 %G%"
+literal|"@(#)parser5.c	3.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -471,7 +471,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * string, number, ( expr )  * Plus function calls.  * Also we map % into string.  *  * Always return v_type == V_ERR when flag == 0.  */
+comment|/*  * string, number, ( expr )  * Plus function calls.  *  * Always return v_type == V_ERR when flag == 0.  */
 end_comment
 
 begin_expr_stmt
@@ -508,37 +508,6 @@ condition|(
 name|token
 condition|)
 block|{
-case|case
-name|T_MOD
-case|:
-if|if
-condition|(
-name|flag
-condition|)
-block|{
-name|v
-operator|->
-name|v_type
-operator|=
-name|V_STR
-expr_stmt|;
-name|v
-operator|->
-name|v_str
-operator|=
-name|str_cpy
-argument_list|(
-literal|"%"
-argument_list|)
-expr_stmt|;
-block|}
-operator|(
-name|void
-operator|)
-name|s_gettok
-argument_list|()
-expr_stmt|;
-break|break;
 case|case
 name|T_NUM
 case|:
@@ -675,12 +644,6 @@ name|char
 modifier|*
 name|cmd
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|s_gettok
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|p_convstr
@@ -744,33 +707,6 @@ name|str_free
 argument_list|(
 name|cmd
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|token
-operator|!=
-name|T_RP
-condition|)
-block|{
-name|p_synerror
-argument_list|()
-expr_stmt|;
-name|val_free
-argument_list|(
-operator|*
-name|v
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
-operator|(
-name|void
-operator|)
-name|s_gettok
-argument_list|()
 expr_stmt|;
 block|}
 return|return

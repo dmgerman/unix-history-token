@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lcmd2.c	3.9 %G%"
+literal|"@(#)lcmd2.c	3.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1832,7 +1832,7 @@ index|[]
 init|=
 block|{
 block|{
-literal|"name"
+literal|"alias"
 block|,
 literal|1
 block|,
@@ -1976,6 +1976,8 @@ name|vtowin
 argument_list|(
 name|a
 operator|++
+argument_list|,
+name|selwin
 argument_list|)
 operator|)
 operator|==

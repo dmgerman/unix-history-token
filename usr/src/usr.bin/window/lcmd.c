@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lcmd.c	3.22 %G%"
+literal|"@(#)lcmd.c	3.23 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -346,14 +346,6 @@ name|lcmd_tab
 index|[]
 init|=
 block|{
-literal|"%"
-block|,
-literal|1
-block|,
-name|l_select
-block|,
-name|arg_select
-block|,
 literal|"alias"
 block|,
 literal|1
@@ -361,14 +353,6 @@ block|,
 name|l_alias
 block|,
 name|arg_alias
-block|,
-literal|"buffer"
-block|,
-literal|2
-block|,
-name|l_nline
-block|,
-name|arg_nline
 block|,
 literal|"close"
 block|,
