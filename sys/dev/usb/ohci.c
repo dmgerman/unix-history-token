@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohci.c,v 1.101 2001/02/20 15:20:32 minoura Exp $	*/
+comment|/*	$NetBSD: ohci.c,v 1.111 2001/11/20 21:12:46 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -5504,6 +5504,17 @@ name|sc
 init|=
 name|p
 decl_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_dying
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* If we get an interrupt while polling, then just ignore it. */
 if|if
 condition|(
