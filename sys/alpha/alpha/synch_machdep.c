@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ddb/ddb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/atomic.h>
 end_include
 
@@ -80,7 +86,7 @@ file|<machine/mutex.h>
 end_include
 
 begin_comment
-comment|/* All mutii in system (used for debug/panic) */
+comment|/* All mutexes in system (used for debug/panic) */
 end_comment
 
 begin_decl_stmt
@@ -94,7 +100,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|"All muti queue head"
+literal|"All mutexes queue head"
 block|,
 name|TAILQ_HEAD_INITIALIZER
 argument_list|(
@@ -313,7 +319,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 			 * This really isn't quite right. Really 			 * ought to bump priority of process that 			 * next axcquires the mutex. 			 */
+comment|/* 			 * This really isn't quite right. Really 			 * ought to bump priority of process that 			 * next acquires the mutex. 			 */
 name|MPASS
 argument_list|(
 name|m
@@ -343,7 +349,7 @@ operator|<=
 name|pri
 condition|)
 return|return;
-comment|/* 		 * If lock holder is actually running  just bump priority. 		 */
+comment|/* 		 * If lock holder is actually running, just bump priority. 		 */
 if|if
 condition|(
 name|TAILQ_NEXT
@@ -356,6 +362,21 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|MPASS
+argument_list|(
+name|p
+operator|->
+name|p_stat
+operator|==
+name|SRUN
+operator|||
+name|p
+operator|->
+name|p_stat
+operator|==
+name|SZOMB
+argument_list|)
+expr_stmt|;
 name|SET_PRIO
 argument_list|(
 name|p
@@ -365,20 +386,25 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 		 * If on run queue move to new run queue, and 		 * quit. Otherwise pick up mutex p is blocked on 		 */
+comment|/* 		 * If on run queue move to new run queue, and 		 * quit. 		 */
 if|if
 condition|(
-operator|(
-name|m
-operator|=
+name|p
+operator|->
+name|p_stat
+operator|==
+name|SRUN
+condition|)
+block|{
+name|MPASS
+argument_list|(
 name|p
 operator|->
 name|p_blocked
-operator|)
 operator|==
 name|NULL
-condition|)
-block|{
+argument_list|)
+expr_stmt|;
 name|remrunqueue
 argument_list|(
 name|p
@@ -398,6 +424,32 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 		 * If we aren't blocked on a mutex, give up and quit. 		 */
+if|if
+condition|(
+name|p
+operator|->
+name|p_stat
+operator|!=
+name|SMTX
+condition|)
+block|{
+return|return;
+block|}
+comment|/* 		 * Pick up the mutex that p is blocked on. 		 */
+name|m
+operator|=
+name|p
+operator|->
+name|p_blocked
+expr_stmt|;
+name|MPASS
+argument_list|(
+name|m
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Check if the proc needs to be moved up on 		 * the blocked chain 		 */
 if|if
 condition|(
@@ -494,7 +546,7 @@ name|CTR4
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"propagate priority: p %p moved before %p on [%p] %s"
+literal|"propagate priority: p 0x%p moved before 0x%p on [0x%p] %s"
 argument_list|,
 name|p
 argument_list|,
@@ -533,6 +585,17 @@ name|p
 init|=
 name|CURPROC
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|p
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"curproc is NULL in mutex"
+operator|)
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|type
@@ -576,7 +639,7 @@ name|CTR1
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_enter: %p recurse"
+literal|"mtx_enter: 0x%p recurse"
 argument_list|,
 name|m
 argument_list|)
@@ -587,7 +650,7 @@ name|CTR3
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_enter: %p contested (lock=%lx) [0x%lx]"
+literal|"mtx_enter: 0x%p contested (lock=%lx) [0x%lx]"
 argument_list|,
 name|m
 argument_list|,
@@ -622,10 +685,6 @@ condition|)
 block|{
 name|int
 name|v
-decl_stmt|;
-name|struct
-name|timeval
-name|tv
 decl_stmt|;
 name|struct
 name|proc
@@ -682,6 +741,28 @@ operator|&
 name|m
 operator|->
 name|mtx_blocked
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|p1
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"contested mutex has no contesters"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|p
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"curproc is NULL for contested mutex"
+operator|)
 argument_list|)
 expr_stmt|;
 name|m
@@ -769,15 +850,6 @@ argument_list|(
 name|m
 argument_list|,
 name|MA_NOTOWNED
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"m->mtx_lock=%lx\n"
-argument_list|,
-name|m
-operator|->
-name|mtx_lock
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -943,21 +1015,23 @@ operator|=
 name|m
 expr_stmt|;
 comment|/* Who we're blocked on */
-ifdef|#
-directive|ifdef
-name|notyet
-name|propagate_priority
-argument_list|(
 name|p
-argument_list|)
+operator|->
+name|p_stat
+operator|=
+name|SMTX
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|propagate_priority(p);
 endif|#
 directive|endif
 name|CTR3
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_enter: p %p blocked on [%p] %s"
+literal|"mtx_enter: p 0x%p blocked on [0x%p] %s"
 argument_list|,
 name|p
 argument_list|,
@@ -968,104 +1042,14 @@ operator|->
 name|mtx_description
 argument_list|)
 expr_stmt|;
-comment|/* 			 * cloaned from mi_switch 			 */
-name|microtime
-argument_list|(
-operator|&
-name|tv
-argument_list|)
-expr_stmt|;
-name|p
-operator|->
-name|p_runtime
-operator|+=
-operator|(
-name|tv
-operator|.
-name|tv_usec
-operator|-
-name|PCPU_GET
-argument_list|(
-name|switchtime
-operator|.
-name|tv_usec
-argument_list|)
-operator|)
-operator|+
-operator|(
-name|tv
-operator|.
-name|tv_sec
-operator|-
-name|PCPU_GET
-argument_list|(
-name|switchtime
-operator|.
-name|tv_sec
-argument_list|)
-operator|)
-operator|*
-operator|(
-name|int64_t
-operator|)
-literal|1000000
-expr_stmt|;
-name|PCPU_SET
-argument_list|(
-name|switchtime
-operator|.
-name|tv_usec
-argument_list|,
-name|tv
-operator|.
-name|tv_usec
-argument_list|)
-expr_stmt|;
-name|PCPU_SET
-argument_list|(
-name|switchtime
-operator|.
-name|tv_sec
-argument_list|,
-name|tv
-operator|.
-name|tv_sec
-argument_list|)
-expr_stmt|;
-name|cpu_switch
+name|mi_switch
 argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|PCPU_GET
-argument_list|(
-name|switchtime
-operator|.
-name|tv_sec
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|microtime
-argument_list|(
-operator|&
-name|GLOBALP
-operator|->
-name|gd_switchtime
-argument_list|)
-expr_stmt|;
-name|PCPU_SET
-argument_list|(
-name|switchticks
-argument_list|,
-name|ticks
-argument_list|)
 expr_stmt|;
 name|CTR3
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_enter: p %p free from blocked on [%p] %s"
+literal|"mtx_enter: p 0x%p free from blocked on [0x%p] %s"
 argument_list|,
 name|p
 argument_list|,
@@ -1194,10 +1178,31 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DDB
+elseif|else
+if|if
+condition|(
+operator|!
+name|db_active
+condition|)
+else|#
+directive|else
 else|else
+endif|#
+directive|endif
 name|panic
 argument_list|(
-literal|"spin lock> 5 seconds"
+literal|"spin lock %s held by 0x%lx for> 5 seconds"
+argument_list|,
+name|m
+operator|->
+name|mtx_description
+argument_list|,
+name|m
+operator|->
+name|mtx_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -1230,7 +1235,7 @@ name|CTR1
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_enter: %p spin done"
+literal|"mtx_enter: 0x%p spin done"
 argument_list|,
 name|m
 argument_list|)
@@ -1315,7 +1320,7 @@ name|CTR1
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_exit: %p unrecurse"
+literal|"mtx_exit: 0x%p unrecurse"
 argument_list|,
 name|m
 argument_list|)
@@ -1334,7 +1339,7 @@ name|CTR1
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_exit: %p contested"
+literal|"mtx_exit: 0x%p contested"
 argument_list|,
 name|m
 argument_list|)
@@ -1419,7 +1424,7 @@ name|CTR1
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_exit: %p not held"
+literal|"mtx_exit: 0x%p not held"
 argument_list|,
 name|m
 argument_list|)
@@ -1494,7 +1499,7 @@ name|CTR2
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_exit: %p contested setrunqueue %p"
+literal|"mtx_exit: 0x%p contested setrunqueue 0x%p"
 argument_list|,
 name|m
 argument_list|,
@@ -1506,6 +1511,12 @@ operator|->
 name|p_blocked
 operator|=
 name|NULL
+expr_stmt|;
+name|p1
+operator|->
+name|p_stat
+operator|=
+name|SRUN
 expr_stmt|;
 name|setrunqueue
 argument_list|(
@@ -1593,7 +1604,7 @@ name|CTR2
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_exit: %p switching out lock=0x%lx"
+literal|"mtx_exit: 0x%p switching out lock=0x%lx"
 argument_list|,
 name|m
 argument_list|,
@@ -1602,14 +1613,14 @@ operator|->
 name|mtx_lock
 argument_list|)
 expr_stmt|;
-name|cpu_switch
+name|mi_switch
 argument_list|()
 expr_stmt|;
 name|CTR2
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_exit: %p resuming lock=0x%lx"
+literal|"mtx_exit: 0x%p resuming lock=0x%lx"
 argument_list|,
 name|m
 argument_list|,
@@ -1670,6 +1681,18 @@ name|MTX_UNOWNED
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|type
+operator|&
+name|MTX_FIRST
+condition|)
+name|enable_intr
+argument_list|()
+expr_stmt|;
+comment|/* XXX is this kosher? */
+else|else
+block|{
 name|MPASS
 argument_list|(
 name|m
@@ -1686,6 +1709,7 @@ operator|->
 name|mtx_saveipl
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 block|}
 name|panic
@@ -2105,7 +2129,7 @@ name|CTR2
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_init %p (%s)"
+literal|"mtx_init 0x%p (%s)"
 argument_list|,
 name|m
 argument_list|,
@@ -2241,7 +2265,7 @@ name|CTR2
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_destroy %p (%s)"
+literal|"mtx_destroy 0x%p (%s)"
 argument_list|,
 name|m
 argument_list|,
