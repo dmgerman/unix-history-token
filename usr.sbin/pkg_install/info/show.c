@@ -1241,6 +1241,7 @@ operator|)
 operator|!=
 name|NULL
 condition|)
+block|{
 if|if
 condition|(
 name|strcmp
@@ -1275,6 +1276,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}
