@@ -59,6 +59,13 @@ end_include
 begin_define
 define|#
 directive|define
+name|DEF_MAXFDESCS
+value|2048
+end_define
+
+begin_define
+define|#
+directive|define
 name|next_word
 parameter_list|(
 name|fp
@@ -678,6 +685,25 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+name|maxfdescs
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"maxfdescs not specifid; %d assumed\n"
+argument_list|,
+name|DEF_MAXFDESCS
+argument_list|)
+expr_stmt|;
+name|maxfdescs
+operator|=
+name|DEF_MAXFDESCS
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|maxusers
 operator|==
 literal|0
@@ -749,13 +775,15 @@ name|fprintf
 argument_list|(
 name|ofp
 argument_list|,
-literal|"PARAM=-DTIMEZONE=%d -DDST=%d -DMAXUSERS=%d\n"
+literal|"PARAM=-DTIMEZONE=%d -DDST=%d -DMAXUSERS=%d -DMAXFDESCS=%d\n"
 argument_list|,
 name|zone
 argument_list|,
 name|dst
 argument_list|,
 name|maxusers
+argument_list|,
+name|maxfdescs
 argument_list|)
 expr_stmt|;
 for|for

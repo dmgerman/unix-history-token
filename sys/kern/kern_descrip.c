@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /usr/bill/working/sys/kern/RCS/kern_descrip.c,v 1.2 92/01/21 21:29:09 william Exp $"
+literal|"$Header: /home/cvs/386BSD/src/sys.386bsd/kern/kern_descrip.c,v 1.1.1.1 1993/06/12 14:57:34 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,6 +127,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* actual number of open files */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|maxfdescs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* maximum number of file descriptors to a process */
 end_comment
 
 begin_comment
@@ -522,6 +533,10 @@ name|RLIMIT_OFILE
 index|]
 operator|.
 name|rlim_cur
+operator|||
+name|new
+operator|>=
+name|maxfdescs
 condition|)
 return|return
 operator|(
@@ -855,6 +870,17 @@ name|RLIMIT_OFILE
 index|]
 operator|.
 name|rlim_cur
+operator|||
+operator|(
+operator|(
+name|unsigned
+operator|)
+name|uap
+operator|->
+name|arg
+operator|>=
+name|maxfdescs
+operator|)
 condition|)
 return|return
 operator|(

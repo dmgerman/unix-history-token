@@ -93,7 +93,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * System parameter formulae.  *  * This file is copied into each directory where we compile  * the kernel; it should be modified there to suit local taste  * if necessary.  *  * Compiled with -DHZ=xx -DTIMEZONE=x -DDST=x -DMAXUSERS=xx  */
+comment|/*  * System parameter formulae.  *  * This file is copied into each directory where we compile  * the kernel; it should be modified there to suit local taste  * if necessary.  *  * Compiled with -DHZ=xx -DTIMEZONE=x -DDST=x -DMAXUSERS=xx -DMAXFDESCS=xx  */
 end_comment
 
 begin_ifndef
@@ -201,6 +201,14 @@ name|long
 name|desiredvnodes
 init|=
 name|NVNODE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|maxfdescs
+init|=
+name|MAXFDESCS
 decl_stmt|;
 end_decl_stmt
 

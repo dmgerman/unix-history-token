@@ -630,6 +630,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|maxfdescs
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|maxusers
 decl_stmt|;
 end_decl_stmt
