@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	5.37 (Berkeley) %G%"
+literal|"@(#)setup.c	5.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2165,6 +2165,38 @@ operator|=
 name|sblock
 operator|.
 name|fs_nrpos
+expr_stmt|;
+name|altsblock
+operator|.
+name|fs_qbmask
+operator|=
+name|sblock
+operator|.
+name|fs_qbmask
+expr_stmt|;
+name|altsblock
+operator|.
+name|fs_qfmask
+operator|=
+name|sblock
+operator|.
+name|fs_qfmask
+expr_stmt|;
+name|altsblock
+operator|.
+name|fs_state
+operator|=
+name|sblock
+operator|.
+name|fs_state
+expr_stmt|;
+name|altsblock
+operator|.
+name|fs_maxfilesize
+operator|=
+name|sblock
+operator|.
+name|fs_maxfilesize
 expr_stmt|;
 if|if
 condition|(
