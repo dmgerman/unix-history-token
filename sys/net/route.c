@@ -416,6 +416,17 @@ name|newrt
 operator|=
 literal|0
 expr_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|info
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|info
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Look up the address in the table for that Address Family 	 */
 if|if
 condition|(
@@ -433,17 +444,6 @@ goto|goto
 name|miss2
 goto|;
 block|}
-name|bzero
-argument_list|(
-operator|&
-name|info
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|info
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|RADIX_NODE_HEAD_LOCK
 argument_list|(
 name|rnh
