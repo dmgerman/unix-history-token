@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.66 1996/10/01 12:13:29 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.67 1996/12/09 06:02:32 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -301,6 +301,34 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|char
+name|hname
+index|[
+literal|256
+index|]
+decl_stmt|;
+comment|/* Initalize various things for a multi-user environment */
+if|if
+condition|(
+operator|!
+name|gethostname
+argument_list|(
+name|hname
+argument_list|,
+sizeof|sizeof
+name|hname
+argument_list|)
+condition|)
+name|variable_set2
+argument_list|(
+name|VAR_HOSTNAME
+argument_list|,
+name|hname
 argument_list|)
 expr_stmt|;
 block|}
@@ -1244,6 +1272,15 @@ argument_list|(
 name|int
 argument_list|)
 decl_stmt|;
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|TIOCNOTTY
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1261,8 +1298,6 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-name|DebugFD
-operator|=
 name|fd
 operator|=
 name|open
@@ -1295,6 +1330,10 @@ literal|0
 argument_list|,
 literal|2
 argument_list|)
+expr_stmt|;
+name|DebugFD
+operator|=
+literal|2
 expr_stmt|;
 if|if
 condition|(
