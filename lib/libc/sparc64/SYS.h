@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/trap.h>
+file|<machine/utrap.h>
 end_include
 
 begin_define
