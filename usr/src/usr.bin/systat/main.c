@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	1.4 (Lucasfilm) %G%"
+literal|"@(#)main.c	1.5 (Lucasfilm) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,6 +112,18 @@ name|suspend
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
+modifier|*
+name|wload
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* one line window for load average */
+end_comment
 
 begin_function
 name|main
@@ -408,7 +420,7 @@ argument_list|,
 name|die
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize display.  Load average appears in standard 	 * window with current display's overlapping sub-window 	 * maintained by the display routines to minimize update 	 * work by curses. 	 */
+comment|/* 	 * Initialize display.  Load average appears in a one line 	 * window of its own.  Current command's display appears in 	 * an overlapping sub-window of stdscr configured by the display 	 * routines to minimize update work by curses. 	 */
 name|initscr
 argument_list|()
 expr_stmt|;
@@ -434,6 +446,37 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"Couldn't initialize display.\n"
+argument_list|)
+expr_stmt|;
+name|die
+argument_list|()
+expr_stmt|;
+block|}
+name|wload
+operator|=
+name|newwin
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|3
+argument_list|,
+literal|20
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wload
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Couldn't set up load average window.\n"
 argument_list|)
 expr_stmt|;
 name|die
@@ -516,19 +559,45 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|strcpy
-argument_list|(
 name|known
 index|[
 literal|0
 index|]
 operator|.
 name|k_name
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|numknown
+operator|=
+literal|1
+expr_stmt|;
+name|procs
+index|[
+literal|0
+index|]
+operator|.
+name|pid
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|procs
+index|[
+literal|0
+index|]
+operator|.
+name|cmd
 argument_list|,
 literal|"<idle>"
 argument_list|)
 expr_stmt|;
-name|numknown
+name|numprocs
 operator|=
 literal|1
 expr_stmt|;
@@ -582,13 +651,11 @@ argument_list|,
 literal|"/0   /1   /2   /3   /4   /5   /6   /7   /8   /9   /10"
 argument_list|)
 expr_stmt|;
-name|mvwaddstr
+name|mvaddstr
 argument_list|(
-name|wnd
+literal|3
 argument_list|,
-literal|0
-argument_list|,
-literal|0
+literal|5
 argument_list|,
 literal|"Load Average"
 argument_list|)
@@ -722,16 +789,16 @@ name|lave
 expr_stmt|;
 name|wmove
 argument_list|(
-name|wnd
+name|wload
 argument_list|,
 literal|0
 argument_list|,
-literal|15
+literal|0
 argument_list|)
 expr_stmt|;
 name|wclrtoeol
 argument_list|(
-name|wnd
+name|wload
 argument_list|)
 expr_stmt|;
 for|for
@@ -757,7 +824,7 @@ operator|--
 control|)
 name|waddch
 argument_list|(
-name|wnd
+name|wload
 argument_list|,
 name|c
 argument_list|)
@@ -770,7 +837,7 @@ literal|50
 condition|)
 name|wprintw
 argument_list|(
-name|wnd
+name|wload
 argument_list|,
 literal|" %4.1f"
 argument_list|,
@@ -784,6 +851,11 @@ operator|->
 name|c_refresh
 call|)
 argument_list|()
+expr_stmt|;
+name|wrefresh
+argument_list|(
+name|wload
+argument_list|)
 expr_stmt|;
 name|wrefresh
 argument_list|(
