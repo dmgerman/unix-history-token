@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: time.c,v 1.4.2.2 1997/08/29 05:30:00 imp Exp $"
+literal|"$Id: time.c,v 1.4.2.3 1998/03/08 14:04:04 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,6 +127,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -191,6 +197,12 @@ name|struct
 name|rusage
 name|ru
 decl_stmt|;
+name|int
+name|exitonsig
+init|=
+literal|0
+decl_stmt|;
+comment|/* Die with same signal as child */
 name|lflag
 operator|=
 literal|0
@@ -369,13 +381,29 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|WIFEXITED
+argument_list|(
 name|status
-operator|&
-literal|0377
+argument_list|)
 condition|)
 name|warnx
 argument_list|(
 literal|"command terminated abnormally"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|WIFSIGNALED
+argument_list|(
+name|status
+argument_list|)
+condition|)
+name|exitonsig
+operator|=
+name|WTERMSIG
+argument_list|(
+name|status
 argument_list|)
 expr_stmt|;
 name|after
@@ -719,6 +747,37 @@ operator|.
 name|ru_nivcsw
 argument_list|,
 literal|"involuntary context switches"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|exitonsig
+condition|)
+block|{
+if|if
+condition|(
+name|signal
+argument_list|(
+name|exitonsig
+argument_list|,
+name|SIG_DFL
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|perror
+argument_list|(
+literal|"signal"
+argument_list|)
+expr_stmt|;
+else|else
+name|kill
+argument_list|(
+name|getpid
+argument_list|()
+argument_list|,
+name|exitonsig
 argument_list|)
 expr_stmt|;
 block|}
