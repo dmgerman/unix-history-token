@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_mbuf.c	1.13	81/11/20	*/
+comment|/*	uipc_mbuf.c	1.14	81/11/21	*/
 end_comment
 
 begin_include
@@ -70,18 +70,25 @@ end_include
 begin_macro
 name|m_reserve
 argument_list|(
-argument|mbufs
+argument|cc
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|int
-name|mbufs
+name|cc
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|mbufs
+init|=
+name|cc
+operator|/
+name|MSIZE
+decl_stmt|;
 if|if
 condition|(
 name|mbstat
@@ -128,18 +135,25 @@ end_block
 begin_macro
 name|m_release
 argument_list|(
-argument|mbufs
+argument|cc
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|int
-name|mbufs
+name|cc
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|mbufs
+init|=
+name|cc
+operator|/
+name|MSIZE
+decl_stmt|;
 name|mbstat
 operator|.
 name|m_lowat
