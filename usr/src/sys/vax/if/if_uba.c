@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_uba.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_uba.c	7.8 (Berkeley) %G%  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"../machine/pte.h"
-end_include
 
 begin_include
 include|#
@@ -73,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|"../net/if.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vax/pte.h"
 end_include
 
 begin_include
@@ -999,29 +999,17 @@ argument_list|)
 expr_stmt|;
 name|cpte
 operator|=
-operator|&
-name|Mbmap
-index|[
-name|mtocl
+name|kvtopte
 argument_list|(
 name|cp
 argument_list|)
-operator|*
-name|CLSIZE
-index|]
 expr_stmt|;
 name|ppte
 operator|=
-operator|&
-name|Mbmap
-index|[
-name|mtocl
+name|kvtopte
 argument_list|(
 name|pp
 argument_list|)
-operator|*
-name|CLSIZE
-index|]
 expr_stmt|;
 name|x
 operator|=
@@ -1718,16 +1706,10 @@ name|ip
 decl_stmt|;
 name|pte
 operator|=
-operator|&
-name|Mbmap
-index|[
-name|mtocl
+name|kvtopte
 argument_list|(
 name|dp
 argument_list|)
-operator|*
-name|CLSIZE
-index|]
 expr_stmt|;
 name|x
 operator|=
