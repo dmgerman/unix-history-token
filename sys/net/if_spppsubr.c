@@ -5481,6 +5481,11 @@ name|ifp
 operator|->
 name|if_oerrors
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|rv
@@ -5491,6 +5496,11 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Unlike in sppp_input(), we can always bump the timestamp 	 * here since sppp_output() is only called on behalf of 	 * network-layer traffic; control-layer traffic is handled 	 * by sppp_cp_send(). 	 */
 name|sp
 operator|->
