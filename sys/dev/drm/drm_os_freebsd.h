@@ -187,12 +187,6 @@ directive|include
 file|<sys/memrange.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<pci/pcivar.h>
-end_include
-
 begin_if
 if|#
 directive|if
@@ -204,6 +198,12 @@ end_if
 begin_include
 include|#
 directive|include
+file|<dev/pci/pcivar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/selinfo.h>
 end_include
 
@@ -211,6 +211,12 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_include
+include|#
+directive|include
+file|<pci/pcivar.h>
+end_include
 
 begin_include
 include|#

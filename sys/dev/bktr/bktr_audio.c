@@ -71,16 +71,27 @@ begin_comment
 comment|/* for DELAY */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
 file|<pci/pcivar.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/pcivar.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
