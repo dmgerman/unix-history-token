@@ -613,12 +613,15 @@ case|case
 name|ETHERTYPE_IP
 case|:
 comment|/* shouldn't need a schednetisr(), as */
+case|case
+name|WCCP_PROTOCOL_TYPE
+case|:
+comment|/* we are in ip_input */
 name|ifq
 operator|=
 operator|&
 name|ipintrq
 expr_stmt|;
-comment|/* we are in ip_input */
 break|break;
 ifdef|#
 directive|ifdef
