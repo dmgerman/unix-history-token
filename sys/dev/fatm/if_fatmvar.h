@@ -427,6 +427,17 @@ begin_comment
 comment|/* one of the above */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FATM_VCC_REOPEN
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* reopening during init */
+end_comment
+
 begin_comment
 comment|/*  * Finally the softc structure  */
 end_comment
