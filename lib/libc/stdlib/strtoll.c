@@ -266,11 +266,6 @@ name|cutoff
 operator|=
 name|neg
 condition|?
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
 operator|-
 operator|(
 name|LLONG_MIN
@@ -278,6 +273,11 @@ operator|+
 name|LLONG_MAX
 operator|)
 operator|+
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|LLONG_MAX
 else|:
 name|LLONG_MAX
