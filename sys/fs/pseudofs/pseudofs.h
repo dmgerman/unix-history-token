@@ -121,6 +121,17 @@ name|PFS_RAW
 value|(PFS_RAWRD|PFS_RAWWR)
 end_define
 
+begin_define
+define|#
+directive|define
+name|PFS_DISABLED
+value|0x8000
+end_define
+
+begin_comment
+comment|/* node is disabled */
+end_comment
+
 begin_comment
 comment|/*  * Data structures  */
 end_comment
@@ -637,6 +648,34 @@ name|struct
 name|vfsconf
 modifier|*
 name|vfc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Other utility functions  */
+end_comment
+
+begin_function_decl
+name|int
+name|pfs_disable
+parameter_list|(
+name|struct
+name|pfs_node
+modifier|*
+name|pn
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pfs_enable
+parameter_list|(
+name|struct
+name|pfs_node
+modifier|*
+name|pn
 parameter_list|)
 function_decl|;
 end_function_decl
