@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lfs.c	5.21 (Berkeley) %G%"
+literal|"@(#)lfs.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -398,6 +398,9 @@ comment|/* lfs_sboffs */
 block|{
 literal|0
 block|}
+block|,
+comment|/* lfs_sp */
+name|NULL
 block|,
 comment|/* lfs_ivnode */
 name|NULL
@@ -984,6 +987,14 @@ operator|=
 name|ssize
 operator|-
 literal|1
+expr_stmt|;
+name|lfsp
+operator|->
+name|lfs_dbpseg
+operator|=
+name|ssize
+operator|/
+name|DEV_BSIZE
 expr_stmt|;
 block|}
 name|lfsp
@@ -1952,7 +1963,7 @@ operator|++
 control|)
 name|dip
 operator|->
-name|di_inum
+name|di_inumber
 operator|=
 name|LFS_UNUSED_INUM
 expr_stmt|;
@@ -3352,7 +3363,7 @@ literal|0
 expr_stmt|;
 name|dip
 operator|->
-name|di_inum
+name|di_inumber
 operator|=
 name|ino
 expr_stmt|;
