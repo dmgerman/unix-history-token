@@ -3125,12 +3125,6 @@ name|in6_multi
 modifier|*
 name|in6m_next
 decl_stmt|;
-comment|/* nuke prefix list.  this may try to remove some of ifaddrs as well */
-name|in6_purgeprefix
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 comment|/* remove neighbor management table */
 name|nd6_purge
 argument_list|(

@@ -257,12 +257,6 @@ directive|include
 file|<netinet6/nd6.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet6/in6_prefix.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -850,27 +844,6 @@ argument_list|,
 name|hz
 argument_list|,
 name|nd6_timer
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-comment|/* router renumbering prefix list maintenance */
-name|callout_init
-argument_list|(
-operator|&
-name|in6_rr_timer_ch
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|callout_reset
-argument_list|(
-operator|&
-name|in6_rr_timer_ch
-argument_list|,
-name|hz
-argument_list|,
-name|in6_rr_timer
 argument_list|,
 name|NULL
 argument_list|)
