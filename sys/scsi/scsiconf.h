@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.46 1996/09/10 23:37:52 bde Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.46.2.1 1997/05/24 22:19:16 jmg Exp $  */
 end_comment
 
 begin_ifndef
@@ -80,6 +80,32 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Don't poke around inside of "scsi_data".  Each low level  * driver has its own definition for it.  */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|scsi_data
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|scsi_link
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/* scsi_link refers to scsi_device and vice-versa */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|proc
+struct_decl|;
+end_struct_decl
 
 begin_comment
 comment|/*  * These entrypoints are called by the high-end drivers to get services from  * whatever low-end drivers they are attached to each adapter type has one of  * these statically allocated.  */
@@ -273,32 +299,6 @@ end_comment
 begin_comment
 comment|/*  * Format of adapter_info() response data  * e.g. maximum number of entries queuable to a device by the adapter  */
 end_comment
-
-begin_comment
-comment|/* Don't poke around inside of "scsi_data".  Each low level  * driver has its own definition for it.  */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|scsi_data
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|scsi_link
-struct_decl|;
-end_struct_decl
-
-begin_comment
-comment|/* scsi_link refers to scsi_device and vice-versa */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|proc
-struct_decl|;
-end_struct_decl
 
 begin_comment
 comment|/*  * These entry points are called by the low-end drivers to get services from  * whatever high-end drivers they are attached to.  Each device type has one  * of these statically allocated.  *  * XXX dufault@hda.com: Each adapter driver has a scsi_device structure  *     that I don't think should be there.  *     This structure should be rearranged and cleaned up once the  *     instance down in the adapter drivers is removed.  */
