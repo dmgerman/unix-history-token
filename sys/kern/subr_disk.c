@@ -482,7 +482,7 @@ end_function
 
 begin_function
 name|void
-name|disk_delete
+name|disk_destroy
 parameter_list|(
 name|dev_t
 name|dev

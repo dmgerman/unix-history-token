@@ -135,7 +135,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|disk_delete
+name|disk_destroy
 name|__P
 argument_list|(
 operator|(
