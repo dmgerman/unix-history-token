@@ -9,11 +9,11 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__OpenBSD__
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+end_ifndef
 
 begin_include
 include|#
