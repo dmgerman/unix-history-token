@@ -219,6 +219,7 @@ operator|->
 name|fs_cgsize
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Note: cg_niblk is 16 bits and may overflow, so it must never 	 * be used except for comparing with the old value. 	 */
 name|newcg
 operator|->
 name|cg_niblk
@@ -1204,9 +1205,9 @@ name|cg
 operator|->
 name|cg_irotor
 operator|<
-name|newcg
+name|fs
 operator|->
-name|cg_niblk
+name|fs_ipg
 condition|)
 name|newcg
 operator|->
