@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setterm.c	5.15 (Berkeley) %G%"
+literal|"@(#)setterm.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -415,11 +415,6 @@ specifier|register
 name|int
 name|unknown
 decl_stmt|;
-name|int
-name|destcol
-decl_stmt|,
-name|destline
-decl_stmt|;
 name|struct
 name|winsize
 name|win
@@ -707,25 +702,26 @@ operator|=
 literal|""
 expr_stmt|;
 block|}
+comment|/* If we can't tab, we can't backtab, either. */
 if|if
 condition|(
 operator|!
 name|GT
 condition|)
-comment|/* If we can't tab, we can't backtab either. */
 name|BT
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* 	 * Test for cursor motion capbility. 	 * 	 * XXX 	 * This is truly stupid -- tgoto returns "OOPS" if it can't 	 * do cursor motions. 	 */
 if|if
 condition|(
 name|tgoto
 argument_list|(
 name|CM
 argument_list|,
-name|destcol
+literal|0
 argument_list|,
-name|destline
+literal|0
 argument_list|)
 index|[
 literal|0
