@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.2 (Berkeley) %G%"
+literal|"@(#)main.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -138,6 +138,14 @@ name|home
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|char
+modifier|*
+name|getlogin
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
 name|main
 parameter_list|(
@@ -163,6 +171,8 @@ name|struct
 name|passwd
 modifier|*
 name|pw
+init|=
+name|NULL
 decl_stmt|;
 name|char
 name|homedir
@@ -398,12 +408,22 @@ name|verbose
 operator|++
 expr_stmt|;
 comment|/* 	 * Set up the home directory in case we're globbing. 	 */
+name|cp
+operator|=
+name|getlogin
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|!=
+name|NULL
+condition|)
 name|pw
 operator|=
 name|getpwnam
 argument_list|(
-name|getlogin
-argument_list|()
+name|cp
 argument_list|)
 expr_stmt|;
 if|if
@@ -822,6 +842,13 @@ break|break;
 name|makeargv
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|margc
+operator|==
+literal|0
+condition|)
+continue|continue;
 name|c
 operator|=
 name|getcmd
@@ -921,13 +948,6 @@ name|help
 condition|)
 break|break;
 block|}
-name|longjmp
-argument_list|(
-name|toplevel
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
@@ -1138,6 +1158,88 @@ comment|/* store from first of buffer */
 while|while
 condition|(
 operator|*
+name|stringbase
+operator|==
+literal|' '
+operator|||
+operator|*
+name|stringbase
+operator|==
+literal|'\t'
+condition|)
+name|stringbase
+operator|++
+expr_stmt|;
+comment|/* skip initial white space */
+if|if
+condition|(
+operator|*
+name|stringbase
+operator|==
+literal|'!'
+condition|)
+block|{
+comment|/* handle shell escapes specially */
+name|stringbase
+operator|++
+expr_stmt|;
+operator|*
+name|argp
+operator|++
+operator|=
+literal|"!"
+expr_stmt|;
+comment|/* command name is "!" */
+name|margc
+operator|++
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|stringbase
+operator|==
+literal|' '
+operator|||
+operator|*
+name|stringbase
+operator|==
+literal|'\t'
+condition|)
+name|stringbase
+operator|++
+expr_stmt|;
+comment|/* skip white space */
+if|if
+condition|(
+operator|*
+name|stringbase
+operator|!=
+literal|'\0'
+condition|)
+block|{
+operator|*
+name|argp
+operator|++
+operator|=
+name|stringbase
+expr_stmt|;
+comment|/* argument is entire command string */
+name|margc
+operator|++
+expr_stmt|;
+block|}
+operator|*
+name|argp
+operator|++
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+else|else
+block|{
+while|while
+condition|(
+operator|*
 name|argp
 operator|++
 operator|=
@@ -1147,6 +1249,7 @@ condition|)
 name|margc
 operator|++
 expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -1186,24 +1289,6 @@ init|=
 name|argbase
 decl_stmt|;
 comment|/* will return this if token found */
-if|if
-condition|(
-operator|*
-name|sb
-operator|==
-literal|'!'
-condition|)
-block|{
-comment|/* recognize ! as a token for shell */
-name|stringbase
-operator|++
-expr_stmt|;
-return|return
-operator|(
-literal|"!"
-operator|)
-return|;
-block|}
 name|S0
 label|:
 switch|switch
@@ -1599,6 +1684,12 @@ name|lines
 operator|+
 name|i
 expr_stmt|;
+if|if
+condition|(
+name|c
+operator|->
+name|c_name
+condition|)
 name|printf
 argument_list|(
 literal|"%s"
