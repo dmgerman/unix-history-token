@@ -10219,11 +10219,6 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-comment|/* 			 * abuse 'next_rule' to store the set_disable word 			 */
-call|(
-name|u_int32_t
-call|)
-argument_list|(
 operator|(
 operator|(
 expr|struct
@@ -10233,8 +10228,7 @@ operator|)
 name|bp
 operator|)
 operator|->
-name|next_rule
-argument_list|)
+name|set_disable
 operator|=
 name|set_disable
 expr_stmt|;
@@ -10331,12 +10325,9 @@ expr|*
 name|p
 argument_list|)
 expr_stmt|;
-operator|(
-name|int
-operator|)
 name|dst
 operator|->
-name|rule
+name|rulenum
 operator|=
 name|p
 operator|->
