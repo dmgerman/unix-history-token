@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ktrace.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ktrace.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * operations to ktrace system call  (op& 0x3)  */
+comment|/*  * operations to ktrace system call  (KTROP(op))  */
 end_comment
 
 begin_define
@@ -15,7 +15,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* set traces */
+comment|/* set trace points */
 end_comment
 
 begin_define
@@ -26,7 +26,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* clear traces */
+comment|/* clear trace points */
 end_comment
 
 begin_define
@@ -40,19 +40,33 @@ begin_comment
 comment|/* stop all tracing to file */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|KTROP
+parameter_list|(
+name|o
+parameter_list|)
+value|((o)&3)
+end_define
+
 begin_comment
-comment|/*  * flags to OR in with operation  */
+comment|/* macro to extract operation */
+end_comment
+
+begin_comment
+comment|/*  * flags (ORed in with operation)  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|KTROP_INHERITFLAG
+name|KTRFLAG_DESCEND
 value|4
 end_define
 
 begin_comment
-comment|/* pass to children flag */
+comment|/* perform op on all children too */
 end_comment
 
 begin_comment
@@ -113,7 +127,7 @@ value|((p)->p_traceflag& (1<<(type)))
 end_define
 
 begin_comment
-comment|/*  * ktrace record types - add new ones here  */
+comment|/*  * ktrace record types  */
 end_comment
 
 begin_comment
@@ -124,7 +138,7 @@ begin_define
 define|#
 directive|define
 name|KTR_SYSCALL
-value|0x1
+value|1
 end_define
 
 begin_struct
@@ -152,7 +166,7 @@ begin_define
 define|#
 directive|define
 name|KTR_SYSRET
-value|0x2
+value|2
 end_define
 
 begin_struct
@@ -183,7 +197,7 @@ begin_define
 define|#
 directive|define
 name|KTR_NAMEI
-value|0x3
+value|3
 end_define
 
 begin_comment
@@ -198,7 +212,7 @@ begin_define
 define|#
 directive|define
 name|KTR_GENIO
-value|0x4
+value|4
 end_define
 
 begin_struct
@@ -218,7 +232,38 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * kernel trace facilities  */
+comment|/*  * KTR_PSIG - trace processed signal  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KTR_PSIG
+value|5
+end_define
+
+begin_struct
+struct|struct
+name|ktr_psig
+block|{
+name|int
+name|signo
+decl_stmt|;
+name|sig_t
+name|action
+decl_stmt|;
+name|int
+name|mask
+decl_stmt|;
+name|int
+name|code
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * kernel trace points  */
 end_comment
 
 begin_define
@@ -247,6 +292,20 @@ define|#
 directive|define
 name|KTRFAC_GENIO
 value|(1<<KTR_GENIO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KTRFAC_PSIG
+value|(1<<KTR_PSIG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KTRFAC_INHERIT
+value|0x80000000
 end_define
 
 end_unit
