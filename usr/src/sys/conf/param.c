@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.c	6.13 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -270,16 +270,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|nport
-init|=
-name|NPROC
-operator|/
-literal|2
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|nmbclusters
 init|=
 name|NMBCLUSTERS
@@ -413,20 +403,6 @@ name|buf
 decl_stmt|,
 modifier|*
 name|swbuf
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|short
-modifier|*
-name|swsize
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-modifier|*
-name|swpf
 decl_stmt|;
 end_decl_stmt
 
