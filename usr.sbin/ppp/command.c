@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.156 1998/07/28 21:54:52 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.157 1998/07/29 18:21:13 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -618,7 +618,7 @@ name|char
 name|VersionDate
 index|[]
 init|=
-literal|"$Date: 1998/07/28 21:54:52 $"
+literal|"$Date: 1998/07/29 18:21:13 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1879,15 +1879,7 @@ name|NULL
 argument_list|,
 name|PHYS_ALL
 argument_list|,
-name|arg
-operator|->
-name|cmd
-operator|->
-name|args
-condition|?
 literal|1
-else|:
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -2850,50 +2842,6 @@ name|NULL
 block|}
 block|,
 block|{
-name|NULL
-block|,
-literal|"dial!"
-block|,
-name|DialCommand
-block|,
-name|LOCAL_AUTH
-operator||
-name|LOCAL_CX_OPT
-block|,
-literal|"Dial and login"
-block|,
-literal|"dial! [remote]"
-block|,
-operator|(
-name|void
-operator|*
-operator|)
-literal|1
-block|}
-block|,
-block|{
-name|NULL
-block|,
-literal|"call!"
-block|,
-name|DialCommand
-block|,
-name|LOCAL_AUTH
-operator||
-name|LOCAL_CX_OPT
-block|,
-literal|"Dial and login"
-block|,
-literal|"call! [remote]"
-block|,
-operator|(
-name|void
-operator|*
-operator|)
-literal|1
-block|}
-block|,
-block|{
 literal|"disable"
 block|,
 name|NULL
@@ -2975,24 +2923,6 @@ block|{
 literal|"open"
 block|,
 name|NULL
-block|,
-name|OpenCommand
-block|,
-name|LOCAL_AUTH
-operator||
-name|LOCAL_CX_OPT
-block|,
-literal|"Open an FSM"
-block|,
-literal|"open [lcp|ccp|ipcp]"
-block|,
-name|NULL
-block|}
-block|,
-block|{
-name|NULL
-block|,
-literal|"open!"
 block|,
 name|OpenCommand
 block|,
@@ -5427,15 +5357,7 @@ name|NULL
 argument_list|,
 name|PHYS_ALL
 argument_list|,
-name|arg
-operator|->
-name|cmd
-operator|->
-name|args
-condition|?
 literal|1
-else|:
-literal|0
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -5540,15 +5462,7 @@ name|name
 argument_list|,
 name|PHYS_ALL
 argument_list|,
-name|arg
-operator|->
-name|cmd
-operator|->
-name|args
-condition|?
 literal|1
-else|:
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -5749,15 +5663,7 @@ name|NULL
 argument_list|,
 name|PHYS_ALL
 argument_list|,
-name|arg
-operator|->
-name|cmd
-operator|->
-name|args
-condition|?
 literal|1
-else|:
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
