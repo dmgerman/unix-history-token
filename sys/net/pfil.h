@@ -263,7 +263,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|"ipfilter.h"
+file|"opt_ipfilter.h"
 end_include
 
 begin_endif
