@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.6 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6106,7 +6106,7 @@ name|errstring
 argument_list|(
 name|h_errno
 operator|+
-name|MAX_ERRNO
+name|E_DNSBASE
 argument_list|)
 expr_stmt|;
 else|else
@@ -6213,7 +6213,7 @@ name|errstring
 argument_list|(
 name|h_errno
 operator|+
-name|MAX_ERRNO
+name|E_DNSBASE
 argument_list|)
 expr_stmt|;
 operator|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.5 (Berkeley) %G%"
+literal|"@(#)err.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1431,13 +1431,19 @@ operator|(
 name|buf
 operator|)
 return|;
+case|case
+name|EOPENTIMEOUT
+case|:
+return|return
+literal|"Timeout on file open"
+return|;
 ifdef|#
 directive|ifdef
 name|NAMED_BIND
 case|case
 name|HOST_NOT_FOUND
 operator|+
-name|MAX_ERRNO
+name|E_DNSBASE
 case|:
 return|return
 operator|(
@@ -1447,7 +1453,7 @@ return|;
 case|case
 name|TRY_AGAIN
 operator|+
-name|MAX_ERRNO
+name|E_DNSBASE
 case|:
 return|return
 operator|(
@@ -1457,7 +1463,7 @@ return|;
 case|case
 name|NO_RECOVERY
 operator|+
-name|MAX_ERRNO
+name|E_DNSBASE
 case|:
 return|return
 operator|(
@@ -1467,7 +1473,7 @@ return|;
 case|case
 name|NO_DATA
 operator|+
-name|MAX_ERRNO
+name|E_DNSBASE
 case|:
 return|return
 operator|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.10 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2646,8 +2646,9 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
+comment|/* return pseudo-error code */
 return|return
-name|ETIMEDOUT
+name|EOPENTIMEOUT
 return|;
 block|}
 name|ev

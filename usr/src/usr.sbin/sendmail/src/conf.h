@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.15 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1540,6 +1540,50 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* **  These are used in a few cases where we need some special **  error codes, but where the system doesn't provide something **  reasonable.  They are printed in errstring. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|E_PSEUDOBASE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|E_PSEUDOBASE
+value|256
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|EOPENTIMEOUT
+value|(E_PSEUDOBASE + 0)
+end_define
+
+begin_comment
+comment|/* timeout on open */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E_DNSBASE
+value|(E_PSEUDOBASE + 20)
+end_define
+
+begin_comment
+comment|/* base for DNS h_errno */
+end_comment
 
 begin_comment
 comment|/* type of arbitrary pointer */
