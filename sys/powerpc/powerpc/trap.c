@@ -238,6 +238,12 @@ directive|include
 file|<machine/sr.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<ddb/ddb.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1262,8 +1268,6 @@ argument_list|(
 name|frame
 operator|->
 name|exc
-argument_list|,
-literal|0
 argument_list|,
 name|frame
 argument_list|)

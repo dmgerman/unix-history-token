@@ -5974,20 +5974,15 @@ name|LI
 operator|+=
 name|loc
 expr_stmt|;
-name|db_symstr
-argument_list|(
-name|pstr
-argument_list|,
-name|LI
-argument_list|,
-name|DB_STGY_ANY
-argument_list|)
-expr_stmt|;
 name|pstr
 operator|+=
-name|strlen
+name|sprintf
 argument_list|(
 name|pstr
+argument_list|,
+literal|"0x%x, "
+argument_list|,
+name|LI
 argument_list|)
 expr_stmt|;
 name|func
@@ -6093,6 +6088,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+break|break;
 block|}
 if|if
 condition|(

@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ddb/db_access.h>
+file|<ddb/ddb.h>
 end_include
 
 begin_comment
