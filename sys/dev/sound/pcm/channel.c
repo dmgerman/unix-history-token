@@ -1347,11 +1347,7 @@ name|c
 operator|->
 name|flags
 operator|&
-operator|(
 name|CHN_F_ABORTING
-operator||
-name|CHN_F_CLOSING
-operator|)
 operator|)
 operator|)
 expr_stmt|;
