@@ -125,7 +125,7 @@ comment|/* OOB/Urgent data can be written */
 end_comment
 
 begin_comment
-comment|/*  * FreeBSD extensions: polling on a regular file might return one  * of these events (currently only supported on UFS).  */
+comment|/*  * File extensions:  * polling on a regular file might return one  * of these events (currently only supported on UFS).  */
 end_comment
 
 begin_define
@@ -170,6 +170,21 @@ end_define
 
 begin_comment
 comment|/* file's contents may have changed */
+end_comment
+
+begin_comment
+comment|/* General FreeBSD extensions (currently only supported for sockets): */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|POLLINIGNEOF
+value|0x2000
+end_define
+
+begin_comment
+comment|/* POLLIN, except ignore EOF */
 end_comment
 
 begin_comment
