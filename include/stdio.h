@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)stdio.h	8.5 (Berkeley) 4/29/95  *	$Id: stdio.h,v 1.14 1998/01/01 17:07:44 alex Exp $  */
+comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)stdio.h	8.5 (Berkeley) 4/29/95  *	$Id: stdio.h,v 1.15 1998/04/11 07:33:46 jb Exp $  */
 end_comment
 
 begin_ifndef
@@ -2256,37 +2256,40 @@ begin_function
 specifier|static
 name|__inline
 name|int
+function|\
 name|__getc_locked
 parameter_list|(
 name|FILE
 modifier|*
-name|fp
+name|_fp
 parameter_list|)
-block|{	\
+function|\
+block|{					\
 specifier|extern
 name|int
 name|__isthreaded
 decl_stmt|;
 block|\
 name|int
-name|ret
+name|_ret
 decl_stmt|;
 block|\
 if|if
 condition|(
 name|__isthreaded
 condition|)
+then|\
 name|_FLOCKFILE
 argument_list|(
-name|fp
+name|_fp
 argument_list|)
 expr_stmt|;
 block|\
-name|ret
+name|_ret
 operator|=
 name|getc_unlocked
 argument_list|(
-name|fp
+name|_fp
 argument_list|)
 expr_stmt|;
 block|\
@@ -2294,15 +2297,16 @@ if|if
 condition|(
 name|__isthreaded
 condition|)
+then|\
 name|_funlockfile
 argument_list|(
-name|fp
+name|_fp
 argument_list|)
 expr_stmt|;
 block|\
 return|return
 operator|(
-name|ret
+name|_ret
 operator|)
 return|;
 block|\ }
@@ -2312,42 +2316,45 @@ begin_function
 specifier|static
 name|__inline
 name|int
+function|\
 name|__putc_locked
 parameter_list|(
 name|int
-name|x
+name|_x
 parameter_list|,
 name|FILE
 modifier|*
-name|fp
+name|_fp
 parameter_list|)
-block|{	\
+function|\
+block|{					\
 specifier|extern
 name|int
 name|__isthreaded
 decl_stmt|;
 block|\
 name|int
-name|ret
+name|_ret
 decl_stmt|;
 block|\
 if|if
 condition|(
 name|__isthreaded
 condition|)
+then|\
 name|_FLOCKFILE
 argument_list|(
-name|fp
+name|_fp
 argument_list|)
 expr_stmt|;
 block|\
-name|ret
+name|_ret
 operator|=
 name|putc_unlocked
 argument_list|(
-name|x
+name|_x
 argument_list|,
-name|fp
+name|_fp
 argument_list|)
 expr_stmt|;
 block|\
@@ -2355,15 +2362,16 @@ if|if
 condition|(
 name|__isthreaded
 condition|)
+then|\
 name|_funlockfile
 argument_list|(
-name|fp
+name|_fp
 argument_list|)
 expr_stmt|;
 block|\
 return|return
 operator|(
-name|ret
+name|_ret
 operator|)
 return|;
 block|\ }
