@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Most parts of this file are not covered by:  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: inflate.c,v 1.3 1994/10/11 11:29:11 csgr Exp $  *  *  */
+comment|/*  * Most parts of this file are not covered by:  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: inflate.c,v 1.4 1994/10/22 11:40:28 phk Exp $  *  *  */
 end_comment
 
 begin_include
@@ -15,11 +15,22 @@ directive|include
 file|<sys/inflate.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/systm.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -33,6 +44,12 @@ directive|include
 file|<sys/malloc.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -44,6 +61,11 @@ include|#
 directive|include
 file|<vm/vm_kern.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* needed to make inflate() work */
@@ -74,6 +96,12 @@ begin_comment
 comment|/* Stuff to make inflate() work */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -86,11 +114,22 @@ parameter_list|)
 value|bzero(dest,len)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|NOMEMCPY
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
 
 begin_define
 define|#
@@ -98,6 +137,34 @@ directive|define
 name|FPRINTF
 value|printf
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+specifier|extern
+name|void
+name|putstr
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|FPRINTF
+value|putstr
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -120,6 +187,50 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KERNEL
+end_ifndef
+
+begin_comment
+comment|/* want to use this file in kzip also */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|unsigned
+name|char
+modifier|*
+name|malloc
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|free
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * This came from unzip-5.12.  I have changed it the flow to pass  * a structure pointer around, thus hopefully making it re-entrant.  * Poul-Henning  */
@@ -1074,6 +1185,9 @@ else|:
 name|BMAX
 expr_stmt|;
 comment|/* set length of EOB code, if any */
+ifdef|#
+directive|ifdef
+name|KERNEL
 name|memzero
 argument_list|(
 operator|(
@@ -1088,6 +1202,32 @@ name|c
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|BMAX
+operator|+
+literal|1
+condition|;
+name|i
+operator|++
+control|)
+name|c
+index|[
+name|i
+index|]
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|p
 operator|=
 name|b
@@ -4318,6 +4458,9 @@ block|{
 name|int
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|KERNEL
 name|u_char
 modifier|*
 name|p
@@ -4346,6 +4489,8 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -4353,11 +4498,22 @@ name|glbl
 operator|->
 name|gz_slide
 condition|)
+ifdef|#
+directive|ifdef
+name|KERNEL
 return|return
 operator|(
 name|ENOMEM
 operator|)
 return|;
+else|#
+directive|else
+return|return
+literal|3
+return|;
+comment|/* kzip expects 3 */
+endif|#
+directive|endif
 name|i
 operator|=
 name|xinflate
@@ -4435,6 +4591,9 @@ operator|)
 name|NULL
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|KERNEL
 if|if
 condition|(
 name|p
@@ -4460,6 +4619,8 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 return|return
 name|i
 return|;

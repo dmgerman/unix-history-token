@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id$  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: inflate.h,v 1.4 1994/10/22 11:40:38 phk Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -15,11 +15,19 @@ directive|define
 name|_SYS_INFLATE_H_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|KERNEL
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|KZIP
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -137,7 +145,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* KERNEL */
+comment|/* KERNEL || KZIP */
 end_comment
 
 begin_endif
