@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nm.c	5.1 (Berkeley) %G%"
+literal|"@(#)nm.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -814,7 +814,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 		 * construct a name of the form "archive.a(obj.o)" for the 		 * current archive entry if the object name is to be printed 		 * on each output line 		 */
+comment|/* 		 * construct a name of the form "archive.a:obj.o:" for the 		 * current archive entry if the object name is to be printed 		 * on each output line 		 */
 if|if
 condition|(
 name|print_file_each_line
@@ -827,7 +827,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"%s("
+literal|"%s:"
 argument_list|,
 name|fname
 argument_list|)
@@ -893,16 +893,6 @@ name|ar_name
 index|[
 name|i
 index|]
-expr_stmt|;
-if|if
-condition|(
-name|print_file_each_line
-condition|)
-operator|*
-name|p
-operator|++
-operator|=
-literal|')'
 expr_stmt|;
 operator|*
 name|p
@@ -1895,7 +1885,7 @@ name|print_file_each_line
 condition|)
 name|printf
 argument_list|(
-literal|"%s: "
+literal|"%s:"
 argument_list|,
 name|objname
 argument_list|)
