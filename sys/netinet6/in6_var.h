@@ -402,7 +402,7 @@ name|struct
 name|sockaddr_in6
 name|ifru_dstaddr
 decl_stmt|;
-name|short
+name|int
 name|ifru_flags
 decl_stmt|;
 name|int

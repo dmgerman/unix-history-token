@@ -3819,9 +3819,6 @@ name|ifm
 operator|->
 name|ifm_flags
 operator|=
-operator|(
-name|u_short
-operator|)
 name|ifp
 operator|->
 name|if_flags
@@ -5028,9 +5025,6 @@ name|ifm
 operator|->
 name|ifm_flags
 operator|=
-operator|(
-name|u_short
-operator|)
 name|ifp
 operator|->
 name|if_flags

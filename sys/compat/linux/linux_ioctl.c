@@ -10701,6 +10701,8 @@ operator|=
 name|ifp
 operator|->
 name|if_flags
+operator|&
+literal|0xffff
 expr_stmt|;
 comment|/* these flags have no Linux equivalent */
 name|flags

@@ -295,7 +295,7 @@ name|short
 name|if_timer
 decl_stmt|;
 comment|/* time 'til if_watchdog called */
-name|short
+name|int
 name|if_flags
 decl_stmt|;
 comment|/* up/down, broadcast, etc. */

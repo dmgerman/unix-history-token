@@ -1465,7 +1465,7 @@ index|]
 operator|.
 name|ifp
 operator|->
-name|if_ipending
+name|if_flags
 operator|&=
 operator|~
 name|IFF_POLLING
@@ -1587,7 +1587,7 @@ if|if
 condition|(
 name|ifp
 operator|->
-name|if_ipending
+name|if_flags
 operator|&
 name|IFF_POLLING
 condition|)
@@ -1664,7 +1664,7 @@ operator|++
 expr_stmt|;
 name|ifp
 operator|->
-name|if_ipending
+name|if_flags
 operator||=
 name|IFF_POLLING
 expr_stmt|;
@@ -1722,7 +1722,7 @@ operator|!
 operator|(
 name|ifp
 operator|->
-name|if_ipending
+name|if_flags
 operator|&
 name|IFF_POLLING
 operator|)
@@ -1766,7 +1766,7 @@ comment|/* found it */
 break|break;
 name|ifp
 operator|->
-name|if_ipending
+name|if_flags
 operator|&=
 operator|~
 name|IFF_POLLING

@@ -11391,7 +11391,7 @@ if|if
 condition|(
 name|ifp
 operator|->
-name|if_ipending
+name|if_flags
 operator|&
 name|IFF_POLLING
 condition|)
@@ -13075,7 +13075,7 @@ if|if
 condition|(
 name|ifp
 operator|->
-name|if_ipending
+name|if_flags
 operator|&
 name|IFF_POLLING
 condition|)
@@ -14724,7 +14724,7 @@ if|if
 condition|(
 name|ifp
 operator|->
-name|if_ipending
+name|if_flags
 operator|&
 name|IFF_POLLING
 condition|)

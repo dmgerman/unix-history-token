@@ -508,10 +508,6 @@ begin_comment
 comment|/* supports multicast */
 end_comment
 
-begin_comment
-comment|/*  * The following flag(s) ought to go in if_flags, but we cannot change  * struct ifnet because of binary compatibility, so we store them in  * if_ipending, which is not used so far.  * If possible, make sure the value is not conflicting with other  * IFF flags, so we have an easier time when we want to merge them.  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -856,12 +852,12 @@ define|#
 directive|define
 name|ifr_flags
 value|ifr_ifru.ifru_flags[0]
-comment|/* flags */
+comment|/* flags (low 16 bits) */
 define|#
 directive|define
-name|ifr_prevflags
+name|ifr_flagshigh
 value|ifr_ifru.ifru_flags[1]
-comment|/* flags */
+comment|/* flags (high 16 bits) */
 define|#
 directive|define
 name|ifr_metric

@@ -79,7 +79,7 @@ name|mask
 decl_stmt|,
 name|subnet
 decl_stmt|;
-name|short
+name|int
 name|flags
 decl_stmt|;
 name|int

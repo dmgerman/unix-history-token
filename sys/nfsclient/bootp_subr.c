@@ -1815,10 +1815,6 @@ name|ifp
 operator|->
 name|if_unit
 argument_list|,
-operator|(
-name|unsigned
-name|short
-operator|)
 name|ifp
 operator|->
 name|if_flags

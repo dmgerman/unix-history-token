@@ -1203,7 +1203,7 @@ modifier|*
 name|warning
 decl_stmt|;
 specifier|static
-name|short
+name|int
 name|prev_flags
 decl_stmt|;
 specifier|static

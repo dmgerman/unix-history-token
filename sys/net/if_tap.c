@@ -2943,7 +2943,7 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-name|short
+name|int
 name|f
 decl_stmt|;
 switch|switch
@@ -3302,7 +3302,7 @@ name|f
 operator|=
 operator|*
 operator|(
-name|short
+name|int
 operator|*
 operator|)
 name|data

@@ -3232,7 +3232,7 @@ name|SIOCGIFFLAGS
 case|:
 operator|*
 operator|(
-name|short
+name|int
 operator|*
 operator|)
 name|data
