@@ -615,7 +615,14 @@ begin_define
 define|#
 directive|define
 name|ARGS_BUFSIZE
-value|1024
+value|2048
+end_define
+
+begin_define
+define|#
+directive|define
+name|RECURSIVE_DEBUG_ADJUST
+value|4
 end_define
 
 begin_comment
@@ -683,22 +690,11 @@ decl_stmt|;
 name|int
 name|arglen
 decl_stmt|,
-name|debugSave
-decl_stmt|,
 name|csock
 init|=
 operator|-
 literal|1
 decl_stmt|;
-comment|/* Lower debugging to avoid infinite recursion */
-name|debugSave
-operator|=
-name|_gNgDebugLevel
-expr_stmt|;
-name|_gNgDebugLevel
-operator|-=
-literal|4
-expr_stmt|;
 comment|/* Display header stuff */
 name|NGLOGX
 argument_list|(
@@ -857,6 +853,11 @@ name|arglen
 operator|=
 name|arglen
 expr_stmt|;
+comment|/* Lower debugging to avoid infinite recursion */
+name|_gNgDebugLevel
+operator|-=
+name|RECURSIVE_DEBUG_ADJUST
+expr_stmt|;
 comment|/* Ask the node to translate the binary message to ASCII for us */
 if|if
 condition|(
@@ -887,9 +888,15 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+name|_gNgDebugLevel
+operator|+=
+name|RECURSIVE_DEBUG_ADJUST
+expr_stmt|;
 goto|goto
 name|fail
 goto|;
+block|}
 if|if
 condition|(
 name|NgRecvMsg
@@ -908,9 +915,20 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+name|_gNgDebugLevel
+operator|+=
+name|RECURSIVE_DEBUG_ADJUST
+expr_stmt|;
 goto|goto
 name|fail
 goto|;
+block|}
+comment|/* Restore debugging level */
+name|_gNgDebugLevel
+operator|+=
+name|RECURSIVE_DEBUG_ADJUST
+expr_stmt|;
 comment|/* Display command string and arguments */
 name|NGLOGX
 argument_list|(
@@ -1007,10 +1025,6 @@ name|close
 argument_list|(
 name|csock
 argument_list|)
-expr_stmt|;
-name|_gNgDebugLevel
-operator|=
-name|debugSave
 expr_stmt|;
 block|}
 end_function
