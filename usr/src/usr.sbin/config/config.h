@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * config.h	1.4	81/03/31  * Definitions that everybody needs to know  */
+comment|/*  * config.h	1.5	81/05/22  * Definitions that everybody needs to know  */
 end_comment
 
 begin_define
@@ -80,6 +80,23 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|idlst
+block|{
+name|char
+modifier|*
+name|id
+decl_stmt|;
+name|struct
+name|idlst
+modifier|*
+name|id_next
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_typedef
 typedef|typedef
 name|char
@@ -106,16 +123,12 @@ modifier|*
 name|d_name
 decl_stmt|;
 comment|/* Name of device (e.g. rk11) */
-name|char
+name|struct
+name|idlist
 modifier|*
-name|d_vec1
+name|d_vec
 decl_stmt|;
-comment|/* First interrupt vector */
-name|char
-modifier|*
-name|d_vec2
-decl_stmt|;
-comment|/* Second interrupt vector */
+comment|/* Interrupt vectors */
 name|int
 name|d_addr
 decl_stmt|;
