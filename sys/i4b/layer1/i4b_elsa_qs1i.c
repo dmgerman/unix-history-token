@@ -21,12 +21,6 @@ directive|include
 file|"opt_i4b.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"pnp.h"
-end_include
-
 begin_else
 else|#
 directive|else
@@ -39,17 +33,17 @@ name|NISIC
 value|1
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|NPNP
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*   * this driver works for both the ELSA QuickStep 1000 PNP and the ELSA  * PCC-16  */

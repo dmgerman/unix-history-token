@@ -9,11 +9,12 @@ directive|ifdef
 name|__FreeBSD__
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|"pnp.h"
-end_include
+begin_define
+define|#
+directive|define
+name|NPNP
+value|1
+end_define
 
 begin_include
 include|#
