@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ww.h	3.15 83/09/15	  */
+comment|/*  *	@(#)ww.h	3.16 83/09/15	  */
 end_comment
 
 begin_include
@@ -183,6 +183,7 @@ modifier|*
 name|ww_nvis
 decl_stmt|;
 comment|/* how many ww_buf chars are visible per row */
+comment|/* things for the window process */
 name|int
 name|ww_pty
 decl_stmt|;
@@ -202,7 +203,7 @@ literal|11
 index|]
 decl_stmt|;
 comment|/* "/dev/ttyp?" */
-comment|/* below are things for the user */
+comment|/* things for the user, they really don't belong here */
 name|char
 name|ww_center
 range|:
@@ -212,12 +213,17 @@ comment|/* center the label */
 name|int
 name|ww_id
 decl_stmt|;
-comment|/* the user id */
+comment|/* the user window id */
 name|char
 modifier|*
 name|ww_label
 decl_stmt|;
 comment|/* the user supplied label */
+name|struct
+name|ww_pos
+name|ww_altpos
+decl_stmt|;
+comment|/* alternate position */
 block|}
 struct|;
 end_struct

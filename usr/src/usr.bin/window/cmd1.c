@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd1.c	3.11 83/09/14"
+literal|"@(#)cmd1.c	3.12 83/09/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -814,7 +814,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Illegal window size or position."
+literal|"Illegal window position."
 argument_list|)
 expr_stmt|;
 return|return
@@ -875,6 +875,22 @@ operator|->
 name|ww_hasframe
 operator|=
 literal|1
+expr_stmt|;
+name|w
+operator|->
+name|ww_altpos
+operator|.
+name|r
+operator|=
+literal|1
+expr_stmt|;
+name|w
+operator|->
+name|ww_altpos
+operator|.
+name|c
+operator|=
+literal|0
 expr_stmt|;
 name|wwcursor
 argument_list|(
