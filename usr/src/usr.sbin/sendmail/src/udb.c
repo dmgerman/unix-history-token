@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.2 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	8.3 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.2 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	8.3 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1293,6 +1293,41 @@ modifier|*
 name|sender
 decl_stmt|;
 block|{
+specifier|extern
+name|char
+modifier|*
+name|udbmatch
+parameter_list|()
+function_decl|;
+return|return
+name|udbmatch
+argument_list|(
+name|sender
+argument_list|,
+literal|"mailname"
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|char
+modifier|*
+name|udbmatch
+parameter_list|(
+name|user
+parameter_list|,
+name|field
+parameter_list|)
+name|char
+modifier|*
+name|user
+decl_stmt|;
+name|char
+modifier|*
+name|field
+decl_stmt|;
+block|{
 specifier|register
 name|char
 modifier|*
@@ -1332,9 +1367,11 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"udbsender(%s)\n"
+literal|"udbmatch(%s, %s)\n"
 argument_list|,
-name|sender
+name|user
+argument_list|,
+name|field
 argument_list|)
 expr_stmt|;
 if|if
@@ -1374,15 +1411,22 @@ return|;
 comment|/* long names can never match and are a pain to deal with */
 if|if
 condition|(
+operator|(
 name|strlen
 argument_list|(
-name|sender
+name|user
 argument_list|)
+operator|+
+name|strlen
+argument_list|(
+name|field
+argument_list|)
+operator|)
 operator|>
 sizeof|sizeof
 name|keybuf
 operator|-
-literal|12
+literal|4
 condition|)
 return|return
 name|NULL
@@ -1390,7 +1434,7 @@ return|;
 comment|/* names beginning with colons indicate metadata */
 if|if
 condition|(
-name|sender
+name|user
 index|[
 literal|0
 index|]
@@ -1408,7 +1452,7 @@ name|strcpy
 argument_list|(
 name|keybuf
 argument_list|,
-name|sender
+name|user
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1418,7 +1462,17 @@ name|strcat
 argument_list|(
 name|keybuf
 argument_list|,
-literal|":mailname"
+literal|":"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcat
+argument_list|(
+name|keybuf
+argument_list|,
+name|field
 argument_list|)
 expr_stmt|;
 name|keylen
@@ -1515,7 +1569,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"udbsender: no match on %s (%d)\n"
+literal|"udbmatch: no match on %s (%d)\n"
 argument_list|,
 name|keybuf
 argument_list|,
@@ -1568,7 +1622,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"udbsender ==> %s\n"
+literal|"udbmatch ==> %s\n"
 argument_list|,
 name|p
 argument_list|)
@@ -1578,6 +1632,20 @@ name|p
 return|;
 block|}
 block|}
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|field
+argument_list|,
+literal|"mailname"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+name|NULL
+return|;
 comment|/* 	**  Nothing yet.  Search again for a default case.  But only 	**  use it if we also have a forward (:maildrop) pointer already 	**  in the database. 	*/
 comment|/* build database key */
 operator|(
@@ -1587,7 +1655,7 @@ name|strcpy
 argument_list|(
 name|keybuf
 argument_list|,
-name|sender
+name|user
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1820,7 +1888,7 @@ name|xalloc
 argument_list|(
 name|strlen
 argument_list|(
-name|sender
+name|user
 argument_list|)
 operator|+
 name|strlen
@@ -1840,7 +1908,7 @@ name|strcpy
 argument_list|(
 name|p
 argument_list|,
-name|sender
+name|user
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1876,7 +1944,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"udbsender ==> %s\n"
+literal|"udbmatch ==> %s\n"
 argument_list|,
 name|p
 argument_list|)
