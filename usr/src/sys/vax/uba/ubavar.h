@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubavar.h	4.23	81/11/26	*/
+comment|/*	ubavar.h	4.24	82/04/01	*/
 end_comment
 
 begin_comment
@@ -217,7 +217,7 @@ name|short
 name|ui_dk
 decl_stmt|;
 comment|/* if init 1 set to number for iostat */
-name|short
+name|int
 name|ui_flags
 decl_stmt|;
 comment|/* parameter from system specification */
