@@ -4652,7 +4652,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Partition an mbuf chain in two pieces, returning the tail --  * all but the first len0 bytes.  In case of failure, it returns NULL and  * attempts to restore the chain to its original state.  */
+comment|/*  * Partition an mbuf chain in two pieces, returning the tail --  * all but the first len0 bytes.  In case of failure, it returns NULL and  * attempts to restore the chain to its original state.  *  * Note that the resulting mbufs might be read-only, because the new  * mbuf can end up sharing an mbuf cluster with the original mbuf if  * the "breaking point" happens to lie within a cluster mbuf. Use the  * M_WRITABLE() macro to check for this case.  */
 end_comment
 
 begin_function
@@ -5021,15 +5021,6 @@ operator|.
 name|ext_size
 operator|)
 expr_stmt|;
-name|m
-operator|->
-name|m_ext
-operator|.
-name|ext_size
-operator|=
-literal|0
-expr_stmt|;
-comment|/* For Accounting XXXXXX danger */
 name|n
 operator|->
 name|m_data
