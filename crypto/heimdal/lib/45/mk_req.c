@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2000 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: mk_req.c,v 1.2 1999/12/02 17:05:01 joda Exp $"
+literal|"$Id: mk_req.c,v 1.6 2000/04/11 00:49:35 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -38,14 +38,17 @@ parameter_list|(
 name|KTEXT
 name|req
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|inst
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|realm
@@ -178,28 +181,62 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KRB_MK_REQ_CONST
+end_ifdef
+
+begin_decl_stmt
 name|int
 name|krb_mk_req
-parameter_list|(
+argument_list|(
 name|KTEXT
 name|authent
-parameter_list|,
+argument_list|,
+specifier|const
 name|char
-modifier|*
+operator|*
 name|service
-parameter_list|,
+argument_list|,
+specifier|const
 name|char
-modifier|*
+operator|*
 name|instance
-parameter_list|,
+argument_list|,
+specifier|const
 name|char
-modifier|*
+operator|*
 name|realm
-parameter_list|,
+argument_list|,
 name|int32_t
 name|checksum
-parameter_list|)
+argument_list|)
+else|#
+directive|else
+name|int
+name|krb_mk_req
+argument_list|(
+name|KTEXT
+name|authent
+argument_list|,
+name|char
+operator|*
+name|service
+argument_list|,
+name|char
+operator|*
+name|instance
+argument_list|,
+name|char
+operator|*
+name|realm
+argument_list|,
+name|int32_t
+name|checksum
+argument_list|)
+endif|#
+directive|endif
 block|{
 name|CREDENTIALS
 name|cr
@@ -214,9 +251,13 @@ decl_stmt|;
 name|int
 name|code
 decl_stmt|;
+comment|/* XXX get user realm */
+specifier|const
 name|char
 modifier|*
 name|myrealm
+init|=
+name|realm
 decl_stmt|;
 name|krb5_data
 name|a
@@ -260,10 +301,22 @@ name|code
 operator|=
 name|get_ad_tkt
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|service
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|instance
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|realm
 argument_list|,
 name|lifetime
@@ -297,11 +350,6 @@ condition|)
 return|return
 name|code
 return|;
-comment|/* XXX get user realm */
-name|myrealm
-operator|=
-name|realm
-expr_stmt|;
 name|sp
 operator|=
 name|krb5_storage_emem
@@ -494,7 +542,7 @@ return|return
 name|KSUCCESS
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/*   * krb_set_lifetime sets the default lifetime for additional tickets  * obtained via krb_mk_req().  *   * It returns the previous value of the default lifetime.  */

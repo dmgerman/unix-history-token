@@ -32,7 +32,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: main.c,v 1.30 1999/11/13 06:30:11 assar Exp $"
+literal|"$Id: main.c,v 1.31 2000/12/31 07:40:17 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -222,12 +222,22 @@ block|{
 name|krb5_context
 name|context
 decl_stmt|;
+name|krb5_error_code
+name|ret
+decl_stmt|;
+name|ret
+operator|=
 name|krb5_init_context
 argument_list|(
 operator|&
 name|context
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+return|return;
 if|#
 directive|if
 name|defined

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: snprintf.c,v 1.25 2000/02/16 01:38:52 assar Exp $"
+literal|"$Id: snprintf.c,v 1.28 2000/12/15 14:04:42 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1024,6 +1024,21 @@ name|int
 name|flags
 parameter_list|)
 block|{
+if|if
+condition|(
+name|arg
+operator|==
+name|NULL
+condition|)
+name|arg
+operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+literal|"(null)"
+expr_stmt|;
 if|if
 condition|(
 name|prec

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: change.c,v 1.1 2000/01/02 04:41:00 assar Exp $"
+literal|"$Id: change.c,v 1.2 2000/06/03 12:24:03 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -634,7 +634,9 @@ name|context
 argument_list|,
 name|ret
 argument_list|,
-literal|"krb5_kt_start_seq_get"
+literal|"krb5_kt_start_seq_get %s"
+argument_list|,
+name|keytab_string
 argument_list|)
 expr_stmt|;
 return|return

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998, 1999 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2001 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: krbhst.c,v 1.23 1999/12/11 23:14:25 assar Exp $"
+literal|"$Id: krbhst.c,v 1.25 2001/01/19 04:30:54 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -137,6 +137,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * do a SRV lookup for `realm, proto, service' returning the result  * in `res, count'  */
+end_comment
 
 begin_function
 specifier|static
@@ -572,6 +576,10 @@ control|)
 empty_stmt|;
 if|if
 condition|(
+name|count
+operator|==
+literal|0
+operator|&&
 name|context
 operator|->
 name|srv_lookup
@@ -736,6 +744,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * set `hostlist' to a malloced list of kadmin servers.  */
+end_comment
+
 begin_function
 name|krb5_error_code
 name|krb5_get_krb_admin_hst
@@ -772,6 +784,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * set `hostlist' to a malloced list of changepw servers.  */
+end_comment
+
 begin_function
 name|krb5_error_code
 name|krb5_get_krb_changepw_hst
@@ -791,7 +807,33 @@ modifier|*
 name|hostlist
 parameter_list|)
 block|{
+name|krb5_error_code
+name|ret
+decl_stmt|;
+name|ret
+operator|=
+name|get_krbhst
+argument_list|(
+name|context
+argument_list|,
+name|realm
+argument_list|,
+literal|"kpasswd_server"
+argument_list|,
+literal|"kpasswd"
+argument_list|,
+name|hostlist
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
 return|return
+name|ret
+return|;
+name|ret
+operator|=
 name|get_krbhst
 argument_list|(
 name|context
@@ -804,9 +846,16 @@ literal|"kpasswd"
 argument_list|,
 name|hostlist
 argument_list|)
+expr_stmt|;
+return|return
+name|ret
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * set `hostlist' to a malloced list of kerberos servers.  */
+end_comment
 
 begin_function
 name|krb5_error_code
@@ -843,6 +892,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * free all memory associated with `hostlist'  */
+end_comment
 
 begin_function
 name|krb5_error_code

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: utility.c,v 1.22 1999/09/16 20:41:38 assar Exp $"
+literal|"$Id: utility.c,v 1.23 2000/10/08 13:34:27 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -115,7 +115,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"ttloop:  peer died: %m\n"
+literal|"ttloop:  peer died\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -195,6 +195,19 @@ decl_stmt|;
 name|int
 name|value
 decl_stmt|;
+if|if
+condition|(
+name|s
+operator|>=
+name|FD_SETSIZE
+condition|)
+name|fatal
+argument_list|(
+name|ourpty
+argument_list|,
+literal|"fd too large"
+argument_list|)
+expr_stmt|;
 do|do
 block|{
 name|FD_ZERO

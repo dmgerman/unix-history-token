@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: import_sec_context.c,v 1.2 2000/02/12 21:26:00 assar Exp $"
+literal|"$Id: import_sec_context.c,v 1.3 2000/07/08 11:56:03 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -69,9 +69,6 @@ name|buffer
 decl_stmt|;
 name|krb5_keyblock
 name|keyblock
-decl_stmt|;
-name|size_t
-name|sz
 decl_stmt|;
 name|int32_t
 name|tmp
@@ -428,7 +425,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|krb5_ret_data (sp,&data);     ac->authenticator = malloc (sizeof (*ac->authenticator));     if (ac->authenticator == NULL) { 	*minor_status = ENOMEM; 	ret = GSS_S_FAILURE; 	goto failure;     }      kret = decode_Authenticator (data.data, data.length, 				 ac->authenticator,&sz);     krb5_data_free (&data);     if (kret) { 	*minor_status = kret; 	ret = GSS_S_FAILURE; 	goto failure;     }
+block|{ 	    size_t sz;  	    krb5_ret_data (sp,&data); 	    ac->authenticator = malloc (sizeof (*ac->authenticator)); 	    if (ac->authenticator == NULL) { 		*minor_status = ENOMEM; 		ret = GSS_S_FAILURE; 		goto failure; 	    }  	    kret = decode_Authenticator (data.data, data.length, 					 ac->authenticator,&sz); 	    krb5_data_free (&data); 	    if (kret) { 		*minor_status = kret; 		ret = GSS_S_FAILURE; 		goto failure; 	    }     }
 endif|#
 directive|endif
 name|krb5_ret_int32

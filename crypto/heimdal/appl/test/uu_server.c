@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: uu_server.c,v 1.6 1999/12/16 10:32:44 assar Exp $"
+literal|"$Id: uu_server.c,v 1.7 2000/08/09 20:53:08 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -43,7 +43,7 @@ name|remote
 decl_stmt|,
 name|local
 decl_stmt|;
-name|int
+name|socklen_t
 name|addrlen
 decl_stmt|;
 name|krb5_address

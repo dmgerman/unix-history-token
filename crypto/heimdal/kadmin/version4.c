@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of KTH nor the names of its contributors may be  *    used to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY KTH AND ITS CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL KTH OR ITS CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR  * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
+comment|/*  * Copyright (c) 1999 - 2001 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of KTH nor the names of its contributors may be  *    used to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY KTH AND ITS CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL KTH OR ITS CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR  * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 end_comment
 
 begin_include
@@ -62,7 +62,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: version4.c,v 1.16 1999/11/25 22:32:47 assar Exp $"
+literal|"$Id: version4.c,v 1.24 2001/01/29 08:40:45 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -779,7 +779,7 @@ name|KADM_EXPDATE
 case|:
 name|mask
 operator||=
-name|KADM5_PW_EXPIRATION
+name|KADM5_PRINC_EXPIRE_TIME
 expr_stmt|;
 case|case
 name|KADM_MAXLIFE
@@ -853,6 +853,11 @@ index|[
 name|REALM_SZ
 index|]
 decl_stmt|;
+name|time_t
+name|exp
+init|=
+literal|0
+decl_stmt|;
 name|memset
 argument_list|(
 name|vals
@@ -917,14 +922,9 @@ if|if
 condition|(
 name|mask
 operator|&
-name|KADM5_PW_EXPIRATION
+name|KADM5_PRINC_EXPIRE_TIME
 condition|)
 block|{
-name|time_t
-name|exp
-init|=
-literal|0
-decl_stmt|;
 if|if
 condition|(
 name|ent
@@ -939,6 +939,14 @@ name|ent
 operator|->
 name|princ_expire_time
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|mask
+operator|&
+name|KADM5_PW_EXPIRATION
+condition|)
+block|{
 if|if
 condition|(
 name|ent
@@ -965,6 +973,7 @@ name|ent
 operator|->
 name|pw_expiration
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|exp
@@ -985,7 +994,6 @@ operator|->
 name|fields
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -1283,7 +1291,7 @@ condition|)
 block|{
 name|ent
 operator|->
-name|pw_expiration
+name|princ_expire_time
 operator|=
 name|vals
 operator|->
@@ -1292,7 +1300,7 @@ expr_stmt|;
 operator|*
 name|mask
 operator||=
-name|KADM5_PW_EXPIRATION
+name|KADM5_PRINC_EXPIRE_TIME
 expr_stmt|;
 block|}
 if|if
@@ -2029,7 +2037,7 @@ name|krb5_warnx
 argument_list|(
 name|context
 argument_list|,
-literal|"v4-compat %s: cpw %s"
+literal|"v4-compat %s: CHPASS %s"
 argument_list|,
 name|principal_string
 argument_list|,
@@ -2367,7 +2375,7 @@ name|context
 argument_list|,
 name|ret
 argument_list|,
-literal|"v4-compat cpw"
+literal|"v4-compat CHPASS"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2479,7 +2487,7 @@ name|krb5_warnx
 argument_list|(
 name|context
 argument_list|,
-literal|"v4-compat %s: add %s"
+literal|"v4-compat %s: ADD %s"
 argument_list|,
 name|principal_string
 argument_list|,
@@ -2493,6 +2501,10 @@ argument_list|(
 name|kadm_handle
 argument_list|,
 name|KADM5_PRIV_ADD
+argument_list|,
+name|ent
+operator|.
+name|principal
 argument_list|)
 expr_stmt|;
 if|if
@@ -2535,7 +2547,7 @@ name|mask
 operator|=
 name|KADM5_PRINCIPAL
 operator||
-name|KADM5_PW_EXPIRATION
+name|KADM5_PRINC_EXPIRE_TIME
 operator||
 name|KADM5_MAX_LIFE
 operator||
@@ -2607,7 +2619,7 @@ name|context
 argument_list|,
 name|ret
 argument_list|,
-literal|"v4-compat add"
+literal|"v4-compat ADD"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2770,7 +2782,7 @@ name|krb5_warnx
 argument_list|(
 name|context
 argument_list|,
-literal|"v4-compat %s: get %s"
+literal|"v4-compat %s: GET %s"
 argument_list|,
 name|principal_string
 argument_list|,
@@ -2784,6 +2796,10 @@ argument_list|(
 name|kadm_handle
 argument_list|,
 name|KADM5_PRIV_GET
+argument_list|,
+name|ent
+operator|.
+name|principal
 argument_list|)
 expr_stmt|;
 if|if
@@ -2871,7 +2887,7 @@ name|context
 argument_list|,
 name|ret
 argument_list|,
-literal|"v4-compat get"
+literal|"v4-compat GET"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2994,7 +3010,7 @@ name|krb5_warnx
 argument_list|(
 name|context
 argument_list|,
-literal|"v4-compat %s: mod %s"
+literal|"v4-compat %s: MOD %s"
 argument_list|,
 name|principal_string
 argument_list|,
@@ -3008,6 +3024,10 @@ argument_list|(
 name|kadm_handle
 argument_list|,
 name|KADM5_PRIV_MODIFY
+argument_list|,
+name|ent
+operator|.
+name|principal
 argument_list|)
 expr_stmt|;
 if|if
@@ -3145,7 +3165,7 @@ name|context
 argument_list|,
 name|ret
 argument_list|,
-literal|"v4-compat mod"
+literal|"v4-compat MOD"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3255,7 +3275,7 @@ name|krb5_warnx
 argument_list|(
 name|context
 argument_list|,
-literal|"v4-compat %s: del %s"
+literal|"v4-compat %s: DEL %s"
 argument_list|,
 name|principal_string
 argument_list|,
@@ -3269,6 +3289,10 @@ argument_list|(
 name|kadm_handle
 argument_list|,
 name|KADM5_PRIV_DELETE
+argument_list|,
+name|ent
+operator|.
+name|principal
 argument_list|)
 expr_stmt|;
 if|if
@@ -3315,7 +3339,7 @@ name|context
 argument_list|,
 name|ret
 argument_list|,
-literal|"v4-compat add"
+literal|"v4-compat ADD"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3594,6 +3618,9 @@ parameter_list|(
 name|krb5_context
 name|context
 parameter_list|,
+name|krb5_keytab
+name|keytab
+parameter_list|,
 name|struct
 name|sockaddr_in
 modifier|*
@@ -3669,6 +3696,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|client_str
+decl_stmt|;
+name|krb5_keytab_entry
+name|entry
 decl_stmt|;
 if|if
 condition|(
@@ -3820,21 +3850,71 @@ return|return;
 block|}
 name|ret
 operator|=
-name|krb5_kt_read_service_key
+name|krb5_kt_get_entry
 argument_list|(
 name|context
 argument_list|,
-literal|"HDB:"
+name|keytab
 argument_list|,
 name|principal
 argument_list|,
 literal|0
 argument_list|,
-comment|/*				       ETYPE_DES_CBC_CRC,*/
 name|ETYPE_DES_CBC_MD5
 argument_list|,
 operator|&
+name|entry
+argument_list|)
+expr_stmt|;
+name|krb5_kt_close
+argument_list|(
+name|context
+argument_list|,
+name|keytab
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+block|{
+name|krb5_free_principal
+argument_list|(
+name|context
+argument_list|,
+name|principal
+argument_list|)
+expr_stmt|;
+name|make_you_loose_packet
+argument_list|(
+name|KADM_NO_AUTH
+argument_list|,
+name|reply
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|ret
+operator|=
+name|krb5_copy_keyblock
+argument_list|(
+name|context
+argument_list|,
+operator|&
+name|entry
+operator|.
+name|keyblock
+argument_list|,
+operator|&
 name|key
+argument_list|)
+expr_stmt|;
+name|krb5_kt_free_entry
+argument_list|(
+name|context
+argument_list|,
+operator|&
+name|entry
 argument_list|)
 expr_stmt|;
 name|krb5_free_principal
@@ -3976,6 +4056,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|ret
+operator|=
 name|krb5_425_conv_principal
 argument_list|(
 name|context
@@ -3996,6 +4078,29 @@ operator|&
 name|client
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+block|{
+name|krb5_warnx
+argument_list|(
+name|context
+argument_list|,
+literal|"krb5_425_conv_principal: %d"
+argument_list|,
+name|ret
+argument_list|)
+expr_stmt|;
+name|make_you_loose_packet
+argument_list|(
+name|KADM_NOMEM
+argument_list|,
+name|reply
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|krb5_unparse_name
 argument_list|(
 name|context
@@ -4058,7 +4163,7 @@ operator|=
 name|des_quad_cksum
 argument_list|(
 operator|(
-name|des_cblock
+name|void
 operator|*
 operator|)
 operator|(
@@ -4300,6 +4405,9 @@ parameter_list|(
 name|krb5_context
 name|context
 parameter_list|,
+name|krb5_keytab
+name|keytab
+parameter_list|,
 name|int
 name|len
 parameter_list|,
@@ -4318,7 +4426,7 @@ name|admin_addr
 decl_stmt|,
 name|client_addr
 decl_stmt|;
-name|int
+name|socklen_t
 name|addr_len
 decl_stmt|;
 name|krb5_data
@@ -4406,6 +4514,19 @@ condition|(
 literal|1
 condition|)
 block|{
+name|doing_useful_work
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|term_flag
+condition|)
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|first
@@ -4617,9 +4738,15 @@ literal|"krb5_net_read"
 argument_list|)
 expr_stmt|;
 block|}
+name|doing_useful_work
+operator|=
+literal|1
+expr_stmt|;
 name|decode_packet
 argument_list|(
 name|context
+argument_list|,
+name|keytab
 argument_list|,
 operator|&
 name|admin_addr

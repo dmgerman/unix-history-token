@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 1990 by the Massachusetts Institute of Technology  *
 end_comment
 
 begin_comment
-comment|/* $Id: misc-proto.h,v 1.8 2000/01/18 03:11:07 assar Exp $ */
+comment|/* $Id: misc-proto.h,v 1.9 2000/11/15 23:00:21 assar Exp $ */
 end_comment
 
 begin_ifndef
@@ -166,6 +166,7 @@ name|char
 modifier|*
 name|telnet_getenv
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)

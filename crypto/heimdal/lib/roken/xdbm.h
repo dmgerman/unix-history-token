@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995 - 2000 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: xdbm.h,v 1.8 2000/02/06 05:03:27 assar Exp $ */
+comment|/* $Id: xdbm.h,v 1.12 2000/08/16 03:57:21 assar Exp $ */
 end_comment
 
 begin_comment
@@ -50,6 +50,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DBM_INSERT
+end_ifndef
+
 begin_if
 if|#
 directive|if
@@ -63,6 +69,21 @@ begin_include
 include|#
 directive|include
 file|<ndbm.h>
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|HAVE_GDBM_NDBM_H
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<gdbm/ndbm.h>
 end_include
 
 begin_elif
@@ -100,15 +121,30 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Macros to convert ndbm names to dbm names.  * Note that dbm_nextkey() cannot be simply converted using a macro, since  * it is invoked giving the database, and nextkey() needs the previous key.  *  * Instead, all routines call "dbm_next" instead.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|NDBM
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_DB_H
+argument_list|)
+end_if
 
 begin_typedef
 typedef|typedef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1999 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997-2000 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: store.c,v 1.32 1999/12/02 17:05:12 joda Exp $"
+literal|"$Id: store.c,v 1.34 2000/04/11 00:46:09 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1187,6 +1187,7 @@ name|krb5_storage
 modifier|*
 name|sp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|s
@@ -2688,6 +2689,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * store `creds' on `sp' returning error or zero  */
+end_comment
+
 begin_function
 name|krb5_error_code
 name|krb5_store_creds
@@ -2701,6 +2706,11 @@ modifier|*
 name|creds
 parameter_list|)
 block|{
+name|int
+name|ret
+decl_stmt|;
+name|ret
+operator|=
 name|krb5_store_principal
 argument_list|(
 name|sp
@@ -2710,6 +2720,15 @@ operator|->
 name|client
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+return|return
+name|ret
+return|;
+name|ret
+operator|=
 name|krb5_store_principal
 argument_list|(
 name|sp
@@ -2719,6 +2738,15 @@ operator|->
 name|server
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+return|return
+name|ret
+return|;
+name|ret
+operator|=
 name|krb5_store_keyblock
 argument_list|(
 name|sp
@@ -2728,6 +2756,15 @@ operator|->
 name|session
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+return|return
+name|ret
+return|;
+name|ret
+operator|=
 name|krb5_store_times
 argument_list|(
 name|sp
@@ -2737,6 +2774,15 @@ operator|->
 name|times
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+return|return
+name|ret
+return|;
+name|ret
+operator|=
 name|krb5_store_int8
 argument_list|(
 name|sp
@@ -2745,6 +2791,15 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* this is probably the 				enc-tkt-in-skey bit from KDCOptions */
+if|if
+condition|(
+name|ret
+condition|)
+return|return
+name|ret
+return|;
+name|ret
+operator|=
 name|krb5_store_int32
 argument_list|(
 name|sp
@@ -2756,6 +2811,15 @@ operator|.
 name|i
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+return|return
+name|ret
+return|;
+name|ret
+operator|=
 name|krb5_store_addrs
 argument_list|(
 name|sp
@@ -2765,6 +2829,15 @@ operator|->
 name|addresses
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+return|return
+name|ret
+return|;
+name|ret
+operator|=
 name|krb5_store_authdata
 argument_list|(
 name|sp
@@ -2774,6 +2847,15 @@ operator|->
 name|authdata
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+return|return
+name|ret
+return|;
+name|ret
+operator|=
 name|krb5_store_data
 argument_list|(
 name|sp
@@ -2783,6 +2865,15 @@ operator|->
 name|ticket
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+return|return
+name|ret
+return|;
+name|ret
+operator|=
 name|krb5_store_data
 argument_list|(
 name|sp
@@ -2792,6 +2883,13 @@ operator|->
 name|second_ticket
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+return|return
+name|ret
+return|;
 return|return
 literal|0
 return|;

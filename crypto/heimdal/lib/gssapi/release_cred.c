@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: release_cred.c,v 1.4 1999/12/02 17:05:04 joda Exp $"
+literal|"$Id: release_cred.c,v 1.5 2001/01/30 00:49:05 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -78,6 +78,29 @@ name|cred_handle
 operator|)
 operator|->
 name|keytab
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|*
+name|cred_handle
+operator|)
+operator|->
+name|ccache
+operator|!=
+name|NULL
+condition|)
+name|krb5_cc_close
+argument_list|(
+name|gssapi_krb5_context
+argument_list|,
+operator|(
+operator|*
+name|cred_handle
+operator|)
+operator|->
+name|ccache
 argument_list|)
 expr_stmt|;
 name|gss_release_oid_set

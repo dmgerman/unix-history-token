@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997 - 2000 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: rsh_locl.h,v 1.23 2000/02/06 05:58:55 assar Exp $ */
+comment|/* $Id: rsh_locl.h,v 1.24 2000/07/02 15:48:46 assar Exp $ */
 end_comment
 
 begin_ifdef
@@ -409,6 +409,24 @@ define|#
 directive|define
 name|_PATH_DEFPATH
 value|"/usr/bin:/bin"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_ETC_ENVIRONMENT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_ETC_ENVIRONMENT
+value|"/etc/environment"
 end_define
 
 begin_endif

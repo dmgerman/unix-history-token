@@ -27,7 +27,7 @@ end_endif
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kerberos.c,v 1.47 2000/02/07 03:14:19 assar Exp $"
+literal|"$Id: kerberos.c,v 1.50 2000/11/23 02:28:06 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -732,13 +732,6 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"[ Trying %s ... ]\r\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -816,6 +809,19 @@ literal|0
 operator|)
 return|;
 block|}
+name|printf
+argument_list|(
+literal|"[ Trying %s (%s.%s@%s) ... ]\r\n"
+argument_list|,
+name|name
+argument_list|,
+name|KRB_SERVICE_NAME
+argument_list|,
+name|instance
+argument_list|,
+name|realm
+argument_list|)
+expr_stmt|;
 name|r
 operator|=
 name|krb_mk_req
@@ -1224,7 +1230,7 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|;
-name|int
+name|socklen_t
 name|addr_len
 decl_stmt|;
 if|if
@@ -1612,7 +1618,7 @@ operator|->
 name|pw_uid
 argument_list|)
 expr_stmt|;
-name|setenv
+name|esetenv
 argument_list|(
 literal|"KRBTKFILE"
 argument_list|,

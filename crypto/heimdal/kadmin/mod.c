@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998, 1999 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2000 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: mod.c,v 1.7 1999/12/02 17:04:58 joda Exp $"
+literal|"$Id: mod.c,v 1.10 2000/07/11 14:34:56 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -114,6 +114,12 @@ init|=
 name|NULL
 decl_stmt|;
 name|int
+name|new_kvno
+init|=
+operator|-
+literal|1
+decl_stmt|;
+name|int
 name|ret
 decl_stmt|,
 name|i
@@ -193,6 +199,20 @@ literal|"Password expiration time"
 block|,
 literal|"time"
 block|}
+block|,
+block|{
+literal|"kvno"
+block|,
+literal|0
+block|,
+name|arg_integer
+block|,
+name|NULL
+block|,
+literal|"Key version number"
+block|,
+literal|"number"
+block|}
 block|,     }
 decl_stmt|;
 name|i
@@ -253,6 +273,17 @@ name|value
 operator|=
 operator|&
 name|pw_expiration_str
+expr_stmt|;
+name|args
+index|[
+name|i
+operator|++
+index|]
+operator|.
+name|value
+operator|=
+operator|&
+name|new_kvno
 expr_stmt|;
 operator|*
 name|optind
@@ -346,6 +377,26 @@ condition|)
 return|return
 name|ret
 return|;
+if|if
+condition|(
+name|new_kvno
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|ent
+operator|->
+name|kvno
+operator|=
+name|new_kvno
+expr_stmt|;
+operator|*
+name|mask
+operator||=
+name|KADM5_KVNO
+expr_stmt|;
+block|}
 return|return
 literal|0
 return|;
@@ -507,6 +558,13 @@ operator||
 name|KADM5_PW_EXPIRATION
 argument_list|)
 expr_stmt|;
+name|krb5_free_principal
+argument_list|(
+name|context
+argument_list|,
+name|princ_ent
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ret
@@ -520,13 +578,6 @@ name|argv
 index|[
 literal|0
 index|]
-argument_list|)
-expr_stmt|;
-name|krb5_free_principal
-argument_list|(
-name|context
-argument_list|,
-name|princ_ent
 argument_list|)
 expr_stmt|;
 return|return
@@ -579,17 +630,6 @@ argument_list|,
 name|ret
 argument_list|,
 literal|"kadm5_modify_principal"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|princ_ent
-condition|)
-name|krb5_free_principal
-argument_list|(
-name|context
-argument_list|,
-name|princ_ent
 argument_list|)
 expr_stmt|;
 name|kadm5_free_principal_ent

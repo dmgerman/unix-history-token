@@ -8,7 +8,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: globals.c,v 1.6 1996/08/26 22:46:26 assar Exp $"
+literal|"$Id: globals.c,v 1.8 2000/11/15 22:56:08 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -85,6 +85,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* interactively prompt on m* cmds */
+end_comment
+
+begin_decl_stmt
+name|int
+name|lineedit
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* use line-editing */
 end_comment
 
 begin_decl_stmt
@@ -577,6 +587,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* used during socket creation */
+end_comment
+
+begin_decl_stmt
+name|int
+name|use_kerberos
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* use Kerberos authentication */
 end_comment
 
 begin_comment

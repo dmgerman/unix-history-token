@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: telnetd.c,v 1.60 1999/12/05 10:59:52 assar Exp $"
+literal|"$Id: telnetd.c,v 1.63 2000/10/08 13:32:28 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -588,7 +588,8 @@ name|int
 name|on
 init|=
 literal|1
-decl_stmt|,
+decl_stmt|;
+name|socklen_t
 name|sa_size
 decl_stmt|;
 name|int
@@ -1374,7 +1375,7 @@ condition|(
 name|secflag
 condition|)
 block|{
-name|int
+name|socklen_t
 name|szss
 init|=
 sizeof|sizeof
@@ -1385,7 +1386,7 @@ decl_stmt|;
 name|int
 name|sock_multi
 decl_stmt|;
-name|int
+name|socklen_t
 name|szi
 init|=
 sizeof|sizeof
@@ -3159,7 +3160,7 @@ name|user_name
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|setenv
+name|esetenv
 argument_list|(
 literal|"TERM"
 argument_list|,
@@ -3887,6 +3888,23 @@ name|FD_ZERO
 argument_list|(
 operator|&
 name|xbits
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|f
+operator|>=
+name|FD_SETSIZE
+operator|||
+name|p
+operator|>=
+name|FD_SETSIZE
+condition|)
+name|fatal
+argument_list|(
+name|net
+argument_list|,
+literal|"fd too large"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Never look for input if there's still 	 * stuff in the corresponding output buffer 	 */

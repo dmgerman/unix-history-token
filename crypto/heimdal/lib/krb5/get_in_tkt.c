@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: get_in_tkt.c,v 1.94 2000/02/06 05:18:20 assar Exp $"
+literal|"$Id: get_in_tkt.c,v 1.97 2000/08/18 06:47:54 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -208,6 +208,8 @@ decl_stmt|;
 name|krb5_crypto
 name|crypto
 decl_stmt|;
+name|ret
+operator|=
 name|krb5_crypto_init
 argument_list|(
 name|context
@@ -220,6 +222,13 @@ operator|&
 name|crypto
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+return|return
+name|ret
+return|;
 name|ret
 operator|=
 name|krb5_decrypt_EncryptedData
@@ -359,6 +368,9 @@ parameter_list|,
 name|krb5_boolean
 name|allow_server_mismatch
 parameter_list|,
+name|krb5_boolean
+name|ignore_cname
+parameter_list|,
 name|krb5_decrypt_proc
 name|decrypt_proc
 parameter_list|,
@@ -381,7 +393,6 @@ decl_stmt|;
 name|krb5_timestamp
 name|sec_now
 decl_stmt|;
-comment|/* compare client */
 name|ret
 operator|=
 name|principalname2krb5_principal
@@ -409,6 +420,13 @@ condition|)
 goto|goto
 name|out
 goto|;
+comment|/* compare client */
+if|if
+condition|(
+operator|!
+name|ignore_cname
+condition|)
+block|{
 name|tmp
 operator|=
 name|krb5_principal_compare
@@ -422,6 +440,12 @@ operator|->
 name|client
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|tmp
+condition|)
+block|{
 name|krb5_free_principal
 argument_list|(
 name|context
@@ -429,12 +453,6 @@ argument_list|,
 name|tmp_principal
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|tmp
-condition|)
-block|{
 name|ret
 operator|=
 name|KRB5KRB_AP_ERR_MODIFIED
@@ -443,6 +461,22 @@ goto|goto
 name|out
 goto|;
 block|}
+block|}
+name|krb5_free_principal
+argument_list|(
+name|context
+argument_list|,
+name|creds
+operator|->
+name|client
+argument_list|)
+expr_stmt|;
+name|creds
+operator|->
+name|client
+operator|=
+name|tmp_principal
+expr_stmt|;
 comment|/* extract ticket */
 block|{
 name|unsigned
@@ -1254,6 +1288,8 @@ condition|)
 return|return
 name|ret
 return|;
+name|ret
+operator|=
 name|krb5_crypto_init
 argument_list|(
 name|context
@@ -1266,6 +1302,13 @@ operator|&
 name|crypto
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+return|return
+name|ret
+return|;
 name|ret
 operator|=
 name|krb5_encrypt_EncryptedData
@@ -1349,7 +1392,7 @@ name|pa
 operator|->
 name|padata_type
 operator|=
-name|pa_enc_timestamp
+name|KRB5_PADATA_ENC_TIMESTAMP
 expr_stmt|;
 name|pa
 operator|->
@@ -2798,7 +2841,7 @@ name|padata_type
 condition|)
 block|{
 case|case
-name|pa_enc_timestamp
+name|KRB5_PADATA_ENC_TIMESTAMP
 case|:
 operator|*
 name|ptypes
@@ -2807,7 +2850,7 @@ name|ptypes2
 expr_stmt|;
 break|break;
 case|case
-name|pa_etype_info
+name|KRB5_PADATA_ETYPE_INFO
 case|:
 operator|*
 name|preauth
@@ -2879,6 +2922,8 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+break|break;
+default|default:
 break|break;
 block|}
 block|}
@@ -3424,7 +3469,7 @@ name|padata
 operator|->
 name|len
 argument_list|,
-name|pa_pw_salt
+name|KRB5_PADATA_PW_SALT
 argument_list|,
 operator|&
 name|index
@@ -3461,7 +3506,7 @@ name|padata
 operator|->
 name|len
 argument_list|,
-name|pa_afs3_salt
+name|KRB5_PADATA_AFS3_SALT
 argument_list|,
 operator|&
 name|index
@@ -3590,6 +3635,12 @@ argument_list|,
 name|nonce
 argument_list|,
 name|FALSE
+argument_list|,
+name|opts
+operator|.
+name|b
+operator|.
+name|request_anonymous
 argument_list|,
 name|decrypt_proc
 argument_list|,

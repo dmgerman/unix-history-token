@@ -23,7 +23,7 @@ end_endif
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: pagsh.c,v 1.3 1999/12/02 17:04:55 joda Exp $"
+literal|"$Id: pagsh.c,v 1.4 2000/10/02 05:05:53 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -241,7 +241,7 @@ operator|+
 literal|5
 argument_list|)
 expr_stmt|;
-name|setenv
+name|esetenv
 argument_list|(
 literal|"KRB5CCNAME"
 argument_list|,
@@ -286,7 +286,7 @@ argument_list|(
 name|tf
 argument_list|)
 expr_stmt|;
-name|setenv
+name|esetenv
 argument_list|(
 literal|"KRBTKFILE"
 argument_list|,

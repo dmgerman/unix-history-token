@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: password_quality.c,v 1.3 1999/12/02 17:05:06 joda Exp $"
+literal|"$Id: password_quality.c,v 1.4 2000/07/05 13:14:45 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -104,24 +104,6 @@ ifdef|#
 directive|ifdef
 name|HAVE_DLOPEN
 end_ifdef
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|check_library
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|check_function
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#

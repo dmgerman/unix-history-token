@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: randkey_c.c,v 1.3 1999/12/02 17:05:07 joda Exp $"
+literal|"$Id: randkey_c.c,v 1.4 2000/07/11 16:00:02 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -64,6 +64,20 @@ decl_stmt|;
 name|krb5_data
 name|reply
 decl_stmt|;
+name|ret
+operator|=
+name|_kadm5_connect
+argument_list|(
+name|server_handle
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+return|return
+name|ret
+return|;
 name|sp
 operator|=
 name|krb5_storage_from_mem
