@@ -18,13 +18,26 @@ name|lint
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)getopt.c	8.3 (Berkeley) 4/27/95";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)getopt.c	8.3 (Berkeley) 4/27/95"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,6 +170,9 @@ modifier|*
 name|oli
 decl_stmt|;
 comment|/* option letter list index */
+name|int
+name|ret
+decl_stmt|;
 if|if
 condition|(
 name|optreset
@@ -375,11 +391,15 @@ name|ostr
 operator|==
 literal|':'
 condition|)
-return|return
-operator|(
+name|ret
+operator|=
 name|BADARG
-operator|)
-return|;
+expr_stmt|;
+else|else
+name|ret
+operator|=
+name|BADCH
+expr_stmt|;
 if|if
 condition|(
 name|opterr
@@ -400,7 +420,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|BADCH
+name|ret
 operator|)
 return|;
 block|}
