@@ -2404,6 +2404,11 @@ operator|->
 name|if_ierrors
 operator|++
 expr_stmt|;
+name|KUE_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 comment|/* Setup new transfer. */
