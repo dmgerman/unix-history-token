@@ -6113,6 +6113,18 @@ operator|->
 name|module
 argument_list|)
 expr_stmt|;
+name|res
+operator|=
+name|linker_reference_module
+argument_list|(
+name|modfile
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|lf
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -6131,25 +6143,6 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
-if|if
-condition|(
-name|res
-operator|==
-name|ENOENT
-operator|&&
-name|rootdev
-operator|==
-name|NULL
-condition|)
-name|printf
-argument_list|(
-literal|"%s: Failed to autoload module: No filesystem\n"
-argument_list|,
-name|modfile
-argument_list|)
-expr_stmt|;
-else|else
 name|printf
 argument_list|(
 literal|"%s: Failed %d to autoload module\n"
@@ -6159,7 +6152,6 @@ argument_list|,
 name|res
 argument_list|)
 expr_stmt|;
-block|}
 name|free
 argument_list|(
 name|modfile
