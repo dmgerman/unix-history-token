@@ -20,17 +20,6 @@ name|_NETGRAPH_H4_H_
 end_define
 
 begin_comment
-comment|/*  * H4 line discipline   * XXX FIXME: does not belong here. Move to "ttycom.h" later  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|H4DISC
-value|7
-end_define
-
-begin_comment
 comment|/**************************************************************************  **************************************************************************  **     Netgraph node hook name, type name and type cookie and commands  **************************************************************************  **************************************************************************/
 end_comment
 

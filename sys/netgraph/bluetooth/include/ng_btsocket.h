@@ -16,33 +16,7 @@ name|_NETGRAPH_BTSOCKET_H_
 end_define
 
 begin_comment
-comment|/*  * XXX FIXME: does not belong here, move to sys/socket.h later and fix AF_MAX  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AF_BLUETOOTH
-value|36
-end_define
-
-begin_comment
-comment|/* Address family */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PF_BLUETOOTH
-value|AF_BLUETOOTH
-end_define
-
-begin_comment
-comment|/* Protocol family */
-end_comment
-
-begin_comment
-comment|/*  * XXX FIXME: does not belong here, move to other places later  */
+comment|/*  * Bluetooth protocols  */
 end_comment
 
 begin_define
@@ -79,7 +53,7 @@ comment|/* RFCOMM protocol number */
 end_comment
 
 begin_comment
-comment|/*  * XXX FIXME: probably does not belong here  * Bluetooth version of struct sockaddr for raw HCI sockets  *  * XXX: sizeof(hci_node) was NG_NODELEN + 1, but NG_NODESIZ (the equivalent  * of NG_NODELEN + 1) has been bumped to 32. The code currently  * truncates the node name to sizeof(hci_node), although it would be  * possible to correctly handle this by means of the hci_len field.  */
+comment|/*  * Bluetooth version of struct sockaddr for raw HCI sockets  *  * XXX: sizeof(hci_node) was NG_NODELEN + 1, but NG_NODESIZ (the equivalent  * of NG_NODELEN + 1) has been bumped to 32. The code currently  * truncates the node name to sizeof(hci_node), although it would be  * possible to correctly handle this by means of the hci_len field.  */
 end_comment
 
 begin_struct

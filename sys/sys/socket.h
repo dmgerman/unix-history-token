@@ -1148,8 +1148,19 @@ end_define
 begin_define
 define|#
 directive|define
-name|AF_MAX
+name|AF_BLUETOOTH
 value|36
+end_define
+
+begin_comment
+comment|/* Bluetooth sockets */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AF_MAX
+value|37
 end_define
 
 begin_endif
@@ -1573,6 +1584,13 @@ define|#
 directive|define
 name|PF_ARP
 value|AF_ARP
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_BLUETOOTH
+value|AF_BLUETOOTH
 end_define
 
 begin_define

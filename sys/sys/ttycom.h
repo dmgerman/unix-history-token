@@ -839,6 +839,17 @@ begin_comment
 comment|/* Netgraph tty node discipline */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|H4DISC
+value|7
+end_define
+
+begin_comment
+comment|/* Netgraph Bluetooth H4 discipline */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
