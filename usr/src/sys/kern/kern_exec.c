@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_exec.c	7.40 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_exec.c	7.41 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"machine/cpu.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"machine/reg.h"
 end_include
 
@@ -147,16 +153,6 @@ directive|include
 file|"kinfo_proc.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"user.h"
-end_include
-
-begin_comment
-comment|/* for pcb, sigc */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -166,8 +162,59 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|"user.h"
+end_include
+
+begin_comment
+comment|/* for pcb */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|"hp300/hpux/hpux_exec.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COPY_SIGCODE
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|sigcode
+index|[]
+decl_stmt|,
+name|esigcode
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|szsigcode
+value|(esigcode - sigcode)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|szsigcode
+value|0
+end_define
 
 begin_endif
 endif|#
@@ -1721,8 +1768,10 @@ name|HPUXCOMPAT
 comment|/* 	 * We are now committed to the exec so we can save the exec 	 * header in the pcb where we can dump it if necessary in core() 	 */
 if|if
 condition|(
-name|u
-operator|.
+name|p
+operator|->
+name|p_addr
+operator|->
 name|u_pcb
 operator|.
 name|pcb_flags
@@ -1740,8 +1789,10 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-name|u
-operator|.
+name|p
+operator|->
+name|p_addr
+operator|->
 name|u_pcb
 operator|.
 name|pcb_exec
@@ -1757,14 +1808,7 @@ name|ucp
 operator|=
 name|USRSTACK
 operator|-
-sizeof|sizeof
-argument_list|(
-name|u
-operator|.
-name|u_pcb
-operator|.
-name|pcb_sigc
-argument_list|)
+name|szsigcode
 operator|-
 name|nc
 operator|-
@@ -2077,17 +2121,16 @@ argument_list|,
 name|retval
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|COPY_SIGCODE
 comment|/* 	 * Install sigcode at top of user stack. 	 */
 name|copyout
 argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|u
-operator|.
-name|u_pcb
-operator|.
-name|pcb_sigc
+name|sigcode
 argument_list|,
 call|(
 name|caddr_t
@@ -2095,26 +2138,14 @@ call|)
 argument_list|(
 name|USRSTACK
 operator|-
-sizeof|sizeof
-argument_list|(
-name|u
-operator|.
-name|u_pcb
-operator|.
-name|pcb_sigc
-argument_list|)
+name|szsigcode
 argument_list|)
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|u
-operator|.
-name|u_pcb
-operator|.
-name|pcb_sigc
-argument_list|)
+name|szsigcode
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Remember file name for accounting. 	 */
 name|p
 operator|->
@@ -2197,6 +2228,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|cpu_exec
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|bad
 label|:
 if|if
@@ -2523,14 +2559,7 @@ name|btoc
 argument_list|(
 name|nargc
 operator|+
-sizeof|sizeof
-argument_list|(
-name|u
-operator|.
-name|u_pcb
-operator|.
-name|pcb_sigc
-argument_list|)
+name|szsigcode
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2657,25 +2686,22 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|hp300
-name|u
-operator|.
+name|HPUXCOMPAT
+name|p
+operator|->
+name|p_addr
+operator|->
 name|u_pcb
 operator|.
 name|pcb_flags
 operator|&=
 operator|~
 operator|(
-name|PCB_AST
-operator||
 name|PCB_HPUXMMAP
 operator||
 name|PCB_HPUXBIN
 operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HPUXCOMPAT
 comment|/* remember that we were loaded from an HPUX format file */
 if|if
 condition|(
@@ -2685,8 +2711,10 @@ name|a_mid
 operator|==
 name|MID_HPUX
 condition|)
-name|u
-operator|.
+name|p
+operator|->
+name|p_addr
+operator|->
 name|u_pcb
 operator|.
 name|pcb_flags
@@ -2711,8 +2739,6 @@ operator|&=
 operator|~
 name|SHPUX
 expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 name|p
@@ -3271,8 +3297,11 @@ name|defined
 argument_list|(
 name|tahoe
 argument_list|)
-name|u
-operator|.
+comment|/* move this when tahoe cpu_exec is created */
+name|p
+operator|->
+name|p_addr
+operator|->
 name|u_pcb
 operator|.
 name|pcb_savacc
