@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)w.c	5.22 (Berkeley) %G%"
+literal|"@(#)w.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -359,7 +359,7 @@ begin_define
 define|#
 directive|define
 name|USAGE
-value|"[ -hi ] [ user ]"
+value|"[ -ht ] [ user ]"
 end_define
 
 begin_define
@@ -491,7 +491,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"hiflsuw"
+literal|"htflsuw"
 argument_list|)
 operator|)
 operator|!=
@@ -514,7 +514,7 @@ literal|0
 expr_stmt|;
 break|break;
 case|case
-literal|'i'
+literal|'t'
 case|:
 name|sortidle
 operator|++
