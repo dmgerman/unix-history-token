@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.29 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.30 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.29 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.30 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -367,10 +367,6 @@ name|firsttime
 init|=
 name|TRUE
 decl_stmt|;
-name|STAB
-modifier|*
-name|st
-decl_stmt|;
 name|bool
 name|trycanon
 init|=
@@ -457,28 +453,11 @@ if|if
 condition|(
 name|droplocalhost
 operator|&&
-operator|(
-name|st
-operator|=
-name|stab
+name|wordinclass
 argument_list|(
 name|fallbackMX
 argument_list|,
-name|ST_CLASS
-argument_list|,
-name|ST_FIND
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-operator|&&
-name|bitnset
-argument_list|(
 literal|'w'
-argument_list|,
-name|st
-operator|->
-name|s_class
 argument_list|)
 condition|)
 block|{
@@ -900,28 +879,11 @@ if|if
 condition|(
 name|droplocalhost
 operator|&&
-operator|(
-name|st
-operator|=
-name|stab
+name|wordinclass
 argument_list|(
 name|bp
 argument_list|,
-name|ST_CLASS
-argument_list|,
-name|ST_FIND
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-operator|&&
-name|bitnset
-argument_list|(
 literal|'w'
-argument_list|,
-name|st
-operator|->
-name|s_class
 argument_list|)
 condition|)
 block|{

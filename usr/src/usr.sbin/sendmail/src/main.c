@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.75 (Berkeley) %G%"
+literal|"@(#)main.c	8.76 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6546,11 +6546,6 @@ argument_list|,
 name|CurEnv
 argument_list|)
 decl_stmt|;
-specifier|register
-name|STAB
-modifier|*
-name|s
-decl_stmt|;
 name|syslog
 argument_list|(
 name|LOG_DEBUG
@@ -6575,31 +6570,14 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|s
-operator|=
-name|stab
+if|if
+condition|(
+operator|!
+name|wordinclass
 argument_list|(
 name|j
 argument_list|,
-name|ST_CLASS
-argument_list|,
-name|ST_FIND
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|s
-operator|==
-name|NULL
-operator|||
-operator|!
-name|bitnset
-argument_list|(
 literal|'w'
-argument_list|,
-name|s
-operator|->
-name|s_class
 argument_list|)
 condition|)
 name|syslog
