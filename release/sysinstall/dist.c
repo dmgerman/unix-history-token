@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: dist.c,v 1.36.2.30 1996/05/24 06:08:26 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: dist.c,v 1.36.2.31 1996/05/29 04:37:13 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1155,6 +1155,18 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|int
+name|distMaybeSetDES
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|distReset
@@ -1219,9 +1231,10 @@ operator|=
 name|DIST_SRC_ALL
 expr_stmt|;
 return|return
-name|DITEM_SUCCESS
-operator||
-name|DITEM_REDRAW
+name|distMaybeSetDES
+argument_list|(
+name|self
+argument_list|)
 return|;
 block|}
 end_function
@@ -1275,6 +1288,11 @@ name|distSetXF86
 argument_list|(
 name|NULL
 argument_list|)
+operator||
+name|distMaybeSetDES
+argument_list|(
+name|self
+argument_list|)
 return|;
 block|}
 end_function
@@ -1302,9 +1320,10 @@ operator|=
 name|DIST_SRC_SYS
 expr_stmt|;
 return|return
-name|DITEM_SUCCESS
-operator||
-name|DITEM_REDRAW
+name|distMaybeSetDES
+argument_list|(
+name|self
+argument_list|)
 return|;
 block|}
 end_function
@@ -1328,9 +1347,10 @@ operator|=
 name|_DIST_USER
 expr_stmt|;
 return|return
-name|DITEM_SUCCESS
-operator||
-name|DITEM_REDRAW
+name|distMaybeSetDES
+argument_list|(
+name|self
+argument_list|)
 return|;
 block|}
 end_function
@@ -1377,6 +1397,11 @@ return|return
 name|distSetXF86
 argument_list|(
 name|NULL
+argument_list|)
+operator||
+name|distMaybeSetDES
+argument_list|(
+name|self
 argument_list|)
 return|;
 block|}
@@ -1438,9 +1463,10 @@ operator|=
 name|DIST_XF86_FONTS_ALL
 expr_stmt|;
 return|return
-name|DITEM_SUCCESS
-operator||
-name|DITEM_REDRAW
+name|distMaybeSetDES
+argument_list|(
+name|self
+argument_list|)
 return|;
 block|}
 end_function
@@ -1503,6 +1529,98 @@ name|i
 operator|=
 name|DITEM_FAILURE
 expr_stmt|;
+return|return
+name|i
+operator||
+name|DITEM_RECREATE
+operator||
+name|DITEM_RESTORE
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|distMaybeSetDES
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|int
+name|i
+init|=
+name|DITEM_SUCCESS
+decl_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"Do wish to install DES cryptographic software?\n\n"
+literal|"If you choose No, FreeBSD will use an MD5 based password scheme which,\n"
+literal|"while perhaps more secure, is not interoperable with the traditional\n"
+literal|"UNIX DES passwords on other non-FreeBSD systems.\n\n"
+literal|"Please do NOT choose Yes at this point if you are outside the\n"
+literal|"United States and Canada yet are installing from a U.S. FTP server.\n"
+literal|"This will violate U.S. export restrictions and possibly get the\n"
+literal|"server site into trouble!  In such cases, install everything but the\n"
+literal|"DES distribution from the U.S. server then switch your media type to\n"
+literal|"point to an international FTP server, using the Custom installation\n"
+literal|"option to select and extract the DES distribution in a second pass."
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|dmenuOpenSimple
+argument_list|(
+operator|&
+name|MenuDESDistributions
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|DESDists
+condition|)
+block|{
+if|if
+condition|(
+name|DESDists
+operator|&
+name|DIST_DES_KERBEROS
+condition|)
+name|DESDists
+operator||=
+name|DIST_DES_DES
+expr_stmt|;
+name|Dists
+operator||=
+name|DIST_DES
+expr_stmt|;
+name|msgDebug
+argument_list|(
+literal|"SetDES Masks: DES: %0x, Dists: %0x\n"
+argument_list|,
+name|DESDists
+argument_list|,
+name|Dists
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+name|i
+operator|=
+name|DITEM_FAILURE
+expr_stmt|;
+block|}
 return|return
 name|i
 operator||
@@ -2673,7 +2791,7 @@ name|status
 operator|=
 name|msgYesNo
 argument_list|(
-literal|"Unable to transfer the %s distribution from %s.\n"
+literal|"Unable to transfer the %s distribution from\n%s.\n\n"
 literal|"Do you want to try to retrieve it again?"
 argument_list|,
 name|me

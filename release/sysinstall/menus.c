@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.63 1996/05/16 13:39:08 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.42.2.51 1996/05/24 06:08:54 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -305,6 +305,30 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|IS_DEVELOPER
+parameter_list|(
+name|dist
+parameter_list|,
+name|extra
+parameter_list|)
+value|(((dist) == (_DIST_DEVELOPER | (extra))) || ((dist) == (_DIST_DEVELOPER | DIST_DES | (extra))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_USER
+parameter_list|(
+name|dist
+parameter_list|,
+name|extra
+parameter_list|)
+value|(((dist) == (_DIST_USER | (extra))) || ((dist) == (_DIST_USER | DIST_DES | (extra))))
+end_define
+
 begin_function
 specifier|static
 name|int
@@ -317,9 +341,12 @@ parameter_list|)
 block|{
 return|return
 operator|(
+name|IS_DEVELOPER
+argument_list|(
 name|Dists
-operator|==
-name|_DIST_DEVELOPER
+argument_list|,
+literal|0
+argument_list|)
 operator|&&
 name|SrcDists
 operator|==
@@ -341,13 +368,12 @@ parameter_list|)
 block|{
 return|return
 operator|(
+name|IS_DEVELOPER
+argument_list|(
 name|Dists
-operator|==
-operator|(
-name|_DIST_DEVELOPER
-operator||
+argument_list|,
 name|DIST_XF86
-operator|)
+argument_list|)
 operator|&&
 name|SrcDists
 operator|==
@@ -369,9 +395,12 @@ parameter_list|)
 block|{
 return|return
 operator|(
+name|IS_DEVELOPER
+argument_list|(
 name|Dists
-operator|==
-name|_DIST_DEVELOPER
+argument_list|,
+literal|0
+argument_list|)
 operator|&&
 name|SrcDists
 operator|==
@@ -393,9 +422,12 @@ parameter_list|)
 block|{
 return|return
 operator|(
+name|IS_USER
+argument_list|(
 name|Dists
-operator|==
-name|_DIST_USER
+argument_list|,
+literal|0
+argument_list|)
 operator|)
 return|;
 block|}
@@ -413,13 +445,12 @@ parameter_list|)
 block|{
 return|return
 operator|(
+name|IS_USER
+argument_list|(
 name|Dists
-operator|==
-operator|(
-name|_DIST_USER
-operator||
+argument_list|,
 name|DIST_XF86
-operator|)
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1495,6 +1526,21 @@ literal|"=ftp://sunsite.mff.cuni.cz/OS/FreeBSD/"
 block|}
 block|,
 block|{
+literal|"Estonia"
+block|,
+literal|"ftp.ee.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp.ee.freebsd.org/pub/FreeBSD/"
+block|}
+block|,
+block|{
 literal|"Finland"
 block|,
 literal|"nic.funet.fi"
@@ -1627,6 +1673,21 @@ name|NULL
 block|,
 name|VAR_FTP_PATH
 literal|"=ftp://ftp7.de.freebsd.org/pub/FreeBSD/"
+block|}
+block|,
+block|{
+literal|"Holland"
+block|,
+literal|"ftp.nl.freebsd.ort"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp.nl.freebsd.org/pub/os/FreeBSD/cdrom/"
 block|}
 block|,
 block|{
@@ -2169,7 +2230,14 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Network interface information required"
 block|,
-literal|"If you are using PPP over a serial device (cuaa0 or cuaa1) as opposed\n\ to a direct ethernet connection, then you may first need to dial your\n\ service provider using the ppp utility we provide for that purpose.\n\ You can also install over a parallel port using a special \"laplink\"\n\ cable, though this only works if you have another FreeBSD machine running\n\ a fairly recent (2.0R or later) release to talk to.\n\n\ To use PPP, select one of the serial devices, otherwise select lp0 for\n\ the parallel port or one of the ethernet controllers (if you have one)\n\ for an ethernet installation."
+literal|"If you are using PPP over a serial device as opposed\n"
+literal|"to a direct ethernet connection, then you may first need to dial your\n"
+literal|"service provider using the ppp utility we provide for that purpose.\n"
+literal|"If you're using SLIP over a serial device then it's expected that you\n"
+literal|"have a hardwired connection.\n\n"
+literal|"You can also install over a parallel port using a special \"laplink\"\n"
+literal|"cable to another machine running a fairly recent (2.0R or later) version\n"
+literal|"of FreeBSD."
 block|,
 literal|"Press F1 to read network configuration manual"
 block|,
@@ -5055,7 +5123,7 @@ literal|"This machine will be an NFS client"
 block|,
 name|dmenuVarCheck
 block|,
-name|dmenuSetVariable
+name|dmenuToggleVariable
 block|,
 name|NULL
 block|,
@@ -5083,7 +5151,7 @@ literal|"This machine will route packets between interfaces"
 block|,
 name|dmenuVarCheck
 block|,
-name|dmenuSetVariable
+name|dmenuToggleVariable
 block|,
 name|NULL
 block|,
@@ -5151,7 +5219,7 @@ literal|"This machine wants to run the rwho daemon"
 block|,
 name|dmenuVarCheck
 block|,
-name|dmenuSetVariable
+name|dmenuToggleVariable
 block|,
 name|NULL
 block|,
