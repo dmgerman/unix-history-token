@@ -918,7 +918,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_map_entry_create:	[ internal use only ]  *  *	Allocates a VM map entry for insertion.  *	No entry fields are filled in.  This routine is  */
+comment|/*  *	vm_map_entry_create:	[ internal use only ]  *  *	Allocates a VM map entry for insertion.  *	No entry fields are filled in.  */
 end_comment
 
 begin_function
