@@ -187,6 +187,26 @@ directive|include
 file|"kvm_private.h"
 end_include
 
+begin_comment
+comment|/* from src/lib/libc/gen/nlist.c */
+end_comment
+
+begin_decl_stmt
+name|int
+name|__fdnlist
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+expr|struct
+name|nlist
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|char
 modifier|*
@@ -1755,7 +1775,8 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -1790,7 +1811,8 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -1854,7 +1876,8 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 if|if
@@ -2069,7 +2092,8 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -2104,7 +2128,8 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -2147,7 +2172,8 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 block|}
