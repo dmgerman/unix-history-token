@@ -682,6 +682,23 @@ name|name
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|PLIST_OPTION
+case|:
+name|printf
+argument_list|(
+name|Quiet
+condition|?
+literal|"@option %s\n"
+else|:
+literal|"\tOption \"%s\" controlling package installation behaviour\n"
+argument_list|,
+name|p
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|cleanup
 argument_list|(
