@@ -83,6 +83,20 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|handleclock
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+name|arg
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
