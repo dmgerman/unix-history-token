@@ -89,6 +89,12 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_comment
 comment|/*  * tip  *  * miscellaneous commands  */
 end_comment
@@ -2933,6 +2939,50 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|nap
+parameter_list|(
+name|msec
+parameter_list|)
+name|int
+name|msec
+decl_stmt|;
+comment|/* milliseconds */
+block|{
+if|if
+condition|(
+name|usleep
+argument_list|(
+name|msec
+operator|*
+literal|1000
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"warning: ldelay or cdelay interrupted, "
+literal|"delay time cut short: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+literal|0
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * FTP - send single character  *  wait for echo& handle timeout  */
 end_comment
@@ -2970,9 +3020,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
 if|if
 condition|(
 name|number
@@ -3000,8 +3047,6 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -3014,9 +3059,6 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|notdef
 if|if
 condition|(
 name|number
@@ -3044,8 +3086,6 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return;
 block|}
 name|tryagain
