@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fdec.c 1.11 %G%"
+literal|"@(#)fdec.c 1.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2206,6 +2206,34 @@ operator|-
 name|DPOFF2
 argument_list|)
 expr_stmt|;
+comment|/* 	     *	Output the runtime test mode for the routine 	     */
+if|if
+condition|(
+name|opt
+argument_list|(
+literal|'t'
+argument_list|)
+condition|)
+name|put
+argument_list|(
+literal|2
+argument_list|,
+name|O_CASE2
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+else|else
+name|put
+argument_list|(
+literal|2
+argument_list|,
+name|O_CASE2
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+comment|/* 	     *	Output line number and routine name 	     */
 name|put
 argument_list|(
 literal|2
