@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: getvfsbyname.c,v 1.2 1997/03/03 13:08:33 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -108,6 +108,15 @@ end_decl_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|__NETBSD_SYSCALLS
+name|errno
+operator|=
+name|ENOSYS
+expr_stmt|;
+else|#
+directive|else
 name|int
 name|name
 index|[
@@ -278,6 +287,8 @@ name|errno
 operator|=
 name|ENOENT
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 operator|-
