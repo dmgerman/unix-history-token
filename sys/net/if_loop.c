@@ -1419,9 +1419,17 @@ argument_list|,
 name|hlen
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__alpha__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
 comment|/* The alpha doesn't like unaligned data. 		 * We move data down in the first mbuf */
 if|if
 condition|(
