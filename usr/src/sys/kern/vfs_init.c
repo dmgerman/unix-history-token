@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed  * to Berkeley by John Heidemann of the UCLA Ficus project.  *  * Source: * @(#)i405_init.c 2.10 92/04/27 UCLA Ficus project  *  * %sccs.include.redist.c%  *  *	@(#)vfs_init.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed  * to Berkeley by John Heidemann of the UCLA Ficus project.  *  * Source: * @(#)i405_init.c 2.10 92/04/27 UCLA Ficus project  *  * %sccs.include.redist.c%  *  *	@(#)vfs_init.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -70,7 +70,7 @@ file|<sys/malloc.h>
 end_include
 
 begin_comment
-comment|/* Sigh, such primitive tools are these... */
+comment|/*  * Sigh, such primitive tools are these...  */
 end_comment
 
 begin_if
@@ -170,13 +170,15 @@ name|vn_default_error
 parameter_list|()
 block|{
 return|return
+operator|(
 name|EOPNOTSUPP
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * vfs_init.c  *  * Allocate and fill in operations vectors.  *  * An undocumented feature of this approach to defining  * operations is that there can be multiple entries in  * vfs_opv_descs for the same operations vector.  * This allows third parties to extend the set of operations  * supported by another layer in a binary compatibile way.  * For example, assume that NFS needed to be modified to support  * Ficus.  NFS has an entry (probably nfs_vnopdeop_decls)  * declaring all the operations NFS supports by default.  * Ficus could add another entry (ficus_nfs_vnodeop_decl_entensions)  * listing those new operations Ficus adds to NFS, all without  * modifying the NFS code.  (Of couse, the OTW NFS protocol  * still needs to be munged, but that's a(whole)nother story.)  * This is a feature.  */
+comment|/*  * vfs_init.c  *  * Allocate and fill in operations vectors.  *  * An undocumented feature of this approach to defining operations is that  * there can be multiple entries in vfs_opv_descs for the same operations  * vector. This allows third parties to extend the set of operations  * supported by another layer in a binary compatibile way. For example,  * assume that NFS needed to be modified to support Ficus. NFS has an entry  * (probably nfs_vnopdeop_decls) declaring all the operations NFS supports by  * default. Ficus could add another entry (ficus_nfs_vnodeop_decl_entensions)  * listing those new operations Ficus adds to NFS, all without modifying the  * NFS code. (Of couse, the OTW NFS protocol still needs to be munged, but  * that is a(whole)nother story.) This is a feature.  */
 end_comment
 
 begin_function
@@ -297,7 +299,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 name|opv_desc_vector
 operator|=
 operator|*
@@ -340,7 +341,7 @@ name|j
 index|]
 operator|)
 expr_stmt|;
-comment|/* 			 * Sanity check:  is this operation listed 			 * in the list of operations?  We check this 			 * by seeing if its offest is zero.  Since 			 * the default routine should always be listed 			 * first, it should be the only one with a zero 			 * offset.  Any other operation with a zero 			 * offset is probably not listed in 			 * vfs_op_descs, 			 * and so is probably an error. 			 * 			 * A panic here means the layer programmer 			 * has committed the all-too common bug 			 * of adding a new operation to the layer's 			 * list of vnode operations but 			 * not adding the operation to the system-wide 			 * list of supported operations. 			 */
+comment|/* 			 * Sanity check:  is this operation listed 			 * in the list of operations?  We check this 			 * by seeing if its offest is zero.  Since 			 * the default routine should always be listed 			 * first, it should be the only one with a zero 			 * offset.  Any other operation with a zero 			 * offset is probably not listed in 			 * vfs_op_descs, and so is probably an error. 			 * 			 * A panic here means the layer programmer 			 * has committed the all-too common bug 			 * of adding a new operation to the layer's 			 * list of vnode operations but 			 * not adding the operation to the system-wide 			 * list of supported operations. 			 */
 if|if
 condition|(
 name|opve_descp
@@ -365,13 +366,15 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"error: operation %s not listed in vfs_op_descs.\n"
+literal|"operation %s not listed in %s.\n"
 argument_list|,
 name|opve_descp
 operator|->
 name|opve_op
 operator|->
 name|vdesc_name
+argument_list|,
+literal|"vfs_op_descs"
 argument_list|)
 expr_stmt|;
 name|panic
@@ -380,7 +383,6 @@ literal|"vfs_opv_init: bad operation"
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 comment|/* 			 * Fill in this entry. 			 */
 name|opv_desc_vector
 index|[
@@ -396,9 +398,7 @@ operator|->
 name|opve_impl
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
-empty_stmt|;
 comment|/* 	 * Finally, go back and replace unfilled routines 	 * with their default.  (Sigh, an O(n^3) algorithm.  I 	 * could make it better, but that'd be work, and n is small.) 	 */
 for|for
 control|(
@@ -447,7 +447,6 @@ literal|"vfs_opv_init: operation vector without default routine."
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 for|for
 control|(
 name|k
@@ -484,9 +483,12 @@ argument_list|)
 index|]
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Initialize known vnode operations vectors.  */
+end_comment
 
 begin_function
 name|void
@@ -533,13 +535,13 @@ operator|)
 operator|=
 name|NULL
 expr_stmt|;
-name|vfs_opv_numops
-operator|=
-literal|0
-expr_stmt|;
 comment|/* 	 * Figure out how many ops there are by counting the table, 	 * and assign each its offset. 	 */
 for|for
 control|(
+name|vfs_opv_numops
+operator|=
+literal|0
+operator|,
 name|i
 operator|=
 literal|0
@@ -566,7 +568,6 @@ name|vfs_opv_numops
 operator|++
 expr_stmt|;
 block|}
-empty_stmt|;
 name|DODEBUG
 argument_list|(
 name|printf
