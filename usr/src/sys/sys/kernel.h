@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kernel.h	7.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kernel.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -19,12 +19,14 @@ comment|/* 1.1 */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|long
 name|hostid
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|char
 name|hostname
 index|[
@@ -34,6 +36,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|hostnamelen
 decl_stmt|;
@@ -44,6 +47,7 @@ comment|/* 1.2 */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|timeval
 name|mono_time
@@ -51,6 +55,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|timeval
 name|boottime
@@ -58,6 +63,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|timeval
 name|time
@@ -65,6 +71,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|timezone
 name|tz
@@ -76,6 +83,7 @@ comment|/* XXX */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|hz
 decl_stmt|;
@@ -86,6 +94,7 @@ comment|/* clock frequency */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|phz
 decl_stmt|;
@@ -96,12 +105,29 @@ comment|/* alternate clock's frequency */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|tick
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* usec per tick */
+end_comment
+
 begin_decl_stmt
+specifier|extern
+name|int
+name|profhz
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* profiling clock's frequency */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|lbolt
 decl_stmt|;
@@ -112,18 +138,59 @@ comment|/* once a second sleep address */
 end_comment
 
 begin_function_decl
+specifier|extern
 name|int
 name|realitexpire
 parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_struct
+struct|struct
+name|clockinfo
+block|{
+name|int
+name|hz
+decl_stmt|;
+comment|/* clock frequency */
+name|int
+name|tick
+decl_stmt|;
+comment|/* micro-seconds per hz tick */
+name|int
+name|phz
+decl_stmt|;
+comment|/* alternate clock frequency */
+name|int
+name|profhz
+decl_stmt|;
+comment|/* profiling clock frequency */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|loadavg
+block|{
 name|fixpt_t
-name|averunnable
+name|ldavg
 index|[
 literal|3
 index|]
+decl_stmt|;
+name|long
+name|fscale
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|loadavg
+name|averunnable
 decl_stmt|;
 end_decl_stmt
 
@@ -173,18 +240,21 @@ name|GPROF
 end_ifdef
 
 begin_decl_stmt
+specifier|extern
 name|u_long
 name|s_textsize
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|profiling
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|u_short
 modifier|*
 name|kcount
@@ -192,6 +262,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|s_lowpc
