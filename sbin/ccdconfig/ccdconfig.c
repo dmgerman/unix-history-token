@@ -478,7 +478,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cCf:gM:N:uUv"
+literal|"cCf:guUv"
 argument_list|)
 operator|)
 operator|!=
