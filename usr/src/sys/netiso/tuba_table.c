@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_table.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_table.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -78,24 +78,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|"tuba_addr.h"
+file|"netiso/iso.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netiso/iso.h"
+file|"tuba_addr.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|SA
-parameter_list|(
-name|p
-parameter_list|)
-value|((struct sockaddr *)(p))
-end_define
 
 begin_decl_stmt
 name|int
@@ -263,7 +253,7 @@ block|}
 end_function
 
 begin_macro
-name|tuba_init
+name|tuba_timer_init
 argument_list|()
 end_macro
 

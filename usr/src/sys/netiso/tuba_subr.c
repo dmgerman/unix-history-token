@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_subr.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_subr.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -188,6 +188,20 @@ end_macro
 
 begin_block
 block|{
+define|#
+directive|define
+name|TUBAHDRSIZE
+value|(3
+comment|/*LLC*/
+value|+ 9
+comment|/*CLNP Fixed*/
+value|+ 42
+comment|/*Addresses*/
+value|\ 		     + 6
+comment|/*CLNP Segment*/
+value|+ 20
+comment|/*TCP*/
+value|)
 specifier|extern
 name|struct
 name|isopcb
@@ -204,20 +218,6 @@ operator|=
 operator|&
 name|tuba_isopcb
 expr_stmt|;
-define|#
-directive|define
-name|TUBAHDRSIZE
-value|(3
-comment|/*LLC*/
-value|+ 9
-comment|/*CLNP Fixed*/
-value|+ 42
-comment|/*Addresses*/
-value|\ 		     + 6
-comment|/*CLNP Segment*/
-value|+ 20
-comment|/*TCP*/
-value|)
 if|if
 condition|(
 name|max_protohdr
@@ -240,6 +240,9 @@ name|panic
 argument_list|(
 literal|"tuba_init"
 argument_list|)
+expr_stmt|;
+name|tuba_timer_init
+argument_list|()
 expr_stmt|;
 block|}
 end_block
