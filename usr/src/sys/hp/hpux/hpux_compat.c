@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.55 92/12/26$  *  *	@(#)hpux_compat.c	7.33 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.55 92/12/26$  *  *	@(#)hpux_compat.c	7.34 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -12,6 +12,23 @@ ifdef|#
 directive|ifdef
 name|HPUXCOMPAT
 end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPAT_43
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|COMPAT_43
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
