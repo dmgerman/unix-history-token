@@ -803,6 +803,7 @@ name|struct
 name|proc
 modifier|*
 name|p
+decl_stmt|;
 name|int
 name|rval
 decl_stmt|;
