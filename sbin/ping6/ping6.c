@@ -1401,6 +1401,17 @@ name|NI_NODEADDR_FLAG_ALL
 expr_stmt|;
 break|break;
 case|case
+literal|'c'
+case|:
+case|case
+literal|'C'
+case|:
+name|naflags
+operator||=
+name|NI_NODEADDR_FLAG_COMPAT
+expr_stmt|;
+break|break;
+case|case
 literal|'l'
 case|:
 case|case
@@ -7777,7 +7788,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-literal|"] [-a [alsg]] [-b sockbufsiz] [-c count] [-I interface]\n\              [-i wait] [-l preload] [-p pattern] [-s packetsize]\n\              [-h hoplimit] host [hosts...]\n"
+literal|"] [-a [aclsg]] [-b sockbufsiz] [-c count] [-I interface]\n\              [-i wait] [-l preload] [-p pattern] [-s packetsize]\n\              [-h hoplimit] host [hosts...]\n"
 argument_list|)
 expr_stmt|;
 name|exit

@@ -4155,8 +4155,25 @@ name|ia6_flags
 operator|&
 name|IN6_IFF_ANYCAST
 condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|ni6
+operator|->
+name|ni_flags
+operator|&
+name|NI_NODEADDR_FLAG_ANYCAST
+operator|)
+operator|!=
+literal|0
+condition|)
+name|addrsofif
+operator|++
+expr_stmt|;
 continue|continue;
 comment|/* we need only unicast addresses */
+block|}
 if|if
 condition|(
 operator|(
@@ -4462,11 +4479,6 @@ operator|&
 name|NI_NODEADDR_FLAG_ANYCAST
 condition|)
 continue|continue;
-else|else
-name|docopy
-operator|=
-literal|1
-expr_stmt|;
 block|}
 comment|/* What do we have to do about ::1? */
 switch|switch
