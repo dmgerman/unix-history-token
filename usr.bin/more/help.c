@@ -68,7 +68,7 @@ name|sprintf
 argument_list|(
 name|cmd
 argument_list|,
-literal|"-more %s"
+literal|"-more -ce %s"
 argument_list|,
 name|_PATH_HELPFILE
 argument_list|)

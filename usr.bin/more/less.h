@@ -329,5 +329,12 @@ name|A_FILE_LIST
 value|27
 end_define
 
+begin_define
+define|#
+directive|define
+name|A_SHELL
+value|28
+end_define
+
 end_unit
 

@@ -677,9 +677,12 @@ operator|>
 name|sc_width
 condition|)
 comment|/* 		 * Printing the message has probably scrolled the screen. 		 * {{ Unless the terminal doesn't have auto margins, 		 *    in which case we just hammered on the right margin. }} 		 */
-name|repaint
-argument_list|()
+comment|/* repaint(); */
+name|screen_trashed
+operator|=
+literal|1
 expr_stmt|;
+comment|/* XXX */
 name|flush
 argument_list|()
 expr_stmt|;
