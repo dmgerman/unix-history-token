@@ -771,6 +771,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|sc
+operator|->
+name|sc_dev
+operator|=
+name|self
+expr_stmt|;
 name|printf
 argument_list|(
 literal|": %s, iclass %d/%d\n"
