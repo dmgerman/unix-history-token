@@ -328,12 +328,9 @@ name|n
 decl_stmt|,
 name|n1
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 if|if
 condition|(
 name|encrypt_output
@@ -348,6 +345,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 if|if
 condition|(
 operator|(

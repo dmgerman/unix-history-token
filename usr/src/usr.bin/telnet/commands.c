@@ -2972,14 +2972,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -3037,6 +3034,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ENCRYPTION */
+end_comment
 
 begin_struct
 struct|struct
@@ -3139,12 +3140,9 @@ block|}
 block|,
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 block|{
 literal|"autoencrypt"
 block|,
@@ -3195,6 +3193,7 @@ block|}
 block|,
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 block|{
 literal|"skiprc"
 block|,
@@ -6294,17 +6293,15 @@ comment|/*@*/
 name|optionstatus
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 name|EncryptStatus
 argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 return|return
 literal|1
 return|;
@@ -6995,6 +6992,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* defined(AUTHENTICATION) || defined(ENCRYPTION) */
 comment|/* reset options */
 name|tninit
 argument_list|()
@@ -9589,14 +9587,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
-end_if
+end_ifdef
 
 begin_comment
 comment|/*  * The ENCRYPT command.  */
@@ -10306,6 +10301,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ENCRYPTION */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -10634,17 +10633,15 @@ else|:
 literal|"No"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 name|encrypt_display
 argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 block|}
 block|}
 else|else
@@ -12122,6 +12119,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* defined(AUTHENTICATION) || defined(ENCRYPTION) */
 block|}
 do|while
 condition|(
@@ -12386,12 +12384,9 @@ literal|"turn on (off) authentication ('auth ?' for more)"
 decl_stmt|,
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 name|encrypthelp
 index|[]
 init|=
@@ -12399,6 +12394,7 @@ literal|"turn on (off) encryption ('encrypt ?' for more)"
 decl_stmt|,
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 if|#
 directive|if
 name|defined
@@ -12607,12 +12603,9 @@ block|}
 block|,
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 block|{
 literal|"encrypt"
 block|,
@@ -12625,6 +12618,7 @@ block|}
 block|,
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 if|#
 directive|if
 name|defined

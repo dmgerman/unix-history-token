@@ -2633,6 +2633,10 @@ block|{
 ifdef|#
 directive|ifdef
 name|SIGINFO
+name|SIG_FUNC_RET
+name|ayt_status
+parameter_list|()
+function_decl|;
 operator|(
 name|void
 operator|)

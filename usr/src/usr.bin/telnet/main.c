@@ -127,15 +127,15 @@ argument_list|,
 ifdef|#
 directive|ifdef
 name|AUTHENTICATION
-literal|" [-8] [-E] [-K] [-L] [-X atype] [-a] [-d] [-e char] [-k realm]"
+literal|"[-8] [-E] [-K] [-L] [-S tos] [-X atype] [-a] [-c] [-d] [-e char]"
 argument_list|,
-literal|"\n\t[-l user] [-n tracefile] "
+literal|"\n\t[-k realm] [-l user] [-n tracefile] "
 argument_list|,
 else|#
 directive|else
-literal|" [-8] [-E] [-L] [-a] [-d] [-e char] [-l user] [-n tracefile]"
+literal|"[-8] [-E] [-L] [-S tos] [-a] [-c] [-d] [-e char] [-l user]"
 argument_list|,
-literal|"\n\t"
+literal|"\n\t[-n tracefile]"
 argument_list|,
 endif|#
 directive|endif
@@ -153,11 +153,11 @@ argument_list|)
 ifdef|#
 directive|ifdef
 name|AUTHENTICATION
-literal|"[-noasynch] [-noasynctty] [-noasyncnet]\n\t[-r] [-t transcom] "
+literal|"[-noasynch] [-noasynctty]\n\t[-noasyncnet] [-r] [-t transcom] "
 argument_list|,
 else|#
 directive|else
-literal|"[-noasynch] [-noasynctty] [-noasyncnet] [-r] [-t transcom]\n\t"
+literal|"[-noasynch] [-noasynctty] [-noasyncnet] [-r]\n\t[-t transcom]"
 argument_list|,
 endif|#
 directive|endif
@@ -173,9 +173,11 @@ name|ENCRYPTION
 literal|"[-x] [host-name [port]]"
 else|#
 directive|else
+comment|/* ENCRYPTION */
 literal|"[host-name [port]]"
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 argument_list|)
 expr_stmt|;
 name|exit
@@ -722,6 +724,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* ENCRYPTION */
 name|fprintf
 argument_list|(
 name|stderr
@@ -733,6 +736,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 break|break;
 case|case
 literal|'?'

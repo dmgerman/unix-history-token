@@ -617,12 +617,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPTION
+name|AUTHENTICATION
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|AUTHENTICATION
+name|ENCRYPTION
 argument_list|)
 name|auth_encrypt_connect
 argument_list|(
@@ -631,6 +631,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* defined(AUTHENTICATION) || defined(ENCRYPTION)  */
 name|restartany
 operator|=
 operator|-
@@ -1364,17 +1365,15 @@ name|TELOPT_AUTHENTICATION
 case|:
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 case|case
 name|TELOPT_ENCRYPT
 case|:
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 name|new_state_ok
 operator|=
 literal|1
@@ -1456,12 +1455,9 @@ argument_list|(
 name|option
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 if|if
 condition|(
 name|option
@@ -1473,6 +1469,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 block|}
 end_function
 
@@ -1783,18 +1780,16 @@ case|case
 name|TELOPT_ENVIRON
 case|:
 comment|/* environment variable option */
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 case|case
 name|TELOPT_ENCRYPT
 case|:
 comment|/* encryption variable option */
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 name|new_state_ok
 operator|=
 literal|1
@@ -3784,12 +3779,9 @@ block|}
 break|break;
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 case|case
 name|TELOPT_ENCRYPT
 case|:
@@ -3982,6 +3974,7 @@ block|}
 break|break;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 default|default:
 break|break;
 block|}
@@ -6997,12 +6990,9 @@ expr_stmt|;
 name|count
 operator|++
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 if|if
 condition|(
 name|decrypt_input
@@ -7019,6 +7009,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 switch|switch
 condition|(
 name|telrcv_state
@@ -7121,12 +7112,9 @@ expr_stmt|;
 name|count
 operator|++
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 if|if
 condition|(
 name|decrypt_input
@@ -7143,6 +7131,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 if|if
 condition|(
 name|c
@@ -7197,12 +7186,9 @@ name|sbp
 operator|&
 literal|0xff
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 if|if
 condition|(
 name|decrypt_input
@@ -7219,6 +7205,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 if|if
 condition|(
 name|c
@@ -7274,12 +7261,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 if|if
 condition|(
 name|decrypt_input
@@ -7295,6 +7279,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 name|TTYADD
 argument_list|(
 literal|'\r'
@@ -8860,12 +8845,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPTION
+name|AUTHENTICATION
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|AUTHENTICATION
+name|ENCRYPTION
 argument_list|)
 block|{
 specifier|static
@@ -8930,6 +8915,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* defined(AUTHENTICATION) || defined(ENCRYPTION)  */
 if|#
 directive|if
 operator|!
@@ -8961,12 +8947,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 name|send_do
 argument_list|(
 name|TELOPT_ENCRYPT
@@ -8983,6 +8966,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 name|send_do
 argument_list|(
 name|TELOPT_SGA

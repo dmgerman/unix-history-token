@@ -97,12 +97,9 @@ modifier|*
 name|mark
 decl_stmt|;
 comment|/* marker (user defined) */
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 name|unsigned
 name|char
 modifier|*
@@ -117,6 +114,7 @@ decl_stmt|;
 comment|/* Data is encrypted to here */
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 name|int
 name|size
 decl_stmt|;
@@ -308,14 +306,11 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -353,6 +348,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ENCRYPTION */
+end_comment
 
 begin_decl_stmt
 specifier|extern

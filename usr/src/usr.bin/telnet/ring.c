@@ -297,12 +297,9 @@ name|ring
 operator|->
 name|size
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 name|ring
 operator|->
 name|clearto
@@ -311,6 +308,7 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 return|return
 literal|1
 return|;
@@ -521,12 +519,9 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 if|if
 condition|(
 name|ring
@@ -600,6 +595,7 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 name|ring
 operator|->
 name|consume
@@ -1162,14 +1158,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|void
@@ -1347,6 +1340,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ENCRYPTION */
+end_comment
 
 end_unit
 

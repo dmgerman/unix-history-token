@@ -95,6 +95,32 @@ directive|include
 file|<setjmp.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CRAY
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_BSD_SETJMP
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<bsdsetjmp.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -122,6 +148,27 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CRAY
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CRAY */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -327,6 +374,12 @@ name|SUBBUFSIZE
 value|256
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CRAY
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -336,6 +389,15 @@ end_decl_stmt
 
 begin_comment
 comment|/* outside this world */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !CRAY */
 end_comment
 
 begin_if
@@ -584,14 +646,11 @@ begin_comment
 comment|/* Who are we connected to? */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
-end_if
+end_ifdef
 
 begin_extern
 extern|extern void (*encrypt_output
@@ -631,6 +690,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ENCRYPTION */
+end_comment
 
 begin_comment
 comment|/*  * We keep track of each side of the option negotiation.  */

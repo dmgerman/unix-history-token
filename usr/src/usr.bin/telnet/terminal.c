@@ -711,6 +711,7 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 specifier|register
 name|int
 name|newmode
@@ -799,6 +800,7 @@ block|}
 block|}
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 block|}
 end_function
 

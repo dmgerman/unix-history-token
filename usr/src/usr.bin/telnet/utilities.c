@@ -2458,12 +2458,9 @@ block|}
 break|break;
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 case|case
 name|TELOPT_ENCRYPT
 case|:
@@ -2787,6 +2784,7 @@ block|}
 break|break;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 case|case
 name|TELOPT_LINEMODE
 case|:
