@@ -195,6 +195,12 @@ name|NO
 value|0
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|CTRL
+end_undef
+
 begin_define
 define|#
 directive|define
