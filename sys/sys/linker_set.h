@@ -166,7 +166,7 @@ value|__MAKE_SET(set, sym)
 end_define
 
 begin_comment
-comment|/*  * Initialize before referring to a give linker set  */
+comment|/*  * Initialize before referring to a given linker set.  */
 end_comment
 
 begin_define
