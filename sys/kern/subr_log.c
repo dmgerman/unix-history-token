@@ -561,6 +561,9 @@ condition|)
 block|{
 name|l
 operator|=
+operator|(
+name|long
+operator|)
 name|mbp
 operator|->
 name|msg_bufx
@@ -926,6 +929,9 @@ argument_list|()
 expr_stmt|;
 name|l
 operator|=
+operator|(
+name|long
+operator|)
 name|msgbufp
 operator|->
 name|msg_bufx
