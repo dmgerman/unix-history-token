@@ -5590,6 +5590,11 @@ decl_stmt|;
 name|size_t
 name|size
 decl_stmt|;
+name|u_int
+name|needed
+init|=
+literal|0
+decl_stmt|;
 switch|switch
 condition|(
 name|uap
@@ -5987,10 +5992,7 @@ case|case
 name|KINFO_BSDI_SYSINFO
 case|:
 block|{
-comment|/* 		 * this is pretty crude, but it's just enough for uname() 		 * from BSDI's 1.x libc to work. 		 * 		 * In particular, it doesn't return the same results when 		 * the supplied buffer is too small.  BSDI's version apparently 		 * will return the amount copied, and set the *size to how 		 * much was needed.  The emulation framework here isn't capable 		 * of that, so we just set both to the amount copied. 		 * BSDI's 2.x product apparently fails with ENOMEM in this 		 * scenario. 		 */
-name|u_int
-name|needed
-decl_stmt|;
+comment|/* 		 * this is pretty crude, but it's just enough for uname() 		 * from BSDI's 1.x libc to work. 		 * 		 * *size gives the size of the buffer before the call, and 		 * the amount of data copied after a successful call. 		 * If successful, the return value is the amount of data 		 * available, which can be larger than *size. 		 * 		 * BSDI's 2.x product apparently fails with ENOMEM if *size 		 * is too small. 		 */
 name|u_int
 name|left
 decl_stmt|;
@@ -6135,11 +6137,21 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|uap
 operator|->
 name|where
 operator|==
 name|NULL
+operator|)
+operator|||
+operator|(
+name|uap
+operator|->
+name|size
+operator|==
+name|NULL
+operator|)
 condition|)
 block|{
 comment|/* process is asking how much buffer to supply.. */
@@ -6153,6 +6165,30 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|copyin
+argument_list|(
+name|uap
+operator|->
+name|size
+argument_list|,
+operator|&
+name|size
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|size
+argument_list|)
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+break|break;
 comment|/* if too much buffer supplied, trim it down */
 if|if
 condition|(
@@ -6257,6 +6293,10 @@ index|[
 literal|0
 index|]
 operator|=
+name|needed
+condition|?
+name|needed
+else|:
 name|size
 expr_stmt|;
 if|if
