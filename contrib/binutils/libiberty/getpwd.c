@@ -3,6 +3,10 @@ begin_comment
 comment|/* getpwd.c - get the working directory */
 end_comment
 
+begin_comment
+comment|/*  @deftypefn Supplemental char* getpwd (void)  Returns the current working directory.  This implementation caches the result on the assumption that the process will not call @code{chdir} between calls to @code{getpwd}.  @end deftypefn  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef

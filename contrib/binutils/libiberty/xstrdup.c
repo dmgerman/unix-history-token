@@ -3,6 +3,10 @@ begin_comment
 comment|/* xstrdup.c -- Duplicate a string in memory, using xmalloc.    This trivial function is in the public domain.    Ian Lance Taylor, Cygnus Support, December 1995.  */
 end_comment
 
+begin_comment
+comment|/*  @deftypefn Replacement char* xstrdup (const char *@var{s})  Duplicates a character string without fail, using @code{xmalloc} to obtain memory.  @end deftypefn  */
+end_comment
+
 begin_include
 include|#
 directive|include

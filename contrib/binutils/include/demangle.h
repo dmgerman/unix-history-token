@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Defs for interface to demanglers.    Copyright 1992, 1993, 1994, 1995, 1996, 1997, 1998, 2000    Free Software Foundation, Inc.        This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Defs for interface to demanglers.    Copyright 1992, 1993, 1994, 1995, 1996, 1997, 1998, 2000, 2001    Free Software Foundation, Inc.        This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_if
@@ -153,6 +153,11 @@ specifier|extern
 enum|enum
 name|demangling_styles
 block|{
+name|no_demangling
+init|=
+operator|-
+literal|1
+block|,
 name|unknown_demangling
 init|=
 literal|0
@@ -200,6 +205,13 @@ end_enum
 begin_comment
 comment|/* Define string names for the various demangling styles. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NO_DEMANGLING_STYLE_STRING
+value|"none"
+end_define
 
 begin_define
 define|#
@@ -344,14 +356,17 @@ end_comment
 
 begin_struct
 specifier|extern
+specifier|const
 struct|struct
 name|demangler_engine
 block|{
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|demangling_style_name
 decl_stmt|;
+specifier|const
 name|enum
 name|demangling_styles
 name|demangling_style
@@ -359,6 +374,7 @@ decl_stmt|;
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|demangling_style_doc
 decl_stmt|;
 block|}
@@ -483,7 +499,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* V3 ABI demangling entry point, defined in cp-demangle.c.  */
+comment|/* V3 ABI demangling entry points, defined in cp-demangle.c.  */
 end_comment
 
 begin_decl_stmt
@@ -498,6 +514,95 @@ specifier|const
 name|char
 operator|*
 name|mangled
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|java_demangle_v3
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|mangled
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_enum
+enum|enum
+name|gnu_v3_ctor_kinds
+block|{
+name|gnu_v3_complete_object_ctor
+init|=
+literal|1
+block|,
+name|gnu_v3_base_object_ctor
+block|,
+name|gnu_v3_complete_object_allocating_ctor
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* Return non-zero iff NAME is the mangled form of a constructor name    in the G++ V3 ABI demangling style.  Specifically, return an `enum    gnu_v3_ctor_kinds' value indicating what kind of constructor    it is.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|gnu_v3_ctor_kinds
+name|is_gnu_v3_mangled_ctor
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|name
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_enum
+enum|enum
+name|gnu_v3_dtor_kinds
+block|{
+name|gnu_v3_deleting_dtor
+init|=
+literal|1
+block|,
+name|gnu_v3_complete_object_dtor
+block|,
+name|gnu_v3_base_object_dtor
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* Return non-zero iff NAME is the mangled form of a destructor name    in the G++ V3 ABI demangling style.  Specifically, return an `enum    gnu_v3_dtor_kinds' value, indicating what kind of destructor    it is.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|gnu_v3_dtor_kinds
+name|is_gnu_v3_mangled_dtor
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|name
 operator|)
 argument_list|)
 decl_stmt|;

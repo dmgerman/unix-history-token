@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  @deftypefn Supplemental char* tmpnam (char *@var{s})  This function attempts to create a name for a temporary file, which will be a valid file name yet not exist when @code{tmpnam} checks for it.  @var{s} must point to a buffer of at least @code{L_tmpnam} bytes, or be @code{NULL}.  Use of this function creates a security risk, and it must not be used in new projects.  Use @code{mkstemp} instead.  @end deftypefn  */
+end_comment
+
 begin_include
 include|#
 directive|include

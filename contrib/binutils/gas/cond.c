@@ -976,7 +976,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"\".elseif\" without matching \".if\" - ignored"
+literal|"\".elseif\" without matching \".if\""
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -993,7 +993,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"\".elseif\" after \".else\" - ignored"
+literal|"\".elseif\" after \".else\""
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1421,7 +1421,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|".else without matching .if - ignored"
+literal|"\".else\" without matching \".if\""
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1438,7 +1438,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"duplicate \"else\" - ignored"
+literal|"duplicate \"else\""
 argument_list|)
 argument_list|)
 expr_stmt|;

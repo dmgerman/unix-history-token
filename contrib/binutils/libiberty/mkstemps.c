@@ -178,7 +178,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Generate a unique temporary file name from TEMPLATE.     TEMPLATE has the form:<path>/ccXXXXXX<suffix>     SUFFIX_LEN tells us how long<suffix> is (it can be zero length).     The last six characters of TEMPLATE before<suffix> must be "XXXXXX";    they are replaced with a string that makes the filename unique.     Returns a file descriptor open on the file for reading and writing.  */
+comment|/*  @deftypefn Replacement int mkstemps (char *@var{template}, int @var{suffix_len})  Generate a unique temporary file name from @var{template}. @var{template} has the form:  @example    @var{path}/ccXXXXXX@var{suffix} @end example  @var{suffix_len} tells us how long @var{suffix} is (it can be zero length).  The last six characters of @var{template} before @var{suffix} must be @samp{XXXXXX}; they are replaced with a string that makes the filename unique.  Returns a file descriptor open on the file for reading and writing.  @end deftypefn  */
 end_comment
 
 begin_function
@@ -437,6 +437,28 @@ operator|%
 literal|62
 index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VMS
+name|fd
+operator|=
+name|open
+argument_list|(
+name|template
+argument_list|,
+name|O_RDWR
+operator||
+name|O_CREAT
+operator||
+name|O_EXCL
+argument_list|,
+literal|0600
+argument_list|,
+literal|"fop=tmd"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|fd
 operator|=
 name|open
@@ -452,6 +474,8 @@ argument_list|,
 literal|0600
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|fd

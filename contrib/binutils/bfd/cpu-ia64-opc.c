@@ -4,7 +4,7 @@ comment|/* Copyright 1998, 1999, 2000, 2001 Free Software Foundation, Inc.    Co
 end_comment
 
 begin_comment
-comment|/* Logically, this code should be part of libopcode but since some of    the operand insertion/extraction functions help bfd to implement    relocations, this code is included as part of elf64-ia64.c.  This    avoids circular dependencies between libopcode and libbfd and also    obviates the need for applications to link in libopcode when all    they really want is libbfd.     --davidm Mon Apr 13 22:14:02 1998 */
+comment|/* Logically, this code should be part of libopcode but since some of    the operand insertion/extraction functions help bfd to implement    relocations, this code is included as part of cpu-ia64.c.  This    avoids circular dependencies between libopcode and libbfd and also    obviates the need for applications to link in libopcode when all    they really want is libbfd.     --davidm Mon Apr 13 22:14:02 1998 */
 end_comment
 
 begin_include

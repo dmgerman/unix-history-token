@@ -1,7 +1,39 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for raw ARM a.out binaries.    Copyright 1994, 1995, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.    Contributed by Richard Earnshaw (rwe@pegasus.esprit.ec.org)  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for raw ARM a.out binaries.    Copyright 1994, 1995, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Contributed by Richard Earnshaw (rwe@pegasus.esprit.ec.org)  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"bfd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sysdep.h"
+end_include
+
+begin_comment
+comment|/* Avoid multiple defininitions from aoutx if supporting standarad a.out    as well as our own.  */
+end_comment
+
+begin_comment
+comment|/* Do not "beautify" the CONCAT* macro args.  Traditional C will not    remove whitespace added here, and thus will fail to concatenate    the tokens.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NAME
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|CONCAT3 (aoutarm,_32_,y)
+end_define
 
 begin_define
 define|#
@@ -11,7 +43,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|((N_MAGIC(x) == NMAGIC) ? 0x8000 : \    (N_MAGIC(x) != ZMAGIC) ? 0 : \    (N_SHARED_LIB(x)) ? ((x).a_entry& ~(TARGET_PAGE_SIZE - 1)) : \    TEXT_START_ADDR)
+value|((N_MAGIC (x) == NMAGIC)					\    ? (bfd_vma) 0x8000						\    : ((N_MAGIC (x) != ZMAGIC)					\       ? (bfd_vma) 0						\       : ((N_SHARED_LIB (x))					\ 	 ? ((x).a_entry& ~(bfd_vma) (TARGET_PAGE_SIZE - 1))	\ 	 : (bfd_vma) TEXT_START_ADDR)))
 end_define
 
 begin_define
@@ -49,7 +81,7 @@ name|MY
 parameter_list|(
 name|OP
 parameter_list|)
-value|CAT(aoutarm_,OP)
+value|CONCAT2 (aoutarm_,OP)
 end_define
 
 begin_define
@@ -72,80 +104,6 @@ parameter_list|)
 value|((x).a_info& ~07200)
 end_define
 
-begin_include
-include|#
-directive|include
-file|"bfd.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sysdep.h"
-end_include
-
-begin_define
-define|#
-directive|define
-name|MYARM
-parameter_list|(
-name|OP
-parameter_list|)
-value|CAT(aoutarm_,OP)
-end_define
-
-begin_function_decl
-name|reloc_howto_type
-modifier|*
-name|MYARM
-parameter_list|(
-name|bfd_reloc_type_lookup
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|bfd_reloc_code_real_type
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
-specifier|static
-name|boolean
-name|MYARM
-parameter_list|(
-name|write_object_contents
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/* Avoid multiple defininitions from aoutx if supporting standarad a.out    as well as our own.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NAME
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|CAT3(aoutarm,_32_,y)
-end_define
-
 begin_define
 define|#
 directive|define
@@ -164,6 +122,23 @@ include|#
 directive|include
 file|"aout/aout64.h"
 end_include
+
+begin_function_decl
+specifier|static
+name|boolean
+name|MY
+parameter_list|(
+name|write_object_contents
+parameter_list|)
+function_decl|PARAMS
+parameter_list|(
+function_decl|(bfd *
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 specifier|static
@@ -249,6 +224,100 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+name|reloc_howto_type
+modifier|*
+name|MY
+parameter_list|(
+name|bfd_reloc_type_lookup
+parameter_list|)
+function_decl|PARAMS
+parameter_list|(
+function_decl|(bfd *
+operator|,
+function_decl|bfd_reloc_code_real_type
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|reloc_howto_type
+modifier|*
+name|MY
+parameter_list|(
+name|reloc_howto
+parameter_list|)
+function_decl|PARAMS
+parameter_list|(
+function_decl|(bfd *
+operator|,
+function_decl|struct reloc_std_external *
+operator|,
+function_decl|int *
+operator|,
+function_decl|int *
+operator|,
+function_decl|int *
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|void
+name|MY
+parameter_list|(
+name|put_reloc
+parameter_list|)
+function_decl|PARAMS
+parameter_list|(
+function_decl|(bfd *
+operator|,
+function_decl|int
+operator|,
+function_decl|int
+operator|,
+function_decl|bfd_vma
+operator|,
+function_decl|reloc_howto_type *
+operator|,
+function_decl|struct reloc_std_external *
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|void
+name|MY
+parameter_list|(
+name|relocatable_reloc
+parameter_list|)
+function_decl|PARAMS
+parameter_list|(
+function_decl|(reloc_howto_type *
+operator|,
+function_decl|bfd *
+operator|,
+function_decl|struct reloc_std_external *
+operator|,
+function_decl|bfd_vma *
+operator|,
+function_decl|bfd_vma
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
 name|void
 name|MY
 parameter_list|(
@@ -268,6 +337,9 @@ unit|))
 empty_stmt|;
 end_empty_stmt
 
+begin_escape
+end_escape
+
 begin_decl_stmt
 name|reloc_howto_type
 name|MY
@@ -277,7 +349,7 @@ argument_list|)
 decl|[]
 init|=
 block|{
-comment|/* type rs size bsz pcrel bitpos ovrf sf name part_inpl readmask setmask      pcdone */
+comment|/* Type rs size bsz pcrel bitpos ovrf sf name part_inpl        readmask setmask pcdone.  */
 name|HOWTO
 argument_list|(
 literal|0
@@ -959,7 +1031,7 @@ decl_stmt|;
 name|int
 name|r_index
 decl_stmt|;
-name|long
+name|bfd_vma
 name|value
 decl_stmt|;
 name|reloc_howto_type
@@ -993,13 +1065,13 @@ operator|->
 name|r_address
 argument_list|)
 expr_stmt|;
+comment|/* Size as a power of two.  */
 name|r_length
 operator|=
 name|howto
 operator|->
 name|size
 expr_stmt|;
-comment|/* Size as a power of two */
 comment|/* Special case for branch relocations.  */
 if|if
 condition|(
@@ -1027,7 +1099,7 @@ name|type
 operator|&
 literal|4
 expr_stmt|;
-comment|/* PC Relative done? */
+comment|/* PC Relative done?  */
 name|r_neg
 operator|=
 name|howto
@@ -1036,7 +1108,7 @@ name|type
 operator|&
 literal|8
 expr_stmt|;
-comment|/* Negative relocation */
+comment|/* Negative relocation.  */
 if|if
 condition|(
 name|bfd_header_big_endian
@@ -1487,7 +1559,7 @@ name|reloc_entry
 operator|->
 name|address
 decl_stmt|;
-name|long
+name|bfd_vma
 name|target
 init|=
 name|bfd_get_32
@@ -1508,7 +1580,7 @@ name|flag
 init|=
 name|bfd_reloc_ok
 decl_stmt|;
-comment|/* If this is an undefined symbol, return error */
+comment|/* If this is an undefined symbol, return error.  */
 if|if
 condition|(
 name|symbol
@@ -1579,7 +1651,7 @@ operator|)
 operator|-
 literal|0x02000000
 expr_stmt|;
-comment|/* Sign extend */
+comment|/* Sign extend.  */
 name|relocation
 operator|+=
 name|symbol
@@ -1637,7 +1709,7 @@ condition|)
 return|return
 name|bfd_reloc_overflow
 return|;
-comment|/* Check for overflow */
+comment|/* Check for overflow.  */
 if|if
 condition|(
 name|relocation
@@ -1674,6 +1746,9 @@ condition|(
 name|relocation
 operator|&
 operator|~
+operator|(
+name|bfd_vma
+operator|)
 literal|0x03ffffff
 condition|)
 name|flag
@@ -1683,6 +1758,9 @@ expr_stmt|;
 name|target
 operator|&=
 operator|~
+operator|(
+name|bfd_vma
+operator|)
 literal|0x00ffffff
 expr_stmt|;
 name|target
@@ -1786,7 +1864,7 @@ break|break;
 default|default:
 return|return
 operator|(
-name|CONST
+specifier|const
 expr|struct
 name|reloc_howto_struct
 operator|*
@@ -1844,7 +1922,7 @@ expr_stmt|;
 default|default:
 return|return
 operator|(
-name|CONST
+specifier|const
 expr|struct
 name|reloc_howto_struct
 operator|*
@@ -1961,7 +2039,7 @@ name|cache_ptr
 operator|->
 name|address
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -2187,7 +2265,7 @@ operator|==
 name|sym
 condition|)
 block|{
-comment|/* Whoops, looked like an abs symbol, but is really an offset 	     from the abs section */
+comment|/* Whoops, looked like an abs symbol, but is really an offset 	     from the abs section.  */
 name|r_index
 operator|=
 literal|0
@@ -2199,7 +2277,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Fill in symbol */
+comment|/* Fill in symbol.  */
 name|r_extern
 operator|=
 literal|1
@@ -2221,7 +2299,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* Just an ordinary section */
+comment|/* Just an ordinary section.  */
 name|r_extern
 operator|=
 literal|0
@@ -2233,7 +2311,7 @@ operator|->
 name|target_index
 expr_stmt|;
 block|}
-comment|/* now the fun stuff */
+comment|/* Now the fun stuff.  */
 if|if
 condition|(
 name|bfd_header_big_endian
@@ -2592,7 +2670,7 @@ operator|(
 name|PTR
 operator|)
 name|MY_backend_data
-block|, }
+block|,   }
 decl_stmt|;
 end_decl_stmt
 
@@ -2779,7 +2857,7 @@ operator|(
 name|PTR
 operator|)
 name|MY_backend_data
-block|, }
+block|,   }
 decl_stmt|;
 end_decl_stmt
 

@@ -883,6 +883,23 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|list_supported_architectures
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|print_arelt_descr
 name|PARAMS
 argument_list|(

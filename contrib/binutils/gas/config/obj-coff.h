@@ -448,6 +448,16 @@ else|#
 directive|else
 end_else
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* FIXME: The "shl" varaible does not appear to exist.  What happened to it ?  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -455,6 +465,24 @@ name|TARGET_FORMAT
 define|\
 value|(shl							\    ? (sh_small ? "coff-shl-small" : "coff-shl")		\    : (sh_small ? "coff-sh-small" : "coff-sh"))
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|TARGET_FORMAT
+define|\
+value|(sh_small ? "coff-shl-small" : "coff-shl")
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

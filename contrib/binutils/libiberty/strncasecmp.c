@@ -3,6 +3,10 @@ begin_comment
 comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific written prior permission. This software  * is provided ``as is'' without express or implied warranty.  */
 end_comment
 
+begin_comment
+comment|/*    @deftypefn Supplemental int strncasecmp (const char *@var{s1}, const char *@var{s2})  A case-insensitive @code{strncmp}.  @end deftypefn  */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -78,6 +82,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|unsigned
 name|char
 name|charmap

@@ -37,10 +37,6 @@ comment|/* This is the code recommended in the autoconf documentation, almost   
 end_comment
 
 begin_comment
-comment|/* Added #undef for DJ Delorie.  The right fix is to ensure that as.h    is included first, before even any system header files, in all files    that use it.  KR 1994.11.03 */
-end_comment
-
-begin_comment
 comment|/* Added void* version for STDC case.  This is to be compatible with    the declaration in bison.simple, used for m68k operand parsing.    --KR 1995.08.08 */
 end_comment
 
@@ -48,65 +44,11 @@ begin_comment
 comment|/* Force void* decl for hpux.  This is what Bison uses.  --KR 1995.08.16 */
 end_comment
 
-begin_comment
-comment|/* AIX requires this to be the first thing in the file.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUC__
-end_ifdef
-
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|alloca
+name|__GNUC__
 end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|void
-modifier|*
-name|alloca
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|alloca
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_if
 if|#
@@ -130,6 +72,10 @@ ifdef|#
 directive|ifdef
 name|_AIX
 end_ifdef
+
+begin_comment
+comment|/* Indented so that pre-ansi C compilers will ignore it, rather than    choke on it.  Some versions of AIX require this to be the first    thing in the file.  */
+end_comment
 
 begin_pragma
 pragma|#
@@ -233,6 +179,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* __GNUC__ */
+end_comment
+
+begin_comment
 comment|/* Now, tend to the rest of the configuration.  */
 end_comment
 
@@ -244,12 +194,6 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_ifdef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ELF support for BFD.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001    Free Software Foundation, Inc.     Written by Fred Fish @ Cygnus Support, from information published    in "UNIX System V Release 4, Programmers Guide: ANSI C and    Programming Support Tools".  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ELF support for BFD.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002    Free Software Foundation, Inc.     Written by Fred Fish @ Cygnus Support, from information published    in "UNIX System V Release 4, Programmers Guide: ANSI C and    Programming Support Tools".  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -702,6 +702,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EM_S390
+value|22
+end_define
+
+begin_comment
+comment|/* IBM S/390 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EM_V800
 value|36
 end_define
@@ -1198,6 +1209,138 @@ begin_comment
 comment|/* SiTera Prism */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EM_AVR
+value|83
+end_define
+
+begin_comment
+comment|/* Atmel AVR 8-bit microcontroller */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_FR30
+value|84
+end_define
+
+begin_comment
+comment|/* Fujitsu FR30 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_D10V
+value|85
+end_define
+
+begin_comment
+comment|/* Mitsubishi D10V */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_D30V
+value|86
+end_define
+
+begin_comment
+comment|/* Mitsubishi D30V */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_V850
+value|87
+end_define
+
+begin_comment
+comment|/* NEC v850 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_M32R
+value|88
+end_define
+
+begin_comment
+comment|/* Mitsubishi M32R */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_MN10300
+value|89
+end_define
+
+begin_comment
+comment|/* Matsushita MN10300 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_MN10200
+value|90
+end_define
+
+begin_comment
+comment|/* Matsushita MN10200 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_PJ
+value|91
+end_define
+
+begin_comment
+comment|/* picoJava */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_OPENRISC
+value|92
+end_define
+
+begin_comment
+comment|/* OpenRISC 32-bit embedded processor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_ARC_A5
+value|93
+end_define
+
+begin_comment
+comment|/* ARC Cores Tangent-A5 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_XTENSA
+value|94
+end_define
+
+begin_comment
+comment|/* Tensilica Xtensa Architecture */
+end_comment
+
 begin_comment
 comment|/* If it is necessary to assign new unofficial EM_* values, please pick large    random numbers (0x8523, 0xa7f2, etc.) to minimize the chances of collision    with official or non-GNU unofficial values.     NOTE: Do not just increment the most recent number by one.    Somebody else somewhere will do exactly the same thing, and you    will have a collision.  Instead, pick a random number.     Normally, each entity or maintainer responsible for a machine with an    unofficial e_machine number should eventually ask registry@sco.com for    an officially blessed number to be added to the list above.  */
 end_comment
@@ -1205,7 +1348,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EM_PJ
+name|EM_PJ_OLD
 value|99
 end_define
 
@@ -1247,17 +1390,6 @@ value|17
 end_define
 
 begin_comment
-comment|/* Cygnus ARC ELF backend.  Written in the absence of an ABI.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EM_CYGNUS_ARC
-value|0x9040
-end_define
-
-begin_comment
 comment|/* Cygnus M32R ELF backend.  Written in the absence of an ABI.  */
 end_comment
 
@@ -1277,6 +1409,17 @@ define|#
 directive|define
 name|EM_ALPHA
 value|0x9026
+end_define
+
+begin_comment
+comment|/* old S/390 backend magic number. Written in the absence of an ABI.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_S390_OLD
+value|0xa390
 end_define
 
 begin_comment
@@ -1348,8 +1491,26 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EM_AVR
+name|EM_AVR_OLD
 value|0x1057
+end_define
+
+begin_comment
+comment|/* OpenRISC magic number    Written in the absense of an ABI.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_OPENRISC_OLD
+value|0x3426
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_XSTORMY16
+value|0xad45
 end_define
 
 begin_comment
@@ -1506,6 +1667,13 @@ end_define
 begin_comment
 comment|/* Processor-specific */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PT_GNU_EH_FRAME
+value|(PT_LOOS + 0x474e550)
+end_define
 
 begin_comment
 comment|/* Program segment permissions, in program header p_flags field.  */
@@ -2164,11 +2332,33 @@ comment|/* Has a struct win32_pstatus */
 end_comment
 
 begin_comment
-comment|/* Values of note segment descriptor types for object files.  */
+comment|/* Note segments for core files on NetBSD systems.  Note name    must start with "NetBSD-CORE".  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_NETBSDCORE_PROCINFO
+value|1
+end_define
+
+begin_comment
+comment|/* Has a struct procinfo */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_NETBSDCORE_FIRSTMACH
+value|32
+end_define
+
+begin_comment
+comment|/* start of machdep note types */
 end_comment
 
 begin_comment
-comment|/* (Only for hppa right now.  Should this be moved elsewhere?)  */
+comment|/* Values of note segment descriptor types for object files.  */
 end_comment
 
 begin_define
@@ -2180,6 +2370,17 @@ end_define
 
 begin_comment
 comment|/* Contains a version string.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_ARCH
+value|2
+end_define
+
+begin_comment
+comment|/* Contains an architecture string.  */
 end_comment
 
 begin_comment
@@ -2594,7 +2795,7 @@ value|0xFFFF
 end_define
 
 begin_comment
-comment|/* Section index it held elsewhere */
+comment|/* Section index is held elsewhere */
 end_comment
 
 begin_define
@@ -2606,6 +2807,17 @@ end_define
 
 begin_comment
 comment|/* End range of reserved indices */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHN_BAD
+value|((unsigned) -1)
+end_define
+
+begin_comment
+comment|/* Used internally by bfd */
 end_comment
 
 begin_comment

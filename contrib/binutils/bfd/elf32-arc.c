@@ -33,6 +33,12 @@ directive|include
 file|"elf/arc.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"libiberty.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|reloc_howto_type
@@ -102,6 +108,38 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|bfd_reloc_status_type
+name|arc_elf_b22_pcrel
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|arelent
+operator|*
+operator|,
+name|asymbol
+operator|*
+operator|,
+name|PTR
+operator|,
+name|asection
+operator|*
+operator|,
+name|bfd
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Try to minimize the amount of space occupied by relocation tables    on the ROM (not that the ROM won't be swamped by other ELF overhead).  */
 end_comment
@@ -149,7 +187,7 @@ comment|/* special_function  */
 literal|"R_ARC_NONE"
 argument_list|,
 comment|/* name  */
-name|false
+name|true
 argument_list|,
 comment|/* partial_inplace  */
 literal|0
@@ -192,7 +230,7 @@ comment|/* special_function  */
 literal|"R_ARC_32"
 argument_list|,
 comment|/* name  */
-name|false
+name|true
 argument_list|,
 comment|/* partial_inplace  */
 literal|0xffffffff
@@ -235,7 +273,7 @@ comment|/* special_function  */
 literal|"R_ARC_B26"
 argument_list|,
 comment|/* name  */
-name|false
+name|true
 argument_list|,
 comment|/* partial_inplace  */
 literal|0x00ffffff
@@ -272,13 +310,13 @@ comment|/* bitpos  */
 name|complain_overflow_signed
 argument_list|,
 comment|/* complain_on_overflow  */
-name|bfd_elf_generic_reloc
+name|arc_elf_b22_pcrel
 argument_list|,
 comment|/* special_function  */
 literal|"R_ARC_B22_PCREL"
 argument_list|,
 comment|/* name  */
-name|false
+name|true
 argument_list|,
 comment|/* partial_inplace  */
 literal|0x07ffff80
@@ -287,7 +325,7 @@ comment|/* src_mask  */
 literal|0x07ffff80
 argument_list|,
 comment|/* dst_mask  */
-name|true
+name|false
 argument_list|)
 block|,
 comment|/* pcrel_offset  */
@@ -383,25 +421,15 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+name|ARRAY_SIZE
+argument_list|(
+name|arc_reloc_map
+argument_list|)
 init|;
 name|i
-operator|<
-sizeof|sizeof
-argument_list|(
-name|arc_reloc_map
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|arc_reloc_map
-argument_list|)
+operator|--
 condition|;
-name|i
-operator|++
 control|)
-block|{
 if|if
 condition|(
 name|arc_reloc_map
@@ -414,18 +442,15 @@ operator|==
 name|code
 condition|)
 return|return
-operator|&
 name|elf_arc_howto_table
-index|[
+operator|+
 name|arc_reloc_map
 index|[
 name|i
 index|]
 operator|.
 name|elf_reloc_val
-index|]
 return|;
-block|}
 return|return
 name|NULL
 return|;
@@ -514,6 +539,7 @@ modifier|*
 name|abfd
 decl_stmt|;
 block|{
+name|unsigned
 name|int
 name|mach
 init|=
@@ -670,15 +696,6 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|->
-name|e_machine
-operator|=
-name|EM_ARC
-expr_stmt|;
-name|elf_elfheader
-argument_list|(
-name|abfd
-argument_list|)
-operator|->
 name|e_flags
 operator|&=
 operator|~
@@ -693,6 +710,94 @@ name|e_flags
 operator||=
 name|val
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|bfd_reloc_status_type
+name|arc_elf_b22_pcrel
+parameter_list|(
+name|abfd
+parameter_list|,
+name|reloc_entry
+parameter_list|,
+name|symbol
+parameter_list|,
+name|data
+parameter_list|,
+name|input_section
+parameter_list|,
+name|output_bfd
+parameter_list|,
+name|error_message
+parameter_list|)
+name|bfd
+modifier|*
+name|abfd
+decl_stmt|;
+name|arelent
+modifier|*
+name|reloc_entry
+decl_stmt|;
+name|asymbol
+modifier|*
+name|symbol
+decl_stmt|;
+name|PTR
+name|data
+decl_stmt|;
+name|asection
+modifier|*
+name|input_section
+decl_stmt|;
+name|bfd
+modifier|*
+name|output_bfd
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|error_message
+decl_stmt|;
+block|{
+comment|/* If linking, back up the final symbol address by the address of the      reloc.  This cannot be accomplished by setting the pcrel_offset      field to true, as bfd_install_relocation will detect this and refuse      to install the offset in the first place, but bfd_perform_relocation      will still insist on removing it.  */
+if|if
+condition|(
+name|output_bfd
+operator|==
+operator|(
+name|bfd
+operator|*
+operator|)
+name|NULL
+condition|)
+name|reloc_entry
+operator|->
+name|addend
+operator|-=
+name|reloc_entry
+operator|->
+name|address
+expr_stmt|;
+comment|/* Fall through to the default elf reloc handler.  */
+return|return
+name|bfd_elf_generic_reloc
+argument_list|(
+name|abfd
+argument_list|,
+name|reloc_entry
+argument_list|,
+name|symbol
+argument_list|,
+name|data
+argument_list|,
+name|input_section
+argument_list|,
+name|output_bfd
+argument_list|,
+name|error_message
+argument_list|)
+return|;
 block|}
 end_function
 

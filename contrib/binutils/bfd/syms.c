@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generic symbol-table support for the BFD library.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generic symbol-table support for the BFD library.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|/* SUBSECTION 	typedef asymbol  	An<<asymbol>> has the form:  */
 end_comment
 
 begin_comment
-comment|/* CODE_FRAGMENT  . .typedef struct symbol_cache_entry .{ .	{* A pointer to the BFD which owns the symbol. This information .	   is necessary so that a back end can work out what additional .   	   information (invisible to the application writer) is carried .	   with the symbol. . .	   This field is *almost* redundant, since you can use section->owner .	   instead, except that some symbols point to the global sections .	   bfd_{abs,com,und}_section.  This could be fixed by making .	   these globals be per-bfd (or per-target-flavor).  FIXME. *} . .  struct _bfd *the_bfd; {* Use bfd_asymbol_bfd(sym) to access this field. *} . .	{* The text of the symbol. The name is left alone, and not copied; the .	   application may not alter it. *} .  CONST char *name; . .	{* The value of the symbol.  This really should be a union of a .          numeric value with a pointer, since some flags indicate that .          a pointer to another symbol is stored here.  *} .  symvalue value; . .	{* Attributes of a symbol: *} . .#define BSF_NO_FLAGS    0x00 . .	{* The symbol has local scope;<<static>> in<<C>>. The value . 	   is the offset into the section of the data. *} .#define BSF_LOCAL	0x01 . .	{* The symbol has global scope; initialized data in<<C>>. The .	   value is the offset into the section of the data. *} .#define BSF_GLOBAL	0x02 . .	{* The symbol has global scope and is exported. The value is .	   the offset into the section of the data. *} .#define BSF_EXPORT	BSF_GLOBAL {* no real difference *} . .	{* A normal C symbol would be one of: .<<BSF_LOCAL>>,<<BSF_FORT_COMM>>,<<BSF_UNDEFINED>> or .<<BSF_GLOBAL>> *} . .	{* The symbol is a debugging record. The value has an arbitary .	   meaning, unless BSF_DEBUGGING_RELOC is also set.  *} .#define BSF_DEBUGGING	0x08 . .	{* The symbol denotes a function entry point.  Used in ELF, .	   perhaps others someday.  *} .#define BSF_FUNCTION    0x10 . .	{* Used by the linker. *} .#define BSF_KEEP        0x20 .#define BSF_KEEP_G      0x40 . .	{* A weak global symbol, overridable without warnings by .	   a regular global symbol of the same name.  *} .#define BSF_WEAK        0x80 . .       {* This symbol was created to point to a section, e.g. ELF's .	   STT_SECTION symbols.  *} .#define BSF_SECTION_SYM 0x100 . .	{* The symbol used to be a common symbol, but now it is .	   allocated. *} .#define BSF_OLD_COMMON  0x200 . .	{* The default value for common data. *} .#define BFD_FORT_COMM_DEFAULT_VALUE 0 . .	{* In some files the type of a symbol sometimes alters its .	   location in an output file - ie in coff a<<ISFCN>> symbol .	   which is also<<C_EXT>> symbol appears where it was .	   declared and not at the end of a section.  This bit is set .  	   by the target BFD part to convey this information. *} . .#define BSF_NOT_AT_END    0x400 . .	{* Signal that the symbol is the label of constructor section. *} .#define BSF_CONSTRUCTOR   0x800 . .	{* Signal that the symbol is a warning symbol.  The name is a .	   warning.  The name of the next symbol is the one to warn about; .	   if a reference is made to a symbol with the same name as the next .	   symbol, a warning is issued by the linker. *} .#define BSF_WARNING       0x1000 . .	{* Signal that the symbol is indirect.  This symbol is an indirect .	   pointer to the symbol with the same name as the next symbol. *} .#define BSF_INDIRECT      0x2000 . .	{* BSF_FILE marks symbols that contain a file name.  This is used .	   for ELF STT_FILE symbols.  *} .#define BSF_FILE          0x4000 . .	{* Symbol is from dynamic linking information.  *} .#define BSF_DYNAMIC	   0x8000 . .       {* The symbol denotes a data object.  Used in ELF, and perhaps .          others someday.  *} .#define BSF_OBJECT	   0x10000 . .       {* This symbol is a debugging symbol.  The value is the offset .          into the section of the data.  BSF_DEBUGGING should be set .          as well.  *} .#define BSF_DEBUGGING_RELOC 0x20000 . .  flagword flags; . .	{* A pointer to the section to which this symbol is .	   relative.  This will always be non NULL, there are special .          sections for undefined and absolute symbols.  *} .  struct sec *section; . .	{* Back end special data.  *} .  union .    { .      PTR p; .      bfd_vma i; .    } udata; . .} asymbol; */
+comment|/* CODE_FRAGMENT  . .typedef struct symbol_cache_entry .{ .	{* A pointer to the BFD which owns the symbol. This information .	   is necessary so that a back end can work out what additional .   	   information (invisible to the application writer) is carried .	   with the symbol. . .	   This field is *almost* redundant, since you can use section->owner .	   instead, except that some symbols point to the global sections .	   bfd_{abs,com,und}_section.  This could be fixed by making .	   these globals be per-bfd (or per-target-flavor).  FIXME. *} . .  struct _bfd *the_bfd; {* Use bfd_asymbol_bfd(sym) to access this field. *} . .	{* The text of the symbol. The name is left alone, and not copied; the .	   application may not alter it. *} .  const char *name; . .	{* The value of the symbol.  This really should be a union of a .          numeric value with a pointer, since some flags indicate that .          a pointer to another symbol is stored here.  *} .  symvalue value; . .	{* Attributes of a symbol: *} . .#define BSF_NO_FLAGS    0x00 . .	{* The symbol has local scope;<<static>> in<<C>>. The value . 	   is the offset into the section of the data. *} .#define BSF_LOCAL	0x01 . .	{* The symbol has global scope; initialized data in<<C>>. The .	   value is the offset into the section of the data. *} .#define BSF_GLOBAL	0x02 . .	{* The symbol has global scope and is exported. The value is .	   the offset into the section of the data. *} .#define BSF_EXPORT	BSF_GLOBAL {* no real difference *} . .	{* A normal C symbol would be one of: .<<BSF_LOCAL>>,<<BSF_FORT_COMM>>,<<BSF_UNDEFINED>> or .<<BSF_GLOBAL>> *} . .	{* The symbol is a debugging record. The value has an arbitary .	   meaning, unless BSF_DEBUGGING_RELOC is also set.  *} .#define BSF_DEBUGGING	0x08 . .	{* The symbol denotes a function entry point.  Used in ELF, .	   perhaps others someday.  *} .#define BSF_FUNCTION    0x10 . .	{* Used by the linker. *} .#define BSF_KEEP        0x20 .#define BSF_KEEP_G      0x40 . .	{* A weak global symbol, overridable without warnings by .	   a regular global symbol of the same name.  *} .#define BSF_WEAK        0x80 . .       {* This symbol was created to point to a section, e.g. ELF's .	   STT_SECTION symbols.  *} .#define BSF_SECTION_SYM 0x100 . .	{* The symbol used to be a common symbol, but now it is .	   allocated. *} .#define BSF_OLD_COMMON  0x200 . .	{* The default value for common data. *} .#define BFD_FORT_COMM_DEFAULT_VALUE 0 . .	{* In some files the type of a symbol sometimes alters its .	   location in an output file - ie in coff a<<ISFCN>> symbol .	   which is also<<C_EXT>> symbol appears where it was .	   declared and not at the end of a section.  This bit is set .  	   by the target BFD part to convey this information. *} . .#define BSF_NOT_AT_END    0x400 . .	{* Signal that the symbol is the label of constructor section. *} .#define BSF_CONSTRUCTOR   0x800 . .	{* Signal that the symbol is a warning symbol.  The name is a .	   warning.  The name of the next symbol is the one to warn about; .	   if a reference is made to a symbol with the same name as the next .	   symbol, a warning is issued by the linker. *} .#define BSF_WARNING       0x1000 . .	{* Signal that the symbol is indirect.  This symbol is an indirect .	   pointer to the symbol with the same name as the next symbol. *} .#define BSF_INDIRECT      0x2000 . .	{* BSF_FILE marks symbols that contain a file name.  This is used .	   for ELF STT_FILE symbols.  *} .#define BSF_FILE          0x4000 . .	{* Symbol is from dynamic linking information.  *} .#define BSF_DYNAMIC	   0x8000 . .       {* The symbol denotes a data object.  Used in ELF, and perhaps .          others someday.  *} .#define BSF_OBJECT	   0x10000 . .       {* This symbol is a debugging symbol.  The value is the offset .          into the section of the data.  BSF_DEBUGGING should be set .          as well.  *} .#define BSF_DEBUGGING_RELOC 0x20000 . .  flagword flags; . .	{* A pointer to the section to which this symbol is .	   relative.  This will always be non NULL, there are special .          sections for undefined and absolute symbols.  *} .  struct sec *section; . .	{* Back end special data.  *} .  union .    { .      PTR p; .      bfd_vma i; .    } udata; . .} asymbol; */
 end_comment
 
 begin_include
@@ -35,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|"libbfd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"safe-ctype.h"
 end_include
 
 begin_include
@@ -59,6 +65,23 @@ operator|(
 specifier|const
 name|char
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cmpindexentry
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|PTR
+operator|,
+specifier|const
+name|PTR
 operator|)
 argument_list|)
 decl_stmt|;
@@ -93,6 +116,7 @@ modifier|*
 name|sym
 decl_stmt|;
 block|{
+comment|/* The BSF_SECTION_SYM check is needed for IA-64, where every label that      starts with '.' is local.  This would accidentally catch section names      if we didn't reject them here.  */
 if|if
 condition|(
 operator|(
@@ -104,6 +128,8 @@ operator|(
 name|BSF_GLOBAL
 operator||
 name|BSF_WEAK
+operator||
+name|BSF_SECTION_SYM
 operator|)
 operator|)
 operator|!=
@@ -220,17 +246,23 @@ block|}
 end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_print_symbol_vandf  SYNOPSIS 	void bfd_print_symbol_vandf(PTR file, asymbol *symbol);  DESCRIPTION 	Print the value and flags of the @var{symbol} supplied to the 	stream @var{file}. */
+comment|/* FUNCTION 	bfd_print_symbol_vandf  SYNOPSIS 	void bfd_print_symbol_vandf(bfd *abfd, PTR file, asymbol *symbol);  DESCRIPTION 	Print the value and flags of the @var{symbol} supplied to the 	stream @var{file}. */
 end_comment
 
 begin_function
 name|void
 name|bfd_print_symbol_vandf
 parameter_list|(
+name|abfd
+parameter_list|,
 name|arg
 parameter_list|,
 name|symbol
 parameter_list|)
+name|bfd
+modifier|*
+name|abfd
+decl_stmt|;
 name|PTR
 name|arg
 decl_stmt|;
@@ -269,8 +301,10 @@ operator|)
 name|NULL
 condition|)
 block|{
-name|fprintf_vma
+name|bfd_fprintf_vma
 argument_list|(
+name|abfd
+argument_list|,
 name|file
 argument_list|,
 name|symbol
@@ -287,8 +321,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|fprintf_vma
+name|bfd_fprintf_vma
 argument_list|(
+name|abfd
+argument_list|,
 name|file
 argument_list|,
 name|symbol
@@ -431,6 +467,61 @@ comment|/* FUNCTION 	bfd_make_empty_symbol  DESCRIPTION 	Create a new<<asymbol>>
 end_comment
 
 begin_comment
+comment|/* FUNCTION 	_bfd_generic_make_empty_symbol  SYNOPSIS 	asymbol *_bfd_generic_make_empty_symbol (bfd *);  DESCRIPTION 	Create a new<<asymbol>> structure for the BFD @var{abfd} 	and return a pointer to it.  Used by core file routines, 	binary back-end and anywhere else where no private info 	is needed. */
+end_comment
+
+begin_function
+name|asymbol
+modifier|*
+name|_bfd_generic_make_empty_symbol
+parameter_list|(
+name|abfd
+parameter_list|)
+name|bfd
+modifier|*
+name|abfd
+decl_stmt|;
+block|{
+name|bfd_size_type
+name|amt
+init|=
+sizeof|sizeof
+argument_list|(
+name|asymbol
+argument_list|)
+decl_stmt|;
+name|asymbol
+modifier|*
+name|new
+init|=
+operator|(
+name|asymbol
+operator|*
+operator|)
+name|bfd_zalloc
+argument_list|(
+name|abfd
+argument_list|,
+name|amt
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|new
+condition|)
+name|new
+operator|->
+name|the_bfd
+operator|=
+name|abfd
+expr_stmt|;
+return|return
+name|new
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* FUNCTION 	bfd_make_debug_symbol  DESCRIPTION 	Create a new<<asymbol>> structure for the BFD @var{abfd}, 	to be used as a debugging symbol.  Further details of its use have 	yet to be worked out.  .#define bfd_make_debug_symbol(abfd,ptr,size) \ .        BFD_SEND (abfd, _bfd_make_debug_symbol, (abfd, ptr, size)) */
 end_comment
 
@@ -438,7 +529,7 @@ begin_struct
 struct|struct
 name|section_to_type
 block|{
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|section
@@ -454,14 +545,14 @@ begin_comment
 comment|/* Map section names to POSIX/BSD single-character symbol types.    This table is probably incomplete.  It is sorted for convenience of    adding entries.  Since it is so short, a linear search is used.  */
 end_comment
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
-name|CONST
-expr|struct
+specifier|const
+name|struct
 name|section_to_type
 name|stt
 index|[]
-operator|=
+init|=
 block|{
 block|{
 literal|"*DEBUG*"
@@ -584,8 +675,8 @@ block|,
 literal|0
 block|}
 block|}
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Return the single-character symbol type corresponding to    section S, or '?' for an unknown COFF section.     Check for any leading string which matches, so .text5 returns    't' as well as .text */
@@ -604,7 +695,7 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-name|CONST
+specifier|const
 name|struct
 name|section_to_type
 modifier|*
@@ -656,48 +747,6 @@ literal|'?'
 return|;
 block|}
 end_function
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|islower
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|islower
-parameter_list|(
-name|c
-parameter_list|)
-value|((c)>= 'a'&& (c)<= 'z')
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|toupper
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|toupper
-parameter_list|(
-name|c
-parameter_list|)
-value|(islower(c) ? ((c)& ~0x20) : (c))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* FUNCTION 	bfd_decode_symclass  DESCRIPTION 	Return a character corresponding to the symbol 	class of @var{symbol}, or '?' for an unknown class.  SYNOPSIS 	int bfd_decode_symclass(asymbol *symbol); */
@@ -871,7 +920,7 @@ name|BSF_GLOBAL
 condition|)
 name|c
 operator|=
-name|toupper
+name|TOUPPER
 argument_list|(
 name|c
 argument_list|)
@@ -1081,7 +1130,7 @@ operator|)
 name|bfd_malloc
 argument_list|(
 operator|(
-name|size_t
+name|bfd_size_type
 operator|)
 name|storage
 argument_list|)
@@ -1519,10 +1568,11 @@ name|indexentry
 decl_stmt|;
 name|char
 modifier|*
-name|directory_name
-decl_stmt|,
-modifier|*
 name|file_name
+decl_stmt|;
+name|char
+modifier|*
+name|directory_name
 decl_stmt|;
 name|int
 name|saw_fun
@@ -1650,15 +1700,14 @@ name|name
 decl_stmt|;
 name|char
 modifier|*
-name|file_name
-decl_stmt|;
-name|char
-modifier|*
-name|directory_name
-decl_stmt|;
-name|char
-modifier|*
 name|function_name
+decl_stmt|;
+name|bfd_size_type
+name|amt
+init|=
+sizeof|sizeof
+expr|*
+name|info
 decl_stmt|;
 name|info
 operator|=
@@ -1671,9 +1720,7 @@ name|bfd_zalloc
 argument_list|(
 name|abfd
 argument_list|,
-sizeof|sizeof
-expr|*
-name|info
+name|amt
 argument_list|)
 expr_stmt|;
 if|if
@@ -1814,6 +1861,9 @@ name|info
 operator|->
 name|stabs
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 literal|0
 argument_list|,
 name|stabsize
@@ -1832,6 +1882,9 @@ name|info
 operator|->
 name|strs
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 literal|0
 argument_list|,
 name|strsize
@@ -1870,6 +1923,9 @@ operator|*
 operator|)
 name|bfd_malloc
 argument_list|(
+operator|(
+name|bfd_size_type
+operator|)
 name|reloc_size
 argument_list|)
 expr_stmt|;
@@ -2097,6 +2153,9 @@ name|bfd_put_32
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|val
 argument_list|,
 name|info
@@ -2274,11 +2333,24 @@ name|info
 operator|->
 name|indextablesize
 expr_stmt|;
+name|amt
+operator|=
+name|info
+operator|->
+name|indextablesize
+expr_stmt|;
+name|amt
+operator|*=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|indexentry
+argument_list|)
+expr_stmt|;
 name|info
 operator|->
 name|indextable
 operator|=
-operator|(
 operator|(
 expr|struct
 name|indexentry
@@ -2288,19 +2360,8 @@ name|bfd_alloc
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|indexentry
+name|amt
 argument_list|)
-operator|*
-name|info
-operator|->
-name|indextablesize
-operator|)
-argument_list|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -2934,6 +2995,9 @@ name|info
 operator|->
 name|indextable
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|i
 argument_list|,
 sizeof|sizeof
@@ -3440,6 +3504,9 @@ operator|*
 operator|)
 name|bfd_malloc
 argument_list|(
+operator|(
+name|bfd_size_type
+operator|)
 name|dirlen
 operator|+
 name|strlen

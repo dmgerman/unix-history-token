@@ -3,6 +3,10 @@ begin_comment
 comment|/* Emulate vfork using just plain fork, for systems without a real vfork.    This function is in the public domain. */
 end_comment
 
+begin_comment
+comment|/*  @deftypefn Supplemental int vfork (void)  Emulates @code{vfork} by calling @code{fork} and returning its value.  @end deftypefn  */
+end_comment
+
 begin_include
 include|#
 directive|include

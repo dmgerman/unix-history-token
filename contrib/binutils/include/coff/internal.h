@@ -189,7 +189,7 @@ name|struct
 name|internal_extra_pe_filehdr
 name|pe
 decl_stmt|;
-comment|/* standard coff  internal info */
+comment|/* Standard coff internal info.  */
 name|unsigned
 name|short
 name|f_magic
@@ -232,7 +232,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Bits for f_flags:  *	F_RELFLG	relocation info stripped from file  *	F_EXEC		file is executable (no unresolved external references)  *	F_LNNO		line numbers stripped from file  *	F_LSYMS		local symbols stripped from file  *	F_AR16WR	file is 16-bit little-endian  *	F_AR32WR	file is 32-bit little-endian  *	F_AR32W		file is 32-bit big-endian  *	F_DYNLOAD	rs/6000 aix: dynamically loadable w/imports& exports  *	F_SHROBJ	rs/6000 aix: file is a shared object  *      F_DLL           PE format DLL  */
+comment|/* Bits for f_flags:  	F_RELFLG	relocation info stripped from file  	F_EXEC		file is executable (no unresolved external references)  	F_LNNO		line numbers stripped from file  	F_LSYMS		local symbols stripped from file  	F_AR16WR	file is 16-bit little-endian  	F_AR32WR	file is 32-bit little-endian  	F_AR32W		file is 32-bit big-endian  	F_DYNLOAD	rs/6000 aix: dynamically loadable w/imports& exports  	F_SHROBJ	rs/6000 aix: file is a shared object         F_DLL           PE format DLL.  */
 end_comment
 
 begin_define
@@ -306,7 +306,7 @@ value|(0x2000)
 end_define
 
 begin_comment
-comment|/* extra structure which is used in the optional header */
+comment|/* Extra structure which is used in the optional header.  */
 end_comment
 
 begin_typedef
@@ -543,8 +543,7 @@ name|tagentries
 decl_stmt|;
 comment|/* number of tag entries to follow */
 comment|/* RS/6000 stuff */
-name|unsigned
-name|long
+name|bfd_vma
 name|o_toc
 decl_stmt|;
 comment|/* address of TOC			*/
@@ -588,13 +587,11 @@ name|short
 name|o_cputype
 decl_stmt|;
 comment|/* Encoded CPU type		*/
-name|unsigned
-name|long
+name|bfd_vma
 name|o_maxstack
 decl_stmt|;
 comment|/* max stack size allowed.	*/
-name|unsigned
-name|long
+name|bfd_vma
 name|o_maxdata
 decl_stmt|;
 comment|/* max data size allowed.	*/
@@ -1458,7 +1455,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * s_flags "type"  */
+comment|/* s_flags "type".  */
 end_comment
 
 begin_define
@@ -1634,7 +1631,7 @@ value|(0x4000)
 end_define
 
 begin_comment
-comment|/* section will be padded with no-op instructions wherever padding is necessary and there is a 					 									     word of contiguous bytes 									     beginning on a word boundary. */
+comment|/* section will be padded with no-op instructions 					   wherever padding is necessary and there is a 					   word of contiguous bytes beginning on a word 					   boundary. */
 end_comment
 
 begin_define
@@ -1653,7 +1650,7 @@ comment|/********************** LINE NUMBERS **********************/
 end_comment
 
 begin_comment
-comment|/* 1 line number entry for every "breakpointable" source line in a section.  * Line numbers are grouped on a per function basis; first entry in a function  * grouping will have l_lnno = 0 and in place of physical address will be the  * symbol table index of the function name.  */
+comment|/* 1 line number entry for every "breakpointable" source line in a section.    Line numbers are grouped on a per function basis; first entry in a function    grouping will have l_lnno = 0 and in place of physical address will be the    symbol table index of the function name.  */
 end_comment
 
 begin_struct
@@ -1662,11 +1659,11 @@ name|internal_lineno
 block|{
 union|union
 block|{
-name|long
+name|bfd_signed_vma
 name|l_symndx
 decl_stmt|;
 comment|/* function name symbol index, iff l_lnno == 0*/
-name|long
+name|bfd_signed_vma
 name|l_paddr
 decl_stmt|;
 comment|/* (physical) address of line number	*/
@@ -1756,7 +1753,7 @@ comment|/* allows for overlaying	*/
 block|}
 name|_n
 union|;
-name|long
+name|bfd_vma
 name|n_value
 decl_stmt|;
 comment|/* value of symbol		*/
@@ -1810,7 +1807,7 @@ value|_n._n_n._n_offset
 end_define
 
 begin_comment
-comment|/* Relocatable symbols have number of the section in which they are defined,    or one of the following: */
+comment|/* Relocatable symbols have number of the section in which they are defined,    or one of the following:  */
 end_comment
 
 begin_define
@@ -1869,7 +1866,7 @@ comment|/* indicates symbol needs postload transfer vector*/
 end_comment
 
 begin_comment
-comment|/*  * Type of a symbol, in low N bits of the word  */
+comment|/* Type of a symbol, in low N bits of the word.  */
 end_comment
 
 begin_define
@@ -2056,7 +2053,7 @@ comment|/* long double		*/
 end_comment
 
 begin_comment
-comment|/*  * derived types, in n_type */
+comment|/* Derived types, in n_type.  */
 end_comment
 
 begin_define
@@ -2227,7 +2224,7 @@ block|{
 struct|struct
 block|{
 comment|/* if ISFCN, tag, or .bb */
-name|long
+name|bfd_signed_vma
 name|x_lnnoptr
 decl_stmt|;
 comment|/* ptr to fcn line # */
@@ -2357,7 +2354,7 @@ block|{
 union|union
 block|{
 comment|/* csect length or enclosing csect */
-name|long
+name|bfd_signed_vma
 name|l
 decl_stmt|;
 name|struct
@@ -2806,7 +2803,7 @@ value|0x43
 end_define
 
 begin_comment
-comment|/* This reloc identifies a bra with an 8-bit pc-relative    target that was formerlly a jmp insn with a 16bit target.  */
+comment|/* This reloc identifies a bra with an 8-bit pc-relative    target that was formerly a jmp insn with a 16bit target.  */
 end_comment
 
 begin_define
@@ -2839,7 +2836,7 @@ value|0x46
 end_define
 
 begin_comment
-comment|/* This reloc identifies a bra with an 8-bit pc-relative    target that was formerlly a jmp insn with a 24bit target.  */
+comment|/* This reloc identifies a bra with an 8-bit pc-relative    target that was formerly a jmp insn with a 24bit target.  */
 end_comment
 
 begin_define
@@ -2905,7 +2902,7 @@ value|0x4c
 end_define
 
 begin_comment
-comment|/* This reloc identifies mov.[wl] insns which formerlly had    a 32/24bit absolute address and now have a 16bit absolute address.  */
+comment|/* This reloc identifies mov.[wl] insns which formerly had    a 32/24bit absolute address and now have a 16bit absolute address.  */
 end_comment
 
 begin_define

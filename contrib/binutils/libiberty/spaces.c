@@ -4,7 +4,7 @@ comment|/* Allocate memory region filled with spaces.    Copyright (C) 1991 Free
 end_comment
 
 begin_comment
-comment|/*  NAME  	spaces -- return a pointer to a buffer full of spaces  SYNOPSIS  	char *spaces (int count)  DESCRIPTION  	Returns a pointer to a memory region filled with the specified 	number of spaces and null terminated.  The returned pointer is 	valid until at least the next call. 	 BUGS  */
+comment|/*  @deftypefn Extension char* spaces (int @var{count})  Returns a pointer to a memory region filled with the specified number of spaces and null terminated.  The returned pointer is valid until at least the next call.  @end deftypefn  */
 end_comment
 
 begin_include

@@ -34,7 +34,7 @@ file|"opintl.h"
 end_include
 
 begin_comment
-comment|/* This file holds the Alpha AXP opcode table.  The opcode table includes    almost all of the extended instruction mnemonics.  This permits the    disassembler to use them, and simplifies the assembler logic, at the    cost of increasing the table size.  The table is strictly constant    data, so the compiler should be able to put it in the .text section.     This file also holds the operand table.  All knowledge about inserting    operands into instructions and vice-versa is kept in this file.     The information for the base instruction set was compiled from the    _Alpha Architecture Handbook_, Digital Order Number EC-QD2KB-TE,    version 2.     The information for the post-ev5 architecture extensions BWX, CIX and    MAX came from version 3 of this same document, which is also available    on-line at http://ftp.digital.com/pub/Digital/info/semiconductor    /literature/alphahb2.pdf     The information for the EV4 PALcode instructions was compiled from    _DECchip 21064 and DECchip 21064A Alpha AXP Microprocessors Hardware    Reference Manual_, Digital Order Number EC-Q9ZUA-TE, preliminary    revision dated June 1994.     The information for the EV5 PALcode instructions was compiled from    _Alpha 21164 Microprocessor Hardware Reference Manual_, Digital    Order Number EC-QAEQB-TE, preliminary revision dated April 1995.  */
+comment|/* This file holds the Alpha AXP opcode table.  The opcode table includes    almost all of the extended instruction mnemonics.  This permits the    disassembler to use them, and simplifies the assembler logic, at the    cost of increasing the table size.  The table is strictly constant    data, so the compiler should be able to put it in the text segment.     This file also holds the operand table.  All knowledge about inserting    and extracting operands from instructions is kept in this file.     The information for the base instruction set was compiled from the    _Alpha Architecture Handbook_, Digital Order Number EC-QD2KB-TE,    version 2.     The information for the post-ev5 architecture extensions BWX, CIX and    MAX came from version 3 of this same document, which is also available    on-line at http://ftp.digital.com/pub/Digital/info/semiconductor    /literature/alphahb2.pdf     The information for the EV4 PALcode instructions was compiled from    _DECchip 21064 and DECchip 21064A Alpha AXP Microprocessors Hardware    Reference Manual_, Digital Order Number EC-Q9ZUA-TE, preliminary    revision dated June 1994.     The information for the EV5 PALcode instructions was compiled from    _Alpha 21164 Microprocessor Hardware Reference Manual_, Digital    Order Number EC-QAEQB-TE, preliminary revision dated April 1995.  */
 end_comment
 
 begin_escape
@@ -2606,10 +2606,18 @@ block|,
 block|{
 literal|"unop"
 block|,
-name|MEM
+name|MEM_
 argument_list|(
 literal|0x0B
 argument_list|)
+operator||
+operator|(
+literal|30
+operator|<<
+literal|16
+operator|)
+block|,
+name|MEM_MASK
 block|,
 name|BASE
 block|,
@@ -11025,6 +11033,26 @@ block|}
 block|}
 block|,
 comment|/* ev56 una */
+block|{
+literal|"wh64en"
+block|,
+name|MFC
+argument_list|(
+literal|0x18
+argument_list|,
+literal|0xFC00
+argument_list|)
+block|,
+name|BASE
+block|,
+block|{
+name|ZA
+block|,
+name|PRB
+block|}
+block|}
+block|,
+comment|/* ev7 una */
 block|{
 literal|"hw_mfpr"
 block|,

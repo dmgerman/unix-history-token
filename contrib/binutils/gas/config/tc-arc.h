@@ -139,29 +139,26 @@ name|LISTING_HEADER
 value|"ARC GAS "
 end_define
 
-begin_define
-define|#
-directive|define
-name|TC_HANDLES_FX_DONE
-end_define
-
-begin_define
-define|#
-directive|define
-name|MD_APPLY_FIX3
-end_define
-
 begin_comment
 comment|/* The ARC needs to parse reloc specifiers in .word.  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|arc_parse_cons_expression
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|expressionS
+operator|*
+operator|,
+name|unsigned
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -176,13 +173,28 @@ define|\
 value|arc_parse_cons_expression (EXP, NBYTES)
 end_define
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|arc_cons_fix_new
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|frag
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+expr|struct
+name|expressionS
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#

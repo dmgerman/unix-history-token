@@ -3,6 +3,10 @@ begin_comment
 comment|/* Stub implementation of (obsolete) rindex(). */
 end_comment
 
+begin_comment
+comment|/*  @deftypefn Supplemental char* rindex (const char *@var{s}, int @var{c})  Returns a pointer to the last occurrence of the character @var{c} in the string @var{s}, or @code{NULL} if not found.  The use of @code{rindex} is deprecated in new programs in favor of @code{strrchr}.  @end deftypefn  */
+end_comment
+
 begin_function_decl
 specifier|extern
 name|char

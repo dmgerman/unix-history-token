@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* as.c - GAS main program.    Copyright 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* as.c - GAS main program.    Copyright 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -849,7 +849,7 @@ name|VERSION
 argument_list|,
 name|TARGET_ALIAS
 argument_list|,
-name|BFD_VERSION
+name|BFD_VERSION_STRING
 argument_list|)
 expr_stmt|;
 else|#
@@ -2168,14 +2168,14 @@ argument_list|(
 literal|"GNU assembler %s\n"
 argument_list|)
 argument_list|,
-name|VERSION
+name|BFD_VERSION_STRING
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
 name|_
 argument_list|(
-literal|"Copyright 2001 Free Software Foundation, Inc.\n"
+literal|"Copyright 2002 Free Software Foundation, Inc.\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2477,7 +2477,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"No file name following -t option\n"
+literal|"no file name following -t option"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2534,14 +2534,11 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|fprintf
+name|as_fatal
 argument_list|(
-name|stderr
-argument_list|,
 name|_
 argument_list|(
-literal|"Failed to read instruction table %s\n"
+literal|"failed to read instruction table %s\n"
 argument_list|)
 argument_list|,
 name|itbl_files
@@ -2549,12 +2546,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_SUCCESS
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 break|break;
 case|case
@@ -2960,6 +2951,14 @@ name|pargv
 operator|=
 name|new_argv
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|md_after_parse_args
+name|md_after_parse_args
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -2967,6 +2966,22 @@ begin_decl_stmt
 specifier|static
 name|long
 name|start_time
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+decl|main
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -3015,6 +3030,21 @@ argument_list|)
 name|setlocale
 argument_list|(
 name|LC_MESSAGES
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SETLOCALE
+argument_list|)
+name|setlocale
+argument_list|(
+name|LC_CTYPE
 argument_list|,
 literal|""
 argument_list|)

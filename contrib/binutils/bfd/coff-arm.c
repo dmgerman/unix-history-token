@@ -67,6 +67,7 @@ name|APCS_26_FLAG
 parameter_list|(
 name|abfd
 parameter_list|)
+define|\
 value|(coff_data (abfd)->flags& F_APCS_26)
 end_define
 
@@ -77,6 +78,7 @@ name|APCS_FLOAT_FLAG
 parameter_list|(
 name|abfd
 parameter_list|)
+define|\
 value|(coff_data (abfd)->flags& F_APCS_FLOAT)
 end_define
 
@@ -87,6 +89,7 @@ name|PIC_FLAG
 parameter_list|(
 name|abfd
 parameter_list|)
+define|\
 value|(coff_data (abfd)->flags& F_PIC)
 end_define
 
@@ -97,6 +100,7 @@ name|APCS_SET
 parameter_list|(
 name|abfd
 parameter_list|)
+define|\
 value|(coff_data (abfd)->flags& F_APCS_SET)
 end_define
 
@@ -109,7 +113,8 @@ name|abfd
 parameter_list|,
 name|flgs
 parameter_list|)
-value|(coff_data (abfd)->flags = \ 					(coff_data (abfd)->flags& ~ (F_APCS_26 | F_APCS_FLOAT | F_PIC)) \ 					 | (flgs | F_APCS_SET))
+define|\
+value|do									\     {									\       coff_data (abfd)->flags&= ~(F_APCS_26 | F_APCS_FLOAT | F_PIC);	\       coff_data (abfd)->flags |= (flgs) | F_APCS_SET;			\     }									\   while (0)
 end_define
 
 begin_define
@@ -119,6 +124,7 @@ name|INTERWORK_FLAG
 parameter_list|(
 name|abfd
 parameter_list|)
+define|\
 value|(coff_data (abfd)->flags& F_INTERWORK)
 end_define
 
@@ -129,6 +135,7 @@ name|INTERWORK_SET
 parameter_list|(
 name|abfd
 parameter_list|)
+define|\
 value|(coff_data (abfd)->flags& F_INTERWORK_SET)
 end_define
 
@@ -141,7 +148,8 @@ name|abfd
 parameter_list|,
 name|flg
 parameter_list|)
-value|(coff_data (abfd)->flags = \ 					(coff_data (abfd)->flags& ~ F_INTERWORK) \ 					 | (flg | F_INTERWORK_SET))
+define|\
+value|do									\     {									\       coff_data (abfd)->flags&= ~F_INTERWORK;				\       coff_data (abfd)->flags |= (flg) | F_INTERWORK_SET;		\     }									\   while (0)
 end_define
 
 begin_ifndef
@@ -536,12 +544,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
-name|CONST
-expr|struct
+specifier|const
+name|struct
 name|reloc_howto_struct
-operator|*
+modifier|*
 name|coff_arm_reloc_type_lookup
 name|PARAMS
 argument_list|(
@@ -552,8 +560,8 @@ operator|,
 name|bfd_reloc_code_real_type
 operator|)
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -599,7 +607,7 @@ expr|struct
 name|bfd_link_info
 operator|*
 operator|,
-name|CONST
+specifier|const
 name|char
 operator|*
 operator|,
@@ -623,7 +631,7 @@ expr|struct
 name|bfd_link_info
 operator|*
 operator|,
-name|CONST
+specifier|const
 name|char
 operator|*
 operator|,
@@ -803,8 +811,31 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|arm_emit_base_file_entry
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|bfd_link_info
+operator|*
+operator|,
+name|bfd
+operator|*
+operator|,
+name|asection
+operator|*
+operator|,
+name|bfd_vma
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/* The linker script knows the section names for placement.    The entry_names are used to do simple name mangling on the stubs.    Given a function name, and its type, the stub can be found. The    name can be changed. The only requirement is the %s be present.    */
+comment|/* The linker script knows the section names for placement.    The entry_names are used to do simple name mangling on the stubs.    Given a function name, and its type, the stub can be found. The    name can be changed. The only requirement is the %s be present.  */
 end_comment
 
 begin_define
@@ -919,7 +950,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|x = ((x& ~howto->dst_mask) | (((x& howto->src_mask) + diff)& howto->dst_mask))
+value|x = ((x& ~howto->dst_mask)					\        | (((x& howto->src_mask) + diff)& howto->dst_mask))
 if|if
 condition|(
 name|diff
@@ -1011,6 +1042,9 @@ name|bfd_put_16
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|x
 argument_list|,
 name|addr
@@ -1041,6 +1075,9 @@ name|bfd_put_32
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|x
 argument_list|,
 name|addr
@@ -1304,7 +1341,6 @@ name|aoutarm_std_reloc_howto
 index|[]
 init|=
 block|{
-comment|/* type              rs size bsz  pcrel bitpos ovrf                     sf name     part_inpl readmask  setmask    pcdone */
 ifdef|#
 directive|ifdef
 name|ARM_WINCE
@@ -2015,6 +2051,23 @@ directive|ifdef
 name|COFF_WITH_PE
 end_ifdef
 
+begin_decl_stmt
+specifier|static
+name|boolean
+name|in_reloc_p
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|reloc_howto_type
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Return true if this relocation should    appear in the output .reloc section.  */
 end_comment
@@ -2330,7 +2383,7 @@ name|flag
 init|=
 name|bfd_reloc_ok
 decl_stmt|;
-comment|/* If this is an undefined symbol, return error */
+comment|/* If this is an undefined symbol, return error.  */
 if|if
 condition|(
 name|symbol
@@ -2401,7 +2454,7 @@ operator|)
 operator|-
 literal|0x02000000
 expr_stmt|;
-comment|/* Sign extend */
+comment|/* Sign extend.  */
 name|relocation
 operator|+=
 name|symbol
@@ -2459,7 +2512,7 @@ condition|)
 return|return
 name|bfd_reloc_overflow
 return|;
-comment|/* Check for overflow */
+comment|/* Check for overflow.  */
 if|if
 condition|(
 name|relocation
@@ -2496,6 +2549,9 @@ condition|(
 name|relocation
 operator|&
 operator|~
+operator|(
+name|bfd_vma
+operator|)
 literal|0x03ffffff
 condition|)
 name|flag
@@ -2521,6 +2577,9 @@ name|bfd_put_32
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|target
 argument_list|,
 operator|(
@@ -2704,7 +2763,7 @@ name|abort
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* If this is an undefined symbol, return error */
+comment|/* If this is an undefined symbol, return error.  */
 if|if
 condition|(
 name|symbol
@@ -2850,7 +2909,7 @@ operator|)
 operator|-
 name|signbit
 expr_stmt|;
-comment|/* Sign extend */
+comment|/* Sign extend.  */
 name|relocation
 operator|+=
 name|symbol
@@ -2908,7 +2967,7 @@ condition|)
 return|return
 name|bfd_reloc_overflow
 return|;
-comment|/* Check for overflow */
+comment|/* Check for overflow.  */
 if|if
 condition|(
 name|relocation
@@ -2984,6 +3043,7 @@ name|target
 operator||=
 operator|(
 operator|(
+operator|(
 name|relocation
 operator|&
 literal|0xfff
@@ -3001,10 +3061,12 @@ operator|)
 operator|&
 literal|0x07ff0000
 operator|)
+operator|)
 expr_stmt|;
 else|else
 name|target
 operator||=
+operator|(
 operator|(
 operator|(
 name|relocation
@@ -3024,6 +3086,7 @@ operator|)
 operator|&
 literal|0x7ff
 operator|)
+operator|)
 expr_stmt|;
 break|break;
 default|default:
@@ -3035,6 +3098,9 @@ name|bfd_put_32
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|target
 argument_list|,
 operator|(
@@ -3057,7 +3123,7 @@ index|[
 name|ARM_26D
 index|]
 expr_stmt|;
-comment|/* TODO: We should possibly have DONE entries for the THUMB PCREL relocations */
+comment|/* TODO: We should possibly have DONE entries for the THUMB PCREL relocations.  */
 return|return
 name|flag
 return|;
@@ -3277,31 +3343,25 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
-name|CONST
-expr|struct
+specifier|const
+name|struct
 name|reloc_howto_struct
-operator|*
+modifier|*
 name|coff_arm_reloc_type_lookup
-argument_list|(
-argument|abfd
-argument_list|,
-argument|code
-argument_list|)
-name|bfd
-operator|*
+parameter_list|(
 name|abfd
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|,
+name|code
+parameter_list|)
+name|bfd
+modifier|*
+name|abfd
+decl_stmt|;
 name|bfd_reloc_code_real_type
 name|code
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 define|#
 directive|define
@@ -3339,7 +3399,7 @@ break|break;
 default|default:
 return|return
 operator|(
-name|CONST
+specifier|const
 expr|struct
 name|reloc_howto_struct
 operator|*
@@ -3481,7 +3541,7 @@ directive|endif
 default|default:
 return|return
 operator|(
-name|CONST
+specifier|const
 expr|struct
 name|reloc_howto_struct
 operator|*
@@ -3490,7 +3550,7 @@ literal|0
 return|;
 block|}
 block|}
-end_block
+end_function
 
 begin_define
 define|#
@@ -3557,13 +3617,11 @@ name|coff_link_hash_table
 name|root
 decl_stmt|;
 comment|/* The size in bytes of the section containg the Thumb-to-ARM glue.  */
-name|long
-name|int
+name|bfd_size_type
 name|thumb_glue_size
 decl_stmt|;
 comment|/* The size in bytes of the section containg the ARM-to-Thumb glue.  */
-name|long
-name|int
+name|bfd_size_type
 name|arm_glue_size
 decl_stmt|;
 comment|/* An arbitary input BFD chosen to hold the glue sections.  */
@@ -3617,9 +3675,17 @@ name|coff_arm_link_hash_table
 modifier|*
 name|ret
 decl_stmt|;
+name|bfd_size_type
+name|amt
+init|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|coff_arm_link_hash_table
+argument_list|)
+decl_stmt|;
 name|ret
 operator|=
-operator|(
 operator|(
 expr|struct
 name|coff_arm_link_hash_table
@@ -3629,13 +3695,8 @@ name|bfd_alloc
 argument_list|(
 name|abfd
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|coff_arm_link_hash_table
+name|amt
 argument_list|)
-argument_list|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -3809,7 +3870,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* The thumb form of a long branch is a bit finicky, because the offset    encoding is split over two fields, each in it's own instruction. They    can occur in any order. So given a thumb form of long branch, and an    offset, insert the offset into the thumb branch and return finished    instruction.     It takes two thumb instructions to encode the target address. Each has    11 bits to invest. The upper 11 bits are stored in one (identifed by    H-0.. see below), the lower 11 bits are stored in the other (identified    by H-1).     Combine together and shifted left by 1 (it's a half word address) and    there you have it.       Op: 1111 = F,      H-0, upper address-0 = 000      Op: 1111 = F,      H-1, lower address-0 = 800     They can be ordered either way, but the arm tools I've seen always put    the lower one first. It probably doesn't matter. krk@cygnus.com     XXX:  Actually the order does matter.  The second instruction (H-1)    moves the computed address into the PC, so it must be the second one    in the sequence.  The problem, however is that whilst little endian code    stores the instructions in HI then LOW order, big endian code does the    reverse.  nickc@cygnus.com  */
+comment|/* The thumb form of a long branch is a bit finicky, because the offset    encoding is split over two fields, each in it's own instruction. They    can occur in any order. So given a thumb form of long branch, and an    offset, insert the offset into the thumb branch and return finished    instruction.     It takes two thumb instructions to encode the target address. Each has    11 bits to invest. The upper 11 bits are stored in one (identifed by    H-0.. see below), the lower 11 bits are stored in the other (identified    by H-1).     Combine together and shifted left by 1 (it's a half word address) and    there you have it.       Op: 1111 = F,      H-0, upper address-0 = 000      Op: 1111 = F,      H-1, lower address-0 = 800     They can be ordered either way, but the arm tools I've seen always put    the lower one first. It probably doesn't matter. krk@cygnus.com     XXX:  Actually the order does matter.  The second instruction (H-1)    moves the computed address into the PC, so it must be the second one    in the sequence.  The problem, however is that whilst little endian code    stores the instructions in HI then LOW order, big endian code does the    reverse.  nickc@cygnus.com.  */
 end_comment
 
 begin_define
@@ -3930,11 +3991,11 @@ operator||
 name|low_bits
 expr_stmt|;
 else|else
+comment|/* FIXME: the BFD library should never abort except for internal errors        - it should return an error status.  */
 name|abort
 argument_list|()
 expr_stmt|;
-comment|/* error - not a valid branch instruction form */
-comment|/* FIXME: abort is probably not the right call. krk@cygnus.com */
+comment|/* Error - not a valid branch instruction form.  */
 return|return
 name|br_insn
 return|;
@@ -3962,7 +4023,7 @@ name|bfd_link_info
 modifier|*
 name|info
 decl_stmt|;
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|name
@@ -3981,15 +4042,9 @@ name|coff_link_hash_entry
 modifier|*
 name|myh
 decl_stmt|;
-name|tmp_name
-operator|=
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-name|bfd_malloc
-argument_list|(
+name|bfd_size_type
+name|amt
+init|=
 name|strlen
 argument_list|(
 name|name
@@ -4001,8 +4056,17 @@ name|THUMB2ARM_GLUE_ENTRY_NAME
 argument_list|)
 operator|+
 literal|1
-argument_list|)
+decl_stmt|;
+name|tmp_name
+operator|=
+operator|(
+name|char
+operator|*
 operator|)
+name|bfd_malloc
+argument_list|(
+name|amt
+argument_list|)
 expr_stmt|;
 name|BFD_ASSERT
 argument_list|(
@@ -4050,7 +4114,7 @@ argument_list|(
 literal|"%s: unable to find THUMB glue '%s' for `%s'"
 argument_list|)
 argument_list|,
-name|bfd_get_filename
+name|bfd_archive_filename
 argument_list|(
 name|input_bfd
 argument_list|)
@@ -4089,7 +4153,7 @@ name|bfd_link_info
 modifier|*
 name|info
 decl_stmt|;
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|name
@@ -4108,15 +4172,9 @@ name|coff_link_hash_entry
 modifier|*
 name|myh
 decl_stmt|;
-name|tmp_name
-operator|=
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-name|bfd_malloc
-argument_list|(
+name|bfd_size_type
+name|amt
+init|=
 name|strlen
 argument_list|(
 name|name
@@ -4128,8 +4186,17 @@ name|ARM2THUMB_GLUE_ENTRY_NAME
 argument_list|)
 operator|+
 literal|1
-argument_list|)
+decl_stmt|;
+name|tmp_name
+operator|=
+operator|(
+name|char
+operator|*
 operator|)
+name|bfd_malloc
+argument_list|(
+name|amt
+argument_list|)
 expr_stmt|;
 name|BFD_ASSERT
 argument_list|(
@@ -4177,7 +4244,7 @@ argument_list|(
 literal|"%s: unable to find ARM glue '%s' for `%s'"
 argument_list|)
 argument_list|,
-name|bfd_get_filename
+name|bfd_archive_filename
 argument_list|(
 name|input_bfd
 argument_list|)
@@ -4606,6 +4673,7 @@ operator|==
 name|bfd_link_hash_defweak
 operator|)
 operator|&&
+operator|(
 name|h
 operator|->
 name|root
@@ -4621,6 +4689,7 @@ operator|==
 name|input_section
 operator|->
 name|output_section
+operator|)
 condition|)
 block|{
 specifier|static
@@ -4712,10 +4781,10 @@ operator|->
 name|relocateable
 condition|)
 continue|continue;
-comment|/* FIXME - it is not clear which targets need this next test 	     and which do not.  It is known that it is needed for the 	     VXworks target (hence the #ifdef), but it is also known 	     that it was supressed for other (arm) targets.  This ought 	     to be sorted out one day.  */
+comment|/* FIXME - it is not clear which targets need this next test 	     and which do not.  It is known that it is needed for the 	     VxWorks and EPOC-PE targets, but it is also known that it 	     was supressed for other ARM targets.  This ought to be 	     sorted out one day.  */
 ifdef|#
 directive|ifdef
-name|VXWORKS
+name|ARM_COFF_BUGFIX
 comment|/* We must not ignore the symbol value.  If the symbol is 	     within the same section, the relocation should have already 	     been fixed, but if it is not, we'll be handed a reloc into 	     the beginning of the symbol's section, so we must not cancel 	     out the symbol's value, otherwise we'll be adding it in 	     twice.  */
 if|if
 condition|(
@@ -4912,14 +4981,13 @@ operator|==
 name|C_THUMBEXTFUNC
 condition|)
 block|{
-comment|/* Arm code calling a Thumb function */
+comment|/* Arm code calling a Thumb function.  */
 name|unsigned
 name|long
 name|int
 name|tmp
 decl_stmt|;
-name|long
-name|int
+name|bfd_vma
 name|my_offset
 decl_stmt|;
 name|asection
@@ -5074,7 +5142,7 @@ argument_list|(
 literal|"%s(%s): warning: interworking not enabled."
 argument_list|)
 argument_list|,
-name|bfd_get_filename
+name|bfd_archive_filename
 argument_list|(
 name|h_sec
 operator|->
@@ -5092,7 +5160,7 @@ argument_list|(
 literal|"  first occurrence: %s: arm call to thumb"
 argument_list|)
 argument_list|,
-name|bfd_get_filename
+name|bfd_archive_filename
 argument_list|(
 name|input_bfd
 argument_list|)
@@ -5118,6 +5186,9 @@ name|bfd_put_32
 argument_list|(
 name|output_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|a2t1_ldr_insn
 argument_list|,
 name|s
@@ -5131,6 +5202,9 @@ name|bfd_put_32
 argument_list|(
 name|output_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|a2t2_bx_r12_insn
 argument_list|,
 name|s
@@ -5263,6 +5337,9 @@ name|bfd_put_32
 argument_list|(
 name|output_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|tmp
 argument_list|,
 name|contents
@@ -5285,7 +5362,7 @@ block|}
 ifndef|#
 directive|ifndef
 name|ARM_WINCE
-comment|/* Note: We used to check for ARM_THUMB9 and ARM_THUMB12 */
+comment|/* Note: We used to check for ARM_THUMB9 and ARM_THUMB12.  */
 elseif|else
 if|if
 condition|(
@@ -5324,8 +5401,7 @@ name|s
 init|=
 literal|0
 decl_stmt|;
-name|long
-name|int
+name|bfd_vma
 name|my_offset
 decl_stmt|;
 name|unsigned
@@ -5486,7 +5562,7 @@ argument_list|(
 literal|"%s(%s): warning: interworking not enabled."
 argument_list|)
 argument_list|,
-name|bfd_get_filename
+name|bfd_archive_filename
 argument_list|(
 name|h_sec
 operator|->
@@ -5504,7 +5580,7 @@ argument_list|(
 literal|"  first occurrence: %s: thumb call to arm"
 argument_list|)
 argument_list|,
-name|bfd_get_filename
+name|bfd_archive_filename
 argument_list|(
 name|input_bfd
 argument_list|)
@@ -5545,6 +5621,9 @@ name|bfd_put_16
 argument_list|(
 name|output_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|t2a1_push_insn
 argument_list|,
 name|s
@@ -5558,6 +5637,9 @@ name|bfd_put_16
 argument_list|(
 name|output_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|t2a2_ldr_insn
 argument_list|,
 name|s
@@ -5573,6 +5655,9 @@ name|bfd_put_16
 argument_list|(
 name|output_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|t2a3_mov_insn
 argument_list|,
 name|s
@@ -5588,6 +5673,9 @@ name|bfd_put_16
 argument_list|(
 name|output_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|t2a4_bx_insn
 argument_list|,
 name|s
@@ -5603,6 +5691,9 @@ name|bfd_put_32
 argument_list|(
 name|output_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|t2a5_pop_insn
 argument_list|,
 name|s
@@ -5618,6 +5709,9 @@ name|bfd_put_32
 argument_list|(
 name|output_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|t2a6_bx_insn
 argument_list|,
 name|s
@@ -5671,6 +5765,9 @@ name|bfd_put_16
 argument_list|(
 name|output_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|t2a1_bx_pc_insn
 argument_list|,
 name|s
@@ -5684,6 +5781,9 @@ name|bfd_put_16
 argument_list|(
 name|output_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|t2a2_noop_insn
 argument_list|,
 name|s
@@ -5703,7 +5803,7 @@ name|bfd_signed_vma
 operator|)
 name|h_val
 operator|)
-comment|/* Address of destination of the stub */
+comment|/* Address of destination of the stub.  */
 operator|-
 operator|(
 call|(
@@ -5737,6 +5837,9 @@ name|bfd_put_32
 argument_list|(
 name|output_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|t2a3_b_insn
 operator||
 operator|(
@@ -5811,6 +5914,9 @@ name|bfd_put_32
 argument_list|(
 name|output_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|insert_thumb_branch
 argument_list|(
 name|tmp
@@ -6663,7 +6769,7 @@ argument_list|(
 literal|"%s: bad reloc address 0x%lx in section `%s'"
 argument_list|)
 argument_list|,
-name|bfd_get_filename
+name|bfd_archive_filename
 argument_list|(
 name|input_bfd
 argument_list|)
@@ -6914,7 +7020,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|memset (foo, test_char, globals->arm_glue_size);
+block|memset (foo, test_char, (size_t) globals->arm_glue_size);
 endif|#
 directive|endif
 name|s
@@ -6992,7 +7098,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|memset (foo, test_char, globals->thumb_glue_size);
+block|memset (foo, test_char, (size_t) globals->thumb_glue_size);
 endif|#
 directive|endif
 name|s
@@ -7072,6 +7178,12 @@ name|coff_arm_link_hash_table
 modifier|*
 name|globals
 decl_stmt|;
+name|bfd_vma
+name|val
+decl_stmt|;
+name|bfd_size_type
+name|amt
+decl_stmt|;
 name|globals
 operator|=
 name|coff_arm_hash_table
@@ -7113,15 +7225,8 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|tmp_name
+name|amt
 operator|=
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-name|bfd_malloc
-argument_list|(
 name|strlen
 argument_list|(
 name|name
@@ -7133,8 +7238,17 @@ name|ARM2THUMB_GLUE_ENTRY_NAME
 argument_list|)
 operator|+
 literal|1
-argument_list|)
+expr_stmt|;
+name|tmp_name
+operator|=
+operator|(
+name|char
+operator|*
 operator|)
+name|bfd_malloc
+argument_list|(
+name|amt
+argument_list|)
 expr_stmt|;
 name|BFD_ASSERT
 argument_list|(
@@ -7184,6 +7298,14 @@ return|return;
 comment|/* we've already seen this guy */
 block|}
 comment|/* The only trick here is using globals->arm_glue_size as the value. Even      though the section isn't allocated yet, this is where we will be putting      it.  */
+name|val
+operator|=
+name|globals
+operator|->
+name|arm_glue_size
+operator|+
+literal|1
+expr_stmt|;
 name|bfd_coff_link_add_one_symbol
 argument_list|(
 name|info
@@ -7198,11 +7320,7 @@ name|BSF_GLOBAL
 argument_list|,
 name|s
 argument_list|,
-name|globals
-operator|->
-name|arm_glue_size
-operator|+
-literal|1
+name|val
 argument_list|,
 name|NULL
 argument_list|,
@@ -7287,6 +7405,12 @@ name|coff_arm_link_hash_table
 modifier|*
 name|globals
 decl_stmt|;
+name|bfd_vma
+name|val
+decl_stmt|;
+name|bfd_size_type
+name|amt
+decl_stmt|;
 name|globals
 operator|=
 name|coff_arm_hash_table
@@ -7328,14 +7452,8 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|tmp_name
+name|amt
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|bfd_malloc
-argument_list|(
 name|strlen
 argument_list|(
 name|name
@@ -7347,6 +7465,16 @@ name|THUMB2ARM_GLUE_ENTRY_NAME
 argument_list|)
 operator|+
 literal|1
+expr_stmt|;
+name|tmp_name
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|bfd_malloc
+argument_list|(
+name|amt
 argument_list|)
 expr_stmt|;
 name|BFD_ASSERT
@@ -7396,6 +7524,14 @@ expr_stmt|;
 return|return;
 comment|/* we've already seen this guy */
 block|}
+name|val
+operator|=
+name|globals
+operator|->
+name|thumb_glue_size
+operator|+
+literal|1
+expr_stmt|;
 name|bfd_coff_link_add_one_symbol
 argument_list|(
 name|info
@@ -7410,11 +7546,7 @@ name|BSF_GLOBAL
 argument_list|,
 name|s
 argument_list|,
-name|globals
-operator|->
-name|thumb_glue_size
-operator|+
-literal|1
+name|val
 argument_list|,
 name|NULL
 argument_list|,
@@ -7453,14 +7585,8 @@ define|#
 directive|define
 name|BACK_FROM_ARM
 value|"__%s_back_from_arm"
-name|tmp_name
+name|amt
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|bfd_malloc
-argument_list|(
 name|strlen
 argument_list|(
 name|name
@@ -7472,6 +7598,16 @@ name|CHANGE_TO_ARM
 argument_list|)
 operator|+
 literal|1
+expr_stmt|;
+name|tmp_name
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|bfd_malloc
+argument_list|(
+name|amt
 argument_list|)
 expr_stmt|;
 name|BFD_ASSERT
@@ -7498,6 +7634,22 @@ name|myh
 operator|=
 name|NULL
 expr_stmt|;
+name|val
+operator|=
+name|globals
+operator|->
+name|thumb_glue_size
+operator|+
+operator|(
+name|globals
+operator|->
+name|support_old_code
+condition|?
+literal|8
+else|:
+literal|4
+operator|)
+expr_stmt|;
 name|bfd_coff_link_add_one_symbol
 argument_list|(
 name|info
@@ -7512,19 +7664,7 @@ name|BSF_LOCAL
 argument_list|,
 name|s
 argument_list|,
-name|globals
-operator|->
-name|thumb_glue_size
-operator|+
-operator|(
-name|globals
-operator|->
-name|support_old_code
-condition|?
-literal|8
-else|:
-literal|4
-operator|)
+name|val
 argument_list|,
 name|NULL
 argument_list|,
@@ -7996,7 +8136,7 @@ argument_list|(
 literal|"%s: illegal symbol index in reloc: %d"
 argument_list|)
 argument_list|,
-name|bfd_get_filename
+name|bfd_archive_filename
 argument_list|(
 name|abfd
 argument_list|)
@@ -8420,7 +8560,7 @@ argument_list|(
 literal|"%s: ERROR: compiled for APCS-%d whereas target %s uses APCS-%d"
 argument_list|)
 argument_list|,
-name|bfd_get_filename
+name|bfd_archive_filename
 argument_list|(
 name|ibfd
 argument_list|)
@@ -8504,7 +8644,7 @@ name|_bfd_error_handler
 argument_list|(
 name|msg
 argument_list|,
-name|bfd_get_filename
+name|bfd_archive_filename
 argument_list|(
 name|ibfd
 argument_list|)
@@ -8570,7 +8710,7 @@ name|_bfd_error_handler
 argument_list|(
 name|msg
 argument_list|,
-name|bfd_get_filename
+name|bfd_archive_filename
 argument_list|(
 name|ibfd
 argument_list|)
@@ -8695,7 +8835,7 @@ name|_bfd_error_handler
 argument_list|(
 name|msg
 argument_list|,
-name|bfd_get_filename
+name|bfd_archive_filename
 argument_list|(
 name|ibfd
 argument_list|)
@@ -9078,7 +9218,7 @@ argument_list|(
 literal|"Warning: Not setting interworking flag of %s, since it has already been specified as non-interworking"
 argument_list|)
 argument_list|,
-name|bfd_get_filename
+name|bfd_archive_filename
 argument_list|(
 name|abfd
 argument_list|)
@@ -9093,7 +9233,7 @@ argument_list|(
 literal|"Warning: Clearing the interworking flag of %s due to outside request"
 argument_list|)
 argument_list|,
-name|bfd_get_filename
+name|bfd_archive_filename
 argument_list|(
 name|abfd
 argument_list|)
@@ -9309,7 +9449,7 @@ argument_list|(
 name|dest
 argument_list|)
 argument_list|,
-name|bfd_get_filename
+name|bfd_archive_filename
 argument_list|(
 name|src
 argument_list|)
@@ -9447,7 +9587,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|int
+name|size_t
 name|len
 init|=
 name|strlen

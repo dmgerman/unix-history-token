@@ -36,7 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|"safe-ctype.h"
 end_include
 
 begin_include
@@ -594,8 +594,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|OPTION_WARN_MULTIPLE_GP
+name|OPTION_WARN_FATAL
 value|(OPTION_WARN_CONSTRUCTORS + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION_WARN_MULTIPLE_GP
+value|(OPTION_WARN_FATAL + 1)
 end_define
 
 begin_define
@@ -729,6 +736,34 @@ define|#
 directive|define
 name|OPTION_ALLOW_SHLIB_UNDEFINED
 value|(OPTION_TARGET_HELP + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION_DISCARD_NONE
+value|(OPTION_ALLOW_SHLIB_UNDEFINED + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION_SPARE_DYNAMIC_TAGS
+value|(OPTION_DISCARD_NONE + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION_NO_DEFINE_COMMON
+value|(OPTION_SPARE_DYNAMIC_TAGS + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION_NOSTDLIB
+value|(OPTION_NO_DEFINE_COMMON + 1)
 end_define
 
 begin_comment
@@ -1156,6 +1191,32 @@ literal|"Set internal name of shared library"
 argument_list|)
 block|,
 name|ONE_DASH
+block|}
+block|,
+block|{
+block|{
+literal|"dynamic-linker"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+name|OPTION_DYNAMIC_LINKER
+block|}
+block|,
+literal|'I'
+block|,
+name|N_
+argument_list|(
+literal|"PROGRAM"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"Set PROGRAM as the dynamic linker to use"
+argument_list|)
+block|,
+name|TWO_DASHES
 block|}
 block|,
 block|{
@@ -1722,7 +1783,30 @@ name|NULL
 block|,
 name|N_
 argument_list|(
-literal|"Discard temporary local symbols"
+literal|"Discard temporary local symbols (default)"
+argument_list|)
+block|,
+name|TWO_DASHES
+block|}
+block|,
+block|{
+block|{
+literal|"discard-none"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_DISCARD_NONE
+block|}
+block|,
+literal|'\0'
+block|,
+name|NULL
+block|,
+name|N_
+argument_list|(
+literal|"Don't discard any local symbols"
 argument_list|)
 block|,
 name|TWO_DASHES
@@ -2144,32 +2228,6 @@ block|}
 block|,
 block|{
 block|{
-literal|"dynamic-linker"
-block|,
-name|required_argument
-block|,
-name|NULL
-block|,
-name|OPTION_DYNAMIC_LINKER
-block|}
-block|,
-literal|'\0'
-block|,
-name|N_
-argument_list|(
-literal|"PROGRAM"
-argument_list|)
-block|,
-name|N_
-argument_list|(
-literal|"Set the dynamic linker to use"
-argument_list|)
-block|,
-name|TWO_DASHES
-block|}
-block|,
-block|{
-block|{
 literal|"embedded-relocs"
 block|,
 name|no_argument
@@ -2363,6 +2421,29 @@ block|}
 block|,
 block|{
 block|{
+literal|"no-define-common"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_NO_DEFINE_COMMON
+block|}
+block|,
+literal|'\0'
+block|,
+name|NULL
+block|,
+name|N_
+argument_list|(
+literal|"Do not define Common storage"
+argument_list|)
+block|,
+name|TWO_DASHES
+block|}
+block|,
+block|{
+block|{
 literal|"no-demangle"
 block|,
 name|no_argument
@@ -2540,6 +2621,29 @@ block|,
 name|NULL
 block|,
 name|NO_HELP
+block|}
+block|,
+block|{
+block|{
+literal|"nostdlib"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_NOSTDLIB
+block|}
+block|,
+literal|'\0'
+block|,
+name|NULL
+block|,
+name|N_
+argument_list|(
+literal|"Only use library directories specified on\n\t\t\t\tthe command line"
+argument_list|)
+block|,
+name|ONE_DASH
 block|}
 block|,
 block|{
@@ -2777,6 +2881,32 @@ block|,
 name|NULL
 block|,
 name|NO_HELP
+block|}
+block|,
+block|{
+block|{
+literal|"spare-dynamic-tags"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+name|OPTION_SPARE_DYNAMIC_TAGS
+block|}
+block|,
+literal|'\0'
+block|,
+name|N_
+argument_list|(
+literal|"COUNT"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"How many tags to reserve in .dynamic section"
+argument_list|)
+block|,
+name|TWO_DASHES
 block|}
 block|,
 block|{
@@ -3243,6 +3373,29 @@ block|}
 block|,
 block|{
 block|{
+literal|"fatal-warnings"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_WARN_FATAL
+block|}
+block|,
+literal|'\0'
+block|,
+name|NULL
+block|,
+name|N_
+argument_list|(
+literal|"Treat warnings as errors"
+argument_list|)
+block|,
+name|TWO_DASHES
+block|}
+block|,
+block|{
+block|{
 literal|"whole-archive"
 block|,
 name|no_argument
@@ -3376,7 +3529,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|isdigit
+name|ISDIGIT
 argument_list|(
 operator|*
 name|string
@@ -3738,12 +3891,8 @@ operator|>=
 name|argc
 operator|||
 operator|!
-name|isdigit
+name|ISDIGIT
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 name|argv
 index|[
 name|i
@@ -3884,7 +4033,6 @@ name|optind
 operator|!=
 name|last_optind
 condition|)
-block|{
 if|if
 condition|(
 name|ldemul_parse_args
@@ -3895,15 +4043,14 @@ name|argv
 argument_list|)
 condition|)
 continue|continue;
-name|last_optind
-operator|=
-name|optind
-expr_stmt|;
-block|}
 comment|/* getopt_long_only is like getopt_long, but '-' as well as '--' 	 can indicate a long option.  */
 name|opterr
 operator|=
 literal|0
+expr_stmt|;
+name|last_optind
+operator|=
+name|optind
 expr_stmt|;
 name|optc
 operator|=
@@ -3928,8 +4075,9 @@ operator|==
 literal|'?'
 condition|)
 block|{
-operator|--
 name|optind
+operator|=
+name|last_optind
 expr_stmt|;
 name|optc
 operator|=
@@ -3939,7 +4087,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-name|shortopts
+literal|"-"
 argument_list|,
 name|really_longopts
 argument_list|,
@@ -3964,41 +4112,26 @@ block|{
 case|case
 literal|'?'
 case|:
-name|fprintf
+name|einfo
 argument_list|(
-name|stderr
-argument_list|,
 name|_
 argument_list|(
-literal|"%s: unrecognized option '%s'\n"
+literal|"%P: unrecognized option '%s'\n"
 argument_list|)
-argument_list|,
-name|program_name
 argument_list|,
 name|argv
 index|[
-name|optind
-operator|-
-literal|1
+name|last_optind
 index|]
 argument_list|)
 expr_stmt|;
 default|default:
-name|fprintf
+name|einfo
 argument_list|(
-name|stderr
-argument_list|,
 name|_
 argument_list|(
-literal|"%s: use the --help option for usage information\n"
+literal|"%P%F: use the --help option for usage information\n"
 argument_list|)
-argument_list|,
-name|program_name
-argument_list|)
-expr_stmt|;
-name|xexit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 case|case
@@ -4311,6 +4444,10 @@ expr_stmt|;
 block|}
 break|break;
 case|case
+literal|'I'
+case|:
+comment|/* Used on Solaris.  */
+case|case
 name|OPTION_DYNAMIC_LINKER
 case|:
 name|command_line
@@ -4357,7 +4494,7 @@ case|case
 literal|'E'
 case|:
 comment|/* HP/UX compatibility.  */
-name|command_line
+name|link_info
 operator|.
 name|export_dynamic
 operator|=
@@ -4685,6 +4822,16 @@ name|false
 expr_stmt|;
 break|break;
 case|case
+name|OPTION_NO_DEFINE_COMMON
+case|:
+name|command_line
+operator|.
+name|inhibit_common_definition
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
 name|OPTION_NO_DEMANGLE
 case|:
 name|demangling
@@ -4746,6 +4893,16 @@ case|case
 name|OPTION_NOINHIBIT_EXEC
 case|:
 name|force_make_executable
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_NOSTDLIB
+case|:
+name|config
+operator|.
+name|only_cmd_line_lib_dirs
 operator|=
 name|true
 expr_stmt|;
@@ -4831,6 +4988,21 @@ case|:
 case|case
 literal|'r'
 case|:
+if|if
+condition|(
+name|optind
+operator|==
+name|last_optind
+condition|)
+comment|/* This can happen if the user put "-rpath,a" on the command 	       line.  (Or something similar.  The comma is important). 	       Getopt becomes confused and thinks that this is a -r option 	       but it cannot parse the text after the -r so it refuses to 	       increment the optind counter.  Detect this case and issue 	       an error message here.  We cannot just make this a warning, 	       increment optind, and continue because getopt is too confused 	       and will seg-fault the next time around.  */
+name|einfo
+argument_list|(
+name|_
+argument_list|(
+literal|"%P%F: bad -rpath option\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|link_info
 operator|.
 name|relocateable
@@ -5328,25 +5500,14 @@ name|optarg2
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|einfo
 argument_list|(
-name|stderr
-argument_list|,
 name|_
 argument_list|(
-literal|"%s: Invalid argument to option \"--section-start\"\n"
+literal|"%P%F: invalid argument to option \"--section-start\"\n"
 argument_list|)
-argument_list|,
-name|program_name
 argument_list|)
 expr_stmt|;
-name|xexit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|optarg2
 operator|++
 expr_stmt|;
@@ -5367,25 +5528,14 @@ operator|==
 literal|'\0'
 operator|)
 condition|)
-block|{
-name|fprintf
+name|einfo
 argument_list|(
-name|stderr
-argument_list|,
 name|_
 argument_list|(
-literal|"%s: Missing argument(s) to option \"--section-start\"\n"
+literal|"%P%F: missing argument(s) to option \"--section-start\"\n"
 argument_list|)
-argument_list|,
-name|program_name
 argument_list|)
 expr_stmt|;
-name|xexit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* We must copy the section name as set_section_start 	       doesn't do it for us.  */
 name|len
 operator|=
@@ -5608,69 +5758,11 @@ break|break;
 case|case
 name|OPTION_VERSION
 case|:
-comment|/* This output is intended to follow the GNU standards document.  */
-name|printf
+name|ldversion
 argument_list|(
-literal|"GNU ld %s\n"
-argument_list|,
-name|ld_program_version
+literal|2
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-name|_
-argument_list|(
-literal|"Copyright 2001 Free Software Foundation, Inc.\n"
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-name|_
-argument_list|(
-literal|"\ This program is free software; you may redistribute it under the terms of\n\ the GNU General Public License.  This program has absolutely no warranty.\n"
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|{
-name|ld_emulation_xfer_type
-modifier|*
-modifier|*
-name|ptr
-init|=
-name|ld_emulations
-decl_stmt|;
-name|printf
-argument_list|(
-name|_
-argument_list|(
-literal|"  Supported emulations:\n"
-argument_list|)
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-operator|*
-name|ptr
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"   %s\n"
-argument_list|,
-operator|(
-operator|*
-name|ptr
-operator|)
-operator|->
-name|emulation_name
-argument_list|)
-expr_stmt|;
-name|ptr
-operator|++
-expr_stmt|;
-block|}
-block|}
 name|xexit
 argument_list|(
 literal|0
@@ -5682,21 +5774,22 @@ name|OPTION_VERSION_SCRIPT
 case|:
 comment|/* This option indicates a small script that only specifies              version information.  Read it, but don't assume that              we've seen a linker script.  */
 block|{
-name|boolean
-name|hold_had_script
+name|FILE
+modifier|*
+name|hold_script_handle
 decl_stmt|;
-name|hold_had_script
+name|hold_script_handle
 operator|=
-name|had_script
+name|saved_script_handle
 expr_stmt|;
 name|ldfile_open_command_file
 argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
-name|had_script
+name|saved_script_handle
 operator|=
-name|hold_had_script
+name|hold_script_handle
 expr_stmt|;
 name|parser_input
 operator|=
@@ -5734,6 +5827,16 @@ case|:
 name|config
 operator|.
 name|warn_constructors
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_WARN_FATAL
+case|:
+name|config
+operator|.
+name|fatal_warnings
 operator|=
 name|true
 expr_stmt|;
@@ -5783,6 +5886,16 @@ name|add_wrap
 argument_list|(
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_DISCARD_NONE
+case|:
+name|link_info
+operator|.
+name|discard
+operator|=
+name|discard_none
 expr_stmt|;
 break|break;
 case|case
@@ -5839,6 +5952,23 @@ case|:
 name|add_ysym
 argument_list|(
 name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_SPARE_DYNAMIC_TAGS
+case|:
+name|link_info
+operator|.
+name|spare_dynamic_tags
+operator|=
+name|strtoul
+argument_list|(
+name|optarg
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5929,25 +6059,14 @@ if|if
 condition|(
 name|ingroup
 condition|)
-block|{
-name|fprintf
+name|einfo
 argument_list|(
-name|stderr
-argument_list|,
 name|_
 argument_list|(
-literal|"%s: may not nest groups (--help for usage)\n"
+literal|"%P%F: may not nest groups (--help for usage)\n"
 argument_list|)
-argument_list|,
-name|program_name
 argument_list|)
 expr_stmt|;
-name|xexit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|lang_enter_group
 argument_list|()
 expr_stmt|;
@@ -5964,25 +6083,14 @@ condition|(
 operator|!
 name|ingroup
 condition|)
-block|{
-name|fprintf
+name|einfo
 argument_list|(
-name|stderr
-argument_list|,
 name|_
 argument_list|(
-literal|"%s: group ended before it began (--help for usage)\n"
+literal|"%P%F: group ended before it began (--help for usage)\n"
 argument_list|)
-argument_list|,
-name|program_name
 argument_list|)
 expr_stmt|;
-name|xexit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|lang_leave_group
 argument_list|()
 expr_stmt|;
@@ -5994,13 +6102,13 @@ break|break;
 case|case
 name|OPTION_MPC860C0
 case|:
+comment|/* Default value (in bytes).  */
 name|link_info
 operator|.
 name|mpc860c0
 operator|=
 literal|20
 expr_stmt|;
-comment|/* default value (in bytes) */
 if|if
 condition|(
 name|optarg
@@ -6028,25 +6136,15 @@ name|words
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
+name|einfo
 argument_list|(
-name|stderr
-argument_list|,
 name|_
 argument_list|(
-literal|"%s: Invalid argument to option \"mpc860c0\"\n"
+literal|"%P%F: invalid argument to option \"mpc860c0\"\n"
 argument_list|)
-argument_list|,
-name|program_name
 argument_list|)
 expr_stmt|;
-name|xexit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
+comment|/* Convert words to bytes.  */
 name|link_info
 operator|.
 name|mpc860c0
@@ -6055,7 +6153,6 @@ name|words
 operator|*
 literal|4
 expr_stmt|;
-comment|/* convert words to bytes */
 block|}
 name|command_line
 operator|.

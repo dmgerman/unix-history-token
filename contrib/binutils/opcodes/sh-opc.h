@@ -8255,6 +8255,16 @@ block|}
 block|,
 block|{
 literal|0
+block|,
+block|{
+literal|0
+block|}
+block|,
+block|{
+literal|0
+block|}
+block|,
+literal|0
 block|}
 block|}
 decl_stmt|;

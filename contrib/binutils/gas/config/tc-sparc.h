@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-sparc.h - Macros and type defines for the sparc.    Copyright 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2,    or (at your option) any later version.     GAS is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public    License along with GAS; see the file COPYING.  If not, write    to the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* tc-sparc.h - Macros and type defines for the sparc.    Copyright 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2,    or (at your option) any later version.     GAS is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public    License along with GAS; see the file COPYING.  If not, write    to the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -166,7 +166,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|(as_fatal(_("estimate_size_before_relax called")), 1)
+value|(as_fatal (_("estimate_size_before_relax called")), 1)
 end_define
 
 begin_define
@@ -374,18 +374,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|MD_APPLY_FIX3
-end_define
-
-begin_define
-define|#
-directive|define
-name|TC_HANDLES_FX_DONE
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -512,6 +500,45 @@ name|md_end
 parameter_list|()
 value|sparc_md_end ()
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OBJ_ELF
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TC_PARSE_CONS_EXPRESSION
+parameter_list|(
+name|EXP
+parameter_list|,
+name|NBYTES
+parameter_list|)
+value|sparc_cons (EXP, NBYTES)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|sparc_cons
+name|PARAMS
+argument_list|(
+operator|(
+name|expressionS
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

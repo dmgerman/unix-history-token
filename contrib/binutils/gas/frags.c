@@ -291,7 +291,7 @@ name|as_fatal
 argument_list|(
 name|_
 argument_list|(
-literal|"Can't extend frag %d. chars"
+literal|"can't extend frag %u chars"
 argument_list|)
 argument_list|,
 name|nchars

@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|"safe-ctype.h"
 end_include
 
 begin_include
@@ -813,6 +813,20 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
+name|dump_bfd
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
 name|display_bfd
 name|PARAMS
 argument_list|(
@@ -995,6 +1009,23 @@ begin_decl_stmt
 specifier|static
 name|void
 name|objdump_print_address
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd_vma
+operator|,
+expr|struct
+name|disassemble_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|objdump_symbol_at_address
 name|PARAMS
 argument_list|(
 operator|(
@@ -1259,7 +1290,7 @@ name|stream
 argument_list|,
 name|_
 argument_list|(
-literal|"Usage: %s OPTION... FILE...\n"
+literal|"Usage: %s<option(s)><file(s)>\n"
 argument_list|)
 argument_list|,
 name|program_name
@@ -1271,7 +1302,7 @@ name|stream
 argument_list|,
 name|_
 argument_list|(
-literal|"Display information from object FILE.\n"
+literal|" Display information from object<file(s)>.\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1281,7 +1312,7 @@ name|stream
 argument_list|,
 name|_
 argument_list|(
-literal|"\n At least one of the following switches must be given:\n"
+literal|" At least one of the following switches must be given:\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1291,7 +1322,7 @@ name|stream
 argument_list|,
 name|_
 argument_list|(
-literal|"\   -a, --archive-headers    Display archive header information\n\   -f, --file-headers       Display the contents of the overall file header\n\   -p, --private-headers    Display object format specific file header contents\n\   -h, --[section-]headers  Display the contents of the section headers\n\   -x, --all-headers        Display the contents of all headers\n\   -d, --disassemble        Display assembler contents of executable sections\n\   -D, --disassemble-all    Display assembler contents of all sections\n\   -S, --source             Intermix source code with disassembly\n\   -s, --full-contents      Display the full contents of all sections requested\n\   -g, --debugging          Display debug information in object file\n\   -G, --stabs              Display (in raw form) any STABS info in the file\n\   -t, --syms               Display the contents of the symbol table(s)\n\   -T, --dynamic-syms       Display the contents of the dynamic symbol table\n\   -r, --reloc              Display the relocation entries in the file\n\   -R, --dynamic-reloc      Display the dynamic relocation entries in the file\n\   -V, --version            Display this program's version number\n\   -i, --info               List object formats and architectures supported\n\   -H, --help               Display this information\n\ "
+literal|"\   -a, --archive-headers    Display archive header information\n\   -f, --file-headers       Display the contents of the overall file header\n\   -p, --private-headers    Display object format specific file header contents\n\   -h, --[section-]headers  Display the contents of the section headers\n\   -x, --all-headers        Display the contents of all headers\n\   -d, --disassemble        Display assembler contents of executable sections\n\   -D, --disassemble-all    Display assembler contents of all sections\n\   -S, --source             Intermix source code with disassembly\n\   -s, --full-contents      Display the full contents of all sections requested\n\   -g, --debugging          Display debug information in object file\n\   -G, --stabs              Display (in raw form) any STABS info in the file\n\   -t, --syms               Display the contents of the symbol table(s)\n\   -T, --dynamic-syms       Display the contents of the dynamic symbol table\n\   -r, --reloc              Display the relocation entries in the file\n\   -R, --dynamic-reloc      Display the dynamic relocation entries in the file\n\   -v, --version            Display this program's version number\n\   -i, --info               List object formats and architectures supported\n\   -H, --help               Display this information\n\ "
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1323,6 +1354,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 name|list_supported_targets
+argument_list|(
+name|program_name
+argument_list|,
+name|stream
+argument_list|)
+expr_stmt|;
+name|list_supported_architectures
 argument_list|(
 name|program_name
 argument_list|,
@@ -1869,8 +1907,10 @@ operator|/
 name|opb
 argument_list|)
 expr_stmt|;
-name|printf_vma
+name|bfd_printf_vma
 argument_list|(
+name|abfd
+argument_list|,
 name|bfd_get_section_vma
 argument_list|(
 name|abfd
@@ -1884,8 +1924,10 @@ argument_list|(
 literal|"  "
 argument_list|)
 expr_stmt|;
-name|printf_vma
+name|bfd_printf_vma
 argument_list|(
+name|abfd
+argument_list|,
 name|section
 operator|->
 name|lma
@@ -1895,6 +1937,10 @@ name|printf
 argument_list|(
 literal|"  %08lx  2**%u"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|section
 operator|->
 name|filepos
@@ -1988,18 +2034,6 @@ argument_list|,
 literal|"RELOC"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SEC_BALIGN
-name|PF
-argument_list|(
-name|SEC_BALIGN
-argument_list|,
-literal|"BALIGN"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|PF
 argument_list|(
 name|SEC_READONLY
@@ -2082,6 +2116,13 @@ argument_list|(
 name|SEC_SHARED
 argument_list|,
 literal|"SHARED"
+argument_list|)
+expr_stmt|;
+name|PF
+argument_list|(
+name|SEC_ARCH_BIT_0
+argument_list|,
+literal|"ARCH_BIT_0"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3322,8 +3363,26 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|sprintf_vma
+name|struct
+name|objdump_disasm_info
+modifier|*
+name|aux
+init|=
+operator|(
+expr|struct
+name|objdump_disasm_info
+operator|*
+operator|)
+name|info
+operator|->
+name|application_data
+decl_stmt|;
+name|bfd_sprintf_vma
 argument_list|(
+name|aux
+operator|->
+name|abfd
+argument_list|,
 name|buf
 argument_list|,
 name|vma
@@ -5432,99 +5491,61 @@ begin_comment
 comment|/* sprintf to a "stream" */
 end_comment
 
-begin_function
+begin_decl_stmt
 specifier|static
 name|int
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
 name|objdump_sprintf
-parameter_list|(
+name|VPARAMS
+argument_list|(
+operator|(
 name|SFILE
-modifier|*
+operator|*
 name|f
-parameter_list|,
+operator|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|format
-parameter_list|,
-modifier|...
-parameter_list|)
-else|#
-directive|else
-function|objdump_sprintf
-parameter_list|(
-name|va_alist
-parameter_list|)
-function|va_dcl
-endif|#
-directive|endif
+operator|,
+operator|...
+operator|)
+argument_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|ANSI_PROTOTYPES
-name|SFILE
-modifier|*
-name|f
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|format
-decl_stmt|;
-endif|#
-directive|endif
 name|char
 modifier|*
 name|buf
 decl_stmt|;
-name|va_list
-name|args
-decl_stmt|;
 name|size_t
 name|n
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
-name|va_start
+name|VA_OPEN
 argument_list|(
 name|args
 argument_list|,
 name|format
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|va_start
-argument_list|(
-name|args
-argument_list|)
-expr_stmt|;
-name|f
-operator|=
-name|va_arg
+name|VA_FIXEDARG
 argument_list|(
 name|args
 argument_list|,
 name|SFILE
 operator|*
+argument_list|,
+name|f
 argument_list|)
 expr_stmt|;
-name|format
-operator|=
-name|va_arg
+name|VA_FIXEDARG
 argument_list|(
 name|args
 argument_list|,
 specifier|const
 name|char
 operator|*
+argument_list|,
+name|format
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|vasprintf
 argument_list|(
 operator|&
@@ -5535,11 +5556,6 @@ argument_list|,
 name|args
 argument_list|)
 expr_stmt|;
-name|va_end
-argument_list|(
-name|args
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|buf
@@ -5547,6 +5563,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|va_end
+argument_list|(
+name|args
+argument_list|)
+expr_stmt|;
 name|fatal
 argument_list|(
 name|_
@@ -5665,15 +5686,26 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+name|VA_CLOSE
+argument_list|(
+name|args
+argument_list|)
+expr_stmt|;
 return|return
 name|n
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* The number of zeroes we want to see before we start skipping them.    The number is arbitrarily chosen.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SKIP_ZEROES
+end_ifndef
 
 begin_define
 define|#
@@ -5682,9 +5714,20 @@ name|SKIP_ZEROES
 value|(8)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* The number of zeroes to skip at the end of a section.  If the    number of zeroes at the end is between SKIP_ZEROES_AT_END and    SKIP_ZEROES, they will be disassembled.  If there are fewer than    SKIP_ZEROES_AT_END, they will be skipped.  This is a heuristic    attempt to avoid disassembling zeroes inserted by section    alignment.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SKIP_ZEROES_AT_END
+end_ifndef
 
 begin_define
 define|#
@@ -5692,6 +5735,11 @@ directive|define
 name|SKIP_ZEROES_AT_END
 value|(3)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Disassemble some data in memory between given values.  */
@@ -5830,10 +5878,15 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-name|sprintf_vma
+name|bfd_sprintf_vma
 argument_list|(
+name|aux
+operator|->
+name|abfd
+argument_list|,
 name|buf
 argument_list|,
+operator|(
 name|section
 operator|->
 name|vma
@@ -5848,6 +5901,7 @@ name|section
 argument_list|)
 operator|/
 name|opb
+operator|)
 argument_list|)
 expr_stmt|;
 name|s
@@ -6083,6 +6137,7 @@ name|with_line_numbers
 operator|||
 name|with_source_code
 condition|)
+comment|/* The line number tables will refer to unadjusted 	       section VMAs, so we must undo any VMA modifications 	       when calling show_line.  */
 name|show_line
 argument_list|(
 name|aux
@@ -6092,6 +6147,8 @@ argument_list|,
 name|section
 argument_list|,
 name|addr_offset
+operator|-
+name|adjust_section_vma
 argument_list|)
 expr_stmt|;
 if|if
@@ -6104,8 +6161,12 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-name|sprintf_vma
+name|bfd_sprintf_vma
 argument_list|(
+name|aux
+operator|->
+name|abfd
+argument_list|,
 name|buf
 argument_list|,
 name|section
@@ -6434,7 +6495,7 @@ control|)
 block|{
 if|if
 condition|(
-name|isprint
+name|ISPRINT
 argument_list|(
 name|data
 index|[
@@ -6772,8 +6833,12 @@ name|opb
 operator|+
 name|pb
 expr_stmt|;
-name|sprintf_vma
+name|bfd_sprintf_vma
 argument_list|(
+name|aux
+operator|->
+name|abfd
+argument_list|,
 name|buf
 argument_list|,
 name|section
@@ -8007,6 +8072,12 @@ name|buffer_length
 operator|=
 name|datasize
 expr_stmt|;
+name|disasm_info
+operator|.
+name|section
+operator|=
+name|section
+expr_stmt|;
 if|if
 condition|(
 name|start_address
@@ -9204,8 +9275,10 @@ argument_list|,
 name|desc
 argument_list|)
 expr_stmt|;
-name|printf_vma
+name|bfd_printf_vma
 argument_list|(
+name|abfd
+argument_list|,
 name|value
 argument_list|)
 expr_stmt|;
@@ -9359,12 +9432,8 @@ index|]
 operator|==
 literal|'\000'
 operator|||
-name|isdigit
+name|ISDIGIT
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 name|s
 operator|->
 name|name
@@ -9557,8 +9626,10 @@ literal|"\nstart address 0x"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf_vma
+name|bfd_printf_vma
 argument_list|(
+name|abfd
+argument_list|,
 name|abfd
 operator|->
 name|start_address
@@ -10644,7 +10715,7 @@ name|printf
 argument_list|(
 literal|"%c"
 argument_list|,
-name|isprint
+name|ISPRINT
 argument_list|(
 name|data
 index|[
@@ -11405,8 +11476,10 @@ index|[
 literal|30
 index|]
 decl_stmt|;
-name|sprintf_vma
+name|bfd_sprintf_vma
 argument_list|(
+name|abfd
+argument_list|,
 name|buf
 argument_list|,
 operator|(
@@ -11757,8 +11830,10 @@ condition|(
 name|sym_name
 condition|)
 block|{
-name|printf_vma
+name|bfd_printf_vma
 argument_list|(
+name|abfd
+argument_list|,
 name|q
 operator|->
 name|address
@@ -11830,8 +11905,10 @@ name|section_name
 operator|=
 literal|"*unknown*"
 expr_stmt|;
-name|printf_vma
+name|bfd_printf_vma
 argument_list|(
+name|abfd
+argument_list|,
 name|q
 operator|->
 name|address
@@ -11863,8 +11940,10 @@ argument_list|(
 literal|"+0x"
 argument_list|)
 expr_stmt|;
-name|printf_vma
+name|bfd_printf_vma
 argument_list|(
+name|abfd
+argument_list|,
 name|q
 operator|->
 name|addend
@@ -12665,7 +12744,7 @@ argument_list|(
 literal|"BFD header file version %s\n"
 argument_list|)
 argument_list|,
-name|BFD_VERSION
+name|BFD_VERSION_STRING
 argument_list|)
 expr_stmt|;
 name|display_target_list
@@ -12676,6 +12755,22 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
+
+begin_decl_stmt
+name|int
+decl|main
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int
@@ -12728,6 +12823,21 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SETLOCALE
+argument_list|)
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|bindtextdomain
 argument_list|(
 name|PACKAGE
@@ -12774,7 +12884,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"pib:m:M:VCdDlfahHrRtTxsSj:wE:zgG"
+literal|"pib:m:M:VvCdDlfaHhrRtTxsSj:wE:zgG"
 argument_list|,
 name|long_options
 argument_list|,
@@ -12798,7 +12908,7 @@ case|case
 literal|0
 case|:
 break|break;
-comment|/* we've been given a long option */
+comment|/* We've been given a long option.  */
 case|case
 literal|'m'
 case|:
@@ -13294,6 +13404,9 @@ name|seenflag
 operator|=
 name|true
 expr_stmt|;
+case|case
+literal|'v'
+case|:
 case|case
 literal|'V'
 case|:

@@ -3,6 +3,10 @@ begin_comment
 comment|/* xstrerror.c -- jacket routine for more robust strerror() usage.    Fri Jun 16 18:30:00 1995  Pat Rankin<rankin@eql.caltech.edu>    This code is in the public domain.  */
 end_comment
 
+begin_comment
+comment|/*  @deftypefn Replacement char* xstrerror (int @var{errnum})  Behaves exactly like the standard @code{strerror} function, but will never return a @code{NULL} pointer.  @end deftypefn  */
+end_comment
+
 begin_include
 include|#
 directive|include

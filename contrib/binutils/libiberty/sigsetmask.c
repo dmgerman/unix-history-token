@@ -4,7 +4,7 @@ comment|/* Version of sigsetmask.c    Written by Steve Chamberlain (sac@cygnus.c
 end_comment
 
 begin_comment
-comment|/* Set the current signal mask to the set provided, and return the     previous value */
+comment|/*  @deftypefn Supplemental int sigsetmask (int @var{set})  Sets the signal mask to the one provided in @var{set} and returns the old mask (which, for libiberty's implementation, will always be the value @code{1}).  @end deftypefn  */
 end_comment
 
 begin_define

@@ -278,6 +278,23 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|wildcard_list
+block|{
+name|struct
+name|wildcard_list
+modifier|*
+name|next
+decl_stmt|;
+name|struct
+name|wildcard_spec
+name|spec
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* Extra information we hold on sections */
 end_comment
@@ -369,6 +386,10 @@ comment|/* 1 => assign space to common symbols even if `relocatable_output'.  */
 name|boolean
 name|force_common_definition
 decl_stmt|;
+comment|/* 1 => do not assign addresses to common symbols. */
+name|boolean
+name|inhibit_common_definition
+decl_stmt|;
 name|boolean
 name|relax
 decl_stmt|;
@@ -405,10 +426,6 @@ name|ENDIAN_LITTLE
 block|}
 name|endian
 enum|;
-comment|/* If true, export all symbols in the dynamic symbol table of an ELF      executable.  */
-name|boolean
-name|export_dynamic
-decl_stmt|;
 comment|/* If true, build MIPS embedded PIC relocation tables in the output      file.  */
 name|boolean
 name|embedded_relocs
@@ -514,6 +531,10 @@ comment|/* If true, warn if the starting address of an output section      chang
 name|boolean
 name|warn_section_align
 decl_stmt|;
+comment|/* If true, warning messages are fatal */
+name|boolean
+name|fatal_warnings
+decl_stmt|;
 name|boolean
 name|sort_common
 decl_stmt|;
@@ -541,6 +562,10 @@ name|split_by_reloc
 decl_stmt|;
 name|bfd_size_type
 name|split_by_file
+decl_stmt|;
+comment|/* If set, only search library directories explicitly selected      on the command line.  */
+name|boolean
+name|only_cmd_line_lib_dirs
 decl_stmt|;
 block|}
 name|ld_config_type
@@ -570,8 +595,9 @@ end_typedef
 
 begin_decl_stmt
 specifier|extern
-name|boolean
-name|had_script
+name|FILE
+modifier|*
+name|saved_script_handle
 decl_stmt|;
 end_decl_stmt
 

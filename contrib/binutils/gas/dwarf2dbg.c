@@ -1088,6 +1088,22 @@ name|line_entry
 modifier|*
 name|e
 decl_stmt|;
+specifier|static
+name|unsigned
+name|int
+name|line
+init|=
+operator|-
+literal|1
+decl_stmt|;
+specifier|static
+name|unsigned
+name|int
+name|filenum
+init|=
+operator|-
+literal|1
+decl_stmt|;
 comment|/* Early out for as-yet incomplete location information.  */
 if|if
 condition|(
@@ -1104,6 +1120,34 @@ operator|==
 literal|0
 condition|)
 return|return;
+comment|/* Don't emit sequences of line symbols for the same line. */
+if|if
+condition|(
+name|line
+operator|==
+name|loc
+operator|->
+name|line
+operator|&&
+name|filenum
+operator|==
+name|loc
+operator|->
+name|filenum
+condition|)
+return|return;
+name|line
+operator|=
+name|loc
+operator|->
+name|line
+expr_stmt|;
+name|filenum
+operator|=
+name|loc
+operator|->
+name|filenum
+expr_stmt|;
 name|e
 operator|=
 operator|(
@@ -1547,7 +1591,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"File number less than one"
+literal|"file number less than one"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1557,6 +1601,9 @@ if|if
 condition|(
 name|num
 operator|<
+operator|(
+name|int
+operator|)
 name|files_in_use
 operator|&&
 name|files
@@ -1573,7 +1620,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"File number %ld already allocated"
+literal|"file number %ld already allocated"
 argument_list|)
 argument_list|,
 operator|(
@@ -1735,7 +1782,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"File number less than one"
+literal|"file number less than one"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1764,7 +1811,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Unassigned file number %ld"
+literal|"unassigned file number %ld"
 argument_list|)
 argument_list|,
 operator|(
@@ -2273,7 +2320,21 @@ operator|==
 name|frag
 condition|)
 block|{
+name|long
+name|align_mask
+init|=
+operator|-
+literal|1
+operator|<<
+name|get_recorded_alignment
+argument_list|(
+name|fr
+operator|->
+name|frch_seg
+argument_list|)
+decl_stmt|;
 return|return
+operator|(
 operator|(
 operator|(
 name|char
@@ -2291,6 +2352,12 @@ name|frag
 operator|->
 name|fr_literal
 operator|)
+operator|+
+operator|~
+name|align_mask
+operator|)
+operator|&
+name|align_mask
 return|;
 block|}
 name|abort
@@ -3137,8 +3204,6 @@ argument_list|(
 name|frag
 operator|->
 name|fr_symbol
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|size
@@ -3230,8 +3295,6 @@ argument_list|(
 name|frag
 operator|->
 name|fr_symbol
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/* fr_var carries the max_chars that we created the fragment with.      fr_subtype carries the current expected length.  We must, of      course, have allocated enough memory earlier.  */
@@ -3763,9 +3826,12 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Unassigned file number %u"
+literal|"unassigned file number %ld"
 argument_list|)
 argument_list|,
+operator|(
+name|long
+operator|)
 name|i
 argument_list|)
 expr_stmt|;
@@ -4941,6 +5007,10 @@ condition|(
 name|all_segs
 operator|==
 name|NULL
+operator|&&
+name|files_in_use
+operator|<=
+literal|1
 condition|)
 return|return;
 comment|/* Calculate the size of an address for the target machine.  */
@@ -5043,6 +5113,10 @@ expr_stmt|;
 comment|/* If this is assembler generated line info, we need .debug_info      and .debug_abbrev sections as well.  */
 if|if
 condition|(
+name|all_segs
+operator|!=
+name|NULL
+operator|&&
 name|debug_type
 operator|==
 name|DEBUG_DWARF2

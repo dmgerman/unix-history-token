@@ -304,69 +304,8 @@ comment|/* PC relative 64 bit */
 end_comment
 
 begin_comment
-comment|/* Inherited these from ECOFF, but they are not particularly useful    and are depreciated.  And not implemented in the BFD, btw.  */
+comment|/* Skip 12 - 16; deprecated ECOFF relocs.  */
 end_comment
-
-begin_macro
-name|RELOC_NUMBER
-argument_list|(
-argument|R_ALPHA_OP_PUSH
-argument_list|,
-literal|12
-argument_list|)
-end_macro
-
-begin_comment
-comment|/* OP stack push */
-end_comment
-
-begin_macro
-name|RELOC_NUMBER
-argument_list|(
-argument|R_ALPHA_OP_STORE
-argument_list|,
-literal|13
-argument_list|)
-end_macro
-
-begin_comment
-comment|/* OP stack pop and store */
-end_comment
-
-begin_macro
-name|RELOC_NUMBER
-argument_list|(
-argument|R_ALPHA_OP_PSUB
-argument_list|,
-literal|14
-argument_list|)
-end_macro
-
-begin_comment
-comment|/* OP stack subtract */
-end_comment
-
-begin_macro
-name|RELOC_NUMBER
-argument_list|(
-argument|R_ALPHA_OP_PRSHIFT
-argument_list|,
-literal|15
-argument_list|)
-end_macro
-
-begin_comment
-comment|/* OP stack right shift */
-end_comment
-
-begin_macro
-name|RELOC_NUMBER
-argument_list|(
-argument|R_ALPHA_GPVALUE
-argument_list|,
-literal|16
-argument_list|)
-end_macro
 
 begin_macro
 name|RELOC_NUMBER
@@ -377,6 +316,10 @@ literal|17
 argument_list|)
 end_macro
 
+begin_comment
+comment|/* GP relative 32 bit, high 16 bits */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -386,50 +329,26 @@ literal|18
 argument_list|)
 end_macro
 
+begin_comment
+comment|/* GP relative 32 bit, low 16 bits */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
-argument|R_ALPHA_IMMED_GP_16
+argument|R_ALPHA_GPREL16
 argument_list|,
 literal|19
 argument_list|)
 end_macro
 
-begin_macro
-name|RELOC_NUMBER
-argument_list|(
-argument|R_ALPHA_IMMED_GP_HI32
-argument_list|,
-literal|20
-argument_list|)
-end_macro
+begin_comment
+comment|/* GP relative 16 bit */
+end_comment
 
-begin_macro
-name|RELOC_NUMBER
-argument_list|(
-argument|R_ALPHA_IMMED_SCN_HI32
-argument_list|,
-literal|21
-argument_list|)
-end_macro
-
-begin_macro
-name|RELOC_NUMBER
-argument_list|(
-argument|R_ALPHA_IMMED_BR_HI32
-argument_list|,
-literal|22
-argument_list|)
-end_macro
-
-begin_macro
-name|RELOC_NUMBER
-argument_list|(
-argument|R_ALPHA_IMMED_LO32
-argument_list|,
-literal|23
-argument_list|)
-end_macro
+begin_comment
+comment|/* Skip 20 - 23; deprecated ECOFF relocs.  */
+end_comment
 
 begin_comment
 comment|/* These relocations are specific to shared libraries.  */

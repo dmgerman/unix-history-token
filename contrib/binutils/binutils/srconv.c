@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* srconv.c -- Sysroff conversion program    Copyright 1994, 1995, 1996, 1998, 1999, 2000    Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* srconv.c -- Sysroff conversion program    Copyright 1994, 1995, 1996, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -55,13 +55,6 @@ directive|include
 file|"../bfd/libcoff.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|PROGRAM_VERSION
-value|"1.5"
-end_define
-
 begin_comment
 comment|/*#define FOOP1 1 */
 end_comment
@@ -90,37 +83,782 @@ name|rnames
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+specifier|static
+name|int
+name|get_member_id
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|get_ordinary_id
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|section_translate
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|strip_suffix
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
-name|wr_cs
-parameter_list|()
-function_decl|;
-end_function_decl
+name|checksum
+name|PARAMS
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+specifier|static
+name|void
+name|writeINT
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|int
+operator|,
+name|FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|writeBITS
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|writeBARRAY
+name|PARAMS
+argument_list|(
+operator|(
+name|barray
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|int
+operator|,
+name|FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|writeCHARS
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|int
+operator|,
+name|FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|wr_tr
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|wr_un
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|coff_ofile
+operator|*
+operator|,
+expr|struct
+name|coff_sfile
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|wr_hd
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|coff_ofile
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|wr_sh
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|coff_ofile
+operator|*
+operator|,
+expr|struct
+name|coff_section
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|wr_ob
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|coff_ofile
+operator|*
+operator|,
+expr|struct
+name|coff_section
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|wr_rl
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|coff_ofile
+operator|*
+operator|,
+expr|struct
+name|coff_section
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|wr_object_body
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|coff_ofile
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|wr_dps_start
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|coff_sfile
+operator|*
+operator|,
+expr|struct
+name|coff_section
+operator|*
+operator|,
+expr|struct
+name|coff_scope
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|wr_dps_end
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|coff_section
+operator|*
+operator|,
+expr|struct
+name|coff_scope
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+modifier|*
+name|nints
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|walk_tree_type_1
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|coff_sfile
+operator|*
+operator|,
+expr|struct
+name|coff_symbol
+operator|*
+operator|,
+expr|struct
+name|coff_type
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|walk_tree_type
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|coff_sfile
+operator|*
+operator|,
+expr|struct
+name|coff_symbol
+operator|*
+operator|,
+expr|struct
+name|coff_type
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|walk_tree_symbol
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|coff_sfile
+operator|*
+operator|,
+expr|struct
+name|coff_section
+operator|*
+operator|,
+expr|struct
+name|coff_symbol
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|walk_tree_scope
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|coff_section
+operator|*
+operator|,
+expr|struct
+name|coff_sfile
+operator|*
+operator|,
+expr|struct
+name|coff_scope
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
-name|wr_globals
-parameter_list|()
-function_decl|;
-end_function_decl
+name|walk_tree_sfile
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|coff_section
+operator|*
+operator|,
+expr|struct
+name|coff_sfile
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+specifier|static
+name|void
+name|wr_program_structure
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|coff_ofile
+operator|*
+operator|,
+expr|struct
+name|coff_sfile
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|wr_du
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|coff_ofile
+operator|*
+operator|,
+expr|struct
+name|coff_sfile
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|wr_dus
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|coff_ofile
+operator|*
+operator|,
+expr|struct
+name|coff_sfile
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|int
 name|find_base
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|coff_sfile
+operator|*
+operator|,
+expr|struct
+name|coff_section
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|wr_dln
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|coff_ofile
+operator|*
+operator|,
+expr|struct
+name|coff_sfile
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|wr_globals
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|coff_ofile
+operator|*
+operator|,
+expr|struct
+name|coff_sfile
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|wr_debug
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|coff_ofile
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|wr_cs
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|wr_sc
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|coff_ofile
+operator|*
+operator|,
+expr|struct
+name|coff_sfile
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|wr_er
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|coff_ofile
+operator|*
+operator|,
+expr|struct
+name|coff_sfile
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|wr_ed
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|coff_ofile
+operator|*
+operator|,
+expr|struct
+name|coff_sfile
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|wr_unit_info
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|coff_ofile
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|wr_module
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|coff_ofile
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|align
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|prescan
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|coff_ofile
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|show_usage
+name|PARAMS
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+decl|main
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -248,14 +986,12 @@ index|[
 name|x
 index|]
 condition|)
-block|{
 return|return
 name|ids2
 index|[
 name|x
 index|]
 return|;
-block|}
 name|ids2
 index|[
 name|x
@@ -291,14 +1027,12 @@ index|[
 name|x
 index|]
 condition|)
-block|{
 return|return
 name|ids1
 index|[
 name|x
 index|]
 return|;
-block|}
 name|ids1
 index|[
 name|x
@@ -572,7 +1306,6 @@ condition|;
 name|j
 operator|++
 control|)
-block|{
 name|sum
 operator|+=
 name|ptr
@@ -580,8 +1313,7 @@ index|[
 name|j
 index|]
 expr_stmt|;
-block|}
-comment|/* Glue on a checksum too */
+comment|/* Glue on a checksum too.  */
 name|ptr
 index|[
 name|bytes
@@ -678,7 +1410,7 @@ operator|>
 literal|240
 condition|)
 block|{
-comment|/* Lets write out that record and do another one */
+comment|/* Lets write out that record and do another one.  */
 name|checksum
 argument_list|(
 name|file
@@ -872,7 +1604,7 @@ index|[
 name|byte
 index|]
 expr_stmt|;
-comment|/* Turn off all about to change bits */
+comment|/* Turn off all about to change bits.  */
 name|old
 operator|&=
 operator|~
@@ -901,7 +1633,7 @@ literal|1
 operator|)
 operator|)
 expr_stmt|;
-comment|/* Turn on the bits we want */
+comment|/* Turn on the bits we want.  */
 name|old
 operator||=
 operator|(
@@ -1004,7 +1736,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|writeINT
 argument_list|(
 name|data
@@ -1023,7 +1754,6 @@ argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1077,7 +1807,7 @@ operator|>
 literal|240
 condition|)
 block|{
-comment|/* Lets write out that record and do another one */
+comment|/* Lets write out that record and do another one.  */
 name|checksum
 argument_list|(
 name|file
@@ -1112,7 +1842,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Variable length string */
+comment|/* Variable length string.  */
 name|size
 operator|=
 name|strlen
@@ -1129,7 +1859,7 @@ operator|=
 name|size
 expr_stmt|;
 block|}
-comment|/* BUG WAITING TO HAPPEN */
+comment|/* BUG WAITING TO HAPPEN.  */
 name|memcpy
 argument_list|(
 name|ptr
@@ -1247,7 +1977,7 @@ name|void
 name|wr_tr
 parameter_list|()
 block|{
-comment|/* The TR block is not normal - it doesn't have any contents. */
+comment|/* The TR block is not normal - it doesn't have any contents.  */
 specifier|static
 name|char
 name|b
@@ -1369,10 +2099,10 @@ name|nsections
 operator|-
 literal|1
 expr_stmt|;
-comment|/*  Don't count the abs section */
+comment|/*  Don't count the abs section.  */
 else|#
 directive|else
-comment|/*NEW - only count sections with size */
+comment|/*NEW - only count sections with size.  */
 name|un
 operator|.
 name|nsections
@@ -1393,7 +2123,7 @@ name|nextrefs
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Count all the undefined and defined variables with global scope */
+comment|/* Count all the undefined and defined variables with global scope.  */
 if|if
 condition|(
 name|first
@@ -1531,23 +2261,19 @@ argument_list|)
 operator|&
 name|EXEC_P
 condition|)
-block|{
 name|hd
 operator|.
 name|mt
 operator|=
 name|MTYPE_ABS_LM
 expr_stmt|;
-block|}
 else|else
-block|{
 name|hd
 operator|.
 name|mt
 operator|=
 name|MTYPE_OMS_OR_LMS
 expr_stmt|;
-block|}
 name|hd
 operator|.
 name|cd
@@ -1981,7 +2707,7 @@ name|todo
 init|=
 literal|200
 decl_stmt|;
-comment|/* Copy in 200 byte lumps */
+comment|/* Copy in 200 byte lumps.  */
 name|ob
 operator|.
 name|spare
@@ -2065,7 +2791,7 @@ name|cpf
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Never compress */
+comment|/* Never compress.  */
 name|ob
 operator|.
 name|data
@@ -2111,7 +2837,7 @@ operator|+=
 name|todo
 expr_stmt|;
 block|}
-comment|/* Now fill the rest with blanks */
+comment|/* Now fill the rest with blanks.  */
 while|while
 condition|(
 name|i
@@ -2133,7 +2859,7 @@ name|todo
 init|=
 literal|200
 decl_stmt|;
-comment|/* Copy in 200 byte lumps */
+comment|/* Copy in 200 byte lumps.  */
 name|ob
 operator|.
 name|spare
@@ -2173,7 +2899,7 @@ name|cpf
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Never compress */
+comment|/* Never compress.  */
 name|ob
 operator|.
 name|data
@@ -2212,7 +2938,7 @@ operator|+=
 name|todo
 expr_stmt|;
 block|}
-comment|/* Now fill the rest with blanks */
+comment|/* Now fill the rest with blanks.  */
 block|}
 end_function
 
@@ -2331,8 +3057,8 @@ name|flen
 operator|=
 literal|32
 expr_stmt|;
-comment|/* SH Specific */
-comment|/* What sort of reloc ? Look in the section to find out */
+comment|/* SH Specific.  */
+comment|/* What sort of reloc ? Look in the section to find out.  */
 name|ref
 operator|=
 name|r
@@ -2356,7 +3082,7 @@ name|bcount
 operator|=
 literal|4
 expr_stmt|;
-comment|/* Always 4 for us */
+comment|/* Always 4 for us.  */
 name|rl
 operator|.
 name|op
@@ -2390,7 +3116,7 @@ name|bcount
 operator|=
 literal|11
 expr_stmt|;
-comment|/* Always 11 for us */
+comment|/* Always 11 for us.  */
 name|rl
 operator|.
 name|op
@@ -2454,7 +3180,7 @@ name|bcount
 operator|=
 literal|11
 expr_stmt|;
-comment|/* Always 11 for us */
+comment|/* Always 11 for us.  */
 name|rl
 operator|.
 name|op
@@ -2525,7 +3251,6 @@ name|op
 operator|==
 name|OP_EXT_REF
 condition|)
-block|{
 name|sysroff_swap_rl_out
 argument_list|(
 name|file
@@ -2534,7 +3259,6 @@ operator|&
 name|rl
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 end_function
@@ -2861,14 +3585,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_function_decl
-specifier|static
-name|void
-name|walk_tree_symbol
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function
 specifier|static
@@ -3264,7 +3980,6 @@ name|param
 operator|->
 name|next
 control|)
-block|{
 name|walk_tree_symbol
 argument_list|(
 name|sfile
@@ -3276,7 +3991,6 @@ argument_list|,
 name|nest
 argument_list|)
 expr_stmt|;
-block|}
 name|dfp
 operator|.
 name|end
@@ -3413,7 +4127,6 @@ name|member
 operator|->
 name|next
 control|)
-block|{
 name|walk_tree_symbol
 argument_list|(
 name|sfile
@@ -3427,7 +4140,6 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 name|dds
 operator|.
 name|end
@@ -3488,7 +4200,6 @@ name|astructref
 operator|.
 name|ref
 condition|)
-block|{
 name|dbt
 operator|.
 name|sid
@@ -3506,16 +4217,13 @@ operator|->
 name|number
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|dbt
 operator|.
 name|sid
 operator|=
 literal|0
 expr_stmt|;
-block|}
 name|dbt
 operator|.
 name|neg
@@ -3548,7 +4256,7 @@ name|dims
 init|=
 literal|1
 decl_stmt|;
-comment|/* Only output one dimension at a time */
+comment|/* Only output one dimension at a time.  */
 name|dar
 operator|.
 name|dims
@@ -3892,7 +4600,6 @@ name|member
 operator|->
 name|next
 control|)
-block|{
 name|walk_tree_symbol
 argument_list|(
 name|sfile
@@ -3906,7 +4613,6 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 name|den
 operator|.
 name|end
@@ -3922,7 +4628,6 @@ name|den
 argument_list|)
 expr_stmt|;
 block|}
-break|break;
 break|break;
 case|case
 name|coff_enumref_type
@@ -4951,7 +5656,7 @@ block|{
 case|case
 name|coff_vis_common
 case|:
-comment|/* We do this 'cause common C symbols are treated as extdefs */
+comment|/* We do this 'cause common C symbols are treated as extdefs.  */
 case|case
 name|coff_vis_ext_def
 case|:
@@ -5158,7 +5863,6 @@ name|vars
 operator|->
 name|next
 control|)
-block|{
 name|walk_tree_symbol
 argument_list|(
 name|sfile
@@ -5170,7 +5874,6 @@ argument_list|,
 name|nest
 argument_list|)
 expr_stmt|;
-block|}
 for|for
 control|(
 name|child
@@ -5187,7 +5890,6 @@ name|child
 operator|->
 name|next
 control|)
-block|{
 name|walk_tree_scope
 argument_list|(
 name|section
@@ -5203,7 +5905,6 @@ argument_list|,
 name|BLOCK_TYPE_BLOCK
 argument_list|)
 expr_stmt|;
-block|}
 name|wr_dps_end
 argument_list|(
 name|section
@@ -5488,11 +6189,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* Look through all the symbols and try and work out the extents in this      source file */
+comment|/* Look through all the symbols and try and work out the extents in this      source file.  */
 if|#
 directive|if
 literal|0
-block|for (symbol = sfile->scope->vars_head;        symbol;        symbol = symbol->next)     {       if (symbol->type->type == coff_secdef_type) 	{ 	  unsigned int low = symbol->where->offset; 	  unsigned int high = symbol->where->offset + symbol->type->size - 1; 	  struct coff_section *section = symbol->where->section;  	  int sn = section->number; 	  if (low< lowest[sn]) 	    lowest[sn] = low; 	  if (high> highest[sn]) 	    highest[sn] = high; 	}     }     for (i = 0; i< du.sections; i++)     {       if (highest[i] == 0) 	{ 	  lowest[i] = highest[i] = incit; 	}       du.san[used] = i;       du.length[used] = highest[i] - lowest[i];       du.address[used] = bfd_get_file_flags (abfd)& EXEC_P ? lowest[i] : 0;       if (debug) 	{ 	  printf (" section %6s 0x%08x..0x%08x\n", 		  p->sections[i + 1].name, 		  lowest[i], 		  highest[i]); 	}       used++;     }
+block|for (symbol = sfile->scope->vars_head;        symbol;        symbol = symbol->next)     {       if (symbol->type->type == coff_secdef_type) 	{ 	  unsigned int low = symbol->where->offset; 	  unsigned int high = symbol->where->offset + symbol->type->size - 1; 	  struct coff_section *section = symbol->where->section;  	  int sn = section->number; 	  if (low< lowest[sn]) 	    lowest[sn] = low; 	  if (high> highest[sn]) 	    highest[sn] = high; 	}     }    for (i = 0; i< du.sections; i++)     {       if (highest[i] == 0) 	lowest[i] = highest[i] = incit;        du.san[used] = i;       du.length[used] = highest[i] - lowest[i];       du.address[used] = bfd_get_file_flags (abfd)& EXEC_P ? lowest[i] : 0;        if (debug) 	{ 	  printf (" section %6s 0x%08x..0x%08x\n", 		  p->sections[i + 1].name, 		  lowest[i], 		  highest[i]); 	}       used++;     }
 endif|#
 directive|endif
 name|lim
@@ -5789,7 +6490,7 @@ name|ndir
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Find the filenames */
+comment|/* Find the filenames.  */
 if|#
 directive|if
 literal|0
@@ -5830,7 +6531,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Find the offset of the .text section for this sfile in the    .text section for the output file */
+comment|/* Find the offset of the .text section for this sfile in the    .text section for the output file.  */
 end_comment
 
 begin_function
@@ -6278,7 +6979,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Write the global symbols out to the debug info */
+comment|/* Write the global symbols out to the debug info.  */
 end_comment
 
 begin_function
@@ -6348,7 +7049,7 @@ operator|==
 name|coff_vis_ext_ref
 condition|)
 block|{
-comment|/* Only write out symbols if they belong to 	     the current source file */
+comment|/* Only write out symbols if they belong to 	     the current source file.  */
 if|if
 condition|(
 name|sy
@@ -6417,7 +7118,6 @@ if|if
 condition|(
 name|debug
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"%s\n"
@@ -6427,7 +7127,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 name|wr_du
 argument_list|(
 name|p
@@ -6473,7 +7172,7 @@ name|void
 name|wr_cs
 parameter_list|()
 block|{
-comment|/* It seems that the CS struct is not normal - the size is wrong      heres one I prepared earlier.. */
+comment|/* It seems that the CS struct is not normal - the size is wrong      heres one I prepared earlier.  */
 specifier|static
 name|char
 name|b
@@ -6598,7 +7297,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Write out the SC records for a unit.  Create an SC    for all the sections which appear in the output file, even    if there isn't an equivalent one on the input */
+comment|/* Write out the SC records for a unit.  Create an SC    for all the sections which appear in the output file, even    if there isn't an equivalent one on the input.  */
 end_comment
 
 begin_function
@@ -6629,7 +7328,7 @@ name|scount
 init|=
 literal|0
 decl_stmt|;
-comment|/* First work out the total number of sections */
+comment|/* First work out the total number of sections.  */
 name|int
 name|total_sec
 init|=
@@ -6789,7 +7488,7 @@ block|}
 block|}
 block|}
 block|}
-comment|/* Now output all the section info, and fake up some stuff for sections      we don't have */
+comment|/* Now output all the section info, and fake up some stuff for sections      we don't have.  */
 for|for
 control|(
 name|i
@@ -6839,7 +7538,7 @@ operator|!
 name|symbol
 condition|)
 block|{
-comment|/* Don't have a symbol set aside for this section, which means that nothing 	     in this file does anything for the section. */
+comment|/* Don't have a symbol set aside for this section, which means 	     that nothing in this file does anything for the section.  */
 name|sc
 operator|.
 name|format
@@ -6999,7 +7698,7 @@ name|spare1
 operator|=
 literal|0
 expr_stmt|;
-comment|/* If not zero, then it doesn't work */
+comment|/* If not zero, then it doesn't work.  */
 name|sc
 operator|.
 name|name
@@ -7066,7 +7765,7 @@ if|#
 directive|if
 literal|0
 comment|/* NEW */
-block|if (sc.length) {
+block|if (sc.length) 	{
 endif|#
 directive|endif
 name|sysroff_swap_sc_out
@@ -7094,7 +7793,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Write out the ER records for a unit. */
+comment|/* Write out the ER records for a unit.  */
 end_comment
 
 begin_function
@@ -7212,7 +7911,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Write out the ED records for a unit. */
+comment|/* Write out the ED records for a unit.  */
 end_comment
 
 begin_function
@@ -7608,7 +8307,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Find all the common variables and turn them into    ordinary defs - dunno why, but thats what hitachi does with 'em */
+comment|/* Find all the common variables and turn them into    ordinary defs - dunno why, but thats what hitachi does with 'em.  */
 end_comment
 
 begin_function
@@ -7634,7 +8333,7 @@ name|coff_section
 modifier|*
 name|common_section
 decl_stmt|;
-comment|/* Find the common section - always section 3 */
+comment|/* Find the common section - always section 3.  */
 name|common_section
 operator|=
 name|tree
@@ -7766,41 +8465,53 @@ name|file
 argument_list|,
 name|_
 argument_list|(
-literal|"Usage: %s [-dhVq] in-file [out-file]\n"
+literal|"Usage: %s [option(s)] in-file [out-file]\n"
 argument_list|)
 argument_list|,
 name|program_name
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+name|_
+argument_list|(
+literal|"Convert a COFF object file into a SYSROFF object file\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+name|_
+argument_list|(
+literal|" The options are:\n\   -q --quick       (Obsolete - ignoerd)\n\   -n --noprescan   Do not perform a scan to convert commons into defs\n\   -d --debug       Display information about what is being done\n\   -h --help        Display this information\n\   -v --version     Print the program's version number\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|status
+operator|==
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+name|_
+argument_list|(
+literal|"Report bugs to %s\n"
+argument_list|)
+argument_list|,
+name|REPORT_BUGS_TO
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
 name|status
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|show_help
-parameter_list|()
-block|{
-name|printf
-argument_list|(
-name|_
-argument_list|(
-literal|"%s: Convert a COFF object file into a SYSROFF object file\n"
-argument_list|)
-argument_list|,
-name|program_name
-argument_list|)
-expr_stmt|;
-name|show_usage
-argument_list|(
-name|stdout
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -7927,6 +8638,21 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SETLOCALE
+argument_list|)
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|bindtextdomain
 argument_list|(
 name|PACKAGE
@@ -7962,7 +8688,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"dhVqn"
+literal|"dHhVvqn"
 argument_list|,
 name|long_options
 argument_list|,
@@ -8007,25 +8733,28 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'H'
+case|:
+case|case
 literal|'h'
 case|:
-name|show_help
-argument_list|()
+name|show_usage
+argument_list|(
+name|stdout
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED */
 case|case
+literal|'v'
+case|:
+case|case
 literal|'V'
 case|:
-name|printf
+name|print_version
 argument_list|(
-name|_
-argument_list|(
-literal|"GNU %s version %s\n"
-argument_list|)
-argument_list|,
-name|program_name
-argument_list|,
-name|PROGRAM_VERSION
+literal|"srconv"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -8314,7 +9043,6 @@ condition|(
 operator|!
 name|file
 condition|)
-block|{
 name|fatal
 argument_list|(
 name|_
@@ -8325,7 +9053,6 @@ argument_list|,
 name|output_file
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|debug

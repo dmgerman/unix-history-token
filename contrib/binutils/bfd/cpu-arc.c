@@ -158,6 +158,19 @@ begin_comment
 comment|/* Given cpu type NAME, return its bfd_mach_arc_xxx value.    Returns -1 if not found.  */
 end_comment
 
+begin_decl_stmt
+name|int
+name|arc_get_mach
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|arc_get_mach

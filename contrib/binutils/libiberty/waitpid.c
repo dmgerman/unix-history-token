@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  @deftypefn Supplemental int waitpid (int @var{pid}, int *@var{status}, int)  This is a wrapper around the @code{wait} function.  Any ``special'' values of @var{pid} depend on your implementation of @code{wait}, as does the return value.  The third argument is unused in @libib{}.  @end deftypefn  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef

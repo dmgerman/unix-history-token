@@ -3,6 +3,10 @@ begin_comment
 comment|/* memset    This implementation is in the public domain.  */
 end_comment
 
+begin_comment
+comment|/*  @deftypefn Supplemental void* memset (void *@var{s}, int @var{c}, size_t @var{count})  Sets the first @var{count} bytes of @var{s} to the constant byte @var{c}, returning a pointer to @var{s}.  @end deftypefn  */
+end_comment
+
 begin_include
 include|#
 directive|include

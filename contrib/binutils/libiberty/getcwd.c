@@ -4,7 +4,7 @@ comment|/* Emulate getcwd using getwd.    This function is in the public domain.
 end_comment
 
 begin_comment
-comment|/* NAME 	getcwd -- get absolute pathname for current working directory  SYNOPSIS 	char *getcwd (char pathname[len], len)  DESCRIPTION 	Copy the absolute pathname for the current working directory into 	the supplied buffer and return a pointer to the buffer.  If the  	current directory's path doesn't fit in LEN characters, the result 	is NULL and errno is set.  	If pathname is a null pointer, getcwd() will obtain size bytes of 	space using malloc.  BUGS 	Emulated via the getwd() call, which is reasonable for most 	systems that do not have getcwd().  */
+comment|/*  @deftypefn Supplemental char* getcwd (char *@var{pathname}, int @var{len})  Copy the absolute pathname for the current working directory into @var{pathname}, which is assumed to point to a buffer of at least @var{len} bytes, and return a pointer to the buffer.  If the current directory's path doesn't fit in @var{len} characters, the result is @code{NULL} and @code{errno} is set.  If @var{pathname} is a null pointer, @code{getcwd} will obtain @var{len} bytes of space using @code{malloc}.  @end deftypefn  */
 end_comment
 
 begin_include

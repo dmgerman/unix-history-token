@@ -204,20 +204,32 @@ struct|struct
 name|alpha_operand
 block|{
 comment|/* The number of bits in the operand.  */
+name|unsigned
 name|int
 name|bits
+range|:
+literal|5
 decl_stmt|;
 comment|/* How far the operand is left shifted in the instruction.  */
+name|unsigned
 name|int
 name|shift
+range|:
+literal|5
 decl_stmt|;
 comment|/* The default relocation type for this operand.  */
+name|signed
 name|int
 name|default_reloc
+range|:
+literal|16
 decl_stmt|;
 comment|/* One bit syntax flags.  */
 name|unsigned
+name|int
 name|flags
+range|:
+literal|16
 decl_stmt|;
 comment|/* Insertion function.  This is used by the assembler.  To insert an      operand value into an instruction, check this field.       If it is NULL, execute          i |= (op& ((1<< o->bits) - 1))<< o->shift;      (i is the instruction which we are filling in, o is a pointer to      this structure, and op is the opcode value; this assumes twos      complement arithmetic).       If this field is not NULL, then simply call it with the      instruction and the operand value.  It will return the new value      of the instruction.  If the ERRMSG argument is not NULL, then if      the operand value is illegal, *ERRMSG will be set to a warning      string (the operand will be inserted in any case).  If the      operand value is legal, *ERRMSG will be unchanged (most operands      can accept any value).  */
 name|unsigned
