@@ -4543,6 +4543,8 @@ name|n
 decl_stmt|;
 if|if
 condition|(
+name|witness_cold
+operator|||
 name|witness_dead
 operator|||
 name|panicstr
@@ -4554,25 +4556,9 @@ operator|(
 literal|0
 operator|)
 return|;
-name|KASSERT
-argument_list|(
-operator|!
-name|witness_cold
-argument_list|,
-operator|(
-literal|"%s: witness_cold"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
 name|n
 operator|=
 literal|0
-expr_stmt|;
-comment|/* 	 * Preemption bad because we need PCPU_PTR(spinlocks) to not change. 	 */
-name|critical_enter
-argument_list|()
 expr_stmt|;
 name|td
 operator|=
@@ -4749,8 +4735,16 @@ operator|&
 name|td
 operator|->
 name|td_sleeplocks
+operator|&&
+name|PCPU_GET
+argument_list|(
+name|spinlocks
+argument_list|)
+operator|!=
+name|NULL
 condition|)
 block|{
+comment|/* 		 * Since we already hold a spinlock preemption is 		 * already blocked. 		 */
 name|lock_list
 operator|=
 name|PCPU_PTR
@@ -4779,9 +4773,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* DDB */
-name|critical_exit
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|n
@@ -6918,12 +6909,14 @@ condition|(
 name|td
 operator|==
 name|curthread
+operator|&&
+name|PCPU_GET
+argument_list|(
+name|spinlocks
+argument_list|)
+operator|!=
+name|NULL
 condition|)
-block|{
-comment|/* 		 * Preemption bad because we need PCPU_PTR(spinlocks) to not 		 * change. 		 */
-name|critical_enter
-argument_list|()
-expr_stmt|;
 name|nheld
 operator|+=
 name|witness_list_locks
@@ -6934,10 +6927,6 @@ name|spinlocks
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|critical_exit
-argument_list|()
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|nheld
