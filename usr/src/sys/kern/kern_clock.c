@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.24	81/08/28	*/
+comment|/*	kern_clock.c	4.25	81/08/31	*/
 end_comment
 
 begin_include
@@ -740,11 +740,6 @@ block|}
 comment|/* 	 * Drain silos. 	 */
 if|#
 directive|if
-name|NBK
-operator|>
-literal|0
-if|#
-directive|if
 name|NDH
 operator|>
 literal|0
@@ -781,8 +776,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 comment|/* 	 * If idling and processes are waiting to swap in, 	 * check on them. 	 */
