@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.120 (Berkeley) %G%"
+literal|"@(#)conf.c	8.121 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1196,7 +1196,7 @@ name|seq_map_parse
 argument_list|,
 name|null_map_open
 argument_list|,
-name|seq_map_close
+name|null_map_close
 argument_list|,
 name|seq_map_lookup
 argument_list|,
@@ -1216,7 +1216,7 @@ name|map_parseargs
 argument_list|,
 name|switch_map_open
 argument_list|,
-name|seq_map_close
+name|null_map_close
 argument_list|,
 name|seq_map_lookup
 argument_list|,
