@@ -719,13 +719,21 @@ decl_stmt|;
 name|u_int32_t
 name|time
 decl_stmt|;
+name|struct
+name|timecounter
+modifier|*
+name|tc
+init|=
+name|timecounter
+decl_stmt|;
+comment|/* can change at any time */
 name|num
 operator|^=
-name|timecounter
+name|tc
 operator|->
 name|tc_get_timecount
 argument_list|(
-name|timecounter
+name|tc
 argument_list|)
 operator|<<
 literal|16
