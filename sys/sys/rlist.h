@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 William Jolitz. All rights reserved.  * Written by William Jolitz 1/92  *  * Redistribution and use in source and binary forms are freely permitted  * provided that the above copyright notice and attribution and date of work  * and this paragraph are duplicated in all such forms.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Resource lists.  *  *	Usage:  *		rlist_free(&swapmap, 100, 200);	add space to swapmap  *		rlist_alloc(&swapmap, 100,&loc); obtain 100 sectors from swap  *  *	from: unknown?  *	$Id: rlist.h,v 1.7 1994/10/09 07:35:10 davidg Exp $  */
+comment|/*  * Copyright (c) 1992 William Jolitz. All rights reserved.  * Written by William Jolitz 1/92  *  * Redistribution and use in source and binary forms are freely permitted  * provided that the above copyright notice and attribution and date of work  * and this paragraph are duplicated in all such forms.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Resource lists.  *  *	Usage:  *		rlist_free(&swapmap, 100, 200);	add space to swapmap  *		rlist_alloc(&swapmap, 100,&loc); obtain 100 sectors from swap  *  *	from: unknown?  *	$Id: rlist.h,v 1.8 1996/01/30 23:01:12 mpp Exp $  */
 end_comment
 
 begin_ifndef
@@ -41,14 +41,41 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|extern
+begin_struct
+struct|struct
+name|rlisthdr
+block|{
+name|int
+name|rlh_lock
+decl_stmt|;
+comment|/* list lock */
 name|struct
 name|rlist
 modifier|*
-name|swaplist
+name|rlh_list
 decl_stmt|;
-end_decl_stmt
+comment|/* list itself */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|RLH_DESIRED
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|RLH_LOCKED
+value|0x1
+end_define
+
+begin_comment
+comment|/* extern struct rlisthdr swaplist; */
+end_comment
 
 begin_comment
 comment|/* Functions to manipulate resource lists.  */
@@ -62,8 +89,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|rlist
-operator|*
+name|rlisthdr
 operator|*
 operator|,
 name|unsigned
@@ -81,8 +107,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|rlist
-operator|*
+name|rlisthdr
 operator|*
 operator|,
 name|unsigned
@@ -102,8 +127,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|rlist
-operator|*
+name|rlisthdr
 operator|*
 operator|)
 argument_list|)
