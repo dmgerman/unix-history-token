@@ -408,7 +408,7 @@ decl_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"rman_manage_region:<%s> request: start %#lx, end %#lx"
+literal|"rman_manage_region:<%s> request: start %#lx, end %#lx\n"
 operator|,
 name|rm
 operator|->
