@@ -309,6 +309,13 @@ name|TWE_DEVICE_ID
 value|0x1000
 end_define
 
+begin_define
+define|#
+directive|define
+name|TWE_DEVICE_ID_ASIC
+value|0x1001
+end_define
+
 begin_comment
 comment|/* command packet opcodes */
 end_comment
