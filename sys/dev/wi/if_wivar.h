@@ -137,10 +137,25 @@ begin_comment
 comment|/* current TX rate */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|WI_MAX_AID
+value|256
+end_define
+
+begin_comment
+comment|/* max stations for ap operation */
+end_comment
+
 begin_struct
 struct|struct
 name|wi_softc
 block|{
+name|struct
+name|arpcom
+name|sc_arp
+decl_stmt|;
 name|struct
 name|ieee80211com
 name|sc_ic
@@ -387,9 +402,6 @@ decl_stmt|;
 name|int
 name|sc_scan_timer
 decl_stmt|;
-name|int
-name|sc_syn_timer
-decl_stmt|;
 name|struct
 name|wi_counters
 name|sc_stats
@@ -458,6 +470,10 @@ decl_stmt|;
 block|}
 name|wi_debug
 struct|;
+name|struct
+name|timeval
+name|sc_last_syn
+decl_stmt|;
 name|int
 name|sc_false_syns
 decl_stmt|;
@@ -513,7 +529,7 @@ begin_define
 define|#
 directive|define
 name|sc_if
-value|sc_ic.ic_if
+value|sc_arp.ac_if
 end_define
 
 begin_define
