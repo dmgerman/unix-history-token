@@ -3,24 +3,6 @@ begin_comment
 comment|/*  * file: sbcard.h  * $FreeBSD$  */
 end_comment
 
-begin_typedef
-typedef|typedef
-struct|struct
-name|_sbdev_info
-block|{  }
-name|sbdev_info
-typedef|;
-end_typedef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|sbc_major
-decl_stmt|,
-name|sbc_minor
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * sound blaster registers  */
 end_comment
@@ -796,69 +778,6 @@ value|0x8000
 end_define
 
 begin_comment
-comment|/*  * sound/sb_mixer.h  *  * Definitions for the SB Pro and SB16 mixers  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Modified: Hunyue Yau	Jan 6 1994 Added defines for the Sound Galaxy NX Pro  * mixer.  *  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SBPRO_RECORDING_DEVICES
-define|\
-value|(SOUND_MASK_LINE | SOUND_MASK_MIC | SOUND_MASK_CD)
-end_define
-
-begin_comment
-comment|/* Same as SB Pro, unless I find otherwise */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SGNXPRO_RECORDING_DEVICES
-value|SBPRO_RECORDING_DEVICES
-end_define
-
-begin_define
-define|#
-directive|define
-name|SBPRO_MIXER_DEVICES
-define|\
-value|(SOUND_MASK_SYNTH | SOUND_MASK_PCM | SOUND_MASK_LINE | SOUND_MASK_MIC | \      SOUND_MASK_CD | SOUND_MASK_VOLUME)
-end_define
-
-begin_comment
-comment|/*  * SG NX Pro has treble and bass settings on the mixer. The 'speaker' channel  * is the COVOX/DisneySoundSource emulation volume control on the mixer. It  * does NOT control speaker volume. Should have own mask eventually?  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SGNXPRO_MIXER_DEVICES
-define|\
-value|(SBPRO_MIXER_DEVICES | SOUND_MASK_BASS | \      SOUND_MASK_TREBLE | SOUND_MASK_SPEAKER )
-end_define
-
-begin_define
-define|#
-directive|define
-name|SB16_RECORDING_DEVICES
-define|\
-value|(SOUND_MASK_SYNTH | SOUND_MASK_LINE | SOUND_MASK_MIC | SOUND_MASK_CD)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SB16_MIXER_DEVICES
-define|\
-value|(SOUND_MASK_SYNTH | SOUND_MASK_PCM | SOUND_MASK_SPEAKER | \      SOUND_MASK_LINE | SOUND_MASK_MIC | SOUND_MASK_CD | \      SOUND_MASK_IGAIN | SOUND_MASK_OGAIN | \      SOUND_MASK_VOLUME | SOUND_MASK_BASS | SOUND_MASK_TREBLE)
-end_define
-
-begin_comment
-comment|/*  * Mixer registers  *  * NOTE!	RECORD_SRC == IN_FILTER  */
-end_comment
-
-begin_comment
 comment|/*  * Mixer registers of SB Pro  */
 end_comment
 
@@ -1055,6 +974,71 @@ define|#
 directive|define
 name|SB16_OMASK
 value|0x3c
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SB_NOMIXER
+end_ifndef
+
+begin_comment
+comment|/*  * sound/sb_mixer.h  *  * Definitions for the SB Pro and SB16 mixers  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Modified: Hunyue Yau	Jan 6 1994 Added defines for the Sound Galaxy NX Pro  * mixer.  *  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SBPRO_RECORDING_DEVICES
+define|\
+value|(SOUND_MASK_LINE | SOUND_MASK_MIC | SOUND_MASK_CD)
+end_define
+
+begin_comment
+comment|/* Same as SB Pro, unless I find otherwise */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SGNXPRO_RECORDING_DEVICES
+value|SBPRO_RECORDING_DEVICES
+end_define
+
+begin_define
+define|#
+directive|define
+name|SBPRO_MIXER_DEVICES
+define|\
+value|(SOUND_MASK_SYNTH | SOUND_MASK_PCM | SOUND_MASK_LINE | SOUND_MASK_MIC | \      SOUND_MASK_CD | SOUND_MASK_VOLUME)
+end_define
+
+begin_comment
+comment|/*  * SG NX Pro has treble and bass settings on the mixer. The 'speaker' channel  * is the COVOX/DisneySoundSource emulation volume control on the mixer. It  * does NOT control speaker volume. Should have own mask eventually?  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SGNXPRO_MIXER_DEVICES
+define|\
+value|(SBPRO_MIXER_DEVICES | SOUND_MASK_BASS | \      SOUND_MASK_TREBLE | SOUND_MASK_SPEAKER )
+end_define
+
+begin_define
+define|#
+directive|define
+name|SB16_RECORDING_DEVICES
+define|\
+value|(SOUND_MASK_SYNTH | SOUND_MASK_LINE | SOUND_MASK_MIC | SOUND_MASK_CD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SB16_MIXER_DEVICES
+define|\
+value|(SOUND_MASK_SYNTH | SOUND_MASK_PCM | SOUND_MASK_SPEAKER | \      SOUND_MASK_LINE | SOUND_MASK_MIC | SOUND_MASK_CD | \      SOUND_MASK_IGAIN | SOUND_MASK_OGAIN | \      SOUND_MASK_VOLUME | SOUND_MASK_BASS | SOUND_MASK_TREBLE)
 end_define
 
 begin_ifndef
@@ -2252,6 +2236,11 @@ end_define
 begin_comment
 comment|/* Use Line-in for recording source */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
