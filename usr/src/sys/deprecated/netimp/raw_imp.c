@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_imp.c	4.5	82/02/16	*/
+comment|/*	raw_imp.c	4.6	82/02/16	*/
 end_comment
 
 begin_include
@@ -295,6 +295,9 @@ condition|)
 goto|goto
 name|bad
 goto|;
+ifdef|#
+directive|ifdef
+name|notdef
 if|if
 condition|(
 name|ip
@@ -320,6 +323,8 @@ condition|)
 goto|goto
 name|bad
 goto|;
+endif|#
+directive|endif
 comment|/* 	 * Fill in IMP leader -- impoutput refrains from rebuilding 	 * the leader when it sees the protocol family PF_IMPLINK. 	 * (message size calculated by walking through mbuf's) 	 */
 for|for
 control|(
