@@ -6414,16 +6414,9 @@ name|mm
 operator|==
 name|NULL
 condition|)
-block|{
-name|m_freem
-argument_list|(
-name|mm
-argument_list|)
-expr_stmt|;
 return|return
 name|ENOBUFS
 return|;
-block|}
 comment|/* TODO: check it! */
 name|mm
 operator|->
