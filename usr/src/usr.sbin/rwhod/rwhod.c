@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwhod.c	4.14 (Berkeley) 83/06/02"
+literal|"@(#)rwhod.c	4.15 (Berkeley) 83/06/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -704,7 +704,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|sigset
+name|signal
 argument_list|(
 name|SIGALRM
 argument_list|,
