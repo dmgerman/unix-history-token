@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mount.c	4.3 (Berkeley) %G%"
+literal|"@(#)mount.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,6 +72,12 @@ end_struct
 begin_decl_stmt
 name|int
 name|ro
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|fake
 decl_stmt|;
 end_decl_stmt
 
@@ -224,6 +230,28 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"-f"
+argument_list|)
+condition|)
+name|fake
+operator|++
+operator|,
+name|argc
+operator|--
+operator|,
+name|argv
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -572,6 +600,10 @@ name|mf
 decl_stmt|;
 if|if
 condition|(
+name|fake
+operator|==
+literal|0
+operator|&&
 name|mount
 argument_list|(
 name|spec
@@ -583,13 +615,11 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-block|}
 name|np
 operator|=
 name|spec
