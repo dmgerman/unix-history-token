@@ -13,7 +13,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Copyright (c) 1983, 1989 The Regents of the University of California.  * All rights reserved.  *  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1983, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -28,7 +28,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1983, 1989 The Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1983, 1989, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,7 +53,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpr.c	5.14 (Berkeley) %G%"
+literal|"@(#)lpr.c	8.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
