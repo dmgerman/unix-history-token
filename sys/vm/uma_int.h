@@ -513,10 +513,6 @@ name|u_int32_t
 name|uz_maxpages
 decl_stmt|;
 comment|/* Maximum number of pages to alloc */
-name|u_int32_t
-name|uz_cachefree
-decl_stmt|;
-comment|/* Last count of items free in caches */
 name|u_int64_t
 name|uz_oallocs
 decl_stmt|;
