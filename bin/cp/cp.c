@@ -200,7 +200,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+specifier|volatile
+name|sig_atomic_t
 name|info
 decl_stmt|;
 end_decl_stmt
