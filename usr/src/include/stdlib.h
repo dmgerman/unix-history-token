@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stdlib.h	5.10 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stdlib.h	5.11 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -693,6 +693,29 @@ operator|*
 operator|,
 specifier|const
 name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|getsubopt
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|,
+name|char
+operator|*
+specifier|const
+operator|*
+operator|,
+name|char
+operator|*
 operator|*
 operator|)
 argument_list|)
