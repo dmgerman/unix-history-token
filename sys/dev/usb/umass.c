@@ -271,8 +271,12 @@ begin_define
 define|#
 directive|define
 name|UPROTO_MASS_ZIP
-value|80
+value|0x50
 end_define
+
+begin_comment
+comment|/* letter 'P' for protoype */
+end_comment
 
 begin_define
 define|#
