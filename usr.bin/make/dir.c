@@ -1054,9 +1054,9 @@ expr_stmt|;
 goto|goto
 name|next
 goto|;
-block|}
 default|default:
 break|break;
+block|}
 block|}
 if|if
 condition|(
