@@ -20,7 +20,7 @@ name|__ACFREEBSD_H__
 end_define
 
 begin_comment
-comment|/*  * XXX this is technically correct, but will cause problems with some ASL  *     which only works if the string names a Microsoft operating system.  */
+comment|/*  * Some systems' ASL may have problems because they look for names   * of Microsoft operating systems.  To override this, set hw.acpi.os_name  * to the appropriate string.  */
 end_comment
 
 begin_define
@@ -218,6 +218,25 @@ define|#
 directive|define
 name|ACPI_USE_STANDARD_HEADERS
 end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FLUSH_CPU_CACHE
+parameter_list|()
+end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
 
 begin_define
 define|#
