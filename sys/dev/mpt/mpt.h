@@ -768,6 +768,36 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|mpt_read_cfg_page
+parameter_list|(
+name|mpt_softc_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|fCONFIG_PAGE_HEADER
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|mpt_write_cfg_page
+parameter_list|(
+name|mpt_softc_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|fCONFIG_PAGE_HEADER
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* mpt_debug.c functions */
 end_comment
