@@ -763,6 +763,13 @@ name|logFacility
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|logIpfwDenied
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -865,6 +872,11 @@ name|logFacility
 operator|=
 name|LOG_DAEMON
 expr_stmt|;
+name|logIpfwDenied
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 comment|/*  * Mark packet buffer empty.  */
 name|packetSock
 operator|=
@@ -881,6 +893,18 @@ name|argc
 argument_list|,
 name|argv
 argument_list|)
+expr_stmt|;
+comment|/*  * Log ipfw(8) denied packets by default in verbose mode.  */
+if|if
+condition|(
+name|logIpfwDenied
+operator|==
+operator|-
+literal|1
+condition|)
+name|logIpfwDenied
+operator|=
+name|verbose
 expr_stmt|;
 comment|/*  * Open syslog channel.  */
 name|openlog
@@ -2395,7 +2419,15 @@ name|aliasOverhead
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|errno
+operator|==
+name|EACCES
+operator|&&
+name|logIpfwDenied
+condition|)
 block|{
 name|sprintf
 argument_list|(
@@ -3537,6 +3569,8 @@ block|,
 name|LogFacility
 block|,
 name|PunchFW
+block|,
+name|LogIpfwDenied
 block|}
 enum|;
 end_enum
@@ -3984,7 +4018,23 @@ literal|"punch_fw"
 block|,
 name|NULL
 block|}
+block|,
+block|{
+name|LogIpfwDenied
+block|,
+literal|0
+block|,
+name|YesNo
+block|,
+literal|"[yes|no]"
+block|,
+literal|"log packets converted by natd, but denied by ipfw"
+block|,
+literal|"log_ipfw_denied"
+block|,
+name|NULL
 block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -4510,7 +4560,7 @@ name|LogDenied
 case|:
 name|logDropped
 operator|=
-literal|1
+name|yesNoValue
 expr_stmt|;
 break|break;
 case|case
@@ -4581,6 +4631,15 @@ argument_list|(
 name|strValue
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|LogIpfwDenied
+case|:
+name|logIpfwDenied
+operator|=
+name|yesNoValue
+expr_stmt|;
+empty_stmt|;
 break|break;
 block|}
 block|}
