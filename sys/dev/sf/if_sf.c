@@ -6302,17 +6302,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|sc
-operator|->
-name|sf_tx_cnt
-condition|)
-name|sf_txeof
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|txprod
 operator|=
 name|csr_read_4
@@ -6510,6 +6499,16 @@ operator|->
 name|sf_tx_cnt
 operator|++
 expr_stmt|;
+comment|/* 		 * Don't get the TX DMA queue get too full. 		 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sf_tx_cnt
+operator|>
+literal|64
+condition|)
+break|break;
 block|}
 if|if
 condition|(
