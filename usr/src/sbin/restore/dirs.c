@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	5.25 (Berkeley) %G%"
+literal|"@(#)dirs.c	5.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -432,6 +432,7 @@ name|opendirfile
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1293,6 +1294,7 @@ name|pathsearch
 parameter_list|(
 name|pathname
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|pathname
@@ -1308,6 +1310,9 @@ name|dp
 decl_stmt|;
 name|char
 modifier|*
+name|path
+decl_stmt|,
+modifier|*
 name|name
 decl_stmt|,
 name|buffer
@@ -1322,7 +1327,7 @@ argument_list|,
 name|pathname
 argument_list|)
 expr_stmt|;
-name|pathname
+name|path
 operator|=
 name|buffer
 expr_stmt|;
@@ -1333,11 +1338,11 @@ expr_stmt|;
 while|while
 condition|(
 operator|*
-name|pathname
+name|path
 operator|==
 literal|'/'
 condition|)
-name|pathname
+name|path
 operator|++
 expr_stmt|;
 while|while
@@ -1348,7 +1353,7 @@ operator|=
 name|strsep
 argument_list|(
 operator|&
-name|pathname
+name|path
 argument_list|,
 literal|"/"
 argument_list|)
@@ -2520,6 +2525,7 @@ name|rst_opendir
 parameter_list|(
 name|name
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
@@ -2611,6 +2617,9 @@ modifier|*
 name|dirp
 decl_stmt|;
 block|{
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|dirp
@@ -2686,6 +2695,7 @@ name|opendirfile
 parameter_list|(
 name|name
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name

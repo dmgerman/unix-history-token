@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interactive.c	5.18 (Berkeley) %G%"
+literal|"@(#)interactive.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -327,6 +327,7 @@ name|glob_stat
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -3349,6 +3350,7 @@ name|name
 parameter_list|,
 name|stp
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
