@@ -208,6 +208,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|ipxpcb
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|mbuf
 struct_decl|;
 end_struct_decl
