@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.64 1997/11/09 14:18:48 brian Exp $  *  *  TODO:  */
+comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.65 1997/11/18 08:49:03 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -195,6 +195,12 @@ directive|include
 file|"chat.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"throughput.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -311,6 +317,14 @@ begin_decl_stmt
 specifier|static
 name|int
 name|dev_is_modem
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|pppThroughput
+name|throughput
 decl_stmt|;
 end_decl_stmt
 
@@ -512,7 +526,7 @@ block|{
 literal|50
 block|,
 name|B50
-block|,   }
+block|, }
 block|,
 endif|#
 directive|endif
@@ -523,7 +537,7 @@ block|{
 literal|75
 block|,
 name|B75
-block|,   }
+block|, }
 block|,
 endif|#
 directive|endif
@@ -534,7 +548,7 @@ block|{
 literal|110
 block|,
 name|B110
-block|,   }
+block|, }
 block|,
 endif|#
 directive|endif
@@ -545,7 +559,7 @@ block|{
 literal|134
 block|,
 name|B134
-block|,   }
+block|, }
 block|,
 endif|#
 directive|endif
@@ -556,7 +570,7 @@ block|{
 literal|150
 block|,
 name|B150
-block|,   }
+block|, }
 block|,
 endif|#
 directive|endif
@@ -567,7 +581,7 @@ block|{
 literal|200
 block|,
 name|B200
-block|,   }
+block|, }
 block|,
 endif|#
 directive|endif
@@ -578,7 +592,7 @@ block|{
 literal|300
 block|,
 name|B300
-block|,   }
+block|, }
 block|,
 endif|#
 directive|endif
@@ -589,7 +603,7 @@ block|{
 literal|600
 block|,
 name|B600
-block|,   }
+block|, }
 block|,
 endif|#
 directive|endif
@@ -600,7 +614,7 @@ block|{
 literal|1200
 block|,
 name|B1200
-block|,   }
+block|, }
 block|,
 endif|#
 directive|endif
@@ -611,7 +625,7 @@ block|{
 literal|1800
 block|,
 name|B1800
-block|,   }
+block|, }
 block|,
 endif|#
 directive|endif
@@ -622,7 +636,7 @@ block|{
 literal|2400
 block|,
 name|B2400
-block|,   }
+block|, }
 block|,
 endif|#
 directive|endif
@@ -633,7 +647,7 @@ block|{
 literal|4800
 block|,
 name|B4800
-block|,   }
+block|, }
 block|,
 endif|#
 directive|endif
@@ -644,7 +658,7 @@ block|{
 literal|9600
 block|,
 name|B9600
-block|,   }
+block|, }
 block|,
 endif|#
 directive|endif
@@ -655,7 +669,7 @@ block|{
 literal|19200
 block|,
 name|B19200
-block|,   }
+block|, }
 block|,
 endif|#
 directive|endif
@@ -666,7 +680,7 @@ block|{
 literal|38400
 block|,
 name|B38400
-block|,   }
+block|, }
 block|,
 endif|#
 directive|endif
@@ -680,7 +694,7 @@ block|{
 literal|7200
 block|,
 name|B7200
-block|,   }
+block|, }
 block|,
 endif|#
 directive|endif
@@ -691,7 +705,7 @@ block|{
 literal|14400
 block|,
 name|B14400
-block|,   }
+block|, }
 block|,
 endif|#
 directive|endif
@@ -702,7 +716,7 @@ block|{
 literal|28800
 block|,
 name|B28800
-block|,   }
+block|, }
 block|,
 endif|#
 directive|endif
@@ -713,7 +727,7 @@ block|{
 literal|57600
 block|,
 name|B57600
-block|,   }
+block|, }
 block|,
 endif|#
 directive|endif
@@ -724,7 +738,7 @@ block|{
 literal|76800
 block|,
 name|B76800
-block|,   }
+block|, }
 block|,
 endif|#
 directive|endif
@@ -735,7 +749,7 @@ block|{
 literal|115200
 block|,
 name|B115200
-block|,   }
+block|, }
 block|,
 endif|#
 directive|endif
@@ -746,7 +760,7 @@ block|{
 literal|230400
 block|,
 name|B230400
-block|,   }
+block|, }
 block|,
 endif|#
 directive|endif
@@ -757,7 +771,7 @@ block|{
 literal|19200
 block|,
 name|EXTA
-block|,   }
+block|, }
 block|,
 endif|#
 directive|endif
@@ -768,7 +782,7 @@ block|{
 literal|38400
 block|,
 name|EXTB
-block|,   }
+block|, }
 block|,
 endif|#
 directive|endif
@@ -886,21 +900,6 @@ name|B0
 return|;
 block|}
 end_function
-
-begin_decl_stmt
-specifier|static
-name|time_t
-name|uptime
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|u_long
-name|OctetsIn
-decl_stmt|,
-name|OctetsOut
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|void
@@ -1861,17 +1860,11 @@ name|void
 name|HaveModem
 parameter_list|()
 block|{
-name|time
+name|throughput_start
 argument_list|(
 operator|&
-name|uptime
+name|throughput
 argument_list|)
-expr_stmt|;
-name|OctetsIn
-operator|=
-name|OctetsOut
-operator|=
-literal|0
 expr_stmt|;
 name|connect_count
 operator|++
@@ -1938,9 +1931,6 @@ operator|&
 name|MODE_DIRECT
 condition|)
 block|{
-name|HaveModem
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|isatty
@@ -1998,6 +1988,9 @@ name|modem
 operator|=
 literal|0
 expr_stmt|;
+name|HaveModem
+argument_list|()
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -2020,6 +2013,9 @@ name|VAR_DEVICE
 argument_list|)
 expr_stmt|;
 comment|/* We don't call ModemTimeout() with this type of connection */
+name|HaveModem
+argument_list|()
+expr_stmt|;
 return|return
 name|modem
 operator|=
@@ -2490,10 +2486,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|uptime
-operator|=
-literal|0
-expr_stmt|;
 name|CloseLogicalModem
 argument_list|()
 expr_stmt|;
@@ -2542,10 +2534,6 @@ argument_list|(
 name|errno
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|uptime
-operator|=
-literal|0
 expr_stmt|;
 name|CloseLogicalModem
 argument_list|()
@@ -2858,9 +2846,13 @@ name|int
 name|n
 parameter_list|)
 block|{
-name|OctetsIn
-operator|+=
+name|throughput_addin
+argument_list|(
+operator|&
+name|throughput
+argument_list|,
 name|n
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -2873,9 +2865,13 @@ name|int
 name|n
 parameter_list|)
 block|{
-name|OctetsOut
-operator|+=
+name|throughput_addout
+argument_list|(
+operator|&
+name|throughput
+argument_list|,
 name|n
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -2886,58 +2882,33 @@ name|void
 name|ClosePhysicalModem
 parameter_list|()
 block|{
+name|LogPrintf
+argument_list|(
+name|LogDEBUG
+argument_list|,
+literal|"ClosePhysicalModem\n"
+argument_list|)
+expr_stmt|;
 name|close
 argument_list|(
 name|modem
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|uptime
-condition|)
-block|{
-name|LogPrintf
-argument_list|(
-name|LogPHASE
-argument_list|,
-literal|"Connect time: %d secs\n"
-argument_list|,
-name|time
-argument_list|(
-name|NULL
-argument_list|)
-operator|-
-name|uptime
-argument_list|)
-expr_stmt|;
-name|LogPrintf
-argument_list|(
-name|LogPHASE
-argument_list|,
-literal|"Modem: %d octets in, %d octets out\n"
-argument_list|,
-name|OctetsIn
-argument_list|,
-name|OctetsOut
-argument_list|)
-expr_stmt|;
-name|OctetsIn
-operator|=
-name|OctetsOut
-operator|=
-literal|0
-expr_stmt|;
-name|uptime
-operator|=
-literal|0
-expr_stmt|;
-block|}
 name|modem
 operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/* Mark modem as closed */
+name|throughput_log
+argument_list|(
+operator|&
+name|throughput
+argument_list|,
+name|LogPHASE
+argument_list|,
+literal|"Modem"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2957,7 +2928,7 @@ name|LogPrintf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"Hangup modem (%s), uptime %ld\n"
+literal|"Hangup modem (%s)\n"
 argument_list|,
 name|modem
 operator|>=
@@ -2966,17 +2937,6 @@ condition|?
 literal|"open"
 else|:
 literal|"closed"
-argument_list|,
-operator|(
-name|long
-operator|)
-name|uptime
-argument_list|)
-expr_stmt|;
-name|StopTimer
-argument_list|(
-operator|&
-name|ModemTimer
 argument_list|)
 expr_stmt|;
 if|if
@@ -2986,6 +2946,18 @@ operator|<
 literal|0
 condition|)
 return|return;
+name|StopTimer
+argument_list|(
+operator|&
+name|ModemTimer
+argument_list|)
+expr_stmt|;
+name|throughput_stop
+argument_list|(
+operator|&
+name|throughput
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|TermMode
@@ -3100,6 +3072,15 @@ name|VarHangupScript
 argument_list|)
 expr_stmt|;
 comment|/* arrays are the same size */
+name|LogPrintf
+argument_list|(
+name|LogDEBUG
+argument_list|,
+literal|"HangupModem: Script: %s\n"
+argument_list|,
+name|ScriptBuffer
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|flag
@@ -3164,6 +3145,13 @@ name|void
 name|CloseLogicalModem
 parameter_list|()
 block|{
+name|LogPrintf
+argument_list|(
+name|LogDEBUG
+argument_list|,
+literal|"CloseLogicalModem\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|modem
@@ -4166,6 +4154,21 @@ argument_list|,
 literal|"PhoneNumber(s) = %s\n"
 argument_list|,
 name|VarPhoneList
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|VarTerm
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|throughput_disp
+argument_list|(
+operator|&
+name|throughput
+argument_list|,
+name|VarTerm
 argument_list|)
 expr_stmt|;
 return|return
