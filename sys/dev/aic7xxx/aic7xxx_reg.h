@@ -1164,6 +1164,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ALLONES
+value|0x069
+end_define
+
+begin_define
+define|#
+directive|define
 name|ALLZEROS
 value|0x06a
 end_define
@@ -1622,17 +1629,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ABORT_TAG
-value|0x91
-end_define
-
-begin_comment
-comment|/* Sent an ABORT_TAG message */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|AWAITING_MSG
 value|0xa1
 end_define
@@ -1995,6 +1991,13 @@ define|#
 directive|define
 name|TAG_ENB
 value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRACE_SCB
+value|0x10
 end_define
 
 begin_define
