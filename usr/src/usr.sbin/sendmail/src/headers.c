@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.53 (Berkeley) %G%"
+literal|"@(#)headers.c	8.54 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,7 +41,7 @@ file|"sendmail.h"
 end_include
 
 begin_comment
-comment|/* **  CHOMPHEADER -- process and save a header line. ** **	Called by collect and by readcf to deal with header lines. ** **	Parameters: **		line -- header as a text line. **		def -- if set, this is a default value. **		e -- the envelope including this header. ** **	Returns: **		flags for this header. ** **	Side Effects: **		The header is saved on the header list. **		Contents of 'line' are destroyed. */
+comment|/* **  CHOMPHEADER -- process and save a header line. ** **	Called by collect and by readcf to deal with header lines. ** **	Parameters: **		line -- header as a text line. **		def -- if set, this is a default value. **		hdrp -- a pointer to the place to save the header. **		e -- the envelope including this header. ** **	Returns: **		flags for this header. ** **	Side Effects: **		The header is saved on the header list. **		Contents of 'line' are destroyed. */
 end_comment
 
 begin_macro
@@ -50,6 +50,8 @@ argument_list|(
 argument|line
 argument_list|,
 argument|def
+argument_list|,
+argument|hdrp
 argument_list|,
 argument|e
 argument_list|)
@@ -65,6 +67,14 @@ end_decl_stmt
 begin_decl_stmt
 name|bool
 name|def
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|HDR
+modifier|*
+modifier|*
+name|hdrp
 decl_stmt|;
 end_decl_stmt
 
@@ -111,6 +121,9 @@ name|cond
 init|=
 name|FALSE
 decl_stmt|;
+name|bool
+name|headeronly
+decl_stmt|;
 name|BITMAP
 name|mopts
 decl_stmt|;
@@ -143,6 +156,24 @@ literal|"chompheader: %s\n"
 argument_list|,
 name|line
 argument_list|)
+expr_stmt|;
+name|headeronly
+operator|=
+name|hdrp
+operator|!=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|headeronly
+condition|)
+name|hdrp
+operator|=
+operator|&
+name|e
+operator|->
+name|e_header
 expr_stmt|;
 comment|/* strip off options */
 name|clrbitmap
@@ -391,6 +422,9 @@ condition|(
 operator|!
 name|def
 operator|&&
+operator|!
+name|headeronly
+operator|&&
 name|bitset
 argument_list|(
 name|H_RESENT
@@ -413,6 +447,9 @@ name|UseErrorsTo
 operator|&&
 operator|!
 name|def
+operator|&&
+operator|!
+name|headeronly
 operator|&&
 name|bitset
 argument_list|(
@@ -486,6 +523,9 @@ if|if
 condition|(
 operator|!
 name|def
+operator|&&
+operator|!
+name|headeronly
 operator|&&
 operator|!
 name|bitset
@@ -799,10 +839,7 @@ for|for
 control|(
 name|hp
 operator|=
-operator|&
-name|e
-operator|->
-name|e_header
+name|hdrp
 init|;
 operator|(
 name|h
@@ -976,6 +1013,9 @@ if|if
 condition|(
 operator|!
 name|def
+operator|&&
+operator|!
+name|headeronly
 operator|&&
 name|bitset
 argument_list|(
@@ -1325,7 +1365,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  ISHEADER -- predicate telling if argument is a header. ** **	A line is a header if it has a single word followed by **	optional white space followed by a colon. ** **	Parameters: **		h -- string to check for possible headerness. ** **	Returns: **		TRUE if h is a header. **		FALSE otherwise. ** **	Side Effects: **		none. */
+comment|/* **  ISHEADER -- predicate telling if argument is a header. ** **	A line is a header if it has a single word followed by **	optional white space followed by a colon. ** **	Header fields beginning with two dashes, although technically **	permitted by RFC822, are automatically rejected in order **	to make MIME work out.  Without this we could have a technically **	legal header such as ``--"foo:bar"'' that would also be a legal **	MIME separator. ** **	Parameters: **		h -- string to check for possible headerness. ** **	Returns: **		TRUE if h is a header. **		FALSE otherwise. ** **	Side Effects: **		none. */
 end_comment
 
 begin_function
@@ -1346,6 +1386,25 @@ name|s
 init|=
 name|h
 decl_stmt|;
+if|if
+condition|(
+name|s
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+operator|&&
+name|s
+index|[
+literal|1
+index|]
+operator|==
+literal|'-'
+condition|)
+return|return
+name|FALSE
+return|;
 while|while
 condition|(
 operator|*

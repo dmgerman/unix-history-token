@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.78 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.79 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1563,6 +1563,8 @@ literal|1
 index|]
 argument_list|,
 name|TRUE
+argument_list|,
+name|NULL
 argument_list|,
 name|e
 argument_list|)

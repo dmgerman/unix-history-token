@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.32 (Berkeley) %G%"
+literal|"@(#)collect.c	8.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -223,8 +223,6 @@ name|FALSE
 decl_stmt|;
 name|bool
 name|headeronly
-init|=
-name|FALSE
 decl_stmt|;
 name|char
 modifier|*
@@ -282,23 +280,11 @@ modifier|*
 name|index
 parameter_list|()
 function_decl|;
-if|if
-condition|(
-name|hdrp
-operator|==
-name|NULL
-condition|)
-name|hdrp
-operator|=
-operator|&
-name|e
-operator|->
-name|e_header
-expr_stmt|;
-else|else
 name|headeronly
 operator|=
-name|TRUE
+name|hdrp
+operator|!=
+name|NULL
 expr_stmt|;
 comment|/* 	**  Create the temp file name and create the file. 	*/
 if|if
@@ -428,6 +414,20 @@ condition|)
 name|message
 argument_list|(
 literal|"354 Enter mail, end with \".\" on a line by itself"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|30
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"collect\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Read the message. 	** 	**	This is done using two interleaved state machines. 	**	The input state machine is looking for things like 	**	hidden dots; the message state machine is handling 	**	the larger picture (e.g., header versus body). 	*/
@@ -598,13 +598,13 @@ condition|(
 operator|!
 name|feof
 argument_list|(
-name|InChannel
+name|fp
 argument_list|)
 operator|&&
 operator|!
 name|ferror
 argument_list|(
-name|InChannel
+name|fp
 argument_list|)
 condition|)
 block|{
@@ -616,7 +616,7 @@ name|c
 operator|=
 name|fgetc
 argument_list|(
-name|InChannel
+name|fp
 argument_list|)
 expr_stmt|;
 if|if
@@ -628,7 +628,7 @@ condition|)
 break|break;
 name|clearerr
 argument_list|(
-name|InChannel
+name|fp
 argument_list|)
 expr_stmt|;
 block|}
@@ -641,6 +641,9 @@ condition|(
 name|TrafficLogFile
 operator|!=
 name|NULL
+operator|&&
+operator|!
+name|headeronly
 condition|)
 block|{
 if|if
@@ -896,7 +899,7 @@ name|ungetc
 argument_list|(
 name|c
 argument_list|,
-name|InChannel
+name|fp
 argument_list|)
 expr_stmt|;
 name|c
@@ -1193,7 +1196,7 @@ do|do
 block|{
 name|clearerr
 argument_list|(
-name|InChannel
+name|fp
 argument_list|)
 expr_stmt|;
 name|errno
@@ -1204,7 +1207,7 @@ name|c
 operator|=
 name|fgetc
 argument_list|(
-name|InChannel
+name|fp
 argument_list|)
 expr_stmt|;
 block|}
@@ -1225,7 +1228,7 @@ name|ungetc
 argument_list|(
 name|c
 argument_list|,
-name|InChannel
+name|fp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1276,6 +1279,8 @@ argument_list|(
 name|buf
 argument_list|,
 name|FALSE
+argument_list|,
+name|hdrp
 argument_list|,
 name|e
 argument_list|)
