@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)diffdir.c	4.8 (Berkeley) %G%"
+literal|"@(#)diffdir.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2110,6 +2110,11 @@ name|done
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|wantpr
+condition|)
+block|{
 name|close
 argument_list|(
 name|pv
@@ -2126,6 +2131,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 while|while
 condition|(
 name|wait
