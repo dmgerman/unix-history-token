@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.32 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.33 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.32 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.33 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -308,6 +308,16 @@ operator|->
 name|mci_host
 expr_stmt|;
 comment|/* XXX UGLY XXX */
+if|if
+condition|(
+name|CurHostName
+operator|==
+name|NULL
+condition|)
+name|CurHostName
+operator|=
+name|MyHostName
+expr_stmt|;
 name|SmtpNeedIntro
 operator|=
 name|TRUE
