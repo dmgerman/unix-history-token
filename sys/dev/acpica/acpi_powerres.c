@@ -60,7 +60,7 @@ file|<dev/acpica/acpivar.h>
 end_include
 
 begin_comment
-comment|/*  * ACPI power resource management.  *  * Power resource behaviour is slightly complicated by the fact that  * a single power resource may provide power for more than one device.  * Thus, we must track the device(s) being powered by a given power  * resource, and only deactivate it when there are no powered devices.  *  * Note that this only manages resources for known devices.  There is an  * ugly case where we may turn of power to a device which is in use because  * we don't know that it depends on a given resource.  We should perhaps  * try to be smarter about this, but a more complete solution would involve  * scanning all of the ACPI namespace to find devices we're not currently  * aware of, and this raises questions about whether they should be left   * on, turned off, etc.  *  * XXX locking  */
+comment|/*  * ACPI power resource management.  *  * Power resource behaviour is slightly complicated by the fact that  * a single power resource may provide power for more than one device.  * Thus, we must track the device(s) being powered by a given power  * resource, and only deactivate it when there are no powered devices.  *  * Note that this only manages resources for known devices.  There is an  * ugly case where we may turn of power to a device which is in use because  * we don't know that it depends on a given resource.  We should perhaps  * try to be smarter about this, but a more complete solution would involve  * scanning all of the ACPI namespace to find devices we're not currently  * aware of, and this raises questions about whether they should be left   * on, turned off, etc.  */
 end_comment
 
 begin_expr_stmt
@@ -234,6 +234,16 @@ argument_list|,
 argument|acpi_powerconsumer
 argument_list|)
 name|acpi_powerconsumers
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ACPI_SERIAL_DECL
+argument_list|(
+name|powerres
+argument_list|,
+literal|"ACPI power resources"
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -462,6 +472,11 @@ operator|(
 name|uintptr_t
 operator|)
 name|__func__
+argument_list|)
+expr_stmt|;
+name|ACPI_SERIAL_ASSERT
+argument_list|(
+name|powerres
 argument_list|)
 expr_stmt|;
 name|rp
@@ -815,6 +830,11 @@ operator|)
 name|__func__
 argument_list|)
 expr_stmt|;
+name|ACPI_SERIAL_ASSERT
+argument_list|(
+name|powerres
+argument_list|)
+expr_stmt|;
 name|rp
 operator|=
 name|NULL
@@ -933,6 +953,11 @@ operator|(
 name|uintptr_t
 operator|)
 name|__func__
+argument_list|)
+expr_stmt|;
+name|ACPI_SERIAL_ASSERT
+argument_list|(
+name|powerres
 argument_list|)
 expr_stmt|;
 comment|/* Check to see whether we know about this consumer already */
@@ -1070,6 +1095,11 @@ operator|)
 name|__func__
 argument_list|)
 expr_stmt|;
+name|ACPI_SERIAL_ASSERT
+argument_list|(
+name|powerres
+argument_list|)
+expr_stmt|;
 comment|/* Find the consumer */
 if|if
 condition|(
@@ -1116,6 +1146,13 @@ argument_list|,
 name|pc
 argument_list|,
 name|ac_link
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|pc
+argument_list|,
+name|M_ACPIPWR
 argument_list|)
 expr_stmt|;
 name|ACPI_DEBUG_PRINT
@@ -1220,6 +1257,21 @@ argument_list|(
 name|AE_NOT_FOUND
 argument_list|)
 expr_stmt|;
+name|reslist_buffer
+operator|.
+name|Pointer
+operator|=
+name|NULL
+expr_stmt|;
+name|reslist_object
+operator|=
+name|NULL
+expr_stmt|;
+name|ACPI_SERIAL_BEGIN
+argument_list|(
+name|powerres
+argument_list|)
+expr_stmt|;
 comment|/* Find the consumer */
 if|if
 condition|(
@@ -1247,11 +1299,9 @@ name|consumer
 argument_list|)
 argument_list|)
 condition|)
-name|return_ACPI_STATUS
-argument_list|(
-name|status
-argument_list|)
-expr_stmt|;
+goto|goto
+name|out
+goto|;
 if|if
 condition|(
 operator|(
@@ -1265,16 +1315,17 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|return_ACPI_STATUS
+name|panic
 argument_list|(
-name|AE_ERROR
+literal|"acpi added power consumer but can't find it"
 argument_list|)
 expr_stmt|;
-comment|/* something very wrong */
 block|}
-block|}
-comment|/* Check for valid transitions */
+comment|/* Check for valid transitions.  We can only go to D0 from D3. */
+name|status
+operator|=
+name|AE_BAD_PARAMETER
+expr_stmt|;
 if|if
 condition|(
 name|pc
@@ -1287,12 +1338,9 @@ name|state
 operator|!=
 name|ACPI_STATE_D0
 condition|)
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_BAD_PARAMETER
-argument_list|)
-expr_stmt|;
-comment|/* can only go to D0 from D3 */
+goto|goto
+name|out
+goto|;
 comment|/* Find transition mechanism(s) */
 switch|switch
 condition|(
@@ -1348,11 +1396,9 @@ literal|"_PR3"
 expr_stmt|;
 break|break;
 default|default:
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_BAD_PARAMETER
-argument_list|)
-expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 name|ACPI_DEBUG_PRINT
 argument_list|(
@@ -1375,20 +1421,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/*      * Verify that this state is supported, ie. one of method or      * reslist must be present.  We need to do this before we go       * dereferencing resources (since we might be trying to go to      * a state we don't support).      *      * Note that if any states are supported, the device has to      * support D0 and D3.  It's never an error to try to go to      * D0.      */
-name|status
-operator|=
-name|AE_BAD_PARAMETER
-expr_stmt|;
-name|reslist_buffer
-operator|.
-name|Pointer
-operator|=
-name|NULL
-expr_stmt|;
-name|reslist_object
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -1451,11 +1483,13 @@ name|ac_state
 operator|=
 name|ACPI_STATE_D0
 expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
+name|status
+operator|=
 name|AE_OK
-argument_list|)
 expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 if|if
 condition|(
@@ -1463,9 +1497,22 @@ name|state
 operator|!=
 name|ACPI_STATE_D3
 condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_OBJECTS
+operator|,
+literal|"attempt to set unsupported state D%d\n"
+operator|,
+name|state
+operator|)
+argument_list|)
+expr_stmt|;
 goto|goto
-name|bad
+name|out
 goto|;
+block|}
 comment|/* 	 * Turn off the resources listed in _PR0 to go to D3.  If there is 	 * no _PR0 method, this object doesn't support ACPI power states. 	 */
 if|if
 condition|(
@@ -1487,8 +1534,19 @@ name|status
 operator|=
 name|AE_NOT_FOUND
 expr_stmt|;
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_OBJECTS
+operator|,
+literal|"device missing _PR0 (desired state was D%d)\n"
+operator|,
+name|state
+operator|)
+argument_list|)
+expr_stmt|;
 goto|goto
-name|bad
+name|out
 goto|;
 block|}
 name|reslist_buffer
@@ -1518,9 +1576,27 @@ argument_list|(
 name|status
 argument_list|)
 condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_OBJECTS
+operator|,
+literal|"can't evaluate _PR0 for device %s, state D%d\n"
+operator|,
+name|acpi_name
+argument_list|(
+name|consumer
+argument_list|)
+operator|,
+name|state
+operator|)
+argument_list|)
+expr_stmt|;
 goto|goto
-name|bad
+name|out
 goto|;
+block|}
 name|reslist_object
 operator|=
 operator|(
@@ -1533,23 +1609,34 @@ name|Pointer
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|ACPI_PKG_VALID
+argument_list|(
 name|reslist_object
-operator|->
-name|Type
-operator|!=
-name|ACPI_TYPE_PACKAGE
-operator|||
-name|reslist_object
-operator|->
-name|Package
-operator|.
-name|Count
-operator|==
-literal|0
+argument_list|,
+literal|1
+argument_list|)
 condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_OBJECTS
+operator|,
+literal|"invalid package object for state D%d\n"
+operator|,
+name|state
+operator|)
+argument_list|)
+expr_stmt|;
+name|status
+operator|=
+name|AE_TYPE
+expr_stmt|;
 goto|goto
-name|bad
+name|out
 goto|;
+block|}
 name|AcpiOsFree
 argument_list|(
 name|reslist_buffer
@@ -1817,26 +1904,17 @@ name|ac_state
 operator|=
 name|state
 expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
+name|status
+operator|=
 name|AE_OK
-argument_list|)
-expr_stmt|;
-name|bad
-label|:
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_OBJECTS
-operator|,
-literal|"attempt to set unsupported state D%d\n"
-operator|,
-name|state
-operator|)
-argument_list|)
 expr_stmt|;
 name|out
 label|:
+name|ACPI_SERIAL_END
+argument_list|(
+name|powerres
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|reslist_buffer
@@ -1913,6 +1991,11 @@ operator|(
 name|AE_BAD_PARAMETER
 operator|)
 return|;
+name|ACPI_SERIAL_BEGIN
+argument_list|(
+name|powerres
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1939,11 +2022,9 @@ name|consumer
 argument_list|)
 argument_list|)
 condition|)
-name|return_ACPI_STATUS
-argument_list|(
-name|status
-argument_list|)
-expr_stmt|;
+goto|goto
+name|out
+goto|;
 if|if
 condition|(
 operator|(
@@ -1957,15 +2038,16 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|return_ACPI_STATUS
+name|panic
 argument_list|(
-name|AE_ERROR
+literal|"acpi wake added power consumer but can't find it"
 argument_list|)
 expr_stmt|;
-comment|/* something very wrong */
 block|}
-block|}
+name|status
+operator|=
+name|AE_OK
+expr_stmt|;
 if|if
 condition|(
 name|acpi_parse_prw
@@ -1978,11 +2060,9 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
-name|AE_OK
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 for|for
 control|(
 name|i
@@ -2032,9 +2112,16 @@ condition|)
 name|acpi_pwr_switch_power
 argument_list|()
 expr_stmt|;
+name|out
+label|:
+name|ACPI_SERIAL_END
+argument_list|(
+name|powerres
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-name|AE_OK
+name|status
 operator|)
 return|;
 block|}
@@ -2096,6 +2183,11 @@ operator|(
 name|uintptr_t
 operator|)
 name|__func__
+argument_list|)
+expr_stmt|;
+name|ACPI_SERIAL_ASSERT
+argument_list|(
+name|powerres
 argument_list|)
 expr_stmt|;
 name|res
@@ -2318,6 +2410,11 @@ operator|)
 name|__func__
 argument_list|)
 expr_stmt|;
+name|ACPI_SERIAL_ASSERT
+argument_list|(
+name|powerres
+argument_list|)
+expr_stmt|;
 name|changed
 operator|=
 literal|0
@@ -2436,6 +2533,11 @@ operator|(
 name|uintptr_t
 operator|)
 name|__func__
+argument_list|)
+expr_stmt|;
+name|ACPI_SERIAL_ASSERT
+argument_list|(
+name|powerres
 argument_list|)
 expr_stmt|;
 comment|/*      * Sweep the list forwards turning things on.      */
@@ -2836,6 +2938,11 @@ operator|)
 name|__func__
 argument_list|)
 expr_stmt|;
+name|ACPI_SERIAL_ASSERT
+argument_list|(
+name|powerres
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|rp
@@ -2893,6 +3000,11 @@ operator|(
 name|uintptr_t
 operator|)
 name|__func__
+argument_list|)
+expr_stmt|;
+name|ACPI_SERIAL_ASSERT
+argument_list|(
+name|powerres
 argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
