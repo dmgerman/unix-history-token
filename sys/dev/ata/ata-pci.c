@@ -828,6 +828,27 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|cmd
+operator|&
+name|PCIM_CMD_PORTEN
+operator|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"ATA channel disabled by BIOS\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 comment|/* is busmastering supported ? */
 if|if
 condition|(
