@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c.c 1.3 %G%"
+literal|"@(#)c.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,6 +88,23 @@ include|#
 directive|include
 file|"machine.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|public
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|"tree.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
