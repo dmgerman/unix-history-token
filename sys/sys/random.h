@@ -53,6 +53,8 @@ name|RANDOM_NET
 block|,
 name|RANDOM_INTERRUPT
 block|,
+name|RANDOM_PURE
+block|,
 name|ENTROPYSOURCE
 block|}
 enum|;
