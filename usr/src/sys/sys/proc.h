@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	proc.h	4.15	82/09/08	*/
+comment|/*	proc.h	4.16	82/10/21	*/
 end_comment
 
 begin_include
@@ -214,12 +214,20 @@ modifier|*
 name|p_ysptr
 decl_stmt|;
 comment|/* pointer to younger siblings */
+ifdef|#
+directive|ifdef
+name|QUOTA
 name|struct
 name|quota
 modifier|*
 name|p_quota
 decl_stmt|;
 comment|/* quotas for this process (MUSH) */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|MUSH
 name|mmsgbuf
 name|p_mb
 decl_stmt|;
@@ -228,15 +236,11 @@ name|int
 name|p_msgflgs
 decl_stmt|;
 comment|/* message flags */
+endif|#
+directive|endif
 name|struct
 name|itimerval
 name|p_realtimer
-decl_stmt|;
-name|int
-name|p_SSS
-index|[
-literal|3
-index|]
 decl_stmt|;
 block|}
 struct|;
