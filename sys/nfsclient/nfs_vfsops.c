@@ -2249,7 +2249,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Mount a remote root fs via. nfs. This depends on the info in the  * nfs_diskless structure that has been filled in properly by some primary  * bootstrap.  * It goes something like this:  * - do enough of "ifconfig" by calling ifioctl() so that the system  *   can talk to the server  * - If nfs_diskless.mygateway is filled in, use that address as  *   a default gateway.  * - build the rootfs mount point and call mountnfs() to do the rest.  */
+comment|/*  * Mount a remote root fs via. nfs. This depends on the info in the  * nfs_diskless structure that has been filled in properly by some primary  * bootstrap.  * It goes something like this:  * - do enough of "ifconfig" by calling ifioctl() so that the system  *   can talk to the server  * - If nfs_diskless.mygateway is filled in, use that address as  *   a default gateway.  * - build the rootfs mount point and call mountnfs() to do the rest.  *  * It is assumed to be safe to read, modify, and write the nfsv3_diskless  * structure, as well as other global NFS client variables here, as  * nfs_mountroot() will be called once in the boot before any other NFS  * client activity occurs.  */
 end_comment
 
 begin_function
@@ -2299,9 +2299,9 @@ index|[
 literal|128
 index|]
 decl_stmt|;
-name|GIANT_REQUIRED
+name|NET_ASSERT_GIANT
+argument_list|()
 expr_stmt|;
-comment|/* XXX until socket locking done */
 if|#
 directive|if
 name|defined
