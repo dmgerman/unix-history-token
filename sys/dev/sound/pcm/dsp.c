@@ -1688,6 +1688,8 @@ name|pos
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 comment|/* 	 * here follow the standard ioctls (filio.h etc.) 	 */
 case|case
 name|FIONREAD
@@ -1738,20 +1740,13 @@ literal|"FIOASYNC\n"
 argument|) ;
 argument_list|)
 break|break;
-endif|#
-directive|endif
 case|case
 name|SNDCTL_DSP_NONBLOCK
 case|:
-ifdef|#
-directive|ifdef
-name|OLDPCM_IOCTL
 case|case
 name|FIONBIO
 case|:
 comment|/* set/clear non-blocking i/o */
-endif|#
-directive|endif
 if|if
 condition|(
 name|rdch
@@ -2410,6 +2405,18 @@ name|CHN_2NDBUFMAXSIZE
 operator|/
 name|fragsz
 expr_stmt|;
+name|DEB
+argument_list|(
+name|printf
+argument_list|(
+literal|"SNDCTL_DSP_SETFRAGMENT %d frags, %d sz\n"
+argument_list|,
+name|maxfrags
+argument_list|,
+name|fragsz
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rdch
@@ -2455,7 +2462,9 @@ operator|<<
 literal|16
 operator|)
 operator||
-name|fragsz
+name|c
+operator|->
+name|blocksize
 expr_stmt|;
 block|}
 break|break;
@@ -2957,7 +2966,11 @@ operator|->
 name|flags
 operator|&=
 operator|~
+operator|(
 name|CHN_F_TRIGGERED
+operator||
+name|CHN_F_NOTRIGGER
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -2971,6 +2984,13 @@ operator|->
 name|flags
 operator||=
 name|CHN_F_TRIGGERED
+expr_stmt|;
+else|else
+name|rdch
+operator|->
+name|flags
+operator||=
+name|CHN_F_NOTRIGGER
 expr_stmt|;
 name|chn_intr
 argument_list|(
@@ -2988,7 +3008,11 @@ operator|->
 name|flags
 operator|&=
 operator|~
+operator|(
 name|CHN_F_TRIGGERED
+operator||
+name|CHN_F_NOTRIGGER
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -3002,6 +3026,13 @@ operator|->
 name|flags
 operator||=
 name|CHN_F_TRIGGERED
+expr_stmt|;
+else|else
+name|wrch
+operator|->
+name|flags
+operator||=
+name|CHN_F_NOTRIGGER
 expr_stmt|;
 name|chn_intr
 argument_list|(

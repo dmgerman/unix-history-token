@@ -472,6 +472,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CHN_F_NOTRIGGER
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
 name|CHN_F_BUSY
 value|0x00001000
 end_define
