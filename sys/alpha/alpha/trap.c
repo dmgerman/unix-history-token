@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: trap.c,v 1.14 1999/05/10 16:00:56 peter Exp $ */
+comment|/* $Id: trap.c,v 1.15 1999/06/08 16:42:17 dt Exp $ */
 end_comment
 
 begin_comment
@@ -1182,7 +1182,6 @@ if|if
 condition|(
 name|fpcurproc
 condition|)
-block|{
 name|savefpstate
 argument_list|(
 operator|&
@@ -1195,20 +1194,9 @@ operator|.
 name|pcb_fp
 argument_list|)
 expr_stmt|;
-name|PRELE
-argument_list|(
-name|fpcurproc
-argument_list|)
-expr_stmt|;
-block|}
 name|fpcurproc
 operator|=
 name|p
-expr_stmt|;
-name|PHOLD
-argument_list|(
-name|fpcurproc
-argument_list|)
 expr_stmt|;
 name|restorefpstate
 argument_list|(
@@ -2871,7 +2859,7 @@ directive|define
 name|dump_fp_regs
 parameter_list|()
 define|\
-value|if (p == fpcurproc) {						\ 		alpha_pal_wrfen(1);					\ 		savefpstate(&fpcurproc->p_addr->u_pcb.pcb_fp);		\ 		alpha_pal_wrfen(0);					\ 		PRELE(fpcurproc);					\ 		fpcurproc = NULL;					\ 	}
+value|if (p == fpcurproc) {						\ 		alpha_pal_wrfen(1);					\ 		savefpstate(&fpcurproc->p_addr->u_pcb.pcb_fp);		\ 		alpha_pal_wrfen(0);					\ 		fpcurproc = NULL;					\ 	}
 end_define
 
 begin_define
