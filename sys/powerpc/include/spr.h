@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001 The NetBSD Foundation, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2001 The NetBSD Foundation, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $NetBSD: spr.h,v 1.25 2002/08/14 15:38:40 matt Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -42,7 +42,7 @@ parameter_list|(
 name|reg
 parameter_list|)
 define|\
-value|( { u_int32_t val;						\ 	  __asm __volatile("mfspr %0,%1" : "=r"(val) : "K"(reg));	\ 	  val; } )
+value|( { register_t val;						\ 	  __asm __volatile("mfspr %0,%1" : "=r"(val) : "K"(reg));	\ 	  val; } )
 end_define
 
 begin_endif
@@ -303,12 +303,56 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SPR_EIE
+value|0x050
+end_define
+
+begin_comment
+comment|/* ..8 Exception Interrupt ??? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_EID
+value|0x051
+end_define
+
+begin_comment
+comment|/* ..8 Exception Interrupt ??? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_NRI
+value|0x052
+end_define
+
+begin_comment
+comment|/* ..8 Exception Interrupt ??? */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SPR_USPRG0
 value|0x100
 end_define
 
 begin_comment
 comment|/* 4.. User SPR General 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_VRSAVE
+value|0x100
+end_define
+
+begin_comment
+comment|/* .6. AltiVec VRSAVE */
 end_comment
 
 begin_define
@@ -402,6 +446,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SPR_ASR
+value|0x118
+end_define
+
+begin_comment
+comment|/* ... Address Space Register (PPC64) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SPR_EAR
 value|0x11a
 end_define
@@ -446,120 +501,197 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PVR_MPC601
+name|MPC601
 value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
-name|PVR_MPC603
+name|MPC603
 value|0x0003
 end_define
 
 begin_define
 define|#
 directive|define
-name|PVR_MPC604
+name|MPC604
 value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
-name|PVR_MPC602
+name|MPC602
 value|0x0005
 end_define
 
 begin_define
 define|#
 directive|define
-name|PVR_MPC603e
+name|MPC603e
 value|0x0006
 end_define
 
 begin_define
 define|#
 directive|define
-name|PVR_MPC603ev
+name|MPC603ev
 value|0x0007
 end_define
 
 begin_define
 define|#
 directive|define
-name|PVR_MPC750
+name|MPC750
 value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
-name|PVR_MPC604ev
+name|MPC604ev
 value|0x0009
 end_define
 
 begin_define
 define|#
 directive|define
-name|PVR_MPC7400
+name|MPC7400
 value|0x000c
 end_define
 
 begin_define
 define|#
 directive|define
-name|PVR_MPC620
+name|MPC620
 value|0x0014
 end_define
 
 begin_define
 define|#
 directive|define
-name|PVR_MPC860
+name|IBM403
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBM401A1
+value|0x0021
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBM401B2
+value|0x0022
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBM401C2
+value|0x0023
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBM401D2
+value|0x0024
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBM401E2
+value|0x0025
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBM401F2
+value|0x0026
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBM401G2
+value|0x0027
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBMPOWER3
+value|0x0041
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPC860
 value|0x0050
 end_define
 
 begin_define
 define|#
 directive|define
-name|PVR_MPC8240
+name|MPC8240
 value|0x0081
 end_define
 
 begin_define
 define|#
 directive|define
-name|PVR_MPC7450
-value|0x8000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PVR_MPC7455
-value|0x8001
-end_define
-
-begin_define
-define|#
-directive|define
-name|PVR_MPC7410
-value|0x800c
-end_define
-
-begin_define
-define|#
-directive|define
-name|PVR_IBM405GP
+name|IBM405GP
 value|0x4011
 end_define
 
 begin_define
 define|#
 directive|define
-name|PVR_IBM405L
+name|IBM405L
 value|0x4161
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBM750FX
+value|0x7000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPC7450
+value|0x8000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPC7455
+value|0x8001
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPC7410
+value|0x800c
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPC8245
+value|0x8081
 end_define
 
 begin_define
@@ -576,12 +708,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SPR_IBAT0U
+value|0x210
+end_define
+
+begin_comment
+comment|/* .6. Instruction BAT Reg 0 Upper */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SPR_IBAT0L
 value|0x211
 end_define
 
 begin_comment
-comment|/* .68 Instruction BAT Reg 0 Lower */
+comment|/* .6. Instruction BAT Reg 0 Lower */
 end_comment
 
 begin_define
@@ -592,7 +735,7 @@ value|0x212
 end_define
 
 begin_comment
-comment|/* .68 Instruction BAT Reg 1 Upper */
+comment|/* .6. Instruction BAT Reg 1 Upper */
 end_comment
 
 begin_define
@@ -603,7 +746,7 @@ value|0x213
 end_define
 
 begin_comment
-comment|/* .68 Instruction BAT Reg 1 Lower */
+comment|/* .6. Instruction BAT Reg 1 Lower */
 end_comment
 
 begin_define
@@ -614,7 +757,7 @@ value|0x214
 end_define
 
 begin_comment
-comment|/* .68 Instruction BAT Reg 2 Upper */
+comment|/* .6. Instruction BAT Reg 2 Upper */
 end_comment
 
 begin_define
@@ -625,7 +768,7 @@ value|0x215
 end_define
 
 begin_comment
-comment|/* .68 Instruction BAT Reg 2 Lower */
+comment|/* .6. Instruction BAT Reg 2 Lower */
 end_comment
 
 begin_define
@@ -636,7 +779,7 @@ value|0x216
 end_define
 
 begin_comment
-comment|/* .68 Instruction BAT Reg 3 Upper */
+comment|/* .6. Instruction BAT Reg 3 Upper */
 end_comment
 
 begin_define
@@ -647,7 +790,7 @@ value|0x217
 end_define
 
 begin_comment
-comment|/* .68 Instruction BAT Reg 3 Lower */
+comment|/* .6. Instruction BAT Reg 3 Lower */
 end_comment
 
 begin_define
@@ -658,7 +801,7 @@ value|0x218
 end_define
 
 begin_comment
-comment|/* .68 Data BAT Reg 0 Upper */
+comment|/* .6. Data BAT Reg 0 Upper */
 end_comment
 
 begin_define
@@ -669,7 +812,7 @@ value|0x219
 end_define
 
 begin_comment
-comment|/* .68 Data BAT Reg 0 Lower */
+comment|/* .6. Data BAT Reg 0 Lower */
 end_comment
 
 begin_define
@@ -680,7 +823,7 @@ value|0x21a
 end_define
 
 begin_comment
-comment|/* .68 Data BAT Reg 1 Upper */
+comment|/* .6. Data BAT Reg 1 Upper */
 end_comment
 
 begin_define
@@ -691,7 +834,7 @@ value|0x21b
 end_define
 
 begin_comment
-comment|/* .68 Data BAT Reg 1 Lower */
+comment|/* .6. Data BAT Reg 1 Lower */
 end_comment
 
 begin_define
@@ -702,7 +845,7 @@ value|0x21c
 end_define
 
 begin_comment
-comment|/* .68 Data BAT Reg 2 Upper */
+comment|/* .6. Data BAT Reg 2 Upper */
 end_comment
 
 begin_define
@@ -713,7 +856,7 @@ value|0x21d
 end_define
 
 begin_comment
-comment|/* .68 Data BAT Reg 2 Lower */
+comment|/* .6. Data BAT Reg 2 Lower */
 end_comment
 
 begin_define
@@ -724,7 +867,7 @@ value|0x21e
 end_define
 
 begin_comment
-comment|/* .68 Data BAT Reg 3 Upper */
+comment|/* .6. Data BAT Reg 3 Upper */
 end_comment
 
 begin_define
@@ -735,13 +878,134 @@ value|0x21f
 end_define
 
 begin_comment
-comment|/* .68 Data BAT Reg 3 Lower */
+comment|/* .6. Data BAT Reg 3 Lower */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SPI_IBAT4U
+name|SPR_IC_CST
+value|0x230
+end_define
+
+begin_comment
+comment|/* ..8 Instruction Cache CSR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IC_CST_IEN
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* I cache is ENabled   (RO) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IC_CST_CMD_INVALL
+value|0x0c000000
+end_define
+
+begin_comment
+comment|/* I cache invalidate all */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IC_CST_CMD_UNLOCKALL
+value|0x0a000000
+end_define
+
+begin_comment
+comment|/* I cache unlock all */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IC_CST_CMD_UNLOCK
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* I cache unlock block */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IC_CST_CMD_LOADLOCK
+value|0x06000000
+end_define
+
+begin_comment
+comment|/* I cache load& lock block */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IC_CST_CMD_DISABLE
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* I cache disable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IC_CST_CMD_ENABLE
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* I cache enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IC_CST_CCER1
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* I cache error type 1 (RO) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IC_CST_CCER2
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* I cache error type 2 (RO) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IC_CST_CCER3
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* I cache error type 3 (RO) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_IBAT4U
 value|0x230
 end_define
 
@@ -752,7 +1016,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SPI_IBAT4L
+name|SPR_IC_ADR
+value|0x231
+end_define
+
+begin_comment
+comment|/* ..8 Instruction Cache Address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_IBAT4L
 value|0x231
 end_define
 
@@ -763,7 +1038,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SPI_IBAT5U
+name|SPR_IC_DAT
+value|0x232
+end_define
+
+begin_comment
+comment|/* ..8 Instruction Cache Data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_IBAT5U
 value|0x232
 end_define
 
@@ -774,7 +1060,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SPI_IBAT5L
+name|SPR_IBAT5L
 value|0x233
 end_define
 
@@ -785,7 +1071,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SPI_IBAT6U
+name|SPR_IBAT6U
 value|0x234
 end_define
 
@@ -796,7 +1082,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SPI_IBAT6L
+name|SPR_IBAT6L
 value|0x235
 end_define
 
@@ -807,7 +1093,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SPI_IBAT7U
+name|SPR_IBAT7U
 value|0x236
 end_define
 
@@ -818,7 +1104,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SPI_IBAT7L
+name|SPR_IBAT7L
 value|0x237
 end_define
 
@@ -829,7 +1115,205 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SPI_DBAT4U
+name|SPR_DC_CST
+value|0x230
+end_define
+
+begin_comment
+comment|/* ..8 Data Cache CSR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_CST_DEN
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* D cache ENabled (RO) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_CST_DFWT
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* D cache Force Write-Thru (RO) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_CST_LES
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* D cache Little Endian Swap (RO) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_CST_CMD_FLUSH
+value|0x0e000000
+end_define
+
+begin_comment
+comment|/* D cache invalidate all */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_CST_CMD_INVALL
+value|0x0c000000
+end_define
+
+begin_comment
+comment|/* D cache invalidate all */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_CST_CMD_UNLOCKALL
+value|0x0a000000
+end_define
+
+begin_comment
+comment|/* D cache unlock all */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_CST_CMD_UNLOCK
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* D cache unlock block */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_CST_CMD_CLRLESWAP
+value|0x07000000
+end_define
+
+begin_comment
+comment|/* D cache clr little-endian swap */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_CST_CMD_LOADLOCK
+value|0x06000000
+end_define
+
+begin_comment
+comment|/* D cache load& lock block */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_CST_CMD_SETLESWAP
+value|0x05000000
+end_define
+
+begin_comment
+comment|/* D cache set little-endian swap */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_CST_CMD_DISABLE
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* D cache disable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_CST_CMD_CLRFWT
+value|0x03000000
+end_define
+
+begin_comment
+comment|/* D cache clear forced write-thru */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_CST_CMD_ENABLE
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* D cache enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_CST_CMD_SETFWT
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* D cache set forced write-thru */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_CST_CCER1
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* D cache error type 1 (RO) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_CST_CCER2
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* D cache error type 2 (RO) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_CST_CCER3
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* D cache error type 3 (RO) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_DBAT4U
 value|0x238
 end_define
 
@@ -840,7 +1324,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SPI_DBAT4L
+name|SPR_DC_ADR
+value|0x231
+end_define
+
+begin_comment
+comment|/* ..8 Data Cache Address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_DBAT4L
 value|0x239
 end_define
 
@@ -851,7 +1346,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SPI_DBAT5U
+name|SPR_DC_DAT
+value|0x232
+end_define
+
+begin_comment
+comment|/* ..8 Data Cache Data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_DBAT5U
 value|0x23a
 end_define
 
@@ -862,7 +1368,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SPI_DBAT5L
+name|SPR_DBAT5L
 value|0x23b
 end_define
 
@@ -873,7 +1379,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SPI_DBAT6U
+name|SPR_DBAT6U
 value|0x23c
 end_define
 
@@ -884,7 +1390,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SPI_DBAT6L
+name|SPR_DBAT6L
 value|0x23d
 end_define
 
@@ -895,7 +1401,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SPI_DBAT7U
+name|SPR_DBAT7U
 value|0x23e
 end_define
 
@@ -906,12 +1412,565 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SPI_DBAT7L
+name|SPR_DBAT7L
 value|0x23f
 end_define
 
 begin_comment
 comment|/* .6. Data BAT Reg 7 Lower */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_MI_CTR
+value|0x310
+end_define
+
+begin_comment
+comment|/* ..8 IMMU control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Mx_CTR_GPM
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Group Protection Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Mx_CTR_PPM
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* Page Protection Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Mx_CTR_CIDEF
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* Cache-Inhibit DEFault */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MD_CTR_WTDEF
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* Write-Through DEFault */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Mx_CTR_RSV4
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* Reserve 4 TLB entries */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MD_CTR_TWAM
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* TableWalk Assist Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Mx_CTR_PPCS
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* Priv/user state compare mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Mx_CTR_TLB_INDX
+value|0x000001f0
+end_define
+
+begin_comment
+comment|/* TLB index mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Mx_CTR_TLB_INDX_BITPOS
+value|8
+end_define
+
+begin_comment
+comment|/* TLB index shift */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_MI_AP
+value|0x312
+end_define
+
+begin_comment
+comment|/* ..8 IMMU access protection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Mx_GP_SUPER
+parameter_list|(
+name|n
+parameter_list|)
+value|(0<< (2*(15-(n))))
+end_define
+
+begin_comment
+comment|/* access is supervisor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Mx_GP_PAGE
+value|(1<< (2*(15-(n))))
+end_define
+
+begin_comment
+comment|/* access is page protect */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Mx_GP_SWAPPED
+value|(2<< (2*(15-(n))))
+end_define
+
+begin_comment
+comment|/* access is swapped */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Mx_GP_USER
+value|(3<< (2*(15-(n))))
+end_define
+
+begin_comment
+comment|/* access is user */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_MI_EPN
+value|0x313
+end_define
+
+begin_comment
+comment|/* ..8 IMMU effective number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Mx_EPN_EPN
+value|0xfffff000
+end_define
+
+begin_comment
+comment|/* Effective Page Number mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Mx_EPN_EV
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* Entry Valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Mx_EPN_ASID
+value|0x0000000f
+end_define
+
+begin_comment
+comment|/* Address Space ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_MI_TWC
+value|0x315
+end_define
+
+begin_comment
+comment|/* ..8 IMMU tablewalk control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MD_TWC_L2TB
+value|0xfffff000
+end_define
+
+begin_comment
+comment|/* Level-2 Tablewalk Base */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Mx_TWC_APG
+value|0x000001e0
+end_define
+
+begin_comment
+comment|/* Access Protection Group */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Mx_TWC_G
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* Guarded memory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Mx_TWC_PS
+value|0x0000000c
+end_define
+
+begin_comment
+comment|/* Page Size (L1) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MD_TWC_WT
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Write-Through */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Mx_TWC_V
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Entry Valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_MI_RPN
+value|0x316
+end_define
+
+begin_comment
+comment|/* ..8 IMMU real (phys) page number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Mx_RPN_RPN
+value|0xfffff000
+end_define
+
+begin_comment
+comment|/* Real Page Number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Mx_RPN_PP
+value|0x00000ff0
+end_define
+
+begin_comment
+comment|/* Page Protection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Mx_RPN_SPS
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* Small Page Size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Mx_RPN_SH
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* SHared page */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Mx_RPN_CI
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Cache Inhibit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Mx_RPN_V
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_MD_CTR
+value|0x318
+end_define
+
+begin_comment
+comment|/* ..8 DMMU control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_M_CASID
+value|0x319
+end_define
+
+begin_comment
+comment|/* ..8 CASID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_CASID
+value|0x0000000f
+end_define
+
+begin_comment
+comment|/* Current AS Id */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_MD_AP
+value|0x31a
+end_define
+
+begin_comment
+comment|/* ..8 DMMU access protection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_MD_EPN
+value|0x31b
+end_define
+
+begin_comment
+comment|/* ..8 DMMU effective number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_M_TWB
+value|0x31c
+end_define
+
+begin_comment
+comment|/* ..8 MMU tablewalk base */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_TWB_L1TB
+value|0xfffff000
+end_define
+
+begin_comment
+comment|/* level-1 translation base */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_TWB_L1INDX
+value|0x00000ffc
+end_define
+
+begin_comment
+comment|/* level-1 index */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_MD_TWC
+value|0x31d
+end_define
+
+begin_comment
+comment|/* ..8 DMMU tablewalk control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_MD_RPN
+value|0x31e
+end_define
+
+begin_comment
+comment|/* ..8 DMMU real (phys) page number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_MD_TW
+value|0x31f
+end_define
+
+begin_comment
+comment|/* ..8 MMU tablewalk scratch */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_MI_CAM
+value|0x330
+end_define
+
+begin_comment
+comment|/* ..8 IMMU CAM entry read */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_MI_RAM0
+value|0x331
+end_define
+
+begin_comment
+comment|/* ..8 IMMU RAM entry read reg 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_MI_RAM1
+value|0x332
+end_define
+
+begin_comment
+comment|/* ..8 IMMU RAM entry read reg 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_MD_CAM
+value|0x338
+end_define
+
+begin_comment
+comment|/* ..8 IMMU CAM entry read */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_MD_RAM0
+value|0x339
+end_define
+
+begin_comment
+comment|/* ..8 IMMU RAM entry read reg 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_MD_RAM1
+value|0x33a
+end_define
+
+begin_comment
+comment|/* ..8 IMMU RAM entry read reg 1 */
 end_comment
 
 begin_define
@@ -2599,6 +3658,116 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SPR_MSSCR0
+value|0x3f6
+end_define
+
+begin_comment
+comment|/* .6. Memory SubSystem Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSSCR0_SHDEN
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* 0: Shared-state enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSSCR0_SHDPEN3
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* 1: ~SHD[01] signal enable in MEI mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSSCR0_L1INTVEN
+value|0x38000000
+end_define
+
+begin_comment
+comment|/* 2-4: L1 data cache ~HIT intervention enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSSCR0_L2INTVEN
+value|0x07000000
+end_define
+
+begin_comment
+comment|/* 5-7: L2 data cache ~HIT intervention enable*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSSCR0_DL1HWF
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* 8: L1 data cache hardware flush */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSSCR0_MBO
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* 9: must be one */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSSCR0_EMODE
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* 10: MPX bus mode (read-only) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSSCR0_ABD
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* 11: address bus driven (read-only) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSSCR0_MBZ
+value|0x000fffff
+end_define
+
+begin_comment
+comment|/* 12-31: must be zero */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SPR_DAC2
 value|0x3f7
 end_define
@@ -2896,6 +4065,61 @@ end_define
 
 begin_comment
 comment|/* 18: L2 DLL bypass. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L2CR_L2FA
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* 19: L2 flush assist (for software flush). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L2CR_L2HWF
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* 20: L2 hardware flush. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L2CR_L2IO
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* 21: L2 instruction-only. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L2CR_L2CLKSTP
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* 22: L2 clock stop. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L2CR_L2DRO
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* 23: L2DLL rollover checkstop enable. */
 end_comment
 
 begin_define
