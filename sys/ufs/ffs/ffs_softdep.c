@@ -3384,6 +3384,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|wk
 operator|=
 name|LIST_FIRST
@@ -3393,6 +3394,9 @@ name|oldbp
 operator|->
 name|b_dep
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|LIST_REMOVE
