@@ -262,6 +262,9 @@ name|pfncn
 operator|=
 name|psum1
 expr_stmt|;
+operator|++
+name|argv
+expr_stmt|;
 block|}
 else|else
 block|{
