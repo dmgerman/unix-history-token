@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)match.c	4.4 (Berkeley) %G%"
+literal|"@(#)match.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2010,6 +2010,8 @@ operator|*
 operator|++
 name|cp
 argument_list|)
+argument_list|,
+name|SZLONG
 argument_list|)
 expr_stmt|;
 continue|continue;
