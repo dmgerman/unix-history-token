@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)sii.c	8.3 (Berkeley) %G%  *  * from: $Header: /sprite/src/kernel/dev/ds3100.md/RCS/devSII.c,  *	v 9.2 89/09/14 13:37:41 jhh Exp $ SPRITE (DECWRL)";  */
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)sii.c	8.4 (Berkeley) %G%  *  * from: $Header: /sprite/src/kernel/dev/ds3100.md/RCS/devSII.c,  *	v 9.2 89/09/14 13:37:41 jhh Exp $ SPRITE (DECWRL)";  */
 end_comment
 
 begin_include
@@ -2974,9 +2974,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|sii_DumpLog
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|panic
 argument_list|(
 literal|"sc_target 2"
@@ -6589,9 +6594,14 @@ argument_list|(
 literal|"sii_GetByte: DNE set 5\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|sii_DumpLog
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|regs
 operator|->
 name|dstat
@@ -7217,10 +7227,15 @@ name|dmlotc
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|sii_DumpLog
 argument_list|()
 expr_stmt|;
 comment|/* XXX */
+endif|#
+directive|endif
 return|return;
 block|}
 comment|/* clear the DNE, other errors handled later */
@@ -7309,9 +7324,14 @@ argument_list|(
 literal|"sii_StartDMA: DNE set\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|sii_DumpLog
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|regs
 operator|->
