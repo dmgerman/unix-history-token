@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.16 1998/06/15 06:58:10 charnier Exp $"
+literal|"$Id: main.c,v 1.17 1998/07/14 09:19:47 jkoshy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -659,25 +659,6 @@ argument_list|,
 literal|1000L
 argument_list|)
 expr_stmt|;
-comment|/* 			 * XXX 			 * physio(9) currently slices all requests to 			 * 64 KB chunks.  So now, if somebody entered 			 * e.g. 96 KB block size here, he would effectively 			 * yield one 64 KB and one 32 KB block, which 			 * restore cannot handle. 			 * Thus we currently enforce pyhsio(9)'s limit 			 * here, too. 			 */
-if|if
-condition|(
-name|ntrec
-operator|>
-literal|64
-condition|)
-block|{
-name|msg
-argument_list|(
-literal|"please choose a blocksize<= 64\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|X_STARTUP
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'c'
