@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)jobs.c	5.7 (Berkeley) %G%"
+literal|"@(#)jobs.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2667,6 +2667,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|jp
 operator|==
 name|NULL
@@ -2676,6 +2677,11 @@ operator|->
 name|nprocs
 operator|==
 literal|0
+operator|)
+operator|&&
+operator|!
+name|fd0_redirected_p
+argument_list|()
 condition|)
 block|{
 name|close
@@ -2722,6 +2728,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|jp
 operator|==
 name|NULL
@@ -2731,6 +2738,11 @@ operator|->
 name|nprocs
 operator|==
 literal|0
+operator|)
+operator|&&
+operator|!
+name|fd0_redirected_p
+argument_list|()
 condition|)
 block|{
 name|close

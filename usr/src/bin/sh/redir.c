@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)redir.c	5.3 (Berkeley) %G%"
+literal|"@(#)redir.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -161,6 +161,18 @@ name|struct
 name|redirtab
 modifier|*
 name|redirlist
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*   * We keep track of whether or not fd0 has been redirected.  This is for  * background commands, where we want to redirect fd0 to /dev/null only  * if it hasn't already been redirected.   */
+end_comment
+
+begin_decl_stmt
+name|int
+name|fd0_redirected
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -444,6 +456,15 @@ name|fd
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|fd
+operator|==
+literal|0
+condition|)
+name|fd0_redirected
+operator|++
+expr_stmt|;
 name|openredirect
 argument_list|(
 name|n
@@ -1151,6 +1172,15 @@ operator|!=
 name|EMPTY
 condition|)
 block|{
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+name|fd0_redirected
+operator|--
+expr_stmt|;
 name|close
 argument_list|(
 name|i
@@ -1252,6 +1282,23 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Return true if fd 0 has already been redirected at least once.  */
+end_comment
+
+begin_function
+name|int
+name|fd0_redirected_p
+parameter_list|()
+block|{
+return|return
+name|fd0_redirected
+operator|!=
+literal|0
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Discard all saved file descriptors.  */
