@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.10 (Berkeley) %G%"
+literal|"@(#)main.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -201,7 +201,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* List of makefiles to read (in 					 * order) */
+comment|/* ordered list of makefiles to read */
 end_comment
 
 begin_decl_stmt
@@ -1342,7 +1342,7 @@ argument_list|)
 condition|)
 name|Fatal
 argument_list|(
-literal|"Could not open system rules (%s)"
+literal|"make: no system rules (%s)."
 argument_list|,
 name|DEFSYSMK
 argument_list|)
@@ -1381,7 +1381,7 @@ name|NILLNODE
 condition|)
 name|Fatal
 argument_list|(
-literal|"Cannot open %s"
+literal|"make: cannot open %s."
 argument_list|,
 operator|(
 name|char
@@ -1525,9 +1525,7 @@ condition|;
 name|cp
 operator|++
 control|)
-block|{
-continue|continue;
-block|}
+empty_stmt|;
 comment|/* Save terminator character so know when to stop */
 name|savec
 operator|=
@@ -1977,6 +1975,13 @@ name|va_alist
 parameter_list|)
 function|va_dcl
 block|{
+name|va_list
+name|ap
+decl_stmt|;
+name|char
+modifier|*
+name|fmt
+decl_stmt|;
 if|if
 condition|(
 name|jobsRunning
@@ -1984,9 +1989,54 @@ condition|)
 name|Job_Wait
 argument_list|()
 expr_stmt|;
-name|Error
+name|va_start
 argument_list|(
-name|va_alist
+name|ap
+argument_list|)
+expr_stmt|;
+name|fmt
+operator|=
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|vfprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|stderr
 argument_list|)
 expr_stmt|;
 if|if
@@ -2025,9 +2075,61 @@ name|va_alist
 parameter_list|)
 function|va_dcl
 block|{
-name|Error
+name|va_list
+name|ap
+decl_stmt|;
+name|char
+modifier|*
+name|fmt
+decl_stmt|;
+name|va_start
 argument_list|(
-name|va_alist
+name|ap
+argument_list|)
+expr_stmt|;
+name|fmt
+operator|=
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|vfprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|stderr
 argument_list|)
 expr_stmt|;
 name|DieHorribly
