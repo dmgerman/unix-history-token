@@ -851,12 +851,6 @@ name|_line
 modifier|*
 name|first_line
 decl_stmt|;
-name|struct
-name|_line
-modifier|*
-modifier|*
-name|line_array
-decl_stmt|;
 block|}
 name|WINDOW
 typedef|;
@@ -890,10 +884,7 @@ end_decl_stmt
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
 name|__STDC__
-argument_list|)
 operator|||
 name|defined
 argument_list|(
