@@ -243,6 +243,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<libutil.h>
+end_include
+
 begin_comment
 comment|/* Global defs */
 end_comment
@@ -298,6 +304,12 @@ name|nsd
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OLD_SETPROCTITLE
+end_ifdef
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -324,6 +336,11 @@ end_decl_stmt
 begin_comment
 comment|/* end of argv */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -428,6 +445,12 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|OLD_SETPROCTITLE
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
 end_ifdef
 
@@ -443,6 +466,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -665,6 +693,9 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|OLD_SETPROCTITLE
 comment|/* Save start and extent of argv for setproctitle. */
 name|Argv
 operator|=
@@ -710,6 +741,8 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 define|#
 directive|define
 name|MAXNFSDCNT
@@ -3318,6 +3351,9 @@ empty_stmt|;
 block|}
 ifdef|#
 directive|ifdef
+name|OLD_SETPROCTITLE
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
 name|void
 name|setproctitle
@@ -3415,6 +3451,11 @@ end_endif
 begin_comment
 comment|/* __FreeBSD__ */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
