@@ -147,11 +147,11 @@ begin_define
 define|#
 directive|define
 name|MAXSSIZ
-value|(1<<25)
+value|(1<<28)
 end_define
 
 begin_comment
-comment|/* max stack size (32M) */
+comment|/* max stack size (256M) */
 end_comment
 
 begin_endif
