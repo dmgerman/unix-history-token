@@ -459,6 +459,12 @@ name|phandle_t
 name|root
 decl_stmt|;
 name|char
+name|name
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|char
 name|type
 index|[
 literal|8
@@ -466,6 +472,9 @@ index|]
 decl_stmt|;
 name|u_int
 name|clock
+decl_stmt|;
+name|caddr_t
+name|p
 decl_stmt|;
 name|root
 operator|=
@@ -531,6 +540,20 @@ condition|)
 name|panic
 argument_list|(
 literal|"cpu_startup: no cpu\n"
+argument_list|)
+expr_stmt|;
+name|OF_getprop
+argument_list|(
+name|child
+argument_list|,
+literal|"name"
+argument_list|,
+name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|OF_getprop
