@@ -123,7 +123,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<opie.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
 end_include
 
 begin_include
@@ -136,12 +148,6 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<skey.h>
 end_include
 
 begin_include
@@ -545,23 +551,37 @@ name|char
 modifier|*
 name|namep
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SKEY
 name|char
 name|user
 index|[
 literal|16
 index|]
-decl_stmt|,
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|OPIE
+name|struct
+name|opie
+name|opiedata
+decl_stmt|;
+name|char
 name|pass
 index|[
-literal|100
+name|OPIE_RESPONSE_MAX
+operator|+
+literal|1
+index|]
+decl_stmt|,
+name|opieprompt
+index|[
+name|OPIE_CHALLENGE_MAX
+operator|+
+literal|1
 index|]
 decl_stmt|;
 else|#
 directive|else
-comment|/* SKEY */
+comment|/* OPIE */
 name|char
 name|user
 index|[
@@ -575,7 +595,7 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* SKEY */
+comment|/* OPIE */
 name|struct
 name|passwd
 modifier|*
@@ -965,34 +985,31 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|SKEY
-name|namep
-operator|=
-name|skey_crypt
+name|OPIE
+name|opiechallenge
 argument_list|(
-name|pass
+operator|&
+name|opiedata
 argument_list|,
-name|pwd
-operator|->
-name|pw_passwd
-argument_list|,
-name|pwd
-argument_list|,
-name|skeyaccess
-argument_list|(
 name|user
 argument_list|,
-name|NULL
-argument_list|,
-name|remote
-argument_list|,
-name|NULL
-argument_list|)
+name|opieprompt
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|opieverify
+argument_list|(
+operator|&
+name|opiedata
+argument_list|,
+name|pass
+argument_list|)
+condition|)
+block|{
 else|#
 directive|else
-comment|/* SKEY */
+comment|/* OPIE */
 name|namep
 operator|=
 name|crypt
@@ -1004,9 +1021,6 @@ operator|->
 name|pw_passwd
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SKEY */
 if|if
 condition|(
 name|strcmp
@@ -1019,6 +1033,9 @@ name|pw_passwd
 argument_list|)
 condition|)
 block|{
+endif|#
+directive|endif
+comment|/* OPIE */
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -1773,13 +1790,7 @@ name|pw_shell
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*VARARGS1*/
-end_comment
-
-begin_function
 name|void
 name|error
 parameter_list|(
@@ -1857,9 +1868,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|getstr
 parameter_list|(
