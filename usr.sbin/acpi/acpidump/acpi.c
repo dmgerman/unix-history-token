@@ -4100,7 +4100,7 @@ operator|-
 name|SIZEOF_SDT_HDR
 argument_list|)
 expr_stmt|;
-comment|/* Write out any SSDTs (if present and the user requested this.) */
+comment|/* Write out any SSDTs (if present.) */
 if|if
 condition|(
 name|rsdt
