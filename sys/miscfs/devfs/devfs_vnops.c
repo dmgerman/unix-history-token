@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.36 1997/04/10 15:05:38 bde Exp $  *  * symlinks can wait 'til later.  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.37 1997/08/25 20:31:00 phk Exp $  *  * symlinks can wait 'til later.  */
 end_comment
 
 begin_include
@@ -366,28 +366,6 @@ name|RENAME
 operator|)
 condition|)
 block|{
-comment|/* 			 * Insert name into cache 			 * (as non-existent) if appropriate. 			 */
-if|if
-condition|(
-operator|(
-name|cnp
-operator|->
-name|cn_flags
-operator|&
-name|MAKEENTRY
-operator|)
-operator|&&
-name|op
-operator|!=
-name|CREATE
-condition|)
-name|DBPRINT
-argument_list|(
-operator|(
-literal|"NOT\n"
-operator|)
-argument_list|)
-expr_stmt|;
 return|return
 name|ENOENT
 return|;
