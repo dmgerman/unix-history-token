@@ -51,6 +51,13 @@ name|CHARNULL
 value|((char *) NULL)
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAXMAILOPTS
+value|20
+end_define
+
 begin_enum
 enum|enum
 name|copymode
@@ -61,6 +68,13 @@ name|DISCARD
 block|}
 enum|;
 end_enum
+
+begin_decl_stmt
+name|char
+modifier|*
+name|myname
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|main
@@ -104,6 +118,22 @@ modifier|*
 name|ml_owner
 decl_stmt|;
 name|char
+modifier|*
+name|mailer_opts
+index|[
+name|MAXMAILOPTS
+operator|+
+literal|1
+index|]
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|next_opt
+init|=
+name|mailer_opts
+decl_stmt|;
+name|char
 name|c
 decl_stmt|;
 specifier|extern
@@ -133,19 +163,48 @@ name|void
 name|copybody
 parameter_list|()
 function_decl|;
-comment|/* parse arguments */
+name|myname
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|argc
+operator|--
+operator|,
+name|argv
+operator|++
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|argv
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+condition|)
+block|{
 if|if
 condition|(
-name|argc
-operator|<
-literal|4
+name|next_opt
+operator|>=
+operator|&
+name|mailer_opts
+index|[
+name|MAXMAILOPTS
+index|]
 condition|)
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: mldistrib listname ownername member...\n"
+literal|"%s: too many mailer options\n"
+argument_list|,
+name|myname
 argument_list|)
 expr_stmt|;
 name|exit
@@ -154,9 +213,46 @@ name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}
+operator|*
+name|next_opt
+operator|++
+operator|=
+operator|*
 name|argv
 operator|++
 expr_stmt|;
+name|argc
+operator|--
+expr_stmt|;
+block|}
+operator|*
+name|next_opt
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* parse arguments */
+if|if
+condition|(
+name|argc
+operator|<
+literal|3
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Usage: %s [-mailopts ...] listname ownername member...\n"
+argument_list|,
+name|myname
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_USAGE
+argument_list|)
+expr_stmt|;
+block|}
 name|ml_name
 operator|=
 operator|*
@@ -193,6 +289,10 @@ name|mailfp
 operator|=
 name|openmailer
 argument_list|(
+name|ml_owner
+argument_list|,
+name|mailer_opts
+argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
@@ -213,6 +313,11 @@ argument_list|,
 literal|"Resent-From:	%s\n"
 argument_list|,
 name|ml_owner
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+literal|120
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Consume header 	** 	**	Errors-To:	discard 	**	Precedence:	retain; mark that it has been seen 	**	Received:	discard 	**	Resent-*:	discard 	**	Return-Path:	discard 	**	Via:		discard 	**	X-Mailer:	discard 	**	others		retain 	*/
@@ -426,7 +531,7 @@ name|fprintf
 argument_list|(
 name|mailfp
 argument_list|,
-literal|"Precedence:	bulk\n"
+literal|"Precedence: bulk\n"
 argument_list|)
 expr_stmt|;
 comment|/* copy the body of the message */
@@ -438,14 +543,12 @@ name|mailfp
 argument_list|)
 expr_stmt|;
 comment|/* clean up the connection */
-name|fclose
+name|exit
+argument_list|(
+name|pclose
 argument_list|(
 name|mailfp
 argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -460,13 +563,28 @@ name|FILE
 modifier|*
 name|openmailer
 parameter_list|(
+name|from
+parameter_list|,
+name|opt
+parameter_list|,
 name|argv
 parameter_list|)
 name|char
 modifier|*
+name|from
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|opt
+decl_stmt|,
+decl|*
 modifier|*
 name|argv
 decl_stmt|;
+end_function
+
+begin_block
 block|{
 specifier|register
 name|char
@@ -500,9 +618,11 @@ name|sprintf
 argument_list|(
 name|bp
 argument_list|,
-literal|"%s"
+literal|"%s -f %s"
 argument_list|,
 name|_PATH_SENDMAIL
+argument_list|,
+name|from
 argument_list|)
 expr_stmt|;
 name|bp
@@ -512,6 +632,63 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+operator|*
+name|opt
+operator|!=
+name|CHARNULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|bp
+argument_list|,
+literal|" %s"
+argument_list|,
+operator|*
+name|opt
+operator|++
+argument_list|)
+expr_stmt|;
+name|bp
+operator|+=
+name|strlen
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|>=
+name|buf
+operator|+
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: options list too long\n"
+argument_list|,
+name|myname
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_SOFTWARE
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 while|while
 condition|(
 operator|*
@@ -541,6 +718,33 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|>=
+name|buf
+operator|+
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: arg list too long\n"
+argument_list|,
+name|myname
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_SOFTWARE
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|mailfp
 operator|=
@@ -562,7 +766,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"mldistrib: Unable to popen %s\n"
+literal|"%s: Unable to popen %s\n"
+argument_list|,
+name|myname
 argument_list|,
 name|_PATH_SENDMAIL
 argument_list|)
@@ -579,7 +785,7 @@ name|mailfp
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/* **  DROPHEADER -- drop a single header field */
