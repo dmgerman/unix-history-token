@@ -968,7 +968,7 @@ name|void
 modifier|*
 name|addr
 parameter_list|,
-name|u_int32_t
+name|int32_t
 name|word
 parameter_list|)
 block|{
@@ -978,6 +978,9 @@ name|suword
 argument_list|(
 name|addr
 argument_list|,
+operator|(
+name|long
+operator|)
 name|word
 argument_list|)
 operator|)
@@ -1242,7 +1245,7 @@ block|}
 end_function
 
 begin_function
-name|u_int32_t
+name|int32_t
 name|fuword32
 parameter_list|(
 specifier|const
@@ -1253,6 +1256,9 @@ parameter_list|)
 block|{
 return|return
 operator|(
+operator|(
+name|int32_t
+operator|)
 name|fuword
 argument_list|(
 name|addr
