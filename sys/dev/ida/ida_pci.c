@@ -138,6 +138,13 @@ name|IDA_DEVICEID_DEC_SMART
 value|0x00461011
 end_define
 
+begin_define
+define|#
+directive|define
+name|IDA_DEVICEID_NCR_53C1510
+value|0x00101000
+end_define
+
 begin_function
 specifier|static
 name|int
@@ -571,6 +578,15 @@ block|{
 name|IDA_DEVICEID_DEC_SMART
 block|,
 literal|"DEC/Compaq Smart Array 4200 controller"
+block|,
+operator|&
+name|ida_v4_access
+block|}
+block|,
+block|{
+name|IDA_DEVICEID_NCR_53C1510
+block|,
+literal|"NCR/Compaq Integrated Array controller"
 block|,
 operator|&
 name|ida_v4_access
