@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mt.c	5.4 (Berkeley) %G%"
+literal|"@(#)mt.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,19 +59,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
 end_include
 
 begin_include
@@ -83,7 +77,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_define
@@ -674,7 +674,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<tahoevba/cyreg.h>
+file|<tahoe/vba/cyreg.h>
 end_include
 
 begin_endif
