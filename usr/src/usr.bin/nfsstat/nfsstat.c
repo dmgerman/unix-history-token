@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nfsstat.c	5.1 (Berkeley) %G%"
+literal|"@(#)nfsstat.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -891,7 +891,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%9.9s %9.9s %9.9s %9.9s\n"
+literal|"%9.9s %9.9s %9.9s %9.9s"
 argument_list|,
 literal|"Attr Hits"
 argument_list|,
@@ -904,7 +904,20 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%9d %9d %9d %9d\n"
+literal|" %9.9s %9.9s %9.9s %9.9s\n"
+argument_list|,
+literal|"BioR Hits"
+argument_list|,
+literal|"Misses"
+argument_list|,
+literal|"BioW Hits"
+argument_list|,
+literal|"Misses"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%9d %9d %9d %9d"
 argument_list|,
 name|nfsstats
 operator|.
@@ -921,6 +934,35 @@ argument_list|,
 name|nfsstats
 operator|.
 name|lookupcache_misses
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" %9d %9d %9d %9d\n"
+argument_list|,
+name|nfsstats
+operator|.
+name|biocache_reads
+operator|-
+name|nfsstats
+operator|.
+name|read_bios
+argument_list|,
+name|nfsstats
+operator|.
+name|read_bios
+argument_list|,
+name|nfsstats
+operator|.
+name|biocache_writes
+operator|-
+name|nfsstats
+operator|.
+name|write_bios
+argument_list|,
+name|nfsstats
+operator|.
+name|write_bios
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1085,7 +1127,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Server Rpc Errors\n"
+literal|"Server Ret-Failed\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1109,6 +1151,45 @@ argument_list|,
 name|nfsstats
 operator|.
 name|srv_errs
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Server Cache Stats:\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%9.9s %9.9s %9.9s %9.9s\n"
+argument_list|,
+literal|"Inprog"
+argument_list|,
+literal|"Idem"
+argument_list|,
+literal|"Non-idem"
+argument_list|,
+literal|"Misses"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%9d %9d %9d %9d\n"
+argument_list|,
+name|nfsstats
+operator|.
+name|srvcache_inproghits
+argument_list|,
+name|nfsstats
+operator|.
+name|srvcache_idemdonehits
+argument_list|,
+name|nfsstats
+operator|.
+name|srvcache_nonidemdonehits
+argument_list|,
+name|nfsstats
+operator|.
+name|srvcache_misses
 argument_list|)
 expr_stmt|;
 block|}
