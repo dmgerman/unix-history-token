@@ -2112,31 +2112,6 @@ name|d
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
-define|#
-directive|define
-name|CALLOUT_INIT
-parameter_list|(
-name|x
-parameter_list|)
-value|callout_init(x, 0
-comment|/* mpsafe */
-value|)
-else|#
-directive|else
-define|#
-directive|define
-name|CALLOUT_INIT
-parameter_list|(
-name|x
-parameter_list|)
-value|callout_init(x)
-endif|#
-directive|endif
 name|CALLOUT_INIT
 argument_list|(
 operator|&
@@ -9863,16 +9838,16 @@ operator|>=
 literal|500000
 name|printf
 argument_list|(
-literal|"Unknown service addr 0x%08x:0x%08x tcode=%x\n"
+literal|"Unknown service addr 0x%08x:0x%08x tcode=%x\n src=0x%x"
 argument_list|,
 else|#
 directive|else
 argument|printf(
-literal|"Unknown service addr 0x%08x:0x%08lx tcode=%x\n"
+literal|"Unknown service addr 0x%08x:0x%08lx tcode=%x src=0x%x\n"
 argument|,
 endif|#
 directive|endif
-argument|ntohs(fp->mode.rreqq.dest_hi), 				ntohl(fp->mode.rreqq.dest_lo), 				fp->mode.common.tcode); 			if (fc->status == FWBUSRESET) { 				printf(
+argument|ntohs(fp->mode.rreqq.dest_hi), 				ntohl(fp->mode.rreqq.dest_lo), 				fp->mode.common.tcode, 				fp->mode.hdr.src); 			if (fc->status == FWBUSRESET) { 				printf(
 literal|"fw_rcv: cannot respond(bus reset)!\n"
 argument|); 				goto err; 			} 			xfer = fw_xfer_alloc(M_FWXFER); 			if(xfer == NULL){ 				return; 			} 			xfer->spd = spd; 			xfer->send.buf = malloc(
 literal|16

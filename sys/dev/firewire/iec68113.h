@@ -39,7 +39,7 @@ literal|3
 operator|,
 name|fn
 operator|:
-literal|1
+literal|2
 expr_stmt|;
 name|u_int8_t
 name|dbc

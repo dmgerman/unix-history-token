@@ -2242,6 +2242,11 @@ end_function
 
 begin_function
 name|int
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500000
 name|fwmem_mmap
 parameter_list|(
 name|dev_t
@@ -2253,6 +2258,25 @@ parameter_list|,
 name|int
 name|nproto
 parameter_list|)
+else|#
+directive|else
+function|fwmem_mmap
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|,
+name|vm_offset_t
+name|offset
+parameter_list|,
+name|vm_offset_t
+modifier|*
+name|paddr
+parameter_list|,
+name|int
+name|nproto
+parameter_list|)
+endif|#
+directive|endif
 block|{
 return|return
 name|EINVAL
