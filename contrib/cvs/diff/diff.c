@@ -3266,7 +3266,7 @@ literal|"-n  --rcs  Output an RCS format diff."
 block|,
 literal|"-y  --side-by-side  Output in two columns."
 block|,
-literal|"  -w NUM  --width=NUM  Output at most NUM (default 130) characters per line."
+literal|"  -W NUM  --width=NUM  Output at most NUM (default 130) characters per line."
 block|,
 literal|"  --left-column  Output only the left column of common lines."
 block|,

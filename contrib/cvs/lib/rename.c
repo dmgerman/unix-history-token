@@ -102,7 +102,7 @@ block|{
 comment|/* We don't check existence_error because the systems which need it 	 have rename().  */
 if|if
 condition|(
-name|unlink
+name|CVS_UNLINK
 argument_list|(
 name|to
 argument_list|)
@@ -250,7 +250,7 @@ operator|==
 literal|0
 operator|&&
 operator|(
-name|unlink
+name|CVS_UNLINK
 argument_list|(
 name|from
 argument_list|)

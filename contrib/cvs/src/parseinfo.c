@@ -123,7 +123,7 @@ name|regex_err
 decl_stmt|;
 if|if
 condition|(
-name|CVSroot_original
+name|current_parsed_root
 operator|==
 name|NULL
 condition|)
@@ -151,7 +151,9 @@ name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 operator|+
 name|strlen
@@ -164,7 +166,7 @@ argument_list|(
 name|CVSROOTADM
 argument_list|)
 operator|+
-literal|10
+literal|3
 argument_list|)
 expr_stmt|;
 operator|(
@@ -176,7 +178,9 @@ name|infopath
 argument_list|,
 literal|"%s/%s/%s"
 argument_list|,
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|,
 name|CVSROOTADM
 argument_list|,
@@ -758,7 +762,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Parse the CVS config file.  The syntax right now is a bit ad hoc    but tries to draw on the best or more common features of the other    *info files and various unix (or non-unix) config file syntaxes.    Lines starting with # are comments.  Settings are lines of the form    KEYWORD=VALUE.  There is currently no way to have a multi-line    VALUE (would be nice if there was, probably).     CVSROOT is the $CVSROOT directory (CVSroot_directory might not be    set yet).     Returns 0 for success, negative value for failure.  Call    error(0, ...) on errors in addition to the return value.  */
+comment|/* Parse the CVS config file.  The syntax right now is a bit ad hoc    but tries to draw on the best or more common features of the other    *info files and various unix (or non-unix) config file syntaxes.    Lines starting with # are comments.  Settings are lines of the form    KEYWORD=VALUE.  There is currently no way to have a multi-line    VALUE (would be nice if there was, probably).     CVSROOT is the $CVSROOT directory (current_parsed_root->directory might not be    set yet).     Returns 0 for success, negative value for failure.  Call    error(0, ...) on errors in addition to the return value.  */
 end_comment
 
 begin_function

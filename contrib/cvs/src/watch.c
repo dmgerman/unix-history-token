@@ -1343,7 +1343,9 @@ directive|ifdef
 name|CLIENT_SUPPORT
 if|if
 condition|(
-name|client_active
+name|current_parsed_root
+operator|->
+name|isremote
 condition|)
 block|{
 name|start_server
@@ -1505,6 +1507,8 @@ argument_list|,
 name|argv
 argument_list|,
 name|local
+argument_list|,
+name|W_LOCAL
 argument_list|,
 literal|0
 argument_list|)
@@ -2154,7 +2158,9 @@ directive|ifdef
 name|CLIENT_SUPPORT
 if|if
 condition|(
-name|client_active
+name|current_parsed_root
+operator|->
+name|isremote
 condition|)
 block|{
 name|start_server

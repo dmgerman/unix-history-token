@@ -1225,7 +1225,9 @@ operator|==
 literal|0
 condition|)
 return|return
-name|CVSroot_original
+name|current_parsed_root
+operator|->
+name|original
 return|;
 elseif|else
 if|if

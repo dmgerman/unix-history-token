@@ -727,7 +727,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|CVSroot_directory
+name|current_parsed_root
 operator|==
 name|NULL
 condition|)
@@ -759,7 +759,9 @@ name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 operator|+
 name|strlen
@@ -770,7 +772,7 @@ literal|0
 index|]
 argument_list|)
 operator|+
-literal|10
+literal|2
 argument_list|)
 expr_stmt|;
 operator|(
@@ -782,7 +784,9 @@ name|repository
 argument_list|,
 literal|"%s/%s"
 argument_list|,
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|,
 name|argv
 index|[
@@ -794,7 +798,9 @@ name|repos_len
 operator|=
 name|strlen
 argument_list|(
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 expr_stmt|;
 block|}
@@ -906,7 +912,9 @@ directive|ifdef
 name|CLIENT_SUPPORT
 if|if
 condition|(
-name|client_active
+name|current_parsed_root
+operator|->
+name|isremote
 condition|)
 block|{
 comment|/* For rationale behind calling start_server before do_editor, see 	   commit.c  */
@@ -1040,7 +1048,9 @@ directive|ifdef
 name|CLIENT_SUPPORT
 if|if
 condition|(
-name|client_active
+name|current_parsed_root
+operator|->
+name|isremote
 condition|)
 block|{
 name|int
@@ -1238,21 +1248,15 @@ name|repository
 argument_list|)
 expr_stmt|;
 comment|/* Create the logfile that will be logged upon completion */
-name|tmpfile
-operator|=
-name|cvs_temp_name
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
 name|logfp
 operator|=
-name|CVS_FOPEN
+name|cvs_temp_file
 argument_list|(
+operator|&
 name|tmpfile
-argument_list|,
-literal|"w+"
 argument_list|)
 operator|)
 operator|==
@@ -1973,7 +1977,7 @@ condition|(
 operator|(
 name|dp
 operator|=
-name|readdir
+name|CVS_READDIR
 argument_list|(
 name|dirp
 argument_list|)
@@ -2202,7 +2206,9 @@ directive|ifdef
 name|CLIENT_SUPPORT
 if|if
 condition|(
-name|client_active
+name|current_parsed_root
+operator|->
+name|isremote
 condition|)
 name|err
 operator|+=
@@ -2287,7 +2293,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|closedir
+name|CVS_CLOSEDIR
 argument_list|(
 name|dirp
 argument_list|)
@@ -6962,7 +6968,9 @@ operator|!
 name|quiet
 operator|&&
 operator|!
-name|client_active
+name|current_parsed_root
+operator|->
+name|isremote
 condition|)
 else|#
 directive|else
@@ -7036,7 +7044,9 @@ name|CLIENT_SUPPORT
 if|if
 condition|(
 operator|!
-name|client_active
+name|current_parsed_root
+operator|->
+name|isremote
 operator|&&
 operator|!
 name|isdir

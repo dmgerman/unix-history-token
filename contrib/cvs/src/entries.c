@@ -3,6 +3,10 @@ begin_comment
 comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Entries file to Files file  *   * Creates the file Files containing the names that comprise the project, from  * the Entries file.  */
 end_comment
 
+begin_comment
+comment|/*  * $FreeBSD$  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -1644,6 +1648,23 @@ operator|.
 name|st_mtime
 argument_list|)
 decl_stmt|;
+comment|/* Fix non-standard format.  */
+if|if
+condition|(
+name|c
+index|[
+literal|8
+index|]
+operator|==
+literal|'0'
+condition|)
+name|c
+index|[
+literal|8
+index|]
+operator|=
+literal|' '
+expr_stmt|;
 if|if
 condition|(
 operator|!

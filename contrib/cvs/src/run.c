@@ -1442,6 +1442,11 @@ argument_list|(
 name|sherr
 argument_list|)
 expr_stmt|;
+else|else
+comment|/* ensure things are received by the parent in the correct order 	 * relative to the protocol pipe 	 */
+name|cvs_flusherr
+argument_list|()
+expr_stmt|;
 name|out2
 label|:
 if|if
@@ -1455,6 +1460,11 @@ name|close
 argument_list|(
 name|shout
 argument_list|)
+expr_stmt|;
+else|else
+comment|/* ensure things are received by the parent in the correct order 	 * relative to the protocol pipe 	 */
+name|cvs_flushout
+argument_list|()
 expr_stmt|;
 name|out1
 label|:
@@ -2036,17 +2046,9 @@ name|int
 name|fd
 decl_stmt|;
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|FD_CLOEXEC
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|F_SETFD
-argument_list|)
 if|if
 condition|(
 name|fcntl

@@ -969,7 +969,7 @@ condition|(
 operator|(
 name|dp
 operator|=
-name|readdir
+name|CVS_READDIR
 argument_list|(
 name|dirp
 argument_list|)
@@ -1074,7 +1074,7 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|closedir
+name|CVS_CLOSEDIR
 argument_list|(
 name|dirp
 argument_list|)
@@ -1090,7 +1090,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|closedir
+name|CVS_CLOSEDIR
 argument_list|(
 name|dirp
 argument_list|)
@@ -1177,11 +1177,15 @@ name|strncmp
 argument_list|(
 name|dir
 argument_list|,
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|,
 name|strlen
 argument_list|(
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 argument_list|)
 operator|==
@@ -1193,7 +1197,9 @@ name|dir
 index|[
 name|strlen
 argument_list|(
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 index|]
 argument_list|)
@@ -1204,7 +1210,9 @@ name|dir
 operator|+
 name|strlen
 argument_list|(
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 operator|+
 literal|1
@@ -1247,7 +1255,7 @@ condition|(
 operator|(
 name|dp
 operator|=
-name|readdir
+name|CVS_READDIR
 argument_list|(
 name|dirp
 argument_list|)
@@ -1630,7 +1638,7 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|closedir
+name|CVS_CLOSEDIR
 argument_list|(
 name|dirp
 argument_list|)
@@ -1646,7 +1654,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|closedir
+name|CVS_CLOSEDIR
 argument_list|(
 name|dirp
 argument_list|)

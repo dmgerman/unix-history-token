@@ -10,26 +10,6 @@ name|HAVE_KERBEROS
 end_undef
 
 begin_comment
-comment|/* Define if you have GSSAPI with MIT Kerberos version 5 available.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|HAVE_GSSAPI
-end_undef
-
-begin_comment
-comment|/* Define if GSS_C_NT_HOSTBASED_SERVICE is defined in the gssapi.h    header file.  Only relevant when using GSSAPI.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|HAVE_GSS_C_NT_HOSTBASED_SERVICE
-end_undef
-
-begin_comment
 comment|/* Define if you want CVS to be able to be a remote repository client.  */
 end_comment
 

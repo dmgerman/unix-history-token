@@ -2928,13 +2928,11 @@ block|{
 name|int
 name|f
 decl_stmt|;
-name|int
-name|inhibit_hunk_merge
-init|=
-name|horizon_lines
-operator|!=
-name|context
-decl_stmt|;
+if|if
+condition|(
+name|inhibit
+condition|)
+return|return;
 for|for
 control|(
 name|f
@@ -3086,13 +3084,7 @@ name|i
 operator|-
 name|start
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|inhibit_hunk_merge
-condition|)
-block|{
-comment|/* Move the changed region back, so long as the 		     previous unchanged line matches the last changed one. 		     This merges with previous changed regions.  */
+comment|/* Move the changed region back, so long as the 		 previous unchanged line matches the last changed one. 		 This merges with previous changed regions.  */
 while|while
 condition|(
 name|start
@@ -3150,7 +3142,6 @@ index|]
 condition|)
 continue|continue;
 block|}
-block|}
 comment|/* Set CORRESPONDING to the end of the changed run, at the last 		 point where it corresponds to a changed run in the other file. 		 CORRESPONDING == I_END means no such point has been found.  */
 name|corresponding
 operator|=
@@ -3165,7 +3156,7 @@ name|i
 else|:
 name|i_end
 expr_stmt|;
-comment|/* Shift the changed region forward, so long as the 		 first changed line matches the following unchanged one, 		 but if INHIBIT_HUNK_MERGE is 1 do not shift if 		 this would merge with another changed region. 		 Do this second, so that if there are no merges, 		 the changed region is moved forward as far as possible.  */
+comment|/* Move the changed region forward, so long as the 		 first changed line matches the following unchanged one. 		 This merges with following changed regions. 		 Do this second, so that if there are no merges, 		 the changed region is moved forward as far as possible.  */
 while|while
 condition|(
 name|i
@@ -3181,18 +3172,6 @@ name|equivs
 index|[
 name|i
 index|]
-operator|&&
-operator|!
-operator|(
-name|inhibit_hunk_merge
-operator|&
-name|other_changed
-index|[
-name|j
-operator|+
-literal|1
-index|]
-operator|)
 condition|)
 block|{
 name|changed

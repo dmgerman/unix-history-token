@@ -326,7 +326,9 @@ directive|ifdef
 name|CLIENT_SUPPORT
 if|if
 condition|(
-name|client_active
+name|current_parsed_root
+operator|->
+name|isremote
 condition|)
 block|{
 name|start_server
@@ -400,6 +402,8 @@ argument_list|,
 name|argv
 argument_list|,
 name|local
+argument_list|,
+name|W_LOCAL
 argument_list|,
 literal|0
 argument_list|)
@@ -982,7 +986,9 @@ name|CLIENT_SUPPORT
 comment|/* OK, we've done everything which needs to happen on the client side.        Now we can try to contact the server; if we fail, then the        notifications stay in CVSADM_NOTIFY to be sent next time.  */
 if|if
 condition|(
-name|client_active
+name|current_parsed_root
+operator|->
+name|isremote
 condition|)
 block|{
 if|if
@@ -1090,6 +1096,8 @@ argument_list|,
 name|argv
 argument_list|,
 name|local
+argument_list|,
+name|W_LOCAL
 argument_list|,
 literal|0
 argument_list|)
@@ -1276,6 +1284,23 @@ literal|24
 index|]
 operator|=
 literal|'\0'
+expr_stmt|;
+comment|/* Fix non-standard format.  */
+if|if
+condition|(
+name|ascnow
+index|[
+literal|8
+index|]
+operator|==
+literal|'0'
+condition|)
+name|ascnow
+index|[
+literal|8
+index|]
+operator|=
+literal|' '
 expr_stmt|;
 name|fprintf
 argument_list|(
@@ -2098,6 +2123,23 @@ literal|24
 index|]
 operator|=
 literal|'\0'
+expr_stmt|;
+comment|/* Fix non-standard format.  */
+if|if
+condition|(
+name|ascnow
+index|[
+literal|8
+index|]
+operator|==
+literal|'0'
+condition|)
+name|ascnow
+index|[
+literal|8
+index|]
+operator|=
+literal|' '
 expr_stmt|;
 name|fprintf
 argument_list|(
@@ -3667,7 +3709,9 @@ name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 operator|+
 sizeof|sizeof
@@ -3683,7 +3727,9 @@ name|strcpy
 argument_list|(
 name|usersname
 argument_list|,
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 expr_stmt|;
 name|strcat
@@ -4691,7 +4737,9 @@ directive|ifdef
 name|CLIENT_SUPPORT
 if|if
 condition|(
-name|client_active
+name|current_parsed_root
+operator|->
+name|isremote
 condition|)
 block|{
 name|start_server

@@ -1264,6 +1264,23 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Fix non-standard format.  */
+if|if
+condition|(
+name|cp
+index|[
+literal|8
+index|]
+operator|==
+literal|'0'
+condition|)
+name|cp
+index|[
+literal|8
+index|]
+operator|=
+literal|' '
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1409,6 +1426,23 @@ literal|24
 index|]
 operator|=
 literal|0
+expr_stmt|;
+comment|/* Fix non-standard format.  */
+if|if
+condition|(
+name|cp
+index|[
+literal|8
+index|]
+operator|==
+literal|'0'
+condition|)
+name|cp
+index|[
+literal|8
+index|]
+operator|=
+literal|' '
 expr_stmt|;
 operator|(
 name|void
