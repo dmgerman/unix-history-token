@@ -2021,10 +2021,6 @@ return|;
 block|}
 end_function
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
 comment|/*  * Adjust "and" and "or" masks for a -o option argument.  */
 end_comment

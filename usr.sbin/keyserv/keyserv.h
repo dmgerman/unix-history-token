@@ -33,10 +33,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_decl_stmt
 specifier|extern
 name|keystatus

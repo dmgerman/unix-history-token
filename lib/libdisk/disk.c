@@ -326,10 +326,6 @@ block|}
 block|}
 end_function
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_function
 name|struct
 name|disk

@@ -77,7 +77,7 @@ name|DECL
 parameter_list|(
 name|foo
 parameter_list|)
-value|int foo(int, char**);
+value|int foo(int, char**)
 end_define
 
 begin_expr_stmt

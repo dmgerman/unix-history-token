@@ -185,7 +185,6 @@ name|gconsumer
 modifier|*
 name|cp
 decl_stmt|;
-empty_stmt|;
 name|struct
 name|gident
 modifier|*
