@@ -98,7 +98,7 @@ name|val
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+literal|0
 return|;
 block|}
 if|if
@@ -121,15 +121,8 @@ literal|10
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"es1888_dspwr(0x%02x) timed out.\n"
-argument_list|,
-name|val
-argument_list|)
-expr_stmt|;
 return|return
-literal|0
+name|ENXIO
 return|;
 block|}
 end_function
@@ -234,21 +227,6 @@ operator|!=
 literal|0xAA
 condition|)
 block|{
-name|DEB
-argument_list|(
-name|printf
-argument_list|(
-literal|"sb_reset_dsp 0x%lx failed\n"
-argument_list|,
-name|rman_get_start
-argument_list|(
-name|d
-operator|->
-name|io_base
-argument_list|)
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return
 name|ENXIO
 return|;
@@ -375,19 +353,25 @@ argument_list|(
 literal|0x220
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|es1888_reset
 argument_list|(
 literal|0x220
 argument_list|)
-expr_stmt|;
+condition|)
+return|return;
 comment|/* 	 * Check identification bytes for es1888. 	 */
+if|if
+condition|(
 name|es1888_dspwr
 argument_list|(
 literal|0x220
 argument_list|,
 literal|0xe7
 argument_list|)
-expr_stmt|;
+condition|)
+return|return;
 name|hi
 operator|=
 name|es1888_get_byte
@@ -400,15 +384,6 @@ operator|=
 name|es1888_get_byte
 argument_list|(
 literal|0x220
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"es1888_identify: 0x%02x%02x\n"
-argument_list|,
-name|hi
-argument_list|,
-name|lo
 argument_list|)
 expr_stmt|;
 if|if
@@ -427,46 +402,49 @@ literal|0x80
 condition|)
 return|return;
 comment|/* 	 * Program irq and drq. 	 */
+if|if
+condition|(
 name|es1888_dspwr
 argument_list|(
 literal|0x220
 argument_list|,
 literal|0xc6
 argument_list|)
-expr_stmt|;
 comment|/* enter extended mode */
+operator|||
 name|es1888_dspwr
 argument_list|(
 literal|0x220
 argument_list|,
 literal|0xb1
 argument_list|)
-expr_stmt|;
 comment|/* write register b1 */
+operator|||
 name|es1888_dspwr
 argument_list|(
 literal|0x220
 argument_list|,
 literal|0x14
 argument_list|)
-expr_stmt|;
 comment|/* enable irq 5 */
+operator|||
 name|es1888_dspwr
 argument_list|(
 literal|0x220
 argument_list|,
 literal|0xb2
 argument_list|)
-expr_stmt|;
 comment|/* write register b1 */
+operator|||
 name|es1888_dspwr
 argument_list|(
 literal|0x220
 argument_list|,
 literal|0x18
 argument_list|)
-expr_stmt|;
+condition|)
 comment|/* enable drq 1 */
+return|return;
 comment|/* 	 * Create the device and program its resources. 	 */
 name|dev
 operator|=
