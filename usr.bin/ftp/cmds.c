@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$	*/
+comment|/*	$Id: cmds.c,v 1.12 1997/12/13 20:38:12 pst Exp $	*/
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$Id$"
+literal|"$Id: cmds.c,v 1.12 1997/12/13 20:38:12 pst Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5368,14 +5368,14 @@ index|[
 literal|0
 index|]
 argument_list|,
-literal|"dir"
+literal|"nlist"
 argument_list|)
 operator|==
 literal|0
 condition|?
-literal|"LIST"
-else|:
 literal|"NLST"
+else|:
+literal|"LIST"
 expr_stmt|;
 name|oldargv2
 operator|=
