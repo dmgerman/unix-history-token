@@ -2292,6 +2292,14 @@ name|fs_contigdirs
 expr_stmt|;
 name|altsblock
 operator|.
+name|fs_active
+operator|=
+name|sblock
+operator|.
+name|fs_active
+expr_stmt|;
+name|altsblock
+operator|.
 name|fs_avgfilesize
 operator|=
 name|sblock
