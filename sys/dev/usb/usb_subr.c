@@ -5388,6 +5388,12 @@ block|}
 endif|#
 directive|endif
 comment|/* First remove remove old */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 name|SIMPLEQ_REMOVE_HEAD
 argument_list|(
 operator|&
@@ -5406,6 +5412,24 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|SIMPLEQ_REMOVE_HEAD
+argument_list|(
+operator|&
+name|pipe
+operator|->
+name|queue
+argument_list|,
+name|next
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|pipe

@@ -1090,6 +1090,12 @@ if|if
 condition|(
 name|reqh
 condition|)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 name|SIMPLEQ_REMOVE_HEAD
 argument_list|(
 operator|&
@@ -1100,6 +1106,22 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|SIMPLEQ_REMOVE_HEAD
+argument_list|(
+operator|&
+name|usbd_free_requests
+argument_list|,
+name|next
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 else|else
 name|reqh
 operator|=
@@ -3580,7 +3602,24 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
-block|for (;;) { 		reqh = SIMPLEQ_FIRST(&pipe->queue); 		if (reqh == 0) 			break; 		SIMPLEQ_REMOVE_HEAD(&pipe->queue, reqh, next); 		reqh->status = USBD_CANCELLED; 		if (reqh->callback) 			reqh->callback(reqh, reqh->priv, reqh->status); 	}
+block|for (;;) { 		reqh = SIMPLEQ_FIRST(&pipe->queue); 		if (reqh == 0) 			break;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+block|SIMPLEQ_REMOVE_HEAD(&pipe->queue, reqh, next);
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+block|SIMPLEQ_REMOVE_HEAD(&pipe->queue, next);
+endif|#
+directive|endif
+block|reqh->status = USBD_CANCELLED; 		if (reqh->callback) 			reqh->callback(reqh, reqh->priv, reqh->status); 	}
 else|#
 directive|else
 while|while
@@ -3607,6 +3646,12 @@ argument_list|(
 name|reqh
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 name|SIMPLEQ_REMOVE_HEAD
 argument_list|(
 operator|&
@@ -3619,6 +3664,24 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|SIMPLEQ_REMOVE_HEAD
+argument_list|(
+operator|&
+name|pipe
+operator|->
+name|queue
+argument_list|,
+name|next
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 endif|#
 directive|endif
