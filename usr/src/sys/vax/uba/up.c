@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	%H%	3.16	%G%	*/
+comment|/*	%H%	3.17	%G%	*/
 end_comment
 
 begin_comment
@@ -630,7 +630,7 @@ begin_define
 define|#
 directive|define
 name|RDY
-value|020
+value|0200
 end_define
 
 begin_comment
@@ -1560,6 +1560,12 @@ expr_stmt|;
 if|if
 condition|(
 name|unit
+operator|<=
+name|DK_NMAX
+operator|&&
+name|DK_N
+operator|+
+name|NUP
 operator|<=
 name|DK_NMAX
 condition|)
