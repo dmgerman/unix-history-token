@@ -1406,21 +1406,70 @@ operator|=
 literal|"OPTi 82C822 host to PCI Bridge"
 expr_stmt|;
 break|break;
-comment|/* Ross (?) -- vendor 0x1166 */
+comment|/* RCC -- vendor 0x1166 */
 case|case
 literal|0x00051166
 case|:
 name|s
 operator|=
-literal|"Ross (?) host to PCI bridge"
+literal|"RCC HE host to PCI bridge"
 expr_stmt|;
-comment|/* just guessing the secondary bus register number ... */
-if|#
-directive|if
-literal|0
-block|*busnum = pci_cfgread(cfg, 0x45, 1);
-endif|#
-directive|endif
+operator|*
+name|busnum
+operator|=
+name|pci_cfgread
+argument_list|(
+name|cfg
+argument_list|,
+literal|0x44
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x00061166
+case|:
+comment|/* FALLTHROUGH */
+case|case
+literal|0x00081166
+case|:
+name|s
+operator|=
+literal|"RCC host to PCI bridge"
+expr_stmt|;
+operator|*
+name|busnum
+operator|=
+name|pci_cfgread
+argument_list|(
+name|cfg
+argument_list|,
+literal|0x44
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x00091166
+case|:
+name|s
+operator|=
+literal|"RCC LE host to PCI bridge"
+expr_stmt|;
+operator|*
+name|busnum
+operator|=
+name|pci_cfgread
+argument_list|(
+name|cfg
+argument_list|,
+literal|0x44
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 break|break;
 comment|/* Integrated Micro Solutions -- vendor 0x10e0 */
 case|case
@@ -1474,10 +1523,16 @@ block|{
 name|pcicfgregs
 name|probe
 decl_stmt|;
+name|u_int8_t
+name|hdrtype
+decl_stmt|;
 name|int
 name|found
 init|=
 literal|0
+decl_stmt|;
+name|int
+name|pcifunchigh
 decl_stmt|;
 if|if
 condition|(
@@ -1519,11 +1574,33 @@ name|slot
 operator|++
 control|)
 block|{
-name|int
+name|hdrtype
+operator|=
+name|pci_cfgread
+argument_list|(
+operator|&
+name|probe
+argument_list|,
+name|PCIR_HEADERTYPE
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hdrtype
+operator|&
+name|PCIM_MFDEV
+condition|)
 name|pcifunchigh
-init|=
+operator|=
+literal|7
+expr_stmt|;
+else|else
+name|pcifunchigh
+operator|=
 literal|0
-decl_stmt|;
+expr_stmt|;
 for|for
 control|(
 name|probe
