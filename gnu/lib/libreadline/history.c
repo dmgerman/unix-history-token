@@ -8436,9 +8436,13 @@ argument_list|)
 expr_stmt|;
 name|t
 operator|=
-name|gets
+name|fgets
 argument_list|(
 name|line
+argument_list|,
+literal|1024
+argument_list|,
+name|stdin
 argument_list|)
 expr_stmt|;
 if|if
