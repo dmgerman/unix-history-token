@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lastcomm.c	4.12 (Berkeley) %G%"
+literal|"@(#)lastcomm.c	4.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -284,20 +284,6 @@ name|cp
 decl_stmt|;
 name|time_t
 name|x
-init|=
-name|expand
-argument_list|(
-name|acp
-operator|->
-name|ac_utime
-argument_list|)
-operator|+
-name|expand
-argument_list|(
-name|acp
-operator|->
-name|ac_stime
-argument_list|)
 decl_stmt|;
 name|acp
 operator|->
@@ -355,6 +341,10 @@ literal|'?'
 expr_stmt|;
 if|if
 condition|(
+name|argc
+operator|>
+literal|1
+operator|&&
 operator|!
 name|ok
 argument_list|(
@@ -364,12 +354,24 @@ name|argv
 argument_list|,
 name|acp
 argument_list|)
-operator|&&
-name|argc
-operator|!=
-literal|1
 condition|)
 continue|continue;
+name|x
+operator|=
+name|expand
+argument_list|(
+name|acp
+operator|->
+name|ac_utime
+argument_list|)
+operator|+
+name|expand
+argument_list|(
+name|acp
+operator|->
+name|ac_stime
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%-*s %s %-*s %-*s %6.2f secs %.16s\n"
