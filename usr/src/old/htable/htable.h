@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)htable.h	4.2 (Berkeley) %G%	*/
+comment|/*	@(#)htable.h	4.3 (Berkeley) %G%	*/
 end_comment
 
 begin_include
@@ -42,6 +42,47 @@ name|name
 modifier|*
 name|name_link
 decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|gateway
+block|{
+name|struct
+name|gateway
+modifier|*
+name|g_link
+decl_stmt|;
+name|struct
+name|gateway
+modifier|*
+name|g_dst
+decl_stmt|;
+comment|/* connected gateway if metric> 0 */
+name|struct
+name|gateway
+modifier|*
+name|g_firstent
+decl_stmt|;
+comment|/* first entry for this gateway */
+name|struct
+name|name
+modifier|*
+name|g_name
+decl_stmt|;
+name|int
+name|g_net
+decl_stmt|;
+name|u_long
+name|g_addr
+decl_stmt|;
+comment|/* address on g_net */
+name|int
+name|g_metric
+decl_stmt|;
+comment|/* hops to this net */
 block|}
 struct|;
 end_struct
