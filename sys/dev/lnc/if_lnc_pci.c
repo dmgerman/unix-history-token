@@ -140,13 +140,6 @@ name|PCI_DEVICE_ID_PCHome_PCI
 value|0x2001
 end_define
 
-begin_define
-define|#
-directive|define
-name|LNC_PROBE_PRIORITY
-value|-1
-end_define
-
 begin_function
 specifier|static
 name|int
@@ -190,7 +183,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|LNC_PROBE_PRIORITY
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 break|break;
@@ -206,7 +199,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|LNC_PROBE_PRIORITY
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 break|break;

@@ -503,8 +503,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|2
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 comment|/* XXX */

@@ -1343,7 +1343,7 @@ block|}
 comment|/* 	 * XXXX: Here is where we might load the f/w module 	 * XXXX: (or increase a reference count to it). 	 */
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
