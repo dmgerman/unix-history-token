@@ -1346,11 +1346,11 @@ argument_list|(
 name|td
 operator|->
 name|td_critnest
-operator|>
+operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"critical_exit:  critnest< 0"
+literal|"critical_exit: td_critnest == 0"
 operator|)
 argument_list|)
 expr_stmt|;
