@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * $Id: ip_log.c,v 1.1.1.2 1998/03/21 10:11:54 peter Exp $  */
+comment|/*  * Copyright (C) 1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * $Id: ip_log.c,v 1.2 1998/03/21 11:34:14 peter Exp $  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"opt_ipfilter.h"
+end_include
 
 begin_ifdef
 ifdef|#
@@ -265,6 +271,11 @@ name|OpenBSD
 operator|>
 literal|199603
 operator|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 end_if
 
 begin_include
@@ -427,7 +438,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|<net/if_var.h>
+file|<sys/malloc.h>
 end_include
 
 begin_endif
