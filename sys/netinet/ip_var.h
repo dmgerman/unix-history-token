@@ -367,6 +367,10 @@ name|u_long
 name|ips_toolong
 decl_stmt|;
 comment|/* ip length> max ip packet size */
+name|u_long
+name|ips_notmember
+decl_stmt|;
+comment|/* multicasts for unregistered grps */
 block|}
 struct|;
 end_struct

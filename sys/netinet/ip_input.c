@@ -1832,7 +1832,7 @@ condition|)
 block|{
 name|ipstat
 operator|.
-name|ips_cantforward
+name|ips_notmember
 operator|++
 expr_stmt|;
 name|m_freem
