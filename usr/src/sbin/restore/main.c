@@ -8,7 +8,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)main.c 1.16 %G%"
+literal|"@(#)main.c 2.1 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,43 +74,43 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/inode.h"
+file|<sys/inode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/fs.h"
+file|<sys/fs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/ndir.h"
+file|<sys/ndir.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/user.h"
+file|<sys/user.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/dumprestor.h"
+file|<dumprestor.h>
 end_include
 
 begin_include
