@@ -8890,8 +8890,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|MTX_SPIN
-operator||
-name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
 name|mtx_init
