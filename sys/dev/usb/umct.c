@@ -506,7 +506,7 @@ name|driver_t
 name|umct_driver
 init|=
 block|{
-literal|"umct"
+literal|"ucom"
 block|,
 name|umct_methods
 block|,

@@ -1098,7 +1098,7 @@ name|driver_t
 name|ubsa_driver
 init|=
 block|{
-literal|"ubsa"
+literal|"ucom"
 block|,
 name|ubsa_methods
 block|,
