@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)whereis.c	4.10 (Berkeley) %G%"
+literal|"@(#)whereis.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,6 +104,12 @@ block|,
 literal|"/usr/man/man7"
 block|,
 literal|"/usr/man/man8"
+block|,
+literal|"/usr/man/manl"
+block|,
+literal|"/usr/man/mann"
+block|,
+literal|"/usr/man/mano"
 block|,
 literal|0
 block|}
