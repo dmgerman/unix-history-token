@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.31 1995/03/21 11:21:08 dufault Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.32 1995/04/14 15:10:44 dufault Exp $  */
 end_comment
 
 begin_comment
@@ -873,6 +873,9 @@ name|ststart
 parameter_list|(
 name|u_int32
 name|unit
+parameter_list|,
+name|u_int32
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4178,6 +4181,8 @@ comment|/* 	 * Tell the device to get going on the transfer if it's 	 * not doin
 name|ststart
 argument_list|(
 name|unit
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|splx
@@ -4215,9 +4220,14 @@ name|void
 name|ststart
 parameter_list|(
 name|unit
+parameter_list|,
+name|flags
 parameter_list|)
 name|u_int32
 name|unit
+decl_stmt|;
+name|u_int32
+name|flags
 decl_stmt|;
 block|{
 name|struct
@@ -4253,9 +4263,6 @@ decl_stmt|;
 name|struct
 name|scsi_rw_tape
 name|cmd
-decl_stmt|;
-name|u_int32
-name|flags
 decl_stmt|;
 name|SC_DEBUG
 argument_list|(
@@ -4550,7 +4557,7 @@ operator||=
 name|ST_WRITTEN
 expr_stmt|;
 name|flags
-operator|=
+operator||=
 name|SCSI_DATA_OUT
 expr_stmt|;
 block|}
@@ -4563,7 +4570,7 @@ operator|=
 name|READ_COMMAND_TAPE
 expr_stmt|;
 name|flags
-operator|=
+operator||=
 name|SCSI_DATA_IN
 expr_stmt|;
 block|}

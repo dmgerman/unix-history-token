@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.25 1995/03/28 07:57:23 bde Exp $  */
+comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.27 1995/04/14 15:10:31 dufault Exp $  */
 end_comment
 
 begin_define
@@ -483,6 +483,8 @@ operator|(
 name|sc_link
 operator|->
 name|dev_unit
+operator|,
+name|flags
 operator|)
 expr_stmt|;
 block|}
@@ -1756,21 +1758,6 @@ name|EIO
 return|;
 block|}
 block|}
-if|if
-condition|(
-name|bp
-operator|&&
-operator|!
-operator|(
-name|flags
-operator|&
-name|SCSI_USER
-operator|)
-condition|)
-name|flags
-operator||=
-name|SCSI_NOSLEEP
-expr_stmt|;
 name|SC_DEBUG
 argument_list|(
 name|sc_link
