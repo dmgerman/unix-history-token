@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tu.c	4.16	83/06/01	*/
+comment|/*	tu.c	4.17	83/06/01	*/
 end_comment
 
 begin_if
@@ -78,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"tu58.h"
+file|"../vax/rsp.h"
 end_include
 
 begin_define
