@@ -7859,7 +7859,6 @@ literal|"Startup Services Menu"
 block|,
 literal|"This menu allows you to configure various aspects of your system's\n"
 literal|"startup configuration.  Use [SPACE] or [ENTER] to select items, and\n"
-block|,
 literal|"[TAB] to move to the buttons.  Select Exit to leave this menu."
 block|,
 name|NULL
