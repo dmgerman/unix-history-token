@@ -458,11 +458,6 @@ literal|"m_getm(): len is< 0"
 operator|)
 argument_list|)
 expr_stmt|;
-name|MBUF_CHECKSLEEP
-argument_list|(
-name|how
-argument_list|)
-expr_stmt|;
 comment|/* If m != NULL, we will append to the end of that chain. */
 if|if
 condition|(
@@ -1393,11 +1388,6 @@ name|mbuf
 modifier|*
 name|mn
 decl_stmt|;
-name|MBUF_CHECKSLEEP
-argument_list|(
-name|how
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|m

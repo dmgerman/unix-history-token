@@ -1442,11 +1442,6 @@ block|{ 	struct
 name|mb_args
 name|args
 block|;
-name|MBUF_CHECKSLEEP
-argument_list|(
-name|how
-argument_list|)
-block|;
 name|args
 operator|.
 name|flags
@@ -1504,11 +1499,6 @@ name|m
 block|; 	struct
 name|mb_args
 name|args
-block|;
-name|MBUF_CHECKSLEEP
-argument_list|(
-name|how
-argument_list|)
 block|;
 name|args
 operator|.
@@ -1582,11 +1572,6 @@ name|struct
 name|mb_args
 name|args
 decl_stmt|;
-name|MBUF_CHECKSLEEP
-argument_list|(
-name|how
-argument_list|)
-expr_stmt|;
 name|args
 operator|.
 name|flags
@@ -1638,11 +1623,6 @@ argument_list|)
 block|{ 	struct
 name|mb_args
 name|args
-block|;
-name|MBUF_CHECKSLEEP
-argument_list|(
-name|how
-argument_list|)
 block|;
 name|args
 operator|.
@@ -1752,11 +1732,6 @@ name|int
 name|how
 parameter_list|)
 block|{
-name|MBUF_CHECKSLEEP
-argument_list|(
-name|how
-argument_list|)
-expr_stmt|;
 name|m
 operator|->
 name|m_ext
