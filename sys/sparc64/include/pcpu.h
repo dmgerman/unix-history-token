@@ -109,6 +109,19 @@ name|intr_vector
 modifier|*
 name|gd_ivt
 decl_stmt|;
+comment|/* Watch point support. */
+name|u_int
+name|gd_wp_insn
+decl_stmt|;
+name|u_long
+name|gd_wp_pstate
+decl_stmt|;
+name|u_long
+name|gd_wp_va
+decl_stmt|;
+name|int
+name|gd_wp_mask
+decl_stmt|;
 block|}
 struct|;
 end_struct
