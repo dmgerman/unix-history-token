@@ -1,7 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/*	df.c	4.6	83/06/15	*/
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)df.c	4.7 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Dial the DF02-AC or DF03-AC  */
@@ -26,22 +43,6 @@ include|#
 directive|include
 file|"tip.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|<setjmp.h>
-end_include
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|sccsid
-init|=
-literal|"@(#)df.c	4.6 %G%"
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -195,21 +196,15 @@ name|speed
 init|=
 literal|0
 decl_stmt|,
+name|rw
+init|=
+literal|2
+decl_stmt|;
+name|char
 name|c
 init|=
-literal|0
+literal|'\0'
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|TIOCMSET
-name|int
-name|st
-init|=
-name|MST
-decl_stmt|;
-comment|/* Secondary Transmit flag, for speed select */
-endif|#
-directive|endif
 name|ioctl
 argument_list|(
 name|f
@@ -270,6 +265,12 @@ condition|(
 name|df03
 condition|)
 block|{
+name|int
+name|st
+init|=
+name|TIOCM_ST
+decl_stmt|;
+comment|/* secondary Transmit flag */
 name|ioctl
 argument_list|(
 name|f
@@ -368,7 +369,8 @@ name|f
 argument_list|,
 name|TIOCFLUSH
 argument_list|,
-literal|0
+operator|&
+name|rw
 argument_list|)
 expr_stmt|;
 name|write
@@ -410,10 +412,6 @@ name|read
 argument_list|(
 name|f
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|c
 argument_list|,
@@ -470,6 +468,11 @@ end_macro
 
 begin_block
 block|{
+name|int
+name|rw
+init|=
+literal|2
+decl_stmt|;
 name|write
 argument_list|(
 name|FD
@@ -490,7 +493,8 @@ name|FD
 argument_list|,
 name|TIOCFLUSH
 argument_list|,
-literal|0
+operator|&
+name|rw
 argument_list|)
 expr_stmt|;
 block|}
@@ -503,28 +507,8 @@ end_macro
 
 begin_block
 block|{
-name|write
-argument_list|(
-name|FD
-argument_list|,
-literal|"\001"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|sleep
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-name|ioctl
-argument_list|(
-name|FD
-argument_list|,
-name|TIOCFLUSH
-argument_list|,
-literal|0
-argument_list|)
+name|df_disconnect
+argument_list|()
 expr_stmt|;
 block|}
 end_block

@@ -1,7 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/*	ventel.c	1.3	83/06/15	*/
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)ventel.c	1.4 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -10,7 +27,7 @@ name|VENTEL
 end_if
 
 begin_comment
-comment|/*  * Routines for calling up on a Ventel Modem  */
+comment|/*  * Routines for calling up on a Ventel Modem  * The Ventel is expected to be strapped for "no echo".  */
 end_comment
 
 begin_include
@@ -19,45 +36,12 @@ directive|include
 file|"tip.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<setjmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
 begin_define
 define|#
 directive|define
 name|MAXRETRY
 value|5
 end_define
-
-begin_define
-define|#
-directive|define
-name|DISCONNECT
-value|"\03"
-end_define
-
-begin_comment
-comment|/* ^C */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|sccsid
-init|=
-literal|"@(#)ventel.c	1.3 %G%"
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -73,6 +57,13 @@ name|int
 name|timeout
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|jmp_buf
+name|timeoutbuf
 decl_stmt|;
 end_decl_stmt
 
@@ -192,7 +183,7 @@ argument_list|)
 expr_stmt|;
 name|echo
 argument_list|(
-literal|"k$\r$\n$D$I$A$L$:$<"
+literal|"#k$\r$\n$D$I$A$L$:$ "
 argument_list|)
 expr_stmt|;
 for|for
@@ -222,19 +213,10 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|read
-argument_list|(
-name|FD
-argument_list|,
-name|cp
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 name|echo
 argument_list|(
-literal|">\r$\n"
+literal|"\r$\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -450,13 +432,6 @@ name|int
 name|sigALRM
 parameter_list|()
 block|{
-name|signal
-argument_list|(
-name|SIGALRM
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"\07timeout waiting for reply\n"
@@ -466,6 +441,13 @@ name|timeout
 operator|=
 literal|1
 expr_stmt|;
+name|longjmp
+argument_list|(
+name|timeoutbuf
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -474,16 +456,23 @@ specifier|static
 name|int
 name|gobble
 parameter_list|(
-name|s
+name|match
 parameter_list|)
 specifier|register
 name|char
-name|s
+name|match
 decl_stmt|;
 block|{
 name|char
 name|c
 decl_stmt|;
+name|int
+function_decl|(
+modifier|*
+name|f
+function_decl|)
+parameter_list|()
+function_decl|;
 name|signal
 argument_list|(
 name|SIGALRM
@@ -497,6 +486,27 @@ literal|0
 expr_stmt|;
 do|do
 block|{
+if|if
+condition|(
+name|setjmp
+argument_list|(
+name|timeoutbuf
+argument_list|)
+condition|)
+block|{
+name|signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|f
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|alarm
 argument_list|(
 name|number
@@ -518,14 +528,14 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|c
-operator|&=
-literal|0177
-expr_stmt|;
 name|alarm
 argument_list|(
 literal|0
 argument_list|)
+expr_stmt|;
+name|c
+operator|&=
+literal|0177
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -547,15 +557,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|timeout
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 do|while
 condition|(
@@ -565,7 +566,7 @@ literal|'\n'
 operator|&&
 name|c
 operator|!=
-name|s
+name|match
 condition|)
 do|;
 name|signal
@@ -579,7 +580,7 @@ return|return
 operator|(
 name|c
 operator|==
-name|s
+name|match
 operator|)
 return|;
 block|}
@@ -598,7 +599,7 @@ value|((a)>(b)?(b):(a))
 end_define
 
 begin_comment
-comment|/*  * This convoluted piece of code attempts to get  * the ventel in sync.  If you don't have the capacity or nread  * call there are gory ways to simulate this.  */
+comment|/*  * This convoluted piece of code attempts to get  * the ventel in sync.  If you don't have FIONREAD  * there are gory ways to simulate this.  */
 end_comment
 
 begin_function
@@ -609,16 +610,12 @@ parameter_list|(
 name|fd
 parameter_list|)
 block|{
-name|long
-name|nread
-decl_stmt|;
-specifier|register
 name|int
 name|already
 init|=
 literal|0
 decl_stmt|,
-name|nbytes
+name|nread
 decl_stmt|;
 name|char
 name|buf
@@ -700,17 +697,20 @@ operator|)
 operator|&
 name|nread
 argument_list|)
-operator|>=
+operator|<
 literal|0
 condition|)
 block|{
-name|nbytes
-operator|=
-name|nread
+name|perror
+argument_list|(
+literal|"tip: ioctl"
+argument_list|)
 expr_stmt|;
+continue|continue;
+block|}
 while|while
 condition|(
-name|nbytes
+name|nread
 operator|>
 literal|0
 condition|)
@@ -723,7 +723,7 @@ name|buf
 argument_list|,
 name|min
 argument_list|(
-name|nbytes
+name|nread
 argument_list|,
 literal|60
 argument_list|)
@@ -734,7 +734,7 @@ condition|(
 operator|(
 name|buf
 index|[
-name|nbytes
+name|nread
 operator|-
 literal|1
 index|]
@@ -749,11 +749,11 @@ operator|(
 literal|1
 operator|)
 return|;
-name|nbytes
+name|nread
 operator|-=
 name|min
 argument_list|(
-name|nbytes
+name|nread
 argument_list|,
 literal|60
 argument_list|)
@@ -767,7 +767,6 @@ expr_stmt|;
 name|already
 operator|++
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(

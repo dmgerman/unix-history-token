@@ -1,7 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/*	value.c	4.4	83/06/15	*/
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)value.c	4.5 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -15,16 +32,6 @@ directive|define
 name|MIDDLE
 value|35
 end_define
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|sccsid
-init|=
-literal|"@(#)value.c	4.4 %G%"
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -1513,16 +1520,24 @@ modifier|*
 name|expand
 parameter_list|()
 function_decl|;
-if|if
-condition|(
 name|p
 operator|=
 name|vlookup
 argument_list|(
 name|s
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+literal|0
 condition|)
-block|{
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 if|if
 condition|(
 name|p
@@ -1572,13 +1587,6 @@ block|}
 return|return
 operator|(
 literal|0
-operator|)
-return|;
-block|}
-else|else
-return|return
-operator|(
-literal|1
 operator|)
 return|;
 block|}

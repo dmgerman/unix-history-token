@@ -1,13 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/*	v3451.c	4.2	83/06/24	*/
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
-begin_if
-if|#
-directive|if
-name|VADIC
-end_if
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)v3451.c	4.3 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|V3451
+end_ifdef
 
 begin_comment
 comment|/*  * Routines for calling up on a Vadic 3451 Modem  */
@@ -19,24 +36,6 @@ directive|include
 file|"tip.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<setjmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
 begin_decl_stmt
 specifier|static
 name|jmp_buf
@@ -45,7 +44,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|vadic_dialer
+name|v3451_dialer
 argument_list|(
 name|num
 argument_list|,
@@ -461,7 +460,7 @@ block|}
 end_block
 
 begin_macro
-name|vadic_disconnect
+name|v3451_disconnect
 argument_list|()
 end_macro
 
@@ -476,7 +475,7 @@ block|}
 end_block
 
 begin_macro
-name|vadic_abort
+name|v3451_abort
 argument_list|()
 end_macro
 
@@ -862,6 +861,11 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -1,7 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/*	tip.c	4.14	83/06/15	*/
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)tip.c	4.15 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * tip - UNIX link to other systems  *  tip [-v] [-speed] system-name  * or  *  cu phone-number [-s speed] [-l line] [-a acu]  */
@@ -12,16 +29,6 @@ include|#
 directive|include
 file|"tip.h"
 end_include
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|sccsid
-init|=
-literal|"@(#)tip.c	4.14 %G%"
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Baud rate mapping table  */
@@ -69,12 +76,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VMUNIX
-end_ifdef
-
 begin_decl_stmt
 name|int
 name|disc
@@ -86,11 +87,6 @@ end_decl_stmt
 begin_comment
 comment|/* tip normally runs this way */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|int
@@ -661,9 +657,6 @@ operator|&
 name|deflchars
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VMUNIX
 name|ioctl
 argument_list|(
 literal|0
@@ -678,8 +671,6 @@ operator|&
 name|odisc
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|arg
 operator|=
 name|defarg
@@ -790,9 +781,6 @@ argument_list|(
 name|uucplock
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VMUNIX
 if|if
 condition|(
 name|odisc
@@ -811,8 +799,6 @@ operator|&
 name|odisc
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|exit
 argument_list|(
 literal|0
@@ -862,9 +848,6 @@ operator|&
 name|ltchars
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VMUNIX
 name|ioctl
 argument_list|(
 literal|0
@@ -879,8 +862,6 @@ operator|&
 name|disc
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 
@@ -895,9 +876,6 @@ end_macro
 
 begin_block
 block|{
-ifdef|#
-directive|ifdef
-name|VMUNIX
 name|ioctl
 argument_list|(
 literal|0
@@ -912,8 +890,6 @@ operator|&
 name|odisc
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|ioctl
 argument_list|(
 literal|0
@@ -959,6 +935,13 @@ expr_stmt|;
 block|}
 end_block
 
+begin_decl_stmt
+specifier|static
+name|jmp_buf
+name|promptbuf
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Print string ``s'', then read a string  *  in from the terminal.  Handles signals& allows use of  *  normal erase and kill characters.  */
 end_comment
@@ -996,10 +979,25 @@ name|b
 init|=
 name|p
 decl_stmt|;
+name|int
+argument_list|(
+operator|*
+name|oint
+argument_list|)
+argument_list|()
+decl_stmt|,
+argument_list|(
+operator|*
+name|oquit
+argument_list|)
+argument_list|()
+decl_stmt|;
 name|stoprompt
 operator|=
 literal|0
 expr_stmt|;
+name|oint
+operator|=
 name|signal
 argument_list|(
 name|SIGINT
@@ -1007,6 +1005,8 @@ argument_list|,
 name|intprompt
 argument_list|)
 expr_stmt|;
+name|oint
+operator|=
 name|signal
 argument_list|(
 name|SIGQUIT
@@ -1024,6 +1024,15 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|setjmp
+argument_list|(
+name|promptbuf
+argument_list|)
+operator|==
+literal|0
+condition|)
 while|while
 condition|(
 operator|(
@@ -1041,25 +1050,14 @@ name|p
 operator|!=
 literal|'\n'
 condition|)
-block|{
-if|if
-condition|(
-name|stoprompt
-condition|)
-goto|goto
-name|pbreak
-goto|;
 name|p
 operator|++
 expr_stmt|;
-block|}
 operator|*
 name|p
 operator|=
 literal|'\0'
 expr_stmt|;
-name|pbreak
-label|:
 name|raw
 argument_list|()
 expr_stmt|;
@@ -1067,14 +1065,14 @@ name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
-name|SIG_DFL
+name|oint
 argument_list|)
 expr_stmt|;
 name|signal
 argument_list|(
 name|SIGQUIT
 argument_list|,
-name|SIG_DFL
+name|oint
 argument_list|)
 expr_stmt|;
 return|return
@@ -1114,6 +1112,13 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"\r\n"
+argument_list|)
+expr_stmt|;
+name|longjmp
+argument_list|(
+name|promptbuf
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1501,6 +1506,12 @@ argument|n
 argument_list|)
 end_macro
 
+begin_decl_stmt
+name|int
+name|n
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -1563,12 +1574,10 @@ end_expr_stmt
 
 begin_block
 block|{
-if|if
-condition|(
-name|p
-condition|)
 while|while
 condition|(
+name|p
+operator|&&
 operator|*
 name|p
 condition|)
@@ -1615,6 +1624,8 @@ literal|0
 decl_stmt|;
 while|while
 condition|(
+name|s
+operator|&&
 operator|*
 name|s
 operator|++
@@ -1985,18 +1996,19 @@ argument|speed
 argument_list|)
 end_macro
 
+begin_decl_stmt
+name|int
+name|speed
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
-ifdef|#
-directive|ifdef
-name|VMUNIX
 name|unsigned
 name|bits
 init|=
 name|LDECCTQ
 decl_stmt|;
-endif|#
-directive|endif
 name|arg
 operator|.
 name|sg_ispeed
@@ -2006,6 +2018,12 @@ operator|.
 name|sg_ospeed
 operator|=
 name|speed
+expr_stmt|;
+name|arg
+operator|.
+name|sg_flags
+operator|=
+name|RAW
 expr_stmt|;
 if|if
 condition|(
@@ -2020,17 +2038,8 @@ condition|)
 name|arg
 operator|.
 name|sg_flags
-operator|=
+operator||=
 name|TANDEM
-operator||
-name|RAW
-expr_stmt|;
-else|else
-name|arg
-operator|.
-name|sg_flags
-operator|=
-name|RAW
 expr_stmt|;
 name|ioctl
 argument_list|(
@@ -2046,9 +2055,6 @@ operator|&
 name|arg
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VMUNIX
 name|ioctl
 argument_list|(
 name|FD
@@ -2063,8 +2069,6 @@ operator|&
 name|bits
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 
@@ -2118,14 +2122,6 @@ block|}
 end_function
 
 begin_decl_stmt
-specifier|extern
-name|char
-name|chartab
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|char
 name|partab
@@ -2136,7 +2132,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * do a write to the remote machine with the correct parity  * we are doing 8 bit wide output, so we just generate a character  * with the right parity and output it.  */
+comment|/*  * Do a write to the remote machine with the correct parity.  * We are doing 8 bit wide output, so we just generate a character  * with the right parity and output it.  */
 end_comment
 
 begin_macro
@@ -2180,27 +2176,22 @@ specifier|register
 name|char
 modifier|*
 name|bp
-init|=
-name|buf
 decl_stmt|;
+name|bp
+operator|=
+name|buf
+expr_stmt|;
 for|for
 control|(
 name|i
 operator|=
 literal|0
-operator|,
-name|bp
-operator|=
-name|buf
 init|;
 name|i
 operator|<
 name|n
 condition|;
 name|i
-operator|++
-operator|,
-name|bp
 operator|++
 control|)
 block|{
@@ -2217,6 +2208,9 @@ operator|&
 literal|0177
 index|]
 expr_stmt|;
+name|bp
+operator|++
+expr_stmt|;
 block|}
 name|write
 argument_list|(
@@ -2231,7 +2225,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * build a parity table with the right high-order bit  * copy an even-parity table and doctor it  */
+comment|/*  * Build a parity table with appropriate high-order bit.  */
 end_comment
 
 begin_macro
@@ -2241,12 +2235,18 @@ end_macro
 
 begin_block
 block|{
+specifier|register
 name|int
 name|i
 decl_stmt|;
 name|char
 modifier|*
 name|parity
+decl_stmt|;
+specifier|extern
+name|char
+name|evenpartab
+index|[]
 decl_stmt|;
 if|if
 condition|(
@@ -2289,11 +2289,21 @@ index|[
 name|i
 index|]
 operator|=
-name|chartab
+name|evenpartab
 index|[
 name|i
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|equal
+argument_list|(
+name|parity
+argument_list|,
+literal|"even"
+argument_list|)
+condition|)
+return|return;
 if|if
 condition|(
 name|equal
@@ -2325,8 +2335,8 @@ operator|^=
 literal|0200
 expr_stmt|;
 comment|/* reverse bit 7 */
+return|return;
 block|}
-elseif|else
 if|if
 condition|(
 name|equal
@@ -2366,8 +2376,8 @@ operator|~
 literal|0200
 expr_stmt|;
 comment|/* turn off bit 7 */
+return|return;
 block|}
-elseif|else
 if|if
 condition|(
 name|equal
@@ -2399,27 +2409,13 @@ operator||=
 literal|0200
 expr_stmt|;
 comment|/* turn on bit 7 */
+return|return;
 block|}
-elseif|else
-if|if
-condition|(
-name|equal
-argument_list|(
-name|parity
-argument_list|,
-literal|"even"
-argument_list|)
-condition|)
-block|{
-comment|/* table is already even parity */
-block|}
-else|else
-block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"parity value %s unknown\n"
+literal|"%s: unknown parity value\n"
 argument_list|,
 name|PA
 argument_list|)
@@ -2429,7 +2425,6 @@ argument_list|(
 name|stderr
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_block
 

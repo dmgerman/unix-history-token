@@ -1,15 +1,40 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/*	remcap.c	4.7	83/06/15	*/
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)remcap.c	4.8 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* Copyright (c) 1979 Regents of the University of California */
+comment|/*  * remcap - routines for dealing with the remote host data base  *  * derived from termcap  */
 end_comment
 
-begin_comment
-comment|/*  *	Modified 9/27/82 - Michael Wendel  *			   General Instrument R&D  *		Looks in user Remote file first.  *		Looks in system Remote file for each tc= entry  *		that cannot be resolved in the user Remote file.  *		Finally looks into the system Remote file to  *		resolve remote name.  *		User remote file will supplement the system file  *		since all the entries in the user file occur  *		ahead of duplicate entries from the system file.  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
 
 begin_ifndef
 ifndef|#
@@ -40,43 +65,6 @@ begin_comment
 comment|/* max number of tc= indirections */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VMUNIX
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"local/uparm.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * remcap - routines for dealing with the remote host data base  *  *	Made from termcap with the following defines.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REMOTE
-end_define
-
-begin_comment
-comment|/* special for tip */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -87,12 +75,6 @@ end_define
 begin_comment
 comment|/* system remote file */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REMOTE
-end_ifdef
 
 begin_define
 define|#
@@ -136,12 +118,6 @@ name|tgetstr
 value|rgetstr
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|E_TERMCAP
-end_undef
-
 begin_define
 define|#
 directive|define
@@ -170,43 +146,9 @@ name|RM
 decl_stmt|;
 end_decl_stmt
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|V_TERMCAP
-value|"TERMCAP"
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_TERM
-value|"TERM"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * termcap - routines for dealing with the terminal capability data base  *  * BUG:		Should use a "last" pointer in tbuf, so that searching  *		for capabilities alphabetically would not be a n**2/2  *		process when large numbers of capabilities are given.  * Note:	If we add a last pointer now we will screw up the  *		tc capability. We really should compile termcap.  *  * Essentially all the work here is scanning and decoding escapes  * in string capabilities.  We don't use stdio because the editor  * doesn't, and because living w/o it is not hard.  */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|sccsid
-init|=
-literal|"@(#)remcap.c	4.7 %G%"
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -297,19 +239,17 @@ name|lbuf
 index|[
 name|BUFSIZ
 index|]
+decl_stmt|,
+modifier|*
+name|cp
+decl_stmt|,
+modifier|*
+name|p
 decl_stmt|;
 name|int
 name|rc1
 decl_stmt|,
 name|rc2
-decl_stmt|;
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-name|char
-modifier|*
-name|p
 decl_stmt|;
 name|remotefile
 operator|=
@@ -538,8 +478,7 @@ name|ibuf
 index|[
 name|BUFSIZ
 index|]
-decl_stmt|;
-name|char
+decl_stmt|,
 modifier|*
 name|cp2
 decl_stmt|;
@@ -554,9 +493,6 @@ name|tf
 operator|=
 literal|0
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|V6
 comment|/* 	 * TERMCAP can have one of two things in it. It can be the 	 * name of a file to use instead of /etc/termcap. In this 	 * case it better start with a "/". Or it can be an entry to 	 * use so we don't have to read the file. In this case it 	 * has to already have the newlines crunched out. 	 */
 if|if
 condition|(
@@ -616,22 +552,17 @@ operator|)
 return|;
 block|}
 else|else
-block|{
 name|tf
 operator|=
 name|open
 argument_list|(
 name|E_TERMCAP
 argument_list|,
-literal|0
+name|O_RDONLY
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 else|else
-ifdef|#
-directive|ifdef
-name|REMOTE
 name|tf
 operator|=
 name|open
@@ -640,22 +571,9 @@ name|RM
 operator|=
 name|cp
 argument_list|,
-literal|0
+name|O_RDONLY
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|tf
-operator|=
-name|open
-argument_list|(
-name|cp
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 if|if
 condition|(
@@ -669,22 +587,9 @@ name|open
 argument_list|(
 name|E_TERMCAP
 argument_list|,
-literal|0
+name|O_RDONLY
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|tf
-operator|=
-name|open
-argument_list|(
-name|E_TERMCAP
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|tf

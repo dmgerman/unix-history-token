@@ -1,13 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/*	log.c	4.4	83/06/15	*/
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
-begin_include
-include|#
-directive|include
-file|"tip.h"
-end_include
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)log.c	4.5 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -15,15 +26,11 @@ directive|ifdef
 name|ACULOG
 end_ifdef
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|sccsid
-init|=
-literal|"@(#)log.c	4.4 %G%"
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"tip.h"
+end_include
 
 begin_decl_stmt
 specifier|static
@@ -94,21 +101,22 @@ condition|)
 return|return;
 if|if
 condition|(
-operator|!
-name|lock
+name|flock
 argument_list|(
-name|value
+name|fileno
 argument_list|(
-name|LOCK
+name|flog
 argument_list|)
+argument_list|,
+name|LOCK_EX
 argument_list|)
+operator|<
+literal|0
 condition|)
 block|{
-name|fprintf
+name|perror
 argument_list|(
-name|stderr
-argument_list|,
-literal|"can't lock up accounting file\r\n"
+literal|"tip: flock"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -204,8 +212,18 @@ argument_list|(
 name|flog
 argument_list|)
 expr_stmt|;
-name|unlock
-argument_list|()
+operator|(
+name|void
+operator|)
+name|flock
+argument_list|(
+name|fileno
+argument_list|(
+name|flog
+argument_list|)
+argument_list|,
+name|LOCK_UN
+argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -217,9 +235,6 @@ end_macro
 
 begin_block
 block|{
-if|if
-condition|(
-operator|(
 name|flog
 operator|=
 name|fopen
@@ -231,7 +246,10 @@ argument_list|)
 argument_list|,
 literal|"a"
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|flog
 operator|==
 name|NULL
 condition|)

@@ -1,7 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/*	cmdtab.c	4.5	83/06/15	*/
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)cmdtab.c	4.6 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -15,9 +32,6 @@ name|int
 name|shell
 argument_list|()
 decl_stmt|,
-name|lcmd
-argument_list|()
-decl_stmt|,
 name|getfl
 argument_list|()
 decl_stmt|,
@@ -26,7 +40,12 @@ argument_list|()
 decl_stmt|,
 name|chdirectory
 argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|finish
 argument_list|()
 decl_stmt|,
@@ -41,7 +60,12 @@ argument_list|()
 decl_stmt|,
 name|variable
 argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|cu_take
 argument_list|()
 decl_stmt|,
@@ -66,23 +90,13 @@ index|[]
 init|=
 block|{
 block|{
-literal|'%'
+literal|'!'
 block|,
 name|NORM
 block|,
 literal|"shell"
 block|,
 name|shell
-block|}
-block|,
-block|{
-literal|'!'
-block|,
-name|NORM
-block|,
-literal|"local command"
-block|,
-name|lcmd
 block|}
 block|,
 block|{
@@ -183,9 +197,6 @@ block|,
 name|finish
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|SIGTSTP
 block|{
 name|CTRL
 argument_list|(
@@ -199,8 +210,6 @@ block|,
 name|suspend
 block|}
 block|,
-endif|#
-directive|endif
 block|{
 literal|'s'
 block|,

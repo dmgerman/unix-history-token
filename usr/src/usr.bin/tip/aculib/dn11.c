@@ -1,7 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/*	dn11.c	4.12	83/06/15	*/
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)dn11.c	4.13 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -19,39 +36,13 @@ directive|include
 file|"tip.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<setjmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_function_decl
+begin_decl_stmt
 name|int
 name|dn_abort
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
+argument_list|()
+decl_stmt|,
 name|alarmtr
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|sccsid
-init|=
-literal|"@(#)dn11.c	4.12 %G%"
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -463,9 +454,6 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VMUNIX
 if|if
 condition|(
 name|FD
@@ -481,8 +469,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|close
 argument_list|(
 name|FD
@@ -527,9 +513,6 @@ argument_list|(
 name|dn
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VMUNIX
 if|if
 condition|(
 name|FD
@@ -545,8 +528,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|close
 argument_list|(
 name|FD

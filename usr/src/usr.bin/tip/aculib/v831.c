@@ -1,7 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/*	v831.c	4.3	83/06/18	*/
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)v831.c	4.4 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -16,31 +33,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<setjmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sgtty.h>
 end_include
 
 begin_include
@@ -48,16 +41,6 @@ include|#
 directive|include
 file|"tip.h"
 end_include
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|sccsid
-init|=
-literal|"@(#)v831.c	4.3 %G%"
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 name|int
@@ -470,9 +453,6 @@ argument_list|)
 block|;
 ifdef|#
 directive|ifdef
-name|VMUNIX
-ifdef|#
-directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
@@ -544,8 +524,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|close
 argument_list|(
 name|FD
@@ -621,12 +599,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VMUNIX
-end_ifdef
-
 begin_if
 if|if
 condition|(
@@ -644,11 +616,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_if
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|close

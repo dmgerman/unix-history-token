@@ -1,7 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/*	tipout.c	4.7	83/06/15	*/
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)tipout.c	4.8 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -15,11 +32,8 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|char
-modifier|*
-name|sccsid
-init|=
-literal|"@(#)tipout.c	4.7 %G%"
+name|jmp_buf
+name|sigbuf
 decl_stmt|;
 end_decl_stmt
 
@@ -34,13 +48,6 @@ end_macro
 
 begin_block
 block|{
-name|signal
-argument_list|(
-name|SIGIOT
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
 name|write
 argument_list|(
 name|repdes
@@ -67,16 +74,12 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|signal
+name|longjmp
 argument_list|(
-name|SIGIOT
+name|sigbuf
 argument_list|,
-name|intIOT
-argument_list|)
-expr_stmt|;
-name|intflag
-operator|=
 literal|1
+argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -110,13 +113,6 @@ decl_stmt|;
 name|char
 name|reply
 decl_stmt|;
-name|signal
-argument_list|(
-name|SIGEMT
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
 name|read
 argument_list|(
 name|fildes
@@ -255,16 +251,12 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|signal
+name|longjmp
 argument_list|(
-name|SIGEMT
+name|sigbuf
 argument_list|,
-name|intEMT
-argument_list|)
-expr_stmt|;
-name|intflag
-operator|=
 literal|1
+argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -276,13 +268,6 @@ end_macro
 
 begin_block
 block|{
-name|signal
-argument_list|(
-name|SIGTERM
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|boolean
@@ -317,13 +302,6 @@ end_macro
 
 begin_block
 block|{
-name|signal
-argument_list|(
-name|SIGSYS
-argument_list|,
-name|intSYS
-argument_list|)
-expr_stmt|;
 name|boolean
 argument_list|(
 name|value
@@ -341,9 +319,12 @@ name|BEAUTIFY
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|intflag
-operator|=
+name|longjmp
+argument_list|(
+name|sigbuf
+argument_list|,
 literal|1
+argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -373,6 +354,9 @@ decl_stmt|;
 specifier|register
 name|int
 name|cnt
+decl_stmt|;
+name|int
+name|omask
 decl_stmt|;
 name|signal
 argument_list|(
@@ -428,18 +412,27 @@ name|intSYS
 argument_list|)
 expr_stmt|;
 comment|/* beautify toggle */
+operator|(
+name|void
+operator|)
+name|setjmp
+argument_list|(
+name|sigbuf
+argument_list|)
+expr_stmt|;
 for|for
 control|(
-init|;
-condition|;
-control|)
-block|{
-do|do
-block|{
-name|intflag
+name|omask
 operator|=
 literal|0
-expr_stmt|;
+init|;
+condition|;
+name|sigsetmask
+argument_list|(
+name|omask
+argument_list|)
+control|)
+block|{
 name|cnt
 operator|=
 name|read
@@ -451,12 +444,6 @@ argument_list|,
 name|BUFSIZ
 argument_list|)
 expr_stmt|;
-block|}
-do|while
-condition|(
-name|intflag
-condition|)
-do|;
 if|if
 condition|(
 name|cnt
@@ -464,6 +451,24 @@ operator|<=
 literal|0
 condition|)
 continue|continue;
+define|#
+directive|define
+name|mask
+parameter_list|(
+name|s
+parameter_list|)
+value|(1<< ((s) - 1))
+define|#
+directive|define
+name|ALLSIGS
+value|mask(SIGEMT)|mask(SIGTERM)|mask(SIGIOT)|mask(SIGSYS)
+name|omask
+operator|=
+name|sigblock
+argument_list|(
+name|ALLSIGS
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|cp
@@ -548,22 +553,20 @@ condition|;
 name|cp
 operator|++
 control|)
-block|{
 if|if
 condition|(
 operator|(
 operator|*
 name|cp
-operator|<
+operator|>=
 literal|' '
-operator|||
+operator|&&
 operator|*
 name|cp
-operator|>
+operator|<=
 literal|'~'
 operator|)
-operator|&&
-operator|!
+operator|||
 name|any
 argument_list|(
 operator|*
@@ -575,7 +578,6 @@ name|EXCEPTIONS
 argument_list|)
 argument_list|)
 condition|)
-continue|continue;
 name|putc
 argument_list|(
 operator|*
@@ -584,7 +586,6 @@ argument_list|,
 name|fscript
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 block|}
