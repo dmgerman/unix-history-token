@@ -4208,6 +4208,7 @@ name|p
 argument_list|)
 operator|)
 condition|)
+block|{
 if|if
 condition|(
 name|error
@@ -4221,6 +4222,9 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
 name|ufs_extattr_uepm_destroy
 argument_list|(
 operator|&
@@ -4229,6 +4233,7 @@ operator|->
 name|um_extattr
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 if|if
