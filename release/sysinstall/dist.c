@@ -4706,6 +4706,11 @@ expr_stmt|;
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|col
+condition|)
+block|{
 name|msgConfirm
 argument_list|(
 literal|"Couldn't extract the following distributions.  This may\n"
@@ -4715,6 +4720,7 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|restorescr
 argument_list|(
