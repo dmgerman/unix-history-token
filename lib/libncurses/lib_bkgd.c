@@ -50,7 +50,7 @@ operator|=
 literal|0
 init|;
 name|y
-operator|<
+operator|<=
 name|win
 operator|->
 name|_maxy
@@ -65,7 +65,7 @@ operator|=
 literal|0
 init|;
 name|x
-operator|<
+operator|<=
 name|win
 operator|->
 name|_maxx
