@@ -280,6 +280,8 @@ operator|,
 name|char
 operator|*
 operator|,
+name|int
+operator|,
 expr|struct
 name|arglist
 operator|*
@@ -476,6 +478,11 @@ argument_list|(
 literal|"/"
 argument_list|,
 name|curdir
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|curdir
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|loop
@@ -540,6 +547,11 @@ argument_list|,
 name|cmd
 argument_list|,
 name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|name
+argument_list|)
 argument_list|,
 operator|&
 name|arglist
@@ -1190,6 +1202,8 @@ name|cmd
 parameter_list|,
 name|name
 parameter_list|,
+name|size
+parameter_list|,
 name|ap
 parameter_list|)
 name|char
@@ -1209,6 +1223,12 @@ name|struct
 name|arglist
 modifier|*
 name|ap
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|size
 decl_stmt|;
 end_decl_stmt
 
@@ -1446,6 +1466,8 @@ argument_list|(
 name|rawname
 argument_list|,
 name|name
+argument_list|,
+name|size
 argument_list|)
 expr_stmt|;
 block|}
@@ -1487,6 +1509,8 @@ argument_list|(
 name|output
 argument_list|,
 name|name
+argument_list|,
+name|size
 argument_list|)
 expr_stmt|;
 block|}
@@ -1818,6 +1842,8 @@ parameter_list|(
 name|rawname
 parameter_list|,
 name|canonname
+parameter_list|,
+name|len
 parameter_list|)
 name|char
 modifier|*
@@ -1827,6 +1853,12 @@ decl|*
 name|canonname
 decl_stmt|;
 end_function
+
+begin_decl_stmt
+name|int
+name|len
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1901,6 +1933,34 @@ argument_list|,
 literal|"./"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|canonname
+argument_list|)
+operator|+
+name|strlen
+argument_list|(
+name|rawname
+argument_list|)
+operator|>=
+name|len
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"canonname: not enough bufferspace\n"
+argument_list|)
+expr_stmt|;
+name|done
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
