@@ -58,7 +58,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: disklabel.c,v 1.19 1998/08/17 21:13:57 bde Exp $"
+literal|"$Id: disklabel.c,v 1.20 1998/08/21 23:44:16 gpalmer Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2657,6 +2657,11 @@ name|int
 name|f
 decl_stmt|;
 block|{
+name|struct
+name|disklabel
+modifier|*
+name|lp
+decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -2685,7 +2690,7 @@ directive|ifdef
 name|__alpha__
 name|u_long
 modifier|*
-name|lp
+name|bootinfo
 decl_stmt|;
 name|int
 name|n
@@ -2695,11 +2700,6 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|__i386__
-name|struct
-name|disklabel
-modifier|*
-name|lp
-decl_stmt|;
 name|char
 modifier|*
 name|tmpbuf
@@ -3417,7 +3417,7 @@ argument_list|,
 name|xxboot
 argument_list|)
 expr_stmt|;
-name|lp
+name|bootinfo
 operator|=
 operator|(
 name|u_long
@@ -3429,7 +3429,7 @@ operator|+
 literal|480
 operator|)
 expr_stmt|;
-name|lp
+name|bootinfo
 index|[
 literal|0
 index|]
@@ -3448,7 +3448,7 @@ name|dp
 operator|->
 name|d_secsize
 expr_stmt|;
-name|lp
+name|bootinfo
 index|[
 literal|1
 index|]
@@ -3456,7 +3456,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* start at sector 1 */
-name|lp
+name|bootinfo
 index|[
 literal|2
 index|]
