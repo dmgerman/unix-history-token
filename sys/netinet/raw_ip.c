@@ -612,6 +612,11 @@ name|policyfail
 init|=
 literal|0
 decl_stmt|;
+name|INP_LOCK_ASSERT
+argument_list|(
+name|last
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|defined
