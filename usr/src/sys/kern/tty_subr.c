@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_subr.c	4.15	82/03/14	*/
+comment|/*	tty_subr.c	4.16	82/10/31	*/
 end_comment
 
 begin_include
@@ -1973,20 +1973,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_include
-include|#
-directive|include
-file|"dmc.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NDMC
-operator|>
-literal|0
-end_if
-
 begin_comment
 comment|/*  * integer (2-byte) get/put  * using clists  */
 end_comment
@@ -2126,11 +2112,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
