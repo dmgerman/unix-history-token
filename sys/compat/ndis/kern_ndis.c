@@ -1314,11 +1314,13 @@ name|tsleep
 argument_list|(
 name|r
 argument_list|,
-name|PPAUSE
+name|curthread
+operator|->
+name|td_priority
 operator||
 name|PCATCH
 argument_list|,
-literal|"ndisthrexit"
+literal|"ndisthexit"
 argument_list|,
 name|hz
 operator|*

@@ -468,7 +468,7 @@ parameter_list|(
 name|td
 parameter_list|)
 define|\
-value|((td)->td_priority == PI_SOFT)
+value|((td)->td_priority == PI_REALTIME)
 end_define
 
 begin_define
@@ -479,7 +479,7 @@ parameter_list|(
 name|td
 parameter_list|)
 define|\
-value|((td)->td_priority< PRI_MIN_KERN)
+value|((td)->td_priority<= PI_NET)
 end_define
 
 begin_define

@@ -2101,7 +2101,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * KeWaitForSingleObject() is a tricky beast, because it can be used  * with several different object types: semaphores, timers, events,  * mutexes and threads. Semaphores don't appear very often, but the  * other object types are quite common. KeWaitForSingleObject() is  * what's normally used to acquire a mutex, and it can be used to  * wait for a thread termination.  *  * The Windows NDIS API is implemented in terms of Windows kernel  * primitives, and some of the object manipulation is duplicated in  * NDIS. For example, NDIS has timers and events, which are actually  * Windows kevents and ktimers. Now, you're supposed to only use the  * NDIS variants of these objects within the confines of the NDIS API,  * but there are some naughty developers out there who will use  * KeWaitForSingleObject() on NDIS timer and event objects, so we  * have to support that as well. Conseqently, our NDIS timer and event  * code has to be closely tied into our ntoskrnl timer and event code,  * just as it is in Windows.  *  * KeWaitForSingleObject() may do different things for different kinds  * of objects:  *  * - For events, we check if the event has been signalled. If the  *   event is already in the signalled state, we just return immediately,  *   otherwise we wait for it to be set to the signalled state by someone  *   else calling KeSetEvent(). Events can be either synchronization or  *   notification events.  *  * - For timers, if the timer has already fired and the timer is in  *   the signalled state, we just return, otherwise we wait on the  *   timer. Unlike an event, timers get signalled automatically when  *   they expire rather than someone having to trip them manually.  *   Timers initialized with KeInitializeTimer() are always notification  *   events: KeInitializeTimerEx() lets you initialize a timer as  *   either a notification or synchronization event.  *  * - For mutexes, we try to acquire the mutex and if we can't, we wait  *   on the mutex until it's available and then grab it. When a mutex is  *   released, it enters the signaled state, which wakes up one of the  *   threads waiting to acquire it. Mutexes are always synchronization  *   events.  *  * - For threads, the only thing we do is wait until the thread object  *   enters a signalled state, which occurs when the thread terminates.  *   Threads are always notification events.  *  * A notification event wakes up all threads waiting on an object. A  * synchronization event wakes up just one. Also, a synchronization event  * is auto-clearing, which means we automatically set the event back to  * the non-signalled state once the wakeup is done.  *  * The problem with KeWaitForSingleObject() is that it can be called  * either from the main kernel 'process' or from a kthread. When sleeping  * inside a kernel thread, we need to use kthread_resume(), but that  * won't work in the kernel context proper. So if kthread_resume() returns  * EINVAL, we need to use tsleep() instead.  */
+comment|/*  * KeWaitForSingleObject() is a tricky beast, because it can be used  * with several different object types: semaphores, timers, events,  * mutexes and threads. Semaphores don't appear very often, but the  * other object types are quite common. KeWaitForSingleObject() is  * what's normally used to acquire a mutex, and it can be used to  * wait for a thread termination.  *  * The Windows NDIS API is implemented in terms of Windows kernel  * primitives, and some of the object manipulation is duplicated in  * NDIS. For example, NDIS has timers and events, which are actually  * Windows kevents and ktimers. Now, you're supposed to only use the  * NDIS variants of these objects within the confines of the NDIS API,  * but there are some naughty developers out there who will use  * KeWaitForSingleObject() on NDIS timer and event objects, so we  * have to support that as well. Conseqently, our NDIS timer and event  * code has to be closely tied into our ntoskrnl timer and event code,  * just as it is in Windows.  *  * KeWaitForSingleObject() may do different things for different kinds  * of objects:  *  * - For events, we check if the event has been signalled. If the  *   event is already in the signalled state, we just return immediately,  *   otherwise we wait for it to be set to the signalled state by someone  *   else calling KeSetEvent(). Events can be either synchronization or  *   notification events.  *  * - For timers, if the timer has already fired and the timer is in  *   the signalled state, we just return, otherwise we wait on the  *   timer. Unlike an event, timers get signalled automatically when  *   they expire rather than someone having to trip them manually.  *   Timers initialized with KeInitializeTimer() are always notification  *   events: KeInitializeTimerEx() lets you initialize a timer as  *   either a notification or synchronization event.  *  * - For mutexes, we try to acquire the mutex and if we can't, we wait  *   on the mutex until it's available and then grab it. When a mutex is  *   released, it enters the signaled state, which wakes up one of the  *   threads waiting to acquire it. Mutexes are always synchronization  *   events.  *  * - For threads, the only thing we do is wait until the thread object  *   enters a signalled state, which occurs when the thread terminates.  *   Threads are always notification events.  *  * A notification event wakes up all threads waiting on an object. A  * synchronization event wakes up just one. Also, a synchronization event  * is auto-clearing, which means we automatically set the event back to  * the non-signalled state once the wakeup is done.  */
 end_comment
 
 begin_function
@@ -4761,7 +4761,7 @@ specifier|__volatile__
 asm|("" : "=c" (lock));
 while|while
 condition|(
-name|atomic_cmpset_int
+name|atomic_cmpset_acq_int
 argument_list|(
 operator|(
 specifier|volatile
@@ -4777,7 +4777,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-comment|/* do noting */
+comment|/* do nothing */
 empty_stmt|;
 return|return;
 block|}
@@ -4799,7 +4799,7 @@ decl_stmt|;
 asm|__asm__
 specifier|__volatile__
 asm|("" : "=c" (lock));
-name|atomic_cmpset_int
+name|atomic_cmpset_rel_int
 argument_list|(
 operator|(
 specifier|volatile
