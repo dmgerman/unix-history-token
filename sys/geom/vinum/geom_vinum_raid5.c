@@ -400,13 +400,6 @@ name|restart
 operator|=
 literal|0
 expr_stmt|;
-name|g_trace
-argument_list|(
-name|G_T_TOPOLOGY
-argument_list|,
-literal|"gv_raid5_worker scan"
-argument_list|)
-expr_stmt|;
 name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|wp
@@ -616,13 +609,6 @@ operator|&
 name|GV_PLEX_THREAD_DIE
 condition|)
 break|break;
-name|g_trace
-argument_list|(
-name|G_T_TOPOLOGY
-argument_list|,
-literal|"gv_raid5_worker sleep"
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|msleep
