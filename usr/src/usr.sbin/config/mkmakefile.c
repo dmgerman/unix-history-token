@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mkmakefile.c	1.22	82/12/09	*/
+comment|/*	mkmakefile.c	1.23	82/12/18	*/
 end_comment
 
 begin_comment
@@ -562,7 +562,7 @@ name|fprintf
 argument_list|(
 name|ofp
 argument_list|,
-literal|"CRT0.EX=/usr/src/libc/csu/crt0.ex\n"
+literal|"CRT0.EX=/usr/src/lib/libc/csu/crt0.ex\n"
 argument_list|)
 expr_stmt|;
 name|cp
