@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.150
+literal|3.151
 operator|%
 name|G
 operator|%
@@ -2942,10 +2942,6 @@ begin_comment
 comment|/* **  GIVERESPONSE -- Interpret an error response from a mailer ** **	Parameters: **		stat -- the status code from the mailer (high byte **			only; core dumps must have been taken care of **			already). **		m -- the mailer descriptor for this mailer. ** **	Returns: **		none. ** **	Side Effects: **		Errors may be incremented. **		ExitStat may be set. */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_macro
 name|giveresponse
 argument_list|(
@@ -3005,6 +3001,19 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+return|return;
+endif|#
+directive|endif
+endif|lint
 comment|/* 	**  Compute status message from code. 	*/
 name|i
 operator|=

@@ -39,7 +39,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.158
+literal|3.159
 operator|%
 name|G
 operator|%
@@ -272,6 +272,15 @@ name|char
 modifier|*
 modifier|*
 name|myhostname
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|arpadate
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -768,6 +777,10 @@ literal|'b'
 argument_list|,
 name|arpadate
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 argument_list|,

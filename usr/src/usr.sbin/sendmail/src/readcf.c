@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|3.56
+literal|3.57
 operator|%
 name|G
 operator|%
@@ -641,11 +641,6 @@ name|wd
 decl_stmt|;
 name|char
 name|delim
-decl_stmt|;
-specifier|register
-name|STAB
-modifier|*
-name|s
 decl_stmt|;
 while|while
 condition|(
