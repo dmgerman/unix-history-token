@@ -1002,7 +1002,7 @@ name|PKTSIZE
 index|]
 decl_stmt|;
 name|struct
-name|sockaddr_in
+name|sockaddr_storage
 name|from
 decl_stmt|;
 name|int
