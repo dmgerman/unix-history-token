@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: ms.c,v 4.300 91/06/09 06:22:04 root Rel41 $ SONY  *  *	@(#)ms.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: ms.c,v 4.300 91/06/09 06:22:04 root Rel41 $ SONY  *  *	@(#)ms.c	7.4 (Berkeley) %G%  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/fix_machine_type.h>
-end_include
 
 begin_include
 include|#
@@ -140,10 +134,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* mips */
-end_comment
-
 begin_decl_stmt
 name|struct
 name|ms_stat
@@ -204,23 +194,12 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|news700
-end_ifndef
-
 begin_decl_stmt
 specifier|extern
 name|int
 name|tty00_is_console
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -240,32 +219,6 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* news3400 */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|news700
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|splms
-value|spl4
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* news700 */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -277,19 +230,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* news700 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* news3400 */
-end_comment
 
 begin_comment
 comment|/*ARGSUSED*/
@@ -496,7 +436,6 @@ operator|.
 name|mss_queue
 decl_stmt|;
 specifier|register
-specifier|volatile
 name|struct
 name|ms_event
 modifier|*
@@ -605,7 +544,6 @@ operator|.
 name|mss_queue
 decl_stmt|;
 specifier|register
-specifier|volatile
 name|struct
 name|ms_event
 modifier|*
@@ -1033,16 +971,6 @@ operator|->
 name|mss_pgrp
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|news700
-name|scc_open
-argument_list|(
-name|SCC_MOUSE
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 if|if
 condition|(
 name|tty00_is_console
@@ -1057,8 +985,6 @@ argument_list|(
 name|SCC_MOUSE
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -1196,9 +1122,6 @@ name|mss_pgrp
 operator|=
 literal|0
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|news700
 if|if
 condition|(
 name|tty00_is_console
@@ -1213,9 +1136,6 @@ argument_list|(
 name|SCC_MOUSE
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* news700 */
 return|return
 operator|(
 literal|0
