@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chown.c	8.5 (Berkeley) %G%"
+literal|"@(#)chown.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -434,8 +434,6 @@ argument_list|()
 expr_stmt|;
 name|fts_options
 operator|=
-name|FTS_NOSTAT
-operator||
 name|FTS_PHYSICAL
 expr_stmt|;
 if|if
@@ -666,6 +664,9 @@ case|case
 name|FTS_ERR
 case|:
 comment|/* Warn, continue. */
+case|case
+name|FTS_NS
+case|:
 name|errno
 operator|=
 name|p
