@@ -2793,6 +2793,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* default => reject */
+comment|/* XXX: Will not work if sizeof(tab*)> sizeof(char) */
 operator|(
 name|void
 operator|)
