@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* copyin.c - extract or list a cpio archive    Copyright (C) 1990, 1991, 1992 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* copyin.c - extract or list a cpio archive    Copyright (C) 1990, 1991, 1992 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  $FreeBSD$ */
 end_comment
 
 begin_include
@@ -124,6 +124,31 @@ begin_include
 include|#
 directive|include
 file|<fnmatch.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_STRFTIME
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<langinfo.h>
 end_include
 
 begin_endif
@@ -4880,6 +4905,22 @@ decl_stmt|;
 name|time_t
 name|when
 decl_stmt|;
+name|char
+modifier|*
+name|ptbuf
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_STRFTIME
+specifier|static
+name|int
+name|d_first
+init|=
+operator|-
+literal|1
+decl_stmt|;
+endif|#
+directive|endif
 name|mode_string
 argument_list|(
 name|file_hdr
@@ -4906,6 +4947,74 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_STRFTIME
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+if|if
+condition|(
+name|d_first
+operator|<
+literal|0
+condition|)
+name|d_first
+operator|=
+operator|(
+operator|*
+name|nl_langinfo
+argument_list|(
+name|D_MD_ORDER
+argument_list|)
+operator|==
+literal|'d'
+operator|)
+expr_stmt|;
+else|#
+directive|else
+name|d_first
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|current_time
+operator|-
+name|when
+operator|>
+literal|6L
+operator|*
+literal|30L
+operator|*
+literal|24L
+operator|*
+literal|60L
+operator|*
+literal|60L
+operator|||
+name|current_time
+operator|-
+name|when
+operator|<
+literal|0L
+condition|)
+name|ptbuf
+operator|=
+name|d_first
+condition|?
+literal|"%e %b  %Y"
+else|:
+literal|"%b %e  %Y"
+expr_stmt|;
+else|else
+name|ptbuf
+operator|=
+name|d_first
+condition|?
+literal|"%e %b %R"
+else|:
+literal|"%b %e %R"
+expr_stmt|;
 name|strftime
 argument_list|(
 name|tbuf
@@ -4915,7 +5024,7 @@ argument_list|(
 name|tbuf
 argument_list|)
 argument_list|,
-literal|"%c"
+name|ptbuf
 argument_list|,
 name|localtime
 argument_list|(
@@ -4923,6 +5032,10 @@ operator|&
 name|when
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|ptbuf
+operator|=
+name|tbuf
 expr_stmt|;
 else|#
 directive|else
@@ -4937,8 +5050,6 @@ name|when
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|current_time
@@ -4982,6 +5093,14 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+name|ptbuf
+operator|=
+name|tbuf
+operator|+
+literal|4
+expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"%s %3lu "
@@ -5097,9 +5216,7 @@ name|printf
 argument_list|(
 literal|"%s "
 argument_list|,
-name|tbuf
-operator|+
-literal|4
+name|ptbuf
 argument_list|)
 expr_stmt|;
 name|print_name_with_quoting
