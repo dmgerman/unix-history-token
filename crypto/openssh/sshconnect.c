@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshconnect.c,v 1.78 2000/09/07 20:27:54 deraadt Exp $"
+literal|"$OpenBSD: sshconnect.c,v 1.79 2000/09/17 15:52:51 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -733,15 +733,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Opens a TCP/IP connection to the remote server on the given host.  * The address of the remote host will be returned in hostaddr.  * If port is 0, the default port will be used.  If anonymous is zero,  * a privileged port will be allocated to make the connection.  * This requires super-user privileges if anonymous is false.  * Connection_attempts specifies the maximum number of tries (one per  * second).  If proxy_command is non-NULL, it specifies the command (with %h  * and %p substituted for host and port, respectively) to use to contact  * the daemon.  */
+comment|/*  * Opens a TCP/IP connection to the remote server on the given host.  * The canonical host name used to connect will be returned in *host.  * The address of the remote host will be returned in hostaddr.  * If port is 0, the default port will be used.  If anonymous is zero,  * a privileged port will be allocated to make the connection.  * This requires super-user privileges if anonymous is false.  * Connection_attempts specifies the maximum number of tries (one per  * second).  If proxy_command is non-NULL, it specifies the command (with %h  * and %p substituted for host and port, respectively) to use to contact  * the daemon.  */
 end_comment
 
 begin_function
 name|int
 name|ssh_connect
 parameter_list|(
-specifier|const
 name|char
+modifier|*
 modifier|*
 name|host
 parameter_list|,
@@ -874,6 +874,7 @@ condition|)
 return|return
 name|ssh_proxy_connect
 argument_list|(
+operator|*
 name|host
 argument_list|,
 name|port
@@ -909,6 +910,12 @@ name|ai_socktype
 operator|=
 name|SOCK_STREAM
 expr_stmt|;
+name|hints
+operator|.
+name|ai_flags
+operator|=
+name|AI_CANONNAME
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|strport
@@ -928,6 +935,7 @@ name|gaierr
 operator|=
 name|getaddrinfo
 argument_list|(
+operator|*
 name|host
 argument_list|,
 name|strport
@@ -948,6 +956,7 @@ literal|"%s: %.100s: %s"
 argument_list|,
 name|__progname
 argument_list|,
+operator|*
 name|host
 argument_list|,
 name|gai_strerror
@@ -1058,7 +1067,9 @@ name|debug
 argument_list|(
 literal|"Connecting to %.200s [%.100s] port %s."
 argument_list|,
-name|host
+name|ai
+operator|->
+name|ai_canonname
 argument_list|,
 name|ntop
 argument_list|,
@@ -1173,8 +1184,28 @@ if|if
 condition|(
 name|ai
 condition|)
+block|{
+if|if
+condition|(
+name|ai
+operator|->
+name|ai_canonname
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|host
+operator|=
+name|xstrdup
+argument_list|(
+name|ai
+operator|->
+name|ai_canonname
+argument_list|)
+expr_stmt|;
 break|break;
 comment|/* Successful connection. */
+block|}
 comment|/* Sleep a moment before retrying. */
 name|sleep
 argument_list|(
@@ -1904,6 +1935,7 @@ name|retval
 operator|=
 literal|1
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|strcmp
@@ -1918,6 +1950,14 @@ condition|)
 name|retval
 operator|=
 literal|0
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Please type 'yes' or 'no'.\n"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

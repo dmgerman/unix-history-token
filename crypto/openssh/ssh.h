@@ -4,7 +4,7 @@ comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylon
 end_comment
 
 begin_comment
-comment|/* RCSID("$OpenBSD: ssh.h,v 1.50 2000/09/07 20:27:54 deraadt Exp $"); */
+comment|/* RCSID("$OpenBSD: ssh.h,v 1.54 2000/10/11 20:27:24 markus Exp $"); */
 end_comment
 
 begin_comment
@@ -34,17 +34,6 @@ include|#
 directive|include
 file|"cipher.h"
 end_include
-
-begin_comment
-comment|/*  * XXX  * The default cipher used if IDEA is not supported by the remote host. It is  * recommended that this be one of the mandatory ciphers (DES, 3DES), though  * that is not required.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSH_FALLBACK_CIPHER
-value|SSH_CIPHER_3DES
-end_define
 
 begin_comment
 comment|/* Cipher used for encrypting authentication files. */
@@ -199,6 +188,13 @@ define|#
 directive|define
 name|HOST_DSA_KEY_FILE
 value|ETCDIR "/ssh_host_dsa_key"
+end_define
+
+begin_define
+define|#
+directive|define
+name|DH_PRIMES
+value|ETCDIR "/primes"
 end_define
 
 begin_define
@@ -1137,8 +1133,8 @@ begin_function_decl
 name|int
 name|ssh_connect
 parameter_list|(
-specifier|const
 name|char
+modifier|*
 modifier|*
 name|host
 parameter_list|,
@@ -1439,7 +1435,6 @@ name|char
 modifier|*
 name|read_passphrase
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 name|prompt
@@ -1502,7 +1497,11 @@ name|SYSLOG_LEVEL_INFO
 block|,
 name|SYSLOG_LEVEL_VERBOSE
 block|,
-name|SYSLOG_LEVEL_DEBUG
+name|SYSLOG_LEVEL_DEBUG1
+block|,
+name|SYSLOG_LEVEL_DEBUG2
+block|,
+name|SYSLOG_LEVEL_DEBUG3
 block|}
 name|LogLevel
 typedef|;
@@ -1695,6 +1694,60 @@ end_empty_stmt
 begin_function_decl
 name|void
 name|debug
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(format
+parameter_list|(
+name|printf
+parameter_list|,
+function_decl|1
+operator|,
+function_decl|2
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|void
+name|debug2
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(format
+parameter_list|(
+name|printf
+parameter_list|,
+function_decl|1
+operator|,
+function_decl|2
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|void
+name|debug3
 parameter_list|(
 specifier|const
 name|char
@@ -2267,6 +2320,27 @@ name|int
 name|IPv4or6
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_PAM
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"auth-pam.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USE_PAM */
+end_comment
 
 begin_endif
 endif|#

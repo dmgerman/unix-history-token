@@ -4,7 +4,7 @@ comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylon
 end_comment
 
 begin_comment
-comment|/* RCSID("$OpenBSD: servconf.h,v 1.28 2000/09/07 20:27:53 deraadt Exp $"); */
+comment|/* RCSID("$OpenBSD: servconf.h,v 1.30 2000/10/14 12:12:09 markus Exp $"); */
 end_comment
 
 begin_comment
@@ -270,6 +270,10 @@ name|int
 name|password_authentication
 decl_stmt|;
 comment|/* If true, permit password 						 * authentication. */
+name|int
+name|kbd_interactive_authentication
+decl_stmt|;
+comment|/* If true, permit */
 ifdef|#
 directive|ifdef
 name|SKEY
@@ -287,6 +291,9 @@ name|int
 name|use_login
 decl_stmt|;
 comment|/* If true, login(1) is used */
+name|int
+name|allow_tcp_forwarding
+decl_stmt|;
 name|unsigned
 name|int
 name|num_allow_users

@@ -12,6 +12,14 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|RCSID
+argument_list|(
 literal|"$OpenBSD: compat.c,v 1.27 2000/10/31 09:31:58 markus Exp $"
 argument_list|)
 expr_stmt|;
@@ -152,6 +160,12 @@ name|check
 index|[]
 init|=
 block|{
+block|{
+literal|"^OpenSSH[-_]2\\.3"
+block|,
+literal|0
+block|}
+block|,
 block|{
 literal|"^OpenSSH[-_]2\\.[012]"
 block|,

@@ -8,6 +8,14 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|RCSID
+argument_list|(
 literal|"$OpenBSD: auth2-skey.c,v 1.1 2000/10/11 20:14:38 markus Exp $"
 argument_list|)
 expr_stmt|;
@@ -134,13 +142,15 @@ operator|-
 literal|1
 decl_stmt|;
 name|struct
-name|skey
+name|opie
 name|skey
 decl_stmt|;
 name|char
 name|challenge
 index|[
-name|SKEY_MAX_CHALLENGE
+name|OPIE_CHALLENGE_MAX
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|char
@@ -169,7 +179,7 @@ name|valid
 condition|)
 name|retval
 operator|=
-name|skeychallenge
+name|opiechallenge
 argument_list|(
 operator|&
 name|skey
@@ -408,7 +418,7 @@ name|authctxt
 operator|->
 name|valid
 operator|&&
-name|skey_haskey
+name|opie_haskey
 argument_list|(
 name|authctxt
 operator|->
@@ -419,7 +429,7 @@ argument_list|)
 operator|==
 literal|0
 operator|&&
-name|skey_passcheck
+name|opie_passverify
 argument_list|(
 name|authctxt
 operator|->

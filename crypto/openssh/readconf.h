@@ -4,7 +4,7 @@ comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylon
 end_comment
 
 begin_comment
-comment|/* RCSID("$OpenBSD: readconf.h,v 1.21 2000/09/07 20:27:53 deraadt Exp $"); */
+comment|/* RCSID("$OpenBSD: readconf.h,v 1.22 2000/10/11 20:14:39 markus Exp $"); */
 end_comment
 
 begin_comment
@@ -136,6 +136,15 @@ name|int
 name|password_authentication
 decl_stmt|;
 comment|/* Try password 						 * authentication. */
+name|int
+name|kbd_interactive_authentication
+decl_stmt|;
+comment|/* Try keyboard-interactive auth. */
+name|char
+modifier|*
+name|kbd_interactive_devices
+decl_stmt|;
+comment|/* Keyboard-interactive auth devices. */
 name|int
 name|fallback_to_rsh
 decl_stmt|;

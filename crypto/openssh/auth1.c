@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth1.c,v 1.4 2000/09/07 20:27:49 deraadt Exp $"
+literal|"$OpenBSD: auth1.c,v 1.6 2000/10/11 20:27:23 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -58,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"cipher.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"mpaux.h"
 end_include
 
@@ -95,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|<login_cap.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<security/pam_appl.h>
 end_include
 
 begin_ifdef
@@ -249,236 +249,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The user does not exist or access is denied,  * but fake indication that authentication is needed.  */
-end_comment
-
-begin_function
-name|void
-name|do_fake_authloop1
-parameter_list|(
-name|char
-modifier|*
-name|user
-parameter_list|)
-block|{
-name|int
-name|attempt
-init|=
-literal|0
-decl_stmt|;
-name|log
-argument_list|(
-literal|"Faking authloop for illegal user %.200s from %.200s port %d"
-argument_list|,
-name|user
-argument_list|,
-name|get_remote_ipaddr
-argument_list|()
-argument_list|,
-name|get_remote_port
-argument_list|()
-argument_list|)
-expr_stmt|;
-comment|/* Indicate that authentication is needed. */
-name|packet_start
-argument_list|(
-name|SSH_SMSG_FAILURE
-argument_list|)
-expr_stmt|;
-name|packet_send
-argument_list|()
-expr_stmt|;
-name|packet_write_wait
-argument_list|()
-expr_stmt|;
-comment|/* 	 * Keep reading packets, and always respond with a failure.  This is 	 * to avoid disclosing whether such a user really exists. 	 */
-for|for
-control|(
-name|attempt
-operator|=
-literal|1
-init|;
-condition|;
-name|attempt
-operator|++
-control|)
-block|{
-comment|/* Read a packet.  This will not return if the client disconnects. */
-name|int
-name|plen
-decl_stmt|;
-name|int
-name|type
-init|=
-name|packet_read
-argument_list|(
-operator|&
-name|plen
-argument_list|)
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SKEY
-name|unsigned
-name|int
-name|dlen
-decl_stmt|;
-name|char
-modifier|*
-name|password
-decl_stmt|,
-modifier|*
-name|skeyinfo
-decl_stmt|;
-name|password
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* Try to send a fake s/key challenge. */
-if|if
-condition|(
-name|options
-operator|.
-name|skey_authentication
-operator|==
-literal|1
-operator|&&
-operator|(
-name|skeyinfo
-operator|=
-name|skey_fake_keyinfo
-argument_list|(
-name|user
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-block|{
-if|if
-condition|(
-name|type
-operator|==
-name|SSH_CMSG_AUTH_TIS
-condition|)
-block|{
-name|packet_start
-argument_list|(
-name|SSH_SMSG_AUTH_TIS_CHALLENGE
-argument_list|)
-expr_stmt|;
-name|packet_put_string
-argument_list|(
-name|skeyinfo
-argument_list|,
-name|strlen
-argument_list|(
-name|skeyinfo
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|packet_send
-argument_list|()
-expr_stmt|;
-name|packet_write_wait
-argument_list|()
-expr_stmt|;
-continue|continue;
-block|}
-elseif|else
-if|if
-condition|(
-name|type
-operator|==
-name|SSH_CMSG_AUTH_PASSWORD
-operator|&&
-name|options
-operator|.
-name|password_authentication
-operator|&&
-operator|(
-name|password
-operator|=
-name|packet_get_string
-argument_list|(
-operator|&
-name|dlen
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-operator|&&
-name|dlen
-operator|==
-literal|5
-operator|&&
-name|strncasecmp
-argument_list|(
-name|password
-argument_list|,
-literal|"s/key"
-argument_list|,
-literal|5
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|packet_send_debug
-argument_list|(
-name|skeyinfo
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-if|if
-condition|(
-name|password
-operator|!=
-name|NULL
-condition|)
-name|xfree
-argument_list|(
-name|password
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-if|if
-condition|(
-name|attempt
-operator|>
-name|AUTH_FAIL_MAX
-condition|)
-name|packet_disconnect
-argument_list|(
-name|AUTH_FAIL_MSG
-argument_list|,
-name|user
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Send failure.  This should be indistinguishable from a 		 * failed authentication. 		 */
-name|packet_start
-argument_list|(
-name|SSH_SMSG_FAILURE
-argument_list|)
-expr_stmt|;
-name|packet_send
-argument_list|()
-expr_stmt|;
-name|packet_write_wait
-argument_list|()
-expr_stmt|;
-block|}
-comment|/* NOTREACHED */
-name|abort
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * read packets and try to authenticate local user *pw.  * return if authentication is successfull  */
+comment|/*  * read packets and try to authenticate local user 'luser'.  * return if authentication is successfull. not that pw == NULL  * if the user does not exists or is not allowed to login.  * each auth method has to 'fake' authentication for nonexisting  * users.  */
 end_comment
 
 begin_function
@@ -489,8 +260,17 @@ name|struct
 name|passwd
 modifier|*
 name|pw
+parameter_list|,
+name|char
+modifier|*
+name|luser
 parameter_list|)
 block|{
+name|int
+name|authenticated
+init|=
+literal|0
+decl_stmt|;
 name|int
 name|attempt
 init|=
@@ -567,6 +347,17 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* HAVE_LOGIN_CAP */
+ifdef|#
+directive|ifdef
+name|USE_PAM
+name|struct
+name|inverted_pam_cookie
+modifier|*
+name|pam_cookie
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* USE_PAM */
 if|#
 directive|if
 name|defined
@@ -599,15 +390,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* HAVE_LOGIN_CAP || LOGIN_ACCESS */
-ifdef|#
-directive|ifdef
-name|HAVE_LIBPAM
-name|int
-name|pam_retval
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* HAVE_LIBPAM */
 if|#
 directive|if
 literal|0
@@ -632,6 +414,10 @@ expr_stmt|;
 name|packet_write_wait
 argument_list|()
 expr_stmt|;
+name|client_user
+operator|=
+name|NULL
+expr_stmt|;
 for|for
 control|(
 name|attempt
@@ -643,11 +429,11 @@ name|attempt
 operator|++
 control|)
 block|{
-name|int
+comment|/* default to fail */
 name|authenticated
-init|=
+operator|=
 literal|0
-decl_stmt|;
+expr_stmt|;
 name|strlcpy
 argument_list|(
 name|user
@@ -733,9 +519,7 @@ name|verbose
 argument_list|(
 literal|"Kerberos v4 tgt REFUSED for %s"
 argument_list|,
-name|pw
-operator|->
-name|pw_name
+name|luser
 argument_list|)
 expr_stmt|;
 name|xfree
@@ -760,7 +544,6 @@ name|k_hasafs
 argument_list|()
 condition|)
 block|{
-comment|/* packet_get_all(); */
 name|verbose
 argument_list|(
 literal|"AFS token passing disabled."
@@ -804,11 +587,9 @@ argument_list|)
 condition|)
 name|verbose
 argument_list|(
-literal|"AFS token REFUSED for %s"
+literal|"AFS token REFUSED for %.100s"
 argument_list|,
-name|pw
-operator|->
-name|pw_name
+name|luser
 argument_list|)
 expr_stmt|;
 name|xfree
@@ -911,6 +692,13 @@ argument_list|(
 name|kdata
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pw
+operator|!=
+name|NULL
+condition|)
+block|{
 name|authenticated
 operator|=
 name|auth_krb4
@@ -948,6 +736,7 @@ argument_list|(
 name|tkt_user
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 break|break;
@@ -1015,9 +804,7 @@ if|if
 condition|(
 name|auth_krb5
 argument_list|(
-name|pw
-operator|->
-name|pw_name
+name|luser
 argument_list|,
 operator|&
 name|k5data
@@ -1027,7 +814,7 @@ name|tkt_client
 argument_list|)
 condition|)
 block|{
-comment|/* pw->name is passed just for logging purposes 				   * */
+comment|/* "luser" is passed just for logging purposes 				   * */
 comment|/* authorize client against .k5login */
 if|if
 condition|(
@@ -1037,9 +824,7 @@ name|ssh_context
 argument_list|,
 name|tkt_client
 argument_list|,
-name|pw
-operator|->
-name|pw_name
+name|luser
 argument_list|)
 condition|)
 name|authenticated
@@ -1097,7 +882,7 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-comment|/* Try to authenticate using /etc/hosts.equiv and 			   .rhosts. */
+comment|/* Try to authenticate using /etc/hosts.equiv and .rhosts. */
 name|authenticated
 operator|=
 name|auth_rhosts
@@ -1116,11 +901,6 @@ name|user
 argument_list|,
 literal|" ruser %s"
 argument_list|,
-name|client_user
-argument_list|)
-expr_stmt|;
-name|xfree
-argument_list|(
 name|client_user
 argument_list|)
 expr_stmt|;
@@ -1238,7 +1018,7 @@ operator|->
 name|n
 argument_list|)
 condition|)
-name|log
+name|verbose
 argument_list|(
 literal|"Warning: keysize mismatch for client_host_key: "
 literal|"actual %d, announced %d"
@@ -1297,11 +1077,6 @@ name|user
 argument_list|,
 literal|" ruser %s"
 argument_list|,
-name|client_user
-argument_list|)
-expr_stmt|;
-name|xfree
-argument_list|(
 name|client_user
 argument_list|)
 expr_stmt|;
@@ -1400,6 +1175,22 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_PAM
+comment|/* Do PAM auth with password */
+name|authenticated
+operator|=
+name|auth_pam_password
+argument_list|(
+name|pw
+argument_list|,
+name|password
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* !USE_PAM */
 comment|/* Try authentication with the password. */
 name|authenticated
 operator|=
@@ -1410,6 +1201,9 @@ argument_list|,
 name|password
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* USE_PAM */
 name|memset
 argument_list|(
 name|password
@@ -1430,7 +1224,188 @@ expr_stmt|;
 break|break;
 ifdef|#
 directive|ifdef
+name|USE_PAM
+case|case
+name|SSH_CMSG_AUTH_TIS
+case|:
+name|debug
+argument_list|(
+literal|"rcvd SSH_CMSG_AUTH_TIS: Trying PAM"
+argument_list|)
+expr_stmt|;
+name|pam_cookie
+operator|=
+name|ipam_start_auth
+argument_list|(
+literal|"csshd"
+argument_list|,
+name|pw
+operator|->
+name|pw_name
+argument_list|)
+expr_stmt|;
+comment|/* We now have data available to send as a challenge */
+if|if
+condition|(
+name|pam_cookie
+operator|->
+name|num_msg
+operator|!=
+literal|1
+operator|||
+operator|(
+name|pam_cookie
+operator|->
+name|msg
+index|[
+literal|0
+index|]
+operator|->
+name|msg_style
+operator|!=
+name|PAM_PROMPT_ECHO_OFF
+operator|&&
+name|pam_cookie
+operator|->
+name|msg
+index|[
+literal|0
+index|]
+operator|->
+name|msg_style
+operator|!=
+name|PAM_PROMPT_ECHO_ON
+operator|)
+condition|)
+block|{
+comment|/* We got several challenges or an unknown challenge type */
+name|ipam_free_cookie
+argument_list|(
+name|pam_cookie
+argument_list|)
+expr_stmt|;
+name|pam_cookie
+operator|=
+name|NULL
+expr_stmt|;
+break|break;
+block|}
+name|packet_start
+argument_list|(
+name|SSH_SMSG_AUTH_TIS_CHALLENGE
+argument_list|)
+expr_stmt|;
+name|packet_put_string
+argument_list|(
+name|pam_cookie
+operator|->
+name|msg
+index|[
+literal|0
+index|]
+operator|->
+name|msg
+argument_list|,
+name|strlen
+argument_list|(
+name|pam_cookie
+operator|->
+name|msg
+index|[
+literal|0
+index|]
+operator|->
+name|msg
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|packet_send
+argument_list|()
+expr_stmt|;
+name|packet_write_wait
+argument_list|()
+expr_stmt|;
+continue|continue;
+case|case
+name|SSH_CMSG_AUTH_TIS_RESPONSE
+case|:
+name|debug
+argument_list|(
+literal|"rcvd SSH_CMSG_AUTH_TIS_RESPONSE"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pam_cookie
+operator|==
+name|NULL
+condition|)
+break|break;
+block|{
+name|char
+modifier|*
+name|response
+init|=
+name|packet_get_string
+argument_list|(
+operator|&
+name|dlen
+argument_list|)
+decl_stmt|;
+name|packet_integrity_check
+argument_list|(
+name|plen
+argument_list|,
+literal|4
+operator|+
+name|dlen
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+name|pam_cookie
+operator|->
+name|resp
+index|[
+literal|0
+index|]
+operator|->
+name|resp
+operator|=
+name|strdup
+argument_list|(
+name|response
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|response
+argument_list|)
+expr_stmt|;
+name|authenticated
+operator|=
+name|ipam_complete_auth
+argument_list|(
+name|pam_cookie
+argument_list|)
+expr_stmt|;
+name|ipam_free_cookie
+argument_list|(
+name|pam_cookie
+argument_list|)
+expr_stmt|;
+name|pam_cookie
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+break|break;
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|SKEY
+argument_list|)
 case|case
 name|SSH_CMSG_AUTH_TIS
 case|:
@@ -1452,12 +1427,16 @@ name|char
 modifier|*
 name|skeyinfo
 init|=
+name|pw
+condition|?
 name|opie_keyinfo
 argument_list|(
 name|pw
 operator|->
 name|pw_name
 argument_list|)
+else|:
+name|NULL
 decl_stmt|;
 if|if
 condition|(
@@ -1470,18 +1449,14 @@ name|debug
 argument_list|(
 literal|"generating fake skeyinfo for %.100s."
 argument_list|,
-name|pw
-operator|->
-name|pw_name
+name|luser
 argument_list|)
 expr_stmt|;
 name|skeyinfo
 operator|=
 name|skey_fake_keyinfo
 argument_list|(
-name|pw
-operator|->
-name|pw_name
+name|luser
 argument_list|)
 expr_stmt|;
 block|}
@@ -1505,14 +1480,9 @@ argument_list|(
 name|SSH_SMSG_AUTH_TIS_CHALLENGE
 argument_list|)
 expr_stmt|;
-name|packet_put_string
+name|packet_put_cstring
 argument_list|(
 name|skeyinfo
-argument_list|,
-name|strlen
-argument_list|(
-name|skeyinfo
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|packet_send
@@ -1573,6 +1543,10 @@ expr_stmt|;
 name|authenticated
 operator|=
 operator|(
+name|pw
+operator|!=
+name|NULL
+operator|&&
 name|opie_haskey
 argument_list|(
 name|pw
@@ -1662,9 +1636,7 @@ condition|(
 operator|!
 name|auth_krb5_tgt
 argument_list|(
-name|pw
-operator|->
-name|pw_name
+name|luser
 argument_list|,
 operator|&
 name|tgt
@@ -1676,9 +1648,7 @@ name|verbose
 argument_list|(
 literal|"Kerberos V5 TGT refused for %.100s"
 argument_list|,
-name|pw
-operator|->
-name|pw_name
+name|luser
 argument_list|)
 expr_stmt|;
 name|xfree
@@ -1704,10 +1674,25 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|authenticated
+operator|&&
+name|pw
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"internal error: authenticated for pw == NULL"
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Check if the user is logging in as root and root logins 		 * are disallowed. 		 * Note that root login is allowed for forced commands. 		 */
 if|if
 condition|(
 name|authenticated
+operator|&&
+name|pw
 operator|&&
 name|pw
 operator|->
@@ -1751,6 +1736,13 @@ block|}
 ifdef|#
 directive|ifdef
 name|HAVE_LOGIN_CAP
+if|if
+condition|(
+name|pw
+operator|!=
+name|NULL
+condition|)
+block|{
 name|lc
 operator|=
 name|login_getpwclass
@@ -1841,6 +1833,11 @@ argument_list|(
 name|lc
 argument_list|)
 expr_stmt|;
+name|lc
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* HAVE_LOGIN_CAP */
@@ -1849,6 +1846,10 @@ directive|ifdef
 name|LOGIN_ACCESS
 if|if
 condition|(
+name|pw
+operator|!=
+name|NULL
+operator|&&
 operator|!
 name|login_access
 argument_list|(
@@ -1884,6 +1885,10 @@ directive|endif
 comment|/* LOGIN_ACCESS */
 if|if
 condition|(
+name|pw
+operator|!=
+name|NULL
+operator|&&
 name|pw
 operator|->
 name|pw_uid
@@ -1921,7 +1926,7 @@ name|log
 expr_stmt|;
 name|authlog
 argument_list|(
-literal|"%s %s for %.200s from %.200s port %d%s"
+literal|"%s %s for %s%.100s from %.200s port %d%s"
 argument_list|,
 name|authenticated
 condition|?
@@ -1935,6 +1940,14 @@ name|type
 argument_list|)
 argument_list|,
 name|pw
+condition|?
+literal|""
+else|:
+literal|"illegal user "
+argument_list|,
+name|pw
+operator|&&
+name|pw
 operator|->
 name|pw_uid
 operator|==
@@ -1942,9 +1955,7 @@ literal|0
 condition|?
 literal|"ROOT"
 else|:
-name|pw
-operator|->
-name|pw_name
+name|luser
 argument_list|,
 name|get_remote_ipaddr
 argument_list|()
@@ -1960,6 +1971,46 @@ condition|(
 name|authenticated
 condition|)
 return|return;
+ifdef|#
+directive|ifdef
+name|USE_PAM
+if|if
+condition|(
+name|authenticated
+operator|&&
+operator|!
+name|do_pam_account
+argument_list|(
+name|pw
+operator|->
+name|pw_name
+argument_list|,
+name|client_user
+argument_list|)
+condition|)
+name|authenticated
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|client_user
+operator|!=
+name|NULL
+condition|)
+block|{
+name|xfree
+argument_list|(
+name|client_user
+argument_list|)
+expr_stmt|;
+name|client_user
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|attempt
@@ -1970,9 +2021,7 @@ name|packet_disconnect
 argument_list|(
 name|AUTH_FAIL_MSG
 argument_list|,
-name|pw
-operator|->
-name|pw_name
+name|luser
 argument_list|)
 expr_stmt|;
 comment|/* Send a message indicating that the authentication attempt failed. */
@@ -2086,25 +2135,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|pw
-operator|||
-operator|!
+operator|&&
 name|allowed_user
 argument_list|(
 name|pw
 argument_list|)
 condition|)
-name|do_fake_authloop1
-argument_list|(
-name|user
-argument_list|)
-expr_stmt|;
-name|xfree
-argument_list|(
-name|user
-argument_list|)
-expr_stmt|;
+block|{
 comment|/* Take a copy of the returned structure. */
 name|memset
 argument_list|(
@@ -2192,17 +2230,6 @@ argument_list|)
 expr_stmt|;
 name|pwcopy
 operator|.
-name|pw_class
-operator|=
-name|xstrdup
-argument_list|(
-name|pw
-operator|->
-name|pw_class
-argument_list|)
-expr_stmt|;
-name|pwcopy
-operator|.
 name|pw_expire
 operator|=
 name|pw
@@ -2222,6 +2249,30 @@ operator|=
 operator|&
 name|pwcopy
 expr_stmt|;
+block|}
+else|else
+block|{
+name|pw
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+ifdef|#
+directive|ifdef
+name|USE_PAM
+if|if
+condition|(
+name|pw
+operator|!=
+name|NULL
+condition|)
+name|start_pam
+argument_list|(
+name|pw
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * If we are not running as root, the user must have the same uid as 	 * the server. 	 */
 if|if
 condition|(
@@ -2229,6 +2280,8 @@ name|getuid
 argument_list|()
 operator|!=
 literal|0
+operator|&&
+name|pw
 operator|&&
 name|pw
 operator|->
@@ -2244,11 +2297,15 @@ argument_list|)
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"Attempting authentication for %.100s."
+literal|"Attempting authentication for %s%.100s."
 argument_list|,
 name|pw
-operator|->
-name|pw_name
+condition|?
+literal|""
+else|:
+literal|"illegal user "
+argument_list|,
+name|user
 argument_list|)
 expr_stmt|;
 comment|/* If the user has no password, accept authentication immediately. */
@@ -2286,12 +2343,27 @@ operator|&&
 endif|#
 directive|endif
 comment|/* KRB4 */
+ifdef|#
+directive|ifdef
+name|USE_PAM
+name|auth_pam_password
+argument_list|(
+argument|pw
+argument_list|,
+literal|""
+argument_list|)
+else|#
+directive|else
+comment|/* !USE_PAM */
 name|auth_password
 argument_list|(
 name|pw
 argument_list|,
 literal|""
 argument_list|)
+endif|#
+directive|endif
+comment|/* USE_PAM */
 condition|)
 block|{
 comment|/* Authentication with empty password succeeded. */
@@ -2299,9 +2371,7 @@ name|log
 argument_list|(
 literal|"Login for user %s from %.100s, accepted without authentication."
 argument_list|,
-name|pw
-operator|->
-name|pw_name
+name|user
 argument_list|,
 name|get_remote_ipaddr
 argument_list|()
@@ -2314,9 +2384,24 @@ comment|/* Loop until the user has been authenticated or the 		   connection is 
 name|do_authloop
 argument_list|(
 name|pw
+argument_list|,
+name|user
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|pw
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"internal error, authentication successfull for user '%.100s'"
+argument_list|,
+name|user
+argument_list|)
+expr_stmt|;
 comment|/* The user has been authenticated and accepted. */
 name|packet_start
 argument_list|(

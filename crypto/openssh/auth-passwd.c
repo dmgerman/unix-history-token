@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-passwd.c,v 1.17 2000/09/07 20:27:49 deraadt Exp $"
+literal|"$OpenBSD: auth-passwd.c,v 1.18 2000/10/03 18:03:03 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -121,7 +121,7 @@ literal|0
 return|;
 ifdef|#
 directive|ifdef
-name|SKEY
+name|SKEY_VIA_PASSWD_IS_DISABLED
 if|if
 condition|(
 name|options
