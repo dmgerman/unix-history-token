@@ -735,17 +735,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PG_MAPPED
-value|0x0020
-end_define
-
-begin_comment
-comment|/* page is mapped */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PG_ZERO
 value|0x0040
 end_define
