@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.6 (Berkeley) %G%"
+literal|"@(#)err.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -846,6 +846,12 @@ name|CurEnv
 operator|->
 name|e_id
 argument_list|,
+name|CurHostName
+operator|==
+name|NULL
+condition|?
+literal|"NO-HOST"
+else|:
 name|CurHostName
 argument_list|,
 name|msg
