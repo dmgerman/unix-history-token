@@ -867,6 +867,19 @@ block|,
 block|{
 name|PCMCIA_CARD
 argument_list|(
+name|EXP
+argument_list|,
+name|THINLANCOMBO
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|PCMCIA_CARD
+argument_list|(
 name|IBM
 argument_list|,
 name|INFOMOVER
@@ -2518,7 +2531,7 @@ name|chip_type
 operator|=
 name|ED_CHIP_TYPE_AX88190
 expr_stmt|;
-comment|/* 	 * Set Attribute Memory IOBASE Register 	 */
+comment|/* 	 * Set Attribute Memory IOBASE Register.  Is this a deficiency in 	 * the PC Card layer, or an ax88190 specific issue? xxx 	 */
 name|iobase
 operator|=
 name|rman_get_start
