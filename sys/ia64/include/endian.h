@@ -45,12 +45,6 @@ name|_QUAD_LOWWORD
 value|0
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
-
 begin_comment
 comment|/*  * Definitions for byte order, according to byte significance from low  * address to high.  */
 end_comment
@@ -58,7 +52,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LITTLE_ENDIAN
+name|_LITTLE_ENDIAN
 value|1234
 end_define
 
@@ -69,7 +63,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BIG_ENDIAN
+name|_BIG_ENDIAN
 value|4321
 end_define
 
@@ -80,7 +74,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PDP_ENDIAN
+name|_PDP_ENDIAN
 value|3412
 end_define
 
@@ -91,18 +85,52 @@ end_comment
 begin_define
 define|#
 directive|define
+name|_BYTE_ORDER
+value|_LITTLE_ENDIAN
+end_define
+
+begin_comment
+comment|/*  * Deprecated variants that don't have enough underscores to be useful in more  * strict namespaces.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_define
+define|#
+directive|define
+name|LITTLE_ENDIAN
+value|_LITTLE_ENDIAN
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIG_ENDIAN
+value|_BIG_ENDIAN
+end_define
+
+begin_define
+define|#
+directive|define
+name|PDP_ENDIAN
+value|_PDP_ENDIAN
+end_define
+
+begin_define
+define|#
+directive|define
 name|BYTE_ORDER
-value|LITTLE_ENDIAN
+value|_BYTE_ORDER
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* !_POSIX_SOURCE */
-end_comment
 
 begin_ifdef
 ifdef|#
