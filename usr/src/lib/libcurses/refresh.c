@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)refresh.c	5.4 (Berkeley) %G%"
+literal|"@(#)refresh.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,6 +89,17 @@ modifier|*
 name|_win
 init|=
 name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|STATIC
+name|int
+name|domvcur
+argument_list|()
+decl_stmt|,
+name|makech
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 

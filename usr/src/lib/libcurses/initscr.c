@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)initscr.c	5.5 (Berkeley) %G%"
+literal|"@(#)initscr.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,7 +64,7 @@ name|char
 modifier|*
 name|sp
 decl_stmt|;
-name|int
+name|void
 name|tstp
 parameter_list|()
 function_decl|;

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tstp.c	5.5 (Berkeley) %G%"
+literal|"@(#)tstp.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,15 +41,13 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  * handle stop and start signals  *  * @(#)tstp.c	5.5 (Berkeley) %G%  */
+comment|/*  * handle stop and start signals  *  * @(#)tstp.c	5.6 (Berkeley) %G%  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|tstp
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 ifdef|#
 directive|ifdef
@@ -177,7 +175,7 @@ endif|#
 directive|endif
 endif|SIGTSTP
 block|}
-end_block
+end_function
 
 end_unit
 
