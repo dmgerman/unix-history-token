@@ -129,23 +129,6 @@ parameter_list|)
 value|suser(a)
 end_define
 
-begin_define
-define|#
-directive|define
-name|thread
-value|proc
-end_define
-
-begin_comment
-comment|/* Compat with new thread stuff */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -1490,8 +1473,7 @@ parameter_list|,
 name|int
 name|devtype
 parameter_list|,
-name|struct
-name|thread
+name|d_thread_t
 modifier|*
 name|td
 parameter_list|)
@@ -1557,8 +1539,7 @@ parameter_list|,
 name|int
 name|devtype
 parameter_list|,
-name|struct
-name|thread
+name|d_thread_t
 modifier|*
 name|td
 parameter_list|)
@@ -2176,8 +2157,7 @@ parameter_list|,
 name|int
 name|fflag
 parameter_list|,
-name|struct
-name|thread
+name|d_thread_t
 modifier|*
 name|td
 parameter_list|)
@@ -3103,8 +3083,7 @@ parameter_list|,
 name|int
 name|events
 parameter_list|,
-name|struct
-name|thread
+name|d_thread_t
 modifier|*
 name|td
 parameter_list|)
