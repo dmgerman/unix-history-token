@@ -14,6 +14,12 @@ specifier|static
 name|char
 name|copyright
 index|[]
+name|__attribute__
+argument_list|(
+operator|(
+name|unused
+operator|)
+argument_list|)
 init|=
 literal|"@(#) Copyright (c) 1983, 1991, 1993, 1994\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
@@ -43,8 +49,14 @@ specifier|static
 name|char
 name|inetd_c_rcsid
 index|[]
+name|__attribute__
+argument_list|(
+operator|(
+name|unused
+operator|)
+argument_list|)
 init|=
-literal|"$Id: inetd.c,v 1.14 1996/10/28 23:02:38 joerg Exp $"
+literal|"$Id: inetd.c,v 1.15 1996/11/01 01:42:08 alex Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -124,6 +136,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<rpc/pmap_clnt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -185,6 +203,12 @@ begin_include
 include|#
 directive|include
 file|<libutil.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sysexits.h>
 end_include
 
 begin_include
@@ -1334,7 +1358,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1361,7 +1385,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}
@@ -2291,6 +2315,9 @@ name|tmpint
 operator|!=
 name|ctrl
 condition|)
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|tmpint
@@ -2303,6 +2330,7 @@ name|sep
 operator|->
 name|se_bi
 condition|)
+block|{
 call|(
 modifier|*
 name|sep
@@ -2317,6 +2345,8 @@ argument_list|,
 name|sep
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
+block|}
 else|else
 block|{
 if|if
@@ -2422,7 +2452,7 @@ argument_list|)
 expr_stmt|;
 name|_exit
 argument_list|(
-literal|1
+name|EX_NOUSER
 argument_list|)
 expr_stmt|;
 block|}
@@ -2445,7 +2475,7 @@ operator|->
 name|se_service
 argument_list|)
 expr_stmt|;
-comment|/* _exit(1); not fatal yet */
+comment|/* _exit(EX_OSERR); not fatal yet */
 block|}
 if|if
 condition|(
@@ -2481,7 +2511,7 @@ operator|->
 name|se_user
 argument_list|)
 expr_stmt|;
-comment|/* _exit(1); not fatal yet */
+comment|/* _exit(EX_OSERR); not yet */
 block|}
 if|if
 condition|(
@@ -2512,7 +2542,7 @@ argument_list|)
 expr_stmt|;
 name|_exit
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|)
 expr_stmt|;
 block|}
@@ -2559,7 +2589,7 @@ argument_list|)
 expr_stmt|;
 name|_exit
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|)
 expr_stmt|;
 block|}
@@ -2610,7 +2640,7 @@ argument_list|)
 expr_stmt|;
 name|_exit
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|)
 expr_stmt|;
 block|}
@@ -3379,10 +3409,12 @@ name|servtab
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|sep
 operator|=
 operator|*
 name|sepp
+operator|)
 condition|)
 block|{
 if|if
@@ -3666,6 +3698,12 @@ name|se_fd
 operator|==
 operator|-
 literal|1
+operator|&&
+operator|!
+name|ISMUX
+argument_list|(
+name|sep
+argument_list|)
 condition|)
 name|setup
 argument_list|(
@@ -4302,8 +4340,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-operator|-
-literal|1
+name|EX_OSERR
 argument_list|)
 expr_stmt|;
 block|}
@@ -5370,8 +5407,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-operator|-
-literal|1
+name|EX_DATAERR
 argument_list|)
 expr_stmt|;
 block|}
@@ -5469,12 +5505,14 @@ literal|'\t'
 condition|)
 if|if
 condition|(
+operator|(
 name|cp
 operator|=
 name|nextline
 argument_list|(
 name|fconfig
 argument_list|)
+operator|)
 condition|)
 goto|goto
 name|again
@@ -5663,6 +5701,7 @@ decl_stmt|;
 block|{
 if|if
 condition|(
+operator|(
 name|cp
 operator|=
 name|strdup
@@ -5673,6 +5712,7 @@ name|cp
 else|:
 literal|""
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(
@@ -5688,8 +5728,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-operator|-
-literal|1
+name|EX_OSERR
 argument_list|)
 expr_stmt|;
 block|}
@@ -7341,17 +7380,11 @@ modifier|*
 name|sep
 decl_stmt|;
 block|{
-if|if
-condition|(
-name|sep
-operator|->
-name|se_rpc
-condition|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: %s proto=%s, wait=%d, user=%s builtin=%x server=%s\n"
+literal|"%s: %s proto=%s accept=%d max=%d user=%s builtin=%x server=%s\n"
 argument_list|,
 name|action
 argument_list|,
@@ -7365,44 +7398,11 @@ name|se_proto
 argument_list|,
 name|sep
 operator|->
-name|se_wait
+name|se_accept
 argument_list|,
 name|sep
 operator|->
-name|se_user
-argument_list|,
-operator|(
-name|int
-operator|)
-name|sep
-operator|->
-name|se_bi
-argument_list|,
-name|sep
-operator|->
-name|se_server
-argument_list|)
-expr_stmt|;
-else|else
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s proto=%s, wait=%d, user=%s builtin=%x server=%s\n"
-argument_list|,
-name|action
-argument_list|,
-name|sep
-operator|->
-name|se_service
-argument_list|,
-name|sep
-operator|->
-name|se_proto
-argument_list|,
-name|sep
-operator|->
-name|se_wait
+name|se_maxchild
 argument_list|,
 name|sep
 operator|->
