@@ -930,6 +930,11 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * If the passed in reqpage page is a fake page, update it with 		 * the new physical address. 		 */
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|dev_pager_updatefake
 argument_list|(
 name|m
@@ -938,11 +943,6 @@ name|reqpage
 index|]
 argument_list|,
 name|paddr
-argument_list|)
-expr_stmt|;
-name|VM_OBJECT_LOCK
-argument_list|(
-name|object
 argument_list|)
 expr_stmt|;
 if|if
@@ -1332,6 +1332,12 @@ operator|->
 name|phys_addr
 operator|=
 name|paddr
+expr_stmt|;
+name|m
+operator|->
+name|valid
+operator|=
+name|VM_PAGE_BITS_ALL
 expr_stmt|;
 block|}
 end_function
