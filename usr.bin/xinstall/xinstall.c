@@ -472,7 +472,7 @@ begin_function_decl
 name|void
 name|usage
 parameter_list|(
-name|int
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -735,9 +735,7 @@ literal|'?'
 case|:
 default|default:
 name|usage
-argument_list|(
-name|__LINE__
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 name|argc
@@ -756,24 +754,26 @@ operator|&&
 name|dodir
 condition|)
 name|usage
-argument_list|(
-name|__LINE__
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* must have at least two arguments, except when creating directories */
 if|if
 condition|(
 name|argc
-operator|<
-literal|2
+operator|==
+literal|0
+operator|||
+operator|(
+name|argc
+operator|==
+literal|1
 operator|&&
 operator|!
 name|dodir
+operator|)
 condition|)
 name|usage
-argument_list|(
-name|__LINE__
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* need to make a temp copy so we can compare stripped version */
 if|if
@@ -984,9 +984,7 @@ operator|!=
 literal|2
 condition|)
 name|usage
-argument_list|(
-name|__LINE__
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -3890,10 +3888,7 @@ end_comment
 begin_function
 name|void
 name|usage
-parameter_list|(
-name|int
-name|line
-parameter_list|)
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -3902,14 +3897,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"line %d\n"
 literal|"usage: install [-bCcpSsv] [-B suffix] [-f flags] [-g group] [-m mode]\n"
 literal|"               [-o owner] file1 file2\n"
 literal|"       install [-bCcpSsv] [-B suffix] [-f flags] [-g group] [-m mode]\n"
 literal|"               [-o owner] file1 ... fileN directory\n"
 literal|"       install -d [-v] [-g group] [-m mode] [-o owner] directory ...\n"
-argument_list|,
-name|line
 argument_list|)
 expr_stmt|;
 name|exit
