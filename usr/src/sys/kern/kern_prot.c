@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_prot.c	5.15	83/02/16	*/
+comment|/*	kern_prot.c	5.15	83/02/20	*/
 end_comment
 
 begin_comment
@@ -979,9 +979,7 @@ name|void
 operator|)
 name|entergroup
 argument_list|(
-name|u
-operator|.
-name|u_rgid
+name|rgid
 argument_list|)
 expr_stmt|;
 name|u
@@ -991,37 +989,12 @@ operator|=
 name|rgid
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|u
-operator|.
-name|u_gid
-operator|!=
-name|egid
-condition|)
-block|{
-name|leavegroup
-argument_list|(
-name|u
-operator|.
-name|u_gid
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|entergroup
-argument_list|(
-name|egid
-argument_list|)
-expr_stmt|;
 name|u
 operator|.
 name|u_gid
 operator|=
 name|egid
 expr_stmt|;
-block|}
 block|}
 end_block
 
@@ -1087,13 +1060,6 @@ name|suser
 argument_list|()
 condition|)
 block|{
-name|leavegroup
-argument_list|(
-name|u
-operator|.
-name|u_gid
-argument_list|)
-expr_stmt|;
 name|leavegroup
 argument_list|(
 name|u

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lfs_vnops.c	4.51	83/02/10	*/
+comment|/*	lfs_vnops.c	4.51	83/02/20	*/
 end_comment
 
 begin_include
@@ -2792,6 +2792,19 @@ operator|&=
 operator|~
 name|ISVTX
 expr_stmt|;
+if|if
+condition|(
+name|u
+operator|.
+name|u_gid
+operator|==
+name|ip
+operator|->
+name|i_gid
+condition|)
+goto|goto
+name|ok
+goto|;
 for|for
 control|(
 name|gp
