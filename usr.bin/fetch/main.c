@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.26.2.6 1997/08/03 18:53:18 peter Exp $ */
+comment|/* $Id: main.c,v 1.26.2.7 1997/08/19 01:58:37 asami Exp $ */
 end_comment
 
 begin_include
@@ -234,7 +234,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"abc:D:f:h:HilLmMnNo:pPqRrT:vV:"
+literal|"abc:D:f:h:HilLmMnNo:pPqRrtT:vV:"
 argument_list|)
 operator|)
 operator|!=
@@ -393,6 +393,16 @@ case|:
 name|fs
 operator|.
 name|fs_precious
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'t'
+case|:
+name|fs
+operator|.
+name|fs_use_connect
 operator|=
 literal|1
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**************************************************************** Copyright 1990 - 1994 by AT&T Bell Laboratories and Bellcore.  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that the copyright notice and this permission notice and warranty disclaimer appear in supporting documentation, and that the names of AT&T Bell Laboratories or Bellcore or any of their entities not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  AT&T and Bellcore disclaim all warranties with regard to this software, including all implied warranties of merchantability and fitness.  In no event shall AT&T or Bellcore be liable for any special, indirect or consequential damages or any damages whatsoever resulting from loss of use, data or profits, whether in an action of contract, negligence or other tortious action, arising out of or in connection with the use or performance of this software. ****************************************************************/
+comment|/**************************************************************** Copyright 1990 - 1996 by AT&T, Lucent Technologies and Bellcore.  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that the copyright notice and this permission notice and warranty disclaimer appear in supporting documentation, and that the names of AT&T, Bell Laboratories, Lucent or Bellcore or any of their entities not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  AT&T, Lucent and Bellcore disclaim all warranties with regard to this software, including all implied warranties of merchantability and fitness.  In no event shall AT&T, Lucent or Bellcore be liable for any special, indirect or consequential damages or any damages whatsoever resulting from loss of use, data or profits, whether in an action of contract, negligence or other tortious action, arising out of or in connection with the use or performance of this software. ****************************************************************/
 end_comment
 
 begin_decl_stmt
@@ -35,6 +35,12 @@ begin_decl_stmt
 name|LOCAL
 name|int
 name|Max_ftn_files
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|badargs
 decl_stmt|;
 end_decl_stmt
 
@@ -163,6 +169,29 @@ name|flag
 name|keepsubs
 init|=
 name|NO
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|flag
+name|byterev
+init|=
+name|NO
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|intr_omit
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|no_cd
+decl_stmt|,
+name|no_i90
 decl_stmt|;
 end_decl_stmt
 
@@ -369,6 +398,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* force real functions to double */
+end_comment
+
+begin_decl_stmt
+name|int
+name|dneg
+init|=
+name|NO
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* f77 treatment of unary minus */
 end_comment
 
 begin_decl_stmt
@@ -1370,6 +1411,34 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
+name|f2c_entry
+argument_list|(
+literal|"cd"
+argument_list|,
+name|P_NO_ARGS
+argument_list|,
+name|P_INT
+argument_list|,
+operator|&
+name|no_cd
+argument_list|,
+literal|1
+argument_list|)
+block|,
+name|f2c_entry
+argument_list|(
+literal|"i90"
+argument_list|,
+name|P_NO_ARGS
+argument_list|,
+name|P_INT
+argument_list|,
+operator|&
+name|no_i90
+argument_list|,
+literal|2
+argument_list|)
+block|,
 ifdef|#
 directive|ifdef
 name|TYQUAD
@@ -1390,6 +1459,24 @@ block|,
 endif|#
 directive|endif
 comment|/* options omitted from man pages */
+comment|/* -b ==> for unformatted I/O, call do_unio (for noncharacter  */
+comment|/* data of length> 1 byte) and do_ucio (for the rest) rather  */
+comment|/* than do_uio.  This permits modifying libI77 to byte-reverse */
+comment|/* numeric data. */
+name|f2c_entry
+argument_list|(
+literal|"b"
+argument_list|,
+name|P_NO_ARGS
+argument_list|,
+name|P_INT
+argument_list|,
+operator|&
+name|byterev
+argument_list|,
+name|YES
+argument_list|)
+block|,
 comment|/* -ev ==> implement equivalence with initialized pointers */
 name|f2c_entry
 argument_list|(
@@ -1470,11 +1557,28 @@ name|f2c_entry
 argument_list|(
 literal|"D"
 argument_list|,
-argument|P_ONE_ARG
+name|P_ONE_ARG
+argument_list|,
+name|P_INT
+argument_list|,
+operator|&
+name|debugflag
+argument_list|,
+name|YES
+argument_list|)
+block|,
+comment|/* -dneg ==> under (default) -!R, imitate f77's bizarre	*/
+comment|/* treatment of unary minus of REAL expressions by	*/
+comment|/* promoting them to DOUBLE PRECISION . */
+name|f2c_entry
+argument_list|(
+literal|"dneg"
+argument_list|,
+argument|P_NO_ARGS
 argument_list|,
 argument|P_INT
 argument_list|,
-argument|&debugflag
+argument|&dneg
 argument_list|,
 argument|YES
 argument_list|)
@@ -1962,6 +2066,11 @@ operator|=
 literal|"E_fp"
 expr_stmt|;
 block|}
+else|else
+name|dneg
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|maxregvar
@@ -2993,6 +3102,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|badargs
+condition|)
+return|return
+literal|1
+return|;
+name|intr_omit
+operator|=
+name|no_cd
+operator||
+name|no_i90
+expr_stmt|;
+if|if
+condition|(
 name|keepsubs
 operator|&&
 name|checksubs
@@ -3164,10 +3286,6 @@ operator|*
 name|file_name
 condition|)
 block|{
-name|cdfilename
-operator|=
-name|coutput
-expr_stmt|;
 if|if
 condition|(
 name|debugflag
@@ -3194,13 +3312,6 @@ name|coutput
 operator|=
 name|o_coutput
 expr_stmt|;
-name|cdfilename
-operator|=
-name|copys
-argument_list|(
-name|outbtail
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|Castargs1
@@ -3217,6 +3328,10 @@ literal|'P'
 argument_list|)
 expr_stmt|;
 block|}
+name|cdfilename
+operator|=
+name|coutput
+expr_stmt|;
 if|if
 condition|(
 name|skipC
@@ -3720,6 +3835,10 @@ argument_list|)
 expr_stmt|;
 name|endproc
 argument_list|()
+expr_stmt|;
+name|nerr
+operator|=
+literal|1
 expr_stmt|;
 block|}
 name|done

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**************************************************************** Copyright 1990, 1991, 1993, 1994 by AT&T Bell Laboratories and Bellcore.  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that the copyright notice and this permission notice and warranty disclaimer appear in supporting documentation, and that the names of AT&T Bell Laboratories or Bellcore or any of their entities not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  AT&T and Bellcore disclaim all warranties with regard to this software, including all implied warranties of merchantability and fitness.  In no event shall AT&T or Bellcore be liable for any special, indirect or consequential damages or any damages whatsoever resulting from loss of use, data or profits, whether in an action of contract, negligence or other tortious action, arising out of or in connection with the use or performance of this software. ****************************************************************/
+comment|/**************************************************************** Copyright 1990, 1991, 1993, 1994, 1996 by AT&T, Lucent Technologies and Bellcore.  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that the copyright notice and this permission notice and warranty disclaimer appear in supporting documentation, and that the names of AT&T, Bell Laboratories, Lucent or Bellcore or any of their entities not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  AT&T, Lucent and Bellcore disclaim all warranties with regard to this software, including all implied warranties of merchantability and fitness.  In no event shall AT&T, Lucent or Bellcore be liable for any special, indirect or consequential damages or any damages whatsoever resulting from loss of use, data or profits, whether in an action of contract, negligence or other tortious action, arising out of or in connection with the use or performance of this software. ****************************************************************/
 end_comment
 
 begin_comment
@@ -46,6 +46,8 @@ end_include
 begin_decl_stmt
 specifier|extern
 name|int
+name|byterev
+decl_stmt|,
 name|inqmask
 decl_stmt|;
 end_decl_stmt
@@ -1500,6 +1502,9 @@ name|lp
 operator|->
 name|labelno
 operator|=
+operator|(
+name|int
+operator|)
 name|newlabel
 argument_list|()
 expr_stmt|;
@@ -3097,6 +3102,9 @@ name|exdo
 argument_list|(
 name|range
 operator|=
+operator|(
+name|int
+operator|)
 name|newlabel
 argument_list|()
 argument_list|,
@@ -3935,7 +3943,34 @@ name|FORMATTED
 condition|?
 literal|"do_fio"
 else|:
+operator|!
+name|byterev
+condition|?
 literal|"do_uio"
+else|:
+name|ONEOF
+argument_list|(
+name|type
+argument_list|,
+name|M
+argument_list|(
+name|TYCHAR
+argument_list|)
+operator||
+name|M
+argument_list|(
+name|TYINT1
+argument_list|)
+operator||
+name|M
+argument_list|(
+name|TYLOGICAL1
+argument_list|)
+argument_list|)
+condition|?
+literal|"do_ucio"
+else|:
+literal|"do_unio"
 decl_stmt|;
 name|q
 operator|=

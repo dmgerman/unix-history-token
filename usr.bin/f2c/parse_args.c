@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**************************************************************** Copyright 1990, 1994 by AT&T Bell Laboratories and Bellcore.  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that the copyright notice and this permission notice and warranty disclaimer appear in supporting documentation, and that the names of AT&T Bell Laboratories or Bellcore or any of their entities not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  AT&T and Bellcore disclaim all warranties with regard to this software, including all implied warranties of merchantability and fitness.  In no event shall AT&T or Bellcore be liable for any special, indirect or consequential damages or any damages whatsoever resulting from loss of use, data or profits, whether in an action of contract, negligence or other tortious action, arising out of or in connection with the use or performance of this software. ****************************************************************/
+comment|/**************************************************************** Copyright 1990, 1994-5 by AT&T, Lucent Technologies and Bellcore.  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that the copyright notice and this permission notice and warranty disclaimer appear in supporting documentation, and that the names of AT&T, Bell Laboratories, Lucent or Bellcore or any of their entities not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  AT&T, Lucent and Bellcore disclaim all warranties with regard to this software, including all implied warranties of merchantability and fitness.  In no event shall AT&T, Lucent or Bellcore be liable for any special, indirect or consequential damages or any damages whatsoever resulting from loss of use, data or profits, whether in an action of contract, negligence or other tortious action, arising out of or in connection with the use or performance of this software. ****************************************************************/
 end_comment
 
 begin_comment
@@ -305,6 +305,13 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|badargs
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|boolean
 ifdef|#
@@ -527,6 +534,9 @@ argument_list|,
 operator|*
 name|argv
 argument_list|)
+expr_stmt|;
+name|badargs
+operator|++
 expr_stmt|;
 block|}
 comment|/* else */
@@ -831,6 +841,9 @@ name|arg
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|badargs
+operator|++
+expr_stmt|;
 block|}
 comment|/* if */
 comment|/* Check the argument count */
@@ -879,6 +892,9 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
+name|badargs
+operator|++
+expr_stmt|;
 block|}
 comment|/* if count != P_NO_ARGS ... */
 comment|/* Check the result field; want to be able to store results */
@@ -923,6 +939,9 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+name|badargs
+operator|++
+expr_stmt|;
 block|}
 comment|/* if arg_result_ptr */
 block|}
@@ -947,6 +966,7 @@ name|type
 operator|>
 name|P_DOUBLE
 condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -960,6 +980,10 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
+name|badargs
+operator|++
+expr_stmt|;
+block|}
 block|}
 comment|/* Check table size */
 block|{
@@ -1006,6 +1030,9 @@ name|i
 argument_list|,
 name|size
 argument_list|)
+expr_stmt|;
+name|badargs
+operator|++
 expr_stmt|;
 block|}
 comment|/* if (arg_count == P_INFINITE_ARGS&& size< 1) */
@@ -1867,17 +1894,13 @@ case|:
 case|case
 name|P_NEW_FILE
 case|:
-operator|*
-name|store
-operator|=
-name|str
-expr_stmt|;
 if|if
 condition|(
 name|str
 operator|==
 name|NULL
 condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -1893,14 +1916,22 @@ argument_list|)
 expr_stmt|;
 name|length
 operator|=
-name|str
-condition|?
+literal|0
+expr_stmt|;
+name|badargs
+operator|++
+expr_stmt|;
+block|}
+else|else
+name|length
+operator|=
 name|strlen
 argument_list|(
+operator|*
+name|store
+operator|=
 name|str
 argument_list|)
-else|:
-literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -1956,6 +1987,7 @@ operator|*
 operator|)
 name|store
 condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -1976,6 +2008,10 @@ operator|)
 name|store
 argument_list|)
 expr_stmt|;
+name|badargs
+operator|++
+expr_stmt|;
+block|}
 name|length
 operator|=
 name|strlen
@@ -2017,6 +2053,7 @@ operator|*
 operator|)
 name|store
 condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -2037,6 +2074,10 @@ operator|)
 name|store
 argument_list|)
 expr_stmt|;
+name|badargs
+operator|++
+expr_stmt|;
+block|}
 name|length
 operator|=
 name|strlen
@@ -2133,6 +2174,9 @@ literal|"put_one_arg:  bad type '%d'\n"
 argument_list|,
 name|type
 argument_list|)
+expr_stmt|;
+name|badargs
+operator|++
 expr_stmt|;
 break|break;
 block|}

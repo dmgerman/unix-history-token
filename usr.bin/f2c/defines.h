@@ -1102,6 +1102,94 @@ begin_comment
 comment|/* max(a,b) macro */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|OPBITTEST
+value|62
+end_define
+
+begin_comment
+comment|/* btest */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPBITCLR
+value|63
+end_define
+
+begin_comment
+comment|/* ibclr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPBITSET
+value|64
+end_define
+
+begin_comment
+comment|/* ibset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPQBITCLR
+value|65
+end_define
+
+begin_comment
+comment|/* ibclr, integer*8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPQBITSET
+value|66
+end_define
+
+begin_comment
+comment|/* ibset, integer*8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPBITBITS
+value|67
+end_define
+
+begin_comment
+comment|/* ibits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPBITSH
+value|68
+end_define
+
+begin_comment
+comment|/* ishft */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPBITSHC
+value|69
+end_define
+
+begin_comment
+comment|/* ishftc */
+end_comment
+
 begin_comment
 comment|/* label type codes -- used with the ASSIGN statement */
 end_comment
@@ -1200,6 +1288,17 @@ end_define
 
 begin_comment
 comment|/* constants, e.g. bigint(1.0) v. bigint (1d0) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTRBGEN
+value|8
+end_define
+
+begin_comment
+comment|/* bit manipulation */
 end_comment
 
 begin_comment
@@ -1401,6 +1500,17 @@ end_define
 
 begin_comment
 comment|/* Maximum length user.ident */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXNAMELEN
+value|50
+end_define
+
+begin_comment
+comment|/* Maximum Fortran name length */
 end_comment
 
 begin_comment
