@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_posix.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -244,6 +250,33 @@ literal|"Compatibility code"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|REGRESSION
+end_ifdef
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(,
+name|OID_AUTO
+argument_list|,
+name|regression
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"Regression test MIB"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_STRING
@@ -715,37 +748,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REGRESSION
-end_ifdef
-
-begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(,
-name|OID_AUTO
-argument_list|,
-name|regression
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-literal|0
-argument_list|,
-literal|"Regression test MIB"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !REGRESSION */
-end_comment
-
 begin_decl_stmt
 name|char
 name|hostname
@@ -887,6 +889,7 @@ name|REGRESSION
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|int
 name|regression_securelevel_nonmonotonic
 init|=
@@ -919,10 +922,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* !REGRESSION */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -1032,7 +1031,6 @@ name|regression_securelevel_nonmonotonic
 condition|)
 endif|#
 directive|endif
-comment|/* !REGRESSION */
 if|if
 condition|(
 name|level
@@ -1070,7 +1068,6 @@ name|regression_securelevel_nonmonotonic
 condition|)
 endif|#
 directive|endif
-comment|/* !REGRESSION */
 if|if
 condition|(
 name|level
@@ -1157,8 +1154,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|unsigned
-name|long
+name|u_long
 name|hostid
 decl_stmt|;
 end_decl_stmt
