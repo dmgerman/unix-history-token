@@ -3574,7 +3574,9 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"exec(strip)"
+literal|"exec(%s)"
+argument_list|,
+name|stripbin
 argument_list|)
 expr_stmt|;
 default|default:
