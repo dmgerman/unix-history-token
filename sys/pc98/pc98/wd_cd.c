@@ -9403,39 +9403,5 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|acd_drvinit
-parameter_list|(
-name|void
-modifier|*
-name|unused
-parameter_list|)
-block|{
-name|cdevsw_add
-argument_list|(
-operator|&
-name|acd_cdevsw
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_macro
-name|SYSINIT
-argument_list|(
-argument|acddev
-argument_list|,
-argument|SI_SUB_DRIVERS
-argument_list|,
-argument|SI_ORDER_MIDDLE + CDEV_MAJOR
-argument_list|,
-argument|acd_drvinit
-argument_list|,
-argument|NULL
-argument_list|)
-end_macro
-
 end_unit
 
