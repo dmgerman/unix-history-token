@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.69 1997/08/31 06:11:26 phk Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.70 1998/02/01 05:24:24 yokota Exp $  */
 end_comment
 
 begin_comment
@@ -661,24 +661,6 @@ decl_stmt|,
 modifier|*
 name|t
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|VESA_SUPPORT
-if|if
-condition|(
-name|bootinfo
-operator|.
-name|bi_vesa
-condition|)
-name|vesa_mode
-argument_list|(
-name|bootinfo
-operator|.
-name|bi_vesa
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|read
 argument_list|(
 operator|(
@@ -1407,23 +1389,6 @@ name|f
 operator||=
 name|RB_ASKNAME
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VESA_SUPPORT
-if|if
-condition|(
-name|c
-operator|==
-literal|'b'
-condition|)
-name|bootinfo
-operator|.
-name|bi_vesa
-operator|=
-literal|0x102
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|c
