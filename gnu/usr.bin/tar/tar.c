@@ -1494,8 +1494,13 @@ expr_stmt|;
 name|exit
 argument_list|(
 name|errors
+condition|?
+name|EX_ARGSBAD
+else|:
+literal|0
 argument_list|)
 expr_stmt|;
+comment|/* FIXME (should be EX_NONDESCRIPT) */
 comment|/* NOTREACHED */
 block|}
 end_function
