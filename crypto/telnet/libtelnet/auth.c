@@ -878,6 +878,11 @@ control|)
 block|{
 if|if
 condition|(
+name|AUTHTYPE_NAME
+argument_list|(
+name|x
+argument_list|)
+operator|&&
 operator|!
 name|strcasecmp
 argument_list|(
