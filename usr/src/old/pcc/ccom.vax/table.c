@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)table.c	1.12 (Berkeley) %G%"
+literal|"@(#)table.c	1.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -218,10 +218,6 @@ operator||
 name|AWD
 block|,
 name|ANYSIGNED
-operator||
-name|TUNSIGNED
-operator||
-name|TULONG
 block|,
 name|SANY
 block|,
@@ -3168,6 +3164,52 @@ operator||
 name|RESCC
 block|,
 literal|"	cvtfd	AL,A1\n	OD2	AR,A1\n	cvtdf	A1,AL\n"
+block|,
+name|ASG
+name|OPFLOAT
+block|,
+name|INAREG
+operator||
+name|FOREFF
+operator||
+name|FORCC
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
+name|ANYFIXED
+block|,
+ifndef|#
+directive|ifndef
+name|SPRECC
+name|SAREG
+operator||
+name|AWD
+block|,
+name|TDOUBLE
+block|,
+comment|/* force FLOAT to register */
+else|#
+directive|else
+name|SAREG
+operator||
+name|AWD
+block|,
+name|TFLOAT
+operator||
+name|TDOUBLE
+block|,
+endif|#
+directive|endif
+name|NAREG
+block|,
+name|RLEFT
+operator||
+name|RESCC
+block|,
+comment|/* usable() knows we need a reg pair */
+literal|"	ZG\n"
 block|,
 name|OPFLOAT
 block|,
