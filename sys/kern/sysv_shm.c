@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_shm.c,v 1.5 1995/05/30 08:06:04 rgrimes Exp $ */
+comment|/*	$Id: sysv_shm.c,v 1.6 1995/07/29 11:40:15 bde Exp $ */
 end_comment
 
 begin_comment
@@ -104,6 +104,37 @@ end_include
 begin_comment
 comment|/*  * Provides the following externally accessible functions:  *  * shminit(void);		           initialization  * shmexit(struct proc *)                  cleanup  * shmfork(struct proc *, struct proc *, int) fork handling  * shmsys(arg1, arg2, arg3, arg4);         shm{at,ctl,dt,get}(arg2, arg3, arg4)  *  * Structures:  * shmsegs (an array of 'struct shmid_ds')  * per proc array of 'struct shmmap_state'  */
 end_comment
+
+begin_comment
+comment|/*  * System initialization  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|shminit
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* should be static*/
+end_comment
+
+begin_macro
+name|SYSINIT
+argument_list|(
+argument|sysv_shm
+argument_list|,
+argument|SI_SUB_SYSV_SHM
+argument_list|,
+argument|SI_ORDER_FIRST
+argument_list|,
+argument|shminit
+argument_list|,
+argument|NULL
+argument_list|)
+end_macro
 
 begin_function_decl
 name|int

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)autoconf.c	7.1 (Berkeley) 5/9/91  *	$Id: autoconf.c,v 1.33 1995/05/30 07:59:14 rgrimes Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)autoconf.c	7.1 (Berkeley) 5/9/91  *	$Id: autoconf.c,v 1.34 1995/07/16 10:45:04 phk Exp $  */
 end_comment
 
 begin_comment
@@ -58,6 +58,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mount.h>
+end_include
+
+begin_comment
+comment|/* mountrootvfsops, struct vfsops*/
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<machine/md_var.h>
 end_include
 
@@ -91,20 +101,21 @@ begin_comment
 comment|/* number of iostat dk numbers assigned so far */
 end_comment
 
-begin_extern
-extern|extern int (*mountroot
-end_extern
-
-begin_expr_stmt
-unit|)
+begin_decl_stmt
+name|int
+name|vfs_mountroot
 name|__P
 argument_list|(
 operator|(
-name|void
+name|caddr_t
 operator|)
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX goes away*/
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -113,14 +124,29 @@ name|FFS
 end_ifdef
 
 begin_decl_stmt
-name|int
-name|ffs_mountroot
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
+specifier|extern
+name|struct
+name|vfsops
+name|ufs_vfsops
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LFS
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vfsops
+name|lfs_vfsops
 decl_stmt|;
 end_decl_stmt
 
@@ -615,6 +641,7 @@ argument_list|(
 name|mfs_root
 argument_list|)
 expr_stmt|;
+comment|/* XXX UGLY*/
 endif|#
 directive|endif
 comment|/* MFS_ROOT */
@@ -666,7 +693,53 @@ condition|)
 block|{
 name|mountroot
 operator|=
-name|ffs_mountroot
+name|vfs_mountroot
+expr_stmt|;
+comment|/* XXX goes away*/
+name|mountrootvfsops
+operator|=
+operator|&
+name|ufs_vfsops
+expr_stmt|;
+comment|/* 		 * Ignore the -a flag if this kernel isn't compiled 		 * with a generic root/swap configuration: if we skip 		 * setroot() and we aren't a generic kernel, chaos 		 * will ensue because setconf() will be a no-op. 		 * (rootdev is always initialized to NODEV in a 		 * generic configuration, so we test for that.) 		 */
+if|if
+condition|(
+operator|(
+name|boothowto
+operator|&
+name|RB_ASKNAME
+operator|)
+operator|==
+literal|0
+operator|||
+name|rootdev
+operator|!=
+name|NODEV
+condition|)
+name|setroot
+argument_list|()
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|LFS
+if|if
+condition|(
+operator|!
+name|mountroot
+condition|)
+block|{
+name|mountroot
+operator|=
+name|vfs_mountroot
+expr_stmt|;
+comment|/* XXX goes away*/
+name|mountrootvfsops
+operator|=
+operator|&
+name|lfs_vfsops
 expr_stmt|;
 comment|/* 		 * Ignore the -a flag if this kernel isn't compiled 		 * with a generic root/swap configuration: if we skip 		 * setroot() and we aren't a generic kernel, chaos 		 * will ensue because setconf() will be a no-op. 		 * (rootdev is always initialized to NODEV in a 		 * generic configuration, so we test for that.) 		 */
 if|if

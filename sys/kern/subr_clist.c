@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1994, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: tty_subr.c,v 1.10 1995/05/30 08:06:18 rgrimes Exp $  */
+comment|/*  * Copyright (C) 1994, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: tty_subr.c,v 1.11 1995/07/11 19:39:54 bde Exp $  */
 end_comment
 
 begin_comment
@@ -11,6 +11,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
 end_include
 
 begin_include
@@ -42,6 +48,38 @@ include|#
 directive|include
 file|<sys/malloc.h>
 end_include
+
+begin_comment
+comment|/*  * System initialization  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+name|clist_init
+name|__P
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
+name|SYSINIT
+argument_list|(
+argument|clist
+argument_list|,
+argument|SI_SUB_CLIST
+argument_list|,
+argument|SI_ORDER_FIRST
+argument_list|,
+argument|clist_init
+argument_list|,
+argument|NULL
+argument_list|)
+end_macro
 
 begin_decl_stmt
 name|struct
@@ -178,10 +216,21 @@ begin_comment
 comment|/*  * Called from init_main.c  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED*/
+end_comment
+
 begin_function
+specifier|static
 name|void
 name|clist_init
-parameter_list|()
+parameter_list|(
+name|udata
+parameter_list|)
+name|caddr_t
+name|udata
+decl_stmt|;
+comment|/* not used*/
 block|{
 comment|/* 	 * Allocate an initial base set of cblocks as a 'slush'. 	 * We allocate non-slush cblocks with each initial ttyopen() and 	 * deallocate them with each ttyclose(). 	 * We should adjust the slush allocation.  This can't be done in 	 * the i/o routines because they are sometimes called from 	 * interrupt handlers when it may be unsafe to call malloc(). 	 */
 name|cblock_alloc_cblocks

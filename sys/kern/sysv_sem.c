@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_sem.c,v 1.5 1995/05/30 08:06:02 rgrimes Exp $ */
+comment|/*	$Id: sysv_sem.c,v 1.6 1995/07/29 11:40:14 bde Exp $ */
 end_comment
 
 begin_comment
@@ -42,6 +42,37 @@ include|#
 directive|include
 file|<sys/malloc.h>
 end_include
+
+begin_comment
+comment|/*  * System initialization  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|seminit
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* should be static*/
+end_comment
+
+begin_macro
+name|SYSINIT
+argument_list|(
+argument|sysv_sem
+argument_list|,
+argument|SI_SUB_SYSV_SEM
+argument_list|,
+argument|SI_ORDER_FIRST
+argument_list|,
+argument|seminit
+argument_list|,
+argument|NULL
+argument_list|)
+end_macro
 
 begin_decl_stmt
 specifier|static

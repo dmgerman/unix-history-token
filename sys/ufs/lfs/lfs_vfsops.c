@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)lfs_vfsops.c	8.7 (Berkeley) 4/16/94  * $Id: lfs_vfsops.c,v 1.10 1995/03/16 18:16:48 bde Exp $  */
+comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)lfs_vfsops.c	8.7 (Berkeley) 4/16/94  * $Id: lfs_vfsops.c,v 1.11 1995/03/19 14:29:20 davidg Exp $  */
 end_comment
 
 begin_include
@@ -202,22 +202,8 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_function
-name|int
-name|lfs_mountroot
-parameter_list|()
-block|{
-name|panic
-argument_list|(
-literal|"lfs_mountroot"
-argument_list|)
-expr_stmt|;
-comment|/* XXX -- implement */
-block|}
-end_function
-
 begin_comment
-comment|/*  * VFS Operations.  *  * mount system call  */
+comment|/*  * lfs_mount  *  * Called when mounting local physical media  *  * PARAMETERS:  *		mountroot  *			mp	mount point structure  *			path	NULL (flag for root mount!!!)  *			data<unused>  *			ndp<unused>  *			p	process (user credentials check [statfs])  *  *		mount  *			mp	mount point structure  *			path	path to mount point  *			data	pointer to argument struct in user space  *			ndp	mount point namei() return (used for  *				credentials on reload), reused to look  *				up block device.  *			p	process (user credentials check)  *  * RETURNS:	0	Success  *		!0	error number (errno.h)  *  * LOCK STATE:  *  *		ENTRY  *			mount point is locked  *		EXIT  *			mount point is locked  *  * NOTES:  *		A NULL path can be used for a flag since the mount  *		system call will fail with EFAULT in copyinstr in  *		namei() if it is a genuine NULL from the user.  *  *		Root mounts are not currently supported.  */
 end_comment
 
 begin_function
@@ -285,11 +271,29 @@ name|u_int
 name|size
 decl_stmt|;
 name|int
-name|error
+name|err
 decl_stmt|;
+comment|/* 	 * Use NULL path to flag a root mount 	 */
 if|if
 condition|(
-name|error
+name|path
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* 		 *** 		 * Mounting root file system 		 *** 		 */
+comment|/* XXX -- implement*/
+name|panic
+argument_list|(
+literal|"lfs_mountroot: can't setup bdevvp for root"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 *** 	 * Mounting non-root file system or updating a file system 	 *** 	 */
+comment|/* copy in user arguments*/
+if|if
+condition|(
+name|err
 operator|=
 name|copyin
 argument_list|(
@@ -308,11 +312,9 @@ name|ufs_args
 argument_list|)
 argument_list|)
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|error_1
+goto|;
 comment|/* Until LFS can do NFS right.		XXX */
 if|if
 condition|(
@@ -324,11 +326,15 @@ name|ex_flags
 operator|&
 name|MNT_EXPORTED
 condition|)
-return|return
-operator|(
+block|{
+name|err
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|error_1
+goto|;
+block|}
 comment|/* 	 * If updating, check whether changing from read-only to 	 * read/write; if there is no device name, that's all we do. 	 */
 if|if
 condition|(
@@ -419,9 +425,9 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * Process export requests. 			 */
-return|return
-operator|(
+comment|/* 			 * Process export requests.  Jumping to "success" 			 * will return the vfs_export() error code. 			 */
+name|err
+operator|=
 name|vfs_export
 argument_list|(
 name|mp
@@ -436,8 +442,10 @@ name|args
 operator|.
 name|export
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|success
+goto|;
 block|}
 block|}
 comment|/* 	 * Not an update, or updating the name: look up the name 	 * and verify that it refers to a sensible block device. 	 */
@@ -460,18 +468,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|error
+name|err
 operator|=
 name|namei
 argument_list|(
 name|ndp
 argument_list|)
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|error_1
+goto|;
 name|devvp
 operator|=
 name|ndp
@@ -487,16 +493,13 @@ operator|!=
 name|VBLK
 condition|)
 block|{
-name|vrele
-argument_list|(
-name|devvp
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
+name|err
+operator|=
 name|ENOTBLK
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|error_2
+goto|;
 block|}
 if|if
 condition|(
@@ -510,16 +513,13 @@ operator|>=
 name|nblkdev
 condition|)
 block|{
-name|vrele
-argument_list|(
-name|devvp
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
+name|err
+operator|=
 name|ENXIO
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|error_2
+goto|;
 block|}
 if|if
 condition|(
@@ -533,7 +533,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|error
+name|err
 operator|=
 name|lfs_mountfs
 argument_list|(
@@ -555,7 +555,7 @@ name|ump
 operator|->
 name|um_devvp
 condition|)
-name|error
+name|err
 operator|=
 name|EINVAL
 expr_stmt|;
@@ -569,19 +569,12 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|error
+name|err
 condition|)
 block|{
-name|vrele
-argument_list|(
-name|devvp
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|error_2
+goto|;
 block|}
 name|ump
 operator|=
@@ -837,9 +830,23 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|error_2
+label|:
+comment|/* error with devvp held*/
+comment|/* release devvp before failing*/
+name|vrele
+argument_list|(
+name|devvp
+argument_list|)
+expr_stmt|;
+name|error_1
+label|:
+comment|/* no state to back out*/
+name|success
+label|:
 return|return
 operator|(
-literal|0
+name|err
 operator|)
 return|;
 block|}
