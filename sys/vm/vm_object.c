@@ -4427,9 +4427,12 @@ name|NULL
 condition|)
 continue|continue;
 comment|/* 		 * We must wait for pending I/O to complete before we can 		 * rename the page. 		 * 		 * We do not have to VM_PROT_NONE the page as mappings should 		 * not be changed by this operation. 		 */
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
-name|vm_page_sleep_busy
+name|vm_page_sleep_if_busy
 argument_list|(
 name|m
 argument_list|,
@@ -4445,6 +4448,9 @@ name|vm_page_busy
 argument_list|(
 name|m
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|vm_page_rename
 argument_list|(
@@ -4775,6 +4781,9 @@ block|{
 name|vm_page_t
 name|pp
 decl_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|op
@@ -4810,6 +4819,9 @@ operator|->
 name|busy
 condition|)
 block|{
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|p
 operator|=
 name|next
@@ -4827,7 +4839,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|vm_page_sleep_busy
+name|vm_page_sleep_if_busy
 argument_list|(
 name|p
 argument_list|,
@@ -4856,6 +4868,9 @@ name|vm_page_busy
 argument_list|(
 name|p
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|KASSERT
 argument_list|(
