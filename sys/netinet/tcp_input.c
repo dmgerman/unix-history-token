@@ -806,7 +806,7 @@ name|so
 parameter_list|,
 name|flags
 parameter_list|)
-value|{ \ 	if ((th)->th_seq == (tp)->rcv_nxt&& \ 	    LIST_EMPTY(&(tp)->t_segq)&& \ 	    (tp)->t_state == TCPS_ESTABLISHED) { \ 		if (DELAY_ACK(tp)) \ 			callout_reset(tp->tt_delack, tcp_delacktime, \ 			    tcp_timer_delack, tp); \ 		else \ 			tp->t_flags |= TF_ACKNOW; \ 		(tp)->rcv_nxt += *(tlenp); \ 		flags = (th)->th_flags& TH_FIN; \ 		tcpstat.tcps_rcvpack++;\ 		tcpstat.tcps_rcvbyte += *(tlenp);\ 		ND6_HINT(tp); \ 		sbappend(&(so)->so_rcv, (m)); \ 		sorwakeup(so); \ 	} else { \ 		(flags) = tcp_reass((tp), (th), (tlenp), (m)); \ 		tp->t_flags |= TF_ACKNOW; \ 	} \ }
+value|{ \ 	if ((th)->th_seq == (tp)->rcv_nxt&& \ 	    LIST_EMPTY(&(tp)->t_segq)&& \ 	    TCPS_HAVEESTABLISHED((tp)->t_state)) { \ 		if (DELAY_ACK(tp)) \ 			callout_reset(tp->tt_delack, tcp_delacktime, \ 			    tcp_timer_delack, tp); \ 		else \ 			tp->t_flags |= TF_ACKNOW; \ 		(tp)->rcv_nxt += *(tlenp); \ 		flags = (th)->th_flags& TH_FIN; \ 		tcpstat.tcps_rcvpack++;\ 		tcpstat.tcps_rcvbyte += *(tlenp);\ 		ND6_HINT(tp); \ 		sbappend(&(so)->so_rcv, (m)); \ 		sorwakeup(so); \ 	} else { \ 		(flags) = tcp_reass((tp), (th), (tlenp), (m)); \ 		tp->t_flags |= TF_ACKNOW; \ 	} \ }
 end_define
 
 begin_function
