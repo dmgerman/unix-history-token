@@ -756,6 +756,8 @@ condition|(
 operator|(
 name|safecopy
 operator|||
+name|docompare
+operator|||
 name|dostrip
 operator|)
 operator|&&
@@ -763,18 +765,6 @@ name|dodir
 condition|)
 name|usage
 argument_list|()
-expr_stmt|;
-comment|/* 	 * Older versions allowed -d -C combo.  Issue a warning 	 * for now, but turn this into an error before 4.5-RELEASE. 	 */
-if|if
-condition|(
-name|docompare
-operator|&&
-name|dodir
-condition|)
-name|warnx
-argument_list|(
-literal|"the -d and -C options may not be specified together"
-argument_list|)
 expr_stmt|;
 comment|/* must have at least two arguments, except when creating directories */
 if|if
