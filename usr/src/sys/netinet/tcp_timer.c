@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_timer.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_timer.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -558,6 +558,38 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCP_COMPAT_42
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|tcp_keeplen
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|int
+name|tcp_keeplen
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * TCP timer processing.  */
 end_comment
@@ -881,6 +913,8 @@ argument_list|,
 name|tp
 operator|->
 name|rcv_nxt
+operator|-
+name|tcp_keeplen
 argument_list|,
 name|tp
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_subr.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_subr.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -455,6 +455,7 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
 name|struct
 name|mbuf
 modifier|*
@@ -473,6 +474,10 @@ modifier|*
 name|ro
 init|=
 literal|0
+decl_stmt|;
+specifier|extern
+name|int
+name|tcp_keeplen
 decl_stmt|;
 if|if
 condition|(
@@ -526,6 +531,10 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|tlen
+operator|=
+name|tcp_keeplen
+expr_stmt|;
 name|m
 operator|->
 name|m_len
@@ -536,7 +545,7 @@ expr|struct
 name|tcpiphdr
 argument_list|)
 operator|+
-literal|1
+name|tlen
 expr_stmt|;
 operator|*
 name|mtod
@@ -603,6 +612,10 @@ name|int
 operator|)
 name|m
 expr_stmt|;
+name|tlen
+operator|=
+literal|0
+expr_stmt|;
 name|m
 operator|->
 name|m_len
@@ -658,10 +671,6 @@ undef|#
 directive|undef
 name|xchg
 block|}
-name|tlen
-operator|=
-literal|0
-expr_stmt|;
 name|ti
 operator|->
 name|ti_next
