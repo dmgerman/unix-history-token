@@ -269,7 +269,7 @@ name|USBDEVNAME
 parameter_list|(
 name|bdev
 parameter_list|)
-value|device_get_nameunit(bdev)
+value|(bdev? device_get_nameunit(bdev):"-")
 end_define
 
 begin_comment
@@ -288,7 +288,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|do{			\ 		if ((v) == 0)		\ 			bzero((d), (s));	\ 		else			\ 			panic("Non zero filler for memset, cannot handle!"); \ 		} while (0)
+value|do{			\ 		if ((v) == 0)		\ 			bzero((d), (s));\ 		else			\ 			panic("Non zero filler for memset, cannot handle!"); \ 		} while (0)
 end_define
 
 begin_define
@@ -408,7 +408,7 @@ define|#
 directive|define
 name|USB_ATTACH_SETUP
 define|\
-value|sc->sc_dev = self; \ 	device_set_desc_copy(self, devinfo);
+value|sc->sc_dev = self; \ 	device_set_desc_copy(self, devinfo)
 end_define
 
 begin_define
