@@ -551,7 +551,24 @@ name|proc
 modifier|*
 name|p2
 decl_stmt|;
-comment|/* mask kernel only flags out of the user flags */
+comment|/* Don't allow kernel only flags. */
+if|if
+condition|(
+operator|(
+name|uap
+operator|->
+name|flags
+operator|&
+name|RFKERNELONLY
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -567,9 +584,6 @@ argument_list|,
 name|uap
 operator|->
 name|flags
-operator|&
-operator|~
-name|RFKERNELONLY
 argument_list|,
 operator|&
 name|p2
