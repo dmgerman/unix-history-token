@@ -4363,6 +4363,11 @@ name|maxrte
 decl_stmt|;
 if|if
 condition|(
+name|qflag
+condition|)
+return|return;
+if|if
+condition|(
 name|ifcp
 operator|==
 name|NULL
