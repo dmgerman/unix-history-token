@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.46 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.47 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,6 +86,23 @@ begin_include
 include|#
 directive|include
 file|<resolv.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOCKF
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_endif
@@ -5334,6 +5351,84 @@ argument_list|(
 name|FALSE
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOCKF
+comment|/* 		**  When our parent closed lockfp, we lost the lock. 		**  Try to get it back now. 		*/
+if|if
+condition|(
+name|lockfp
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|fseek
+argument_list|(
+name|lockfp
+argument_list|,
+literal|0
+argument_list|,
+name|SEEK_SET
+argument_list|)
+operator|!=
+literal|0
+operator|||
+name|lockf
+argument_list|(
+name|fileno
+argument_list|(
+name|lockfp
+argument_list|)
+argument_list|,
+name|F_TLOCK
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+comment|/* oops....  lost it */
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|5
+condition|)
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"%s: lost lock"
+argument_list|,
+name|CurEnv
+operator|->
+name|e_id
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* LOG */
+name|fclose
+argument_list|(
+name|lockfp
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_OK
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
+comment|/* LOCKF */
 break|break;
 block|}
 comment|/* 	**  Run through the list and send everything. 	*/

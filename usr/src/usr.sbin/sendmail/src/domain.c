@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.31 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	5.32 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.31 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	5.32 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1192,7 +1192,7 @@ operator|=
 name|TRY_AGAIN
 expr_stmt|;
 return|return
-name|rval
+name|FALSE
 return|;
 block|}
 if|if
@@ -1231,7 +1231,7 @@ operator|==
 literal|0
 condition|)
 return|return
-name|rval
+name|FALSE
 return|;
 block|}
 block|}
@@ -1242,6 +1242,7 @@ operator|<
 literal|0
 condition|)
 block|{
+comment|/* 		**  Try the unmodified name. 		*/
 name|cp
 operator|=
 name|host
@@ -1321,8 +1322,14 @@ argument_list|,
 name|h_errno
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|h_errno
+operator|!=
+name|NO_DATA
+condition|)
 return|return
-name|rval
+name|FALSE
 return|;
 block|}
 block|}
@@ -1488,7 +1495,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-name|rval
+name|FALSE
 return|;
 comment|/* ???XXX??? */
 block|}

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.34 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	5.35 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.34 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	5.35 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -324,6 +324,10 @@ condition|(
 name|errno
 operator|!=
 name|EACCES
+operator|&&
+name|errno
+operator|!=
+name|EAGAIN
 condition|)
 name|syserr
 argument_list|(
@@ -2674,6 +2678,36 @@ begin_comment
 comment|/* **  READQF -- read queue file and set up environment. ** **	Parameters: **		e -- the envelope of the job to run. **		full -- if set, read in all information.  Otherwise just **			read in info needed for a queue print. ** **	Returns: **		FILE * pointing to flock()ed fd so it can be closed **		after the mail is delivered ** **	Side Effects: **		cf is read and created as the current job, as though **		we had been invoked by argument. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOCKF
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|RDLK_MODE
+value|"r+"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|RDLK_MODE
+value|"r"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|FILE
 modifier|*
@@ -2748,7 +2782,7 @@ name|fopen
 argument_list|(
 name|qf
 argument_list|,
-literal|"r"
+name|RDLK_MODE
 argument_list|)
 expr_stmt|;
 if|if

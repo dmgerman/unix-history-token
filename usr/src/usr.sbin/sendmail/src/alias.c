@@ -97,7 +97,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.29 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	5.30 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,7 +118,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.29 (Berkeley) %G% (with DBM)"
+literal|"@(#)alias.c	5.30 (Berkeley) %G% (with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,7 +133,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.29 (Berkeley) %G% (without DBM)"
+literal|"@(#)alias.c	5.30 (Berkeley) %G% (without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1195,6 +1195,36 @@ begin_comment
 comment|/* **  READALIASES -- read and process the alias file. ** **	This routine implements the part of initaliases that occurs **	when we are not going to use the DBM stuff. ** **	Parameters: **		aliasfile -- the pathname of the alias file master. **		init -- if set, initialize the DBM stuff. ** **	Returns: **		none. ** **	Side Effects: **		Reads aliasfile into the symbol table. **		Optionally, builds the .dir& .pag files. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOCKF
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|RDLK_MODE
+value|"r+"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|RDLK_MODE
+value|"r"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
 specifier|static
 name|readaliases
@@ -1285,7 +1315,7 @@ name|fopen
 argument_list|(
 name|aliasfile
 argument_list|,
-literal|"r"
+name|RDLK_MODE
 argument_list|)
 operator|)
 operator|==
