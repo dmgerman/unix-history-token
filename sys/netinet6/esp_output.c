@@ -1521,6 +1521,8 @@ operator|->
 name|replay
 operator|->
 name|count
+operator|&
+literal|0xffffffff
 argument_list|)
 expr_stmt|;
 block|}
