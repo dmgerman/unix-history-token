@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sysctl.c	7.34 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sysctl.c	7.35 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -35,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vnode.h>
 end_include
 
 begin_include
@@ -950,6 +956,26 @@ name|newlen
 argument_list|,
 operator|&
 name|maxfiles
+argument_list|)
+operator|)
+return|;
+case|case
+name|KERN_MAXVNODES
+case|:
+return|return
+operator|(
+name|sysctl_int
+argument_list|(
+name|oldp
+argument_list|,
+name|oldlenp
+argument_list|,
+name|newp
+argument_list|,
+name|newlen
+argument_list|,
+operator|&
+name|desiredvnodes
 argument_list|)
 operator|)
 return|;

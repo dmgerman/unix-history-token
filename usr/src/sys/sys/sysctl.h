@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)sysctl.h	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)sysctl.h	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -255,12 +255,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KERN_POSIX1
+name|KERN_MAXVNODES
 value|5
 end_define
 
 begin_comment
-comment|/* int: POSIX.1 version */
+comment|/* int: max vnodes */
 end_comment
 
 begin_define
@@ -387,8 +387,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KERN_MAXID
+name|KERN_POSIX1
 value|17
+end_define
+
+begin_comment
+comment|/* int: POSIX.1 version */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERN_MAXID
+value|18
 end_define
 
 begin_comment
@@ -399,7 +410,7 @@ begin_define
 define|#
 directive|define
 name|CTL_KERN_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "ostype", CTLTYPE_STRING }, \ 	{ "osrelease", CTLTYPE_STRING }, \ 	{ "osrevision", CTLTYPE_INT }, \ 	{ "version", CTLTYPE_STRING }, \ 	{ "posix1version", CTLTYPE_INT }, \ 	{ "maxproc", CTLTYPE_INT }, \ 	{ "maxfiles", CTLTYPE_INT }, \ 	{ "argmax", CTLTYPE_INT }, \ 	{ "securelevel", CTLTYPE_INT }, \ 	{ "hostname", CTLTYPE_STRING }, \ 	{ "hostid", CTLTYPE_INT }, \ 	{ "clockrate", CTLTYPE_STRUCT }, \ 	{ "vnode", CTLTYPE_STRUCT }, \ 	{ "proc", CTLTYPE_STRUCT }, \ 	{ "file", CTLTYPE_STRUCT }, \ 	{ "profiling", CTLTYPE_NODE }, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "ostype", CTLTYPE_STRING }, \ 	{ "osrelease", CTLTYPE_STRING }, \ 	{ "osrevision", CTLTYPE_INT }, \ 	{ "version", CTLTYPE_STRING }, \ 	{ "maxvnodes", CTLTYPE_INT }, \ 	{ "maxproc", CTLTYPE_INT }, \ 	{ "maxfiles", CTLTYPE_INT }, \ 	{ "argmax", CTLTYPE_INT }, \ 	{ "securelevel", CTLTYPE_INT }, \ 	{ "hostname", CTLTYPE_STRING }, \ 	{ "hostid", CTLTYPE_INT }, \ 	{ "clockrate", CTLTYPE_STRUCT }, \ 	{ "vnode", CTLTYPE_STRUCT }, \ 	{ "proc", CTLTYPE_STRUCT }, \ 	{ "file", CTLTYPE_STRUCT }, \ 	{ "profiling", CTLTYPE_NODE }, \ 	{ "posix1version", CTLTYPE_INT }, \ }
 end_define
 
 begin_comment
