@@ -6381,6 +6381,16 @@ operator|.
 name|fsm
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dl
+operator|->
+name|state
+operator|==
+name|DATALINK_OPENING
+condition|)
+return|return;
+comment|/* we're doing a callback... */
 comment|/* fall through */
 default|default:
 name|datalink_ComeDown
