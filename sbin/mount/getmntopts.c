@@ -233,6 +233,7 @@ condition|(
 name|p
 condition|)
 operator|*
+operator|++
 name|p
 operator|=
 literal|'\0'
