@@ -483,6 +483,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|pcic_deactivate
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|pcic_deactivate_resource
 parameter_list|(

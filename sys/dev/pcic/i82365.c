@@ -172,7 +172,7 @@ name|DPRINTF
 parameter_list|(
 name|arg
 parameter_list|)
-value|if (pcic_debug) printf arg;
+value|if (pcic_debug) printf arg; else ;
 end_define
 
 begin_define
@@ -182,7 +182,7 @@ name|DEVPRINTF
 parameter_list|(
 name|arg
 parameter_list|)
-value|if (pcic_debug) device_printf arg;
+value|if (pcic_debug) device_printf arg; else ;
 end_define
 
 begin_else
@@ -212,6 +212,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|VERBOSE
+parameter_list|(
+name|arg
+parameter_list|)
+value|if (bootverbose) printf arg; else ;
+end_define
 
 begin_define
 define|#
@@ -286,17 +296,6 @@ parameter_list|(
 name|struct
 name|pcic_handle
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|pcic_deactivate
-parameter_list|(
-name|device_t
-name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -862,9 +861,6 @@ operator|->
 name|port_res
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|PCIC_DEBUG
 name|device_printf
 argument_list|(
 name|dev
@@ -872,8 +868,6 @@ argument_list|,
 literal|"Cannot allocate ioport\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|ENOMEM
 return|;
@@ -911,33 +905,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|sc
 operator|->
 name|irq_res
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|PCIC_DEBUG
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Cannot allocate irq\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|pcic_deactivate
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-return|return
-name|ENOMEM
-return|;
-block|}
 name|sc
 operator|->
 name|irq
@@ -987,6 +959,16 @@ return|return
 name|err
 return|;
 block|}
+block|}
+else|else
+block|{
+comment|/* XXX Do polling */
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 comment|/* XXX This might not be needed in future, get it directly from 	 * XXX parent */
 name|sc
 operator|->
@@ -1023,15 +1005,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|sc
 operator|->
 name|mem_res
+operator|==
+name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|PCIC_DEBUG
 name|device_printf
 argument_list|(
 name|dev
@@ -1039,8 +1019,6 @@ argument_list|,
 literal|"Cannot allocate mem\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|pcic_deactivate
 argument_list|(
 name|dev
@@ -1105,7 +1083,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|pcic_deactivate
 parameter_list|(
@@ -1296,12 +1273,12 @@ return|return
 name|error
 return|;
 comment|/* now check for each controller/socket */
-comment|/* 	 * this could be done with a loop, but it would violate the 	 * abstraction...  so? --imp 	 */
+comment|/* 	 * this could be done with a loop, but it would violate the 	 * abstraction...  --- unknown 	 * so? I don't see the abstraction... --imp 	 */
 name|count
 operator|=
 literal|0
 expr_stmt|;
-name|DPRINTF
+name|VERBOSE
 argument_list|(
 operator|(
 literal|"pcic ident regs:"
@@ -1440,7 +1417,7 @@ name|laststate
 operator|=
 name|PCIC_LASTSTATE_EMPTY
 expr_stmt|;
-name|DPRINTF
+name|VERBOSE
 argument_list|(
 operator|(
 literal|" 0x%02x"
@@ -1581,7 +1558,7 @@ name|laststate
 operator|=
 name|PCIC_LASTSTATE_EMPTY
 expr_stmt|;
-name|DPRINTF
+name|VERBOSE
 argument_list|(
 operator|(
 literal|" 0x%02x"
@@ -1754,7 +1731,7 @@ name|laststate
 operator|=
 name|PCIC_LASTSTATE_EMPTY
 expr_stmt|;
-name|DPRINTF
+name|VERBOSE
 argument_list|(
 operator|(
 literal|" 0x%02x"
@@ -1895,7 +1872,7 @@ name|laststate
 operator|=
 name|PCIC_LASTSTATE_EMPTY
 expr_stmt|;
-name|DPRINTF
+name|VERBOSE
 argument_list|(
 operator|(
 literal|" 0x%02x\n"
