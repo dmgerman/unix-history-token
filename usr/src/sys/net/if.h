@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.h	4.14	82/06/13	*/
+comment|/*	if.h	4.15	82/06/23	*/
 end_comment
 
 begin_comment
@@ -36,6 +36,10 @@ name|short
 name|if_flags
 decl_stmt|;
 comment|/* up/down, broadcast, etc. */
+name|short
+name|if_timer
+decl_stmt|;
+comment|/* time 'til if_watchdog called */
 name|int
 name|if_host
 index|[
@@ -122,6 +126,14 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* uba reset routine */
+name|int
+function_decl|(
+modifier|*
+name|if_watchdog
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* timer routine */
 comment|/* generic interface statistics */
 name|int
 name|if_ipackets
@@ -274,6 +286,17 @@ directive|define
 name|IFQ_MAXLEN
 value|50
 end_define
+
+begin_define
+define|#
+directive|define
+name|IFNET_SLOWHZ
+value|1
+end_define
+
+begin_comment
+comment|/* granularity is 1 second */
+end_comment
 
 begin_ifdef
 ifdef|#
