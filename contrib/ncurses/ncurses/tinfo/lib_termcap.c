@@ -68,6 +68,18 @@ directive|ifdef
 name|FREEBSD_NATIVE
 end_ifdef
 
+begin_undef
+undef|#
+directive|undef
+name|GCC_UNUSED
+end_undef
+
+begin_define
+define|#
+directive|define
+name|GCC_UNUSED
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|char
