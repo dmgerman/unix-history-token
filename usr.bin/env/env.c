@@ -46,6 +46,17 @@ literal|"@(#)env.c	8.3 (Berkeley) 4/2/94"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -91,6 +102,22 @@ name|char
 modifier|*
 modifier|*
 name|environ
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+decl|main
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+index|[]
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
