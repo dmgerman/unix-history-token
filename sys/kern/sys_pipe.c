@@ -188,7 +188,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
+file|<vm/uma.h>
 end_include
 
 begin_comment
@@ -755,7 +755,7 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
-name|vm_zone_t
+name|uma_zone_t
 name|pipe_zone
 decl_stmt|;
 end_decl_stmt
@@ -1488,9 +1488,11 @@ decl_stmt|;
 operator|*
 name|cpipep
 operator|=
-name|zalloc
+name|uma_zalloc
 argument_list|(
 name|pipe_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -5866,7 +5868,7 @@ argument_list|(
 name|cpipe
 argument_list|)
 expr_stmt|;
-name|zfree
+name|uma_zfree
 argument_list|(
 name|pipe_zone
 argument_list|,

@@ -184,13 +184,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
+file|<vm/vm_page.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vm/vm_page.h>
+file|<vm/uma.h>
 end_include
 
 begin_function_decl
@@ -7851,9 +7851,11 @@ name|nd
 decl_stmt|;
 name|path
 operator|=
-name|zalloc
+name|uma_zalloc
 argument_list|(
 name|namei_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -8157,7 +8159,7 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|zfree
+name|uma_zfree
 argument_list|(
 name|namei_zone
 argument_list|,

@@ -156,7 +156,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
+file|<vm/uma.h>
 end_include
 
 begin_include
@@ -1190,9 +1190,11 @@ block|}
 comment|/* Allocate new proc. */
 name|newproc
 operator|=
-name|zalloc
+name|uma_zalloc
 argument_list|(
 name|proc_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Setup linkage for kernel based threading 	 */

@@ -156,7 +156,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
+file|<vm/uma.h>
 end_include
 
 begin_expr_stmt

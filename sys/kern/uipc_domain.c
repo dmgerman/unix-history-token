@@ -54,7 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
+file|<vm/uma.h>
 end_include
 
 begin_comment
@@ -330,10 +330,10 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
-comment|/* 	 * Before we do any setup, make sure to initialize the 	 * zone allocator we get struct sockets from.  The obvious 	 * maximum number of sockets is `maxfiles', but it is possible 	 * to have a socket without an open file (e.g., a connection waiting 	 * to be accept(2)ed).  Rather than think up and define a 	 * better value, we just use nmbclusters, since that's what people 	 * are told to increase first when the network runs out of memory. 	 * Perhaps we should have two pools, one of unlimited size 	 * for use during socreate(), and one ZONE_INTERRUPT pool for 	 * use in sonewconn(). 	 */
+comment|/* 	 * Before we do any setup, make sure to initialize the 	 * zone allocator we get struct sockets from. 	 */
 name|socket_zone
 operator|=
-name|zinit
+name|uma_zcreate
 argument_list|(
 literal|"socket"
 argument_list|,
@@ -343,11 +343,17 @@ expr|struct
 name|socket
 argument_list|)
 argument_list|,
-name|maxsockets
+name|NULL
 argument_list|,
-name|ZONE_INTERRUPT
+name|NULL
 argument_list|,
-literal|0
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+name|UMA_ZONE_NOFREE
 argument_list|)
 expr_stmt|;
 if|if

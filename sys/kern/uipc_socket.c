@@ -148,7 +148,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
+file|<vm/uma.h>
 end_include
 
 begin_include
@@ -315,7 +315,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|vm_zone_t
+name|uma_zone_t
 name|socket_zone
 decl_stmt|;
 end_decl_stmt
@@ -447,9 +447,11 @@ name|so
 decl_stmt|;
 name|so
 operator|=
-name|zalloc
+name|uma_zalloc
 argument_list|(
 name|socket_zone
+argument_list|,
+name|waitok
 argument_list|)
 expr_stmt|;
 if|if
@@ -1027,7 +1029,7 @@ name|so_cred
 argument_list|)
 expr_stmt|;
 comment|/* sx_destroy(&so->so_sxlock); */
-name|zfree
+name|uma_zfree
 argument_list|(
 name|so
 operator|->

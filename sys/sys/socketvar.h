@@ -48,7 +48,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
+file|<vm/uma.h>
 end_include
 
 begin_comment
@@ -72,7 +72,7 @@ begin_struct
 struct|struct
 name|socket
 block|{
-name|vm_zone_t
+name|uma_zone_t
 name|so_zone
 decl_stmt|;
 comment|/* zone we were allocated from */
@@ -961,13 +961,6 @@ end_endif
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|maxsockets
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|u_long
 name|sb_max
 decl_stmt|;
@@ -975,7 +968,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|vm_zone_t
+name|uma_zone_t
 name|socket_zone
 decl_stmt|;
 end_decl_stmt

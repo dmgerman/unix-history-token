@@ -45,12 +45,6 @@ directive|include
 file|<sys/malloc.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<vm/vm_zone.h>
-end_include
-
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(

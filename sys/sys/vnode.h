@@ -64,7 +64,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
+file|<vm/uma.h>
 end_include
 
 begin_comment
@@ -1325,7 +1325,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|vm_zone_t
+name|uma_zone_t
 name|namei_zone
 decl_stmt|;
 end_decl_stmt

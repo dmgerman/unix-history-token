@@ -89,7 +89,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
+file|<vm/uma.h>
 end_include
 
 begin_comment
@@ -97,7 +97,7 @@ comment|/*  * Allocation zone for namei  */
 end_comment
 
 begin_decl_stmt
-name|vm_zone_t
+name|uma_zone_t
 name|namei_zone
 decl_stmt|;
 end_decl_stmt
@@ -318,9 +318,11 @@ name|cnp
 operator|->
 name|cn_pnbuf
 operator|=
-name|zalloc
+name|uma_zalloc
 argument_list|(
 name|namei_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -402,7 +404,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|zfree
+name|uma_zfree
 argument_list|(
 name|namei_zone
 argument_list|,
@@ -577,7 +579,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|zfree
+name|uma_zfree
 argument_list|(
 name|namei_zone
 argument_list|,
@@ -622,7 +624,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|zfree
+name|uma_zfree
 argument_list|(
 name|namei_zone
 argument_list|,
@@ -747,9 +749,11 @@ literal|1
 condition|)
 name|cp
 operator|=
-name|zalloc
+name|uma_zalloc
 argument_list|(
 name|namei_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 else|else
@@ -848,7 +852,7 @@ name|ni_pathlen
 operator|>
 literal|1
 condition|)
-name|zfree
+name|uma_zfree
 argument_list|(
 name|namei_zone
 argument_list|,
@@ -880,7 +884,7 @@ name|ni_pathlen
 operator|>
 literal|1
 condition|)
-name|zfree
+name|uma_zfree
 argument_list|(
 name|namei_zone
 argument_list|,
@@ -912,7 +916,7 @@ name|ni_pathlen
 operator|>
 literal|1
 condition|)
-name|zfree
+name|uma_zfree
 argument_list|(
 name|namei_zone
 argument_list|,
@@ -949,7 +953,7 @@ operator|->
 name|ni_pathlen
 argument_list|)
 expr_stmt|;
-name|zfree
+name|uma_zfree
 argument_list|(
 name|namei_zone
 argument_list|,
@@ -995,7 +999,7 @@ operator|->
 name|ni_dvp
 expr_stmt|;
 block|}
-name|zfree
+name|uma_zfree
 argument_list|(
 name|namei_zone
 argument_list|,

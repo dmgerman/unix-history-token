@@ -138,7 +138,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
+file|<vm/uma.h>
 end_include
 
 begin_expr_stmt
@@ -702,7 +702,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|vm_zone_t
+name|uma_zone_t
 name|knote_zone
 decl_stmt|;
 end_decl_stmt
@@ -5607,7 +5607,7 @@ parameter_list|)
 block|{
 name|knote_zone
 operator|=
-name|zinit
+name|uma_zcreate
 argument_list|(
 literal|"KNOTE"
 argument_list|,
@@ -5617,11 +5617,17 @@ expr|struct
 name|knote
 argument_list|)
 argument_list|,
-literal|0
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
 argument_list|,
 literal|0
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -5659,9 +5665,11 @@ expr|struct
 name|knote
 operator|*
 operator|)
-name|zalloc
+name|uma_zalloc
 argument_list|(
 name|knote_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 operator|)
 return|;
@@ -5679,7 +5687,7 @@ modifier|*
 name|kn
 parameter_list|)
 block|{
-name|zfree
+name|uma_zfree
 argument_list|(
 name|knote_zone
 argument_list|,

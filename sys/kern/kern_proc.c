@@ -114,7 +114,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
+file|<vm/uma.h>
 end_include
 
 begin_expr_stmt
@@ -288,13 +288,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|vm_zone_t
+name|uma_zone_t
 name|proc_zone
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|vm_zone_t
+name|uma_zone_t
 name|ithread_zone
 decl_stmt|;
 end_decl_stmt
@@ -379,7 +379,7 @@ argument_list|)
 expr_stmt|;
 name|proc_zone
 operator|=
-name|zinit
+name|uma_zcreate
 argument_list|(
 literal|"PROC"
 argument_list|,
@@ -389,11 +389,17 @@ expr|struct
 name|proc
 argument_list|)
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|5
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+name|UMA_ZONE_NOFREE
 argument_list|)
 expr_stmt|;
 name|uihashinit

@@ -160,7 +160,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
+file|<vm/uma.h>
 end_include
 
 begin_expr_stmt
@@ -796,14 +796,14 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|vm_zone_t
+name|uma_zone_t
 name|vnode_zone
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|vm_zone_t
+name|uma_zone_t
 name|vnodepoll_zone
 decl_stmt|;
 end_decl_stmt
@@ -1134,9 +1134,11 @@ name|vp
 operator|->
 name|v_pollinfo
 operator|=
-name|zalloc
+name|uma_zalloc
 argument_list|(
 name|vnodepoll_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|mtx_init
@@ -1245,7 +1247,7 @@ argument_list|)
 expr_stmt|;
 name|vnode_zone
 operator|=
-name|zinit
+name|uma_zcreate
 argument_list|(
 literal|"VNODE"
 argument_list|,
@@ -1255,16 +1257,22 @@ expr|struct
 name|vnode
 argument_list|)
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|5
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+name|UMA_ZONE_NOFREE
 argument_list|)
 expr_stmt|;
 name|vnodepoll_zone
 operator|=
-name|zinit
+name|uma_zcreate
 argument_list|(
 literal|"VNODEPOLL"
 argument_list|,
@@ -1274,11 +1282,17 @@ expr|struct
 name|vpollinfo
 argument_list|)
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|5
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+name|UMA_ZONE_NOFREE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize the filesystem syncer. 	 */
@@ -3433,7 +3447,7 @@ operator|->
 name|vpi_lock
 argument_list|)
 expr_stmt|;
-name|zfree
+name|uma_zfree
 argument_list|(
 name|vnodepoll_zone
 argument_list|,
@@ -3501,9 +3515,11 @@ expr|struct
 name|vnode
 operator|*
 operator|)
-name|zalloc
+name|uma_zalloc
 argument_list|(
 name|vnode_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -12678,7 +12694,7 @@ name|HASBUF
 operator|)
 condition|)
 block|{
-name|zfree
+name|uma_zfree
 argument_list|(
 name|namei_zone
 argument_list|,
