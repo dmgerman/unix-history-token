@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	utboot.c	4.2	83/02/20	*/
+comment|/*	utboot.c	4.3	83/03/06	*/
 end_comment
 
 begin_comment
@@ -205,7 +205,7 @@ operator|,
 literal|016
 operator|.
 name|set
-name|UTCK
+name|UTCC
 operator|,
 literal|020
 operator|.
@@ -243,39 +243,39 @@ operator|.
 name|set
 name|UT_REW
 operator|,
-literal|06
+literal|0x6
 operator|.
 name|set
 name|UT_RCOM
 operator|,
-literal|070
+literal|0x38
 operator|.
 name|set
 name|UT_SREV
 operator|,
-literal|032
+literal|0x1a
 operator|.
 name|set
 name|UT_DCLR
 operator|,
-literal|010
+literal|0x8
 operator|.
 name|set
 name|UT_crdy
 operator|,
-literal|0200
+literal|0x80
 operator|.
 name|set
 name|UT_gapsd
 operator|,
-literal|020000
+literal|0x2000
 comment|/* aka "positioning in progress" */
 operator|.
 name|set
 name|UTDENS
 operator|,
-literal|0
-comment|/* 1600 bpi */
+literal|0x4c0
+comment|/* 1600 bpi, PDP-11 format */
 comment|/* local stack variables */
 operator|.
 name|set
