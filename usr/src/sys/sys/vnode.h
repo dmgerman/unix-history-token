@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.64 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.65 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -1563,6 +1563,12 @@ expr|struct
 name|proc
 operator|*
 name|p
+operator|,
+name|int
+name|slpflag
+operator|,
+name|int
+name|slptimeo
 operator|)
 argument_list|)
 decl_stmt|;
