@@ -2826,29 +2826,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|ROUNDUP
-parameter_list|(
-name|a
-parameter_list|)
-define|\
-value|((a)> 0 ? (1 + (((a) - 1) | (sizeof(long) - 1))) : sizeof(long))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADVANCE
-parameter_list|(
-name|x
-parameter_list|,
-name|n
-parameter_list|)
-value|(x += ROUNDUP((n)->sa_len))
-end_define
-
 begin_function
 name|void
 name|rt_xaddrs
@@ -2953,10 +2930,10 @@ operator|*
 operator|)
 name|cp
 expr_stmt|;
-name|ADVANCE
-argument_list|(
 name|cp
-argument_list|,
+operator|+=
+name|SA_SIZE
+argument_list|(
 name|sa
 argument_list|)
 expr_stmt|;

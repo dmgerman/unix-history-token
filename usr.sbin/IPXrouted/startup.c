@@ -217,7 +217,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Sleazy use of local variables throughout file, warning!!!! */
+comment|/* XXX Sleazy use of local variables throughout file, warning!!!! */
 end_comment
 
 begin_define
@@ -239,29 +239,6 @@ define|#
 directive|define
 name|brdaddr
 value|info.rti_info[RTAX_BRD]
-end_define
-
-begin_define
-define|#
-directive|define
-name|ROUNDUP
-parameter_list|(
-name|a
-parameter_list|)
-define|\
-value|((a)> 0 ? (1 + (((a) - 1) | (sizeof(long) - 1))) : sizeof(long))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADVANCE
-parameter_list|(
-name|x
-parameter_list|,
-name|n
-parameter_list|)
-value|(x += ROUNDUP((n)->sa_len))
 end_define
 
 begin_function
@@ -366,10 +343,10 @@ operator|*
 operator|)
 name|cp
 expr_stmt|;
-name|ADVANCE
-argument_list|(
 name|cp
-argument_list|,
+operator|+=
+name|SA_SIZE
+argument_list|(
 name|sa
 argument_list|)
 expr_stmt|;

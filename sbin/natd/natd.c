@@ -3178,23 +3178,6 @@ operator|+
 literal|1
 operator|)
 decl_stmt|;
-define|#
-directive|define
-name|ROUNDUP
-parameter_list|(
-name|a
-parameter_list|)
-define|\
-value|((a)> 0 ? (1 + (((a) - 1) | (sizeof(long) - 1))) : sizeof(long))
-define|#
-directive|define
-name|ADVANCE
-parameter_list|(
-name|x
-parameter_list|,
-name|n
-parameter_list|)
-value|(x += ROUNDUP((n)->sa_len))
 for|for
 control|(
 name|i
@@ -3217,10 +3200,10 @@ name|ifam_addrs
 operator|&
 name|i
 condition|)
-name|ADVANCE
-argument_list|(
 name|cp
-argument_list|,
+operator|+=
+name|SA_SIZE
+argument_list|(
 operator|(
 expr|struct
 name|sockaddr

@@ -210,33 +210,6 @@ value|(kread((u_long)(p), (char *)&(d), sizeof (d)))
 end_define
 
 begin_comment
-comment|/* alignment constraint for routing socket */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ROUNDUP
-parameter_list|(
-name|a
-parameter_list|)
-define|\
-value|((a)> 0 ? (1 + (((a) - 1) | (sizeof(long) - 1))) : sizeof(long))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADVANCE
-parameter_list|(
-name|x
-parameter_list|,
-name|n
-parameter_list|)
-value|(x += ROUNDUP((n)->sa_len))
-end_define
-
-begin_comment
 comment|/*  * Definitions for showing gateway flags.  */
 end_comment
 
@@ -2808,11 +2781,9 @@ name|sockaddr
 operator|*
 operator|)
 operator|(
-name|ROUNDUP
+name|SA_SIZE
 argument_list|(
 name|sa
-operator|->
-name|sa_len
 argument_list|)
 operator|+
 operator|(

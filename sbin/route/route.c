@@ -577,29 +577,6 @@ comment|/* NOTREACHED */
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|ROUNDUP
-parameter_list|(
-name|a
-parameter_list|)
-define|\
-value|((a)> 0 ? (1 + (((a) - 1) | (sizeof(long) - 1))) : sizeof(long))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADVANCE
-parameter_list|(
-name|x
-parameter_list|,
-name|n
-parameter_list|)
-value|(x += ROUNDUP((n)->sa_len))
-end_define
-
 begin_function
 name|int
 name|main
@@ -1354,11 +1331,9 @@ name|sockaddr
 operator|*
 operator|)
 operator|(
-name|ROUNDUP
+name|SA_SIZE
 argument_list|(
 name|sa
-operator|->
-name|sa_len
 argument_list|)
 operator|+
 operator|(
@@ -6170,7 +6145,7 @@ parameter_list|,
 name|u
 parameter_list|)
 define|\
-value|if (rtm_addrs& (w)) {\ 	    l = ROUNDUP(u.sa.sa_len); memmove(cp,&(u), l); cp += l;\ 	    if (verbose) sodump(&(u),"u");\ 	}
+value|if (rtm_addrs& (w)) {\ 	    l = SA_SIZE(&(u.sa)); memmove(cp,&(u), l); cp += l;\ 	    if (verbose) sodump(&(u),"u");\ 	}
 name|errno
 operator|=
 literal|0
@@ -7435,10 +7410,10 @@ name|sa
 expr_stmt|;
 break|break;
 block|}
-name|ADVANCE
-argument_list|(
 name|cp
-argument_list|,
+operator|+=
+name|SA_SIZE
+argument_list|(
 name|sa
 argument_list|)
 expr_stmt|;
@@ -7989,10 +7964,10 @@ name|sa
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ADVANCE
-argument_list|(
 name|cp
-argument_list|,
+operator|+=
+name|SA_SIZE
+argument_list|(
 name|sa
 argument_list|)
 expr_stmt|;

@@ -478,17 +478,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ROUNDUP
-parameter_list|(
-name|a
-parameter_list|)
-define|\
-value|((a)> 0 ? (1 + (((a) - 1) | (sizeof(long) - 1))) : sizeof(long))
-end_define
-
-begin_define
-define|#
-directive|define
 name|SETFUNC
 parameter_list|(
 name|f
@@ -1665,11 +1654,9 @@ name|sockaddr_dl
 operator|*
 operator|)
 operator|(
-name|ROUNDUP
+name|SA_SIZE
 argument_list|(
 name|addr
-operator|->
-name|sin_len
 argument_list|)
 operator|+
 operator|(
@@ -2223,11 +2210,9 @@ name|sockaddr_dl
 operator|*
 operator|)
 operator|(
-name|ROUNDUP
+name|SA_SIZE
 argument_list|(
 name|addr
-operator|->
-name|sin_len
 argument_list|)
 operator|+
 operator|(
@@ -2649,11 +2634,9 @@ operator|*
 operator|)
 name|sin2
 operator|+
-name|ROUNDUP
+name|SA_SIZE
 argument_list|(
 name|sin2
-operator|->
-name|sin_len
 argument_list|)
 expr_stmt|;
 if|if
@@ -2940,11 +2923,9 @@ name|sockaddr_inarp
 operator|*
 operator|)
 operator|(
-name|ROUNDUP
+name|SA_SIZE
 argument_list|(
 name|sdl
-operator|->
-name|sdl_len
 argument_list|)
 operator|+
 operator|(
@@ -3556,7 +3537,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|if (rtm->rtm_addrs& (w)) { \ 		bcopy((char *)&s, cp, sizeof(s)); cp += ROUNDUP(sizeof(s));}
+value|if (rtm->rtm_addrs& (w)) { \ 		bcopy((char *)&s, cp, sizeof(s)); cp += SA_SIZE(&s);}
 name|NEXTADDR
 argument_list|(
 name|RTA_DST
