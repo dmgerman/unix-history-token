@@ -3459,15 +3459,6 @@ name|ip6
 argument_list|)
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|PULLDOWN_TEST
-comment|/* 			 * m_pullup is prohibited in KAME IPv6 input processing 			 * but there's no other way! 			 */
-else|#
-directive|else
-comment|/* okay to pullup in m_pulldown style */
-endif|#
-directive|endif
 name|m
 operator|=
 name|m_pullup

@@ -571,6 +571,7 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* XXX need more descriptive message */
 name|log
 argument_list|(
 name|LOG_ERR
@@ -858,7 +859,7 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* 		 * Before deleting, check if a corresponding loopbacked host 		 * route surely exists.  With this check, we can avoid to 		 * delete an interface direct route whose destination is same 		 * as the address being removed.  This can happen when remofing 		 * a subnet-router anycast address on an interface attahced 		 * to a shared medium. 		 */
+comment|/* 		 * Before deleting, check if a corresponding loopbacked host 		 * route surely exists.  With this check, we can avoid to 		 * delete an interface direct route whose destination is same 		 * as the address being removed.  This can happen when removing 		 * a subnet-router anycast address on an interface attahced 		 * to a shared medium. 		 */
 name|rt
 operator|=
 name|rtalloc1
@@ -1064,6 +1065,7 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
+comment|/* ignore the scope_id part */
 if|if
 condition|(
 name|lim0
@@ -1084,7 +1086,6 @@ operator|*
 name|mask
 argument_list|)
 condition|)
-comment|/* ignore the scope_id part */
 name|lim
 operator|=
 operator|(
@@ -1499,7 +1500,7 @@ operator|(
 name|EPERM
 operator|)
 return|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|OSIOCGIFINFO_IN6
 case|:
@@ -1657,7 +1658,7 @@ operator|(
 name|EPERM
 operator|)
 return|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|SIOCGLIFADDR
 case|:
@@ -1906,7 +1907,7 @@ case|case
 name|SIOCGIFADDR_IN6
 case|:
 comment|/* This interface is basically deprecated. use SIOCGIFCONF. */
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|SIOCGIFAFLAG_IN6
 case|:
@@ -2415,8 +2416,10 @@ name|ndpr_plen
 operator|==
 literal|128
 condition|)
+block|{
 break|break;
 comment|/* we don't need to install a host route. */
+block|}
 name|pr0
 operator|.
 name|ndpr_prefix
@@ -2517,7 +2520,7 @@ name|ifra_lifetime
 operator|.
 name|ia6t_pltime
 expr_stmt|;
-comment|/* add the prefix if there's one. */
+comment|/* add the prefix if not yet. */
 if|if
 condition|(
 operator|(
@@ -2569,7 +2572,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"nd6_prelist_add succedded but "
+literal|"nd6_prelist_add succeeded but "
 literal|"no prefix\n"
 argument_list|)
 expr_stmt|;
@@ -2714,7 +2717,7 @@ decl_stmt|,
 modifier|*
 name|pr
 decl_stmt|;
-comment|/* 		 * If the address being deleted is the only one that owns 		 * the corresponding prefix, expire the prefix as well. 		 * XXX: theoretically, we don't have to warry about such 		 * relationship, since we separate the address management 		 * and the prefix management.  We do this, however, to provide 		 * as much backward compatibility as possible in terms of 		 * the ioctl operation. 		 */
+comment|/* 		 * If the address being deleted is the only one that owns 		 * the corresponding prefix, expire the prefix as well. 		 * XXX: theoretically, we don't have to worry about such 		 * relationship, since we separate the address management 		 * and the prefix management.  We do this, however, to provide 		 * as much backward compatibility as possible in terms of 		 * the ioctl operation. 		 */
 name|bzero
 argument_list|(
 operator|&
@@ -3169,6 +3172,8 @@ operator||
 name|IFF_LOOPBACK
 operator|)
 operator|)
+operator|!=
+literal|0
 operator|&&
 operator|(
 name|dst6
@@ -3455,7 +3460,7 @@ name|hostIsNew
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 		 * When in6_update_ifa() is called in a process of a received 		 * RA, it is called under splnet().  So, we should call malloc 		 * with M_NOWAIT. 		 */
+comment|/* 		 * When in6_update_ifa() is called in a process of a received 		 * RA, it is called under an interrupt context.  So, we should 		 * call malloc with M_NOWAIT. 		 */
 name|ia
 operator|=
 operator|(
@@ -3745,7 +3750,7 @@ operator|->
 name|ifra_prefixmask
 expr_stmt|;
 block|}
-comment|/* 	 * If a new destination address is specified, scrub the old one and 	 * install the new destination.  Note that the interface must be 	 * p2p or loopback (see the check above.)  	 */
+comment|/* 	 * If a new destination address is specified, scrub the old one and 	 * install the new destination.  Note that the interface must be 	 * p2p or loopback (see the check above.) 	 */
 if|if
 condition|(
 name|dst6
@@ -3871,17 +3876,7 @@ condition|)
 goto|goto
 name|unlink
 goto|;
-comment|/* 	 * Beyond this point, we should call in6_purgeaddr upon an error, 	 * not just go to unlink.  	 */
-if|#
-directive|if
-literal|0
-comment|/* disable this mechanism for now */
-comment|/* update prefix list */
-block|if (hostIsNew&& 	    (ifra->ifra_flags& IN6_IFF_NOPFX) == 0) {
-comment|/* XXX */
-block|int iilen;  		iilen = (sizeof(ia->ia_prefixmask.sin6_addr)<< 3) - plen; 		if ((error = in6_prefix_add_ifid(iilen, ia)) != 0) { 			in6_purgeaddr((struct ifaddr *)ia); 			return (error); 		} 	}
-endif|#
-directive|endif
+comment|/* 	 * Beyond this point, we should call in6_purgeaddr upon an error, 	 * not just go to unlink. 	 */
 if|if
 condition|(
 operator|(
@@ -3911,7 +3906,7 @@ condition|(
 name|hostIsNew
 condition|)
 block|{
-comment|/* 			 * join solicited multicast addr for new host id 			 */
+comment|/* join solicited multicast addr for new host id */
 name|struct
 name|in6_addr
 name|llsol
@@ -5345,7 +5340,7 @@ argument_list|(
 literal|"invalid argument to in6_lifaddr_ioctl"
 argument_list|)
 expr_stmt|;
-comment|/*NOTRECHED*/
+comment|/* NOTREACHED */
 block|}
 switch|switch
 condition|(
@@ -5751,7 +5746,7 @@ operator|->
 name|sa_family
 condition|)
 block|{
-comment|/*XXX*/
+comment|/* XXX */
 name|bcopy
 argument_list|(
 operator|&
@@ -7139,7 +7134,7 @@ argument_list|,
 name|in6m_entry
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Let MLD6 know that we have joined a new IP6 multicast 	 * group. 	 */
+comment|/* 	 * Let MLD6 know that we have joined a new IPv6 multicast 	 * group. 	 */
 name|mld6_start_listening
 argument_list|(
 name|in6m
@@ -7780,6 +7775,7 @@ name|ia
 operator|->
 name|ia_next
 control|)
+block|{
 if|if
 condition|(
 name|IN6_ARE_MASKED_ADDR_EQUAL
@@ -7801,9 +7797,12 @@ operator|.
 name|sin6_addr
 argument_list|)
 condition|)
+block|{
 return|return
 literal|1
 return|;
+block|}
+block|}
 return|return
 operator|(
 literal|0
@@ -8359,12 +8358,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-block|printf("in6_ifawithscope: output interface is not specified\n");
-endif|#
-directive|endif
 return|return
 operator|(
 name|NULL

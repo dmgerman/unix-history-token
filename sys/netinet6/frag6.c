@@ -2233,7 +2233,7 @@ name|ip6_hdr
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/* restoure source and destination addresses */
+comment|/* restore source and destination addresses */
 name|ip6
 operator|->
 name|ip6_src

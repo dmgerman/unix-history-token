@@ -240,7 +240,7 @@ operator|&
 name|inetdomain
 block|,
 literal|0
-comment|/*IPPROTO_IPV[46]*/
+comment|/* IPPROTO_IPV[46] */
 block|,
 name|PR_ATOMIC
 operator||

@@ -2215,7 +2215,7 @@ decl_stmt|;
 name|int
 name|n0len
 decl_stmt|;
-comment|/* 			 * Prepare an internal mbuf. m_pullup() doesn't 			 * always copy the length we specified. 			 */
+comment|/* 			 * Prepare an internal mbuf.  m_pullup() doesn't 			 * always copy the length we specified. 			 */
 if|if
 condition|(
 name|maxlen
@@ -2389,7 +2389,7 @@ expr|struct
 name|icmp6_hdr
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Adjust mbuf. ip6_plen will be adjusted in 			 * ip6_output(). 			 */
+comment|/* 			 * Adjust mbuf.  ip6_plen will be adjusted in 			 * ip6_output(). 			 */
 name|m_adj
 argument_list|(
 name|n0
@@ -2654,7 +2654,7 @@ case|:
 case|case
 name|MLD_MTRACE
 case|:
-comment|/* XXX: these two are experimental.  not officially defind. */
+comment|/* XXX: these two are experimental.  not officially defined. */
 comment|/* XXX: per-interface statistics? */
 break|break;
 comment|/* just pass it to applications */
@@ -4539,6 +4539,7 @@ return|;
 block|}
 endif|#
 directive|endif
+comment|/* 		 * retrieve parameters from the inner IPv6 header, and convert 		 * them into sockaddr structures. 		 * XXX: there is no guarantee that the source or destination 		 * addresses of the inner packet are in the same scope as 		 * the addresses of the icmp packet.  But there is no other 		 * way to determine the zone. 		 */
 name|eip6
 operator|=
 operator|(
@@ -5189,7 +5190,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Process a Node Information Query packet, based on  * draft-ietf-ipngwg-icmp-name-lookups-07.  *   * Spec incompatibilities:  * - IPv6 Subject address handling  * - IPv4 Subject address handling support missing  * - Proxy reply (answer even if it's not for me)  * - joins NI group address at in6_ifattach() time only, does not cope  *   with hostname changes by sethostname(3)  */
+comment|/*  * Process a Node Information Query packet, based on  * draft-ietf-ipngwg-icmp-name-lookups-07.  *  * Spec incompatibilities:  * - IPv6 Subject address handling  * - IPv4 Subject address handling support missing  * - Proxy reply (answer even if it's not for me)  * - joins NI group address at in6_ifattach() time only, does not cope  *   with hostname changes by sethostname(3)  */
 end_comment
 
 begin_define
@@ -5368,7 +5369,9 @@ condition|)
 block|{
 comment|/* m is already reclaimed */
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 endif|#
@@ -5796,7 +5799,7 @@ name|sin6_d
 argument_list|)
 condition|)
 break|break;
-comment|/* 			 * XXX if we are to allow other cases, we should really 			 * be careful about scope here. 			 * basically, we should disallow queries toward IPv6 			 * destination X with subject Y, if scope(X)> scope(Y). 			 * if we allow scope(X)> scope(Y), it will result in 			 * information leakage across scope boundary. 			 */
+comment|/* 			 * XXX if we are to allow other cases, we should really 			 * be careful about scope here. 			 * basically, we should disallow queries toward IPv6 			 * destination X with subject Y, 			 * if scope(X)> scope(Y). 			 * if we allow scope(X)> scope(Y), it will result in 			 * information leakage across scope boundary. 			 */
 goto|goto
 name|bad
 goto|;
@@ -6036,7 +6039,7 @@ expr_stmt|;
 comment|/* XXX: will truncate pkt later */
 break|break;
 default|default:
-comment|/* 		 * XXX: We must return a reply with the ICMP6 code 		 * `unknown Qtype' in this case. However we regard the case 		 * as an FQDN query for backward compatibility. 		 * Older versions set a random value to this field, 		 * so it rarely varies in the defined qtypes. 		 * But the mechanism is not reliable... 		 * maybe we should obsolete older versions. 		 */
+comment|/* 		 * XXX: We must return a reply with the ICMP6 code 		 * `unknown Qtype' in this case.  However we regard the case 		 * as an FQDN query for backward compatibility. 		 * Older versions set a random value to this field, 		 * so it rarely varies in the defined qtypes. 		 * But the mechanism is not reliable... 		 * maybe we should obsolete older versions. 		 */
 name|qtype
 operator|=
 name|NI_QTYPE_FQDN
@@ -7996,7 +7999,7 @@ break|break;
 default|default:
 continue|continue;
 block|}
-comment|/* 			 * check if anycast is okay. 			 * XXX: just experimental. not in the spec. 			 */
+comment|/* 			 * check if anycast is okay. 			 * XXX: just experimental.  not in the spec. 			 */
 if|if
 condition|(
 operator|(
@@ -8391,7 +8394,9 @@ condition|)
 block|{
 comment|/* m is already reclaimed */
 return|return
+operator|(
 name|IPPROTO_DONE
+operator|)
 return|;
 block|}
 endif|#
@@ -9489,7 +9494,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * If the incoming packet was addressed directly to us(i.e. unicast), 	 * use dst as the src for the reply. 	 * The IN6_IFF_NOTREADY case would be VERY rare, but is possible 	 * (for example) when we encounter an error while forwarding procedure 	 * destined to a duplicated address of ours. 	 */
+comment|/* 	 * If the incoming packet was addressed directly to us (i.e. unicast), 	 * use dst as the src for the reply. 	 * The IN6_IFF_NOTREADY case should be VERY rare, but is possible 	 * (for example) when we encounter an error while forwarding procedure 	 * destined to a duplicated address of ours. 	 */
 for|for
 control|(
 name|ia
@@ -12008,7 +12013,7 @@ name|nd_opt_rd_hdr
 modifier|*
 name|nd_opt_rh
 decl_stmt|;
-comment|/* 	 * compute the maximum size for icmp6 redirect header option. 	 * XXX room for auth header? 	 */
+comment|/* 		 * compute the maximum size for icmp6 redirect header option. 		 * XXX room for auth header? 		 */
 name|len
 operator|=
 name|maxlen
@@ -12074,7 +12079,7 @@ operator|->
 name|m_len
 expr_stmt|;
 block|}
-comment|/* 	 * Redirected header option spec (RFC2461 4.6.3) talks nothing 	 * about padding/truncate rule for the original IP packet. 	 * From the discussion on IPv6imp in Feb 1999, the consensus was: 	 * - "attach as much as possible" is the goal 	 * - pad if not aligned (original size can be guessed by original 	 *   ip6 header) 	 * Following code adds the padding if it is simple enough, 	 * and truncates if not. 	 */
+comment|/* 		 * Redirected header option spec (RFC2461 4.6.3) talks nothing 		 * about padding/truncate rule for the original IP packet. 		 * From the discussion on IPv6imp in Feb 1999, 		 * the consensus was: 		 * - "attach as much as possible" is the goal 		 * - pad if not aligned (original size can be guessed by 		 *   original ip6 header) 		 * Following code adds the padding if it is simple enough, 		 * and truncates if not. 		 */
 if|if
 condition|(
 name|m0
