@@ -21,6 +21,12 @@ directive|include
 file|<machine/sr.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/pte.h>
+end_include
+
 begin_if
 if|#
 directive|if
