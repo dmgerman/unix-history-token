@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getpass.c	5.6 (Berkeley) %G%"
+literal|"@(#)getpass.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -202,7 +202,7 @@ argument_list|(
 name|fp
 argument_list|)
 argument_list|,
-name|TCSADFLUSH
+name|TCSAFLUSH
 argument_list|,
 operator|&
 name|term
@@ -305,7 +305,7 @@ argument_list|(
 name|fp
 argument_list|)
 argument_list|,
-name|TCSADFLUSH
+name|TCSAFLUSH
 argument_list|,
 operator|&
 name|term
