@@ -1537,7 +1537,7 @@ name|args
 operator|.
 name|next_hop
 operator|=
-name|m_claim_next_hop
+name|m_claim_next
 argument_list|(
 name|m
 argument_list|,

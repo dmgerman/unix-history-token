@@ -2904,7 +2904,7 @@ name|__inline
 expr|struct
 name|sockaddr_in
 operator|*
-name|m_claim_next_hop
+name|m_claim_next
 argument_list|(
 argument|struct mbuf *m
 argument_list|,

@@ -1976,7 +1976,7 @@ directive|endif
 comment|/* Grab info from PACKET_TAG_IPFORWARD tag prepended to the chain. */
 name|next_hop
 operator|=
-name|m_claim_next_hop
+name|m_claim_next
 argument_list|(
 name|m
 argument_list|,
