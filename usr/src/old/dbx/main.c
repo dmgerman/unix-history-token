@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c 1.3 %G%"
+literal|"@(#)main.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,6 +86,20 @@ name|file
 parameter_list|)
 value|(interactive or isatty(fileno(file)))
 end_define
+
+begin_include
+include|#
+directive|include
+file|<sgtty.h>
+end_include
+
+begin_typedef
+typedef|typedef
+name|struct
+name|sgttyb
+name|Ttyinfo
+typedef|;
+end_typedef
 
 begin_endif
 endif|#
@@ -254,6 +268,13 @@ begin_comment
 comment|/* first program argument (for -r) */
 end_comment
 
+begin_decl_stmt
+name|private
+name|Ttyinfo
+name|ttyinfo
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|private
 name|catchintr
@@ -284,6 +305,10 @@ specifier|register
 name|Integer
 name|i
 decl_stmt|;
+specifier|extern
+name|String
+name|date
+decl_stmt|;
 name|cmdname
 operator|=
 name|argv
@@ -306,6 +331,18 @@ argument_list|(
 name|stdout
 argument_list|,
 name|outbuf
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"dbx version of %s.\nType 'help' for help.\n"
+argument_list|,
+name|date
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
 argument_list|)
 expr_stmt|;
 name|scanargs
@@ -386,6 +423,14 @@ argument_list|(
 name|env
 argument_list|)
 expr_stmt|;
+name|restoretty
+argument_list|(
+name|stdout
+argument_list|,
+operator|&
+name|ttyinfo
+argument_list|)
+expr_stmt|;
 name|signal
 argument_list|(
 name|SIGINT
@@ -435,6 +480,14 @@ name|String
 name|getenv
 parameter_list|()
 function_decl|;
+name|savetty
+argument_list|(
+name|stdout
+argument_list|,
+operator|&
+name|ttyinfo
+argument_list|)
+expr_stmt|;
 name|enterkeywords
 argument_list|()
 expr_stmt|;
@@ -460,9 +513,29 @@ name|nil
 argument_list|)
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"reading symbolic information ..."
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 name|readobj
 argument_list|(
 name|objname
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
 argument_list|)
 expr_stmt|;
 name|curfunc
@@ -1340,6 +1413,68 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Save/restore the state of a tty.  */
+end_comment
+
+begin_function
+name|public
+name|savetty
+parameter_list|(
+name|f
+parameter_list|,
+name|t
+parameter_list|)
+name|File
+name|f
+decl_stmt|;
+name|Ttyinfo
+modifier|*
+name|t
+decl_stmt|;
+block|{
+name|gtty
+argument_list|(
+name|fileno
+argument_list|(
+name|f
+argument_list|)
+argument_list|,
+name|t
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|public
+name|restoretty
+parameter_list|(
+name|f
+parameter_list|,
+name|t
+parameter_list|)
+name|File
+name|f
+decl_stmt|;
+name|Ttyinfo
+modifier|*
+name|t
+decl_stmt|;
+block|{
+name|stty
+argument_list|(
+name|fileno
+argument_list|(
+name|f
+argument_list|)
+argument_list|,
+name|t
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
