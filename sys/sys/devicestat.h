@@ -287,6 +287,10 @@ name|devstat_type_flags
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*  * XXX: Next revision should add  *	off_t		offset[DEVSTAT_N_TRANS_FLAGS];  * XXX: which should contain the offset of the last completed transfer.  */
+end_comment
+
 begin_struct
 struct|struct
 name|devstat
