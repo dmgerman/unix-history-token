@@ -3063,12 +3063,15 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* 	 * If VLANs are configured on the interface, check to 	 * see if the device performed the decapsulation and 	 * provided us with the tag. 	 */
+comment|/* 	 * Check to see if the device performed the VLAN decapsulation and 	 * provided us with the tag. 	 */
 if|if
 condition|(
-name|ifp
-operator|->
-name|if_nvlans
+name|m_tag_first
+argument_list|(
+name|m
+argument_list|)
+operator|!=
+name|NULL
 operator|&&
 name|m_tag_locate
 argument_list|(
@@ -3084,6 +3087,28 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* 		 * If no VLANs are configured, drop. 		 */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_nvlans
+operator|==
+literal|0
+condition|)
+block|{
+name|ifp
+operator|->
+name|if_noproto
+operator|++
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* 		 * vlan_input() will either recursively call ether_input() 		 * or drop the packet. 		 */
 name|KASSERT
 argument_list|(
