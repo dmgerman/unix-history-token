@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	5.3 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3619,6 +3619,30 @@ name|q_user
 argument_list|)
 operator|!=
 literal|0
+condition|)
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+comment|/* if receiving uid's don't match, these are "different" */
+if|if
+condition|(
+name|a
+operator|->
+name|q_uid
+operator|!=
+name|b
+operator|->
+name|q_uid
+operator|||
+name|a
+operator|->
+name|q_gid
+operator|!=
+name|b
+operator|->
+name|q_gid
 condition|)
 return|return
 operator|(
