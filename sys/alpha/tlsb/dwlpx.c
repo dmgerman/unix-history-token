@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: dwlpx.c,v 1.2 1998/06/14 13:45:21 dfr Exp $  */
+comment|/*-  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: dwlpx.c,v 1.3 1998/07/12 16:23:13 dfr Exp $  */
 end_comment
 
 begin_include
@@ -142,9 +142,9 @@ define|#
 directive|define
 name|SPARSE_READ
 parameter_list|(
-name|o
+name|kv
 parameter_list|)
-value|(*(u_int32_t*) (o))
+value|(*(u_int32_t*) (kv))
 end_define
 
 begin_define
@@ -152,11 +152,11 @@ define|#
 directive|define
 name|SPARSE_WRITE
 parameter_list|(
-name|o
+name|kv
 parameter_list|,
 name|d
 parameter_list|)
-value|(*(u_int32_t*) (o) = (d))
+value|(*(u_int32_t*) (kv) = (d))
 end_define
 
 begin_define
@@ -192,6 +192,42 @@ end_define
 begin_define
 define|#
 directive|define
+name|SPARSE_BYTE_ADDRESS
+parameter_list|(
+name|base
+parameter_list|,
+name|o
+parameter_list|)
+value|((base) + SPARSE_BYTE_OFFSET(o))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPARSE_WORD_ADDRESS
+parameter_list|(
+name|base
+parameter_list|,
+name|o
+parameter_list|)
+value|((base) + SPARSE_WORD_OFFSET(o))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPARSE_LONG_ADDRESS
+parameter_list|(
+name|base
+parameter_list|,
+name|o
+parameter_list|)
+value|((base) + SPARSE_LONG_OFFSET(o))
+end_define
+
+begin_define
+define|#
+directive|define
 name|SPARSE_BYTE_EXTRACT
 parameter_list|(
 name|o
@@ -211,6 +247,18 @@ parameter_list|,
 name|d
 parameter_list|)
 value|((d)>> (8*((o)& 2)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPARSE_LONG_EXTRACT
+parameter_list|(
+name|o
+parameter_list|,
+name|d
+parameter_list|)
+value|(d)
 end_define
 
 begin_define
@@ -240,6 +288,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|SPARSE_LONG_INSERT
+parameter_list|(
+name|o
+parameter_list|,
+name|d
+parameter_list|)
+value|(d)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SPARSE_READ_BYTE
 parameter_list|(
 name|base
@@ -247,7 +307,7 @@ parameter_list|,
 name|o
 parameter_list|)
 define|\
-value|SPARSE_BYTE_EXTRACT(o, SPARSE_READ(base + SPARSE_BYTE_OFFSET(o)))
+value|SPARSE_BYTE_EXTRACT(o, SPARSE_READ(SPARSE_BYTE_ADDRESS(base, o)))
 end_define
 
 begin_define
@@ -260,7 +320,7 @@ parameter_list|,
 name|o
 parameter_list|)
 define|\
-value|SPARSE_WORD_EXTRACT(o, SPARSE_READ(base + SPARSE_WORD_OFFSET(o)))
+value|SPARSE_WORD_EXTRACT(o, SPARSE_READ(SPARSE_WORD_ADDRESS(base, o)))
 end_define
 
 begin_define
@@ -273,7 +333,7 @@ parameter_list|,
 name|o
 parameter_list|)
 define|\
-value|SPARSE_READ(base + SPARSE_LONG_OFFSET(o))
+value|SPARSE_READ(SPARSE_LONG_ADDRESS(base, o))
 end_define
 
 begin_define
@@ -288,7 +348,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|SPARSE_WRITE(base + SPARSE_BYTE_OFFSET(o), SPARSE_BYTE_INSERT(o, d))
+value|SPARSE_WRITE(SPARSE_BYTE_ADDRESS(base, o), SPARSE_BYTE_INSERT(o, d))
 end_define
 
 begin_define
@@ -303,7 +363,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|SPARSE_WRITE(base + SPARSE_WORD_OFFSET(o), SPARSE_WORD_INSERT(o, d))
+value|SPARSE_WRITE(SPARSE_WORD_ADDRESS(base, o), SPARSE_WORD_INSERT(o, d))
 end_define
 
 begin_define
@@ -318,7 +378,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|SPARSE_WRITE(base + SPARSE_LONG_OFFSET(o), d)
+value|SPARSE_WRITE(SPARSE_LONG_ADDRESS(base, o), d)
 end_define
 
 begin_decl_stmt
@@ -692,6 +752,46 @@ define|\
 value|(((b)<< 16) | ((s)<< 11) | ((f)<< 8) | (r))
 end_define
 
+begin_define
+define|#
+directive|define
+name|CFGREAD
+parameter_list|(
+name|b
+parameter_list|,
+name|s
+parameter_list|,
+name|f
+parameter_list|,
+name|r
+parameter_list|,
+name|width
+parameter_list|)
+define|\
+value|struct dwlpx_softc* sc = DWLPX_SOFTC(dwlpx0);			\ 	vm_offset_t off = DWLPX_CFGOFF(b, s, f, r);			\ 	vm_offset_t kv = SPARSE_##width##_ADDRESS(sc->cfg_base, off);	\ 	if (badaddr((caddr_t)kv, 4)) return ~0;				\ 	return SPARSE_##width##_EXTRACT(off, SPARSE_READ(kv))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CFGWRITE
+parameter_list|(
+name|b
+parameter_list|,
+name|s
+parameter_list|,
+name|f
+parameter_list|,
+name|r
+parameter_list|,
+name|data
+parameter_list|,
+name|width
+parameter_list|)
+define|\
+value|struct dwlpx_softc* sc = DWLPX_SOFTC(dwlpx0);			\ 	vm_offset_t off = DWLPX_CFGOFF(b, s, f, r);			\ 	vm_offset_t kv = SPARSE_##width##_ADDRESS(sc->cfg_base, off);	\ 	if (badaddr((caddr_t)kv, 4)) return;				\ 	SPARSE_WRITE(kv, SPARSE_##width##_INSERT(off, data))
+end_define
+
 begin_function
 specifier|static
 name|u_int8_t
@@ -710,20 +810,7 @@ name|u_int
 name|r
 parameter_list|)
 block|{
-name|struct
-name|dwlpx_softc
-modifier|*
-name|sc
-init|=
-name|DWLPX_SOFTC
-argument_list|(
-name|dwlpx0
-argument_list|)
-decl_stmt|;
-name|vm_offset_t
-name|off
-init|=
-name|DWLPX_CFGOFF
+name|CFGREAD
 argument_list|(
 name|b
 argument_list|,
@@ -732,40 +819,10 @@ argument_list|,
 name|f
 argument_list|,
 name|r
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|badaddr
-argument_list|(
-call|(
-name|caddr_t
-call|)
-argument_list|(
-name|sc
-operator|->
-name|cfg_base
-operator|+
-name|off
-argument_list|)
 argument_list|,
-literal|1
+name|BYTE
 argument_list|)
-condition|)
-return|return
-operator|~
-literal|0
-return|;
-return|return
-name|SPARSE_READ_BYTE
-argument_list|(
-name|sc
-operator|->
-name|cfg_base
-argument_list|,
-name|off
-argument_list|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
@@ -787,20 +844,7 @@ name|u_int
 name|r
 parameter_list|)
 block|{
-name|struct
-name|dwlpx_softc
-modifier|*
-name|sc
-init|=
-name|DWLPX_SOFTC
-argument_list|(
-name|dwlpx0
-argument_list|)
-decl_stmt|;
-name|vm_offset_t
-name|off
-init|=
-name|DWLPX_CFGOFF
+name|CFGREAD
 argument_list|(
 name|b
 argument_list|,
@@ -809,40 +853,10 @@ argument_list|,
 name|f
 argument_list|,
 name|r
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|badaddr
-argument_list|(
-call|(
-name|caddr_t
-call|)
-argument_list|(
-name|sc
-operator|->
-name|cfg_base
-operator|+
-name|off
-argument_list|)
 argument_list|,
-literal|2
+name|WORD
 argument_list|)
-condition|)
-return|return
-operator|~
-literal|0
-return|;
-return|return
-name|SPARSE_READ_WORD
-argument_list|(
-name|sc
-operator|->
-name|cfg_base
-argument_list|,
-name|off
-argument_list|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
@@ -864,20 +878,7 @@ name|u_int
 name|r
 parameter_list|)
 block|{
-name|struct
-name|dwlpx_softc
-modifier|*
-name|sc
-init|=
-name|DWLPX_SOFTC
-argument_list|(
-name|dwlpx0
-argument_list|)
-decl_stmt|;
-name|vm_offset_t
-name|off
-init|=
-name|DWLPX_CFGOFF
+name|CFGREAD
 argument_list|(
 name|b
 argument_list|,
@@ -886,40 +887,10 @@ argument_list|,
 name|f
 argument_list|,
 name|r
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|badaddr
-argument_list|(
-call|(
-name|caddr_t
-call|)
-argument_list|(
-name|sc
-operator|->
-name|cfg_base
-operator|+
-name|off
-argument_list|)
 argument_list|,
-literal|4
+name|LONG
 argument_list|)
-condition|)
-return|return
-operator|~
-literal|0
-return|;
-return|return
-name|SPARSE_READ_LONG
-argument_list|(
-name|sc
-operator|->
-name|cfg_base
-argument_list|,
-name|off
-argument_list|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
@@ -944,20 +915,7 @@ name|u_int8_t
 name|data
 parameter_list|)
 block|{
-name|struct
-name|dwlpx_softc
-modifier|*
-name|sc
-init|=
-name|DWLPX_SOFTC
-argument_list|(
-name|dwlpx0
-argument_list|)
-decl_stmt|;
-name|vm_offset_t
-name|off
-init|=
-name|DWLPX_CFGOFF
+name|CFGWRITE
 argument_list|(
 name|b
 argument_list|,
@@ -966,36 +924,10 @@ argument_list|,
 name|f
 argument_list|,
 name|r
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|badaddr
-argument_list|(
-call|(
-name|caddr_t
-call|)
-argument_list|(
-name|sc
-operator|->
-name|cfg_base
-operator|+
-name|off
-argument_list|)
-argument_list|,
-literal|1
-argument_list|)
-condition|)
-return|return;
-name|SPARSE_WRITE_BYTE
-argument_list|(
-name|sc
-operator|->
-name|cfg_base
-argument_list|,
-name|off
 argument_list|,
 name|data
+argument_list|,
+name|BYTE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1022,20 +954,7 @@ name|u_int16_t
 name|data
 parameter_list|)
 block|{
-name|struct
-name|dwlpx_softc
-modifier|*
-name|sc
-init|=
-name|DWLPX_SOFTC
-argument_list|(
-name|dwlpx0
-argument_list|)
-decl_stmt|;
-name|vm_offset_t
-name|off
-init|=
-name|DWLPX_CFGOFF
+name|CFGWRITE
 argument_list|(
 name|b
 argument_list|,
@@ -1044,36 +963,10 @@ argument_list|,
 name|f
 argument_list|,
 name|r
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|badaddr
-argument_list|(
-call|(
-name|caddr_t
-call|)
-argument_list|(
-name|sc
-operator|->
-name|cfg_base
-operator|+
-name|off
-argument_list|)
-argument_list|,
-literal|2
-argument_list|)
-condition|)
-return|return;
-name|SPARSE_WRITE_WORD
-argument_list|(
-name|sc
-operator|->
-name|cfg_base
-argument_list|,
-name|off
 argument_list|,
 name|data
+argument_list|,
+name|WORD
 argument_list|)
 expr_stmt|;
 block|}
@@ -1100,20 +993,7 @@ name|u_int32_t
 name|data
 parameter_list|)
 block|{
-name|struct
-name|dwlpx_softc
-modifier|*
-name|sc
-init|=
-name|DWLPX_SOFTC
-argument_list|(
-name|dwlpx0
-argument_list|)
-decl_stmt|;
-name|vm_offset_t
-name|off
-init|=
-name|DWLPX_CFGOFF
+name|CFGWRITE
 argument_list|(
 name|b
 argument_list|,
@@ -1122,36 +1002,10 @@ argument_list|,
 name|f
 argument_list|,
 name|r
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|badaddr
-argument_list|(
-call|(
-name|caddr_t
-call|)
-argument_list|(
-name|sc
-operator|->
-name|cfg_base
-operator|+
-name|off
-argument_list|)
-argument_list|,
-literal|4
-argument_list|)
-condition|)
-return|return;
-name|SPARSE_WRITE_LONG
-argument_list|(
-name|sc
-operator|->
-name|cfg_base
-argument_list|,
-name|off
 argument_list|,
 name|data
+argument_list|,
+name|LONG
 argument_list|)
 expr_stmt|;
 block|}
