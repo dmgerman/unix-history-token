@@ -33,13 +33,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/*static char sccsid[] = "from: @(#)csfix.c	6.3 (Berkeley) 4/17/91";*/
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)csfix.c	6.3 (Berkeley) 4/17/91"
+literal|"csfix.c,v 1.2 1993/08/01 18:23:36 mycroft Exp"
 decl_stmt|;
 end_decl_stmt
 
