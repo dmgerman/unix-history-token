@@ -1,29 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  * 		@(#)qdreg.h	1.4  Berkeley  %G%  */
-end_comment
-
-begin_comment
-comment|/* derived from: @(#)qdreg.h	6.1	(ULTRIX)	11/24/87       */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  * 		@(#)qdreg.h	1.5  Berkeley  %G%  */
 end_comment
 
 begin_comment
 comment|/************************************************************************  *									*  *			Copyright (c) 1985, 1986 by			*  *		Digital Equipment Corporation, Maynard, MA		*  *			All rights reserved.				*  *									*  *   This software is furnished under a license and may be used and	*  *   copied  only  in accordance with the terms of such license and	*  *   with the  inclusion  of  the  above  copyright  notice.   This	*  *   software  or  any	other copies thereof may not be provided or	*  *   otherwise made available to any other person.  No title to and	*  *   ownership of the software is hereby transferred.			*  *									*  *   The information in this software is subject to change  without	*  *   notice  and should not be construed as a commitment by Digital	*  *   Equipment Corporation.						*  *									*  *   Digital assumes no responsibility for the use  or	reliability	*  *   of its software on equipment which is not supplied by Digital.	*  *									*  ************************************************************************/
-end_comment
-
-begin_comment
-comment|/*  * qdreg.h  *  * Modification history  *  * QDSS registers/data structures and definitions  *  *  4-Feb-85 - longo  *  *	Created file.  *  * 18-Mar-85 - longo  *  *	Added DGA CSR bit definitions.  *  * 20-Mar-85 - longo  *  *	Revised register naming conventions.  *  * 28-Mar-85 - longo  *  *	Added DUART register struct.  *  * 19-Apr-85 - longo  *  *	Removed "base" entry from 'struct qdmap'.  *  *  1-May-85 - longo  *  *	Changed layout of DUART device map data structure and  *	added command/intrpt/status bit definitions.  *  *  4-Jun-85 - longo  *  *	Added bit definitions for ADDER registers.  *  * 10-Sep-85 - longo  *  *	Changed dga struct DMA address entry names.  *  * 25-Sep-85 - longo  *  *	Changed ADDER status bit constant.  *  * 20-May-86 - ricky palmer  *  *	Added new DEVIOCGET ioctl request code. V2.0  *  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEV_SIZE
-value|8
-end_define
-
-begin_comment
-comment|/*XXX*/
 end_comment
 
 begin_comment
@@ -1492,41 +1473,6 @@ directive|define
 name|resetbits
 value|stpctr
 comment|/* output bits reset cmd (write) */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* Driver and data specific structure */
-end_comment
-
-begin_struct
-struct|struct
-name|qd_softc
-block|{
-name|long
-name|sc_flags
-decl_stmt|;
-comment|/* Flags			*/
-name|long
-name|sc_category_flags
-decl_stmt|;
-comment|/* Category flags		*/
-name|u_long
-name|sc_softcnt
-decl_stmt|;
-comment|/* Soft error count total	*/
-name|u_long
-name|sc_hardcnt
-decl_stmt|;
-comment|/* Hard error count total	*/
-name|char
-name|sc_device
-index|[
-name|DEV_SIZE
-index|]
-decl_stmt|;
-comment|/* Device type string		*/
 block|}
 struct|;
 end_struct

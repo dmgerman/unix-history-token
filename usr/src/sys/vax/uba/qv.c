@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  * 		@(#)qv.c	1.6  Berkeley  %G%  *  *	derived from: @(#)qv.c	1.8 (ULTRIX) 8/21/85  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  * 		@(#)qv.c	1.7  Berkeley  %G%  *  *	derived from: @(#)qv.c	1.8 (ULTRIX) 8/21/85  */
 end_comment
 
 begin_comment
@@ -912,12 +912,6 @@ end_define
 
 begin_decl_stmt
 name|int
-name|qv_events
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|qv_ipl_lo
 init|=
 literal|1
@@ -944,7 +938,7 @@ begin_decl_stmt
 name|struct
 name|proc
 modifier|*
-name|rsel
+name|qvrsel
 decl_stmt|;
 end_decl_stmt
 
@@ -971,26 +965,26 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|u_short
 name|q_key
 index|[]
 decl_stmt|,
 name|q_shift_key
 index|[]
 decl_stmt|,
-modifier|*
-name|q_special
-index|[]
-decl_stmt|,
-name|q_font
+name|q_cursor
 index|[]
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|short
-name|q_cursor
+name|char
+modifier|*
+name|q_special
+index|[]
+decl_stmt|,
+name|q_font
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -1066,6 +1060,16 @@ expr_stmt|;
 name|br
 operator|=
 name|cvec
+expr_stmt|;
+name|qvkint
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|qvvint
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -1283,6 +1287,9 @@ name|ui_unit
 operator|!=
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|qv_setup
 argument_list|(
 operator|(
@@ -2054,7 +2061,7 @@ literal|1
 operator|)
 return|;
 block|}
-name|rsel
+name|qvrsel
 operator|=
 name|u
 operator|.
@@ -2070,9 +2077,7 @@ operator|(
 literal|0
 operator|)
 return|;
-case|case
-name|FWRITE
-case|:
+default|default:
 comment|/* can never write */
 name|splx
 argument_list|(
@@ -2081,11 +2086,17 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EACCES
+literal|0
 operator|)
 return|;
 block|}
 else|else
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ttselect
@@ -2096,6 +2107,8 @@ name|rw
 argument_list|)
 operator|)
 return|;
+block|}
+comment|/*NOTREACHED*/
 block|}
 end_block
 
@@ -2138,13 +2151,6 @@ decl_stmt|;
 specifier|register
 name|int
 name|i
-decl_stmt|,
-name|j
-decl_stmt|;
-name|int
-name|k
-decl_stmt|,
-name|l
 decl_stmt|;
 name|ui
 operator|=
@@ -2561,17 +2567,17 @@ name|i
 expr_stmt|;
 if|if
 condition|(
-name|rsel
+name|qvrsel
 condition|)
 block|{
 name|selwakeup
 argument_list|(
-name|rsel
+name|qvrsel
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|rsel
+name|qvrsel
 operator|=
 literal|0
 expr_stmt|;
@@ -2666,6 +2672,9 @@ case|:
 comment|/* return screen info */
 name|bcopy
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|qp
 argument_list|,
 name|data
@@ -3267,6 +3276,9 @@ operator|--
 name|qv_ipl_lo
 condition|)
 return|return;
+operator|(
+name|void
+operator|)
 name|spl4
 argument_list|()
 expr_stmt|;
@@ -4068,7 +4080,7 @@ block|}
 comment|/* if we have proc waiting, and event has happened, wake him up */
 if|if
 condition|(
-name|rsel
+name|qvrsel
 operator|&&
 operator|(
 name|qp
@@ -4083,12 +4095,12 @@ condition|)
 block|{
 name|selwakeup
 argument_list|(
-name|rsel
+name|qvrsel
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|rsel
+name|qvrsel
 operator|=
 literal|0
 expr_stmt|;
@@ -5199,10 +5211,16 @@ block|}
 comment|/* 	 * Save the first 15 scanlines so that we can put them at 	 * the bottom when done. 	 */
 name|bcopy
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|qp
 operator|->
 name|scanmap
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|tmpscanlines
 argument_list|,
 sizeof|sizeof
@@ -5241,12 +5259,20 @@ expr_stmt|;
 comment|/* 	 * Now move the scanlines down  	 */
 name|bcopy
 argument_list|(
+call|(
+name|caddr_t
+call|)
+argument_list|(
 name|qp
 operator|->
 name|scanmap
 operator|+
 literal|15
+argument_list|)
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|qp
 operator|->
 name|scanmap
@@ -5268,8 +5294,15 @@ expr_stmt|;
 comment|/* 	 * Now put the other lines back 	 */
 name|bcopy
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|tmpscanlines
 argument_list|,
+call|(
+name|caddr_t
+call|)
+argument_list|(
 name|qp
 operator|->
 name|scanmap
@@ -5281,9 +5314,12 @@ name|row
 operator|*
 literal|15
 operator|)
+argument_list|)
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|tmpscanlines
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5301,7 +5337,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|char
+name|u_short
 name|c
 decl_stmt|;
 end_decl_stmt
@@ -5422,7 +5458,9 @@ name|v_putc
 operator|!=
 name|cnputc
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 end_if
 
 begin_comment
@@ -5457,7 +5495,9 @@ name|pcpu
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 end_if
 
 begin_comment
@@ -5562,6 +5602,9 @@ if|if
 condition|(
 name|badaddr
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|qvaddr
 argument_list|,
 sizeof|sizeof
@@ -5570,14 +5613,19 @@ name|short
 argument_list|)
 argument_list|)
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 end_if
 
 begin_comment
 comment|/*          * Okay the device is there lets set it up          */
 end_comment
 
-begin_expr_stmt
+begin_if
+if|if
+condition|(
+operator|!
 name|qv_setup
 argument_list|(
 name|qvaddr
@@ -5586,8 +5634,11 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+condition|)
+return|return
+literal|0
+return|;
+end_if
 
 begin_expr_stmt
 name|v_putc
@@ -5606,6 +5657,12 @@ name|QVSSMAJOR
 index|]
 expr_stmt|;
 end_expr_stmt
+
+begin_return
+return|return
+literal|1
+return|;
+end_return
 
 begin_comment
 unit|}
@@ -5981,6 +6038,9 @@ name|qv_csr
 operator||=
 name|QV_VIDEO_ENA
 expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 end_block
 
