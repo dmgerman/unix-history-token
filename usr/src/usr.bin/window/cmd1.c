@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd1.c	3.23 84/04/08"
+literal|"@(#)cmd1.c	3.24 84/04/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -203,7 +203,7 @@ name|terse
 condition|)
 name|wwputs
 argument_list|(
-literal|"\r\nLower right corner: "
+literal|"\nLower right corner: "
 argument_list|,
 name|cmdwin
 argument_list|)
@@ -339,9 +339,9 @@ condition|(
 operator|!
 name|terse
 condition|)
-name|wwputs
+name|wwputc
 argument_list|(
-literal|"\r\n"
+literal|'\n'
 argument_list|,
 name|cmdwin
 argument_list|)
@@ -655,7 +655,7 @@ name|terse
 operator|)
 name|wwputs
 argument_list|(
-literal|"\r\nCancelled.  "
+literal|"\nCancelled.  "
 argument_list|,
 name|cmdwin
 argument_list|)
@@ -677,7 +677,7 @@ name|terse
 condition|)
 name|wwputs
 argument_list|(
-literal|"\r\nType [hjklHJKL] to move, return to enter position, escape to cancel."
+literal|"\nType [hjklHJKL] to move, return to enter position, escape to cancel."
 argument_list|,
 name|cmdwin
 argument_list|)

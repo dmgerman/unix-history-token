@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	3.21 84/04/08"
+literal|"@(#)main.c	3.22 84/04/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -465,6 +465,12 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|cmdwin
+operator|->
+name|ww_mapnl
+operator|=
+literal|1
+expr_stmt|;
 name|cmdwin
 operator|->
 name|ww_nointr

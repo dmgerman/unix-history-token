@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd.c	3.27 84/04/08"
+literal|"@(#)cmd.c	3.28 84/04/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,9 +77,9 @@ condition|(
 operator|!
 name|terse
 condition|)
-name|wwputs
+name|wwputc
 argument_list|(
-literal|"\r\n"
+literal|'\n'
 argument_list|,
 name|cmdwin
 argument_list|)
@@ -946,9 +946,9 @@ condition|(
 operator|!
 name|terse
 condition|)
-name|wwputs
+name|wwputc
 argument_list|(
-literal|"\r\n"
+literal|'\n'
 argument_list|,
 name|cmdwin
 argument_list|)
