@@ -112,14 +112,14 @@ comment|/*  * Common CPU frequency glue code.  Drivers for specific hardware can
 end_comment
 
 begin_comment
-comment|/*  * Number of levels we can handle.  Levels are synthesized from settings  * so for N settings there may be N^2 levels.  */
+comment|/*  * Number of levels we can handle.  Levels are synthesized from settings  * so for M settings and N drivers, there may be M*N levels.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|CF_MAX_LEVELS
-value|32
+value|64
 end_define
 
 begin_struct
@@ -1426,9 +1426,22 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+if|if
+condition|(
+name|error
+operator|==
+name|E2BIG
+condition|)
+name|printf
+argument_list|(
+literal|"cpufreq: need to increase CF_MAX_LEVELS\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 name|error
 operator|=
 name|device_get_children
@@ -3198,7 +3211,20 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+if|if
+condition|(
+name|error
+operator|==
+name|E2BIG
+condition|)
+name|printf
+argument_list|(
+literal|"cpufreq: need to increase CF_MAX_LEVELS\n"
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 for|for
 control|(
 name|i
@@ -3400,9 +3426,22 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+if|if
+condition|(
+name|error
+operator|==
+name|E2BIG
+condition|)
+name|printf
+argument_list|(
+literal|"cpufreq: need to increase CF_MAX_LEVELS\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 if|if
 condition|(
 name|count
