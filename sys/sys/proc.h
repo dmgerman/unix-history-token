@@ -362,7 +362,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*-  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(CPU)" below,  * which might be addressable only on a processor on which the process  * is running.  *  * Below is a key of locks used to protect each member of struct proc.  The  * lock is indicated by a reference to a specific character in parens in the  * associated comment.  *      * - not yet protected  *      a - only touched by curproc or parent during fork/wait  *      b - created at fork, never changes  *		(exception aiods switch vmspaces, but they are also  *		marked 'P_SYSTEM' so hopefully it will be left alone)  *      c - locked by proc mtx  *      d - locked by allproc_lock lock  *      e - locked by proctree_lock lock  *      f - session mtx  *      g - process group mtx  *      h - callout_lock mtx  *      i - by curproc or the master session mtx  *      j - locked by sched_lock mtx  *      k - only accessed by curthread  *      l - the attaching proc or attaching proc parent  *      m - Giant  *      n - not locked, lazy  *      o - ktrace lock  *      p - select lock (sellock)  *      r - p_peers lock  *  * If the locking key specifies two identifiers (for example, p_pptr) then  * either lock is sufficient for read access, but both locks must be held  * for write access.  */
+comment|/*-  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(CPU)" below,  * which might be addressable only on a processor on which the process  * is running.  *  * Below is a key of locks used to protect each member of struct proc.  The  * lock is indicated by a reference to a specific character in parens in the  * associated comment.  *      * - not yet protected  *      a - only touched by curproc or parent during fork/wait  *      b - created at fork, never changes  *		(exception aiods switch vmspaces, but they are also  *		marked 'P_SYSTEM' so hopefully it will be left alone)  *      c - locked by proc mtx  *      d - locked by allproc_lock lock  *      e - locked by proctree_lock lock  *      f - session mtx  *      g - process group mtx  *      h - callout_lock mtx  *      i - by curproc or the master session mtx  *      j - locked by sched_lock mtx  *      k - only accessed by curthread  *      l - the attaching proc or attaching proc parent  *      m - Giant  *      n - not locked, lazy  *      o - ktrace lock  *      p - select lock (sellock)  *      r - p_peers lock  *      z - zombie threads/kse/ksegroup lock  *  * If the locking key specifies two identifiers (for example, p_pptr) then  * either lock is sufficient for read access, but both locks must be held  * for write access.  */
 end_comment
 
 begin_struct_decl
@@ -464,27 +464,27 @@ name|proc
 modifier|*
 name|td_proc
 decl_stmt|;
-comment|/* Associated process. */
+comment|/* (*) Associated process. */
 name|struct
 name|ksegrp
 modifier|*
 name|td_ksegrp
 decl_stmt|;
-comment|/* Associated KSEG. */
+comment|/* (*) Associated KSEG. */
 name|TAILQ_ENTRY
 argument_list|(
 argument|thread
 argument_list|)
 name|td_plist
 expr_stmt|;
-comment|/* All threads in this proc */
+comment|/* (*) All threads in this proc */
 name|TAILQ_ENTRY
 argument_list|(
 argument|thread
 argument_list|)
 name|td_kglist
 expr_stmt|;
-comment|/* All threads in this ksegrp */
+comment|/* (*) All threads in this ksegrp */
 comment|/* The two queues below should someday be merged */
 name|TAILQ_ENTRY
 argument_list|(
@@ -506,7 +506,7 @@ argument|thread
 argument_list|)
 name|td_runq
 expr_stmt|;
-comment|/* (j) Run queue(s). XXXKSE */
+comment|/* (j/z) Run queue(s). XXXKSE */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -616,7 +616,7 @@ name|kse_thr_mailbox
 modifier|*
 name|td_mailbox
 decl_stmt|;
-comment|/* The userland mailbox address */
+comment|/* (*) Userland mailbox address */
 name|struct
 name|ucred
 modifier|*
@@ -638,17 +638,17 @@ name|thread
 modifier|*
 name|td_standin
 decl_stmt|;
-comment|/* (?) Use this for an upcall */
+comment|/* (*) Use this for an upcall */
 name|u_int
 name|td_prticks
 decl_stmt|;
-comment|/* (?) Profclock hits in sys for user */
+comment|/* (*) Profclock hits in sys for user */
 name|struct
 name|kse_upcall
 modifier|*
 name|td_upcall
 decl_stmt|;
-comment|/* our upcall structure. */
+comment|/* (*) Upcall structure. */
 name|u_int64_t
 name|td_sticks
 decl_stmt|;
@@ -656,11 +656,11 @@ comment|/* (j) Statclock hits in system mode. */
 name|u_int
 name|td_uuticks
 decl_stmt|;
-comment|/* Statclock hits in user, for UTS */
+comment|/* (*) Statclock hits in user, for UTS */
 name|u_int
 name|td_usticks
 decl_stmt|;
-comment|/* Statclock hits in kernel, for UTS */
+comment|/* (*) Statclock hits in kernel, for UTS */
 name|u_int
 name|td_critnest
 decl_stmt|;
@@ -668,7 +668,7 @@ comment|/* (k) Critical section nest level. */
 name|sigset_t
 name|td_oldsigmask
 decl_stmt|;
-comment|/* (c) Saved mask from pre sigpause. */
+comment|/* (k) Saved mask from pre sigpause. */
 name|sigset_t
 name|td_sigmask
 decl_stmt|;
@@ -684,14 +684,14 @@ argument|thread
 argument_list|)
 name|td_umtxq
 expr_stmt|;
-comment|/* (p) List of threads blocked by us. */
+comment|/* (c?) List of threads blocked by us. */
 name|STAILQ_ENTRY
 argument_list|(
 argument|thread
 argument_list|)
 name|td_umtx
 expr_stmt|;
-comment|/* (p) Link for when we're blocked. */
+comment|/* (c?) Link for when we're blocked. */
 define|#
 directive|define
 name|td_endzero
@@ -763,11 +763,11 @@ comment|/* (a) Kstack object. */
 name|vm_offset_t
 name|td_kstack
 decl_stmt|;
-comment|/* Kernel VA of kstack. */
+comment|/* (a) Kernel VA of kstack. */
 name|int
 name|td_kstack_pages
 decl_stmt|;
-comment|/* Size of the kstack */
+comment|/* (a) Size of the kstack */
 name|struct
 name|vm_object
 modifier|*
@@ -777,11 +777,11 @@ comment|/* (a) Alternate kstack object. */
 name|vm_offset_t
 name|td_altkstack
 decl_stmt|;
-comment|/* Kernel VA of alternate kstack. */
+comment|/* (a) Kernel VA of alternate kstack. */
 name|int
 name|td_altkstack_pages
 decl_stmt|;
-comment|/* Size of the alternate kstack */
+comment|/* (a) Size of the alternate kstack */
 name|struct
 name|mdthread
 name|td_md
@@ -792,7 +792,7 @@ name|td_sched
 modifier|*
 name|td_sched
 decl_stmt|;
-comment|/* Scheduler specific data */
+comment|/* (*) Scheduler specific data */
 block|}
 struct|;
 end_struct
@@ -1362,34 +1362,34 @@ name|proc
 modifier|*
 name|ke_proc
 decl_stmt|;
-comment|/* Associated process. */
+comment|/* (*) Associated process. */
 name|struct
 name|ksegrp
 modifier|*
 name|ke_ksegrp
 decl_stmt|;
-comment|/* Associated KSEG. */
+comment|/* (*) Associated KSEG. */
 name|TAILQ_ENTRY
 argument_list|(
 argument|kse
 argument_list|)
 name|ke_kglist
 expr_stmt|;
-comment|/* Queue of all KSEs in ke_ksegrp. */
+comment|/* (*) Queue of KSEs in ke_ksegrp. */
 name|TAILQ_ENTRY
 argument_list|(
 argument|kse
 argument_list|)
 name|ke_kgrlist
 expr_stmt|;
-comment|/* Queue of all KSEs in this state. */
+comment|/* (*) Queue of KSEs in this state. */
 name|TAILQ_ENTRY
 argument_list|(
 argument|kse
 argument_list|)
 name|ke_procq
 expr_stmt|;
-comment|/* (j) Run queue. */
+comment|/* (j/z) Run queue. */
 define|#
 directive|define
 name|ke_startzero
@@ -1403,7 +1403,7 @@ name|thread
 modifier|*
 name|ke_thread
 decl_stmt|;
-comment|/* Active associated thread. */
+comment|/* (*) Active associated thread. */
 name|fixpt_t
 name|ke_pctcpu
 decl_stmt|;
@@ -1434,7 +1434,7 @@ comment|/* slaved to thread state */
 block|}
 name|ke_state
 enum|;
-comment|/* (j) S* process status. */
+comment|/* (j) KSE status. */
 define|#
 directive|define
 name|ke_endzero
@@ -1447,7 +1447,7 @@ name|ke_sched
 modifier|*
 name|ke_sched
 decl_stmt|;
-comment|/* Scheduler specific data */
+comment|/* (*) Scheduler specific data */
 block|}
 struct|;
 end_struct
@@ -1568,14 +1568,14 @@ name|proc
 modifier|*
 name|kg_proc
 decl_stmt|;
-comment|/* Process that contains this KSEG. */
+comment|/* (*) Process that contains this KSEG. */
 name|TAILQ_ENTRY
 argument_list|(
 argument|ksegrp
 argument_list|)
 name|kg_ksegrp
 expr_stmt|;
-comment|/* Queue of KSEGs in kg_proc. */
+comment|/* (*) Queue of KSEGs in kg_proc. */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -1631,7 +1631,7 @@ value|kg_estcpu
 name|u_int
 name|kg_estcpu
 decl_stmt|;
-comment|/* Sum of the same field in KSEs. */
+comment|/* (j) Sum of the same field in KSEs. */
 name|u_int
 name|kg_slptime
 decl_stmt|;
@@ -1641,7 +1641,7 @@ name|thread
 modifier|*
 name|kg_last_assigned
 decl_stmt|;
-comment|/* (j) Last thread assigned to a KSE */
+comment|/* (j) Last thread assigned to a KSE. */
 name|int
 name|kg_runnable
 decl_stmt|;
@@ -1667,15 +1667,15 @@ name|kse_thr_mailbox
 modifier|*
 name|kg_completed
 decl_stmt|;
-comment|/* (c) completed thread mboxes */
+comment|/* (c) Completed thread mboxes. */
 name|int
 name|kg_nextupcall
 decl_stmt|;
-comment|/* next upcall time */
+comment|/* (*) Next upcall time */
 name|int
 name|kg_upquantum
 decl_stmt|;
-comment|/* quantum to schedule an upcall */
+comment|/* (*) Quantum to schedule an upcall */
 define|#
 directive|define
 name|kg_endzero
@@ -1695,7 +1695,7 @@ comment|/* (j) User pri from estcpu and nice. */
 name|char
 name|kg_nice
 decl_stmt|;
-comment|/* (j?/k?) Process "nice" value. */
+comment|/* (c + j) Process "nice" value. */
 define|#
 directive|define
 name|kg_endcopy
@@ -1713,7 +1713,7 @@ name|kg_sched
 modifier|*
 name|kg_sched
 decl_stmt|;
-comment|/* Scheduler specific data */
+comment|/* (*) Scheduler specific data */
 block|}
 struct|;
 end_struct
@@ -1756,7 +1756,7 @@ argument|thread
 argument_list|)
 name|p_suspended
 expr_stmt|;
-comment|/* (td_runq) suspended threads */
+comment|/* (td_runq) Suspended threads. */
 name|struct
 name|ucred
 modifier|*
@@ -1781,7 +1781,7 @@ name|plimit
 modifier|*
 name|p_limit
 decl_stmt|;
-comment|/* (m) Process limits. */
+comment|/* (c*) Process limits. */
 name|struct
 name|vm_object
 modifier|*
@@ -1818,7 +1818,7 @@ name|PRS_ZOMBIE
 block|}
 name|p_state
 enum|;
-comment|/* (j) S* process status. */
+comment|/* (j/c) S* process status. */
 name|pid_t
 name|p_pid
 decl_stmt|;
@@ -1862,7 +1862,7 @@ name|struct
 name|mtx
 name|p_mtx
 decl_stmt|;
-comment|/* (k) Lock for this struct. */
+comment|/* (n) Lock for this struct. */
 comment|/* The following fields are all zeroed upon creation in fork. */
 define|#
 directive|define
@@ -2002,17 +2002,17 @@ name|void
 modifier|*
 name|p_aioinfo
 decl_stmt|;
-comment|/* (c) ASYNC I/O info. */
+comment|/* (?) ASYNC I/O info. */
 name|struct
 name|thread
 modifier|*
 name|p_singlethread
 decl_stmt|;
-comment|/* (j) If single threading this is it */
+comment|/* (c + j) If single threading this is it */
 name|int
 name|p_suspcount
 decl_stmt|;
-comment|/* (j) # threads in suspended mode */
+comment|/* (c) # threads in suspended mode */
 comment|/* End area that is zeroed on creation. */
 define|#
 directive|define
@@ -2074,7 +2074,7 @@ comment|/* (c) Exit status; also stop sig. */
 name|int
 name|p_numthreads
 decl_stmt|;
-comment|/* (?) number of threads */
+comment|/* (j) Number of threads. */
 name|int
 name|p_numksegrps
 decl_stmt|;
@@ -2083,12 +2083,12 @@ name|struct
 name|mdproc
 name|p_md
 decl_stmt|;
-comment|/* (c) Any machine-dependent fields. */
+comment|/* Any machine-dependent fields. */
 name|struct
 name|callout
 name|p_itcallout
 decl_stmt|;
-comment|/* (h) Interval timer callout. */
+comment|/* (h + c) Interval timer callout. */
 name|struct
 name|user
 modifier|*
@@ -2126,13 +2126,13 @@ name|struct
 name|label
 name|p_label
 decl_stmt|;
-comment|/* process (not subject) MAC label */
+comment|/* (*) Process (not subject) MAC label */
 name|struct
 name|p_sched
 modifier|*
 name|p_sched
 decl_stmt|;
-comment|/* Scheduler specific data */
+comment|/* (*) Scheduler specific data */
 block|}
 struct|;
 end_struct
