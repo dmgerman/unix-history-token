@@ -11,7 +11,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)pass2.c	3.3 (Berkeley) %G%"
+literal|"@(#)pass2.c	3.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -152,21 +152,17 @@ literal|"FIX"
 argument_list|)
 operator|==
 literal|0
-operator|||
-operator|(
+condition|)
+name|errexit
+argument_list|(
+literal|""
+argument_list|)
+expr_stmt|;
 name|dp
 operator|=
 name|ginode
 argument_list|(
 name|ROOTINO
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-name|errexit
-argument_list|(
-literal|""
 argument_list|)
 expr_stmt|;
 name|dp
@@ -1225,9 +1221,6 @@ operator|==
 literal|1
 condition|)
 break|break;
-if|if
-condition|(
-operator|(
 name|dp
 operator|=
 name|ginode
@@ -1236,11 +1229,7 @@ name|dirp
 operator|->
 name|d_ino
 argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-break|break;
+expr_stmt|;
 name|statemap
 index|[
 name|dirp

@@ -11,7 +11,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)pass1.c	3.3 (Berkeley) %G%"
+literal|"@(#)pass1.c	3.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -265,20 +265,13 @@ operator|<
 name|ROOTINO
 condition|)
 continue|continue;
-if|if
-condition|(
-operator|(
 name|dp
 operator|=
 name|ginode
 argument_list|(
 name|inumber
 argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-continue|continue;
+expr_stmt|;
 if|if
 condition|(
 operator|!

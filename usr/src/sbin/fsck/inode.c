@@ -11,7 +11,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)inode.c	3.3 (Berkeley) %G%"
+literal|"@(#)inode.c	3.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -898,28 +898,13 @@ name|inumber
 operator|>
 name|imax
 condition|)
-block|{
-if|if
-condition|(
-name|debug
-operator|&&
-name|inumber
-operator|>
-name|imax
-condition|)
-name|printf
+name|errexit
 argument_list|(
-literal|"inumber out of range (%d)\n"
+literal|"bad inode number %d to ginode\n"
 argument_list|,
 name|inumber
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
 if|if
 condition|(
 name|startinum
@@ -1052,9 +1037,6 @@ name|DINODE
 modifier|*
 name|dp
 decl_stmt|;
-if|if
-condition|(
-operator|(
 name|dp
 operator|=
 name|ginode
@@ -1063,11 +1045,7 @@ name|idesc
 operator|->
 name|id_number
 argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-return|return;
+expr_stmt|;
 if|if
 condition|(
 name|flg
@@ -1289,18 +1267,22 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|ino
+operator|<
+name|ROOTINO
+operator|||
+name|ino
+operator|>
+name|imax
+condition|)
+return|return;
 name|dp
 operator|=
 name|ginode
 argument_list|(
 name|ino
 argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-return|return;
+expr_stmt|;
 name|printf
 argument_list|(
 literal|" OWNER="

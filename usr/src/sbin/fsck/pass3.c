@@ -11,7 +11,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)pass3.c	3.2 (Berkeley) %G%"
+literal|"@(#)pass3.c	3.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -168,18 +168,22 @@ name|id_parent
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|orphan
+operator|<
+name|ROOTINO
+operator|||
+name|orphan
+operator|>
+name|imax
+condition|)
+break|break;
 name|dp
 operator|=
 name|ginode
 argument_list|(
 name|orphan
 argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-break|break;
+expr_stmt|;
 name|idesc
 operator|.
 name|id_parent
