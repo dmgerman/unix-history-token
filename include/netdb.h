@@ -557,7 +557,8 @@ begin_define
 define|#
 directive|define
 name|AI_MASK
-value|(AI_PASSIVE | AI_CANONNAME | AI_NUMERICHOST)
+define|\
+value|(AI_PASSIVE | AI_CANONNAME | AI_NUMERICHOST | AI_ADDRCONFIG)
 end_define
 
 begin_define
