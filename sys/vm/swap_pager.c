@@ -486,6 +486,28 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|boolean_t
+name|swap_pager_haspage
+parameter_list|(
+name|vm_object_t
+name|object
+parameter_list|,
+name|vm_pindex_t
+name|pindex
+parameter_list|,
+name|int
+modifier|*
+name|before
+parameter_list|,
+name|int
+modifier|*
+name|after
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|swap_pager_init
 parameter_list|(
@@ -2022,6 +2044,7 @@ comment|/*  * SWAP_PAGER_HASPAGE() -	determine if we have good backing store for
 end_comment
 
 begin_function
+specifier|static
 name|boolean_t
 name|swap_pager_haspage
 parameter_list|(
