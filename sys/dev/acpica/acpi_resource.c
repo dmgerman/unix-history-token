@@ -2913,7 +2913,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"system resource"
+literal|"System Resource"
 argument_list|)
 expr_stmt|;
 else|else

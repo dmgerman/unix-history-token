@@ -1159,7 +1159,7 @@ argument_list|(
 name|desc
 argument_list|)
 argument_list|,
-literal|"embedded controller: ECDT, GPE %#x, GLK"
+literal|"Embedded Controller: ECDT, GPE %#x, GLK"
 argument_list|,
 name|DEV_GET_GPEBIT
 argument_list|(
@@ -1340,7 +1340,7 @@ argument_list|(
 name|desc
 argument_list|)
 argument_list|,
-literal|"embedded controller: GPE %#x%s"
+literal|"Embedded Controller: GPE %#x%s"
 argument_list|,
 name|gpebit
 argument_list|,

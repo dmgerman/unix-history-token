@@ -1428,7 +1428,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Control method Battery"
+literal|"Control Method Battery"
 argument_list|)
 expr_stmt|;
 return|return

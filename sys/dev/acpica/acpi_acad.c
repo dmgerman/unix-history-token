@@ -523,7 +523,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"AC adapter"
+literal|"AC Adapter"
 argument_list|)
 expr_stmt|;
 return|return

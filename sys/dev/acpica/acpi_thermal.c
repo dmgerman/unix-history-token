@@ -664,7 +664,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"thermal zone"
+literal|"Thermal Zone"
 argument_list|)
 expr_stmt|;
 name|result
