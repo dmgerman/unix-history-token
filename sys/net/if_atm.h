@@ -817,21 +817,6 @@ comment|/* XXX: could be 9188 with LLC/SNAP according 					to comer */
 end_comment
 
 begin_comment
-comment|/* user's ioctl hook for raw atm mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIOCRAWATM
-value|_IOWR('a', 122, int)
-end_define
-
-begin_comment
-comment|/* set driver's raw mode */
-end_comment
-
-begin_comment
 comment|/* atm_pseudoioctl: turns on and off RX VCIs  [for internal use only!] */
 end_comment
 

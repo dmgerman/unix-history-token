@@ -224,17 +224,6 @@ begin_comment
 comment|/* destory as soon as inq == 0 */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NPCB_RAW
-value|0x10
-end_define
-
-begin_comment
-comment|/* in 'raw' mode? */
-end_comment
-
 begin_comment
 comment|/* flag arg to npcb_free */
 end_comment
@@ -259,21 +248,6 @@ end_define
 
 begin_comment
 comment|/* destroy and be free */
-end_comment
-
-begin_comment
-comment|/*  * NPCB_RAWCC is a hack which applies to connections in 'raw' mode.   it   * is used to override the sbspace() macro when you *really* don't want   * to drop rcv data.   the recv socket buffer size is raised to this value.  *  * XXX: socket buffering needs to be looked at.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NPCB_RAWCC
-value|(1024*1024)
-end_define
-
-begin_comment
-comment|/* 1MB */
 end_comment
 
 begin_expr_stmt
@@ -354,33 +328,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* atm_rawioctl: kernel's version of SIOCRAWATM [for internal use only!] */
-end_comment
-
-begin_struct
-struct|struct
-name|atm_rawioctl
-block|{
-name|struct
-name|natmpcb
-modifier|*
-name|npcb
-decl_stmt|;
-name|int
-name|rawvalue
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|SIOCXRAWATM
-value|_IOWR('a', 125, struct atm_rawioctl)
-end_define
 
 begin_comment
 comment|/* external functions */
