@@ -625,6 +625,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rhost
+operator|!=
+name|NULL
 condition|)
 name|strncpy
 argument_list|(
@@ -917,6 +919,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rhost
+operator|!=
+name|NULL
 condition|)
 comment|/* note: does not need to be NUL-terminated */
 name|strncpy
