@@ -646,10 +646,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|dpt
-condition|)
 name|dpt_free
 argument_list|(
 name|dpt
