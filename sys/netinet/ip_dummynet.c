@@ -6425,9 +6425,6 @@ operator|&
 name|extract_heap
 argument_list|)
 expr_stmt|;
-name|DUMMYNET_UNLOCK
-argument_list|()
-expr_stmt|;
 comment|/*      * Now purge all queued pkts and delete all pipes      */
 comment|/* scan and purge all flow_sets. */
 for|for
@@ -6485,6 +6482,9 @@ name|M_DUMMYNET
 argument_list|)
 expr_stmt|;
 block|}
+name|DUMMYNET_UNLOCK
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
