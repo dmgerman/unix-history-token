@@ -925,8 +925,31 @@ if|if
 condition|(
 name|flags
 operator|&
-name|GLOB_QUOTE
+name|GLOB_NOESCAPE
 condition|)
+while|while
+condition|(
+name|bufnext
+operator|<
+name|bufend
+operator|&&
+operator|(
+name|c
+operator|=
+operator|*
+name|patnext
+operator|++
+operator|)
+operator|!=
+name|EOS
+condition|)
+operator|*
+name|bufnext
+operator|++
+operator|=
+name|c
+expr_stmt|;
+else|else
 block|{
 comment|/* Protect the quoted characters. */
 while|while
@@ -990,29 +1013,6 @@ operator|=
 name|c
 expr_stmt|;
 block|}
-else|else
-while|while
-condition|(
-name|bufnext
-operator|<
-name|bufend
-operator|&&
-operator|(
-name|c
-operator|=
-operator|*
-name|patnext
-operator|++
-operator|)
-operator|!=
-name|EOS
-condition|)
-operator|*
-name|bufnext
-operator|++
-operator|=
-name|c
-expr_stmt|;
 operator|*
 name|bufnext
 operator|=
@@ -1913,7 +1913,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The main glob() routine: compiles the pattern (optionally processing  * quotes), calls glob1() to do the real pattern matching, and finally  * sorts the list (unless unsorted operation is requested).  Returns 0  * if things went well, nonzero if errors occurred.  It is not an error  * to find no matches.  */
+comment|/*  * The main glob() routine: compiles the pattern (optionally processing  * quotes), calls glob1() to do the real pattern matching, and finally  * sorts the list (unless unsorted operation is requested).  Returns 0  * if things went well, nonzero if errors occurred.  */
 end_comment
 
 begin_function
@@ -2269,7 +2269,10 @@ operator|->
 name|gl_pathc
 operator|==
 name|oldpathc
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 operator|(
 name|pglob
@@ -2311,7 +2314,13 @@ name|limit
 argument_list|)
 operator|)
 return|;
-elseif|else
+else|else
+return|return
+operator|(
+name|GLOB_NOMATCH
+operator|)
+return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -2649,7 +2658,7 @@ name|pathend_last
 condition|)
 return|return
 operator|(
-literal|1
+name|GLOB_ABORTED
 operator|)
 return|;
 operator|*
@@ -2726,7 +2735,7 @@ name|pathend_last
 condition|)
 return|return
 operator|(
-literal|1
+name|GLOB_ABORTED
 operator|)
 return|;
 operator|*
@@ -2771,7 +2780,7 @@ name|pathend_last
 condition|)
 return|return
 operator|(
-literal|1
+name|GLOB_ABORTED
 operator|)
 return|;
 operator|*
@@ -2900,7 +2909,7 @@ name|pathend_last
 condition|)
 return|return
 operator|(
-literal|1
+name|GLOB_ABORTED
 operator|)
 return|;
 operator|*
@@ -2952,7 +2961,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|GLOB_ABEND
+name|GLOB_ABORTED
 operator|)
 return|;
 if|if
@@ -2974,7 +2983,7 @@ name|GLOB_ERR
 condition|)
 return|return
 operator|(
-name|GLOB_ABEND
+name|GLOB_ABORTED
 operator|)
 return|;
 block|}
