@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|4.10
+literal|4.11
 operator|%
 name|G
 operator|%
@@ -2517,7 +2517,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-specifier|static
 name|char
 name|pvpbuf
 index|[
@@ -2655,25 +2654,32 @@ operator|)
 return|;
 block|}
 comment|/* append it to the token list */
+for|for
+control|(
 name|avp
 operator|=
 operator|--
 name|hbrvp
-expr_stmt|;
-while|while
-condition|(
-operator|(
+init|;
+operator|*
+name|xpvp
+operator|!=
+name|NULL
+condition|;
+name|xpvp
+operator|++
+control|)
+block|{
 operator|*
 name|avp
 operator|++
 operator|=
+name|newstr
+argument_list|(
 operator|*
 name|xpvp
-operator|++
-operator|)
-operator|!=
-name|NULL
-condition|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|avp
@@ -2687,6 +2693,7 @@ condition|)
 goto|goto
 name|toolong
 goto|;
+block|}
 comment|/* restore the old trailing information */
 for|for
 control|(
@@ -2723,6 +2730,7 @@ condition|)
 goto|goto
 name|toolong
 goto|;
+break|break;
 block|}
 comment|/* 		**  Check for subroutine calls. 		*/
 comment|/* 		**  Do hostname lookup if requested. 		*/
