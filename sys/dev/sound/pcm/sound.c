@@ -2505,6 +2505,14 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
+name|chn_kill
+argument_list|(
+operator|&
+name|d
+operator|->
+name|fakechan
+argument_list|)
+expr_stmt|;
 name|fkchan_kill
 argument_list|(
 operator|&
