@@ -181,6 +181,28 @@ modifier|*
 name|cnt
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+comment|/* XXX Stubbed out, our vm system is differnet */
+name|_kvm_err
+argument_list|(
+name|kd
+argument_list|,
+name|kd
+operator|->
+name|program
+argument_list|,
+literal|"kvm_readswap not implemented"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+else|#
+directive|else
 specifier|register
 name|int
 name|ix
@@ -751,6 +773,9 @@ name|offset
 index|]
 operator|)
 return|;
+endif|#
+directive|endif
+comment|/* __FreeBSD__ */
 block|}
 end_function
 
