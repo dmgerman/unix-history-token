@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	systm.h	4.30	82/10/20	*/
+comment|/*	systm.h	4.31	82/10/31	*/
 end_comment
 
 begin_comment
@@ -250,6 +250,12 @@ begin_comment
 comment|/* device for argument lists */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -272,6 +278,11 @@ end_decl_stmt
 begin_comment
 comment|/* its size */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -420,18 +431,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|umbabeg
-decl_stmt|,
-name|umbaend
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* where sensitive vm begins/ends */
-end_comment
-
-begin_decl_stmt
-name|int
 name|noproc
 decl_stmt|;
 end_decl_stmt
@@ -439,16 +438,6 @@ end_decl_stmt
 begin_comment
 comment|/* no one is running just now */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|catcher
-index|[
-literal|256
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|char
