@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hunt.c	4.7 (Berkeley) %G%"
+literal|"@(#)hunt.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -195,6 +195,23 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|FD
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
+name|deadfl
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
