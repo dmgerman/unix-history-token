@@ -23,49 +23,123 @@ begin_comment
 comment|/* iommmu registers */
 end_comment
 
-begin_struct
-struct|struct
-name|iommureg
-block|{
-name|u_int64_t
-name|iommu_cr
-decl_stmt|;
+begin_define
+define|#
+directive|define
+name|IMR_CTL
+value|0x0000
+end_define
+
+begin_comment
 comment|/* IOMMU control register */
-name|u_int64_t
-name|iommu_tsb
-decl_stmt|;
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IMR_TSB
+value|0x0008
+end_define
+
+begin_comment
 comment|/* IOMMU TSB base register */
-name|u_int64_t
-name|iommu_flush
-decl_stmt|;
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IMR_FLUSH
+value|0x0010
+end_define
+
+begin_comment
 comment|/* IOMMU flush register */
-block|}
-struct|;
-end_struct
+end_comment
 
 begin_comment
 comment|/* streaming buffer registers */
 end_comment
 
-begin_struct
-struct|struct
-name|iommu_strbuf
-block|{
-name|u_int64_t
-name|strbuf_ctl
-decl_stmt|;
+begin_define
+define|#
+directive|define
+name|ISR_CTL
+value|0x0000
+end_define
+
+begin_comment
 comment|/* streaming buffer control reg */
-name|u_int64_t
-name|strbuf_pgflush
-decl_stmt|;
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISR_PGFLUSH
+value|0x0008
+end_define
+
+begin_comment
 comment|/* streaming buffer page flush */
-name|u_int64_t
-name|strbuf_flushsync
-decl_stmt|;
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISR_FLUSHSYNC
+value|0x0010
+end_define
+
+begin_comment
 comment|/* streaming buffer flush sync */
-block|}
-struct|;
-end_struct
+end_comment
+
+begin_comment
+comment|/* streaming buffer diagnostics registers. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISD_DATA_DIAG
+value|0x0000
+end_define
+
+begin_comment
+comment|/* streaming buffer data RAM diag 0..127 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISD_ERROR_DIAG
+value|0x0400
+end_define
+
+begin_comment
+comment|/* streaming buffer error status diag 0..127 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISD_PG_TAG_DIAG
+value|0x0800
+end_define
+
+begin_comment
+comment|/* streaming buffer page tag diag 0..15 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISD_LN_TAG_DIAG
+value|0x0900
+end_define
+
+begin_comment
+comment|/* streaming buffer line tag diag 0..15 */
+end_comment
 
 begin_comment
 comment|/* streaming buffer control register */
@@ -106,6 +180,13 @@ end_comment
 begin_comment
 comment|/* Nummber of entries in IOTSB */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IOMMUCR_TSBSZ_SHIFT
+value|16
+end_define
 
 begin_define
 define|#
@@ -307,6 +388,28 @@ value|0x0000000000000002UL
 end_define
 
 begin_comment
+comment|/* log2 of the IOMMU TTE size. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOTTE_SHIFT
+value|3
+end_define
+
+begin_comment
+comment|/*  * Number of bytes written by a stream buffer flushsync operation to indicate  * completion.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STRBUF_FLUSHSYNC_NBYTES
+value|64
+end_define
+
+begin_comment
 comment|/*  * On sun4u each bus controller has a separate IOMMU.  The IOMMU has   * a TSB which must be page aligned and physically contiguous.  Mappings  * can be of 8K IOMMU pages or 64K IOMMU pages.  We use 8K for compatibility  * with the CPU's MMU.  *  * On sysio, psycho, and psycho+, IOMMU TSBs using 8K pages can map the  * following size segments:  *  *	VA size		VA base		TSB size	tsbsize  *	--------	--------	---------	-------  *	8MB		ff800000	8K		0  *	16MB		ff000000	16K		1  *	32MB		fe000000	32K		2  *	64MB		fc000000	64K		3  *	128MB		f8000000	128K		4  *	256MB		f0000000	256K		5  *	512MB		e0000000	512K		6  *	1GB		c0000000	1MB		7  *  * Unfortunately, sabres on UltraSPARC IIi and IIe processors does not use  * this scheme to determine the IOVA base address.  Instead, bits 31-29 are  * used to check against the Target Address Space register in the IIi and  * the the IOMMU is used if they hit.  God knows what goes on in the IIe.  *  */
 end_comment
 
@@ -314,7 +417,7 @@ begin_define
 define|#
 directive|define
 name|IOTSB_VEND
-value|(~PAGE_MASK)
+value|(~IO_PAGE_MASK)
 end_define
 
 begin_define
@@ -354,7 +457,7 @@ parameter_list|,
 name|sz
 parameter_list|)
 define|\
-value|((u_int)(((vm_offset_t)(va)) - (is->is_dvmabase))>> PAGE_SHIFT)
+value|((u_int)(((vm_offset_t)(va)) - (is->is_dvmabase))>> IO_PAGE_SHIFT)
 end_define
 
 begin_endif
