@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.16 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	5.17 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.16 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	5.17 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -217,6 +217,10 @@ index|[
 name|MAXMXHOSTS
 index|]
 decl_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|n
 operator|=
 name|res_search
@@ -714,6 +718,25 @@ name|prefer
 index|[
 name|j
 index|]
+operator|||
+operator|(
+name|prefer
+index|[
+name|i
+index|]
+operator|==
+name|prefer
+index|[
+name|j
+index|]
+operator|&&
+name|rand
+argument_list|()
+operator|%
+literal|1
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 specifier|register
@@ -889,6 +912,35 @@ literal|0
 expr_stmt|;
 name|loop
 label|:
+comment|/* 	 * Use query type of ANY if possible (NO_WILDCARD_MX), which will 	 * find types CNAME, A, and MX, and will cause all existing records 	 * to be cached by our local server.  If there is (might be) a 	 * wildcard MX record in the local domain or its parents that are 	 * searched, we can't use ANY; it would cause fully-qualified names 	 * to match as names in a local domain. 	 */
+ifdef|#
+directive|ifdef
+name|NO_WILDCARD_MX
+name|n
+operator|=
+name|res_search
+argument_list|(
+name|host
+argument_list|,
+name|C_IN
+argument_list|,
+name|T_ANY
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|answer
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|answer
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|n
 operator|=
 name|res_search
@@ -912,6 +964,8 @@ name|answer
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|n
