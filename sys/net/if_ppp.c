@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: if_ppp.c,v 1.25 1995/10/31 20:24:08 peter Exp $ */
 end_comment
 
 begin_comment
@@ -2710,11 +2710,6 @@ operator|->
 name|if_unit
 index|]
 decl_stmt|;
-name|struct
-name|ppp_header
-modifier|*
-name|ph
-decl_stmt|;
 name|int
 name|protocol
 decl_stmt|,
@@ -3700,9 +3695,6 @@ modifier|*
 name|sc
 decl_stmt|;
 block|{
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -3721,10 +3713,6 @@ decl_stmt|,
 name|control
 decl_stmt|,
 name|protocol
-decl_stmt|;
-name|enum
-name|NPmode
-name|mode
 decl_stmt|;
 comment|/*      * Grab a packet to send: first try the fast queue, then the      * normal queue.      */
 name|IF_DEQUEUE

@@ -4,7 +4,7 @@ comment|/*  * ppp_tty.c - Point-to-Point Protocol (PPP) driver for asynchronous 
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: ppp_tty.c,v 1.2 1995/10/31 20:24:14 peter Exp $ */
 end_comment
 
 begin_comment
@@ -756,8 +756,6 @@ name|int
 name|error
 decl_stmt|,
 name|s
-decl_stmt|,
-name|i
 decl_stmt|;
 if|if
 condition|(
@@ -1096,11 +1094,6 @@ name|struct
 name|ppp_softc
 modifier|*
 name|sc
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|m
 decl_stmt|;
 name|int
 name|s
