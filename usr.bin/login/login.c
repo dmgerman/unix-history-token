@@ -1297,7 +1297,7 @@ comment|/* 			 * Do not allow user to type in kerberos password 			 * over the n
 if|if
 condition|(
 operator|!
-name|permit_password
+name|permit_passwd
 condition|)
 block|{
 name|rval
