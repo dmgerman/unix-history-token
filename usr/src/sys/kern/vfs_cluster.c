@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * This module is believed to contain source code proprietary to AT&T.  * Use and redistribution is subject to the Berkeley Software License  * Agreement and your Software Agreement with AT&T (Western Electric).  *  *	@(#)vfs_cluster.c	7.54 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * This module is believed to contain source code proprietary to AT&T.  * Use and redistribution is subject to the Berkeley Software License  * Agreement and your Software Agreement with AT&T (Western Electric).  *  *	@(#)vfs_cluster.c	7.55 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -76,12 +76,10 @@ end_define
 
 begin_decl_stmt
 name|struct
-name|buf
-modifier|*
+name|list_entry
 modifier|*
 name|bufhashtbl
 decl_stmt|,
-modifier|*
 name|invalhash
 decl_stmt|;
 end_decl_stmt
@@ -99,23 +97,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|bremhash
-parameter_list|(
-name|bp
-parameter_list|)
-value|{ \ 	struct buf *bq; \ 	if (bq = (bp)->b_forw) \ 		bq->b_back = (bp)->b_back; \ 	*(bp)->b_back = bq; \ }
-end_define
-
-begin_define
-define|#
-directive|define
 name|binshash
 parameter_list|(
 name|bp
 parameter_list|,
 name|dp
 parameter_list|)
-value|{ \ 	struct buf *bq; \ 	if (bq = *(dp)) \ 		bq->b_back =&(bp)->b_forw; \ 	(bp)->b_forw = bq; \ 	(bp)->b_back = (dp); \ 	*(dp) = (bp); \ }
+value|list_enter_head(dp, bp, struct buf *, b_hash)
+end_define
+
+begin_define
+define|#
+directive|define
+name|bremhash
+parameter_list|(
+name|bp
+parameter_list|)
+value|list_remove(bp, struct buf *, b_hash)
 end_define
 
 begin_comment
@@ -177,30 +175,15 @@ begin_comment
 comment|/* buffer headers with no memory */
 end_comment
 
-begin_struct
-struct|struct
-name|bufqueue
-block|{
+begin_decl_stmt
 name|struct
-name|buf
-modifier|*
-name|buffreehead
-decl_stmt|;
-comment|/* head of available list */
-name|struct
-name|buf
-modifier|*
-modifier|*
-name|buffreetail
-decl_stmt|;
-comment|/* tail of available list */
-block|}
+name|queue_entry
 name|bufqueues
 index|[
 name|BQUEUES
 index|]
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -211,6 +194,32 @@ end_decl_stmt
 begin_comment
 comment|/*  * Insq/Remq for the buffer free lists.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|binsheadfree
+parameter_list|(
+name|bp
+parameter_list|,
+name|dp
+parameter_list|)
+define|\
+value|queue_enter_head(dp, bp, struct buf *, b_freelist)
+end_define
+
+begin_define
+define|#
+directive|define
+name|binstailfree
+parameter_list|(
+name|bp
+parameter_list|,
+name|dp
+parameter_list|)
+define|\
+value|queue_enter_tail(dp, bp, struct buf *, b_freelist)
+end_define
 
 begin_function
 name|void
@@ -225,34 +234,21 @@ name|bp
 decl_stmt|;
 block|{
 name|struct
-name|buf
-modifier|*
-name|bq
-decl_stmt|;
-name|struct
-name|bufqueue
+name|queue_entry
 modifier|*
 name|dp
 decl_stmt|;
+comment|/* 	 * We only calculate the head of the freelist when removing 	 * the last element of the list as that is the only time that 	 * it is needed (e.g. to reset the tail pointer). 	 */
 if|if
 condition|(
-name|bq
-operator|=
 name|bp
 operator|->
-name|b_actf
+name|b_freelist
+operator|.
+name|qe_next
+operator|==
+name|NULL
 condition|)
-block|{
-name|bq
-operator|->
-name|b_actb
-operator|=
-name|bp
-operator|->
-name|b_actb
-expr_stmt|;
-block|}
-else|else
 block|{
 for|for
 control|(
@@ -275,12 +271,14 @@ if|if
 condition|(
 name|dp
 operator|->
-name|buffreetail
+name|qe_prev
 operator|==
 operator|&
 name|bp
 operator|->
-name|b_actf
+name|b_freelist
+operator|.
+name|qe_next
 condition|)
 break|break;
 if|if
@@ -298,48 +296,22 @@ argument_list|(
 literal|"bremfree: lost tail"
 argument_list|)
 expr_stmt|;
-name|dp
-operator|->
-name|buffreetail
-operator|=
-name|bp
-operator|->
-name|b_actb
-expr_stmt|;
 block|}
-operator|*
+name|queue_remove
+argument_list|(
+name|dp
+argument_list|,
 name|bp
-operator|->
-name|b_actb
-operator|=
-name|bq
+argument_list|,
+expr|struct
+name|buf
+operator|*
+argument_list|,
+name|b_freelist
+argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_define
-define|#
-directive|define
-name|binsheadfree
-parameter_list|(
-name|bp
-parameter_list|,
-name|dp
-parameter_list|)
-value|{ \ 	struct buf *bq; \ 	if (bq = (dp)->buffreehead) \ 		bq->b_actb =&(bp)->b_actf; \ 	else \ 		(dp)->buffreetail =&(bp)->b_actf; \ 	(dp)->buffreehead = (bp); \ 	(bp)->b_actf = bq; \ 	(bp)->b_actb =&(dp)->buffreehead; \ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|binstailfree
-parameter_list|(
-name|bp
-parameter_list|,
-name|dp
-parameter_list|)
-value|{ \ 	(bp)->b_actf = NULL; \ 	(bp)->b_actb = (dp)->buffreetail; \ 	*(dp)->buffreetail = (bp); \ 	(dp)->buffreetail =&(bp)->b_actf; \ }
-end_define
 
 begin_comment
 comment|/*  * Initialize buffers and hash links for buffers.  */
@@ -357,7 +329,7 @@ modifier|*
 name|bp
 decl_stmt|;
 name|struct
-name|bufqueue
+name|queue_entry
 modifier|*
 name|dp
 decl_stmt|;
@@ -387,21 +359,16 @@ condition|;
 name|dp
 operator|++
 control|)
+name|queue_init
+argument_list|(
 name|dp
-operator|->
-name|buffreetail
-operator|=
-operator|&
-name|dp
-operator|->
-name|buffreehead
+argument_list|)
 expr_stmt|;
 name|bufhashtbl
 operator|=
 operator|(
 expr|struct
-name|buf
-operator|*
+name|list_entry
 operator|*
 operator|)
 name|hashinit
@@ -1750,7 +1717,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|bufqueue
+name|queue_entry
 modifier|*
 name|flist
 decl_stmt|;
@@ -2079,13 +2046,14 @@ for|for
 control|(
 name|bp
 operator|=
-operator|*
 name|BUFHASH
 argument_list|(
 name|vp
 argument_list|,
 name|blkno
 argument_list|)
+operator|->
+name|le_next
 init|;
 name|bp
 condition|;
@@ -2093,7 +2061,9 @@ name|bp
 operator|=
 name|bp
 operator|->
-name|b_forw
+name|b_hash
+operator|.
+name|qe_next
 control|)
 if|if
 condition|(
@@ -2191,8 +2161,9 @@ name|struct
 name|buf
 modifier|*
 name|bp
-decl_stmt|,
-modifier|*
+decl_stmt|;
+name|struct
+name|list_entry
 modifier|*
 name|dp
 decl_stmt|;
@@ -2226,8 +2197,9 @@ for|for
 control|(
 name|bp
 operator|=
-operator|*
 name|dp
+operator|->
+name|le_next
 init|;
 name|bp
 condition|;
@@ -2235,7 +2207,9 @@ name|bp
 operator|=
 name|bp
 operator|->
-name|b_forw
+name|b_hash
+operator|.
+name|qe_next
 control|)
 block|{
 if|if
@@ -2626,7 +2600,7 @@ index|[
 name|BQ_EMPTY
 index|]
 operator|.
-name|buffreehead
+name|qe_next
 operator|)
 operator|==
 name|NULL
@@ -2902,7 +2876,7 @@ name|bp
 decl_stmt|;
 specifier|register
 name|struct
-name|bufqueue
+name|queue_entry
 modifier|*
 name|dp
 decl_stmt|;
@@ -2943,7 +2917,7 @@ if|if
 condition|(
 name|dp
 operator|->
-name|buffreehead
+name|qe_next
 condition|)
 break|break;
 if|if
@@ -2984,7 +2958,7 @@ name|bp
 operator|=
 name|dp
 operator|->
-name|buffreehead
+name|qe_next
 expr_stmt|;
 name|bremfree
 argument_list|(
@@ -3381,7 +3355,7 @@ name|bp
 decl_stmt|;
 specifier|register
 name|struct
-name|bufqueue
+name|queue_entry
 modifier|*
 name|dp
 decl_stmt|;
@@ -3475,7 +3449,7 @@ name|bp
 operator|=
 name|dp
 operator|->
-name|buffreehead
+name|qe_next
 init|;
 name|bp
 condition|;
@@ -3483,7 +3457,9 @@ name|bp
 operator|=
 name|bp
 operator|->
-name|b_actf
+name|b_freelist
+operator|.
+name|qe_next
 control|)
 block|{
 name|counts
