@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acucntrl.c	5.9 (Berkeley) %G%"
+literal|"@(#)acucntrl.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,6 +34,12 @@ directive|include
 file|"uucp.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DIALINOUT
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -52,11 +58,48 @@ directive|include
 file|<sys/conf.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BSD4_2
+end_ifdef
+
 begin_include
 include|#
 directive|include
-file|"/sys/vaxuba/ubavar.h"
+file|<vaxuba/ubavar.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/ubavar.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* vax */
+end_comment
 
 begin_include
 include|#
@@ -652,6 +695,9 @@ argument_list|(
 name|device
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|vax
 comment|/* Get nlist info */
 name|nlist
 argument_list|(
@@ -660,6 +706,9 @@ argument_list|,
 name|nl
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|vax
 comment|/* Chdir to /dev */
 if|if
 condition|(
@@ -942,6 +991,9 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|sequent
 comment|/* Disable modem control */
 if|if
 condition|(
@@ -968,11 +1020,58 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+endif|!sequent
 if|if
 condition|(
 name|enable
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|sequent
+if|if
+condition|(
+name|setmodem
+argument_list|(
+name|device
+argument_list|,
+name|ENABLE
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Cannot Enable modem control\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setmodem
+argument_list|(
+name|device
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+endif|sequent
+ifndef|#
+directive|ifndef
+name|sequent
 if|if
 condition|(
 operator|(
@@ -1120,10 +1219,16 @@ name|errno
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|!sequent
 name|i
 operator|=
 name|resetmodem
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|sequent
 if|if
 condition|(
 name|setmodem
@@ -1159,6 +1264,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+endif|sequent
 name|resetmodem
 operator|=
 name|i
@@ -1402,6 +1510,38 @@ argument_list|,
 name|Uname
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|sequent
+comment|/* Disable modem control */
+if|if
+condition|(
+name|setmodem
+argument_list|(
+name|device
+argument_list|,
+name|DISABLE
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Unable to disable modem control\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+endif|sequent
 if|if
 condition|(
 operator|(
@@ -2850,6 +2990,20 @@ argument_list|(
 name|ttysfile
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|sequent
+comment|/* Why is the sequent off by one? */
+name|utmploc
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|utmp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|sequent
 return|return;
 block|}
 name|ttyslnbeg
@@ -3079,6 +3233,81 @@ endif|#
 directive|endif
 endif|!BSD4_3
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sequent
+end_ifdef
+
+begin_macro
+name|setmodem
+argument_list|(
+argument|ttyline
+argument_list|,
+argument|enable
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|ttyline
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|enable
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|char
+modifier|*
+name|sysbuf
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|sysbuf
+argument_list|,
+literal|"/etc/ttyconfig /dev/%s -special %s"
+argument_list|,
+name|ttyline
+argument_list|,
+name|enable
+condition|?
+literal|"-carrier"
+else|:
+literal|"-nocarrier"
+argument_list|)
+expr_stmt|;
+name|system
+argument_list|(
+name|sysbuf
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* sequent */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
 
 begin_comment
 comment|/*  * Excerpted from (June 8, 1983 W.Sebok)  *> ttymodem.c - enable/disable modem control for tty lines.  *>  *> Knows about DZ11s and DH11/DM11s.  *> 23.3.83 - TS  *> modified to know about DMF's  (hasn't been tested) Nov 8, 1984 - WLS  */
@@ -4078,6 +4307,15 @@ return|;
 block|}
 end_block
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* vax */
+end_comment
+
 begin_expr_stmt
 name|prefix
 argument_list|(
@@ -4135,6 +4373,15 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DIALINOUT */
+end_comment
 
 end_unit
 
