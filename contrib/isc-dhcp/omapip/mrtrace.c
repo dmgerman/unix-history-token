@@ -345,7 +345,7 @@ end_function_decl
 
 begin_decl_stmt
 specifier|extern
-name|time_t
+name|TIME
 name|cur_time
 decl_stmt|;
 end_decl_stmt
