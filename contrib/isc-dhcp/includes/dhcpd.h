@@ -10,6 +10,26 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|lint
+end_ifndef
+
+begin_expr_stmt
+literal|"$FreeBSD$\n"
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__CYGWIN32__
 end_ifndef
 
@@ -2827,6 +2847,14 @@ name|IFNAMSIZ
 index|]
 decl_stmt|;
 comment|/* Its name... */
+name|int
+name|linkstatus
+decl_stmt|;
+comment|/* Link status */
+name|int
+name|ieee802
+decl_stmt|;
+comment|/* True if media is ieee802 */
 name|int
 name|index
 decl_stmt|;
@@ -12617,6 +12645,28 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ENABLE_POLLING_MODE
+end_ifdef
+
+begin_decl_stmt
+name|void
+name|state_link
+name|PROTO
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|void
