@@ -1084,7 +1084,7 @@ expr_stmt|;
 define|#
 directive|define
 name|HEADER
-value|"USER    TTY FROM              LOGIN@  IDLE WHAT\n"
+value|"USER     TTY FROM              LOGIN@  IDLE WHAT\n"
 define|#
 directive|define
 name|WUSED
@@ -1793,7 +1793,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-*.*s %-2.2s %-*.*s "
+literal|"%-*.*s %-3.3s %-*.*s "
 argument_list|,
 name|UT_NAMESIZE
 argument_list|,
