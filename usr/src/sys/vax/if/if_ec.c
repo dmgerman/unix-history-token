@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ec.c	4.5	82/04/14	*/
+comment|/*	if_ec.c	4.6	82/05/07	*/
 end_comment
 
 begin_include
@@ -427,6 +427,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Make sure memory is turned on 	 */
+name|addr
+operator|->
+name|ec_rcr
+operator|=
+name|EC_AROM
+expr_stmt|;
 comment|/* 	 * Check for existence of buffers on Unibus. 	 * This won't work on a 780 until more work is done. 	 */
 if|if
 condition|(
@@ -1267,7 +1274,7 @@ name|ui
 operator|->
 name|ui_addr
 expr_stmt|;
-comment|/* 	 * Hang receive buffers and start any pending 	 * writes by faking a transmit complete. 	 */
+comment|/* 	 * Hang receive buffers and start any pending 	 * writes by faking a transmit complete. 	 * Writing into the rcr also makes sure the memory 	 * is turned on. 	 */
 name|s
 operator|=
 name|splimp
