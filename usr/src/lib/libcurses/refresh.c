@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)refresh.c	5.11 (Berkeley) %G%"
+literal|"@(#)refresh.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -917,6 +917,49 @@ decl_stmt|,
 modifier|*
 name|ce
 decl_stmt|;
+comment|/* Is the cursor still on the end of the last line? */
+if|if
+condition|(
+name|wy
+operator|>
+literal|0
+operator|&&
+name|win
+operator|->
+name|lines
+index|[
+name|wy
+operator|-
+literal|1
+index|]
+operator|->
+name|flags
+operator|&
+name|__ISPASTEOL
+condition|)
+block|{
+name|win
+operator|->
+name|lines
+index|[
+name|wy
+operator|-
+literal|1
+index|]
+operator|->
+name|flags
+operator|&=
+operator|~
+name|__ISPASTEOL
+expr_stmt|;
+name|ly
+operator|++
+expr_stmt|;
+name|lx
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -1511,6 +1554,9 @@ operator|->
 name|maxy
 operator|-
 literal|1
+operator|&&
+operator|!
+name|curwin
 condition|)
 if|if
 condition|(
@@ -1599,7 +1645,6 @@ operator|&&
 operator|!
 name|curwin
 condition|)
-block|{
 name|scroll
 argument_list|(
 name|curscr
@@ -1775,6 +1820,12 @@ operator|&&
 name|AM
 condition|)
 block|{
+comment|/* 			 * xn glitch: chomps a newline after auto-wrap. 			 * we just feed it now and forget about it. 			 */
+if|if
+condition|(
+name|XN
+condition|)
+block|{
 name|lx
 operator|=
 literal|0
@@ -1782,12 +1833,6 @@ expr_stmt|;
 name|ly
 operator|++
 expr_stmt|;
-comment|/* 			 * xn glitch: chomps a newline after auto-wrap. 			 * we just feed it now and forget about it. 			 */
-if|if
-condition|(
-name|XN
-condition|)
-block|{
 name|putchar
 argument_list|(
 literal|'\n'
@@ -1797,6 +1842,32 @@ name|putchar
 argument_list|(
 literal|'\r'
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|wy
+operator|!=
+name|LINES
+condition|)
+name|win
+operator|->
+name|lines
+index|[
+name|wy
+index|]
+operator|->
+name|flags
+operator||=
+name|__ISPASTEOL
+expr_stmt|;
+name|lx
+operator|=
+name|COLS
+operator|-
+literal|1
 expr_stmt|;
 block|}
 block|}
@@ -1821,7 +1892,13 @@ name|OK
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * domvcur --  *	Do a mvcur, leaving standout mode if necessary.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|domvcur
@@ -1903,7 +1980,13 @@ name|nx
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Quickch() attempts to detect a pattern in the change of the window  * inorder to optimize the change, e.g., scroll n lines as opposed to   * repainting the screen line by line.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|quickch
@@ -2220,6 +2303,9 @@ index|[
 name|target
 index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|__TRACE
 argument_list|(
 literal|"quickch: n=%d startw=%d curw=%d i = %d target=%d "
@@ -2235,6 +2321,8 @@ argument_list|,
 name|target
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|target
@@ -2246,11 +2334,16 @@ operator|<
 name|curw
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|__TRACE
 argument_list|(
 literal|"-- notdirty"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|win
 operator|->
 name|lines
@@ -2317,11 +2410,16 @@ operator|->
 name|maxx
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|__TRACE
 argument_list|(
 literal|"-- memset"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|clp
 operator|->
 name|hash
@@ -2330,11 +2428,16 @@ name|blank_hash
 expr_stmt|;
 block|}
 else|else
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|__TRACE
 argument_list|(
 literal|" -- nonmemset"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|touchline
 argument_list|(
 name|win
@@ -2353,11 +2456,16 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|__TRACE
 argument_list|(
 literal|" -- just dirty"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|touchline
 argument_list|(
 name|win
@@ -2374,11 +2482,16 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|__TRACE
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|target
@@ -2418,6 +2531,9 @@ name|target
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|__TRACE
 argument_list|(
 literal|"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n"
@@ -2454,7 +2570,12 @@ operator|->
 name|line
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|scrolln
