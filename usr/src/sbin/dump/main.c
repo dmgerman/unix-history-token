@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.10 (Berkeley) %G%"
+literal|"@(#)main.c	1.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,12 +55,36 @@ begin_decl_stmt
 name|int
 name|density
 init|=
-literal|160
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* density in 0.1" units */
+comment|/* density in bytes/0.1" */
+end_comment
+
+begin_decl_stmt
+name|int
+name|ntrec
+init|=
+name|NTREC
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* # tape blocks in each tape record */
+end_comment
+
+begin_decl_stmt
+name|int
+name|cartridge
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Assume non-cartridge tape */
 end_comment
 
 begin_ifdef
@@ -125,12 +149,9 @@ argument_list|)
 expr_stmt|;
 name|tsize
 operator|=
-literal|2300L
-operator|*
-literal|12L
-operator|*
-literal|10L
+literal|0
 expr_stmt|;
+comment|/* Default later, based on 'c' option for cart tapes */
 name|tape
 operator|=
 name|TAPE
@@ -353,6 +374,41 @@ expr_stmt|;
 block|}
 break|break;
 case|case
+literal|'b'
+case|:
+comment|/* blocks per tape write */
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+condition|)
+block|{
+name|argv
+operator|++
+expr_stmt|;
+name|argc
+operator|--
+expr_stmt|;
+name|ntrec
+operator|=
+name|atol
+argument_list|(
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|'c'
+case|:
+comment|/* Tape is cart. not 9-track */
+name|cartridge
+operator|++
+expr_stmt|;
+break|break;
+case|case
 literal|'0'
 case|:
 comment|/* dump level */
@@ -445,6 +501,39 @@ operator|*
 name|argv
 expr_stmt|;
 block|}
+comment|/* 	 * Determine how to default tape size and density 	 * 	 *         	density				tape size 	 * 9-track	1600 bpi (160 bytes/.1")	2300 ft. 	 * 9-track	6250 bpi (625 bytes/.1")	2300 ft. 	 * cartridge	8000 bpi (100 bytes/.1")	4000 ft. (450*9 - slop) 	 */
+if|if
+condition|(
+name|density
+operator|==
+literal|0
+condition|)
+name|density
+operator|=
+name|cartridge
+condition|?
+literal|100
+else|:
+literal|160
+expr_stmt|;
+if|if
+condition|(
+name|tsize
+operator|==
+literal|0
+condition|)
+name|tsize
+operator|=
+name|cartridge
+condition|?
+literal|4000L
+operator|*
+literal|120L
+else|:
+literal|2300L
+operator|*
+literal|120L
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RDUMP
@@ -933,6 +1022,66 @@ argument_list|(
 name|nodmap
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cartridge
+condition|)
+block|{
+comment|/* Estimate number of tapes, assuming streaming stops at 		   the end of each block written, and not in mid-block. 		   Assume no erroneous blocks; this can be compensated for 		   with an artificially low tape size. */
+name|fetapes
+operator|=
+operator|(
+name|esize
+comment|/* blocks */
+operator|*
+name|TP_BSIZE
+comment|/* bytes/block */
+operator|*
+operator|(
+literal|1.0
+operator|/
+name|density
+operator|)
+comment|/* 0.1" / byte */
+operator|+
+name|esize
+comment|/* blocks */
+operator|*
+operator|(
+literal|1.0
+operator|/
+name|ntrec
+operator|)
+comment|/* streaming-stops per block */
+operator|*
+literal|15.48
+comment|/* 0.1" / streaming-stop */
+operator|)
+operator|*
+operator|(
+literal|1.0
+operator|/
+name|tsize
+operator|)
+expr_stmt|;
+comment|/* tape / 0.1" */
+block|}
+else|else
+block|{
+comment|/* Estimate number of tapes, for old fashioned 9-track tape */
+name|int
+name|tenthsperirg
+init|=
+operator|(
+name|density
+operator|==
+literal|625
+operator|)
+condition|?
+literal|3
+else|:
+literal|7
+decl_stmt|;
 name|fetapes
 operator|=
 operator|(
@@ -955,9 +1104,12 @@ operator|*
 operator|(
 literal|1.0
 operator|/
-name|NTREC
+name|ntrec
 operator|)
 comment|/* IRG's / block */
+operator|*
+name|tenthsperirg
+comment|/* 0.1" / IRG */
 operator|*
 literal|7
 comment|/* 0.1" / IRG */
@@ -968,8 +1120,9 @@ literal|1.0
 operator|/
 name|tsize
 operator|)
-comment|/* tape / 0.1" */
 expr_stmt|;
+comment|/* tape / 0.1" */
+block|}
 name|etapes
 operator|=
 name|fetapes
@@ -1013,6 +1166,10 @@ argument_list|,
 name|fetapes
 argument_list|)
 expr_stmt|;
+name|alloctape
+argument_list|()
+expr_stmt|;
+comment|/* Allocate tape buffer */
 name|otape
 argument_list|()
 expr_stmt|;
@@ -1073,7 +1230,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NTREC
+name|ntrec
 condition|;
 name|i
 operator|++

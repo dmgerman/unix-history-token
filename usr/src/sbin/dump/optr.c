@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)optr.c	1.5 (Berkeley) %G%"
+literal|"@(#)optr.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1803,7 +1803,7 @@ name|dt
 operator|->
 name|fs_file
 else|:
-literal|0
+literal|""
 argument_list|,
 name|itwalk
 operator|->

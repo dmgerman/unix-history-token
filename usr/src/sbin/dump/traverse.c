@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)traverse.c	1.12 (Berkeley) %G%"
+literal|"@(#)traverse.c	1.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -867,7 +867,7 @@ name|fs_bsize
 argument_list|)
 expr_stmt|;
 else|else
-name|blkclr
+name|bzero
 argument_list|(
 name|idblk
 argument_list|,
@@ -1911,34 +1911,6 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-block|}
-end_block
-
-begin_macro
-name|blkclr
-argument_list|(
-argument|cp
-argument_list|,
-argument|size
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|long
-name|size
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-asm|asm("movc5	$0,(r0),$0,8(ap),*4(ap)");
 block|}
 end_block
 

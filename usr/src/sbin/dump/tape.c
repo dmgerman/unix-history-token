@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tape.c	1.5 (Berkeley) %G%"
+literal|"@(#)tape.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -15,17 +15,31 @@ directive|include
 file|"dump.h"
 end_include
 
-begin_decl_stmt
+begin_expr_stmt
 name|char
+argument_list|(
+operator|*
 name|tblock
-index|[
-name|NTREC
-index|]
+argument_list|)
 index|[
 name|TP_BSIZE
 index|]
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Pointer to malloc()ed buffer for tape */
+end_comment
+
+begin_decl_stmt
+name|int
+name|writesize
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Size of malloc()ed buffer for tape */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -34,6 +48,60 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ntrec
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* blocking factor on tape */
+end_comment
+
+begin_comment
+comment|/*  * Allocate the buffer for tape operations.  *  * Depends on global variable ntrec, set from 'b' option in command line.  * Returns 1 if successful, 0 if failed.  *  * For later kernel performance improvement, this buffer should be allocated  * on a page boundary.  */
+end_comment
+
+begin_macro
+name|alloctape
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|writesize
+operator|=
+name|ntrec
+operator|*
+name|TP_BSIZE
+expr_stmt|;
+name|tblock
+operator|=
+operator|(
+name|char
+argument_list|(
+operator|*
+argument_list|)
+index|[
+name|TP_BSIZE
+index|]
+operator|)
+name|malloc
+argument_list|(
+name|writesize
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|tblock
+operator|!=
+name|NULL
+operator|)
+return|;
+block|}
+end_block
 
 begin_macro
 name|taprec
@@ -91,7 +159,7 @@ if|if
 condition|(
 name|trecno
 operator|>=
-name|NTREC
+name|ntrec
 condition|)
 name|flusht
 argument_list|()
@@ -146,7 +214,7 @@ argument_list|)
 expr_stmt|;
 name|avail
 operator|=
-name|NTREC
+name|ntrec
 operator|-
 name|trecno
 expr_stmt|;
@@ -216,7 +284,7 @@ name|avail
 expr_stmt|;
 name|avail
 operator|=
-name|NTREC
+name|ntrec
 operator|-
 name|trecno
 expr_stmt|;
@@ -249,7 +317,7 @@ if|if
 condition|(
 name|trecno
 operator|>=
-name|NTREC
+name|ntrec
 condition|)
 name|flusht
 argument_list|()
@@ -295,16 +363,10 @@ index|[
 literal|0
 index|]
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|tblock
-argument_list|)
+name|writesize
 argument_list|)
 operator|!=
-sizeof|sizeof
-argument_list|(
-name|tblock
-argument_list|)
+name|writesize
 condition|)
 block|{
 name|msg
@@ -376,10 +438,7 @@ block|}
 block|}
 name|asize
 operator|+=
-sizeof|sizeof
-argument_list|(
-name|tblock
-argument_list|)
+name|writesize
 operator|/
 name|density
 expr_stmt|;
@@ -389,7 +448,7 @@ literal|7
 expr_stmt|;
 name|blockswritten
 operator|+=
-name|NTREC
+name|ntrec
 expr_stmt|;
 if|if
 condition|(
