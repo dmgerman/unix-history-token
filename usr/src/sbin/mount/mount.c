@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	8.23 (Berkeley) %G%"
+literal|"@(#)mount.c	8.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -455,6 +455,9 @@ block|{
 specifier|const
 name|char
 modifier|*
+name|mntfromname
+decl_stmt|,
+modifier|*
 modifier|*
 name|vfslist
 decl_stmt|,
@@ -868,6 +871,34 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|fs
+operator|=
+name|getfsfile
+argument_list|(
+name|mntbuf
+operator|->
+name|f_mntonname
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+name|mntfromname
+operator|=
+name|fs
+operator|->
+name|fs_spec
+expr_stmt|;
+else|else
+name|mntfromname
+operator|=
+name|mntbuf
+operator|->
+name|f_mntfromname
+expr_stmt|;
 name|rval
 operator|=
 name|mountfs
@@ -876,9 +907,7 @@ name|mntbuf
 operator|->
 name|f_fstypename
 argument_list|,
-name|mntbuf
-operator|->
-name|f_mntfromname
+name|mntfromname
 argument_list|,
 name|mntbuf
 operator|->
