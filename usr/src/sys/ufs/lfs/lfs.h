@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	8.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -52,38 +52,38 @@ begin_struct
 struct|struct
 name|segusage
 block|{
-name|u_long
+name|u_int32_t
 name|su_nbytes
 decl_stmt|;
 comment|/* number of live bytes */
-name|u_long
+name|u_int32_t
 name|su_lastmod
 decl_stmt|;
 comment|/* SEGUSE last modified timestamp */
-name|u_short
+name|u_int16_t
 name|su_nsums
 decl_stmt|;
 comment|/* number of summaries in segment */
-name|u_short
+name|u_int16_t
 name|su_ninos
 decl_stmt|;
 comment|/* number of inode blocks in seg */
 define|#
 directive|define
 name|SEGUSE_ACTIVE
-value|0x1
+value|0x01
 comment|/* segment is currently being written */
 define|#
 directive|define
 name|SEGUSE_DIRTY
-value|0x2
+value|0x02
 comment|/* segment has data in it */
 define|#
 directive|define
 name|SEGUSE_SUPERBLOCK
-value|0x4
+value|0x04
 comment|/* segment contains a superblock */
-name|u_long
+name|u_int32_t
 name|su_flags
 decl_stmt|;
 block|}
@@ -127,19 +127,19 @@ begin_struct
 struct|struct
 name|finfo
 block|{
-name|u_long
+name|u_int32_t
 name|fi_nblocks
 decl_stmt|;
 comment|/* number of blocks */
-name|u_long
+name|u_int32_t
 name|fi_version
 decl_stmt|;
 comment|/* version number */
-name|u_long
+name|u_int32_t
 name|fi_ino
 decl_stmt|;
 comment|/* inode number */
-name|long
+name|daddr_t
 name|fi_blocks
 index|[
 literal|1
@@ -162,7 +162,7 @@ define|#
 directive|define
 name|LFS_MAGIC
 value|0x070162
-name|u_long
+name|u_int32_t
 name|lfs_magic
 decl_stmt|;
 comment|/* magic number */
@@ -170,31 +170,31 @@ define|#
 directive|define
 name|LFS_VERSION
 value|1
-name|u_long
+name|u_int32_t
 name|lfs_version
 decl_stmt|;
 comment|/* version number */
-name|u_long
+name|u_int32_t
 name|lfs_size
 decl_stmt|;
 comment|/* number of blocks in fs */
-name|u_long
+name|u_int32_t
 name|lfs_ssize
 decl_stmt|;
 comment|/* number of blocks per segment */
-name|u_long
+name|u_int32_t
 name|lfs_dsize
 decl_stmt|;
 comment|/* number of disk blocks in fs */
-name|u_long
+name|u_int32_t
 name|lfs_bsize
 decl_stmt|;
 comment|/* file system block size */
-name|u_long
+name|u_int32_t
 name|lfs_fsize
 decl_stmt|;
 comment|/* size of frag blocks in fs */
-name|u_long
+name|u_int32_t
 name|lfs_frag
 decl_stmt|;
 comment|/* number of frags in a block in fs */
@@ -203,19 +203,19 @@ name|ino_t
 name|lfs_free
 decl_stmt|;
 comment|/* start of the free list */
-name|u_long
+name|u_int32_t
 name|lfs_bfree
 decl_stmt|;
 comment|/* number of free disk blocks */
-name|u_long
+name|u_int32_t
 name|lfs_nfiles
 decl_stmt|;
 comment|/* number of allocated inodes */
-name|long
+name|int32_t
 name|lfs_avail
 decl_stmt|;
 comment|/* blocks available for writing */
-name|u_long
+name|u_int32_t
 name|lfs_uinodes
 decl_stmt|;
 comment|/* inodes in cache not yet on disk */
@@ -247,12 +247,12 @@ name|daddr_t
 name|lfs_lastpseg
 decl_stmt|;
 comment|/* address of last partial written */
-name|u_long
+name|u_int32_t
 name|lfs_tstamp
 decl_stmt|;
 comment|/* time stamp */
 comment|/* These are configuration parameters. */
-name|u_long
+name|u_int32_t
 name|lfs_minfree
 decl_stmt|;
 comment|/* minimum percentage of free blocks */
@@ -261,82 +261,86 @@ name|u_quad_t
 name|lfs_maxfilesize
 decl_stmt|;
 comment|/* maximum representable file size */
-name|u_long
+name|u_int32_t
 name|lfs_dbpseg
 decl_stmt|;
 comment|/* disk blocks per segment */
-name|u_long
+name|u_int32_t
 name|lfs_inopb
 decl_stmt|;
 comment|/* inodes per block */
-name|u_long
+name|u_int32_t
 name|lfs_ifpb
 decl_stmt|;
 comment|/* IFILE entries per block */
-name|u_long
+name|u_int32_t
 name|lfs_sepb
 decl_stmt|;
 comment|/* SEGUSE entries per block */
-name|u_long
+name|u_int32_t
 name|lfs_nindir
 decl_stmt|;
 comment|/* indirect pointers per block */
-name|u_long
+name|u_int32_t
 name|lfs_nseg
 decl_stmt|;
 comment|/* number of segments */
-name|u_long
+name|u_int32_t
 name|lfs_nspf
 decl_stmt|;
 comment|/* number of sectors per fragment */
-name|u_long
+name|u_int32_t
 name|lfs_cleansz
 decl_stmt|;
 comment|/* cleaner info size in blocks */
-name|u_long
+name|u_int32_t
 name|lfs_segtabsz
 decl_stmt|;
 comment|/* segment table size in blocks */
-name|u_long
+name|u_int32_t
 name|lfs_segmask
 decl_stmt|;
 comment|/* calculate offset within a segment */
-name|u_long
+name|u_int32_t
 name|lfs_segshift
 decl_stmt|;
 comment|/* fast mult/div for segments */
-name|u_long
+name|u_int32_t
 name|lfs_bmask
 decl_stmt|;
 comment|/* calc block offset from file offset */
-name|u_long
+name|u_int32_t
 name|lfs_bshift
 decl_stmt|;
 comment|/* calc block number from file offset */
-name|u_long
+name|u_int32_t
 name|lfs_ffmask
 decl_stmt|;
 comment|/* calc frag offset from file offset */
-name|u_long
+name|u_int32_t
 name|lfs_ffshift
 decl_stmt|;
 comment|/* fast mult/div for frag from file */
-name|u_long
+name|u_int32_t
 name|lfs_fbmask
 decl_stmt|;
 comment|/* calc frag offset from block offset */
-name|u_long
+name|u_int32_t
 name|lfs_fbshift
 decl_stmt|;
 comment|/* fast mult/div for frag from block */
-name|u_long
+name|u_int32_t
 name|lfs_fsbtodb
 decl_stmt|;
 comment|/* fsbtodb and dbtofsb shift constant */
-name|u_long
+name|u_int32_t
 name|lfs_sushift
 decl_stmt|;
 comment|/* fast mult/div for segusage table */
+name|int32_t
+name|lfs_maxsymlinklen
+decl_stmt|;
+comment|/* max length of an internal symlink */
 define|#
 directive|define
 name|LFS_MIN_SBINTERVAL
@@ -353,6 +357,11 @@ index|[
 name|LFS_MAXNUMSB
 index|]
 decl_stmt|;
+comment|/* Checksum -- last valid disk field. */
+name|u_int32_t
+name|lfs_cksum
+decl_stmt|;
+comment|/* checksum for superblock checking */
 comment|/* These fields are set at mount time and are meaningless on disk. */
 name|struct
 name|segment
@@ -394,19 +403,19 @@ name|u_long
 name|lfs_nactive
 decl_stmt|;
 comment|/* Number of segments since last ckp */
-name|u_char
+name|int8_t
 name|lfs_fmod
 decl_stmt|;
 comment|/* super block modified flag */
-name|u_char
+name|int8_t
 name|lfs_clean
 decl_stmt|;
 comment|/* file system is clean flag */
-name|u_char
+name|int8_t
 name|lfs_ronly
 decl_stmt|;
 comment|/* mounted read-only flag */
-name|u_char
+name|int8_t
 name|lfs_flags
 decl_stmt|;
 comment|/* currently unused flag */
@@ -417,32 +426,12 @@ name|MNAMELEN
 index|]
 decl_stmt|;
 comment|/* name mounted on */
-name|u_char
-name|pad
-index|[
-literal|3
-index|]
-decl_stmt|;
-comment|/* long-align */
-comment|/* Checksum; valid on disk. */
-name|u_long
-name|lfs_cksum
-decl_stmt|;
-comment|/* checksum for superblock checking */
-name|long
-name|lfs_maxsymlinklen
-decl_stmt|;
-comment|/* max length of an internal symlink */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * Inode 0 is the out-of-band inode number, inode 1 is the inode number for  * the IFILE, the root inode is 2 and the lost+found inode is 3.  */
-end_comment
-
-begin_comment
-comment|/* Fixed inode numbers. */
+comment|/*  * Inode 0:	out-of-band inode number  * Inode 1:	IFILE inode number  * Inode 2:	root inode  * Inode 3:	lost+found inode number  */
 end_comment
 
 begin_define
@@ -557,7 +546,7 @@ begin_struct
 struct|struct
 name|ifile
 block|{
-name|u_long
+name|u_int32_t
 name|if_version
 decl_stmt|;
 comment|/* inode version number */
@@ -587,11 +576,11 @@ typedef|typedef
 struct|struct
 name|_cleanerinfo
 block|{
-name|u_long
+name|u_int32_t
 name|clean
 decl_stmt|;
 comment|/* K: number of clean segments */
-name|u_long
+name|u_int32_t
 name|dirty
 decl_stmt|;
 comment|/* K: number of dirty segments */
@@ -638,11 +627,11 @@ begin_struct
 struct|struct
 name|segsum
 block|{
-name|u_long
+name|u_int32_t
 name|ss_sumsum
 decl_stmt|;
 comment|/* check sum of summary block */
-name|u_long
+name|u_int32_t
 name|ss_datasum
 decl_stmt|;
 comment|/* check sum of data */
@@ -650,15 +639,15 @@ name|daddr_t
 name|ss_next
 decl_stmt|;
 comment|/* next segment */
-name|u_long
+name|u_int32_t
 name|ss_create
 decl_stmt|;
 comment|/* creation time stamp */
-name|u_short
+name|u_int16_t
 name|ss_nfinfo
 decl_stmt|;
 comment|/* number of file info structures */
-name|u_short
+name|u_int16_t
 name|ss_ninos
 decl_stmt|;
 comment|/* number of inodes in summary */
@@ -672,11 +661,11 @@ directive|define
 name|SS_CONT
 value|0x02
 comment|/* more partials to finish this write*/
-name|u_short
+name|u_int16_t
 name|ss_flags
 decl_stmt|;
 comment|/* used for directory operations */
-name|u_short
+name|u_int16_t
 name|ss_pad
 decl_stmt|;
 comment|/* extra space */
@@ -897,7 +886,7 @@ parameter_list|,
 name|db
 parameter_list|)
 define|\
-value|((long)((db + ((fs)->lfs_uinodes + INOPB((fs))) / INOPB((fs)) +	\ 	fsbtodb(fs, 1) + LFS_SUMMARY_SIZE / DEV_BSIZE +			\ 	(fs)->lfs_segtabsz))< (fs)->lfs_avail)
+value|((int32_t)((db + ((fs)->lfs_uinodes + INOPB((fs))) / 		\ 	INOPB((fs)) + fsbtodb(fs, 1) + LFS_SUMMARY_SIZE / DEV_BSIZE +	\ 	(fs)->lfs_segtabsz))< (fs)->lfs_avail)
 end_define
 
 begin_comment
@@ -1011,19 +1000,19 @@ modifier|*
 name|segsum
 decl_stmt|;
 comment|/* segment summary info */
-name|u_long
+name|u_int32_t
 name|ninodes
 decl_stmt|;
 comment|/* number of inodes in this segment */
-name|u_long
+name|u_int32_t
 name|seg_bytes_left
 decl_stmt|;
 comment|/* bytes left in segment */
-name|u_long
+name|u_int32_t
 name|sum_bytes_left
 decl_stmt|;
 comment|/* bytes left in summary block */
-name|u_long
+name|u_int32_t
 name|seg_number
 decl_stmt|;
 comment|/* number of this segment */
@@ -1047,7 +1036,7 @@ directive|define
 name|SEGM_SYNC
 value|0x04
 comment|/* wait for segment */
-name|u_long
+name|u_int16_t
 name|seg_flags
 decl_stmt|;
 comment|/* run-time flags for this segment */
@@ -1116,40 +1105,40 @@ begin_struct
 struct|struct
 name|lfs_stats
 block|{
-name|int
+name|u_int
 name|segsused
 decl_stmt|;
-name|int
+name|u_int
 name|psegwrites
 decl_stmt|;
-name|int
+name|u_int
 name|psyncwrites
 decl_stmt|;
-name|int
+name|u_int
 name|pcleanwrites
 decl_stmt|;
-name|int
+name|u_int
 name|blocktot
 decl_stmt|;
-name|int
+name|u_int
 name|cleanblocks
 decl_stmt|;
-name|int
+name|u_int
 name|ncheckpoints
 decl_stmt|;
-name|int
+name|u_int
 name|nwrites
 decl_stmt|;
-name|int
+name|u_int
 name|nsync_writes
 decl_stmt|;
-name|int
+name|u_int
 name|wait_exceeded
 decl_stmt|;
-name|int
+name|u_int
 name|write_exceeded
 decl_stmt|;
-name|int
+name|u_int
 name|flush_invoked
 decl_stmt|;
 block|}

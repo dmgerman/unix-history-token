@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -10,18 +10,18 @@ file|<ufs/ufs/dinode.h>
 end_include
 
 begin_comment
-comment|/*  * Theoretically, directories can be more than 2Gb in length, however, in  * practice this seems unlikely. So, we define the type doff_t as a long  * to keep down the cost of doing lookup on a 32-bit machine. If you are  * porting to a 64-bit architecture, you should make doff_t the same as off_t.  */
+comment|/*  * Theoretically, directories can be more than 2Gb in length, however, in  * practice this seems unlikely. So, we define the type doff_t as a 32-bit  * quantity to keep down the cost of doing lookup on a 32-bit machine.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|doff_t
-value|long
+value|int32_t
 end_define
 
 begin_comment
-comment|/*  * The inode is used to describe each active (or recently active)  * file in the UFS filesystem. It is composed of two types of  * information. The first part is the information that is needed  * only while the file is active (such as the identity of the file  * and linkage to speed its lookup). The second part is the   * permannent meta-data associated with the file which is read  * in from the permanent dinode from long term storage when the  * file becomes active, and is put back when the file is no longer  * being used.  */
+comment|/*  * The inode is used to describe each active (or recently active) file in the  * UFS filesystem. It is composed of two types of information. The first part  * is the information that is needed only while the file is active (such as  * the identity of the file and linkage to speed its lookup). The second part  * is * the permanent meta-data associated with the file which is read in  * from the permanent dinode from long term storage when the file becomes  * active, and is put back when the file is no longer being used.  */
 end_comment
 
 begin_struct
@@ -53,10 +53,10 @@ modifier|*
 name|i_devvp
 decl_stmt|;
 comment|/* Vnode for block I/O. */
-name|u_long
+name|u_int32_t
 name|i_flag
 decl_stmt|;
-comment|/* I* flags. */
+comment|/* flags, see below */
 name|dev_t
 name|i_dev
 decl_stmt|;
@@ -103,7 +103,7 @@ comment|/* Dquot structures. */
 name|u_quad_t
 name|i_modrev
 decl_stmt|;
-comment|/* Revision level for lease. */
+comment|/* Revision level for NFS lease. */
 name|struct
 name|lockf
 modifier|*
@@ -119,7 +119,7 @@ name|i_lockwaiter
 decl_stmt|;
 comment|/* DEBUG: latest blocked for inode lock. */
 comment|/* 	 * Side effects; used during directory lookup. 	 */
-name|long
+name|int32_t
 name|i_count
 decl_stmt|;
 comment|/* Size of free slot in directory. */
@@ -139,17 +139,10 @@ name|ino_t
 name|i_ino
 decl_stmt|;
 comment|/* Inode number of found directory. */
-name|u_long
+name|u_int32_t
 name|i_reclen
 decl_stmt|;
 comment|/* Size of found directory entry. */
-name|long
-name|i_spare
-index|[
-literal|11
-index|]
-decl_stmt|;
-comment|/* Spares to round up to 128 bytes. */
 comment|/* 	 * The on-disk dinode itself. 	 */
 name|struct
 name|dinode
@@ -455,19 +448,19 @@ begin_struct
 struct|struct
 name|ufid
 block|{
-name|u_short
+name|u_int16_t
 name|ufid_len
 decl_stmt|;
 comment|/* Length of structure. */
-name|u_short
+name|u_int16_t
 name|ufid_pad
 decl_stmt|;
-comment|/* Force long alignment. */
+comment|/* Force 32-bit alignment. */
 name|ino_t
 name|ufid_ino
 decl_stmt|;
 comment|/* File number (ino). */
-name|long
+name|int32_t
 name|ufid_gen
 decl_stmt|;
 comment|/* Generation number. */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)dir.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)dir.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -37,19 +37,19 @@ begin_struct
 struct|struct
 name|direct
 block|{
-name|u_long
+name|u_int32_t
 name|d_ino
 decl_stmt|;
 comment|/* inode number of entry */
-name|u_short
+name|u_int16_t
 name|d_reclen
 decl_stmt|;
 comment|/* length of this record */
-name|u_char
+name|u_int8_t
 name|d_type
 decl_stmt|;
 comment|/* file type, see below */
-name|u_char
+name|u_int8_t
 name|d_namlen
 decl_stmt|;
 comment|/* length of string in d_name */
@@ -174,7 +174,7 @@ parameter_list|,
 name|dp
 parameter_list|)
 define|\
-value|((oldfmt) ? \     ((sizeof (struct direct) - (MAXNAMLEN+1)) + (((dp)->d_type+1 + 3)&~ 3)) : \     ((sizeof (struct direct) - (MAXNAMLEN+1)) + (((dp)->d_namlen+1 + 3)&~ 3)))
+value|((oldfmt) ? \     ((sizeof(struct direct) - (MAXNAMLEN+1)) + (((dp)->d_type+1 + 3)&~ 3)) : \     ((sizeof(struct direct) - (MAXNAMLEN+1)) + (((dp)->d_namlen+1 + 3)&~ 3)))
 end_define
 
 begin_else
@@ -192,7 +192,7 @@ parameter_list|,
 name|dp
 parameter_list|)
 define|\
-value|((sizeof (struct direct) - (MAXNAMLEN+1)) + (((dp)->d_namlen+1 + 3)&~ 3))
+value|((sizeof(struct direct) - (MAXNAMLEN+1)) + (((dp)->d_namlen+1 + 3)&~ 3))
 end_define
 
 begin_endif
@@ -215,23 +215,23 @@ value|0
 end_define
 
 begin_comment
-comment|/*  * Template for manipulating directories.  * Should use struct direct's, but the name field  * is MAXNAMLEN - 1, and this just won't do.  */
+comment|/*  * Template for manipulating directories.  Should use struct direct's,  * but the name field is MAXNAMLEN - 1, and this just won't do.  */
 end_comment
 
 begin_struct
 struct|struct
 name|dirtemplate
 block|{
-name|u_long
+name|u_int32_t
 name|dot_ino
 decl_stmt|;
-name|short
+name|int16_t
 name|dot_reclen
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|dot_type
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|dot_namlen
 decl_stmt|;
 name|char
@@ -241,16 +241,16 @@ literal|4
 index|]
 decl_stmt|;
 comment|/* must be multiple of 4 */
-name|u_long
+name|u_int32_t
 name|dotdot_ino
 decl_stmt|;
-name|short
+name|int16_t
 name|dotdot_reclen
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|dotdot_type
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|dotdot_namlen
 decl_stmt|;
 name|char
@@ -272,13 +272,13 @@ begin_struct
 struct|struct
 name|odirtemplate
 block|{
-name|u_long
+name|u_int32_t
 name|dot_ino
 decl_stmt|;
-name|short
+name|int16_t
 name|dot_reclen
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|dot_namlen
 decl_stmt|;
 name|char
@@ -288,13 +288,13 @@ literal|4
 index|]
 decl_stmt|;
 comment|/* must be multiple of 4 */
-name|u_long
+name|u_int32_t
 name|dotdot_ino
 decl_stmt|;
-name|short
+name|int16_t
 name|dotdot_reclen
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|dotdot_namlen
 decl_stmt|;
 name|char

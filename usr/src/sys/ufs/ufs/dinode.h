@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)dinode.h	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)dinode.h	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -44,17 +44,17 @@ begin_struct
 struct|struct
 name|dinode
 block|{
-name|u_short
+name|u_int16_t
 name|di_mode
 decl_stmt|;
-comment|/*   0: IFMT and permissions. */
-name|short
+comment|/*   0: IFMT, permissions; see below. */
+name|int16_t
 name|di_nlink
 decl_stmt|;
 comment|/*   2: File link count. */
 union|union
 block|{
-name|u_short
+name|u_int16_t
 name|oldids
 index|[
 literal|2
@@ -101,27 +101,27 @@ name|NIADDR
 index|]
 decl_stmt|;
 comment|/*  88: Indirect disk blocks. */
-name|u_long
+name|u_int32_t
 name|di_flags
 decl_stmt|;
 comment|/* 100: Status flags (chflags). */
-name|long
+name|int32_t
 name|di_blocks
 decl_stmt|;
 comment|/* 104: Blocks actually held. */
-name|long
+name|int32_t
 name|di_gen
 decl_stmt|;
 comment|/* 108: Generation number. */
-name|u_long
+name|u_int32_t
 name|di_uid
 decl_stmt|;
 comment|/* 112: File owner. */
-name|u_long
+name|u_int32_t
 name|di_gid
 decl_stmt|;
 comment|/* 116: File group. */
-name|long
+name|int32_t
 name|di_spare
 index|[
 literal|2
@@ -179,7 +179,7 @@ value|((NDADDR + NIADDR) * sizeof(daddr_t))
 end_define
 
 begin_comment
-comment|/* File modes. */
+comment|/* File permissions. */
 end_comment
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Elz at The University of Melbourne.  *  * %sccs.include.redist.c%  *  *	@(#)quota.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Elz at The University of Melbourne.  *  * %sccs.include.redist.c%  *  *	@(#)quota.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -27,7 +27,7 @@ value|(7*24*60*60)
 end_define
 
 begin_comment
-comment|/* 1 week */
+comment|/* seconds in 1 week */
 end_comment
 
 begin_define
@@ -38,7 +38,7 @@ value|(7*24*60*60)
 end_define
 
 begin_comment
-comment|/* 1 week */
+comment|/* seconds in 1 week */
 end_comment
 
 begin_comment
@@ -207,27 +207,27 @@ begin_struct
 struct|struct
 name|dqblk
 block|{
-name|u_long
+name|u_int32_t
 name|dqb_bhardlimit
 decl_stmt|;
 comment|/* absolute limit on disk blks alloc */
-name|u_long
+name|u_int32_t
 name|dqb_bsoftlimit
 decl_stmt|;
 comment|/* preferred limit on disk blks */
-name|u_long
+name|u_int32_t
 name|dqb_curblocks
 decl_stmt|;
 comment|/* current block count */
-name|u_long
+name|u_int32_t
 name|dqb_ihardlimit
 decl_stmt|;
 comment|/* maximum # allocated inodes + 1 */
-name|u_long
+name|u_int32_t
 name|dqb_isoftlimit
 decl_stmt|;
 comment|/* preferred inode limit */
-name|u_long
+name|u_int32_t
 name|dqb_curinodes
 decl_stmt|;
 comment|/* current # allocated inodes */
@@ -271,23 +271,23 @@ modifier|*
 name|dq_freeb
 decl_stmt|;
 comment|/* free list */
-name|short
+name|u_int16_t
 name|dq_flags
 decl_stmt|;
 comment|/* flags, see below */
-name|short
+name|u_int16_t
 name|dq_cnt
 decl_stmt|;
 comment|/* count of active references */
-name|short
+name|u_int16_t
 name|dq_spare
 decl_stmt|;
 comment|/* unused spare padding */
-name|short
+name|u_int16_t
 name|dq_type
 decl_stmt|;
 comment|/* quota type of this dquot */
-name|u_long
+name|u_int32_t
 name|dq_id
 decl_stmt|;
 comment|/* identifier this applies to */
@@ -437,14 +437,14 @@ value|dq_dqb.dqb_itime
 end_define
 
 begin_comment
-comment|/*  * If the system has never checked for a quota for this file, then it is set  * to NODQUOT.  Once a write attempt is made the inode pointer is set to  * reference a dquot structure.  */
+comment|/*  * If the system has never checked for a quota for this file, then it is  * set to NODQUOT.  Once a write attempt is made the inode pointer is set  * to reference a dquot structure.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NODQUOT
-value|((struct dquot *) 0)
+value|NULL
 end_define
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufsmount.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufsmount.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_struct_decl
@@ -208,6 +208,16 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MNINDIR
+parameter_list|(
+name|ump
+parameter_list|)
+value|((ump)->um_nindir)
+end_define
+
+begin_define
+define|#
+directive|define
 name|blkptrtodb
 parameter_list|(
 name|ump
@@ -229,16 +239,6 @@ parameter_list|,
 name|b
 parameter_list|)
 value|((b) == (a) + ump->um_seqinc)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MNINDIR
-parameter_list|(
-name|ump
-parameter_list|)
-value|((ump)->um_nindir)
 end_define
 
 end_unit
