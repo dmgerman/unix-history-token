@@ -619,7 +619,7 @@ begin_define
 define|#
 directive|define
 name|_POSIX2_VERSION
-value|200112L
+value|199212L
 end_define
 
 begin_comment
