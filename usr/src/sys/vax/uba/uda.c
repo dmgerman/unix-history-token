@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * %sccs.include.redist.c%  *  *	@(#)uda.c	7.29 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * %sccs.include.redist.c%  *  *	@(#)uda.c	7.30 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1284,9 +1284,18 @@ operator|)
 name|reg
 expr_stmt|;
 comment|/* 	 * Initialise the controller (partially).  The UDA50 programmer's 	 * manual states that if initialisation fails, it should be retried 	 * at least once, but after a second failure the port should be 	 * considered `down'; it also mentions that the controller should 	 * initialise within ten seconds.  Or so I hear; I have not seen 	 * this manual myself. 	 */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|QBA
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|GENERIC
+argument_list|)
 name|s
 operator|=
 name|spl6
@@ -1391,6 +1400,9 @@ comment|/* should have interrupted by now */
 ifdef|#
 directive|ifdef
 name|QBA
+ifndef|#
+directive|ifndef
+name|GENERIC
 name|sc
 operator|->
 name|sc_ipl
@@ -1400,6 +1412,18 @@ operator|=
 name|qbgetpri
 argument_list|()
 expr_stmt|;
+else|#
+directive|else
+name|sc
+operator|->
+name|sc_ipl
+operator|=
+name|br
+operator|=
+literal|0x15
+expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 return|return
@@ -1423,9 +1447,18 @@ condition|)
 goto|goto
 name|again
 goto|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|QBA
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|GENERIC
+argument_list|)
 name|splx
 argument_list|(
 name|s
