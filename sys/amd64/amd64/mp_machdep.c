@@ -742,12 +742,14 @@ expr_stmt|;
 if|if
 condition|(
 name|apic_id
-operator|>
+operator|>=
 name|mp_maxid
 condition|)
 name|mp_maxid
 operator|=
 name|apic_id
+operator|+
+literal|1
 expr_stmt|;
 if|if
 condition|(
