@@ -123,15 +123,32 @@ define|\
 value|(x)->ndis_txidx = ((x)->ndis_txidx + 1) % (x)->ndis_maxpkts
 end_define
 
+begin_define
+define|#
+directive|define
+name|arpcom
+value|ic.ic_ac
+end_define
+
 begin_struct
 struct|struct
 name|ndis_softc
 block|{
 name|struct
-name|arpcom
+name|ieee80211com
+name|ic
+decl_stmt|;
+comment|/* interface info */
+ifdef|#
+directive|ifdef
+name|notdef
+name|struct
+name|ieee80211com
 name|arpcom
 decl_stmt|;
 comment|/* interface info */
+endif|#
+directive|endif
 name|struct
 name|ifmedia
 name|ifmedia
@@ -250,6 +267,18 @@ decl_stmt|;
 name|struct
 name|nch
 name|ndis_cfglist_head
+decl_stmt|;
+name|int
+name|ndis_80211
+decl_stmt|;
+name|int
+name|ndis_link
+decl_stmt|;
+name|uint32_t
+name|ndis_filter
+decl_stmt|;
+name|int
+name|ndis_if_flags
 decl_stmt|;
 name|struct
 name|sysctl_ctx_list

@@ -4469,6 +4469,12 @@ name|ndis_resource_list
 modifier|*
 name|nmb_rlist
 decl_stmt|;
+name|ndis_status
+name|nmb_getstat
+decl_stmt|;
+name|ndis_status
+name|nmb_setstat
+decl_stmt|;
 block|}
 struct|;
 end_struct

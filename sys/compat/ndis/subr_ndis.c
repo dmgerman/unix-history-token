@@ -168,6 +168,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net80211/ieee80211_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net80211/ieee80211_ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/pci/pcireg.h>
 end_include
 
@@ -3370,7 +3382,7 @@ name|mtx
 argument_list|,
 literal|"ndislock"
 argument_list|,
-name|MTX_NETWORK_LOCK
+literal|"ndis spin lock"
 argument_list|,
 name|MTX_DEF
 operator||
