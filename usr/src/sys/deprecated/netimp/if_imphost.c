@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imphost.c	4.6	82/03/09	*/
+comment|/*	if_imphost.c	4.7	82/03/12	*/
 end_comment
 
 begin_include
@@ -438,12 +438,6 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|register
-name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|;
 name|COUNT
 argument_list|(
 name|HOSTFREE
@@ -587,15 +581,6 @@ literal|0
 expr_stmt|;
 name|hostrelease
 argument_list|(
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-expr|struct
-name|hmbuf
-operator|*
-argument_list|)
-argument_list|,
 name|hp
 argument_list|)
 expr_stmt|;
