@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.h	1.1	86/01/05	*/
+comment|/*	trap.h	1.2	86/11/25	*/
 end_comment
 
 begin_comment
@@ -174,6 +174,17 @@ end_define
 
 begin_comment
 comment|/* bus error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_KDBTRAP
+value|17
+end_define
+
+begin_comment
+comment|/* kernel debugger trap */
 end_comment
 
 end_unit

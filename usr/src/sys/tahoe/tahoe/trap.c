@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	1.5	86/07/16	*/
+comment|/*	trap.c	1.6	86/11/25	*/
 end_comment
 
 begin_include
@@ -185,16 +185,31 @@ comment|/* T_KSPNOTVAL */
 literal|"Bus error"
 block|,
 comment|/* T_BUSERR */
+literal|"Kernel debugger trap"
+block|,
+comment|/* T_KDBTRAP */
 block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_decl_stmt
+name|int
 name|TRAP_TYPES
-value|(sizeof (trap_type) / sizeof (trap_type[0]))
-end_define
+init|=
+sizeof|sizeof
+argument_list|(
+name|trap_type
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|trap_type
+index|[
+literal|0
+index|]
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Called from the trap handler when a processor trap occurs.  */
@@ -330,6 +345,20 @@ name|type
 condition|)
 block|{
 default|default:
+ifdef|#
+directive|ifdef
+name|KDB
+if|if
+condition|(
+name|kdb_trap
+argument_list|(
+operator|&
+name|psl
+argument_list|)
+condition|)
+return|return;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"trap type %d, code = %x, pc = %x\n"
