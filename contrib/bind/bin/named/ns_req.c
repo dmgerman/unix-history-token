@@ -10782,15 +10782,9 @@ comment|/* first just copy over the type_covered, algorithm, */
 comment|/* labels, orig ttl, two timestamps, and the footprint */
 if|if
 condition|(
-operator|(
-name|dp
-operator|->
-name|d_size
-operator|-
-literal|18
-operator|)
-operator|>
 name|buflen
+operator|<
+literal|18
 condition|)
 goto|goto
 name|cleanup

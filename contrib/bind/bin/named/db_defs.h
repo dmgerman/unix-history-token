@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|MAXDATA
-value|(2*MAXDNAME + 5*INT32SZ)
+value|(3*MAXDNAME + 5*INT32SZ)
 end_define
 
 begin_comment

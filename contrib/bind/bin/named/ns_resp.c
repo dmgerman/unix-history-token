@@ -9916,6 +9916,8 @@ name|data
 argument_list|)
 operator|-
 name|n
+operator|-
+name|INT16SZ
 expr_stmt|;
 name|n
 operator|=
@@ -10140,12 +10142,52 @@ operator|=
 name|origTTL
 expr_stmt|;
 block|}
+comment|/* 		 * Check that expire and signature times are internally 		 * consistant. 		 */
+if|if
+condition|(
+operator|!
+name|SEQ_GT
+argument_list|(
+name|exptime
+argument_list|,
+name|signtime
+argument_list|)
+operator|&&
+name|exptime
+operator|!=
+name|signtime
+condition|)
+block|{
+name|ns_debug
+argument_list|(
+name|ns_log_default
+argument_list|,
+literal|3
+argument_list|,
+literal|"ignoring SIG: signature expires before it was signed"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|(
+name|cp
+operator|-
+name|rrp
+operator|)
+operator|+
+name|dlen
+operator|)
+return|;
+block|}
 comment|/* Don't let bogus signers "sign" in the future.  */
 if|if
 condition|(
+name|SEQ_GT
+argument_list|(
 name|signtime
-operator|>
+argument_list|,
 name|now
+argument_list|)
 condition|)
 block|{
 name|ns_debug
@@ -10177,9 +10219,12 @@ block|}
 comment|/* Ignore received SIG RR's that are already expired.  */
 if|if
 condition|(
-name|exptime
-operator|<=
+name|SEQ_GT
+argument_list|(
 name|now
+argument_list|,
+name|exptime
+argument_list|)
 condition|)
 block|{
 name|ns_debug
