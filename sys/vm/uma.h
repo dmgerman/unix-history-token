@@ -645,6 +645,23 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Sets a high limit on the number of items allowed in a zone  *  * Arguments:  *	zone  The zone to limit  *  * Returns:  *	Nothing  */
+end_comment
+
+begin_function_decl
+name|void
+name|uma_zone_set_max
+parameter_list|(
+name|uma_zone_t
+name|zone
+parameter_list|,
+name|int
+name|nitems
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Replaces the standard page_alloc or obj_alloc functions for this zone  *  * Arguments:  *	zone   The zone whos back end allocator is being changed.  *	allocf A pointer to the allocation function  *  * Returns:  *	Nothing  *  * Discussion:  *	This could be used to implement pageable allocation, or perhaps  *	even DMA allocators if used in conjunction with the OFFPAGE  *	zone flag.  */
 end_comment
 
