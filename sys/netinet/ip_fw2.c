@@ -329,17 +329,6 @@ comment|/* XXX for in_cksum */
 end_comment
 
 begin_comment
-comment|/*  * This is used to avoid that a firewall-generated packet  * loops forever through the firewall.  Note that it must  * be a flag that is unused by other protocols that might  * be called from ip_output (e.g. IPsec) and it must be  * listed in M_COPYFLAGS in mbuf.h so that if the mbuf chain  * is altered on the way through ip_output it is not lost.  * It might be better to add an m_tag since the this happens  * infrequently.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_SKIP_FIREWALL
-value|M_PROTO6
-end_define
-
-begin_comment
 comment|/*  * set_disable contains one bit per set value (0..31).  * If the bit is set, all rules with the corresponding set  * are disabled. Set RESVD_SET(31) is reserved for the default rule  * and rules that are not deleted by the flush command,  * and CANNOT be disabled.  * Rules in set RESVD_SET can only be deleted explicitly.  */
 end_comment
 

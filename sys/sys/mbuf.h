@@ -574,12 +574,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_PROTO6
+name|M_SKIP_FIREWALL
 value|0x4000
 end_define
 
 begin_comment
-comment|/* protocol-specific (avoid M_BCAST conflict) */
+comment|/* skip firewall processing */
 end_comment
 
 begin_define
@@ -741,7 +741,7 @@ begin_define
 define|#
 directive|define
 name|M_COPYFLAGS
-value|(M_PKTHDR|M_EOR|M_RDONLY|M_PROTO1|M_PROTO1|M_PROTO2|\ 			    M_PROTO3|M_PROTO4|M_PROTO5|M_PROTO6|\ 			    M_BCAST|M_MCAST|M_FRAG|M_FIRSTFRAG|M_LASTFRAG)
+value|(M_PKTHDR|M_EOR|M_RDONLY|M_PROTO1|M_PROTO1|M_PROTO2|\ 			    M_PROTO3|M_PROTO4|M_PROTO5|M_SKIP_FIREWALL|\ 			    M_BCAST|M_MCAST|M_FRAG|M_FIRSTFRAG|M_LASTFRAG)
 end_define
 
 begin_comment
