@@ -122,7 +122,7 @@ directive|endif
 end_endif
 
 begin_empty
-empty|#ident "$Revision: 1.9 $"
+empty|#ident "$FreeBSD$"
 end_empty
 
 begin_decl_stmt

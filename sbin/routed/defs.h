@@ -10,7 +10,7 @@ name|sgi
 end_ifdef
 
 begin_empty
-empty|#ident "$Revision: 1.11 $"
+empty|#ident "$FreeBSD$"
 end_empty
 
 begin_endif

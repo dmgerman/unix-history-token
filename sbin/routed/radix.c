@@ -68,7 +68,7 @@ directive|endif
 end_endif
 
 begin_empty
-empty|#ident "$Revision: 1.3 $"
+empty|#ident "$FreeBSD$"
 end_empty
 
 begin_define
