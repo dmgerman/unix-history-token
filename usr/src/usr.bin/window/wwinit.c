@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwinit.c	3.25 %G%"
+literal|"@(#)wwinit.c	3.26 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -862,9 +862,6 @@ name|cap
 index|[
 literal|32
 index|]
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 operator|(
 name|void
