@@ -297,6 +297,9 @@ specifier|static
 name|cmd_erase
 argument_list|()
 block|{
+name|int
+name|c
+block|;
 comment|/* 	 * backspace past beginning of the string: this usually means 	 * abort the command. 	 */
 if|if
 condition|(
@@ -309,20 +312,23 @@ operator|(
 literal|1
 operator|)
 return|;
-end_expr_stmt
-
-begin_comment
 comment|/* erase an extra character, for the carat. */
-end_comment
+name|c
+operator|=
+operator|*
+operator|--
+name|cp
+operator|&
+literal|0xff
+expr_stmt|;
+end_expr_stmt
 
 begin_if
 if|if
 condition|(
 name|CONTROL_CHAR
 argument_list|(
-operator|*
-operator|--
-name|cp
+name|c
 argument_list|)
 condition|)
 block|{
@@ -459,6 +465,8 @@ index|[
 operator|-
 literal|1
 index|]
+operator|&
+literal|0xff
 argument_list|)
 operator|&&
 operator|!
@@ -476,6 +484,8 @@ index|[
 operator|-
 literal|1
 index|]
+operator|&
+literal|0xff
 argument_list|)
 operator|&&
 operator|!
@@ -492,6 +502,8 @@ index|[
 operator|-
 literal|1
 index|]
+operator|&
+literal|0xff
 argument_list|)
 operator|&&
 operator|!
@@ -576,6 +588,11 @@ argument_list|)
 expr_stmt|;
 name|cmd_col
 operator|++
+expr_stmt|;
+name|c
+operator|&=
+operator|~
+literal|0200
 expr_stmt|;
 name|c
 operator|=
@@ -1172,6 +1189,8 @@ name|isspace
 argument_list|(
 operator|*
 name|p
+operator|&
+literal|0xff
 argument_list|)
 condition|;
 operator|++
@@ -1203,6 +1222,8 @@ name|isspace
 argument_list|(
 operator|*
 name|p
+operator|&
+literal|0xff
 argument_list|)
 condition|;
 operator|++
@@ -2220,6 +2241,11 @@ name|putchr
 argument_list|(
 literal|'^'
 argument_list|)
+expr_stmt|;
+name|c
+operator|&=
+operator|~
+literal|0200
 expr_stmt|;
 name|c
 operator|=

@@ -222,7 +222,7 @@ directive|define
 name|ch_get
 parameter_list|()
 define|\
-value|((buf_head->block == ch_block&& \ 	    ch_offset< buf_head->datasize) ? \ 	    buf_head->data[ch_offset] : fch_get())
+value|((buf_head->block == ch_block&& \ 	    ch_offset< buf_head->datasize) ? \ 	    buf_head->data[ch_offset]& 0xff : fch_get())
 end_define
 
 begin_expr_stmt
@@ -311,6 +311,8 @@ name|data
 index|[
 name|ch_offset
 index|]
+operator|&
+literal|0xff
 operator|)
 return|;
 goto|goto
@@ -593,8 +595,6 @@ block|{
 operator|*
 operator|--
 name|p
-operator|&=
-literal|0177
 expr_stmt|;
 if|if
 condition|(
@@ -631,8 +631,6 @@ name|ch
 operator|=
 operator|*
 name|p
-operator|&
-literal|0177
 expr_stmt|;
 if|if
 condition|(
@@ -642,14 +640,10 @@ literal|'\r'
 operator|&&
 name|n
 operator|&&
-operator|(
 name|p
 index|[
 literal|1
 index|]
-operator|&
-literal|0177
-operator|)
 operator|==
 literal|'\n'
 condition|)
@@ -792,6 +786,8 @@ name|data
 index|[
 name|ch_offset
 index|]
+operator|&
+literal|0xff
 operator|)
 return|;
 end_return

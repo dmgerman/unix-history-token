@@ -85,7 +85,7 @@ name|CONTROL_CHAR
 parameter_list|(
 name|c
 parameter_list|)
-value|(iscntrl(c))
+value|(!isprint(c))
 end_define
 
 begin_define

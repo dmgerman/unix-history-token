@@ -347,6 +347,35 @@ begin_comment
 comment|/* Printing width of standout sequences */
 end_comment
 
+begin_decl_stmt
+name|int
+name|mode_flags
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|M_SO
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_UL
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_BO
+value|4
+end_define
+
 begin_comment
 comment|/*  * These two variables are sometimes defined in,  * and needed by, the termcap library.  * It may be necessary on some systems to declare them extern here.  */
 end_comment
@@ -1823,6 +1852,33 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|mode_flags
+operator|&
+name|M_SO
+condition|)
+name|so_exit
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|mode_flags
+operator|&
+name|M_UL
+condition|)
+name|ul_exit
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|mode_flags
+operator|&
+name|M_BO
+condition|)
+name|bo_exit
+argument_list|()
+expr_stmt|;
 name|tputs
 argument_list|(
 name|sc_clear
@@ -1846,6 +1902,33 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|mode_flags
+operator|&
+name|M_SO
+condition|)
+name|so_exit
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|mode_flags
+operator|&
+name|M_UL
+condition|)
+name|ul_exit
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|mode_flags
+operator|&
+name|M_BO
+condition|)
+name|bo_exit
+argument_list|()
+expr_stmt|;
 name|tputs
 argument_list|(
 name|sc_eol_clear
@@ -1878,6 +1961,10 @@ argument_list|,
 name|putchr
 argument_list|)
 expr_stmt|;
+name|mode_flags
+operator||=
+name|M_SO
+expr_stmt|;
 block|}
 end_block
 
@@ -1900,6 +1987,11 @@ literal|1
 argument_list|,
 name|putchr
 argument_list|)
+expr_stmt|;
+name|mode_flags
+operator|&=
+operator|~
+name|M_SO
 expr_stmt|;
 block|}
 end_block
@@ -1924,6 +2016,10 @@ argument_list|,
 name|putchr
 argument_list|)
 expr_stmt|;
+name|mode_flags
+operator||=
+name|M_UL
+expr_stmt|;
 block|}
 end_block
 
@@ -1946,6 +2042,11 @@ literal|1
 argument_list|,
 name|putchr
 argument_list|)
+expr_stmt|;
+name|mode_flags
+operator|&=
+operator|~
+name|M_UL
 expr_stmt|;
 block|}
 end_block
@@ -1970,6 +2071,10 @@ argument_list|,
 name|putchr
 argument_list|)
 expr_stmt|;
+name|mode_flags
+operator||=
+name|M_BO
+expr_stmt|;
 block|}
 end_block
 
@@ -1992,6 +2097,11 @@ literal|1
 argument_list|,
 name|putchr
 argument_list|)
+expr_stmt|;
+name|mode_flags
+operator|&=
+operator|~
+name|M_BO
 expr_stmt|;
 block|}
 end_block

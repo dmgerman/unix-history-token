@@ -1790,6 +1790,8 @@ name|isupper
 argument_list|(
 operator|*
 name|p
+operator|&
+literal|0xff
 argument_list|)
 condition|)
 operator|*
@@ -1799,6 +1801,8 @@ name|tolower
 argument_list|(
 operator|*
 name|p
+operator|&
+literal|0xff
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2177,12 +2181,16 @@ name|isupper
 argument_list|(
 operator|*
 name|p
+operator|&
+literal|0xff
 argument_list|)
 condition|?
 name|tolower
 argument_list|(
 operator|*
 name|p
+operator|&
+literal|0xff
 argument_list|)
 else|:
 operator|*

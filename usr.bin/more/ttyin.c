@@ -129,7 +129,7 @@ return|return
 operator|(
 name|c
 operator|&
-literal|0177
+literal|0xff
 operator|)
 return|;
 block|}
