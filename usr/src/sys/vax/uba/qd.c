@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  * 	@(#)qd.c	1.4  Berkeley  %G%  *  * derived from: "@(#)qd.c	1.40	ULTRIX	10/2/86";  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  * 	@(#)qd.c	1.5  Berkeley  %G%  *  * derived from: "@(#)qd.c	1.40	ULTRIX	10/2/86";  */
 end_comment
 
 begin_comment
@@ -178,7 +178,7 @@ comment|/* user mapping status word */
 name|u_int
 name|kernel_loop
 decl_stmt|;
-comment|/* if kernel console is redirected */
+comment|/* if kernel console is redirected (DEFUNCT) */
 name|u_int
 name|user_dma
 decl_stmt|;
@@ -6527,6 +6527,14 @@ operator|*
 operator|)
 name|datap
 expr_stmt|;
+break|break;
+comment|/* 	     * ultrix has a bizarre scheme for routing console output 	     * to an alternate window (xcons).  these ioctls are 	     * left in as no-ops so the X11R2 qdss server code doesn't 	     * have to be modified. console redirection is accomplished 	     * by a more sensible method using TIOCCONS in 4.3.tahoe BSD. 	     */
+case|case
+name|QD_KERN_LOOP
+case|:
+case|case
+name|QD_KERN_UNLOOP
+case|:
 break|break;
 default|default:
 comment|/*----------------------------- 		* service tty type ioctl's  */
