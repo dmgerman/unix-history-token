@@ -8,7 +8,7 @@ comment|/* Header files used by all modules */
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/*  * $Id: vinumhdr.h,v 1.15 1999/10/12 09:40:35 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -218,6 +218,12 @@ directive|include
 file|<dev/vinum/vinumext.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/cpu.h>
+end_include
+
 begin_undef
 undef|#
 directive|undef
@@ -321,7 +327,7 @@ name|Malloc
 parameter_list|(
 name|x
 parameter_list|)
-value|malloc((x), M_DEVBUF, M_WAITOK)
+value|malloc((x), M_DEVBUF, intr_nesting_level == 0)
 end_define
 
 begin_define
