@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  */
 end_comment
 
 begin_ifndef
@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)putpcc.c	5.1 (Berkeley) 6/7/85"
+literal|"@(#)putpcc.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * putpcc.c  *  * Intermediate code generation for S. C. Johnson C compilers  * New version using binary polish postfix intermediate  *  * University of Utah CS Dept modification history:  *  * $Header: putpcc.c,v 3.2 85/03/25 09:35:57 root Exp $  * $Log:	putpcc.c,v $  * Revision 3.2  85/03/25  09:35:57  root  * fseek return -1 on error.  *   * Revision 3.1  85/02/27  19:06:55  donn  * Changed to use pcc.h instead of pccdefs.h.  *   * Revision 2.12  85/02/22  01:05:54  donn  * putaddr() didn't know about intrinsic functions...  *   * Revision 2.11  84/11/28  21:28:49  donn  * Hacked putop() to handle any character expression being converted to int,  * not just function calls.  Previously it bombed on concatenations.  *   * Revision 2.10  84/11/01  22:07:07  donn  * Yet another try at getting putop() to work right.  It appears that the  * second pass can't abide certain explicit conversions (e.g. short to long)  * so the conversion code in putop() tries to remove them.  I think this  * version (finally) works.  *   * Revision 2.9  84/10/29  02:30:57  donn  * Earlier fix to putop() for conversions was insufficient -- we NEVER want to  * see the type of the left operand of the thing left over from stripping off  * conversions...  *   * Revision 2.8  84/09/18  03:09:21  donn  * Fixed bug in putop() where the left operand of an addrblock was being  * extracted...  This caused an extremely obscure conversion error when  * an array of longs was subscripted by a short.  *   * Revision 2.7  84/08/19  20:10:19  donn  * Removed stuff in putbranch that treats STGARG parameters specially -- the  * bug in the code generation pass that motivated it has been fixed.  *   * Revision 2.6  84/08/07  21:32:23  donn  * Bumped the size of the buffer for the intermediate code file from 0.5K  * to 4K on a VAX.  *   * Revision 2.5  84/08/04  20:26:43  donn  * Fixed a goof in the new putbranch() -- it now calls mkaltemp instead of  * mktemp().  Correction due to Jerry Berkman.  *   * Revision 2.4  84/07/24  19:07:15  donn  * Fixed bug reported by Craig Leres in which putmnmx() mistakenly assumed  * that mkaltemp() returns tempblocks, and tried to free them with frtemp().  *   * Revision 2.3  84/07/19  17:22:09  donn  * Changed putch1() so that OPPAREN expressions of type CHARACTER are legal.  *   * Revision 2.2  84/07/19  12:30:38  donn  * Fixed a type clash in Bob Corbett's new putbranch().  *   * Revision 2.1  84/07/19  12:04:27  donn  * Changed comment headers for UofU.  *   * Revision 1.8  84/07/19  11:38:23  donn  * Replaced putbranch() routine so that you can ASSIGN into argument variables.  * The code is from Bob Corbett, donated by Jerry Berkman.  *   * Revision 1.7  84/05/31  00:48:32  donn  * Fixed an extremely obscure bug dealing with the comparison of CHARACTER*1  * expressions -- a foulup in the order of COMOP and the comparison caused  * one operand of the comparison to be garbage.  *   * Revision 1.6  84/04/16  09:54:19  donn  * Backed out earlier fix for bug where items in the argtemplist were  * (incorrectly) being given away; this is now fixed in mkargtemp().  *   * Revision 1.5  84/03/23  22:49:48  donn  * Took out the initialization of the subroutine argument temporary list in  * putcall() -- it needs to be done once per statement instead of once per call.  *   * Revision 1.4  84/03/01  06:48:05  donn  * Fixed bug in Bob Corbett's code for argument temporaries that caused an  * addrblock to get thrown out inadvertently when it was needed for recycling  * purposes later on.  *   * Revision 1.3  84/02/26  06:32:38  donn  * Added Berkeley changes to move data definitions around and reduce offsets.  *   * Revision 1.2  84/02/26  06:27:45  donn  * Added code to catch TTEMP values passed to putx().  *   */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  */
 end_comment
 
 begin_ifndef
@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)optcse.c	5.1 (Berkeley) 6/7/85"
+literal|"@(#)optcse.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * optcse.c  *  * Common subexpression elimination routines, F77 compiler pass 1.  *  * University of Utah CS Dept modification history:  *  * $Log:	optcse.c,v $  * Revision 2.4  84/10/29  04:40:48  donn  * Problem with conversions -- two expressions headed by a conversion may be  * identical in structure but different in type, thus type must be checked in  * findnode().  This was causing a subscript to become REAL*8 type...  *   * Revision 2.3  84/08/04  20:38:53  donn  * Added fix from Jerry Berkman for an earlier fix from Alastair Fyfe --  * samebase() should treat EQUIVALENCEd variables just as daintily as  * COMMON variables.  *   * Revision 2.2  84/08/01  16:04:33  donn  * Changed rmcommaop so that it does subscripts too.  *   * Revision 2.1  84/07/19  12:03:44  donn  * Changed comment headers for UofU.  *   * Revision 1.5  84/07/09  14:43:05  donn  * Added changes to make OPPLUSEQ and OPSTAREQ expressions ineligible for  * CSE, since I can't think of a simple way to handle them and they are broken  * in the previous version, where they were treated like OPASSIGN -- this  * fails because CSE would think that the value of the lhs and rhs were equal.  *   * Revision 1.4  84/06/08  11:43:35  donn  * Yet another way of handling the bug with COMMON -- this one is from Alastair  * Fyfe at Sun.  I backed out the old fix.  *   * Revision 1.3  84/03/07  19:25:14  donn  * Changed method of handling COMMON bug -- COMMON variables are now treated  * like array elements and hence are ineligible for CSE.  *   * Revision 1.2  84/02/26  03:30:47  donn  * Fixed bug in evaluation graph construction that caused two variables in  * common to be considered identical if they were merely in the same common,  * rather than in the same common at the same offset.  *   */

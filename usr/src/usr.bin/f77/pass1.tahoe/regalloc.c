@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  */
 end_comment
 
 begin_ifndef
@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)regalloc.c	5.1 (Berkeley) 6/7/85"
+literal|"@(#)regalloc.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * regalloc.c  *  * Register optimization routines for f77 compiler, pass 1  *  * University of Utah CS Dept modification history:  *  * $History$  * $Log:	regalloc.c,v $  * Revision 1.4  86/02/12  15:29:16  rcs  * 4.3 F77. C. Keating.  *   * Revision 2.9  85/03/18  21:35:05  donn  * Bob Corbett's hack to prevent conflicts between subroutine side effects  * and register assignment.  Makes the code a lot worse...  *   * Revision 2.8  85/02/22  02:14:08  donn  * In code like 'x = foo(x)', alreg() would copy the memory version of the  * variable 'x' into the register version after the assignment, clobbering  * the result.  A small change to regwrite() seems to prevent this.  *   * Revision 2.7  85/02/16  03:32:45  donn  * Fixed a bug where the loop test and increment were having register  * substitution performed twice, once in the environment of the current  * loop and once in the environment of the containing loop.  If the  * containing loop puts (say) the inner loop's index variable in register  * but the inner loop does not, havoc results.  *   * Revision 2.6  85/02/14  23:21:45  donn  * Don't permit variable references of the form 'a(i)' to be put in register  * if array 'a' is in common.  This is because there is no good way to  * identify instances of this sort without getting confused with other  * variables in the same common block which are in register.  Sigh.  *   * Revision 2.5  85/01/11  21:08:00  donn  * Made changes so that we pay attention to SAVE statements.  Added a new  * gensetreturn() function to implement this.  *   * Revision 2.4  84/09/03  22:37:28  donn  * Changed the treatment of SKRETURN in alreg() so that all variables in  * register, not just COMMON variables, get written out to memory before a  * RETURN.  This was causing the return value of a function to get lost when  * a RETURN was done from inside a loop (among other problems).  *   * Revision 2.3  84/08/04  20:52:42  donn  * Added fixes for EXTERNAL parameters from Jerry Berkman.  *   * Revision 2.2  84/08/04  20:34:29  donn  * Fixed a stupidity pointed out by Jerry Berkman -- the 'floats in register'  * stuff applies if the TARGET is a VAX, not if the local machine is a VAX.  *   * Revision 2.1  84/07/19  12:04:47  donn  * Changed comment headers for UofU.  *   * Revision 1.5  83/11/27  19:25:41  donn  * Added REAL to the list of types which may appear in registers (VAXen only).  *   * Revision 1.4  83/11/13  02:38:39  donn  * Bug fixed in alreg()'s handling of computed goto's.  A '<=' in place of a  * '<' led to core dumps when we walked off the end of the list of labels...  *   * Revision 1.3  83/11/12  01:25:57  donn  * Bug in redundant register assignment code, mistakenly carried over some old  * code that sometimes rewound a slot pointer even when a redundant slot wasn't  * deleted; this caused an infinite loop...  Seems to work now.  *   * Revision 1.2  83/11/09  14:58:12  donn  * Took out broken code dealing with redundant register initializations.  * Couldn't see what to do about redundantly initializing a DO variable but  * I did fix things so that an assignment from a register into the same  * register is always deleted.  *   */

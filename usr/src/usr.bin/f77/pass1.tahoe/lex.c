@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  */
 end_comment
 
 begin_ifndef
@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	5.1 (Berkeley) 6/7/85"
+literal|"@(#)lex.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * lex.c  *  * Lexical scanner routines for the f77 compiler, pass 1, 4.2 BSD.  *  * University of Utah CS Dept modification history:  *  * $Log:	lex.c,v $  * Revision 1.2  84/10/27  02:20:09  donn  * Fixed bug where the input file and the name field of the include file  * structure shared -- when the input file name was freed, the include file  * name got stomped on, leading to peculiar error messages.  *   */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  */
 end_comment
 
 begin_ifndef
@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bb.c	5.1 (Berkeley) 6/7/85"
+literal|"@(#)bb.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * bb.c  *  * Basic block optimizations.  *  * University of Utah CS Dept modification history:  *  * Revision 2.1  84/07/19  12:01:20  donn  * Changed comment headers for UofU.  *   * Revision 1.2  84/04/02  14:22:49  donn  * Bug in copy propagation missed places where temporaries are assigned to  * by OPSTAREQ or OPPLUSEQ, e.g. exponentiation with an integer constant  * power, expanded inline.  *   */
