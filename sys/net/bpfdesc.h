@@ -202,6 +202,21 @@ comment|/* read timeout has expired in select */
 end_comment
 
 begin_comment
+comment|/* Test whether a BPF is ready for read(). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|bpf_ready
+parameter_list|(
+name|bd
+parameter_list|)
+define|\
+value|((bd)->bd_hlen != 0 ||						\ 	 (((bd)->bd_immediate || (bd)->bd_state == BPF_TIMED_OUT)&&	\ 	 (bd)->bd_slen != 0))
+end_define
+
+begin_comment
 comment|/*  * Descriptor associated with each attached hardware interface.  */
 end_comment
 
