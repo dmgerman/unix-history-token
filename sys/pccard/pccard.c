@@ -78,18 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pccard/card.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pccard/slot.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<i386/isa/isa.h>
 end_include
 
@@ -103,6 +91,18 @@ begin_include
 include|#
 directive|include
 file|<i386/isa/icu.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pccard/card.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pccard/slot.h>
 end_include
 
 begin_decl_stmt
