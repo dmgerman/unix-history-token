@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: pcap.c,v 1.12 94/06/12 14:32:23 leres Exp $ (LBL)"
+literal|"@(#) $Header: /home/ncvs/src/lib/libpcap/pcap.c,v 1.1.1.1 1995/01/20 04:13:03 jkh Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,6 +34,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -513,52 +519,11 @@ name|int
 name|errnum
 parameter_list|)
 block|{
-specifier|extern
-name|int
-name|sys_nerr
-decl_stmt|;
-comment|/* 	extern char *sys_errlist[]; */
-specifier|static
-name|char
-name|ebuf
-index|[
-literal|20
-index|]
-decl_stmt|;
-if|if
-condition|(
-operator|(
-name|unsigned
-name|int
-operator|)
-name|errnum
-operator|<
-name|sys_nerr
-condition|)
 return|return
-operator|(
-name|sys_errlist
-index|[
-name|errnum
-index|]
-operator|)
-return|;
-operator|(
-name|void
-operator|)
-name|sprintf
+name|strerror
 argument_list|(
-name|ebuf
-argument_list|,
-literal|"Unknown error: %d"
-argument_list|,
 name|errnum
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ebuf
-operator|)
 return|;
 block|}
 end_function
