@@ -1145,6 +1145,34 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Dependencies */
+end_comment
+
+begin_function_decl
+name|int
+name|sortdeps
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|chkifdepends
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Externs */
 end_comment
 
