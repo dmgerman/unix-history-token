@@ -3671,7 +3671,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"extern struct isa_driver %3.3sdriver;"
+literal|"extern struct isa_driver %sdriver;"
 argument_list|,
 name|dp
 operator|->
@@ -3988,7 +3988,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"{ -1,&%3.3sdriver, %8.8s,"
+literal|"{ -1,&%sdriver, %s,"
 argument_list|,
 name|mp
 operator|->
@@ -4003,7 +4003,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%6.6s, %2d, C 0x%05X, %5d, %8.8s,  %2d, 0x%04X, %2d, 0, 0, 0, 1 },\n"
+literal|"%s, %2d, C 0x%05X, %5d, %s,  %2d, 0x%04X, %2d, 0, 0, 0, 1 },\n"
 argument_list|,
 name|sirq
 argument_list|(
@@ -4183,7 +4183,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"{ %2d,&%3.3sdriver,"
+literal|"{ %2d,&%sdriver,"
 argument_list|,
 operator|(
 operator|*
@@ -4206,7 +4206,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|" %8.8s,"
+literal|" %s,"
 argument_list|,
 name|dp
 operator|->
@@ -4229,7 +4229,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%6.6s, %2d, C 0x%05X, %5d, %8.8s,  %2d, 0x%04X, 0, 0, 0, 0, 1 },\n"
+literal|"%s, %2d, C 0x%05X, %5d, %s,  %2d, 0x%04X, 0, 0, 0, 0, 1 },\n"
 argument_list|,
 name|sirq
 argument_list|(
