@@ -377,6 +377,17 @@ name|D_TTY
 operator||
 name|D_KQFILTER
 block|,
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500014
+comment|/* bmaj */
+operator|-
+literal|1
+block|,
+endif|#
+directive|endif
 comment|/* kqfilter */
 name|ttykqfilter
 block|, }
