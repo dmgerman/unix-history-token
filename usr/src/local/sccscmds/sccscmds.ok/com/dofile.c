@@ -8,7 +8,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ndir.h>
+file|<dir.h>
 end_include
 
 begin_expr_stmt
@@ -21,7 +21,7 @@ operator|)
 name|dofile
 operator|.
 name|c
-literal|1.3
+literal|1.4
 argument_list|)
 expr_stmt|;
 end_expr_stmt
