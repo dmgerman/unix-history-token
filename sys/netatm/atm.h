@@ -659,20 +659,6 @@ struct|struct
 name|sockaddr_atm
 block|{
 comment|/* XNS_EXT */
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|BSD
-argument_list|)
-operator|&&
-operator|(
-name|BSD
-operator|>=
-literal|199103
-operator|)
-operator|)
 name|u_char
 name|satm_len
 decl_stmt|;
@@ -681,14 +667,6 @@ name|u_char
 name|satm_family
 decl_stmt|;
 comment|/* Address family */
-else|#
-directive|else
-name|u_short
-name|satm_family
-decl_stmt|;
-comment|/* Address family */
-endif|#
-directive|endif
 name|struct
 name|t_atm_sap
 name|satm_addr

@@ -285,20 +285,8 @@ name|AF_ATM
 block|,
 literal|"atm"
 block|,
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
 name|atm_initialize
 block|,
-else|#
-directive|else
-literal|0
-block|,
-endif|#
-directive|endif
 literal|0
 block|,
 literal|0
@@ -332,23 +320,6 @@ name|atm
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-operator|(
-name|BSD
-operator|>=
-literal|199506
-operator|)
-operator|)
-end_if
 
 begin_comment
 comment|/*  * Protocol request not supported  *  * Arguments:  *	so	pointer to socket  *  * Returns:  *	errno	error - operation not supported  *  */
@@ -498,15 +469,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* (defined(__FreeBSD__)&& (BSD>= 199506)) */
-end_comment
 
 end_unit
 

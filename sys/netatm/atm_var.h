@@ -29,27 +29,6 @@ begin_comment
 comment|/*  * Global variable declarations  */
 end_comment
 
-begin_comment
-comment|/* atm_aal5.c */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-operator|(
-name|BSD
-operator|>=
-literal|199506
-operator|)
-operator|)
-end_if
-
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -57,11 +36,6 @@ name|pr_usrreqs
 name|atm_aal5_usrreqs
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* atm_proto.c */
@@ -200,27 +174,6 @@ name|atm_attributes_pool
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* atm_usrreq.c */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-operator|(
-name|BSD
-operator|>=
-literal|199506
-operator|)
-operator|)
-end_if
-
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -228,11 +181,6 @@ name|pr_usrreqs
 name|atm_dgram_usrreqs
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Global function declarations  */
@@ -757,23 +705,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|BSD
-argument_list|)
-operator|&&
-operator|(
-name|BSD
-operator|>=
-literal|199103
-operator|)
-operator|)
-end_if
-
 begin_function_decl
 name|int
 name|atm_ifoutput
@@ -795,34 +726,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-name|int
-name|atm_ifoutput
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|KBuffer
-modifier|*
-parameter_list|,
-name|struct
-name|sockaddr
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|struct
@@ -851,23 +754,6 @@ end_function_decl
 begin_comment
 comment|/* atm_proto.c */
 end_comment
-
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-operator|(
-name|BSD
-operator|>=
-literal|199506
-operator|)
-operator|)
-end_if
 
 begin_function_decl
 name|int
@@ -941,11 +827,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* atm_signal.c */
@@ -1384,57 +1265,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* atm_usrreq.c */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|(
-operator|!
-operator|(
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-operator|(
-name|BSD
-operator|>=
-literal|199506
-operator|)
-operator|)
-operator|)
-end_if
-
-begin_function_decl
-name|int
-name|atm_dgram_usrreq
-parameter_list|(
-name|struct
-name|socket
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|KBuffer
-modifier|*
-parameter_list|,
-name|KBuffer
-modifier|*
-parameter_list|,
-name|KBuffer
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

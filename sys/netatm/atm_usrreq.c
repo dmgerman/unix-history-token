@@ -194,23 +194,6 @@ begin_comment
 comment|/*  * New-style socket request routines  */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-operator|(
-name|BSD
-operator|>=
-literal|199506
-operator|)
-operator|)
-end_if
-
 begin_decl_stmt
 name|struct
 name|pr_usrreqs
@@ -271,11 +254,6 @@ comment|/* pru_sockaddr */
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Handy common code macros  */

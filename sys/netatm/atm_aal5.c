@@ -457,23 +457,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-operator|(
-name|BSD
-operator|>=
-literal|199506
-operator|)
-operator|)
-end_if
-
 begin_comment
 comment|/*  * New-style socket request routines  */
 end_comment
@@ -546,11 +529,6 @@ comment|/* pru_sopoll */
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Local variables  */
@@ -1705,20 +1683,6 @@ name|atp_type
 index|]
 operator|++
 expr_stmt|;
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|BSD
-argument_list|)
-operator|&&
-operator|(
-name|BSD
-operator|>=
-literal|199103
-operator|)
-operator|)
 name|so
 operator|=
 name|sonewconn
@@ -1730,19 +1694,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|so
-operator|=
-name|sonewconn
-argument_list|(
-name|atp0
-operator|->
-name|atp_socket
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|so
