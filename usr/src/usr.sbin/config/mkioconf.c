@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkioconf.c	5.2 (Berkeley) %G%"
+literal|"@(#)mkioconf.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2181,10 +2181,9 @@ name|d_vec
 operator|==
 literal|0
 condition|)
-block|{
 name|printf
 argument_list|(
-literal|"must specify vector for device %s%d\n"
+literal|"Warning, no interrupt vector specified for device %s%d\n"
 argument_list|,
 name|dp
 operator|->
@@ -2195,8 +2194,6 @@ operator|->
 name|d_unit
 argument_list|)
 expr_stmt|;
-continue|continue;
-block|}
 if|if
 condition|(
 name|dp
