@@ -841,7 +841,7 @@ name|p
 argument_list|)
 condition|)
 block|{
-name|int
+name|uintptr_t
 name|v
 decl_stmt|;
 name|struct
