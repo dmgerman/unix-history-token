@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fflush.c	5.1 (Berkeley) %G%"
+literal|"@(#)fflush.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,7 +94,11 @@ name|fp
 operator|->
 name|_flags
 operator|&
+operator|(
 name|__SWR
+operator||
+name|__SRW
+operator|)
 operator|)
 operator|==
 literal|0
