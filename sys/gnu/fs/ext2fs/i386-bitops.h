@@ -186,7 +186,7 @@ condition|)
 return|return
 literal|0
 return|;
-asm|__asm__(" 		cld 		movl $-1,%%eax 		xorl %%edx,%%edx 		repe; scasl 		je 1f 		xorl -4(%%edi),%%eax 		subl $4,%%edi 		bsfl %%eax,%%edx 1:		subl %%ebx,%%edi 		shll $3,%%edi 		addl %%edi,%%edx" 		:"=d" (res) 		:"c" ((size + 31)>> 5), "D" (addr), "b" (addr) 		:"ax", "cx", "di");
+asm|__asm__("			\n\ 		cld			\n\ 		movl $-1,%%eax		\n\ 		xorl %%edx,%%edx	\n\ 		repe; scasl		\n\ 		je 1f			\n\ 		xorl -4(%%edi),%%eax	\n\ 		subl $4,%%edi		\n\ 		bsfl %%eax,%%edx	\n\ 1:		subl %%ebx,%%edi	\n\ 		shll $3,%%edi		\n\ 		addl %%edi,%%edx" 		:"=d" (res) 		:"c" ((size + 31)>> 5), "D" (addr), "b" (addr) 		:"ax", "cx", "di");
 return|return
 name|res
 return|;
@@ -249,7 +249,7 @@ name|bit
 condition|)
 block|{
 comment|/* 		 * Look for zero in first byte 		 */
-asm|__asm__(" 			bsfl %1,%0 			jne 1f 			movl $32, %0 1:			" 			: "=r" (set) 			: "r" (~(*p>> bit)));
+asm|__asm__("			\n\ 			bsfl %1,%0		\n\ 			jne 1f			\n\ 			movl $32, %0		\n\ 1:			" 			: "=r" (set) 			: "r" (~(*p>> bit)));
 if|if
 condition|(
 name|set
@@ -368,7 +368,7 @@ condition|)
 return|return
 name|addr
 return|;
-asm|__asm__("cld                 repnz; scasb                 jnz 1f                 dec %%edi 1:              "                 : "=D" (addr), "=c" (size)                 : "0" (addr), "1" (size), "a" (c));
+asm|__asm__("			\n\ 		cld			\n\                 repnz; scasb		\n\                 jnz 1f			\n\                 dec %%edi		\n\ 1:              "                 : "=D" (addr), "=c" (size)                 : "0" (addr), "1" (size), "a" (c));
 return|return
 name|addr
 return|;
