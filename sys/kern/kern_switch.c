@@ -1434,6 +1434,9 @@ modifier|*
 name|td
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|PREEMPTION
 name|struct
 name|thread
 modifier|*
@@ -1444,6 +1447,8 @@ name|cpri
 decl_stmt|,
 name|pri
 decl_stmt|;
+endif|#
+directive|endif
 name|mtx_assert
 argument_list|(
 operator|&
