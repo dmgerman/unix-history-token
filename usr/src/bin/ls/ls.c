@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.74 (Berkeley) %G%"
+literal|"@(#)ls.c	5.75 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,13 +80,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<fts.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -104,13 +116,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -1095,12 +1101,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|display
@@ -1153,10 +1154,8 @@ block|{
 case|case
 name|FTS_DC
 case|:
-name|err
+name|warnx
 argument_list|(
-literal|0
-argument_list|,
 literal|"%s: directory causes a cycle"
 argument_list|,
 name|p
@@ -1171,22 +1170,13 @@ case|:
 case|case
 name|FTS_ERR
 case|:
-name|err
+name|warn
 argument_list|(
-literal|0
-argument_list|,
-literal|"%s: %s"
+literal|"%s"
 argument_list|,
 name|p
 operator|->
 name|fts_name
-argument_list|,
-name|strerror
-argument_list|(
-name|p
-operator|->
-name|fts_errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1478,22 +1468,13 @@ operator|==
 name|FTS_NS
 condition|)
 block|{
-name|err
+name|warn
 argument_list|(
-literal|0
-argument_list|,
-literal|"%s: %s"
+literal|"%s"
 argument_list|,
 name|cur
 operator|->
 name|fts_name
-argument_list|,
-name|strerror
-argument_list|(
-name|cur
-operator|->
-name|fts_errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|cur
@@ -1795,12 +1776,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|np
