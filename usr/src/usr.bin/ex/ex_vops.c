@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vops.c	6.2 %G%"
+literal|"@(#)ex_vops.c	6.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -330,11 +330,6 @@ else|:
 name|unddol
 operator|-
 name|dol
-argument_list|)
-expr_stmt|;
-name|vudump
-argument_list|(
-literal|"before big undo"
 argument_list|)
 expr_stmt|;
 name|savenote
