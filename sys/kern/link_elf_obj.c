@@ -1145,6 +1145,24 @@ name|modptr
 operator|=
 name|preload_search_by_type
 argument_list|(
+literal|"elf"
+name|__XSTRING
+argument_list|(
+name|__ELF_WORD_SIZE
+argument_list|)
+literal|" kernel"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|modptr
+operator|==
+name|NULL
+condition|)
+name|modptr
+operator|=
+name|preload_search_by_type
+argument_list|(
 literal|"elf kernel"
 argument_list|)
 expr_stmt|;
@@ -2239,6 +2257,21 @@ name|type
 operator|==
 name|NULL
 operator|||
+operator|(
+name|strcmp
+argument_list|(
+name|type
+argument_list|,
+literal|"elf"
+name|__XSTRING
+argument_list|(
+name|__ELF_WORD_SIZE
+argument_list|)
+literal|" module"
+argument_list|)
+operator|!=
+literal|0
+operator|&&
 name|strcmp
 argument_list|(
 name|type
@@ -2247,6 +2280,7 @@ literal|"elf module"
 argument_list|)
 operator|!=
 literal|0
+operator|)
 condition|)
 return|return
 operator|(
