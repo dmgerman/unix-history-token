@@ -1158,6 +1158,7 @@ break|break;
 case|case
 literal|'?'
 case|:
+default|default:
 name|usage
 argument_list|()
 expr_stmt|;
