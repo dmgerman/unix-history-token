@@ -13,12 +13,6 @@ directive|include
 file|"gzip.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_KERNEL_INFLATE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -30,11 +24,6 @@ include|#
 directive|include
 file|<sys/inflate.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* PKZIP header definitions */
@@ -340,12 +329,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_KERNEL_INFLATE
-end_ifdef
-
 begin_function
 name|int
 name|Flush
@@ -407,11 +390,6 @@ begin_comment
 comment|/* put it into the BSS */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Unzip in to out.  This routine works on both gzip and pkzip files.  *  * IN assertions: the buffer inbuf contains already the beginning of  * the compressed data, from offsets inptr to insize-1 included.  * The magic header has already been checked. The output buffer is cleared.  */
 end_comment
@@ -442,6 +420,8 @@ decl_stmt|;
 comment|/* extended local header */
 name|int
 name|n
+decl_stmt|,
+name|res
 decl_stmt|;
 name|crc
 operator|=
@@ -476,20 +456,17 @@ name|LOCLEN
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Decompress */
 if|if
 condition|(
 name|method
-operator|==
+operator|!=
 name|DEFLATED
 condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|USE_KERNEL_INFLATE
-name|int
-name|res
-decl_stmt|;
+name|error
+argument_list|(
+literal|"internal error, invalid method"
+argument_list|)
+expr_stmt|;
 name|infl
 operator|.
 name|gz_input
@@ -516,16 +493,6 @@ operator|&
 name|infl
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|int
-name|res
-init|=
-name|inflate
-argument_list|()
-decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|res
@@ -547,62 +514,6 @@ condition|)
 name|error
 argument_list|(
 literal|"invalid compressed format"
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|pkzip
-operator|&&
-name|method
-operator|==
-name|STORED
-condition|)
-block|{
-specifier|register
-name|ulong
-name|n
-init|=
-name|LG
-argument_list|(
-name|inbuf
-operator|+
-name|LOCLEN
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|n
-operator|!=
-name|LG
-argument_list|(
-name|inbuf
-operator|+
-name|LOCSIZ
-argument_list|)
-condition|)
-name|error
-argument_list|(
-literal|"length mismatch"
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-name|n
-operator|--
-condition|)
-name|put_char
-argument_list|(
-name|get_byte
-argument_list|()
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|error
-argument_list|(
-literal|"internal error, invalid method"
 argument_list|)
 expr_stmt|;
 comment|/* Get the crc and original length */

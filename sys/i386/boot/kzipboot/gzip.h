@@ -11,25 +11,6 @@ name|uchar
 typedef|;
 end_typedef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|USE_KERNEL_INFLATE
-end_ifndef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|short
-name|ushort
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -279,8 +260,8 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|uchar
+modifier|*
 name|inbuf
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -291,8 +272,8 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|uchar
+modifier|*
 name|outbuf
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -303,8 +284,8 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|uchar
+modifier|*
 name|window
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -465,27 +446,6 @@ name|m
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|USE_KERNEL_INFLATE
-end_ifndef
-
-begin_function_decl
-specifier|extern
-name|int
-name|inflate
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
