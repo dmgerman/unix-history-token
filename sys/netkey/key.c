@@ -32131,12 +32131,24 @@ name|ADDR
 expr_stmt|;
 block|}
 else|else
+block|{
+name|baselen
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX pacify gcc-3.1 */
 name|checktype
 operator|=
 name|NONE
 expr_stmt|;
+block|}
 break|break;
 default|default:
+name|baselen
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX pacify gcc-3.1 */
 name|checktype
 operator|=
 name|NONE
