@@ -6688,17 +6688,9 @@ condition|)
 block|{
 if|if
 condition|(
-if|#
-directive|if
-literal|0
-condition|compatMake&&
-endif|#
-directive|endif
-operator|(
 name|lastc
 operator|!=
 literal|'\\'
-operator|)
 condition|)
 block|{
 comment|/* 			 * If the character is a hash mark and it isn't escaped 			 * (or we're being compatible), the thing is a comment. 			 * Skip to the end of the line. 			 */
