@@ -201,6 +201,40 @@ return|;
 block|}
 end_function
 
+begin_struct
+struct|struct
+name|ia64_fdesc
+block|{
+name|u_int64_t
+name|func
+decl_stmt|;
+name|u_int64_t
+name|gp
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|FDESC_FUNC
+parameter_list|(
+name|fn
+parameter_list|)
+value|(((struct ia64_fdesc *) fn)->func)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FDESC_GP
+parameter_list|(
+name|fn
+parameter_list|)
+value|(((struct ia64_fdesc *) fn)->gp)
+end_define
+
 begin_comment
 comment|/*  * Finish a fork operation, with process p2 nearly set up.  * Copy and update the pcb, set up the stack so that the child  * ready to run and return to user mode.  */
 end_comment
@@ -425,9 +459,9 @@ index|[
 name|FRAME_R9
 index|]
 operator|=
-literal|0
+literal|1
 expr_stmt|;
-comment|/* no error 		*/
+comment|/* is child (FreeBSD) 	*/
 name|p2tf
 operator|->
 name|tf_r
@@ -435,9 +469,9 @@ index|[
 name|FRAME_R10
 index|]
 operator|=
-literal|1
+literal|0
 expr_stmt|;
-comment|/* is child (FreeBSD) 	*/
+comment|/* no error 		*/
 comment|/* 		 * Turn off RSE for a moment and work out our current 		 * ar.bspstore. This assumes that p1==curproc. Also 		 * flush dirty regs to ensure that the user's stacked 		 * regs are written out to backing store. 		 * 		 * We could cope with p1!=curproc by digging values 		 * out of its PCB but I don't see the point since 		 * current usage never allows it. 		 */
 asm|__asm __volatile("mov ar.rsc=0;;");
 asm|__asm __volatile("flushrs;;" ::: "memory");
@@ -587,7 +621,7 @@ name|pcb_rnat
 operator|=
 name|rnat
 expr_stmt|;
-comment|/* 		 * Arrange for continuation at child_return(), which 		 * will return to exception_return().  Note that the child 		 * process doesn't stay in the kernel for long! 		 */
+comment|/* 		 * Arrange for continuation at child_return(), which 		 * will return to exception_return().  Note that the child 		 * process doesn't stay in the kernel for long! 		 * 		 * We should really deal with the function descriptor 		 * for child_return in switch_trampoline so that a 		 * kthread started from a loaded module can have the 		 * right value for gp. 		 */
 name|up
 operator|->
 name|u_pcb
@@ -607,10 +641,10 @@ name|u_pcb
 operator|.
 name|pcb_r4
 operator|=
-operator|(
-name|u_int64_t
-operator|)
+name|FDESC_FUNC
+argument_list|(
 name|child_return
+argument_list|)
 expr_stmt|;
 name|up
 operator|->
@@ -618,10 +652,10 @@ name|u_pcb
 operator|.
 name|pcb_r5
 operator|=
-operator|(
-name|u_int64_t
-operator|)
+name|FDESC_FUNC
+argument_list|(
 name|exception_return
+argument_list|)
 expr_stmt|;
 name|up
 operator|->
@@ -640,10 +674,10 @@ name|u_pcb
 operator|.
 name|pcb_b0
 operator|=
-operator|(
-name|u_int64_t
-operator|)
+name|FDESC_FUNC
+argument_list|(
 name|switch_trampoline
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -702,10 +736,10 @@ name|u_pcb
 operator|.
 name|pcb_r4
 operator|=
-operator|(
-name|u_int64_t
-operator|)
+name|FDESC_FUNC
+argument_list|(
 name|func
+argument_list|)
 expr_stmt|;
 name|p
 operator|->

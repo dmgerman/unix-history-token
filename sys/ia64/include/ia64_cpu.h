@@ -767,6 +767,334 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Read the value of ar.k0.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|u_int64_t
+name|ia64_get_k0
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|u_int64_t
+name|result
+decl_stmt|;
+asm|__asm __volatile("mov %0=ar.k0" : "=r" (result));
+return|return
+name|result
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Read the value of ar.k1.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|u_int64_t
+name|ia64_get_k1
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|u_int64_t
+name|result
+decl_stmt|;
+asm|__asm __volatile("mov %0=ar.k1" : "=r" (result));
+return|return
+name|result
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Read the value of ar.k2.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|u_int64_t
+name|ia64_get_k2
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|u_int64_t
+name|result
+decl_stmt|;
+asm|__asm __volatile("mov %0=ar.k2" : "=r" (result));
+return|return
+name|result
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Read the value of ar.k3.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|u_int64_t
+name|ia64_get_k3
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|u_int64_t
+name|result
+decl_stmt|;
+asm|__asm __volatile("mov %0=ar.k3" : "=r" (result));
+return|return
+name|result
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Read the value of ar.k4.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|u_int64_t
+name|ia64_get_k4
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|u_int64_t
+name|result
+decl_stmt|;
+asm|__asm __volatile("mov %0=ar.k4" : "=r" (result));
+return|return
+name|result
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Read the value of ar.k5.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|u_int64_t
+name|ia64_get_k5
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|u_int64_t
+name|result
+decl_stmt|;
+asm|__asm __volatile("mov %0=ar.k5" : "=r" (result));
+return|return
+name|result
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Read the value of ar.k6.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|u_int64_t
+name|ia64_get_k6
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|u_int64_t
+name|result
+decl_stmt|;
+asm|__asm __volatile("mov %0=ar.k6" : "=r" (result));
+return|return
+name|result
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Read the value of ar.k7.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|u_int64_t
+name|ia64_get_k7
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|u_int64_t
+name|result
+decl_stmt|;
+asm|__asm __volatile("mov %0=ar.k7" : "=r" (result));
+return|return
+name|result
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Write the value of ar.k0.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ia64_set_k0
+parameter_list|(
+name|u_int64_t
+name|v
+parameter_list|)
+block|{
+asm|__asm __volatile("mov ar.k0=%0" :: "r" (v));
+block|}
+end_function
+
+begin_comment
+comment|/*  * Write the value of ar.k1.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ia64_set_k1
+parameter_list|(
+name|u_int64_t
+name|v
+parameter_list|)
+block|{
+asm|__asm __volatile("mov ar.k1=%0" :: "r" (v));
+block|}
+end_function
+
+begin_comment
+comment|/*  * Write the value of ar.k2.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ia64_set_k2
+parameter_list|(
+name|u_int64_t
+name|v
+parameter_list|)
+block|{
+asm|__asm __volatile("mov ar.k2=%0" :: "r" (v));
+block|}
+end_function
+
+begin_comment
+comment|/*  * Write the value of ar.k3.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ia64_set_k3
+parameter_list|(
+name|u_int64_t
+name|v
+parameter_list|)
+block|{
+asm|__asm __volatile("mov ar.k3=%0" :: "r" (v));
+block|}
+end_function
+
+begin_comment
+comment|/*  * Write the value of ar.k4.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ia64_set_k4
+parameter_list|(
+name|u_int64_t
+name|v
+parameter_list|)
+block|{
+asm|__asm __volatile("mov ar.k4=%0" :: "r" (v));
+block|}
+end_function
+
+begin_comment
+comment|/*  * Write the value of ar.k5.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ia64_set_k5
+parameter_list|(
+name|u_int64_t
+name|v
+parameter_list|)
+block|{
+asm|__asm __volatile("mov ar.k5=%0" :: "r" (v));
+block|}
+end_function
+
+begin_comment
+comment|/*  * Write the value of ar.k6.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ia64_set_k6
+parameter_list|(
+name|u_int64_t
+name|v
+parameter_list|)
+block|{
+asm|__asm __volatile("mov ar.k6=%0" :: "r" (v));
+block|}
+end_function
+
+begin_comment
+comment|/*  * Write the value of ar.k7.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ia64_set_k7
+parameter_list|(
+name|u_int64_t
+name|v
+parameter_list|)
+block|{
+asm|__asm __volatile("mov ar.k7=%0" :: "r" (v));
+block|}
+end_function
+
+begin_comment
 comment|/*  * Read the value of ar.itc.  */
 end_comment
 

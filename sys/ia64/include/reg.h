@@ -15,6 +15,12 @@ directive|define
 name|_MACHINE_REG_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_IA64_FPREG_DEFINED
+end_ifndef
+
 begin_struct
 struct|struct
 name|ia64_fpreg
@@ -37,6 +43,17 @@ operator|)
 argument_list|)
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|_IA64_FPREG_DEFINED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct

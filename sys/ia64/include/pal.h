@@ -359,7 +359,7 @@ begin_function_decl
 specifier|extern
 name|struct
 name|ia64_pal_result
-name|ia64_call_pal_static
+name|ia64_call_pal
 parameter_list|(
 name|u_int64_t
 name|proc

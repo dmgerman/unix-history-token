@@ -80,60 +80,60 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * LEAF  *	Declare a global leaf function.  *	A leaf function does not call other functions.  */
+comment|/*  * ENTRY  *	Declare a global leaf function.  *	A leaf function does not call other functions.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|LEAF
+name|ENTRY
 parameter_list|(
 name|_name_
 parameter_list|,
 name|_n_args_
 parameter_list|)
 define|\
-value|.global	_name_;				\ 	.proc	_name_;				\ _name_:;					\ 	.regstk	_n_args_, 0, 0, 0		\ 	MCOUNT
+value|.global	_name_;				\ 	.align	16;				\ 	.proc	_name_;				\ _name_:;					\ 	.regstk	_n_args_, 0, 0, 0		\ 	MCOUNT
 end_define
 
 begin_define
 define|#
 directive|define
-name|LEAF_NOPROFILE
+name|ENTRY_NOPROFILE
 parameter_list|(
 name|_name_
 parameter_list|,
 name|_n_args_
 parameter_list|)
 define|\
-value|.global	_name_;				\ 	.proc	_name_;				\ _name_:;					\ 	.regstk	_n_args_, 0, 0, 0
-end_define
-
-begin_comment
-comment|/*  * STATIC_LEAF  *	Declare a local leaf function.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|STATIC_LEAF
-parameter_list|(
-name|_name_
-parameter_list|,
-name|_n_args_
-parameter_list|)
-define|\
-value|.proc	_name_;				\ _name_:;					\ 	.regstk	_n_args_, 0, 0, 0		\ 	MCOUNT
+value|.global	_name_;				\ 	.align	16;				\ 	.proc	_name_;				\ _name_:;					\ 	.regstk	_n_args_, 0, 0, 0
 end_define
 
 begin_comment
-comment|/*  * XLEAF  *	Global alias for a leaf function, or alternate entry point  */
+comment|/*  * STATIC_ENTRY  *	Declare a local leaf function.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|XLEAF
+name|STATIC_ENTRY
+parameter_list|(
+name|_name_
+parameter_list|,
+name|_n_args_
+parameter_list|)
+define|\
+value|.align	16;				\ 	.proc	_name_;				\ _name_:;					\ 	.regstk	_n_args_, 0, 0, 0		\ 	MCOUNT
+end_define
+
+begin_comment
+comment|/*  * XENTRY  *	Global alias for a leaf function, or alternate entry point  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENTRY
 parameter_list|(
 name|_name_
 parameter_list|)
@@ -142,90 +142,13 @@ value|.globl	_name_;				\ _name_:
 end_define
 
 begin_comment
-comment|/*  * STATIC_XLEAF  *	Local alias for a leaf function, or alternate entry point  */
+comment|/*  * STATIC_XENTRY  *	Local alias for a leaf function, or alternate entry point  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|STATIC_XLEAF
-parameter_list|(
-name|_name_
-parameter_list|)
-define|\
-value|_name_:
-end_define
-
-begin_comment
-comment|/*  * NESTED  *	Declare a (global) nested function  *	A nested function calls other functions and needs  *	to use alloc to save registers.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NESTED
-parameter_list|(
-name|_name_
-parameter_list|,
-name|_n_args_
-parameter_list|)
-define|\
-value|.globl	_name_;				\ 	.proc	_name_;				\ _name_:;					\ 	.regstk	_n_args_, 0, 0, 0		\ 	MCOUNT
-end_define
-
-begin_define
-define|#
-directive|define
-name|NESTED_NOPROFILE
-parameter_list|(
-name|_name_
-parameter_list|,
-name|_n_args_
-parameter_list|)
-define|\
-value|.globl	_name_;				\ 	.proc	_name_;				\ _name_:;					\ 	.regstk	_n_args_, 0, 0, 0
-end_define
-
-begin_comment
-comment|/*  * STATIC_NESTED  *	Declare a local nested function.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|STATIC_NESTED
-parameter_list|(
-name|_name_
-parameter_list|,
-name|_n_args_
-parameter_list|)
-define|\
-value|.proc	_name_;				\ _name_:;					\ 	.regstk	_n_args_, 0, 0, 0		\ 	MCOUNT
-end_define
-
-begin_comment
-comment|/*  * XNESTED  *	Same as XLEAF, for a nested function.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|XNESTED
-parameter_list|(
-name|_name_
-parameter_list|)
-define|\
-value|.globl	_name_;				\ _name_:
-end_define
-
-begin_comment
-comment|/*  * STATIC_XNESTED  *	Same as STATIC_XLEAF, for a nested function.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|STATIC_XNESTED
+name|STATIC_XENTRY
 parameter_list|(
 name|_name_
 parameter_list|)
@@ -340,7 +263,7 @@ parameter_list|,
 name|label
 parameter_list|)
 define|\
-value|lda reg, label;						\ 	.data;							\ label:	ASCIZ msg;						\ 	.text;
+value|addl reg,@ltoff(label),gp;;		\ 	ld8 reg=[reg];;				\ 	.data;					\ label:	ASCIZ msg;				\ 	.text;
 end_define
 
 begin_comment

@@ -439,12 +439,17 @@ block|{
 name|u_int32_t
 name|freq
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|if (clockdev == NULL) 		panic("cpu_initclocks: no clock attached");
-endif|#
-directive|endif
+if|if
+condition|(
+name|clockdev
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"cpu_initclocks: no clock attached"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * We use cr.itc and cr.itm to implement a 1024hz clock. 	 */
 name|hz
 operator|=
@@ -576,13 +581,12 @@ name|stathz
 operator|=
 literal|128
 expr_stmt|;
-if|#
-directive|if
-literal|0
 comment|/* 	 * Get the clock started. 	 */
-block|CLOCK_INIT(clockdev);
-endif|#
-directive|endif
+name|CLOCK_INIT
+argument_list|(
+name|clockdev
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

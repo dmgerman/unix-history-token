@@ -34,6 +34,10 @@ block|{
 name|u_long
 name|md_flags
 decl_stmt|;
+name|vm_offset_t
+name|md_bspstore
+decl_stmt|;
+comment|/* initial ar.bspstore */
 name|struct
 name|trapframe
 modifier|*
