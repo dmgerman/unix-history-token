@@ -587,7 +587,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+comment|/*__inline__*/
 name|void
 name|mga_g400_emit_tex0
 parameter_list|(
@@ -1069,7 +1069,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+comment|/*__inline__*/
 name|void
 name|mga_g400_emit_pipe
 parameter_list|(
