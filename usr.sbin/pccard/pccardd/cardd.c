@@ -2395,6 +2395,12 @@ name|cardaddr
 operator|=
 literal|0x4000
 expr_stmt|;
+name|sp
+operator|->
+name|flags
+operator||=
+name|MEM_ASSIGNED
+expr_stmt|;
 if|if
 condition|(
 name|debug_level
