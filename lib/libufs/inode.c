@@ -268,7 +268,7 @@ name|inode
 operator|-
 operator|(
 name|inode
-operator|&
+operator|%
 name|INOPB
 argument_list|(
 name|fs
