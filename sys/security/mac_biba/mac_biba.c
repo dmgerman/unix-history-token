@@ -3669,11 +3669,6 @@ name|struct
 name|label
 modifier|*
 name|delabel
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|fullpath
 parameter_list|)
 block|{
 name|struct
