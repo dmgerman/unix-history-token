@@ -41,7 +41,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.22	%G%"
+literal|"@(#)main.c	3.23	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -452,11 +452,24 @@ literal|30
 index|]
 decl_stmt|;
 comment|/* holds ctime(tbuf) */
+name|char
+name|ybuf
+index|[
+literal|10
+index|]
+decl_stmt|;
+comment|/* holds tty id */
 name|bool
 name|aliasinit
 init|=
 name|FALSE
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|ttyname
+parameter_list|()
+function_decl|;
 name|bool
 name|canrename
 decl_stmt|;
@@ -1180,6 +1193,58 @@ argument_list|,
 name|Version
 argument_list|)
 expr_stmt|;
+comment|/* tty name */
+name|p
+operator|=
+name|ttyname
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|rindex
+argument_list|(
+name|p
+argument_list|,
+literal|'/'
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|p
+operator|=
+name|rindex
+argument_list|(
+name|p
+argument_list|,
+literal|'/'
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|ybuf
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|define
+argument_list|(
+literal|'y'
+argument_list|,
+name|ybuf
+argument_list|)
+expr_stmt|;
+block|}
 name|readcf
 argument_list|(
 name|cfname

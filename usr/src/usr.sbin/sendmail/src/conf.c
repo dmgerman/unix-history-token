@@ -21,7 +21,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	3.19	%G%"
+literal|"@(#)conf.c	3.20	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -343,28 +343,23 @@ name|V6
 end_ifdef
 
 begin_comment
-comment|/* **  TTYPATH -- Get the path of the user's tty -- Version 6 version. ** **	Returns the pathname of the user's tty.  Returns NULL if **	the user is not logged in or if s/he has write permission **	denied. ** **	Parameters: **		none ** **	Returns: **		pathname of the user's tty. **		NULL if not logged in or write permission denied. ** **	Side Effects: **		none. ** **	WARNING: **		Return value is in a local buffer. ** **	Called By: **		savemail */
+comment|/* **  TTYNAME -- return name of terminal. ** **	Parameters: **		fd -- file descriptor to check. ** **	Returns: **		pointer to full path of tty. **		NULL if no tty. ** **	Side Effects: **		none. */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
 
 begin_function
 name|char
 modifier|*
-name|ttypath
-parameter_list|()
-block|{
-name|struct
-name|stat
-name|stbuf
-decl_stmt|;
-specifier|register
+name|ttyname
+parameter_list|(
+name|fd
+parameter_list|)
 name|int
-name|i
+name|fd
+decl_stmt|;
+block|{
+specifier|register
+name|char
+name|tn
 decl_stmt|;
 specifier|static
 name|char
@@ -377,37 +372,15 @@ comment|/* compute the pathname of the controlling tty */
 if|if
 condition|(
 operator|(
-name|i
+name|tn
 operator|=
 name|ttyn
 argument_list|(
-literal|2
+name|fd
 argument_list|)
 operator|)
 operator|==
-literal|'x'
-operator|&&
-operator|(
-name|i
-operator|=
-name|ttyn
-argument_list|(
-literal|1
-argument_list|)
-operator|)
-operator|==
-literal|'x'
-operator|&&
-operator|(
-name|i
-operator|=
-name|ttyn
-argument_list|(
-literal|0
-argument_list|)
-operator|)
-operator|==
-literal|'x'
+name|NULL
 condition|)
 block|{
 name|errno
@@ -425,56 +398,8 @@ index|[
 literal|8
 index|]
 operator|=
-name|i
+name|tn
 expr_stmt|;
-comment|/* see if we have write permission */
-if|if
-condition|(
-name|stat
-argument_list|(
-name|pathn
-argument_list|,
-operator|&
-name|stbuf
-argument_list|)
-operator|<
-literal|0
-operator|||
-operator|!
-name|bitset
-argument_list|(
-literal|02
-argument_list|,
-name|stbuf
-operator|.
-name|st_mode
-argument_list|)
-condition|)
-block|{
-name|errno
-operator|=
-literal|0
-expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-comment|/* see if the user is logged in */
-if|if
-condition|(
-name|getlogin
-argument_list|()
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-comment|/* looks good */
 return|return
 operator|(
 name|pathn
@@ -617,14 +542,8 @@ end_endif
 begin_escape
 end_escape
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|V6
-end_ifndef
-
 begin_comment
-comment|/* **  TTYPATH -- Get the path of the user's tty -- Version 7 version. ** **	Returns the pathname of the user's tty.  Returns NULL if **	the user is not logged in or if s/he has write permission **	denied. ** **	Parameters: **		none ** **	Returns: **		pathname of the user's tty. **		NULL if not logged in or write permission denied. ** **	Side Effects: **		none. ** **	WARNING: **		Return value is in a local buffer. ** **	Called By: **		savemail */
+comment|/* **  TTYPATH -- Get the path of the user's tty ** **	Returns the pathname of the user's tty.  Returns NULL if **	the user is not logged in or if s/he has write permission **	denied. ** **	Parameters: **		none ** **	Returns: **		pathname of the user's tty. **		NULL if not logged in or write permission denied. ** **	Side Effects: **		none. ** **	WARNING: **		Return value is in a local buffer. ** **	Called By: **		savemail */
 end_comment
 
 begin_include
@@ -762,12 +681,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-endif|V6
-end_endif
 
 begin_escape
 end_escape
