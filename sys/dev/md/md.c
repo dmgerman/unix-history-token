@@ -334,6 +334,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|d_close_t
+name|mdclose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|d_ioctl_t
 name|mdioctl
 decl_stmt|,
@@ -352,7 +359,7 @@ comment|/* open */
 name|mdopen
 block|,
 comment|/* close */
-name|nullclose
+name|mdclose
 block|,
 comment|/* read */
 name|physread
@@ -496,6 +503,9 @@ name|type
 decl_stmt|;
 name|unsigned
 name|nsect
+decl_stmt|;
+name|unsigned
+name|opencount
 decl_stmt|;
 name|unsigned
 name|secsize
@@ -673,6 +683,53 @@ operator|/
 name|dl
 operator|->
 name|d_secpercyl
+expr_stmt|;
+name|sc
+operator|->
+name|opencount
+operator|++
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|mdclose
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|)
+block|{
+name|struct
+name|md_s
+modifier|*
+name|sc
+init|=
+name|dev
+operator|->
+name|si_drv1
+decl_stmt|;
+name|sc
+operator|->
+name|opencount
+operator|--
 expr_stmt|;
 return|return
 operator|(
@@ -3922,6 +3979,19 @@ operator|(
 name|ENOENT
 operator|)
 return|;
+if|if
+condition|(
+name|sc
+operator|->
+name|opencount
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|EBUSY
+operator|)
+return|;
 switch|switch
 condition|(
 name|sc
@@ -4346,7 +4416,9 @@ name|c
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"md%d: Preloaded image<%s> %d bytes at %p\n"
+literal|"%s%d: Preloaded image<%s> %d bytes at %p\n"
+argument_list|,
+name|MD_NAME
 argument_list|,
 name|mdunits
 argument_list|,
