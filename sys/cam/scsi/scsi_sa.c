@@ -9372,12 +9372,16 @@ name|error
 operator|==
 literal|0
 condition|)
+block|{
 name|softc
 operator|->
 name|buffer_mode
 operator|=
 name|SMH_SA_BUF_MODE_SIBUF
 expr_stmt|;
+block|}
+else|else
+block|{
 name|xpt_print_path
 argument_list|(
 name|ccb
@@ -9392,6 +9396,7 @@ argument_list|(
 literal|"unable to set buffered mode\n"
 argument_list|)
 expr_stmt|;
+block|}
 name|error
 operator|=
 literal|0
