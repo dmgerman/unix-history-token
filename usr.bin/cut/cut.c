@@ -677,8 +677,11 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"[-cf] list: %d too large (max %d)"
+literal|"[-cf] list: %ld too large (max %d)"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|stop
 argument_list|,
 name|_POSIX2_LINE_MAX
@@ -930,6 +933,7 @@ specifier|const
 name|char
 modifier|*
 name|fname
+name|__unused
 decl_stmt|;
 block|{
 name|int
