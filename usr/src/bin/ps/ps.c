@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ps.c	4.4 (Berkeley) %G%"
+literal|"@(#)ps.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -611,6 +611,8 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|rawcpu
+decl_stmt|,
+name|sumcpu
 decl_stmt|;
 end_decl_stmt
 
@@ -732,6 +734,13 @@ case|case
 literal|'C'
 case|:
 name|rawcpu
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+name|sumcpu
 operator|++
 expr_stmt|;
 break|break;
@@ -3351,6 +3360,26 @@ operator|+
 name|u
 operator|.
 name|u_vm
+operator|.
+name|vm_stime
+expr_stmt|;
+if|if
+condition|(
+name|sumcpu
+condition|)
+name|ap
+operator|->
+name|a_cpu
+operator|+=
+name|u
+operator|.
+name|u_cvm
+operator|.
+name|vm_utime
+operator|+
+name|u
+operator|.
+name|u_cvm
 operator|.
 name|vm_stime
 expr_stmt|;
