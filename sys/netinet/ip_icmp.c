@@ -1777,7 +1777,7 @@ name|icmp_ip
 operator|.
 name|ip_dst
 expr_stmt|;
-comment|/* 		 * MTU discovery: 		 * If we got a needfrag and there is a host route to the 		 * original destination, and the MTU is not locked, then 		 * set the MTU in the route to the suggested new value 		 * (if given) and then notify as usual.  The ULPs will 		 * notice that the MTU has changed and adapt accordingly. 		 * If no new MTU was suggested, then we guess a new one 		 * less than the current value.  If the new MTU is  		 * unreasonably small, then we don't update the MTU value. 		 * 		 * XXX: All this should be done in tcp_mtudisc() because 		 * the way we do it now, everyone can send us bogus ICMP 		 * MSGSIZE packets for any destination. By doing this far 		 * higher in the chain we have a matching tcp connection. 		 * Thus spoofing is much harder. However there is no easy 		 * non-hackish way to pass the new MTU up to tcp_mtudisc(). 		 * Also see next XXX regarding IPv4 AH TCP. 		 */
+comment|/* 		 * MTU discovery: 		 * If we got a needfrag and there is a host route to the 		 * original destination, and the MTU is not locked, then 		 * set the MTU in the route to the suggested new value 		 * (if given) and then notify as usual.  The ULPs will 		 * notice that the MTU has changed and adapt accordingly. 		 * If no new MTU was suggested, then we guess a new one 		 * less than the current value.  If the new MTU is  		 * unreasonably small (defined by sysctl tcp_minmss), then 		 * we don't update the MTU value. 		 * 		 * XXX: All this should be done in tcp_mtudisc() because 		 * the way we do it now, everyone can send us bogus ICMP 		 * MSGSIZE packets for any destination. By doing this far 		 * higher in the chain we have a matching tcp connection. 		 * Thus spoofing is much harder. However there is no easy 		 * non-hackish way to pass the new MTU up to tcp_mtudisc(). 		 * Also see next XXX regarding IPv4 AH TCP. 		 */
 if|if
 condition|(
 name|code
@@ -1845,12 +1845,19 @@ if|if
 condition|(
 name|mtu
 operator|>=
-literal|256
+name|max
+argument_list|(
+literal|296
+argument_list|,
+operator|(
+name|tcp_minmss
 operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|tcpiphdr
+argument_list|)
+operator|)
 argument_list|)
 condition|)
 name|tcp_hc_updatemtu
