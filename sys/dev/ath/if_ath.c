@@ -8971,6 +8971,17 @@ name|hdrbuf
 operator|+
 name|hdrlen
 expr_stmt|;
+name|wh
+operator|=
+name|mtod
+argument_list|(
+name|m0
+argument_list|,
+expr|struct
+name|ieee80211_frame
+operator|*
+argument_list|)
+expr_stmt|;
 comment|/* 		 * XXX 		 * IV must not duplicate during the lifetime of the key. 		 * But no mechanism to renew keys is defined in IEEE 802.11 		 * WEP.  And IV may be duplicated between other stations 		 * because of the session key itself is shared. 		 * So we use pseudo random IV for now, though it is not the 		 * right way. 		 */
 name|iv
 operator|=
