@@ -193,17 +193,17 @@ directive|include
 file|<ufs/ufs/inode.h>
 end_include
 
-begin_undef
-undef|#
-directive|undef
-name|_KERNEL
-end_undef
-
 begin_include
 include|#
 directive|include
 file|<sys/mount.h>
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|_KERNEL
+end_undef
 
 begin_include
 include|#
