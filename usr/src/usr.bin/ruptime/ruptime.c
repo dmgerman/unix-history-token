@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ruptime.c	4.5 82/10/07"
+literal|"@(#)ruptime.c	4.6 82/11/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -738,7 +738,7 @@ name|hsp
 operator|->
 name|hs_wd
 operator|->
-name|wd_bootime
+name|wd_boottime
 argument_list|,
 literal|"  up"
 argument_list|)
@@ -1257,7 +1257,7 @@ name|h2
 operator|->
 name|hs_wd
 operator|->
-name|wd_bootime
+name|wd_boottime
 operator|)
 operator|-
 operator|(
@@ -1284,7 +1284,7 @@ name|h1
 operator|->
 name|hs_wd
 operator|->
-name|wd_bootime
+name|wd_boottime
 operator|)
 operator|)
 return|;

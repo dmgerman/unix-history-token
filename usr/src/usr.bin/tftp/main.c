@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	main.c	4.2	82/10/08	*/
+comment|/*	main.c	4.3	82/11/14	*/
 end_comment
 
 begin_comment
@@ -16,13 +16,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/in.h>
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
+file|<netinet/in.h>
 end_include
 
 begin_include
@@ -65,22 +65,12 @@ begin_decl_stmt
 name|struct
 name|sockaddr_in
 name|sin
-init|=
-block|{
-name|AF_INET
-block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|f
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|options
 decl_stmt|;
 end_decl_stmt
 
@@ -471,57 +461,17 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|sin
-operator|.
-name|sin_port
-operator|=
-name|htons
-argument_list|(
-name|sp
-operator|->
-name|s_port
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|argc
-operator|>
-literal|1
-operator|&&
-operator|!
-name|strcmp
-argument_list|(
-name|argv
-index|[
-literal|1
-index|]
-argument_list|,
-literal|"-d"
-argument_list|)
-condition|)
-block|{
-name|options
-operator||=
-name|SO_DEBUG
-expr_stmt|;
-name|argc
-operator|--
-operator|,
-name|argv
-operator|++
-expr_stmt|;
-block|}
 name|f
 operator|=
 name|socket
 argument_list|(
+literal|0
+argument_list|,
 name|SOCK_DGRAM
 argument_list|,
 literal|0
 argument_list|,
 literal|0
-argument_list|,
-name|options
 argument_list|)
 expr_stmt|;
 if|if
@@ -723,6 +673,14 @@ condition|(
 name|host
 condition|)
 block|{
+name|sin
+operator|.
+name|sin_family
+operator|=
+name|host
+operator|->
+name|h_addrtype
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|host
@@ -748,6 +706,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|sin
+operator|.
+name|sin_family
+operator|=
+name|AF_INET
+expr_stmt|;
 name|sin
 operator|.
 name|sin_addr
@@ -858,24 +822,20 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-if|#
-directive|if
-name|vax
-operator|||
-name|pdp11
 name|sin
 operator|.
 name|sin_port
 operator|=
 name|htons
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|sin
 operator|.
 name|sin_port
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|connected
 operator|=
 literal|1
@@ -1320,6 +1280,9 @@ name|hp
 operator|->
 name|h_addr
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|sin
 operator|.
@@ -1785,6 +1748,9 @@ name|hp
 operator|->
 name|h_addr
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|sin
 operator|.
@@ -2551,7 +2517,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Help command.  * Call each command handler with argc == 0 and argv[0] == name.  */
+comment|/*  * Help command.  */
 end_comment
 
 begin_macro

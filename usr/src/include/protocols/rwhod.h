@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rwhod.h	4.1	82/04/02	*/
+comment|/*	rwhod.h	4.2	82/11/14	*/
 end_comment
 
 begin_struct
@@ -26,7 +26,7 @@ literal|3
 index|]
 decl_stmt|;
 name|int
-name|wd_bootime
+name|wd_boottime
 decl_stmt|;
 struct|struct
 name|whoent
