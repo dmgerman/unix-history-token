@@ -7707,6 +7707,8 @@ name|SMP_prvspace
 index|[
 literal|0
 index|]
+operator|.
+name|pcpu
 expr_stmt|;
 name|gdt_segs
 index|[
@@ -9815,6 +9817,17 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|bzero
+argument_list|(
+name|sv_87
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|sv_87
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* FPU control/status */
 name|penv_87
 operator|->
