@@ -207,28 +207,6 @@ directive|include
 file|"ftp_var.h"
 end_include
 
-begin_comment
-comment|/* wrapper for KAME-special getnameinfo() */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NI_WITHSCOPEID
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NI_WITHSCOPEID
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|int
 name|data
@@ -795,7 +773,7 @@ block|{
 name|char
 name|hname
 index|[
-name|INET6_ADDRSTRLEN
+name|NI_MAXHOST
 index|]
 decl_stmt|;
 name|getnameinfo
@@ -822,8 +800,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|NI_NUMERICHOST
-operator||
-name|NI_WITHSCOPEID
 argument_list|)
 expr_stmt|;
 name|warn
@@ -863,8 +839,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|NI_NUMERICHOST
-operator||
-name|NI_WITHSCOPEID
 argument_list|)
 expr_stmt|;
 name|printf
@@ -8020,8 +7994,6 @@ name|INET6
 case|case
 name|AF_INET6
 case|:
-endif|#
-directive|endif
 name|af
 operator|=
 operator|(
@@ -8035,6 +8007,22 @@ condition|?
 literal|1
 else|:
 literal|2
+expr_stmt|;
+if|if
+condition|(
+name|daddr
+operator|->
+name|su_family
+operator|==
+name|AF_INET6
+condition|)
+name|daddr
+operator|->
+name|su_sin6
+operator|.
+name|sin6_scope_id
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -8095,6 +8083,8 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+endif|#
+directive|endif
 default|default:
 name|result
 operator|=
