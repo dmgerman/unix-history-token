@@ -882,7 +882,7 @@ define|#
 directive|define
 name|CRYPTO_F_IMBUF
 value|0x0001
-comment|/* Input/output are mbuf chains, otherwise contig */
+comment|/* Input/output are mbuf chains */
 define|#
 directive|define
 name|CRYPTO_F_IOV
@@ -908,6 +908,11 @@ directive|define
 name|CRYPTO_F_DONE
 value|0x0020
 comment|/* Operation completed */
+define|#
+directive|define
+name|CRYPTO_F_CBIFSYNC
+value|0x0040
+comment|/* Do CBIMM if op is synchronous */
 name|caddr_t
 name|crp_buf
 decl_stmt|;

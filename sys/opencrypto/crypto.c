@@ -3730,13 +3730,37 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * CBIMM means unconditionally do the callback immediately; 	 * CBIFSYNC means do the callback immediately only if the 	 * operation was done synchronously.  Both are used to avoid 	 * doing extraneous context switches; the latter is mostly 	 * used with the software crypto driver. 	 */
 if|if
 condition|(
+operator|(
 name|crp
 operator|->
 name|crp_flags
 operator|&
 name|CRYPTO_F_CBIMM
+operator|)
+operator|||
+operator|(
+operator|(
+name|crp
+operator|->
+name|crp_flags
+operator|&
+name|CRYPTO_F_CBIFSYNC
+operator|)
+operator|&&
+operator|(
+name|CRYPTO_SESID2CAPS
+argument_list|(
+name|crp
+operator|->
+name|crp_sid
+argument_list|)
+operator|&
+name|CRYPTOCAP_F_SYNC
+operator|)
+operator|)
 condition|)
 block|{
 comment|/* 		 * Do the callback directly.  This is ok when the 		 * callback routine does very little (e.g. the 		 * /dev/crypto callback method just does a wakeup). 		 */
