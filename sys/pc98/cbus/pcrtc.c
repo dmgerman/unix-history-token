@@ -305,7 +305,7 @@ name|LEAPYEAR
 parameter_list|(
 name|y
 parameter_list|)
-value|((u_int)(y) % 4 == 0)
+value|(((u_int)(y) % 4 == 0) ? 1 : 0)
 end_define
 
 begin_define
