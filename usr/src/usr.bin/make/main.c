@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.11 (Berkeley) %G%"
+literal|"@(#)main.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -1202,6 +1202,15 @@ argument_list|(
 literal|"MFLAGS"
 argument_list|,
 literal|""
+argument_list|,
+name|VAR_GLOBAL
+argument_list|)
+expr_stmt|;
+name|Var_Set
+argument_list|(
+literal|"MACHINE"
+argument_list|,
+name|MACHINE
 argument_list|,
 name|VAR_GLOBAL
 argument_list|)
