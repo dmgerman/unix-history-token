@@ -310,6 +310,20 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|dcache_inval_phys
+name|__P
+argument_list|(
+operator|(
+name|vm_offset_t
+operator|,
+name|vm_offset_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|dcache_blast
 name|__P
 argument_list|(
