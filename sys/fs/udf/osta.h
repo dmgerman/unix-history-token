@@ -75,6 +75,21 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|udf_UncompressUnicodeByte
+parameter_list|(
+name|int
+parameter_list|,
+name|byte
+modifier|*
+parameter_list|,
+name|byte
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|udf_CompressUnicode
 parameter_list|(
 name|int
