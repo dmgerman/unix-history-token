@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass5.c	5.17 (Berkeley) %G%"
+literal|"@(#)pass5.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -123,9 +123,6 @@ name|struct
 name|csum
 modifier|*
 name|cs
-decl_stmt|;
-name|time_t
-name|now
 decl_stmt|;
 name|struct
 name|csum
@@ -540,15 +537,6 @@ name|csum
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|time
-argument_list|(
-operator|&
-name|now
-argument_list|)
-expr_stmt|;
 name|j
 operator|=
 name|blknum
@@ -665,14 +653,6 @@ name|fs
 operator|->
 name|fs_size
 expr_stmt|;
-if|if
-condition|(
-name|now
-operator|>
-name|cg
-operator|->
-name|cg_time
-condition|)
 name|newcg
 operator|->
 name|cg_time
@@ -680,13 +660,6 @@ operator|=
 name|cg
 operator|->
 name|cg_time
-expr_stmt|;
-else|else
-name|newcg
-operator|->
-name|cg_time
-operator|=
-name|now
 expr_stmt|;
 name|newcg
 operator|->
