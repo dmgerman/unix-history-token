@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.44 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.45 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -496,6 +496,12 @@ expr_stmt|;
 comment|/* see if a notification is needed */
 if|if
 condition|(
+name|e
+operator|->
+name|e_df
+operator|!=
+name|NULL
+operator|&&
 name|bitset
 argument_list|(
 name|QBADADDR
