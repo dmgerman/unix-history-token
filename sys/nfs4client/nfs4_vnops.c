@@ -14507,6 +14507,11 @@ operator|.
 name|bop_strategy
 operator|=
 name|bufstrategy
+block|,
+operator|.
+name|bop_sync
+operator|=
+name|bufsync
 block|, }
 decl_stmt|;
 end_decl_stmt
