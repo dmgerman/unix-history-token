@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.59 (Berkeley) %G%"
+literal|"@(#)login.c	5.60 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -399,8 +399,6 @@ decl_stmt|;
 name|int
 name|quietlog
 decl_stmt|,
-name|passwd_req
-decl_stmt|,
 name|ioctlval
 decl_stmt|,
 name|rval
@@ -579,10 +577,6 @@ operator|=
 name|rflag
 operator|=
 literal|0
-expr_stmt|;
-name|passwd_req
-operator|=
-literal|1
 expr_stmt|;
 name|uid
 operator|=
@@ -1221,52 +1215,32 @@ name|salt
 operator|=
 literal|"xx"
 expr_stmt|;
-comment|/* 		 * Disallow automatic login to root; if not invoked by 		 * root, disallow if the uid's differ. 		 */
-if|if
-condition|(
-name|pwd
-operator|&&
-name|fflag
-condition|)
-block|{
-name|passwd_req
-operator|=
-ifndef|#
-directive|ifndef
-name|KERBEROS
-name|pwd
-operator|->
-name|pw_uid
-operator|==
-literal|0
-operator|||
-endif|#
-directive|endif
-operator|(
-name|uid
-operator|&&
-name|uid
-operator|!=
-name|pwd
-operator|->
-name|pw_uid
-operator|)
-expr_stmt|;
-block|}
-comment|/* 		 * If no pre-authentication and a password exists 		 * for this user, prompt for one and verify it. 		 */
+comment|/* 		 * if we have a valid account name, and it doesn't have a 		 * password, or the -f option was specified and the caller 		 * is root or the caller isn't changing their uid, don't 		 * authenticate. 		 */
 if|if
 condition|(
 name|pwd
 operator|&&
 operator|(
-operator|!
-name|passwd_req
-operator|||
-operator|!
 operator|*
 name|pwd
 operator|->
 name|pw_passwd
+operator|==
+literal|'\0'
+operator|||
+name|fflag
+operator|&&
+operator|(
+name|uid
+operator|==
+literal|0
+operator|||
+name|uid
+operator|==
+name|pwd
+operator|->
+name|pw_uid
+operator|)
 operator|)
 condition|)
 break|break;
