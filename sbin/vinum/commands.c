@@ -4,7 +4,7 @@ comment|/* commands.c: vinum interface program, main commands */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: commands.c,v 1.22 2003/04/28 06:19:06 grog Exp $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: commands.c,v 1.23 2003/05/04 05:23:59 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -614,15 +614,15 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* make sure we don't pass anything*/
+comment|/* make sure we don't pass anything */
 if|if
 condition|(
 name|argc
 operator|>
 literal|0
 condition|)
-comment|/* args specified, */
 block|{
+comment|/* args specified, */
 for|for
 control|(
 name|i
@@ -636,8 +636,8 @@ condition|;
 name|i
 operator|++
 control|)
-comment|/* each drive name */
 block|{
+comment|/* each drive name */
 name|strcat
 argument_list|(
 name|buffer
@@ -10475,16 +10475,15 @@ decl_stmt|;
 if|if
 condition|(
 name|argc
-operator|==
-literal|0
+operator|!=
+literal|2
 condition|)
 block|{
-comment|/* start everything */
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: readpol<volume><plex>|round\n"
+literal|"usage: readpol<volume><plex> | round\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -10495,7 +10494,7 @@ name|find_object
 argument_list|(
 name|argv
 index|[
-literal|1
+literal|0
 index|]
 argument_list|,
 operator|&
@@ -10518,7 +10517,7 @@ literal|"%s is not a volume\n"
 argument_list|,
 name|argv
 index|[
-literal|1
+literal|0
 index|]
 argument_list|)
 expr_stmt|;
@@ -10538,7 +10537,7 @@ name|strcmp
 argument_list|(
 name|argv
 index|[
-literal|2
+literal|1
 index|]
 argument_list|,
 literal|"round"
@@ -10552,7 +10551,7 @@ name|find_object
 argument_list|(
 name|argv
 index|[
-literal|2
+literal|1
 index|]
 argument_list|,
 operator|&
@@ -10575,7 +10574,7 @@ literal|"%s is not a plex\n"
 argument_list|,
 name|argv
 index|[
-literal|2
+literal|1
 index|]
 argument_list|)
 expr_stmt|;
@@ -10618,8 +10617,6 @@ name|otherobject
 operator|=
 name|plexno
 expr_stmt|;
-if|if
-condition|(
 name|ioctl
 argument_list|(
 name|superdev
@@ -10628,8 +10625,12 @@ name|VINUM_READPOL
 argument_list|,
 name|message
 argument_list|)
-operator|<
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|reply
+operator|.
+name|error
 condition|)
 name|fprintf
 argument_list|(
@@ -10637,12 +10638,27 @@ name|stderr
 argument_list|,
 literal|"Can't set read policy: %s (%d)\n"
 argument_list|,
+name|reply
+operator|.
+name|msg
+index|[
+literal|0
+index|]
+condition|?
+name|reply
+operator|.
+name|msg
+else|:
 name|strerror
 argument_list|(
-name|errno
+name|reply
+operator|.
+name|error
 argument_list|)
 argument_list|,
-name|errno
+name|reply
+operator|.
+name|error
 argument_list|)
 expr_stmt|;
 if|if
