@@ -967,18 +967,6 @@ end_function_decl
 begin_function_decl
 name|__stdcall
 specifier|static
-name|void
-name|ntoskrnl_init_lock
-parameter_list|(
-name|kspin_lock
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|__stdcall
-specifier|static
 name|size_t
 name|ntoskrnl_memcmp
 parameter_list|(
@@ -5273,7 +5261,6 @@ end_comment
 
 begin_function
 name|__stdcall
-specifier|static
 name|void
 name|ntoskrnl_init_lock
 parameter_list|(
