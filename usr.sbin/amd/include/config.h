@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: config.h,v 1.8 1998/11/20 05:18:34 obrien Exp $ */
+comment|/* $Id: config.h,v 1.9 1999/01/13 19:33:02 obrien Exp $ */
 end_comment
 
 begin_comment
@@ -2153,9 +2153,12 @@ begin_comment
 comment|/* does ufs_args_t have fspec field? */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_FIELD_UFS_ARGS_T_FSPEC */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_FIELD_UFS_ARGS_T_FSPEC
+value|1
+end_define
 
 begin_comment
 comment|/* does efs_args_t have flags field? */
@@ -3029,9 +3032,12 @@ begin_comment
 comment|/* Define a type for the ufs_args structure */
 end_comment
 
-begin_comment
-comment|/* #undef ufs_args_t */
-end_comment
+begin_define
+define|#
+directive|define
+name|ufs_args_t
+value|struct ufs_args
+end_define
 
 begin_comment
 comment|/* Define a type for the efs_args structure */
@@ -5630,9 +5636,12 @@ begin_comment
 comment|/* Define if you have the<ufs/ufs_mount.h> header file.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_UFS_UFS_MOUNT_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_UFS_UFS_MOUNT_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the<unistd.h> header file.  */
