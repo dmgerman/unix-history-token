@@ -63,6 +63,15 @@ directive|include
 file|"bootstrap.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|EFI_GUID
+name|hcdp
+init|=
+name|HCDP_TABLE_GUID
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Return a 'boothowto' value corresponding to the kernel arguments in  * (kargs) and any relevant environment variables.  */
 end_comment
@@ -1092,6 +1101,20 @@ name|bi_esymtab
 operator|=
 name|esym
 expr_stmt|;
+name|bi
+operator|->
+name|bi_hcdp
+operator|=
+operator|(
+name|uint64_t
+operator|)
+name|efi_get_table
+argument_list|(
+operator|&
+name|hcdp
+argument_list|)
+expr_stmt|;
+comment|/* DIG64 HCDP table addr. */
 name|fpswa_init
 argument_list|(
 operator|&

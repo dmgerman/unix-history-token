@@ -36,6 +36,18 @@ end_decl_stmt
 
 begin_function_decl
 name|void
+modifier|*
+name|efi_get_table
+parameter_list|(
+name|EFI_GUID
+modifier|*
+name|tbl
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|efi_main
 parameter_list|(
 name|EFI_HANDLE
