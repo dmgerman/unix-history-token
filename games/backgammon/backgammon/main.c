@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"back.h"
 end_include
 
@@ -420,34 +426,8 @@ name|char
 name|c
 decl_stmt|;
 comment|/* non-descript character storage */
-name|long
-name|t
-decl_stmt|;
-comment|/* time for random num generator */
-name|uid_t
-name|uid
-decl_stmt|;
-comment|/*Drop the privilege.*/
-name|uid
-operator|=
-name|getuid
-argument_list|()
-expr_stmt|;
-name|setreuid
-argument_list|(
-name|uid
-argument_list|,
-name|uid
-argument_list|)
-expr_stmt|;
 comment|/* revoke privs */
 name|setegid
-argument_list|(
-name|getgid
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|setgid
 argument_list|(
 name|getgid
 argument_list|()
@@ -596,19 +576,9 @@ name|begscr
 operator|=
 literal|0
 expr_stmt|;
-name|t
-operator|=
-name|time
-argument_list|(
-literal|0
-argument_list|)
+name|srandomdev
+argument_list|()
 expr_stmt|;
-name|srandom
-argument_list|(
-name|t
-argument_list|)
-expr_stmt|;
-comment|/* 'random' seed */
 name|getarg
 argument_list|(
 name|argc
@@ -760,7 +730,9 @@ name|noteach
 argument_list|)
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 else|else
