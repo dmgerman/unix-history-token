@@ -257,7 +257,7 @@ argument_list|)
 expr_stmt|;
 name|EVENTHANDLER_REGISTER
 argument_list|(
-name|shutdown_post_sync
+name|shutdown_final
 argument_list|,
 name|module_shutdown
 argument_list|,
