@@ -214,6 +214,13 @@ comment|/* clear priority field */
 ifdef|#
 directive|ifdef
 name|GRAB_LOPRIO
+comment|/* Leave the BSP at TPR 0 during boot to make sure it gets interrupts */
+if|if
+condition|(
+name|cpuid
+operator|!=
+literal|0
+condition|)
 name|temp
 operator||=
 name|LOPRIO_LEVEL
