@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asscan.c 4.4 %G%"
+literal|"@(#)asscan.c 4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4176,6 +4176,38 @@ operator|==
 literal|'f'
 condition|)
 block|{
+comment|/* 				 *	Well, it appears to be a local label 				 *	reference, but check to see if 				 *	the next character makes it a floating 				 *	point constant. 				 */
+name|forb
+operator|=
+name|getchar
+argument_list|()
+expr_stmt|;
+name|ungetc
+argument_list|(
+name|forb
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|INCHARSET
+argument_list|(
+name|forb
+argument_list|,
+operator|(
+name|DIGIT
+operator||
+name|SIGN
+operator||
+name|FLOATEXP
+operator||
+name|POINT
+operator|)
+argument_list|)
+operator|)
+condition|)
+block|{
 name|yylval
 operator|=
 literal|1
@@ -4187,6 +4219,7 @@ expr_stmt|;
 goto|goto
 name|ret
 goto|;
+block|}
 block|}
 if|if
 condition|(
