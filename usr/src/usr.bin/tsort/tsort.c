@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tsort.c	5.7 (Berkeley) %G%"
+literal|"@(#)tsort.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1050,17 +1050,24 @@ block|{
 case|case
 literal|0
 case|:
-return|return
-operator|(
-operator|*
-operator|(
-name|NODE
-operator|*
-operator|*
-operator|)
+name|bcopy
+argument_list|(
 name|data
 operator|.
 name|data
+argument_list|,
+operator|&
+name|n
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|n
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|n
 operator|)
 return|;
 case|case
