@@ -202,7 +202,7 @@ name|char
 modifier|*
 name|se_policy
 decl_stmt|;
-comment|/* IPsec poilcy string */
+comment|/* IPsec policy string */
 endif|#
 directive|endif
 name|int

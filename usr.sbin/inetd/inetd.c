@@ -68,7 +68,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * Inetd - Internet super-server  *  * This program invokes all internet services as needed.  Connection-oriented  * services are invoked each time a connection is made, by creating a process.  * This process is passed the connection as file descriptor 0 and is expected  * to do a getpeername to find out the source host and port.  *  * Datagram oriented services are invoked when a datagram  * arrives; a process is created and passed a pending message  * on file descriptor 0.  Datagram servers may either connect  * to their peer, freeing up the original socket for inetd  * to receive further messages on, or ``take over the socket'',  * processing all arriving datagrams and, eventually, timing  * out.	 The first type of server is said to be ``multi-threaded'';  * the second type of server ``single-threaded''.  *  * Inetd uses a configuration file which is read at startup  * and, possibly, at some later time in response to a hangup signal.  * The configuration file is ``free format'' with fields given in the  * order shown below.  Continuation lines for an entry must being with  * a space or tab.  All fields must be present in each entry.  *  *	service name			must be in /etc/services or must  *					name a tcpmux service  *	socket type			stream/dgram/raw/rdm/seqpacket  *	protocol			must be in /etc/protocols  *	wait/nowait			single-threaded/multi-threaded  *	user				user to run daemon as  *	server program			full path name  *	server program arguments	maximum of MAXARGS (20)  *  * TCP services without official port numbers are handled with the  * RFC1078-based tcpmux internal service. Tcpmux listens on port 1 for  * requests. When a connection is made from a foreign host, the service  * requested is passed to tcpmux, which looks it up in the servtab list  * and returns the proper entry for the service. Tcpmux returns a  * negative reply if the service doesn't exist, otherwise the invoked  * server is expected to return the positive reply if the service type in  * inetd.conf file has the prefix "tcpmux/". If the service type has the  * prefix "tcpmux/+", tcpmux will return the positive reply for the  * process; this is for compatibility with older server code, and also  * allows you to invoke programs that use stdin/stdout without putting any  * special server code in them. Services that use tcpmux are "nowait"  * because they do not have a well-known port and hence cannot listen  * for new requests.  *  * For RPC services  *	service name/version		must be in /etc/rpc  *	socket type			stream/dgram/raw/rdm/seqpacket  *	protocol			must be in /etc/protocols  *	wait/nowait			single-threaded/multi-threaded  *	user				user to run daemon as  *	server program			full path name  *	server program arguments	maximum of MAXARGS  *  * Comment lines are indicated by a `#' in column 1.  *  * #ifdef IPSEC  * Comment lines that start with "#@" denote IPsec policy string, as described  * in ipsec_set_policy(3).  This will affect all the following items in  * inetd.conf(8).  To reset the policy, just use "#@" line.  By default,  * there's no IPsec policy.  * #endif  */
+comment|/*  * Inetd - Internet super-server  *  * This program invokes all internet services as needed.  Connection-oriented  * services are invoked each time a connection is made, by creating a process.  * This process is passed the connection as file descriptor 0 and is expected  * to do a getpeername to find out the source host and port.  *  * Datagram oriented services are invoked when a datagram  * arrives; a process is created and passed a pending message  * on file descriptor 0.  Datagram servers may either connect  * to their peer, freeing up the original socket for inetd  * to receive further messages on, or ``take over the socket'',  * processing all arriving datagrams and, eventually, timing  * out.	 The first type of server is said to be ``multi-threaded'';  * the second type of server ``single-threaded''.  *  * Inetd uses a configuration file which is read at startup  * and, possibly, at some later time in response to a hangup signal.  * The configuration file is ``free format'' with fields given in the  * order shown below.  Continuation lines for an entry must begin with  * a space or tab.  All fields must be present in each entry.  *  *	service name			must be in /etc/services or must  *					name a tcpmux service  *	socket type			stream/dgram/raw/rdm/seqpacket  *	protocol			must be in /etc/protocols  *	wait/nowait			single-threaded/multi-threaded  *	user				user to run daemon as  *	server program			full path name  *	server program arguments	maximum of MAXARGS (20)  *  * TCP services without official port numbers are handled with the  * RFC1078-based tcpmux internal service. Tcpmux listens on port 1 for  * requests. When a connection is made from a foreign host, the service  * requested is passed to tcpmux, which looks it up in the servtab list  * and returns the proper entry for the service. Tcpmux returns a  * negative reply if the service doesn't exist, otherwise the invoked  * server is expected to return the positive reply if the service type in  * inetd.conf file has the prefix "tcpmux/". If the service type has the  * prefix "tcpmux/+", tcpmux will return the positive reply for the  * process; this is for compatibility with older server code, and also  * allows you to invoke programs that use stdin/stdout without putting any  * special server code in them. Services that use tcpmux are "nowait"  * because they do not have a well-known port and hence cannot listen  * for new requests.  *  * For RPC services  *	service name/version		must be in /etc/rpc  *	socket type			stream/dgram/raw/rdm/seqpacket  *	protocol			must be in /etc/protocols  *	wait/nowait			single-threaded/multi-threaded  *	user				user to run daemon as  *	server program			full path name  *	server program arguments	maximum of MAXARGS  *  * Comment lines are indicated by a `#' in column 1.  *  * #ifdef IPSEC  * Comment lines that start with "#@" denote IPsec policy string, as described  * in ipsec_set_policy(3).  This will affect all the following items in  * inetd.conf(8).  To reset the policy, just use "#@" line.  By default,  * there's no IPsec policy.  * #endif  */
 end_comment
 
 begin_include
@@ -454,6 +454,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TOOMANY
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -464,6 +470,11 @@ end_define
 begin_comment
 comment|/* don't start more than TOOMANY */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -814,7 +825,7 @@ if|if
 condition|(
 name|tmp
 operator|<
-literal|1
+literal|0
 operator|||
 operator|*
 name|p
@@ -2538,6 +2549,10 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|toomany
+operator|>
+literal|0
+operator|&&
 name|sep
 operator|->
 name|se_count
@@ -2608,6 +2623,23 @@ argument_list|,
 name|sep
 operator|->
 name|se_proto
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sep
+operator|->
+name|se_accept
+operator|&&
+name|sep
+operator|->
+name|se_socktype
+operator|==
+name|SOCK_STREAM
+condition|)
+name|close
+argument_list|(
+name|ctrl
 argument_list|)
 expr_stmt|;
 name|close_sep
@@ -2972,11 +3004,18 @@ if|if
 condition|(
 name|dofork
 condition|)
+block|{
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|_exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -3630,6 +3669,15 @@ name|pid_t
 name|pid
 parameter_list|)
 block|{
+if|if
+condition|(
+name|sep
+operator|->
+name|se_maxchild
+operator|<=
+literal|0
+condition|)
+return|return;
 ifdef|#
 directive|ifdef
 name|SANITY_CHECK
@@ -3669,15 +3717,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-if|if
-condition|(
-name|sep
-operator|->
-name|se_maxchild
-operator|==
-literal|0
-condition|)
-return|return;
 name|sep
 operator|->
 name|se_pids
@@ -4203,10 +4242,14 @@ condition|(
 name|sep
 operator|->
 name|se_maxchild
+operator|>
+literal|0
 operator|&&
 name|new
 operator|->
 name|se_maxchild
+operator|>
+literal|0
 condition|)
 block|{
 name|new
@@ -4294,6 +4337,14 @@ name|new
 operator|->
 name|se_maxcpm
 expr_stmt|;
+name|sep
+operator|->
+name|se_bi
+operator|=
+name|new
+operator|->
+name|se_bi
+expr_stmt|;
 comment|/* might need to turn on or off service now */
 if|if
 condition|(
@@ -4309,6 +4360,8 @@ condition|(
 name|sep
 operator|->
 name|se_maxchild
+operator|>
+literal|0
 operator|&&
 name|sep
 operator|->
@@ -8736,6 +8789,8 @@ condition|(
 name|sep
 operator|->
 name|se_maxchild
+operator|>
+literal|0
 condition|)
 block|{
 name|sep

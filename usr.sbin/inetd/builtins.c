@@ -2303,6 +2303,14 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ssize
+operator|==
+literal|0
+condition|)
+break|break;
 name|bufsiz
 operator|-=
 name|ssize
