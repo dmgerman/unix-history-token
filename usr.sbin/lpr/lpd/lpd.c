@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netdb.h>
 end_include
 
@@ -2275,12 +2281,6 @@ name|first
 init|=
 literal|1
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|inet_ntoa
-parameter_list|()
-function_decl|;
 name|f
 operator|->
 name|sin_port

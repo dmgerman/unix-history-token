@@ -109,65 +109,6 @@ comment|/*  * Stuff for handling lprm specifications  */
 end_comment
 
 begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|user
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* users to process */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|users
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* # of users in user array */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|requ
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* job number of spool entries */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|requests
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* # of spool requests */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|person
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* name of person doing lprm */
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|char
 name|root

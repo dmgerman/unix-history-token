@@ -404,11 +404,6 @@ modifier|*
 name|msg
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-modifier|*
-name|name
-decl_stmt|;
 operator|(
 name|void
 operator|)

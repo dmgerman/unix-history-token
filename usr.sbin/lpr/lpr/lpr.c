@@ -638,12 +638,6 @@ name|group
 modifier|*
 name|gptr
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|itoa
-parameter_list|()
-function_decl|;
 specifier|register
 name|char
 modifier|*
@@ -3601,11 +3595,6 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-name|char
-modifier|*
-name|lmktemp
-parameter_list|()
-function_decl|;
 operator|(
 name|void
 operator|)

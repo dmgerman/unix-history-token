@@ -1024,10 +1024,6 @@ literal|0
 decl_stmt|,
 name|lines
 decl_stmt|;
-specifier|extern
-name|int
-name|NCMDS
-decl_stmt|;
 name|printf
 argument_list|(
 literal|"Commands may be abbreviated.  Commands are:\n\n"

@@ -156,6 +156,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lp.h"
 end_include
 
@@ -4800,12 +4806,6 @@ block|{
 name|time_t
 name|tvec
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|ctime
-parameter_list|()
-function_decl|;
 name|time
 argument_list|(
 operator|&
@@ -5255,15 +5255,6 @@ name|d
 decl_stmt|,
 name|scnhgt
 decl_stmt|;
-specifier|extern
-name|char
-name|scnkey
-index|[]
-index|[
-name|HEIGHT
-index|]
-decl_stmt|;
-comment|/* in lpdchar.c */
 for|for
 control|(
 name|scnhgt

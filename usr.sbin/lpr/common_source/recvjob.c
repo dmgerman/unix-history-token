@@ -1575,11 +1575,6 @@ function|va_dcl
 endif|#
 directive|endif
 block|{
-specifier|extern
-name|char
-name|fromb
-index|[]
-decl_stmt|;
 name|va_list
 name|ap
 decl_stmt|;
