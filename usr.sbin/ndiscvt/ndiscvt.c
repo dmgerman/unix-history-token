@@ -32,6 +32,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -496,7 +508,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"Usage: %s [-i<inffile>] -s<sysfile> "
-literal|"[-o outfile]\n"
+literal|"[-d devname] [-o outfile]\n"
 argument_list|,
 name|__progname
 argument_list|)
@@ -564,6 +576,12 @@ name|outfile
 init|=
 name|NULL
 decl_stmt|;
+name|char
+modifier|*
+name|dname
+init|=
+name|NULL
+decl_stmt|;
 name|int
 name|ch
 decl_stmt|;
@@ -578,7 +596,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"i:s:o:"
+literal|"i:s:o:n:"
 argument_list|)
 operator|)
 operator|!=
@@ -611,6 +629,14 @@ case|case
 literal|'o'
 case|:
 name|outfile
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+name|dname
 operator|=
 name|optarg
 expr_stmt|;
@@ -789,6 +815,12 @@ argument_list|,
 literal|" * Generated from %s and %s (%d bytes)\n"
 argument_list|,
 name|inffile
+operator|==
+name|NULL
+condition|?
+literal|"<notused>"
+else|:
+name|inffile
 argument_list|,
 name|sysfile
 argument_list|,
@@ -804,7 +836,54 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fp
+name|dname
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|dname
+argument_list|)
+operator|>
+name|IFNAMSIZ
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"selected device name '%s' is "
+literal|"too long (max chars: %d)"
+argument_list|,
+name|dname
+argument_list|,
+name|IFNAMSIZ
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|outfp
+argument_list|,
+literal|"#define NDIS_DEVNAME \"%s\"\n"
+argument_list|,
+name|dname
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|outfp
+argument_list|,
+literal|"#define NDIS_MODNAME %s\n"
+argument_list|,
+name|dname
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|inffile
 operator|==
 name|NULL
 condition|)
@@ -820,7 +899,7 @@ name|fprintf
 argument_list|(
 name|outfp
 argument_list|,
-literal|"\t{ NULL, NULL, ndis_parm_int, { 0 } }\n"
+literal|"\t{ NULL, NULL, { 0 }, 0 }\n"
 argument_list|)
 expr_stmt|;
 name|fprintf

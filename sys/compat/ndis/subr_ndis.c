@@ -3975,15 +3975,23 @@ operator|*
 operator|)
 name|adapter
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
+name|block
+operator|->
+name|nmb_dev
+argument_list|,
 literal|"NDIS ERROR: %x\n"
 argument_list|,
 name|code
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
+name|block
+operator|->
+name|nmb_dev
+argument_list|,
 literal|"NDIS NUMERRORS: %x\n"
 argument_list|,
 name|numerrors
@@ -4009,8 +4017,12 @@ condition|;
 name|i
 operator|++
 control|)
-name|printf
+name|device_printf
 argument_list|(
+name|block
+operator|->
+name|nmb_dev
+argument_list|,
 literal|"argptr: %p\n"
 argument_list|,
 name|va_arg
@@ -8384,8 +8396,12 @@ name|block
 operator|->
 name|nmb_rlist
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
+name|block
+operator|->
+name|nmb_dev
+argument_list|,
 literal|"assign PCI resources...\n"
 argument_list|)
 expr_stmt|;

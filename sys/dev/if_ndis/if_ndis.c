@@ -689,8 +689,17 @@ name|driver_t
 name|ndis_driver
 init|=
 block|{
+ifdef|#
+directive|ifdef
+name|NDIS_DEVNAME
+name|NDIS_DEVNAME
+block|,
+else|#
+directive|else
 literal|"ndis"
 block|,
+endif|#
+directive|endif
 name|ndis_methods
 block|,
 expr|sizeof
@@ -708,6 +717,55 @@ name|devclass_t
 name|ndis_devclass
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NDIS_MODNAME
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NDIS_MODNAME_OVERRIDE_PCI
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|DRIVER_MODULE(x, pci, ndis_driver, ndis_devclass, 0, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_MODNAME_OVERRIDE_CARDBUS
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|DRIVER_MODULE(x, cardbus, ndis_driver, ndis_devclass, 0, 0)
+end_define
+
+begin_expr_stmt
+name|NDIS_MODNAME_OVERRIDE_PCI
+argument_list|(
+name|NDIS_MODNAME
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|NDIS_MODNAME_OVERRIDE_CARDBUS
+argument_list|(
+name|NDIS_MODNAME
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_expr_stmt
 name|DRIVER_MODULE
@@ -744,6 +802,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Program the 64-bit multicast hash filter.  */
@@ -1104,12 +1167,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ndis%d: couldn't map "
-literal|"iospace\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map iospace"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1139,14 +1201,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ndis%d: too many memory "
-literal|"resources"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|ndis_unit
+literal|"too many memory resources"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1211,12 +1270,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ndis%d: couldn't map "
-literal|"alt memory\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map alt memory"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1272,12 +1330,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ndis%d: couldn't map "
-literal|"memory\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map memory"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1333,12 +1390,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ndis%d: couldn't map "
-literal|"interrupt\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map interrupt"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1388,11 +1444,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ndis%d: couldn't set up irq\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't set up irq\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1631,13 +1687,11 @@ name|sc
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ndis%d: init handler failed\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|ndis_unit
+literal|"init handler failed\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1863,29 +1917,19 @@ break|break;
 block|}
 block|}
 comment|/* 	 * An NDIS device was detected. Inform the world. 	 */
-if|if
-condition|(
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"%s address: %6D\n"
+argument_list|,
 name|sc
 operator|->
 name|ndis_80211
-condition|)
-name|printf
-argument_list|(
-literal|"ndis%d: 802.11 address: %6D\n"
-argument_list|,
-name|unit
-argument_list|,
-name|eaddr
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"ndis%d: Ethernet address: %6D\n"
-argument_list|,
-name|unit
+condition|?
+literal|"802.11"
+else|:
+literal|"Ethernet"
 argument_list|,
 name|eaddr
 argument_list|,
@@ -2095,8 +2139,10 @@ if|if
 condition|(
 name|r
 condition|)
-name|printf
+name|device_printf
 argument_list|(
+name|dev
+argument_list|,
 literal|"get rates failed: 0x%x\n"
 argument_list|,
 name|r
@@ -3043,13 +3089,13 @@ name|p
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"ndis%d: ptom failed\n"
-argument_list|,
 name|sc
 operator|->
-name|ndis_unit
+name|ndis_dev
+argument_list|,
+literal|"ptom failed\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3447,13 +3493,13 @@ name|ndis_link
 operator|=
 literal|1
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ndis%d: link up\n"
-argument_list|,
 name|sc
 operator|->
-name|ndis_unit
+name|ndis_dev
+argument_list|,
+literal|"link up\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3486,13 +3532,13 @@ break|break;
 case|case
 name|NDIS_STATUS_MEDIA_DISCONNECT
 case|:
-name|printf
+name|device_printf
 argument_list|(
-literal|"ndis%d: link down\n"
-argument_list|,
 name|sc
 operator|->
-name|ndis_unit
+name|ndis_dev
+argument_list|,
+literal|"link down\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4352,8 +4398,12 @@ if|if
 condition|(
 name|error
 condition|)
-name|printf
+name|device_printf
 argument_list|(
+name|sc
+operator|->
+name|ndis_dev
+argument_list|,
 literal|"set filter failed: %d\n"
 argument_list|,
 name|error
@@ -4656,13 +4706,13 @@ name|IFM_1000_T
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|device_printf
 argument_list|(
-literal|"ndis%d: unknown speed: %d\n"
-argument_list|,
 name|sc
 operator|->
-name|ndis_unit
+name|ndis_dev
+argument_list|,
+literal|"unknown speed: %d\n"
 argument_list|,
 name|media_info
 argument_list|)
@@ -4774,13 +4824,13 @@ if|if
 condition|(
 name|rval
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"ndis%d: set auth failed: %d\n"
-argument_list|,
 name|sc
 operator|->
-name|ndis_unit
+name|ndis_dev
+argument_list|,
+literal|"set auth failed: %d\n"
 argument_list|,
 name|rval
 argument_list|)
@@ -4829,13 +4879,13 @@ if|if
 condition|(
 name|rval
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"ndis%d: set infra failed: %d\n"
-argument_list|,
 name|sc
 operator|->
-name|ndis_unit
+name|ndis_dev
+argument_list|,
+literal|"set infra failed: %d\n"
 argument_list|,
 name|rval
 argument_list|)
@@ -5043,14 +5093,13 @@ if|if
 condition|(
 name|rval
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"ndis%d: set wepkey "
-literal|"failed: %d\n"
-argument_list|,
 name|sc
 operator|->
-name|ndis_unit
+name|ndis_dev
+argument_list|,
+literal|"set wepkey failed: %d\n"
 argument_list|,
 name|rval
 argument_list|)
@@ -5087,13 +5136,13 @@ if|if
 condition|(
 name|rval
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"ndis%d: enable WEP failed: %d\n"
-argument_list|,
 name|sc
 operator|->
-name|ndis_unit
+name|ndis_dev
+argument_list|,
+literal|"enable WEP failed: %d\n"
 argument_list|,
 name|rval
 argument_list|)
@@ -5205,13 +5254,13 @@ if|if
 condition|(
 name|rval
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"ndis%d: set ssid failed: %d\n"
-argument_list|,
 name|sc
 operator|->
-name|ndis_unit
+name|ndis_dev
+argument_list|,
+literal|"set ssid failed: %d\n"
 argument_list|,
 name|rval
 argument_list|)
@@ -5307,7 +5356,7 @@ name|ic_state
 operator|=
 name|IEEE80211_S_ASSOC
 expr_stmt|;
-comment|/* 	len = sizeof(arg); 	rval = ndis_get_info(sc, OID_802_11_INFRASTRUCTURE_MODE,&arg,&len);  	if (rval) 		printf ("ndis%d: get infra failed: %d\n", sc->ndis_unit, rval);  	switch(arg) { 	case NDIS_80211_NET_INFRA_IBSS: 		ic->ic_opmode = IEEE80211_M_IBSS; 		break; 	case NDIS_80211_NET_INFRA_BSS: 		ic->ic_opmode = IEEE80211_M_STA; 		break; 	default: 		break; 	} */
+comment|/* 	len = sizeof(arg); 	rval = ndis_get_info(sc, OID_802_11_INFRASTRUCTURE_MODE,&arg,&len);  	if (rval) 		device_printf (sc->ndis_dev, "get infra failed: %d\n", rval);  	switch(arg) { 	case NDIS_80211_NET_INFRA_IBSS: 		ic->ic_opmode = IEEE80211_M_IBSS; 		break; 	case NDIS_80211_NET_INFRA_BSS: 		ic->ic_opmode = IEEE80211_M_STA; 		break; 	default: 		break; 	} */
 name|len
 operator|=
 sizeof|sizeof
@@ -5346,13 +5395,13 @@ if|if
 condition|(
 name|rval
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"ndis%d: get ssid failed: %d\n"
-argument_list|,
 name|sc
 operator|->
-name|ndis_unit
+name|ndis_dev
+argument_list|,
+literal|"get ssid failed: %d\n"
 argument_list|,
 name|rval
 argument_list|)
@@ -5576,13 +5625,13 @@ name|ni_rates
 operator|.
 name|rs_nrates
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"ndis%d: no matching rate for: %d\n"
-argument_list|,
 name|sc
 operator|->
-name|ndis_unit
+name|ndis_dev
+argument_list|,
+literal|"no matching rate for: %d\n"
 argument_list|,
 operator|(
 name|arg
@@ -5628,13 +5677,13 @@ if|if
 condition|(
 name|rval
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"ndis%d: get power mode failed: %d\n"
-argument_list|,
 name|sc
 operator|->
-name|ndis_unit
+name|ndis_dev
+argument_list|,
+literal|"get power mode failed: %d\n"
 argument_list|,
 name|rval
 argument_list|)
@@ -5659,7 +5708,7 @@ name|ic_flags
 operator||=
 name|IEEE80211_F_PMGTON
 expr_stmt|;
-comment|/* 	len = sizeof(arg); 	rval = ndis_get_info(sc, OID_802_11_WEP_STATUS,&arg,&len);  	if (rval) 		printf ("ndis%d: get wep status failed: %d\n", 		    sc->ndis_unit, rval);  	if (arg == NDIS_80211_WEPSTAT_ENABLED) 		ic->ic_flags |= IEEE80211_F_WEPON; 	else 		ic->ic_flags&= ~IEEE80211_F_WEPON; */
+comment|/* 	len = sizeof(arg); 	rval = ndis_get_info(sc, OID_802_11_WEP_STATUS,&arg,&len);  	if (rval) 		device_printf (sc->ndis_dev, 		    "get wep status failed: %d\n", rval);  	if (arg == NDIS_80211_WEPSTAT_ENABLED) 		ic->ic_flags |= IEEE80211_F_WEPON; 	else 		ic->ic_flags&= ~IEEE80211_F_WEPON; */
 return|return;
 block|}
 end_function
@@ -6033,13 +6082,13 @@ operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"ndis%d: watchdog timeout\n"
-argument_list|,
 name|sc
 operator|->
-name|ndis_unit
+name|ndis_dev
+argument_list|,
+literal|"watchdog timeout\n"
 argument_list|)
 expr_stmt|;
 name|ndis_reset
