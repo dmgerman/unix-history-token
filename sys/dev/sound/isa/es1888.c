@@ -15,6 +15,12 @@ directive|include
 file|<dev/sound/isa/sb.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__alpha__
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -238,7 +244,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* 	 * Emit the Read-Sequence-Key to enter configuration 	 * mode. Note this only works after a reset (or after bit 2 of  	 * mixer register 0x40 is set). 	 * 	 * 3 reads from 0x229 in a row guarantees reset of key 	 * sequence to beginning. 	 */
+comment|/* 	 * Emit the Read-Sequence-Key to enter configuration 	 * mode. Note this only works after a reset (or after bit 2 of 	 * mixer register 0x40 is set). 	 * 	 * 3 reads from 0x229 in a row guarantees reset of key 	 * sequence to beginning. 	 */
 name|inb
 argument_list|(
 literal|0x229
@@ -318,6 +324,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
