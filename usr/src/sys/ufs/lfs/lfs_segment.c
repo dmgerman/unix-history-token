@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	7.23 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	7.24 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -721,6 +721,17 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|ip
+operator|=
+name|VTOI
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+do|do
+block|{
+do|do
+block|{
 if|if
 condition|(
 name|vp
@@ -738,16 +749,9 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
-name|ip
-operator|=
-name|VTOI
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
+block|}
+do|while
+condition|(
 name|lfs_writeinode
 argument_list|(
 name|fs
@@ -756,7 +760,8 @@ name|sp
 argument_list|,
 name|ip
 argument_list|)
-expr_stmt|;
+condition|)
+do|;
 name|ip
 operator|->
 name|i_flags
@@ -772,16 +777,23 @@ operator||
 name|ICHG
 operator|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+block|}
+do|while
+condition|(
 name|lfs_writeseg
 argument_list|(
 name|fs
 argument_list|,
 name|sp
 argument_list|)
-expr_stmt|;
+operator|&&
+name|ip
+operator|->
+name|i_number
+operator|==
+name|LFS_IFILE_INUM
+condition|)
+do|;
 comment|/* 	 * If the I/O count is non-zero, sleep until it reaches zero.  At the 	 * moment, the user's process hangs around so we can sleep. 	 */
 name|s
 operator|=
@@ -1223,10 +1235,10 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
+operator|++
 name|fs
 operator|->
 name|lfs_iocount
-operator|++
 expr_stmt|;
 name|splx
 argument_list|(
@@ -1243,11 +1255,6 @@ name|sp
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
 expr_stmt|;
 name|fs
 operator|->
@@ -1304,22 +1311,12 @@ name|lfs_writer
 operator|=
 literal|0
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|lfs_writevnodes
 argument_list|(
 name|fs
@@ -1454,16 +1451,6 @@ name|sp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If the I/O count is non-zero, sleep until it reaches zero.  At the 	 * moment, the user's process hangs around so we can sleep. 	 */
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
-operator|--
-name|fs
-operator|->
-name|lfs_iocount
-expr_stmt|;
 name|fs
 operator|->
 name|lfs_writer
@@ -1483,6 +1470,16 @@ name|fs
 operator|->
 name|lfs_dirops
 argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
+operator|--
+name|fs
+operator|->
+name|lfs_iocount
 expr_stmt|;
 if|if
 condition|(
@@ -3889,7 +3886,11 @@ operator|&
 name|SEGM_CKP
 operator|)
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* 	 * Compute checksum across data and then across summary; the first 	 * block (the summary block) is skipped.  Set the create time here 	 * so that it's guaranteed to be later than the inode mod times. 	 * 	 * XXX 	 * Fix this to do it inline, instead of malloc/copy. 	 */
 name|datap
 operator|=
