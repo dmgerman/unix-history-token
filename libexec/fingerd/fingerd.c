@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: fingerd.c,v 1.10 1997/11/20 07:26:04 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -328,6 +328,14 @@ expr_stmt|;
 block|}
 comment|/* 	 * Enable server-side Transaction TCP. 	 */
 block|{
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__alpha__
+argument_list|)
+comment|/* XXX FIXME */
 name|int
 name|one
 init|=
@@ -359,6 +367,8 @@ literal|"setsockopt(TCP_NOPUSH) failed: %m"
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
