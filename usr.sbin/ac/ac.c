@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ac.c,v 1.10 1998/07/02 05:34:08 phk Exp $"
+literal|"$Id: ac.c,v 1.11 1999/06/30 21:46:03 sheldonh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -567,31 +567,6 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-comment|/* 	 * Added by GAW... 	 */
-if|if
-condition|(
-name|strcmp
-argument_list|(
-literal|"-"
-argument_list|,
-name|name
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|Flags
-operator||=
-name|AC_W
-expr_stmt|;
-return|return
-operator|(
-name|stdin
-operator|)
-return|;
-block|}
-else|else
-block|{
 if|if
 condition|(
 operator|(
@@ -633,7 +608,6 @@ expr_stmt|;
 return|return
 name|fp
 return|;
-block|}
 block|}
 end_function
 
