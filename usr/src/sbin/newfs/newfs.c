@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	8.12 (Berkeley) %G%"
+literal|"@(#)newfs.c	8.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,7 +102,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ufs/ufs/dinode.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ufs/ffs/fs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/ufsmount.h>
 end_include
 
 begin_include
@@ -1247,6 +1259,8 @@ name|mopts
 argument_list|,
 operator|&
 name|mntflags
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 else|else
@@ -1856,6 +1870,10 @@ if|if
 condition|(
 name|cp
 operator|==
+operator|(
+name|char
+operator|*
+operator|)
 operator|-
 literal|1
 operator|||
@@ -2673,7 +2691,7 @@ if|if
 condition|(
 name|mount
 argument_list|(
-name|MOUNT_MFS
+literal|"mfs"
 argument_list|,
 name|argv
 index|[
