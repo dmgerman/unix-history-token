@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ffs_broken_fixme.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_ufs.h"
 end_include
 
@@ -4520,6 +4526,17 @@ operator||
 name|IN_UPDATE
 expr_stmt|;
 comment|/* 	 * If the last named reference to a snapshot goes away, 	 * drop its snapshot reference so that it will be reclaimed 	 * when last open reference goes away. 	 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FFS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|IFS
+argument_list|)
 if|if
 condition|(
 name|ip
@@ -4547,6 +4564,8 @@ argument_list|(
 name|ip
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|error
@@ -4768,6 +4787,17 @@ operator||
 name|IN_UPDATE
 expr_stmt|;
 comment|/* 	 * If the last named reference to a snapshot goes away, 	 * drop its snapshot reference so that it will be reclaimed 	 * when last open reference goes away. 	 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FFS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|IFS
+argument_list|)
 if|if
 condition|(
 operator|(
@@ -4791,6 +4821,8 @@ argument_list|(
 name|oip
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|error
