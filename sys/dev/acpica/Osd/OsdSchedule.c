@@ -971,16 +971,13 @@ name|hz
 operator|/
 literal|1000
 expr_stmt|;
+comment|/*       * If requested sleep time is less than our hz resolution, use      * DELAY instead for better granularity.      */
 if|if
 condition|(
 name|timo
-operator|==
+operator|>
 literal|0
 condition|)
-name|timo
-operator|=
-literal|1
-expr_stmt|;
 name|tsleep
 argument_list|(
 operator|&
@@ -991,6 +988,14 @@ argument_list|,
 literal|"acpislp"
 argument_list|,
 name|timo
+argument_list|)
+expr_stmt|;
+else|else
+name|DELAY
+argument_list|(
+name|Milliseconds
+operator|*
+literal|1000
 argument_list|)
 expr_stmt|;
 name|return_VOID
