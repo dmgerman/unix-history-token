@@ -7222,9 +7222,12 @@ comment|/* Lucent -- Vendor 0x11c1 */
 case|case
 literal|0x044011c1
 case|:
+case|case
+literal|0x044811c1
+case|:
 return|return
 operator|(
-literal|"LUCENT K56Flex DSVD LTMODEM (winmodem, unsupported)"
+literal|"Lucent K56Flex DSVD LTModem (Win Modem, unsupported)"
 operator|)
 return|;
 comment|/* CCUBE -- Vendor 0x123f */
