@@ -688,6 +688,10 @@ literal|'+'
 case|:
 comment|/* continuation of X device control */
 case|case
+literal|'m'
+case|:
+comment|/* color */
+case|case
 literal|'#'
 case|:
 comment|/* comment */
@@ -968,6 +972,10 @@ index|]
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|no_move
+init|=
+literal|0
 decl_stmt|;
 name|char
 modifier|*
@@ -1282,6 +1290,10 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+name|no_move
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 default|default:
 if|#
@@ -1290,8 +1302,18 @@ literal|0
 block|warning("unknown drawing function %s", buf);
 endif|#
 directive|endif
+name|no_move
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+operator|!
+name|no_move
+condition|)
+block|{
 if|if
 condition|(
 name|buf
@@ -1365,6 +1387,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}

@@ -4,7 +4,7 @@ comment|// -*- C++ -*-
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1989, 1990, 1991, 1992 Free Software Foundation, Inc.      Written by James Clark (jjc@jclark.com)  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* Copyright (C) 1989, 1990, 1991, 1992, 2001, 2002    Free Software Foundation, Inc.      Written by James Clark (jjc@jclark.com)  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
 end_comment
 
 begin_decl_stmt
@@ -51,14 +51,26 @@ name|unsigned
 name|char
 name|ascii_code
 decl_stmt|;
+name|unsigned
+name|char
+name|asciify_code
+decl_stmt|;
 name|char
 name|not_found
 decl_stmt|;
 name|char
 name|transparent_translate
 decl_stmt|;
-comment|// non-zero means translation applies to
+comment|// non-zero means translation applies
 comment|// to transparent throughput
+name|char
+name|translate_input
+decl_stmt|;
+comment|// non-zero means that asciify_code is
+comment|// active for .asciify (set by .trin)
+name|char
+name|fallback
+decl_stmt|;
 name|public
 label|:
 enum|enum
@@ -151,6 +163,11 @@ name|char
 name|get_ascii_code
 parameter_list|()
 function_decl|;
+name|unsigned
+name|char
+name|get_asciify_code
+parameter_list|()
+function_decl|;
 name|void
 name|set_hyphenation_code
 parameter_list|(
@@ -164,6 +181,21 @@ parameter_list|(
 name|unsigned
 name|char
 parameter_list|)
+function_decl|;
+name|void
+name|set_asciify_code
+parameter_list|(
+name|unsigned
+name|char
+parameter_list|)
+function_decl|;
+name|void
+name|set_translation_input
+parameter_list|()
+function_decl|;
+name|int
+name|get_translation_input
+parameter_list|()
 function_decl|;
 name|charinfo
 modifier|*
@@ -179,6 +211,8 @@ name|set_translation
 parameter_list|(
 name|charinfo
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -212,6 +246,10 @@ name|set_macro
 parameter_list|(
 name|macro
 modifier|*
+parameter_list|,
+name|int
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 name|macro
@@ -235,6 +273,10 @@ parameter_list|()
 function_decl|;
 name|int
 name|numbered
+parameter_list|()
+function_decl|;
+name|int
+name|is_fallback
 parameter_list|()
 function_decl|;
 name|symbol
@@ -392,6 +434,20 @@ end_expr_stmt
 
 begin_expr_stmt
 specifier|inline
+name|int
+name|charinfo
+operator|::
+name|is_fallback
+argument_list|()
+block|{
+return|return
+name|fallback
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
 name|charinfo
 operator|*
 name|charinfo
@@ -448,6 +504,27 @@ end_expr_stmt
 
 begin_expr_stmt
 specifier|inline
+name|unsigned
+name|char
+name|charinfo
+operator|::
+name|get_asciify_code
+argument_list|()
+block|{
+return|return
+operator|(
+name|translate_input
+operator|?
+name|asciify_code
+operator|:
+literal|0
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
 name|void
 name|charinfo
 operator|::
@@ -469,6 +546,31 @@ argument_list|()
 block|{
 return|return
 name|index
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+name|void
+name|charinfo
+operator|::
+name|set_translation_input
+argument_list|()
+block|{
+name|translate_input
+operator|=
+literal|1
+block|; }
+specifier|inline
+name|int
+name|charinfo
+operator|::
+name|get_translation_input
+argument_list|()
+block|{
+return|return
+name|translate_input
 return|;
 block|}
 end_expr_stmt

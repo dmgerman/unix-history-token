@@ -23,16 +23,6 @@ directive|define
 name|HTML_H
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|DEBUGGING
-end_undef
-
-begin_comment
-comment|// #  define DEBUGGING
-end_comment
-
 begin_comment
 comment|/*  *  class and structure needed to buffer words  */
 end_comment
@@ -150,6 +140,16 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+name|s
+parameter_list|)
+function_decl|;
+name|simple_output
+modifier|&
+name|put_string
+parameter_list|(
+specifier|const
+name|string
+modifier|&
 name|s
 parameter_list|)
 function_decl|;
