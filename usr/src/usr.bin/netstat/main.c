@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.8 83/05/01"
+literal|"@(#)main.c	4.9 83/05/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -185,6 +185,14 @@ name|N_ICMPSTAT
 value|13
 block|{
 literal|"_icmpstat"
+block|}
+block|,
+define|#
+directive|define
+name|N_RTSTAT
+value|14
+block|{
+literal|"_rtstat"
 block|}
 block|,
 literal|""
@@ -937,6 +945,21 @@ condition|(
 name|rflag
 condition|)
 block|{
+if|if
+condition|(
+name|sflag
+condition|)
+name|rt_stats
+argument_list|(
+name|nl
+index|[
+name|N_RTSTAT
+index|]
+operator|.
+name|n_value
+argument_list|)
+expr_stmt|;
+else|else
 name|routepr
 argument_list|(
 name|nl
@@ -1169,6 +1192,31 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_function
+name|char
+modifier|*
+name|plural
+parameter_list|(
+name|n
+parameter_list|)
+name|int
+name|n
+decl_stmt|;
+block|{
+return|return
+operator|(
+name|n
+operator|!=
+literal|1
+condition|?
+literal|"s"
+else|:
+literal|""
+operator|)
+return|;
+block|}
+end_function
 
 end_unit
 
