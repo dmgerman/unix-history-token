@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * 16 Feb 93	Julian Elischer	(julian@dialix.oz.au)  *  *	$Id: cdio.h,v 1.14.2.2 1998/10/30 16:52:13 luigi Exp $  */
+comment|/*  * 16 Feb 93	Julian Elischer	(julian@dialix.oz.au)  *  *	$Id: cdio.h,v 1.14.2.3 1998/11/08 14:08:41 luigi Exp $  */
 end_comment
 
 begin_comment
@@ -904,35 +904,6 @@ end_define
 begin_comment
 comment|/*<2>*/
 end_comment
-
-begin_struct
-struct|struct
-name|ioc_read_audio
-block|{
-name|u_char
-name|address_format
-decl_stmt|;
-name|union
-name|msf_lba
-name|address
-decl_stmt|;
-name|int
-name|nframes
-decl_stmt|;
-name|u_char
-modifier|*
-name|buffer
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|CDIOCREADAUDIO
-value|_IOWR('c',31,struct ioc_read_audio)
-end_define
 
 begin_struct
 struct|struct
