@@ -132,14 +132,22 @@ begin_comment
 comment|/* Jolitz suggested defining HOST_STACK_END_ADDR to    (u.u_kproc.kp_eproc.e_vm.vm_maxsaddr + MAXSSIZ), which should work on    both BSDI and 386BSD, but that is believed not to work for BSD 4.4.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__bsdi__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
 
 begin_comment
-comment|/* This seems to be the right thing for BSDI.  */
+comment|/* This seems to be the right thing for BSDI and FreeBSD.  */
 end_comment
 
 begin_define
