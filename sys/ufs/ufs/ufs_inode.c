@@ -177,11 +177,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|VI_LOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|prtactive
@@ -196,11 +191,6 @@ name|vprint
 argument_list|(
 literal|"ufs_inactive: pushing active"
 argument_list|,
-name|vp
-argument_list|)
-expr_stmt|;
-name|VI_UNLOCK
-argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
@@ -456,15 +446,6 @@ block|}
 block|}
 name|out
 label|:
-name|VOP_UNLOCK
-argument_list|(
-name|vp
-argument_list|,
-literal|0
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
 comment|/* 	 * If we are done with the inode, reclaim it 	 * so that it can be reused immediately. 	 */
 if|if
 condition|(
