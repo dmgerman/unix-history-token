@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mkmakefile.c	1.28	83/06/16	*/
+comment|/*	mkmakefile.c	1.29	83/06/29	*/
 end_comment
 
 begin_comment
@@ -717,7 +717,9 @@ name|fprintf
 argument_list|(
 name|ofp
 argument_list|,
-literal|"GPROF.EX=/usr/src/lib/libc/csu/gmon.ex\n"
+literal|"GPROF.EX=/usr/src/lib/libc/%s/csu/gmon.ex\n"
+argument_list|,
+name|machinename
 argument_list|)
 expr_stmt|;
 name|cp
