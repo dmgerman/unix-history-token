@@ -309,6 +309,16 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"#define\tP_DSIZE %d\n"
+argument_list|,
+operator|&
+name|p
+operator|->
+name|p_dsize
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"#define\tP_SSIZE %d\n"
 argument_list|,
 operator|&
