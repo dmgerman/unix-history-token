@@ -1568,6 +1568,10 @@ name|first
 operator|==
 literal|3
 operator|&&
+name|pf
+operator|==
+literal|0
+operator|&&
 operator|(
 name|tp
 operator|=
@@ -1578,6 +1582,19 @@ argument_list|)
 operator|)
 operator|!=
 literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|tp
+operator|->
+name|f_type
+operator|!=
+name|INVISIBLE
+operator|||
+name|tp
+operator|->
+name|f_flags
 condition|)
 name|printf
 argument_list|(
@@ -1592,6 +1609,22 @@ operator|->
 name|f_fn
 argument_list|)
 expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"%s: Local file %s could override %s"
+literal|" with a different kernel configuration.\n"
+argument_list|,
+name|fname
+argument_list|,
+name|this
+argument_list|,
+name|tp
+operator|->
+name|f_fn
+argument_list|)
+expr_stmt|;
+block|}
 name|nreqs
 operator|=
 literal|0
