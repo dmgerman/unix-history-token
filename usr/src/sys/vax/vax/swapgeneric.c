@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)swapgeneric.c	6.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)swapgeneric.c	6.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -94,10 +94,22 @@ end_comment
 begin_decl_stmt
 name|dev_t
 name|rootdev
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|dev_t
 name|argdev
-decl_stmt|,
+init|=
+name|NODEV
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|dev_t
 name|dumpdev
+init|=
+name|NODEV
 decl_stmt|;
 end_decl_stmt
 
@@ -310,6 +322,23 @@ operator|&
 name|hkdriver
 block|,
 literal|"hk"
+block|,
+name|makedev
+argument_list|(
+literal|3
+argument_list|,
+literal|0
+argument_list|)
+block|,	}
+block|,
+block|{
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|hkdriver
+block|,
+literal|"rk"
 block|,
 name|makedev
 argument_list|(
@@ -838,6 +867,9 @@ literal|'\b'
 case|:
 case|case
 literal|'#'
+case|:
+case|case
+literal|'\177'
 case|:
 name|lp
 operator|--
