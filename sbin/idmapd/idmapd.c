@@ -840,7 +840,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"bad message length: %zd/%zd\n"
+literal|"bad message length: %zu/%zu\n"
 argument_list|,
 name|e
 operator|->
