@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pc.c 3.20 %G%"
+literal|"@(#)pc.c 3.21 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2071,9 +2071,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-ifndef|#
-directive|ifndef
-name|sun
 name|ldargs
 index|[
 name|ldargx
@@ -2090,26 +2087,6 @@ index|]
 operator|=
 literal|"-lc"
 expr_stmt|;
-else|#
-directive|else
-name|ldargs
-index|[
-name|ldargx
-operator|++
-index|]
-operator|=
-literal|"-lMm"
-expr_stmt|;
-name|ldargs
-index|[
-name|ldargx
-operator|++
-index|]
-operator|=
-literal|"-lMc"
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|ldargs
 index|[
