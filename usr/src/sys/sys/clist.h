@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	clist.h	4.2	81/02/19	*/
+comment|/*	clist.h	4.3	81/02/27	*/
 end_comment
 
 begin_comment
@@ -26,13 +26,46 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|cblock
+modifier|*
+name|cfree
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nclist
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|struct
 name|cblock
-name|cfree
-index|[]
+modifier|*
+name|cfreelist
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|cfreecount
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

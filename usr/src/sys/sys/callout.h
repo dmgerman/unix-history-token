@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	callout.h	4.2	81/02/19	*/
+comment|/*	callout.h	4.3	81/02/27	*/
 end_comment
 
 begin_comment
@@ -31,15 +31,32 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
 begin_decl_stmt
+specifier|extern
 name|struct
 name|callo
+modifier|*
 name|callout
-index|[
-name|NCALL
-index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ncallo
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
