@@ -4001,6 +4001,14 @@ index|[
 literal|30
 index|]
 decl_stmt|;
+name|time_t
+name|t
+init|=
+operator|(
+name|time_t
+operator|)
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|twidth
@@ -4014,12 +4022,8 @@ name|timestr
 argument_list|,
 name|ctime
 argument_list|(
-operator|(
-name|time_t
-operator|*
-operator|)
 operator|&
-name|twidth
+name|t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4063,16 +4067,15 @@ parameter_list|)
 value|(time_t)(x)
 endif|#
 directive|endif
-name|time_t
 name|t
-init|=
+operator|=
 name|_long_to_time
 argument_list|(
 name|rule
 operator|->
 name|timestamp
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|strcpy
 argument_list|(
 name|timestr
@@ -13425,7 +13428,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parse arguments and assemble the microinstructions which make up a rule.  * Rules are added into the 'rulebuf' and then copied in the correct order  * into the actual rule.  *  * The syntax for a rule starts with the action, followed by an  * optional log action, and the various match patterns.  * In the assembled microcode, the first opcode must be a O_PROBE_STATE  * (generated if the rule includes a keep-state option), then the  * various match patterns, the "log" action, and the actual action.  *  */
+comment|/*  * Parse arguments and assemble the microinstructions which make up a rule.  * Rules are added into the 'rulebuf' and then copied in the correct order  * into the actual rule.  *  * The syntax for a rule starts with the action, followed by an  * optional log action, and the various match patterns.  * In the assembled microcode, the first opcode must be an O_PROBE_STATE  * (generated if the rule includes a keep-state option), then the  * various match patterns, the "log" action, and the actual action.  *  */
 end_comment
 
 begin_function
@@ -14531,6 +14534,7 @@ name|EX_DATAERR
 argument_list|,
 literal|"invalid protocol ``%s''"
 argument_list|,
+operator|*
 name|av
 argument_list|)
 expr_stmt|;
@@ -16118,6 +16122,7 @@ name|EX_DATAERR
 argument_list|,
 literal|"invalid protocol ``%s''"
 argument_list|,
+operator|*
 name|av
 argument_list|)
 expr_stmt|;
@@ -16355,6 +16360,7 @@ name|EX_DATAERR
 argument_list|,
 literal|"invalid mac type %s"
 argument_list|,
+operator|*
 name|av
 argument_list|)
 expr_stmt|;
@@ -17773,6 +17779,31 @@ argument_list|(
 operator|*
 name|av
 argument_list|,
+literal|"set"
+argument_list|,
+name|strlen
+argument_list|(
+operator|*
+name|av
+argument_list|)
+argument_list|)
+condition|)
+name|sets_handler
+argument_list|(
+name|ac
+argument_list|,
+name|av
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strncmp
+argument_list|(
+operator|*
+name|av
+argument_list|,
 literal|"enable"
 argument_list|,
 name|strlen
@@ -17816,31 +17847,6 @@ argument_list|,
 name|av
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|!
-name|strncmp
-argument_list|(
-operator|*
-name|av
-argument_list|,
-literal|"set"
-argument_list|,
-name|strlen
-argument_list|(
-operator|*
-name|av
-argument_list|)
-argument_list|)
-condition|)
-name|sets_handler
-argument_list|(
-name|ac
-argument_list|,
-name|av
 argument_list|)
 expr_stmt|;
 elseif|else
