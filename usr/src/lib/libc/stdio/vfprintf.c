@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vfprintf.c	5.29 (Berkeley) %G%"
+literal|"@(#)vfprintf.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -496,10 +496,6 @@ name|fp
 operator|->
 name|_ptr
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|t
 expr_stmt|;
 operator|(
@@ -549,10 +545,6 @@ name|fp
 operator|->
 name|_ptr
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|t
 expr_stmt|;
 if|if
@@ -941,6 +933,24 @@ operator|>
 name|MAXFRACT
 condition|)
 block|{
+if|if
+condition|(
+operator|*
+name|fmt
+operator|!=
+literal|'g'
+operator|&&
+operator|*
+name|fmt
+operator|!=
+literal|'G'
+operator|||
+operator|(
+name|flags
+operator|&
+name|ALT
+operator|)
+condition|)
 name|fpprec
 operator|=
 name|prec
