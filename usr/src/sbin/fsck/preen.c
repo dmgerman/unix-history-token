@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)preen.c	5.6 (Berkeley) %G%"
+literal|"@(#)preen.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1877,12 +1877,10 @@ operator|)
 return|;
 if|if
 condition|(
-operator|*
-operator|(
 name|dp
-operator|+
+index|[
 literal|1
-operator|)
+index|]
 operator|!=
 literal|'r'
 condition|)
@@ -1896,13 +1894,17 @@ name|void
 operator|)
 name|strcpy
 argument_list|(
+operator|&
 name|dp
-operator|+
+index|[
 literal|1
+index|]
 argument_list|,
+operator|&
 name|dp
-operator|+
+index|[
 literal|2
+index|]
 argument_list|)
 expr_stmt|;
 return|return
@@ -1993,9 +1995,11 @@ name|strcat
 argument_list|(
 name|rawbuf
 argument_list|,
+operator|&
 name|dp
-operator|+
+index|[
 literal|1
+index|]
 argument_list|)
 expr_stmt|;
 return|return
