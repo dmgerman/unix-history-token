@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printsym.c 1.6 %G%"
+literal|"@(#)printsym.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -378,6 +378,18 @@ operator|->
 name|class
 operator|==
 name|FUNC
+operator|&&
+operator|(
+operator|!
+name|istypename
+argument_list|(
+name|s
+operator|->
+name|type
+argument_list|,
+literal|"void"
+argument_list|)
+operator|)
 condition|)
 block|{
 name|len
@@ -833,6 +845,39 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|s
+operator|->
+name|type
+operator|->
+name|class
+operator|==
+name|ARRAY
+operator|&&
+operator|(
+operator|!
+name|istypename
+argument_list|(
+name|s
+operator|->
+name|type
+operator|->
+name|type
+argument_list|,
+literal|"char"
+argument_list|)
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" ARRAY "
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
 name|isvarparam
 argument_list|(
 name|s
@@ -920,6 +965,7 @@ argument_list|(
 literal|"*** expression too large ***"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
