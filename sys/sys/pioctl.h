@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * procfs ioctl definitions.  *  * $Id: pioctl.h,v 1.4 1997/12/13 03:13:36 sef Exp $  */
+comment|/*  * procfs ioctl definitions.  *  * $Id: pioctl.h,v 1.5 1997/12/15 00:29:41 sef Exp $  */
 end_comment
 
 begin_ifndef
@@ -207,6 +207,17 @@ end_define
 
 begin_comment
 comment|/* Keep stops around after last close */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PF_ISUGID
+value|0x02
+end_define
+
+begin_comment
+comment|/* Ignore UID/GID changes */
 end_comment
 
 begin_endif
