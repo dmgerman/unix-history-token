@@ -1340,6 +1340,24 @@ index|[
 literal|12
 index|]
 decl_stmt|;
+name|int
+name|flags
+init|=
+name|MDF_ATTR
+decl_stmt|;
+comment|/* attribute memory */
+name|ioctl
+argument_list|(
+name|sp
+operator|->
+name|fd
+argument_list|,
+name|PIOCRWFLAG
+argument_list|,
+operator|&
+name|flags
+argument_list|)
+expr_stmt|;
 name|lseek
 argument_list|(
 name|sp
