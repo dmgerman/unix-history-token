@@ -8035,6 +8035,11 @@ modifier|*
 name|sc
 decl_stmt|;
 block|{
+if|#
+directive|if
+name|NBPFILTER
+operator|>
+literal|0
 name|struct
 name|ifnet
 modifier|*
@@ -8045,6 +8050,8 @@ name|sc
 operator|->
 name|sc_if
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|mbuf
 modifier|*
