@@ -291,6 +291,14 @@ literal|"SysKonnect Gigabit Ethernet (V2.0)"
 block|}
 block|,
 block|{
+name|VENDORID_MARVELL
+block|,
+name|DEVICEID_SK_V2
+block|,
+literal|"Marvell Gigabit Ethernet"
+block|}
+block|,
+block|{
 name|VENDORID_3COM
 block|,
 name|DEVICEID_3COM_3C940

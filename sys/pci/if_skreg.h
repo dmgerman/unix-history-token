@@ -41,6 +41,17 @@ value|0x1148
 end_define
 
 begin_comment
+comment|/*  * Marvell PCI vendor ID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VENDORID_MARVELL
+value|0x11AB
+end_define
+
+begin_comment
 comment|/*  * SK-NET gigabit ethernet device IDs  */
 end_comment
 
