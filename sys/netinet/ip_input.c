@@ -2579,7 +2579,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 			 * The process-level routing demon needs to receive 			 * all multicast IGMP packets, whether or not this 			 * host belongs to their destination groups. 			 */
+comment|/* 			 * The process-level routing daemon needs to receive 			 * all multicast IGMP packets, whether or not this 			 * host belongs to their destination groups. 			 */
 if|if
 condition|(
 name|ip

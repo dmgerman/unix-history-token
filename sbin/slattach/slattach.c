@@ -426,7 +426,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* act as demon if zero, else don't fork. */
+comment|/* act as daemon if zero, else don't fork. */
 end_comment
 
 begin_decl_stmt
