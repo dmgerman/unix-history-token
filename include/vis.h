@@ -152,6 +152,17 @@ begin_comment
 comment|/* http-style escape % HEX HEX */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VIS_GLOB
+value|0x100
+end_define
+
+begin_comment
+comment|/* encode glob(3) magics */
+end_comment
+
 begin_comment
 comment|/*  * unvis return codes  */
 end_comment
