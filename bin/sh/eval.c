@@ -1032,6 +1032,11 @@ argument_list|(
 name|n
 argument_list|)
 expr_stmt|;
+comment|/* 		 * The 'for' command does not set exitstatus, so the value 		 * now in exitstatus is from the last command executed in 		 * the 'for' loop.  That exit value had been tested (wrt 		 * 'sh -e' checking) while processing that command, and 		 * it should not be re-tested here. 		 */
+name|flags
+operator||=
+name|EV_TESTED
+expr_stmt|;
 break|break;
 case|case
 name|NCASE
@@ -1042,6 +1047,11 @@ name|n
 argument_list|,
 name|flags
 argument_list|)
+expr_stmt|;
+comment|/* 		 * The 'case' command does not set exitstatus, so the value 		 * now in exitstatus is from the last command executed in 		 * the 'case' block.  That exit value had been tested (wrt 		 * 'sh -e' checking) while processing that command, and 		 * it should not be re-tested here. 		 */
+name|flags
+operator||=
+name|EV_TESTED
 expr_stmt|;
 break|break;
 case|case
