@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)server.c	5.4 (Berkeley) %G%"
+literal|"@(#)server.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1913,6 +1913,9 @@ name|printf
 argument_list|(
 literal|"readlink = %.*s\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|stb
 operator|.
 name|st_size
