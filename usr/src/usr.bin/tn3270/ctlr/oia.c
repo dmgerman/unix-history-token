@@ -58,7 +58,7 @@ end_define
 begin_function
 specifier|static
 name|void
-name|SetXarea
+name|OiaXArea
 parameter_list|(
 name|x
 parameter_list|,
@@ -134,7 +134,7 @@ block|}
 end_function
 
 begin_macro
-name|SetInsert
+name|OiaInsert
 argument_list|(
 argument|onoff
 argument_list|)
@@ -173,11 +173,17 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|ScreenOIA
+argument_list|(
+operator|&
+name|OperatorInformationArea
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
 begin_macro
-name|SetSystemLocked
+name|OiaSystemLocked
 argument_list|(
 argument|onoff
 argument_list|)
@@ -210,17 +216,23 @@ literal|0
 operator|)
 condition|)
 block|{
-name|SetXArea
+name|OiaXArea
 argument_list|(
 name|X_AREA_SYSTEM
 argument_list|)
 expr_stmt|;
 block|}
+name|ScreenOIA
+argument_list|(
+operator|&
+name|OperatorInformationArea
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
 begin_macro
-name|SetPWait
+name|OiaPWait
 argument_list|(
 argument|onoff
 argument_list|)
@@ -243,7 +255,7 @@ condition|(
 name|onoff
 condition|)
 block|{
-name|SetXArea
+name|OiaXArea
 argument_list|(
 name|X_AREA_CLOCK
 argument_list|)
@@ -256,7 +268,7 @@ condition|(
 name|SystemLocked
 condition|)
 block|{
-name|SetXArea
+name|OiaXArea
 argument_list|(
 name|X_AREA_SYSTEM
 argument_list|)
@@ -264,18 +276,24 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|SetXArea
+name|OiaXArea
 argument_list|(
 name|X_AREA_NULL
 argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|ScreenOIA
+argument_list|(
+operator|&
+name|OperatorInformationArea
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
 begin_macro
-name|SetTWait
+name|OiaTWait
 argument_list|(
 argument|onoff
 argument_list|)
@@ -293,7 +311,7 @@ name|TWait
 operator|=
 name|onoff
 expr_stmt|;
-name|SetPWait
+name|OiaPWait
 argument_list|(
 name|onoff
 argument_list|)
@@ -302,7 +320,7 @@ block|}
 end_block
 
 begin_macro
-name|SetOnlineA
+name|OiaOnlineA
 argument_list|(
 argument|onoff
 argument_list|)
@@ -325,7 +343,7 @@ condition|(
 name|onoff
 condition|)
 block|{
-name|SetMyJob
+name|OiaMyJob
 argument_list|(
 literal|1
 argument_list|)
@@ -346,11 +364,17 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|ScreenOIA
+argument_list|(
+operator|&
+name|OperatorInformationArea
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
 begin_macro
-name|SetReady3274
+name|OiaReady3274
 argument_list|(
 argument|onoff
 argument_list|)
@@ -389,11 +413,17 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|ScreenOIA
+argument_list|(
+operator|&
+name|OperatorInformationArea
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
 begin_macro
-name|SetMyJob
+name|OiaMyJob
 argument_list|(
 argument|onoff
 argument_list|)
@@ -432,6 +462,12 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|ScreenOIA
+argument_list|(
+operator|&
+name|OperatorInformationArea
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
