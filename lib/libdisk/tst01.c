@@ -3061,6 +3061,27 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+ifdef|#
+directive|ifdef
+name|PC98
+if|if
+condition|(
+operator|!
+name|strcasecmp
+argument_list|(
+operator|*
+name|cmds
+argument_list|,
+literal|"create"
+argument_list|)
+operator|&&
+name|ncmd
+operator|==
+literal|7
+condition|)
+block|{
+else|#
+directive|else
 if|if
 condition|(
 operator|!
@@ -3077,6 +3098,8 @@ operator|==
 literal|6
 condition|)
 block|{
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"Create=%d\n"
@@ -3133,6 +3156,9 @@ argument_list|,
 literal|0
 argument_list|)
 argument_list|,
+ifdef|#
+directive|ifdef
+name|PC98
 name|strtol
 argument_list|(
 name|cmds
@@ -3144,9 +3170,32 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
+argument_list|,
+name|cmds
+index|[
+literal|6
+index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|strtol
+argument_list|(
+name|cmds
+index|[
+literal|5
+index|]
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|)
+block|)
+empty_stmt|;
+endif|#
+directive|endif
 continue|continue;
 block|}
 if|if
@@ -3387,11 +3436,23 @@ literal|0
 block|printf("\tcollapse [pointer]\n");
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|PC98
+name|printf
+argument_list|(
+literal|"\tcreate offset size enum subtype flags name\n"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|printf
 argument_list|(
 literal|"\tcreate offset size enum subtype flags\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"\t\tsubtype(part): swap=1, ffs=7\n"
@@ -3483,13 +3544,16 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_expr_stmt
 name|exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
+unit|}
 end_unit
 
