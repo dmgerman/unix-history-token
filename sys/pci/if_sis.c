@@ -7089,17 +7089,15 @@ directive|ifdef
 name|DEVICE_POLLING
 if|if
 condition|(
+operator|(
 name|ifp
 operator|->
 name|if_flags
 operator|&
 name|IFF_POLLING
-condition|)
-goto|goto
-name|done
-goto|;
-if|if
-condition|(
+operator|)
+operator|||
+operator|(
 operator|(
 name|ifp
 operator|->
@@ -7114,6 +7112,7 @@ name|sis_poll
 argument_list|,
 name|ifp
 argument_list|)
+operator|)
 condition|)
 block|{
 comment|/* ok, disable interrupts */
@@ -7126,9 +7125,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-goto|goto
-name|done
-goto|;
+name|SIS_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 endif|#
 directive|endif
