@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwclose.c	3.4 83/08/26"
+literal|"@(#)wwclose.c	3.5 83/09/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,6 +114,12 @@ operator|)
 name|w
 operator|->
 name|ww_win
+argument_list|,
+name|w
+operator|->
+name|ww_w
+operator|.
+name|t
 argument_list|)
 expr_stmt|;
 name|wwfree
@@ -126,6 +132,12 @@ operator|)
 name|w
 operator|->
 name|ww_cov
+argument_list|,
+name|w
+operator|->
+name|ww_w
+operator|.
+name|t
 argument_list|)
 expr_stmt|;
 name|wwfree
@@ -138,6 +150,12 @@ operator|)
 name|w
 operator|->
 name|ww_buf
+argument_list|,
+name|w
+operator|->
+name|ww_w
+operator|.
+name|t
 argument_list|)
 expr_stmt|;
 if|if
@@ -158,6 +176,12 @@ operator|)
 name|w
 operator|->
 name|ww_fmap
+argument_list|,
+name|w
+operator|->
+name|ww_w
+operator|.
+name|t
 argument_list|)
 expr_stmt|;
 name|free
@@ -166,9 +190,17 @@ operator|(
 name|char
 operator|*
 operator|)
+operator|(
 name|w
 operator|->
 name|ww_nvis
+operator|+
+name|w
+operator|->
+name|ww_w
+operator|.
+name|t
+operator|)
 argument_list|)
 expr_stmt|;
 name|free

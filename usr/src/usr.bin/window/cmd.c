@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd.c	3.11 83/09/02"
+literal|"@(#)cmd.c	3.12 83/09/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -950,17 +950,9 @@ argument_list|,
 name|cmdwin
 argument_list|)
 expr_stmt|;
-name|wwsetcursor
-argument_list|(
-name|wwcurrow
+name|wwcurtowin
 argument_list|(
 name|cmdwin
-argument_list|)
-argument_list|,
-name|wwcurcol
-argument_list|(
-name|cmdwin
-argument_list|)
 argument_list|)
 expr_stmt|;
 while|while

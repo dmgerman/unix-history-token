@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwinit.c	3.9 83/08/26"
+literal|"@(#)wwinit.c	3.10 83/09/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -335,6 +335,10 @@ name|wwsmap
 operator|=
 name|wwalloc
 argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
 name|wwnrow
 argument_list|,
 name|wwncol
@@ -397,6 +401,10 @@ operator|*
 operator|)
 name|wwalloc
 argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
 name|wwnrow
 argument_list|,
 name|wwncol
@@ -465,6 +473,10 @@ operator|*
 operator|)
 name|wwalloc
 argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
 name|wwnrow
 argument_list|,
 name|wwncol

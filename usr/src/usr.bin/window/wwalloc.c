@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwalloc.c	3.4 83/08/26"
+literal|"@(#)wwalloc.c	3.5 83/09/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,19 +32,16 @@ modifier|*
 modifier|*
 name|wwalloc
 parameter_list|(
+name|row
+parameter_list|,
+name|col
+parameter_list|,
 name|nrow
 parameter_list|,
 name|ncol
 parameter_list|,
 name|size
 parameter_list|)
-name|int
-name|nrow
-decl_stmt|,
-name|ncol
-decl_stmt|,
-name|size
-decl_stmt|;
 block|{
 specifier|register
 name|char
@@ -115,6 +112,10 @@ index|[
 name|nrow
 index|]
 expr_stmt|;
+name|col
+operator|*=
+name|size
+expr_stmt|;
 name|size
 operator|/=
 sizeof|sizeof
@@ -147,6 +148,8 @@ name|i
 index|]
 operator|=
 name|p
+operator|-
+name|col
 expr_stmt|;
 name|p
 operator|+=
@@ -155,6 +158,8 @@ expr_stmt|;
 block|}
 return|return
 name|pp
+operator|-
+name|row
 return|;
 block|}
 end_function
@@ -163,6 +168,8 @@ begin_expr_stmt
 name|wwfree
 argument_list|(
 name|p
+argument_list|,
+name|row
 argument_list|)
 specifier|register
 name|char
@@ -180,7 +187,11 @@ operator|(
 name|char
 operator|*
 operator|)
+operator|(
 name|p
+operator|+
+name|row
+operator|)
 argument_list|)
 expr_stmt|;
 block|}

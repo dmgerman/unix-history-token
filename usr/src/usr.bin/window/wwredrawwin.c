@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwredrawwin.c	3.4 83/09/14"
+literal|"@(#)wwredrawwin.c	3.5 83/09/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,28 +50,14 @@ operator|->
 name|ww_i
 operator|.
 name|t
-operator|-
-name|w
-operator|->
-name|ww_w
-operator|.
-name|t
 argument_list|,
 name|w
 operator|->
 name|ww_i
 operator|.
 name|b
-operator|-
-name|w
-operator|->
-name|ww_w
-operator|.
-name|t
 argument_list|,
-name|w
-operator|->
-name|ww_scroll
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -86,7 +72,7 @@ name|row1
 argument_list|,
 name|row2
 argument_list|,
-name|scroll
+name|offset
 argument_list|)
 specifier|register
 expr|struct
@@ -102,7 +88,7 @@ name|row1
 decl_stmt|,
 name|row2
 decl_stmt|,
-name|scroll
+name|offset
 decl_stmt|;
 end_decl_stmt
 
@@ -146,12 +132,6 @@ operator|&
 name|wwtouched
 index|[
 name|row1
-operator|+
-name|w
-operator|->
-name|ww_w
-operator|.
-name|t
 index|]
 expr_stmt|;
 for|for
@@ -177,12 +157,6 @@ operator|&
 name|wwns
 index|[
 name|i
-operator|+
-name|w
-operator|->
-name|ww_w
-operator|.
-name|t
 index|]
 index|[
 name|w
@@ -198,12 +172,6 @@ operator|&
 name|wwsmap
 index|[
 name|i
-operator|+
-name|w
-operator|->
-name|ww_w
-operator|.
-name|t
 index|]
 index|[
 name|w
@@ -220,20 +188,14 @@ name|w
 operator|->
 name|ww_buf
 index|[
-name|scroll
-operator|+
 name|i
+operator|+
+name|offset
 index|]
 index|[
 name|w
 operator|->
 name|ww_i
-operator|.
-name|l
-operator|-
-name|w
-operator|->
-name|ww_w
 operator|.
 name|l
 index|]
@@ -251,12 +213,6 @@ index|[
 name|w
 operator|->
 name|ww_i
-operator|.
-name|l
-operator|-
-name|w
-operator|->
-name|ww_w
 operator|.
 name|l
 index|]

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwcursor.c	3.2 83/09/14"
+literal|"@(#)wwcursor.c	3.3 83/09/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,11 +48,6 @@ name|char
 modifier|*
 name|win
 decl_stmt|;
-specifier|register
-name|r
-operator|,
-name|c
-expr_stmt|;
 if|if
 condition|(
 name|on
@@ -161,22 +156,12 @@ name|win
 operator|^=
 name|wwcursormodes
 expr_stmt|;
-name|r
-operator|=
-name|wwcurrow
-argument_list|(
-name|w
-argument_list|)
-expr_stmt|;
-name|c
-operator|=
-name|wwcurcol
-argument_list|(
-name|w
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
+name|w
+operator|->
+name|ww_cur
+operator|.
 name|r
 operator|<
 name|w
@@ -185,6 +170,10 @@ name|ww_i
 operator|.
 name|t
 operator|||
+name|w
+operator|->
+name|ww_cur
+operator|.
 name|r
 operator|>=
 name|w
@@ -193,6 +182,10 @@ name|ww_i
 operator|.
 name|b
 operator|||
+name|w
+operator|->
+name|ww_cur
+operator|.
 name|c
 operator|<
 name|w
@@ -201,6 +194,10 @@ name|ww_i
 operator|.
 name|l
 operator|||
+name|w
+operator|->
+name|ww_cur
+operator|.
 name|c
 operator|>=
 name|w
@@ -214,9 +211,17 @@ if|if
 condition|(
 name|wwsmap
 index|[
+name|w
+operator|->
+name|ww_cur
+operator|.
 name|r
 index|]
 index|[
+name|w
+operator|->
+name|ww_cur
+operator|.
 name|c
 index|]
 operator|==
@@ -227,9 +232,17 @@ condition|)
 block|{
 name|wwns
 index|[
+name|w
+operator|->
+name|ww_cur
+operator|.
 name|r
 index|]
 index|[
+name|w
+operator|->
+name|ww_cur
+operator|.
 name|c
 index|]
 operator|.
@@ -239,6 +252,10 @@ name|wwcursormodes
 expr_stmt|;
 name|wwtouched
 index|[
+name|w
+operator|->
+name|ww_cur
+operator|.
 name|r
 index|]
 operator|=

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwdelline.c	3.4 83/09/14"
+literal|"@(#)wwdelline.c	3.5 83/09/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ name|wwdelline
 argument_list|(
 name|w
 argument_list|,
-name|line
+name|row
 argument_list|)
 specifier|register
 expr|struct
@@ -43,7 +43,7 @@ end_expr_stmt
 
 begin_decl_stmt
 name|int
-name|line
+name|row
 decl_stmt|;
 end_decl_stmt
 
@@ -86,11 +86,7 @@ condition|(
 operator|(
 name|row1
 operator|=
-name|line
-operator|-
-name|w
-operator|->
-name|ww_scroll
+name|row
 operator|)
 operator|<
 name|w
@@ -98,13 +94,8 @@ operator|->
 name|ww_i
 operator|.
 name|t
-operator|-
-name|w
-operator|->
-name|ww_w
-operator|.
-name|t
 condition|)
+block|{
 name|row1
 operator|=
 name|w
@@ -112,13 +103,8 @@ operator|->
 name|ww_i
 operator|.
 name|t
-operator|-
-name|w
-operator|->
-name|ww_w
-operator|.
-name|t
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -126,11 +112,9 @@ name|row2
 operator|=
 name|w
 operator|->
-name|ww_nline
-operator|-
-name|w
-operator|->
-name|ww_scroll
+name|ww_b
+operator|.
+name|b
 operator|)
 operator|>
 name|w
@@ -138,12 +122,6 @@ operator|->
 name|ww_i
 operator|.
 name|b
-operator|-
-name|w
-operator|->
-name|ww_w
-operator|.
-name|t
 condition|)
 block|{
 name|row2
@@ -153,12 +131,6 @@ operator|->
 name|ww_i
 operator|.
 name|b
-operator|-
-name|w
-operator|->
-name|ww_w
-operator|.
-name|t
 expr_stmt|;
 name|visible
 operator|=
@@ -193,7 +165,7 @@ name|w
 operator|->
 name|ww_buf
 index|[
-name|line
+name|row
 index|]
 expr_stmt|;
 name|cqq
@@ -213,9 +185,11 @@ name|i
 operator|=
 name|w
 operator|->
-name|ww_nline
+name|ww_b
+operator|.
+name|b
 operator|-
-name|line
+name|row
 init|;
 operator|--
 name|i
@@ -247,11 +221,17 @@ name|w
 argument_list|,
 name|w
 operator|->
-name|ww_nline
+name|ww_b
+operator|.
+name|b
 operator|-
 literal|1
 argument_list|,
-literal|0
+name|w
+operator|->
+name|ww_b
+operator|.
+name|l
 argument_list|,
 name|deleted
 argument_list|)
@@ -263,7 +243,7 @@ name|i
 operator|=
 name|w
 operator|->
-name|ww_w
+name|ww_b
 operator|.
 name|nc
 init|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ww.h	3.13 83/09/14	  */
+comment|/*  *	@(#)ww.h	3.14 83/09/15	  */
 end_comment
 
 begin_include
@@ -131,29 +131,28 @@ name|char
 name|ww_order
 decl_stmt|;
 comment|/* the overlapping order */
+comment|/* sizes and positions */
 name|struct
 name|ww_dim
 name|ww_w
 decl_stmt|;
-comment|/* window dimemsions */
+comment|/* window size and pos */
+name|struct
+name|ww_dim
+name|ww_b
+decl_stmt|;
+comment|/* buffer size and pos */
 name|struct
 name|ww_dim
 name|ww_i
 decl_stmt|;
 comment|/* the part inside the screen */
-name|int
-name|ww_nline
-decl_stmt|;
-comment|/* size of the buffer */
-name|int
-name|ww_scroll
-decl_stmt|;
-comment|/* where the window is relative to the buffer */
 name|struct
 name|ww_pos
 name|ww_cur
 decl_stmt|;
 comment|/* the cursor position, relative to ww_w */
+comment|/* arrays */
 name|char
 modifier|*
 modifier|*
@@ -893,26 +892,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|wwcurrow
-parameter_list|(
-name|w
-parameter_list|)
-value|((w)->ww_cur.r + (w)->ww_w.t)
-end_define
-
-begin_define
-define|#
-directive|define
-name|wwcurcol
-parameter_list|(
-name|w
-parameter_list|)
-value|((w)->ww_cur.c + (w)->ww_w.l)
-end_define
-
-begin_define
-define|#
-directive|define
 name|wwsetcursor
 parameter_list|(
 name|r
@@ -929,7 +908,7 @@ name|wwcurtowin
 parameter_list|(
 name|w
 parameter_list|)
-value|wwsetcursor(wwcurrow(w), wwcurcol(w))
+value|wwsetcursor((w)->ww_cur.r, (w)->ww_cur.c)
 end_define
 
 begin_define
@@ -948,6 +927,20 @@ parameter_list|(
 name|w
 parameter_list|)
 value|wwunframe(w)
+end_define
+
+begin_define
+define|#
+directive|define
+name|wwclreol
+parameter_list|(
+name|w
+parameter_list|,
+name|r
+parameter_list|,
+name|c
+parameter_list|)
+value|wwclreol1((w), (r), (c), 0)
 end_define
 
 begin_comment

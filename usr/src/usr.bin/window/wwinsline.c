@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwinsline.c	3.4 83/09/14"
+literal|"@(#)wwinsline.c	3.5 83/09/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ name|wwinsline
 argument_list|(
 name|w
 argument_list|,
-name|line
+name|row
 argument_list|)
 specifier|register
 expr|struct
@@ -43,7 +43,7 @@ end_expr_stmt
 
 begin_decl_stmt
 name|int
-name|line
+name|row
 decl_stmt|;
 end_decl_stmt
 
@@ -70,7 +70,7 @@ modifier|*
 name|cp
 decl_stmt|;
 name|int
-name|row11
+name|row1
 decl_stmt|,
 name|row2
 decl_stmt|;
@@ -84,13 +84,9 @@ comment|/* 	 * Scroll first. 	 */
 if|if
 condition|(
 operator|(
-name|row11
+name|row1
 operator|=
-name|line
-operator|-
-name|w
-operator|->
-name|ww_scroll
+name|row
 operator|)
 operator|<
 name|w
@@ -98,17 +94,15 @@ operator|->
 name|ww_i
 operator|.
 name|t
-operator|-
-name|w
-operator|->
-name|ww_w
-operator|.
-name|t
 condition|)
 block|{
-name|row11
+name|row1
 operator|=
-literal|0
+name|w
+operator|->
+name|ww_i
+operator|.
+name|t
 expr_stmt|;
 name|visible
 operator|=
@@ -127,11 +121,9 @@ name|row2
 operator|=
 name|w
 operator|->
-name|ww_nline
-operator|-
-name|w
-operator|->
-name|ww_scroll
+name|ww_b
+operator|.
+name|b
 operator|)
 operator|>
 name|w
@@ -139,13 +131,8 @@ operator|->
 name|ww_i
 operator|.
 name|b
-operator|-
-name|w
-operator|->
-name|ww_w
-operator|.
-name|t
 condition|)
+block|{
 name|row2
 operator|=
 name|w
@@ -153,20 +140,15 @@ operator|->
 name|ww_i
 operator|.
 name|b
-operator|-
-name|w
-operator|->
-name|ww_w
-operator|.
-name|t
 expr_stmt|;
+block|}
 name|deleted
 operator|=
 name|wwscroll1
 argument_list|(
 name|w
 argument_list|,
-name|row11
+name|row1
 argument_list|,
 name|row2
 argument_list|,
@@ -186,7 +168,9 @@ name|ww_buf
 index|[
 name|w
 operator|->
-name|ww_nline
+name|ww_b
+operator|.
+name|b
 index|]
 expr_stmt|;
 name|cqq
@@ -206,15 +190,15 @@ name|i
 operator|=
 name|w
 operator|->
-name|ww_nline
+name|ww_b
+operator|.
+name|b
 operator|-
-name|line
-operator|-
-literal|1
+name|row
 init|;
 operator|--
 name|i
-operator|>=
+operator|>
 literal|0
 condition|;
 control|)
@@ -240,9 +224,13 @@ name|wwclreol1
 argument_list|(
 name|w
 argument_list|,
-name|line
+name|row
 argument_list|,
-literal|0
+name|w
+operator|->
+name|ww_b
+operator|.
+name|l
 argument_list|,
 name|deleted
 argument_list|)
@@ -254,7 +242,7 @@ name|i
 operator|=
 name|w
 operator|->
-name|ww_w
+name|ww_b
 operator|.
 name|nc
 init|;
