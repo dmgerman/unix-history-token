@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.66 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.67 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3422,7 +3422,48 @@ name|finis
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* 	(void) rewrite(pvp, 3, 0, e); 	(void) rewrite(pvp, 1, 0, e); 	(void) rewrite(pvp, 4, 0, e); */
+operator|(
+name|void
+operator|)
+name|rewrite
+argument_list|(
+name|pvp
+argument_list|,
+literal|3
+argument_list|,
+literal|0
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|rewrite
+argument_list|(
+name|pvp
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|rewrite
+argument_list|(
+name|pvp
+argument_list|,
+literal|4
+argument_list|,
+literal|0
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
 name|bp
 operator|=
 name|buf
@@ -3775,6 +3816,10 @@ block|,
 literal|"HAS_DF"
 block|,
 name|EF_HAS_DF
+block|,
+literal|"IS_MIME"
+block|,
+name|EF_IS_MIME
 block|,
 name|NULL
 block|}
