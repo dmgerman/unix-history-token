@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.30	81/03/17	*/
+comment|/*	rk.c	4.31	81/03/17	*/
 end_comment
 
 begin_include
@@ -37,8 +37,14 @@ begin_comment
 comment|/* DEBUG */
 end_comment
 
+begin_decl_stmt
+name|int
+name|rkdebug
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/*  * RK11/RK07 disk driver  *  * This driver mimics up.c; see it for an explanation of common code.  *  * TODO:  *	Learn why we lose an interrupt sometime when spinning drives down  */
+comment|/*  * RK611/RK0[67] disk driver  *  * This driver mimics up.c; see it for an explanation of common code.  *  * TODO:  *	Learn why we lose an interrupt sometime when spinning drives down  *	Support rk06  */
 end_comment
 
 begin_include
@@ -382,29 +388,29 @@ literal|16
 index|]
 init|=
 block|{
-name|P400
+name|RKAS_P400
 block|,
-name|M400
+name|RKAS_M400
 block|,
-name|P400
+name|RKAS_P400
 block|,
-name|M400
+name|RKAS_M400
 block|,
-name|P800
+name|RKAS_P800
 block|,
-name|M800
+name|RKAS_M800
 block|,
-name|P800
+name|RKAS_P800
 block|,
-name|M800
+name|RKAS_M800
 block|,
-name|P1200
+name|RKAS_P1200
 block|,
-name|M1200
+name|RKAS_M1200
 block|,
-name|P1200
+name|RKAS_P1200
 block|,
-name|M1200
+name|RKAS_M1200
 block|,
 literal|0
 block|,
@@ -622,14 +628,14 @@ name|rkaddr
 operator|->
 name|rkcs2
 operator|&
-name|RK_NED
+name|RKCS2_NED
 operator|||
 operator|(
 name|rkaddr
 operator|->
 name|rkds
 operator|&
-name|RK_SVAL
+name|RKDS_SVAL
 operator|)
 operator|==
 literal|0
@@ -1209,7 +1215,7 @@ name|rkaddr
 operator|->
 name|rkds
 operator|&
-name|RK_VV
+name|RKDS_VV
 operator|)
 operator|==
 literal|0
@@ -1254,10 +1260,10 @@ name|rkaddr
 operator|->
 name|rkds
 operator|&
-name|RK_DREADY
+name|RKDS_DREADY
 operator|)
 operator|!=
-name|RK_DREADY
+name|RKDS_DREADY
 condition|)
 goto|goto
 name|done
@@ -1635,7 +1641,7 @@ name|rkaddr
 operator|->
 name|rkds
 operator|&
-name|RK_SVAL
+name|RKDS_SVAL
 operator|)
 operator|==
 literal|0
@@ -1654,7 +1660,7 @@ name|rkaddr
 operator|->
 name|rkds
 operator|&
-name|RK_PIP
+name|RKDS_PIP
 condition|)
 block|{
 name|rkpip
@@ -1671,10 +1677,10 @@ name|rkaddr
 operator|->
 name|rkds
 operator|&
-name|RK_DREADY
+name|RKDS_DREADY
 operator|)
 operator|!=
-name|RK_DREADY
+name|RKDS_DREADY
 condition|)
 block|{
 name|printf
@@ -1694,10 +1700,10 @@ name|rkaddr
 operator|->
 name|rkds
 operator|&
-name|RK_DREADY
+name|RKDS_DREADY
 operator|)
 operator|!=
-name|RK_DREADY
+name|RKDS_DREADY
 condition|)
 block|{
 name|printf
@@ -2131,9 +2137,32 @@ name|rker
 decl_stmt|;
 if|if
 condition|(
+name|rkdebug
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"cs2=%b ds=%b er=%b\n"
+argument_list|,
+name|cs2
+argument_list|,
+name|RKCS2_BITS
+argument_list|,
 name|ds
+argument_list|,
+name|RKDS_BITS
+argument_list|,
+name|er
+argument_list|,
+name|RKER_BITS
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|er
 operator|&
-name|RK_WLE
+name|RKER_WLE
 condition|)
 block|{
 name|printf
@@ -2228,14 +2257,14 @@ if|if
 condition|(
 name|cs2
 operator|&
-name|RK_MDS
+name|RKCS2_MDS
 condition|)
 block|{
 name|rkaddr
 operator|->
 name|rkcs2
 operator|=
-name|RK_SCLR
+name|RKCS2_SCLR
 expr_stmt|;
 goto|goto
 name|retry
@@ -2249,16 +2278,16 @@ if|if
 condition|(
 name|ds
 operator|&
-name|RK_DROT
+name|RKDS_DROT
 operator|||
 name|er
 operator|&
 operator|(
-name|RK_OPI
+name|RKER_OPI
 operator||
-name|RK_SKI
+name|RKER_SKI
 operator||
-name|RK_UNS
+name|RKER_UNS
 operator|)
 operator|||
 operator|(
@@ -2283,13 +2312,13 @@ operator|(
 name|er
 operator|&
 operator|(
-name|RK_DCK
+name|RKER_DCK
 operator||
-name|RK_ECH
+name|RKER_ECH
 operator|)
 operator|)
 operator|==
-name|RK_DCK
+name|RKER_DCK
 condition|)
 if|if
 condition|(
@@ -3990,7 +4019,7 @@ name|rkaddr
 operator|->
 name|rkds
 operator|&
-name|RK_VV
+name|RKDS_VV
 operator|)
 operator|==
 literal|0
