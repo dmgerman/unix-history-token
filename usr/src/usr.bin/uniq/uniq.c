@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uniq.c	5.2 (Berkeley) %G%"
+literal|"@(#)uniq.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -290,6 +290,11 @@ comment|/* because of the +, getopt is messed up */
 for|for
 control|(
 init|;
+name|argc
+operator|>
+literal|0
+operator|&&
+operator|(
 operator|*
 operator|*
 name|argv
@@ -301,6 +306,7 @@ operator|*
 name|argv
 operator|==
 literal|'-'
+operator|)
 condition|;
 operator|++
 name|argv
