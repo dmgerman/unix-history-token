@@ -1579,7 +1579,6 @@ name|totlen
 operator|!=
 name|plen
 condition|)
-empty_stmt|;
 name|printf
 argument_list|(
 literal|"sum of m_len=%u\n"
