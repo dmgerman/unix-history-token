@@ -728,6 +728,17 @@ begin_comment
 comment|/* object might be dirty */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VI_DOINGINACT
+value|0x0800
+end_define
+
+begin_comment
+comment|/* VOP_INACTIVE is in progress */
+end_comment
+
 begin_comment
 comment|/*  * XXX VI_ONWORKLST could be replaced with a check for NULL list elements  * in v_synclist.  */
 end_comment
@@ -1671,7 +1682,7 @@ parameter_list|(
 name|vp
 parameter_list|)
 define|\
-value|(!((vp)->v_iflag& (VI_FREE|VI_DOOMED))&& \ 	 !(vp)->v_holdcnt&& !(vp)->v_usecount&& \ 	 (!(vp)->v_object || \ 	  !((vp)->v_object->ref_count || (vp)->v_object->resident_page_count)))
+value|(!((vp)->v_iflag& (VI_FREE|VI_DOOMED|VI_DOINGINACT))&& \ 	 !(vp)->v_holdcnt&& !(vp)->v_usecount&& \ 	 (!(vp)->v_object || \ 	  !((vp)->v_object->ref_count || (vp)->v_object->resident_page_count)))
 end_define
 
 begin_comment
@@ -1686,7 +1697,7 @@ parameter_list|(
 name|vp
 parameter_list|)
 define|\
-value|(!((vp)->v_iflag& (VI_FREE|VI_DOOMED|VI_XLOCK))&&	\ 	 LIST_EMPTY(&(vp)->v_cache_src)&& !(vp)->v_usecount)
+value|(!((vp)->v_iflag& (VI_FREE|VI_DOOMED|VI_XLOCK|VI_DOINGINACT))&& \ 	 LIST_EMPTY(&(vp)->v_cache_src)&& !(vp)->v_usecount)
 end_define
 
 begin_comment
