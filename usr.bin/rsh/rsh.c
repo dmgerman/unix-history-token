@@ -40,7 +40,17 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rsh.c	8.3 (Berkeley) 4/6/94"
+literal|"From: @(#)rsh.c	8.3 (Berkeley) 4/6/94"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,10 +61,6 @@ end_endif
 
 begin_comment
 comment|/* not lint */
-end_comment
-
-begin_comment
-comment|/*  * $Source: /home/ncvs/src/usr.bin/rsh/rsh.c,v $  * $Header: /home/ncvs/src/usr.bin/rsh/rsh.c,v 1.1.1.1 1994/05/27 12:32:35 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -473,13 +479,13 @@ name|CRYPT
 define|#
 directive|define
 name|OPTIONS
-value|"8KLdek:l:nwx"
+value|"8KLde:k:l:nwx"
 else|#
 directive|else
 define|#
 directive|define
 name|OPTIONS
-value|"8KLdek:l:nw"
+value|"8KLde:k:l:nw"
 endif|#
 directive|endif
 else|#
@@ -487,7 +493,7 @@ directive|else
 define|#
 directive|define
 name|OPTIONS
-value|"8KLdel:nw"
+value|"8KLde:l:nw"
 endif|#
 directive|endif
 while|while
