@@ -100,6 +100,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -474,22 +480,14 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
-name|inet_ntoa
-argument_list|()
-decl_stmt|,
-modifier|*
 name|iso_ntoa
-argument_list|()
-decl_stmt|,
-modifier|*
-name|link_ntoa
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|void
