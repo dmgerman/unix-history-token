@@ -1164,11 +1164,14 @@ init|;
 operator|*
 name|cp
 operator|&&
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|cp
 operator|-
 name|cmdline
-operator|)
+argument_list|)
 operator|<
 sizeof|sizeof
 argument_list|(
