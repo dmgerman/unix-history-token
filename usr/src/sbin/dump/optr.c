@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)optr.c	1.8 (Berkeley) %G%"
+literal|"@(#)optr.c	1.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,7 +71,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* attemtion message */
+comment|/* attention message */
 end_comment
 
 begin_macro
@@ -247,7 +247,7 @@ else|else
 block|{
 name|msg
 argument_list|(
-literal|"\"Yes\" or \"No\" ONLY!\n"
+literal|"\"Yes\" or \"No\"?\n"
 argument_list|)
 expr_stmt|;
 name|alarmcatch
@@ -353,14 +353,14 @@ begin_block
 block|{
 name|msg
 argument_list|(
-literal|"Interrupt received. Do>>>YOU<<< know what are you doing?\n"
+literal|"Interrupt received.\n"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|query
 argument_list|(
-literal|"Do you really want to abort dump?"
+literal|"Do you want to abort dump?"
 argument_list|)
 condition|)
 name|dumpabort
