@@ -10,6 +10,33 @@ file|"gprint.h"
 end_include
 
 begin_comment
+comment|/* imports from main.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|linenum
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* current line number in input file */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|gremlinfile
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name of file currently reading */
+end_comment
+
+begin_comment
 comment|/* imports from c */
 end_comment
 
@@ -296,11 +323,11 @@ literal|"gremlinfile"
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|error
 argument_list|(
-name|stderr
+literal|"%s is not a gremlin file"
 argument_list|,
-literal|"not gremlin file\n"
+name|gremlinfile
 argument_list|)
 expr_stmt|;
 return|return
@@ -354,11 +381,11 @@ operator|==
 name|EOF
 condition|)
 block|{
-name|fprintf
+name|error
 argument_list|(
-name|stderr
+literal|"%s, error in file format"
 argument_list|,
-literal|"error in file format\n"
+name|gremlinfile
 argument_list|)
 expr_stmt|;
 return|return
