@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: main.c,v 1.18 1997/07/24 06:58:06 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1226,19 +1226,6 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Be compatible if user did not specify -j and did not explicitly 	 * turned compatibility on 	 */
-if|if
-condition|(
-operator|!
-name|compatMake
-operator|&&
-operator|!
-name|forceJobs
-condition|)
-name|compatMake
-operator|=
-name|TRUE
-expr_stmt|;
 name|oldVars
 operator|=
 name|TRUE
@@ -1345,6 +1332,19 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Be compatible if user did not specify -j and did not explicitly 	 * turned compatibility on 	 */
+if|if
+condition|(
+operator|!
+name|compatMake
+operator|&&
+operator|!
+name|forceJobs
+condition|)
+name|compatMake
+operator|=
+name|TRUE
+expr_stmt|;
 block|}
 end_function
 
