@@ -56,31 +56,25 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
+file|<sys/time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/user.h>
+file|<sys/resource.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
 end_include
 
 begin_include
