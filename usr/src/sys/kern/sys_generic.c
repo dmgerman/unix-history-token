@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_generic.c	5.29	82/12/28	*/
+comment|/*	sys_generic.c	5.30	83/01/23	*/
 end_comment
 
 begin_include
@@ -2892,7 +2892,10 @@ condition|(
 name|com
 operator|&
 name|IOC_IN
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|size
 condition|)
 block|{
@@ -2937,7 +2940,8 @@ name|uap
 operator|->
 name|cmarg
 expr_stmt|;
-comment|/* 	 * Zero the buffer on the stack so the user 	 * always gets back something deterministic. 	 */
+block|}
+elseif|else
 if|if
 condition|(
 operator|(
@@ -2948,6 +2952,7 @@ operator|)
 operator|&&
 name|size
 condition|)
+comment|/* 		 * Zero the buffer on the stack so the user 		 * always gets back something deterministic. 		 */
 name|bzero
 argument_list|(
 operator|(
