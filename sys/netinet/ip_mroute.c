@@ -14288,6 +14288,22 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* If a NULL_REGISTER, pass it to the daemon */
+if|if
+condition|(
+operator|(
+name|ntohl
+argument_list|(
+operator|*
+name|reghdr
+argument_list|)
+operator|&
+name|PIM_NULL_REGISTER
+operator|)
+condition|)
+goto|goto
+name|pim_input_to_daemon
+goto|;
 comment|/* 	 * Copy the TOS from the outer IP header to the inner IP header. 	 */
 if|if
 condition|(
@@ -14370,22 +14386,6 @@ name|PIM_MINLEN
 operator|)
 expr_stmt|;
 block|}
-comment|/* If a NULL_REGISTER, pass it to the daemon */
-if|if
-condition|(
-operator|(
-name|ntohl
-argument_list|(
-operator|*
-name|reghdr
-argument_list|)
-operator|&
-name|PIM_NULL_REGISTER
-operator|)
-condition|)
-goto|goto
-name|pim_input_to_daemon
-goto|;
 comment|/* 	 * Decapsulate the inner IP packet and loopback to forward it 	 * as a normal multicast packet. Also, make a copy of the  	 *     outer_iphdr + pimhdr + reghdr + encap_iphdr 	 * to pass to the daemon later, so it can take the appropriate 	 * actions (e.g., send back PIM_REGISTER_STOP). 	 * XXX: here m->m_data points to the outer IP header. 	 */
 name|mcp
 operator|=
