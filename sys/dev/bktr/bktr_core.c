@@ -19707,7 +19707,7 @@ name|IICBUS
 parameter_list|(
 name|bktr
 parameter_list|)
-value|((bktr)->i2c_sc.iicbus)
+value|((bktr)->i2c_sc.iicbb)
 comment|/* The MSP34xx and DPL35xx Audio chip require i2c bus writes of up */
 comment|/* to 5 bytes which the bt848 automated i2c bus controller cannot handle */
 comment|/* Therefore we need low level control of the i2c bus hardware */
