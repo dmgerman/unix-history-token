@@ -41,7 +41,7 @@ comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_endif
-unit|__FBSDID("$FreeBSD$");
+unit|__FBSDID("FreeBSD: src/lib/libc/stdio/vfprintf.c,v 1.51 2003/03/12 20:30:00 das Exp");
 endif|#
 directive|endif
 end_endif
