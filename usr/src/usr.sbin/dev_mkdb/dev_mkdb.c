@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dev_mkdb.c	5.6 (Berkeley) %G%"
+literal|"@(#)dev_mkdb.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,6 +81,16 @@ include|#
 directive|include
 file|<dirent.h>
 end_include
+
+begin_struct_decl
+struct_decl|struct
+name|nlist
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/* XXX bletch */
+end_comment
 
 begin_include
 include|#
@@ -435,6 +445,23 @@ literal|1
 expr_stmt|;
 else|else
 continue|continue;
+name|bcopy
+argument_list|(
+operator|&
+name|sb
+operator|.
+name|st_rdev
+argument_list|,
+name|bkeybuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sb
+operator|.
+name|st_rdev
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/*  		 * Nul terminate the name so caller doesn't have to.  		 */
 name|bcopy
 argument_list|(
