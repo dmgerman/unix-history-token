@@ -29,31 +29,19 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* ********************************************************** INCLUDES ***** */
@@ -7290,7 +7278,7 @@ name|err
 argument_list|(
 literal|32
 argument_list|,
-literal|"rdfs: attempting to read negative block number\n"
+literal|"rdfs: attempting to read negative block number"
 argument_list|)
 expr_stmt|;
 block|}
@@ -9765,7 +9753,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"There is not enough space (%d< %d)"
+literal|"there is not enough space (%d< %d)"
 argument_list|,
 name|p_size
 argument_list|,
@@ -9861,7 +9849,7 @@ literal|1
 argument_list|,
 literal|"active snapshot found in file system\n"
 literal|"	please remove all snapshots before "
-literal|"using growfs\n"
+literal|"using growfs"
 argument_list|)
 expr_stmt|;
 block|}
