@@ -389,17 +389,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LK_THISLAYER
-value|0x00040000
-end_define
-
-begin_comment
-comment|/* vn_lock: lock/unlock only current layer */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LK_INTERNAL
 value|0x00080000
 end_define
