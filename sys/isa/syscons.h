@@ -61,6 +61,32 @@ value|((ch)>0x1B || ((ch)>0x0d&& (ch)<0x1b) || (ch)<0x07)
 end_define
 
 begin_comment
+comment|/* macros for "intelligent" screen update */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|mark_for_update
+parameter_list|(
+name|scp
+parameter_list|,
+name|x
+parameter_list|)
+value|{\ 			  	    if ((x)< scp->start) scp->start = (x);\ 				    else if ((x)> scp->end) scp->end = (x);\ 				}
+end_define
+
+begin_define
+define|#
+directive|define
+name|mark_all
+parameter_list|(
+name|scp
+parameter_list|)
+value|{\ 				    scp->start = 0;\ 				    scp->end = scp->xsize * scp->ysize;\ 				}
+end_define
+
+begin_comment
 comment|/* status flags */
 end_comment
 
@@ -139,13 +165,6 @@ define|#
 directive|define
 name|UPDATE_MOUSE
 value|0x01000
-end_define
-
-begin_define
-define|#
-directive|define
-name|UPDATE_SCREEN
-value|0x02000
 end_define
 
 begin_comment
@@ -485,6 +504,17 @@ directive|define
 name|del
 value|0x7f
 end_define
+
+begin_define
+define|#
+directive|define
+name|DEAD_CHAR
+value|0x07
+end_define
+
+begin_comment
+comment|/* char used for cursor */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -1303,6 +1333,9 @@ parameter_list|(
 name|scr_stat
 modifier|*
 name|scp
+parameter_list|,
+name|int
+name|force
 parameter_list|)
 function_decl|;
 end_function_decl
