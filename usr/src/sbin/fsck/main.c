@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.17 (Berkeley) %G%"
+literal|"@(#)main.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2133,6 +2133,9 @@ name|dups
 operator|*
 operator|)
 literal|0
+expr_stmt|;
+name|inocleanup
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

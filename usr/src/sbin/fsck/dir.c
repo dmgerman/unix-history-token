@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dir.c	5.10 (Berkeley) %G%"
+literal|"@(#)dir.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -246,7 +246,7 @@ name|DFOUND
 expr_stmt|;
 name|dp
 operator|=
-name|ginode
+name|getcacheino
 argument_list|(
 name|inumber
 argument_list|)
@@ -316,9 +316,24 @@ argument_list|)
 operator|==
 literal|1
 condition|)
+block|{
+name|dp
+operator|=
+name|ginode
+argument_list|(
+name|inumber
+argument_list|)
+expr_stmt|;
+name|dp
+operator|->
+name|di_size
+operator|=
+name|MINDIRSIZE
+expr_stmt|;
 name|inodirty
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -383,9 +398,31 @@ argument_list|)
 operator|==
 literal|1
 condition|)
+block|{
+name|dp
+operator|=
+name|ginode
+argument_list|(
+name|inumber
+argument_list|)
+expr_stmt|;
+name|dp
+operator|->
+name|di_size
+operator|=
+name|roundup
+argument_list|(
+name|dp
+operator|->
+name|di_size
+argument_list|,
+name|DIRBLKSIZ
+argument_list|)
+expr_stmt|;
 name|inodirty
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 name|curino
 operator|.

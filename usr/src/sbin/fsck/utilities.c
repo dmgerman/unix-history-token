@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.21 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2167,7 +2167,7 @@ condition|(
 operator|(
 name|ckinode
 argument_list|(
-name|ginode
+name|getcacheino
 argument_list|(
 name|ino
 argument_list|)
@@ -2215,7 +2215,7 @@ condition|(
 operator|(
 name|ckinode
 argument_list|(
-name|ginode
+name|getcacheino
 argument_list|(
 name|idesc
 operator|.

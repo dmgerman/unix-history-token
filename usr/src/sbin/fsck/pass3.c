@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass3.c	5.6 (Berkeley) %G%"
+literal|"@(#)pass3.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -188,7 +188,7 @@ condition|)
 break|break;
 name|dp
 operator|=
-name|ginode
+name|getcacheino
 argument_list|(
 name|orphan
 argument_list|)

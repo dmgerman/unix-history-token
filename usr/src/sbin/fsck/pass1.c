@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass1.c	5.9 (Berkeley) %G%"
+literal|"@(#)pass1.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -751,11 +751,8 @@ name|zlnp
 expr_stmt|;
 block|}
 block|}
-name|statemap
-index|[
-name|inumber
-index|]
-operator|=
+if|if
+condition|(
 operator|(
 name|dp
 operator|->
@@ -765,9 +762,29 @@ name|IFMT
 operator|)
 operator|==
 name|IFDIR
-condition|?
+condition|)
+block|{
+name|statemap
+index|[
+name|inumber
+index|]
+operator|=
 name|DSTATE
-else|:
+expr_stmt|;
+name|cacheino
+argument_list|(
+name|dp
+argument_list|,
+name|inumber
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|statemap
+index|[
+name|inumber
+index|]
+operator|=
 name|FSTATE
 expr_stmt|;
 name|badblk
