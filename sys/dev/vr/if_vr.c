@@ -4664,12 +4664,12 @@ name|arpcom
 operator|.
 name|ac_if
 expr_stmt|;
-comment|/* Clear the timeout timer. */
+comment|/* Reset the timeout timer; if_txeoc will clear it. */
 name|ifp
 operator|->
 name|if_timer
 operator|=
-literal|0
+literal|5
 expr_stmt|;
 comment|/* Sanity check. */
 if|if
@@ -4877,12 +4877,6 @@ name|arpcom
 operator|.
 name|ac_if
 expr_stmt|;
-name|ifp
-operator|->
-name|if_timer
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -4908,6 +4902,12 @@ operator|.
 name|vr_tx_tail
 operator|=
 name|NULL
+expr_stmt|;
+name|ifp
+operator|->
+name|if_timer
+operator|=
+literal|0
 expr_stmt|;
 block|}
 return|return;
