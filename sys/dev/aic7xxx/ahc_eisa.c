@@ -808,7 +808,7 @@ name|driver_t
 name|ahc_eisa_driver
 init|=
 block|{
-literal|"ahc"
+literal|"ahc_eisa"
 block|,
 name|ahc_eisa_device_methods
 block|,
@@ -824,20 +824,20 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|devclass_t
-name|ahc_devclass
+name|ahc_eisa_devclass
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|ahc
+name|ahc_eisa
 argument_list|,
 name|eisa
 argument_list|,
 name|ahc_eisa_driver
 argument_list|,
-name|ahc_devclass
+name|ahc_eisa_devclass
 argument_list|,
 literal|0
 argument_list|,
