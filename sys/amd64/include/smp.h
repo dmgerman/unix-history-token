@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.37 1998/03/03 20:55:23 tegge Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.38 1998/03/03 22:56:26 tegge Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -356,14 +356,6 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|u_int
-name|ivectors
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 specifier|volatile
 name|u_int
 name|stopped_cpus
@@ -395,46 +387,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* global data in apic_ipl.s */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|u_int
-name|vec
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_int
-name|Xintr8254
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_int
-name|mask8254
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* functions in apic_ipl.s */
 end_comment
-
-begin_decl_stmt
-name|void
-name|vec8254
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|void

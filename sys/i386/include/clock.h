@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id: clock.h,v 1.32 1998/02/20 16:35:27 phk Exp $  */
+comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id: clock.h,v 1.33 1998/02/25 02:20:30 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -73,6 +73,24 @@ name|int
 name|wall_cmos_clock
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|APIC_IO
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|apic_8254_intr
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Driver to clock driver interface.  */
