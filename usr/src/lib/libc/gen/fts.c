@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.33 (Berkeley) %G%"
+literal|"@(#)fts.c	5.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1175,6 +1175,9 @@ name|char
 modifier|*
 name|t
 decl_stmt|;
+name|int
+name|saved_errno
+decl_stmt|;
 comment|/* If finished or unrecoverable error, return NULL. */
 if|if
 condition|(
@@ -1532,12 +1535,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|p
-operator|->
-name|fts_flags
-operator||=
-name|FTS_DONTCHDIR
-expr_stmt|;
 if|if
 condition|(
 name|ISSET
@@ -1558,6 +1555,12 @@ name|fts_level
 operator|==
 name|FTS_ROOTLEVEL
 operator|&&
+operator|!
+name|ISSET
+argument_list|(
+name|FTS_NOCHDIR
+argument_list|)
+operator|&&
 name|FCHDIR
 argument_list|(
 name|sp
@@ -1568,6 +1571,10 @@ name|fts_rfd
 argument_list|)
 condition|)
 block|{
+name|saved_errno
+operator|=
+name|errno
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1577,6 +1584,10 @@ name|sp
 operator|->
 name|fts_rfd
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|saved_errno
 expr_stmt|;
 name|SET
 argument_list|(
@@ -1589,15 +1600,17 @@ name|NULL
 operator|)
 return|;
 block|}
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|sp
+name|p
 operator|->
-name|fts_rfd
-argument_list|)
+name|fts_flags
+operator||=
+name|FTS_DONTCHDIR
+expr_stmt|;
+name|p
+operator|->
+name|fts_info
+operator|=
+name|FTS_DP
 expr_stmt|;
 return|return
 operator|(
@@ -1884,6 +1897,10 @@ name|fts_rfd
 argument_list|)
 condition|)
 block|{
+name|saved_errno
+operator|=
+name|errno
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1893,6 +1910,10 @@ name|sp
 operator|->
 name|fts_rfd
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|saved_errno
 expr_stmt|;
 name|SET
 argument_list|(
@@ -1938,6 +1959,10 @@ name|fts_symfd
 argument_list|)
 condition|)
 block|{
+name|saved_errno
+operator|=
+name|errno
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1947,6 +1972,10 @@ name|p
 operator|->
 name|fts_symfd
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|saved_errno
 expr_stmt|;
 name|SET
 argument_list|(
@@ -3137,31 +3166,17 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/* If didn't find anything, just do the post-order visit */
+comment|/* If didn't find anything, return NULL. */
 if|if
 condition|(
 operator|!
 name|nitems
 condition|)
-block|{
-if|if
-condition|(
-name|type
-operator|==
-name|BREAD
-condition|)
-name|cur
-operator|->
-name|fts_info
-operator|=
-name|FTS_DP
-expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-block|}
 comment|/* Sort the entries. */
 if|if
 condition|(
