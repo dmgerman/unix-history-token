@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.8 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1578,6 +1578,8 @@ operator|->
 name|e_flags
 operator||=
 name|EF_RESPONSE
+operator||
+name|EF_METOO
 expr_stmt|;
 end_expr_stmt
 
