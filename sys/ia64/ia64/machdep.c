@@ -375,11 +375,33 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|u_int64_t
+name|pa_bootinfo
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int64_t
+name|va_bootinfo
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|bootinfo
 name|bootinfo
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|bootinfo_error
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX temporary ad-hoc error mask to help debugging */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -1953,7 +1975,27 @@ name|IA64_FPSR_DEFAULT
 argument_list|)
 expr_stmt|;
 comment|/* 	 * TODO: Get critical system information (if possible, from the 	 * information provided by the boot program). 	 */
-comment|/* 	 * Gross and disgusting hack. The bootinfo is written into 	 * memory at a fixed address. 	 */
+comment|/* 	 * Gross and disgusting hack. The bootinfo is written into 	 * memory at a fixed address. 	 * To help transitioning to a non-fixed bootinfo block, we 	 * temporarily have to make this more gross and disgusting: 	 * o  pa_bootinfo is the physical address of the bootinfo block 	 *    as passed to us by the loader (initialized in locore.s) 	 *    (EFI loader version 0.3 and up). We only check this value. 	 *    We don't actively use it yet. 	 * o  va_bootinfo is the hardwired virtual (RR7) address of 	 *    the bootinfo block (old loaders). We still use it for the 	 *    moment. 	 */
+name|va_bootinfo
+operator|=
+literal|0xe000000000508000
+expr_stmt|;
+comment|/* the fixed RR7 address */
+if|if
+condition|(
+name|IA64_PHYS_TO_RR7
+argument_list|(
+name|pa_bootinfo
+argument_list|)
+operator|!=
+name|va_bootinfo
+condition|)
+name|bootinfo_error
+operator||=
+literal|1
+expr_stmt|;
+comment|/* XXX loader did not set r8 */
+comment|/* copy the bootinfo block */
 name|bootinfo
 operator|=
 operator|*
@@ -1962,7 +2004,7 @@ expr|struct
 name|bootinfo
 operator|*
 operator|)
-literal|0xe000000000508000
+name|va_bootinfo
 expr_stmt|;
 if|if
 condition|(
@@ -1979,6 +2021,11 @@ operator|!=
 literal|1
 condition|)
 block|{
+name|bootinfo_error
+operator||=
+literal|2
+expr_stmt|;
+comment|/* XXX bogus block */
 name|bzero
 argument_list|(
 operator|&
@@ -2318,6 +2365,30 @@ name|cninit
 argument_list|()
 expr_stmt|;
 comment|/* OUTPUT NOW ALLOWED */
+if|if
+condition|(
+name|bootinfo_error
+operator|&
+literal|1
+condition|)
+name|printf
+argument_list|(
+literal|"bootinfo: the loader did not not pass the address "
+literal|"of the block in r8.\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bootinfo_error
+operator|&
+literal|2
+condition|)
+name|printf
+argument_list|(
+literal|"bootinfo: block not valid; possibly not at hardwired "
+literal|"address.\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ia64_pal_base
