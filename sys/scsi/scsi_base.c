@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file  * is totally correct for any given task and users of this file must  * accept responsibility for any damage that occurs from the application of this  * file.  *  * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.46 1997/03/23 06:33:46 bde Exp $  */
+comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file  * is totally correct for any given task and users of this file must  * accept responsibility for any damage that occurs from the application of this  * file.  *  * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.47 1997/03/24 01:46:15 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -81,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|<sys/errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/clock.h>
 end_include
 
 begin_include
@@ -2937,6 +2943,11 @@ case|case
 name|XS_BUSY
 case|:
 comment|/* should somehow arange for a 1 sec delay here (how?)[jre]  		 * tsleep(&localvar, priority, "foo", hz);  		 * that's how! [unknown]  		 * no, we could be at interrupt context..  use  		 * timeout(scsi_resubmit,xs,hz); [jre] (not implimenteed yet)  		 */
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
 case|case
 name|XS_TIMEOUT
 case|:
