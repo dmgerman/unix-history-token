@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chmod.c	5.14 (Berkeley) %G%"
+literal|"@(#)chmod.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -341,16 +341,12 @@ argument_list|(
 operator|++
 name|argv
 argument_list|,
-operator|(
 name|oct
 condition|?
 name|FTS_NOSTAT
+operator||
+name|FTS_PHYSICAL
 else|:
-literal|0
-operator|)
-operator||
-name|FTS_MULTIPLE
-operator||
 name|FTS_PHYSICAL
 argument_list|,
 literal|0
