@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: index.c,v 1.65 1999/05/12 09:02:34 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: index.c,v 1.66 1999/05/14 12:15:32 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -165,7 +165,7 @@ literal|"Package Selection"
 block|,
 literal|"To mark a package, move to it and press SPACE.  If the package is\n"
 literal|"already marked, it will be unmarked or deleted (if installed).\n"
-literal|"Items marked with a 'D' are dependencies which will be auto-loaded\n."
+literal|"Items marked with a `D' are dependencies which will be auto-loaded.\n"
 literal|"To search for a package by name, press ESC.  To select a category,\n"
 literal|"press RETURN.  NOTE:  The All category selection creates a very large\n"
 literal|"submenu!  If you select it, please be patient while it comes up."
@@ -2003,20 +2003,15 @@ operator|->
 name|next
 control|)
 block|{
-comment|/* Subtract out the All category from searches */
 if|if
 condition|(
-operator|!
-name|strcmp
-argument_list|(
 name|p
 operator|->
-name|name
-argument_list|,
-literal|"All"
-argument_list|)
+name|type
+operator|==
+name|PACKAGE
 condition|)
-continue|continue;
+block|{
 comment|/* If tp == NULL, we're looking for an exact package match */
 if|if
 condition|(
@@ -2066,13 +2061,16 @@ return|return
 name|p
 return|;
 block|}
-comment|/* The usual recursion-out-of-laziness ploy */
+block|}
+elseif|else
 if|if
 condition|(
 name|p
 operator|->
 name|kids
 condition|)
+block|{
+comment|/* The usual recursion-out-of-laziness ploy */
 if|if
 condition|(
 operator|(
@@ -2093,6 +2091,7 @@ condition|)
 return|return
 name|sp
 return|;
+block|}
 block|}
 if|if
 condition|(
@@ -3276,79 +3275,6 @@ name|PkgNodePtr
 name|top
 parameter_list|,
 name|PkgNodePtr
-name|plist
-parameter_list|)
-block|{
-name|PkgNodePtr
-name|tmp
-decl_stmt|;
-name|int
-name|status
-init|=
-name|DITEM_SUCCESS
-decl_stmt|;
-for|for
-control|(
-name|tmp
-operator|=
-name|plist
-operator|->
-name|kids
-init|;
-name|tmp
-operator|&&
-name|tmp
-operator|->
-name|name
-condition|;
-name|tmp
-operator|=
-name|tmp
-operator|->
-name|next
-control|)
-if|if
-condition|(
-name|DITEM_STATUS
-argument_list|(
-name|index_extract_one
-argument_list|(
-name|dev
-argument_list|,
-name|top
-argument_list|,
-name|tmp
-argument_list|,
-name|FALSE
-argument_list|)
-argument_list|)
-operator|!=
-name|DITEM_SUCCESS
-condition|)
-name|status
-operator|=
-name|DITEM_FAILURE
-expr_stmt|;
-return|return
-name|status
-operator||
-name|DITEM_RESTORE
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|index_extract_one
-parameter_list|(
-name|Device
-modifier|*
-name|dev
-parameter_list|,
-name|PkgNodePtr
-name|top
-parameter_list|,
-name|PkgNodePtr
 name|who
 parameter_list|,
 name|Boolean
@@ -3463,7 +3389,7 @@ condition|)
 block|{
 name|status
 operator|=
-name|index_extract_one
+name|index_extract
 argument_list|(
 name|dev
 argument_list|,
