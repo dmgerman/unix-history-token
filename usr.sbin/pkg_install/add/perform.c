@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.8 1994/05/25 17:59:54 asami Exp $"
+literal|"$Id: perform.c,v 1.9 1994/10/04 16:07:43 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -183,10 +183,6 @@ name|FILE
 modifier|*
 name|cfile
 decl_stmt|;
-name|char
-modifier|*
-name|home
-decl_stmt|;
 name|int
 name|code
 init|=
@@ -286,6 +282,27 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|char
+name|home
+index|[
+name|FILENAME_MAX
+index|]
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|getcwd
+argument_list|(
+name|home
+argument_list|,
+name|FILENAME_MAX
+argument_list|)
+condition|)
+name|upchuck
+argument_list|(
+literal|"getcwd"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pkg
@@ -335,7 +352,7 @@ return|return
 literal|1
 return|;
 block|}
-comment|/* 	 * Apply a crude heuristic to see how much space the package will 	 * take up once it's unpacked.  I've noticed that most packages 	 * compress an average of 65%. 	 */
+comment|/* 	 * Apply a crude heuristic to see how much space the package will 	 * take up once it's unpacked.  I've noticed that most packages 	 * compress an average of 75%, so multiply by 4 for good measure. 	 */
 if|if
 condition|(
 name|stat
@@ -364,10 +381,11 @@ name|sb
 operator|.
 name|st_size
 operator|*=
-literal|1.65
+literal|4
 expr_stmt|;
-name|home
-operator|=
+operator|(
+name|void
+operator|)
 name|make_playpen
 argument_list|(
 name|PlayPen
