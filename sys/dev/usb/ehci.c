@@ -1,10 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ehci.c,v 1.87 2004/10/25 10:29:49 augustss Exp $	*/
+comment|/*	$NetBSD: ehci.c,v 1.89 2004/12/03 08:51:31 augustss Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * TODO  *  hold off explorations by companion controllers until ehci has started.  */
+comment|/*  * Copyright (c) 2004 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Lennart Augustsson (lennart@augustsson.net) and by Charles M. Hannum.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+end_comment
+
+begin_comment
+comment|/*  * USB Enhanced Host Controller Driver, a.k.a. USB 2.0 controller.  *  * The EHCI 1.0 spec can be found at  * http://developer.intel.com/technology/usb/download/ehci-r10.pdf  * and the USB 2.0 spec at  * http://www.usb.org/developers/docs/usb_20.zip  *  */
+end_comment
+
+begin_comment
+comment|/*  * TODO:  * 1) hold off explorations by companion controllers until ehci has started.  *  * 2) The EHCI driver lacks support for interrupt isochronous transfers, so  *    devices using them don't work.  *    Interrupt transfers are not difficult, it's just not done.   *  * 3) The meaty part to implement is the support for USB 2.0 hubs.  *    They are quite complicated since the need to be able to do  *    "transaction translation", i.e., converting to/from USB 2 and USB 1.  *    So the hub driver needs to handle and schedule these things, to  *    assign place in frame where different devices get to go. See chapter  *    on hubs in USB 2.0 for details.   *  * 4) command failures are not recovered correctly */
 end_comment
 
 begin_include
@@ -20,18 +28,6 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/*  * Copyright (c) 2004 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Lennart Augustsson (lennart@augustsson.net) and by Charles M. Hannum.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
-end_comment
-
-begin_comment
-comment|/*  * USB Enhanced Host Controller Driver, a.k.a. USB 2.0 controller.  *  * The EHCI 1.0 spec can be found at  * http://developer.intel.com/technology/usb/download/ehci-r10.pdf  * and the USB 2.0 spec at  * http://www.usb.org/developers/docs/usb_20.zip  *  */
-end_comment
-
-begin_comment
-comment|/*  * TODO:  * 1) hold off explorations by companion controllers until ehci has started.  *  * 2) The EHCI driver lacks support for interrupt isochronous transfers, so  *    devices using them don't work.  *    Interrupt transfers are not difficult, it's just not done.   *  * 3) The meaty part to implement is the support for USB 2.0 hubs.  *    They are quite complicated since the need to be able to do  *    "transaction translation", i.e., converting to/from USB 2 and USB 1.  *    So the hub driver needs to handle and schedule these things, to  *    assign place in frame where different devices get to go. See chapter  *    on hubs in USB 2.0 for details.   *  * 4) command failures are not recovered correctly */
-end_comment
 
 begin_include
 include|#
@@ -4091,7 +4087,7 @@ name|status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If there are left over TDs we need to update the toggle. 	 * The default pipe doesn't need it since control transfers 	 * start the toggle at 0 every time. 	 */
+comment|/*  	 * If there are left over TDs we need to update the toggle. 	 * The default pipe doesn't need it since control transfers 	 * start the toggle at 0 every time. 	 */
 if|if
 condition|(
 name|sqtd
@@ -4140,7 +4136,7 @@ name|nstatus
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * For a short transfer we need to update the toggle for the missing 	 * packets within the qTD. 	 */
+comment|/*  	 * For a short transfer we need to update the toggle for the missing 	 * packets within the qTD. 	 */
 name|pkts_left
 operator|=
 name|EHCI_QTD_GET_BYTES
@@ -5543,6 +5539,31 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|EHCI_DEBUG
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"ehci_power: sc=%p\n"
+operator|,
+name|sc
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ehcidebug
+operator|>
+literal|0
+condition|)
+name|ehci_dump_regs
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -10723,7 +10744,14 @@ parameter_list|(
 name|usbd_xfer_handle
 name|xfer
 parameter_list|)
-block|{ }
+block|{
+name|xfer
+operator|->
+name|hcpriv
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 end_function
 
 begin_comment
