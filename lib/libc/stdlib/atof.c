@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atof.c	5.2 (Berkeley) 6/1/90"
+literal|"@(#)atof.c	5.3 (Berkeley) 1/8/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,6 +55,7 @@ name|atof
 parameter_list|(
 name|ascii
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|ascii
@@ -66,11 +67,6 @@ name|strtod
 argument_list|(
 name|ascii
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|NULL
 argument_list|)
 operator|)
