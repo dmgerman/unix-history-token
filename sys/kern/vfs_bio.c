@@ -5311,6 +5311,9 @@ if|if
 condition|(
 operator|(
 name|curproc
+operator|&&
+operator|(
+name|curproc
 operator|->
 name|p_flag
 operator|&
@@ -5318,6 +5321,7 @@ name|P_BUFEXHAUST
 operator|)
 operator|==
 literal|0
+operator|)
 operator|||
 name|bufspace
 operator|>=
@@ -5346,6 +5350,8 @@ comment|/* nop */
 comment|/* 	 * Setup for scan.  If we do not have enough free buffers, 	 * we setup a degenerate case that immediately fails.  Note 	 * that if we are specially marked process, we are allowed to 	 * dip into our reserves. 	 * 	 * Normally we want to find an EMPTYKVA buffer.  That is, a 	 * buffer with kva already allocated.  If there are no EMPTYKVA 	 * buffers we back up to the truely EMPTY buffers.  When defragging 	 * we do not bother backing up since we have to locate buffers with 	 * kva to defrag.  If we are out of space we skip both EMPTY and 	 * EMPTYKVA and dig right into the CLEAN queue. 	 * 	 * In this manner we avoid scanning unnecessary buffers.  It is very 	 * important for us to do this because the buffer cache is almost 	 * constantly out of space or in need of defragmentation. 	 */
 if|if
 condition|(
+name|curproc
+operator|&&
 operator|(
 name|curproc
 operator|->
@@ -7314,14 +7320,19 @@ argument_list|()
 expr_stmt|;
 name|loop
 label|:
-comment|/* 	 * Block if we are low on buffers.   Certain processes are allowed 	 * to completely exhaust the buffer cache. 	 */
+comment|/* 	 * Block if we are low on buffers.   Certain processes are allowed 	 * to completely exhaust the buffer cache.          *          * If this check ever becomes a bottleneck it may be better to          * move it into the else, when gbincore() fails.  At the moment          * it isn't a problem.          */
 if|if
 condition|(
+operator|!
+name|curproc
+operator|||
+operator|(
 name|curproc
 operator|->
 name|p_flag
 operator|&
 name|P_BUFEXHAUST
+operator|)
 condition|)
 block|{
 if|if
@@ -7331,6 +7342,14 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|curproc
+condition|)
+return|return
+name|NULL
+return|;
 name|needsbuffer
 operator||=
 name|VFS_BIO_NEED_ANY
