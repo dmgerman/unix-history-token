@@ -15,49 +15,14 @@ directive|define
 name|_PRIVS_H
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_USE_BSD
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_USE_BSD
-value|1
-end_define
-
 begin_include
 include|#
 directive|include
 file|<unistd.h>
 end_include
-
-begin_undef
-undef|#
-directive|undef
-name|_USE_BSD
-end_undef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
-comment|/* Relinquish privileges temporarily for a setuid or setgid program  * with the option of getting them back later.  This is done by swapping  * the real and effective userid BSD style.  Call RELINQUISH_PRIVS once  * at the beginning of the main program.  This will cause all operations  * to be executed with the real userid.  When you need the privileges  * of the setuid/setgid invocation, call PRIV_START; when you no longer  * need it, call PRIV_END.  Note that it is an error to call PRIV_START  * and not PRIV_END within the same function.  *  * Use RELINQUISH_PRIVS_ROOT(a,b) if your program started out running  * as root, and you want to drop back the effective userid to a  * and the effective group id to b, with the option to get them back  * later.  *  * If you no longer need root privileges, but those of some other  * userid/groupid, you can call REDUCE_PRIV(a,b) when your effective  * is the user's.  *  * Problems: Do not use return between PRIV_START and PRIV_END; this  * will cause the program to continue running in an unprivileged  * state.  *  * It is NOT safe to call exec(), system() or popen() with a user-  * supplied program (i.e. without carefully checking PATH and any  * library load paths) with relinquished privileges; the called program  * can acquire them just as easily.  Set both effective and real userid  * to the real userid before calling any of them.  */
+comment|/* Relinquish privileges temporarily for a setuid or setgid program  * with the option of getting them back later.  This is done by  * utilizing POSIX saved user and group IDs.  Call RELINQUISH_PRIVS once  * at the beginning of the main program.  This will cause all operations  * to be executed with the real userid.  When you need the privileges  * of the setuid/setgid invocation, call PRIV_START; when you no longer  * need it, call PRIV_END.  Note that it is an error to call PRIV_START  * and not PRIV_END within the same function.  *  * Use RELINQUISH_PRIVS_ROOT(a,b) if your program started out running  * as root, and you want to drop back the effective userid to a  * and the effective group id to b, with the option to get them back  * later.  *  * If you no longer need root privileges, but those of some other  * userid/groupid, you can call REDUCE_PRIV(a,b) when your effective  * is the user's.  *  * Problems: Do not use return between PRIV_START and PRIV_END; this  * will cause the program to continue running in an unprivileged  * state.  *  * It is NOT safe to call exec(), system() or popen() with a user-  * supplied program (i.e. without carefully checking PATH and any  * library load paths) with relinquished privileges; the called program  * can acquire them just as easily.  Set both effective and real userid  * to the real userid before calling any of them.  */
 end_comment
 
 begin_ifndef
@@ -98,7 +63,7 @@ begin_define
 define|#
 directive|define
 name|RELINQUISH_PRIVS
-value|{ \ 			      real_uid = getuid(); \ 			      effective_uid = geteuid(); \ 			      real_gid = getgid(); \ 			      effective_gid = getegid(); \ 			      setreuid(effective_uid, real_uid); \ 			      setregid(effective_gid, real_gid); \ 		          }
+value|{ \ 	real_uid = getuid(); \ 	effective_uid = geteuid(); \ 	real_gid = getgid(); \ 	effective_gid = getegid(); \ 	seteuid(real_uid); \ 	setegid(real_gid); \ }
 end_define
 
 begin_define
@@ -110,22 +75,21 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|{ \ 			      real_uid = (a); \ 			      effective_uid = geteuid(); \ 			      real_gid = (b); \ 			      effective_gid = getegid(); \ 			      setregid(effective_gid, real_gid); \ 			      setreuid(effective_uid, real_uid); \ 		          }
+value|{ \ 	real_uid = (a); \ 	effective_uid = geteuid(); \ 	real_gid = (b); \ 	effective_gid = getegid(); \ 	setegid(real_gid); \ 	seteuid(real_uid); \ }
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRIV_START
-value|{\ 		    setreuid(real_uid, effective_uid); \ 		    setregid(real_gid, effective_gid);
+value|{ \ 	seteuid(effective_uid); \ 	setegid(effective_gid); \ }
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRIV_END
-define|\
-value|setregid(effective_gid, real_gid); \ 		    setreuid(effective_uid, real_uid); \ 		    }
+value|{ \ 	setegid(real_gid); \ 	seteuid(real_uid); \ }
 end_define
 
 begin_define
@@ -137,7 +101,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|{\ 			setreuid(real_uid, effective_uid); \ 			setregid(real_gid, effective_gid); \ 			effective_uid = (a); \ 			effective_gid = (b); \ 			setregid(effective_gid, real_gid); \ 			setreuid(effective_uid, real_uid); \ 		    }
+value|{ \ 	PRIV_START \ 	effective_uid = (a); \ 	effective_gid = (b); \ 	setreuid((uid_t)-1, effective_uid); \ 	setregid((gid_t)-1, effective_gid); \ 	PRIV_END \ }
 end_define
 
 begin_endif

@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"privs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"at.h"
 end_include
 
@@ -101,11 +107,15 @@ if|if
 condition|(
 name|fcreated
 condition|)
+block|{
+name|PRIV_START
 name|unlink
 argument_list|(
 name|atfile
 argument_list|)
-expr_stmt|;
+decl_stmt|;
+name|PRIV_END
+block|}
 name|errx
 argument_list|(
 name|EXIT_FAILURE
@@ -137,11 +147,15 @@ if|if
 condition|(
 name|fcreated
 condition|)
+block|{
+name|PRIV_START
 name|unlink
 argument_list|(
 name|atfile
 argument_list|)
-expr_stmt|;
+decl_stmt|;
+name|PRIV_END
+block|}
 name|errno
 operator|=
 name|serrno
