@@ -1651,12 +1651,6 @@ return|;
 block|}
 name|sb
 operator|->
-name|sb_hiwat
-operator|=
-name|cc
-expr_stmt|;
-name|sb
-operator|->
 name|sb_mbmax
 operator|=
 name|min
