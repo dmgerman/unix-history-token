@@ -451,13 +451,6 @@ operator|&
 name|freepath
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"string: %s\n"
-argument_list|,
-name|fullpath
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|OBJT_SWAP
