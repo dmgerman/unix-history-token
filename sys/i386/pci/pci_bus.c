@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_cpu.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pcib_if.h"
 end_include
 
@@ -618,9 +624,26 @@ name|s
 operator|=
 literal|"AMD Elan SC520 host to PCI bridge"
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CPU_ELAN
 name|init_AMD_Elan_sc520
 argument_list|()
 expr_stmt|;
+else|#
+directive|else
+name|printf
+argument_list|(
+literal|"*** WARNING: kernel option CPU_ELAN missing"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"-- timekeeping may be wrong\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 literal|0x70061022
