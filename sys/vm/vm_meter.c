@@ -224,25 +224,6 @@ name|p_stat
 condition|)
 block|{
 case|case
-name|SSLEEP
-case|:
-if|if
-condition|(
-name|p
-operator|->
-name|p_priority
-operator|>
-name|PZERO
-operator|||
-name|p
-operator|->
-name|p_slptime
-operator|!=
-literal|0
-condition|)
-continue|continue;
-comment|/* FALLTHROUGH */
-case|case
 name|SRUN
 case|:
 case|case
