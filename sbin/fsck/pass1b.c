@@ -9,26 +9,14 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static const char sccsid[] = "@(#)pass1b.c	8.4 (Berkeley) 4/28/95";
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"@(#)pass1b.c	8.4 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +33,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -217,10 +211,12 @@ name|inumber
 expr_stmt|;
 if|if
 condition|(
-name|statemap
-index|[
+name|inoinfo
+argument_list|(
 name|inumber
-index|]
+argument_list|)
+operator|->
+name|ino_state
 operator|!=
 name|USTATE
 operator|&&
