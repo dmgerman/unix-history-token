@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1995 Matt Thomas (thomas@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_pdq.c,v 1.1 1995/03/14 09:16:04 davidg Exp $  *  * $Log: if_pdq.c,v $  * Revision 1.1  1995/03/14  09:16:04  davidg  * Added support for generic FDDI and the DEC DEFEA and DEFPA FDDI adapters.  *  * Submitted by:	Matt Thomas  *  * Revision 1.7  1995/03/14  01:52:52  thomas  * Update for new FreeBSD PCI Interrupt interface  *  * Revision 1.6  1995/03/10  17:06:59  thomas  * Update for latest version of FreeBSD.  * Compensate for the fast that the ifp will not be first thing  * in softc on BSDI.  *  * Revision 1.5  1995/03/07  19:59:42  thomas  * First pass at BSDI EISA support  *  * Revision 1.4  1995/03/06  17:06:03  thomas  * Add transmit timeout support.  * Add support DEFEA (untested).  *  * Revision 1.3  1995/03/03  13:48:35  thomas  * more fixes  *  *  */
+comment|/*-  * Copyright (c) 1995 Matt Thomas (thomas@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_pdq.c,v 1.2 1995/03/17 04:27:17 davidg Exp $  *  * $Log: if_pdq.c,v $  * Revision 1.2  1995/03/17  04:27:17  davidg  * Added a new field to the pci_device struct called pd_shutdown to specify  * a device specific shutdown routine for devconf. Assign the value of this  * to the kern_devconf struct. Implement a device shutdown routine for if_de  * that disables the device. This will stop the device from corrupting memory  * after a reboot.  *  * Revision 1.1  1995/03/14  09:16:04  davidg  * Added support for generic FDDI and the DEC DEFEA and DEFPA FDDI adapters.  *  * Submitted by:	Matt Thomas  *  * Revision 1.7  1995/03/14  01:52:52  thomas  * Update for new FreeBSD PCI Interrupt interface  *  * Revision 1.6  1995/03/10  17:06:59  thomas  * Update for latest version of FreeBSD.  * Compensate for the fast that the ifp will not be first thing  * in softc on BSDI.  *  * Revision 1.5  1995/03/07  19:59:42  thomas  * First pass at BSDI EISA support  *  * Revision 1.4  1995/03/06  17:06:03  thomas  * Add transmit timeout support.  * Add support DEFEA (untested).  *  * Revision 1.3  1995/03/03  13:48:35  thomas  * more fixes  *  *  */
 end_comment
 
 begin_comment
@@ -3309,7 +3309,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"fea%s: mapping of device memory failed\n"
+literal|"fea%d: mapping of device memory failed\n"
 argument_list|,
 name|sc
 operator|->
@@ -3362,7 +3362,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"fea%s: initialization failed\n"
+literal|"fea%d: initialization failed\n"
 argument_list|,
 name|sc
 operator|->
