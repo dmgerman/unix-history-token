@@ -160,7 +160,7 @@ begin_define
 define|#
 directive|define
 name|USAGE_STR
-value|"Interface management subcommands:\n\     attach<intf><protocol>\n\     detach<intf>\n\     set mac<intf><MAC/ESI address>\n\     set netif<intf><prefix><n>\n\     set prefix<intf><NSAP prefix>\n\     show config<intf>]\n\     show interface<intf>]\n\     show netif<netif>]\n\     show stats interface<intf> phy | dev | atm | aal0 | aal4 |\n\         aal5 | driver]\n\ \n\ VC management subcommands:\n\     add<intf><vpi><vci><aal><encaps><owner> ...\n\     delete pvc<intf><vpi><vci>\n\     delete svc<intf><vpi><vci>\n\     show stats vcc<intf> [vpi [vci]]]\n\     show vcc<intf> [<vpi> [<vci>] | SVC | PVC]]\n\ \n\ IP management subcommands:\n\     add ar<netif>]<IP addr><ATM addr>\n\     add pvc<intf><vpi><vci><aal><encaps> IP<netif><IP addr> |\n\         dynamic\n\     delete arp<netif>]<IP addr>\n\     set arpserver<netif><server><IP prefix> ...\n\     show arp<host>]\n\     show arpserver<netif>]\n\     show ipvcc<IP addr> |<netif>]\n\ \n\ Miscellaneous subcommands:\n\     help\n\     show version\n"
+value|"Interface management subcommands:\n\     attach<intf><protocol>\n\     detach<intf>\n\     set mac<intf><MAC/ESI address>\n\     set netif<intf><prefix><n>\n\     set prefix<intf><NSAP prefix>\n\     show config<intf>]\n\     show interface<intf>]\n\     show netif<netif>]\n\     show stats interface<intf> phy | dev | atm | aal0 | aal4 |\n\         aal5 | driver]\n\ \n\ VC management subcommands:\n\     add<intf><vpi><vci><aal><encaps><owner> ...\n\                    [UBR<pcr> | CBR<pcr> | VBR<pcr><scr><mbs>]\n\     delete pvc<intf><vpi><vci>\n\     delete svc<intf><vpi><vci>\n\     show stats vcc<intf> [vpi [vci]]]\n\     show vcc<intf> [<vpi> [<vci>] | SVC | PVC]]\n\ \n\ IP management subcommands:\n\     add ar<netif>]<IP addr><ATM addr>\n\     add pvc<intf><vpi><vci><aal><encaps> IP<netif><IP addr> |\n\         dynamic\n\     delete arp<netif>]<IP addr>\n\     set arpserver<netif><server><IP prefix> ...\n\     show arp<host>]\n\     show arpserver<netif>]\n\     show ipvcc<IP addr> |<netif>]\n\ \n\ Miscellaneous subcommands:\n\     help\n\     show version\n"
 end_define
 
 begin_comment
@@ -1990,7 +1990,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Process PVC add command  *   * Command format:   *	atm add PVC<interface_name><vpi><vci><aal><encaps>  *<owner_name> [ubr<PCR> | cbr<PCR> | vbr<PCR><SCR><MBS>]  *  * Arguments:  *	argc	number of arguments to command  *	argv	pointer to argument strings  *	cmdp	pointer to command description   *  * Returns:  *	none  *  */
+comment|/*  * Process PVC add command  *   * Command format:   *	atm add PVC<interface_name><vpi><vci><aal><encaps>  *<owner_name> ...owner info...  *		[ubr<PCR> | cbr<PCR> | vbr<PCR><SCR><MBS>]  *  * Arguments:  *	argc	number of arguments to command  *	argv	pointer to argument strings  *	cmdp	pointer to command description   *  * Returns:  *	none  *  */
 end_comment
 
 begin_function
