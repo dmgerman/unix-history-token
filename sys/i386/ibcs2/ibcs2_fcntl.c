@@ -1040,9 +1040,12 @@ name|file
 modifier|*
 name|fp
 decl_stmt|;
-name|fp
+name|int
+name|error
+decl_stmt|;
+name|error
 operator|=
-name|ffind_hold
+name|fget
 argument_list|(
 name|td
 argument_list|,
@@ -1052,6 +1055,9 @@ name|td_retval
 index|[
 literal|0
 index|]
+argument_list|,
+operator|&
+name|fp
 argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK
@@ -1061,9 +1067,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fp
-operator|==
-name|NULL
+name|error
 condition|)
 return|return
 operator|(
