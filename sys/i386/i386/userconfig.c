@@ -8210,7 +8210,7 @@ literal|"present in your system, you can set their parameters (Interrupt, DMA"
 block|,
 literal|"channel, I/O addresses).  To do this, select the driver and press"
 block|,
-literal|"[!bENTER!n]: it is now possible to edit the settings the settings at the"
+literal|"[!bENTER!n]: it is now possible to edit the settings at the"
 block|,
 literal|"bottom of the screen.  Use [!bTAB!n] to change fields, and when you are"
 block|,
