@@ -3393,6 +3393,18 @@ operator|->
 name|pindex
 expr_stmt|;
 comment|/* 	 * perform the I/O.  NOTE!!!  bp cannot be considered valid after 	 * this point because we automatically release it on completion. 	 * Instead, we look at the one page we are interested in which we 	 * still hold a lock on even through the I/O completion. 	 * 	 * The other pages in our m[] array are also released on completion, 	 * so we cannot assume they are valid anymore either. 	 * 	 * NOTE: b_blkno is destroyed by the call to VOP_STRATEGY 	 */
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|BUF_KERNPROC
 argument_list|(
 name|bp
@@ -3401,6 +3413,18 @@ expr_stmt|;
 name|BUF_STRATEGY
 argument_list|(
 name|bp
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
 argument_list|)
 expr_stmt|;
 comment|/* 	 * wait for the page we want to complete.  PG_SWAPINPROG is always 	 * cleared on completion.  If an I/O error occurs, SWAPBLK_NONE 	 * is set in the meta-data. 	 */
@@ -3438,9 +3462,12 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|tsleep
+name|msleep
 argument_list|(
 name|mreq
+argument_list|,
+operator|&
+name|vm_mtx
 argument_list|,
 name|PSWP
 argument_list|,
