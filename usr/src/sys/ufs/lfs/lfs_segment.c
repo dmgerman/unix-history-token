@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	5.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	7.1 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -96,37 +96,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/quota.h>
+file|<ufs/ufs/quota.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ufs/inode.h>
+file|<ufs/ufs/inode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ufs/dir.h>
+file|<ufs/ufs/dir.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ufs/ufsmount.h>
+file|<ufs/ufs/ufsmount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<lfs/lfs.h>
+file|<ufs/lfs/lfs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<lfs/lfs_extern.h>
+file|<ufs/lfs/lfs_extern.h>
 end_include
 
 begin_comment
@@ -154,7 +154,8 @@ name|lfs_endsum
 name|__P
 argument_list|(
 operator|(
-name|LFS
+expr|struct
+name|lfs
 operator|*
 operator|,
 name|SEGMENT
@@ -174,7 +175,8 @@ name|lfs_gather
 name|__P
 argument_list|(
 operator|(
-name|LFS
+expr|struct
+name|lfs
 operator|*
 operator|,
 name|SEGMENT
@@ -207,7 +209,8 @@ name|lfs_newbuf
 name|__P
 argument_list|(
 operator|(
-name|LFS
+expr|struct
+name|lfs
 operator|*
 operator|,
 name|daddr_t
@@ -226,7 +229,8 @@ name|lfs_newseg
 name|__P
 argument_list|(
 operator|(
-name|LFS
+expr|struct
+name|lfs
 operator|*
 operator|)
 argument_list|)
@@ -241,7 +245,8 @@ name|lfs_newsum
 name|__P
 argument_list|(
 operator|(
-name|LFS
+expr|struct
+name|lfs
 operator|*
 operator|,
 name|SEGMENT
@@ -258,7 +263,8 @@ name|lfs_nextseg
 name|__P
 argument_list|(
 operator|(
-name|LFS
+expr|struct
+name|lfs
 operator|*
 operator|)
 argument_list|)
@@ -272,7 +278,8 @@ name|lfs_updatemeta
 name|__P
 argument_list|(
 operator|(
-name|LFS
+expr|struct
+name|lfs
 operator|*
 operator|,
 name|SEGMENT
@@ -302,7 +309,8 @@ name|lfs_writeckp
 name|__P
 argument_list|(
 operator|(
-name|LFS
+expr|struct
+name|lfs
 operator|*
 operator|,
 name|SEGMENT
@@ -320,7 +328,8 @@ name|lfs_writefile
 name|__P
 argument_list|(
 operator|(
-name|LFS
+expr|struct
+name|lfs
 operator|*
 operator|,
 name|SEGMENT
@@ -343,7 +352,8 @@ name|lfs_writeinode
 name|__P
 argument_list|(
 operator|(
-name|LFS
+expr|struct
+name|lfs
 operator|*
 operator|,
 name|SEGMENT
@@ -363,7 +373,8 @@ name|lfs_writeseg
 name|__P
 argument_list|(
 operator|(
-name|LFS
+expr|struct
+name|lfs
 operator|*
 operator|,
 name|SEGMENT
@@ -380,7 +391,8 @@ name|lfs_writesum
 name|__P
 argument_list|(
 operator|(
-name|LFS
+expr|struct
+name|lfs
 operator|*
 operator|)
 argument_list|)
@@ -394,7 +406,8 @@ name|lfs_writesuper
 name|__P
 argument_list|(
 operator|(
-name|LFS
+expr|struct
+name|lfs
 operator|*
 operator|)
 argument_list|)
@@ -450,7 +463,8 @@ name|next
 name|__P
 argument_list|(
 operator|(
-name|LFS
+expr|struct
+name|lfs
 operator|*
 operator|,
 name|SEGMENT
@@ -509,7 +523,8 @@ name|INODE
 modifier|*
 name|ip
 decl_stmt|;
-name|LFS
+name|struct
+name|lfs
 modifier|*
 name|fs
 decl_stmt|;
@@ -770,7 +785,8 @@ modifier|*
 name|bp
 decl_stmt|;
 block|{
-name|LFS
+name|struct
+name|lfs
 modifier|*
 name|fs
 decl_stmt|;
@@ -896,7 +912,8 @@ name|sp
 parameter_list|,
 name|calc_next
 parameter_list|)
-name|LFS
+name|struct
+name|lfs
 modifier|*
 name|fs
 decl_stmt|;
@@ -1047,7 +1064,8 @@ name|vp
 parameter_list|,
 name|match
 parameter_list|)
-name|LFS
+name|struct
+name|lfs
 modifier|*
 name|fs
 decl_stmt|;
@@ -1481,7 +1499,8 @@ name|daddr
 parameter_list|,
 name|size
 parameter_list|)
-name|LFS
+name|struct
+name|lfs
 modifier|*
 name|fs
 decl_stmt|;
@@ -1596,7 +1615,8 @@ name|lfs_newseg
 parameter_list|(
 name|fs
 parameter_list|)
-name|LFS
+name|struct
+name|lfs
 modifier|*
 name|fs
 decl_stmt|;
@@ -1932,7 +1952,8 @@ name|fs
 parameter_list|,
 name|sp
 parameter_list|)
-name|LFS
+name|struct
+name|lfs
 modifier|*
 name|fs
 decl_stmt|;
@@ -2264,7 +2285,8 @@ name|lfs_nextseg
 parameter_list|(
 name|fs
 parameter_list|)
-name|LFS
+name|struct
+name|lfs
 modifier|*
 name|fs
 decl_stmt|;
@@ -2360,7 +2382,8 @@ name|bpp
 parameter_list|,
 name|nblocks
 parameter_list|)
-name|LFS
+name|struct
+name|lfs
 modifier|*
 name|fs
 decl_stmt|;
@@ -2854,7 +2877,8 @@ name|fs
 parameter_list|,
 name|sp
 parameter_list|)
-name|LFS
+name|struct
+name|lfs
 modifier|*
 name|fs
 decl_stmt|;
@@ -3253,7 +3277,8 @@ name|vp
 parameter_list|,
 name|do_ckp
 parameter_list|)
-name|LFS
+name|struct
+name|lfs
 modifier|*
 name|fs
 decl_stmt|;
@@ -3578,7 +3603,8 @@ name|sp
 parameter_list|,
 name|ip
 parameter_list|)
-name|LFS
+name|struct
+name|lfs
 modifier|*
 name|fs
 decl_stmt|;
@@ -3837,7 +3863,8 @@ name|fs
 parameter_list|,
 name|sp
 parameter_list|)
-name|LFS
+name|struct
+name|lfs
 modifier|*
 name|fs
 decl_stmt|;
@@ -4097,7 +4124,8 @@ name|lfs_writesum
 parameter_list|(
 name|fs
 parameter_list|)
-name|LFS
+name|struct
+name|lfs
 modifier|*
 name|fs
 decl_stmt|;
@@ -4232,7 +4260,8 @@ name|lfs_writesuper
 parameter_list|(
 name|fs
 parameter_list|)
-name|LFS
+name|struct
+name|lfs
 modifier|*
 name|fs
 decl_stmt|;
@@ -4281,7 +4310,8 @@ name|fs
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|LFS
+expr|struct
+name|lfs
 argument_list|)
 operator|-
 sizeof|sizeof
@@ -4320,7 +4350,8 @@ name|b_lfs
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|LFS
+expr|struct
+name|lfs
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4485,7 +4516,8 @@ name|sp
 parameter_list|,
 name|nbp
 parameter_list|)
-name|LFS
+name|struct
+name|lfs
 modifier|*
 name|fs
 decl_stmt|;
