@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	main.c	4.3	82/11/14	*/
+comment|/*	main.c	4.4	82/11/15	*/
 end_comment
 
 begin_comment
@@ -465,7 +465,7 @@ name|f
 operator|=
 name|socket
 argument_list|(
-literal|0
+name|AF_INET
 argument_list|,
 name|SOCK_DGRAM
 argument_list|,

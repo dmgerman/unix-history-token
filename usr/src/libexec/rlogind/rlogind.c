@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	4.4 82/11/15"
+literal|"@(#)rlogind.c	4.5 82/11/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -406,7 +406,7 @@ name|f
 operator|=
 name|socket
 argument_list|(
-literal|0
+name|AF_INET
 argument_list|,
 name|SOCK_STREAM
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tftpd.c	4.5	82/11/15	*/
+comment|/*	tftpd.c	4.6	82/11/15	*/
 end_comment
 
 begin_comment
@@ -311,7 +311,7 @@ name|f
 operator|=
 name|socket
 argument_list|(
-literal|0
+name|AF_INET
 argument_list|,
 name|SOCK_DGRAM
 argument_list|,
