@@ -2813,6 +2813,9 @@ name|sc_outpkt
 operator|++
 expr_stmt|;
 comment|/* 	* Now queue the data for when it can be sent 	*/
+ifdef|#
+directive|ifdef
+name|THIS_DOESNT_COMPILE
 if|if
 condition|(
 name|meta
@@ -2846,6 +2849,19 @@ name|xmitq
 operator|)
 expr_stmt|;
 block|}
+else|#
+directive|else
+name|xmitq_p
+operator|=
+operator|(
+operator|&
+name|sc
+operator|->
+name|xmitq
+operator|)
+expr_stmt|;
+endif|#
+directive|endif
 name|s
 operator|=
 name|splimp
