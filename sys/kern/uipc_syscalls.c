@@ -8439,6 +8439,9 @@ goto|goto
 name|retry_lookup
 goto|;
 block|}
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_wakeup
 argument_list|(
 name|pg
@@ -8447,9 +8450,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
-name|vm_page_sleep_busy
+name|vm_page_sleep_if_busy
 argument_list|(
 name|pg
 argument_list|,
@@ -8462,16 +8468,10 @@ goto|goto
 name|retry_lookup
 goto|;
 comment|/* 		 	 * Wire the page so it does not get ripped out from 			 * under us. 			 */
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_wire
 argument_list|(
 name|pg
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 block|}
 comment|/* 		 * If page is not valid for what we need, initiate I/O 		 */
@@ -8501,6 +8501,9 @@ name|vm_page_io_start
 argument_list|(
 name|pg
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 comment|/* 			 * Get the page from backing store. 			 */
 name|bsize
@@ -8577,6 +8580,9 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_flag_clear
 argument_list|(
 name|pg
@@ -8594,9 +8600,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_unwire
 argument_list|(
 name|pg
@@ -8668,6 +8671,9 @@ name|done
 goto|;
 block|}
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 comment|/* 		 * Get a sendfile buf. We usually wait as long as necessary, 		 * but this wait can be interrupted. 		 */
 if|if
 condition|(
