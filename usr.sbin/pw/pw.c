@@ -44,12 +44,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<paths.h>
 end_include
 
@@ -204,19 +198,6 @@ name|mode
 parameter_list|,
 name|int
 name|which
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|filelock
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|filename
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -741,37 +722,7 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* 	 * Be pessimistic and lock the master passowrd and group 	 * files right away.  Keep it locked for the duration. 	 */
-end_comment
-
-begin_if
-if|if
-condition|(
-operator|-
-literal|1
-operator|==
-name|filelock
-argument_list|(
-name|_PATH_GROUP
-argument_list|)
-operator|||
-operator|-
-literal|1
-operator|==
-name|filelock
-argument_list|(
-name|_PATH_MASTERPASSWD
-argument_list|)
-condition|)
-block|{
-name|ch
-operator|=
-name|EX_IOERR
-expr_stmt|;
-block|}
-else|else
-block|{
+begin_expr_stmt
 name|ch
 operator|=
 name|funcs
@@ -787,8 +738,7 @@ operator|&
 name|arglist
 operator|)
 expr_stmt|;
-block|}
-end_if
+end_expr_stmt
 
 begin_comment
 comment|/* 	 * If everything went ok, and we've been asked to update 	 * the NIS maps, then do it now 	 */
@@ -940,32 +890,6 @@ end_return
 
 begin_function
 unit|}  static
-name|int
-name|filelock
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|filename
-parameter_list|)
-block|{
-return|return
-name|open
-argument_list|(
-name|filename
-argument_list|,
-name|O_RDONLY
-operator||
-name|O_EXLOCK
-argument_list|,
-literal|0
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
 name|int
 name|getindex
 parameter_list|(
