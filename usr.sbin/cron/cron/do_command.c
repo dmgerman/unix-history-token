@@ -362,7 +362,7 @@ name|signal
 argument_list|(
 name|SIGCHLD
 argument_list|,
-name|SIG_IGN
+name|SIG_DFL
 argument_list|)
 expr_stmt|;
 else|#
