@@ -6975,16 +6975,6 @@ literal|0UL
 operator|)
 condition|)
 block|{
-name|device_printf
-argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-literal|"intreq\n"
-argument_list|)
-expr_stmt|;
 name|cfg
 operator|->
 name|intline
