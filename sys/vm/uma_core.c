@@ -6467,7 +6467,7 @@ decl_stmt|;
 name|int
 name|badness
 init|=
-literal|1
+literal|0
 decl_stmt|;
 comment|/* This is the fast path allocation */
 ifdef|#
@@ -6509,6 +6509,19 @@ literal|"malloc(M_WAITOK) in interrupt context"
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|zone
+operator|->
+name|uz_name
+argument_list|,
+literal|"Mbuf"
+argument_list|)
+operator|==
+literal|0
+condition|)
 ifdef|#
 directive|ifdef
 name|WITNESS
@@ -6528,6 +6541,12 @@ name|zone
 operator|->
 name|uz_name
 argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|badness
+operator|=
+literal|1
 expr_stmt|;
 endif|#
 directive|endif
