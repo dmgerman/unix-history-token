@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1995 Mikael Hybsch  *  * The Linux driver cdu31a has been used as a reference when writing this  * code, therefore bringing it under the GNU Public License.  The following  * conditions of redistribution therefore apply:  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  *  * $Id$  *  */
+comment|/*-  * Copyright (c) 1995 Mikael Hybsch  *  * The Linux driver cdu31a has been used as a reference when writing this  * code, therefore bringing it under the GNU Public License.  The following  * conditions of redistribution therefore apply:  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  *  * $Id: scdreg.h,v 1.2 1995/01/29 22:51:41 jkh Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -490,9 +490,16 @@ struct|struct
 name|sony_tracklist
 block|{
 name|u_char
-label|:
-literal|8
-expr_stmt|;
+name|adr
+range|:
+literal|4
+decl_stmt|;
+comment|/* xcdplayer needs these two values */
+name|u_char
+name|ctl
+range|:
+literal|4
+decl_stmt|;
 name|u_char
 name|track
 decl_stmt|;
