@@ -6894,6 +6894,14 @@ name|periph
 operator|->
 name|softc
 expr_stmt|;
+name|block_len
+operator|=
+literal|0
+expr_stmt|;
+name|maxsector
+operator|=
+literal|0
+expr_stmt|;
 name|error
 operator|=
 literal|0
