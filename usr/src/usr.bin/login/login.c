@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.3 (Berkeley) %G%"
+literal|"@(#)login.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -905,7 +905,7 @@ argument_list|()
 init|;
 name|t
 operator|>
-literal|3
+literal|2
 condition|;
 name|t
 operator|--
@@ -1837,6 +1837,9 @@ if|if
 condition|(
 operator|!
 name|hflag
+operator|&&
+operator|!
+name|rflag
 condition|)
 comment|/* XXX */
 name|ioctl
@@ -2939,10 +2942,6 @@ name|char
 modifier|*
 name|speed
 decl_stmt|;
-name|struct
-name|winsize
-name|ws
-decl_stmt|;
 if|if
 condition|(
 name|cp
@@ -3021,6 +3020,51 @@ name|speeds
 expr_stmt|;
 break|break;
 block|}
+name|compatsiz
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
+block|}
+name|tp
+operator|->
+name|sg_flags
+operator|=
+name|ECHO
+operator||
+name|CRMOD
+operator||
+name|ANYP
+operator||
+name|XTABS
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/* BEGIN TRASH  *  * This is here only long enough to get us by to the revised rlogin  */
+end_comment
+
+begin_macro
+name|compatsiz
+argument_list|(
+argument|cp
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|struct
+name|winsize
+name|ws
+decl_stmt|;
 name|ws
 operator|.
 name|ws_row
@@ -3174,25 +3218,22 @@ operator|!=
 operator|-
 literal|1
 condition|)
-name|win
-operator|=
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|TIOCSWINSZ
+argument_list|,
+operator|&
 name|ws
-expr_stmt|;
-block|}
-name|tp
-operator|->
-name|sg_flags
-operator|=
-name|ECHO
-operator||
-name|CRMOD
-operator||
-name|ANYP
-operator||
-name|XTABS
+argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/* END TRASH */
+end_comment
 
 begin_comment
 comment|/*  * Set the value of var to be arg in the Unix 4.2 BSD environment env.  * Var should end with '='.  * (bindings are of the form "var=value")  * This procedure assumes the memory for the first level of environ  * was allocated using malloc.  */
