@@ -1152,9 +1152,10 @@ operator|*
 operator|)
 name|dst
 argument_list|,
+operator|&
 name|ifp
 operator|->
-name|if_addrlist
+name|if_addrhead
 argument_list|)
 operator|)
 operator|==
