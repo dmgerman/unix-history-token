@@ -20,6 +20,7 @@ name|copyright
 index|[]
 init|=
 literal|"$Id: parse.c,v 1.104.2.17 2004/06/17 20:54:38 dhankins Exp $ Copyright (c) 2004 Internet Systems Consortium.  All rights reserved.\n"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -1816,6 +1817,9 @@ name|enum
 name|dhcp_token
 name|token
 decl_stmt|;
+name|int32_t
+name|num
+decl_stmt|;
 name|token
 operator|=
 name|next_token
@@ -1862,7 +1866,8 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|timep
+operator|&
+name|num
 argument_list|,
 name|val
 argument_list|,
@@ -1877,11 +1882,9 @@ name|timep
 operator|=
 name|ntohl
 argument_list|(
-operator|*
-name|timep
+name|num
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 name|parse_semi
 argument_list|(
 name|cfile
