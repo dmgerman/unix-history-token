@@ -26,7 +26,8 @@ typedef|typedef
 struct|struct
 name|__mcontext
 block|{
-name|uint64_t
+name|unsigned
+name|long
 name|mc_flags
 decl_stmt|;
 define|#
@@ -37,7 +38,8 @@ define|#
 directive|define
 name|IA64_MC_FLAGS_HIGHFP_VALID
 value|2
-name|uint64_t
+name|unsigned
+name|long
 name|_reserved_
 decl_stmt|;
 name|struct
