@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.23 1996/09/19 18:07:20 peter Exp $ */
+comment|/* $Id: main.c,v 1.24 1996/10/06 00:44:24 jmz Exp $ */
 end_comment
 
 begin_include
@@ -2221,10 +2221,6 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
-name|ftp
-operator|=
-literal|1
-expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -2328,7 +2324,7 @@ return|return;
 block|}
 else|else
 block|{
-comment|/* assume /host.name:/file/name */
+comment|/* assume host.name:/file/name */
 name|p
 operator|=
 name|strchr
@@ -2344,16 +2340,28 @@ operator|!
 name|p
 condition|)
 block|{
-name|warnx
-argument_list|(
-literal|"no filename??"
-argument_list|)
+comment|/* assume /file/name */
+name|host
+operator|=
+name|NULL
 expr_stmt|;
-name|usage
-argument_list|()
+name|ftp
+operator|=
+name|http
+operator|=
+literal|0
 expr_stmt|;
+name|file_to_get
+operator|=
+name|s
+expr_stmt|;
+return|return;
 block|}
 block|}
+name|ftp
+operator|=
+literal|1
+expr_stmt|;
 operator|*
 name|p
 operator|++
