@@ -4,6 +4,10 @@ comment|/*	$NetBSD: ieeefp.h,v 1.4 1998/01/09 08:03:43 perry Exp $	*/
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*   * Written by J.T. Conklin, Apr 6, 1995  * Public domain.  */
 end_comment
 
@@ -81,7 +85,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|fp_except
+name|fp_except_t
 name|fpgetmask
 name|__P
 argument_list|(
@@ -94,12 +98,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|fp_except
+name|fp_except_t
 name|fpsetmask
 name|__P
 argument_list|(
 operator|(
-name|fp_except
+name|fp_except_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -107,7 +111,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|fp_except
+name|fp_except_t
 name|fpgetsticky
 name|__P
 argument_list|(
@@ -120,12 +124,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|fp_except
+name|fp_except_t
 name|fpsetsticky
 name|__P
 argument_list|(
 operator|(
-name|fp_except
+name|fp_except_t
 operator|)
 argument_list|)
 decl_stmt|;
