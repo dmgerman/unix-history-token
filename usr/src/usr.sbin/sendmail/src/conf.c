@@ -6679,6 +6679,13 @@ argument_list|)
 return|;
 else|#
 directive|else
+specifier|extern
+name|struct
+name|hostent
+modifier|*
+name|__switch_gethostbyname
+parameter_list|()
+function_decl|;
 return|return
 name|__switch_gethostbyname
 argument_list|(
@@ -6760,6 +6767,13 @@ argument_list|)
 return|;
 else|#
 directive|else
+specifier|extern
+name|struct
+name|hostent
+modifier|*
+name|__switch_gethostbyaddr
+parameter_list|()
+function_decl|;
 return|return
 name|__switch_gethostbyaddr
 argument_list|(
