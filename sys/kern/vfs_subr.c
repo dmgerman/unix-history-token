@@ -1091,6 +1091,36 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|vnlru_nowhere
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|vnlru_nowhere
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|vnlru_nowhere
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of times the vnlru process ran without success"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Initialize the vnode management data structures.  */
 end_comment
@@ -2652,14 +2682,13 @@ literal|0
 expr_stmt|;
 name|tsleep
 argument_list|(
-operator|&
 name|vnlruproc
 argument_list|,
 name|PVFS
 argument_list|,
 literal|"vlruwt"
 argument_list|,
-name|hz
+literal|0
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -2764,14 +2793,18 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"vnlru process getting nowhere, pausing..\n"
-argument_list|)
+if|#
+directive|if
+literal|0
+comment|/* These messages are temporary debugging aids */
+block|if (vnlru_nowhere< 5) 				printf("vnlru process getting nowhere..\n"); 			else if (vnlru_nowhere == 5) 				printf("vnlru process messages stopped.\n");
+endif|#
+directive|endif
+name|vnlru_nowhere
+operator|++
 expr_stmt|;
 name|tsleep
 argument_list|(
-operator|&
 name|vnlru_proc
 argument_list|,
 name|PPAUSE
@@ -2918,7 +2951,6 @@ expr_stmt|;
 comment|/* avoid unnecessary wakeups */
 name|wakeup
 argument_list|(
-operator|&
 name|vnlruproc
 argument_list|)
 expr_stmt|;
