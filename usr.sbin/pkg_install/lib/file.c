@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: file.c,v 1.23 1996/08/01 12:13:20 jkh Exp $"
+literal|"$Id: file.c,v 1.24 1996/10/14 19:41:44 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|<ftpio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
 end_include
 
 begin_include
@@ -721,6 +727,8 @@ name|tpid
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|status
 decl_stmt|;
 name|char
 modifier|*
@@ -1017,6 +1025,9 @@ argument_list|,
 name|uname
 argument_list|,
 name|pword
+argument_list|,
+operator|&
+name|status
 argument_list|)
 expr_stmt|;
 if|if
@@ -1157,9 +1168,21 @@ block|}
 else|else
 name|printf
 argument_list|(
-literal|"Error: FTP Unable to get %s\n"
+literal|"Error: FTP Unable to get %s: %s\n"
 argument_list|,
 name|fname
+argument_list|,
+name|status
+condition|?
+name|ftpErrString
+argument_list|(
+name|status
+argument_list|)
+else|:
+name|hstrerror
+argument_list|(
+name|h_errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
