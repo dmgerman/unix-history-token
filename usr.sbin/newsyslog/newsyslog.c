@@ -8,7 +8,7 @@ comment|/*  Copyright 1988, 1989 by the Massachusetts Institute of Technology  P
 end_comment
 
 begin_comment
-comment|/*  *      newsyslog - roll over selected logs at the appropriate time,  *              keeping the a specified number of backup files around.  *  *      $Source: /home/ncvs/src/usr.sbin/newsyslog/newsyslog.c,v $  *      $Author: alex $  */
+comment|/*  *      newsyslog - roll over selected logs at the appropriate time,  *              keeping the a specified number of backup files around.  *  *      $Source: /home/ncvs/src/usr.sbin/newsyslog/newsyslog.c,v $  *      $Author: jkh $  */
 end_comment
 
 begin_ifndef
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: newsyslog.c,v 1.5 1996/06/08 23:32:10 alex Exp $"
+literal|"$Id: newsyslog.c,v 1.6 1996/09/06 06:36:07 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2163,6 +2163,8 @@ index|]
 decl_stmt|;
 name|int
 name|fd
+decl_stmt|,
+name|_numdays
 decl_stmt|;
 name|struct
 name|stat
@@ -2263,6 +2265,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Move down log files */
+name|_numdays
+operator|=
+name|numdays
+expr_stmt|;
+comment|/* preserve */
 while|while
 condition|(
 name|numdays
@@ -2450,10 +2457,8 @@ expr_stmt|;
 comment|/* Report the trimming to the old log */
 if|if
 condition|(
-name|numdays
-operator|==
-operator|-
-literal|1
+operator|!
+name|_numdays
 condition|)
 block|{
 if|if
