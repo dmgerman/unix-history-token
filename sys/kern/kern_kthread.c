@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/resourcevar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/signalvar.h>
 end_include
 
@@ -172,6 +178,30 @@ name|proc
 modifier|*
 name|p2
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|proc0
+operator|.
+name|p_stats
+operator|||
+name|proc0
+operator|.
+name|p_stats
+operator|->
+name|p_start
+operator|.
+name|tv_sec
+operator|==
+literal|0
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"kthread_create called too soon"
+argument_list|)
+expr_stmt|;
+block|}
 name|error
 operator|=
 name|fork1
