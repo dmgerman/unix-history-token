@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)finger.c	5.17 (Berkeley) %G%"
+literal|"@(#)finger.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -336,10 +336,6 @@ name|PERSON
 modifier|*
 name|pn
 decl_stmt|;
-name|FILE
-modifier|*
-name|fp
-decl_stmt|;
 name|struct
 name|passwd
 modifier|*
@@ -359,18 +355,15 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-operator|(
-name|fp
-operator|=
-name|fopen
+operator|!
+name|freopen
 argument_list|(
 name|_PATH_UTMP
 argument_list|,
 literal|"r"
+argument_list|,
+name|stdin
 argument_list|)
-operator|)
-operator|==
-name|NULL
 condition|)
 block|{
 operator|(
@@ -416,7 +409,7 @@ argument_list|)
 argument_list|,
 literal|1
 argument_list|,
-name|fp
+name|stdin
 argument_list|)
 operator|==
 literal|1
@@ -491,14 +484,6 @@ name|pn
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|fclose
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|pn
@@ -574,10 +559,6 @@ name|dolocal
 decl_stmt|,
 modifier|*
 name|used
-decl_stmt|;
-name|FILE
-modifier|*
-name|fp
 decl_stmt|;
 name|char
 modifier|*
@@ -922,18 +903,15 @@ return|return;
 comment|/* 	 * Scan thru the list of users currently logged in, saving 	 * appropriate data whenever a match occurs. 	 */
 if|if
 condition|(
-operator|(
-name|fp
-operator|=
-name|fopen
+operator|!
+name|freopen
 argument_list|(
 name|_PATH_UTMP
 argument_list|,
 literal|"r"
+argument_list|,
+name|stdin
 argument_list|)
-operator|)
-operator|==
-name|NULL
 condition|)
 block|{
 operator|(
@@ -972,7 +950,7 @@ argument_list|)
 argument_list|,
 literal|1
 argument_list|,
-name|fp
+name|stdin
 argument_list|)
 operator|==
 literal|1
@@ -1014,14 +992,6 @@ name|pn
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|fclose
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|pn
