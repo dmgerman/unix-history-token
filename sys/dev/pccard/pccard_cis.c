@@ -172,7 +172,7 @@ begin_define
 define|#
 directive|define
 name|PCCARD_CIS_SIZE
-value|1024
+value|4096
 end_define
 
 begin_struct
@@ -372,6 +372,18 @@ name|pf
 operator|=
 name|NULL
 expr_stmt|;
+name|tsleep
+argument_list|(
+operator|&
+name|state
+argument_list|,
+literal|0
+argument_list|,
+literal|"pccard"
+argument_list|,
+name|hz
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pccard_scan_cis
@@ -488,6 +500,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* allocate some memory */
+comment|/* 	 * Some reports from the field suggest that a 64k memory boundary 	 * helps card CIS being able to be read.  Try it here and see what 	 * the results actually are.  I'm not sure I understand why this 	 * would make cards work better, but it is easy enough to test. 	 */
 name|rid
 operator|=
 literal|0
@@ -511,6 +524,13 @@ argument_list|,
 name|PCCARD_CIS_SIZE
 argument_list|,
 name|RF_ACTIVE
+operator||
+name|rman_make_alignment_flags
+argument_list|(
+literal|64
+operator|*
+literal|1024
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
