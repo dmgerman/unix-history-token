@@ -194,10 +194,9 @@ comment|/* Flag indicating whether IPv4 or IPv6.  This can be set on the command
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|IPv4or6
-init|=
-name|AF_UNSPEC
 decl_stmt|;
 end_decl_stmt
 

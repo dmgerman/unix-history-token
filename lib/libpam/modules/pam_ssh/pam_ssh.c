@@ -167,14 +167,6 @@ directive|include
 file|"pam_ssh.h"
 end_include
 
-begin_decl_stmt
-name|int
-name|IPv4or6
-init|=
-name|AF_UNSPEC
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Generic cleanup function for SSH "Key" type.  */
 end_comment

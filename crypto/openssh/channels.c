@@ -356,9 +356,10 @@ comment|/* AF_UNSPEC or AF_INET or AF_INET6 */
 end_comment
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|IPv4or6
+init|=
+name|AF_UNSPEC
 decl_stmt|;
 end_decl_stmt
 
