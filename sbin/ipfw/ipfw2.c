@@ -12814,8 +12814,11 @@ name|EX_DATAERR
 argument_list|,
 literal|"unrecognised option ``%s''"
 argument_list|,
-operator|*
 name|av
+index|[
+operator|-
+literal|1
+index|]
 argument_list|)
 expr_stmt|;
 block|}
