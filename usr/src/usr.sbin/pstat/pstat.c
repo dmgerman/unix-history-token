@@ -275,7 +275,7 @@ end_define
 begin_decl_stmt
 name|char
 modifier|*
-name|fnlist
+name|nlistf
 init|=
 name|NULL
 decl_stmt|;
@@ -284,7 +284,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|fcore
+name|memf
 init|=
 name|NULL
 decl_stmt|;
@@ -697,13 +697,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|char
-modifier|*
-name|Program
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -726,8 +719,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
 specifier|extern
@@ -744,13 +737,6 @@ name|ch
 decl_stmt|,
 name|ret
 decl_stmt|;
-name|Program
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -902,7 +888,7 @@ name|argc
 operator|>
 literal|1
 condition|)
-name|fcore
+name|memf
 operator|=
 name|argv
 index|[
@@ -915,20 +901,37 @@ name|argc
 operator|>
 literal|0
 condition|)
-name|fnlist
+name|nlistf
 operator|=
 name|argv
 index|[
 literal|0
 index|]
 expr_stmt|;
+comment|/* 	 * Discard setgid privileges if not the running kernel so that bad 	 * guys can't print interesting stuff from kernel memory. 	 */
+if|if
+condition|(
+name|nlistf
+operator|!=
+name|NULL
+operator|||
+name|memf
+operator|!=
+name|NULL
+condition|)
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|kvm_openfiles
 argument_list|(
-name|fnlist
+name|nlistf
 argument_list|,
-name|fcore
+name|memf
 argument_list|,
 name|NULL
 argument_list|)
@@ -2944,7 +2947,7 @@ parameter_list|()
 function_decl|;
 if|if
 condition|(
-name|fcore
+name|memf
 operator|!=
 name|NULL
 condition|)
@@ -6348,7 +6351,7 @@ name|len
 decl_stmt|;
 if|if
 condition|(
-name|fcore
+name|memf
 operator|!=
 name|NULL
 condition|)
@@ -8267,9 +8270,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: "
-argument_list|,
-name|Program
+literal|"pstat: "
 argument_list|)
 expr_stmt|;
 name|va_start
@@ -8339,9 +8340,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: "
-argument_list|,
-name|Program
+literal|"pstat: "
 argument_list|)
 expr_stmt|;
 name|va_start
