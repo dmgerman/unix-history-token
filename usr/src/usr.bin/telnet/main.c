@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	1.15 (Berkeley) %G%"
+literal|"@(#)main.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,11 +58,44 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|unix
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* defined(unix) */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(unix) */
+end_comment
 
 begin_include
 include|#
@@ -103,9 +136,17 @@ expr_stmt|;
 name|init_sys
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TN3270
+argument_list|)
 name|init_3270
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -150,14 +191,27 @@ decl_stmt|;
 name|char
 modifier|*
 name|user
+decl_stmt|,
+modifier|*
+name|strrchr
+argument_list|()
 decl_stmt|;
 name|tninit
 argument_list|()
 expr_stmt|;
 comment|/* Clear out things */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CRAY
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__STDC__
+argument_list|)
 name|_setlist_init
 argument_list|()
 expr_stmt|;
@@ -171,7 +225,7 @@ if|if
 condition|(
 name|prompt
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|argv
 index|[
@@ -217,6 +271,7 @@ operator|)
 operator|!=
 name|EOF
 condition|)
+block|{
 switch|switch
 condition|(
 name|ch
@@ -348,7 +403,6 @@ name|noasynchtty
 operator|=
 literal|1
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -365,10 +419,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-block|}
-end_function
-
-begin_else
 else|else
 endif|#
 directive|endif
@@ -378,13 +428,7 @@ argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
-end_else
-
-begin_break
 break|break;
-end_break
-
-begin_if
 if|#
 directive|if
 name|defined
@@ -396,22 +440,13 @@ name|defined
 argument_list|(
 name|unix
 argument_list|)
-end_if
-
-begin_case
 case|case
 literal|'t'
 case|:
-end_case
-
-begin_expr_stmt
 name|transcom
 operator|=
 name|tline
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 operator|(
 name|void
 operator|)
@@ -422,52 +457,27 @@ argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_break
 break|break;
-end_break
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_case
 case|case
 literal|'?'
 case|:
-end_case
-
-begin_default
 default|default:
-end_default
-
-begin_expr_stmt
 name|usage
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* NOTREACHED */
-end_comment
-
-begin_expr_stmt
-unit|} 	argc
+block|}
+block|}
+name|argc
 operator|-=
 name|optind
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|argv
 operator|+=
 name|optind
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|argc
@@ -589,9 +599,6 @@ literal|1
 operator|)
 return|;
 block|}
-end_if
-
-begin_expr_stmt
 operator|(
 name|void
 operator|)
@@ -600,14 +607,12 @@ argument_list|(
 name|toplevel
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_for
 for|for
 control|(
 init|;
 condition|;
 control|)
+block|{
 ifdef|#
 directive|ifdef
 name|TN3270
@@ -630,12 +635,16 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-end_for
+block|}
+block|}
+end_function
 
-begin_expr_stmt
-unit|}  usage
-operator|(
-operator|)
+begin_macro
+name|usage
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|fprintf
 argument_list|(
@@ -645,13 +654,14 @@ literal|"usage: %s [-a] [ [-l user] host-name [port] ]\n"
 argument_list|,
 name|prompt
 argument_list|)
-block|;
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
 argument_list|)
-block|; }
-end_expr_stmt
+expr_stmt|;
+block|}
+end_block
 
 end_unit
 

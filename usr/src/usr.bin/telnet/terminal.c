@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)terminal.c	1.21 (Berkeley) %G%"
+literal|"@(#)terminal.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -101,7 +101,7 @@ end_ifdef
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|VFLUSHO
+name|VDISCARD
 end_ifndef
 
 begin_decl_stmt
@@ -251,6 +251,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VSTATUS
+end_ifndef
+
+begin_decl_stmt
+name|cc_t
+name|termAytChar
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_else
 else|#
 directive|else
@@ -259,6 +276,12 @@ end_else
 begin_decl_stmt
 name|cc_t
 name|termForw2Char
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|cc_t
+name|termAytChar
 decl_stmt|;
 end_decl_stmt
 

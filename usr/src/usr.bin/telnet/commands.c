@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)commands.c	1.32 (Berkeley) %G%"
+literal|"@(#)commands.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1162,8 +1162,7 @@ operator|==
 operator|(
 name|cc_t
 operator|)
-operator|-
-literal|1
+name|_POSIX_VDISABLE
 condition|)
 block|{
 return|return
@@ -1172,6 +1171,10 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|c
 operator|>=
 literal|0x80
@@ -1242,6 +1245,10 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|c
 operator|>=
 literal|0x20
@@ -2140,6 +2147,15 @@ default|default:
 name|NET2ADD
 argument_list|(
 name|IAC
+argument_list|,
+name|what
+argument_list|)
+expr_stmt|;
+name|printoption
+argument_list|(
+literal|"SENT"
+argument_list|,
+literal|"IAC"
 argument_list|,
 name|what
 argument_list|)
@@ -3542,7 +3558,7 @@ block|,
 block|{
 literal|"tracefile"
 block|,
-literal|"file to write trace intormation to"
+literal|"file to write trace information to"
 block|,
 name|SetNetTrace
 block|,
@@ -3572,7 +3588,7 @@ block|,
 block|{
 literal|"flushoutput"
 block|,
-literal|"character to cause an Abort Oubput"
+literal|"character to cause an Abort Output"
 block|,
 literal|0
 block|,
@@ -3726,20 +3742,39 @@ name|termForw2Charp
 block|}
 block|,
 block|{
+literal|"ayt"
+block|,
+literal|"alternate AYT character"
+block|,
+literal|0
+block|,
+name|termAytCharp
+block|}
+block|,
+block|{
 literal|0
 block|}
 block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CRAY
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__STDC__
+argument_list|)
+end_if
 
 begin_comment
-comment|/* Work around compiler bug */
+comment|/* Work around compiler bug in pcc 4.1.5 */
 end_comment
 
 begin_macro
@@ -3932,6 +3967,18 @@ operator|=
 operator|&
 name|termForw2Char
 expr_stmt|;
+name|Setlist
+index|[
+name|N
+operator|+
+literal|16
+index|]
+operator|.
+name|charp
+operator|=
+operator|&
+name|termAytChar
+expr_stmt|;
 undef|#
 directive|undef
 name|N
@@ -3944,7 +3991,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CRAY */
+comment|/* defined(CRAY)&& !defined(__STDC__) */
 end_comment
 
 begin_function
@@ -4055,8 +4102,7 @@ argument_list|(
 name|s
 argument_list|)
 else|:
-operator|-
-literal|1
+name|_POSIX_VDISABLE
 expr_stmt|;
 name|printf
 argument_list|(
@@ -4512,8 +4558,7 @@ else|else
 block|{
 name|value
 operator|=
-operator|-
-literal|1
+name|_POSIX_VDISABLE
 expr_stmt|;
 block|}
 operator|*
@@ -4897,8 +4942,7 @@ operator|->
 name|charp
 operator|)
 operator|=
-operator|-
-literal|1
+name|_POSIX_VDISABLE
 expr_stmt|;
 name|printf
 argument_list|(
@@ -7139,6 +7183,9 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|env_send
+argument_list|()
+decl_stmt|,
 name|env_list
 argument_list|()
 decl_stmt|,
@@ -7197,6 +7244,16 @@ block|,
 literal|"Dont mark an environment variable for automatic export"
 block|,
 name|env_unexport
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"send"
+block|,
+literal|"Send an environment variable"
+block|,
+name|env_send
 block|,
 literal|1
 block|}
@@ -7604,6 +7661,10 @@ name|env_find
 parameter_list|(
 name|var
 parameter_list|)
+name|char
+modifier|*
+name|var
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -7863,10 +7924,7 @@ operator|=
 name|cp
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/* 	 * If USER is not defined, but LOGNAME is, then add 	 * USER with the value from LOGNAME. 	 */
+comment|/* 	 * If USER is not defined, but LOGNAME is, then add 	 * USER with the value from LOGNAME.  By default, we 	 * don't export the USER variable. 	 */
 if|if
 condition|(
 operator|(
@@ -7887,6 +7945,7 @@ literal|"LOGNAME"
 argument_list|)
 operator|)
 condition|)
+block|{
 name|env_define
 argument_list|(
 literal|"USER"
@@ -7896,13 +7955,12 @@ operator|->
 name|value
 argument_list|)
 expr_stmt|;
-name|env_export
+name|env_unexport
 argument_list|(
 literal|"USER"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 name|env_export
 argument_list|(
 literal|"DISPLAY"
@@ -7946,7 +8004,7 @@ decl_stmt|;
 specifier|extern
 name|char
 modifier|*
-name|savestr
+name|strdup
 parameter_list|()
 function_decl|;
 if|if
@@ -8050,7 +8108,7 @@ name|ep
 operator|->
 name|var
 operator|=
-name|savestr
+name|strdup
 argument_list|(
 name|var
 argument_list|)
@@ -8059,7 +8117,7 @@ name|ep
 operator|->
 name|value
 operator|=
-name|savestr
+name|strdup
 argument_list|(
 name|value
 argument_list|)
@@ -8114,6 +8172,12 @@ name|ep
 operator|->
 name|next
 expr_stmt|;
+if|if
+condition|(
+name|ep
+operator|->
+name|next
+condition|)
 name|ep
 operator|->
 name|next
@@ -8235,6 +8299,90 @@ operator|->
 name|export
 operator|=
 literal|0
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|env_send
+argument_list|(
+argument|var
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|var
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|struct
+name|env_lst
+modifier|*
+name|ep
+decl_stmt|;
+if|if
+condition|(
+name|my_state_is_wont
+argument_list|(
+name|TELOPT_ENVIRON
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Cannot send '%s': Telnet ENVIRON option not enabled\n"
+argument_list|,
+name|var
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|ep
+operator|=
+name|env_find
+argument_list|(
+name|var
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ep
+operator|==
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Cannot send '%s': variable not defined\n"
+argument_list|,
+name|var
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|env_opt_start_info
+argument_list|()
+expr_stmt|;
+name|env_opt_add
+argument_list|(
+name|ep
+operator|->
+name|var
+argument_list|)
+expr_stmt|;
+name|env_opt_end
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -8401,10 +8549,16 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NO_STRDUP
+end_ifdef
+
 begin_function
 name|char
 modifier|*
-name|savestr
+name|strdup
 parameter_list|(
 name|s
 parameter_list|)
@@ -8451,6 +8605,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -9278,6 +9437,45 @@ return|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SIGINFO
+end_ifdef
+
+begin_comment
+comment|/*  * Function that gets called when SIGINFO is received.  */
+end_comment
+
+begin_macro
+name|ayt_status
+argument_list|()
+end_macro
+
+begin_block
+block|{
+operator|(
+name|void
+operator|)
+name|call
+argument_list|(
+name|status
+argument_list|,
+literal|"status"
+argument_list|,
+literal|"notmuch"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -9519,6 +9717,22 @@ name|user
 init|=
 literal|0
 decl_stmt|;
+comment|/* clear the socket address prior to use */
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|sin
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sin
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|connected
@@ -9641,6 +9855,31 @@ continue|continue;
 block|}
 if|if
 condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"-a"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+operator|--
+name|argc
+expr_stmt|;
+operator|++
+name|argv
+expr_stmt|;
+name|autologin
+operator|=
+literal|1
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
 name|hostp
 operator|==
 literal|0
@@ -9679,7 +9918,7 @@ name|usage
 label|:
 name|printf
 argument_list|(
-literal|"usage: %s [-l user] host-name [port]\n"
+literal|"usage: %s [-l user] [-a] host-name [port]\n"
 argument_list|,
 name|cmd
 argument_list|)
@@ -10449,16 +10688,12 @@ name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-name|uid_t
-name|uid
-init|=
-name|getuid
-argument_list|()
-decl_stmt|;
 name|user
 operator|=
-name|getlogin
-argument_list|()
+name|getenv
+argument_list|(
+literal|"USER"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -10479,15 +10714,18 @@ name|pw
 operator|->
 name|pw_uid
 operator|!=
-name|uid
+name|getuid
+argument_list|()
 condition|)
+block|{
 if|if
 condition|(
 name|pw
 operator|=
 name|getpwuid
 argument_list|(
-name|uid
+name|getuid
+argument_list|()
 argument_list|)
 condition|)
 name|user
@@ -10501,6 +10739,7 @@ name|user
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

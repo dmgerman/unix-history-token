@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	5.50 (Berkeley) %G%"
+literal|"@(#)telnet.c	5.51 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1867,6 +1867,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|setconnmode
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Set new tty mode */
 block|}
 else|else
 block|{
@@ -3049,7 +3055,7 @@ operator|==
 name|TELQUAL_SEND
 condition|)
 block|{
-name|int
+name|long
 name|ospeed
 decl_stmt|,
 name|ispeed
@@ -3619,6 +3625,8 @@ switch|switch
 condition|(
 operator|*
 name|cp
+operator|&
+literal|0xff
 condition|)
 block|{
 case|case
@@ -4138,6 +4146,8 @@ switch|switch
 condition|(
 operator|*
 name|cp
+operator|&
+literal|0xff
 condition|)
 block|{
 case|case
@@ -4237,6 +4247,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+name|unsigned
 name|char
 modifier|*
 name|cmd
@@ -4356,6 +4367,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+name|unsigned
 name|char
 modifier|*
 name|cmd
@@ -4409,6 +4421,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+name|unsigned
 name|char
 modifier|*
 name|cmd
@@ -4527,6 +4540,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+name|unsigned
 name|char
 modifier|*
 name|cmd
@@ -5359,6 +5373,26 @@ operator|!=
 name|SLC_NOSUPPORT
 condition|)
 block|{
+if|if
+condition|(
+name|spcp
+operator|->
+name|val
+operator|==
+call|(
+name|cc_t
+call|)
+argument_list|(
+name|_POSIX_VDISABLE
+argument_list|)
+condition|)
+name|spcp
+operator|->
+name|flags
+operator|=
+name|SLC_NOSUPPORT
+expr_stmt|;
+else|else
 name|spcp
 operator|->
 name|flags
@@ -5390,7 +5424,7 @@ name|spc_data
 argument_list|,
 name|spcp
 operator|->
-name|mylevel
+name|flags
 argument_list|,
 name|spcp
 operator|->
@@ -5495,12 +5529,14 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|cp
 index|[
 name|SLC_FLAGS
 index|]
 operator|&
 name|SLC_LEVELBITS
+operator|)
 operator|!=
 name|SLC_NOSUPPORT
 condition|)
@@ -5807,6 +5843,34 @@ name|spcp
 operator|->
 name|valp
 expr_stmt|;
+if|if
+condition|(
+name|spcp
+operator|->
+name|val
+operator|==
+call|(
+name|cc_t
+call|)
+argument_list|(
+name|_POSIX_VDISABLE
+argument_list|)
+condition|)
+name|spcp
+operator|->
+name|flags
+operator|=
+name|SLC_NOSUPPORT
+expr_stmt|;
+else|else
+name|spcp
+operator|->
+name|flags
+operator|=
+name|spcp
+operator|->
+name|mylevel
+expr_stmt|;
 name|slc_add_reply
 argument_list|(
 name|spcp
@@ -5815,7 +5879,7 @@ name|spc_data
 argument_list|,
 name|spcp
 operator|->
-name|mylevel
+name|flags
 argument_list|,
 name|spcp
 operator|->
@@ -6214,6 +6278,8 @@ name|buf
 index|[
 literal|0
 index|]
+operator|&
+literal|0xff
 condition|)
 block|{
 case|case
@@ -6256,6 +6322,8 @@ name|buf
 index|[
 name|i
 index|]
+operator|&
+literal|0xff
 condition|)
 block|{
 case|case
@@ -6717,6 +6785,8 @@ block|{
 switch|switch
 condition|(
 name|c
+operator|&
+literal|0xff
 condition|)
 block|{
 case|case
@@ -7308,6 +7378,15 @@ case|case
 name|DM
 case|:
 comment|/* 		     * We may have missed an urgent notification, 		     * so make sure we flush whatever is in the 		     * buffer currently. 		     */
+name|printoption
+argument_list|(
+literal|"RCVD"
+argument_list|,
+literal|"IAC"
+argument_list|,
+name|DM
+argument_list|)
+expr_stmt|;
 name|SYNCHing
 operator|=
 literal|1
@@ -7405,6 +7484,15 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+name|printoption
+argument_list|(
+literal|"RCVD"
+argument_list|,
+literal|"IAC"
+argument_list|,
+name|EOR
+argument_list|)
+expr_stmt|;
 break|break;
 endif|#
 directive|endif
@@ -9399,6 +9487,30 @@ argument_list|,
 literal|"IAC"
 argument_list|,
 name|xEOF
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|sendayt
+parameter_list|()
+block|{
+name|NET2ADD
+argument_list|(
+name|IAC
+argument_list|,
+name|AYT
+argument_list|)
+expr_stmt|;
+name|printoption
+argument_list|(
+literal|"SENT"
+argument_list|,
+literal|"IAC"
+argument_list|,
+name|AYT
 argument_list|)
 expr_stmt|;
 block|}
