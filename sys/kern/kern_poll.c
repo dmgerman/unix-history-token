@@ -73,11 +73,28 @@ directive|ifdef
 name|SMP
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|"opt_lint.h"
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPILING_LINT
+end_ifndef
+
 begin_error
 error|#
 directive|error
 error|DEVICE_POLLING is not compatible with SMP
 end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
