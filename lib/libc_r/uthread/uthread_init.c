@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -47,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ttycom.h>
 end_include
 
 begin_ifdef
@@ -236,6 +248,9 @@ name|void
 parameter_list|)
 block|{
 name|int
+name|fd
+decl_stmt|;
+name|int
 name|flags
 decl_stmt|;
 name|int
@@ -252,6 +267,139 @@ name|_thread_initial
 condition|)
 comment|/* Only initialise the threaded application once. */
 return|return;
+comment|/* 	 * Check for the special case of this process running as 	 * or in place of init as pid = 1: 	 */
+if|if
+condition|(
+name|getpid
+argument_list|()
+operator|==
+literal|1
+condition|)
+block|{
+comment|/* 		 * Setup a new session for this process which is 		 * assumed to be running as root. 		 */
+if|if
+condition|(
+name|setsid
+argument_list|()
+operator|==
+operator|-
+literal|1
+condition|)
+name|PANIC
+argument_list|(
+literal|"Can't set session ID"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|revoke
+argument_list|(
+name|_PATH_CONSOLE
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|PANIC
+argument_list|(
+literal|"Can't revoke console"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|fd
+operator|=
+name|_thread_sys_open
+argument_list|(
+name|_PATH_CONSOLE
+argument_list|,
+name|O_RDWR
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+name|PANIC
+argument_list|(
+literal|"Can't open console"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|setlogin
+argument_list|(
+literal|"root"
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|PANIC
+argument_list|(
+literal|"Can't set login to root"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|_thread_sys_ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|TIOCSCTTY
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|PANIC
+argument_list|(
+literal|"Can't set controlling terminal"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|_thread_sys_dup2
+argument_list|(
+name|fd
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+operator|||
+name|_thread_sys_dup2
+argument_list|(
+name|fd
+argument_list|,
+literal|1
+argument_list|)
+operator|==
+operator|-
+literal|1
+operator|||
+name|_thread_sys_dup2
+argument_list|(
+name|fd
+argument_list|,
+literal|2
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|PANIC
+argument_list|(
+literal|"Can't dup2"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Get the standard I/O flags before messing with them : */
 for|for
 control|(
@@ -592,7 +740,7 @@ name|act
 operator|.
 name|sa_flags
 operator|=
-name|SA_RESTART
+literal|0
 expr_stmt|;
 comment|/* Enter a loop to get the existing signal status: */
 for|for
