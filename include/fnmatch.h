@@ -59,16 +59,38 @@ begin_comment
 comment|/* Period must be matched by period. */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
 begin_define
 define|#
 directive|define
-name|FNM_ICASE
+name|FNM_LEADING_DIR
 value|0x08
 end_define
 
 begin_comment
-comment|/* case insensitive search */
+comment|/* Ignore "/*" after match */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|FNM_CASEFOLD
+value|0x10
+end_define
+
+begin_comment
+comment|/* Case insensitive search */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -78,9 +100,6 @@ end_include
 
 begin_decl_stmt
 name|__BEGIN_DECLS
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
 name|int
 name|fnmatch
 name|__P
@@ -99,11 +118,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_macro
 name|__END_DECLS
