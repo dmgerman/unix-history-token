@@ -865,25 +865,25 @@ name|AF_APPLETALK
 case|:
 name|printf
 argument_list|(
-literal|"atalk:%-7.7s "
+literal|"atalk:%-12.12s "
 argument_list|,
 name|atalk_print
 argument_list|(
 name|sa
 argument_list|,
-literal|9
+literal|0x10
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-15.15s "
+literal|"%-9.9s  "
 argument_list|,
 name|atalk_print
 argument_list|(
 name|sa
 argument_list|,
-literal|11
+literal|0x0b
 argument_list|)
 argument_list|)
 expr_stmt|;
