@@ -1138,6 +1138,10 @@ operator|+
 literal|4
 argument_list|)
 expr_stmt|;
+name|optc
+operator|--
+expr_stmt|;
+comment|/* this option isn't exclusive */
 block|}
 elseif|else
 if|if
