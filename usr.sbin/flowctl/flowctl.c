@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2004 Gleb Smirnoff<glebius@FreeBSD.org>  * Copyright (c) 2001-2003 Roman V. Palagin<romanp@unshadow.net>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $SourceForge: flowctl.c,v 1.15 2004/08/31 20:24:58 glebius Exp $  */
+comment|/*-  * Copyright (c) 2004, 2005 Gleb Smirnoff<glebius@FreeBSD.org>  * Copyright (c) 2001-2003 Roman V. Palagin<romanp@unshadow.net>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $SourceForge: flowctl.c,v 1.15 2004/08/31 20:24:58 glebius Exp $  */
 end_comment
 
 begin_ifndef
@@ -71,12 +71,6 @@ begin_include
 include|#
 directive|include
 file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
 end_include
 
 begin_include
@@ -162,8 +156,6 @@ name|ctl_show
 parameter_list|(
 name|int
 parameter_list|,
-name|int
-parameter_list|,
 name|char
 modifier|*
 modifier|*
@@ -204,17 +196,11 @@ modifier|*
 name|cmd_name
 decl_stmt|;
 name|int
-name|cmd_code
-decl_stmt|;
-name|int
 function_decl|(
 modifier|*
 name|cmd_func
 function_decl|)
 parameter_list|(
-name|int
-name|code
-parameter_list|,
 name|int
 name|argc
 parameter_list|,
@@ -238,15 +224,11 @@ block|{
 block|{
 literal|"show"
 block|,
-name|NGM_NETFLOW_SHOW
-block|,
 name|ctl_show
 block|}
 block|,
 block|{
 name|NULL
-block|,
-literal|0
 block|,
 name|NULL
 block|}
@@ -285,8 +267,6 @@ name|argv
 parameter_list|)
 block|{
 name|int
-name|flags
-decl_stmt|,
 name|c
 decl_stmt|;
 name|char
@@ -424,57 +404,6 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"NgMkSockNode"
-argument_list|)
-expr_stmt|;
-comment|/* set control socket nonblocking */
-if|if
-condition|(
-operator|(
-name|flags
-operator|=
-name|fcntl
-argument_list|(
-name|cs
-argument_list|,
-name|F_GETFL
-argument_list|,
-literal|0
-argument_list|)
-operator|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"fcntl(F_GETFL)"
-argument_list|)
-expr_stmt|;
-name|flags
-operator||=
-name|O_NONBLOCK
-expr_stmt|;
-if|if
-condition|(
-name|fcntl
-argument_list|(
-name|cs
-argument_list|,
-name|F_SETFL
-argument_list|,
-name|flags
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"fcntl(F_SETFL)"
 argument_list|)
 expr_stmt|;
 comment|/* set receive buffer size */
@@ -663,13 +592,6 @@ operator|.
 name|cmd_func
 operator|)
 operator|(
-name|cmds
-index|[
-name|cindex
-index|]
-operator|.
-name|cmd_code
-operator|,
 name|argc
 operator|,
 name|argv
@@ -683,9 +605,6 @@ specifier|static
 name|int
 name|ctl_show
 parameter_list|(
-name|int
-name|code
-parameter_list|,
 name|int
 name|argc
 parameter_list|,
