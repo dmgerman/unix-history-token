@@ -75,14 +75,10 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_comment
-comment|/* XXX -- header file should probably be installed somewhere */
-end_comment
-
 begin_include
 include|#
 directive|include
-file|"/sys/isa/ic/nec765.h"
+file|<dev/ic/nec765.h>
 end_include
 
 begin_decl_stmt
