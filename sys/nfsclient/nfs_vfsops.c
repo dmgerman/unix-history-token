@@ -2499,17 +2499,6 @@ name|so
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If the gateway field is filled in, set it as the default route. 	 * Note that pxeboot will set a default route of 0 if the route 	 * is not set by the DHCP server.  Check also for a value of 0 	 * to avoid panicking inappropriately in that situation. 	 */
-name|printf
-argument_list|(
-literal|"gateway: %d bytes\n"
-argument_list|,
-name|nd
-operator|->
-name|mygateway
-operator|.
-name|sin_len
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|nd
