@@ -4085,7 +4085,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"mutex %s %p already initialized"
+literal|"mutex \"%s\" %p already initialized"
 operator|,
 name|name
 operator|,
