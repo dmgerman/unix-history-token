@@ -90,31 +90,31 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_quad_t
+name|uintmax_t
 name|in_full
 decl_stmt|;
 comment|/* # of full input blocks */
-name|u_quad_t
+name|uintmax_t
 name|in_part
 decl_stmt|;
 comment|/* # of partial input blocks */
-name|u_quad_t
+name|uintmax_t
 name|out_full
 decl_stmt|;
 comment|/* # of full output blocks */
-name|u_quad_t
+name|uintmax_t
 name|out_part
 decl_stmt|;
 comment|/* # of partial output blocks */
-name|u_quad_t
+name|uintmax_t
 name|trunc
 decl_stmt|;
 comment|/* # of truncated records */
-name|u_quad_t
+name|uintmax_t
 name|swab
 decl_stmt|;
 comment|/* # of odd-length swab blocks */
-name|u_quad_t
+name|uintmax_t
 name|bytes
 decl_stmt|;
 comment|/* # of bytes written */

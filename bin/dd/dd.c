@@ -133,6 +133,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<locale.h>
 end_include
 
@@ -252,7 +258,7 @@ comment|/* conversion function */
 end_comment
 
 begin_decl_stmt
-name|u_quad_t
+name|uintmax_t
 name|cpy_cnt
 decl_stmt|;
 end_decl_stmt
@@ -277,6 +283,8 @@ end_comment
 begin_decl_stmt
 name|u_int
 name|ddflags
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -295,7 +303,7 @@ comment|/* conversion block size */
 end_comment
 
 begin_decl_stmt
-name|quad_t
+name|uintmax_t
 name|files_cnt
 init|=
 literal|1
@@ -1242,7 +1250,7 @@ operator|.
 name|in_part
 operator|>=
 operator|(
-name|u_quad_t
+name|uintmax_t
 operator|)
 name|cpy_cnt
 condition|)

@@ -65,6 +65,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<limits.h>
 end_include
 
@@ -247,7 +253,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_quad_t
+name|uintmax_t
 name|get_num
 parameter_list|(
 specifier|const
@@ -827,8 +833,11 @@ name|in
 operator|.
 name|offset
 operator|>
-name|QUAD_MAX
+name|OFF_MAX
 operator|/
+operator|(
+name|ssize_t
+operator|)
 name|in
 operator|.
 name|dbsz
@@ -837,8 +846,11 @@ name|out
 operator|.
 name|offset
 operator|>
-name|QUAD_MAX
+name|OFF_MAX
 operator|/
+operator|(
+name|ssize_t
+operator|)
 name|out
 operator|.
 name|dbsz
@@ -847,9 +859,12 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"seek offsets cannot be larger than %qd"
+literal|"seek offsets cannot be larger than %jd"
 argument_list|,
-name|QUAD_MAX
+operator|(
+name|intmax_t
+operator|)
+name|OFF_MAX
 argument_list|)
 expr_stmt|;
 block|}
@@ -914,7 +929,7 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|u_quad_t
+name|uintmax_t
 name|res
 decl_stmt|;
 name|res
@@ -969,7 +984,7 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|u_quad_t
+name|uintmax_t
 name|res
 decl_stmt|;
 name|res
@@ -1018,11 +1033,14 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|u_quad_t
+name|intmax_t
 name|res
 decl_stmt|;
 name|res
 operator|=
+operator|(
+name|intmax_t
+operator|)
 name|get_num
 argument_list|(
 name|arg
@@ -1030,9 +1048,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|quad_t
-operator|)
 name|res
 operator|<
 literal|0
@@ -1052,6 +1067,9 @@ literal|0
 condition|)
 name|cpy_cnt
 operator|=
+operator|(
+name|uintmax_t
+operator|)
 operator|-
 literal|1
 expr_stmt|;
@@ -1059,7 +1077,7 @@ else|else
 name|cpy_cnt
 operator|=
 operator|(
-name|quad_t
+name|uintmax_t
 operator|)
 name|res
 expr_stmt|;
@@ -1093,9 +1111,13 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"files must be between 1 and %qd"
+literal|"files must be between 1 and %jd"
 argument_list|,
-name|QUAD_MAX
+operator|(
+name|uintmax_t
+operator|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1111,7 +1133,7 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|u_quad_t
+name|uintmax_t
 name|res
 decl_stmt|;
 if|if
@@ -1145,7 +1167,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"ibs must be between 1 and %d"
+literal|"ibs must be between 1 and %zd"
 argument_list|,
 name|SSIZE_MAX
 argument_list|)
@@ -1192,7 +1214,7 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|u_quad_t
+name|uintmax_t
 name|res
 decl_stmt|;
 if|if
@@ -1226,7 +1248,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"obs must be between 1 and %d"
+literal|"obs must be between 1 and %zd"
 argument_list|,
 name|SSIZE_MAX
 argument_list|)
@@ -1669,12 +1691,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert an expression of the following forms to a u_quad_t.  * 	1) A positive decimal number.  *	2) A positive decimal number followed by a b (mult by 512).  *	3) A positive decimal number followed by a k (mult by 1<< 10).  *	4) A positive decimal number followed by a m (mult by 1<< 20).  *	5) A positive decimal number followed by a g (mult by 1<< 30).  *	5) A positive decimal number followed by a w (mult by sizeof int).  *	6) Two or more positive decimal numbers (with/without [bkmgw])  *	   separated by x (also * for backwards compatibility), specifying  *	   the product of the indicated values.  */
+comment|/*  * Convert an expression of the following forms to a uintmax_t.  * 	1) A positive decimal number.  *	2) A positive decimal number followed by a b (mult by 512).  *	3) A positive decimal number followed by a k (mult by 1<< 10).  *	4) A positive decimal number followed by a m (mult by 1<< 20).  *	5) A positive decimal number followed by a g (mult by 1<< 30).  *	5) A positive decimal number followed by a w (mult by sizeof int).  *	6) Two or more positive decimal numbers (with/without [bkmgw])  *	   separated by x (also * for backwards compatibility), specifying  *	   the product of the indicated values.  */
 end_comment
 
 begin_function
 specifier|static
-name|u_quad_t
+name|uintmax_t
 name|get_num
 parameter_list|(
 specifier|const
@@ -1683,7 +1705,7 @@ modifier|*
 name|val
 parameter_list|)
 block|{
-name|u_quad_t
+name|uintmax_t
 name|num
 decl_stmt|,
 name|mult
@@ -1914,7 +1936,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert an expression of the following forms to an off_t.  This is the  * same as get_num(), but it uses signed numbers.  *  * The major problem here is that an off_t may not necessarily be a quad_t.  * The right thing to do would be to use intmax_t when available and then  * cast down to an off_t, if possible.  */
+comment|/*  * Convert an expression of the following forms to an off_t.  This is the  * same as get_num(), but it uses signed numbers.  *  * The major problem here is that an off_t may not necessarily be a intmax_t.  */
 end_comment
 
 begin_function
@@ -1928,7 +1950,7 @@ modifier|*
 name|val
 parameter_list|)
 block|{
-name|quad_t
+name|intmax_t
 name|num
 decl_stmt|,
 name|mult
@@ -2110,7 +2132,7 @@ case|:
 name|mult
 operator|=
 operator|(
-name|quad_t
+name|intmax_t
 operator|)
 name|get_off_t
 argument_list|(

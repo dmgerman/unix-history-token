@@ -65,6 +65,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -173,7 +179,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%qu+%qu records in\n%qu+%qu records out\n"
+literal|"%ju+%ju records in\n%ju+%ju records out\n"
 argument_list|,
 name|st
 operator|.
@@ -226,7 +232,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%qu odd length swab %s\n"
+literal|"%ju odd length swab %s\n"
 argument_list|,
 name|st
 operator|.
@@ -280,7 +286,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%qu truncated %s\n"
+literal|"%ju truncated %s\n"
 argument_list|,
 name|st
 operator|.
@@ -327,7 +333,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%qu bytes transferred in %.6f secs (%.0f bytes/sec)\n"
+literal|"%ju bytes transferred in %.6f secs (%.0f bytes/sec)\n"
 argument_list|,
 name|st
 operator|.
