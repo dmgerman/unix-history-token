@@ -1005,6 +1005,14 @@ name|int
 name|vc_txmax
 decl_stmt|;
 comment|/* max tx/rx packet size */
+name|int
+name|vc_rxmax
+decl_stmt|;
+comment|/* max readx data size */
+name|int
+name|vc_wxmax
+decl_stmt|;
+comment|/* max writex data size */
 name|struct
 name|smbiod
 modifier|*
