@@ -186,6 +186,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|volatile
+name|uint16_t
+modifier|*
+name|pps_ap
+index|[
+literal|3
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|u_int
 name|pps_a
 decl_stmt|,
@@ -194,6 +207,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_int
 name|echo_a
 decl_stmt|,
@@ -217,6 +231,7 @@ name|CPU_SOEKRIS
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|u_int
 name|led_cookie
 index|[
@@ -226,6 +241,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|dev_t
 name|led_dev
 index|[
@@ -722,6 +738,39 @@ literal|0xc30
 operator|+
 name|v
 expr_stmt|;
+name|pps_ap
+index|[
+literal|0
+index|]
+operator|=
+operator|&
+name|mmcrptr
+index|[
+name|pps_a
+operator|/
+literal|2
+index|]
+expr_stmt|;
+name|pps_ap
+index|[
+literal|1
+index|]
+operator|=
+operator|&
+name|elan_mmcr
+operator|->
+name|GPTMR2CNT
+expr_stmt|;
+name|pps_ap
+index|[
+literal|2
+index|]
+operator|=
+operator|&
+name|elan_mmcr
+operator|->
+name|GPTMR1CNT
+expr_stmt|;
 name|mmcrptr
 index|[
 operator|(
@@ -999,31 +1048,65 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|u_int
+name|uint16_t
 name|u
+decl_stmt|,
+name|x
+decl_stmt|,
+name|y
+decl_stmt|,
+name|z
 decl_stmt|;
+name|u_long
+name|eflags
+decl_stmt|;
+comment|/* 	 * Grab the HW state as quickly and compactly as we can.  Disable 	 * interrupts to avoid measuring our interrupt service time on 	 * hw with quality clock sources. 	 */
+name|eflags
+operator|=
+name|read_eflags
+argument_list|()
+expr_stmt|;
+name|disable_intr
+argument_list|()
+expr_stmt|;
+name|x
+operator|=
+operator|*
+name|pps_ap
+index|[
+literal|0
+index|]
+expr_stmt|;
+comment|/* state, must be first, see below */
+name|y
+operator|=
+operator|*
+name|pps_ap
+index|[
+literal|1
+index|]
+expr_stmt|;
+comment|/* timer2 */
+name|z
+operator|=
+operator|*
+name|pps_ap
+index|[
+literal|2
+index|]
+expr_stmt|;
+comment|/* timer1 */
+name|write_eflags
+argument_list|(
+name|eflags
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Order is important here.  We need to check the state of the GPIO 	 * pin first, in order to avoid reading timer 1 right before the 	 * state change.  Technically pps_a may be zero in which case we 	 * harmlessly read the REVID register and the contents of pps_d is 	 * of no concern. 	 */
 name|i
 operator|=
-name|mmcrptr
-index|[
-name|pps_a
-operator|/
-literal|2
-index|]
+name|x
 operator|&
 name|pps_d
-expr_stmt|;
-comment|/* 	 * Subtract timer1 from timer2 to compensate for time from the 	 * edge until now. 	 */
-name|u
-operator|=
-name|elan_mmcr
-operator|->
-name|GPTMR2CNT
-operator|-
-name|elan_mmcr
-operator|->
-name|GPTMR1CNT
 expr_stmt|;
 comment|/* If state did not change or we don't have a GPIO pin, return */
 if|if
@@ -1067,7 +1150,13 @@ name|echo_d
 expr_stmt|;
 return|return;
 block|}
-comment|/* State is "high", record the pps data */
+comment|/* 	 * Subtract timer1 from timer2 to compensate for time from the 	 * edge until we read the counters. 	 */
+name|u
+operator|=
+name|y
+operator|-
+name|z
+expr_stmt|;
 name|pps_capture
 argument_list|(
 operator|&
@@ -1079,8 +1168,6 @@ operator|.
 name|capcount
 operator|=
 name|u
-operator|&
-literal|0xffff
 expr_stmt|;
 name|pps_event
 argument_list|(
