@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<search.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"timer.h"
 end_include
 

@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<search.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
