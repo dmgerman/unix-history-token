@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)isatty.c	5.3 (Berkeley) %G%"
+literal|"@(#)isatty.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sgtty.h>
+file|<termios.h>
 end_include
 
 begin_macro
@@ -59,22 +59,21 @@ end_decl_stmt
 begin_block
 block|{
 name|struct
-name|sgttyb
-name|ttyb
+name|termios
+name|t
 decl_stmt|;
 return|return
 operator|(
-name|ioctl
+name|tcgetattr
 argument_list|(
 name|fd
 argument_list|,
-name|TIOCGETP
-argument_list|,
 operator|&
-name|ttyb
+name|t
 argument_list|)
-operator|>=
-literal|0
+operator|!=
+operator|-
+literal|1
 operator|)
 return|;
 block|}
