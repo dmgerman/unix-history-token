@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: miscbltin.c,v 1.18 1998/12/16 04:45:35 imp Exp $"
+literal|"$Id: miscbltin.c,v 1.19 1999/05/08 10:21:56 kris Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -167,7 +167,7 @@ comment|/* argument list for builtin command */
 end_comment
 
 begin_comment
-comment|/*  * The read builtin.  The -e option causes backslashes to escape the  * following character.  *  * This uses unbuffered input, which may be avoidable in some cases.  */
+comment|/*  * The read builtin.  The -r option causes backslashes to be treated like  * ordinary characters.  *  * This uses unbuffered input, which may be avoidable in some cases.  */
 end_comment
 
 begin_function
@@ -201,7 +201,7 @@ name|char
 name|c
 decl_stmt|;
 name|int
-name|eflag
+name|rflag
 decl_stmt|;
 name|char
 modifier|*
@@ -244,7 +244,7 @@ decl_stmt|;
 name|int
 name|tsaved
 decl_stmt|;
-name|eflag
+name|rflag
 operator|=
 literal|0
 expr_stmt|;
@@ -272,7 +272,7 @@ name|i
 operator|=
 name|nextopt
 argument_list|(
-literal|"ep:t:"
+literal|"erp:t:"
 argument_list|)
 operator|)
 operator|!=
@@ -295,7 +295,11 @@ break|break;
 case|case
 literal|'e'
 case|:
-name|eflag
+break|break;
+case|case
+literal|'r'
+case|:
+name|rflag
 operator|=
 literal|1
 expr_stmt|;
@@ -623,7 +627,8 @@ continue|continue;
 block|}
 if|if
 condition|(
-name|eflag
+operator|!
+name|rflag
 operator|&&
 name|c
 operator|==
