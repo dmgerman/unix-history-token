@@ -363,19 +363,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Expanded sf_freelist head. Really an SLIST_HEAD() in disguise, with the  * additional sf_lock mutex.  */
+comment|/*  * Expanded sf_freelist head. Really an SLIST_HEAD() in disguise, with the  * sf_freelist head with the sf_lock mutex.  */
 end_comment
 
 begin_struct
 specifier|static
 struct|struct
 block|{
-comment|/* XXX: FIXME!  This is a very improper use of<sys/queue.h> */
-name|struct
-name|sf_buf
-modifier|*
-name|slh_first
-decl_stmt|;
+name|SLIST_HEAD
+argument_list|(
+argument_list|,
+argument|sf_buf
+argument_list|)
+name|sf_head
+expr_stmt|;
 name|struct
 name|mtx
 name|sf_lock
@@ -7314,6 +7315,8 @@ name|SLIST_INIT
 argument_list|(
 operator|&
 name|sf_freelist
+operator|.
+name|sf_head
 argument_list|)
 expr_stmt|;
 name|sf_base
@@ -7377,6 +7380,8 @@ name|SLIST_INSERT_HEAD
 argument_list|(
 operator|&
 name|sf_freelist
+operator|.
+name|sf_head
 argument_list|,
 operator|&
 name|sf_bufs
@@ -7441,6 +7446,8 @@ name|SLIST_FIRST
 argument_list|(
 operator|&
 name|sf_freelist
+operator|.
+name|sf_head
 argument_list|)
 operator|)
 operator|==
@@ -7472,6 +7479,8 @@ name|SLIST_REMOVE_HEAD
 argument_list|(
 operator|&
 name|sf_freelist
+operator|.
+name|sf_head
 argument_list|,
 name|free_list
 argument_list|)
@@ -7614,6 +7623,8 @@ name|SLIST_INSERT_HEAD
 argument_list|(
 operator|&
 name|sf_freelist
+operator|.
+name|sf_head
 argument_list|,
 name|sf
 argument_list|,
