@@ -4,7 +4,7 @@ comment|/*	$NetBSD: usbdi.c,v 1.9 1998/08/02 22:30:53 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id: usbdi.c,v 1.3 1998/12/14 09:32:24 n_hibma Exp $ */
+comment|/*	FreeBSD $Id: usbdi.c,v 1.4 1999/01/03 16:48:03 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -329,7 +329,7 @@ begin_define
 define|#
 directive|define
 name|USB_CDEV_MAJOR
-value|110
+value|108
 end_define
 
 begin_decl_stmt
