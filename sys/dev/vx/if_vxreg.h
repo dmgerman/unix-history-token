@@ -71,6 +71,14 @@ name|tx_succ_ok
 decl_stmt|;
 comment|/* # packets sent in sequence	*/
 comment|/* w/o underrun			*/
+name|struct
+name|callout_handle
+name|ch
+decl_stmt|;
+comment|/* Callout handle for timeouts  */
+name|int
+name|buffill_pending
+decl_stmt|;
 block|}
 struct|;
 end_struct
