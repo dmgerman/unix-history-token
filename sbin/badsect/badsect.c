@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/stat.h>
 end_include
 
@@ -87,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|<ufs/ufs/dinode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dirent.h>
 end_include
 
 begin_include
@@ -270,7 +270,7 @@ name|devstat
 decl_stmt|;
 specifier|register
 name|struct
-name|direct
+name|dirent
 modifier|*
 name|dp
 decl_stmt|;

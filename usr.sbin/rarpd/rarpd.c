@@ -39,7 +39,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /home/ncvs/src/usr.sbin/rarpd/rarpd.c,v 1.5 1995/07/18 21:35:32 wpaul Exp $ (LBL)"
+literal|"@(#) $Header: /home/ncvs/src/usr.sbin/rarpd/rarpd.c,v 1.6 1996/08/24 23:05:08 wpaul Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -163,10 +163,39 @@ directive|include
 file|<netdb.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SUNOS4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DIRENT_H
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SUNOS4
+name|HAVE_DIRENT_H
 end_ifdef
 
 begin_include
@@ -2129,7 +2158,7 @@ begin_block
 block|{
 ifdef|#
 directive|ifdef
-name|SUNOS4
+name|HAVE_DIRENT_H
 specifier|register
 name|struct
 name|dirent

@@ -102,12 +102,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/stat.h>
 end_include
 
@@ -115,6 +109,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dirent.h>
 end_include
 
 begin_include
@@ -1044,7 +1044,7 @@ condition|)
 block|{
 comment|/* relocate message bounds */
 name|struct
-name|direct
+name|dirent
 modifier|*
 name|dp
 decl_stmt|;

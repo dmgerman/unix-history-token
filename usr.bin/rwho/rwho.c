@@ -62,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/file.h>
 end_include
 
@@ -75,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<protocols/rwhod.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dirent.h>
 end_include
 
 begin_include
@@ -224,7 +224,7 @@ name|int
 name|ch
 decl_stmt|;
 name|struct
-name|direct
+name|dirent
 modifier|*
 name|dp
 decl_stmt|;

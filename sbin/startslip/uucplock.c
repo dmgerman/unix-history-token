@@ -44,7 +44,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
+file|<dirent.h>
 end_include
 
 begin_include

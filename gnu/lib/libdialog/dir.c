@@ -15,12 +15,26 @@ directive|include
 file|<sys/stat.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_comment
+comment|/* XXX for _POSIX_VERSION ifdefs */
+end_comment
+
 begin_if
 if|#
 directive|if
 operator|!
 name|defined
 name|sgi
+operator|&&
+operator|!
+name|defined
+name|_POSIX_VERSION
 end_if
 
 begin_include
@@ -57,6 +71,9 @@ if|#
 directive|if
 name|defined
 name|sgi
+operator|||
+name|defined
+name|_POSIX_VERSION
 end_if
 
 begin_include
@@ -86,12 +103,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
 end_include
 
 begin_include

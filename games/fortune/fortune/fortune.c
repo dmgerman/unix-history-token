@@ -70,7 +70,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
+file|<dirent.h>
 end_include
 
 begin_include
@@ -3568,26 +3568,12 @@ name|DIR
 modifier|*
 name|dir
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SYSV
 specifier|register
 name|struct
 name|dirent
 modifier|*
 name|dirent
 decl_stmt|;
-comment|/* NIH, of course! */
-else|#
-directive|else
-specifier|register
-name|struct
-name|direct
-modifier|*
-name|dirent
-decl_stmt|;
-endif|#
-directive|endif
 specifier|auto
 name|FILEDESC
 modifier|*

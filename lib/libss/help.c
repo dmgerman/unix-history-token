@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -500,18 +506,6 @@ empty_stmt|;
 block|}
 block|}
 end_function
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/dir.h>
-end_include
 
 begin_function
 name|void

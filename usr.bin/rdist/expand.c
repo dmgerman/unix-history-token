@@ -1437,7 +1437,7 @@ name|stb
 decl_stmt|;
 specifier|register
 name|struct
-name|direct
+name|dirent
 modifier|*
 name|dp
 decl_stmt|;

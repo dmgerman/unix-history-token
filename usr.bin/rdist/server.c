@@ -1339,7 +1339,7 @@ modifier|*
 name|d
 decl_stmt|;
 name|struct
-name|direct
+name|dirent
 modifier|*
 name|dp
 decl_stmt|;
@@ -6419,7 +6419,7 @@ name|d
 decl_stmt|;
 specifier|register
 name|struct
-name|direct
+name|dirent
 modifier|*
 name|dp
 decl_stmt|;
@@ -6869,7 +6869,7 @@ modifier|*
 name|d
 decl_stmt|;
 name|struct
-name|direct
+name|dirent
 modifier|*
 name|dp
 decl_stmt|;

@@ -22,7 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
+file|<dirent.h>
 end_include
 
 begin_include
@@ -697,7 +697,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|direct
+name|dirent
 modifier|*
 name|dp
 decl_stmt|;

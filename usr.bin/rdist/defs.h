@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/stat.h>
 end_include
 
@@ -37,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dirent.h>
 end_include
 
 begin_include

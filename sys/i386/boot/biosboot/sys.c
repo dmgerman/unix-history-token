@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:36:34  rpd  *	$Id: sys.c,v 1.14 1996/09/11 19:23:11 phk Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:36:34  rpd  *	$Id: sys.c,v 1.15 1996/09/14 07:41:00 bde Exp $  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
+file|<sys/dirent.h>
 end_include
 
 begin_include
@@ -572,7 +572,7 @@ init|=
 name|ROOTINO
 decl_stmt|;
 name|struct
-name|direct
+name|dirent
 modifier|*
 name|dp
 decl_stmt|;
@@ -821,7 +821,7 @@ name|dp
 operator|=
 operator|(
 expr|struct
-name|direct
+name|dirent
 operator|*
 operator|)
 operator|(
@@ -840,7 +840,7 @@ if|if
 condition|(
 name|dp
 operator|->
-name|d_ino
+name|d_fileno
 operator|&&
 name|list_only
 condition|)
@@ -859,7 +859,7 @@ condition|(
 operator|!
 name|dp
 operator|->
-name|d_ino
+name|d_fileno
 operator|||
 name|strcmp
 argument_list|(
@@ -875,7 +875,7 @@ name|ino
 operator|=
 name|dp
 operator|->
-name|d_ino
+name|d_fileno
 expr_stmt|;
 operator|*
 operator|(

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1992 Carnegie Mellon University  * All Rights Reserv
 end_comment
 
 begin_comment
-comment|/*  * scan.c - sup list file scanner  *  **********************************************************************  * HISTORY  * $Log: scan.c,v $  * Revision 1.2  1995/12/26 05:02:48  peter  * Apply ports/net/sup/patches/patch-aa...  *  * Revision 1.1.1.1  1995/12/26 04:54:47  peter  * Import the unmodified version of the sup that we are using.  * The heritage of this version is not clear.  It appears to be NetBSD  * derived from some time ago.  *  * Revision 1.1.1.1  1993/08/21  00:46:33  jkh  * Current sup with compression support.  *  * Revision 1.1.1.1  1993/05/21  14:52:17  cgd  * initial import of CMU's SUP to NetBSD  *  * Revision 1.8  92/08/11  12:04:28  mrt  * 	Brad's changes: delinted, added forward declarations of static  * 	functions.Added Copyright.  * 	[92/07/24            mrt]  *   * 18-Mar-88  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added host=<hostfile> support to releases file.  *  * 11-Mar-88  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added "rsymlink" recursive symbolic link quoting directive.  *  * 28-Jun-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added code for "release" support.  *  * 26-May-87  Doug Philips (dwp) at Carnegie-Mellon University  *	Lets see if we'll be able to write the scan file BEFORE  *	we collect the data for it.  Include sys/file.h and use  *	new definitions for access check codes.  *  * 20-May-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added type casting information for lint.  *  * 21-Jan-86  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added check for newonly upgrade when lasttime is the same as  *	scantime.  This will save us the trouble of parsing the scanfile  *	when the client has successfully received everything in the  *	scanfile already.  *  * 16-Jan-86  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Clear Texec pointers in execT so that Tfree of execT will not  *	free command trees associated with files in listT.  *  * 06-Jan-86  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added code to omit scanned files from list if we want new files  *	only and they are old.  *  * 29-Dec-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Major rewrite for protocol version 4.  Added version numbers to  *	scan file.  Also added mode of file in addition to flags.  *	Execute commands are now immediately after file information.  *  * 13-Dec-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added comments to list file format.  *  * 08-Dec-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added code to implement omitany.  Currently doesn't know about  *	{a,b,c} patterns.  *  * 07-Oct-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Created.  *  **********************************************************************  */
+comment|/*  * scan.c - sup list file scanner  *  **********************************************************************  * HISTORY  * $Log: scan.c,v $  * Revision 1.3  1995/12/26 05:10:59  peter  * Apply ports/net/sup/patches/patch-ab  *  * Revision 1.2  1995/12/26 05:02:48  peter  * Apply ports/net/sup/patches/patch-aa...  *  * Revision 1.1.1.1  1995/12/26 04:54:47  peter  * Import the unmodified version of the sup that we are using.  * The heritage of this version is not clear.  It appears to be NetBSD  * derived from some time ago.  *  * Revision 1.1.1.1  1993/08/21  00:46:33  jkh  * Current sup with compression support.  *  * Revision 1.1.1.1  1993/05/21  14:52:17  cgd  * initial import of CMU's SUP to NetBSD  *  * Revision 1.8  92/08/11  12:04:28  mrt  * 	Brad's changes: delinted, added forward declarations of static  * 	functions.Added Copyright.  * 	[92/07/24            mrt]  *   * 18-Mar-88  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added host=<hostfile> support to releases file.  *  * 11-Mar-88  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added "rsymlink" recursive symbolic link quoting directive.  *  * 28-Jun-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added code for "release" support.  *  * 26-May-87  Doug Philips (dwp) at Carnegie-Mellon University  *	Lets see if we'll be able to write the scan file BEFORE  *	we collect the data for it.  Include sys/file.h and use  *	new definitions for access check codes.  *  * 20-May-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added type casting information for lint.  *  * 21-Jan-86  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added check for newonly upgrade when lasttime is the same as  *	scantime.  This will save us the trouble of parsing the scanfile  *	when the client has successfully received everything in the  *	scanfile already.  *  * 16-Jan-86  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Clear Texec pointers in execT so that Tfree of execT will not  *	free command trees associated with files in listT.  *  * 06-Jan-86  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added code to omit scanned files from list if we want new files  *	only and they are old.  *  * 29-Dec-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Major rewrite for protocol version 4.  Added version numbers to  *	scan file.  Also added mode of file in addition to flags.  *	Execute commands are now immediately after file information.  *  * 13-Dec-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added comments to list file format.  *  * 08-Dec-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added code to implement omitany.  Currently doesn't know about  *	{a,b,c} patterns.  *  * 07-Oct-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Created.  *  **********************************************************************  */
 end_comment
 
 begin_include
@@ -40,13 +40,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
+file|<sys/file.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<dirent.h>
 end_include
 
 begin_include
@@ -3611,7 +3611,7 @@ end_decl_stmt
 begin_block
 block|{
 name|struct
-name|direct
+name|dirent
 modifier|*
 name|dentry
 decl_stmt|;

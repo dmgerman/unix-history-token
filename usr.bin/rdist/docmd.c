@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: docmd.c,v 1.4 1996/07/12 04:00:13 nate Exp $"
+literal|"$Id: docmd.c,v 1.5 1996/08/10 07:54:12 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2617,7 +2617,7 @@ name|d
 decl_stmt|;
 specifier|register
 name|struct
-name|direct
+name|dirent
 modifier|*
 name|dp
 decl_stmt|;
