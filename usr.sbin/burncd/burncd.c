@@ -318,9 +318,10 @@ name|cdopen
 init|=
 literal|0
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
-name|devname
+name|dev
 init|=
 literal|"/dev/acd0c"
 decl_stmt|;
@@ -367,7 +368,7 @@ break|break;
 case|case
 literal|'f'
 case|:
-name|devname
+name|dev
 operator|=
 name|optarg
 expr_stmt|;
@@ -484,7 +485,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|devname
+name|dev
 argument_list|,
 name|O_RDWR
 argument_list|,
@@ -500,7 +501,7 @@ name|EX_NOINPUT
 argument_list|,
 literal|"open(%s)"
 argument_list|,
-name|devname
+name|dev
 argument_list|)
 expr_stmt|;
 if|if
@@ -1386,7 +1387,7 @@ parameter_list|)
 block|{
 name|struct
 name|stat
-name|stat
+name|sb
 decl_stmt|;
 name|int
 name|file
@@ -1463,7 +1464,7 @@ argument_list|(
 name|file
 argument_list|,
 operator|&
-name|stat
+name|sb
 argument_list|)
 operator|<
 literal|0
@@ -1502,7 +1503,7 @@ index|]
 operator|.
 name|file_size
 operator|=
-name|stat
+name|sb
 operator|.
 name|st_size
 expr_stmt|;
@@ -1621,7 +1622,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"adding type 0x%02x file %s size %qd KB %d blocks %s\n"
+literal|"adding type 0x%02x file %s size %jd KB %d blocks %s\n"
 argument_list|,
 name|tracks
 index|[
@@ -1632,7 +1633,10 @@ name|block_type
 argument_list|,
 name|name
 argument_list|,
-name|stat
+operator|(
+name|intmax_t
+operator|)
+name|sb
 operator|.
 name|st_size
 operator|/
@@ -3098,7 +3102,7 @@ name|int
 name|track
 parameter_list|,
 name|int
-name|index
+name|ind
 parameter_list|,
 name|int
 name|dataform
@@ -3132,7 +3136,7 @@ name|cue
 operator|->
 name|index
 operator|=
-name|index
+name|ind
 expr_stmt|;
 name|cue
 operator|->
@@ -3203,6 +3207,7 @@ name|cleanup
 parameter_list|(
 name|int
 name|dummy
+name|__unused
 parameter_list|)
 block|{
 if|if
