@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.26 (Berkeley) %G%"
+literal|"@(#)main.c	6.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -445,11 +445,6 @@ name|int
 name|optind
 decl_stmt|;
 specifier|extern
-name|bool
-name|safefile
-parameter_list|()
-function_decl|;
-specifier|extern
 name|time_t
 name|convtime
 parameter_list|()
@@ -805,6 +800,22 @@ name|MainEnvelope
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|RealUid
+operator|=
+name|getuid
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|RealGid
+operator|=
+name|getgid
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Handle any non-getoptable constructions. */
 end_comment
@@ -972,6 +983,12 @@ name|stdout
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FROZENCONFIG
+end_ifdef
+
 begin_if
 if|if
 condition|(
@@ -989,6 +1006,23 @@ name|argv0
 argument_list|)
 expr_stmt|;
 end_if
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+name|readconfig
+operator|=
+name|TRUE
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -1743,14 +1777,37 @@ case|:
 case|case
 name|MD_PRINT
 case|:
+ifdef|#
+directive|ifdef
+name|FROZENCONFIG
 case|case
 name|MD_FREEZE
 case|:
+endif|#
+directive|endif
 name|OpMode
 operator|=
 name|j
 expr_stmt|;
 break|break;
+ifndef|#
+directive|ifndef
+name|FROZENCONFIG
+case|case
+name|MD_FREEZE
+case|:
+name|usrerr
+argument_list|(
+literal|"Frozen configurations unsupported"
+argument_list|)
+expr_stmt|;
+name|ExitStat
+operator|=
+name|EX_USAGE
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 default|default:
 name|usrerr
 argument_list|(
@@ -2369,6 +2426,9 @@ condition|(
 name|OpMode
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|FROZENCONFIG
 case|case
 name|MD_FREEZE
 case|:
@@ -2402,6 +2462,8 @@ argument_list|(
 name|EX_OK
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 case|case
 name|MD_INITALIAS
 case|:
@@ -4190,6 +4252,12 @@ begin_comment
 comment|/* **  FREEZE -- freeze BSS& allocated memory ** **	This will be used to efficiently load the configuration file. ** **	Parameters: **		freezefile -- the name of the file to freeze to. ** **	Returns: **		none. ** **	Side Effects: **		Writes BSS and malloc'ed memory to freezefile */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FROZENCONFIG
+end_ifdef
+
 begin_union
 union|union
 name|frz
@@ -5005,6 +5073,15 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* FROZENCONFIG */
+end_comment
 
 begin_escape
 end_escape
