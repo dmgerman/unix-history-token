@@ -1367,7 +1367,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"pipe: %%m"
+literal|"pipe: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -4089,7 +4089,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s/%s unknown RPC service."
+literal|"%s/%s unknown RPC service"
 argument_list|,
 name|sep
 operator|->
@@ -6249,7 +6249,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"bad RPC version specifier; %s\n"
+literal|"bad RPC version specifier; %s"
 argument_list|,
 name|sep
 operator|->
