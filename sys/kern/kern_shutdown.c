@@ -543,7 +543,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 name|boot
 argument_list|(
 name|uap
@@ -551,7 +550,6 @@ operator|->
 name|opt
 argument_list|)
 expr_stmt|;
-block|}
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -2188,32 +2186,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* This had probably better not go into a release. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|face
-index|[
-literal|4
-index|]
-init|=
-block|{
-literal|"\\|/ ____ \\|/"
-block|,
-literal|"\"@'/ .. \\`@\""
-block|,
-literal|"/_| \\__/ |_\\"
-block|,
-literal|"   \\__U_/   "
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Panic is called on unresolvable fatal errors.  It prints "panic: mesg",  * and then reboots.  If we are called twice, then we avoid trying to sync  * the disks as this often leads to recursive panics.  *  * MPSAFE  */
 end_comment
 
@@ -2231,29 +2203,7 @@ parameter_list|)
 block|{
 name|int
 name|bootopt
-decl_stmt|,
-name|i
-decl_stmt|,
-name|offset
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|DDB
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|RESTARTABLE_PANICS
-argument_list|)
-name|int
-name|holding_giant
-init|=
-literal|0
-decl_stmt|;
-endif|#
-directive|endif
 name|va_list
 name|ap
 decl_stmt|;
@@ -2264,13 +2214,6 @@ index|[
 literal|256
 index|]
 decl_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 	 * We must hold Giant when entering a panic 	 */
-block|if (!mtx_owned(&Giant)) { 		mtx_lock(&Giant); 		holding_giant = 1; 	}
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|SMP
@@ -2284,7 +2227,6 @@ argument_list|(
 name|cpuid
 argument_list|)
 condition|)
-block|{
 while|while
 condition|(
 name|atomic_cmpset_int
@@ -2302,7 +2244,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 while|while
 condition|(
 name|panic_cpu
@@ -2311,8 +2252,6 @@ name|NOCPU
 condition|)
 empty_stmt|;
 comment|/* nothing */
-block|}
-block|}
 endif|#
 directive|endif
 name|bootopt
@@ -2333,48 +2272,6 @@ else|else
 name|panicstr
 operator|=
 name|fmt
-expr_stmt|;
-comment|/* Test that the console is still working. */
-name|offset
-operator|=
-operator|(
-literal|60
-operator|+
-name|strlen
-argument_list|(
-name|face
-index|[
-literal|0
-index|]
-argument_list|)
-operator|)
-operator|/
-literal|2
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|4
-condition|;
-name|i
-operator|++
-control|)
-name|printf
-argument_list|(
-literal|"%*s\n"
-argument_list|,
-name|offset
-argument_list|,
-name|face
-index|[
-name|i
-index|]
-argument_list|)
 expr_stmt|;
 name|va_start
 argument_list|(
@@ -2491,16 +2388,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|holding_giant
-condition|)
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 endif|#
