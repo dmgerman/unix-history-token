@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)context.c	3.4 84/01/13"
+literal|"@(#)context.c	3.5 84/05/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -330,6 +330,10 @@ begin_macro
 name|cx_beginbuf
 argument_list|(
 argument|buf
+argument_list|,
+argument|arg
+argument_list|,
+argument|narg
 argument_list|)
 end_macro
 
@@ -337,6 +341,20 @@ begin_decl_stmt
 name|char
 modifier|*
 name|buf
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|value
+modifier|*
+name|arg
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|narg
 decl_stmt|;
 end_decl_stmt
 
@@ -368,6 +386,18 @@ operator|.
 name|x_buf
 operator|=
 name|buf
+expr_stmt|;
+name|cx
+operator|.
+name|x_arg
+operator|=
+name|arg
+expr_stmt|;
+name|cx
+operator|.
+name|x_narg
+operator|=
+name|narg
 expr_stmt|;
 return|return
 literal|0

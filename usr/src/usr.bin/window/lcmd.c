@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lcmd.c	3.18 84/04/08"
+literal|"@(#)lcmd.c	3.19 84/05/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,6 +37,13 @@ include|#
 directive|include
 file|"lcmd.h"
 end_include
+
+begin_function_decl
+name|int
+name|l_alias
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
@@ -138,6 +145,13 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|l_unalias
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|l_unset
 parameter_list|()
 function_decl|;
@@ -163,6 +177,14 @@ name|l_write
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|struct
+name|lcmd_arg
+name|arg_alias
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -255,6 +277,14 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|lcmd_arg
+name|arg_unalias
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|lcmd_arg
 name|arg_unset
 index|[]
 decl_stmt|;
@@ -292,6 +322,14 @@ block|,
 name|l_select
 block|,
 name|arg_select
+block|,
+literal|"alias"
+block|,
+literal|1
+block|,
+name|l_alias
+block|,
+name|arg_alias
 block|,
 literal|"buffer"
 block|,
@@ -413,9 +451,17 @@ name|l_time
 block|,
 name|arg_time
 block|,
+literal|"unalias"
+block|,
+literal|3
+block|,
+name|l_unalias
+block|,
+name|arg_unalias
+block|,
 literal|"unset"
 block|,
-literal|1
+literal|3
 block|,
 name|l_unset
 block|,
@@ -556,6 +602,10 @@ begin_macro
 name|dolongcmd
 argument_list|(
 argument|buffer
+argument_list|,
+argument|arg
+argument_list|,
+argument|narg
 argument_list|)
 end_macro
 
@@ -566,6 +616,20 @@ name|buffer
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|value
+modifier|*
+name|arg
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|narg
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 if|if
@@ -573,6 +637,10 @@ condition|(
 name|cx_beginbuf
 argument_list|(
 name|buffer
+argument_list|,
+name|arg
+argument_list|,
+name|narg
 argument_list|)
 operator|<
 literal|0

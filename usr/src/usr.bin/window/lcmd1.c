@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lcmd1.c	3.22 84/04/08"
+literal|"@(#)lcmd1.c	3.23 84/05/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,6 +42,12 @@ begin_include
 include|#
 directive|include
 file|"lcmd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"var.h"
 end_include
 
 begin_decl_stmt

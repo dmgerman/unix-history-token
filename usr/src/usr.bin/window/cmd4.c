@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd4.c	3.11 84/04/08"
+literal|"@(#)cmd4.c	3.12 84/05/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,6 +89,15 @@ condition|(
 name|dolongcmd
 argument_list|(
 name|buf
+argument_list|,
+operator|(
+expr|struct
+name|value
+operator|*
+operator|)
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 operator|<
 literal|0

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)context.h	3.4 84/03/03  */
+comment|/*  *	@(#)context.h	3.5 84/05/06  */
 end_comment
 
 begin_include
@@ -72,6 +72,16 @@ modifier|*
 name|X_bufp
 decl_stmt|;
 comment|/* current position in buf */
+name|struct
+name|value
+modifier|*
+name|X_arg
+decl_stmt|;
+comment|/* argument for alias */
+name|int
+name|X_narg
+decl_stmt|;
+comment|/* number of arguments */
 block|}
 name|x_b
 struct|;
@@ -123,6 +133,20 @@ define|#
 directive|define
 name|x_bufp
 value|x_un.x_b.X_bufp
+end_define
+
+begin_define
+define|#
+directive|define
+name|x_arg
+value|x_un.x_b.X_arg
+end_define
+
+begin_define
+define|#
+directive|define
+name|x_narg
+value|x_un.x_b.X_narg
 end_define
 
 begin_define

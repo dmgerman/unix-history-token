@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)error.c	3.9 84/04/08"
+literal|"@(#)error.c	3.10 84/05/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,17 +93,45 @@ begin_block
 block|{
 specifier|register
 name|struct
+name|context
+modifier|*
+name|x
+decl_stmt|;
+specifier|register
+name|struct
 name|ww
 modifier|*
 name|w
 decl_stmt|;
-if|if
-condition|(
+for|for
+control|(
+name|x
+operator|=
+operator|&
 name|cx
-operator|.
+init|;
+name|x
+operator|!=
+literal|0
+operator|&&
+name|x
+operator|->
 name|x_type
 operator|!=
 name|X_FILE
+condition|;
+name|x
+operator|=
+name|x
+operator|->
+name|x_link
+control|)
+empty_stmt|;
+if|if
+condition|(
+name|x
+operator|==
+literal|0
 condition|)
 block|{
 if|if
@@ -150,8 +178,8 @@ return|return;
 block|}
 if|if
 condition|(
-name|cx
-operator|.
+name|x
+operator|->
 name|x_noerr
 condition|)
 return|return;
@@ -160,8 +188,8 @@ condition|(
 operator|(
 name|w
 operator|=
-name|cx
-operator|.
+name|x
+operator|->
 name|x_errwin
 operator|)
 operator|==
@@ -183,8 +211,8 @@ name|buf
 argument_list|,
 literal|"Errors from %s"
 argument_list|,
-name|cx
-operator|.
+name|x
+operator|->
 name|x_filename
 argument_list|)
 expr_stmt|;
@@ -193,8 +221,8 @@ condition|(
 operator|(
 name|w
 operator|=
-name|cx
-operator|.
+name|x
+operator|->
 name|x_errwin
 operator|=
 name|openiwin
@@ -215,8 +243,8 @@ argument_list|,
 name|cmdwin
 argument_list|)
 expr_stmt|;
-name|cx
-operator|.
+name|x
+operator|->
 name|x_noerr
 operator|=
 literal|1
@@ -236,8 +264,8 @@ operator|==
 literal|2
 condition|)
 block|{
-name|cx
-operator|.
+name|x
+operator|->
 name|x_noerr
 operator|=
 literal|1
@@ -250,8 +278,8 @@ name|w
 argument_list|,
 literal|"line %d: "
 argument_list|,
-name|cx
-operator|.
+name|x
+operator|->
 name|x_lineno
 argument_list|)
 expr_stmt|;
@@ -297,6 +325,12 @@ begin_block
 block|{
 if|if
 condition|(
+name|cx
+operator|.
+name|x_type
+operator|==
+name|X_FILE
+operator|&&
 name|cx
 operator|.
 name|x_errwin

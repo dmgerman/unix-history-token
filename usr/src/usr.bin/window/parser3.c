@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)parser3.c	3.1 84/01/12"
+literal|"@(#)parser3.c	3.2 84/05/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,18 +60,6 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|error
-argument_list|(
-literal|"expr: %d."
-argument_list|,
-name|flag
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|p_expr0
@@ -112,6 +100,18 @@ name|v_type
 condition|)
 block|{
 case|case
+name|V_NUM
+case|:
+name|p_error
+argument_list|(
+literal|"%d: Not a variable."
+argument_list|,
+name|t
+operator|.
+name|v_num
+argument_list|)
+expr_stmt|;
+case|case
 name|V_ERR
 case|:
 name|t
@@ -121,35 +121,6 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
-case|case
-name|V_NUM
-case|:
-if|if
-condition|(
-operator|(
-name|t
-operator|.
-name|v_str
-operator|=
-name|str_itoa
-argument_list|(
-name|t
-operator|.
-name|v_num
-argument_list|)
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|p_memerror
-argument_list|()
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
 block|}
 name|ret
 operator|=
