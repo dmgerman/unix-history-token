@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"@(#)$Header: /home/ncvs/src/usr.sbin/traceroute/traceroute.c,v 1.7 1996/08/13 16:28:59 fenner Exp $ (LBL)"
+literal|"@(#)$Header: /home/ncvs/src/usr.sbin/traceroute/traceroute.c,v 1.8 1996/08/17 10:37:28 peter Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2408,26 +2408,6 @@ operator|&
 name|tz
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Since we'll be receiving all ICMP 				 * messages to this host above, we may 				 * never end up with cc=0, so we need 				 * an additional termination check. 				 */
-if|if
-condition|(
-name|t2
-operator|.
-name|tv_sec
-operator|-
-name|t1
-operator|.
-name|tv_sec
-operator|>
-name|waittime
-condition|)
-block|{
-name|cc
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-block|}
 if|if
 condition|(
 operator|(
