@@ -1468,20 +1468,6 @@ name|d_secsize
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|tahoe
-name|sn
-operator|*=
-name|DEV_BSIZE
-operator|/
-name|lp
-operator|->
-name|d_secsize
-expr_stmt|;
-comment|/* XXX */
-endif|#
-directive|endif
 name|sn
 operator|+=
 name|lp
