@@ -10632,14 +10632,6 @@ comment|/* FALLTHROUGH */
 case|case
 name|SSD_KEY_MISCOMPARE
 case|:
-name|print_sense
-operator|=
-name|FALSE
-expr_stmt|;
-comment|/* FALLTHROUGH */
-case|case
-name|SSD_KEY_RECOVERED_ERROR
-case|:
 comment|/* decrement the number of retries */
 name|retry
 operator|=
@@ -10655,6 +10647,11 @@ if|if
 condition|(
 name|retry
 condition|)
+block|{
+name|error
+operator|=
+name|ERESTART
+expr_stmt|;
 name|ccb
 operator|->
 name|ccb_h
@@ -10662,10 +10659,22 @@ operator|.
 name|retry_count
 operator|--
 expr_stmt|;
+block|}
+else|else
+block|{
+name|error
+operator|=
+name|EIO
+expr_stmt|;
+block|}
+case|case
+name|SSD_KEY_RECOVERED_ERROR
+case|:
 name|error
 operator|=
 literal|0
 expr_stmt|;
+comment|/* not an error */
 break|break;
 case|case
 name|SSD_KEY_ILLEGAL_REQUEST
@@ -10877,6 +10886,9 @@ expr_stmt|;
 block|}
 block|}
 break|break;
+case|case
+name|SSD_KEY_ABORTED_COMMAND
+case|:
 default|default:
 comment|/* decrement the number of retries */
 name|retry
@@ -10945,6 +10957,17 @@ operator|&
 name|SS_ERRMASK
 expr_stmt|;
 block|}
+comment|/* 			 * Make sure ABORTED COMMAND errors get 			 * printed as they're indicative of marginal 			 * SCSI busses that people should address. 			 */
+if|if
+condition|(
+name|sense_key
+operator|==
+name|SSD_KEY_ABORTED_COMMAND
+condition|)
+name|print_sense
+operator|=
+name|TRUE
+expr_stmt|;
 block|}
 break|break;
 block|}
