@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.39	81/10/16	*/
+comment|/*	machdep.c	4.40	81/10/17	*/
 end_comment
 
 begin_include
@@ -671,16 +671,6 @@ argument_list|,
 name|nnetpages
 operator|/
 literal|2
-argument_list|)
-expr_stmt|;
-name|valloc
-argument_list|(
-name|freetab
-argument_list|,
-expr|struct
-name|pfree
-argument_list|,
-name|nnetpages
 argument_list|)
 expr_stmt|;
 name|valloclim
