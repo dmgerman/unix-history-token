@@ -1520,6 +1520,13 @@ block|}
 name|free
 argument_list|(
 name|obj
+operator|->
+name|priv
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|obj
 argument_list|)
 expr_stmt|;
 block|}
