@@ -4206,8 +4206,6 @@ operator|)
 literal|0
 argument_list|,
 name|td
-operator|->
-name|td_proc
 argument_list|)
 condition|)
 return|return
@@ -4472,8 +4470,6 @@ operator|)
 literal|0
 argument_list|,
 name|td
-operator|->
-name|td_proc
 argument_list|)
 condition|)
 return|return
@@ -4527,8 +4523,6 @@ operator|)
 literal|0
 argument_list|,
 name|td
-operator|->
-name|td_proc
 argument_list|)
 condition|)
 block|{
@@ -4961,12 +4955,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|td
-condition|?
-name|td
-operator|->
-name|td_proc
-else|:
-name|NULL
 argument_list|)
 condition|)
 return|return

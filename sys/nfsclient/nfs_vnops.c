@@ -15468,8 +15468,6 @@ operator|)
 literal|0
 argument_list|,
 name|td
-operator|->
-name|td_proc
 argument_list|)
 condition|)
 block|{
@@ -15668,8 +15666,6 @@ operator|)
 literal|0
 argument_list|,
 name|td
-operator|->
-name|td_proc
 argument_list|)
 condition|)
 block|{
