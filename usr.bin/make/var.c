@@ -8990,6 +8990,13 @@ index|]
 operator|!=
 operator|*
 name|var
+operator|||
+name|val
+index|[
+literal|1
+index|]
+operator|!=
+literal|'\0'
 condition|)
 block|{
 name|Buf_AddBytes
