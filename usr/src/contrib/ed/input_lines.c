@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input_lines.c	5.9 (Berkeley) %G%"
+literal|"@(#)input_lines.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -550,11 +550,11 @@ literal|0L
 operator|)
 return|;
 block|}
-name|bcopy
+name|memmove
 argument_list|(
-name|l_text2
-argument_list|,
 name|l_text
+argument_list|,
+name|l_text2
 argument_list|,
 name|l_nn
 argument_list|)

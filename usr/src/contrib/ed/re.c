@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)re.c	5.4 (Berkeley) %G%"
+literal|"@(#)re.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -710,11 +710,11 @@ block|}
 ifdef|#
 directive|ifdef
 name|REG_STARTEND
-name|bcopy
+name|memmove
 argument_list|(
-name|line
-argument_list|,
 name|l_string
+argument_list|,
+name|line
 argument_list|,
 operator|(
 name|int
@@ -724,11 +724,11 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|bcopy
+name|memmove
 argument_list|(
-name|line
-argument_list|,
 name|l_string
+argument_list|,
+name|line
 argument_list|,
 operator|(
 name|int
@@ -1008,25 +1008,25 @@ comment|/* Copy over what doesn't change before the chars to be replaced. */
 ifdef|#
 directive|ifdef
 name|REG_STARTEND
-name|bcopy
+name|memmove
 argument_list|(
-name|line
-argument_list|,
 name|l_string
 argument_list|,
+name|line
+argument_list|,
 operator|(
-name|int
+name|size_t
 operator|)
 name|l_len_before
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|bcopy
+name|memmove
 argument_list|(
-name|line
-argument_list|,
 name|l_string
+argument_list|,
+name|line
 argument_list|,
 name|l_len_before
 operator|+

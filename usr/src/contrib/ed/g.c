@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)g.c	5.7 (Berkeley) %G%"
+literal|"@(#)g.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -702,11 +702,11 @@ return|return;
 block|}
 block|}
 comment|/* set up the STDIO command list file */
-name|bcopy
+name|memmove
 argument_list|(
-literal|"/tmp/_4.4bsd_ed_g_XXXXXX\0"
-argument_list|,
 name|l_template_g
+argument_list|,
+literal|"/tmp/_4.4bsd_ed_g_XXXXXX\0"
 argument_list|,
 literal|24
 argument_list|)
