@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.10 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1898,11 +1898,18 @@ if|if
 condition|(
 name|gargs
 condition|)
+block|{
 name|blkfree
 argument_list|(
 name|gargs
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|gargs
+argument_list|)
+expr_stmt|;
+block|}
 continue|continue;
 block|}
 for|for
@@ -2025,11 +2032,18 @@ name|gargs
 operator|!=
 name|NULL
 condition|)
+block|{
 name|blkfree
 argument_list|(
 name|gargs
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|gargs
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 operator|(
 name|void
@@ -6717,11 +6731,18 @@ if|if
 condition|(
 name|globbed
 condition|)
+block|{
 name|blkfree
 argument_list|(
 name|globbed
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|globbed
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -6746,11 +6767,18 @@ condition|(
 operator|*
 name|globbed
 condition|)
+block|{
 name|blkfree
 argument_list|(
 name|globbed
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|globbed
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
