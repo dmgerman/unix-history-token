@@ -2859,6 +2859,14 @@ operator|*
 name|tcount
 argument_list|)
 expr_stmt|;
+name|bintime_add
+argument_list|(
+operator|&
+name|bt
+argument_list|,
+name|boottimebin
+argument_list|)
+expr_stmt|;
 name|bintime2timespec
 argument_list|(
 operator|&
