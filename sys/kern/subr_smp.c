@@ -381,21 +381,20 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_macro
 name|SYSINIT
 argument_list|(
-name|cpu_mp_probe
+argument|cpu_mp_probe
 argument_list|,
-name|SI_SUB_TUNABLES
+argument|SI_SUB_TUNABLES
 argument_list|,
-name|SI_ORDER_FIRST
+argument|SI_ORDER_FIRST
 argument_list|,
-name|mp_probe
+argument|mp_probe
 argument_list|,
-name|NULL
+argument|NULL
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_comment
 comment|/*  * Call the MD SMP initialization code.  */
