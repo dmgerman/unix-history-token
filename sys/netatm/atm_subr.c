@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/intrq.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netatm/port.h>
 end_include
 
