@@ -85,17 +85,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_BSD_SUSECONDS_T_
-value|int
-end_define
-
-begin_comment
-comment|/* suseconds_t */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|_BSD_TIME_T_
 value|int
 end_define
@@ -113,17 +102,6 @@ end_define
 
 begin_comment
 comment|/* timer_t */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_BSD_USECONDS_T_
-value|unsigned int
-end_define
-
-begin_comment
-comment|/* useconds_t */
 end_comment
 
 begin_typedef
