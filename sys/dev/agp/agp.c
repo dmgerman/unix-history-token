@@ -170,7 +170,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_AGP
