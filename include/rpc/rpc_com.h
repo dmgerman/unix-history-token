@@ -252,7 +252,7 @@ end_function_decl
 
 begin_function_decl
 name|bool_t
-name|__rpc_control
+name|rpc_control
 parameter_list|(
 name|int
 parameter_list|,
