@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_ktrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -39,12 +33,6 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ktr.h>
 end_include
 
 begin_include
@@ -68,12 +56,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/pcpu.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/proc.h>
 end_include
 
@@ -92,37 +74,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/smp.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/unistd.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KTRACE
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ktrace.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -164,7 +117,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Setup per-cpu idle process contexts.  The AP's shouldn't be running or  * accessing their idle processes at this point, so don't bother with  * locking.  */
+comment|/*  * Set up per-cpu idle process contexts.  The AP's shouldn't be running or  * accessing their idle processes at this point, so don't bother with  * locking.  */
 end_comment
 
 begin_function
@@ -379,7 +332,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * idle process context  */
+comment|/*  * The actual idle process.  */
 end_comment
 
 begin_function
@@ -392,23 +345,15 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-name|int
-name|count
-decl_stmt|;
-endif|#
-directive|endif
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
 name|struct
 name|proc
 modifier|*
 name|p
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
 decl_stmt|;
 name|td
 operator|=
@@ -434,27 +379,6 @@ argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-name|count
-operator|=
-literal|0
-expr_stmt|;
-while|while
-condition|(
-name|count
-operator|>=
-literal|0
-operator|&&
-name|sched_runnable
-argument_list|()
-operator|==
-literal|0
-condition|)
-block|{
-else|#
-directive|else
 while|while
 condition|(
 name|sched_runnable
@@ -462,57 +386,20 @@ argument_list|()
 operator|==
 literal|0
 condition|)
-block|{
-endif|#
-directive|endif
-comment|/* 		 * This is a good place to put things to be done in 		 * the background, including sanity checks. 		 */
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-if|if
-condition|(
-name|count
-operator|++
-operator|<
-literal|0
-condition|)
-name|CTR0
-argument_list|(
-name|KTR_PROC
-argument_list|,
-literal|"idle_proc: timed out waiting"
-literal|" for a process"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
 name|cpu_idle
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
-block|}
 name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
 argument_list|)
+expr_stmt|;
+name|td
+operator|->
+name|td_state
+operator|=
+name|TDS_CAN_RUN
 expr_stmt|;
 name|p
 operator|->
@@ -522,12 +409,6 @@ name|p_ru
 operator|.
 name|ru_nvcsw
 operator|++
-expr_stmt|;
-name|td
-operator|->
-name|td_state
-operator|=
-name|TDS_CAN_RUN
 expr_stmt|;
 name|mi_switch
 argument_list|()
