@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yyrecover.c 1.2 %G%"
+literal|"@(#)yyrecover.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -448,11 +448,23 @@ argument_list|(
 literal|" [Idfail]"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PXP
+name|putchar
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|pchr
 argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"Input %s%s"
