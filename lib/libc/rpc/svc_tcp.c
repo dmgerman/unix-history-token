@@ -1021,7 +1021,7 @@ name|FALSE
 operator|)
 return|;
 block|}
-comment|/* 	 * XXX careful for ftp bounce attacks. If discovered, close the 	 * socket and look for another connection. 	 */
+comment|/* 	 * Guard against FTP bounce attacks. 	 */
 if|if
 condition|(
 name|addr
@@ -1039,9 +1039,11 @@ argument_list|(
 name|sock
 argument_list|)
 expr_stmt|;
-goto|goto
-name|again
-goto|;
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
 block|}
 comment|/* 	 * make a new transporter (re-uses xprt) 	 */
 name|xprt
