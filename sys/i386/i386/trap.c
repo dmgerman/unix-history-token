@@ -686,6 +686,11 @@ block|{
 name|int
 name|sig
 decl_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -708,6 +713,11 @@ name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK_NOSWITCH
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 name|p
@@ -760,6 +770,11 @@ expr_stmt|;
 name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -784,6 +799,11 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+name|PROC_UNLOCK_NOSWITCH
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * Charge system time if profiling. 	 */
 if|if
@@ -799,22 +819,6 @@ name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|)
-expr_stmt|;
-comment|/* XXX - do we need Giant? */
-if|if
-condition|(
-operator|!
-name|mtx_owned
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-condition|)
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 name|addupc_task

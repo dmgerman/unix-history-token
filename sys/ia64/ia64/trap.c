@@ -294,6 +294,11 @@ name|int
 name|sig
 decl_stmt|;
 comment|/* take pending signals */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -317,6 +322,9 @@ argument_list|(
 operator|&
 name|sched_lock
 argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK_NOSWITCH
+argument_list|()
 expr_stmt|;
 name|p
 operator|->
@@ -368,6 +376,11 @@ expr_stmt|;
 name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -392,6 +405,11 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+name|PROC_UNLOCK_NOSWITCH
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * If profiling, charge recent system time to the trapped pc. 	 */
 if|if
@@ -407,21 +425,6 @@ name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|mtx_owned
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-condition|)
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 name|addupc_task
