@@ -350,20 +350,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|mtx
-name|sched_lock
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|mtx
-name|Giant
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 name|pcpu0
 index|[
@@ -1545,14 +1531,6 @@ operator|=
 operator|&
 name|frame0
 expr_stmt|;
-name|LIST_INIT
-argument_list|(
-operator|&
-name|thread0
-operator|.
-name|td_contested
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Set up per-cpu data. 	 */
 name|pc
 operator|=
@@ -1605,50 +1583,8 @@ literal|0
 expr_stmt|;
 comment|/* pc->pc_mid = mid; */
 asm|__asm __volatile("mtsprg 0, %0" :: "r"(pc));
-comment|/* 	 * Initialize mutexes. 	 */
-name|mtx_init
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|,
-literal|"sched lock"
-argument_list|,
-name|MTX_SPIN
-operator||
-name|MTX_RECURSE
-argument_list|)
-expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|Giant
-argument_list|,
-literal|"Giant"
-argument_list|,
-name|MTX_DEF
-operator||
-name|MTX_RECURSE
-argument_list|)
-expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|proc0
-operator|.
-name|p_mtx
-argument_list|,
-literal|"process lock"
-argument_list|,
-name|MTX_DEF
-operator||
-name|MTX_DUPOK
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
+name|mutex_init
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Initialise virtual memory. 	 */
 name|ofmsr
@@ -1798,12 +1734,7 @@ comment|/* Init basic tunables, hz etc */
 end_comment
 
 begin_comment
-unit|init_param1(); 	init_param2(physmem);
-comment|/* setup curproc so the mutexes work */
-end_comment
-
-begin_comment
-unit|PCPU_SET(curthread,&thread0);  	LIST_INIT(&thread0.td_contested);
+unit|init_param1(); 	init_param2(physmem);  	PCPU_SET(curthread,&thread0);
 comment|/* XXX: NetBSDism I _think_.  Not sure yet. */
 end_comment
 
@@ -1820,11 +1751,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* 	 * Initialise some mutexes. 	 */
-end_comment
-
-begin_comment
-unit|mtx_init(&Giant, "Giant", MTX_DEF | MTX_RECURSE); 	mtx_init(&sched_lock, "sched lock", MTX_SPIN | MTX_RECURSE); 	mtx_init(&proc0.p_mtx, "process lock", MTX_DEF); 	mtx_lock(&Giant);
+unit|mutex_init();
 comment|/* 	 * Initialise console. 	 */
 end_comment
 

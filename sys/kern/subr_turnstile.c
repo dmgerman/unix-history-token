@@ -192,6 +192,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * System-wide mutexes  */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|mtx
+name|sched_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|mtx
+name|Giant
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Prototypes for non-exported routines.  */
 end_comment
 
@@ -3897,6 +3915,74 @@ operator|&
 name|m
 operator|->
 name|mtx_object
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Intialize the mutex code and system mutexes.  This is called from the MD  * startup code prior to mi_startup().  The per-CPU data space needs to be  * setup before this is called.  */
+end_comment
+
+begin_function
+name|void
+name|mutex_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* Setup thread0 so that mutexes work. */
+name|LIST_INIT
+argument_list|(
+operator|&
+name|thread0
+operator|.
+name|td_contested
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Initialize mutexes. 	 */
+name|mtx_init
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+literal|"Giant"
+argument_list|,
+name|MTX_DEF
+operator||
+name|MTX_RECURSE
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+literal|"sched lock"
+argument_list|,
+name|MTX_SPIN
+operator||
+name|MTX_RECURSE
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|proc0
+operator|.
+name|p_mtx
+argument_list|,
+literal|"process lock"
+argument_list|,
+name|MTX_DEF
+operator||
+name|MTX_DUPOK
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 block|}

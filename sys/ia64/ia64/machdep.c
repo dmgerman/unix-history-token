@@ -404,20 +404,6 @@ comment|/* XXX temporary ad-hoc error mask to help debugging */
 end_comment
 
 begin_decl_stmt
-name|struct
-name|mtx
-name|sched_lock
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|mtx
-name|Giant
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|char
 name|kstack
@@ -3133,6 +3119,23 @@ operator|)
 name|pcpup
 argument_list|)
 expr_stmt|;
+name|PCPU_SET
+argument_list|(
+name|curthread
+argument_list|,
+operator|&
+name|thread0
+argument_list|)
+expr_stmt|;
+comment|/* We pretend to own FP state so that ia64_fpstate_check() works */
+name|PCPU_SET
+argument_list|(
+name|fpcurthread
+argument_list|,
+operator|&
+name|thread0
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Initialize the rest of proc 0's PCB. 	 * 	 * Set the kernel sp, reserving space for an (empty) trapframe, 	 * and make proc0's trapframe pointer point to it for sanity. 	 * Initialise proc0's backing store to start after u area. 	 * 	 * XXX what is all this +/- 16 stuff? 	 */
 name|thread0
 operator|.
@@ -3175,76 +3178,8 @@ name|u_int64_t
 operator|)
 name|proc0kstack
 expr_stmt|;
-comment|/* Setup curproc so that mutexes work */
-name|PCPU_SET
-argument_list|(
-name|curthread
-argument_list|,
-operator|&
-name|thread0
-argument_list|)
-expr_stmt|;
-comment|/* We pretend to own FP state so that ia64_fpstate_check() works */
-name|PCPU_SET
-argument_list|(
-name|fpcurthread
-argument_list|,
-operator|&
-name|thread0
-argument_list|)
-expr_stmt|;
-name|LIST_INIT
-argument_list|(
-operator|&
-name|thread0
-operator|.
-name|td_contested
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Initialise mutexes. 	 */
-name|mtx_init
-argument_list|(
-operator|&
-name|Giant
-argument_list|,
-literal|"Giant"
-argument_list|,
-name|MTX_DEF
-operator||
-name|MTX_RECURSE
-argument_list|)
-expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|,
-literal|"sched lock"
-argument_list|,
-name|MTX_SPIN
-operator||
-name|MTX_RECURSE
-argument_list|)
-expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|proc0
-operator|.
-name|p_mtx
-argument_list|,
-literal|"process lock"
-argument_list|,
-name|MTX_DEF
-operator||
-name|MTX_DUPOK
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
+name|mutex_init
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Initialize the virtual memory system. 	 */
 name|pmap_bootstrap

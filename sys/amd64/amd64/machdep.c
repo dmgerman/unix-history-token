@@ -1049,20 +1049,6 @@ end_endif
 begin_decl_stmt
 name|struct
 name|mtx
-name|sched_lock
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|mtx
-name|Giant
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|mtx
 name|icu_lock
 decl_stmt|;
 end_decl_stmt
@@ -7510,7 +7496,6 @@ argument_list|,
 name|pc
 argument_list|)
 expr_stmt|;
-comment|/* setup curproc so that mutexes work */
 name|PCPU_SET
 argument_list|(
 name|curthread
@@ -7519,52 +7504,9 @@ operator|&
 name|thread0
 argument_list|)
 expr_stmt|;
-name|LIST_INIT
-argument_list|(
-operator|&
-name|thread0
-operator|.
-name|td_contested
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Initialize mutexes. 	 * 	 * icu_lock: in order to allow an interrupt to occur in a critical 	 * 	     section, to set pcpu->ipending (etc...) properly, we 	 *	     must be able to get the icu lock, so it can't be 	 *	     under witness. 	 */
-name|mtx_init
-argument_list|(
-operator|&
-name|Giant
-argument_list|,
-literal|"Giant"
-argument_list|,
-name|MTX_DEF
-operator||
-name|MTX_RECURSE
-argument_list|)
-expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|,
-literal|"sched lock"
-argument_list|,
-name|MTX_SPIN
-operator||
-name|MTX_RECURSE
-argument_list|)
-expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|proc0
-operator|.
-name|p_mtx
-argument_list|,
-literal|"process lock"
-argument_list|,
-name|MTX_DEF
-operator||
-name|MTX_DUPOK
-argument_list|)
+name|mutex_init
+argument_list|()
 expr_stmt|;
 name|mtx_init
 argument_list|(
@@ -7588,12 +7530,6 @@ argument_list|,
 name|MTX_SPIN
 operator||
 name|MTX_NOWITNESS
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 comment|/* make ldt memory segments */
