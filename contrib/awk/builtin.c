@@ -6969,8 +6969,12 @@ operator|)
 literal|0
 argument_list|)
 operator|^
+operator|(
 name|getpid
 argument_list|()
+operator|<<
+literal|16
+operator|)
 argument_list|)
 argument_list|)
 expr_stmt|;
