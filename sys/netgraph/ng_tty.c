@@ -743,6 +743,8 @@ argument_list|,
 name|M_NETGRAPH
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -760,17 +762,6 @@ goto|goto
 name|done
 goto|;
 block|}
-name|bzero
-argument_list|(
-name|sc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|sc
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|tp

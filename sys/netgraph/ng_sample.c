@@ -383,6 +383,8 @@ argument_list|,
 name|M_NETGRAPH
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -396,17 +398,6 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-name|bzero
-argument_list|(
-name|privdata
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|XXX
-argument_list|)
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i

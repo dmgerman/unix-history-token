@@ -5286,6 +5286,8 @@ argument_list|,
 name|M_NETGRAPH
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -5303,19 +5305,6 @@ goto|goto
 name|done
 goto|;
 block|}
-name|bzero
-argument_list|(
-name|foff
-argument_list|,
-name|num
-operator|*
-sizeof|sizeof
-argument_list|(
-operator|*
-name|foff
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* Get opening brace/bracket */
 if|if
 condition|(
