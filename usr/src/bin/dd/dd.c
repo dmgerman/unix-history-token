@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dd.c	5.16 (Berkeley) %G%"
+literal|"@(#)dd.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1673,8 +1673,30 @@ expr_stmt|;
 if|if
 condition|(
 name|nw
-operator|<
+operator|<=
 literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|nw
+operator|==
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|"%s: end of device"
+argument_list|,
+name|out
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|!=
+name|EINTR
 condition|)
 name|err
 argument_list|(
@@ -1690,6 +1712,11 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|nw
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|outp
 operator|+=
 name|nw
