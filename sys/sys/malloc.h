@@ -116,7 +116,7 @@ name|long
 name|ks_inuse
 decl_stmt|;
 comment|/* # of packets of this type currently in use */
-name|int64_t
+name|uint64_t
 name|ks_calls
 decl_stmt|;
 comment|/* total packets of this type ever allocated */
