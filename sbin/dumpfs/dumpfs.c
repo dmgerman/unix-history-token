@@ -408,7 +408,7 @@ name|name
 parameter_list|)
 block|{
 name|time_t
-name|time
+name|fstime
 decl_stmt|;
 name|int64_t
 name|fssize
@@ -432,7 +432,7 @@ name|afs
 operator|.
 name|fs_size
 expr_stmt|;
-name|time
+name|fstime
 operator|=
 name|afs
 operator|.
@@ -449,7 +449,7 @@ argument_list|,
 name|ctime
 argument_list|(
 operator|&
-name|time
+name|fstime
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -478,7 +478,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ncg\t%d\tsize\t%qd\tblocks\t%d\n"
+literal|"ncg\t%d\tsize\t%qd\tblocks\t%jd\n"
 argument_list|,
 name|afs
 operator|.
@@ -486,6 +486,9 @@ name|fs_ncg
 argument_list|,
 name|fssize
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|afs
 operator|.
 name|fs_dsize
@@ -501,7 +504,7 @@ name|afs
 operator|.
 name|fs_old_size
 expr_stmt|;
-name|time
+name|fstime
 operator|=
 name|afs
 operator|.
@@ -518,7 +521,7 @@ argument_list|,
 name|ctime
 argument_list|(
 operator|&
-name|time
+name|fstime
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -543,7 +546,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ncg\t%d\tsize\t%qd\tblocks\t%d\n"
+literal|"ncg\t%d\tsize\t%qd\tblocks\t%jd\n"
 argument_list|,
 name|afs
 operator|.
@@ -551,6 +554,9 @@ name|fs_ncg
 argument_list|,
 name|fssize
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|afs
 operator|.
 name|fs_dsize
@@ -558,7 +564,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-break|break;
+goto|goto
+name|err
+goto|;
 block|}
 name|printf
 argument_list|(
@@ -736,7 +744,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"sbsize\t%d\tcgsize\t%d\tcsaddr\t%d\tcssize\t%d\n"
+literal|"sbsize\t%d\tcgsize\t%d\tcsaddr\t%jd\tcssize\t%d\n"
 argument_list|,
 name|afs
 operator|.
@@ -746,6 +754,9 @@ name|afs
 operator|.
 name|fs_cgsize
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|afs
 operator|.
 name|fs_csaddr
@@ -925,7 +936,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-break|break;
+goto|goto
+name|err
+goto|;
 block|}
 name|printf
 argument_list|(
@@ -1252,8 +1265,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"blocks in last group %d\n\n"
+literal|"blocks in last group %ld\n\n"
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 operator|(
 name|fssize
 operator|%
@@ -1265,6 +1282,7 @@ operator|/
 name|afs
 operator|.
 name|fs_frag
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1325,7 +1343,7 @@ name|void
 parameter_list|)
 block|{
 name|time_t
-name|time
+name|cgtime
 decl_stmt|;
 name|off_t
 name|cur
@@ -1376,7 +1394,7 @@ block|{
 case|case
 literal|2
 case|:
-name|time
+name|cgtime
 operator|=
 name|acg
 operator|.
@@ -1395,7 +1413,7 @@ argument_list|,
 name|ctime
 argument_list|(
 operator|&
-name|time
+name|cgtime
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1424,7 +1442,7 @@ break|break;
 case|case
 literal|1
 case|:
-name|time
+name|cgtime
 operator|=
 name|acg
 operator|.
@@ -1443,7 +1461,7 @@ argument_list|,
 name|ctime
 argument_list|(
 operator|&
-name|time
+name|cgtime
 argument_list|)
 argument_list|)
 expr_stmt|;
