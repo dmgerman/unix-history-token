@@ -372,6 +372,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SSC_GET_RTC
+value|65
+end_define
+
+begin_define
+define|#
+directive|define
 name|SSC_EXIT
 value|66
 end_define
