@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.37 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -209,7 +209,7 @@ end_comment
 begin_decl_stmt
 name|struct
 name|nlist
-name|nl
+name|namelist
 index|[]
 init|=
 block|{
@@ -897,7 +897,7 @@ name|kvm_nlist
 argument_list|(
 name|kd
 argument_list|,
-name|nl
+name|namelist
 argument_list|)
 operator|)
 operator|!=
@@ -931,12 +931,12 @@ name|c
 operator|<
 sizeof|sizeof
 argument_list|(
-name|nl
+name|namelist
 argument_list|)
 operator|/
 sizeof|sizeof
 argument_list|(
-name|nl
+name|namelist
 index|[
 literal|0
 index|]
@@ -947,7 +947,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|nl
+name|namelist
 index|[
 name|c
 index|]
@@ -960,7 +960,7 @@ name|printf
 argument_list|(
 literal|" %s"
 argument_list|,
-name|nl
+name|namelist
 index|[
 name|c
 index|]
@@ -1749,7 +1749,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|nl
+name|namelist
 index|[
 name|X_STATHZ
 index|]
@@ -1758,7 +1758,7 @@ name|n_type
 operator|!=
 literal|0
 operator|&&
-name|nl
+name|namelist
 index|[
 name|X_STATHZ
 index|]
@@ -4078,14 +4078,14 @@ argument_list|()
 expr_stmt|;
 name|nintr
 operator|=
-name|nl
+name|namelist
 index|[
 name|X_EINTRCNT
 index|]
 operator|.
 name|n_value
 operator|-
-name|nl
+name|namelist
 index|[
 name|X_INTRCNT
 index|]
@@ -4094,14 +4094,14 @@ name|n_value
 expr_stmt|;
 name|inamlen
 operator|=
-name|nl
+name|namelist
 index|[
 name|X_EINTRNAMES
 index|]
 operator|.
 name|n_value
 operator|-
-name|nl
+name|namelist
 index|[
 name|X_INTRNAMES
 index|]
@@ -4656,7 +4656,7 @@ name|sym
 decl_stmt|;
 if|if
 condition|(
-name|nl
+name|namelist
 index|[
 name|nlx
 index|]
@@ -4665,7 +4665,7 @@ name|n_type
 operator|==
 literal|0
 operator|||
-name|nl
+name|namelist
 index|[
 name|nlx
 index|]
@@ -4677,7 +4677,7 @@ condition|)
 block|{
 name|sym
 operator|=
-name|nl
+name|namelist
 index|[
 name|nlx
 index|]
@@ -4718,7 +4718,7 @@ name|kvm_read
 argument_list|(
 name|kd
 argument_list|,
-name|nl
+name|namelist
 index|[
 name|nlx
 index|]
@@ -4735,7 +4735,7 @@ condition|)
 block|{
 name|sym
 operator|=
-name|nl
+name|namelist
 index|[
 name|nlx
 index|]
