@@ -4516,6 +4516,12 @@ literal|0
 expr_stmt|;
 name|ipcp
 operator|->
+name|peer_req
+operator|=
+literal|0
+expr_stmt|;
+name|ipcp
+operator|->
 name|peer_ip
 operator|=
 name|ipcp
@@ -6190,6 +6196,12 @@ name|maxreq
 operator|*
 literal|3
 expr_stmt|;
+name|ipcp
+operator|->
+name|peer_req
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
@@ -7628,8 +7640,6 @@ decl_stmt|,
 name|length
 decl_stmt|,
 name|gotdnsnak
-decl_stmt|,
-name|ipaddr_req
 decl_stmt|;
 name|u_int32_t
 name|compproto
@@ -7659,10 +7669,6 @@ literal|100
 index|]
 decl_stmt|;
 name|gotdnsnak
-operator|=
-literal|0
-expr_stmt|;
-name|ipaddr_req
 operator|=
 literal|0
 expr_stmt|;
@@ -7773,7 +7779,9 @@ block|{
 case|case
 name|MODE_REQ
 case|:
-name|ipaddr_req
+name|ipcp
+operator|->
+name|peer_req
 operator|=
 literal|1
 expr_stmt|;
@@ -9210,10 +9218,38 @@ operator|==
 name|MODE_REQ
 operator|&&
 operator|!
-name|ipaddr_req
+name|ipcp
+operator|->
+name|peer_req
 condition|)
 block|{
-comment|/* We *REQUIRE* that the peer requests an IP address */
+if|if
+condition|(
+name|dec
+operator|->
+name|rejend
+operator|==
+name|dec
+operator|->
+name|rej
+operator|&&
+name|dec
+operator|->
+name|nakend
+operator|==
+name|dec
+operator|->
+name|nak
+condition|)
+block|{
+comment|/*          * Pretend the peer has requested an IP.          * We do this to ensure that we only send one NAK if the only          * reason for the NAK is because the peer isn't sending a          * TY_IPADDR REQ.  This stops us from repeatedly trying to tell          * the peer that we have to have an IP address on their end.          */
+name|ipcp
+operator|->
+name|peer_req
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|ipaddr
 operator|.
 name|s_addr
