@@ -2106,11 +2106,20 @@ block|,
 literal|"RTM_DELMADDR"
 block|}
 decl_stmt|;
+define|#
+directive|define
+name|NEW_RTM_PAT
+value|"RTM type %#x"
 specifier|static
 name|char
 name|name0
 index|[
-name|NAME0_LEN
+sizeof|sizeof
+argument_list|(
+name|NEW_RTM_PAT
+argument_list|)
+operator|+
+literal|2
 index|]
 decl_stmt|;
 if|if
@@ -2139,9 +2148,12 @@ name|snprintf
 argument_list|(
 name|name0
 argument_list|,
-name|NAME0_LEN
+sizeof|sizeof
+argument_list|(
+name|name0
+argument_list|)
 argument_list|,
-literal|"RTM type %#x"
+name|NEW_RTM_PAT
 argument_list|,
 name|type
 argument_list|)
@@ -2161,6 +2173,9 @@ literal|1
 index|]
 return|;
 block|}
+undef|#
+directive|undef
+name|NEW_RTM_PAT
 block|}
 end_function
 

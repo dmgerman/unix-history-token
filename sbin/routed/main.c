@@ -934,7 +934,7 @@ operator|++
 expr_stmt|;
 name|msglog
 argument_list|(
-literal|"version 2.21"
+literal|"version 2.22"
 argument_list|)
 expr_stmt|;
 break|break;

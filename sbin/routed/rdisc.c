@@ -70,13 +70,11 @@ end_elif
 
 begin_expr_stmt
 name|__RCSID
+argument_list|(
 literal|"$NetBSD$"
+argument_list|)
+expr_stmt|;
 end_expr_stmt
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_endif
 endif|#
