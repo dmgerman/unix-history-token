@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.42.2.62 1996/07/11 20:06:57 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.89 1996/10/14 21:32:31 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1227,16 +1227,6 @@ literal|"pcnfsd"
 block|}
 block|,
 block|{
-literal|"Ports"
-block|,
-literal|"Link to FreeBSD ports collection."
-block|,
-name|NULL
-block|,
-name|configPorts
-block|}
-block|,
-block|{
 literal|"Root Password"
 block|,
 literal|"Set the system manager's password."
@@ -2155,7 +2145,7 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Choose a Floppy drive"
 block|,
-literal|"You have more than one floppy drive.  Please chose the drive\n\ you would like to use for this operation"
+literal|"You have more than one floppy drive.  Please chose which drive\n\ you would like to use."
 block|,
 name|NULL
 block|,
@@ -2230,7 +2220,7 @@ literal|"=ftp://ftp.freebsd.org/pub/FreeBSD/"
 block|}
 block|,
 block|{
-literal|"Other"
+literal|"URL"
 block|,
 literal|"Specify some other ftp site by URL"
 block|,
@@ -2242,6 +2232,21 @@ name|NULL
 block|,
 name|VAR_FTP_PATH
 literal|"=other"
+block|}
+block|,
+block|{
+literal|"Argentina"
+block|,
+literal|"ftp.ar.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp.ar.freebsd.org/pub/FreeBSD/"
 block|}
 block|,
 block|{
@@ -2607,7 +2612,7 @@ block|,
 block|{
 literal|"Israel"
 block|,
-literal|"orgchem.weizmann.ac.il"
+literal|"ftp.il.freebsd.org"
 block|,
 name|NULL
 block|,
@@ -2616,13 +2621,13 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://orgchem.weizmann.ac.il/pub/FreeBSD/"
+literal|"=ftp://ftp.il.freebsd.org/pub/FreeBSD/"
 block|}
 block|,
 block|{
 literal|"Israel #2"
 block|,
-literal|"xray4.weizmann.ac.il"
+literal|"ftp2.il.freebsd.org"
 block|,
 name|NULL
 block|,
@@ -2631,7 +2636,7 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://xray4.weizmann.ac.il/pub/FreeBSD/"
+literal|"=ftp://ftp2.il.freebsd.org/pub/FreeBSD/"
 block|}
 block|,
 block|{
@@ -3129,11 +3134,11 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Network interface information required"
 block|,
-literal|"If you are using PPP over a serial device as opposed\n"
-literal|"to a direct ethernet connection, then you may first need to dial your\n"
-literal|"service provider using the ppp utility we provide for that purpose.\n"
-literal|"If you're using SLIP over a serial device then it's expected that you\n"
-literal|"have a hardwired connection.\n\n"
+literal|"If you are using PPP over a serial device, as opposed to a direct\n"
+literal|"ethernet connection, then you may first need to dial your Internet\n"
+literal|"Service Provider using the ppp utility we provide for that purpose.\n"
+literal|"If you're using SLIP over a serial device then the expectation is\n"
+literal|"that you have a HARDWIRED connection.\n\n"
 literal|"You can also install over a parallel port using a special \"laplink\"\n"
 literal|"cable to another machine running a fairly recent (2.0R or later) version\n"
 literal|"of FreeBSD."
@@ -3184,37 +3189,7 @@ name|mediaSetCDROM
 block|}
 block|,
 block|{
-literal|"2 DOS"
-block|,
-literal|"Install from a DOS partition"
-block|,
-name|NULL
-block|,
-name|mediaSetDOS
-block|}
-block|,
-block|{
-literal|"3 File System"
-block|,
-literal|"Install from an existing filesystem"
-block|,
-name|NULL
-block|,
-name|mediaSetUFS
-block|}
-block|,
-block|{
-literal|"4 Floppy"
-block|,
-literal|"Install from a floppy disk set"
-block|,
-name|NULL
-block|,
-name|mediaSetFloppy
-block|}
-block|,
-block|{
-literal|"5 FTP"
+literal|"2 FTP"
 block|,
 literal|"Install from an FTP server"
 block|,
@@ -3224,7 +3199,7 @@ name|mediaSetFTPActive
 block|}
 block|,
 block|{
-literal|"6 FTP Passive"
+literal|"3 FTP Passive"
 block|,
 literal|"Install from an FTP server through a firewall"
 block|,
@@ -3234,13 +3209,43 @@ name|mediaSetFTPPassive
 block|}
 block|,
 block|{
-literal|"7 NFS"
+literal|"4 DOS"
+block|,
+literal|"Install from a DOS partition"
+block|,
+name|NULL
+block|,
+name|mediaSetDOS
+block|}
+block|,
+block|{
+literal|"5 NFS"
 block|,
 literal|"Install over NFS"
 block|,
 name|NULL
 block|,
 name|mediaSetNFS
+block|}
+block|,
+block|{
+literal|"6 File System"
+block|,
+literal|"Install from an existing filesystem"
+block|,
+name|NULL
+block|,
+name|mediaSetUFS
+block|}
+block|,
+block|{
+literal|"7 Floppy"
+block|,
+literal|"Install from a floppy disk set"
+block|,
+name|NULL
+block|,
+name|mediaSetFloppy
 block|}
 block|,
 block|{
@@ -3991,6 +3996,29 @@ block|,
 literal|']'
 block|,
 name|DIST_SRC_BASE
+block|}
+block|,
+block|{
+literal|"contrib"
+block|,
+literal|"/usr/src/contrib (contributed software) [33MB]"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|SrcDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_SRC_CONTRIB
 block|}
 block|,
 block|{
@@ -5926,17 +5954,7 @@ name|configPackages
 block|}
 block|,
 block|{
-literal|"9 Ports"
-block|,
-literal|"Link to FreeBSD Ports Collection on CD"
-block|,
-name|NULL
-block|,
-name|configPorts
-block|}
-block|,
-block|{
-literal|"A Root Password"
+literal|"9 Root Password"
 block|,
 literal|"Set the system manager's password"
 block|,
@@ -5950,7 +5968,7 @@ literal|"passwd root"
 block|}
 block|,
 block|{
-literal|"B HTML Docs"
+literal|"A HTML Docs"
 block|,
 literal|"Go to the HTML documentation menu (post-install)"
 block|,
@@ -5960,7 +5978,7 @@ name|docBrowser
 block|}
 block|,
 block|{
-literal|"C XFree86"
+literal|"B XFree86"
 block|,
 literal|"Configure XFree86"
 block|,
@@ -5970,7 +5988,7 @@ name|configXFree86
 block|}
 block|,
 block|{
-literal|"0 Exit"
+literal|"Exit"
 block|,
 literal|"Exit this menu (returning to previous)"
 block|,
@@ -6741,48 +6759,6 @@ block|,
 name|NULL
 block|,
 literal|"keymap=jp.106"
-block|}
-block|,
-block|{
-literal|"Russian CP866"
-block|,
-literal|"Russian Code Page 866 keymap"
-block|,
-name|dmenuVarCheck
-block|,
-name|dmenuSetVariable
-block|,
-name|NULL
-block|,
-literal|"keymap=ru.cp866"
-block|}
-block|,
-block|{
-literal|"Russian KOI8"
-block|,
-literal|"Russian koi8 keymap"
-block|,
-name|dmenuVarCheck
-block|,
-name|dmenuSetVariable
-block|,
-name|NULL
-block|,
-literal|"keymap=ru.koi8-r"
-block|}
-block|,
-block|{
-literal|"Russian s-KOI8"
-block|,
-literal|"Russian shifted koi8 keymap"
-block|,
-name|dmenuVarCheck
-block|,
-name|dmenuSetVariable
-block|,
-name|NULL
-block|,
-literal|"keymap=ru.koi8-r.shift"
 block|}
 block|,
 block|{

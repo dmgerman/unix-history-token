@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: cdrom.c,v 1.7.2.25 1996/07/13 05:52:02 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  * Copyright (c) 1995  * 	Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: cdrom.c,v 1.26 1996/10/14 21:32:22 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  * Copyright (c) 1995  * 	Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -74,10 +74,11 @@ name|CD9660
 end_undef
 
 begin_comment
-comment|/*  * This isn't static, like the others, since it's often useful to know whether  * or not we have a CDROM available in some of the other installation screens.  * This also isn't a boolean like the others since we have 3 states for it:  * 0 = cdrom isn't mounted, 1 = cdrom is mounted and we mounted it, 2 = cdrom  * was already mounted when we came in and we should leave it that way when  * we leave.  */
+comment|/*  * This isn't a boolean like the others since we have 3 states for it:  * 0 = cdrom isn't mounted, 1 = cdrom is mounted and we mounted it, 2 = cdrom  * was already mounted when we came in and we should leave it that way when  * we leave.  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|cdromMounted
 decl_stmt|;
@@ -197,6 +198,13 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|EBUSY
+condition|)
+block|{
 name|msgConfirm
 argument_list|(
 literal|"Error mounting %s on /cdrom: %s (%u)"
@@ -217,7 +225,7 @@ return|return
 name|FALSE
 return|;
 block|}
-elseif|else
+block|}
 if|if
 condition|(
 operator|!
@@ -235,6 +243,8 @@ literal|"Warning: The CD currently in the drive is either not a FreeBSD\n"
 literal|"CD or it is an older (pre 2.1.5) FreeBSD CD which does not\n"
 literal|"have a version number on it.  Do you wish to use this CD anyway?"
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|unmount
@@ -329,8 +339,9 @@ expr_stmt|;
 else|else
 name|msgConfirm
 argument_list|(
-literal|"Warning: The version of the FreeBSD CD currently in the drive (%s)\n"
-literal|"does not match the version of this boot floppy (%s).\n"
+literal|"Warning: The version of the FreeBSD CD currently in the drive\n"
+literal|"(%s) does not match the version of this boot floppy\n"
+literal|"(%s).\n\n"
 literal|"If this is intentional, then please visit the Options editor\n"
 literal|"to set the boot floppy version string to match that of the CD\n"
 literal|"before selecting it as an installation media to avoid this warning"
@@ -381,6 +392,11 @@ index|[
 name|PATH_MAX
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
 name|msgDebug
 argument_list|(
 literal|"Request for %s from CDROM\n"

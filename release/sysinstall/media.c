@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: media.c,v 1.49 1996/07/08 12:00:40 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: media.c,v 1.62 1996/10/14 21:50:38 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -916,7 +916,48 @@ specifier|extern
 name|int
 name|FtpPort
 decl_stmt|;
-name|dialog_clear
+specifier|static
+name|Boolean
+name|network_init
+init|=
+literal|1
+decl_stmt|;
+name|int
+name|what
+init|=
+name|DITEM_RESTORE
+decl_stmt|;
+name|cp
+operator|=
+name|variable_get
+argument_list|(
+name|VAR_FTP_PATH
+argument_list|)
+expr_stmt|;
+comment|/* If we've been through here before ... */
+if|if
+condition|(
+operator|!
+name|network_init
+operator|&&
+name|cp
+operator|&&
+name|msgYesNo
+argument_list|(
+literal|"Re-use old FTP site selection values?"
+argument_list|)
+condition|)
+name|cp
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cp
+condition|)
+block|{
+name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
 if|if
@@ -943,25 +984,21 @@ argument_list|(
 name|VAR_FTP_PATH
 argument_list|)
 expr_stmt|;
+name|what
+operator|=
+name|DITEM_RECREATE
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
 name|cp
 condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"%s not set!  Not setting an FTP installation path, OK?"
-argument_list|,
-name|VAR_FTP_PATH
-argument_list|)
-expr_stmt|;
 return|return
 name|DITEM_FAILURE
 operator||
-name|DITEM_RECREATE
+name|what
 return|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -981,7 +1018,7 @@ argument_list|,
 literal|"ftp://"
 argument_list|)
 expr_stmt|;
-name|dialog_clear
+name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
 name|cp
@@ -1007,12 +1044,27 @@ operator|||
 operator|!
 operator|*
 name|cp
+operator|||
+operator|!
+name|strcmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"ftp://"
+argument_list|)
 condition|)
+block|{
+name|variable_unset
+argument_list|(
+name|VAR_FTP_PATH
+argument_list|)
+expr_stmt|;
 return|return
 name|DITEM_FAILURE
 operator||
-name|DITEM_RECREATE
+name|what
 return|;
+block|}
 block|}
 if|if
 condition|(
@@ -1033,10 +1085,15 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
+name|variable_unset
+argument_list|(
+name|VAR_FTP_PATH
+argument_list|)
+expr_stmt|;
 return|return
 name|DITEM_FAILURE
 operator||
-name|DITEM_RECREATE
+name|what
 return|;
 block|}
 name|strcpy
@@ -1048,17 +1105,51 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|network_init
+operator|||
+name|msgYesNo
+argument_list|(
+literal|"You've already done the network configuration once,\n"
+literal|"would you like to skip over it now?"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|mediaDevice
+condition|)
+name|mediaDevice
+operator|->
+name|shutdown
+argument_list|(
+name|mediaDevice
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|tcpDeviceSelect
 argument_list|()
 condition|)
+block|{
+name|variable_unset
+argument_list|(
+name|VAR_FTP_PATH
+argument_list|)
+expr_stmt|;
 return|return
 name|DITEM_FAILURE
 operator||
-name|DITEM_RECREATE
+name|what
 return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -1083,12 +1174,22 @@ argument_list|(
 literal|"mediaSetFTP: Net device init failed.\n"
 argument_list|)
 expr_stmt|;
+name|variable_unset
+argument_list|(
+name|VAR_FTP_PATH
+argument_list|)
+expr_stmt|;
 return|return
 name|DITEM_FAILURE
 operator||
-name|DITEM_RECREATE
+name|what
 return|;
 block|}
+block|}
+name|network_init
+operator|=
+name|FALSE
+expr_stmt|;
 name|hostname
 operator|=
 name|cp
@@ -1195,6 +1296,14 @@ name|FtpPort
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|variable_get
+argument_list|(
+name|VAR_NAMESERVER
+argument_list|)
+condition|)
+block|{
 name|msgNotify
 argument_list|(
 literal|"Looking up host %s.."
@@ -1238,11 +1347,16 @@ argument_list|(
 name|mediaDevice
 argument_list|)
 expr_stmt|;
+name|network_init
+operator|=
+name|TRUE
+expr_stmt|;
 return|return
 name|DITEM_FAILURE
 operator||
-name|DITEM_RECREATE
+name|what
 return|;
+block|}
 block|}
 name|variable_set2
 argument_list|(
@@ -1315,9 +1429,11 @@ operator|&
 name|ftpDevice
 expr_stmt|;
 return|return
+name|DITEM_SUCCESS
+operator||
 name|DITEM_LEAVE_MENU
 operator||
-name|DITEM_RECREATE
+name|what
 return|;
 block|}
 end_function
@@ -1389,6 +1505,9 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|cp
 operator|=
 name|variable_get_value
@@ -1486,6 +1605,9 @@ decl_stmt|,
 modifier|*
 name|idx
 decl_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|cp
 operator|=
 name|variable_get_value
@@ -1584,6 +1706,14 @@ name|idx
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+name|variable_get
+argument_list|(
+name|VAR_NAMESERVER
+argument_list|)
+condition|)
+block|{
 name|msgNotify
 argument_list|(
 literal|"Looking up host %s.."
@@ -1623,6 +1753,7 @@ expr_stmt|;
 return|return
 name|DITEM_FAILURE
 return|;
+block|}
 block|}
 name|variable_set2
 argument_list|(
@@ -2112,7 +2243,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Don't check status - gunzip seems to return a bogus one! */
+comment|/* Don't check exit status - gunzip seems to return a bogus one! */
 if|if
 condition|(
 name|i
@@ -2547,7 +2678,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Don't check status - gunzip seems to return a bogus one! */
+comment|/* Don't check exit status - gunzip seems to return a bogus one! */
 if|if
 condition|(
 name|i
@@ -2701,7 +2832,7 @@ end_comment
 
 begin_function
 name|int
-name|mediaSetFtpUserPass
+name|mediaSetFTPUserPass
 parameter_list|(
 name|dialogMenuItem
 modifier|*
@@ -2712,6 +2843,9 @@ name|char
 modifier|*
 name|pass
 decl_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|variable_get_value
@@ -2721,6 +2855,10 @@ argument_list|,
 literal|"Please enter the username you wish to login as:"
 argument_list|)
 condition|)
+block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|pass
 operator|=
 name|variable_get_value
@@ -2730,17 +2868,22 @@ argument_list|,
 literal|"Please enter the password for this user:"
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|pass
 operator|=
 name|NULL
 expr_stmt|;
 return|return
+operator|(
 name|pass
 condition|?
 name|DITEM_SUCCESS
 else|:
 name|DITEM_FAILURE
+operator|)
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 end_function

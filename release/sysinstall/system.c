@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.44.2.24 1996/07/08 09:07:29 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.66 1996/10/01 12:13:29 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -76,6 +76,13 @@ name|int
 name|sig
 parameter_list|)
 block|{
+name|WINDOW
+modifier|*
+name|save
+init|=
+name|savescr
+argument_list|()
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -87,6 +94,12 @@ condition|)
 name|systemShutdown
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+else|else
+name|restorescr
+argument_list|(
+name|save
 argument_list|)
 expr_stmt|;
 block|}
@@ -190,12 +203,28 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|open
 argument_list|(
 literal|"/dev/ttyv0"
 argument_list|,
 name|O_RDWR
 argument_list|)
+operator|<
+literal|0
+condition|)
+name|open
+argument_list|(
+literal|"/dev/console"
+argument_list|,
+name|O_RDWR
+argument_list|)
+expr_stmt|;
+else|else
+name|OnVTY
+operator|=
+name|TRUE
 expr_stmt|;
 name|close
 argument_list|(
@@ -537,13 +566,6 @@ index|[
 name|FILENAME_MAX
 index|]
 decl_stmt|;
-name|WINDOW
-modifier|*
-name|old
-init|=
-name|savescr
-argument_list|()
-decl_stmt|;
 name|int
 name|ret
 init|=
@@ -627,11 +649,6 @@ name|COLS
 argument_list|)
 expr_stmt|;
 block|}
-name|restorescr
-argument_list|(
-name|old
-argument_list|)
-expr_stmt|;
 return|return
 name|ret
 return|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.16.2.58 1996/07/08 09:07:08 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.51 1996/10/14 21:32:25 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -78,13 +78,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|nchunks
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|cdromMounted
 decl_stmt|;
 end_decl_stmt
 
@@ -1614,6 +1607,7 @@ return|;
 block|}
 else|else
 return|return
+operator|(
 name|variable_get_value
 argument_list|(
 name|VAR_BLANKTIME
@@ -1624,6 +1618,9 @@ condition|?
 name|DITEM_SUCCESS
 else|:
 name|DITEM_FAILURE
+operator|)
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -1695,6 +1692,8 @@ expr_stmt|;
 block|}
 return|return
 name|status
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -1779,43 +1778,6 @@ condition|)
 return|return;
 if|if
 condition|(
-operator|!
-name|variable_get
-argument_list|(
-name|VAR_NAMESERVER
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|mediaDevice
-operator|&&
-operator|(
-name|mediaDevice
-operator|->
-name|type
-operator|==
-name|DEVICE_TYPE_NFS
-operator|||
-name|mediaDevice
-operator|->
-name|type
-operator|==
-name|DEVICE_TYPE_FTP
-operator|)
-condition|)
-name|msgConfirm
-argument_list|(
-literal|"Warning:  Missing name server value - network operations\n"
-literal|"may fail as a result!"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|skip
-goto|;
-block|}
-if|if
-condition|(
 name|Mkdir
 argument_list|(
 literal|"/etc"
@@ -1829,6 +1791,34 @@ literal|"files will therefore not be written!"
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
+name|cp
+operator|=
+name|variable_get
+argument_list|(
+name|VAR_NAMESERVER
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cp
+operator|||
+operator|!
+operator|*
+name|cp
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Warning:  Missing name server value - be sure to refer\n"
+literal|"to other hosts in any network operation by IP address\n"
+literal|"rather than name (or go back and fill in a name server)."
+argument_list|)
+expr_stmt|;
+goto|goto
+name|skip
+goto|;
 block|}
 name|fp
 operator|=
@@ -1877,10 +1867,7 @@ name|fp
 argument_list|,
 literal|"nameserver\t%s\n"
 argument_list|,
-name|variable_get
-argument_list|(
-name|VAR_NAMESERVER
-argument_list|)
+name|cp
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -1901,45 +1888,6 @@ expr_stmt|;
 name|skip
 label|:
 comment|/* Tack ourselves into /etc/hosts */
-name|cp
-operator|=
-name|variable_get
-argument_list|(
-name|VAR_IPADDR
-argument_list|)
-expr_stmt|;
-name|dp
-operator|=
-name|variable_get
-argument_list|(
-name|VAR_DOMAINNAME
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|cp
-operator|&&
-operator|*
-name|cp
-operator|!=
-literal|'0'
-operator|&&
-operator|(
-name|hp
-operator|=
-name|variable_get
-argument_list|(
-name|VAR_HOSTNAME
-argument_list|)
-operator|)
-condition|)
-block|{
-name|char
-name|cp2
-index|[
-literal|255
-index|]
-decl_stmt|;
 name|fp
 operator|=
 name|fopen
@@ -1949,6 +1897,62 @@ argument_list|,
 literal|"w"
 argument_list|)
 expr_stmt|;
+comment|/* Add an entry for localhost */
+name|dp
+operator|=
+name|variable_get
+argument_list|(
+name|VAR_DOMAINNAME
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"127.0.0.1\t\tlocalhost.%s localhost\n"
+argument_list|,
+name|dp
+condition|?
+name|dp
+else|:
+literal|"my.domain"
+argument_list|)
+expr_stmt|;
+comment|/* Now the host entries, if applicable */
+name|cp
+operator|=
+name|variable_get
+argument_list|(
+name|VAR_IPADDR
+argument_list|)
+expr_stmt|;
+name|hp
+operator|=
+name|variable_get
+argument_list|(
+name|VAR_HOSTNAME
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|&&
+name|cp
+index|[
+literal|0
+index|]
+operator|!=
+literal|'0'
+operator|&&
+name|hp
+condition|)
+block|{
+name|char
+name|cp2
+index|[
+literal|255
+index|]
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1992,19 +1996,6 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"127.0.0.1\t\tlocalhost.%s localhost\n"
-argument_list|,
-name|dp
-condition|?
-name|dp
-else|:
-literal|"my.domain"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
 literal|"%s\t\t%s %s\n"
 argument_list|,
 name|cp
@@ -2025,6 +2016,7 @@ argument_list|,
 name|hp
 argument_list|)
 expr_stmt|;
+block|}
 name|fclose
 argument_list|(
 name|fp
@@ -2043,7 +2035,6 @@ name|cp
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 end_function
 
 begin_function
@@ -2056,6 +2047,7 @@ name|self
 parameter_list|)
 block|{
 return|return
+operator|(
 name|variable_get_value
 argument_list|(
 name|VAR_ROUTEDFLAGS
@@ -2067,6 +2059,9 @@ condition|?
 name|DITEM_SUCCESS
 else|:
 name|DITEM_FAILURE
+operator|)
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -2151,7 +2146,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|dialog_clear
+name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
 name|msgConfirm
@@ -2167,6 +2162,8 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 name|msgNotify
@@ -2211,6 +2208,8 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 name|mediaDevice
@@ -2337,7 +2336,7 @@ block|}
 block|}
 else|else
 block|{
-name|dialog_clear
+name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
 name|msgConfirm
@@ -2386,336 +2385,10 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_SUCCESS
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|configPorts
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-block|{
-name|char
-modifier|*
-name|cp
-decl_stmt|,
-modifier|*
-name|dist
-init|=
-name|NULL
-decl_stmt|;
-comment|/* Shut up compiler */
-name|int
-name|status
-init|=
-name|DITEM_SUCCESS
-decl_stmt|,
-name|tries
-init|=
-literal|0
-decl_stmt|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|variable_get
-argument_list|(
-name|VAR_PORTS_PATH
-argument_list|)
-condition|)
-name|variable_set2
-argument_list|(
-name|VAR_PORTS_PATH
-argument_list|,
-name|dist
-operator|=
-literal|"/cdrom/ports"
-argument_list|)
-expr_stmt|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
-while|while
-condition|(
-operator|!
-name|directory_exists
-argument_list|(
-name|dist
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-operator|++
-name|tries
-operator|>
-literal|2
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"You appear to be having some problems with your CD drive\n"
-literal|"or perhaps cannot find the second CD.  This step will now\n"
-literal|"therefore be skipped."
-argument_list|)
-expr_stmt|;
-name|status
-operator|=
-name|DITEM_FAILURE
-expr_stmt|;
-goto|goto
-name|fixup
-goto|;
-block|}
-comment|/* Even if we're running multi-user, unmount it for this case */
-name|cdromMounted
-operator|=
-name|CD_WE_MOUNTED_IT
-expr_stmt|;
-name|mediaDevice
-operator|->
-name|shutdown
-argument_list|(
-name|mediaDevice
-argument_list|)
-expr_stmt|;
-name|msgConfirm
-argument_list|(
-literal|"The ports collection is now on the second CDROM due to\n"
-literal|"space constraints.  Please remove the first CD from the\n"
-literal|"drive at this time and insert the second CDROM.  You will\n"
-literal|"also need to have the second CDROM in your drive any time\n"
-literal|"you wish to use the ports collection.  When you're ready,\n"
-literal|"please press [ENTER]."
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|mediaDevice
-operator|->
-name|init
-argument_list|(
-name|mediaDevice
-argument_list|)
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"Mount failed - either the CDROM isn't in the drive or\n"
-literal|"you did not allow sufficient time for the drive to become\n"
-literal|"ready before pressing [ENTER].  Please try again."
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-name|cp
-operator|=
-name|msgGetInput
-argument_list|(
-literal|"/usr/ports"
-argument_list|,
-literal|"Where would you like to create the link tree?\n"
-literal|"(press [ENTER] for default location).  The link tree should\n"
-literal|"reside in a directory with as much free space as possible,\n"
-literal|"as you'll need space to compile any ports."
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|cp
-operator|||
-operator|!
-operator|*
-name|cp
-condition|)
-block|{
-name|status
-operator|=
-name|DITEM_FAILURE
-expr_stmt|;
-goto|goto
-name|fixup
-goto|;
-block|}
-if|if
-condition|(
-name|Mkdir
-argument_list|(
-name|cp
-argument_list|)
-condition|)
-block|{
-name|status
-operator|=
-name|DITEM_FAILURE
-expr_stmt|;
-goto|goto
-name|fixup
-goto|;
-block|}
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|cp
-argument_list|,
-literal|"/usr/ports"
-argument_list|)
-condition|)
-block|{
-name|unlink
-argument_list|(
-literal|"/usr/ports"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|symlink
-argument_list|(
-name|cp
-argument_list|,
-literal|"/usr/ports"
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"Unable to create a symlink from /usr/ports to %s!\n"
-literal|"I can't continue, sorry!"
-argument_list|,
-name|cp
-argument_list|)
-expr_stmt|;
-name|status
-operator|=
-name|DITEM_FAILURE
-expr_stmt|;
-goto|goto
-name|fixup
-goto|;
-block|}
-else|else
-block|{
-name|msgConfirm
-argument_list|(
-literal|"NOTE: This directory is also now symlinked to /usr/ports\n"
-literal|"which, for a variety of reasons, is the directory the ports\n"
-literal|"framework expects to find its files in.  You should refer to\n"
-literal|"/usr/ports instead of %s directly when you're working in the\n"
-literal|"ports collection."
-argument_list|,
-name|cp
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-name|msgNotify
-argument_list|(
-literal|"Making a link tree from %s to %s."
-argument_list|,
-name|dist
-argument_list|,
-name|cp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|DITEM_STATUS
-argument_list|(
-name|lndir
-argument_list|(
-name|dist
-argument_list|,
-name|cp
-argument_list|)
-argument_list|)
-operator|!=
-name|DITEM_SUCCESS
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"The lndir function returned an error status and may not have.\n"
-literal|"successfully generated the link tree.  You may wish to inspect\n"
-literal|"the /usr/ports directory carefully for any missing link files."
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|msgConfirm
-argument_list|(
-literal|"The /usr/ports directory is now ready to use.  When the system comes\n"
-literal|"up fully, you can cd to this directory and type `make' in any sub-\n"
-literal|"directory for which you'd like to compile a port.  You can also\n"
-literal|"cd to /usr/ports and type `make print-index' for a complete list of all\n"
-literal|"ports in the hierarchy."
-argument_list|)
-expr_stmt|;
-block|}
-name|fixup
-label|:
-name|tries
-operator|=
-literal|0
-expr_stmt|;
-while|while
-condition|(
-operator|++
-name|tries
-operator|<
-literal|3
-condition|)
-block|{
-name|mediaDevice
-operator|->
-name|shutdown
-argument_list|(
-name|mediaDevice
-argument_list|)
-expr_stmt|;
-name|msgConfirm
-argument_list|(
-literal|"Done with the second CD.  Please remove it and reinsert the first\n"
-literal|"CDROM now.  It may be required for subsequence installation steps.\n\n"
-literal|"When you've done so, please press [ENTER]."
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|mediaDevice
-operator|->
-name|init
-argument_list|(
-name|mediaDevice
-argument_list|)
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"Mount failed - either the CDROM isn't in the drive or\n"
-literal|"you did not allow sufficient time for the drive to become\n"
-literal|"ready before pressing [ENTER].  Please try again."
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-return|return
-name|status
 operator||
 name|DITEM_RESTORE
+operator||
+name|DITEM_RECREATE
 return|;
 block|}
 end_function
@@ -2802,6 +2475,21 @@ name|DITEM_SUCCESS
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|RunningAsInit
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"This package can only be installed in multi-user mode."
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
+return|;
+block|}
+if|if
+condition|(
 name|variable_get
 argument_list|(
 name|VAR_NOVELL
@@ -2840,6 +2528,8 @@ expr_stmt|;
 block|}
 return|return
 name|ret
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -2947,6 +2637,9 @@ init|=
 name|savescr
 argument_list|()
 decl_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Operating as an NFS server means that you must first configure\n"

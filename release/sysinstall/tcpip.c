@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: tcpip.c,v 1.30.2.25 1996/07/03 01:31:18 jkh Exp $  *  * Copyright (c) 1995  *      Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY GARY J PALMER ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL GARY J PALMER BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS  * OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
+comment|/*  * $Id: tcpip.c,v 1.48 1996/10/05 16:33:04 jkh Exp $  *  * Copyright (c) 1995  *      Gary J Palmer. All rights reserved.  * Copyright (c) 1996  *      Jordan K. Hubbard. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS  * OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -245,7 +245,7 @@ name|HOSTNAME_FIELD_LEN
 operator|-
 literal|1
 block|,
-literal|"Host name:"
+literal|"Host:"
 block|,
 literal|"Your fully-qualified hostname, e.g. foo.bar.com"
 block|,
@@ -271,7 +271,7 @@ name|HOSTNAME_FIELD_LEN
 operator|-
 literal|1
 block|,
-literal|"Domain name:"
+literal|"Domain:"
 block|,
 literal|"The name of the domain that your machine is in, e.g. bar.com"
 block|,
@@ -403,7 +403,7 @@ literal|1
 block|,
 literal|"Extra options to ifconfig:"
 block|,
-literal|"Any interface-specific options to ifconfig you would like to use"
+literal|"Any interface-specific options to ifconfig you would like to add"
 block|,
 name|extras
 block|,
@@ -1129,12 +1129,32 @@ index|[
 literal|80
 index|]
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|RunningAsInit
+condition|)
+block|{
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
+name|msgDebug
+argument_list|(
+literal|"Running multi-user, assuming that the network is already up\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|DITEM_SUCCESS
+return|;
+block|}
 name|save
 operator|=
 name|savescr
 argument_list|()
 expr_stmt|;
-name|dialog_clear
+name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
 comment|/* We need a curses window */
@@ -1163,16 +1183,14 @@ literal|"Cannot open TCP/IP dialog window!!"
 argument_list|)
 expr_stmt|;
 comment|/* Say where our help comes from */
+name|use_helpfile
+argument_list|(
 name|systemHelpFile
 argument_list|(
 name|TCP_HELPFILE
 argument_list|,
 name|help
 argument_list|)
-expr_stmt|;
-name|use_helpfile
-argument_list|(
-name|help
 argument_list|)
 expr_stmt|;
 comment|/* Setup a nice screen for us to splat stuff onto */
@@ -2074,75 +2092,13 @@ expr_stmt|;
 break|break;
 comment|/* This doesn't work for list dialogs. Oh well. Perhaps 	       should special case the move from the OK button ``up'' 	       to make it go to the interface list, but then it gets 	       awkward for the user to go back and correct screw up's 	       in the per-interface section */
 case|case
-name|KEY_UP
-case|:
-if|if
-condition|(
-name|obj
-operator|->
-name|prev
-operator|!=
-name|NULL
-condition|)
-block|{
-name|obj
-operator|=
-name|obj
-operator|->
-name|prev
-expr_stmt|;
-operator|--
-name|n
-expr_stmt|;
-block|}
-else|else
-block|{
-name|obj
-operator|=
-name|last
-expr_stmt|;
-name|n
-operator|=
-name|max
-expr_stmt|;
-block|}
-break|break;
-case|case
 name|KEY_DOWN
 case|:
-if|if
-condition|(
-name|obj
-operator|->
-name|next
-operator|!=
-name|NULL
-condition|)
-block|{
-name|obj
-operator|=
-name|obj
-operator|->
-name|next
-expr_stmt|;
-operator|++
-name|n
-expr_stmt|;
-block|}
-else|else
-block|{
-name|obj
-operator|=
-name|first
-expr_stmt|;
-name|n
-operator|=
-literal|0
-expr_stmt|;
-block|}
-break|break;
 case|case
 name|SEL_TAB
+case|:
+case|case
+name|SEL_CR
 case|:
 if|if
 condition|(
@@ -2188,25 +2144,9 @@ name|TRUE
 expr_stmt|;
 block|}
 break|break;
-comment|/* Generic CR handler */
 case|case
-name|SEL_CR
+name|KEY_UP
 case|:
-if|if
-condition|(
-name|n
-operator|<
-name|max
-condition|)
-operator|++
-name|n
-expr_stmt|;
-else|else
-name|n
-operator|=
-literal|0
-expr_stmt|;
-break|break;
 case|case
 name|SEL_BACKTAB
 case|:
@@ -2307,10 +2247,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Clear this crap off the screen */
-name|dialog_clear
-argument_list|()
-expr_stmt|;
-name|refresh
+name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
 name|use_helpfile
@@ -2715,20 +2652,6 @@ condition|(
 name|cnt
 operator|==
 literal|1
-operator|||
-operator|(
-operator|!
-name|RunningAsInit
-operator|&&
-operator|!
-name|Fake
-operator|)
-condition|)
-block|{
-comment|/* If we're running in user mode, assume network already up */
-if|if
-condition|(
-name|RunningAsInit
 condition|)
 block|{
 if|if
@@ -2749,13 +2672,6 @@ condition|)
 return|return
 name|FALSE
 return|;
-block|}
-else|else
-name|msgDebug
-argument_list|(
-literal|"Running multi-user, assuming that the network is already up\n"
-argument_list|)
-expr_stmt|;
 name|mediaDevice
 operator|=
 name|devs
