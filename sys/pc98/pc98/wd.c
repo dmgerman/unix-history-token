@@ -3091,7 +3091,7 @@ condition|)
 return|return;
 name|bp
 operator|=
-name|bioq_first
+name|bioq_takefirst
 argument_list|(
 operator|&
 name|drive_queue
@@ -3108,29 +3108,13 @@ name|bp
 operator|==
 name|NULL
 condition|)
-block|{
-comment|/* yes, an assign */
 return|return;
-block|}
 comment|/* 	 * store away which device we came from. 	 */
 name|bp
 operator|->
 name|bio_driver1
 operator|=
 name|du
-expr_stmt|;
-name|bioq_remove
-argument_list|(
-operator|&
-name|drive_queue
-index|[
-name|du
-operator|->
-name|dk_lunit
-index|]
-argument_list|,
-name|bp
-argument_list|)
 expr_stmt|;
 comment|/* link onto controller queue */
 name|bioq_insert_tail
