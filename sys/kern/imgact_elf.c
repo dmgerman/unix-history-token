@@ -470,11 +470,15 @@ operator|==
 name|MAX_BRANDS
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -535,11 +539,15 @@ operator|==
 name|MAX_BRANDS
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -667,7 +675,9 @@ operator|!=
 name|EV_CURRENT
 condition|)
 return|return
+operator|(
 name|ENOEXEC
+operator|)
 return|;
 comment|/* 	 * Make sure we have at least one brand for this machine. 	 */
 for|for
@@ -706,7 +716,9 @@ operator|==
 name|MAX_BRANDS
 condition|)
 return|return
+operator|(
 name|ENOEXEC
+operator|)
 return|;
 if|if
 condition|(
@@ -717,10 +729,14 @@ operator|!=
 name|ELF_TARG_VER
 condition|)
 return|return
+operator|(
 name|ENOEXEC
+operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -857,7 +873,9 @@ name|object
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|rv
+operator|)
 return|;
 block|}
 name|off
@@ -907,12 +925,16 @@ name|error
 condition|)
 block|{
 return|return
+operator|(
 name|KERN_FAILURE
+operator|)
 return|;
 block|}
 block|}
 return|return
+operator|(
 name|KERN_SUCCESS
+operator|)
 return|;
 block|}
 end_function
@@ -993,7 +1015,9 @@ condition|(
 name|rv
 condition|)
 return|return
+operator|(
 name|rv
+operator|)
 return|;
 name|offset
 operator|+=
@@ -1059,7 +1083,9 @@ condition|(
 name|rv
 condition|)
 return|return
+operator|(
 name|rv
+operator|)
 return|;
 name|end
 operator|=
@@ -1126,7 +1152,9 @@ condition|(
 name|rv
 condition|)
 return|return
+operator|(
 name|rv
+operator|)
 return|;
 while|while
 condition|(
@@ -1186,7 +1214,9 @@ name|object
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|rv
+operator|)
 return|;
 block|}
 name|off
@@ -1252,7 +1282,9 @@ name|error
 condition|)
 block|{
 return|return
+operator|(
 name|KERN_FAILURE
+operator|)
 return|;
 block|}
 name|start
@@ -1300,13 +1332,17 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|rv
+operator|)
 return|;
 block|}
 else|else
 block|{
 return|return
+operator|(
 name|KERN_SUCCESS
+operator|)
 return|;
 block|}
 block|}
@@ -1551,7 +1587,9 @@ name|object
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 comment|/* we can stop now if we've covered it all */
@@ -1563,7 +1601,9 @@ name|filsz
 condition|)
 block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -1660,7 +1700,9 @@ name|KERN_SUCCESS
 condition|)
 block|{
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 block|}
@@ -1723,7 +1765,9 @@ name|object
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 comment|/* send the page fragment to user space */
@@ -1813,7 +1857,9 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -2572,7 +2618,9 @@ name|M_TEMP
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -2721,8 +2769,10 @@ operator|!=
 name|ET_EXEC
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 comment|/* 	 * From here on down, we return an errno, not -1, as we've 	 * detected an ELF file. 	 */
 if|if
@@ -2754,7 +2804,9 @@ condition|)
 block|{
 comment|/* Only support headers in first page for now */
 return|return
+operator|(
 name|ENOEXEC
+operator|)
 return|;
 block|}
 name|phdr
@@ -3886,7 +3938,9 @@ name|td
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_decl_stmt
@@ -4165,7 +4219,9 @@ operator|)
 name|base
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -4549,7 +4605,9 @@ name|NULL
 condition|)
 block|{
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 name|error
@@ -4703,7 +4761,9 @@ name|M_TEMP
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -5391,6 +5451,7 @@ argument_list|)
 expr_stmt|;
 comment|/* Write it to the core file. */
 return|return
+operator|(
 name|vn_rdwr_inchunks
 argument_list|(
 name|UIO_WRITE
@@ -5420,6 +5481,7 @@ name|NULL
 argument_list|,
 name|td
 argument_list|)
+operator|)
 return|;
 comment|/* XXXKSE */
 block|}

@@ -2708,7 +2708,9 @@ argument_list|()
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 block|}
 block|}
@@ -2758,7 +2760,9 @@ literal|0
 index|]
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -4151,7 +4155,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 name|xs
 operator|=
@@ -4207,7 +4213,9 @@ operator|=
 name|newexecsw
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -4286,7 +4294,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 for|for
 control|(
@@ -4334,7 +4344,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 name|xs
 operator|=
@@ -4387,7 +4399,9 @@ operator|=
 name|newexecsw
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
