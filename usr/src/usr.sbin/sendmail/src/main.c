@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.22 (Berkeley) %G%"
+literal|"@(#)main.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1386,9 +1386,38 @@ block|{
 case|case
 name|MD_DAEMON
 case|:
-ifndef|#
-directive|ifndef
+ifdef|#
+directive|ifdef
 name|DAEMON
+if|if
+condition|(
+name|getuid
+argument_list|()
+operator|!=
+literal|0
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"Permission denied"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_USAGE
+argument_list|)
+expr_stmt|;
+block|}
+operator|(
+name|void
+operator|)
+name|unsetenv
+argument_list|(
+literal|"HOSTALIASES"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|usrerr
 argument_list|(
 literal|"Daemon mode not implemented"
@@ -1775,6 +1804,33 @@ comment|/* run queue files at intervals */
 ifdef|#
 directive|ifdef
 name|QUEUE
+if|if
+condition|(
+name|getuid
+argument_list|()
+operator|!=
+literal|0
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"Permission denied"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_USAGE
+argument_list|)
+expr_stmt|;
+block|}
+operator|(
+name|void
+operator|)
+name|unsetenv
+argument_list|(
+literal|"HOSTALIASES"
+argument_list|)
+expr_stmt|;
 name|queuemode
 operator|=
 name|TRUE
