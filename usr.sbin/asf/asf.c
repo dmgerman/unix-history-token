@@ -92,16 +92,7 @@ value|10
 end_define
 
 begin_decl_stmt
-name|char
-modifier|*
-name|token
-index|[
-name|MAXTOKEN
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|modules_path
@@ -113,6 +104,7 @@ comment|/* path relative to kernel 					 * build directory */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|outfile
@@ -128,6 +120,7 @@ comment|/*  * Take a blank separated list of tokens and turn it into a list of  
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|tokenize
 parameter_list|(
@@ -383,9 +376,11 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|myname
@@ -458,6 +453,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|filemode
@@ -472,6 +468,7 @@ name|MAXPATHLEN
 index|]
 decl_stmt|;
 comment|/* current directory */
+specifier|const
 name|char
 modifier|*
 name|debugname
@@ -479,6 +476,13 @@ init|=
 literal|".debug"
 decl_stmt|;
 comment|/* some file names end in this */
+name|char
+modifier|*
+name|token
+index|[
+name|MAXTOKEN
+index|]
+decl_stmt|;
 name|getcwd
 argument_list|(
 name|cwd
