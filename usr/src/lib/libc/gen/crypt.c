@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crypt.c	5.6 (Berkeley) %G%"
+literal|"@(#)crypt.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
 end_include
 
 begin_comment
@@ -2820,31 +2826,15 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 operator|*
 name|setting
-operator|!=
-literal|'_'
 condition|)
 block|{
-comment|/* old style */
-name|num_iter
-operator|=
-literal|25
-expr_stmt|;
-name|salt_size
-operator|=
-literal|2
-expr_stmt|;
-name|key_size
-operator|=
-literal|8
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* new style */
+case|case
+name|_PASSWORD_EFMT1
+case|:
 operator|*
 name|encp
 operator|++
@@ -2928,6 +2918,20 @@ expr_stmt|;
 name|key_size
 operator|=
 literal|128
+expr_stmt|;
+break|break;
+default|default:
+name|num_iter
+operator|=
+literal|25
+expr_stmt|;
+name|salt_size
+operator|=
+literal|2
+expr_stmt|;
+name|key_size
+operator|=
+literal|8
 expr_stmt|;
 block|}
 name|salt
@@ -5895,6 +5899,9 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%s:\n"
@@ -5930,6 +5937,9 @@ name|j
 operator|++
 control|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%3d"
@@ -5945,12 +5955,18 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\n"
