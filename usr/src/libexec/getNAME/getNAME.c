@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getNAME.c	8.1 (Berkeley) %G%"
+literal|"@(#)getNAME.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -576,6 +576,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|tocrc
+operator|&&
 operator|!
 name|intro
 condition|)
