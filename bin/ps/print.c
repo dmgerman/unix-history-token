@@ -2852,9 +2852,6 @@ decl_stmt|;
 name|double
 name|fracmem
 decl_stmt|;
-name|int
-name|szptudot
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -2894,10 +2891,6 @@ literal|0.0
 operator|)
 return|;
 comment|/* XXX want pmap ptpages, segtab, etc. (per architecture) */
-name|szptudot
-operator|=
-name|UPAGES
-expr_stmt|;
 comment|/* XXX don't have info about shared */
 name|fracmem
 operator|=
@@ -2910,8 +2903,6 @@ operator|->
 name|ki_p
 operator|->
 name|ki_rssize
-operator|+
-name|szptudot
 operator|)
 operator|/
 name|mempages
