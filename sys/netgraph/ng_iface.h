@@ -141,6 +141,8 @@ comment|/* returns struct ng_iface_ifname */
 name|NGM_IFACE_POINT2POINT
 block|,
 name|NGM_IFACE_BROADCAST
+block|,
+name|NGM_IFACE_GET_IFINDEX
 block|, }
 enum|;
 end_enum
