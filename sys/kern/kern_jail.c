@@ -284,7 +284,7 @@ name|_security_jail
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|getfsstate_getfsstatroot_only
+name|getfsstatroot_only
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
