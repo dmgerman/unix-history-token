@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vbaparam.h	1.3	86/12/15	*/
+comment|/*	vbaparam.h	1.4	87/06/30	*/
 end_comment
 
 begin_comment
@@ -143,24 +143,6 @@ parameter_list|(
 name|addr
 parameter_list|)
 value|((int)(((caddr_t)(addr)) - VBIOBASE))
-end_define
-
-begin_comment
-comment|/*  * Page table map sizes.  *  * Current VBmap allotments are:  *	4 vd controllers	32+1 pte's  *	2 cy controllers	32+1 pte's  * Current VBMEMmap allotments are:  *	2 ace controllers	32+1 pte's  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VBPTSIZE
-value|(((4*(32+1))+2*(32+1)+3)&~ 3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VBMEMSIZE
-value|((2*(32+1)+3)&~ 3)
 end_define
 
 end_unit
