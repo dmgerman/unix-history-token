@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ufs_lookup.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ufs_lookup.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -44,15 +44,6 @@ include|#
 directive|include
 file|"../ufs/fs.h"
 end_include
-
-begin_function_decl
-name|struct
-name|vnode
-modifier|*
-name|cache_lookup
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 name|struct
@@ -309,7 +300,7 @@ return|;
 comment|/* 	 * We now have a segment name to search for, and a directory to search. 	 * 	 * Before tediously performing a linear scan of the directory, 	 * check the name cache to see if the directory/name pair 	 * we are looking for is known already. 	 */
 if|if
 condition|(
-name|vdp
+name|error
 operator|=
 name|cache_lookup
 argument_list|(
@@ -317,17 +308,64 @@ name|ndp
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * Get the next vnode in the path. 		 * See comment above `IUNLOCK' code for 		 * an explaination of the locking protocol. 		 */
+name|int
+name|vpid
+decl_stmt|;
+comment|/* capability number of vnode */
+if|if
+condition|(
+name|error
+operator|==
+name|ENOENT
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+comment|/* 		 * Get the next vnode in the path. 		 * See comment below starting `Step through' for 		 * an explaination of the locking protocol. 		 */
 name|pdp
 operator|=
 name|dp
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|ndp
+operator|->
+name|ni_vp
+operator|==
+name|ndp
+operator|->
+name|ni_rdir
+operator|&&
+name|ndp
+operator|->
+name|ni_isdotdot
+operator|)
+condition|)
 name|dp
 operator|=
 name|VTOI
 argument_list|(
-name|vdp
+name|ndp
+operator|->
+name|ni_vp
 argument_list|)
+expr_stmt|;
+name|vdp
+operator|=
+name|ITOV
+argument_list|(
+name|dp
+argument_list|)
+expr_stmt|;
+name|vpid
+operator|=
+name|vdp
+operator|->
+name|v_id
 expr_stmt|;
 if|if
 condition|(
@@ -374,17 +412,40 @@ name|pdp
 argument_list|)
 expr_stmt|;
 block|}
-name|ndp
-operator|->
-name|ni_vp
-operator|=
+comment|/* 		 * Check that the capability number did not change 		 * while we were waiting for the lock. 		 */
+if|if
+condition|(
+name|vpid
+operator|==
 name|vdp
-expr_stmt|;
+operator|->
+name|v_id
+condition|)
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+name|iput
+argument_list|(
+name|dp
+argument_list|)
+expr_stmt|;
+name|ILOCK
+argument_list|(
+name|pdp
+argument_list|)
+expr_stmt|;
+name|dp
+operator|=
+name|pdp
+expr_stmt|;
+name|ndp
+operator|->
+name|ni_vp
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 comment|/* 	 * Suppress search for slots unless creating 	 * file and at end of pathname, in which case 	 * we watch for a place to put the new file in 	 * case it doesn't already exist. 	 */
 name|slotstatus
@@ -1123,6 +1184,18 @@ name|dp
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Insert name into cache (as non-existent) if appropriate. 	 */
+if|if
+condition|(
+name|ndp
+operator|->
+name|ni_makeentry
+condition|)
+name|cache_enter
+argument_list|(
+name|ndp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOENT
@@ -1252,7 +1325,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 		 * Return pointer to current entry in ndp->ni_offset, 		 * and distance past previous entry (if there 		 * is a previous entry in this block) in ndp->ni_count. 		 * Save directory inode pointer in ndp->ni_pdir for dirremove(). 		 */
+comment|/* 		 * Return pointer to current entry in ndp->ni_offset, 		 * and distance past previous entry (if there 		 * is a previous entry in this block) in ndp->ni_count. 		 * Save directory inode pointer in ndp->ni_dvp for dirremove(). 		 */
 if|if
 condition|(
 operator|(
