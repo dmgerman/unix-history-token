@@ -669,6 +669,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|MPC745X_P
+parameter_list|(
+name|v
+parameter_list|)
+value|((v& 0xFFFC) == 0x8000)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MPC7450
 value|0x8000
 end_define
@@ -678,6 +688,13 @@ define|#
 directive|define
 name|MPC7455
 value|0x8001
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPC7457
+value|0x8002
 end_define
 
 begin_define
