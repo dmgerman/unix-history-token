@@ -2559,7 +2559,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|"%s\n"
+literal|"%s\n\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
