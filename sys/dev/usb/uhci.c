@@ -4628,12 +4628,28 @@ name|status
 operator|==
 literal|0
 condition|)
+block|{
 comment|/* The interrupt was not for us. */
+name|printf
+argument_list|(
+literal|"%s: interrupt, but not for us\n"
+argument_list|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|bdev
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 if|#
 directive|if
 name|defined
@@ -4791,6 +4807,7 @@ if|if
 condition|(
 name|ack
 condition|)
+block|{
 comment|/* acknowledge the ints */
 name|UWRITE2
 argument_list|(
@@ -4801,13 +4818,32 @@ argument_list|,
 name|ack
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 comment|/* nothing to acknowledge */
+name|printf
+argument_list|(
+literal|"%s: UHCI interrupt, STS = 0x%04x, but ack == 0\n"
+argument_list|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|bdev
+argument_list|)
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 name|sc
 operator|->
 name|sc_bus
