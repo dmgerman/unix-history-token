@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mba.c	4.8	83/01/27	*/
+comment|/*	mba.c	4.9	83/02/18	*/
 end_comment
 
 begin_include
@@ -217,14 +217,12 @@ name|i_flgs
 operator|&
 name|F_SSI
 condition|)
-block|{
 name|drv
 operator|->
 name|mbd_of
 operator||=
 name|HPOF_SSEI
 expr_stmt|;
-block|}
 switch|switch
 condition|(
 name|io
@@ -336,6 +334,27 @@ name|HP_GO
 expr_stmt|;
 break|break;
 default|default:
+goto|goto
+name|error
+goto|;
+block|}
+if|if
+condition|(
+operator|(
+name|drv
+operator|->
+name|mbd_dt
+operator|&
+name|MBDT_TAP
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|error
 label|:
 name|io
@@ -356,29 +375,6 @@ operator|(
 literal|1
 operator|)
 return|;
-block|}
-if|if
-condition|(
-operator|(
-name|drv
-operator|->
-name|mbd_dt
-operator|&
-name|MBDT_TAP
-operator|)
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-else|else
-goto|goto
-name|error
-goto|;
-comment|/* if not a disk : error */
 block|}
 end_block
 
