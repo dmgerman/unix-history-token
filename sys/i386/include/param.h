@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)param.h	5.8 (Berkeley) 6/28/91  *	$Id: param.h,v 1.33 1997/08/09 00:03:16 dyson Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)param.h	5.8 (Berkeley) 6/28/91  *	$Id: param.h,v 1.9 1997/08/21 04:48:45 smp Exp smp $  */
 end_comment
 
 begin_ifndef
@@ -62,6 +62,12 @@ directive|define
 name|MID_MACHINE
 value|MID_I386
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
 
 begin_comment
 comment|/*  * Round p (pointer or byte index) up to a correctly-aligned value  * for all data types (int, long, ...).   The result is unsigned int  * and must be cast to any desired pointer type.  */
@@ -451,6 +457,15 @@ parameter_list|)
 value|((unsigned)(x)<< PAGE_SHIFT)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !LOCORE */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -462,6 +477,216 @@ define|#
 directive|define
 name|_SIMPLELOCK_H_
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOCORE
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MPLOCKED
+value|lock ;
+end_define
+
+begin_comment
+comment|/*  * Some handy macros to allow logical organization and  * convenient reassignment of various locks.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPU_LOCK
+value|call	_get_fpu_lock
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALIGN_LOCK
+value|call	_get_align_lock
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCALL_LOCK
+value|call	_get_syscall_lock
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALTSYSCALL_LOCK
+value|call	_get_altsyscall_lock
+end_define
+
+begin_comment
+comment|/*  * Protects INTR() ISRs.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISR_TRYLOCK
+define|\
+value|pushl	$_mp_lock ;
+comment|/* GIANT_LOCK */
+value|\ 	call	_MPtrylock ;
+comment|/* try to get lock */
+value|\ 	add	$4, %esp
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISR_RELLOCK
+define|\
+value|pushl	$_mp_lock ;
+comment|/* GIANT_LOCK */
+value|\ 	call	_MPrellock ;						\ 	add	$4, %esp
+end_define
+
+begin_comment
+comment|/*  * Protects the IO APIC and apic_imen as a critical region.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IMASK_LOCK
+define|\
+value|pushl	$_imen_lock ;
+comment|/* address of lock */
+value|\ 	call	_s_lock ;
+comment|/* MP-safe */
+value|\ 	addl	$4, %esp
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMASK_UNLOCK
+define|\
+value|pushl	$_imen_lock ;
+comment|/* address of lock */
+value|\ 	call	_s_unlock ;
+comment|/* MP-safe */
+value|\ 	addl	$4, %esp
+end_define
+
+begin_comment
+comment|/*  * Protects spl updates as a critical region.  * Items within this 'region' include:  *  cpl  *  cil  *  ipending  *  ???  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPL_LOCK
+define|\
+value|pushl	$_cpl_lock ;
+comment|/* address of lock */
+value|\ 	call	_s_lock ;
+comment|/* MP-safe */
+value|\ 	addl	$4, %esp
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPL_UNLOCK
+define|\
+value|pushl	$_cpl_lock ;
+comment|/* address of lock */
+value|\ 	call	_s_unlock ;
+comment|/* MP-safe */
+value|\ 	addl	$4, %esp
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* SMP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPLOCKED
+end_define
+
+begin_comment
+comment|/* NOP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPU_LOCK
+end_define
+
+begin_comment
+comment|/* NOP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ALIGN_LOCK
+end_define
+
+begin_comment
+comment|/* NOP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYSCALL_LOCK
+end_define
+
+begin_comment
+comment|/* NOP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ALTSYSCALL_LOCK
+end_define
+
+begin_comment
+comment|/* NOP */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SMP */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* LOCORE */
+end_comment
 
 begin_comment
 comment|/*  * A simple spin lock.  *  * This structure only sets one bit of data, but is sized based on the  * minimum word size that can be operated on by the hardware test-and-set  * instruction. It is only needed for multiprocessors, as uniprocessors  * will always run to completion or a sleep. It is an error to hold one  * of these locks while a process is sleeping.  */
@@ -478,6 +703,110 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* functions in simplelock.s */
+end_comment
+
+begin_decl_stmt
+name|void
+name|s_lock_init
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|simplelock
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|s_lock
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|simplelock
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|s_lock_try
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|simplelock
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|s_unlock
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|simplelock
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* global data in mp_machdep.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|simplelock
+name|imen_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|simplelock
+name|cpl_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|simplelock
+name|fast_intr_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|simplelock
+name|intr_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|simplelock
+name|com_lock
+decl_stmt|;
+end_decl_stmt
 
 begin_if
 if|#
@@ -667,6 +996,15 @@ end_endif
 
 begin_comment
 comment|/* NCPUS> 1 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* LOCORE */
 end_comment
 
 begin_endif
