@@ -1,11 +1,23 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ttychars.h	4.1	82/12/02	*/
+comment|/*	ttychars.h	4.2	82/12/05	*/
 end_comment
 
 begin_comment
 comment|/*  * User visible structures and constants  * related to terminal handling.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_TTYCHARS_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_TTYCHARS_
+end_define
 
 begin_struct
 struct|struct
@@ -107,7 +119,7 @@ value|0177
 end_define
 
 begin_comment
-comment|/* DEL */
+comment|/* DEL, ^? */
 end_comment
 
 begin_define
@@ -118,7 +130,7 @@ value|034
 end_define
 
 begin_comment
-comment|/* FS, cntl shift L */
+comment|/* FS, ^\ */
 end_comment
 
 begin_define
@@ -197,6 +209,11 @@ directive|define
 name|CLNEXT
 value|CTRL(v)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
