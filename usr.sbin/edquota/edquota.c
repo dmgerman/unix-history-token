@@ -350,6 +350,9 @@ operator|(
 name|long
 operator|,
 name|int
+operator|,
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -546,6 +549,12 @@ init|=
 literal|0
 decl_stmt|;
 name|char
+modifier|*
+name|fspath
+init|=
+name|NULL
+decl_stmt|;
+name|char
 name|buf
 index|[
 literal|30
@@ -587,7 +596,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ugtp:"
+literal|"ugtf:p:"
 argument_list|)
 operator|)
 operator|!=
@@ -600,6 +609,14 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'f'
+case|:
+name|fspath
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
 case|case
 literal|'p'
 case|:
@@ -681,6 +698,8 @@ argument_list|(
 name|protoid
 argument_list|,
 name|quotatype
+argument_list|,
+name|fspath
 argument_list|)
 expr_stmt|;
 for|for
@@ -904,6 +923,8 @@ argument_list|(
 literal|0
 argument_list|,
 name|quotatype
+argument_list|,
+name|fspath
 argument_list|)
 expr_stmt|;
 if|if
@@ -1007,6 +1028,8 @@ argument_list|(
 name|id
 argument_list|,
 name|quotatype
+argument_list|,
+name|fspath
 argument_list|)
 expr_stmt|;
 if|if
@@ -1085,13 +1108,13 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: edquota [-u] [-p username] username ..."
+literal|"usage: edquota [-u] [-f fspath] [-p username] username ..."
 argument_list|,
-literal|"       edquota -g [-p groupname] groupname ..."
+literal|"       edquota -g [-f fspath] [-p groupname] groupname ..."
 argument_list|,
-literal|"       edquota [-u] -t"
+literal|"       edquota [-u] -t [-f fspath]"
 argument_list|,
-literal|"       edquota -g -t"
+literal|"       edquota -g -t [-f fspath]"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1247,6 +1270,8 @@ parameter_list|(
 name|id
 parameter_list|,
 name|quotatype
+parameter_list|,
+name|fspath
 parameter_list|)
 specifier|register
 name|long
@@ -1254,6 +1279,10 @@ name|id
 decl_stmt|;
 name|int
 name|quotatype
+decl_stmt|;
+name|char
+modifier|*
+name|fspath
 decl_stmt|;
 block|{
 specifier|register
@@ -1324,6 +1353,32 @@ argument_list|()
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|fspath
+operator|&&
+operator|*
+name|fspath
+operator|&&
+name|strcmp
+argument_list|(
+name|fspath
+argument_list|,
+name|fs
+operator|->
+name|fs_spec
+argument_list|)
+operator|&&
+name|strcmp
+argument_list|(
+name|fspath
+argument_list|,
+name|fs
+operator|->
+name|fs_file
+argument_list|)
+condition|)
+continue|continue;
 if|if
 condition|(
 name|strcmp
