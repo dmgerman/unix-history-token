@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)arp.c	1.1 (Berkeley) %G%"
+literal|"@(#)arp.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -557,8 +557,7 @@ name|sockaddr_in
 modifier|*
 name|sin
 decl_stmt|;
-name|struct
-name|ether_addr
+name|u_char
 modifier|*
 name|ea
 decl_stmt|;
@@ -668,8 +667,7 @@ expr_stmt|;
 name|ea
 operator|=
 operator|(
-expr|struct
-name|ether_addr
+name|u_char
 operator|*
 operator|)
 name|ar
@@ -851,8 +849,7 @@ name|sockaddr_in
 modifier|*
 name|sin
 decl_stmt|;
-name|struct
-name|ether_addr
+name|u_char
 modifier|*
 name|ea
 decl_stmt|;
@@ -1021,8 +1018,7 @@ expr_stmt|;
 name|ea
 operator|=
 operator|(
-expr|struct
-name|ether_addr
+name|u_char
 operator|*
 operator|)
 name|ar
@@ -1690,7 +1686,6 @@ name|ATF_COM
 condition|)
 name|ether_print
 argument_list|(
-operator|&
 name|at
 operator|->
 name|at_enaddr
@@ -1743,32 +1738,19 @@ end_block
 begin_macro
 name|ether_print
 argument_list|(
-argument|ea
+argument|cp
 argument_list|)
 end_macro
 
 begin_decl_stmt
-name|struct
-name|ether_addr
+name|u_char
 modifier|*
-name|ea
+name|cp
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
-name|u_char
-modifier|*
-name|cp
-init|=
-operator|&
-name|ea
-operator|->
-name|ether_addr_octet
-index|[
-literal|0
-index|]
-decl_stmt|;
 name|printf
 argument_list|(
 literal|"%x:%x:%x:%x:%x:%x"
@@ -1824,8 +1806,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|ether_addr
+name|u_char
 modifier|*
 name|n
 decl_stmt|;
@@ -1922,8 +1903,6 @@ name|i
 operator|++
 control|)
 name|n
-operator|->
-name|ether_addr_octet
 index|[
 name|i
 index|]
