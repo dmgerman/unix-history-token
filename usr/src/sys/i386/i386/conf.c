@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)conf.c	5.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)conf.c	5.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -673,6 +673,36 @@ argument_list|()
 decl_stmt|,
 name|cnioctl
 argument_list|()
+decl_stmt|,
+name|cnselect
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|pcopen
+argument_list|()
+decl_stmt|,
+name|pcclose
+argument_list|()
+decl_stmt|,
+name|pcread
+argument_list|()
+decl_stmt|,
+name|pcwrite
+argument_list|()
+decl_stmt|,
+name|pcioctl
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|tty
+name|pccons
 decl_stmt|;
 end_decl_stmt
 
@@ -1032,7 +1062,7 @@ name|nullop
 block|,
 name|NULL
 block|,
-name|ttselect
+name|cnselect
 block|,
 name|enodev
 block|,
@@ -1287,6 +1317,32 @@ block|,
 name|enodev
 block|,
 name|xdstrategy
+block|}
+block|,
+block|{
+name|pcopen
+block|,
+name|pcclose
+block|,
+name|pcread
+block|,
+name|pcwrite
+block|,
+comment|/*C*/
+name|pcioctl
+block|,
+name|nullop
+block|,
+name|nullop
+block|,
+operator|&
+name|pccons
+block|,
+name|ttselect
+block|,
+name|enodev
+block|,
+name|NULL
 block|}
 block|, }
 decl_stmt|;
