@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.13	81/04/13	*/
+comment|/*	init_main.c	4.14	81/04/23	*/
 end_comment
 
 begin_include
@@ -150,16 +150,6 @@ name|startup
 argument_list|(
 name|firstaddr
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|lotsfree
-operator|==
-literal|0
-condition|)
-name|lotsfree
-operator|=
-name|LOTSFREE
 expr_stmt|;
 comment|/* 	 * set up system process 0 (swapper) 	 */
 name|p
@@ -409,6 +399,10 @@ operator|.
 name|u_smap
 operator|=
 name|zdmap
+expr_stmt|;
+comment|/* 	 * Set the scan rate and other parameters of the paging subsystem. 	 */
+name|setupclock
+argument_list|()
 expr_stmt|;
 comment|/* 	 * make page-out daemon (process 2) 	 * the daemon has ctopt(nswbuf*CLSIZE*KLMAX) pages of page 	 * table so that it can map dirty pages into 	 * its address space during asychronous pushes. 	 */
 name|mpid
