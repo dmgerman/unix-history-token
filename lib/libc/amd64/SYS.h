@@ -24,11 +24,11 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|SYSCALL
+name|RSYSCALL
 parameter_list|(
 name|x
 parameter_list|)
-value|2: movq PIC_GOT(HIDENAME(cerror)),%rcx;		\ 			jmp *%rcx;					\ 			ENTRY(__CONCAT(__sys_,x));			\ 			.weak CNAME(x);					\ 			.set CNAME(x),CNAME(__CONCAT(__sys_,x));	\ 			.weak CNAME(__CONCAT(_,x));			\ 			.set CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x)); \ 			mov __CONCAT($SYS_,x),%rax; KERNCALL; jb 2b
+value|ENTRY(__CONCAT(__sys_,x));			\ 			.weak CNAME(x);					\ 			.set CNAME(x),CNAME(__CONCAT(__sys_,x));	\ 			.weak CNAME(__CONCAT(_,x));			\ 			.set CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x)); \ 			mov __CONCAT($SYS_,x),%rax; KERNCALL; jb 2f; ret; \ 			2: movq PIC_GOT(HIDENAME(cerror)),%rcx; jmp *%rcx
 end_define
 
 begin_else
@@ -39,27 +39,17 @@ end_else
 begin_define
 define|#
 directive|define
-name|SYSCALL
+name|RSYSCALL
 parameter_list|(
 name|x
 parameter_list|)
-value|2: jmp HIDENAME(cerror);			\ 			ENTRY(__CONCAT(__sys_,x));			\ 			.weak CNAME(x);					\ 			.set CNAME(x),CNAME(__CONCAT(__sys_,x));	\ 			.weak CNAME(__CONCAT(_,x));			\ 			.set CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x)); \ 			mov __CONCAT($SYS_,x),%rax; KERNCALL; jb 2b
+value|ENTRY(__CONCAT(__sys_,x));			\ 			.weak CNAME(x);					\ 			.set CNAME(x),CNAME(__CONCAT(__sys_,x));	\ 			.weak CNAME(__CONCAT(_,x));			\ 			.set CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x)); \ 			mov __CONCAT($SYS_,x),%rax; KERNCALL; jb 2f; ret; \ 			2: jmp HIDENAME(cerror)
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|RSYSCALL
-parameter_list|(
-name|x
-parameter_list|)
-value|SYSCALL(x); ret
-end_define
 
 begin_define
 define|#
