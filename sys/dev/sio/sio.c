@@ -385,11 +385,38 @@ end_comment
 begin_define
 define|#
 directive|define
+name|COM_C_IIR_TXRDYBUG
+value|0x80000
+end_define
+
+begin_define
+define|#
+directive|define
 name|COM_CONSOLE
 parameter_list|(
 name|flags
 parameter_list|)
 value|((flags)& 0x10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|COM_DEBUGGER
+parameter_list|(
+name|flags
+parameter_list|)
+value|((flags)& 0x80)
+end_define
+
+begin_define
+define|#
+directive|define
+name|COM_FIFOSIZE
+parameter_list|(
+name|flags
+parameter_list|)
+value|(((flags)& 0xff000000)>> 24)
 end_define
 
 begin_define
@@ -405,21 +432,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|COM_LLCONSOLE
+name|COM_IIR_TXRDYBUG
 parameter_list|(
 name|flags
 parameter_list|)
-value|((flags)& 0x40)
+value|((flags)& COM_C_IIR_TXRDYBUG)
 end_define
 
 begin_define
 define|#
 directive|define
-name|COM_DEBUGGER
+name|COM_LLCONSOLE
 parameter_list|(
 name|flags
 parameter_list|)
-value|((flags)& 0x80)
+value|((flags)& 0x40)
 end_define
 
 begin_define
@@ -445,6 +472,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|COM_NOPROBE
+parameter_list|(
+name|flags
+parameter_list|)
+value|((flags)& 0x40000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|COM_NOSCR
+parameter_list|(
+name|flags
+parameter_list|)
+value|((flags)& 0x100000)
+end_define
+
+begin_define
+define|#
+directive|define
 name|COM_PPSCTS
 parameter_list|(
 name|flags
@@ -465,65 +512,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|COM_C_NOPROBE
-value|(0x40000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|COM_NOPROBE
-parameter_list|(
-name|flags
-parameter_list|)
-value|((flags)& COM_C_NOPROBE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|COM_C_IIR_TXRDYBUG
-value|(0x80000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|COM_IIR_TXRDYBUG
-parameter_list|(
-name|flags
-parameter_list|)
-value|((flags)& COM_C_IIR_TXRDYBUG)
-end_define
-
-begin_define
-define|#
-directive|define
-name|COM_NOSCR
-parameter_list|(
-name|flags
-parameter_list|)
-value|((flags)& 0x100000)
-end_define
-
-begin_define
-define|#
-directive|define
 name|COM_TI16754
 parameter_list|(
 name|flags
 parameter_list|)
 value|((flags)& 0x200000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|COM_FIFOSIZE
-parameter_list|(
-name|flags
-parameter_list|)
-value|(((flags)& 0xff000000)>> 24)
 end_define
 
 begin_define
@@ -811,10 +804,6 @@ name|hasfifo
 decl_stmt|;
 comment|/* nonzero for 16550 UARTs */
 name|bool_t
-name|st16650a
-decl_stmt|;
-comment|/* Is a Startech 16650A or RTS/CTS compat */
-name|bool_t
 name|loses_outints
 decl_stmt|;
 comment|/* nonzero if device loses output interrupts */
@@ -848,6 +837,10 @@ name|bool_t
 name|poll_output
 decl_stmt|;
 comment|/* nonzero if polling for output is required */
+name|bool_t
+name|st16650a
+decl_stmt|;
+comment|/* nonzero if Startech 16650A compatible */
 name|int
 name|unit
 decl_stmt|;
@@ -2015,7 +2008,7 @@ name|com
 operator|->
 name|gone
 operator|=
-literal|1
+name|TRUE
 expr_stmt|;
 for|for
 control|(
@@ -4517,12 +4510,6 @@ name|DELAY
 argument_list|(
 literal|100
 argument_list|)
-expr_stmt|;
-name|com
-operator|->
-name|st16650a
-operator|=
-literal|0
 expr_stmt|;
 switch|switch
 condition|(
