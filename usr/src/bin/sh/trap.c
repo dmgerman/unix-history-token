@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trap.c	5.2 (Berkeley) %G%"
+literal|"@(#)trap.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -162,6 +162,17 @@ end_define
 
 begin_comment
 comment|/* signal is ignored permenantly */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_RESET
+value|5
+end_define
+
+begin_comment
+comment|/* temporary - to reset a hard ignored sig */
 end_comment
 
 begin_decl_stmt
@@ -534,6 +545,11 @@ name|void
 name|onsig
 parameter_list|()
 function_decl|;
+specifier|extern
+name|sig_t
+name|getsigaction
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 operator|(
@@ -666,30 +682,12 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* current setting unknown */
-comment|/* 		 * There is a race condition here if action is not S_IGN. 		 * A signal can be ignored that shouldn't be. 		 */
-if|if
-condition|(
-call|(
-name|int
-call|)
-argument_list|(
+comment|/*  		 * current setting unknown  		 */
 name|sigact
 operator|=
-name|signal
+name|getsigaction
 argument_list|(
 name|signo
-argument_list|,
-name|SIG_IGN
-argument_list|)
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|error
-argument_list|(
-literal|"Signal system call failed"
 argument_list|)
 expr_stmt|;
 if|if
@@ -699,6 +697,33 @@ operator|==
 name|SIG_IGN
 condition|)
 block|{
+if|if
+condition|(
+name|jflag
+operator|&&
+operator|(
+name|signo
+operator|==
+name|SIGTSTP
+operator|||
+name|signo
+operator|==
+name|SIGTTIN
+operator|||
+name|signo
+operator|==
+name|SIGTTOU
+operator|)
+condition|)
+block|{
+operator|*
+name|t
+operator|=
+name|S_IGN
+expr_stmt|;
+comment|/* don't hard ignore these */
+block|}
+else|else
 operator|*
 name|t
 operator|=
@@ -710,8 +735,9 @@ block|{
 operator|*
 name|t
 operator|=
-name|S_IGN
+name|S_RESET
 expr_stmt|;
+comment|/* force to be set */
 block|}
 block|}
 if|if
@@ -774,6 +800,54 @@ name|signo
 argument_list|,
 name|sigact
 argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Return the current setting for sig w/o changing it.  */
+end_comment
+
+begin_function
+name|sig_t
+name|getsigaction
+parameter_list|(
+name|signo
+parameter_list|)
+block|{
+name|struct
+name|sigaction
+name|sa
+decl_stmt|;
+if|if
+condition|(
+name|sigaction
+argument_list|(
+name|signo
+argument_list|,
+operator|(
+expr|struct
+name|sigaction
+operator|*
+operator|)
+literal|0
+argument_list|,
+operator|&
+name|sa
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|error
+argument_list|(
+literal|"Sigaction system call failed"
+argument_list|)
+expr_stmt|;
+return|return
+name|sa
+operator|.
+name|sa_handler
 return|;
 block|}
 end_function
