@@ -133,7 +133,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
-name|_kern_security
+name|_security
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -151,7 +151,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_kern_security_capabilities
+name|_security_capabilities
 argument_list|,
 name|OID_AUTO
 argument_list|,
