@@ -77,6 +77,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -355,6 +361,13 @@ name|char
 modifier|*
 name|cmd
 decl_stmt|;
+name|setlocale
+argument_list|(
+name|LC_ALL
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 name|aflag
 operator|=
 name|uflag
@@ -492,6 +505,18 @@ name|argc
 condition|)
 name|usage
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|xflag
+condition|)
+name|setlocale
+argument_list|(
+name|LC_COLLATE
+argument_list|,
+literal|"C"
+argument_list|)
 expr_stmt|;
 name|init
 argument_list|()

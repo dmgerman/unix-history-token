@@ -393,7 +393,7 @@ name|dif
 decl_stmt|;
 name|dif
 operator|=
-name|strcmp
+name|strcoll
 argument_list|(
 name|node
 operator|->
