@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strfile.c	5.10 (Berkeley) %G%"
+literal|"@(#)strfile.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,13 +55,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<machine/endian.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -626,10 +626,16 @@ name|pos
 operator|-
 name|last_off
 operator|-
+operator|(
+name|sp
+condition|?
 name|strlen
 argument_list|(
 name|sp
 argument_list|)
+else|:
+literal|0
+operator|)
 expr_stmt|;
 name|last_off
 operator|=
