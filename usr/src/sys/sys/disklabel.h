@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)disklabel.h	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)disklabel.h	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -367,10 +367,27 @@ name|u_char
 name|p_frag
 decl_stmt|;
 comment|/* filesystem fragments per block */
+union|union
+block|{
 name|u_short
-name|p_cpg
+name|cpg
 decl_stmt|;
-comment|/* filesystem cylinders per group */
+comment|/* UFS: FS cylinders per group */
+name|u_short
+name|sgs
+decl_stmt|;
+comment|/* LFS: FS segment shift */
+block|}
+name|__partition_u1
+union|;
+define|#
+directive|define
+name|p_cpg
+value|__partition_u1.cpg
+define|#
+directive|define
+name|p_sgs
+value|__partition_u1.sgs
 block|}
 name|d_partitions
 index|[
@@ -618,6 +635,17 @@ end_define
 
 begin_comment
 comment|/* MSDOS file system */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FS_LFS
+value|9
+end_define
+
+begin_comment
+comment|/* 4.4BSD log-structured file system */
 end_comment
 
 begin_ifdef
