@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)passwd.c	4.29 (Berkeley) %G%"
+literal|"@(#)passwd.c	4.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1574,12 +1574,49 @@ condition|)
 break|break;
 if|if
 condition|(
-name|checkpass
+name|strlen
 argument_list|(
 name|pwbuf
 argument_list|)
+operator|<=
+literal|4
+condition|)
+name|puts
+argument_list|(
+literal|"Please enter a longer password."
+argument_list|)
+expr_stmt|;
+else|else
+for|for
+control|(
+name|pw
+operator|=
+name|pwbuf
+init|;
+operator|*
+name|pw
+operator|&&
+name|islower
+argument_list|(
+operator|*
+name|pw
+argument_list|)
+condition|;
+operator|++
+name|pw
+control|)
+empty_stmt|;
+if|if
+condition|(
+operator|*
+name|pw
 condition|)
 break|break;
+name|puts
+argument_list|(
+literal|"Please don't use an all-lower case password.\nUnusual capitalization, control characters or digits are suggested."
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1592,8 +1629,6 @@ argument_list|(
 literal|"Retype new password:"
 argument_list|)
 argument_list|)
-operator|!=
-literal|0
 condition|)
 block|{
 name|puts
