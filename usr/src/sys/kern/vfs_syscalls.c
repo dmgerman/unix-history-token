@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_syscalls.c	7.52 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_syscalls.c	7.53 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -68,6 +68,13 @@ include|#
 directive|include
 file|"malloc.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|p_devtmp
+value|p_logname[11]
+end_define
 
 begin_undef
 undef|#
@@ -2780,17 +2787,14 @@ name|uap
 operator|->
 name|fname
 expr_stmt|;
-name|u
-operator|.
-name|u_r
-operator|.
-name|u_rv
-operator|.
-name|R_val1
+name|p
+operator|->
+name|p_devtmp
 operator|=
-name|indx
+operator|-
+literal|1
 expr_stmt|;
-comment|/* XXX for fdopen() */
+comment|/* XXX check for fdopen */
 if|if
 condition|(
 name|error
@@ -2821,10 +2825,33 @@ if|if
 condition|(
 name|error
 operator|==
-name|EJUSTRETURN
+name|ENODEV
+operator|&&
+comment|/* XXX from fdopen */
+name|p
+operator|->
+name|p_devtmp
+operator|>=
+literal|0
+operator|&&
+operator|(
+name|error
+operator|=
+name|dupfdopen
+argument_list|(
+name|indx
+argument_list|,
+name|p
+operator|->
+name|p_devtmp
+argument_list|,
+name|fmode
+argument_list|)
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
-comment|/* XXX from fdopen */
 operator|*
 name|retval
 operator|=
