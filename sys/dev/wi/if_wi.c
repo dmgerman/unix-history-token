@@ -1534,17 +1534,10 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|WI_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return
 name|ENXIO
 return|;
 comment|/* XXX */
-block|}
 comment|/* 	 * Read the station address. 	 * And do it twice. I've seen PRISM-based cards that return 	 * an error when trying to read it the first time, which causes 	 * the probe to fail. 	 */
 name|buflen
 operator|=
