@@ -16,20 +16,13 @@ comment|/*  *  * Card configuration  * ==================  *  * This card is unu
 end_comment
 
 begin_comment
-comment|/*  * TODO  *  * _stop - mostly done  *	would be nice to understand shutdown/or power save to prevent RX  * _reset - done  * 	just needs calling in the right places  *	converted panics to resets - when tx packets are the wrong length  *	may be needed in a couple of other places when I do more commands  * havenet - mostly done  *	i think i've got all the places to set it right, but not so sure  *	we reset it in all the right places  * _unload - done  *	recreated most of stop but as card is unplugged don't try and  *	access it to turn it off  * TX bpf - done  * RX bpf - done  *	I would much prefer to have the complete 802.11 packet dropped to  *	the bpf tap and then have a user land program parse the headers  *	as needed. This way, tcpdump -w can be used to grab the raw data. If  *	needed the 802.11 aware program can "translate" the .11 to ethernet  *	for tcpdump -r  * use std timeout code for download - done  *	was mainly moving a call and removing a load of stuff in  *	download_done as it duplicates check_ccs and ccs_done  * promisoius - done  * add the start_join_net - done  *	i needed it anyway  * remove startccs and startcmd - done  *	as those were used for the NetBSD start timeout  * multicast - done but UNTESTED  *	I don't have the ability/facilty to test this  * rxlevel - done  *	stats reported via raycontrol  * getparams ioctl - done  *	reported via raycontrol  * start_join_done needs a restart in download_done - done  *	now use netbsd style start up  * ioctls - done  *	use raycontrol  *	translation, BSS_ID, countrycode, changing mode  * ifp->if_hdr length - done  * rx level and antenna cache - done  *	antenna not used yet  * antenna tx side - done  *	not tested!  * shutdown - done  *	the driver seems to do the right thing for plugging and unplugging  *	cards  * apm/resume - ignore  *	apm+pccard is borken for 3.x - no one knows how to do it anymore  * fix the XXX code in start_join_done - n/a  *	i've removed this as the error handling should be consistent for  *	all ECF commands and none of the other commands bother!  * ray_update_params_done needs work - done  *	as part of scheduler/promisc re-write  * raycontrol to be firmware version aware - done  *	also report and update parameters IOCTLs are version aware  * make RAY_DPRINTFN RAY_DPRINTF - done  * make all printfs RAY_PRINTF - done  * faster TX routine - done  *	see comments but OACTIVE is gone  * __P to die - done  *	the rest is ansi anyway  * macroize the attribute read/write and 3.x driver - done  *	like the SRAM macros?  * rename "translation" to framing for consitency with Webgear - done  * severe breakage with CCS allocation - done  *	ccs are now allocated in a sleepable context with error recovery  * resource allocation should be be in attach and not probe - done  * resources allocated in probe hould be released before probe exits - done  * softc and ifp in variable definition block - done  * callout handles need rationalising. can probably remove sj_timerh - done  *  * ***stop/detach need to drain comq  * ***stop/detach checks in more routines  * ***reset in ray_init_user?  * ***IFF_RUNNING checks are they really needed?  * ***PCATCH tsleeps and have something that will clean the runq  * ***priorities for each tsleep   * ***watchdog to catch screwed up removals?  * ***check and rationalise CM mappings  * ***should the desired nw parameters move into the comq entry to maintain  *    correct sequencing?  * use /sys/net/if_ieee80211.h and update it  * why can't download use sc_promisc?  * macro for gone and check is at head of all externally called routines  * probably function/macro to test unload at top of commands  * for ALLMULTI must go into PROMISC and filter unicast packets  * mcast code resurrection  * UPDATE_PARAMS seems to return via an interrupt - maybe the timeout  *	is needed for wrong values?  *	remember it must be serialised as it uses the HCF-ECF area  * check all RECERRs and make sure that some are RAY_PRINTF not RAY_DPRINTF  * havenet needs checking again  * error handling of ECF command completions  * proper setting of mib_hop_seq_len with country code for v4 firmware  * _reset - check where needed  * splimp or splnet?  * tidy #includes - we cant need all of these  * differeniate between parameters set in attach and init  * more translations  * spinning in ray_com_ecf  * make RAY_DEBUG a knob somehow - either sysctl or IFF_DEBUG  * fragmentation when rx level drops?  *  * infra mode stuff  * 	proper handling of the basic rate set - see the manual  *	all ray_sj, ray_assoc sequencues need a "nicer" solution as we  *		remember association and authentication  *	need to consider WEP  * acting as ap - should be able to get working from the manual  *  * ray_nw_param- promisc in here too?  * ray_nw_param- sc_station_addr in here too (for changing mac address)  * ray_nw_param- move desired into the command structure?  */
+comment|/*  * TODO  *  * _stop - mostly done  *	would be nice to understand shutdown/or power save to prevent RX  * _reset - done  * 	just needs calling in the right places  *	converted panics to resets - when tx packets are the wrong length  *	may be needed in a couple of other places when I do more commands  * havenet - mostly done  *	i think i've got all the places to set it right, but not so sure  *	we reset it in all the right places  * _unload - done  *	recreated most of stop but as card is unplugged don't try and  *	access it to turn it off  * TX bpf - done  * RX bpf - done  *	I would much prefer to have the complete 802.11 packet dropped to  *	the bpf tap and then have a user land program parse the headers  *	as needed. This way, tcpdump -w can be used to grab the raw data. If  *	needed the 802.11 aware program can "translate" the .11 to ethernet  *	for tcpdump -r  * use std timeout code for download - done  *	was mainly moving a call and removing a load of stuff in  *	download_done as it duplicates check_ccs and ccs_done  * promisoius - done  * add the start_join_net - done  *	i needed it anyway  * remove startccs and startcmd - done  *	as those were used for the NetBSD start timeout  * multicast - done but UNTESTED  *	I don't have the ability/facilty to test this  * rxlevel - done  *	stats reported via raycontrol  * getparams ioctl - done  *	reported via raycontrol  * start_join_done needs a restart in download_done - done  *	now use netbsd style start up  * ioctls - done  *	use raycontrol  *	translation, BSS_ID, countrycode, changing mode  * ifp->if_hdr length - done  * rx level and antenna cache - done  *	antenna not used yet  * antenna tx side - done  *	not tested!  * shutdown - done  *	the driver seems to do the right thing for plugging and unplugging  *	cards  * apm/resume - ignore  *	apm+pccard is borken for 3.x - no one knows how to do it anymore  * fix the XXX code in start_join_done - n/a  *	i've removed this as the error handling should be consistent for  *	all ECF commands and none of the other commands bother!  * ray_update_params_done needs work - done  *	as part of scheduler/promisc re-write  * raycontrol to be firmware version aware - done  *	also report and update parameters IOCTLs are version aware  * make RAY_DPRINTFN RAY_DPRINTF - done  * make all printfs RAY_PRINTF - done  * faster TX routine - done  *	see comments but OACTIVE is gone  * __P to die - done  *	the rest is ansi anyway  * macroize the attribute read/write and 3.x driver - done  *	like the SRAM macros?  * rename "translation" to framing for consitency with Webgear - done  * severe breakage with CCS allocation - done  *	ccs are now allocated in a sleepable context with error recovery  * resource allocation should be be in attach and not probe - done  * resources allocated in probe hould be released before probe exits - done  * softc and ifp in variable definition block - done  * callout handles need rationalising. can probably remove sj_timerh - done  * why can't download use sc_promisc? - done  *	still use the specific update in _init to ensure that the state is  *	right until promisc is moved into current/desired parameters  *  * ***detach needs to drain comq  * ***stop/detach checks in more routines  * ***reset in ray_init_user?  * ***IFF_RUNNING checks are they really needed?  *	this whole area is circumspect as RUNNING is reflection of the  *	driver state and is subject to waits etc.  *	- need to return EIO from runq routines that check  *	- now understood and I have to get the runq routines to  *	  check as required  *		init sequence is done  *		stop sequence is done  *		other not done  * ***PCATCH tsleeps and have something that will clean the runq  * ***priorities for each tsleep   * ***watchdog to catch screwed up removals?  * ***check and rationalise CM mappings  * use /sys/net/if_ieee80211.h and update it  * macro for gone and check is at head of all externally called routines  * probably function/macro to test unload at top of commands  * for ALLMULTI must go into PROMISC and filter unicast packets  * mcast code resurrection  * UPDATE_PARAMS seems to return via an interrupt - maybe the timeout  *	is needed for wrong values?  *	remember it must be serialised as it uses the HCF-ECF area  * check all RECERRs and make sure that some are RAY_PRINTF not RAY_DPRINTF  * havenet needs checking again  * error handling of ECF command completions  * proper setting of mib_hop_seq_len with country code for v4 firmware  * _reset - check where needed  * splimp or splnet?  * tidy #includes - we cant need all of these  * differeniate between parameters set in attach and init  * more translations  * spinning in ray_com_ecf  * make RAY_DEBUG a knob somehow - either sysctl or IFF_DEBUG  * fragmentation when rx level drops?  *  * infra mode stuff  * 	proper handling of the basic rate set - see the manual  *	all ray_sj, ray_assoc sequencues need a "nicer" solution as we  *		remember association and authentication  *	need to consider WEP  * acting as ap - should be able to get working from the manual  *  * ray_nw_param  *	promisc in here too? will need work in download_done and init  * 	sc_station_addr in here too (for changing mac address)  * 	move desired into the command structure?  *	take downloaded MIB from a complete nw_param?  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|XXX
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|XXX_CLEARCCS_IN_INIT
 value|0
 end_define
 
@@ -78,26 +71,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|XXX_IOCTLLOCK
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|RAY_DEBUG
 value|(				\  			   RAY_DBG_RECERR	|    	\
 comment|/* RAY_DBG_SUBR		| */
 value|\
 comment|/* RAY_DBG_BOOTPARAM	| */
-value|\
-comment|/* RAY_DBG_STARTJOIN	| */
-value|\
+value|\ 			   RAY_DBG_STARTJOIN	|   	\
 comment|/* RAY_DBG_CCS		| */
-value|\
-comment|/* RAY_DBG_IOCTL	| */
-value|\
+value|\                            RAY_DBG_IOCTL	|   	\
 comment|/* RAY_DBG_MBUF		| */
 value|\
 comment|/* RAY_DBG_RX		| */
 value|\
 comment|/* RAY_DBG_CM		| */
-value|\
-comment|/* RAY_DBG_COM		| */
-value|\                            RAY_DBG_STOP		|   	\
+value|\                            RAY_DBG_COM		|    	\                            RAY_DBG_STOP		|   	\
 comment|/* RAY_DBG_CTL		| */
 value|\
 comment|/* RAY_DBG_MGT		| */
@@ -410,12 +404,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/limits.h>
 end_include
 
@@ -517,7 +505,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_int8_t
+name|void
 name|ray_ccs_free
 parameter_list|(
 name|struct
@@ -595,13 +583,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|RAY_DEBUG
-operator|&
-name|RAY_DBG_COM
-end_if
+begin_function_decl
+specifier|static
+name|struct
+name|ray_comq_entry
+modifier|*
+name|ray_com_init
+parameter_list|(
+name|struct
+name|ray_comq_entry
+modifier|*
+name|com
+parameter_list|,
+name|ray_comqfn_t
+name|function
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|char
+modifier|*
+name|mesg
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -623,36 +628,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-specifier|static
-name|struct
-name|ray_comq_entry
-modifier|*
-name|ray_com_malloc
-parameter_list|(
-name|ray_comqfn_t
-name|function
-parameter_list|,
-name|int
-name|flags
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* RAY_DEBUG& RAY_DBG_COM */
-end_comment
-
 begin_function_decl
 specifier|static
 name|void
@@ -668,26 +643,8 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|ray_com_runq_add
-parameter_list|(
-name|struct
-name|ray_softc
-modifier|*
-name|sc
-parameter_list|,
-name|struct
-name|ray_comq_entry
-modifier|*
-name|com
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
-name|ray_com_runq_arr
+name|ray_com_runq_add
 parameter_list|(
 name|struct
 name|ray_softc
@@ -817,6 +774,32 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|ray_init_download_v4
+parameter_list|(
+name|struct
+name|ray_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ray_init_download_v5
+parameter_list|(
+name|struct
+name|ray_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|ray_init_sj
 parameter_list|(
 name|struct
@@ -926,6 +909,32 @@ name|command
 parameter_list|,
 name|caddr_t
 name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|ray_ioctl_lock
+parameter_list|(
+name|struct
+name|ray_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ray_ioctl_unlock
+parameter_list|(
+name|struct
+name|ray_softc
+modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1262,6 +1271,24 @@ begin_function_decl
 specifier|static
 name|void
 name|ray_stop
+parameter_list|(
+name|struct
+name|ray_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|ray_comq_entry
+modifier|*
+name|com
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|ray_stop_user
 parameter_list|(
 name|struct
 name|ray_softc
@@ -1859,12 +1886,6 @@ name|gone
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Reset any pending interrupts 	 */
-name|RAY_HCS_CLEAR_INTR
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Fixup tib size to be correct - on build 4 it is garbage 	 */
 if|if
 condition|(
@@ -1966,20 +1987,11 @@ name|sc
 operator|->
 name|gone
 condition|)
-block|{
-name|RAY_PRINTF
-argument_list|(
-name|sc
-argument_list|,
-literal|"unloaded"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-name|ENODEV
+name|ENXIO
 operator|)
 return|;
-block|}
 comment|/* 	 * Grab the resources I need 	 */
 if|#
 directive|if
@@ -2173,7 +2185,13 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * Set the parameters that will survive stop/init and 	 * reset a few things on the card. 	 * 	 * Do not update these in ray_init's parameter setup 	 */
+comment|/* 	 * Reset any pending interrupts 	 */
+name|RAY_HCS_CLEAR_INTR
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Set the parameters that will survive stop/init and 	 * reset a few things on the card. 	 * 	 * Do not update these in ray_init_download's parameter setup 	 */
 name|RAY_MAP_CM
 argument_list|(
 name|sc
@@ -2184,7 +2202,7 @@ directive|if
 name|XXX
 name|see
 name|the
-name|ray_init
+name|ray_init_download
 name|section
 for|for stuff to move
 endif|#
@@ -2217,13 +2235,6 @@ name|ray_nw_param
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|XXX_CLEARCCS_IN_INIT
-operator|>
-literal|0
-else|#
-directive|else
 comment|/* Set all ccs to be free */
 name|bzero
 argument_list|(
@@ -2270,9 +2281,6 @@ argument_list|,
 name|ccs
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* XXX_CLEARCCS_IN_INIT */
 comment|/* 	 * Initialise the network interface structure 	 */
 if|if
 condition|(
@@ -2430,7 +2438,25 @@ name|ifp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Initialise the timers and bpf 	 */
+comment|/* 	 * Initialise the timers and driver 	 */
+if|#
+directive|if
+name|XXX_IOCTLLOCK
+name|sc
+operator|->
+name|sc_ioctl_lock
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|sc_ioctl_cnt
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* XXX_IOCTLLOCK */
 name|callout_handle_init
 argument_list|(
 operator|&
@@ -2520,18 +2546,18 @@ name|RAY_ECFS_BUILD_4
 condition|)
 name|printf
 argument_list|(
-literal|"  Firmware version 4\n"
+literal|".  Firmware version 4\n"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"  Firmware version 5\n"
+literal|".  Firmware version 5\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  Status 0x%b\n"
+literal|".  Status 0x%b\n"
 argument_list|,
 name|ep
 operator|->
@@ -2542,7 +2568,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  Ether address %6D\n"
+literal|".  Ether address %6D\n"
 argument_list|,
 name|ep
 operator|->
@@ -2562,7 +2588,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"  Program checksum %0x\n"
+literal|".  Program checksum %0x\n"
 argument_list|,
 name|ep
 operator|->
@@ -2571,7 +2597,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  CIS checksum %0x\n"
+literal|".  CIS checksum %0x\n"
 argument_list|,
 name|ep
 operator|->
@@ -2586,7 +2612,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"  (reserved word) %0x\n"
+literal|".  (reserved word) %0x\n"
 argument_list|,
 name|ep
 operator|->
@@ -2595,7 +2621,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  Supported rates %8D\n"
+literal|".  Supported rates %8D\n"
 argument_list|,
 name|ep
 operator|->
@@ -2607,7 +2633,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"  Japan call sign %12D\n"
+literal|".  Japan call sign %12D\n"
 argument_list|,
 name|ep
 operator|->
@@ -2627,7 +2653,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"  Program checksum %0x\n"
+literal|".  Program checksum %0x\n"
 argument_list|,
 name|ep
 operator|->
@@ -2636,7 +2662,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  CIS checksum %0x\n"
+literal|".  CIS checksum %0x\n"
 argument_list|,
 name|ep
 operator|->
@@ -2645,7 +2671,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  Firmware version %0x\n"
+literal|".  Firmware version %0x\n"
 argument_list|,
 name|ep
 operator|->
@@ -2654,7 +2680,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  Firmware revision %0x\n"
+literal|".  Firmware revision %0x\n"
 argument_list|,
 name|ep
 operator|->
@@ -2663,7 +2689,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  (reserved word) %0x\n"
+literal|".  (reserved word) %0x\n"
 argument_list|,
 name|ep
 operator|->
@@ -2672,7 +2698,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  ASIC version %0x\n"
+literal|".  ASIC version %0x\n"
 argument_list|,
 name|ep
 operator|->
@@ -2681,7 +2707,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  TIB size %0x\n"
+literal|".  TIB size %0x\n"
 argument_list|,
 name|ep
 operator|->
@@ -2750,20 +2776,11 @@ name|sc
 operator|->
 name|gone
 condition|)
-block|{
-name|RAY_PRINTF
-argument_list|(
-name|sc
-argument_list|,
-literal|"unloaded"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 comment|/* 	 * Clear out timers and sort out driver state 	 */
 name|untimeout
 argument_list|(
@@ -2935,37 +2952,8 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|gone
-condition|)
-block|{
-name|RAY_PRINTF
-argument_list|(
-name|sc
-argument_list|,
-literal|"unloaded"
-argument_list|)
-expr_stmt|;
-name|ifp
-operator|->
-name|if_flags
-operator|&=
-operator|~
-name|IFF_RUNNING
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 name|error
 operator|=
-literal|0
-expr_stmt|;
 name|error2
 operator|=
 literal|0
@@ -2975,6 +2963,26 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+name|XXX_IOCTLLOCK
+name|error
+operator|=
+name|ray_ioctl_lock
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+goto|goto
+name|cannotlock
+goto|;
+endif|#
+directive|endif
+comment|/* XXX_IOCTLLOCK */
 switch|switch
 condition|(
 name|command
@@ -3069,7 +3077,8 @@ argument_list|,
 literal|"SIFFLAGS"
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If the interface is marked up and stopped, then start 		 * it. If it is marked down and running, then stop it. 		 */
+comment|/* 		 * If the interface is marked up and stopped, then start 		 * it. If it is marked down and running, then stop it. 		 * 	   	 * Restarting the interface deals with promisc/allmulti, 		 * so only check them if we are already running. 		 *  		 */
+comment|/* XXX  need some mechanism to allow me to differentiate init and promisc? 	we could just not bail in promisc? */
 if|if
 condition|(
 name|ifp
@@ -3078,18 +3087,6 @@ name|if_flags
 operator|&
 name|IFF_UP
 condition|)
-block|{
-if|if
-condition|(
-operator|!
-operator|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_RUNNING
-operator|)
-condition|)
 name|error
 operator|=
 name|ray_init_user
@@ -3097,49 +3094,14 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_promisc
-operator|!=
-operator|!
-operator|!
-operator|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-operator|(
-name|IFF_PROMISC
-operator||
-name|IFF_ALLMULTI
-operator|)
-operator|)
-condition|)
-name|ray_promisc_user
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-block|}
 else|else
-block|{
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_RUNNING
-condition|)
-name|ray_stop
+name|error
+operator|=
+name|ray_stop_user
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|SIOCADDMULTI
@@ -3493,6 +3455,19 @@ operator|=
 name|EINVAL
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|XXX_IOCTLLOCK
+name|ray_ioctl_unlock
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|cannotlock
+label|:
+endif|#
+directive|endif
+comment|/* XXX_IOCTLLOCK */
 name|splx
 argument_list|(
 name|s
@@ -3506,8 +3481,192 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|XXX_IOCTLLOCK
+end_if
+
 begin_comment
-comment|/*  * User land entry to network initialisation. Called by ray_ioctl  *   * First do a bit of house keeping before calling ray_download  *  * ray_init_download fills the startup parameter structure out and  * sends it to the card.  *  * ray_init_sj tells the card to try and find an existing network or  * start a new one.  *  * ray_init_sj_done checks a few parameters and we are ready to process packets  *  * the promiscuous and multi-cast modes are then set  *  * Returns values are either 0 for success, a varity of resource allocation  * failures or errors in the command sent to the card.  */
+comment|/*  * Lock routines for serialising ioctls  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|ray_ioctl_lock
+parameter_list|(
+name|struct
+name|ray_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|RAY_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|RAY_DBG_SUBR
+operator||
+name|RAY_DBG_IOCTL
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|gone
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+comment|/* XXX Just in case for KAME ipv6 - see awi.c */
+if|if
+condition|(
+name|curproc
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_ioctl_lock
+condition|)
+return|return
+operator|(
+name|EWOULDBLOCK
+operator|)
+return|;
+name|sc
+operator|->
+name|sc_ioctl_lock
+operator|=
+literal|1
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+while|while
+condition|(
+name|sc
+operator|->
+name|sc_busy
+condition|)
+block|{
+name|sc
+operator|->
+name|sc_ioctl_cnt
+operator|++
+expr_stmt|;
+name|error
+operator|=
+name|tsleep
+argument_list|(
+name|ray_ioctl_lock
+argument_list|,
+name|PCATCH
+argument_list|,
+literal|"raylock"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_ioctl_cnt
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+if|if
+condition|(
+name|sc
+operator|->
+name|gone
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
+name|sc
+operator|->
+name|sc_ioctl_lock
+operator|=
+literal|1
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|ray_ioctl_unlock
+parameter_list|(
+name|struct
+name|ray_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|RAY_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|RAY_DBG_SUBR
+operator||
+name|RAY_DBG_IOCTL
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_ioctl_lock
+operator|=
+literal|0
+expr_stmt|;
+name|wakeup
+argument_list|(
+name|ray_ioctl_lock
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* XXX_IOCTLLOCK */
+end_comment
+
+begin_comment
+comment|/*  * User land entry to network initialisation. Called by ray_ioctl  *   * We do a very small bit of house keeping before calling ray_init_download  * to do all the real work. We do it this way in case there are runq  * entries outstanding from earlier ioctls that modify the interface  * flags.  *  * ray_init_download fills the startup parameter structure out and  * sends it to the card.  *  * ray_init_sj tells the card to try and find an existing network or  * start a new one.  *  * ray_init_sj_done checks a few parameters and we are ready to process packets  *  * the promiscuous and multi-cast modes are then set  *  * Returns values are either 0 for success, a varity of resource allocation  * failures or errors in the command sent to the card.  */
 end_comment
 
 begin_function
@@ -3528,18 +3687,6 @@ name|com
 index|[
 literal|5
 index|]
-decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-operator|&
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
 decl_stmt|;
 name|int
 name|i
@@ -3570,35 +3717,258 @@ name|sc
 operator|->
 name|gone
 condition|)
-block|{
-name|RAY_PRINTF
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+comment|/* 	 * Create the following runq entries: 	 * 	 *		download	- download the network to the card 	 *		sj		- find or start a BSS 	 *		assoc		- associate with a ESSID if needed 	 *		promisc		- force promiscuous mode update 	 *		mcast		- force multicast list 	 */
+name|ncom
+operator|=
+literal|0
+expr_stmt|;
+name|com
+index|[
+name|ncom
+operator|++
+index|]
+operator|=
+name|RAY_COM_MALLOC
+argument_list|(
+name|ray_init_download
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|com
+index|[
+name|ncom
+operator|++
+index|]
+operator|=
+name|RAY_COM_MALLOC
+argument_list|(
+name|ray_init_sj
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|XXX_ASSOC
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_d
+operator|.
+name|np_net_type
+operator|==
+name|RAY_MIB_NET_TYPE_INFRA
+condition|)
+name|com
+index|[
+name|ncom
+operator|++
+index|]
+operator|=
+name|RAY_COM_MALLOC
+argument_list|(
+name|ray_init_assoc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* XXX_ASSOC */
+name|com
+index|[
+name|ncom
+operator|++
+index|]
+operator|=
+name|RAY_COM_MALLOC
+argument_list|(
+name|ray_promisc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|XXX_MCAST
+name|com
+index|[
+name|ncom
+operator|++
+index|]
+operator|=
+name|RAY_COM_MALLOC
+argument_list|(
+name|ray_mcast
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* XXX_MCAST */
+name|error
+operator|=
+name|ray_com_runq_add
 argument_list|(
 name|sc
 argument_list|,
-literal|"unloaded"
+name|com
+argument_list|,
+name|ncom
+argument_list|,
+literal|"rayinit"
 argument_list|)
 expr_stmt|;
+comment|/* XXX no real error processing from anything yet! */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ncom
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|com
+index|[
+name|i
+index|]
+operator|->
+name|c_flags
+operator|&
+name|RAY_COM_FCOMPLETED
+condition|)
+block|{ 		}
+else|else
+block|{
+name|ray_ccs_free
+argument_list|(
+name|sc
+argument_list|,
+name|com
+index|[
+name|i
+index|]
+operator|->
+name|c_ccs
+argument_list|)
+expr_stmt|;
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_comq
+argument_list|,
+name|com
+index|[
+name|i
+index|]
+argument_list|,
+name|c_chain
+argument_list|)
+expr_stmt|;
+block|}
+name|FREE
+argument_list|(
+name|com
+index|[
+name|i
+index|]
+argument_list|,
+name|M_RAYCOM
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* runq_arr may fail:      if sleeping in ccs_alloc with eintr/erestart/enxio/enodev 		erestart	try again from the top 				XXX do not malloc more comqs 				XXX ccs allocation hard     		eintr		clean up and return 		enxio		clean up and return      if sleeping in runq_arr itself with eintr/erestart/enxio/enodev 		erestart	try again from the top 				XXX do not malloc more comqs 				XXX ccs allocation hard 				XXX reinsert comqs at head of list     		eintr		clean up and return 		enxio		clean up and return  only difficult one is init sequence that should be aborted in download         as commands complete before next one starts then                 init                 init is safe          longer term need to attach a desired nw params to the runq entry  */
 return|return
 operator|(
-name|ENODEV
+name|error
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
+comment|/*  * Runq entry for resetting driver and downloading start up structures to card  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ray_init_download
+parameter_list|(
+name|struct
+name|ray_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|ray_comq_entry
+modifier|*
+name|com
+parameter_list|)
+block|{
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+operator|&
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+decl_stmt|;
+name|RAY_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|RAY_DBG_SUBR
+operator||
+name|RAY_DBG_STARTJOIN
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+name|RAY_MAP_CM
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* 	 * If card already running we don't need to download. 	 */
 if|if
 condition|(
-operator|(
 name|ifp
 operator|->
 name|if_flags
 operator|&
 name|IFF_RUNNING
-operator|)
 condition|)
-name|ray_stop
+block|{
+name|ray_com_runq_done
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 comment|/* 	 * Reset instance variables 	 * 	 * The first set are network parameters that are read back when 	 * the card starts or joins the network. 	 * 	 * The second set are network parameters that are downloaded to 	 * the card. 	 * 	 * The third set are driver parameters. 	 * 	 * All of the variables in these sets can be updated by the 	 * card or ioctls. 	 */
 if|#
 directive|if
@@ -3733,258 +4103,103 @@ name|framing
 operator|=
 name|SC_FRAMING_WEBGEAR
 expr_stmt|;
-if|#
-directive|if
-name|XXX_CLEARCCS_IN_INIT
-operator|>
-literal|0
-comment|/* Set all ccs to be free */
-name|bzero
-argument_list|(
 name|sc
 operator|->
-name|sc_ccsinuse
-argument_list|,
-sizeof|sizeof
-argument_list|(
+name|sc_rxoverflow
+operator|=
+literal|0
+expr_stmt|;
 name|sc
 operator|->
-name|sc_ccsinuse
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|ccs
-operator|=
-name|RAY_CCS_ADDRESS
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
+name|sc_rxcksum
 operator|=
 literal|0
-init|;
-name|i
-operator|<
-name|RAY_CCS_LAST
-condition|;
-name|ccs
-operator|+=
-name|RAY_CCS_SIZE
-operator|,
-name|i
-operator|++
-control|)
-name|RAY_CCS_FREE
-argument_list|(
-name|sc
-argument_list|,
-name|ccs
-argument_list|)
 expr_stmt|;
-comment|/* Clear any pending interrupts */
-name|RAY_HCS_CLEAR_INTR
-argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* XXX_CLEARCCS_IN_INIT */
-comment|/* 	 * We are now up and running. We are busy until network is joined. 	 */
-name|ifp
 operator|->
-name|if_flags
-operator||=
-name|IFF_RUNNING
-operator||
-name|IFF_OACTIVE
-expr_stmt|;
-comment|/* 	 * Create the following runq entries: 	 * 	 *		download	- download the network to the card 	 *		sj		- find or start a BSS 	 *		assoc		- associate with a ESSID if needed 	 *		promisc		- force promiscuous mode update 	 *		mcast		- force multicast list 	 */
-name|ncom
+name|sc_rxhcksum
 operator|=
 literal|0
 expr_stmt|;
-name|com
-index|[
-name|ncom
-operator|++
-index|]
+name|sc
+operator|->
+name|sc_rxnoise
 operator|=
-name|RAY_COM_MALLOC
-argument_list|(
-name|ray_init_download
-argument_list|,
 literal|0
-argument_list|)
 expr_stmt|;
-name|com
-index|[
-name|ncom
-operator|++
-index|]
-operator|=
-name|RAY_COM_MALLOC
-argument_list|(
-name|ray_init_sj
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-name|XXX_ASSOC
+comment|/* 	 * Download the right firmware defaults 	 */
 if|if
 condition|(
 name|sc
 operator|->
-name|sc_d
-operator|.
-name|np_net_type
+name|sc_version
 operator|==
-name|RAY_MIB_NET_TYPE_INFRA
+name|RAY_ECFS_BUILD_4
 condition|)
-name|com
-index|[
-name|ncom
-operator|++
-index|]
-operator|=
-name|RAY_COM_MALLOC
+name|ray_init_download_v4
 argument_list|(
-name|ray_init_assoc
-argument_list|,
-literal|0
+name|sc
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* XXX_ASSOC */
-name|com
-index|[
-name|ncom
-operator|++
-index|]
-operator|=
-name|RAY_COM_MALLOC
+else|else
+name|ray_init_download_v5
 argument_list|(
-name|ray_promisc
-argument_list|,
-literal|0
+name|sc
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|XXX_MCAST
-name|com
-index|[
-name|ncom
-operator|++
-index|]
-operator|=
-name|RAY_COM_MALLOC
-argument_list|(
-name|ray_mcast
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* XXX_MCAST */
-name|error
-operator|=
-name|ray_com_runq_arr
+comment|/* 	 * Kick the card 	 */
+name|ray_ccs_fill
 argument_list|(
 name|sc
 argument_list|,
 name|com
+operator|->
+name|c_ccs
 argument_list|,
-name|ncom
-argument_list|,
-literal|"rayinit"
+name|RAY_CMD_DOWNLOAD_PARAMS
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|error
-operator|==
-name|EINTR
-operator|)
-operator|||
-operator|(
-name|error
-operator|==
-name|ERESTART
-operator|)
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
-comment|/* XXX no real error processing from anything yet! */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|ncom
-condition|;
-name|i
-operator|++
-control|)
-name|FREE
+name|ray_com_ecf
 argument_list|(
-name|com
-index|[
-name|i
-index|]
+name|sc
 argument_list|,
-name|M_RAYCOM
+name|com
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|PUT2
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|do { (p)[0] = ((v>> 8)& 0xff); (p)[1] = (v& 0xff); } while(0)
+end_define
+
 begin_comment
-comment|/*  * Runq entry for downloading start up structures to card  */
+comment|/*  * Firmware version 4 defaults - see if_raymib.h for details  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|ray_init_download
+name|ray_init_download_v4
 parameter_list|(
 name|struct
 name|ray_softc
 modifier|*
 name|sc
-parameter_list|,
-name|struct
-name|ray_comq_entry
-modifier|*
-name|com
 parameter_list|)
 block|{
 name|struct
 name|ray_mib_4
 name|ray_mib_4_default
-decl_stmt|;
-name|struct
-name|ray_mib_5
-name|ray_mib_5_default
 decl_stmt|;
 name|RAY_DPRINTF
 argument_list|(
@@ -4009,24 +4224,6 @@ parameter_list|(
 name|m
 parameter_list|)
 value|ray_mib_4_default.##m
-define|#
-directive|define
-name|MIB5
-parameter_list|(
-name|m
-parameter_list|)
-value|ray_mib_5_default.##m
-define|#
-directive|define
-name|PUT2
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|do { (p)[0] = ((v>> 8)& 0xff); (p)[1] = (v& 0xff); } while(0)
-comment|/* 	  * Firmware version 4 defaults - see if_raymib.h for details 	  */
 name|MIB4
 argument_list|(
 name|mib_net_type
@@ -4228,7 +4425,9 @@ argument_list|(
 name|mib_promisc
 argument_list|)
 operator|=
-name|RAY_MIB_PROMISC_DEFAULT
+name|sc
+operator|->
+name|sc_promisc
 expr_stmt|;
 name|PUT2
 argument_list|(
@@ -4366,7 +4565,69 @@ argument_list|)
 operator|=
 name|RAY_MIB_TEST_MAX_CHAN_DEFAULT
 expr_stmt|;
-comment|/* 	  * Firmware version 5 defaults - see if_raymib.h for details 	  */
+undef|#
+directive|undef
+name|MIB4
+name|SRAM_WRITE_REGION
+argument_list|(
+name|sc
+argument_list|,
+name|RAY_HOST_TO_ECF_BASE
+argument_list|,
+operator|&
+name|ray_mib_4_default
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ray_mib_4_default
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Firmware version 5 defaults - see if_raymib.h for details  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ray_init_download_v5
+parameter_list|(
+name|struct
+name|ray_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|struct
+name|ray_mib_5
+name|ray_mib_5_default
+decl_stmt|;
+name|RAY_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|RAY_DBG_SUBR
+operator||
+name|RAY_DBG_STARTJOIN
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+name|RAY_MAP_CM
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+define|#
+directive|define
+name|MIB5
+parameter_list|(
+name|m
+parameter_list|)
+value|ray_mib_5_default.##m
 name|MIB5
 argument_list|(
 name|mib_net_type
@@ -4378,7 +4639,7 @@ name|sc_d
 operator|.
 name|np_net_type
 expr_stmt|;
-name|MIB4
+name|MIB5
 argument_list|(
 name|mib_ap_status
 argument_list|)
@@ -4568,7 +4829,9 @@ argument_list|(
 name|mib_promisc
 argument_list|)
 operator|=
-name|RAY_MIB_PROMISC_DEFAULT
+name|sc
+operator|->
+name|sc_promisc
 expr_stmt|;
 name|PUT2
 argument_list|(
@@ -4755,30 +5018,9 @@ name|sc_d
 operator|.
 name|np_def_txrate
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_version
-operator|==
-name|RAY_ECFS_BUILD_4
-condition|)
-name|SRAM_WRITE_REGION
-argument_list|(
-name|sc
-argument_list|,
-name|RAY_HOST_TO_ECF_BASE
-argument_list|,
-operator|&
-name|ray_mib_4_default
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ray_mib_4_default
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|else
+undef|#
+directive|undef
+name|MIB5
 name|SRAM_WRITE_REGION
 argument_list|(
 name|sc
@@ -4792,28 +5034,16 @@ sizeof|sizeof
 argument_list|(
 name|ray_mib_5_default
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|ray_ccs_fill
-argument_list|(
-name|sc
-argument_list|,
-name|com
-operator|->
-name|c_ccs
-argument_list|,
-name|RAY_CMD_DOWNLOAD_PARAMS
-argument_list|)
-expr_stmt|;
-name|ray_com_ecf
-argument_list|(
-name|sc
-argument_list|,
-name|com
 argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_undef
+undef|#
+directive|undef
+name|PUT2
+end_undef
 
 begin_comment
 comment|/*  * Download completion routine  */
@@ -4910,6 +5140,18 @@ name|com
 parameter_list|)
 block|{
 name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+operator|&
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+decl_stmt|;
+name|struct
 name|ray_net_params
 name|np
 decl_stmt|;
@@ -4932,6 +5174,23 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If card already running we don't need to start the n/w. 	 * 	 * XXX When we cope with errors and re-call this routine we 	 * XXX need better checking 	 */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_RUNNING
+condition|)
+block|{
+name|ray_com_runq_done
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|sc
 operator|->
 name|sc_havenet
@@ -5171,6 +5430,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Kick the card 	 */
 name|ray_com_ecf
 argument_list|(
 name|sc
@@ -5340,7 +5600,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Hurrah! The network is now active. 	 * 	 * Clearing IFF_OACTIVE will ensure that the system will queue 	 * packets. Just before we return from the interrupt context 	 * we check to see if packets have been queued. 	 */
+comment|/* 	 * Hurrah! The network is now active. 	 * 	 * Clearing IFF_OACTIVE will ensure that the system will send us 	 * packets. Just before we return from the interrupt context 	 * we check to see if packets have been queued. 	 */
 if|if
 condition|(
 name|SRAM_READ_FIELD_1
@@ -5362,6 +5622,12 @@ operator|->
 name|sc_havenet
 operator|=
 literal|1
+expr_stmt|;
+name|ifp
+operator|->
+name|if_flags
+operator||=
+name|IFF_RUNNING
 expr_stmt|;
 name|ifp
 operator|->
@@ -5399,6 +5665,18 @@ modifier|*
 name|com
 parameter_list|)
 block|{
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+operator|&
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+decl_stmt|;
 name|RAY_DPRINTF
 argument_list|(
 name|sc
@@ -5415,6 +5693,24 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If card already running we don't need to associate. 	 * 	 * XXX When we cope with errors and re-call this routine we 	 * XXX need better checking 	 */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_RUNNING
+condition|)
+block|{
+name|ray_com_runq_done
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* 	 * Kick the card 	 */
 name|ray_ccs_fill
 argument_list|(
 name|sc
@@ -5489,12 +5785,18 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Hurrah! The network is now active. 	 * 	 * Clearing IFF_OACTIVE will ensure that the system will queue 	 * packets. Just before we return from the interrupt context 	 * we check to see if packets have been queued. 	 */
+comment|/* 	 * Hurrah! The network is now active. 	 * 	 * Clearing IFF_OACTIVE will ensure that the system will send us 	 * packets. Just before we return from the interrupt context 	 * we check to see if packets have been queued. 	 */
 name|sc
 operator|->
 name|sc_havenet
 operator|=
 literal|1
+expr_stmt|;
+name|ifp
+operator|->
+name|if_flags
+operator||=
+name|IFF_RUNNING
 expr_stmt|;
 name|ifp
 operator|->
@@ -5512,13 +5814,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Network stop.  *  * Assumes that a ray_init is used to restart the card.  *  */
+comment|/*  * Network stop.  *  * Inhibit card - if we can't prevent reception then do not worry;  * stopping a NIC only guarantees no TX.  *  * The change to the interface flags is done via the runq so that any  * existing commands can execute normally.  */
 end_comment
 
 begin_function
 specifier|static
-name|void
-name|ray_stop
+name|int
+name|ray_stop_user
 parameter_list|(
 name|struct
 name|ray_softc
@@ -5527,24 +5829,15 @@ name|sc
 parameter_list|)
 block|{
 name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-operator|&
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-decl_stmt|;
-name|struct
 name|ray_comq_entry
 modifier|*
 name|com
+index|[
+literal|1
+index|]
 decl_stmt|;
 name|int
-name|s
+name|error
 decl_stmt|;
 name|RAY_DPRINTF
 argument_list|(
@@ -5568,189 +5861,110 @@ name|sc
 operator|->
 name|gone
 condition|)
-block|{
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+comment|/* 	 * Schedule the real stop routine 	 */
+name|com
+index|[
+literal|0
+index|]
+operator|=
+name|RAY_COM_MALLOC
+argument_list|(
+name|ray_stop
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ray_com_runq_add
+argument_list|(
+name|sc
+argument_list|,
+name|com
+argument_list|,
+literal|1
+argument_list|,
+literal|"raystop"
+argument_list|)
+expr_stmt|;
+comment|/* XXX no real error processing from anything yet! */
+if|if
+condition|(
+name|error
+condition|)
 name|RAY_PRINTF
 argument_list|(
 name|sc
 argument_list|,
-literal|"unloaded"
+literal|"got error from ray_stop 0x%x"
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
-comment|/* 	 * Clear out timers and sort out driver state 	 */
-name|RAY_DPRINTF
+name|FREE
 argument_list|(
-name|sc
-argument_list|,
-name|RAY_DBG_STOP
-argument_list|,
-literal|"HCS_intr %d RCSI 0x%0x"
-argument_list|,
-name|RAY_HCS_INTR
-argument_list|(
-name|sc
-argument_list|)
-argument_list|,
-name|SRAM_READ_1
-argument_list|(
-name|sc
-argument_list|,
-name|RAY_SCB_RCSI
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|RAY_DPRINTF
-argument_list|(
-name|sc
-argument_list|,
-name|RAY_DBG_STOP
-argument_list|,
-literal|"ECF %s ready"
-argument_list|,
-name|RAY_ECF_READY
-argument_list|(
-name|sc
-argument_list|)
-condition|?
-literal|"is"
-else|:
-literal|"not"
-argument_list|)
-expr_stmt|;
 name|com
-operator|=
-name|TAILQ_FIRST
-argument_list|(
+index|[
+literal|0
+index|]
+argument_list|,
+name|M_RAYCOM
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Runq entry for stopping the interface activity  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ray_stop
+parameter_list|(
+name|struct
+name|ray_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|ray_comq_entry
+modifier|*
+name|com
+parameter_list|)
+block|{
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
 operator|&
 name|sc
 operator|->
-name|sc_comq
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|com
-operator|==
-name|NULL
-condition|)
-block|{
+name|arpcom
+operator|.
+name|ac_if
+decl_stmt|;
 name|RAY_DPRINTF
 argument_list|(
 name|sc
 argument_list|,
-name|RAY_DBG_COM
+name|RAY_DBG_SUBR
 operator||
 name|RAY_DBG_STOP
 argument_list|,
-literal|"empty command queue"
-argument_list|)
-expr_stmt|;
-block|}
-for|for
-control|(
-init|;
-name|com
-operator|!=
-name|NULL
-condition|;
-name|com
-operator|=
-name|TAILQ_NEXT
-argument_list|(
-name|com
-argument_list|,
-name|c_chain
-argument_list|)
-control|)
-block|{
-name|RAY_COM_DUMP
-argument_list|(
-name|sc
-argument_list|,
-name|RAY_DBG_COM
-operator||
-name|RAY_DBG_STOP
-argument_list|,
-name|com
-argument_list|,
-literal|"on queue"
-argument_list|)
-expr_stmt|;
-block|}
-name|untimeout
-argument_list|(
-name|ray_com_ecf_timo
-argument_list|,
-name|sc
-argument_list|,
-name|sc
-operator|->
-name|com_timerh
-argument_list|)
-expr_stmt|;
-name|untimeout
-argument_list|(
-name|ray_reset_timo
-argument_list|,
-name|sc
-argument_list|,
-name|sc
-operator|->
-name|reset_timerh
-argument_list|)
-expr_stmt|;
-name|untimeout
-argument_list|(
-name|ray_tx_timo
-argument_list|,
-name|sc
-argument_list|,
-name|sc
-operator|->
-name|tx_timerh
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|sc_havenet
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|sc_rxoverflow
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|sc_rxcksum
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|sc_rxhcksum
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|sc_rxnoise
-operator|=
-literal|0
-expr_stmt|;
-comment|/* 	 * Inhibit card - if we can't prevent reception then do not worry; 	 * stopping a NIC only guarantees no TX. 	 */
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
-comment|/* XXX what does the SHUTDOWN command do? Or power saving in COR */
-name|splx
-argument_list|(
-name|s
+literal|""
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Mark as not running 	 */
@@ -5764,6 +5978,18 @@ name|IFF_RUNNING
 operator||
 name|IFF_OACTIVE
 operator|)
+expr_stmt|;
+name|ifp
+operator|->
+name|if_timer
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX Drain output queue (don't bother for detach) */
+name|ray_com_runq_done
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -6019,16 +6245,7 @@ name|sc
 operator|->
 name|gone
 condition|)
-block|{
-name|RAY_PRINTF
-argument_list|(
-name|sc
-argument_list|,
-literal|"unloaded"
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 name|RAY_PRINTF
 argument_list|(
 name|sc
@@ -6114,16 +6331,7 @@ name|sc
 operator|->
 name|gone
 condition|)
-block|{
-name|RAY_PRINTF
-argument_list|(
-name|sc
-argument_list|,
-literal|"unloaded"
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 if|if
 condition|(
 operator|!
@@ -7334,9 +7542,11 @@ operator|!=
 name|RAY_CCS_STATUS_COMPLETE
 condition|)
 block|{
-name|RAY_PRINTF
+name|RAY_DPRINTF
 argument_list|(
 name|sc
+argument_list|,
+name|RAY_DBG_RECERR
 argument_list|,
 literal|"tx completed but status is %s"
 argument_list|,
@@ -9729,16 +9939,7 @@ name|sc
 operator|->
 name|gone
 condition|)
-block|{
-name|RAY_PRINTF
-argument_list|(
-name|sc
-argument_list|,
-literal|"unloaded"
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 comment|/* 	 * Check that the interrupt was for us, if so get the rcs/ccs 	 * and vector on the command contained within it. 	 */
 if|if
 condition|(
@@ -10248,9 +10449,7 @@ argument_list|,
 name|ccs
 argument_list|)
 expr_stmt|;
-goto|goto
-name|done
-goto|;
+break|break;
 case|case
 name|RAY_CMD_START_ASSOC
 case|:
@@ -10338,21 +10537,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|ray_ccs_free
-argument_list|(
-name|sc
-argument_list|,
-name|ccs
-argument_list|)
-expr_stmt|;
-name|done
-label|:
-comment|/* 	 * See if needed things can be done now that a command has completed 	 */
-name|ray_com_runq
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -10690,7 +10874,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|ray_com_runq_arr
+name|ray_com_runq_add
 argument_list|(
 name|sc
 argument_list|,
@@ -10698,7 +10882,7 @@ name|com
 argument_list|,
 name|ncom
 argument_list|,
-literal|"rayinit"
+literal|"raymcast"
 argument_list|)
 expr_stmt|;
 if|if
@@ -11064,7 +11248,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|ray_com_runq_arr
+name|ray_com_runq_add
 argument_list|(
 name|sc
 argument_list|,
@@ -11807,7 +11991,7 @@ name|pr
 expr_stmt|;
 name|error
 operator|=
-name|ray_com_runq_arr
+name|ray_com_runq_add
 argument_list|(
 name|sc
 argument_list|,
@@ -12699,7 +12883,7 @@ comment|/* XXX_ASSOC */
 block|}
 name|error
 operator|=
-name|ray_com_runq_arr
+name|ray_com_runq_add
 argument_list|(
 name|sc
 argument_list|,
@@ -13020,75 +13204,32 @@ comment|/*  * Command queuing and execution  */
 end_comment
 
 begin_comment
-comment|/*  * Malloc, set up a comq entry struct  */
+comment|/*  * Set up a comq entry struct  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|RAY_DEBUG
-operator|&
-name|RAY_DBG_COM
-end_if
-
-begin_decl_stmt
+begin_function
 specifier|static
 name|struct
 name|ray_comq_entry
 modifier|*
-name|ray_com_malloc
-argument_list|(
-name|ray_comqfn_t
-name|function
-argument_list|,
-name|int
-name|flags
-argument_list|,
-name|char
-operator|*
-name|mesg
-argument_list|)
-else|#
-directive|else
-decl|static struct
-name|ray_comq_entry
-modifier|*
-name|ray_com_malloc
-argument_list|(
-name|ray_comqfn_t
-name|function
-argument_list|,
-name|int
-name|flags
-argument_list|)
-endif|#
-directive|endif
-comment|/* RAY_DEBUG& RAY_DBG_COM */
-block|{
+name|ray_com_init
+parameter_list|(
 name|struct
 name|ray_comq_entry
 modifier|*
 name|com
-decl_stmt|;
-name|MALLOC
-argument_list|(
-name|com
-argument_list|,
-expr|struct
-name|ray_comq_entry
-operator|*
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ray_comq_entry
-argument_list|)
-argument_list|,
-name|M_RAYCOM
-argument_list|,
-name|M_WAITOK
-argument_list|)
-expr_stmt|;
+parameter_list|,
+name|ray_comqfn_t
+name|function
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|char
+modifier|*
+name|mesg
+parameter_list|)
+block|{
 name|com
 operator|->
 name|c_function
@@ -13125,36 +13266,91 @@ name|c_pr
 operator|=
 name|NULL
 expr_stmt|;
-if|#
-directive|if
-name|RAY_DEBUG
-operator|&
-name|RAY_DBG_COM
 name|com
 operator|->
 name|c_mesg
 operator|=
 name|mesg
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* RAY_DEBUG& RAY_DBG_COM */
 return|return
 operator|(
 name|com
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
-comment|/*  * Add an array of commands to the runq, get some ccs's for them and  * then run, waiting on the last command.  *  * We add the commands to the queue first to serialise ioctls, as the  * ccs allocation may wait. The ccs allocation may timeout, in which  * case the ccs and comq entries are freed.  */
+comment|/*  * Malloc and set up a comq entry struct  */
+end_comment
+
+begin_function
+specifier|static
+name|struct
+name|ray_comq_entry
+modifier|*
+name|ray_com_malloc
+parameter_list|(
+name|ray_comqfn_t
+name|function
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|char
+modifier|*
+name|mesg
+parameter_list|)
+block|{
+name|struct
+name|ray_comq_entry
+modifier|*
+name|com
+decl_stmt|;
+name|MALLOC
+argument_list|(
+name|com
+argument_list|,
+expr|struct
+name|ray_comq_entry
+operator|*
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ray_comq_entry
+argument_list|)
+argument_list|,
+name|M_RAYCOM
+argument_list|,
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ray_com_init
+argument_list|(
+name|com
+argument_list|,
+name|function
+argument_list|,
+name|flags
+argument_list|,
+name|mesg
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Add an array of commands to the runq, get some ccs's for them and  * then run, waiting on the last command.  *  * We add the commands to the queue first to preserve ioctl ordering.  *  * On any error, this routine simply returns. This ensures that commands  * remain serialised, even though recovery is difficult - but as the  * only failure mechanisms are a signal or detach/stop most callers  * won't bother restarting.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|ray_com_runq_arr
+name|ray_com_runq_add
 parameter_list|(
 name|struct
 name|ray_softc
@@ -13185,6 +13381,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|RAY_DBG_SUBR
+operator||
+name|RAY_DBG_COM
 argument_list|,
 literal|""
 argument_list|)
@@ -13231,14 +13429,33 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
-name|ray_com_runq_add
+name|RAY_DCOM
 argument_list|(
 name|sc
+argument_list|,
+name|RAY_DBG_COM
 argument_list|,
 name|com
 index|[
 name|i
 index|]
+argument_list|,
+literal|"adding"
+argument_list|)
+expr_stmt|;
+name|TAILQ_INSERT_TAIL
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_comq
+argument_list|,
+name|com
+index|[
+name|i
+index|]
+argument_list|,
+name|c_chain
 argument_list|)
 expr_stmt|;
 block|}
@@ -13253,7 +13470,7 @@ name|c_flags
 operator|=
 name|RAY_COM_FWOK
 expr_stmt|;
-comment|/* 	 * Allocate ccs's for each command. If we fail, clean up 	 * and return. 	 */
+comment|/* 	 * Allocate ccs's for each command. If we fail, we bail 	 * for the caller to sort everything out. 	 */
 for|for
 control|(
 name|i
@@ -13289,83 +13506,13 @@ if|if
 condition|(
 name|error
 condition|)
-break|break;
-block|}
-if|if
-condition|(
-name|error
-condition|)
-block|{
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|ncom
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|com
-index|[
-name|i
-index|]
-operator|->
-name|c_ccs
-operator|!=
-name|NULL
-condition|)
-name|ray_ccs_free
-argument_list|(
-name|sc
-argument_list|,
-name|com
-index|[
-name|i
-index|]
-operator|->
-name|c_ccs
-argument_list|)
-expr_stmt|;
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_comq
-argument_list|,
-name|com
-index|[
-name|i
-index|]
-argument_list|,
-name|c_chain
-argument_list|)
-expr_stmt|;
-name|FREE
-argument_list|(
-name|com
-index|[
-name|i
-index|]
-argument_list|,
-name|M_RAYCOM
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * Allow the queue to run 	 */
+comment|/* 	 * Allow the queue to run and if needed sleep 	 */
 name|com
 index|[
 literal|0
@@ -13381,6 +13528,19 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_comq
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
 name|RAY_DPRINTF
 argument_list|(
 name|sc
@@ -13414,85 +13574,22 @@ name|sc
 argument_list|,
 name|RAY_DBG_COM
 argument_list|,
-literal|"awakened"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-name|RAY_PRINTF
-argument_list|(
-name|sc
-argument_list|,
-literal|"sleep error 0x%0x"
+literal|"awakened, tsleep returned 0x%x"
 argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-comment|/* XXX really bad at present as sleep will return the same errors 	 * XXX as the comq and we dont clean up after ourself and we 	 * XXX leak comq entries 	 * ECANCELED? 	 */
+block|}
+else|else
+name|error
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Add a command to the tail of the queue  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|ray_com_runq_add
-parameter_list|(
-name|struct
-name|ray_softc
-modifier|*
-name|sc
-parameter_list|,
-name|struct
-name|ray_comq_entry
-modifier|*
-name|com
-parameter_list|)
-block|{
-name|RAY_DPRINTF
-argument_list|(
-name|sc
-argument_list|,
-name|RAY_DBG_SUBR
-operator||
-name|RAY_DBG_COM
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-name|RAY_COM_DUMP
-argument_list|(
-name|sc
-argument_list|,
-name|RAY_DBG_COM
-argument_list|,
-name|com
-argument_list|,
-literal|"adding"
-argument_list|)
-expr_stmt|;
-name|TAILQ_INSERT_TAIL
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_comq
-argument_list|,
-name|com
-argument_list|,
-name|c_chain
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -13515,18 +13612,6 @@ name|struct
 name|ray_comq_entry
 modifier|*
 name|com
-decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-operator|&
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
 decl_stmt|;
 name|RAY_DPRINTF
 argument_list|(
@@ -13643,32 +13728,13 @@ return|return;
 endif|#
 directive|endif
 comment|/* RAY_DEBUG& RAY_DBG_COM */
-comment|/* 	 * XXX how can IFF_RUNNING be cleared 	 * XXX before this routine exits - check in ray_ioctl and the 	 * XXX network code itself. ray_stop should have prevented this 	 * XXX command from running? 	 * 	 * XXX also what about sc->sc_gone and sc->sc_havenet? 	 */
-if|if
-condition|(
-operator|!
-operator|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_RUNNING
-operator|)
-condition|)
-name|RAY_PANIC
-argument_list|(
-name|sc
-argument_list|,
-literal|"not running"
-argument_list|)
-expr_stmt|;
 name|com
 operator|->
 name|c_flags
 operator||=
 name|RAY_COM_FRUNNING
 expr_stmt|;
-name|RAY_COM_DUMP
+name|RAY_DCOM
 argument_list|(
 name|sc
 argument_list|,
@@ -13752,7 +13818,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* RAY_DEBUG& RAY_DBG_COM */
-name|RAY_COM_DUMP
+name|RAY_DCOM
 argument_list|(
 name|sc
 argument_list|,
@@ -13837,7 +13903,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* RAY_DEBUG& RAY_DBG_COM */
-name|RAY_COM_DUMP
+name|RAY_DCOM
 argument_list|(
 name|sc
 argument_list|,
@@ -13869,7 +13935,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove run command and wakeup caller.  *  * Minimal checks are done here as we ensure that the com and  * command handler were matched up earlier.  *  * Remove the com from the comq, and wakeup the caller if it requested  * to be woken. This is used for ensuring a sequence of commands  * completes.  */
+comment|/*  * Remove run command, free ccs and wakeup caller.  *  * Minimal checks are done here as we ensure that the com and command  * handler were matched up earlier. Must be called at splnet or higher  * so that entries on the command queue are correctly removed.  *  * Remove the com from the comq, and wakeup the caller if it requested  * to be woken. This is used for ensuring a sequence of commands  * completes. Finally, re-run the queue.  */
 end_comment
 
 begin_function
@@ -13910,26 +13976,7 @@ name|sc_comq
 argument_list|)
 expr_stmt|;
 comment|/* XXX shall we check this as below */
-name|com
-operator|->
-name|c_flags
-operator|&=
-operator|~
-name|RAY_COM_FRUNNING
-expr_stmt|;
-name|com
-operator|->
-name|c_flags
-operator||=
-name|RAY_COM_FCOMPLETED
-expr_stmt|;
-name|com
-operator|->
-name|c_retval
-operator|=
-literal|0
-expr_stmt|;
-name|RAY_COM_DUMP
+name|RAY_DCOM
 argument_list|(
 name|sc
 argument_list|,
@@ -13952,6 +13999,40 @@ argument_list|,
 name|c_chain
 argument_list|)
 expr_stmt|;
+name|com
+operator|->
+name|c_flags
+operator|&=
+operator|~
+name|RAY_COM_FRUNNING
+expr_stmt|;
+name|com
+operator|->
+name|c_flags
+operator||=
+name|RAY_COM_FCOMPLETED
+expr_stmt|;
+name|com
+operator|->
+name|c_retval
+operator|=
+literal|0
+expr_stmt|;
+name|ray_ccs_free
+argument_list|(
+name|sc
+argument_list|,
+name|com
+operator|->
+name|c_ccs
+argument_list|)
+expr_stmt|;
+name|com
+operator|->
+name|c_ccs
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|com
@@ -13967,7 +14048,12 @@ operator|->
 name|c_wakeup
 argument_list|)
 expr_stmt|;
-comment|/* XXX what about error on completion then? deal with when i fix 	 * XXX the status checking */
+name|ray_com_runq
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* XXX what about error on completion then? deal with when i fix 	 * XXX the status checking 	 * 	 * XXX all the runq_done calls from IFF_RUNNING checks in runq 	 * XXX routines should return EIO but shouldn't abort the runq 	 */
 block|}
 end_function
 
@@ -14078,7 +14164,7 @@ argument_list|,
 literal|"spinning"
 argument_list|)
 expr_stmt|;
-name|RAY_COM_DUMP
+name|RAY_DCOM
 argument_list|(
 name|sc
 argument_list|,
@@ -14381,7 +14467,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called when interrupt handler for the command has done all it  * needs to.  */
+comment|/*  * Called when interrupt handler for the command has done all it  * needs to. Will be called at splnet.  */
 end_comment
 
 begin_function
@@ -14665,7 +14751,9 @@ name|sc
 argument_list|,
 name|RAY_DBG_CCS
 argument_list|,
-literal|"awakened"
+literal|"awakened, tsleep returned 0x%x"
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 if|if
@@ -14819,7 +14907,7 @@ end_comment
 
 begin_function
 specifier|static
-name|u_int8_t
+name|void
 name|ray_ccs_free
 parameter_list|(
 name|struct
@@ -14831,9 +14919,6 @@ name|size_t
 name|ccs
 parameter_list|)
 block|{
-name|u_int8_t
-name|status
-decl_stmt|;
 name|RAY_DPRINTF
 argument_list|(
 name|sc
@@ -14850,19 +14935,43 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|status
-operator|=
-name|SRAM_READ_FIELD_1
+if|#
+directive|if
+literal|1
+operator||
+operator|(
+name|RAY_DEBUG
+operator|&
+name|RAY_DBG_CCS
+operator|)
+if|if
+condition|(
+operator|!
+name|sc
+operator|->
+name|sc_ccsinuse
+index|[
+name|RAY_CCS_INDEX
+argument_list|(
+name|ccs
+argument_list|)
+index|]
+condition|)
+name|RAY_PRINTF
 argument_list|(
 name|sc
 argument_list|,
+literal|"freeing free ccs 0x%02x"
+argument_list|,
+name|RAY_CCS_INDEX
+argument_list|(
 name|ccs
-argument_list|,
-name|ray_cmd
-argument_list|,
-name|c_status
+argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* RAY_DEBUG& RAY_DBG_CCS */
 name|RAY_CCS_FREE
 argument_list|(
 name|sc
@@ -14901,11 +15010,6 @@ argument_list|(
 name|ray_ccs_alloc
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|status
-operator|)
-return|;
 block|}
 end_function
 
@@ -15173,6 +15277,9 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|int
+name|error
+decl_stmt|;
 name|RAY_DPRINTF
 argument_list|(
 name|sc
@@ -15239,7 +15346,45 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/* XXX ensure attribute memory settings */
+comment|/* Ensure attribute memory settings */
+name|error
+operator|=
+name|CARD_SET_RES_FLAGS
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
+argument_list|,
+name|sc
+operator|->
+name|dev
+argument_list|,
+name|SYS_RES_MEMORY
+argument_list|,
+name|sc
+operator|->
+name|am_rid
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* XXX card_set_res_flags */
+if|if
+condition|(
+name|error
+condition|)
+name|RAY_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"CARD_SET_RES_FLAGS returned 0x%0x"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|am_bsh
@@ -15306,7 +15451,7 @@ argument_list|(
 name|sc
 argument_list|,
 literal|"allocated attribute memory:\n"
-literal|"  start 0x%0lx count 0x%0lx flags 0x%0lx"
+literal|".  start 0x%0lx count 0x%0lx flags 0x%0lx"
 argument_list|,
 name|bus_get_resource_start
 argument_list|(
@@ -15364,6 +15509,9 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|int
+name|error
+decl_stmt|;
 name|RAY_DPRINTF
 argument_list|(
 name|sc
@@ -15428,7 +15576,45 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/* XXX ensure 8bit access */
+comment|/* Ensure 8bit access */
+name|error
+operator|=
+name|CARD_SET_RES_FLAGS
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
+argument_list|,
+name|sc
+operator|->
+name|dev
+argument_list|,
+name|SYS_RES_MEMORY
+argument_list|,
+name|sc
+operator|->
+name|cm_rid
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+comment|/* XXX card_set_res_flags */
+if|if
+condition|(
+name|error
+condition|)
+name|RAY_PRINTF
+argument_list|(
+name|sc
+argument_list|,
+literal|"CARD_SET_RES_FLAGS returned 0x%0x"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|cm_bsh
@@ -15495,7 +15681,7 @@ argument_list|(
 name|sc
 argument_list|,
 literal|"allocated common memory:\n"
-literal|"  start 0x%0lx count 0x%0lx flags 0x%0lx"
+literal|".  start 0x%0lx count 0x%0lx flags 0x%0lx"
 argument_list|,
 name|bus_get_resource_start
 argument_list|(
@@ -15672,7 +15858,7 @@ operator||
 name|RAY_DBG_BOOTPARAM
 argument_list|,
 literal|"allocated irq:\n"
-literal|"  start 0x%0lx count 0x%0lx"
+literal|".  start 0x%0lx count 0x%0lx"
 argument_list|,
 name|bus_get_resource_start
 argument_list|(
@@ -15842,7 +16028,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Hacks for working around the PCCard layer problems.  *  * For NEWBUS kludge and OLDCARD.  *  * We just call the pccard layer to change and restore the mapping each  * time we use the attribute memory.  *  */
+comment|/*  * Hacks for working around the PCCard layer problems.  *  * For NEWBUS kludge and OLDCARD.  *  * We just call the pccard layer to change and restore the mapping each  * time we use the attribute memory.  *  * XXX These could become marcos around bus_activate_resource, but  * XXX the functions do made hacking them around safer.  *  */
 end_comment
 
 begin_if
@@ -15862,15 +16048,8 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|CARD_SET_RES_FLAGS
+name|bus_activate_resource
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|sc
-operator|->
-name|dev
-argument_list|)
-argument_list|,
 name|sc
 operator|->
 name|dev
@@ -15881,10 +16060,11 @@ name|sc
 operator|->
 name|am_rid
 argument_list|,
-name|PCCARD_A_MEM_ATTR
+name|sc
+operator|->
+name|am_res
 argument_list|)
 expr_stmt|;
-comment|/* XXX card_set_res_flags */
 if|#
 directive|if
 name|RAY_DEBUG
@@ -15925,7 +16105,7 @@ argument_list|(
 name|sc
 argument_list|,
 literal|"attribute memory\n"
-literal|"  start 0x%0lx count 0x%0lx flags 0x%0lx"
+literal|".  start 0x%0lx count 0x%0lx flags 0x%0lx"
 argument_list|,
 name|bus_get_resource_start
 argument_list|(
@@ -15974,15 +16154,8 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|CARD_SET_RES_FLAGS
+name|bus_activate_resource
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|sc
-operator|->
-name|dev
-argument_list|)
-argument_list|,
 name|sc
 operator|->
 name|dev
@@ -15993,10 +16166,11 @@ name|sc
 operator|->
 name|cm_rid
 argument_list|,
-literal|0
+name|sc
+operator|->
+name|cm_res
 argument_list|)
 expr_stmt|;
-comment|/* XXX card_set_res_flags */
 if|#
 directive|if
 name|RAY_DEBUG
@@ -16037,7 +16211,7 @@ argument_list|(
 name|sc
 argument_list|,
 literal|"common memory\n"
-literal|"  start 0x%0lx count 0x%0lx flags 0x%0lx"
+literal|".  start 0x%0lx count 0x%0lx flags 0x%0lx"
 argument_list|,
 name|bus_get_resource_start
 argument_list|(
