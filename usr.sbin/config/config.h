@@ -735,20 +735,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|zone
-decl_stmt|,
-name|hadtz
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|dst
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|profiling
 decl_stmt|;
 end_decl_stmt

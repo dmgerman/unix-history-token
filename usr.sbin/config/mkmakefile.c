@@ -773,11 +773,7 @@ name|fprintf
 argument_list|(
 name|ofp
 argument_list|,
-literal|"PARAM=-DTIMEZONE=%d -DDST=%d -DMAXUSERS=%d\n"
-argument_list|,
-name|zone
-argument_list|,
-name|dst
+literal|"PARAM=-DMAXUSERS=%d\n"
 argument_list|,
 name|maxusers
 argument_list|)
