@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx.h,v 1.10.2.1 1995/07/22 04:25:01 davidg Exp $  */
+comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx.h,v 1.10.2.2 1995/08/23 03:52:16 davidg Exp $  */
 end_comment
 
 begin_ifndef
@@ -40,16 +40,23 @@ begin_define
 define|#
 directive|define
 name|AHC_SCB_MAX
-value|16
+value|255
 end_define
 
 begin_comment
-comment|/* 				 * Up to 16 SCBs on some types of aic7xxx based 				 * boards.  The aic7770 family only have 4 				 */
+comment|/* 				 * Up to 255 SCBs on some types of aic7xxx 				 * based boards.  The aic7870 have 16 internal 				 * SCBs, but external SRAM bumps this to 255. 				 * The aic7770 family have only 4, and the  				 * aic7850 have only 3. 				 */
 end_comment
 
 begin_comment
 comment|/* #define AHCDEBUG */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|bootverbose
+decl_stmt|;
+end_decl_stmt
 
 begin_typedef
 typedef|typedef
@@ -137,6 +144,37 @@ literal|0x840
 comment|/* Twin Channel PCI Controller */
 block|}
 name|ahc_type
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|AHC_FNONE
+init|=
+literal|0x00
+block|,
+name|AHC_INIT
+init|=
+literal|0x01
+block|,
+name|AHC_RUNNING
+init|=
+literal|0x02
+block|,
+name|AHC_EXTSCB
+init|=
+literal|0x10
+block|,
+comment|/* External SCBs present */
+name|AHC_CHNLB
+init|=
+literal|0x20
+block|,
+comment|/*  					 * Second controller on 3940  					 * Also encodes the offset in the 					 * SEEPROM for CHNLB info (32) 					 */
+block|}
+name|ahc_flag
 typedef|;
 end_typedef
 
@@ -381,17 +419,9 @@ block|{
 name|ahc_type
 name|type
 decl_stmt|;
-name|int
+name|ahc_flag
 name|flags
 decl_stmt|;
-define|#
-directive|define
-name|AHC_INIT
-value|0x01
-define|#
-directive|define
-name|AHC_RUNNING
-value|0x02
 name|u_long
 name|baseport
 decl_stmt|;
@@ -408,6 +438,14 @@ name|struct
 name|scb
 modifier|*
 name|free_scb
+decl_stmt|;
+name|struct
+name|scb
+modifier|*
+name|timedout_scb
+decl_stmt|;
+name|int
+name|in_timeout
 decl_stmt|;
 name|int
 name|our_id
@@ -512,6 +550,9 @@ name|io_base
 operator|,
 name|ahc_type
 name|type
+operator|,
+name|ahc_flag
+name|flags
 operator|)
 argument_list|)
 decl_stmt|;
