@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)login.c	4.21 83/03/31"
+literal|"@(#)login.c	4.22 83/04/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -691,27 +691,9 @@ name|pwd
 operator|==
 name|NULL
 condition|)
-block|{
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|rusername
-argument_list|,
-name|lusername
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|"%s: No such user\r\n"
-argument_list|,
-name|lusername
-argument_list|)
-expr_stmt|;
 goto|goto
 name|abnormal
 goto|;
-block|}
 name|hostf
 operator|=
 name|pwd
