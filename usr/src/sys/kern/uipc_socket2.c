@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)uipc_socket2.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)uipc_socket2.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -504,11 +504,11 @@ name|so_timeo
 expr_stmt|;
 name|so
 operator|->
-name|so_pgrp
+name|so_pgid
 operator|=
 name|head
 operator|->
-name|so_pgrp
+name|so_pgid
 expr_stmt|;
 operator|(
 name|void
@@ -1142,7 +1142,7 @@ if|if
 condition|(
 name|so
 operator|->
-name|so_pgrp
+name|so_pgid
 operator|<
 literal|0
 condition|)
@@ -1151,7 +1151,7 @@ argument_list|(
 operator|-
 name|so
 operator|->
-name|so_pgrp
+name|so_pgid
 argument_list|,
 name|SIGIO
 argument_list|)
@@ -1161,7 +1161,7 @@ if|if
 condition|(
 name|so
 operator|->
-name|so_pgrp
+name|so_pgid
 operator|>
 literal|0
 operator|&&
@@ -1172,7 +1172,7 @@ name|pfind
 argument_list|(
 name|so
 operator|->
-name|so_pgrp
+name|so_pgid
 argument_list|)
 operator|)
 operator|!=
