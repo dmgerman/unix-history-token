@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.66 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.67 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7889,7 +7889,7 @@ name|putfromline
 argument_list|(
 name|f
 argument_list|,
-name|ProgMailer
+name|FileMailer
 argument_list|,
 name|e
 argument_list|)
@@ -7903,7 +7903,7 @@ call|)
 argument_list|(
 name|f
 argument_list|,
-name|ProgMailer
+name|FileMailer
 argument_list|,
 name|e
 argument_list|)
@@ -7914,7 +7914,7 @@ literal|"\n"
 argument_list|,
 name|f
 argument_list|,
-name|ProgMailer
+name|FileMailer
 argument_list|)
 expr_stmt|;
 call|(
@@ -7926,7 +7926,7 @@ call|)
 argument_list|(
 name|f
 argument_list|,
-name|ProgMailer
+name|FileMailer
 argument_list|,
 name|e
 argument_list|)
@@ -7937,7 +7937,7 @@ literal|"\n"
 argument_list|,
 name|f
 argument_list|,
-name|ProgMailer
+name|FileMailer
 argument_list|)
 expr_stmt|;
 if|if
