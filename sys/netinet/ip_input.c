@@ -526,6 +526,36 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|ip_sendsourcequench
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_ip
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|sendsourcequench
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ip_sendsourcequench
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable the transmission of source quench packets"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * XXX - Setting ip_checkinterface mostly implements the receive side of  * the Strong ES model described in RFC 1122, but since the routing table  * and transmit implementation do not implement the Strong ES model,  * setting this to 1 results in an odd hybrid.  *  * XXX - ip_checkinterface currently must be disabled if you use ipnat  * to translate the destination address to another local interface.  *  * XXX - ip_checkinterface must be disabled if you add IP aliases  * to the loopback interface instead of the interface where the  * packets for those addresses are received.  */
 end_comment
@@ -8431,6 +8461,23 @@ break|break;
 case|case
 name|ENOBUFS
 case|:
+comment|/* 		 * A router should not generate ICMP_SOURCEQUENCH as 		 * required in RFC1812 Requirements for IP Version 4 Routers. 		 * Source quench could be a big problem under DoS attacks, 		 * or if the underlying interface is rate-limited. 		 * Those who need source quench packets may re-enable them 		 * via the net.inet.ip.sendsourcequench sysctl. 		 */
+if|if
+condition|(
+name|ip_sendsourcequench
+operator|==
+literal|0
+condition|)
+block|{
+name|m_freem
+argument_list|(
+name|mcopy
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+else|else
+block|{
 name|type
 operator|=
 name|ICMP_SOURCEQUENCH
@@ -8439,6 +8486,7 @@ name|code
 operator|=
 literal|0
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|EACCES
