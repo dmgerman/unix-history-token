@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_conv.c,v 1.2 1994/09/27 20:42:42 phk Exp $ */
+comment|/*	$Id: msdosfs_conv.c,v 1.3 1994/12/12 12:35:42 bde Exp $ */
 end_comment
 
 begin_comment
@@ -47,6 +47,12 @@ begin_comment
 comment|/* defines tz */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<machine/clock.h>
+end_include
+
 begin_comment
 comment|/*  * MSDOSFS include files.  */
 end_comment
@@ -58,7 +64,7 @@ file|<msdosfs/direntry.h>
 end_include
 
 begin_comment
-comment|/*  * Days in each month in a regular year.  */
+comment|/*  * Total number of days that have passed for each month in a regular year.  */
 end_comment
 
 begin_decl_stmt
@@ -69,33 +75,33 @@ init|=
 block|{
 literal|31
 block|,
-literal|28
+literal|59
 block|,
-literal|31
+literal|90
 block|,
-literal|30
+literal|120
 block|,
-literal|31
+literal|151
 block|,
-literal|30
+literal|181
 block|,
-literal|31
+literal|212
 block|,
-literal|31
+literal|243
 block|,
-literal|30
+literal|273
 block|,
-literal|31
+literal|304
 block|,
-literal|30
+literal|334
 block|,
-literal|31
+literal|365
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Days in each month in a leap year.  */
+comment|/*  * Total number of days that have passed for each month in a leap year.  */
 end_comment
 
 begin_decl_stmt
@@ -106,27 +112,27 @@ init|=
 block|{
 literal|31
 block|,
-literal|29
+literal|60
 block|,
-literal|31
+literal|91
 block|,
-literal|30
+literal|121
 block|,
-literal|31
+literal|152
 block|,
-literal|30
+literal|182
 block|,
-literal|31
+literal|213
 block|,
-literal|31
+literal|244
 block|,
-literal|30
+literal|274
 block|,
-literal|31
+literal|305
 block|,
-literal|30
+literal|335
 block|,
-literal|31
+literal|366
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -220,8 +226,11 @@ name|tz_minuteswest
 operator|*
 literal|60
 operator|)
-comment|/* +- daylight savings time correction */
+operator|-
+name|adjkerntz
 expr_stmt|;
+comment|/* +- daylight savings time correction */
+empty_stmt|;
 if|if
 condition|(
 name|lasttime
@@ -350,32 +359,32 @@ name|month
 operator|=
 literal|0
 init|;
-name|month
-operator|<
-literal|12
-condition|;
-name|month
-operator|++
-control|)
-block|{
-if|if
-condition|(
 name|days
-operator|<
+operator|>
 name|months
 index|[
 name|month
 index|]
+condition|;
+name|month
+operator|++
+control|)
+empty_stmt|;
+if|if
+condition|(
+name|month
+operator|>
+literal|0
 condition|)
-break|break;
 name|days
 operator|-=
 name|months
 index|[
 name|month
+operator|-
+literal|1
 index|]
 expr_stmt|;
-block|}
 name|lastddate
 operator|=
 operator|(
@@ -565,31 +574,35 @@ operator|)
 operator|>>
 name|DD_YEAR_SHIFT
 expr_stmt|;
-for|for
-control|(
-name|y
+name|days
 operator|=
-literal|0
-init|;
-name|y
-operator|<
 name|year
-condition|;
-name|y
-operator|++
-control|)
-block|{
+operator|*
+literal|365
+expr_stmt|;
 name|days
 operator|+=
-name|y
+name|year
+operator|/
+literal|4
+operator|+
+literal|1
+expr_stmt|;
+comment|/* add in leap days */
+if|if
+condition|(
+operator|(
+name|year
 operator|&
 literal|0x03
-condition|?
-literal|365
-else|:
-literal|366
+operator|)
+operator|==
+literal|0
+condition|)
+name|days
+operator|--
 expr_stmt|;
-block|}
+comment|/* if year is a leap year */
 name|months
 operator|=
 name|year
@@ -600,7 +613,6 @@ name|regyear
 else|:
 name|leapyear
 expr_stmt|;
-comment|/* 		 * Prevent going from 0 to 0xffffffff in the following 		 * loop. 		 */
 name|month
 operator|=
 operator|(
@@ -614,8 +626,12 @@ expr_stmt|;
 if|if
 condition|(
 name|month
-operator|==
-literal|0
+operator|<
+literal|1
+operator|||
+name|month
+operator|>
+literal|12
 condition|)
 block|{
 name|printf
@@ -630,30 +646,21 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-for|for
-control|(
-name|m
-operator|=
-literal|0
-init|;
-name|m
-operator|<
+if|if
+condition|(
 name|month
-operator|-
+operator|>
 literal|1
-condition|;
-name|m
-operator|++
-control|)
-block|{
+condition|)
 name|days
 operator|+=
 name|months
 index|[
-name|m
+name|month
+operator|-
+literal|2
 index|]
 expr_stmt|;
-block|}
 name|days
 operator|+=
 operator|(
@@ -698,6 +705,8 @@ name|tz_minuteswest
 operator|*
 literal|60
 operator|)
+operator|+
+name|adjkerntz
 comment|/* -+ daylight savings time correction */
 expr_stmt|;
 name|tsp
