@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lint.c	1.1	(Berkeley)	%G%"
+literal|"@(#)lint.c	1.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1087,9 +1087,9 @@ directive|else
 argument|static char x[BUFSIZ];
 endif|#
 directive|endif
-argument|register char *p;  	for( p=x; *s; ++s ){ 		if( *s ==
-literal|'/'
-argument|) p=x; 		else if( *s !=
+argument|register char *p; 	static	int	stripping =
+literal|0
+argument|;  	if (stripping) 		return(s); 	stripping++; 	for( p=x; *s; ++s ){ 		if( *s !=
 literal|'"'
 argument|){
 ifndef|#
@@ -1101,7 +1101,9 @@ literal|"filename too long"
 argument|);
 endif|#
 directive|endif
-argument|*p++ = *s; 		} 	} 	*p =
+argument|*p++ = *s; 		} 	} 	stripping =
+literal|0
+argument|; 	*p =
 literal|'\0'
 argument|;
 ifndef|#
@@ -1152,13 +1154,11 @@ argument|if( f ==
 literal|'u'
 argument|&& nerrors>
 literal|1
-argument|) --nerrors;
+argument|) 		--nerrors;
 comment|/* don't get "too many errors" */
 argument|fprintf( stderr,
 literal|"%s(%d): "
-argument|, (f ==
-literal|'c'
-argument|) ? ftitle : strip(ftitle), lineno ); 	}
+argument|, strip(ftitle), lineno); 	}
 comment|/* a number of dummy routines, unneeded by lint */
 argument|branch(n){;} defalign(n){;} deflab(n){;} bycode(t,i){;} cisreg(t) TWORD t; {return(
 literal|1
