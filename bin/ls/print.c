@@ -3452,6 +3452,26 @@ operator|->
 name|fts_name
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We have no way to tell whether a symbolic link has an ACL since 	 * pathconf() and acl_get_file() both follow them. 	 */
+if|if
+condition|(
+name|S_ISLNK
+argument_list|(
+name|p
+operator|->
+name|fts_statp
+operator|->
+name|st_mode
+argument_list|)
+condition|)
+block|{
+operator|*
+name|haveacls
+operator|=
+literal|1
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 operator|(
