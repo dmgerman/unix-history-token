@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/condvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -634,6 +640,26 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+name|cv_init
+argument_list|(
+operator|&
+name|mmbfree
+operator|.
+name|m_starved
+argument_list|,
+literal|"mbuf free list starved cv"
+argument_list|)
+expr_stmt|;
+name|cv_init
+argument_list|(
+operator|&
+name|mclfree
+operator|.
+name|m_starved
+argument_list|,
+literal|"mbuf cluster free list starved cv"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Initialize mbuf subsystem (sysctl exported) statistics structure. 	 */
 name|mbstat
 operator|.
@@ -1110,7 +1136,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Once the mb_map has been exhausted and if the call to the allocation macros  * (or, in some cases, functions) is with M_TRYWAIT, then it is necessary to  * rely solely on reclaimed mbufs.  *  * Here we request for the protocols to free up some resources and, if we  * still cannot get anything, then we wait for an mbuf to be freed for a   * designated (mbuf_wait) time.   *  * Must be called with the mmbfree mutex held.  */
+comment|/*  * Once the mb_map has been exhausted and if the call to the allocation macros  * (or, in some cases, functions) is with M_TRYWAIT, then it is necessary to  * rely solely on reclaimed mbufs.  *  * Here we request for the protocols to free up some resources and, if we  * still cannot get anything, then we wait for an mbuf to be freed for a   * designated (mbuf_wait) time, at most.  *  * Must be called with the mmbfree mutex held.  */
 end_comment
 
 begin_function
@@ -1159,20 +1185,23 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|int
+name|retval
+decl_stmt|;
 name|m_mballoc_wid
 operator|++
 expr_stmt|;
-name|msleep
+name|retval
+operator|=
+name|cv_timedwait
 argument_list|(
 operator|&
-name|m_mballoc_wid
+name|mmbfree
+operator|.
+name|m_starved
 argument_list|,
 operator|&
 name|mbuf_mtx
-argument_list|,
-name|PVM
-argument_list|,
-literal|"mballc"
 argument_list|,
 name|mbuf_wait
 argument_list|)
@@ -1180,7 +1209,13 @@ expr_stmt|;
 name|m_mballoc_wid
 operator|--
 expr_stmt|;
-comment|/* 		 * Try again (one last time). 		 * 		 * We retry to fetch _even_ if the sleep timed out. This 		 * is left this way, purposely, in the [unlikely] case 		 * that an mbuf was freed but the sleep was not awoken 		 * in time. 		 * 		 * If the sleep didn't time out (i.e. we got woken up) then 		 * we have the lock so we just grab an mbuf, hopefully. 		 */
+comment|/* 		 * If we got signaled (i.e. didn't time out), allocate. 		 */
+if|if
+condition|(
+name|retval
+operator|==
+literal|0
+condition|)
 name|_MGET
 argument_list|(
 name|p
@@ -1189,7 +1224,6 @@ name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If we waited and got something... */
 if|if
 condition|(
 name|p
@@ -1213,6 +1247,11 @@ condition|)
 name|MBWAKEUP
 argument_list|(
 name|m_mballoc_wid
+argument_list|,
+operator|&
+name|mmbfree
+operator|.
+name|m_starved
 argument_list|)
 expr_stmt|;
 block|}
@@ -1404,7 +1443,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Once the mb_map submap has been exhausted and the allocation is called with  * M_TRYWAIT, we rely on the mclfree list. If nothing is free, we will  * sleep for a designated amount of time (mbuf_wait) or until we're woken up  * due to sudden mcluster availability.  *  * Must be called with the mclfree lock held.  */
+comment|/*  * Once the mb_map submap has been exhausted and the allocation is called with  * M_TRYWAIT, we rely on the mclfree list. If nothing is free, we will  * block on a cv for a designated amount of time (mbuf_wait) or until we're  * signaled due to sudden mcluster availability.  *  * Must be called with the mclfree lock held.  */
 end_comment
 
 begin_function
@@ -1419,20 +1458,23 @@ name|p
 init|=
 name|NULL
 decl_stmt|;
+name|int
+name|retval
+decl_stmt|;
 name|m_clalloc_wid
 operator|++
 expr_stmt|;
-name|msleep
+name|retval
+operator|=
+name|cv_timedwait
 argument_list|(
 operator|&
-name|m_clalloc_wid
+name|mclfree
+operator|.
+name|m_starved
 argument_list|,
 operator|&
 name|mbuf_mtx
-argument_list|,
-name|PVM
-argument_list|,
-literal|"mclalc"
 argument_list|,
 name|mbuf_wait
 argument_list|)
@@ -1441,6 +1483,12 @@ name|m_clalloc_wid
 operator|--
 expr_stmt|;
 comment|/* 	 * Now that we (think) that we've got something, try again. 	 */
+if|if
+condition|(
+name|retval
+operator|==
+literal|0
+condition|)
 name|_MCLALLOC
 argument_list|(
 name|p
@@ -1448,7 +1496,6 @@ argument_list|,
 name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
-comment|/* If we waited and got something ... */
 if|if
 condition|(
 name|p
@@ -1472,6 +1519,11 @@ condition|)
 name|MBWAKEUP
 argument_list|(
 name|m_clalloc_wid
+argument_list|,
+operator|&
+name|mclfree
+operator|.
+name|m_starved
 argument_list|)
 expr_stmt|;
 block|}
@@ -1512,7 +1564,7 @@ name|KASSERT
 argument_list|(
 name|witness_list
 argument_list|(
-name|CURPROC
+name|curproc
 argument_list|)
 operator|==
 literal|0
