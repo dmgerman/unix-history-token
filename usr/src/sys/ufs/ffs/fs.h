@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*	fs.h	1.3	%G%	*/
+comment|/*	fs.h	1.4	%G%	*/
 end_comment
 
 begin_comment
@@ -40,7 +40,18 @@ value|((daddr_t)(3*FRAG))
 end_define
 
 begin_comment
-comment|/*  * Addresses stored in inodes are capable of addressing fragments of `blocks.'  * File system blocks of size BSIZE can be broken into FRAG pieces,  * each of which is addressible; these pieces may be sectors, or some  * multiple of a sector size (e.g. 1k byte units).  *  * Large files consist of exclusively large (BSIZE) data blocks.  To avoid  * undue fragmentation, the last data block of a small file may be  * allocated as only as many pieces  * of a large block as are necessary.  The file system format retains  * only a single pointer to such a fragment, which is a piece of a single  * BSIZE block which has been divided.  The size of such a fragment is  * determinable from information in the inode.  *  * The file system records space availability at the fragment level;  * to determine block availability, aligned fragments are examined.  */
+comment|/*  * Addresses stored in inodes are capable of addressing fragments of `blocks.'  * File system blocks of size BSIZE can be broken into FRAG pieces,  * each of which is addressible; these pieces may be sectors, or some  * multiple of a sector size (e.g. 1k byte units).  *  * Large files consist of exclusively large (BSIZE) data blocks.  To avoid  * undue fragmentation, the last data block of a small file may be  * allocated as only as many pieces  * of a large block as are necessary.  The file system format retains  * only a single pointer to such a fragment, which is a piece of a single  * BSIZE block which has been divided.  The size of such a fragment is  * determinable from information in the inode.  *  * The file system records space availability at the fragment level;  * to determine block availability, aligned fragments are examined.  *  * For each cylinder we keep track of the availability of blocks at different  * rotational positions, so that we can lay out the data to be picked  * up with minimum rotational latency.  NRPOS is the number of rotational  * positions which we distinguish.  With NRPOS 8 the resolution of our  * summary information is 2ms for a typical 3600 rpm drive.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NRPOS
+value|8
+end_define
+
+begin_comment
+comment|/* number distinct rotational positions */
 end_comment
 
 begin_comment
@@ -106,7 +117,7 @@ begin_define
 define|#
 directive|define
 name|DESCPG
-value|8
+value|16
 end_define
 
 begin_comment
@@ -117,7 +128,7 @@ begin_define
 define|#
 directive|define
 name|MAXCPG
-value|16
+value|32
 end_define
 
 begin_comment
@@ -247,14 +258,48 @@ literal|32
 index|]
 decl_stmt|;
 comment|/* name mounted on */
+comment|/* these fields retain the current block allocation info */
+name|short
+name|fs_cgrotor
+decl_stmt|;
+comment|/* last cg searched */
 name|struct
 name|csum
 modifier|*
-name|fs_cs
+name|fs_csp
+index|[
+name|NBUF
+index|]
 decl_stmt|;
+comment|/* list of fs_cs info buffers */
+name|short
+name|fs_postbl
+index|[
+name|NRPOS
+index|]
+decl_stmt|;
+comment|/* head of blocks for each rotation */
+name|short
+name|fs_rotbl
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* list of blocks for each rotation */
+comment|/* actually longer */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|fs_cs
+parameter_list|(
+name|indx
+parameter_list|)
+value|fs_csp[(indx) / (BSIZE / sizeof(struct csum))] \ 			  [(indx) % (BSIZE / sizeof(struct csum))]
+end_define
 
 begin_comment
 comment|/*  * Cylinder group macros to locate things in cylinder groups.  */
@@ -426,21 +471,6 @@ comment|/*  * Cylinder group related limits.  */
 end_comment
 
 begin_comment
-comment|/*  * For each cylinder we keep track of the availability of blocks at different  * rotational positions, so that we can lay out the data to be picked  * up with minimum rotational latency.  NRPOS is the number of rotational  * positions which we distinguish.  With NRPOS 16 the resolution of our  * summary information is 1ms for a typical 3600 rpm drive.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NRPOS
-value|16
-end_define
-
-begin_comment
-comment|/* number distinct rotational positions */
-end_comment
-
-begin_comment
 comment|/*  * MAXIPG bounds the number of inodes per cylinder group, and  * is needed only to keep the structure simpler by having the  * only a single variable size element (the free bit map).  *  * N.B.: MAXIPG must be a multiple of INOPB.  */
 end_comment
 
@@ -591,24 +621,6 @@ name|getfs
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-name|int
-name|inside
-index|[]
-decl_stmt|,
-name|around
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|unsigned
-name|char
-name|fragtbl
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#
