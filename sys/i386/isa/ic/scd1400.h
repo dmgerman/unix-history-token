@@ -38,13 +38,6 @@ name|CD1400_PORTS
 value|4
 end_define
 
-begin_define
-define|#
-directive|define
-name|CD1400_CLKHZ
-value|25000000
-end_define
-
 begin_comment
 comment|/*  *	Define the cd1400 uarts internal FIFO sizes.  */
 end_comment
@@ -654,7 +647,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/*  *	Define values used by COR4.  */
+comment|/*  *	Define the bit values of COR4.  */
 end_comment
 
 begin_define
@@ -669,6 +662,17 @@ define|#
 directive|define
 name|COR4_IGNBRK
 value|0x18
+end_define
+
+begin_comment
+comment|/*  *	Define the bit values of COR5.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COR5_ISTRIP
+value|0x80
 end_define
 
 begin_comment
