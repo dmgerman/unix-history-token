@@ -8,6 +8,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -127,6 +133,9 @@ specifier|const
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|mode_t
+name|mask
 parameter_list|)
 block|{
 name|int
@@ -232,6 +241,13 @@ sizeof|sizeof
 name|s
 argument_list|)
 expr_stmt|;
+name|mask
+operator|=
+name|umask
+argument_list|(
+name|mask
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bind
@@ -255,6 +271,11 @@ operator|<
 literal|0
 condition|)
 block|{
+name|umask
+argument_list|(
+name|mask
+argument_list|)
+expr_stmt|;
 name|LogPrintf
 argument_list|(
 name|LogERROR
@@ -296,6 +317,11 @@ return|return
 literal|3
 return|;
 block|}
+name|umask
+argument_list|(
+name|mask
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|listen
