@@ -2656,12 +2656,6 @@ begin_comment
 comment|/*  * Inter Processor Interrupt functions.  The lapic_ipi_*() functions are  * private the sys/i386 code.  The public interface for the rest of the  * kernel is defined in mp_machdep.c.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|DETECT_DEADLOCK
-end_define
-
 begin_function
 name|int
 name|lapic_ipi_wait
