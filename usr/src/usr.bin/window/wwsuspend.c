@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwsuspend.c	2.1 83/07/30"
+literal|"@(#)wwsuspend.c	2.1.1.1 83/08/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,9 +39,7 @@ name|mask
 parameter_list|(
 name|s
 parameter_list|)
-value|(1<<(SIG
-comment|/**/
-value|s-1))
+value|(1<< (s) - 1)
 end_define
 
 begin_macro
@@ -60,13 +58,16 @@ name|sigblock
 argument_list|(
 name|mask
 argument_list|(
-name|TSTP
+name|SIGTSTP
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|wwend
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sigsetmask
 argument_list|(
 name|sigblock
@@ -77,10 +78,13 @@ operator|&
 operator|~
 name|mask
 argument_list|(
-name|TSTP
+name|SIGTSTP
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|kill
 argument_list|(
 literal|0
@@ -88,14 +92,20 @@ argument_list|,
 name|SIGTSTP
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sigblock
 argument_list|(
 name|mask
 argument_list|(
-name|TSTP
+name|SIGTSTP
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|wwsettty
 argument_list|(
 literal|0
@@ -104,13 +114,20 @@ operator|&
 name|wwnewtty
 argument_list|)
 expr_stmt|;
-name|Winit
-argument_list|(
-literal|2
-argument_list|,
-literal|1
-argument_list|)
+call|(
+modifier|*
+name|tt
+operator|.
+name|tt_reset
+call|)
+argument_list|()
 expr_stmt|;
+name|wwredraw
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sigsetmask
 argument_list|(
 name|oldmask
