@@ -291,7 +291,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cpu%d: %s %s Processor (%d.%02d MHZ CPU)\n"
+literal|"cpu%d: %s %s Processor (%d.%02d MHz CPU)\n"
 argument_list|,
 name|id
 argument_list|,
