@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.37 1997/12/02 21:06:54 phk Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.38 1997/12/06 14:27:40 bde Exp $  */
 end_comment
 
 begin_comment
@@ -1565,6 +1565,16 @@ default|default:
 break|break;
 block|}
 block|}
+name|du
+operator|->
+name|dk_altport
+operator|=
+name|du
+operator|->
+name|dk_port
+operator|+
+name|wd_ctlr
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4127,7 +4137,7 @@ argument|} 		} else if (du->dk_status& WDCS_ECCCOR) 			wderror(bp, du,
 literal|"soft ecc"
 argument|); 	}
 comment|/* 	 * If this was a successful read operation, fetch the data. 	 */
-argument|if (((bp->b_flags& (B_READ | B_ERROR)) == B_READ)&& !((du->dk_flags& (DKFL_DMA|DKFL_SINGLE)) == DKFL_DMA) 		int	chk, dummy, multisize; 		multisize = chk = du->dk_currentiosize * DEV_BSIZE; 		if( du->dk_bc< chk) { 			chk = du->dk_bc; 			if( ((chk + DEV_BSIZE -
+argument|if (((bp->b_flags& (B_READ | B_ERROR)) == B_READ)&& !((du->dk_flags& (DKFL_DMA|DKFL_SINGLE)) == DKFL_DMA)&& wdtab[unit].b_active) { 		int	chk, dummy, multisize; 		multisize = chk = du->dk_currentiosize * DEV_BSIZE; 		if( du->dk_bc< chk) { 			chk = du->dk_bc; 			if( ((chk + DEV_BSIZE -
 literal|1
 argument|) / DEV_BSIZE)< du->dk_currentiosize) { 				du->dk_currentiosize = (chk + DEV_BSIZE -
 literal|1
@@ -4171,9 +4181,15 @@ argument|if (du->dk_bc>
 literal|0
 argument|&& (du->dk_flags& DKFL_ERROR) ==
 literal|0
-argument|) { 				wdtab[unit].b_active =
+argument|) { 				if( (du->dk_flags& DKFL_SINGLE) || 					((bp->b_flags& B_READ) ==
 literal|0
-argument|; 				wdstart(unit); 				return;
+argument|)) { 					wdtab[unit].b_active =
+literal|0
+argument|; 					wdstart(unit); 				} else { 					du->dk_timeout =
+literal|1
+argument|+
+literal|3
+argument|; 				} 				return;
 comment|/* next chunk is started */
 argument|} else if ((du->dk_flags& (DKFL_SINGLE | DKFL_ERROR)) 				   == DKFL_ERROR) { 				du->dk_skip =
 literal|0
@@ -4183,7 +4199,7 @@ argument|; 				wdstart(unit); 				return;
 comment|/* redo xfer sector by sector */
 argument|} 		}  done: ;
 comment|/* done with this transfer, with or without error */
-argument|du->dk_flags&= ~DKFL_SINGLE; 		bufq_remove(&wdtab[unit].controller_queue, bp); 		wdtab[unit].b_errcnt =
+argument|du->dk_flags&= ~(DKFL_SINGLE|DKFL_DMA); 		bufq_remove(&wdtab[unit].controller_queue, bp); 		wdtab[unit].b_errcnt =
 literal|0
 argument|; 		bp->b_resid = bp->b_bcount - du->dk_skip * DEV_BSIZE; 		wdutab[du->dk_lunit].b_active =
 literal|0
@@ -4440,7 +4456,7 @@ endif|#
 directive|endif
 argument|outb(wdc + wd_sector, sector +
 literal|1
-argument|); 			outb(wdc + wd_seccnt, count); 		} 	} 	if (wdwait(du, command == WDCC_DIAGNOSE || command == WDCC_IDC 		       ?
+argument|); 			outb(wdc + wd_seccnt, count); 		} 	} 	if (wdwait(du, (command == WDCC_DIAGNOSE || command == WDCC_IDC) 		       ?
 literal|0
 argument|: WDCS_READY, TIMEOUT)<
 literal|0
@@ -4854,7 +4870,7 @@ literal|1
 argument|] = du->dk_error; 		return (error);
 endif|#
 directive|endif
-argument|default: 		return (ENOTTY); 	} 	return (error); }
+argument|default: 		return (ENOTTY); 	} }
 ifdef|#
 directive|ifdef
 name|B_FORMAT
@@ -5126,11 +5142,11 @@ argument|*
 literal|1000
 argument|); 		epson_outb(du->dk_altport, WDCTL_IDS); 		if (wdwait(du, WDCS_READY | WDCS_SEEKCMPLT, TIMEOUT) !=
 literal|0
-argument||| (du->dk_error = epson_errorf(wdc + wd_error)) !=
+argument||| (du->dk_error = epson_errorf(du->dk_port + wd_error)) !=
 literal|0x01
 argument|) 			return (
 literal|1
-argument|); 		epson_outb(wdc + wd_ctlr, WDCTL_4BIT); 		err =
+argument|); 		epson_outb(du->dk_altport, WDCTL_4BIT); 		err =
 literal|0
 argument|; 	} 	else {
 endif|#
