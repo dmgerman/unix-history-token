@@ -59,7 +59,8 @@ begin_struct
 struct|struct
 name|sockaddr_un
 block|{
-name|u_char
+name|unsigned
+name|char
 name|sun_len
 decl_stmt|;
 comment|/* sockaddr len including null */
