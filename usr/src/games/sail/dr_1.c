@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dr_1.c	1.5 83/10/10"
+literal|"@(#)dr_1.c	1.6 83/10/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -3011,6 +3011,44 @@ expr_stmt|;
 block|}
 block|}
 block|}
+end_block
+
+begin_comment
+comment|/*VARARGS2*/
+end_comment
+
+begin_macro
+name|Signal
+argument_list|(
+argument|fmt
+argument_list|,
+argument|ship
+argument_list|,
+argument|a
+argument_list|,
+argument|b
+argument_list|,
+argument|c
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|fmt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ship
+modifier|*
+name|ship
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{ }
 end_block
 
 end_unit
