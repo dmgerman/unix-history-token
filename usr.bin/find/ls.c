@@ -125,12 +125,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"find.h"
 end_include
 
@@ -238,7 +232,9 @@ name|sb
 operator|->
 name|st_nlink
 argument_list|,
-name|UT_NAMESIZE
+name|MAXLOGNAME
+operator|-
+literal|1
 argument_list|,
 name|user_from_uid
 argument_list|(
@@ -249,7 +245,9 @@ argument_list|,
 literal|0
 argument_list|)
 argument_list|,
-name|UT_NAMESIZE
+name|MAXLOGNAME
+operator|-
+literal|1
 argument_list|,
 name|group_from_gid
 argument_list|(
