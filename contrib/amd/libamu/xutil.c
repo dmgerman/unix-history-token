@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1998 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: xutil.c,v 1.2 1998/12/27 06:25:24 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-1998 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: xutil.c,v 1.1.1.3 1999/01/13 19:20:33 obrien Exp $  *  */
 end_comment
 
 begin_ifdef
@@ -1045,7 +1045,7 @@ comment|/* DEBUG_MEM */
 end_comment
 
 begin_comment
-comment|/*  * Take a log format string and expand occurrences of %m  * with the current error code taken from errno.  */
+comment|/*  * Take a log format string and expand occurrences of %m  * with the current error code taken from errno.  Make sure  * 'e' never gets longer than maxlen characters.  */
 end_comment
 
 begin_function
@@ -1060,6 +1060,9 @@ parameter_list|,
 name|char
 modifier|*
 name|e
+parameter_list|,
+name|int
+name|maxlen
 parameter_list|)
 block|{
 specifier|extern
@@ -1069,27 +1072,46 @@ decl_stmt|;
 name|char
 modifier|*
 name|p
+decl_stmt|,
+modifier|*
+name|q
 decl_stmt|;
 name|int
 name|error
 init|=
 name|errno
 decl_stmt|;
+name|int
+name|len
+init|=
+literal|0
+decl_stmt|;
 for|for
 control|(
 name|p
 operator|=
 name|f
+operator|,
+name|q
+operator|=
+name|e
 init|;
 operator|(
 operator|*
-name|e
+name|q
 operator|=
 operator|*
 name|p
 operator|)
+operator|&&
+name|len
+operator|<
+name|maxlen
 condition|;
-name|e
+name|len
+operator|++
+operator|,
+name|q
 operator|++
 operator|,
 name|p
@@ -1146,7 +1168,7 @@ name|errstr
 condition|)
 name|strcpy
 argument_list|(
-name|e
+name|q
 argument_list|,
 name|errstr
 argument_list|)
@@ -1154,18 +1176,27 @@ expr_stmt|;
 else|else
 name|sprintf
 argument_list|(
-name|e
+name|q
 argument_list|,
 literal|"Error %d"
 argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-name|e
+name|len
 operator|+=
 name|strlen
 argument_list|(
-name|e
+name|q
+argument_list|)
+operator|-
+literal|1
+expr_stmt|;
+name|q
+operator|+=
+name|strlen
+argument_list|(
+name|q
 argument_list|)
 operator|-
 literal|1
@@ -1175,6 +1206,16 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+name|e
+index|[
+name|maxlen
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* null terminate, to be sure */
 block|}
 end_function
 
@@ -1533,8 +1574,11 @@ argument_list|(
 name|fmt
 argument_list|,
 name|efmt
+argument_list|,
+literal|1024
 argument_list|)
 expr_stmt|;
+comment|/*    * XXX: ptr is 1024 bytes long.  It is possible to write into it    * more than 1024 bytes, if efmt is already large, and vargs expand    * as well.    */
 name|vsprintf
 argument_list|(
 name|ptr
@@ -1544,6 +1588,14 @@ argument_list|,
 name|vargs
 argument_list|)
 expr_stmt|;
+name|msg
+index|[
+literal|1023
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* null terminate, to be sure */
 name|ptr
 operator|+=
 name|strlen
