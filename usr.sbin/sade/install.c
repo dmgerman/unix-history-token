@@ -87,6 +87,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/ufsmount.h>
+end_include
+
 begin_function_decl
 specifier|static
 name|void
@@ -1903,12 +1909,6 @@ name|installConfigure
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* Now write out any changes .. */
-name|configSysconfig
-argument_list|(
-literal|"/etc/sysconfig"
-argument_list|)
-expr_stmt|;
 return|return
 name|i
 operator||
@@ -2411,12 +2411,6 @@ comment|/* Give user the option of one last configuration spree */
 name|installConfigure
 argument_list|()
 expr_stmt|;
-comment|/* Now write out any changes .. */
-name|configSysconfig
-argument_list|(
-literal|"/etc/sysconfig"
-argument_list|)
-expr_stmt|;
 return|return
 name|DITEM_LEAVE_MENU
 operator||
@@ -2461,12 +2455,6 @@ block|{
 comment|/* Give user the option of one last configuration spree */
 name|installConfigure
 argument_list|()
-expr_stmt|;
-comment|/* Now write out any changes .. */
-name|configSysconfig
-argument_list|(
-literal|"/etc/sysconfig"
-argument_list|)
 expr_stmt|;
 return|return
 name|i

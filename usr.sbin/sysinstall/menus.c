@@ -1998,8 +1998,8 @@ literal|"but this configuration menu should at least narrow down the choices\n"
 literal|"somewhat.  Once you've selected one of the below, you can specify\n"
 literal|"/dev/mouse as your mouse device when running the XFree86 configuration\n"
 literal|"utility (see Configuration menu).  Please note that for PS/2 mice,\n"
-literal|"a kernel recompile is also required!  See the handbook for more details\n"
-literal|"on building a kernel."
+literal|"you need to enable the psm driver in the kernel configuration menu\n"
+literal|"when installing for the first time."
 block|,
 literal|"For more information, visit the Documentation menu"
 block|,
