@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getopt.c	4.3 (Berkeley) %G%"
+literal|"@(#)getopt.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,7 +96,7 @@ name|tell
 parameter_list|(
 name|s
 parameter_list|)
-value|if (opterr) {fputs(*nargv,stderr);fputs(s,stderr); \ 		fputc(optopt,stderr);fputc('\n',stderr);return(BADCH);}
+value|{ \ 	if (opterr) { \ 		fputs(*nargv, stderr); \ 		fputs(s, stderr); \ 		fputc(optopt, stderr); \ 		fputc((int)'\n', stderr); \ 	} \ 	return(BADCH); \ }
 end_define
 
 begin_macro
@@ -282,11 +282,11 @@ condition|(
 operator|*
 name|place
 condition|)
+comment|/* no white space */
 name|optarg
 operator|=
 name|place
 expr_stmt|;
-comment|/* no white space */
 elseif|else
 if|if
 condition|(
@@ -308,6 +308,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+comment|/* white space */
 name|optarg
 operator|=
 name|nargv
@@ -315,7 +316,6 @@ index|[
 name|optind
 index|]
 expr_stmt|;
-comment|/* white space */
 name|place
 operator|=
 name|EMSG
