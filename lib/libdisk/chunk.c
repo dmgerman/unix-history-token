@@ -2011,7 +2011,7 @@ literal|0
 argument_list|,
 argument|*c2
 argument_list|,
-argument|*c3; 	chunk_e type = c->type;  	if(type == whole) 		return
+argument|*c3; 	chunk_e type = c->type; 	long offset = c->offset;  	if(type == whole) 		return
 literal|1
 argument|;
 ifndef|#
@@ -2048,7 +2048,15 @@ argument|); 			Free_Chunk(c2->part); 			c2->part =
 literal|0
 argument|; 			goto scan; 		} 	} 	return
 literal|1
-argument|;     scan: 	for(c2 = c1->part; c2; c2 = c2->next) { 		if (c2->type != unused) 			continue; 		if (!c2->next) 			continue; 		if (c2->next->type != unused) 			continue; 		c3 = c2->next; 		c2->size += c3->size; 		c2->end = c3->end; 		c2->next = c3->next; 		c3->next =
+argument|;     scan:
+comment|/* 	 * Collapse multiple unused elements together, and attempt 	 * to extend the previous chunk into the freed chunk. 	 */
+argument|for(c2 = c1->part; c2; c2 = c2->next) { 		if (c2->type != unused) { 			if (c2->offset + c2->size != offset || 			    (c2->flags& CHUNK_AUTO_SIZE) ==
+literal|0
+argument||| 			    (c2->flags& CHUNK_NEWFS) ==
+literal|0
+argument|) { 				continue; 			}
+comment|/* else extend into free area */
+argument|} 		if (!c2->next) 			continue; 		if (c2->next->type != unused) 			continue; 		c3 = c2->next; 		c2->size += c3->size; 		c2->end = c3->end; 		c2->next = c3->next; 		c3->next =
 literal|0
 argument|; 		Free_Chunk(c3); 		goto scan; 	} 	Fixup_Names(d); 	return
 literal|0

@@ -190,7 +190,7 @@ parameter_list|,
 name|Chunk
 modifier|*
 modifier|*
-name|vtdev
+name|tdev
 parameter_list|,
 name|Chunk
 modifier|*
@@ -230,7 +230,7 @@ modifier|*
 name|vardev
 decl_stmt|,
 modifier|*
-name|vartmpdev
+name|tmpdev
 decl_stmt|,
 modifier|*
 name|homedev
@@ -292,10 +292,10 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|vtdev
+name|tdev
 condition|)
 operator|*
-name|vtdev
+name|tdev
 operator|=
 name|NULL
 expr_stmt|;
@@ -316,7 +316,7 @@ name|usrdev
 operator|=
 name|vardev
 operator|=
-name|vartmpdev
+name|tmpdev
 operator|=
 name|homedev
 operator|=
@@ -669,13 +669,13 @@ operator|)
 operator|->
 name|mountpoint
 argument_list|,
-literal|"/var/tmp"
+literal|"/tmp"
 argument_list|)
 condition|)
 block|{
 if|if
 condition|(
-name|vartmpdev
+name|tmpdev
 condition|)
 block|{
 if|if
@@ -684,7 +684,7 @@ name|whinge
 condition|)
 name|msgConfirm
 argument_list|(
-literal|"WARNING:  You have more than one /var/tmp filesystem.\n"
+literal|"WARNING:  You have more than one /tmp filesystem.\n"
 literal|"Using the first one found."
 argument_list|)
 expr_stmt|;
@@ -692,7 +692,7 @@ continue|continue;
 block|}
 else|else
 block|{
-name|vartmpdev
+name|tmpdev
 operator|=
 name|c2
 expr_stmt|;
@@ -703,9 +703,9 @@ argument_list|()
 condition|)
 name|msgDebug
 argument_list|(
-literal|"Found vartmpdev at %s!\n"
+literal|"Found tmpdev at %s!\n"
 argument_list|,
-name|vartmpdev
+name|tmpdev
 operator|->
 name|name
 argument_list|)
@@ -969,12 +969,12 @@ name|vardev
 expr_stmt|;
 if|if
 condition|(
-name|vtdev
+name|tdev
 condition|)
 operator|*
-name|vtdev
+name|tdev
 operator|=
-name|vartmpdev
+name|tmpdev
 expr_stmt|;
 if|if
 condition|(
