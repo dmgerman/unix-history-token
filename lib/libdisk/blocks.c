@@ -143,6 +143,7 @@ parameter_list|,
 name|daddr_t
 name|block
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|foo

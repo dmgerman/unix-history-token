@@ -59,13 +59,61 @@ directive|include
 file|"libdisk.h"
 end_include
 
-begin_define
-define|#
-directive|define
+begin_function
+specifier|static
+name|struct
+name|chunk
+modifier|*
 name|new_chunk
-parameter_list|()
-value|memset(malloc(sizeof(struct chunk)), 0, sizeof(struct chunk))
-end_define
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|struct
+name|chunk
+modifier|*
+name|c
+decl_stmt|;
+name|c
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+expr|*
+name|c
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc"
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+name|c
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+expr|*
+name|c
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|c
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/* Is c2 completely inside c1 ? */
@@ -76,11 +124,13 @@ specifier|static
 name|int
 name|Chunk_Inside
 parameter_list|(
+specifier|const
 name|struct
 name|chunk
 modifier|*
 name|c1
 parameter_list|,
+specifier|const
 name|struct
 name|chunk
 modifier|*
@@ -122,6 +172,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|chunk
 modifier|*
@@ -435,6 +486,7 @@ name|chunk
 modifier|*
 name|Clone_Chunk
 parameter_list|(
+specifier|const
 name|struct
 name|chunk
 modifier|*
@@ -552,6 +604,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 ifdef|#
 directive|ifdef

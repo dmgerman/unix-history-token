@@ -71,13 +71,6 @@ modifier|*
 name|name
 decl_stmt|;
 name|u_long
-name|flags
-decl_stmt|;
-define|#
-directive|define
-name|DISK_ON_TRACK
-value|1
-name|u_long
 name|bios_cyl
 decl_stmt|;
 name|u_long
@@ -344,24 +337,6 @@ comment|/* Will open the named disk, and return populated tree.  */
 end_comment
 
 begin_function_decl
-name|struct
-name|disk
-modifier|*
-name|Clone_Disk
-parameter_list|(
-name|struct
-name|disk
-modifier|*
-name|disk
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Clone a copy of a tree.  Useful for "Undo" functionality  */
-end_comment
-
-begin_function_decl
 name|void
 name|Free_Disk
 parameter_list|(
@@ -607,6 +582,7 @@ name|char
 modifier|*
 name|CheckRules
 parameter_list|(
+specifier|const
 name|struct
 name|disk
 modifier|*
@@ -732,6 +708,7 @@ begin_function_decl
 name|int
 name|Write_Disk
 parameter_list|(
+specifier|const
 name|struct
 name|disk
 modifier|*
@@ -745,28 +722,10 @@ comment|/* Write all the MBRs, disklabels, bootblocks and boot managers  */
 end_comment
 
 begin_function_decl
-name|int
-name|Cyl_Aligned
-parameter_list|(
-name|struct
-name|disk
-modifier|*
-name|d
-parameter_list|,
-name|u_long
-name|offset
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Check if offset is aligned on a cylinder according to the  * bios geometry  */
-end_comment
-
-begin_function_decl
 name|u_long
 name|Next_Cyl_Aligned
 parameter_list|(
+specifier|const
 name|struct
 name|disk
 modifier|*
@@ -786,6 +745,7 @@ begin_function_decl
 name|u_long
 name|Prev_Cyl_Aligned
 parameter_list|(
+specifier|const
 name|struct
 name|disk
 modifier|*
@@ -805,6 +765,7 @@ begin_function_decl
 name|int
 name|Track_Aligned
 parameter_list|(
+specifier|const
 name|struct
 name|disk
 modifier|*
@@ -824,6 +785,7 @@ begin_function_decl
 name|u_long
 name|Next_Track_Aligned
 parameter_list|(
+specifier|const
 name|struct
 name|disk
 modifier|*
@@ -843,6 +805,7 @@ begin_function_decl
 name|u_long
 name|Prev_Track_Aligned
 parameter_list|(
+specifier|const
 name|struct
 name|disk
 modifier|*
@@ -869,6 +832,7 @@ name|disk
 modifier|*
 name|d
 parameter_list|,
+specifier|const
 name|struct
 name|chunk
 modifier|*
@@ -948,23 +912,6 @@ begin_comment
 comment|/* Return string to show flags. */
 end_comment
 
-begin_function_decl
-name|char
-modifier|*
-name|ChunkCanBeRoot
-parameter_list|(
-name|struct
-name|chunk
-modifier|*
-name|c
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Return NULL if chunk can be /, explanation otherwise */
-end_comment
-
 begin_comment
 comment|/*  * Implementation details>>> DO NOT USE<<<  */
 end_comment
@@ -997,6 +944,7 @@ name|chunk
 modifier|*
 name|Clone_Chunk
 parameter_list|(
+specifier|const
 name|struct
 name|chunk
 modifier|*
@@ -1096,6 +1044,7 @@ name|int
 parameter_list|,
 name|daddr_t
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 parameter_list|,
@@ -1162,6 +1111,24 @@ parameter_list|(
 name|struct
 name|disk
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|MakeDevChunk
+parameter_list|(
+specifier|const
+name|struct
+name|chunk
+modifier|*
+name|c1
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path
 parameter_list|)
 function_decl|;
 end_function_decl
