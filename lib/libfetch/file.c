@@ -193,12 +193,8 @@ name|f
 decl_stmt|;
 if|if
 condition|(
-name|flags
-operator|&&
-name|strchr
+name|CHECK_FLAG
 argument_list|(
-name|flags
-argument_list|,
 literal|'a'
 argument_list|)
 condition|)
