@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)api.c	4.3 (Berkeley) %G%"
+literal|"@(#)api.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,8 +89,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Should we trace API interactions */
+comment|/*  * Some defines for things we use internally.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PS_SESSION_ID
+value|23
+end_define
+
+begin_define
+define|#
+directive|define
+name|BUF_SESSION_ID
+value|0
+end_define
 
 begin_comment
 comment|/*  * General utility routines.  */
@@ -685,15 +699,29 @@ operator|=
 literal|0x0d
 expr_stmt|;
 comment|/* Invalid option code */
+ifdef|#
+directive|ifdef
+name|NOTOBS
 block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|parms
 operator|.
 name|data_code
 operator|!=
 literal|0x45
+operator|)
+operator|&&
+operator|(
+name|parms
+operator|.
+name|data_code
+operator|!=
+literal|0x00
+comment|/*OBS*/
+operator|)
 condition|)
 block|{
 name|parms
@@ -702,6 +730,9 @@ name|rc
 operator|=
 literal|0x0b
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* NOTOBS */
 block|}
 else|else
 block|{
@@ -793,7 +824,7 @@ name|name_array_element
 operator|.
 name|session_id
 operator|=
-literal|23
+name|PS_SESSION_ID
 expr_stmt|;
 name|memcpy
 argument_list|(
@@ -959,7 +990,7 @@ name|parms
 operator|.
 name|session_id
 operator|!=
-literal|23
+name|PS_SESSION_ID
 condition|)
 block|{
 name|parms
@@ -1120,7 +1151,7 @@ name|parms
 operator|.
 name|session_id
 operator|!=
-literal|23
+name|PS_SESSION_ID
 condition|)
 block|{
 name|parms
@@ -1279,7 +1310,7 @@ name|parms
 operator|.
 name|session_id
 operator|!=
-literal|23
+name|PS_SESSION_ID
 condition|)
 block|{
 name|parms
@@ -1432,7 +1463,7 @@ name|parms
 operator|.
 name|session_id
 operator|!=
-literal|23
+name|PS_SESSION_ID
 condition|)
 block|{
 name|parms
@@ -1580,7 +1611,7 @@ name|parms
 operator|.
 name|session_id
 operator|!=
-literal|23
+name|PS_SESSION_ID
 condition|)
 block|{
 name|parms
@@ -2001,7 +2032,7 @@ name|parms
 operator|.
 name|session_id
 operator|!=
-literal|23
+name|PS_SESSION_ID
 condition|)
 block|{
 name|parms
@@ -2154,7 +2185,7 @@ name|parms
 operator|.
 name|session_id
 operator|!=
-literal|23
+name|PS_SESSION_ID
 condition|)
 block|{
 name|parms
@@ -2765,7 +2796,7 @@ name|target
 operator|->
 name|session_id
 operator|==
-literal|0
+name|BUF_SESSION_ID
 condition|)
 block|{
 comment|/* Target is buffer */
@@ -2775,7 +2806,7 @@ name|source
 operator|->
 name|session_id
 operator|!=
-literal|23
+name|PS_SESSION_ID
 condition|)
 block|{
 comment|/* A no-no */
@@ -2951,7 +2982,7 @@ name|source
 operator|->
 name|session_id
 operator|!=
-literal|0
+name|BUF_SESSION_ID
 condition|)
 block|{
 name|parms
@@ -3200,6 +3231,12 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|parms
+operator|.
+name|function_id
+operator|=
+literal|0x64
+expr_stmt|;
 name|movetothem
 argument_list|(
 name|sregs
@@ -3309,7 +3346,7 @@ name|parms
 operator|.
 name|session_id
 operator|!=
-literal|23
+name|PS_SESSION_ID
 condition|)
 block|{
 name|parms
@@ -3861,6 +3898,7 @@ name|QUERY_SESSION_CURSOR
 case|:
 if|if
 condition|(
+operator|(
 name|regs
 operator|->
 name|h
@@ -3868,6 +3906,18 @@ operator|.
 name|cl
 operator|!=
 literal|0xff
+operator|)
+operator|&&
+operator|(
+name|regs
+operator|->
+name|h
+operator|.
+name|cl
+operator|!=
+literal|0x00
+comment|/*OBS*/
+operator|)
 condition|)
 block|{
 name|regs
@@ -4205,6 +4255,25 @@ expr|*
 name|sregs
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MSDOS
+block|{
+name|char
+name|buf
+index|[
+literal|10
+index|]
+decl_stmt|;
+name|gets
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* MSDOS */
 block|}
 block|}
 end_block
