@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)valloc.c	4.1 (Berkeley) %G% */
+comment|/*	valloc.c	4.2	83/07/01	*/
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<valign.h>
-end_include
 
 begin_function_decl
 name|char
@@ -28,6 +22,14 @@ name|int
 name|i
 decl_stmt|;
 block|{
+name|int
+name|valsiz
+init|=
+name|getpagesize
+argument_list|()
+decl_stmt|,
+name|j
+decl_stmt|;
 name|char
 modifier|*
 name|cp
@@ -37,14 +39,11 @@ argument_list|(
 name|i
 operator|+
 operator|(
-name|VALSIZ
+name|valsize
 operator|-
 literal|1
 operator|)
 argument_list|)
-decl_stmt|;
-name|int
-name|j
 decl_stmt|;
 name|j
 operator|=
@@ -55,7 +54,7 @@ operator|)
 name|cp
 operator|+
 operator|(
-name|VALSIZ
+name|valsiz
 operator|-
 literal|1
 operator|)
@@ -63,7 +62,7 @@ operator|)
 operator|&
 operator|~
 operator|(
-name|VALSIZ
+name|valsiz
 operator|-
 literal|1
 operator|)
