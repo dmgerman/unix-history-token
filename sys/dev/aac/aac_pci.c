@@ -1009,6 +1009,8 @@ name|sc
 operator|->
 name|aac_irq
 argument_list|,
+name|INTR_MPSAFE
+operator||
 name|INTR_TYPE_BIO
 operator||
 name|INTR_ENTROPY
