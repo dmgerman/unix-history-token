@@ -5976,6 +5976,17 @@ name|valid
 operator|=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_ZERO
+condition|)
+name|vm_page_zero_count
+operator|--
+expr_stmt|;
 name|m
 operator|->
 name|flags
