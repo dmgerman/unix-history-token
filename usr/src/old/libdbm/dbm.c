@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dbm.c	4.4 (Berkeley) %G%"
+literal|"@(#)dbm.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,11 +26,23 @@ directive|include
 file|"dbm.h"
 end_include
 
+begin_undef
+undef|#
+directive|undef
+name|NULL
+end_undef
+
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|setbit
+end_undef
 
 begin_include
 include|#
