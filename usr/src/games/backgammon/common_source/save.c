@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"	save.c	1.1	82/05/11	"
+literal|"	save.c	4.1	82/05/11	"
 decl_stmt|;
 end_decl_stmt
 

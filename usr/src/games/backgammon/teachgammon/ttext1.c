@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"	ttext1.c	1.1	82/05/11	"
+literal|"	ttext1.c	4.1	82/05/11	"
 decl_stmt|;
 end_decl_stmt
 

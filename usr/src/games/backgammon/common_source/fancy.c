@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"	fancy.c	1.1	82/05/11	"
+literal|"	fancy.c	4.1	82/05/11	"
 decl_stmt|;
 end_decl_stmt
 
