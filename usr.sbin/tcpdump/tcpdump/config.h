@@ -58,14 +58,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if your processor stores words with the most significant    byte first (like Motorola and SPARC, unlike Intel and VAX).  */
-end_comment
-
-begin_comment
-comment|/* #undef WORDS_BIGENDIAN */
-end_comment
-
-begin_comment
 comment|/* Define if you have SSLeay 0.9.0b with the buggy cast128. */
 end_comment
 
@@ -203,13 +195,13 @@ value|1
 end_define
 
 begin_comment
-comment|/* define if you have both getipnodebyname() and getipnodebyaddr() */
+comment|/* define if you have ether_ntohost() and it works */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|USE_GETIPNODEBY
+name|USE_ETHER_NTOHOST
 value|1
 end_define
 
@@ -284,6 +276,25 @@ comment|/* #undef u_int8_t */
 end_comment
 
 begin_comment
+comment|/* Whether or not to include the possibly-buggy SMB printer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPDUMP_DO_SMB
+value|1
+end_define
+
+begin_comment
+comment|/* Long story short: aclocal.m4 depends on autoconf 2.13  * implementation details wrt "const"; newer versions  * have different implementation details so for now we  * put "const" here.  This may cause duplicate definitions  * in config.h but that should be OK since they're the same.  */
+end_comment
+
+begin_comment
+comment|/* #undef const */
+end_comment
+
+begin_comment
 comment|/* The number of bytes in a char.  */
 end_comment
 
@@ -350,17 +361,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the freeaddrinfo function.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_FREEADDRINFO
-value|1
-end_define
-
-begin_comment
 comment|/* Define if you have the getaddrinfo function.  */
 end_comment
 
@@ -368,28 +368,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_GETADDRINFO
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you have the getipnodebyaddr function.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_GETIPNODEBYADDR
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you have the getipnodebyname function.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_GETIPNODEBYNAME
 value|1
 end_define
 
@@ -489,6 +467,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the strdup function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRDUP
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the strlcat function.  */
 end_comment
 
@@ -578,9 +567,12 @@ begin_comment
 comment|/* Define if you have the<rpc/rpcent.h> header file.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_RPC_RPCENT_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_RPC_RPCENT_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the<smi.h> header file.  */
@@ -611,22 +603,6 @@ comment|/* #undef HAVE_LIBDNET */
 end_comment
 
 begin_comment
-comment|/* Define if you have the nsl library (-lnsl).  */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBNSL */
-end_comment
-
-begin_comment
-comment|/* Define if you have the resolv library (-lresolv).  */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBRESOLV */
-end_comment
-
-begin_comment
 comment|/* Define if you have the rpc library (-lrpc).  */
 end_comment
 
@@ -640,22 +616,6 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_LIBSMI */
-end_comment
-
-begin_comment
-comment|/* Define if you have the socket library (-lsocket).  */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBSOCKET */
-end_comment
-
-begin_comment
-comment|/* Define if you have the str library (-lstr).  */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBSTR */
 end_comment
 
 begin_comment
