@@ -879,7 +879,7 @@ name|_nc_termcap
 argument_list|,
 name|FALSE
 argument_list|,
-name|FALSE
+name|TRUE
 argument_list|,
 name|NULLHOOK
 argument_list|)
