@@ -995,8 +995,11 @@ begin_function
 name|void
 name|pr_rthdr
 parameter_list|(
-name|af
+name|wid_af
 parameter_list|)
+name|int
+name|wid_af
+decl_stmt|;
 block|{
 name|int
 name|wid_dst
@@ -1008,7 +1011,7 @@ operator|=
 ifdef|#
 directive|ifdef
 name|INET6
-name|af
+name|wid_af
 operator|==
 name|AF_INET6
 condition|?
@@ -1023,7 +1026,7 @@ operator|=
 ifdef|#
 directive|ifdef
 name|INET6
-name|af
+name|wid_af
 operator|==
 name|AF_INET6
 condition|?
