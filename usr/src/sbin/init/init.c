@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	6.4 (Berkeley) %G%"
+literal|"@(#)init.c	6.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2382,6 +2382,10 @@ operator|)
 name|single_user
 return|;
 block|}
+name|requested_transition
+operator|=
+literal|0
+expr_stmt|;
 do|do
 block|{
 if|if
@@ -2472,8 +2476,21 @@ condition|(
 name|wpid
 operator|!=
 name|pid
+operator|&&
+operator|!
+name|requested_transition
 condition|)
 do|;
+if|if
+condition|(
+name|requested_transition
+condition|)
+return|return
+operator|(
+name|state_func_t
+operator|)
+name|requested_transition
+return|;
 if|if
 condition|(
 operator|!
