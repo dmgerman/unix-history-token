@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)create.c	5.21 (Berkeley) %G%"
+literal|"@(#)create.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -845,7 +845,7 @@ argument_list|(
 operator|&
 name|indent
 argument_list|,
-literal|"size=%ld"
+literal|"size=%qd"
 argument_list|,
 name|p
 operator|->
