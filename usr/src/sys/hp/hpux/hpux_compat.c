@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.64 93/08/05$  *  *	@(#)hpux_compat.c	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.64 93/08/05$  *  *	@(#)hpux_compat.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -529,7 +529,7 @@ argument|retval
 argument_list|,
 argument|code
 argument_list|,
-argument|nargs
+argument|argsize
 argument_list|)
 end_macro
 
@@ -542,7 +542,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|register_t
 modifier|*
 name|uap
 decl_stmt|,
@@ -555,7 +555,7 @@ begin_decl_stmt
 name|int
 name|code
 decl_stmt|,
-name|nargs
+name|argsize
 decl_stmt|;
 end_decl_stmt
 
@@ -594,12 +594,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|nargs
+name|argsize
 condition|)
 while|while
 condition|(
-name|nargs
-operator|--
+name|argsize
+operator|-=
+sizeof|sizeof
+argument_list|(
+name|register_t
+argument_list|)
 condition|)
 name|printf
 argument_list|(
@@ -609,7 +613,7 @@ operator|*
 name|argp
 operator|++
 argument_list|,
-name|nargs
+name|argsize
 condition|?
 literal|','
 else|:
@@ -1097,7 +1101,7 @@ expr_stmt|;
 comment|/* owait clobbers first arg */
 name|error
 operator|=
-name|owait
+name|compat_43_wait
 argument_list|(
 name|p
 argument_list|,
@@ -8761,7 +8765,7 @@ name|RLIMIT_NOFILE
 expr_stmt|;
 return|return
 operator|(
-name|ogetrlimit
+name|compat_43_getrlimit
 argument_list|(
 name|p
 argument_list|,
@@ -8839,7 +8843,7 @@ name|RLIMIT_NOFILE
 expr_stmt|;
 return|return
 operator|(
-name|osetrlimit
+name|compat_43_setrlimit
 argument_list|(
 name|p
 argument_list|,
@@ -10384,7 +10388,7 @@ comment|/*  * SYS V style setpgrp()  */
 end_comment
 
 begin_expr_stmt
-name|ohpuxsetpgrp
+name|compat_43_hpuxsetpgrp
 argument_list|(
 name|p
 argument_list|,
@@ -10461,7 +10465,7 @@ struct|;
 end_struct
 
 begin_macro
-name|ohpuxtime
+name|compat_43_hpuxtime
 argument_list|(
 argument|p
 argument_list|,
@@ -10564,7 +10568,7 @@ struct|;
 end_struct
 
 begin_macro
-name|ohpuxstime
+name|compat_43_hpuxstime
 argument_list|(
 argument|p
 argument_list|,
@@ -10696,7 +10700,7 @@ struct|;
 end_struct
 
 begin_macro
-name|ohpuxftime
+name|compat_43_hpuxftime
 argument_list|(
 argument|p
 argument_list|,
@@ -10822,7 +10826,7 @@ struct|;
 end_struct
 
 begin_expr_stmt
-name|ohpuxalarm
+name|compat_43_hpuxalarm
 argument_list|(
 name|p
 argument_list|,
@@ -11024,7 +11028,7 @@ struct|;
 end_struct
 
 begin_expr_stmt
-name|ohpuxnice
+name|compat_43_hpuxnice
 argument_list|(
 name|p
 argument_list|,
@@ -11119,7 +11123,7 @@ struct|;
 end_struct
 
 begin_macro
-name|ohpuxtimes
+name|compat_43_hpuxtimes
 argument_list|(
 argument|p
 argument_list|,
@@ -11349,7 +11353,7 @@ struct|;
 end_struct
 
 begin_macro
-name|ohpuxutime
+name|compat_43_hpuxutime
 argument_list|(
 argument|p
 argument_list|,
@@ -11594,7 +11598,7 @@ block|}
 end_block
 
 begin_macro
-name|ohpuxpause
+name|compat_43_hpuxpause
 argument_list|(
 argument|p
 argument_list|,
@@ -11670,7 +11674,7 @@ struct|;
 end_struct
 
 begin_macro
-name|ohpuxfstat
+name|compat_43_hpuxfstat
 argument_list|(
 argument|p
 argument_list|,
@@ -11771,7 +11775,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|ohpuxstat1
+name|compat_43_hpuxstat1
 argument_list|(
 operator|(
 expr|struct
@@ -11815,7 +11819,7 @@ struct|;
 end_struct
 
 begin_macro
-name|ohpuxstat
+name|compat_43_hpuxstat
 argument_list|(
 argument|p
 argument_list|,
@@ -11895,7 +11899,7 @@ operator|)
 return|;
 name|error
 operator|=
-name|ohpuxstat1
+name|compat_43_hpuxstat1
 argument_list|(
 name|nd
 operator|.
@@ -11925,7 +11929,7 @@ end_block
 
 begin_function
 name|int
-name|ohpuxstat1
+name|compat_43_hpuxstat1
 parameter_list|(
 name|vp
 parameter_list|,
