@@ -4975,9 +4975,6 @@ name|device_t
 name|dev
 decl_stmt|;
 block|{
-name|int
-name|s
-decl_stmt|;
 name|u_char
 name|eaddr
 index|[
@@ -5015,11 +5012,6 @@ literal|0
 decl_stmt|,
 name|rid
 decl_stmt|;
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
