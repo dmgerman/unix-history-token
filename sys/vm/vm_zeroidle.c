@@ -507,11 +507,6 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
-name|struct
 name|rtprio
 name|rtp
 decl_stmt|;
@@ -528,12 +523,6 @@ decl_stmt|;
 name|td
 operator|=
 name|curthread
-expr_stmt|;
-name|p
-operator|=
-name|td
-operator|->
-name|td_proc
 expr_stmt|;
 name|rtp
 operator|.
