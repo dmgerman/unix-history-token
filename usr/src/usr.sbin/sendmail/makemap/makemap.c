@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)makemap.c	8.11 (Berkeley) %G%"
+literal|"@(#)makemap.c	8.6.1.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
