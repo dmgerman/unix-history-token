@@ -1304,6 +1304,9 @@ operator|*
 operator|,
 name|char
 operator|*
+operator|,
+name|entry
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
