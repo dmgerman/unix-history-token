@@ -1591,6 +1591,12 @@ name|ifa
 operator|->
 name|ifa_ifp
 operator|)
+operator|&&
+operator|(
+name|ifaaddr
+operator|||
+name|gate
+operator|)
 condition|)
 name|ifa
 operator|=
@@ -1622,6 +1628,9 @@ operator|)
 operator|)
 operator|||
 operator|(
+name|gate
+operator|&&
+operator|(
 name|ifa
 operator|=
 name|ifa_ifwithroute
@@ -1637,6 +1646,7 @@ argument_list|)
 argument_list|,
 name|gate
 argument_list|)
+operator|)
 operator|)
 condition|)
 name|ifp
