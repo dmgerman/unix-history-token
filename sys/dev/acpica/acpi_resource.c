@@ -1075,7 +1075,6 @@ break|break;
 block|}
 if|if
 condition|(
-operator|(
 name|res
 operator|->
 name|Data
@@ -1085,9 +1084,7 @@ operator|.
 name|ResourceType
 operator|!=
 name|ACPI_MEMORY_RANGE
-operator|)
-operator|||
-operator|(
+operator|&&
 name|res
 operator|->
 name|Data
@@ -1097,7 +1094,6 @@ operator|.
 name|ResourceType
 operator|!=
 name|ACPI_IO_RANGE
-operator|)
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -1483,7 +1479,6 @@ break|break;
 block|}
 if|if
 condition|(
-operator|(
 name|res
 operator|->
 name|Data
@@ -1493,9 +1488,7 @@ operator|.
 name|ResourceType
 operator|!=
 name|ACPI_MEMORY_RANGE
-operator|)
-operator|||
-operator|(
+operator|&&
 name|res
 operator|->
 name|Data
@@ -1505,7 +1498,6 @@ operator|.
 name|ResourceType
 operator|!=
 name|ACPI_IO_RANGE
-operator|)
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
