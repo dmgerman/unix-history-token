@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.109 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.110 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -128,6 +128,10 @@ name|Verbose
 decl_stmt|;
 name|int
 name|pid
+decl_stmt|;
+name|char
+modifier|*
+name|qid
 decl_stmt|;
 name|int
 name|pid
@@ -1753,10 +1757,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|qf
-decl_stmt|;
-name|char
-modifier|*
-name|id
 decl_stmt|;
 name|bool
 name|didany
