@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kgmon.c	4.6 83/01/16"
+literal|"@(#)kgmon.c	4.7 83/03/10"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,6 +34,12 @@ begin_include
 include|#
 directive|include
 file|<machine/pte.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vm.h>
 end_include
 
 begin_include
@@ -1735,27 +1741,43 @@ name|kflag
 condition|)
 block|{
 comment|/* get kernel pte */
+if|#
+directive|if
+name|vax
 name|base
 operator|&=
 literal|0x7fffffff
 expr_stmt|;
+endif|#
+directive|endif
 name|base
 operator|=
+operator|(
+operator|(
+name|int
+operator|)
+name|ptob
+argument_list|(
 name|Sysmap
 index|[
+name|btop
+argument_list|(
 name|base
-operator|>>
-literal|9
+argument_list|)
 index|]
 operator|.
 name|pg_pfnum
-operator|*
-literal|512
+argument_list|)
+operator|)
 operator|+
 operator|(
 name|base
 operator|&
-literal|0x1ff
+operator|(
+name|NBPG
+operator|-
+literal|1
+operator|)
 operator|)
 expr_stmt|;
 block|}
