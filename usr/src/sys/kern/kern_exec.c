@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	8.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1896,6 +1896,31 @@ condition|)
 goto|goto
 name|bad
 goto|;
+comment|/* take a reference to the new text vnode (for procfs) */
+if|if
+condition|(
+name|p
+operator|->
+name|p_textvp
+condition|)
+name|vrele
+argument_list|(
+name|p
+operator|->
+name|p_textvp
+argument_list|)
+expr_stmt|;
+name|VREF
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|p_textvp
+operator|=
+name|vp
+expr_stmt|;
 name|vput
 argument_list|(
 name|vp

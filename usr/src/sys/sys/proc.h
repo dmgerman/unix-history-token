@@ -325,10 +325,16 @@ name|int
 name|p_siglist
 decl_stmt|;
 comment|/* Signals arrived but not delivered. */
+name|struct
+name|vnode
+modifier|*
+name|p_textvp
+decl_stmt|;
+comment|/* Vnode of executable. */
 name|long
 name|p_spare
 index|[
-literal|6
+literal|5
 index|]
 decl_stmt|;
 comment|/* pad to 256, avoid shifting eproc. */
@@ -338,14 +344,14 @@ directive|define
 name|p_endzero
 value|p_startcopy
 comment|/* The following fields are all copied upon creation in fork. */
-name|sigset_t
-name|p_sigmask
-decl_stmt|;
-comment|/* Current signal mask. */
 define|#
 directive|define
 name|p_startcopy
 value|p_sigmask
+name|sigset_t
+name|p_sigmask
+decl_stmt|;
+comment|/* Current signal mask. */
 name|sigset_t
 name|p_sigignore
 decl_stmt|;
