@@ -1,13 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
 name|sccsid
+index|[]
 init|=
-literal|"@(#)vfontinfo.c	4.4 (Berkeley) %G%"
+literal|"@(#)vfontinfo.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/* Font Information for VCat-style fonts  *      Andy Hertzfeld  4/79  *  *	Modified to print Ascii chars 1/80 by Mark Horton  *	Zoom option added 5/81 by Steve Stone with tables from Mark Horton.  *	Message option added 5/31 by Mark Horton  */
@@ -556,7 +575,38 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n ASCII     offset    size  left    right   up     down    width \n"
+literal|"\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+name|strlen
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+operator|+
+literal|1
+init|;
+name|i
+operator|>
+literal|0
+condition|;
+operator|--
+name|i
+control|)
+name|printf
+argument_list|(
+literal|" "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ASCII     offset    size  left    right   up     down    width \n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -611,7 +661,12 @@ name|msgflag
 condition|)
 name|printf
 argument_list|(
-literal|"  %3o %2s     %4d   %4d   %4d   %4d   %4d   %4d   %5d\n"
+literal|"%s  %3o %2s     %4d   %4d   %4d   %4d   %4d   %4d   %5d\n"
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
 argument_list|,
 name|j
 argument_list|,
