@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)refill.c	5.1 (Berkeley) %G%"
+literal|"@(#)refill.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,7 +89,7 @@ name|__SWR
 condition|)
 return|return
 operator|(
-name|fflush
+name|__sflush
 argument_list|(
 name|fp
 argument_list|)
@@ -200,7 +200,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|fflush
+name|__sflush
 argument_list|(
 name|fp
 argument_list|)

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setvbuf.c	5.1 (Berkeley) %G%"
+literal|"@(#)setvbuf.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,7 +133,7 @@ comment|/* 	 * Write current buffer, if any; drop read count, if any. 	 * Make s
 operator|(
 name|void
 operator|)
-name|fflush
+name|__sflush
 argument_list|(
 name|fp
 argument_list|)

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fseek.c	5.4 (Berkeley) %G%"
+literal|"@(#)fseek.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -797,7 +797,7 @@ name|dumb
 label|:
 if|if
 condition|(
-name|fflush
+name|__sflush
 argument_list|(
 name|fp
 argument_list|)
