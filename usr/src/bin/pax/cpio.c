@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cpio.c	1.1 (Berkeley) %G%"
+literal|"@(#)cpio.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1325,6 +1325,12 @@ argument_list|,
 name|OCT
 argument_list|)
 expr_stmt|;
+name|arcn
+operator|->
+name|sb
+operator|.
+name|st_ctime
+operator|=
 name|arcn
 operator|->
 name|sb
@@ -2732,6 +2738,12 @@ name|arcn
 operator|->
 name|sb
 operator|.
+name|st_ctime
+operator|=
+name|arcn
+operator|->
+name|sb
+operator|.
 name|st_atime
 operator|=
 name|arcn
@@ -3234,7 +3246,7 @@ argument_list|()
 operator|)
 return|;
 block|}
-comment|/*  * vcpio_wr()  *	copy the data in the ARCHD to buffer in system VR4 cpio  *	(with/without crc) format.  * Return  *      0 if file has data to be written after the header, 1 if file has  *	NO data  *      to write after the header, -1 if archive write failed  */
+comment|/*  * vcpio_wr()  *	copy the data in the ARCHD to buffer in system VR4 cpio  *	(with/without crc) format.  * Return  *	0 if file has data to be written after the header, 1 if file has  *	NO data to write after the header, -1 if archive write failed  */
 if|#
 directive|if
 name|__STDC__
@@ -4801,6 +4813,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|arcn
+operator|->
+name|sb
+operator|.
+name|st_ctime
+operator|=
 name|arcn
 operator|->
 name|sb
