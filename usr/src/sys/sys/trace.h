@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trace.h	4.8	81/07/25	*/
+comment|/*	trace.h	4.9	82/05/31	*/
 end_comment
 
 begin_comment
@@ -463,6 +463,25 @@ parameter_list|,
 name|c
 parameter_list|)
 value|if (traceflags[a]) trace1(a,b,c)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|trace
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|b
+parameter_list|)
+value|;
 end_define
 
 begin_endif
