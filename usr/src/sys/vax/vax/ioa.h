@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)ioa.h	1.1 (Berkeley) %G%  */
+comment|/*  * @(#)ioa.h	1.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -46,7 +46,7 @@ name|IOA8600
 parameter_list|(
 name|i
 parameter_list|)
-value|((short *)(0x20080000+IOASIZE*i))
+value|((caddr_t)(0x20080000+IOASIZE*i))
 end_define
 
 begin_ifndef
@@ -247,6 +247,27 @@ define|#
 directive|define
 name|IOA_SBIA
 value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOA_SBI780
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOA_CMI750
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOA_XXX730
+value|0x04
 end_define
 
 end_unit
