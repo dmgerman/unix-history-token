@@ -257,12 +257,33 @@ name|DEV_BSIZE
 value|(1<<DEV_BSHIFT)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BLKDEV_IOSIZE
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|BLKDEV_IOSIZE
-value|2048
+value|PAGE_SIZE
 end_define
+
+begin_comment
+comment|/* default block device I/O size */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DFLTPHYS
+end_ifndef
 
 begin_define
 define|#
@@ -275,6 +296,17 @@ begin_comment
 comment|/* default max raw I/O transfer size */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXPHYS
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -285,6 +317,11 @@ end_define
 begin_comment
 comment|/* max raw I/O transfer size */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
