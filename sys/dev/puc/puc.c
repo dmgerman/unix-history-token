@@ -852,7 +852,7 @@ name|res
 argument_list|,
 name|INTR_TYPE_TTY
 operator||
-name|INTR_FAST
+name|INTR_TYPE_FAST
 argument_list|,
 name|puc_intr
 argument_list|,
