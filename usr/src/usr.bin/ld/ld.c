@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ld.c	6.14 (Berkeley) %G%"
+literal|"@(#)ld.c	6.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -12087,7 +12087,7 @@ name|statbuf
 operator|.
 name|st_flags
 operator||
-name|NODUMP
+name|UF_NODUMP
 argument_list|)
 expr_stmt|;
 name|filemode
