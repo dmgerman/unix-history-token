@@ -1106,113 +1106,109 @@ begin_comment
 comment|/* FreeBSD needs values less than zero */
 end_comment
 
-begin_comment
-comment|/* for the moment disabled #define UMATCH_VENDOR_PRODUCT_REV			-14 #define UMATCH_VENDOR_PRODUCT				-13 #define UMATCH_VENDOR_DEVCLASS_DEVPROTO			-12 #define UMATCH_DEVCLASS_DEVSUBCLASS_DEVPROTO		-11 #define UMATCH_DEVCLASS_DEVSUBCLASS			-10 #define UMATCH_VENDOR_PRODUCT_REV_CONF_IFACE		 -9 #define UMATCH_VENDOR_PRODUCT_CONF_IFACE		 -8 #define UMATCH_VENDOR_IFACESUBCLASS_IFACEPROTO		 -7 #define UMATCH_VENDOR_IFACESUBCLASS			 -6 #define UMATCH_IFACECLASS_IFACESUBCLASS_IFACEPROTO	 -5 #define UMATCH_IFACECLASS_IFACESUBCLASS			 -4 #define UMATCH_IFACECLASS				 -3 #define UMATCH_IFACECLASS_GENERIC			 -2 #define UMATCH_GENERIC					 -1 #define UMATCH_NONE				      ENXIO  * For the moment we use Yes/No answers with appropriate * sorting in the config file */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|UMATCH_VENDOR_PRODUCT_REV
-value|0
+value|(-10)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UMATCH_VENDOR_PRODUCT
-value|0
+value|(-20)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UMATCH_VENDOR_DEVCLASS_DEVPROTO
-value|0
+value|(-30)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UMATCH_DEVCLASS_DEVSUBCLASS_DEVPROTO
-value|0
+value|(-40)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UMATCH_DEVCLASS_DEVSUBCLASS
-value|0
+value|(-50)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UMATCH_VENDOR_PRODUCT_REV_CONF_IFACE
-value|0
+value|(-60)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UMATCH_VENDOR_PRODUCT_CONF_IFACE
-value|0
+value|(-70)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UMATCH_VENDOR_IFACESUBCLASS_IFACEPROTO
-value|0
+value|(-80)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UMATCH_VENDOR_IFACESUBCLASS
-value|0
+value|(-90)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UMATCH_IFACECLASS_IFACESUBCLASS_IFACEPROTO
-value|0
+value|(-100)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UMATCH_IFACECLASS_IFACESUBCLASS
-value|0
+value|(-110)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UMATCH_IFACECLASS
-value|0
+value|(-120)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UMATCH_IFACECLASS_GENERIC
-value|0
+value|(-130)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UMATCH_GENERIC
-value|0
+value|(-140)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UMATCH_NONE
-value|ENXIO
+value|(ENXIO)
 end_define
 
 begin_endif
