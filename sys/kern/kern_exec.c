@@ -1651,28 +1651,6 @@ operator|&=
 operator|~
 name|AFORK
 expr_stmt|;
-comment|/* Set values passed into the program in registers. */
-name|setregs
-argument_list|(
-name|td
-argument_list|,
-name|imgp
-operator|->
-name|entry_addr
-argument_list|,
-operator|(
-name|u_long
-operator|)
-operator|(
-name|uintptr_t
-operator|)
-name|stack_base
-argument_list|,
-name|imgp
-operator|->
-name|ps_strings
-argument_list|)
-expr_stmt|;
 comment|/* Free any previous argument cache */
 name|pa
 operator|=
@@ -1709,6 +1687,28 @@ argument_list|(
 name|pa
 argument_list|,
 name|M_PARGS
+argument_list|)
+expr_stmt|;
+comment|/* Set values passed into the program in registers. */
+name|setregs
+argument_list|(
+name|td
+argument_list|,
+name|imgp
+operator|->
+name|entry_addr
+argument_list|,
+operator|(
+name|u_long
+operator|)
+operator|(
+name|uintptr_t
+operator|)
+name|stack_base
+argument_list|,
+name|imgp
+operator|->
+name|ps_strings
 argument_list|)
 expr_stmt|;
 comment|/* Cache arguments if they fit inside our allowance */
