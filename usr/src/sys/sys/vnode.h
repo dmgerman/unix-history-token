@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vnode.h	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vnode.h	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -164,8 +164,10 @@ modifier|*
 name|vu_text
 decl_stmt|;
 comment|/* text/mapped region (VREG) */
-name|dev_t
-name|vu_rdev
+name|struct
+name|specinfo
+modifier|*
+name|vu_specinfo
 decl_stmt|;
 comment|/* device (VCHR, VBLK) */
 block|}
@@ -211,8 +213,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|v_rdev
-value|v_un.vu_rdev
+name|v_specinfo
+value|v_un.vu_specinfo
 end_define
 
 begin_comment
@@ -294,6 +296,17 @@ end_define
 
 begin_comment
 comment|/* proc is waiting on shared or excl. lock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VALIASED
+value|0x80
+end_define
+
+begin_comment
+comment|/* vnode has an alias */
 end_comment
 
 begin_comment
@@ -970,6 +983,62 @@ parameter_list|(
 name|b
 parameter_list|)
 value|(*((b)->b_vp->v_op->vn_strategy))(b)
+end_define
+
+begin_comment
+comment|/*  * This structure defines the information maintained about  * special devices. It is allocated in checkalias and freed  * in vgone.  */
+end_comment
+
+begin_struct
+struct|struct
+name|specinfo
+block|{
+name|dev_t
+name|si_rdev
+decl_stmt|;
+name|daddr_t
+name|si_lastr
+decl_stmt|;
+name|struct
+name|mount
+modifier|*
+name|si_mounton
+decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+name|si_specnext
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|v_rdev
+value|v_specinfo->si_rdev
+end_define
+
+begin_define
+define|#
+directive|define
+name|v_lastr
+value|v_specinfo->si_lastr
+end_define
+
+begin_define
+define|#
+directive|define
+name|v_mounton
+value|v_specinfo->si_mounton
+end_define
+
+begin_define
+define|#
+directive|define
+name|v_specnext
+value|v_specinfo->si_specnext
 end_define
 
 begin_comment
