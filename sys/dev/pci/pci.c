@@ -3863,6 +3863,28 @@ name|intline
 operator|!=
 literal|255
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|__ia64__
+comment|/* 		 * Re-route interrupts on ia64 so that we can get the 		 * I/O SAPIC interrupt numbers (the BIOS leaves legacy 		 * PIC interrupt numbers in the intline registers). 		 */
+name|cfg
+operator|->
+name|intline
+operator|=
+name|PCIB_ROUTE_INTERRUPT
+argument_list|(
+name|pcib
+argument_list|,
+name|dev
+argument_list|,
+name|cfg
+operator|->
+name|intpin
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|resource_list_add
 argument_list|(
 name|rl
@@ -3882,6 +3904,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
