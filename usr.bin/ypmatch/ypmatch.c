@@ -6,16 +6,17 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LINT
+name|lint
 end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"ypmatch.c,v 1.2 1993/05/16 02:49:03 deraadt Exp"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,6 +24,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
@@ -45,13 +50,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -145,67 +168,21 @@ block|, }
 struct|;
 end_struct
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage:\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"%s\n%s\n"
 argument_list|,
-literal|"\typmatch [-d domain] [-t] [-k] key [key ...] mname\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"usage: ypmatch [-d domain] [-t] [-k] key [key ...] mname"
 argument_list|,
-literal|"\typmatch -x\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"where\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\tmname may be either a mapname or a nickname for a map\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-t inhibits map nickname translation\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-k prints keys as well as values.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-x dumps the map nickname translation table.\n"
+literal|"       ypmatch -x"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -214,7 +191,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|int
@@ -233,6 +210,8 @@ block|{
 name|char
 modifier|*
 name|domainname
+init|=
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
@@ -243,15 +222,6 @@ name|inmap
 decl_stmt|,
 modifier|*
 name|outbuf
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
 decl_stmt|;
 name|int
 name|outbuflen
@@ -272,12 +242,6 @@ operator|=
 name|key
 operator|=
 literal|0
-expr_stmt|;
-name|yp_get_default_domain
-argument_list|(
-operator|&
-name|domainname
-argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -388,6 +352,17 @@ literal|2
 condition|)
 name|usage
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|domainname
+condition|)
+name|yp_get_default_domain
+argument_list|(
+operator|&
+name|domainname
+argument_list|)
 expr_stmt|;
 name|inmap
 operator|=
@@ -524,24 +499,19 @@ break|break;
 case|case
 name|YPERR_YPBIND
 case|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"yp_match: not running ypbind\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"not running ypbind"
 argument_list|)
 expr_stmt|;
 default|default:
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Can't match key %s in map %s. Reason: %s\n"
+literal|"can't match key %s in map %s. reason: %s"
 argument_list|,
 name|inkey
 argument_list|,
@@ -553,7 +523,6 @@ name|r
 argument_list|)
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
 block|}
 name|exit

@@ -6,16 +6,17 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LINT
+name|lint
 end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"ypcat.c,v 1.2 1993/05/16 02:49:01 deraadt Exp"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,6 +24,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
@@ -45,13 +50,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -151,32 +174,21 @@ name|key
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage:\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"%s\n%s\n"
 argument_list|,
-literal|"\typcat [-k] [-d domainname] [-t] mapname\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"usage: ypcat [-k] [-d domainname] [-t] mapname"
 argument_list|,
-literal|"\typcat -x\n"
+literal|"       ypcat -x"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -185,65 +197,45 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|printit
-argument_list|(
-argument|instatus
-argument_list|,
-argument|inkey
-argument_list|,
-argument|inkeylen
-argument_list|,
-argument|inval
-argument_list|,
-argument|invallen
-argument_list|,
-argument|indata
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|instatus
+parameter_list|,
+name|inkey
+parameter_list|,
+name|inkeylen
+parameter_list|,
+name|inval
+parameter_list|,
+name|invallen
+parameter_list|,
+name|indata
+parameter_list|)
 name|int
 name|instatus
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|inkey
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|inkeylen
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|inval
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|invallen
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|indata
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -284,7 +276,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|int
@@ -303,6 +295,8 @@ block|{
 name|char
 modifier|*
 name|domainname
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|ypall_callback
@@ -311,15 +305,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|inmap
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
 decl_stmt|;
 name|int
 name|notrans
@@ -336,12 +321,6 @@ operator|=
 name|key
 operator|=
 literal|0
-expr_stmt|;
-name|yp_get_default_domain
-argument_list|(
-operator|&
-name|domainname
-argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -451,6 +430,17 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|domainname
+condition|)
+name|yp_get_default_domain
+argument_list|(
+operator|&
+name|domainname
+argument_list|)
+expr_stmt|;
 name|inmap
 operator|=
 name|argv
@@ -544,24 +534,19 @@ break|break;
 case|case
 name|YPERR_YPBIND
 case|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"ypcat: not running ypbind\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"not running ypbind"
 argument_list|)
 expr_stmt|;
 default|default:
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"No such map %s. Reason: %s\n"
+literal|"no such map %s. reason: %s"
 argument_list|,
 name|inmap
 argument_list|,
@@ -569,11 +554,6 @@ name|yperr_string
 argument_list|(
 name|r
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
