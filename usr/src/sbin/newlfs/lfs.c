@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lfs.c	5.8 (Berkeley) %G%"
+literal|"@(#)lfs.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -202,6 +202,9 @@ block|,
 comment|/* lfs_offset */
 literal|0
 block|,
+comment|/* lfs_lastpseg */
+literal|0
+block|,
 comment|/* lfs_tstamp */
 literal|0
 block|,
@@ -300,6 +303,15 @@ comment|/* lfs_seglist */
 name|NULL
 block|,
 comment|/* lfs_iocount */
+literal|0
+block|,
+comment|/* lfs_writer */
+literal|0
+block|,
+comment|/* lfs_dirops */
+literal|0
+block|,
+comment|/* lfs_doifile */
 literal|0
 block|,
 comment|/* lfs_fmod */
