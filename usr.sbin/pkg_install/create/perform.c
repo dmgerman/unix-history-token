@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.8 1994/05/19 18:27:41 alm Exp $"
+literal|"$Id: perform.c,v 1.9 1994/05/25 06:24:41 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -194,7 +194,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|index
+name|rindex
 argument_list|(
 name|pkg
 argument_list|,
@@ -636,6 +636,25 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|pkg
+operator|==
+literal|'/'
+condition|)
+name|sprintf
+argument_list|(
+name|tball
+argument_list|,
+literal|"%s.%s"
+argument_list|,
+name|pkg
+argument_list|,
+name|suffix
+argument_list|)
+expr_stmt|;
+else|else
 name|sprintf
 argument_list|(
 name|tball

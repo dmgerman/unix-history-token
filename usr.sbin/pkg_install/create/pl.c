@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: pl.c,v 1.2 1993/09/03 23:00:57 jkh Exp $"
+literal|"$Id: pl.c,v 1.3 1994/08/28 14:15:23 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,6 +102,12 @@ name|where
 init|=
 name|home
 decl_stmt|;
+name|char
+modifier|*
+name|there
+init|=
+name|NULL
+decl_stmt|;
 name|PackingList
 name|p
 init|=
@@ -152,12 +158,14 @@ name|type
 operator|==
 name|PLIST_SRC
 condition|)
-name|where
+block|{
+name|there
 operator|=
 name|p
 operator|->
 name|name
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -181,6 +189,10 @@ name|name
 argument_list|,
 literal|"%s/%s"
 argument_list|,
+name|there
+condition|?
+name|there
+else|:
 name|where
 argument_list|,
 name|p
@@ -334,6 +346,12 @@ name|where
 init|=
 name|home
 decl_stmt|;
+name|char
+modifier|*
+name|there
+init|=
+name|NULL
+decl_stmt|;
 while|while
 condition|(
 name|p
@@ -362,7 +380,7 @@ name|type
 operator|==
 name|PLIST_SRC
 condition|)
-name|where
+name|there
 operator|=
 name|p
 operator|->
@@ -440,6 +458,10 @@ comment|/* 	     * Otherwise, try along the actual extraction path.. 	     */
 else|else
 name|copy_hierarchy
 argument_list|(
+name|there
+condition|?
+name|there
+else|:
 name|where
 argument_list|,
 name|p
