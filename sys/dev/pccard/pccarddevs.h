@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.69 2003/08/21 18:05:35 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.70 2003/09/20 05:23:50 imp Exp   */
 end_comment
 
 begin_comment
@@ -3749,6 +3749,27 @@ end_define
 begin_comment
 comment|/* Proxim */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_PROXIM_HARMONY
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_PROXIM_HARMONY
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_PROXIM_HARMONY
+value|"Proxim HARMONY 80211B"
+end_define
 
 begin_define
 define|#
