@@ -1885,7 +1885,7 @@ comment|/*  * Search a single command table for the command string in cmd.  */
 end_comment
 
 begin_function
-name|public
+specifier|static
 name|int
 name|cmd_search
 parameter_list|(
@@ -1929,6 +1929,11 @@ specifier|register
 name|int
 name|a
 decl_stmt|;
+operator|*
+name|sp
+operator|=
+name|NULL
+expr_stmt|;
 for|for
 control|(
 name|p
@@ -2024,12 +2029,6 @@ operator|~
 name|A_EXTRA
 expr_stmt|;
 block|}
-else|else
-operator|*
-name|sp
-operator|=
-name|NULL
-expr_stmt|;
 return|return
 operator|(
 name|a
@@ -2215,6 +2214,16 @@ name|A_INVALID
 condition|)
 break|break;
 block|}
+if|if
+condition|(
+name|action
+operator|==
+name|A_UINVALID
+condition|)
+name|action
+operator|=
+name|A_INVALID
+expr_stmt|;
 return|return
 operator|(
 name|action
