@@ -682,6 +682,30 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|ep
+operator|->
+name|provider
+operator|->
+name|name
+argument_list|,
+literal|"geom.ctl"
+argument_list|)
+operator|&&
+name|strcmp
+argument_list|(
+name|mp
+operator|->
+name|name
+argument_list|,
+literal|"DEV"
+argument_list|)
+condition|)
+continue|continue;
 name|i
 operator|=
 literal|1
@@ -1065,6 +1089,11 @@ argument_list|(
 name|ep
 argument_list|)
 expr_stmt|;
+name|g_destroy_event
+argument_list|(
+name|ep
+argument_list|)
+expr_stmt|;
 name|g_pending_events
 operator|--
 expr_stmt|;
@@ -1074,21 +1103,14 @@ name|g_pending_events
 operator|==
 literal|0
 condition|)
-block|{
 name|wakeup
 argument_list|(
 operator|&
 name|g_pending_events
 argument_list|)
 expr_stmt|;
-block|}
 name|g_topology_unlock
 argument_list|()
-expr_stmt|;
-name|g_destroy_event
-argument_list|(
-name|ep
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1207,7 +1229,17 @@ operator|==
 name|NULL
 argument_list|,
 operator|(
-literal|"Double event on class"
+literal|"Double event on class %d %d"
+operator|,
+name|ep
+operator|->
+name|event
+operator|,
+name|mp
+operator|->
+name|event
+operator|->
+name|event
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1240,7 +1272,17 @@ operator|==
 name|NULL
 argument_list|,
 operator|(
-literal|"Double event on geom"
+literal|"Double event on geom %d %d"
+operator|,
+name|ep
+operator|->
+name|event
+operator|,
+name|gp
+operator|->
+name|event
+operator|->
+name|event
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1273,7 +1315,21 @@ operator|==
 name|NULL
 argument_list|,
 operator|(
-literal|"Double event on provider"
+literal|"Double event on provider %s %d %d"
+operator|,
+name|pp
+operator|->
+name|name
+operator|,
+name|ep
+operator|->
+name|event
+operator|,
+name|pp
+operator|->
+name|event
+operator|->
+name|event
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1306,7 +1362,17 @@ operator|==
 name|NULL
 argument_list|,
 operator|(
-literal|"Double event on consumer"
+literal|"Double event on consumer %d %d"
+operator|,
+name|ep
+operator|->
+name|event
+operator|,
+name|cp
+operator|->
+name|event
+operator|->
+name|event
 operator|)
 argument_list|)
 expr_stmt|;
