@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cardd.c,v 1.28 1998/03/02 19:00:01 guido Exp $"
+literal|"$Id: cardd.c,v 1.29 1998/03/02 20:51:06 guido Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -326,7 +326,9 @@ comment|/*  *	readslots - read all the PCMCIA slots, and build  *	a list of the 
 end_comment
 
 begin_function
-name|void
+name|struct
+name|slot
+modifier|*
 name|readslots
 parameter_list|(
 name|void
@@ -346,8 +348,15 @@ decl_stmt|;
 name|struct
 name|slot
 modifier|*
+name|slots
+decl_stmt|,
+modifier|*
 name|sp
 decl_stmt|;
+name|slots
+operator|=
+name|NULL
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -547,6 +556,11 @@ name|sp
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|slots
+operator|)
+return|;
 block|}
 end_function
 
@@ -568,10 +582,6 @@ name|struct
 name|slotstate
 name|state
 decl_stmt|;
-name|current_slot
-operator|=
-name|sp
-expr_stmt|;
 if|if
 condition|(
 name|ioctl
@@ -750,6 +760,8 @@ argument_list|(
 name|cp
 operator|->
 name|remove
+argument_list|,
+name|sp
 argument_list|)
 expr_stmt|;
 name|sp
@@ -954,6 +966,9 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|sp
 operator|->
 name|config
@@ -962,25 +977,11 @@ name|assign_driver
 argument_list|(
 name|cp
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sp
-operator|->
-name|config
+operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
-block|{
-name|execute
-argument_list|(
-name|cp
-operator|->
-name|insert
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 if|if
 condition|(
 name|assign_io
@@ -1015,6 +1016,8 @@ argument_list|(
 name|cp
 operator|->
 name|insert
+argument_list|,
+name|sp
 argument_list|)
 expr_stmt|;
 if|#
@@ -1363,7 +1366,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
@@ -1393,7 +1396,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
@@ -1466,7 +1469,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}

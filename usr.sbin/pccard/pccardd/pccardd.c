@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cardd.c,v 1.24 1998/02/04 20:19:39 guido Exp $"
+literal|"$Id: pccardd.c,v 1.1 1998/02/27 08:19:25 hosokawa Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,17 +100,20 @@ block|{
 name|struct
 name|slot
 modifier|*
+name|slots
+decl_stmt|,
+modifier|*
 name|sp
 decl_stmt|;
 name|int
 name|count
 decl_stmt|,
-name|debug
+name|dodebug
 init|=
 literal|0
 decl_stmt|;
 name|int
-name|verbose
+name|doverbose
 init|=
 literal|0
 decl_stmt|;
@@ -155,7 +158,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|debug
+name|dodebug
 operator|=
 literal|1
 expr_stmt|;
@@ -163,7 +166,7 @@ break|break;
 case|case
 literal|'v'
 case|:
-name|verbose
+name|doverbose
 operator|=
 literal|1
 expr_stmt|;
@@ -199,7 +202,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|debug
+name|dodebug
 operator|=
 literal|1
 expr_stmt|;
@@ -228,7 +231,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|verbose
+name|doverbose
 condition|)
 name|dump_config_file
 argument_list|()
@@ -239,7 +242,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|debug
+name|dodebug
 condition|)
 if|if
 condition|(
@@ -255,6 +258,8 @@ argument_list|(
 literal|"fork failed"
 argument_list|)
 expr_stmt|;
+name|slots
+operator|=
 name|readslots
 argument_list|()
 expr_stmt|;

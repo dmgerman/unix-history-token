@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: file.c,v 1.12 1997/10/06 11:36:06 charnier Exp $"
+literal|"$Id: file.c,v 1.13 1997/11/19 02:31:40 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1152,10 +1152,6 @@ block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
-if|if
-condition|(
-name|verbose
-condition|)
 name|printf
 argument_list|(
 literal|"Drv %s%d created\n"
