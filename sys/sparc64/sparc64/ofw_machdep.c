@@ -242,7 +242,7 @@ if|if
 condition|(
 name|bus
 operator|==
-name|NULL
+literal|0
 condition|)
 return|return
 operator|(
@@ -454,7 +454,7 @@ if|if
 condition|(
 name|pbus
 operator|==
-name|NULL
+literal|0
 condition|)
 return|return
 operator|(

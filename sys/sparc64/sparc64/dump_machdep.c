@@ -616,7 +616,7 @@ argument_list|)
 expr_stmt|;
 name|va
 operator|=
-name|NULL
+literal|0L
 expr_stmt|;
 name|error
 operator|=

@@ -1768,7 +1768,7 @@ name|SPOFF
 expr_stmt|;
 name|sp
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 if|if
 condition|(
