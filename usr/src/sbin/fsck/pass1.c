@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass1.c	5.20 (Berkeley) %G%"
+literal|"@(#)pass1.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1097,6 +1097,9 @@ name|dp
 operator|->
 name|di_ouid
 operator|!=
+operator|(
+name|u_short
+operator|)
 operator|-
 literal|1
 operator|||
@@ -1104,6 +1107,9 @@ name|dp
 operator|->
 name|di_ogid
 operator|!=
+operator|(
+name|u_short
+operator|)
 operator|-
 literal|1
 operator|)
