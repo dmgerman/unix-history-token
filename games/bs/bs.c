@@ -113,14 +113,6 @@ begin_comment
 comment|/* !A_UNDERLINE */
 end_comment
 
-begin_function_decl
-specifier|static
-name|bool
-name|checkplace
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Constants for tuning the random-fire algorithm. It prefers moves that  * diagonal-stripe the board with a stripe separation of srchstep. If  * no such preferred moves are found, srchstep is decremented.  */
 end_comment
@@ -526,61 +518,28 @@ begin_comment
 comment|/* direction constants */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_enum
+enum|enum
+name|directions
+block|{
 name|E
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
+block|,
 name|SE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
+block|,
 name|S
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
+block|,
 name|SW
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
+block|,
 name|W
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
+block|,
 name|NW
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
+block|,
 name|N
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
+block|,
 name|NE
-value|7
-end_define
+block|}
+enum|;
+end_enum
 
 begin_decl_stmt
 specifier|static
@@ -684,6 +643,7 @@ name|name
 decl_stmt|;
 comment|/* name of the ship type */
 name|unsigned
+name|int
 name|hits
 decl_stmt|;
 comment|/* how many times has this ship been hit? */
@@ -701,7 +661,8 @@ decl_stmt|,
 name|y
 decl_stmt|;
 comment|/* coordinates of ship start point */
-name|char
+name|enum
+name|directions
 name|dir
 decl_stmt|;
 comment|/* direction of `bow' */
@@ -913,6 +874,49 @@ name|PR
 value|(void)addstr
 end_define
 
+begin_decl_stmt
+specifier|static
+name|bool
+name|checkplace
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|ship_t
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|getcoord
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|playagain
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -1066,17 +1070,16 @@ name|void
 name|intro
 parameter_list|()
 block|{
-specifier|extern
-name|char
-modifier|*
-name|getlogin
-parameter_list|()
-function_decl|;
 name|char
 modifier|*
 name|tmpname
 decl_stmt|;
 name|srandomdev
+argument_list|()
+expr_stmt|;
+name|tmpname
+operator|=
+name|getlogin
 argument_list|()
 expr_stmt|;
 operator|(
@@ -1134,9 +1137,8 @@ expr_stmt|;
 if|if
 condition|(
 name|tmpname
-operator|=
-name|getlogin
-argument_list|()
+operator|!=
+literal|'\0'
 condition|)
 block|{
 operator|(
@@ -2437,17 +2439,6 @@ name|NULL
 expr_stmt|;
 do|do
 block|{
-specifier|extern
-name|char
-modifier|*
-name|strchr
-parameter_list|()
-function_decl|;
-specifier|static
-name|char
-name|getcoord
-parameter_list|()
-function_decl|;
 name|char
 name|c
 decl_stmt|,
@@ -3504,6 +3495,7 @@ decl_stmt|;
 comment|/* anything on the square */
 if|if
 condition|(
+operator|(
 name|collide
 operator|=
 name|IS_SHIP
@@ -3519,6 +3511,9 @@ index|[
 name|y
 index|]
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -4391,6 +4386,10 @@ name|char
 modifier|*
 name|m
 decl_stmt|;
+name|m
+operator|=
+name|NULL
+expr_stmt|;
 name|prompt
 argument_list|(
 literal|1
@@ -4488,6 +4487,7 @@ condition|(
 name|has_colors
 argument_list|()
 condition|)
+block|{
 if|if
 condition|(
 name|hit
@@ -4509,6 +4509,7 @@ name|COLOR_GREEN
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* A_COLOR */
@@ -5094,6 +5095,10 @@ name|ship_t
 modifier|*
 name|ss
 decl_stmt|;
+name|ss
+operator|=
+name|NULL
+expr_stmt|;
 name|hits
 index|[
 name|COMPUTER
@@ -5150,14 +5155,6 @@ else|:
 literal|"miss"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sunk
-operator|=
-operator|(
-name|hit
-operator|&&
-operator|(
 name|ss
 operator|=
 name|hitship
@@ -5166,8 +5163,16 @@ name|x
 argument_list|,
 name|y
 argument_list|)
-operator|)
-operator|)
+expr_stmt|;
+name|sunk
+operator|=
+name|hit
+operator|&&
+name|ss
+expr_stmt|;
+if|if
+condition|(
+name|sunk
 condition|)
 operator|(
 name|void
@@ -5202,6 +5207,7 @@ condition|(
 name|has_colors
 argument_list|()
 condition|)
+block|{
 if|if
 condition|(
 name|hit
@@ -5223,6 +5229,7 @@ name|COLOR_GREEN
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* A_COLOR */
@@ -6031,12 +6038,10 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|playagain
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|j
@@ -6209,7 +6214,7 @@ literal|'Y'
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -6518,6 +6523,7 @@ block|}
 end_function
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -6680,6 +6686,12 @@ condition|)
 do|;
 name|uninitgame
 argument_list|()
+expr_stmt|;
+comment|/*NOTREACHED*/
+name|exit
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
 block|}
