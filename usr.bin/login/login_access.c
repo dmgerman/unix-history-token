@@ -176,30 +176,22 @@ begin_comment
 comment|/* login_access - match username/group and host/tty with access control file */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|login_access
-argument_list|(
-argument|user
-argument_list|,
-argument|from
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|user
+parameter_list|,
+name|from
+parameter_list|)
 name|char
 modifier|*
 name|user
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|from
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|FILE
 modifier|*
@@ -243,6 +235,7 @@ comment|/* for diagnostics */
 comment|/*      * Process the table one line at a time and stop at the first match.      * Blank lines and lines that begin with a '#' character are ignored.      * Non-comment lines are broken at the ':' character. All fields are      * mandatory. The first field should be a "+" or "-" character. A      * non-existing table means no access control.      */
 if|if
 condition|(
+operator|(
 name|fp
 operator|=
 name|fopen
@@ -251,6 +244,9 @@ name|_PATH_LOGACCESS
 argument_list|,
 literal|"r"
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 while|while
@@ -521,7 +517,7 @@ operator|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* list_match - match an item against a list of tokens with exceptions */
@@ -617,6 +613,7 @@ comment|/* EXCEPT: give up */
 break|break;
 if|if
 condition|(
+operator|(
 name|match
 operator|=
 call|(
@@ -628,6 +625,9 @@ name|tok
 argument_list|,
 name|item
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 comment|/* YES */
 break|break;
@@ -716,6 +716,9 @@ name|machine
 parameter_list|,
 name|user
 parameter_list|)
+name|gid_t
+name|group
+decl_stmt|;
 name|char
 modifier|*
 name|machine
@@ -770,6 +773,9 @@ argument_list|,
 literal|"NIS netgroup support not configured"
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 endif|#
 directive|endif
 block|}
@@ -857,12 +863,16 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|group
 operator|=
 name|getgrnam
 argument_list|(
 name|tok
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* try group membership */
