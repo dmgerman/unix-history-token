@@ -553,7 +553,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|get_dumpsize
 name|__P
 argument_list|(
@@ -1800,6 +1800,9 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
+name|mode_t
+name|oumask
+decl_stmt|;
 comment|/* 	 * Get the current number and update the bounds file.  Do the update 	 * now, because may fail later and don't want to overwrite anything. 	 */
 operator|(
 name|void
@@ -1953,6 +1956,16 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Create the core file. */
+name|oumask
+operator|=
+name|umask
+argument_list|(
+name|S_IRWXG
+operator||
+name|S_IRWXO
+argument_list|)
+expr_stmt|;
+comment|/* Restrict access to the core file.*/
 operator|(
 name|void
 operator|)
@@ -2036,6 +2049,14 @@ operator||
 name|S_IRGRP
 operator||
 name|S_IROTH
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|umask
+argument_list|(
+name|oumask
 argument_list|)
 expr_stmt|;
 comment|/* Open the raw device. */
@@ -3063,7 +3084,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|get_dumpsize
 parameter_list|()
 block|{
@@ -3113,11 +3134,6 @@ operator|*=
 name|getpagesize
 argument_list|()
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_function
 
@@ -3205,11 +3221,15 @@ expr_stmt|;
 block|}
 name|kernelsize
 operator|=
+operator|(
 name|st
 operator|.
 name|st_blocks
 operator|*
 name|S_BLKSIZE
+operator|)
+operator|/
+literal|1024
 expr_stmt|;
 if|if
 condition|(
