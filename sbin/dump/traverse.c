@@ -1111,7 +1111,8 @@ name|sblock
 argument_list|,
 name|DIP
 argument_list|(
-name|dp
+operator|&
+name|di
 argument_list|,
 name|di_size
 argument_list|)
@@ -1225,7 +1226,8 @@ name|tapesize
 operator|+=
 name|blockest
 argument_list|(
-name|dp
+operator|&
+name|di
 argument_list|)
 expr_stmt|;
 name|change
