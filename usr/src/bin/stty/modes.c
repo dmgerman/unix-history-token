@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)modes.c	5.4 (Berkeley) %G%"
+literal|"@(#)modes.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -220,6 +220,16 @@ block|,
 name|PARODD
 operator||
 name|PARENB
+operator||
+name|CSIZE
+block|,
+literal|"-pass8"
+block|,
+name|PARENB
+operator||
+name|CS7
+block|,
+name|PARODD
 operator||
 name|CSIZE
 block|,
@@ -868,18 +878,6 @@ block|,
 name|OXTABS
 block|,
 literal|0
-block|,
-literal|"xtabs"
-block|,
-name|OXTABS
-block|,
-literal|0
-block|,
-literal|"-xtabs"
-block|,
-literal|0
-block|,
-name|OXTABS
 block|,
 literal|"oxtabs"
 block|,
