@@ -133,7 +133,7 @@ begin_decl_stmt
 name|int
 name|ftsoptions
 init|=
-name|FTS_LOGICAL
+name|FTS_PHYSICAL
 decl_stmt|;
 end_decl_stmt
 
@@ -241,7 +241,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cdef:iK:k:np:Prs:UuxX:"
+literal|"cdef:iK:k:Lnp:qrs:UuxX:"
 argument_list|)
 operator|)
 operator|!=
@@ -392,6 +392,19 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'L'
+case|:
+name|ftsoptions
+operator|&=
+operator|~
+name|FTS_PHYSICAL
+expr_stmt|;
+name|ftsoptions
+operator||=
+name|FTS_LOGICAL
+expr_stmt|;
+break|break;
+case|case
 literal|'n'
 case|:
 name|nflag
@@ -413,18 +426,6 @@ case|:
 name|qflag
 operator|=
 literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'P'
-case|:
-name|ftsoptions
-operator|^=
-name|FTS_LOGICAL
-expr_stmt|;
-name|ftsoptions
-operator||=
-name|FTS_PHYSICAL
 expr_stmt|;
 break|break;
 case|case
@@ -624,7 +625,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mtree [-PUcdeinqrux] [-f spec] [-K key] [-k key] [-p path] [-s seed]\n"
+literal|"usage: mtree [-LUcdeinqrux] [-f spec] [-K key] [-k key] [-p path] [-s seed]\n"
 literal|"\t[-X excludes]\n"
 argument_list|)
 expr_stmt|;
