@@ -12,7 +12,7 @@ name|p
 parameter_list|,
 name|size
 parameter_list|)
-value|do { \ 	if (write(STDOUT_FILENO, p, size) != size) \ 		oerr(); \ 	} while(0)
+value|do { \ 	if (write(STDOUT_FILENO, p, size) != (ssize_t)size) \ 		oerr(); \ 	} while(0)
 end_define
 
 begin_define
@@ -214,6 +214,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|fname
