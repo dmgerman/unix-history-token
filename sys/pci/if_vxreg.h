@@ -111,6 +111,10 @@ name|F_PROMISC
 value|0x8
 define|#
 directive|define
+name|F_ALLMULTI
+value|0x10
+define|#
+directive|define
 name|F_ACCESS_32_BITS
 value|0x100
 ifdef|#
