@@ -25,7 +25,7 @@ value|"/usr/lib/sendmail -i -t -F \"Bugs Bunny\" -f owner-bugs@ucbvax.BERKELEY.E
 end_define
 
 begin_comment
-comment|/*  * the METOO definition has the bugfiler exit with an error (-1) status  * if there's a problem.  Sendmail then mails off a copy of the problem  * mail to "owner-bugs".  This is great if you would have otherwise lost  * the bug report.  It's not so great if you get a whole bunch of mail  * that you really don't want.  */
+comment|/*  * the METOO definition has the bugfiler exit with an error (-1) status  * if there's a problem.  This causes sendmail to send off a copy of the  * report (as failed mail) to the "owner" of the mail alias that executed  * the bugfiler.  This is great if you would have otherwise lost the bug  * report.  It's not so great if you get a whole bunch of mail that you  * really don't want.  */
 end_comment
 
 begin_define
@@ -102,6 +102,17 @@ end_define
 
 begin_comment
 comment|/* tmp bug report */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TMP_DIR
+value|"errors"
+end_define
+
+begin_comment
+comment|/* tmp directory */
 end_comment
 
 begin_define
