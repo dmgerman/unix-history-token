@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/sound/ulaw.h>
+file|<i386/isa/snd/ulaw.h>
 end_include
 
 begin_define

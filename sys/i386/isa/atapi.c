@@ -4,7 +4,7 @@ comment|/*  * Device-independent level for ATAPI drivers.  *  * Copyright (C) 19
 end_comment
 
 begin_comment
-comment|/*  * The ATAPI level is implemented as a machine-dependent layer  * between the device driver and the IDE controller.  * All the machine- and controller dependency is isolated inside  * the ATAPI level, while all the device dependency is located  * in the device subdriver.  *  * It seems that an ATAPI bus will became popular for medium-speed  * storage devices such as CD-ROMs, magneto-optical disks, tape streamers etc.  *  * To ease the development of new ATAPI drivers, the subdriver  * interface was designed to be as simple as possible.  *  * Three routines are available for the subdriver to access the device:  *  *      struct atapires atapi_request_wait (ata, unit, cmd, a1, a2, a3, a4, a5,  *              a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, addr, count);  *      struct atapi *ata;  -- atapi controller descriptor  *      int unit;           -- device unit number on the IDE bus  *      u_char cmd;         -- ATAPI command code  *      u_char a1..a15;     -- ATAPI command arguments  *      char *addr;         -- address of the data buffer for i/o  *      int count;          -- data length,>0 for read ops,<0 for write ops  *  * The atapi_request_wait() function puts the op in the queue of ATAPI  * commands for the IDE controller, starts the controller, the waits for  * operation to be completed (using tsleep).  * The function should be called from the user phase only (open(), close(),  * ioctl() etc).  * Ata and unit args are the values which the subdriver gets from the ATAPI  * level via attach() call.  * Buffer pointed to by *addr should be placed in core memory, static  * or dynamic, but not in stack.  * The function returns the error code structure, which consists of:  * - atapi driver code value  * - controller status port value  * - controller error port value  *  *      struct atapires atapi_request_immediate (ata, unit, cmd, a1, a2, a3,  *              a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15,  *              addr, count);  *  * The atapi_request_immediate() function is similar to atapi_request_wait(),  * but it does not use interrupts for performing the request.  * It should be used during an attach phase to get parameters from the device.  *  *      void atapi_request_callback (ata, unit, cmd, a1, a2, a3, a4, a5,  *              a6, a7, a8, a9, a10, a11, a12, a13, a14, a15,  *              addr, count, done, x, y);  *      struct atapi *ata;  -- atapi controller descriptor  *      int unit;           -- device unit number on the IDE bus  *      u_char cmd;         -- ATAPI command code  *      u_char a1..a15;     -- ATAPI command arguments  *      char *addr;         -- address of the data buffer for i/o  *      int count;          -- data length,>0 for read ops,<0 for write ops  *      void (*done)();     -- function to call when op finished  *      void *x, *y;        -- arguments for done() function  *  * The atapi_request_callback() function puts the op in the queue of ATAPI  * commands for the IDE controller, starts the controller, then returns.  * When the operation finishes, then the callback function done()  * will be called on the interrupt level.  * The function is designed to be callable from the interrupt phase.  * The done() functions is called with the following arguments:  *      (void) (*done) (x, y, count, errcode)  *      void *x, *y;             -- arguments from the atapi_request_callback()  *      int count;               -- the data residual count  *      struct atapires errcode; -- error code structure, see above  *  * The new driver could be added in three steps:  * 1. Add entries for the new driver to bdevsw and cdevsw tables in conf.c.  *    You will need to make at least three routines: open(), close(),  *    strategy() and possibly ioctl().  * 2. Make attach() routine, which should allocate all the needed data  *    structures and print the device description string (see wcdattach()).  * 3. Add an appropriate case to the switch in atapi_attach() routine,  *    call attach() routine of the new driver here.  Add the appropriate  *    #include line at the top of attach.c.  * That's all!  *  * Use #define DEBUG in atapi.c to enable tracing of all i/o operations  * on the IDE bus.  */
+comment|/*  * The ATAPI level is implemented as a machine-dependent layer  * between the device driver and the IDE controller.  * All the machine- and controller dependency is isolated inside  * the ATAPI level, while all the device dependency is located  * in the device subdriver.  *  * It seems that an ATAPI bus will became popular for medium-speed  * storage devices such as CD-ROMs, magneto-optical disks, tape streamers etc.  *  * To ease the development of new ATAPI drivers, the subdriver  * interface was designed to be as simple as possible.  *  * Three routines are available for the subdriver to access the device:  *  *      struct atapires atapi_request_wait (ata, unit, cmd, a1, a2, a3, a4, a5,  *              a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, addr, count);  *      struct atapi *ata;  -- atapi controller descriptor  *      int unit;           -- device unit number on the IDE bus  *      u_char cmd;         -- ATAPI command code  *      u_char a1..a15;     -- ATAPI command arguments  *      char *addr;         -- address of the data buffer for i/o  *      int count;          -- data length,>0 for read ops,<0 for write ops  *  * The atapi_request_wait() function puts the op in the queue of ATAPI  * commands for the IDE controller, starts the controller, the waits for  * operation to be completed (using tsleep).  * The function should be called from the user phase only (open(), close(),  * ioctl() etc).  * Ata and unit args are the values which the subdriver gets from the ATAPI  * level via attach() call.  * Buffer pointed to by *addr should be placed in core memory, static  * or dynamic, but not in stack.  * The function returns the error code structure, which consists of:  * - atapi driver code value  * - controller status port value  * - controller error port value  *  *      struct atapires atapi_request_immediate (ata, unit, cmd, a1, a2, a3,  *              a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15,  *              addr, count);  *  * The atapi_request_immediate() function is similar to atapi_request_wait(),  * but it does not use interrupts for performing the request.  * It should be used during an attach phase to get parameters from the device.  *  *      void atapi_request_callback (ata, unit, cmd, a1, a2, a3, a4, a5,  *              a6, a7, a8, a9, a10, a11, a12, a13, a14, a15,  *              addr, count, done, x, y);  *      struct atapi *ata;  -- atapi controller descriptor  *      int unit;           -- device unit number on the IDE bus  *      u_char cmd;         -- ATAPI command code  *      u_char a1..a15;     -- ATAPI command arguments  *      char *addr;         -- address of the data buffer for i/o  *      int count;          -- data length,>0 for read ops,<0 for write ops  *      void (*done)();     -- function to call when op finished  *      void *x, *y;        -- arguments for done() function  *  * The atapi_request_callback() function puts the op in the queue of ATAPI  * commands for the IDE controller, starts the controller, then returns.  * When the operation finishes, then the callback function done()  * will be called on the interrupt level.  * The function is designed to be callable from the interrupt phase.  * The done() functions is called with the following arguments:  *      (void) (*done) (x, y, count, errcode)  *      void *x, *y;             -- arguments from the atapi_request_callback()  *      int count;               -- the data residual count  *      struct atapires errcode; -- error code structure, see above  *  * The new driver could be added in three steps:  * 1. Add entries for the new driver to bdevsw and cdevsw tables in conf.c.  *    You will need to make at least three routines: open(), close(),  *    strategy() and possibly ioctl().  * 2. Make attach() routine, which should allocate all the needed data  *    structures and print the device description string (see xxxattach()).  * 3. Add an appropriate case to the switch in atapi_attach() routine,  *    call attach() routine of the new driver here.  Add the appropriate  *    #include line at the top of attach.c.  * That's all!  *  * Use #define DEBUG in atapi.c to enable tracing of all i/o operations  * on the IDE bus.  */
 end_comment
 
 begin_undef
@@ -35,12 +35,6 @@ begin_include
 include|#
 directive|include
 file|"acd.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"wcd.h"
 end_include
 
 begin_include
@@ -445,26 +439,6 @@ begin_function_decl
 specifier|extern
 name|int
 name|acdattach
-parameter_list|(
-name|struct
-name|atapi
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|atapi_params
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|wcdattach
 parameter_list|(
 name|struct
 name|atapi
@@ -1161,46 +1135,6 @@ operator|)
 return|;
 else|#
 directive|else
-if|#
-directive|if
-name|NWCD
-operator|>
-literal|0
-comment|/* ATAPI CD-ROM drives */
-if|if
-condition|(
-name|wcdattach
-argument_list|(
-name|ata
-argument_list|,
-name|unit
-argument_list|,
-name|ap
-argument_list|,
-name|ata
-operator|->
-name|debug
-argument_list|)
-operator|<
-literal|0
-condition|)
-break|break;
-name|ata
-operator|->
-name|attached
-index|[
-name|unit
-index|]
-operator|=
-literal|1
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-else|#
-directive|else
 name|printf
 argument_list|(
 literal|"wdc%d: ATAPI CD-ROMs not configured\n"
@@ -1209,8 +1143,6 @@ name|ctlr
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 endif|#
 directive|endif
 case|case
@@ -3122,7 +3054,7 @@ modifier|*
 name|ac
 parameter_list|)
 block|{
-comment|/* Wait for DRQ from 50 usec to 3 msec for slow devices */
+comment|/* Wait for DRQ from 100 usec to 3 msec for slow devices */
 name|int
 name|cnt
 init|=
@@ -3138,7 +3070,7 @@ name|slow
 condition|?
 literal|3000
 else|:
-literal|50
+literal|100
 decl_stmt|;
 name|int
 name|ireason
