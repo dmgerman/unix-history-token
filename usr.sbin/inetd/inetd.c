@@ -11,15 +11,10 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
-name|__attribute__
-argument_list|(
-operator|(
-name|unused
-operator|)
-argument_list|)
 init|=
 literal|"@(#) Copyright (c) 1983, 1991, 1993, 1994\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
@@ -40,23 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_comment
-comment|/* from: @(#)inetd.c	8.4 (Berkeley) 4/13/94"; */
-end_comment
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)from: inetd.c     8.4 (Berkeley) 4/13/94";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|inetd_c_rcsid
+name|rcsid
 index|[]
-name|__attribute__
-argument_list|(
-operator|(
-name|unused
-operator|)
-argument_list|)
 init|=
-literal|"$Id: inetd.c,v 1.15.2.3 1997/05/10 19:57:55 davidn Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -143,6 +141,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -1903,11 +1907,9 @@ if|if
 condition|(
 name|debug
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"someone wants %s\n"
+literal|"someone wants %s"
 argument_list|,
 name|sep
 operator|->
@@ -1953,11 +1955,9 @@ if|if
 condition|(
 name|debug
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"accept, ctrl %d\n"
+literal|"accept, ctrl %d"
 argument_list|,
 name|ctrl
 argument_list|)
@@ -2356,11 +2356,9 @@ if|if
 condition|(
 name|debug
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"+ Closing from %d\n"
+literal|"+ closing from %d"
 argument_list|,
 name|maxsock
 argument_list|)
@@ -2422,11 +2420,9 @@ if|if
 condition|(
 name|debug
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%d execl %s\n"
+literal|"%d execl %s"
 argument_list|,
 name|getpid
 argument_list|()
@@ -2951,11 +2947,9 @@ if|if
 condition|(
 name|debug
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%d reaped, status %#x\n"
+literal|"%d reaped, status %#x"
 argument_list|,
 name|pid
 argument_list|,
@@ -4150,11 +4144,9 @@ if|if
 condition|(
 name|debug
 condition|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"socket failed on %s/%s: %s\n"
+literal|"socket failed on %s/%s"
 argument_list|,
 name|sep
 operator|->
@@ -4163,11 +4155,6 @@ argument_list|,
 name|sep
 operator|->
 name|se_proto
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|syslog
@@ -4315,11 +4302,9 @@ if|if
 condition|(
 name|debug
 condition|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"bind failed on %s/%s: %s\n"
+literal|"bind failed on %s/%s"
 argument_list|,
 name|sep
 operator|->
@@ -4328,11 +4313,6 @@ argument_list|,
 name|sep
 operator|->
 name|se_proto
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|syslog
@@ -4559,11 +4539,9 @@ condition|(
 name|debug
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"registered %s on %d\n"
+literal|"registered %s on %d"
 argument_list|,
 name|sep
 operator|->
@@ -4774,10 +4752,8 @@ if|if
 condition|(
 name|debug
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
 literal|"enabling %s, fd %d"
 argument_list|,
 name|sep
@@ -4925,10 +4901,8 @@ if|if
 condition|(
 name|debug
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
 literal|"disabling %s, fd %d"
 argument_list|,
 name|sep
@@ -7862,11 +7836,9 @@ if|if
 condition|(
 name|debug
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Unable to get time of day\n"
+literal|"unable to get time of day"
 argument_list|)
 expr_stmt|;
 return|return
@@ -8587,11 +8559,9 @@ if|if
 condition|(
 name|debug
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"tcpmux: someone wants %s\n"
+literal|"tcpmux: someone wants %s"
 argument_list|,
 name|service
 argument_list|)
