@@ -3969,8 +3969,11 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-name|PGRPSESS_XLOCK
-argument_list|()
+name|sx_xlock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
 expr_stmt|;
 name|enterpgrp
 argument_list|(
@@ -3985,8 +3988,11 @@ argument_list|,
 name|newsess
 argument_list|)
 expr_stmt|;
-name|PGRPSESS_XUNLOCK
-argument_list|()
+name|sx_xunlock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
 expr_stmt|;
 comment|/* Mark special process type. */
 name|mycp

@@ -3344,8 +3344,11 @@ name|TIOCSCTTY
 condition|)
 block|{
 comment|/* Do nothing if reassigning same control tty */
-name|PGRPSESS_SLOCK
-argument_list|()
+name|sx_slock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3360,8 +3363,11 @@ operator|==
 name|vp
 condition|)
 block|{
-name|PGRPSESS_SUNLOCK
-argument_list|()
+name|sx_sunlock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -3412,8 +3418,11 @@ operator|->
 name|p_session
 argument_list|)
 expr_stmt|;
-name|PGRPSESS_SUNLOCK
-argument_list|()
+name|sx_sunlock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
 expr_stmt|;
 comment|/* Get rid of reference to old control tty */
 if|if
