@@ -96,7 +96,7 @@ end_include
 
 begin_decl_stmt
 name|u_char
-name|mbr
+name|mbrboot
 index|[]
 init|=
 block|{
@@ -3321,11 +3321,11 @@ name|Set_Boot_Mgr
 argument_list|(
 name|d
 argument_list|,
-name|mbr
+name|mbrboot
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|mbr
+name|mbrboot
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3369,9 +3369,10 @@ name|d
 operator|=
 name|Open_Disk
 argument_list|(
-name|d
-operator|->
-name|name
+name|argv
+index|[
+literal|1
+index|]
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -3495,40 +3496,12 @@ argument_list|(
 literal|"\nENUM:\n\t"
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
+if|#
+directive|if
 literal|0
-init|;
-name|chunk_n
-index|[
-name|i
-index|]
-condition|;
-name|i
-operator|++
-control|)
-name|printf
-argument_list|(
-literal|"%d = %s%s"
-argument_list|,
-name|i
-argument_list|,
-name|chunk_n
-index|[
-name|i
-index|]
-argument_list|,
-name|i
-operator|==
-literal|4
-condition|?
-literal|"\n\t"
-else|:
-literal|"  "
-argument_list|)
-expr_stmt|;
+block|for(i=0;chunk_n[i];i++) 			printf("%d = %s%s",i,chunk_n[i],i == 4 ? "\n\t" : "  ");
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"\n"
