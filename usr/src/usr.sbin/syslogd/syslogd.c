@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.7 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2689,11 +2689,6 @@ name|sigblock
 argument_list|(
 name|sigmask
 argument_list|(
-name|SIGALRM
-argument_list|)
-operator||
-name|sigmask
-argument_list|(
 name|SIGHUP
 argument_list|)
 argument_list|)
@@ -3063,6 +3058,14 @@ expr_stmt|;
 block|}
 name|untty
 argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigsetmask
+argument_list|(
+name|omask
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
