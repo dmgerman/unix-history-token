@@ -109,7 +109,15 @@ name|msg
 argument_list|,
 name|lineno
 argument_list|,
+operator|(
 name|curline
+operator|==
+name|NULL
+condition|?
+literal|""
+else|:
+name|curline
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3058,6 +3066,19 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* We'll be back to set this in a minute */
+if|if
+condition|(
+name|cat
+operator|==
+name|NULL
+condition|)
+name|error
+argument_list|(
+name|NULL
+argument_list|,
+literal|"cannot write empty catalog set"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|cnt
