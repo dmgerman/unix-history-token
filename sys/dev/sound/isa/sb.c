@@ -6915,6 +6915,11 @@ case|case
 literal|0x44008c0e
 case|:
 comment|/* CTL0044 */
+name|s
+operator|=
+literal|"Creative SB AWE64 Gold"
+expr_stmt|;
+break|break;
 case|case
 literal|0x45008c0e
 case|:
