@@ -65,13 +65,6 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_struct
-struct|struct
-name|dom_binding
-block|{}
-struct|;
-end_struct
-
 begin_include
 include|#
 directive|include
