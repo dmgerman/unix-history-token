@@ -15514,13 +15514,6 @@ block|}
 comment|/* 		 * Allocate space to remember the list of bufs to commit.  It is 		 * important to use M_NOWAIT here to avoid a race with nfs_write. 		 * If we can't get memory (for whatever reason), we will end up 		 * committing the buffers one-by-one in the loop below. 		 */
 if|if
 condition|(
-name|bveccount
-operator|>
-name|NFS_COMMITBVECSIZ
-condition|)
-block|{
-if|if
-condition|(
 name|bvec
 operator|!=
 name|NULL
@@ -15536,6 +15529,13 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bveccount
+operator|>
+name|NFS_COMMITBVECSIZ
+condition|)
+block|{
 name|bvec
 operator|=
 operator|(
