@@ -390,9 +390,6 @@ name|prticks
 decl_stmt|,
 name|sticks
 decl_stmt|;
-name|register_t
-name|s
-decl_stmt|;
 name|int
 name|sflag
 decl_stmt|;
@@ -458,40 +455,13 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* XXX: Quiet warning. */
-name|s
-operator|=
-name|intr_disable
-argument_list|()
-expr_stmt|;
-while|while
-condition|(
-operator|(
-name|ke
-operator|->
-name|ke_flags
-operator|&
-operator|(
-name|KEF_ASTPENDING
-operator||
-name|KEF_NEEDRESCHED
-operator|)
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|intr_restore
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|td
 operator|->
 name|td_frame
 operator|=
 name|framep
 expr_stmt|;
-comment|/* 		 * This updates the p_sflag's for the checks below in one 		 * "atomic" operation with turning off the astpending flag. 		 * If another AST is triggered while we are handling the 		 * AST's saved in sflag, the astpending flag will be set and 		 * we will loop again. 		 */
+comment|/* 		 * This updates the p_sflag's for the checks below in one 		 * "atomic" operation with turning off the astpending flag. 		 * If another AST is triggered while we are handling the 		 * AST's saved in sflag, the astpending flag will be set and 		 * ast() will be called again. 		 */
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -753,12 +723,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|s
-operator|=
-name|intr_disable
-argument_list|()
-expr_stmt|;
-block|}
 name|mtx_assert
 argument_list|(
 operator|&
@@ -767,7 +731,6 @@ argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We need to keep interrupts disabled so that if any further AST's 	 * come in, the interrupt they come in on will be delayed until we 	 * finish returning to userland.  We assume that the return to userland 	 * will perform the equivalent of intr_restore(). 	 */
 block|}
 end_function
 
