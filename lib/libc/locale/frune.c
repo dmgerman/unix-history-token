@@ -75,6 +75,16 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_expr_stmt
+name|__warn_references
+argument_list|(
+name|fgetrune
+argument_list|,
+literal|"warning: fgetrune() is deprecated. See fgetrune(3)."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|long
 name|fgetrune
@@ -204,6 +214,16 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|__warn_references
+argument_list|(
+name|fungetrune
+argument_list|,
+literal|"warning: fungetrune() is deprecated. See fungetrune(3)."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|int
 name|fungetrune
@@ -275,6 +295,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|__warn_references
+argument_list|(
+name|fputrune
+argument_list|,
+literal|"warning: fputrune() is deprecated. See fputrune(3)."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
