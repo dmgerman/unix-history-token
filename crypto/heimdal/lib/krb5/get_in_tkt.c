@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: get_in_tkt.c,v 1.100 2001/05/14 06:14:48 assar Exp $"
+literal|"$Id: get_in_tkt.c,v 1.103 2002/01/06 23:10:06 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -28,7 +28,7 @@ name|unsigned
 modifier|*
 name|len
 parameter_list|,
-name|int
+name|krb5_enctype
 modifier|*
 modifier|*
 name|val
@@ -114,7 +114,9 @@ name|i
 operator|*
 sizeof|sizeof
 argument_list|(
-name|int
+operator|*
+operator|*
+name|val
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1515,7 +1517,7 @@ parameter_list|,
 name|krb5_const_pointer
 name|keyseed
 parameter_list|,
-name|int
+name|krb5_enctype
 modifier|*
 name|enctypes
 parameter_list|,
@@ -1537,7 +1539,7 @@ decl_stmt|;
 name|krb5_salt
 name|salt2
 decl_stmt|;
-name|int
+name|krb5_enctype
 modifier|*
 name|ep
 decl_stmt|;
@@ -1578,15 +1580,10 @@ condition|)
 block|{
 name|enctypes
 operator|=
-operator|(
-name|int
-operator|*
-operator|)
 name|context
 operator|->
 name|etypes
 expr_stmt|;
-comment|/* XXX */
 name|netypes
 operator|=
 literal|0
@@ -2318,6 +2315,7 @@ name|addresses
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|ret
 operator|=
 name|krb5_get_all_client_addrs
@@ -2331,6 +2329,42 @@ operator|.
 name|addresses
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+operator|&&
+name|a
+operator|->
+name|req_body
+operator|.
+name|addresses
+operator|->
+name|len
+operator|==
+literal|0
+condition|)
+block|{
+name|free
+argument_list|(
+name|a
+operator|->
+name|req_body
+operator|.
+name|addresses
+argument_list|)
+expr_stmt|;
+name|a
+operator|->
+name|req_body
+operator|.
+name|addresses
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|ret
@@ -3529,6 +3563,11 @@ name|context
 argument_list|,
 operator|&
 name|error
+argument_list|)
+expr_stmt|;
+name|krb5_clear_error_string
+argument_list|(
+name|context
 argument_list|)
 expr_stmt|;
 continue|continue;

@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: cmds.c,v 1.42 2001/02/15 04:17:09 assar Exp $"
+literal|"$Id: cmds.c,v 1.44 2001/08/05 06:39:14 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -590,6 +590,11 @@ operator|||
 name|defined
 argument_list|(
 name|_CRAY
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
 argument_list|)
 operator|)
 operator|&&
@@ -2073,6 +2078,10 @@ operator|&&
 operator|!
 name|islower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|tp
 argument_list|)
@@ -2114,6 +2123,10 @@ if|if
 condition|(
 name|isupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|tp2
 argument_list|)
@@ -2924,6 +2937,10 @@ operator|&&
 operator|!
 name|islower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|tp
 argument_list|)
@@ -2968,6 +2985,10 @@ if|if
 condition|(
 name|isupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|tp2
 argument_list|)
@@ -3601,17 +3622,10 @@ operator|*
 name|tp2
 operator|++
 operator|=
-name|isupper
-argument_list|(
-name|ch
-argument_list|)
-condition|?
 name|tolower
 argument_list|(
 name|ch
 argument_list|)
-else|:
-name|ch
 expr_stmt|;
 operator|*
 name|tp2
@@ -8798,6 +8812,10 @@ literal|'$'
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 operator|(
 name|cp2
@@ -8930,6 +8948,10 @@ literal|'$'
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 operator|(
 name|cp2
@@ -9147,6 +9169,10 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 operator|(
 name|cp2

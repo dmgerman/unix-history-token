@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: mk_priv.c,v 1.29 2001/05/14 06:14:49 assar Exp $"
+literal|"$Id: mk_priv.c,v 1.30 2001/06/18 02:44:54 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -86,7 +86,6 @@ decl_stmt|;
 name|krb5_crypto
 name|crypto
 decl_stmt|;
-comment|/* XXX - Is this right? */
 if|if
 condition|(
 name|auth_context

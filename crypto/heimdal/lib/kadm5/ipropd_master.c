@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ipropd_master.c,v 1.22 2001/02/14 23:00:16 assar Exp $"
+literal|"$Id: ipropd_master.c,v 1.24 2001/09/03 05:54:18 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -211,6 +211,10 @@ name|SOL_SOCKET
 argument_list|,
 name|SO_REUSEADDR
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|one
 argument_list|,
@@ -2030,6 +2034,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|pidfile
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
 name|krb5_openlog
 argument_list|(
 name|context
@@ -2498,6 +2507,10 @@ name|recvfrom
 argument_list|(
 name|signal_fd
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|vers
 argument_list|,

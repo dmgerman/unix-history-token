@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: parse_units.c,v 1.13 2001/03/26 00:47:06 assar Exp $"
+literal|"$Id: parse_units.c,v 1.14 2001/09/04 09:56:00 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -742,7 +742,7 @@ end_comment
 
 begin_function
 specifier|static
-name|size_t
+name|int
 name|unparse_something
 parameter_list|(
 name|int
@@ -811,7 +811,7 @@ name|units
 modifier|*
 name|u
 decl_stmt|;
-name|size_t
+name|int
 name|ret
 init|=
 literal|0
@@ -904,6 +904,15 @@ argument_list|,
 name|num
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tmp
+operator|<
+literal|0
+condition|)
+return|return
+name|tmp
+return|;
 name|len
 operator|-=
 name|tmp
@@ -1037,7 +1046,7 @@ block|}
 end_function
 
 begin_function
-name|size_t
+name|int
 name|unparse_units
 parameter_list|(
 name|int
@@ -1079,7 +1088,7 @@ block|}
 end_function
 
 begin_function
-name|size_t
+name|int
 name|unparse_units_approx
 parameter_list|(
 name|int
@@ -1390,7 +1399,7 @@ block|}
 end_function
 
 begin_function
-name|size_t
+name|int
 name|unparse_flags
 parameter_list|(
 name|int

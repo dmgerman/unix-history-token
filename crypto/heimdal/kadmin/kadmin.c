@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kadmin.c,v 1.38 2001/05/15 06:34:35 assar Exp $"
+literal|"$Id: kadmin.c,v 1.41 2001/08/10 08:06:13 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -368,6 +368,10 @@ block|}
 block|,
 block|{
 literal|"del_entry"
+block|}
+block|,
+block|{
+literal|"del"
 block|}
 block|,
 block|{
@@ -789,9 +793,6 @@ name|optind
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|e
-decl_stmt|;
 name|setprogname
 argument_list|(
 name|argv
@@ -821,11 +822,8 @@ argument_list|,
 name|ret
 argument_list|)
 expr_stmt|;
-while|while
+if|if
 condition|(
-operator|(
-name|e
-operator|=
 name|getarg
 argument_list|(
 name|args
@@ -839,18 +837,10 @@ argument_list|,
 operator|&
 name|optind
 argument_list|)
-operator|)
 condition|)
-name|errx
+name|usage
 argument_list|(
 literal|1
-argument_list|,
-literal|"error at argument `%s'"
-argument_list|,
-name|argv
-index|[
-name|optind
-index|]
 argument_list|)
 expr_stmt|;
 if|if

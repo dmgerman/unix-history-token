@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: get_cred.c,v 1.85 2001/05/14 06:14:46 assar Exp $"
+literal|"$Id: get_cred.c,v 1.87 2001/07/03 18:45:03 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2300,6 +2300,12 @@ name|ret
 decl_stmt|;
 name|krb5_addresses
 name|addresses
+decl_stmt|,
+modifier|*
+name|addrs
+init|=
+operator|&
+name|addresses
 decl_stmt|;
 name|krb5_get_all_client_addrs
 argument_list|(
@@ -2308,6 +2314,19 @@ argument_list|,
 operator|&
 name|addresses
 argument_list|)
+expr_stmt|;
+comment|/* XXX this sucks. */
+if|if
+condition|(
+name|addresses
+operator|.
+name|len
+operator|==
+literal|0
+condition|)
+name|addrs
+operator|=
+name|NULL
 expr_stmt|;
 name|ret
 operator|=
@@ -2319,8 +2338,7 @@ name|id
 argument_list|,
 name|flags
 argument_list|,
-operator|&
-name|addresses
+name|addrs
 argument_list|,
 name|in_creds
 argument_list|,

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: sys_term.c,v 1.100 2001/04/24 23:11:43 assar Exp $"
+literal|"$Id: sys_term.c,v 1.104 2001/09/17 02:09:04 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -398,6 +398,12 @@ begin_comment
 comment|/* STREAMSPTY */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|NOERROR
+end_undef
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -631,6 +637,23 @@ begin_include
 include|#
 directive|include
 file|<util.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LIBUTIL_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
 end_include
 
 begin_endif
@@ -1662,9 +1685,42 @@ endif|#
 directive|endif
 if|#
 directive|if
+name|__linux
+name|int
+name|master
+decl_stmt|;
+name|int
+name|slave
+decl_stmt|;
+if|if
+condition|(
+name|openpty
+argument_list|(
+operator|&
+name|master
+argument_list|,
+operator|&
+name|slave
+argument_list|,
+name|line
+argument_list|,
 literal|0
-comment|/*&& defined(HAVE_OPENPTY) */
-block|int master;     int slave;     if(openpty(&master,&slave, line, 0, 0) == 0){ 	close(slave); 	return master;     }
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|close
+argument_list|(
+name|slave
+argument_list|)
+expr_stmt|;
+return|return
+name|master
+return|;
+block|}
 else|#
 directive|else
 ifdef|#
@@ -3561,18 +3617,6 @@ decl_stmt|;
 name|struct
 name|winsize
 name|ws
-decl_stmt|;
-specifier|extern
-name|int
-name|def_row
-decl_stmt|,
-name|def_col
-decl_stmt|;
-specifier|extern
-name|int
-name|def_tspeed
-decl_stmt|,
-name|def_rspeed
 decl_stmt|;
 comment|/*      * Opening the slave side may cause initilization of the      * kernel tty structure.  We need remember the state of      * 	if linemode was turned on      *	terminal window size      *	terminal speed      * so that we can re-set them if we need to.      */
 comment|/*      * Make sure that we don't have a controlling tty, and      * that we are the session (process group) leader.      */

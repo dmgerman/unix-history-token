@@ -12,14 +12,14 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: unwrap.c,v 1.17 2001/05/11 09:16:47 assar Exp $"
+literal|"$Id: unwrap.c,v 1.19 2001/08/23 04:35:55 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_function
 name|OM_uint32
-name|gss_krb5_getsomekey
+name|gss_krb5_get_remotekey
 parameter_list|(
 specifier|const
 name|gss_ctx_id_t
@@ -31,12 +31,11 @@ modifier|*
 name|key
 parameter_list|)
 block|{
-comment|/* XXX this is ugly, and probably incorrect... */
 name|krb5_keyblock
 modifier|*
 name|skey
 decl_stmt|;
-name|krb5_auth_con_getlocalsubkey
+name|krb5_auth_con_getremotesubkey
 argument_list|(
 name|gssapi_krb5_context
 argument_list|,
@@ -54,7 +53,7 @@ name|skey
 operator|==
 name|NULL
 condition|)
-name|krb5_auth_con_getremotesubkey
+name|krb5_auth_con_getlocalsubkey
 argument_list|(
 name|gssapi_krb5_context
 argument_list|,
@@ -794,7 +793,7 @@ return|return
 name|GSS_S_BAD_MIC
 return|;
 block|}
-name|krb5_auth_setremoteseqnumber
+name|krb5_auth_con_setremoteseqnumber
 argument_list|(
 name|gssapi_krb5_context
 argument_list|,
@@ -976,9 +975,16 @@ if|if
 condition|(
 name|ret
 condition|)
+block|{
+operator|*
+name|minor_status
+operator|=
+literal|0
+expr_stmt|;
 return|return
 name|ret
 return|;
+block|}
 if|if
 condition|(
 name|memcmp
@@ -1500,7 +1506,7 @@ return|return
 name|GSS_S_BAD_MIC
 return|;
 block|}
-name|krb5_auth_setremoteseqnumber
+name|krb5_auth_con_setremoteseqnumber
 argument_list|(
 name|gssapi_krb5_context
 argument_list|,
@@ -1744,7 +1750,7 @@ name|keytype
 decl_stmt|;
 name|ret
 operator|=
-name|gss_krb5_getsomekey
+name|gss_krb5_get_remotekey
 argument_list|(
 name|context_handle
 argument_list|,

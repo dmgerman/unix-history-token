@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kpasswd-generator.c,v 1.4 2001/05/12 15:17:10 assar Exp $"
+literal|"$Id: kpasswd-generator.c,v 1.5 2001/07/31 02:44:42 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -718,6 +718,29 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|help_flag
+condition|)
+name|usage
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|version_flag
+condition|)
+block|{
+name|print_version
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|argc
 operator|-=
 name|optind

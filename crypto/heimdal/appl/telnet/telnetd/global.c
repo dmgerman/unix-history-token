@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: global.c,v 1.12 1997/05/11 06:29:59 assar Exp $"
+literal|"$Id: global.c,v 1.13 2001/07/19 16:00:42 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -272,7 +272,7 @@ block|{
 name|va_list
 name|args
 decl_stmt|;
-name|size_t
+name|int
 name|remaining
 decl_stmt|,
 name|ret
@@ -309,7 +309,14 @@ argument_list|)
 expr_stmt|;
 name|nfrontp
 operator|+=
+name|min
+argument_list|(
 name|ret
+argument_list|,
+name|remaining
+operator|-
+literal|1
+argument_list|)
 expr_stmt|;
 name|va_end
 argument_list|(

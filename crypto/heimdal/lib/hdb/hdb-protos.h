@@ -376,7 +376,7 @@ operator|,
 specifier|const
 name|char
 operator|*
-name|filename
+name|arg
 operator|)
 argument_list|)
 decl_stmt|;

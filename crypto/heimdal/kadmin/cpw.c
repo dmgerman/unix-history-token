@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: cpw.c,v 1.12 2001/05/07 05:30:23 assar Exp $"
+literal|"$Id: cpw.c,v 1.13 2001/08/10 08:05:35 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -132,7 +132,7 @@ name|args
 argument_list|,
 name|num_args
 argument_list|,
-literal|"cpw"
+literal|"passwd"
 argument_list|,
 literal|"principal..."
 argument_list|)

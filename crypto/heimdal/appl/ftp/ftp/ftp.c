@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ftp.c,v 1.69 2000/10/08 13:15:33 assar Exp $"
+literal|"$Id: ftp.c,v 1.70 2001/09/07 20:28:10 nectar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1402,6 +1402,11 @@ name|stdout
 argument_list|,
 name|fmt
 argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;

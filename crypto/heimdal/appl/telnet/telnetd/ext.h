@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of Calif
 end_comment
 
 begin_comment
-comment|/* $Id: ext.h,v 1.22 2001/04/24 23:12:11 assar Exp $ */
+comment|/* $Id: ext.h,v 1.23 2001/08/29 00:45:22 assar Exp $ */
 end_comment
 
 begin_ifndef
@@ -1246,6 +1246,35 @@ name|int
 name|no_warn
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|def_tspeed
+decl_stmt|,
+name|def_rspeed
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TIOCSWINSZ
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|def_row
+decl_stmt|,
+name|def_col
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

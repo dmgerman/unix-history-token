@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rd_cred.c,v 1.14 2001/05/14 06:14:50 assar Exp $"
+literal|"$Id: rd_cred.c,v 1.15 2001/06/29 14:53:44 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -579,6 +579,29 @@ name|ret_creds
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|ret_creds
+operator|==
+name|NULL
+condition|)
+block|{
+name|ret
+operator|=
+name|ENOMEM
+expr_stmt|;
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 for|for
 control|(
 name|i

@@ -292,30 +292,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Define NDBM if you are using the 4.3 ndbm library (which is part of  * libc).  If not defined, 4.2 dbm will be assumed.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_DBM_FIRSTKEY
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|NDBM
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* telnet stuff ----------------------------------------------- */
 end_comment
 

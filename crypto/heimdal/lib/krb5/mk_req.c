@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: mk_req.c,v 1.23 2001/05/14 06:14:49 assar Exp $"
+literal|"$Id: mk_req.c,v 1.24 2001/06/18 20:05:52 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -189,7 +189,8 @@ condition|)
 return|return
 name|ret
 return|;
-return|return
+name|ret
+operator|=
 name|krb5_mk_req_extended
 argument_list|(
 name|context
@@ -204,6 +205,16 @@ name|cred
 argument_list|,
 name|outbuf
 argument_list|)
+expr_stmt|;
+name|krb5_free_creds
+argument_list|(
+name|context
+argument_list|,
+name|cred
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
 return|;
 block|}
 end_function

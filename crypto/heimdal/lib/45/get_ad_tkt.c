@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: get_ad_tkt.c,v 1.3 1999/12/02 17:05:01 joda Exp $"
+literal|"$Id: get_ad_tkt.c,v 1.4 2001/06/18 13:11:05 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -380,7 +380,7 @@ return|;
 block|}
 name|ret
 operator|=
-name|krb524_convert_creds_kdc
+name|krb524_convert_creds_kdc_ccache
 argument_list|(
 name|context
 argument_list|,

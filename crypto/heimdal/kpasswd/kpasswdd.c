@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kpasswdd.c,v 1.51 2001/05/14 06:18:56 assar Exp $"
+literal|"$Id: kpasswdd.c,v 1.52 2001/07/02 16:27:09 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1957,7 +1957,8 @@ argument_list|)
 expr_stmt|;
 name|maxfd
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 name|FD_ZERO
 argument_list|(
@@ -2064,6 +2065,11 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
+name|int
+name|save_errno
+init|=
+name|errno
+decl_stmt|;
 name|ret
 operator|=
 name|krb5_print_address
@@ -2087,19 +2093,34 @@ operator|&
 name|len
 argument_list|)
 expr_stmt|;
-name|krb5_err
+if|if
+condition|(
+name|ret
+condition|)
+name|strlcpy
+argument_list|(
+name|str
+argument_list|,
+literal|"unknown address"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|str
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|krb5_warn
 argument_list|(
 name|context
 argument_list|,
-literal|1
-argument_list|,
-name|errno
+name|save_errno
 argument_list|,
 literal|"bind(%s)"
 argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
+continue|continue;
 block|}
 name|maxfd
 operator|=
@@ -2140,6 +2161,22 @@ name|real_fdset
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|maxfd
+operator|==
+operator|-
+literal|1
+condition|)
+name|krb5_errx
+argument_list|(
+name|context
+argument_list|,
+literal|1
+argument_list|,
+literal|"No sockets!"
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|exit_flag

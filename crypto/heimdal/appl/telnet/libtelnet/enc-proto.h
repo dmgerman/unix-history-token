@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 1990 by the Massachusetts Institute of Technology  *
 end_comment
 
 begin_comment
-comment|/* $Id: enc-proto.h,v 1.10 2000/01/18 03:09:56 assar Exp $ */
+comment|/* $Id: enc-proto.h,v 1.11 2002/01/18 12:58:49 joda Exp $ */
 end_comment
 
 begin_if
@@ -397,6 +397,15 @@ end_function_decl
 begin_function_decl
 name|void
 name|encrypt_send_request_end
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|encrypt_is_encrypting
 parameter_list|(
 name|void
 parameter_list|)

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: get_mic.c,v 1.17 2001/05/11 09:16:46 assar Exp $"
+literal|"$Id: get_mic.c,v 1.19 2001/10/31 13:37:39 nectar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -292,7 +292,7 @@ argument_list|)
 expr_stmt|;
 comment|/* SGN_CKSUM */
 comment|/* sequence number */
-name|krb5_auth_getlocalseqnumber
+name|krb5_auth_con_getlocalseqnumber
 argument_list|(
 name|gssapi_krb5_context
 argument_list|,
@@ -421,7 +421,7 @@ argument_list|,
 name|DES_ENCRYPT
 argument_list|)
 expr_stmt|;
-name|krb5_auth_setlocalseqnumber
+name|krb5_auth_con_setlocalseqnumber
 argument_list|(
 name|gssapi_krb5_context
 argument_list|,
@@ -795,7 +795,7 @@ name|length
 argument_list|)
 expr_stmt|;
 comment|/* sequence number */
-name|krb5_auth_getlocalseqnumber
+name|krb5_auth_con_getlocalseqnumber
 argument_list|(
 name|gssapi_krb5_context
 argument_list|,
@@ -995,30 +995,7 @@ operator|&
 name|encdata
 argument_list|)
 expr_stmt|;
-name|p
-operator|+=
-literal|8
-operator|+
-name|cksum
-operator|.
-name|checksum
-operator|.
-name|length
-expr_stmt|;
-name|memcpy
-argument_list|(
-name|p
-argument_list|,
-name|message_buffer
-operator|->
-name|value
-argument_list|,
-name|message_buffer
-operator|->
-name|length
-argument_list|)
-expr_stmt|;
-name|krb5_auth_setlocalseqnumber
+name|krb5_auth_con_setlocalseqnumber
 argument_list|(
 name|gssapi_krb5_context
 argument_list|,
@@ -1077,7 +1054,7 @@ name|keytype
 decl_stmt|;
 name|ret
 operator|=
-name|gss_krb5_getsomekey
+name|gss_krb5_get_localkey
 argument_list|(
 name|context_handle
 argument_list|,

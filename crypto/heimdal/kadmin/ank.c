@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ank.c,v 1.21 2000/09/10 19:16:39 joda Exp $"
+literal|"$Id: ank.c,v 1.22 2001/08/10 08:08:22 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -129,6 +129,9 @@ name|rand_key
 parameter_list|,
 name|int
 name|rand_password
+parameter_list|,
+name|int
+name|use_defaults
 parameter_list|,
 name|char
 modifier|*
@@ -327,6 +330,24 @@ operator||
 name|KADM5_PW_EXPIRATION
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|use_defaults
+condition|)
+name|set_defaults
+argument_list|(
+operator|&
+name|princ
+argument_list|,
+operator|&
+name|mask
+argument_list|,
+name|default_ent
+argument_list|,
+name|default_mask
+argument_list|)
+expr_stmt|;
+else|else
 name|edit_entry
 argument_list|(
 operator|&
@@ -899,7 +920,7 @@ name|arg_string
 block|,
 name|NULL
 block|,
-literal|"Expiration time"
+literal|"expiration time"
 block|,
 literal|"time"
 block|}
@@ -913,9 +934,21 @@ name|arg_string
 block|,
 name|NULL
 block|,
-literal|"Password expiration time"
+literal|"password expiration time"
 block|,
 literal|"time"
+block|}
+block|,
+block|{
+literal|"use-defaults"
+block|,
+literal|0
+block|,
+name|arg_flag
+block|,
+name|NULL
+block|,
+literal|"use default values"
 block|}
 block|}
 decl_stmt|;
@@ -1041,6 +1074,11 @@ init|=
 name|NULL
 decl_stmt|;
 name|int
+name|use_defaults
+init|=
+literal|0
+decl_stmt|;
+name|int
 name|i
 decl_stmt|;
 name|int
@@ -1147,6 +1185,16 @@ name|value
 operator|=
 operator|&
 name|pw_expiration
+expr_stmt|;
+name|args
+index|[
+literal|9
+index|]
+operator|.
+name|value
+operator|=
+operator|&
+name|use_defaults
 expr_stmt|;
 if|if
 condition|(
@@ -1302,6 +1350,8 @@ argument_list|,
 name|random_key
 argument_list|,
 name|random_password
+argument_list|,
+name|use_defaults
 argument_list|,
 name|password
 argument_list|,

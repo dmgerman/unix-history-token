@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: termstat.c,v 1.11 1997/05/11 06:30:04 assar Exp $"
+literal|"$Id: termstat.c,v 1.12 2001/08/29 00:45:23 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -65,7 +65,9 @@ end_comment
 begin_function
 name|void
 name|flowstat
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -167,10 +169,6 @@ name|int
 name|parm2
 parameter_list|)
 block|{
-name|void
-name|netflush
-parameter_list|()
-function_decl|;
 comment|/*      * Get a copy of terminal characteristics.      */
 name|init_termbuf
 argument_list|()

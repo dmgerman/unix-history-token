@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rd_priv.c,v 1.28 2001/05/14 06:14:50 assar Exp $"
+literal|"$Id: rd_priv.c,v 1.29 2001/06/18 02:46:15 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -147,31 +147,30 @@ goto|goto
 name|failure
 goto|;
 block|}
-comment|/* XXX - Is this right? */
 if|if
 condition|(
 name|auth_context
 operator|->
-name|local_subkey
+name|remote_subkey
 condition|)
 name|key
 operator|=
 name|auth_context
 operator|->
-name|local_subkey
+name|remote_subkey
 expr_stmt|;
 elseif|else
 if|if
 condition|(
 name|auth_context
 operator|->
-name|remote_subkey
+name|local_subkey
 condition|)
 name|key
 operator|=
 name|auth_context
 operator|->
-name|remote_subkey
+name|local_subkey
 expr_stmt|;
 else|else
 name|key

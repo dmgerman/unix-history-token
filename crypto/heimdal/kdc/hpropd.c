@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: hpropd.c,v 1.32 2001/02/20 01:44:50 assar Exp $"
+literal|"$Id: hpropd.c,v 1.34 2001/09/18 09:54:15 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -856,6 +856,14 @@ name|from_stdin
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|local_realm
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -958,6 +966,19 @@ block|,
 literal|"keytab to use for authentication"
 block|,
 literal|"keytab"
+block|}
+block|,
+block|{
+literal|"realm"
+block|,
+literal|'r'
+block|,
+name|arg_string
+block|,
+operator|&
+name|local_realm
+block|,
+literal|"realm to use"
 block|}
 block|,
 ifdef|#
@@ -1219,6 +1240,19 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* KRB4 */
+if|if
+condition|(
+name|local_realm
+operator|!=
+name|NULL
+condition|)
+name|krb5_set_default_realm
+argument_list|(
+name|context
+argument_list|,
+name|local_realm
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|help_flag
@@ -1645,7 +1679,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|krb5_auth_getauthenticator
+name|krb5_auth_con_getauthenticator
 argument_list|(
 name|context
 argument_list|,
@@ -1667,7 +1701,7 @@ literal|1
 argument_list|,
 name|ret
 argument_list|,
-literal|"krb5_auth_getauthenticator"
+literal|"krb5_auth_con_getauthenticator"
 argument_list|)
 expr_stmt|;
 name|ret

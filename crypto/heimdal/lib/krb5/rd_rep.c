@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rd_rep.c,v 1.21 2001/05/14 06:14:50 assar Exp $"
+literal|"$Id: rd_rep.c,v 1.22 2001/06/18 02:46:53 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -304,10 +304,12 @@ operator|)
 operator|->
 name|seq_number
 condition|)
+name|krb5_auth_con_setremoteseqnumber
+argument_list|(
+name|context
+argument_list|,
 name|auth_context
-operator|->
-name|remote_seqnumber
-operator|=
+argument_list|,
 operator|*
 operator|(
 operator|(
@@ -317,6 +319,30 @@ operator|)
 operator|->
 name|seq_number
 operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|*
+name|repl
+operator|)
+operator|->
+name|subkey
+condition|)
+name|krb5_auth_con_setremotesubkey
+argument_list|(
+name|context
+argument_list|,
+name|auth_context
+argument_list|,
+operator|(
+operator|*
+name|repl
+operator|)
+operator|->
+name|subkey
+argument_list|)
 expr_stmt|;
 name|out
 label|:

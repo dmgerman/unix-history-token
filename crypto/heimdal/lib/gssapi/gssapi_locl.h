@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997 - 2001 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: gssapi_locl.h,v 1.16 2001/05/11 09:16:46 assar Exp $ */
+comment|/* $Id: gssapi_locl.h,v 1.21 2001/08/29 02:21:09 assar Exp $ */
 end_comment
 
 begin_ifndef
@@ -61,8 +61,15 @@ name|gssapi_krb5_context
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|krb5_keytab
+name|gssapi_krb5_keytab
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
-name|void
+name|krb5_error_code
 name|gssapi_krb5_init
 parameter_list|(
 name|void
@@ -71,9 +78,13 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
+name|OM_uint32
 name|gssapi_krb5_create_8003_checksum
 parameter_list|(
+name|OM_uint32
+modifier|*
+name|minor_status
+parameter_list|,
 specifier|const
 name|gss_channel_bindings_t
 name|input_chan_bindings
@@ -81,6 +92,7 @@ parameter_list|,
 name|OM_uint32
 name|flags
 parameter_list|,
+specifier|const
 name|krb5_data
 modifier|*
 name|fwd_data
@@ -93,13 +105,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|krb5_error_code
+name|OM_uint32
 name|gssapi_krb5_verify_8003_checksum
 parameter_list|(
+name|OM_uint32
+modifier|*
+name|minor_status
+parameter_list|,
 specifier|const
 name|gss_channel_bindings_t
 name|input_chan_bindings
 parameter_list|,
+specifier|const
 name|Checksum
 modifier|*
 name|cksum
@@ -119,6 +136,10 @@ begin_function_decl
 name|OM_uint32
 name|gssapi_krb5_encapsulate
 parameter_list|(
+name|OM_uint32
+modifier|*
+name|minor_status
+parameter_list|,
 specifier|const
 name|krb5_data
 modifier|*
@@ -138,6 +159,10 @@ begin_function_decl
 name|OM_uint32
 name|gssapi_krb5_decapsulate
 parameter_list|(
+name|OM_uint32
+modifier|*
+name|minor_status
+parameter_list|,
 name|gss_buffer_t
 name|input_token_buffer
 parameter_list|,
@@ -210,7 +235,23 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
-name|gss_krb5_getsomekey
+name|gss_krb5_get_remotekey
+parameter_list|(
+specifier|const
+name|gss_ctx_id_t
+name|context_handle
+parameter_list|,
+name|krb5_keyblock
+modifier|*
+modifier|*
+name|key
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|OM_uint32
+name|gss_krb5_get_localkey
 parameter_list|(
 specifier|const
 name|gss_ctx_id_t

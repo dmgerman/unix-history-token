@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: telnetd.c,v 1.64 2001/02/08 16:06:27 assar Exp $"
+literal|"$Id: telnetd.c,v 1.67 2001/09/17 02:08:29 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -125,6 +125,12 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_undef
+undef|#
+directive|undef
+name|NOERROR
+end_undef
 
 begin_ifdef
 ifdef|#
@@ -554,6 +560,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ENCRYPTION
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|des_check_key
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|int
 name|main
@@ -617,10 +641,6 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|ENCRYPTION
-specifier|extern
-name|int
-name|des_check_key
-decl_stmt|;
 name|des_check_key
 operator|=
 literal|1

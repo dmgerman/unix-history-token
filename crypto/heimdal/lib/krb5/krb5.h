@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997 - 2001 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: krb5.h,v 1.190 2001/05/16 22:23:56 assar Exp $ */
+comment|/* $Id: krb5.h,v 1.197 2001/09/27 01:31:53 assar Exp $ */
 end_comment
 
 begin_ifndef
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<heim_err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<k524_err.h>
 end_include
 
 begin_include
@@ -880,14 +886,14 @@ begin_define
 define|#
 directive|define
 name|KRB5_GC_CACHED
-value|1
+value|(1U<< 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|KRB5_GC_USER_USER
-value|2
+value|(1U<< 1)
 end_define
 
 begin_comment
@@ -1339,10 +1345,6 @@ name|krb5_boolean
 name|srv_try_txt
 decl_stmt|;
 comment|/* try TXT records also */
-name|krb5_boolean
-name|srv_try_rfc2052
-decl_stmt|;
-comment|/* try RFC2052 compatible records */
 name|int32_t
 name|fcache_vno
 decl_stmt|;
@@ -1371,6 +1373,10 @@ name|error_buf
 index|[
 literal|256
 index|]
+decl_stmt|;
+name|krb5_addresses
+modifier|*
+name|ignore_addresses
 decl_stmt|;
 block|}
 name|krb5_context_data
@@ -2420,6 +2426,13 @@ name|KRB5_VERIFY_LREALMS
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|KRB5_VERIFY_NO_ADDRESSES
+value|2
+end_define
+
 begin_decl_stmt
 specifier|extern
 specifier|const
@@ -2495,28 +2508,28 @@ begin_define
 define|#
 directive|define
 name|KRB5_KPASSWD_MALFORMED
-value|0
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|KRB5_KPASSWD_HARDERROR
-value|0
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|KRB5_KPASSWD_AUTHERROR
-value|0
+value|3
 end_define
 
 begin_define
 define|#
 directive|define
 name|KRB5_KPASSWD_SOFTERROR
-value|0
+value|4
 end_define
 
 begin_define
@@ -2525,6 +2538,98 @@ directive|define
 name|KPASSWD_PORT
 value|464
 end_define
+
+begin_comment
+comment|/* types for the new krbhst interface */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|krb5_krbhst_data
+struct_decl|;
+end_struct_decl
+
+begin_typedef
+typedef|typedef
+name|struct
+name|krb5_krbhst_data
+modifier|*
+name|krb5_krbhst_handle
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|KRB5_KRBHST_KDC
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|KRB5_KRBHST_ADMIN
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|KRB5_KRBHST_CHANGEPW
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|KRB5_KRBHST_KRB524
+value|4
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|krb5_krbhst_info
+block|{
+enum|enum
+block|{
+name|KRB5_KRBHST_UDP
+block|,
+name|KRB5_KRBHST_TCP
+block|,
+name|KRB5_KRBHST_HTTP
+block|}
+name|proto
+enum|;
+name|unsigned
+name|short
+name|port
+decl_stmt|;
+name|unsigned
+name|short
+name|def_port
+decl_stmt|;
+name|struct
+name|addrinfo
+modifier|*
+name|ai
+decl_stmt|;
+name|struct
+name|krb5_krbhst_info
+modifier|*
+name|next
+decl_stmt|;
+name|char
+name|hostname
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* has to come last */
+block|}
+name|krb5_krbhst_info
+typedef|;
+end_typedef
 
 begin_struct_decl
 struct_decl|struct

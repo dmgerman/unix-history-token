@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1989 Regents of the University of California.  * All
 end_comment
 
 begin_comment
-comment|/* $Id: popper.h,v 1.49 1999/08/12 11:37:55 joda Exp $ */
+comment|/* $Id: popper.h,v 1.50 2001/09/10 11:56:34 joda Exp $ */
 end_comment
 
 begin_comment
@@ -403,6 +403,33 @@ directive|ifdef
 name|HAVE_ARPA_INET_H
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_AIX
+end_ifdef
+
+begin_struct_decl
+struct_decl|struct
+name|sockaddr_dl
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/* AIX fun */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|ether_addr
+struct_decl|;
+end_struct_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -551,13 +578,6 @@ define|#
 directive|define
 name|MAXUSERNAMELEN
 value|65
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAXDROPLEN
-value|64
 end_define
 
 begin_define
@@ -1089,14 +1109,14 @@ comment|/*  Number of maildrop bytes                                            
 name|char
 name|drop_name
 index|[
-name|MAXDROPLEN
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 comment|/*  The name of the user's                                                      maildrop */
 name|char
 name|temp_drop
 index|[
-name|MAXDROPLEN
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 comment|/*  The name of the user's                                                      temporary maildrop */

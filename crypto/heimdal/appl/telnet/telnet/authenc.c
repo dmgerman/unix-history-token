@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: authenc.c,v 1.11 2000/11/15 23:00:58 assar Exp $"
+literal|"$Id: authenc.c,v 1.12 2001/12/20 20:39:51 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -151,11 +151,25 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-return|return
-operator|(
-operator|-
+specifier|extern
+name|int
+name|scheduler_lockout_tty
+decl_stmt|;
+name|scheduler_lockout_tty
+operator|=
 literal|1
-operator|)
+expr_stmt|;
+name|Scheduler
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|scheduler_lockout_tty
+operator|=
+literal|0
+expr_stmt|;
+return|return
+literal|0
 return|;
 block|}
 end_function

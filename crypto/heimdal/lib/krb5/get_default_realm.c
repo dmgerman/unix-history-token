@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: get_default_realm.c,v 1.9 2001/05/14 06:14:47 assar Exp $"
+literal|"$Id: get_default_realm.c,v 1.10 2001/07/19 16:55:27 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -128,9 +128,18 @@ if|if
 condition|(
 name|ret
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"no default realm configured"
+argument_list|)
+expr_stmt|;
 return|return
 name|KRB5_CONFIG_NODEFREALM
 return|;
+block|}
 block|}
 name|res
 operator|=

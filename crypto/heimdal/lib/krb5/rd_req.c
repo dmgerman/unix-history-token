@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rd_req.c,v 1.45 2001/05/14 06:14:50 assar Exp $"
+literal|"$Id: rd_req.c,v 1.47 2001/06/18 02:48:18 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -613,7 +613,7 @@ name|crypto
 decl_stmt|;
 name|ret
 operator|=
-name|krb5_auth_getauthenticator
+name|krb5_auth_con_getauthenticator
 argument_list|(
 name|context
 argument_list|,
@@ -1206,20 +1206,21 @@ name|authenticator
 operator|->
 name|seq_number
 condition|)
+name|krb5_auth_con_setremoteseqnumber
+argument_list|(
+name|context
+argument_list|,
 name|ac
-operator|->
-name|remote_seqnumber
-operator|=
+argument_list|,
 operator|*
 name|ac
 operator|->
 name|authenticator
 operator|->
 name|seq_number
+argument_list|)
 expr_stmt|;
 comment|/* XXX - Xor sequence numbers */
-comment|/* XXX - subkeys? */
-comment|/* And where should it be stored? */
 if|if
 condition|(
 name|ac
@@ -1229,22 +1230,28 @@ operator|->
 name|subkey
 condition|)
 block|{
-name|krb5_copy_keyblock
+name|ret
+operator|=
+name|krb5_auth_con_setremotesubkey
 argument_list|(
 name|context
+argument_list|,
+name|ac
 argument_list|,
 name|ac
 operator|->
 name|authenticator
 operator|->
 name|subkey
-argument_list|,
-operator|&
-name|ac
-operator|->
-name|remote_subkey
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+goto|goto
+name|out2
+goto|;
 block|}
 if|if
 condition|(
