@@ -7,7 +7,7 @@ value|15
 end_define
 
 begin_comment
-comment|/* starting pos for player's hand window */
+comment|/* size of player's hand window */
 end_comment
 
 begin_define
@@ -25,7 +25,7 @@ value|21
 end_define
 
 begin_comment
-comment|/* starting pos for table window */
+comment|/* size of table window */
 end_comment
 
 begin_define
@@ -43,7 +43,7 @@ value|15
 end_define
 
 begin_comment
-comment|/* starting pos for computer's hand window */
+comment|/* size of computer's hand window */
 end_comment
 
 begin_define
@@ -61,15 +61,26 @@ value|0
 end_define
 
 begin_comment
-comment|/* starting pos for scoring board */
+comment|/* starting position of scoring board */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCORE_X
-value|39
+value|0
 end_define
+
+begin_define
+define|#
+directive|define
+name|SCORE_SZ
+value|41
+end_define
+
+begin_comment
+comment|/* X size of score board */
+end_comment
 
 begin_define
 define|#
@@ -86,7 +97,7 @@ begin_define
 define|#
 directive|define
 name|CRIB_X
-value|(PLAY_X + TABLE_X)
+value|(PLAY_X + TABLE_X + SCORE_SZ)
 end_define
 
 begin_define

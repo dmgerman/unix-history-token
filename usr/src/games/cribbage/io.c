@@ -1728,7 +1728,9 @@ index|[
 name|BUFSIZ
 index|]
 init|=
-literal|""
+block|{
+literal|'\0'
+block|}
 decl_stmt|;
 end_decl_stmt
 

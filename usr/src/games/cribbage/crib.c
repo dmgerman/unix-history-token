@@ -233,7 +233,7 @@ name|PLAY_X
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|SCORE_SZ
 argument_list|)
 expr_stmt|;
 name|Tablewin
@@ -249,6 +249,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|PLAY_X
+operator|+
+name|SCORE_SZ
 argument_list|)
 expr_stmt|;
 name|Compwin
@@ -266,6 +268,8 @@ argument_list|,
 name|TABLE_X
 operator|+
 name|PLAY_X
+operator|+
+name|SCORE_SZ
 argument_list|)
 expr_stmt|;
 name|leaveok
@@ -1152,7 +1156,7 @@ name|move
 argument_list|(
 name|CRIB_Y
 argument_list|,
-literal|0
+name|SCORE_SZ
 argument_list|)
 expr_stmt|;
 name|clrtobot
@@ -1816,7 +1820,7 @@ expr_stmt|;
 else|else
 name|cardx
 operator|=
-literal|0
+name|SCORE_SZ
 expr_stmt|;
 name|mvaddstr
 argument_list|(
