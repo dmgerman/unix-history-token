@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)subr_prof.c	8.3 (Berkeley) 9/23/93  * $Id: subr_prof.c,v 1.16 1995/12/29 15:29:08 bde Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)subr_prof.c	8.3 (Berkeley) 9/23/93  * $Id: subr_prof.c,v 1.17 1996/10/17 19:32:18 bde Exp $  */
 end_comment
 
 begin_include
@@ -158,6 +158,17 @@ expr_stmt|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|nullfunc_loop_profiled_end
+value|nullfunc_profiled
+end_define
+
+begin_comment
+comment|/* XXX */
+end_comment
+
 begin_function
 name|void
 name|nullfunc_profiled
@@ -210,9 +221,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|fptrint_t
-name|kmstartup_addr
-decl_stmt|;
 name|int
 name|mcount_overhead
 decl_stmt|;
@@ -224,6 +232,9 @@ name|nullfunc_loop_overhead
 decl_stmt|;
 name|int
 name|nullfunc_loop_profiled_time
+decl_stmt|;
+name|fptrint_t
+name|tmp_addr
 decl_stmt|;
 endif|#
 directive|endif
@@ -674,7 +685,7 @@ name|__GNUC__
 operator|>=
 literal|2
 asm|asm("call mexitcount; 1:" 			: : : "ax", "bx", "cx", "dx", "memory");
-asm|asm("movl $1b,%0" : "=rm" (kmstartup_addr));
+asm|asm("movl $1b,%0" : "=rm" (tmp_addr));
 else|#
 directive|else
 error|#
@@ -691,7 +702,7 @@ name|PC_TO_I
 argument_list|(
 name|p
 argument_list|,
-name|kmstartup_addr
+name|tmp_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -715,27 +726,31 @@ literal|0
 expr_stmt|;
 for|for
 control|(
-name|i
+name|tmp_addr
 operator|=
-literal|0
+operator|(
+name|fptrint_t
+operator|)
+name|nullfunc_loop_profiled
 init|;
-name|i
+name|tmp_addr
 operator|<
-literal|28
+operator|(
+name|fptrint_t
+operator|)
+name|nullfunc_loop_profiled_end
 condition|;
-name|i
+name|tmp_addr
 operator|+=
+name|HISTFRACTION
+operator|*
 sizeof|sizeof
 argument_list|(
 name|HISTCOUNTER
 argument_list|)
 control|)
-block|{
-name|int
-name|x
-decl_stmt|;
-name|x
-operator|=
+name|nullfunc_loop_profiled_time
+operator|+=
 name|KCOUNT
 argument_list|(
 name|p
@@ -744,31 +759,10 @@ name|PC_TO_I
 argument_list|(
 name|p
 argument_list|,
-operator|(
-name|fptrint_t
-operator|)
-name|nullfunc_loop_profiled
-operator|+
-name|i
+name|tmp_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|nullfunc_loop_profiled_time
-operator|+=
-name|x
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"leaf[%d] = %d sum %d\n"
-argument_list|,
-name|i
-argument_list|,
-name|x
-argument_list|,
-name|nullfunc_loop_profiled_time
-argument_list|)
-expr_stmt|;
-block|}
 define|#
 directive|define
 name|CALIB_DOSCALE
