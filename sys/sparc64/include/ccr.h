@@ -18,6 +18,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|ICC_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICC_BITS
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICC_MASK
+value|((1UL<< ICC_BITS) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ICC_C
 value|(1UL<< 0)
 end_define
@@ -41,6 +62,27 @@ define|#
 directive|define
 name|ICC_N
 value|(1UL<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XCC_SHIFT
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|XCC_BITS
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|XCC_MASK
+value|(((1UL<< XCC_BITS) - 1)<< XCC_SHIFT)
 end_define
 
 begin_define
