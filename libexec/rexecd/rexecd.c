@@ -245,7 +245,16 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|sockaddr_storage
-name|asin
+name|sa
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|default_shell
+index|[]
+init|=
+name|_PATH_BSHELL
 decl_stmt|;
 end_decl_stmt
 
@@ -271,6 +280,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -490,11 +500,6 @@ decl_stmt|,
 modifier|*
 name|cp
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|namep
-decl_stmt|;
 name|char
 name|user
 index|[
@@ -551,15 +556,6 @@ name|one
 init|=
 literal|1
 decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|envlist
-decl_stmt|,
-modifier|*
-modifier|*
-name|env
-decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -615,6 +611,11 @@ expr_stmt|;
 name|port
 operator|=
 literal|0
+expr_stmt|;
+name|sd
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 for|for
 control|(
@@ -696,15 +697,15 @@ expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
-name|asin
+name|sa
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|asin
+name|sa
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|asin
+name|sa
 operator|.
 name|ss_family
 operator|=
@@ -712,7 +713,7 @@ name|fromp
 operator|->
 name|sa_family
 expr_stmt|;
-name|asin
+name|sa
 operator|.
 name|ss_len
 operator|=
@@ -732,9 +733,9 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|asin
+name|sa
 argument_list|,
-name|asin
+name|sa
 operator|.
 name|ss_len
 argument_list|)
@@ -1417,7 +1418,7 @@ name|pwd
 operator|->
 name|pw_shell
 operator|=
-name|_PATH_BSHELL
+name|default_shell
 expr_stmt|;
 if|if
 condition|(
@@ -1768,9 +1769,10 @@ parameter_list|,
 name|int
 name|cnt
 parameter_list|,
+specifier|const
 name|char
 modifier|*
-name|err
+name|field
 parameter_list|)
 block|{
 name|char
@@ -1815,7 +1817,7 @@ name|error
 argument_list|(
 literal|"%s too long\n"
 argument_list|,
-name|err
+name|field
 argument_list|)
 expr_stmt|;
 name|exit
