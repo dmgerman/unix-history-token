@@ -174,6 +174,7 @@ file|"pathnames.h"
 end_include
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|qfname
@@ -183,6 +184,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|qfextension
@@ -193,6 +195,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|quotagroup
@@ -258,6 +261,7 @@ name|alldigits
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|s
@@ -330,6 +334,7 @@ name|getentry
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1137,6 +1142,7 @@ name|name
 parameter_list|,
 name|quotatype
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1926,11 +1932,11 @@ begin_function
 name|int
 name|editit
 parameter_list|(
-name|tmpfile
+name|tmpf
 parameter_list|)
 name|char
 modifier|*
-name|tmpfile
+name|tmpf
 decl_stmt|;
 block|{
 name|long
@@ -1939,7 +1945,7 @@ decl_stmt|;
 name|int
 name|pid
 decl_stmt|,
-name|stat
+name|status
 decl_stmt|;
 name|omask
 operator|=
@@ -2028,6 +2034,7 @@ literal|0
 condition|)
 block|{
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|ed
@@ -2076,8 +2083,12 @@ name|ed
 argument_list|,
 name|ed
 argument_list|,
-name|tmpfile
+name|tmpf
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -2096,7 +2107,7 @@ argument_list|(
 name|pid
 argument_list|,
 operator|&
-name|stat
+name|status
 argument_list|,
 literal|0
 argument_list|)
@@ -2111,12 +2122,12 @@ condition|(
 operator|!
 name|WIFEXITED
 argument_list|(
-name|stat
+name|status
 argument_list|)
 operator|||
 name|WEXITSTATUS
 argument_list|(
-name|stat
+name|status
 argument_list|)
 operator|!=
 literal|0
@@ -2252,7 +2263,7 @@ name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"%s: %s %u, limits (soft = %u, hard = %u)\n"
+literal|"%s: %s %lu, limits (soft = %lu, hard = %lu)\n"
 argument_list|,
 name|qup
 operator|->
@@ -2316,22 +2327,34 @@ name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"%s %u, limits (soft = %u, hard = %u)\n"
+literal|"%s %lu, limits (soft = %lu, hard = %lu)\n"
 argument_list|,
 literal|"\tinodes in use:"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|qup
 operator|->
 name|dqblk
 operator|.
 name|dqb_curinodes
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|qup
 operator|->
 name|dqblk
 operator|.
 name|dqb_isoftlimit
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|qup
 operator|->
 name|dqblk
@@ -2384,6 +2407,22 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|fd
+decl_stmt|;
+name|unsigned
+name|long
+name|bhardlimit
+decl_stmt|,
+name|bsoftlimit
+decl_stmt|,
+name|curblocks
+decl_stmt|;
+name|unsigned
+name|long
+name|ihardlimit
+decl_stmt|,
+name|isoftlimit
+decl_stmt|,
+name|curinodes
 decl_stmt|;
 name|int
 name|cnt
@@ -2564,22 +2603,16 @@ name|sscanf
 argument_list|(
 name|cp
 argument_list|,
-literal|" blocks in use: %u, limits (soft = %u, hard = %u)"
+literal|" blocks in use: %lu, limits (soft = %lu, hard = %lu)"
 argument_list|,
 operator|&
-name|dqblk
-operator|.
-name|dqb_curblocks
+name|curblocks
 argument_list|,
 operator|&
-name|dqblk
-operator|.
-name|dqb_bsoftlimit
+name|bsoftlimit
 argument_list|,
 operator|&
-name|dqblk
-operator|.
-name|dqb_bhardlimit
+name|bhardlimit
 argument_list|)
 expr_stmt|;
 if|if
@@ -2613,9 +2646,7 @@ argument_list|(
 operator|(
 name|off_t
 operator|)
-name|dqblk
-operator|.
-name|dqb_curblocks
+name|curblocks
 operator|*
 literal|1024
 argument_list|)
@@ -2629,9 +2660,7 @@ argument_list|(
 operator|(
 name|off_t
 operator|)
-name|dqblk
-operator|.
-name|dqb_bsoftlimit
+name|bsoftlimit
 operator|*
 literal|1024
 argument_list|)
@@ -2645,9 +2674,7 @@ argument_list|(
 operator|(
 name|off_t
 operator|)
-name|dqblk
-operator|.
-name|dqb_bhardlimit
+name|bhardlimit
 operator|*
 literal|1024
 argument_list|)
@@ -2689,22 +2716,16 @@ name|sscanf
 argument_list|(
 name|cp
 argument_list|,
-literal|"\tinodes in use: %u, limits (soft = %u, hard = %u)"
+literal|"\tinodes in use: %lu, limits (soft = %lu, hard = %lu)"
 argument_list|,
 operator|&
-name|dqblk
-operator|.
-name|dqb_curinodes
+name|curinodes
 argument_list|,
 operator|&
-name|dqblk
-operator|.
-name|dqb_isoftlimit
+name|isoftlimit
 argument_list|,
 operator|&
-name|dqblk
-operator|.
-name|dqb_ihardlimit
+name|ihardlimit
 argument_list|)
 expr_stmt|;
 if|if
@@ -2729,6 +2750,24 @@ literal|0
 operator|)
 return|;
 block|}
+name|dqblk
+operator|.
+name|dqb_curinodes
+operator|=
+name|curinodes
+expr_stmt|;
+name|dqblk
+operator|.
+name|dqb_isoftlimit
+operator|=
+name|isoftlimit
+expr_stmt|;
+name|dqblk
+operator|.
+name|dqb_ihardlimit
+operator|=
+name|ihardlimit
+expr_stmt|;
 for|for
 control|(
 name|qup
@@ -3220,6 +3259,11 @@ name|iseconds
 decl_stmt|,
 name|bseconds
 decl_stmt|;
+name|long
+name|l_itime
+decl_stmt|,
+name|l_btime
+decl_stmt|;
 name|char
 modifier|*
 name|fsp
@@ -3396,12 +3440,12 @@ argument_list|,
 literal|" block grace period: %ld %s file grace period: %ld %s"
 argument_list|,
 operator|&
-name|btime
+name|l_btime
 argument_list|,
 name|bunits
 argument_list|,
 operator|&
-name|itime
+name|l_itime
 argument_list|,
 name|iunits
 argument_list|)
@@ -3428,6 +3472,14 @@ literal|0
 operator|)
 return|;
 block|}
+name|btime
+operator|=
+name|l_btime
+expr_stmt|;
+name|itime
+operator|=
+name|l_itime
+expr_stmt|;
 if|if
 condition|(
 name|cvtatos
@@ -3591,10 +3643,10 @@ name|char
 modifier|*
 name|cvtstoa
 parameter_list|(
-name|time
+name|secs
 parameter_list|)
 name|time_t
-name|time
+name|secs
 decl_stmt|;
 block|{
 specifier|static
@@ -3606,7 +3658,7 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|time
+name|secs
 operator|%
 operator|(
 literal|24
@@ -3619,7 +3671,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|time
+name|secs
 operator|/=
 literal|24
 operator|*
@@ -3633,9 +3685,12 @@ name|buf
 argument_list|,
 literal|"%ld day%s"
 argument_list|,
-name|time
+operator|(
+name|long
+operator|)
+name|secs
 argument_list|,
-name|time
+name|secs
 operator|==
 literal|1
 condition|?
@@ -3648,7 +3703,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|time
+name|secs
 operator|%
 operator|(
 literal|60
@@ -3659,7 +3714,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|time
+name|secs
 operator|/=
 literal|60
 operator|*
@@ -3671,9 +3726,12 @@ name|buf
 argument_list|,
 literal|"%ld hour%s"
 argument_list|,
-name|time
+operator|(
+name|long
+operator|)
+name|secs
 argument_list|,
-name|time
+name|secs
 operator|==
 literal|1
 condition|?
@@ -3686,14 +3744,14 @@ block|}
 elseif|else
 if|if
 condition|(
-name|time
+name|secs
 operator|%
 literal|60
 operator|==
 literal|0
 condition|)
 block|{
-name|time
+name|secs
 operator|/=
 literal|60
 expr_stmt|;
@@ -3703,9 +3761,12 @@ name|buf
 argument_list|,
 literal|"%ld minute%s"
 argument_list|,
-name|time
+operator|(
+name|long
+operator|)
+name|secs
 argument_list|,
-name|time
+name|secs
 operator|==
 literal|1
 condition|?
@@ -3722,9 +3783,12 @@ name|buf
 argument_list|,
 literal|"%ld second%s"
 argument_list|,
-name|time
+operator|(
+name|long
+operator|)
+name|secs
 argument_list|,
-name|time
+name|secs
 operator|==
 literal|1
 condition|?
@@ -3749,14 +3813,14 @@ begin_function
 name|int
 name|cvtatos
 parameter_list|(
-name|time
+name|period
 parameter_list|,
 name|units
 parameter_list|,
 name|seconds
 parameter_list|)
 name|time_t
-name|time
+name|period
 decl_stmt|;
 name|char
 modifier|*
@@ -3783,7 +3847,7 @@ condition|)
 operator|*
 name|seconds
 operator|=
-name|time
+name|period
 expr_stmt|;
 elseif|else
 if|if
@@ -3802,7 +3866,7 @@ condition|)
 operator|*
 name|seconds
 operator|=
-name|time
+name|period
 operator|*
 literal|60
 expr_stmt|;
@@ -3823,7 +3887,7 @@ condition|)
 operator|*
 name|seconds
 operator|=
-name|time
+name|period
 operator|*
 literal|60
 operator|*
@@ -3846,7 +3910,7 @@ condition|)
 operator|*
 name|seconds
 operator|=
-name|time
+name|period
 operator|*
 literal|24
 operator|*
@@ -3943,14 +4007,16 @@ parameter_list|(
 name|s
 parameter_list|)
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|s
 decl_stmt|;
 block|{
 specifier|register
+name|int
 name|c
-expr_stmt|;
+decl_stmt|;
 name|c
 operator|=
 operator|*
