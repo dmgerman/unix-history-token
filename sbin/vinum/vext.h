@@ -262,7 +262,9 @@ end_comment
 begin_function_decl
 name|void
 name|setsigs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1004,14 +1006,18 @@ end_function_decl
 begin_function_decl
 name|int
 name|checkupdates
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
 name|genvolname
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1379,7 +1385,9 @@ end_function_decl
 begin_function_decl
 name|void
 name|list_defective_objects
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1644,7 +1652,9 @@ end_function_decl
 begin_function_decl
 name|void
 name|timestamp
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
