@@ -273,6 +273,19 @@ begin_comment
 comment|/* TUNER_AFC */
 end_comment
 
+begin_function_decl
+name|int
+name|TDA9887_init
+parameter_list|(
+name|bktr_ptr_t
+name|bktr
+parameter_list|,
+name|int
+name|output2_enable
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*   * This is for start-up convenience only, NOT mandatory.  */
 end_comment
