@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tip.c,v 1.7 1997/09/18 14:07:17 phk Exp $"
+literal|"$Id: tip.c,v 1.8 1998/06/09 04:28:05 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -662,9 +662,9 @@ operator|>
 sizeof|sizeof
 argument_list|(
 name|PNbuf
+argument_list|)
 operator|-
 literal|1
-argument_list|)
 condition|)
 name|errx
 argument_list|(
@@ -687,9 +687,9 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 name|PNbuf
+argument_list|)
 operator|-
 literal|1
-argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
