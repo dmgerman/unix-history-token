@@ -5224,6 +5224,8 @@ operator|&
 name|sc
 operator|->
 name|sc_hccadma
+argument_list|,
+literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
