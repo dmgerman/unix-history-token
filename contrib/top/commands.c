@@ -388,7 +388,7 @@ name|errs
 comment|/* structure for a system-call error */
 block|{
 name|int
-name|errno
+name|error
 decl_stmt|;
 comment|/* value of errno (that is, the actual error) */
 name|char
@@ -458,7 +458,7 @@ name|p
 parameter_list|,
 name|e
 parameter_list|)
-value|if (errcnt>= ERRMAX) \ 		    { \ 			return(err_toomany); \ 		    } \ 		    else \ 		    { \ 			errs[errcnt].arg = (p); \ 			errs[errcnt++].errno = (e); \ 		    }
+value|if (errcnt>= ERRMAX) \ 		    { \ 			return(err_toomany); \ 		    } \ 		    else \ 		    { \ 			errs[errcnt].arg = (p); \ 			errs[errcnt++].error = (e); \ 		    }
 end_define
 
 begin_comment
@@ -592,7 +592,7 @@ if|if
 condition|(
 name|errp
 operator|->
-name|errno
+name|error
 operator|!=
 name|currerr
 condition|)
@@ -645,7 +645,7 @@ name|currerr
 operator|=
 name|errp
 operator|->
-name|errno
+name|error
 expr_stmt|;
 name|first
 operator|=
@@ -974,11 +974,11 @@ name|result
 operator|=
 name|p1
 operator|->
-name|errno
+name|error
 operator|-
 name|p2
 operator|->
-name|errno
+name|error
 operator|)
 operator|==
 literal|0
@@ -1084,7 +1084,7 @@ name|arg
 argument_list|,
 name|errp
 operator|->
-name|errno
+name|error
 operator|==
 literal|0
 condition|?
@@ -1094,7 +1094,7 @@ name|errmsg
 argument_list|(
 name|errp
 operator|->
-name|errno
+name|error
 argument_list|)
 argument_list|)
 expr_stmt|;
