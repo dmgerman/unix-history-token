@@ -1057,13 +1057,6 @@ argument_list|,
 name|VM_FAULT_NORMAL
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"vm_fault said %d\n"
-argument_list|,
-name|rv
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|rv
