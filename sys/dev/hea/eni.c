@@ -1253,7 +1253,7 @@ name|eup
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Copy MAC address to PIF and config structures 	 */
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|(
 name|caddr_t

@@ -254,7 +254,7 @@ else|else
 break|break;
 block|}
 comment|/* 	 * Clear all RAM to initial value of zero. 	 * This makes sure we don't leave anything funny in the 	 * queues. 	 */
-name|KM_ZERO
+name|bzero
 argument_list|(
 operator|(
 name|uintptr_t
@@ -316,18 +316,11 @@ literal|1
 return|;
 block|}
 comment|/* 	 * Allocate initial element which will hold all of memory 	 */
-if|if
-condition|(
-operator|(
 name|eup
 operator|->
 name|eu_memmap
 operator|=
-operator|(
-name|Mbd
-operator|*
-operator|)
-name|KM_ALLOC
+name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -338,17 +331,21 @@ name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|eup
+operator|->
+name|eu_memmap
 operator|==
 name|NULL
 condition|)
-block|{
-comment|/* Memory allocation error */
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
-block|}
 comment|/* 	 * Test and size memory 	 */
 name|eup
 operator|->
@@ -626,11 +623,7 @@ decl_stmt|;
 comment|/* Yep - create a new segment */
 name|etmp
 operator|=
-operator|(
-name|Mbd
-operator|*
-operator|)
-name|KM_ALLOC
+name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -646,10 +639,6 @@ if|if
 condition|(
 name|etmp
 operator|==
-operator|(
-name|Mbd
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
@@ -670,9 +659,6 @@ literal|0
 expr_stmt|;
 return|return
 operator|(
-operator|(
-name|caddr_t
-operator|)
 name|NULL
 operator|)
 return|;
@@ -1195,16 +1181,9 @@ operator|->
 name|prev
 expr_stmt|;
 comment|/* and free this element */
-operator|(
-name|void
-operator|)
-name|KM_FREE
+name|free
 argument_list|(
 name|etmp
-argument_list|,
-name|etmp
-operator|->
-name|size
 argument_list|,
 name|M_DEVBUF
 argument_list|)
@@ -1270,16 +1249,9 @@ operator|->
 name|next
 expr_stmt|;
 comment|/* and free next element */
-operator|(
-name|void
-operator|)
-name|KM_FREE
+name|free
 argument_list|(
 name|etmp
-argument_list|,
-name|etmp
-operator|->
-name|size
 argument_list|,
 name|M_DEVBUF
 argument_list|)

@@ -721,7 +721,7 @@ expr_stmt|;
 comment|/* Give the adapter time to */
 comment|/* make the transition */
 comment|/* 	 * Reset everything 	 */
-name|KM_ZERO
+name|bzero
 argument_list|(
 operator|(
 name|uintptr_t
