@@ -778,6 +778,15 @@ literal|"TransmetaCPU"
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|cpu_vendor
+argument_list|,
+literal|"Geode by NSC"
+argument_list|)
+operator|==
+literal|0
 operator|)
 condition|)
 block|{
@@ -2250,6 +2259,52 @@ argument_list|,
 literal|"Blue Lightning CPU"
 argument_list|)
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|cpu_vendor
+argument_list|,
+literal|"Geode by NSC"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+switch|switch
+condition|(
+name|cpu_id
+operator|&
+literal|0xfff
+condition|)
+block|{
+case|case
+literal|0x540
+case|:
+name|strcpy
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"Geode SC1100"
+argument_list|)
+expr_stmt|;
+name|tsc_is_broken
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+default|default:
+name|strcpy
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"Geode/NSC unknown"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 block|}
 comment|/* 	 * Replace cpu_model with cpu_brand minus leading spaces if 	 * we have one. 	 */
 name|brand
