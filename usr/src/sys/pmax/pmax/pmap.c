@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	7.4 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3498,12 +3498,26 @@ name|PG_RO
 expr_stmt|;
 block|}
 comment|/* 	 * The only time we need to flush the cache is if we 	 * execute from a physical address and then change the data. 	 * This is the best place to do this. 	 * pmap_protect() and pmap_remove() are mostly used to switch 	 * between R/W and R/O pages. 	 * NOTE: we only support cache flush for read only text. 	 */
-if|#
-directive|if
-literal|0
-block|if (prot == (VM_PROT_READ | VM_PROT_EXECUTE)) 		MachFlushICache(MACH_PHYS_TO_UNCACHED(pa), PAGE_SIZE);
-endif|#
-directive|endif
+if|if
+condition|(
+name|prot
+operator|==
+operator|(
+name|VM_PROT_READ
+operator||
+name|VM_PROT_EXECUTE
+operator|)
+condition|)
+name|MachFlushICache
+argument_list|(
+name|MACH_PHYS_TO_UNCACHED
+argument_list|(
+name|pa
+argument_list|)
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
