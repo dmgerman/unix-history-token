@@ -2235,27 +2235,20 @@ block|}
 end_function
 
 begin_comment
-unit|}
 comment|/*  * Process the tail end of a fork() for the child.  */
 end_comment
 
-begin_macro
-unit|void
+begin_function
+name|void
 name|child_return
-argument_list|(
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|have_giant
@@ -2346,7 +2339,7 @@ name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Process an asynchronous software trap.  * This is relatively easy.  */
