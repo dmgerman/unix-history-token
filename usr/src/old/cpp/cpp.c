@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cpp.c	1.19 %G%"
+literal|"@(#)cpp.c	1.20 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -655,7 +655,7 @@ begin_define
 define|#
 directive|define
 name|MAXINC
-value|10
+value|15
 end_define
 
 begin_define
