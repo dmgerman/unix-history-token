@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_de.c,v 1.80 1998/09/25 18:06:53 matt Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_de.c,v 1.93 1998/12/30 00:37:43 hoek Exp $ */
+comment|/*	$Id: if_de.c,v 1.93.2.1 1999/03/01 17:03:24 luigi Exp $ */
 end_comment
 
 begin_comment
@@ -487,6 +487,29 @@ directive|define
 name|DEVAR_INCLUDE
 value|"pci/if_devar.h"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|"opt_bdg.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BRIDGE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net/bridge.h>
+end_include
 
 begin_endif
 endif|#
@@ -18946,6 +18969,92 @@ name|tulip_flags
 operator||=
 name|TULIP_RXACT
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BRIDGE
+comment|/* see code in if_ed.c */
+name|ms
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|=
+name|ifp
+expr_stmt|;
+comment|/* XXX */
+name|ms
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|=
+name|total_len
+expr_stmt|;
+comment|/* XXX */
+if|if
+condition|(
+name|do_bridge
+condition|)
+block|{
+name|struct
+name|ifnet
+modifier|*
+name|bdg_ifp
+decl_stmt|;
+name|bdg_ifp
+operator|=
+name|bridge_in
+argument_list|(
+name|ms
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bdg_ifp
+operator|==
+name|BDG_DROP
+condition|)
+goto|goto
+name|next
+goto|;
+comment|/* and drop */
+if|if
+condition|(
+name|bdg_ifp
+operator|!=
+name|BDG_LOCAL
+condition|)
+name|bdg_forward
+argument_list|(
+operator|&
+name|ms
+argument_list|,
+name|bdg_ifp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bdg_ifp
+operator|!=
+name|BDG_LOCAL
+operator|&&
+name|bdg_ifp
+operator|!=
+name|BDG_BCAST
+operator|&&
+name|bdg_ifp
+operator|!=
+name|BDG_MCAST
+condition|)
+goto|goto
+name|next
+goto|;
+comment|/* and drop */
+comment|/* all others accepted locally */
+block|}
+elseif|else
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
