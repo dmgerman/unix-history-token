@@ -4,7 +4,7 @@ comment|/* i386-opcode.h -- Intel 80386 opcode table    Copyright (C) 1989, 1991
 end_comment
 
 begin_comment
-comment|/* $Id: i386.h,v 1.3 1995/05/30 04:48:01 rgrimes Exp $ */
+comment|/* $Id: i386.h,v 1.4 1996/10/01 00:13:48 peter Exp $ */
 end_comment
 
 begin_decl_stmt
@@ -9588,6 +9588,14 @@ block|,
 name|Control
 block|,
 literal|3
+block|}
+block|,
+block|{
+literal|"cr4"
+block|,
+name|Control
+block|,
+literal|4
 block|}
 block|,
 comment|/* debug registers */
