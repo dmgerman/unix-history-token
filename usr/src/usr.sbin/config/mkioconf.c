@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mkioconf.c	2.3	82/10/24	*/
+comment|/*	mkioconf.c	2.4	82/10/24	*/
 end_comment
 
 begin_include
@@ -33,6 +33,20 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|char
+modifier|*
+name|intv
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_if
+if|#
+directive|if
+name|MACHINE_VAX
+end_if
+
 begin_macro
 name|vax_ioconf
 argument_list|()
@@ -58,11 +72,6 @@ name|uba_n
 decl_stmt|,
 name|slave
 decl_stmt|;
-name|char
-modifier|*
-name|intv
-parameter_list|()
-function_decl|;
 name|FILE
 modifier|*
 name|fp
@@ -1447,6 +1456,17 @@ expr_stmt|;
 block|}
 end_block
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|MACHINE_SUN
+end_if
+
 begin_macro
 name|sun_ioconf
 argument_list|()
@@ -1472,11 +1492,6 @@ name|uba_n
 decl_stmt|,
 name|slave
 decl_stmt|;
-name|char
-modifier|*
-name|intv
-parameter_list|()
-function_decl|;
 name|FILE
 modifier|*
 name|fp
@@ -2272,6 +2287,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|char
