@@ -370,6 +370,7 @@ begin_struct
 specifier|static
 struct|struct
 block|{
+comment|/* XXX: FIXME!  This is a very improper use of<sys/queue.h> */
 name|struct
 name|sf_buf
 modifier|*
