@@ -528,7 +528,7 @@ name|mouse_status
 operator|.
 name|handler
 operator|=
-name|N_GETVEC
+name|MAKEVEC
 argument_list|(
 name|R_ES
 argument_list|,
@@ -634,7 +634,7 @@ name|mouse_status
 operator|.
 name|handler
 operator|=
-name|GETVEC
+name|MAKEVEC
 argument_list|(
 name|R_ES
 argument_list|,
@@ -645,7 +645,7 @@ name|R_CX
 operator|=
 name|mask
 expr_stmt|;
-name|N_PUTVEC
+name|PUTVEC
 argument_list|(
 name|R_ES
 argument_list|,
@@ -677,7 +677,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_ES
 argument_list|,
@@ -707,7 +707,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_ES
 argument_list|,
@@ -820,7 +820,7 @@ index|[
 name|i
 index|]
 operator|=
-name|N_GETVEC
+name|MAKEVEC
 argument_list|(
 name|R_ES
 argument_list|,
@@ -905,7 +905,7 @@ name|R_CX
 operator|=
 literal|0
 expr_stmt|;
-name|N_PUTVEC
+name|PUTVEC
 argument_list|(
 name|R_ES
 argument_list|,
@@ -991,7 +991,7 @@ operator|.
 name|installed
 condition|)
 block|{
-name|N_PUTVEC
+name|PUTVEC
 argument_list|(
 name|R_ES
 argument_list|,

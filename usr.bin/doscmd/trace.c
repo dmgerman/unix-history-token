@@ -241,7 +241,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_CS
 argument_list|,
@@ -382,7 +382,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("IRET: %04x %04x %04x\n", 	       ((u_short *)N_GETPTR(R_SS, R_SP))[0], 	       ((u_short *)N_GETPTR(R_SS, R_SP))[1], 	       ((u_short *)N_GETPTR(R_SS, R_SP))[2]);
+block|printf("IRET: %04x %04x %04x\n", 	       ((u_short *)MAKEPTR(R_SS, R_SP))[0], 	       ((u_short *)MAKEPTR(R_SS, R_SP))[1], 	       ((u_short *)MAKEPTR(R_SS, R_SP))[2]);
 endif|#
 directive|endif
 break|break;
@@ -613,7 +613,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_CS
 argument_list|,

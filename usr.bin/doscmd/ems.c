@@ -3076,7 +3076,7 @@ block|{
 comment|/* Conventional memory source */
 name|src_addr
 operator|=
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|emvp
 operator|->
@@ -3190,7 +3190,7 @@ block|{
 comment|/* Conventional memory source */
 name|dst_addr
 operator|=
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|emvp
 operator|->
@@ -4774,7 +4774,7 @@ name|addr
 decl_stmt|;
 name|addr
 operator|=
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|seg
 argument_list|,

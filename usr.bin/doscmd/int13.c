@@ -3235,7 +3235,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_ES
 argument_list|,
@@ -3540,7 +3540,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_ES
 argument_list|,
@@ -4165,7 +4165,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|N_PUTVEC
+name|PUTVEC
 argument_list|(
 name|R_ES
 argument_list|,

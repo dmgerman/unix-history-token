@@ -224,7 +224,7 @@ directive|if
 literal|1
 block|char *addr;
 comment|/*= (char *)VECPTR(ivec[intnum]);*/
-block|int i, l, j;         char buf[100];          R_CS = 0x2c7;          R_IP = 0x14f9;         addr = (char *)N_GETPTR(R_CS, R_IP);          printf("\n");         for (i = 0; i< 100; i++) {             l = i386dis(R_CS, R_IP, addr, buf, 0);             printf("%04x:%04x  %s\t;",R_CS,R_IP,buf);             for (j = 0; j< l; j++)                 printf(" %02x", (u_char)addr[j]);             printf("\n");             R_IP += l;             addr += l;         }         exit (0);
+block|int i, l, j;         char buf[100];          R_CS = 0x2c7;          R_IP = 0x14f9;         addr = (char *)MAKEPTR(R_CS, R_IP);          printf("\n");         for (i = 0; i< 100; i++) {             l = i386dis(R_CS, R_IP, addr, buf, 0);             printf("%04x:%04x  %s\t;",R_CS,R_IP,buf);             for (j = 0; j< l; j++)                 printf(" %02x", (u_char)addr[j]);             printf("\n");             R_IP += l;             addr += l;         }         exit (0);
 else|#
 directive|else
 block|tmode = 1;
@@ -287,7 +287,7 @@ name|reset_poll
 argument_list|()
 expr_stmt|;
 comment|/* stack for and call the interrupt in vm86 space */
-name|N_PUSH
+name|PUSH
 argument_list|(
 operator|(
 name|R_FLAGS
@@ -309,14 +309,14 @@ argument_list|,
 name|REGS
 argument_list|)
 expr_stmt|;
-name|N_PUSH
+name|PUSH
 argument_list|(
 name|R_CS
 argument_list|,
 name|REGS
 argument_list|)
 expr_stmt|;
-name|N_PUSH
+name|PUSH
 argument_list|(
 name|R_IP
 argument_list|,
@@ -329,7 +329,7 @@ operator|~
 name|PSL_VIF
 expr_stmt|;
 comment|/* disable interrupts */
-name|N_PUTVEC
+name|PUTVEC
 argument_list|(
 name|R_CS
 argument_list|,
@@ -546,7 +546,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|GETPTR
+name|MAKEPTR
 argument_list|(
 name|sc
 operator|->
@@ -1103,9 +1103,9 @@ operator|(
 operator|&
 name|sf
 operator|->
-name|sf_siginfo
+name|sf_uc
 operator|.
-name|si_sc
+name|uc_mcontext
 operator|)
 decl_stmt|;
 if|if
@@ -1124,9 +1124,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|sf
 operator|->
-name|sf_arg2
+name|sf_siginfo
 operator|!=
 literal|0
 condition|)
@@ -1135,25 +1138,32 @@ name|fatal
 argument_list|(
 literal|"SIGBUS code %d, trapno: %d, err: %d\n"
 argument_list|,
-name|sf
-operator|->
-name|sf_arg2
-argument_list|,
-name|sf
-operator|->
-name|sf_siginfo
-operator|.
-name|si_sc
-operator|.
-name|sc_trapno
-argument_list|,
+operator|(
+name|int
+operator|)
 name|sf
 operator|->
 name|sf_siginfo
+argument_list|,
+name|sf
+operator|->
+name|sf_uc
 operator|.
-name|si_sc
+name|uc_mcontext
 operator|.
-name|sc_err
+name|mc_tf
+operator|.
+name|tf_trapno
+argument_list|,
+name|sf
+operator|->
+name|sf_uc
+operator|.
+name|uc_mcontext
+operator|.
+name|mc_tf
+operator|.
+name|tf_err
 argument_list|)
 expr_stmt|;
 block|}
@@ -1163,7 +1173,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_CS
 argument_list|,
@@ -1332,7 +1342,7 @@ expr_stmt|;
 name|R_IP
 operator|++
 expr_stmt|;
-name|N_PUSH
+name|PUSH
 argument_list|(
 operator|(
 name|R_FLAGS
@@ -1360,7 +1370,7 @@ name|IRET
 case|:
 name|R_IP
 operator|=
-name|N_POP
+name|POP
 argument_list|(
 name|REGS
 argument_list|)
@@ -1368,7 +1378,7 @@ expr_stmt|;
 comment|/* get new cs:ip off the stack */
 name|R_CS
 operator|=
-name|N_POP
+name|POP
 argument_list|(
 name|REGS
 argument_list|)
@@ -1410,7 +1420,7 @@ expr_stmt|;
 comment|/* get flags from stack */
 name|tempflags
 operator|=
-name|N_POP
+name|POP
 argument_list|(
 name|REGS
 argument_list|)
@@ -1805,7 +1815,7 @@ name|func
 operator|=
 name|find_callback
 argument_list|(
-name|N_GETVEC
+name|MAKEVEC
 argument_list|(
 name|R_CS
 argument_list|,
@@ -1908,9 +1918,9 @@ operator|(
 operator|&
 name|sf
 operator|->
-name|sf_siginfo
+name|sf_uc
 operator|.
-name|si_sc
+name|uc_mcontext
 operator|)
 decl_stmt|;
 if|if
@@ -2014,9 +2024,9 @@ operator|(
 operator|&
 name|sf
 operator|->
-name|sf_siginfo
+name|sf_uc
 operator|.
-name|si_sc
+name|uc_mcontext
 operator|)
 decl_stmt|;
 if|if
@@ -2064,9 +2074,12 @@ directive|ifdef
 name|__FreeBSD__
 name|trapno
 operator|=
+operator|(
+name|int
+operator|)
 name|sf
 operator|->
-name|sf_arg2
+name|sf_siginfo
 expr_stmt|;
 comment|/* XXX GROSTIC HACK ALERT */
 else|#
@@ -2094,7 +2107,7 @@ name|intnum
 operator|=
 literal|1
 expr_stmt|;
-name|N_PUSH
+name|PUSH
 argument_list|(
 operator|(
 name|R_FLAGS
@@ -2116,14 +2129,14 @@ argument_list|,
 name|REGS
 argument_list|)
 expr_stmt|;
-name|N_PUSH
+name|PUSH
 argument_list|(
 name|R_CS
 argument_list|,
 name|REGS
 argument_list|)
 expr_stmt|;
-name|N_PUSH
+name|PUSH
 argument_list|(
 name|R_IP
 argument_list|,
@@ -2135,7 +2148,7 @@ operator|&=
 operator|~
 name|PSL_T
 expr_stmt|;
-name|N_PUTVEC
+name|PUTVEC
 argument_list|(
 name|R_CS
 argument_list|,
@@ -2183,9 +2196,9 @@ operator|(
 operator|&
 name|sf
 operator|->
-name|sf_siginfo
+name|sf_uc
 operator|.
-name|si_sc
+name|uc_mcontext
 operator|)
 decl_stmt|;
 if|if
@@ -2253,9 +2266,9 @@ operator|(
 operator|&
 name|sf
 operator|->
-name|sf_siginfo
+name|sf_uc
 operator|.
-name|si_sc
+name|uc_mcontext
 operator|)
 decl_stmt|;
 if|if
@@ -2321,9 +2334,9 @@ operator|(
 operator|&
 name|sf
 operator|->
-name|sf_siginfo
+name|sf_uc
 operator|.
-name|si_sc
+name|uc_mcontext
 operator|)
 decl_stmt|;
 name|fprintf
@@ -2376,9 +2389,9 @@ operator|(
 operator|&
 name|sf
 operator|->
-name|sf_siginfo
+name|sf_uc
 operator|.
-name|si_sc
+name|uc_mcontext
 operator|)
 decl_stmt|;
 if|if

@@ -551,7 +551,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_CS
 argument_list|,
@@ -596,7 +596,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_CS
 argument_list|,

@@ -877,7 +877,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_ES
 argument_list|,
@@ -1098,7 +1098,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_ES
 argument_list|,
@@ -1165,7 +1165,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_ES
 argument_list|,
@@ -1478,7 +1478,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_ES
 argument_list|,
@@ -1585,7 +1585,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_ES
 argument_list|,
@@ -1650,7 +1650,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_ES
 argument_list|,

@@ -613,7 +613,7 @@ argument_list|,
 name|R_DX
 argument_list|)
 expr_stmt|;
-name|N_PUTVEC
+name|PUTVEC
 argument_list|(
 name|R_ES
 argument_list|,

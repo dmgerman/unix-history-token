@@ -939,7 +939,7 @@ operator|(
 name|u_short
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_SS
 argument_list|,
@@ -1898,7 +1898,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_DS
 argument_list|,
@@ -1912,7 +1912,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_ES
 argument_list|,
@@ -2519,7 +2519,7 @@ operator|(
 name|CDS
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_ES
 argument_list|,
@@ -2577,7 +2577,7 @@ operator|(
 name|SFT
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_ES
 argument_list|,
@@ -3232,7 +3232,7 @@ operator|(
 name|LOL
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_BX
 argument_list|,
@@ -3246,7 +3246,7 @@ operator|(
 name|SDA
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_DI
 argument_list|,

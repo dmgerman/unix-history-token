@@ -56,7 +56,7 @@ name|R_AL
 expr_stmt|;
 name|R_AX
 operator|=
-name|N_POP
+name|POP
 argument_list|(
 name|REGS
 argument_list|)
@@ -173,7 +173,7 @@ argument_list|,
 literal|"***\n"
 argument_list|)
 expr_stmt|;
-name|N_PUSH
+name|PUSH
 argument_list|(
 name|R_AX
 argument_list|,

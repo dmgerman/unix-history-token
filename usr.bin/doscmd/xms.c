@@ -1679,7 +1679,7 @@ case|case
 literal|0x10
 case|:
 comment|/* get handler address */
-name|N_PUTVEC
+name|PUTVEC
 argument_list|(
 name|R_ES
 argument_list|,
@@ -2561,7 +2561,7 @@ expr|struct
 name|EMM
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_DS
 argument_list|,

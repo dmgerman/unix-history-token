@@ -2492,7 +2492,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_DS
 argument_list|,
@@ -2581,7 +2581,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_DS
 argument_list|,
@@ -2855,10 +2855,7 @@ name|n
 operator|=
 name|tty_peek
 argument_list|(
-operator|&
 name|REGS
-operator|->
-name|sc
 argument_list|,
 name|poll_cnt
 condition|?
@@ -3082,7 +3079,7 @@ argument_list|)
 expr_stmt|;
 name|disk_transfer_addr
 operator|=
-name|N_GETVEC
+name|MAKEVEC
 argument_list|(
 name|R_DS
 argument_list|,
@@ -3162,7 +3159,7 @@ index|[
 name|R_AL
 index|]
 operator|=
-name|N_GETVEC
+name|MAKEVEC
 argument_list|(
 name|R_DS
 argument_list|,
@@ -3671,7 +3668,7 @@ modifier|*
 name|REGS
 parameter_list|)
 block|{
-name|N_PUTVEC
+name|PUTVEC
 argument_list|(
 name|R_ES
 argument_list|,
@@ -4001,7 +3998,7 @@ modifier|*
 name|REGS
 parameter_list|)
 block|{
-name|N_PUTVEC
+name|PUTVEC
 argument_list|(
 name|R_ES
 argument_list|,
@@ -4035,7 +4032,7 @@ modifier|*
 name|REGS
 parameter_list|)
 block|{
-name|N_PUTVEC
+name|PUTVEC
 argument_list|(
 name|R_ES
 argument_list|,
@@ -4172,14 +4169,14 @@ operator|(
 name|char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_DS
 argument_list|,
 name|R_DX
 argument_list|)
 expr_stmt|;
-name|N_PUTVEC
+name|PUTVEC
 argument_list|(
 name|countryinfo
 operator|.
@@ -4252,7 +4249,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_DS
 argument_list|,
@@ -4365,7 +4362,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_ES
 argument_list|,
@@ -4488,7 +4485,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_DS
 argument_list|,
@@ -4504,7 +4501,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_DS
 argument_list|,
@@ -4575,7 +4572,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_DS
 argument_list|,
@@ -4609,7 +4606,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_DS
 argument_list|,
@@ -4677,7 +4674,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_DS
 argument_list|,
@@ -4711,7 +4708,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_DS
 argument_list|,
@@ -5132,7 +5129,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_DS
 argument_list|,
@@ -5295,7 +5292,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_DS
 argument_list|,
@@ -5676,7 +5673,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_DS
 argument_list|,
@@ -6208,7 +6205,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_DS
 argument_list|,
@@ -6463,7 +6460,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_DS
 argument_list|,
@@ -6482,7 +6479,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_DS
 argument_list|,
@@ -6516,7 +6513,7 @@ operator|(
 name|u_short
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_ES
 argument_list|,
@@ -6731,7 +6728,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_DS
 argument_list|,
@@ -7235,7 +7232,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_DS
 argument_list|,
@@ -7360,7 +7357,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_DS
 argument_list|,
@@ -7371,7 +7368,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_ES
 argument_list|,
@@ -7913,7 +7910,7 @@ expr|struct
 name|fcb
 operator|*
 operator|)
-name|GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_DS
 argument_list|,
@@ -8583,7 +8580,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_DS
 argument_list|,
@@ -8594,7 +8591,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_ES
 argument_list|,
@@ -8613,7 +8610,7 @@ literal|"%d %s, FCB: %d, %.11s\n"
 argument_list|,
 name|nbytes
 argument_list|,
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_DS
 argument_list|,
@@ -8625,14 +8622,14 @@ operator|(
 name|int
 operator|*
 operator|)
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_ES
 argument_list|,
 name|R_DI
 argument_list|)
 argument_list|,
-name|N_GETPTR
+name|MAKEPTR
 argument_list|(
 name|R_ES
 argument_list|,
