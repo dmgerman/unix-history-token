@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)iostat.c	5.10 (Berkeley) %G%"
+literal|"@(#)iostat.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -382,7 +382,6 @@ comment|/* XXX */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|void
 name|cpustats
 name|__P
@@ -391,7 +390,11 @@ operator|(
 name|void
 operator|)
 argument_list|)
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|dkstats
 name|__P
 argument_list|(
@@ -399,7 +402,27 @@ operator|(
 name|void
 operator|)
 argument_list|)
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|err
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|phdr
 name|__P
 argument_list|(
@@ -411,25 +434,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|void
 name|usage
 name|__P
 argument_list|(
 operator|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|,
-name|err
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
 operator|)
 argument_list|)
 decl_stmt|;
