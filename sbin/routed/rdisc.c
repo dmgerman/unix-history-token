@@ -3,54 +3,32 @@ begin_comment
 comment|/*  * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|lint
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|sgi
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
+literal|0
 end_if
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)rdisc.c	8.1 (Berkeley) x/y/95"
-decl_stmt|;
-end_decl_stmt
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-end_elif
+begin_endif
+unit|static char sccsid[] = "@(#)rdisc.c	8.1 (Berkeley) x/y/95";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD$"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,9 +37,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_empty
-empty|#ident "$Revision: 1.20 $"
-end_empty
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
@@ -1045,7 +1023,7 @@ condition|)
 return|return;
 name|trace_act
 argument_list|(
-literal|"start suppying routes"
+literal|"start supplying routes"
 argument_list|)
 expr_stmt|;
 comment|/* Forget discovered routes. 	 */
@@ -1197,7 +1175,7 @@ name|dr
 modifier|*
 name|drp
 decl_stmt|;
-comment|/* If only adverising, then do only that. */
+comment|/* If only advertising, then do only that. */
 if|if
 condition|(
 name|supplier
@@ -1218,7 +1196,7 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
-comment|/* If we are being told about a bad router, 	 * then age the discovered default route, and if there is 	 * no alternative, solicite a replacement. 	 */
+comment|/* If we are being told about a bad router, 	 * then age the discovered default route, and if there is 	 * no alternative, solicit a replacement. 	 */
 if|if
 condition|(
 name|bad_gate
@@ -2383,7 +2361,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* look for the least valueable entry to reuse 			 */
+comment|/* look for the least valuable entry to reuse 			 */
 if|if
 condition|(
 operator|(
@@ -2634,7 +2612,7 @@ parameter_list|,
 name|naddr
 name|dst
 parameter_list|,
-comment|/* 0 or unicast destination */
+comment|/* 0 or UNICAST destination */
 name|int
 name|type
 parameter_list|)
@@ -2705,7 +2683,7 @@ block|{
 case|case
 literal|0
 case|:
-comment|/* unicast */
+comment|/* UNICAST */
 default|default:
 name|msg
 operator|=
@@ -2798,7 +2776,7 @@ comment|/* select the right interface. */
 ifdef|#
 directive|ifdef
 name|MCAST_PPP_BUG
-comment|/* Do not specifiy the primary interface explicitly 			 * if we have the multicast point-to-point kernel 			 * bug, since the kernel will do the wrong thing 			 * if the local address of a point-to-point link 			 * is the same as the address of an ordinary 			 * interface. 			 */
+comment|/* Do not specify the primary interface explicitly 			 * if we have the multicast point-to-point kernel 			 * bug, since the kernel will do the wrong thing 			 * if the local address of a point-to-point link 			 * is the same as the address of an ordinary 			 * interface. 			 */
 if|if
 condition|(
 name|ifp
@@ -3008,7 +2986,7 @@ parameter_list|,
 name|naddr
 name|dst
 parameter_list|,
-comment|/* 0 or unicast destination */
+comment|/* 0 or UNICAST destination */
 name|int
 name|type
 parameter_list|)

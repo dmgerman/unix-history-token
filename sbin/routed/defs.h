@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)defs.h	8.1 (Berkeley) 6/5/93  *	$Id$  */
+comment|/*  * Copyright (c) 1983, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)defs.h	8.1 (Berkeley) 6/5/93  *	$Id: defs.h,v 1.9 1997/02/22 14:33:11 peter Exp $  */
 end_comment
 
 begin_comment
-comment|/* Definitions for RIPv2 routing process.  *  * This code is based on the 4.4BSD `routed` daemon, with extensions to  * support:  *	RIPv2, including variable length subnet masks.  *	Router Discovery  *	aggregate routes in the kernel tables.  *	aggregate advertised routes.  *	maintain spare routes for faster selection of another gateway  *		when the current gateway dies.  *	timers on routes with second granularity so that selection  *		of a new route does not wait 30-60 seconds.  *	tolerance of static routes.  *	tell the kernel hop counts  *	do not advertise if ipforwarding=0  *  * The vestigual support for other protocols has been removed.  There  * is no likelihood that IETF RIPv1 or RIPv2 will ever be used with  * other protocols.  The result is far smaller, faster, cleaner, and  * perhaps understandable.  *  * The accumulation of special flags and kludges added over the many  * years have been simplified and integrated.  */
+comment|/* Definitions for RIPv2 routing process.  *  * This code is based on the 4.4BSD `routed` daemon, with extensions to  * support:  *	RIPv2, including variable length subnet masks.  *	Router Discovery  *	aggregate routes in the kernel tables.  *	aggregate advertised routes.  *	maintain spare routes for faster selection of another gateway  *		when the current gateway dies.  *	timers on routes with second granularity so that selection  *		of a new route does not wait 30-60 seconds.  *	tolerance of static routes.  *	tell the kernel hop counts  *	do not advertise if ipforwarding=0  *  * The vestigial support for other protocols has been removed.  There  * is no likelihood that IETF RIPv1 or RIPv2 will ever be used with  * other protocols.  The result is far smaller, faster, cleaner, and  * perhaps understandable.  *  * The accumulation of special flags and kludges added over the many  * years have been simplified and integrated.  */
 end_comment
 
 begin_include
@@ -1418,7 +1418,7 @@ define|#
 directive|define
 name|AGS_SUPPRESS
 value|0x001
-comment|/* combine with coaser mask */
+comment|/* combine with coarser mask */
 define|#
 directive|define
 name|AGS_PROMOTE
@@ -1464,7 +1464,7 @@ define|#
 directive|define
 name|AGS_CORS_GATE
 value|0x100
-comment|/* ignore differing gate when this 					 * has the coarser netmaks */
+comment|/* ignore differing gate when this 					 * has the coarser netmasks */
 define|#
 directive|define
 name|AGS_SPLIT_HZ
@@ -1806,7 +1806,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 1=must continue adverising it */
+comment|/* 1=must continue advertising it */
 end_comment
 
 begin_decl_stmt

@@ -3,54 +3,32 @@ begin_comment
 comment|/*  * Copyright (c) 1983, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|lint
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|sgi
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
+literal|0
 end_if
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)tables.c	8.1 (Berkeley) 6/5/93"
-decl_stmt|;
-end_decl_stmt
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-end_elif
+begin_endif
+unit|static char sccsid[] = "@(#)tables.c	8.1 (Berkeley) 6/5/93";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD$"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,6 +36,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
@@ -463,7 +445,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Flush routes waiting for aggretation.  *	This must not suppress a route unless it is known that among all  *	routes with coarser masks that match it, the one with the longest  *	mask is appropriate.  This is ensured by scanning the routes  *	in lexical order, and with the most restritive mask first  *	among routes to the same destination.  */
+comment|/* Flush routes waiting for aggregation.  *	This must not suppress a route unless it is known that among all  *	routes with coarser masks that match it, the one with the longest  *	mask is appropriate.  This is ensured by scanning the routes  *	in lexical order, and with the most restrictive mask first  *	among routes to the same destination.  */
 end_comment
 
 begin_function
@@ -951,7 +933,7 @@ operator|>=
 name|mask
 condition|)
 break|break;
-comment|/* Suppress old routes (i.e. combine with compatible routes 		 * with coarser masks) as we look for the right slot in the 		 * aggregation table for the new route. 		 * A route to an address less than the current destination 		 * will not be affected by the current route or any route 		 * seen hereafter.  That means it is safe to suppress it. 		 * This check keeps poor routes (eg. with large hop counts) 		 * from preventing suppresion of finer routes. 		 */
+comment|/* Suppress old routes (i.e. combine with compatible routes 		 * with coarser masks) as we look for the right slot in the 		 * aggregation table for the new route. 		 * A route to an address less than the current destination 		 * will not be affected by the current route or any route 		 * seen hereafter.  That means it is safe to suppress it. 		 * This check keeps poor routes (e.g. with large hop counts) 		 * from preventing suppression of finer routes. 		 */
 if|if
 condition|(
 name|ag_cors
@@ -2855,13 +2837,15 @@ expr|struct
 name|khash
 operator|*
 operator|)
-name|malloc
+name|rtmalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
 name|k
 argument_list|)
+argument_list|,
+literal|"kern_add"
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -3783,9 +3767,15 @@ return|return;
 block|}
 name|buf
 operator|=
-name|malloc
+operator|(
+name|char
+operator|*
+operator|)
+name|rtmalloc
 argument_list|(
 name|needed
+argument_list|,
+literal|"flush_kern"
 argument_list|)
 expr_stmt|;
 if|if

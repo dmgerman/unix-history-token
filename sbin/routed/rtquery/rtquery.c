@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rtquery.c,v 1.7 1998/01/14 07:17:12 charnier Exp $"
+literal|"$Id: rtquery.c,v 1.8 1998/07/22 05:49:36 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -489,8 +489,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function
+begin_function_decl
+specifier|static
 name|void
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|int
 name|main
 parameter_list|(
 name|int
@@ -643,9 +653,9 @@ name|wtime
 operator|<=
 literal|0
 condition|)
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 break|break;
 case|case
 literal|'r'
@@ -658,9 +668,9 @@ if|if
 condition|(
 name|rflag
 condition|)
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 name|rflag
 operator|=
 name|getnet
@@ -698,27 +708,20 @@ name|hp
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"rtquery: %s:"
-argument_list|,
-name|optarg
-argument_list|)
-expr_stmt|;
-name|herror
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s: %s"
+argument_list|,
+name|optarg
+argument_list|,
+name|hstrerror
+argument_list|(
+name|h_errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|bcopy
 argument_list|(
 name|hp
@@ -864,9 +867,9 @@ argument_list|)
 operator|>
 name|MAXPATHLEN
 condition|)
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 break|break;
 case|case
 name|TRACE_MORE
@@ -875,9 +878,9 @@ if|if
 condition|(
 name|value
 condition|)
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 name|OMSG
 operator|.
 name|rip_cmd
@@ -896,9 +899,9 @@ if|if
 condition|(
 name|value
 condition|)
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 name|OMSG
 operator|.
 name|rip_cmd
@@ -917,9 +920,9 @@ if|if
 condition|(
 name|value
 condition|)
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 name|OMSG
 operator|.
 name|rip_cmd
@@ -932,9 +935,9 @@ literal|"dump/../table"
 expr_stmt|;
 break|break;
 default|default:
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 block|}
 name|strcpy
 argument_list|(
@@ -986,9 +989,9 @@ condition|(
 operator|!
 name|p
 condition|)
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 operator|*
 name|p
 operator|++
@@ -1025,9 +1028,9 @@ operator|=
 name|RIP_AUTH_MD5
 expr_stmt|;
 else|else
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 literal|0
@@ -1050,9 +1053,9 @@ name|passwd
 argument_list|)
 argument_list|)
 condition|)
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|auth_type
@@ -1089,9 +1092,9 @@ name|p
 operator|!=
 literal|'\0'
 condition|)
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -1101,15 +1104,15 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 block|}
 break|break;
 default|default:
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 block|}
 name|argv
 operator|+=
@@ -1131,26 +1134,9 @@ name|argc
 operator|==
 literal|0
 condition|)
-block|{
 name|usage
-label|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s\n%s\n"
-argument_list|,
-literal|"usage: rtquery [-np1v] [-r addr] [-w timeout] [-a secret] host ..."
-argument_list|,
-literal|"       rtquery [-t op] host ..."
-argument_list|)
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|s
 operator|=
 name|socket
@@ -1246,7 +1232,37 @@ argument_list|,
 name|argc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* NOTREACHED */
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s\n%s\n"
+argument_list|,
+literal|"usage: rtquery [-np1v] [-r addr] [-w timeout] [-a secret] host ..."
+argument_list|,
+literal|"       rtquery [-t op] host ..."
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

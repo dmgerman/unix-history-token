@@ -3,54 +3,32 @@ begin_comment
 comment|/*  * Copyright (c) 1983, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|lint
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|sgi
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
+literal|0
 end_if
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)output.c	8.1 (Berkeley) 6/5/93"
-decl_stmt|;
-end_decl_stmt
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-end_elif
+begin_endif
+unit|static char sccsid[] = "@(#)output.c	8.1 (Berkeley) 6/5/93";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD$"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,9 +37,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_empty
-empty|#ident "$Revision: 1.21 $"
-end_empty
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
@@ -527,7 +505,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|MCAST_PPP_BUG
-comment|/* Do not specifiy the primary interface 				 * explicitly if we have the multicast 				 * point-to-point kernel bug, since the 				 * kernel will do the wrong thing if the 				 * local address of a point-to-point link 				 * is the same as the address of an ordinary 				 * interface. 				 */
+comment|/* Do not specify the primary interface 				 * explicitly if we have the multicast 				 * point-to-point kernel bug, since the 				 * kernel will do the wrong thing if the 				 * local address of a point-to-point link 				 * is the same as the address of an ordinary 				 * interface. 				 */
 if|if
 condition|(
 name|ifp
@@ -758,7 +736,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Find the first key for a packet to send.  * Try for a key that is eligable and has not expired, but settle for  * the last key if they have all expired.  * If no key is ready yet, give up.  */
+comment|/* Find the first key for a packet to send.  * Try for a key that is eligible and has not expired, but settle for  * the last key if they have all expired.  * If no key is ready yet, give up.  */
 end_comment
 
 begin_function
@@ -1293,7 +1271,7 @@ modifier|*
 name|wb
 parameter_list|)
 block|{
-comment|/* Output multicast only if legal. 	 * If we would multcast and it would be illegal, then discard the 	 * packet. 	 */
+comment|/* Output multicast only if legal. 	 * If we would multicast and it would be illegal, then discard the 	 * packet. 	 */
 switch|switch
 condition|(
 name|wb
@@ -2029,7 +2007,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/* Do not send automatic synthetic network routes 			 * if they are not needed becaus no RIPv1 listeners 			 * can hear them. 			 */
+comment|/* Do not send automatic synthetic network routes 			 * if they are not needed because no RIPv1 listeners 			 * can hear them. 			 */
 if|if
 condition|(
 name|ws
