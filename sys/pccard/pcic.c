@@ -392,10 +392,6 @@ struct|struct
 name|pcic_slot
 block|{
 name|int
-name|slotnum
-decl_stmt|;
-comment|/* My slot number */
-name|int
 name|index
 decl_stmt|;
 comment|/* Index register */
@@ -2266,18 +2262,6 @@ expr_stmt|;
 comment|/* 		 *	OK it seems we have a PCIC or lookalike. 		 *	Allocate a slot and initialise the data structures. 		 */
 name|validslots
 operator|++
-expr_stmt|;
-name|sp
-operator|->
-name|slotnum
-operator|=
-name|slotnum
-operator|+
-name|sc
-operator|->
-name|unit
-operator|*
-name|PCIC_CARD_SLOTS
 expr_stmt|;
 name|sp
 operator|->
