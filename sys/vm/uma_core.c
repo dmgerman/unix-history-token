@@ -7890,6 +7890,17 @@ name|cpu
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * The "UMA Zones" zone (master zone) does not have pcpu 		 * caches allocated for it, so the above computation is entirely 		 * bogus.  Re-set cachefree to 0 in that case. 		 */
+if|if
+condition|(
+name|z
+operator|==
+name|zones
+condition|)
+name|cachefree
+operator|=
+literal|0
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|bucket
