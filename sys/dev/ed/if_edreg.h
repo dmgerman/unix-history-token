@@ -392,6 +392,16 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ED_P1_PAR
+parameter_list|(
+name|i
+parameter_list|)
+value|(ED_P1_PAR0 + i)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ED_P1_CURR
 value|0x07
 end_define
@@ -487,6 +497,16 @@ end_define
 begin_comment
 comment|/* Multicast Address Register 7 */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_P1_MAR
+parameter_list|(
+name|i
+parameter_list|)
+value|(ED_P1_MAR0 + i)
+end_define
 
 begin_comment
 comment|/*  * Page 2 register offsets  */
@@ -3138,16 +3158,31 @@ end_define
 begin_define
 define|#
 directive|define
-name|ED_PC_RESET
-value|0x1f
+name|ED_PC_ASIC_OFFSET
+value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|ED_PC_MISC
-value|0x18
+name|ED_PC_RESET
+value|0x0f
 end_define
+
+begin_comment
+comment|/* Reset(offset from ASIC base) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_PC_MISC
+value|0x08
+end_define
+
+begin_comment
+comment|/* Misc (offset from ASIC base) */
+end_comment
 
 begin_comment
 comment|/*   * if_ze.h  constants  */
