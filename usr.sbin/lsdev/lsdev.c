@@ -860,26 +860,78 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"%-10.10s %-2.2s %-10.10s %s\n"
+literal|"%-10.10s "
 argument_list|,
 literal|"Device"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vflag
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%-2.2s %-10.10s "
 argument_list|,
 literal|"St"
 argument_list|,
 literal|"Parent"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"%-15.15s "
+argument_list|,
+literal|"State"
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"%s\n"
 argument_list|,
 literal|"Description"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-10.10s %-2.2s %-10.10s %s\n"
+literal|"%-10.10s "
 argument_list|,
 literal|"----------"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vflag
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%-2.2s %-10.10s "
 argument_list|,
 literal|"--"
 argument_list|,
 literal|"----------"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"%-15.15s "
+argument_list|,
+literal|"---------------"
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"%s\n"
 argument_list|,
 literal|"--------------------------------------------------"
 argument_list|)
@@ -904,6 +956,27 @@ block|,
 literal|"I"
 block|,
 literal|"B"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|longstates
+index|[]
+init|=
+block|{
+literal|"Unknown"
+block|,
+literal|"Unconfigured"
+block|,
+literal|"Idle"
+block|,
+literal|"Busy"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -945,6 +1018,11 @@ operator|->
 name|dc_unit
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vflag
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"%-10.10s %2.2s "
@@ -1006,9 +1084,32 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"%-10.10s %s\n"
+literal|"%-10.10s "
 argument_list|,
 name|buf
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"%-10.10s %-15.15s "
+argument_list|,
+name|buf
+argument_list|,
+name|longstates
+index|[
+name|dc
+operator|->
+name|dc_state
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"%s\n"
 argument_list|,
 name|dc
 operator|->
