@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_disksubr.c	8.5 (Berkeley) 1/21/94  * $Id: ufs_disksubr.c,v 1.33 1997/11/07 08:53:36 phk Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_disksubr.c	8.5 (Berkeley) 1/21/94  * $Id: ufs_disksubr.c,v 1.34 1998/02/20 13:37:40 bde Exp $  */
 end_comment
 
 begin_include
@@ -1366,7 +1366,7 @@ name|char
 modifier|*
 name|sname
 decl_stmt|;
-name|int
+name|daddr_t
 name|sn
 decl_stmt|;
 if|if
@@ -1451,8 +1451,11 @@ modifier|*
 name|pr
 call|)
 argument_list|(
-literal|"%d"
+literal|"%ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|sn
 argument_list|)
 expr_stmt|;
@@ -1474,8 +1477,11 @@ modifier|*
 name|pr
 call|)
 argument_list|(
-literal|"%d of "
+literal|"%ld of "
 argument_list|,
+operator|(
+name|long
+operator|)
 name|sn
 argument_list|)
 expr_stmt|;
@@ -1485,12 +1491,19 @@ modifier|*
 name|pr
 call|)
 argument_list|(
-literal|"%d-%d"
+literal|"%ld-%ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|bp
 operator|->
 name|b_blkno
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|bp
 operator|->
 name|b_blkno
@@ -1504,6 +1517,7 @@ literal|1
 operator|)
 operator|/
 name|DEV_BSIZE
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1557,21 +1571,32 @@ modifier|*
 name|pr
 call|)
 argument_list|(
-literal|" (%s bn %d; cn %d"
+literal|" (%s bn %ld; cn %ld"
 argument_list|,
 name|sname
 argument_list|,
+operator|(
+name|long
+operator|)
 name|sn
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|sn
 operator|/
 name|lp
 operator|->
 name|d_secpercyl
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|sn
 operator|%=
+operator|(
+name|long
+operator|)
 name|lp
 operator|->
 name|d_secpercyl
@@ -1581,19 +1606,29 @@ modifier|*
 name|pr
 call|)
 argument_list|(
-literal|" tn %d sn %d)"
+literal|" tn %ld sn %ld)"
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|sn
 operator|/
 name|lp
 operator|->
 name|d_nsectors
+argument_list|)
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|sn
 operator|%
 name|lp
 operator|->
 name|d_nsectors
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
