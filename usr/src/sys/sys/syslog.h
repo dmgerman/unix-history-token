@@ -1,312 +1,87 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)syslog.h	4.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)syslog.h	4.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  *  Declarations for system logging program  *  *	These are used as the first parameter to syslog().  */
-end_comment
-
-begin_comment
-comment|/* kernel priorities */
+comment|/*  *  Facility codes  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|KERN_EMERG
-value|1
+name|LOG_KERN
+value|(0<<3)
 end_define
 
 begin_comment
-comment|/* emergency -- send to all users (wall) */
+comment|/* kernel messages */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|KERN_ALERT
-value|2
+name|LOG_USER
+value|(1<<3)
 end_define
 
 begin_comment
-comment|/* alert -- system failure */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KERN_ERR
-value|3
-end_define
-
-begin_comment
-comment|/* hard errors */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KERN_FAIL
-value|4
-end_define
-
-begin_comment
-comment|/* table full/overflow */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KERN_RECOV
-value|5
-end_define
-
-begin_comment
-comment|/* recoverable errors (softecc) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KERN_INFO
-value|6
-end_define
-
-begin_comment
-comment|/* inconsistency/configuration error */
-end_comment
-
-begin_comment
-comment|/* user abnormal conditions priorities */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOG_EMERG
-value|7
-end_define
-
-begin_comment
-comment|/* system unusable -- send to all users */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOG_ALERT
-value|8
-end_define
-
-begin_comment
-comment|/* missing files (e.g., /etc/utmp) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOG_CRIT
-value|9
-end_define
-
-begin_comment
-comment|/* critical conditions */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOG_ERR
-value|10
-end_define
-
-begin_comment
-comment|/* init open faliures/fatal daemon errors */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOG_FAIL
-value|11
-end_define
-
-begin_comment
-comment|/* getty failing, interface dropped */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOG_WARNING
-value|12
-end_define
-
-begin_comment
-comment|/* non-fatal daemon errs */
-end_comment
-
-begin_comment
-comment|/* user priorities */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOG_SALERT
-value|13
-end_define
-
-begin_comment
-comment|/* important information */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOG_SECURITY
-value|14
-end_define
-
-begin_comment
-comment|/* root/su logins */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOG_FIXED
-value|15
-end_define
-
-begin_comment
-comment|/* abnormal condition fixed (recovery action) */
+comment|/* random user-level messages */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|LOG_MAIL
-value|16
+value|(2<<3)
 end_define
 
 begin_comment
-comment|/* mail failures */
+comment|/* mail system */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|LOG_REJECT
-value|17
+name|LOG_DAEMON
+value|(3<<3)
 end_define
 
 begin_comment
-comment|/* login/daemon rejections */
+comment|/* system daemons */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|LOG_NOTICE
-value|18
+name|LOG_AUTH
+value|(4<<3)
 end_define
 
 begin_comment
-comment|/* important info */
+comment|/* security/authorization messages */
 end_comment
 
 begin_comment
-comment|/* user information priorities */
+comment|/* codes 5 - 15 reserved for system use */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|LOG_INFO
-value|19
+name|LOG_LOCAL0
+value|(16<<3)
 end_define
 
 begin_comment
-comment|/* informational message */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOG_INFO1
-value|20
-end_define
-
-begin_comment
-comment|/* informational message */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOG_INFO2
-value|21
-end_define
-
-begin_comment
-comment|/* informational message */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOG_INFO3
-value|22
-end_define
-
-begin_comment
-comment|/* informational message */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOG_INFO4
-value|23
-end_define
-
-begin_comment
-comment|/* informational message */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOG_INFO5
-value|24
-end_define
-
-begin_comment
-comment|/* informational message */
-end_comment
-
-begin_comment
-comment|/* user debug/local priorities */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOG_DEBUG
-value|25
-end_define
-
-begin_comment
-comment|/* debugging info */
+comment|/* reserved for local use */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|LOG_LOCAL1
-value|26
+value|(17<<3)
 end_define
 
 begin_comment
@@ -317,7 +92,7 @@ begin_define
 define|#
 directive|define
 name|LOG_LOCAL2
-value|27
+value|(18<<3)
 end_define
 
 begin_comment
@@ -328,7 +103,7 @@ begin_define
 define|#
 directive|define
 name|LOG_LOCAL3
-value|28
+value|(19<<3)
 end_define
 
 begin_comment
@@ -339,7 +114,7 @@ begin_define
 define|#
 directive|define
 name|LOG_LOCAL4
-value|29
+value|(20<<3)
 end_define
 
 begin_comment
@@ -350,7 +125,7 @@ begin_define
 define|#
 directive|define
 name|LOG_LOCAL5
-value|30
+value|(21<<3)
 end_define
 
 begin_comment
@@ -361,11 +136,147 @@ begin_define
 define|#
 directive|define
 name|LOG_LOCAL6
-value|31
+value|(22<<3)
 end_define
 
 begin_comment
 comment|/* reserved for local use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOG_LOCAL7
+value|(23<<3)
+end_define
+
+begin_comment
+comment|/* reserved for local use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOG_NFACILITIES
+value|24
+end_define
+
+begin_comment
+comment|/* maximum number of facilities */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOG_FACMASK
+value|0x03f8
+end_define
+
+begin_comment
+comment|/* mask to extract facility part */
+end_comment
+
+begin_comment
+comment|/*  *  Priorities (these are ordered)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOG_EMERG
+value|0
+end_define
+
+begin_comment
+comment|/* system is unusable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOG_ALERT
+value|1
+end_define
+
+begin_comment
+comment|/* action must be taken immediately */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOG_CRIT
+value|2
+end_define
+
+begin_comment
+comment|/* critical conditions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOG_ERR
+value|3
+end_define
+
+begin_comment
+comment|/* error conditions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOG_WARNING
+value|4
+end_define
+
+begin_comment
+comment|/* warning conditions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOG_NOTICE
+value|5
+end_define
+
+begin_comment
+comment|/* normal but signification condition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOG_INFO
+value|6
+end_define
+
+begin_comment
+comment|/* informational */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOG_DEBUG
+value|7
+end_define
+
+begin_comment
+comment|/* debug-level messages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOG_PRIMASK
+value|0x0007
+end_define
+
+begin_comment
+comment|/* mask to extract priority part */
 end_comment
 
 begin_comment
