@@ -2476,8 +2476,18 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
+end_function
+
+begin_comment
 comment|/*  * callback proc for Parse_Info for rcsinfo templates this routine basically  * copies the matching template onto the end of the tempfile we are setting  * up  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|rcsinfo_proc
@@ -2664,22 +2674,37 @@ operator|)
 return|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * Uses setup_tmpfile() to pass the updated message on directly to any  * logfile programs that have a regular expression match for the checked in  * directory in the source repository.  The log information is fed into the  * specified program as standard input.  */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|FILE
 modifier|*
 name|logfp
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|message
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|List
 modifier|*
 name|changes
 decl_stmt|;
+end_decl_stmt
+
+begin_function
 name|void
 name|Update_Logfile
 parameter_list|(
@@ -2755,7 +2780,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * callback proc to actually do the logfile write from Update_Logfile  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|update_logfile_proc
@@ -2790,7 +2821,13 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * concatenate each filename/version onto str_list  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|title_proc
@@ -3124,7 +3161,13 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Writes some stuff to the logfile "filter" and returns the status of the  * filter program.  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|logfile_write
@@ -3848,8 +3891,17 @@ else|:
 literal|0
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * We choose to use the *last* match within the editinfo file for this  * repository.  This allows us to have a global editinfo program for the  * root of some hierarchy, for example, and different ones within different  * sub-directories of the root (like a special checker for changes made to  * the "src" directory versus changes made to the "doc" or "test"  * directories.  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|editinfo_proc
@@ -3908,7 +3960,13 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  This routine is calld by Parse_Info.  it asigns the name of the  *  message verification script to the global variable verify_script  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|verifymsg_proc
