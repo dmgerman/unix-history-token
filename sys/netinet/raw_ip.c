@@ -1280,6 +1280,17 @@ argument_list|,
 name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOBUFS
+operator|)
+return|;
 name|ip
 operator|=
 name|mtod
