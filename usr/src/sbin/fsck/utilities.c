@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.4 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -974,7 +974,7 @@ literal|0
 expr_stmt|;
 name|bzero
 argument_list|(
-name|cp
+name|buf
 argument_list|,
 name|size
 argument_list|)
