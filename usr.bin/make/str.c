@@ -99,55 +99,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * str_end --  *	Cleanup the strings package  *  */
-end_comment
-
-begin_function
-name|void
-name|str_end
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-if|if
-condition|(
-name|argv
-condition|)
-block|{
-if|if
-condition|(
-name|argv
-index|[
-literal|0
-index|]
-condition|)
-name|free
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|argv
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|buffer
-condition|)
-name|free
-argument_list|(
-name|buffer
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*-  * str_concat --  *	concatenate the two strings, inserting a space or slash between them.  *  * returns --  *	the resulting string in allocated space.  */
 end_comment
 

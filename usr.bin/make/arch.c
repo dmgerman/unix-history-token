@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*-  * arch.c --  *	Functions to manipulate libraries, archives and their members.  *  *	Once again, cacheing/hashing comes into play in the manipulation  * of archives. The first time an archive is referenced, all of its members'  * headers are read and hashed and the archive closed again. All hashed  * archives are kept on a list which is searched each time an archive member  * is referenced.  *  * The interface to this module is:  *	Arch_ParseArchive   	Given an archive specification, return a list  *	    	  	    	of GNode's, one for each member in the spec.  *	    	  	    	FAILURE is returned if the specification is  *	    	  	    	invalid for some reason.  *  *	Arch_Touch	    	Alter the modification time of the archive  *	    	  	    	member described by the given node to be  *	    	  	    	the current time.  *  *	Arch_TouchLib	    	Update the modification time of the library  *	    	  	    	described by the given node. This is special  *	    	  	    	because it also updates the modification time  *	    	  	    	of the library's table of contents.  *  *	Arch_MTime	    	Find the modification time of a member of  *	    	  	    	an archive *in the archive*. The time is also  *	    	  	    	placed in the member's GNode. Returns the  *	    	  	    	modification time.  *  *	Arch_MemTime	    	Find the modification time of a member of  *	    	  	    	an archive. Called when the member doesn't  *	    	  	    	already exist. Looks in the archive for the  *	    	  	    	modification time. Returns the modification  *	    	  	    	time.  *  *	Arch_FindLib	    	Search for a library along a path. The  *	    	  	    	library name in the GNode should be in  *	    	  	    	-l<name> format.  *  *	Arch_LibOODate	    	Special function to decide if a library node  *	    	  	    	is out-of-date.  *  *	Arch_Init 	    	Initialize this module.  *  *	Arch_End 	    	Cleanup this module.  */
+comment|/*-  * arch.c --  *	Functions to manipulate libraries, archives and their members.  *  *	Once again, cacheing/hashing comes into play in the manipulation  * of archives. The first time an archive is referenced, all of its members'  * headers are read and hashed and the archive closed again. All hashed  * archives are kept on a list which is searched each time an archive member  * is referenced.  *  * The interface to this module is:  *	Arch_ParseArchive   	Given an archive specification, return a list  *	    	  	    	of GNode's, one for each member in the spec.  *	    	  	    	FAILURE is returned if the specification is  *	    	  	    	invalid for some reason.  *  *	Arch_Touch	    	Alter the modification time of the archive  *	    	  	    	member described by the given node to be  *	    	  	    	the current time.  *  *	Arch_TouchLib	    	Update the modification time of the library  *	    	  	    	described by the given node. This is special  *	    	  	    	because it also updates the modification time  *	    	  	    	of the library's table of contents.  *  *	Arch_MTime	    	Find the modification time of a member of  *	    	  	    	an archive *in the archive*. The time is also  *	    	  	    	placed in the member's GNode. Returns the  *	    	  	    	modification time.  *  *	Arch_MemTime	    	Find the modification time of a member of  *	    	  	    	an archive. Called when the member doesn't  *	    	  	    	already exist. Looks in the archive for the  *	    	  	    	modification time. Returns the modification  *	    	  	    	time.  *  *	Arch_FindLib	    	Search for a library along a path. The  *	    	  	    	library name in the GNode should be in  *	    	  	    	-l<name> format.  *  *	Arch_LibOODate	    	Special function to decide if a library node  *	    	  	    	is out-of-date.  *  *	Arch_Init 	    	Initialize this module.  */
 end_comment
 
 begin_include
@@ -145,17 +145,6 @@ end_typedef
 
 begin_function_decl
 specifier|static
-name|void
-name|ArchFree
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|struct
 name|ar_hdr
 modifier|*
@@ -242,99 +231,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * ArchFree --  *	Free memory used by an archive  *  * Results:  *	None.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|ArchFree
-parameter_list|(
-name|void
-modifier|*
-name|ap
-parameter_list|)
-block|{
-name|Arch
-modifier|*
-name|a
-init|=
-name|ap
-decl_stmt|;
-name|Hash_Search
-name|search
-decl_stmt|;
-name|Hash_Entry
-modifier|*
-name|entry
-decl_stmt|;
-comment|/* Free memory from hash entries */
-for|for
-control|(
-name|entry
-operator|=
-name|Hash_EnumFirst
-argument_list|(
-operator|&
-name|a
-operator|->
-name|members
-argument_list|,
-operator|&
-name|search
-argument_list|)
-init|;
-name|entry
-operator|!=
-name|NULL
-condition|;
-name|entry
-operator|=
-name|Hash_EnumNext
-argument_list|(
-operator|&
-name|search
-argument_list|)
-control|)
-name|free
-argument_list|(
-name|Hash_GetValue
-argument_list|(
-name|entry
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|a
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|a
-operator|->
-name|fnametab
-argument_list|)
-expr_stmt|;
-name|Hash_DeleteTable
-argument_list|(
-operator|&
-name|a
-operator|->
-name|members
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|a
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Arch_ParseArchive --  *	Parse the archive specification in the given line and find/create  *	the nodes for the specified archive members, placing their nodes  *	on the given list, given the pointer to the start of the  *	specification, a Lst on which to place the nodes, and a context  *	in which to expand variables.  *  * Results:  *	SUCCESS if it was a valid specification. The linePtr is updated  *	to point to the first non-space after the archive spec. The  *	nodes for the members are placed on the given list.  *  * Side Effects:  *	Some nodes may be created. The given list is extended.  *  *-----------------------------------------------------------------------  */
@@ -3939,28 +3835,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{ }
-end_function
-
-begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Arch_End --  *	Cleanup things for this module.  *  * Results:  *	None.  *  * Side Effects:  *	The 'archives' list is freed  *  *-----------------------------------------------------------------------  */
-end_comment
-
-begin_function
-name|void
-name|Arch_End
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|Lst_Destroy
-argument_list|(
-operator|&
-name|archives
-argument_list|,
-name|ArchFree
-argument_list|)
-expr_stmt|;
-block|}
 end_function
 
 end_unit

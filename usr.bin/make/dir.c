@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*-  * dir.c --  *	Directory searching using wildcards and/or normal names...  *	Used both for source wildcarding in the Makefile and for finding  *	implicit sources.  *  * The interface for this module is:  *	Dir_Init  	    Initialize the module.  *  *	Dir_End  	    Cleanup the module.  *  *	Dir_HasWildcards    Returns TRUE if the name given it needs to  *	    	  	    be wildcard-expanded.  *  *	Dir_Expand	    Given a pattern and a path, return a Lst of names  *	    	  	    which match the pattern on the search path.  *  *	Dir_FindFile	    Searches for a file on a given search path.  *	    	  	    If it exists, the entire path is returned.  *	    	  	    Otherwise NULL is returned.  *  *	Dir_MTime 	    Return the modification time of a node. The file  *	    	  	    is searched for along the default search path.  *	    	  	    The path and mtime fields of the node are filled  *	    	  	    in.  *  *	Dir_AddDir	    Add a directory to a search path.  *  *	Dir_MakeFlags	    Given a search path and a command flag, create  *	    	  	    a string with each of the directories in the path  *	    	  	    preceded by the command flag and all of them  *	    	  	    separated by a space.  *  *	Dir_Destroy	    Destroy an element of a search path. Frees up all  *	    	  	    things that can be freed for the element as long  *	    	  	    as the element is no longer referenced by any other  *	    	  	    search path.  *	Dir_ClearPath	    Resets a search path to the empty list.  *  * For debugging:  *	Dir_PrintDirectories	Print stats about the directory cache.  */
+comment|/*-  * dir.c --  *	Directory searching using wildcards and/or normal names...  *	Used both for source wildcarding in the Makefile and for finding  *	implicit sources.  *  * The interface for this module is:  *	Dir_Init  	    Initialize the module.  *  *	Dir_HasWildcards    Returns TRUE if the name given it needs to  *	    	  	    be wildcard-expanded.  *  *	Dir_Expand	    Given a pattern and a path, return a Lst of names  *	    	  	    which match the pattern on the search path.  *  *	Dir_FindFile	    Searches for a file on a given search path.  *	    	  	    If it exists, the entire path is returned.  *	    	  	    Otherwise NULL is returned.  *  *	Dir_MTime 	    Return the modification time of a node. The file  *	    	  	    is searched for along the default search path.  *	    	  	    The path and mtime fields of the node are filled  *	    	  	    in.  *  *	Dir_AddDir	    Add a directory to a search path.  *  *	Dir_MakeFlags	    Given a search path and a command flag, create  *	    	  	    a string with each of the directories in the path  *	    	  	    preceded by the command flag and all of them  *	    	  	    separated by a space.  *  *	Dir_Destroy	    Destroy an element of a search path. Frees up all  *	    	  	    things that can be freed for the element as long  *	    	  	    as the element is no longer referenced by any other  *	    	  	    search path.  *	Dir_ClearPath	    Resets a search path to the empty list.  *  * For debugging:  *	Dir_PrintDirectories	Print stats about the directory cache.  */
 end_comment
 
 begin_include
@@ -282,65 +282,6 @@ operator|->
 name|refCount
 operator|+=
 literal|1
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Dir_End --  *	cleanup things for this module  *  * Results:  *	none  *  * Side Effects:  *	none  *-----------------------------------------------------------------------  */
-end_comment
-
-begin_function
-name|void
-name|Dir_End
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|dot
-operator|->
-name|refCount
-operator|-=
-literal|1
-expr_stmt|;
-name|Dir_Destroy
-argument_list|(
-name|dot
-argument_list|)
-expr_stmt|;
-name|Dir_ClearPath
-argument_list|(
-operator|&
-name|dirSearchPath
-argument_list|)
-expr_stmt|;
-name|Lst_Destroy
-argument_list|(
-operator|&
-name|dirSearchPath
-argument_list|,
-name|NOFREE
-argument_list|)
-expr_stmt|;
-name|Dir_ClearPath
-argument_list|(
-operator|&
-name|openDirectories
-argument_list|)
-expr_stmt|;
-name|Lst_Destroy
-argument_list|(
-operator|&
-name|openDirectories
-argument_list|,
-name|NOFREE
-argument_list|)
-expr_stmt|;
-name|Hash_DeleteTable
-argument_list|(
-operator|&
-name|mtimes
-argument_list|)
 expr_stmt|;
 block|}
 end_function

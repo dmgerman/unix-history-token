@@ -7130,15 +7130,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-name|void
-name|Var_End
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
-end_function
-
 begin_comment
 comment|/****************** PRINT DEBUGGING INFO *****************/
 end_comment

@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*-  * targ.c --  *	Functions for maintaining the Lst allTargets. Target nodes are  * kept in two structures: a Lst, maintained by the list library, and a  * hash table, maintained by the hash library.  *  * Interface:  *	Targ_Init 	    	Initialization procedure.  *  *	Targ_End 	    	Cleanup the module  *  *	Targ_NewGN	    	Create a new GNode for the passed target  *	    	  	    	(string). The node is *not* placed in the  *	    	  	    	hash table, though all its fields are  *	    	  	    	initialized.  *  *	Targ_FindNode	    	Find the node for a given target, creating  *	    	  	    	and storing it if it doesn't exist and the  *	    	  	    	flags are right (TARG_CREATE)  *  *	Targ_FindList	    	Given a list of names, find nodes for all  *	    	  	    	of them. If a name doesn't exist and the  *	    	  	    	TARG_NOCREATE flag was given, an error message  *	    	  	    	is printed. Else, if a name doesn't exist,  *	    	  	    	its node is created.  *  *	Targ_Ignore	    	Return TRUE if errors should be ignored when  *	    	  	    	creating the given target.  *  *	Targ_Silent	    	Return TRUE if we should be silent when  *	    	  	    	creating the given target.  *  *	Targ_Precious	    	Return TRUE if the target is precious and  *	    	  	    	should not be removed if we are interrupted.  *  * Debugging:  *	Targ_PrintGraph	    	Print out the entire graphm all variables  *	    	  	    	and statistics for the directory cache. Should  *	    	  	    	print something for suffixes, too, but...  */
+comment|/*-  * targ.c --  *	Functions for maintaining the Lst allTargets. Target nodes are  * kept in two structures: a Lst, maintained by the list library, and a  * hash table, maintained by the hash library.  *  * Interface:  *	Targ_Init 	    	Initialization procedure.  *  *	Targ_NewGN	    	Create a new GNode for the passed target  *	    	  	    	(string). The node is *not* placed in the  *	    	  	    	hash table, though all its fields are  *	    	  	    	initialized.  *  *	Targ_FindNode	    	Find the node for a given target, creating  *	    	  	    	and storing it if it doesn't exist and the  *	    	  	    	flags are right (TARG_CREATE)  *  *	Targ_FindList	    	Given a list of names, find nodes for all  *	    	  	    	of them. If a name doesn't exist and the  *	    	  	    	TARG_NOCREATE flag was given, an error message  *	    	  	    	is printed. Else, if a name doesn't exist,  *	    	  	    	its node is created.  *  *	Targ_Ignore	    	Return TRUE if errors should be ignored when  *	    	  	    	creating the given target.  *  *	Targ_Silent	    	Return TRUE if we should be silent when  *	    	  	    	creating the given target.  *  *	Targ_Precious	    	Return TRUE if the target is precious and  *	    	  	    	should not be removed if we are interrupted.  *  * Debugging:  *	Targ_PrintGraph	    	Print out the entire graphm all variables  *	    	  	    	and statistics for the directory cache. Should  *	    	  	    	print something for suffixes, too, but...  */
 end_comment
 
 begin_include
@@ -148,34 +148,6 @@ operator|&
 name|targets
 argument_list|,
 name|HTSIZE
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Targ_End --  *	Finalize this module  *  * Results:  *	None  *  * Side Effects:  *	All lists and gnodes are cleared  *-----------------------------------------------------------------------  */
-end_comment
-
-begin_function
-name|void
-name|Targ_End
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|Lst_Destroy
-argument_list|(
-operator|&
-name|allTargets
-argument_list|,
-name|NOFREE
-argument_list|)
-expr_stmt|;
-name|Hash_DeleteTable
-argument_list|(
-operator|&
-name|targets
 argument_list|)
 expr_stmt|;
 block|}

@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*-  * parse.c --  *	Functions to parse a makefile.  *  *	One function, Parse_Init, must be called before any functions  *	in this module are used. After that, the function Parse_File is the  *	main entry point and controls most of the other functions in this  *	module.  *  *	Most important structures are kept in Lsts. Directories for  *	the #include "..." function are kept in the 'parseIncPath' Lst, while  *	those for the #include<...> are kept in the 'sysIncPath' Lst. The  *	targets currently being defined are kept in the 'targets' Lst.  *  *	The variables 'curFile.fname' and 'curFile.lineno' are used to track  *	the name of the current file and the line number in that file so that  *	error messages can be more meaningful.  *  * Interface:  *	Parse_Init	    	    Initialization function which must be  *	    	  	    	    called before anything else in this module  *	    	  	    	    is used.  *  *	Parse_End		    Cleanup the module  *  *	Parse_File	    	    Function used to parse a makefile. It must  *	    	  	    	    be given the name of the file, which should  *	    	  	    	    already have been opened, and a function  *	    	  	    	    to call to read a character from the file.  *  *	Parse_IsVar	    	    Returns TRUE if the given line is a  *	    	  	    	    variable assignment. Used by MainParseArgs  *	    	  	    	    to determine if an argument is a target  *	    	  	    	    or a variable assignment. Used internally  *	    	  	    	    for pretty much the same thing...  *  *	Parse_Error	    	    Function called when an error occurs in  *	    	  	    	    parsing. Used by the variable and  *	    	  	    	    conditional modules.  *	Parse_MainName	    	    Returns a Lst of the main target to create.  */
+comment|/*-  * parse.c --  *	Functions to parse a makefile.  *  *	One function, Parse_Init, must be called before any functions  *	in this module are used. After that, the function Parse_File is the  *	main entry point and controls most of the other functions in this  *	module.  *  *	Most important structures are kept in Lsts. Directories for  *	the #include "..." function are kept in the 'parseIncPath' Lst, while  *	those for the #include<...> are kept in the 'sysIncPath' Lst. The  *	targets currently being defined are kept in the 'targets' Lst.  *  *	The variables 'curFile.fname' and 'curFile.lineno' are used to track  *	the name of the current file and the line number in that file so that  *	error messages can be more meaningful.  *  * Interface:  *	Parse_Init	    	    Initialization function which must be  *	    	  	    	    called before anything else in this module  *	    	  	    	    is used.  *  *	Parse_File	    	    Function used to parse a makefile. It must  *	    	  	    	    be given the name of the file, which should  *	    	  	    	    already have been opened, and a function  *	    	  	    	    to call to read a character from the file.  *  *	Parse_IsVar	    	    Returns TRUE if the given line is a  *	    	  	    	    variable assignment. Used by MainParseArgs  *	    	  	    	    to determine if an argument is a target  *	    	  	    	    or a variable assignment. Used internally  *	    	  	    	    for pretty much the same thing...  *  *	Parse_Error	    	    Function called when an error occurs in  *	    	  	    	    parsing. Used by the variable and  *	    	  	    	    conditional modules.  *	Parse_MainName	    	    Returns a Lst of the main target to create.  */
 end_comment
 
 begin_include
@@ -7329,49 +7329,6 @@ name|mainNode
 operator|=
 name|NULL
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|Parse_End
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|Lst_Destroy
-argument_list|(
-operator|&
-name|targets
-argument_list|,
-name|NOFREE
-argument_list|)
-expr_stmt|;
-name|Lst_Destroy
-argument_list|(
-operator|&
-name|sysIncPath
-argument_list|,
-name|Dir_Destroy
-argument_list|)
-expr_stmt|;
-name|Lst_Destroy
-argument_list|(
-operator|&
-name|parseIncPath
-argument_list|,
-name|Dir_Destroy
-argument_list|)
-expr_stmt|;
-name|Lst_Destroy
-argument_list|(
-operator|&
-name|includes
-argument_list|,
-name|NOFREE
-argument_list|)
-expr_stmt|;
-comment|/* Should be empty now */
 block|}
 end_function
 

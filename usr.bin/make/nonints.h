@@ -96,15 +96,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|Arch_End
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* compat.c */
 end_comment
@@ -430,15 +421,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|Parse_End
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|Parse_FromString
 parameter_list|(
 name|char
@@ -466,15 +448,6 @@ end_comment
 begin_function_decl
 name|void
 name|str_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|str_end
 parameter_list|(
 name|void
 parameter_list|)
@@ -698,15 +671,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|Suff_End
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|Suff_PrintAll
 parameter_list|(
 name|void
@@ -721,15 +685,6 @@ end_comment
 begin_function_decl
 name|void
 name|Targ_Init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|Targ_End
 parameter_list|(
 name|void
 parameter_list|)
@@ -1014,15 +969,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|Var_Init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|Var_End
 parameter_list|(
 name|void
 parameter_list|)
