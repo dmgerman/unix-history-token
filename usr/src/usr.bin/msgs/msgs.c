@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)msgs.c	4.11 (Berkeley) %G%"
+literal|"@(#)msgs.c	4.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2554,6 +2554,20 @@ operator|>
 name|Lpp
 condition|)
 block|{
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGQUIT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|cmdbuf
@@ -2618,6 +2632,7 @@ argument_list|,
 name|newmsg
 argument_list|)
 condition|)
+block|{
 name|fputs
 argument_list|(
 name|inbuf
@@ -2625,6 +2640,15 @@ argument_list|,
 name|outf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|outf
+argument_list|)
+condition|)
+break|break;
+block|}
 if|if
 condition|(
 name|outf
@@ -2635,6 +2659,20 @@ block|{
 name|pclose
 argument_list|(
 name|outf
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGQUIT
+argument_list|,
+name|SIG_DFL
 argument_list|)
 expr_stmt|;
 block|}
