@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.162 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.163 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -872,6 +872,28 @@ end_define
 begin_comment
 comment|/* does not have getusershell(3) call */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IP_SRCROUTE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IP_SRCROUTE
+value|0
+end_define
+
+begin_comment
+comment|/* Something is broken with getsockopt() */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -3739,6 +3761,28 @@ end_define
 
 begin_comment
 comment|/* TCP/IP implementation is broken */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IP_SRCROUTE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IP_SRCROUTE
+value|0
+end_define
+
+begin_comment
+comment|/* Something is broken with getsockopt() */
 end_comment
 
 begin_endif
@@ -7275,6 +7319,28 @@ end_define
 
 begin_comment
 comment|/* use IDENT proto (RFC 1413) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IP_SRCROUTE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IP_SRCROUTE
+value|1
+end_define
+
+begin_comment
+comment|/* Detect IP source routing */
 end_comment
 
 begin_endif
