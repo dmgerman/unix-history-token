@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1980,1986 Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/* "@(#)raboot.c	6.4 (Berkeley) %G%" */
+comment|/* "@(#)raboot.c	7.1 (Berkeley) %G%" */
 end_comment
 
 begin_expr_stmt

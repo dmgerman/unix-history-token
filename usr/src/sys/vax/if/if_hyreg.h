@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)if_hyreg.h	6.4 (Berkeley) %G%  *  * $Header: if_hyreg.h,v 10.0 84/06/30 19:51:34 steveg Stable $  * $Locker:  $  *  * Modifications from Berkeley 4.2 BSD  * Copyright (c) 1983, Tektronix Inc.  * All Rights Reserved  *  */
+comment|/*  *	@(#)if_hyreg.h	7.1 (Berkeley) %G%  *  * $Header: if_hyreg.h,v 10.0 84/06/30 19:51:34 steveg Stable $  * $Locker:  $  *  * Modifications from Berkeley 4.2 BSD  * Copyright (c) 1983, Tektronix Inc.  * All Rights Reserved  *  */
 end_comment
 
 begin_comment
