@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_lookup.c,v 1.24 1998/05/17 21:18:08 dt Exp $ */
+comment|/*	$Id: msdosfs_lookup.c,v 1.25 1998/05/18 10:24:26 dt Exp $ */
 end_comment
 
 begin_comment
@@ -3110,18 +3110,6 @@ decl_stmt|;
 name|int
 name|blsize
 decl_stmt|;
-name|u_long
-name|boff
-decl_stmt|;
-name|boff
-operator|=
-name|diroffset
-operator|&
-operator|~
-name|pmp
-operator|->
-name|pm_crbomask
-expr_stmt|;
 name|blsize
 operator|=
 name|pmp
