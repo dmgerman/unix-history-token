@@ -381,7 +381,7 @@ name|dev
 parameter_list|)
 block|{
 name|int
-name|min
+name|u
 decl_stmt|;
 if|if
 condition|(
@@ -402,7 +402,7 @@ argument_list|,
 name|NSMB_NAME
 argument_list|,
 operator|&
-name|min
+name|u
 argument_list|)
 operator|!=
 literal|1
@@ -416,7 +416,10 @@ argument_list|(
 operator|&
 name|nsmb_cdevsw
 argument_list|,
-name|min
+name|unit2minor
+argument_list|(
+name|u
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -427,7 +430,7 @@ argument_list|,
 name|NSMB_NAME
 literal|"%d"
 argument_list|,
-name|min
+name|u
 argument_list|)
 expr_stmt|;
 block|}
