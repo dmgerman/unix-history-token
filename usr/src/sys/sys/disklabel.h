@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)disklabel.h	7.5 (Berkeley) %G%  */
+comment|/*  *	@(#)disklabel.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ begin_define
 define|#
 directive|define
 name|DISKMAGIC
-value|0x82564557
+value|((u_long) 0x82564557)
 end_define
 
 begin_comment
