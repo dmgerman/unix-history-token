@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /src/pub/tcsh/patchlevel.h,v 3.121 1999/08/16 20:06:57 christos Exp $ */
+comment|/* $Header: /src/pub/tcsh/patchlevel.h,v 3.122 2000/01/14 22:57:26 christos Exp $ */
 end_comment
 
 begin_comment
@@ -44,14 +44,14 @@ begin_define
 define|#
 directive|define
 name|PATCHLEVEL
-value|0
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|DATE
-value|"1999-08-16"
+value|"2000-01-14"
 end_define
 
 begin_endif

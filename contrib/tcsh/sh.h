@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /src/pub/tcsh/sh.h,v 3.86 1998/10/25 15:10:16 christos Exp $ */
+comment|/* $Header: /src/pub/tcsh/sh.h,v 3.87 2000/01/14 22:57:28 christos Exp $ */
 end_comment
 
 begin_comment
@@ -1828,6 +1828,12 @@ name|defined
 argument_list|(
 name|WINNT
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|IRIS4D
+argument_list|)
 end_if
 
 begin_include
@@ -1842,7 +1848,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_MINIX&& !COHERENT&& !supermax&& !WINNT */
+comment|/* !_MINIX&& !COHERENT&& !supermax&& !WINNT&& !defined(IRIS4D) */
 end_comment
 
 begin_if
@@ -3829,6 +3835,13 @@ end_endif
 begin_comment
 comment|/* _SEQUENT_ */
 end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|long
+name|seconds0
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

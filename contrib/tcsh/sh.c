@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /src/pub/tcsh/sh.c,v 3.89 1999/08/13 16:32:51 christos Exp $ */
+comment|/* $Header: /src/pub/tcsh/sh.c,v 3.90 2000/01/14 22:57:27 christos Exp $ */
 end_comment
 
 begin_comment
@@ -54,7 +54,7 @@ end_comment
 begin_macro
 name|RCSID
 argument_list|(
-literal|"$Id: sh.c,v 3.89 1999/08/13 16:32:51 christos Exp $"
+literal|"$Id: sh.c,v 3.90 2000/01/14 22:57:27 christos Exp $"
 argument_list|)
 end_macro
 
@@ -8419,7 +8419,7 @@ name|stb
 operator|.
 name|st_mtime
 operator|>
-name|time0
+name|seconds0
 expr_stmt|;
 endif|#
 directive|endif
@@ -8518,7 +8518,7 @@ name|stb
 operator|.
 name|st_mtime
 operator|>
-name|time0
+name|seconds0
 expr_stmt|;
 endif|#
 directive|endif
