@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -60,6 +66,7 @@ file|<sysexits.h>
 end_include
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -96,14 +103,14 @@ parameter_list|)
 block|{
 name|unsigned
 name|int
+name|i
+decl_stmt|,
 name|len
 decl_stmt|;
 name|int
 name|n
 init|=
 literal|0
-decl_stmt|,
-name|i
 decl_stmt|,
 name|k
 decl_stmt|,
@@ -112,9 +119,6 @@ init|=
 literal|0
 decl_stmt|;
 name|char
-modifier|*
-name|gfn
-decl_stmt|,
 modifier|*
 name|line
 decl_stmt|,
@@ -126,6 +130,11 @@ index|]
 decl_stmt|,
 modifier|*
 name|p
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|gfn
 decl_stmt|;
 name|FILE
 modifier|*
