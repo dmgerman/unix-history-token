@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.5	81/04/03	*/
+comment|/*	tm.c	4.6	81/12/01	*/
 end_comment
 
 begin_comment
@@ -166,13 +166,13 @@ name|errcnt
 decl_stmt|;
 specifier|register
 name|struct
-name|device
+name|tmdevice
 modifier|*
 name|tmaddr
 init|=
 operator|(
 expr|struct
-name|device
+name|tmdevice
 operator|*
 operator|)
 name|ubamem
@@ -447,7 +447,7 @@ name|tmaddr
 argument_list|)
 specifier|register
 expr|struct
-name|device
+name|tmdevice
 operator|*
 name|tmaddr
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ts.c	4.3	81/03/22	*/
+comment|/*	ts.c	4.4	81/12/01	*/
 end_comment
 
 begin_comment
@@ -79,7 +79,7 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|device
+name|tsdevice
 modifier|*
 name|tsaddr
 init|=
