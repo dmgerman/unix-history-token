@@ -3613,7 +3613,6 @@ name|print_ext_speed
 argument_list|(
 operator|*
 name|p
-operator|++
 argument_list|,
 literal|0
 argument_list|)
