@@ -31,7 +31,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)edit.c	1.2 %G%"
+literal|"@(#)edit.c	1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -255,7 +255,7 @@ decl_stmt|;
 comment|/* 	 * Set signals; locate editor. 	 */
 name|sigint
 operator|=
-name|signal
+name|sigset
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -264,7 +264,7 @@ argument_list|)
 expr_stmt|;
 name|sigquit
 operator|=
-name|signal
+name|sigset
 argument_list|(
 name|SIGQUIT
 argument_list|,
@@ -563,7 +563,7 @@ name|sigint
 operator|!=
 name|SIG_IGN
 condition|)
-name|signal
+name|sigsys
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -576,7 +576,7 @@ name|sigquit
 operator|!=
 name|SIG_IGN
 condition|)
-name|signal
+name|sigsys
 argument_list|(
 name|SIGQUIT
 argument_list|,
@@ -825,14 +825,14 @@ block|}
 comment|/* 	 * Restore signals and return. 	 */
 name|out
 label|:
-name|signal
+name|sigset
 argument_list|(
 name|SIGINT
 argument_list|,
 name|sigint
 argument_list|)
 expr_stmt|;
-name|signal
+name|sigset
 argument_list|(
 name|SIGQUIT
 argument_list|,
