@@ -81,6 +81,14 @@ name|u_long
 name|icps_bmcasttstamp
 decl_stmt|;
 comment|/* b/mcast tstamp requests dropped */
+name|u_long
+name|icps_badaddr
+decl_stmt|;
+comment|/* bad return address */
+name|u_long
+name|icps_noroute
+decl_stmt|;
+comment|/* no route back */
 block|}
 struct|;
 end_struct
