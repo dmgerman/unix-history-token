@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.52 1998/05/04 04:55:36 kato Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.53 1998/05/06 08:25:58 kato Exp $  */
 end_comment
 
 begin_comment
@@ -625,7 +625,7 @@ begin_struct
 struct|struct
 name|disk
 block|{
-name|long
+name|u_int
 name|dk_bc
 decl_stmt|;
 comment|/* byte count left */
@@ -646,15 +646,15 @@ decl_stmt|;
 comment|/* controller number for CMD640 quirk */
 endif|#
 directive|endif
-name|int
+name|u_int32_t
 name|dk_unit
 decl_stmt|;
 comment|/* physical unit number */
-name|int
+name|u_int32_t
 name|dk_lunit
 decl_stmt|;
 comment|/* logical unit number */
-name|int
+name|u_int32_t
 name|dk_interface
 decl_stmt|;
 comment|/* interface (two ctrlrs per interface) */
@@ -674,11 +674,11 @@ name|u_char
 name|dk_timeout
 decl_stmt|;
 comment|/* countdown to next timeout */
-name|int
+name|u_int32_t
 name|dk_port
 decl_stmt|;
 comment|/* i/o port base */
-name|int
+name|u_int32_t
 name|dk_altport
 decl_stmt|;
 comment|/* altstatus port base */
@@ -784,11 +784,12 @@ name|int
 name|dk_dkunit
 decl_stmt|;
 comment|/* disk stats unit number */
+name|unsigned
 name|int
 name|dk_multi
 decl_stmt|;
 comment|/* multi transfers */
-name|int
+name|u_int
 name|dk_currentiosize
 decl_stmt|;
 comment|/* current io size */
@@ -1167,6 +1168,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SLICE
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|void
@@ -1179,6 +1186,11 @@ name|bp
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1281,6 +1293,17 @@ begin_comment
 comment|/* downwards travelling close */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|sl_h_dump_t
+name|wddump
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* core dump req downward */
+end_comment
+
 begin_function_decl
 specifier|static
 name|void
@@ -1332,7 +1355,10 @@ name|NULL
 block|,
 comment|/* verify */
 name|NULL
+block|,
 comment|/* upconfig */
+operator|&
+name|wddump
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2332,7 +2358,7 @@ name|mynor
 decl_stmt|;
 endif|#
 directive|endif
-name|int
+name|u_int
 name|unit
 decl_stmt|,
 name|lunit
@@ -4132,10 +4158,10 @@ name|secpertrk
 decl_stmt|,
 name|secpercyl
 decl_stmt|;
-name|int
+name|u_int
 name|lunit
 decl_stmt|;
-name|int
+name|u_int
 name|count
 decl_stmt|;
 ifdef|#
@@ -4481,7 +4507,7 @@ comment|/* XXX */
 argument|u_long ds_offset = 		    du->dk_slices->dss_slices[dkslice(bp->b_dev)].ds_offset;  		blknum = transbad144(dsgetbad(bp->b_dev, du->dk_slices), 				     blknum - ds_offset) + ds_offset; 	}
 else|#
 directive|else
-argument|if (du->dk_flags& DKFL_SINGLE) { 		(void) (*du->slice->handler_up->upconf)(du->slice, 			SLCIOCTRANSBAD, (caddr_t)&blknum,
+argument|if (du->dk_flags& DKFL_SINGLE&& du->slice->handler_up) { 		(void) (*du->slice->handler_up->upconf)(du->slice, 			SLCIOCTRANSBAD, (caddr_t)&blknum,
 literal|0
 argument|,
 literal|0
@@ -4735,7 +4761,7 @@ argument|} 		} else if (du->dk_status& WDCS_ECCCOR) 			wderror(bp, du,
 literal|"soft ecc"
 argument|); 	}
 comment|/* 	 * If this was a successful read operation, fetch the data. 	 */
-argument|if (((bp->b_flags& (B_READ | B_ERROR)) == B_READ)&& !((du->dk_flags& (DKFL_DMA|DKFL_SINGLE)) == DKFL_DMA)&& wdtab[unit].b_active) { 		int	chk, dummy, multisize; 		multisize = chk = du->dk_currentiosize * DEV_BSIZE; 		if( du->dk_bc< chk) { 			chk = du->dk_bc; 			if( ((chk + DEV_BSIZE -
+argument|if (((bp->b_flags& (B_READ | B_ERROR)) == B_READ)&& !((du->dk_flags& (DKFL_DMA|DKFL_SINGLE)) == DKFL_DMA)&& wdtab[unit].b_active) { 		u_int	chk, dummy, multisize; 		multisize = chk = du->dk_currentiosize * DEV_BSIZE; 		if( du->dk_bc< chk) { 			chk = du->dk_bc; 			if( ((chk + DEV_BSIZE -
 literal|1
 argument|) / DEV_BSIZE)< du->dk_currentiosize) { 				du->dk_currentiosize = (chk + DEV_BSIZE -
 literal|1
@@ -5364,23 +5390,23 @@ argument|bcopy(tb2, tb, sizeof(struct wdparams)); 			du->dk_flags&= ~DKFL_32BIT;
 comment|/* shuffle string byte order */
 argument|for (i =
 literal|0
-argument|; i< sizeof(wp->wdp_model); i +=
+argument|; (unsigned)i< sizeof(wp->wdp_model); i +=
 literal|2
 argument|) { 		u_short *p;  		p = (u_short *) (wp->wdp_model + i); 		*p = ntohs(*p); 	}
 comment|/* 	 * Clean up the wdp_model by converting nulls to spaces, and 	 * then removing the trailing spaces. 	 */
-argument|for (i=
+argument|for (i =
 literal|0
-argument|; i< sizeof(wp->wdp_model); i++) { 		if (wp->wdp_model[i] ==
+argument|; (unsigned)i< sizeof(wp->wdp_model); i++) { 		if (wp->wdp_model[i] ==
 literal|'\0'
 argument|) { 			wp->wdp_model[i] =
 literal|' '
-argument|; 		} 	} 	for (i=sizeof(wp->wdp_model)-
+argument|; 		} 	} 	for (i = sizeof(wp->wdp_model) -
 literal|1
-argument|; i>=
+argument|; 	    (i>=
 literal|0
-argument|&& wp->wdp_model[i]==
+argument|&& wp->wdp_model[i] ==
 literal|' '
-argument|; i--) { 		wp->wdp_model[i] =
+argument|); i--) { 		wp->wdp_model[i] =
 literal|'\0'
 argument|; 	}
 comment|/* 	 * find out the drives maximum multi-block transfer capability 	 */
@@ -5583,8 +5609,20 @@ argument|);
 endif|#
 directive|endif
 argument|return (dssize(dev,&du->dk_slices, wdopen, wdclose)); }
-comment|/*  * Dump core after a system crash.  */
-argument|int wddump(dev_t dev) {
+endif|#
+directive|endif
+comment|/* !SLICE */
+ifndef|#
+directive|ifndef
+name|SLICE
+argument|int wddump(dev_t dev)
+else|#
+directive|else
+argument|static int wddump(void *private, int32_t start, int32_t num)
+endif|#
+directive|endif
+comment|/* SLICE */
+argument|{
 ifdef|#
 directive|ifdef
 name|PC98
@@ -5596,11 +5634,25 @@ literal|0
 argument|);
 else|#
 directive|else
-argument|register struct disk *du; 	struct disklabel *lp; 	long	num;
+argument|register struct disk *du;
+ifndef|#
+directive|ifndef
+name|SLICE
+argument|struct disklabel *lp; 	long	num;
 comment|/* number of sectors to write */
-argument|int	lunit, part; 	long	blkoff, blknum; 	long	blkchk, blkcnt, blknext; 	long	cylin, head, sector; 	long	secpertrk, secpercyl, nblocks; 	u_long	ds_offset; 	char   *addr; 	static int wddoingadump =
+argument|int	lunit, part; 	long	blkoff, blknum; 	long	blkchk, blkcnt, blknext; 	u_long	ds_offset; 	u_long	nblocks; 	static int wddoingadump =
 literal|0
 argument|;
+else|#
+directive|else
+argument|long	blknum, blkchk, blkcnt, blknext;
+endif|#
+directive|endif
+comment|/* SLICE */
+argument|long	cylin, head, sector; 	long	secpertrk, secpercyl; 	char   *addr;
+ifndef|#
+directive|ifndef
+name|SLICE
 comment|/* Toss any characters present prior to dump. */
 argument|while (cncheckc() != -
 literal|1
@@ -5621,7 +5673,7 @@ argument|);
 endif|#
 directive|endif
 comment|/* Size of memory to dump, in disk sectors. */
-argument|num = (u_long)Maxmem * PAGE_SIZE / du->dk_dd.d_secsize;  	secpertrk = du->dk_dd.d_nsectors; 	secpercyl = du->dk_dd.d_secpercyl; 	nblocks = lp->d_partitions[part].p_size; 	blkoff = lp->d_partitions[part].p_offset;
+argument|num = (u_long)Maxmem * PAGE_SIZE / du->dk_dd.d_secsize;   	secpertrk = du->dk_dd.d_nsectors; 	secpercyl = du->dk_dd.d_secpercyl; 	nblocks = lp->d_partitions[part].p_size; 	blkoff = lp->d_partitions[part].p_offset;
 comment|/* XXX */
 argument|ds_offset = du->dk_slices->dss_slices[dkslice(dev)].ds_offset; 	blkoff += ds_offset;
 if|#
@@ -5646,6 +5698,12 @@ directive|endif
 argument|wddoingadump =
 literal|1
 argument|;
+else|#
+directive|else
+argument|du = private; 	if (du->dk_state< OPEN) 		return (ENXIO);  	secpertrk = du->dk_dd.d_nsectors; 	secpercyl = du->dk_dd.d_secpercyl;
+endif|#
+directive|endif
+comment|/* SLICE */
 comment|/* Recalibrate the drive. */
 argument|DELAY(
 literal|5
@@ -5669,7 +5727,18 @@ argument|) { 		wderror((struct buf *)NULL, du,
 literal|"wddump: recalibrate failed"
 argument|); 		return (EIO); 	}  	du->dk_flags |= DKFL_SINGLE; 	addr = (char *)
 literal|0
-argument|; 	blknum = dumplo + blkoff; 	while (num>
+argument|;
+ifndef|#
+directive|ifndef
+name|SLICE
+argument|blknum = dumplo + blkoff;
+else|#
+directive|else
+argument|blknum = start;
+endif|#
+directive|endif
+comment|/* SLICE */
+argument|while (num>
 literal|0
 argument|) { 		blkcnt = num; 		if (blkcnt> MAXTRANSFER) 			blkcnt = MAXTRANSFER;
 comment|/* Keep transfer within current cylinder. */
@@ -5677,7 +5746,21 @@ argument|if ((blknum + blkcnt -
 literal|1
 argument|) / secpercyl != blknum / secpercyl) 			blkcnt = secpercyl - (blknum % secpercyl); 		blknext = blknum + blkcnt;
 comment|/* 		 * See if one of the sectors is in the bad sector list 		 * (if we have one).  If the first sector is bad, then 		 * reduce the transfer to this one bad sector; if another 		 * sector is bad, then reduce reduce the transfer to 		 * avoid any bad sectors. 		 */
-argument|if (du->dk_flags& DKFL_SINGLE&& dsgetbad(dev, du->dk_slices) != NULL) { 		  for (blkchk = blknum; blkchk< blknum + blkcnt; blkchk++) { 			daddr_t blknew; 			blknew = transbad144(dsgetbad(dev, du->dk_slices), 					     blkchk - ds_offset) + ds_offset; 			if (blknew != blkchk) {
+ifndef|#
+directive|ifndef
+name|SLICE
+argument|if (du->dk_flags& DKFL_SINGLE&& dsgetbad(dev, du->dk_slices) != NULL) { 		  for (blkchk = blknum; blkchk< blknum + blkcnt; blkchk++) { 			daddr_t blknew; 			blknew = transbad144(dsgetbad(dev, du->dk_slices), 					     blkchk - ds_offset) + ds_offset;
+else|#
+directive|else
+argument|if (du->dk_flags& DKFL_SINGLE&& du->slice->handler_up) { 		    for (blkchk = blknum; blkchk< blknum + blkcnt; blkchk++) { 			daddr_t blknew = blkchk; 			(void) (*du->slice->handler_up->upconf)(du->slice, 				SLCIOCTRANSBAD, (caddr_t)&blknew,
+literal|0
+argument|,
+literal|0
+argument|);
+endif|#
+directive|endif
+comment|/* SLICE */
+argument|if (blknew != blkchk) {
 comment|/* Found bad block. */
 argument|blkcnt = blkchk - blknum; 				if (blkcnt>
 literal|0
@@ -5697,7 +5780,7 @@ literal|"bad block %lu -> %lu\n"
 argument|, 				       blknum, blknew);
 endif|#
 directive|endif
-argument|break; 			} 		  } 		} out:
+argument|break; 			} 		    } 		} out:
 comment|/* Compute disk address. */
 argument|cylin = blknum / secpercyl; 		head = (blknum % secpercyl) / secpertrk; 		sector = blknum % secpertrk;
 if|#
@@ -5773,11 +5856,7 @@ literal|0
 argument|);
 endif|#
 directive|endif
-argument|}
-endif|#
-directive|endif
-comment|/* !SLICE */
-argument|static void wderror(struct buf *bp, struct disk *du, char *mesg) {
+argument|}  static void wderror(struct buf *bp, struct disk *du, char *mesg) {
 ifdef|#
 directive|ifdef
 name|SLICE
@@ -6076,7 +6155,7 @@ argument|wdstart(du->dk_ctrlr);
 comment|/* start controller */
 argument|splx(s); 	return;  }
 comment|/*  * Initialize a drive.  */
-argument|static int wdsopen(void *private, int flags, int mode, struct proc *p) { 	register struct disk *du; 	register unsigned int lunit; 	int	error =
+argument|static int wdsopen(void *private, int flags, int mode, struct proc *p) { 	register struct disk *du; 	int	error =
 literal|0
 argument|;  	du = private;  	if ((flags& (FREAD|FWRITE)) !=
 literal|0
@@ -6112,7 +6191,14 @@ argument|static void wdsclose(void *private, int flags, int mode, struct proc *p
 endif|#
 directive|endif
 comment|/* 0 */
-argument|static int wdsioctl( void *private, int cmd, caddr_t addr, int flag, struct proc *p) { 	register struct disk *du; 	int	error;  	du = private;  	wdsleep(du->dk_ctrlr,
+argument|static int wdsioctl( void *private, int cmd, caddr_t addr, int flag, struct proc *p) { 	register struct disk *du = private;
+ifdef|#
+directive|ifdef
+name|notyet
+argument|int	error;
+endif|#
+directive|endif
+argument|wdsleep(du->dk_ctrlr,
 literal|"wdioct"
 argument|); 	switch (cmd) { 	case DIOCSBADSCAN: 		if (*(int *)addr) 			du->dk_flags |= DKFL_BADSCAN; 		else 			du->dk_flags&= ~DKFL_BADSCAN; 		return (
 literal|0
