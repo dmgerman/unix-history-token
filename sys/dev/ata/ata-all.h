@@ -899,13 +899,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATA_BMCTL_PORT
-value|0x09
-end_define
-
-begin_define
-define|#
-directive|define
 name|ATA_BMDEVSPEC_0
 value|0x0a
 end_define

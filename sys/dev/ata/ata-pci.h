@@ -1320,13 +1320,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|PRIDX
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
 name|PRTX4
 value|0x01
 end_define
