@@ -829,6 +829,7 @@ name|open_mode
 operator|!=
 name|OPEN_WRITE
 condition|)
+block|{
 comment|/* Recording is possible */
 if|if
 condition|(
@@ -836,6 +837,7 @@ name|sbc_major
 operator|<
 literal|3
 condition|)
+block|{
 comment|/* Limited input speed with these cards */
 if|if
 condition|(
@@ -856,6 +858,8 @@ name|max_speed
 operator|=
 literal|13000
 expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|speed
@@ -4065,6 +4069,7 @@ condition|(
 operator|!
 name|sb16
 condition|)
+block|{
 comment|/* There is a better driver for SB16 */
 endif|#
 directive|endif
@@ -4158,6 +4163,21 @@ argument_list|(
 literal|"SB: Too many DSP devices available\n"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CONFIG_SB16
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CONFIG_SBPRO
+argument_list|)
+block|}
+endif|#
+directive|endif
+comment|/* CONFIG_SB16&& CONFIG_SBPRO */
 else|#
 directive|else
 name|conf_printf

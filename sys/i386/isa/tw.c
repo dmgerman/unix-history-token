@@ -2008,6 +2008,7 @@ operator||
 name|POLLRDNORM
 operator|)
 condition|)
+block|{
 if|if
 condition|(
 name|sc
@@ -2039,6 +2040,7 @@ operator|->
 name|sc_selp
 argument_list|)
 expr_stmt|;
+block|}
 name|splx
 argument_list|(
 name|s

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.40 1999/01/27 22:42:09 dillon Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.41 1999/03/28 23:00:33 dt Exp $ */
 end_comment
 
 begin_comment
@@ -4586,6 +4586,7 @@ name|pm_fmod
 operator|!=
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|pmp
@@ -4602,6 +4603,7 @@ expr_stmt|;
 else|else
 block|{
 comment|/* update fats here */
+block|}
 block|}
 comment|/* 	 * Write back each (modified) denode. 	 */
 name|simple_lock

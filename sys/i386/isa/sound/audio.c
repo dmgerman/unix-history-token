@@ -230,6 +230,7 @@ operator|&
 name|fmt
 operator|)
 condition|)
+block|{
 comment|/* Not supported */
 if|if
 condition|(
@@ -256,6 +257,7 @@ operator|=
 name|AFMT_U8
 expr_stmt|;
 comment|/* This is always supported */
+block|}
 name|audio_format
 index|[
 name|dev

@@ -3344,6 +3344,7 @@ operator|!=
 operator|-
 literal|1
 condition|)
+block|{
 if|if
 condition|(
 name|position
@@ -3355,6 +3356,7 @@ index|]
 operator|.
 name|len
 condition|)
+block|{
 if|if
 condition|(
 name|voices
@@ -3397,6 +3399,8 @@ operator|&
 name|WAVE_16_BITS
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 block|}
 end_function
 

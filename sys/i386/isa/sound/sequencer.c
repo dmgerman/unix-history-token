@@ -7736,6 +7736,7 @@ operator||
 name|POLLRDNORM
 operator|)
 condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -7772,6 +7773,7 @@ operator|~
 name|WK_SLEEP
 expr_stmt|;
 block|}
+block|}
 if|if
 condition|(
 name|events
@@ -7782,6 +7784,7 @@ operator||
 name|POLLWRNORM
 operator|)
 condition|)
+block|{
 if|if
 condition|(
 name|qlen
@@ -7818,6 +7821,7 @@ operator|&=
 operator|~
 name|WK_SLEEP
 expr_stmt|;
+block|}
 block|}
 name|splx
 argument_list|(

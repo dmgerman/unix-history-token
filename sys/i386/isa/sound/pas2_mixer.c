@@ -444,6 +444,7 @@ name|whichDev
 operator|<
 name|SOUND_MIXER_NRDEVICES
 condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -463,6 +464,7 @@ name|mixer
 operator|=
 name|P_M_MV508_OUTPUTMIX
 expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|whichDev

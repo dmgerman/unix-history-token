@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.52 1999/01/12 12:16:50 eivind Exp $  */
+comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.53 1999/01/18 02:06:57 fenner Exp $  */
 end_comment
 
 begin_include
@@ -10016,6 +10016,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|rsvpdebug
@@ -10025,7 +10026,9 @@ argument_list|(
 literal|"rsvp_input: Failed to append to socket\n"
 argument_list|)
 expr_stmt|;
-elseif|else
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|rsvpdebug
@@ -10035,6 +10038,7 @@ argument_list|(
 literal|"rsvp_input: send packet up\n"
 argument_list|)
 expr_stmt|;
+block|}
 name|splx
 argument_list|(
 name|s

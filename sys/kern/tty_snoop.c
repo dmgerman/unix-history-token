@@ -2412,6 +2412,7 @@ operator||
 name|POLLRDNORM
 operator|)
 condition|)
+block|{
 if|if
 condition|(
 name|snp
@@ -2447,6 +2448,7 @@ operator|->
 name|snp_sel
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|revents

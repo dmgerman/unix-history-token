@@ -3222,6 +3222,7 @@ operator||
 name|POLLRDNORM
 operator|)
 condition|)
+block|{
 if|if
 condition|(
 name|ifp
@@ -3288,6 +3289,7 @@ operator|->
 name|tun_rsel
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

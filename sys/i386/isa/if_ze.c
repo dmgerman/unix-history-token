@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.55 1998/10/22 05:58:39 bde Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.56 1998/12/07 21:58:21 archie Exp $  */
 end_comment
 
 begin_comment
@@ -3572,6 +3572,7 @@ name|sc
 operator|->
 name|data_buffered
 condition|)
+block|{
 if|if
 condition|(
 name|sc
@@ -3596,6 +3597,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|IF_DEQUEUE
 argument_list|(

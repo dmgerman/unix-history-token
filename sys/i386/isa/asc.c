@@ -4,7 +4,7 @@ comment|/* asc.c - device driver for hand scanners  *  * Current version support
 end_comment
 
 begin_comment
-comment|/*  * $Id: asc.c,v 1.34 1999/01/28 01:59:53 dillon Exp $  */
+comment|/*  * $Id: asc.c,v 1.35 1999/04/28 10:52:14 dt Exp $  */
 end_comment
 
 begin_include
@@ -4131,6 +4131,7 @@ operator||
 name|POLLRDNORM
 operator|)
 condition|)
+block|{
 if|if
 condition|(
 name|scu
@@ -4219,6 +4220,7 @@ name|p
 operator|->
 name|p_pid
 expr_stmt|;
+block|}
 block|}
 name|splx
 argument_list|(

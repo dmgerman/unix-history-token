@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.82 1999/04/27 11:16:51 phk Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.83 1999/04/28 11:37:27 phk Exp $ */
 end_comment
 
 begin_comment
@@ -7974,6 +7974,7 @@ name|ap
 operator|->
 name|a_eofflag
 condition|)
+block|{
 if|if
 condition|(
 name|dep
@@ -8003,6 +8004,7 @@ name|a_eofflag
 operator|=
 literal|0
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|error
