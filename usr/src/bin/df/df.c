@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)df.c	5.28 (Berkeley) %G%"
+literal|"@(#)df.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -136,7 +136,7 @@ operator|,
 name|int
 operator|*
 operator|,
-name|int
+name|long
 operator|*
 operator|)
 argument_list|)
@@ -874,9 +874,11 @@ name|maxwidth
 decl_stmt|;
 block|{
 specifier|static
-name|int
+name|long
 name|blocksize
-decl_stmt|,
+decl_stmt|;
+specifier|static
+name|int
 name|headerlen
 decl_stmt|,
 name|timesthrough

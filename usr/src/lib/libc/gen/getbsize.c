@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getbsize.c	5.1 (Berkeley) %G%"
+literal|"@(#)getbsize.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,13 +58,11 @@ decl_stmt|;
 name|int
 modifier|*
 name|headerlenp
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|long
+modifier|*
 name|blocksizep
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 specifier|static
 name|char
@@ -388,7 +386,7 @@ name|header
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
