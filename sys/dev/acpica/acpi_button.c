@@ -51,7 +51,7 @@ value|ACPI_BUTTON
 end_define
 
 begin_macro
-name|MODULE_NAME
+name|ACPI_MODULE_NAME
 argument_list|(
 literal|"BUTTON"
 argument_list|)
@@ -347,7 +347,7 @@ decl_stmt|;
 name|ACPI_STATUS
 name|status
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|__func__
 argument_list|)
@@ -376,7 +376,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|ACPI_FAILURE
+argument_list|(
 name|status
 operator|=
 name|AcpiInstallNotifyHandler
@@ -391,9 +392,7 @@ name|acpi_button_notify_handler
 argument_list|,
 name|sc
 argument_list|)
-operator|)
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 block|{
 name|device_printf
@@ -444,7 +443,7 @@ name|acpi_softc
 modifier|*
 name|acpi_sc
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|__func__
 argument_list|)
@@ -569,7 +568,7 @@ name|acpi_softc
 modifier|*
 name|acpi_sc
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|__func__
 argument_list|)
@@ -720,7 +719,7 @@ operator|*
 operator|)
 name|context
 decl_stmt|;
-name|FUNCTION_TRACE_U32
+name|ACPI_FUNCTION_TRACE_U32
 argument_list|(
 name|__func__
 argument_list|,

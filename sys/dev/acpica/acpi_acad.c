@@ -93,7 +93,7 @@ value|ACPI_AC_ADAPTER
 end_define
 
 begin_macro
-name|MODULE_NAME
+name|ACPI_MODULE_NAME
 argument_list|(
 literal|"AC_ADAPTER"
 argument_list|)
@@ -240,6 +240,8 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
+name|ACPI_FAILURE
+argument_list|(
 name|acpi_EvaluateInteger
 argument_list|(
 name|h
@@ -249,8 +251,7 @@ argument_list|,
 operator|&
 name|newstatus
 argument_list|)
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 block|{
 name|sc

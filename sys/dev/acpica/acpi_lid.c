@@ -69,7 +69,7 @@ value|ACPI_BUTTON
 end_define
 
 begin_macro
-name|MODULE_NAME
+name|ACPI_MODULE_NAME
 argument_list|(
 literal|"LID"
 argument_list|)
@@ -289,7 +289,7 @@ name|acpi_lid_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|__func__
 argument_list|)
@@ -358,7 +358,7 @@ name|acpi_softc
 modifier|*
 name|acpi_sc
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|__func__
 argument_list|)
@@ -375,6 +375,8 @@ expr_stmt|;
 comment|/*      * Evaluate _LID and check the return value, update lid status.      *	Zero:		The lid is closed      *	Non-zero:	The lid is open      */
 if|if
 condition|(
+name|ACPI_FAILURE
+argument_list|(
 name|acpi_EvaluateInteger
 argument_list|(
 name|sc
@@ -388,8 +390,7 @@ name|sc
 operator|->
 name|lid_status
 argument_list|)
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 name|return_VOID
 expr_stmt|;
@@ -506,7 +507,7 @@ operator|*
 operator|)
 name|context
 decl_stmt|;
-name|FUNCTION_TRACE_U32
+name|ACPI_FUNCTION_TRACE_U32
 argument_list|(
 name|__func__
 argument_list|,
