@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id$  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: utils.c,v 1.2 1994/10/20 05:00:00 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -680,6 +680,17 @@ index|[
 literal|90
 index|]
 decl_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|ufsargs
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+name|ufsargs
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|prefix

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: main.c,v 1.2 1994/10/20 04:59:56 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: main.c,v 1.3 1994/10/20 06:14:29 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -212,7 +212,7 @@ expr_stmt|;
 name|stage1
 argument_list|()
 expr_stmt|;
-comment|/* XXX This is how stage one should output: */
+comment|/*  		 * XXX This is how stage one should output: 		 */
 name|devicename
 index|[
 literal|0
@@ -253,6 +253,27 @@ argument_list|(
 literal|"/usr"
 argument_list|)
 expr_stmt|;
+name|devicename
+index|[
+literal|2
+index|]
+operator|=
+name|StrAlloc
+argument_list|(
+literal|"wd0b"
+argument_list|)
+expr_stmt|;
+name|mountpoint
+index|[
+literal|2
+index|]
+operator|=
+name|StrAlloc
+argument_list|(
+literal|"swap"
+argument_list|)
+expr_stmt|;
+comment|/* 		 * XXX sort it by mountpoint, so that safe seq of mounting 		 * is guaranteed 		 */
 name|stage2
 argument_list|()
 expr_stmt|;
@@ -262,11 +283,29 @@ if|if
 condition|(
 name|getenv
 argument_list|(
-literal|"STAGE3)) { 		stage3(); 	} else { 		fprintf(stderr,"
-argument|Must setenv STAGE0 or STAGE3
-literal|"
+literal|"STAGE3"
+argument_list|)
+condition|)
+block|{
+name|stage3
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Must setenv STAGE0 or STAGE3"
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+literal|0
+return|;
+block|}
 end_function
 
-unit|);  	return 0; }
 end_unit
 
