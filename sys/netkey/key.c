@@ -2979,6 +2979,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|callout
+name|key_timehandler_ch
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* %%% IPsec policy management */
 end_comment
@@ -20166,11 +20174,13 @@ argument_list|()
 expr_stmt|;
 block|}
 comment|/* 	 * should set timeout based on the most closest timer expiration. 	 * we don't bother to do that yet. 	 */
-operator|(
-name|void
-operator|)
-name|timeout
+name|callout_reset
 argument_list|(
+operator|&
+name|key_timehandler_ch
+argument_list|,
+name|hz
+argument_list|,
 name|key_timehandler
 argument_list|,
 operator|(
@@ -20178,8 +20188,6 @@ name|void
 operator|*
 operator|)
 literal|0
-argument_list|,
-name|hz
 argument_list|)
 expr_stmt|;
 name|splx
@@ -32962,6 +32970,14 @@ name|key_cb
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|callout_init
+argument_list|(
+operator|&
+name|key_timehandler_ch
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -33168,8 +33184,13 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
-name|timeout
+name|callout_reset
 argument_list|(
+operator|&
+name|key_timehandler_ch
+argument_list|,
+name|hz
+argument_list|,
 name|key_timehandler
 argument_list|,
 operator|(
@@ -33177,8 +33198,6 @@ name|void
 operator|*
 operator|)
 literal|0
-argument_list|,
-name|hz
 argument_list|)
 expr_stmt|;
 comment|/* initialize key statistics */
