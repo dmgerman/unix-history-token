@@ -726,7 +726,7 @@ name|start
 argument_list|,
 name|end
 argument_list|,
-name|VM_MAP_WIRE_USER
+name|VM_MAP_WIRE_SYSTEM
 operator||
 name|VM_MAP_WIRE_NOHOLES
 argument_list|)
