@@ -4,7 +4,7 @@ comment|/* Buffer management for tar.    Copyright (C) 1988, 1992, 1993 Free Sof
 end_comment
 
 begin_comment
-comment|/*  * Buffer management for tar.  *  * Written by John Gilmore, ihnp4!hoptoad!gnu, on 25 August 1985.  */
+comment|/*  * Buffer management for tar.  *  * Written by John Gilmore, ihnp4!hoptoad!gnu, on 25 August 1985.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -4542,6 +4542,47 @@ condition|)
 name|verify_volume
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__MSDOS__
+comment|/*    * Closing the child's pipe before reading EOF guarantees that it    * will be unhappy - SIGPIPE, or exit 1.    * Either way it can screw us, so play nice.    */
+if|if
+condition|(
+name|childpid
+operator|&&
+name|ar_reading
+condition|)
+block|{
+name|char
+name|buf
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
+while|while
+condition|(
+operator|(
+name|c
+operator|=
+name|read
+argument_list|(
+name|archive
+argument_list|,
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+operator|)
+operator|>
+literal|0
+condition|)
+empty_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -4691,6 +4732,7 @@ argument_list|(
 name|status
 argument_list|)
 condition|)
+block|{
 name|msg
 argument_list|(
 literal|"child returned status %d"
@@ -4701,6 +4743,12 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+name|EX_BADARCH
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 block|}
