@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trace.c	5.1 (Berkeley) %G%"
+literal|"@(#)trace.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -474,8 +474,15 @@ literal|0
 operator|&&
 name|t
 operator|->
+name|ift_size
+operator|<
+name|len
+operator|&&
+name|t
+operator|->
 name|ift_packet
 condition|)
+block|{
 name|free
 argument_list|(
 name|t
@@ -489,6 +496,7 @@ name|ift_packet
 operator|=
 literal|0
 expr_stmt|;
+block|}
 name|t
 operator|->
 name|ift_stamp
@@ -510,6 +518,12 @@ condition|(
 name|len
 operator|>
 literal|0
+operator|&&
+name|t
+operator|->
+name|ift_packet
+operator|==
+literal|0
 condition|)
 block|{
 name|t
@@ -526,6 +540,19 @@ condition|(
 name|t
 operator|->
 name|ift_packet
+operator|==
+literal|0
+condition|)
+name|len
+operator|=
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|len
+operator|>
+literal|0
 condition|)
 name|bcopy
 argument_list|(
@@ -538,12 +565,6 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-else|else
-name|len
-operator|=
-literal|0
-expr_stmt|;
-block|}
 name|t
 operator|->
 name|ift_size
@@ -1020,6 +1041,11 @@ literal|"*** end packet history ***\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|fflush
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -1107,6 +1133,11 @@ argument_list|,
 literal|"%s: no packets.\n"
 argument_list|,
 name|cp
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1382,6 +1413,11 @@ argument_list|,
 name|packet
 argument_list|)
 expr_stmt|;
+name|fflush
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 switch|switch
@@ -1513,6 +1549,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|fflush
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
