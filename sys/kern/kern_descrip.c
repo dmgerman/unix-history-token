@@ -5506,7 +5506,7 @@ operator|->
 name|fd_ofiles
 init|;
 name|i
-operator|<
+operator|<=
 name|fdp
 operator|->
 name|fd_lastfile
