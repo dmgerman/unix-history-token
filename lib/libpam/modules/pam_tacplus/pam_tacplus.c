@@ -879,6 +879,11 @@ argument_list|(
 name|tach
 argument_list|)
 expr_stmt|;
+name|PAM_VERBOSE_ERROR
+argument_list|(
+literal|"TACACS+ authentication failed"
+argument_list|)
+expr_stmt|;
 name|PAM_RETURN
 argument_list|(
 name|PAM_AUTH_ERR
