@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.20 1995/08/02 12:59:49 dfr Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.21 1995/08/03 12:17:35 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -1723,7 +1723,6 @@ name|VWRITE
 argument_list|,
 name|cred
 argument_list|,
-operator|&
 name|ap
 operator|->
 name|a_p
