@@ -1152,20 +1152,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* XXX until Intel fix this in their headers, based on NEXT_RESOURCE */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_RESOURCE_NEXT
-parameter_list|(
-name|Res
-parameter_list|)
-value|(ACPI_RESOURCE *)((UINT8 *)Res + Res->Length)
-end_define
-
-begin_comment
 comment|/* ACPI event handling */
 end_comment
 

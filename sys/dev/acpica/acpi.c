@@ -6373,7 +6373,7 @@ operator|)
 return|;
 name|rp
 operator|=
-name|ACPI_RESOURCE_NEXT
+name|ACPI_NEXT_RESOURCE
 argument_list|(
 name|rp
 argument_list|)
@@ -6564,7 +6564,7 @@ condition|)
 break|break;
 name|rp
 operator|=
-name|ACPI_RESOURCE_NEXT
+name|ACPI_NEXT_RESOURCE
 argument_list|(
 name|rp
 argument_list|)
@@ -6708,7 +6708,7 @@ expr_stmt|;
 comment|/* And add the terminator. */
 name|rp
 operator|=
-name|ACPI_RESOURCE_NEXT
+name|ACPI_NEXT_RESOURCE
 argument_list|(
 name|rp
 argument_list|)
