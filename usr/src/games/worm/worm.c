@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)worm.c	5.2 (Berkeley) %G%"
+literal|"@(#)worm.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -125,7 +125,7 @@ name|CNTRL
 parameter_list|(
 name|p
 parameter_list|)
-value|('p'-'A'+1)
+value|(p-'A'+1)
 end_define
 
 begin_ifndef
@@ -1040,32 +1040,32 @@ return|return;
 name|when
 name|CNTRL
 argument_list|(
-name|Z
+literal|'Z'
 argument_list|)
-operator|:
+range|:
 name|suspend
 argument_list|()
-expr_stmt|;
+decl_stmt|;
 return|return;
 name|when
 name|CNTRL
 argument_list|(
-name|C
+literal|'C'
 argument_list|)
-operator|:
+range|:
 name|crash
 argument_list|()
-expr_stmt|;
+decl_stmt|;
 return|return;
 name|when
 name|CNTRL
 argument_list|(
-name|D
+literal|'D'
 argument_list|)
-operator|:
+range|:
 name|crash
 argument_list|()
-expr_stmt|;
+decl_stmt|;
 return|return;
 name|otherwise
 label|:
