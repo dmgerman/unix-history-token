@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yp_main.c,v 1.1 1997/11/09 20:54:38 wpaul Exp wpaul $"
+literal|"$Id: yp_main.c,v 1.17 1998/02/11 19:15:32 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -612,6 +612,13 @@ block|{
 name|int
 name|status
 decl_stmt|;
+name|int
+name|saved_errno
+decl_stmt|;
+name|saved_errno
+operator|=
+name|errno
+expr_stmt|;
 if|if
 condition|(
 name|sig
@@ -630,6 +637,10 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+name|errno
+operator|=
+name|saved_errno
+expr_stmt|;
 return|return;
 block|}
 if|if
@@ -668,6 +679,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|errno
+operator|=
+name|saved_errno
+expr_stmt|;
+return|return;
 block|}
 end_function
 
