@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 Shunsuke Akiyama.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Shunsuke Akiyama.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Shunsuke Akiyama AND CONTRIBUTORS ``AS IS''  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: od.c,v 1.7 1995/12/08 23:22:20 phk Exp $  */
+comment|/*  * Copyright (c) 1995 Shunsuke Akiyama.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Shunsuke Akiyama.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Shunsuke Akiyama AND CONTRIBUTORS ``AS IS''  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: od.c,v 1.8 1995/12/10 19:52:55 bde Exp $  */
 end_comment
 
 begin_comment
@@ -174,6 +174,7 @@ file|<machine/md_var.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|u_int32
 name|odstrats
 decl_stmt|,
@@ -250,65 +251,6 @@ define|\
 value|makedev(major(DEV), dkmakeminor((U), dkslice(DEV), dkpart(DEV)))
 end_define
 
-begin_decl_stmt
-name|errval
-name|od_get_parms
-name|__P
-argument_list|(
-operator|(
-name|int
-name|unit
-operator|,
-name|int
-name|flags
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|odstrategy1
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|buf
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|od_sense_handler
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|scsi_xfer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|odstart
-name|__P
-argument_list|(
-operator|(
-name|u_int32
-operator|,
-name|u_int32
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_struct
 struct|struct
 name|scsi_data
@@ -381,23 +323,101 @@ block|}
 struct|;
 end_struct
 
-begin_function
+begin_decl_stmt
+specifier|static
+name|errval
+name|od_get_parms
+name|__P
+argument_list|(
+operator|(
+name|int
+name|unit
+operator|,
+name|int
+name|flags
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|errval
+name|od_reassign_blocks
+name|__P
+argument_list|(
+operator|(
+name|int
+name|unit
+operator|,
+name|int
+name|block
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_int32
+name|od_size
+name|__P
+argument_list|(
+operator|(
+name|int
+name|unit
+operator|,
+name|int
+name|flags
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|int
-name|odunit
-parameter_list|(
-name|dev_t
-name|dev
-parameter_list|)
-block|{
-return|return
-name|ODUNIT
+name|od_sense_handler
+name|__P
 argument_list|(
-name|dev
+operator|(
+expr|struct
+name|scsi_xfer
+operator|*
+operator|)
 argument_list|)
-return|;
-block|}
-end_function
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|odstart
+name|__P
+argument_list|(
+operator|(
+name|u_int32
+operator|,
+name|u_int32
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|odstrategy1
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|buf
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -422,7 +442,26 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|odunit
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|)
+block|{
+return|return
+name|ODUNIT
+argument_list|(
+name|dev
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_decl_stmt
+specifier|static
 name|errval
 name|od_open
 name|__P
@@ -452,6 +491,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|errval
 name|od_ioctl
 parameter_list|(
@@ -481,6 +521,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|errval
 name|od_close
 name|__P
@@ -510,6 +551,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|od_strategy
 parameter_list|(
@@ -544,13 +586,6 @@ begin_decl_stmt
 specifier|static
 name|d_ioctl_t
 name|odioctl
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|d_psize_t
-name|odsize
 decl_stmt|;
 end_decl_stmt
 
@@ -601,7 +636,7 @@ block|,
 comment|/*20*/
 name|nodump
 block|,
-name|odsize
+name|nopsize
 block|,
 literal|0
 block|,
@@ -946,6 +981,7 @@ comment|/*  * The routine called by the low level scsi routine when it discovers
 end_comment
 
 begin_function
+specifier|static
 name|errval
 name|odattach
 parameter_list|(
@@ -1222,6 +1258,7 @@ comment|/*  * open the device. Make sure the partition info is a up-to-date as c
 end_comment
 
 begin_function
+specifier|static
 name|errval
 name|od_open
 parameter_list|(
@@ -1739,6 +1776,7 @@ comment|/*  * close the device.. only called if we are the LAST occurence of an 
 end_comment
 
 begin_function
+specifier|static
 name|errval
 name|od_close
 parameter_list|(
@@ -1837,6 +1875,7 @@ comment|/*  * Actually translate the requested transfer into one the physical dr
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|od_strategy
 parameter_list|(
@@ -2053,6 +2092,7 @@ comment|/*  * odstart looks to see if there is a buf waiting for the device  * a
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|odstart
 parameter_list|(
@@ -2450,6 +2490,7 @@ comment|/*  * Perform special action on behalf of the user  * Knows about the in
 end_comment
 
 begin_function
+specifier|static
 name|errval
 name|od_ioctl
 parameter_list|(
@@ -2622,6 +2663,7 @@ comment|/*  * Find out from the device what it's capacity is  */
 end_comment
 
 begin_function
+specifier|static
 name|u_int32
 name|od_size
 parameter_list|(
@@ -2777,6 +2819,7 @@ comment|/*  * Tell the device to map out a defective block  */
 end_comment
 
 begin_function
+specifier|static
 name|errval
 name|od_reassign_blocks
 parameter_list|(
@@ -2992,6 +3035,7 @@ comment|/*  * Get the scsi driver to send a full inquiry to the  * device and us
 end_comment
 
 begin_function
+specifier|static
 name|errval
 name|od_get_parms
 parameter_list|(
@@ -3132,26 +3176,12 @@ return|;
 block|}
 end_function
 
-begin_function
-name|int
-name|odsize
-parameter_list|(
-name|dev_t
-name|dev
-parameter_list|)
-block|{
-return|return
-operator|-
-literal|1
-return|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * sense handler: Called to determine what to do when the  * device returns a CHECK CONDITION.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|od_sense_handler
 parameter_list|(
