@@ -543,6 +543,10 @@ name|s
 argument_list|,
 literal|"sigmask 0x%08lx\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|pthread
 operator|->
 name|sigmask
