@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nvsort.c	1.2 (CWI) 86/11/26"
+literal|"@(#)nvsort.c	1.3 (CWI) 86/11/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -324,10 +324,6 @@ begin_comment
 comment|/* resolution of the device, in inches	*/
 end_comment
 
-begin_comment
-comment|/* #ifdef BERK		/* leave this one in for now */
-end_comment
-
 begin_decl_stmt
 name|int
 name|thick
@@ -375,27 +371,6 @@ begin_endif
 endif|#
 directive|endif
 endif|BERK
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BERK
-end_ifndef
-
-begin_decl_stmt
-name|int
-name|started
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* see or we started */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
 end_endif
 
 begin_decl_stmt
@@ -524,6 +499,11 @@ name|char
 name|f
 decl_stmt|;
 comment|/* font number */
+name|unsigned
+name|short
+name|x
+decl_stmt|;
+comment|/* set if this span starts with `x' command */
 name|char
 modifier|*
 name|p
@@ -693,6 +673,12 @@ operator|->
 name|t
 operator|=
 name|thick
+expr_stmt|;
+comment|/* we don't need added HxxVxxfxsxx for first span */
+name|vlp
+operator|->
+name|x
+operator|++
 expr_stmt|;
 while|while
 condition|(
@@ -2859,20 +2845,6 @@ name|vpos
 operator|=
 literal|0
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|BERK
-if|if
-condition|(
-operator|!
-name|started
-condition|)
-name|started
-operator|++
-expr_stmt|;
-endif|#
-directive|endif
-endif|BERK
 break|break;
 case|case
 literal|'n'
@@ -3047,12 +3019,10 @@ literal|0
 index|]
 condition|)
 block|{
-comment|/* crude for now */
 case|case
 literal|'r'
 case|:
 comment|/* resolution assumed when prepared */
-comment|/* 		fscanf(fp, "%d",&inRES); 		if (n!=RES) error(FATAL,"Input computed for wrong printer"); 		 */
 name|fscanf
 argument_list|(
 name|fp
@@ -3112,7 +3082,12 @@ argument_list|(
 name|vpos
 argument_list|)
 expr_stmt|;
-comment|/* 	*op++ = c; 	do 	    *op++ = c = getc(fp); 	while (c != '\n'&& c != EOF); 	 */
+name|vlp
+operator|->
+name|x
+operator|++
+expr_stmt|;
+comment|/* yes, this is an x command */
 name|p
 operator|=
 name|str1
@@ -3766,52 +3741,23 @@ operator|>=
 name|topv
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|BERK
+if|if
+condition|(
+name|vp
+operator|->
+name|x
+condition|)
+comment|/* doesn't need position, etc.		*/
 name|printf
 argument_list|(
-literal|"H%dV%ds%df%d\ni%d\nDs%d\nDt%d\n%s"
-argument_list|,
-name|vp
-operator|->
-name|h
-argument_list|,
-name|vp
-operator|->
-name|v
-argument_list|,
-name|vp
-operator|->
-name|s
-argument_list|,
-name|vp
-operator|->
-name|f
-argument_list|,
-name|vp
-operator|->
-name|l
-argument_list|,
-name|vp
-operator|->
-name|st
-argument_list|,
-name|vp
-operator|->
-name|t
+literal|"%s"
 argument_list|,
 name|vp
 operator|->
 name|p
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-if|if
-condition|(
-name|started
-condition|)
+else|else
 name|printf
 argument_list|(
 literal|"H%dV%ds%df%d\n%s"
@@ -3837,20 +3783,6 @@ operator|->
 name|p
 argument_list|)
 expr_stmt|;
-else|else
-comment|/* 		     * only the real string to put out, else dver 		     * complains since it didn't got an "x init 		     * command", so it doen't know about any font yet 		     */
-name|printf
-argument_list|(
-literal|"%s"
-argument_list|,
-name|vp
-operator|->
-name|p
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|BERK
 block|}
 name|notdone
 operator||=
@@ -3964,6 +3896,12 @@ operator|->
 name|t
 operator|=
 name|thick
+expr_stmt|;
+name|vlp
+operator|->
+name|x
+operator|=
+literal|0
 expr_stmt|;
 operator|*
 name|op
@@ -4512,6 +4450,12 @@ operator|->
 name|t
 operator|=
 name|thick
+expr_stmt|;
+name|vlp
+operator|->
+name|x
+operator|=
+literal|0
 expr_stmt|;
 name|nvlist
 operator|++
