@@ -1593,7 +1593,7 @@ operator|->
 name|ki_ppid
 operator|==
 operator|(
-name|uid_t
+name|pid_t
 operator|)
 name|li
 operator|->
@@ -1639,7 +1639,7 @@ operator|->
 name|ki_pgid
 operator|==
 operator|(
-name|uid_t
+name|pid_t
 operator|)
 name|li
 operator|->
@@ -1706,7 +1706,7 @@ operator|->
 name|ki_tdev
 operator|==
 operator|(
-name|uid_t
+name|udev_t
 operator|)
 name|li
 operator|->
@@ -1753,7 +1753,7 @@ operator|->
 name|ki_sid
 operator|==
 operator|(
-name|uid_t
+name|pid_t
 operator|)
 name|li
 operator|->
