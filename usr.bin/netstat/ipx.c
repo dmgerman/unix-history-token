@@ -653,7 +653,8 @@ name|y
 parameter_list|,
 name|z
 parameter_list|)
-value|(printf("\t%u %s%s%s\n",x,y,plural(x),z))
+define|\
+value|if (x || sflag<= 1) printf("\t%u %s%s%s\n", x, y, plural(x), z)
 end_define
 
 begin_define
@@ -667,7 +668,8 @@ name|y
 parameter_list|,
 name|z
 parameter_list|)
-value|(printf("\t%lu %s%s%s\n",x,y,plural(x),z))
+define|\
+value|if (x || sflag<= 1) printf("\t%lu %s%s%s\n", x, y, plural(x), z)
 end_define
 
 begin_comment
