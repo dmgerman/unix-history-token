@@ -41,6 +41,15 @@ end_include
 
 begin_typedef
 typedef|typedef
+name|unsigned
+name|long
+name|cell_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
 name|int
 name|ihandle_t
 typedef|;
@@ -48,6 +57,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|unsigned
 name|int
 name|phandle_t
 typedef|;
