@@ -1597,6 +1597,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
 name|warn
 argument_list|(
 literal|"%s"
@@ -1612,6 +1613,8 @@ operator|(
 name|CMDRTN_ERROR
 operator|)
 return|;
+block|}
+break|break;
 default|default:
 return|return
 operator|(
