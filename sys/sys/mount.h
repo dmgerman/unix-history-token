@@ -956,7 +956,7 @@ name|ex_root
 decl_stmt|;
 comment|/* mapping for root uid */
 name|struct
-name|ucred
+name|xucred
 name|ex_anon
 decl_stmt|;
 comment|/* mapping for anonymous user */
@@ -966,7 +966,7 @@ modifier|*
 name|ex_addr
 decl_stmt|;
 comment|/* net address to which exported */
-name|int
+name|u_char
 name|ex_addrlen
 decl_stmt|;
 comment|/* and the net address length */
@@ -976,7 +976,7 @@ modifier|*
 name|ex_mask
 decl_stmt|;
 comment|/* mask of valid bits in saddr */
-name|int
+name|u_char
 name|ex_masklen
 decl_stmt|;
 comment|/* and the smask length */

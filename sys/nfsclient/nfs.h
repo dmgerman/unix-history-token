@@ -1001,7 +1001,7 @@ name|nsd_haddr
 decl_stmt|;
 comment|/* Ip address of client */
 name|struct
-name|ucred
+name|xucred
 name|nsd_cr
 decl_stmt|;
 comment|/* Cred. uid maps to */

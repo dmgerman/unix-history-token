@@ -683,7 +683,7 @@ operator|,
 name|int
 operator|,
 expr|struct
-name|ucred
+name|xucred
 operator|*
 operator|,
 name|char
@@ -728,7 +728,7 @@ name|int
 operator|*
 operator|,
 expr|struct
-name|ucred
+name|xucred
 operator|*
 operator|)
 argument_list|)
@@ -1036,7 +1036,7 @@ name|char
 operator|*
 operator|,
 expr|struct
-name|ucred
+name|xucred
 operator|*
 operator|)
 argument_list|)
@@ -1217,11 +1217,11 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|ucred
+name|xucred
 name|def_anon
 init|=
 block|{
-literal|1
+literal|0
 block|,
 operator|(
 name|uid_t
@@ -1238,6 +1238,8 @@ operator|)
 operator|-
 literal|2
 block|}
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4155,7 +4157,7 @@ modifier|*
 name|hpe
 decl_stmt|;
 name|struct
-name|ucred
+name|xucred
 name|anon
 decl_stmt|;
 name|char
@@ -6959,7 +6961,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|ucred
+name|xucred
 modifier|*
 name|cr
 decl_stmt|;
@@ -8448,7 +8450,7 @@ name|int
 name|exflags
 decl_stmt|;
 name|struct
-name|ucred
+name|xucred
 modifier|*
 name|anoncrp
 decl_stmt|;
@@ -9726,7 +9728,7 @@ modifier|*
 name|namelist
 decl_stmt|;
 name|struct
-name|ucred
+name|xucred
 modifier|*
 name|cr
 decl_stmt|;
@@ -9763,12 +9765,6 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* 	 * Set up the unprivileged user. 	 */
-name|cr
-operator|->
-name|cr_ref
-operator|=
-literal|1
-expr_stmt|;
 name|cr
 operator|->
 name|cr_uid

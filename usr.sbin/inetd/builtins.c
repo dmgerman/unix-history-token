@@ -1514,7 +1514,7 @@ literal|2
 index|]
 decl_stmt|;
 name|struct
-name|ucred
+name|xucred
 name|uc
 decl_stmt|;
 name|struct
