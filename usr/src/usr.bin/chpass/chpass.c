@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chpass.c	5.2 (Berkeley) %G%"
+literal|"@(#)chpass.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1335,6 +1335,21 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * give the file to the real user; setuid permissions 	 * are discarded in edit() 	 */
+operator|(
+name|void
+operator|)
+name|fchown
+argument_list|(
+name|fd
+argument_list|,
+name|getuid
+argument_list|()
+argument_list|,
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2069,6 +2084,24 @@ argument_list|()
 operator|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
+name|setuid
+argument_list|(
+name|getuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|execlp
 argument_list|(
 name|editor
