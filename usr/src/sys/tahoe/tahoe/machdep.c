@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	1.11	87/02/21	*/
+comment|/*	machdep.c	1.12	87/02/26	*/
 end_comment
 
 begin_include
@@ -1263,6 +1263,10 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* Enable interrupts from now on */
+comment|/* 	 * Set up CPU-specific registers, cache, etc. 	 */
+name|initcpu
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Set up buffers, so they can be used to read disk labels. 	 */
 name|bhinit
 argument_list|()
@@ -2103,16 +2107,12 @@ end_decl_stmt
 begin_macro
 name|boot
 argument_list|(
-argument|paniced
-argument_list|,
 argument|arghowto
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|int
-name|paniced
-decl_stmt|,
 name|arghowto
 decl_stmt|;
 end_decl_stmt
@@ -2358,6 +2358,15 @@ argument_list|(
 name|rootdev
 argument_list|)
 expr_stmt|;
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|CPBFLG
+operator|=
+name|howto
+expr_stmt|;
 if|if
 condition|(
 name|howto
@@ -2388,9 +2397,9 @@ else|else
 block|{
 if|if
 condition|(
-name|paniced
-operator|==
-name|RB_PANIC
+name|howto
+operator|&
+name|RB_DUMP
 condition|)
 block|{
 name|doadump
@@ -2399,15 +2408,6 @@ expr_stmt|;
 comment|/* TXDB_BOOT's itsself */
 comment|/*NOTREACHED*/
 block|}
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
-name|CPBFLG
-operator|=
-name|howto
-expr_stmt|;
 name|tocons
 argument_list|(
 name|CPBOOT
@@ -3172,6 +3172,71 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|initcpu
+argument_list|()
+end_macro
+
+begin_block
+block|{
+specifier|register
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+name|p
+operator|=
+operator|&
+name|proc
+index|[
+literal|0
+index|]
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|lint
+define|#
+directive|define
+name|initkey
+parameter_list|(
+name|which
+parameter_list|,
+name|p
+parameter_list|,
+name|index
+parameter_list|)
+define|\
+value|which
+comment|/**/
+value|_cache[index] = 1, which
+comment|/**/
+value|_cnt[index] = 1; \     p->p_
+comment|/**/
+value|which = index;
+name|initkey
+argument_list|(
+name|ckey
+argument_list|,
+name|p
+argument_list|,
+name|MAXCKEY
+argument_list|)
+expr_stmt|;
+name|initkey
+argument_list|(
+name|dkey
+argument_list|,
+name|p
+argument_list|,
+name|MAXDKEY
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
