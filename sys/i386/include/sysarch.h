@@ -33,6 +33,13 @@ name|I386_SET_LDT
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|LDT_AUTO_ALLOC
+value|0xffffffff
+end_define
+
 begin_comment
 comment|/* I386_IOPL */
 end_comment

@@ -2456,7 +2456,7 @@ name|uap
 operator|->
 name|start
 operator|==
-literal|0
+name|LDT_AUTO_ALLOC
 operator|&&
 name|uap
 operator|->
@@ -2510,12 +2510,6 @@ name|num
 expr_stmt|;
 if|if
 condition|(
-name|uap
-operator|->
-name|start
-operator|<=
-name|LUDATA_SEL
-operator|||
 name|uap
 operator|->
 name|start
@@ -2905,7 +2899,7 @@ name|uap
 operator|->
 name|start
 operator|==
-literal|0
+name|LDT_AUTO_ALLOC
 operator|&&
 name|uap
 operator|->
@@ -2977,6 +2971,7 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+comment|/* 		 * start scanning a bit up to leave room for NVidia and 		 * Wine, which still user the "Blat" method of allocation. 		 */
 name|dp
 operator|=
 operator|&
@@ -2996,7 +2991,6 @@ index|[
 name|NLDT
 index|]
 expr_stmt|;
-comment|/* 		 * start scanning a bit up to leave room for NVidia and 		 * Wine, which still user the "Blat" method of allocation. 		 */
 for|for
 control|(
 name|i
