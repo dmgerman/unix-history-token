@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)init_main.c	7.30 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)init_main.c	7.31 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -143,6 +143,28 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|i386
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|initflags
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Initialization code.  * Called from cold start routine as  * soon as a stack and segmentation  * have been established.  * Functions:  *	clear and free user core  *	turn on clock  *	hand craft 0th process  *	call all initialization routines  *	fork - process 0 to schedule  *	     - process 1 execute bootstrap  *	     - process 2 to page out  */
 end_comment
@@ -178,6 +200,56 @@ decl_stmt|;
 name|rqinit
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|i386
+argument_list|)
+comment|/* 	 * set boot flags 	 */
+if|if
+condition|(
+name|boothowto
+operator|&
+name|RB_SINGLE
+condition|)
+name|bcopy
+argument_list|(
+literal|"-s"
+argument_list|,
+name|initflags
+argument_list|,
+literal|3
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|boothowto
+operator|&
+name|RB_ASKNAME
+condition|)
+name|bcopy
+argument_list|(
+literal|"-a"
+argument_list|,
+name|initflags
+argument_list|,
+literal|3
+argument_list|)
+expr_stmt|;
+else|else
+name|bcopy
+argument_list|(
+literal|"-"
+argument_list|,
+name|initflags
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined
@@ -678,6 +750,10 @@ expr_stmt|;
 name|schedcpu
 argument_list|()
 expr_stmt|;
+name|enablertclock
+argument_list|()
+expr_stmt|;
+comment|/* enable realtime clock interrupts */
 comment|/* set up the root file system */
 if|if
 condition|(
@@ -740,10 +816,6 @@ name|u_start
 operator|=
 name|time
 expr_stmt|;
-name|enablertclock
-argument_list|()
-expr_stmt|;
-comment|/* enable realtime clock interrupts */
 comment|/* 	 * make init process 	 */
 name|siginit
 argument_list|(
