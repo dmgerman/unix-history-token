@@ -3375,9 +3375,7 @@ directive|ifdef
 name|ATAPI_DEBUG
 name|ata_prtdev
 argument_list|(
-name|atadev
-operator|->
-name|device
+name|request
 operator|->
 name|device
 argument_list|,
