@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)odsyntax.c	5.4 (Berkeley) %G%"
+literal|"@(#)odsyntax.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -414,6 +414,10 @@ name|argvp
 operator|+=
 name|optind
 expr_stmt|;
+if|if
+condition|(
+name|argc
+condition|)
 name|odoffset
 argument_list|(
 name|argc
@@ -423,17 +427,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_define
-define|#
-directive|define
-name|ishexdigit
-parameter_list|(
-name|c
-parameter_list|)
-define|\
-value|(c>= '0'&& c<= '9' || c>= 'a'&& c<= 'f' || c>= 'A'&& c<= 'F')
-end_define
 
 begin_macro
 name|odoffset
@@ -480,7 +473,7 @@ name|char
 modifier|*
 name|end
 decl_stmt|;
-comment|/* 	 * The offset syntax of od(1) was genuinely bizarre.  First, if 	 * it started with a plus it had to be an offset.  Otherwise, if 	 * there were at least two arguments, a number or lower-case 'x' 	 * followed by a number makes it an offset.  By default it was 	 * octal; if it started with 'x' or '0x' it was hex.  If it ended 	 * in a '.', it was decimal.  If a 'b' or 'B' was appended, it 	 * multiplied the number by 512 or 1024 byte units.  There was 	 * no way to assign a block count to a hex offset. 	 * 	 * We assumes it's a file if the offset is bad. 	 */
+comment|/* 	 * The offset syntax of od(1) was genuinely bizarre.  First, if 	 * it started with a plus it had to be an offset.  Otherwise, if 	 * there were at least two arguments, a number or lower-case 'x' 	 * followed by a number makes it an offset.  By default it was 	 * octal; if it started with 'x' or '0x' it was hex.  If it ended 	 * in a '.', it was decimal.  If a 'b' or 'B' was appended, it 	 * multiplied the number by 512 or 1024 byte units.  There was 	 * no way to assign a block count to a hex offset. 	 * 	 * We assume it's a file if the offset is bad. 	 */
 name|p
 operator|=
 operator|*
@@ -518,7 +511,7 @@ operator|!=
 literal|'x'
 operator|||
 operator|!
-name|ishexdigit
+name|isxdigit
 argument_list|(
 name|p
 index|[
@@ -556,7 +549,7 @@ index|]
 operator|==
 literal|'x'
 operator|&&
-name|ishexdigit
+name|isxdigit
 argument_list|(
 name|p
 index|[
@@ -613,7 +606,7 @@ name|num
 operator|=
 name|p
 init|;
-name|ishexdigit
+name|isxdigit
 argument_list|(
 operator|*
 name|p
