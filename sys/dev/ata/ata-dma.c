@@ -2178,6 +2178,10 @@ expr_stmt|;
 comment|/* we could set PIO mode timings, but we assume the BIOS did that */
 break|break;
 case|case
+literal|0x74411022
+case|:
+comment|/* AMD 768 */
+case|case
 literal|0x74111022
 case|:
 comment|/* AMD 766 */
