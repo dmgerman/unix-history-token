@@ -13548,6 +13548,7 @@ name|rx_quality
 operator|&
 literal|0xFF
 expr_stmt|;
+comment|/* 	 * -149 is Lucent specific to convert to dBm.  Prism2 cards do 	 * things differently, sometimes don't have a noise measurement, 	 * and is firmware dependent :-( 	 */
 name|sc
 operator|->
 name|wi_sigcache
