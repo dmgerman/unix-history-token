@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.21 1996/10/07 10:01:17 sos Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.22 1996/10/10 11:27:35 sos Exp $  *  */
 end_comment
 
 begin_include
@@ -2577,15 +2577,18 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+name|int
+name|aft_cmd
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|Prompt
-parameter_list|(
-name|flag
-parameter_list|)
-name|int
-name|flag
-decl_stmt|;
+parameter_list|()
 block|{
 name|char
 modifier|*
@@ -2606,12 +2609,18 @@ condition|)
 return|return;
 if|if
 condition|(
-name|flag
+operator|!
+name|aft_cmd
 condition|)
 name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
+expr_stmt|;
+else|else
+name|aft_cmd
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
