@@ -2254,17 +2254,10 @@ operator|==
 operator|-
 literal|1
 condition|)
+comment|/* The default is to keep retrying forever. */
 name|retrycnt
 operator|=
-operator|(
-name|opflags
-operator|&
-name|BGRND
-operator|)
-condition|?
 literal|0
-else|:
-literal|1
 expr_stmt|;
 if|if
 condition|(
