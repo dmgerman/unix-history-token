@@ -34,12 +34,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/socket.h>
 end_include
 
@@ -64,19 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i4b/include/i4b_global.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<i4b/include/i4b_mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i4b/include/i4b_l1l2.h>
 end_include
 
 begin_include
@@ -142,19 +124,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/rman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<isa/isavar.h>
 end_include
 
 begin_comment

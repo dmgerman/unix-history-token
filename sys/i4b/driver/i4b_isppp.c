@@ -135,12 +135,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/protosw.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -153,18 +147,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/netisr.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/route.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in.h>
 end_include
 
@@ -172,12 +154,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_var.h>
 end_include
 
 begin_include
@@ -374,12 +350,6 @@ begin_include
 include|#
 directive|include
 file|<i4b/include/i4b_global.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i4b/include/i4b_mbuf.h>
 end_include
 
 begin_include

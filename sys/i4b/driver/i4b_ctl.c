@@ -61,12 +61,6 @@ directive|include
 file|<sys/ioccom.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa_device.h>
-end_include
-
 begin_else
 else|#
 directive|else
@@ -99,24 +93,6 @@ begin_include
 include|#
 directive|include
 file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/fcntl.h>
 end_include
 
 begin_include
@@ -264,12 +240,6 @@ begin_include
 include|#
 directive|include
 file|<i4b/include/i4b_global.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i4b/include/i4b_mbuf.h>
 end_include
 
 begin_include

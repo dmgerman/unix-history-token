@@ -100,12 +100,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i4b/include/i4b_l1l2.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<i4b/layer1/i4b_l1.h>
 end_include
 

@@ -24,30 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/tty.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/socket.h>
 end_include
 
@@ -61,12 +37,6 @@ begin_include
 include|#
 directive|include
 file|<i4b/include/i4b_mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i4b/include/i4b_global.h>
 end_include
 
 begin_define

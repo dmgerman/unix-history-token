@@ -32,19 +32,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mbuf.h>
 end_include
 
 begin_include
@@ -117,12 +105,6 @@ begin_include
 include|#
 directive|include
 file|<i4b/layer1/isic/i4b_hscx.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i4b/include/i4b_mbuf.h>
 end_include
 
 begin_include

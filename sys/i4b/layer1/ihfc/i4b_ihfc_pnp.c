@@ -52,12 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/clock.h>
 end_include
 
@@ -65,18 +59,6 @@ begin_include
 include|#
 directive|include
 file|<i4b/include/i4b_global.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i4b/include/i4b_mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i4b/include/i4b_l1l2.h>
 end_include
 
 begin_include

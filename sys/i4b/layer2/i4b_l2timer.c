@@ -61,12 +61,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/socket.h>
 end_include
 
@@ -144,30 +138,6 @@ begin_include
 include|#
 directive|include
 file|<i4b/include/i4b_global.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i4b/include/i4b_l1l2.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i4b/include/i4b_l2l3.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i4b/include/i4b_isdnq931.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i4b/include/i4b_mbuf.h>
 end_include
 
 begin_include
