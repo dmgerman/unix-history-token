@@ -1331,12 +1331,19 @@ control|(
 name|p
 operator|=
 name|argv
+operator|,
+name|ip
+operator|=
+name|used
 init|;
 operator|*
 name|p
 condition|;
 operator|++
 name|p
+operator|,
+operator|++
+name|ip
 control|)
 block|{
 if|if
@@ -1346,6 +1353,11 @@ operator|*
 name|p
 operator|!=
 literal|'/'
+operator|||
+operator|*
+name|ip
+operator|==
+literal|1
 operator|||
 operator|!
 name|show_text
@@ -1386,7 +1398,13 @@ argument_list|(
 name|pw
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+operator|*
+name|ip
+condition|)
 name|warnx
 argument_list|(
 literal|"%s: no such user"
