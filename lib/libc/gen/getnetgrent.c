@@ -1004,7 +1004,7 @@ name|group
 argument_list|)
 operator|)
 operator|==
-literal|'\n'
+literal|'\0'
 condition|)
 return|return
 operator|(

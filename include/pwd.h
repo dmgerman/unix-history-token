@@ -144,45 +144,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_PW_KEYPLUSBYNUM
+name|_PW_KEYYPBYNUM
 value|'5'
 end_define
 
 begin_comment
 comment|/* special +@netgroup entries */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_PW_KEYMINUSBYNUM
-value|'6'
-end_define
-
-begin_comment
-comment|/* special -@netgroup entries */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_PW_KEYPLUSCNT
-value|'7'
-end_define
-
-begin_comment
-comment|/* number of +@netgroup entries */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_PW_KEYMINUSCNT
-value|'8'
-end_define
-
-begin_comment
-comment|/* number of -@netgroup entries */
 end_comment
 
 begin_define
