@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: dec_kn8ae.c,v 1.1 1998/06/10 10:52:30 dfr Exp $ */
+comment|/* $Id: dec_kn8ae.c,v 1.2 1998/06/14 13:44:42 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -45,12 +45,6 @@ begin_include
 include|#
 directive|include
 file|<machine/rpb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/conf.h>
 end_include
 
 begin_include
