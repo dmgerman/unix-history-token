@@ -54,6 +54,13 @@ end_ifdef
 begin_typedef
 typedef|typedef
 name|_BSD_WCHAR_T_
+name|rune_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|_BSD_WCHAR_T_
 name|wchar_t
 typedef|;
 end_typedef
@@ -124,16 +131,19 @@ name|RAND_MAX
 value|0x7fffffff
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|__mb_cur_max
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
 name|MB_CUR_MAX
-value|1
+value|__mb_cur_max
 end_define
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_include
 include|#
