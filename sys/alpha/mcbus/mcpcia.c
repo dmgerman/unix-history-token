@@ -1037,6 +1037,9 @@ expr_stmt|;
 name|dec_kn300_cons_init
 argument_list|()
 expr_stmt|;
+name|promcndetach
+argument_list|()
+expr_stmt|;
 comment|/* 			 * Enable EISA interrupts. 			 */
 name|mcpcia_enable_intr
 argument_list|(
