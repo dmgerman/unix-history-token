@@ -1633,6 +1633,13 @@ argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
+name|ips_notmember
+argument_list|,
+literal|"\t%lu packet%s received for unknown multicast group\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
 name|ips_redirectsent
 argument_list|,
 literal|"\t%lu redirect%s sent\n"
