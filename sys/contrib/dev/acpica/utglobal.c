@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 201 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 202 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -2554,6 +2554,10 @@ expr_stmt|;
 name|AcpiGbl_DeviceNotify
 operator|.
 name|Handler
+operator|=
+name|NULL
+expr_stmt|;
+name|AcpiGbl_ExceptionHandler
 operator|=
 name|NULL
 expr_stmt|;
