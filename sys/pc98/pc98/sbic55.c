@@ -96,7 +96,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pc98/pc98/pc98_device.h>
+file|<i386/isa/isa_device.h>
 end_include
 
 begin_include
@@ -950,23 +950,23 @@ block|,
 literal|0
 block|,
 block|{
-name|MDDT_PC98
+name|MDDT_ISA
 block|,
 literal|0
 block|,
 literal|"bio"
 block|}
 block|,
-name|pc98_generic_externalize
+name|isa_generic_externalize
 block|,
 literal|0
 block|,
 literal|0
 block|,
-name|PC98_EXTERNALLEN
+name|ISA_EXTERNALLEN
 block|,
 operator|&
-name|kdc_nec0
+name|kdc_isa0
 block|,
 comment|/* parent */
 literal|0
@@ -1062,7 +1062,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Check if the device can be found at the port given  * and if so, set it up ready for further work  * as an argument, takes the pc98_device structure from  * autoconf.c  */
+comment|/*  * Check if the device can be found at the port given  * and if so, set it up ready for further work  * as an argument, takes the isa_device structure from  * autoconf.c  */
 end_comment
 
 begin_function
@@ -4387,7 +4387,7 @@ directive|ifndef
 name|ALLWAYS_BOUNCE
 if|if
 condition|(
-name|pc98_dmarangecheck
+name|isa_dmarangecheck
 argument_list|(
 operator|(
 name|caddr_t

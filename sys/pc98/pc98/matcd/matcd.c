@@ -36,7 +36,7 @@ comment|/*	The proceeding strings may not be changed*/
 end_comment
 
 begin_comment
-comment|/* $Id: matcd.c,v 1.2 1996/07/30 18:56:16 asami Exp $ */
+comment|/* $Id: matcd.c,v 1.3 1996/08/31 15:07:38 asami Exp $ */
 end_comment
 
 begin_comment
@@ -773,35 +773,6 @@ block|,
 literal|0
 block|,
 comment|/*Filled in by dev_attach*/
-ifdef|#
-directive|ifdef
-name|PC98
-literal|"matcdc"
-block|,
-literal|0
-block|,
-block|{
-name|MDDT_PC98
-block|,
-literal|0
-block|,
-literal|"bio"
-block|}
-block|,
-name|pc98_generic_externalize
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|PC98_EXTERNALLEN
-block|,
-operator|&
-name|kdc_nec0
-block|,
-comment|/*<12>Parent*/
-else|#
-directive|else
 literal|"matcdc"
 block|,
 literal|0
@@ -826,8 +797,6 @@ operator|&
 name|kdc_isa0
 block|,
 comment|/*<12>Parent*/
-endif|#
-directive|endif
 literal|0
 block|,
 comment|/*<12>Parent Data*/
@@ -5040,22 +5009,6 @@ name|id
 operator|->
 name|id_unit
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PC98
-name|kdc_matcd
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|.
-name|kdc_pc98
-operator|=
-name|id
-expr_stmt|;
-else|#
-directive|else
 name|kdc_matcd
 index|[
 name|id
@@ -5067,8 +5020,6 @@ name|kdc_isa
 operator|=
 name|id
 expr_stmt|;
-endif|#
-directive|endif
 name|dev_attach
 argument_list|(
 operator|&

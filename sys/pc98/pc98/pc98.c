@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	$Id: pc98.c,v 1.2 1996/07/23 07:46:28 asami Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	$Id: pc98.c,v 1.3 1996/08/31 15:07:05 asami Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * code to manage AT bus  *  * 92/08/18  Frank P. MacLachlan (fpm@crash.cts.com):  * Fixed uninitialized variable problem and added code to deal  * with DMA page boundaries in pc98_dmarangecheck().  Fixed word  * mode DMA count compution and reorganized DMA setup code in  * isa_dmastart()  */
+comment|/*  * code to manage AT bus  *  * 92/08/18  Frank P. MacLachlan (fpm@crash.cts.com):  * Fixed uninitialized variable problem and added code to deal  * with DMA page boundaries in isa_dmarangecheck().  Fixed word  * mode DMA count compution and reorganized DMA setup code in  * isa_dmastart()  */
 end_comment
 
 begin_comment
-comment|/*  * modified for PC9801 by A.Kojima F.Ukai M.Ishii   *			Kyoto University Microcomputer Club (KMC)  *	$Id: pc98.c,v 1.2 1996/07/23 07:46:28 asami Exp $  */
+comment|/*  * modified for PC9801 by A.Kojima F.Ukai M.Ishii   *			Kyoto University Microcomputer Club (KMC)  *	$Id: pc98.c,v 1.3 1994/03/17 23:24:40 kakefuda Exp $  */
 end_comment
 
 begin_include
@@ -89,17 +89,17 @@ directive|include
 file|<vm/pmap.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<i386/isa/isa_device.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|PC98
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<pc98/pc98/pc98_device.h>
-end_include
 
 begin_include
 include|#
@@ -123,12 +123,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa_device.h>
-end_include
 
 begin_include
 include|#
@@ -394,7 +388,7 @@ end_ifdef
 begin_decl_stmt
 name|struct
 name|kern_devconf
-name|kdc_nec0
+name|kdc_isa0
 init|=
 block|{
 literal|0
@@ -832,7 +826,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|pc98_dmarangecheck
+name|isa_dmarangecheck
 name|__P
 argument_list|(
 operator|(
@@ -1420,7 +1414,7 @@ end_comment
 
 begin_function
 name|int
-name|haveseen_pc98dev
+name|haveseen_isadev
 parameter_list|(
 name|dvp
 parameter_list|,
@@ -1449,7 +1443,7 @@ for|for
 control|(
 name|tmpdvp
 operator|=
-name|pc98_devtab_tty
+name|isa_devtab_tty
 init|;
 name|tmpdvp
 operator|->
@@ -1482,7 +1476,7 @@ for|for
 control|(
 name|tmpdvp
 operator|=
-name|pc98_devtab_bio
+name|isa_devtab_bio
 init|;
 name|tmpdvp
 operator|->
@@ -1515,7 +1509,7 @@ for|for
 control|(
 name|tmpdvp
 operator|=
-name|pc98_devtab_net
+name|isa_devtab_net
 init|;
 name|tmpdvp
 operator|->
@@ -1548,7 +1542,7 @@ for|for
 control|(
 name|tmpdvp
 operator|=
-name|pc98_devtab_null
+name|isa_devtab_null
 init|;
 name|tmpdvp
 operator|->
@@ -1591,7 +1585,7 @@ end_comment
 
 begin_function
 name|void
-name|pc98_configure
+name|isa_configure
 parameter_list|()
 block|{
 name|struct
@@ -1602,7 +1596,7 @@ decl_stmt|;
 name|dev_attach
 argument_list|(
 operator|&
-name|kdc_nec0
+name|kdc_isa0
 argument_list|)
 expr_stmt|;
 name|splhigh
@@ -1618,7 +1612,7 @@ for|for
 control|(
 name|dvp
 operator|=
-name|pc98_devtab_tty
+name|isa_devtab_tty
 init|;
 name|dvp
 operator|->
@@ -1647,7 +1641,7 @@ for|for
 control|(
 name|dvp
 operator|=
-name|pc98_devtab_bio
+name|isa_devtab_bio
 init|;
 name|dvp
 operator|->
@@ -1676,7 +1670,7 @@ for|for
 control|(
 name|dvp
 operator|=
-name|pc98_devtab_net
+name|isa_devtab_net
 init|;
 name|dvp
 operator|->
@@ -1705,7 +1699,7 @@ for|for
 control|(
 name|dvp
 operator|=
-name|pc98_devtab_null
+name|isa_devtab_null
 init|;
 name|dvp
 operator|->
@@ -1738,7 +1732,7 @@ for|for
 control|(
 name|dvp
 operator|=
-name|pc98_devtab_tty
+name|isa_devtab_tty
 init|;
 name|dvp
 operator|->
@@ -1768,7 +1762,7 @@ for|for
 control|(
 name|dvp
 operator|=
-name|pc98_devtab_bio
+name|isa_devtab_bio
 init|;
 name|dvp
 operator|->
@@ -1798,7 +1792,7 @@ for|for
 control|(
 name|dvp
 operator|=
-name|pc98_devtab_net
+name|isa_devtab_net
 init|;
 name|dvp
 operator|->
@@ -1828,7 +1822,7 @@ for|for
 control|(
 name|dvp
 operator|=
-name|pc98_devtab_null
+name|isa_devtab_null
 init|;
 name|dvp
 operator|->
@@ -1909,7 +1903,7 @@ for|for
 control|(
 name|dvp
 operator|=
-name|pc98_devtab_tty
+name|isa_devtab_tty
 init|;
 name|dvp
 operator|->
@@ -1929,7 +1923,7 @@ for|for
 control|(
 name|dvp
 operator|=
-name|pc98_devtab_bio
+name|isa_devtab_bio
 init|;
 name|dvp
 operator|->
@@ -1949,7 +1943,7 @@ for|for
 control|(
 name|dvp
 operator|=
-name|pc98_devtab_net
+name|isa_devtab_net
 init|;
 name|dvp
 operator|->
@@ -1969,7 +1963,7 @@ for|for
 control|(
 name|dvp
 operator|=
-name|pc98_devtab_null
+name|isa_devtab_null
 init|;
 name|dvp
 operator|->
@@ -2028,7 +2022,7 @@ end_function
 
 begin_function
 name|void
-name|reconfig_pc98dev
+name|reconfig_isadev
 parameter_list|(
 name|isdp
 parameter_list|,
@@ -2134,7 +2128,7 @@ condition|(
 operator|!
 name|reconfig
 operator|&&
-name|haveseen_pc98dev
+name|haveseen_isadev
 argument_list|(
 name|isdp
 argument_list|,
@@ -2462,7 +2456,7 @@ name|CC_IRQ
 expr_stmt|;
 if|if
 condition|(
-name|haveseen_pc98dev
+name|haveseen_isadev
 argument_list|(
 name|isdp
 argument_list|,
@@ -2678,7 +2672,7 @@ end_comment
 
 begin_function
 name|int
-name|pc98_externalize
+name|isa_externalize
 parameter_list|(
 name|struct
 name|isa_device
@@ -2714,7 +2708,7 @@ end_comment
 
 begin_function
 name|int
-name|pc98_internalize
+name|isa_internalize
 parameter_list|(
 name|struct
 name|isa_device
@@ -2769,7 +2763,7 @@ end_function
 
 begin_function
 name|int
-name|pc98_generic_externalize
+name|isa_generic_externalize
 parameter_list|(
 name|struct
 name|kern_devconf
@@ -2783,11 +2777,11 @@ name|req
 parameter_list|)
 block|{
 return|return
-name|pc98_externalize
+name|isa_externalize
 argument_list|(
 name|kdc
 operator|->
-name|kdc_pc98
+name|kdc_isa
 argument_list|,
 name|req
 argument_list|)
@@ -2801,7 +2795,7 @@ end_comment
 
 begin_function
 name|void
-name|pc98_defaultirq
+name|isa_defaultirq
 parameter_list|()
 block|{
 name|int
@@ -3340,7 +3334,7 @@ end_comment
 
 begin_function
 name|void
-name|pc98_dmainit
+name|isa_dmainit
 parameter_list|(
 name|chan
 parameter_list|,
@@ -3369,7 +3363,7 @@ name|VALID_DMA_MASK
 condition|)
 name|panic
 argument_list|(
-literal|"pc98_dmainit: channel out of range"
+literal|"isa_dmainit: channel out of range"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3383,7 +3377,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"pc98_dmainit: impossible request"
+literal|"isa_dmainit: impossible request"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3416,7 +3410,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|pc98_dmarangecheck
+name|isa_dmarangecheck
 argument_list|(
 name|buf
 argument_list|,
@@ -3478,7 +3472,7 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
-literal|"pc98_dmainit(%d, %d) failed\n"
+literal|"isa_dmainit(%d, %d) failed\n"
 argument_list|,
 name|chan
 argument_list|,
@@ -3502,7 +3496,7 @@ end_comment
 
 begin_function
 name|int
-name|pc98_dma_acquire
+name|isa_dma_acquire
 parameter_list|(
 name|chan
 parameter_list|)
@@ -3522,7 +3516,7 @@ name|VALID_DMA_MASK
 condition|)
 name|panic
 argument_list|(
-literal|"pc98_dma_acquire: channel out of range"
+literal|"isa_dma_acquire: channel out of range"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3540,7 +3534,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"pc98_dma_acquire: channel %d already in use\n"
+literal|"isa_dma_acquire: channel %d already in use\n"
 argument_list|,
 name|chan
 argument_list|)
@@ -3573,7 +3567,7 @@ end_comment
 
 begin_function
 name|void
-name|pc98_dma_release
+name|isa_dma_release
 parameter_list|(
 name|chan
 parameter_list|)
@@ -3593,7 +3587,7 @@ name|VALID_DMA_MASK
 condition|)
 name|panic
 argument_list|(
-literal|"pc98_dma_release: channel out of range"
+literal|"isa_dma_release: channel out of range"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3610,7 +3604,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"pc98_dma_release: channel %d not in use\n"
+literal|"isa_dma_release: channel %d not in use\n"
 argument_list|,
 name|chan
 argument_list|)
@@ -3658,12 +3652,12 @@ name|PC98
 end_ifndef
 
 begin_comment
-comment|/*  * pc98_dmacascade(): program 8237 DMA controller channel to accept  * external dma control by a board.  */
+comment|/*  * isa_dmacascade(): program 8237 DMA controller channel to accept  * external dma control by a board.  */
 end_comment
 
 begin_function
 name|void
-name|pc98_dmacascade
+name|isa_dmacascade
 parameter_list|(
 name|chan
 parameter_list|)
@@ -3683,7 +3677,7 @@ name|VALID_DMA_MASK
 condition|)
 name|panic
 argument_list|(
-literal|"pc98_dmacascade: channel out of range"
+literal|"isa_dmacascade: channel out of range"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3751,12 +3745,12 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * pc98_dmastart(): program 8237 DMA controller channel, avoid page alignment  * problems by using a bounce buffer.  */
+comment|/*  * isa_dmastart(): program 8237 DMA controller channel, avoid page alignment  * problems by using a bounce buffer.  */
 end_comment
 
 begin_function
 name|void
-name|pc98_dmastart
+name|isa_dmastart
 parameter_list|(
 name|int
 name|flags
@@ -3799,7 +3793,7 @@ name|VALID_DMA_MASK
 condition|)
 name|panic
 argument_list|(
-literal|"pc98_dmastart: channel out of range"
+literal|"isa_dmastart: channel out of range"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3843,7 +3837,7 @@ operator|)
 condition|)
 name|panic
 argument_list|(
-literal|"pc98_dmastart: impossible request"
+literal|"isa_dmastart: impossible request"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3860,7 +3854,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"pc98_dmastart: channel %d not acquired\n"
+literal|"isa_dmastart: channel %d not acquired\n"
 argument_list|,
 name|chan
 argument_list|)
@@ -3879,7 +3873,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"pc98_dmastart: channel %d busy\n"
+literal|"isa_dmastart: channel %d busy\n"
 argument_list|,
 name|chan
 argument_list|)
@@ -3894,7 +3888,7 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|pc98_dmarangecheck
+name|isa_dmarangecheck
 argument_list|(
 name|addr
 argument_list|,
@@ -3922,7 +3916,7 @@ name|nbytes
 condition|)
 name|panic
 argument_list|(
-literal|"pc98_dmastart: bad bounce buffer"
+literal|"isa_dmastart: bad bounce buffer"
 argument_list|)
 expr_stmt|;
 name|dma_bounced
@@ -4205,7 +4199,7 @@ end_function
 
 begin_function
 name|void
-name|pc98_dmadone
+name|isa_dmadone
 parameter_list|(
 name|int
 name|flags
@@ -4256,7 +4250,7 @@ name|VALID_DMA_MASK
 condition|)
 name|panic
 argument_list|(
-literal|"pc98_dmadone: channel out of range"
+literal|"isa_dmadone: channel out of range"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4273,7 +4267,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"pc98_dmadone: channel %d not acquired\n"
+literal|"isa_dmadone: channel %d not acquired\n"
 argument_list|,
 name|chan
 argument_list|)
@@ -4284,7 +4278,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * XXX This should be checked, but drivers like ad1848 only call 	 * isa_dmastart() once because they use Auto DMA mode.  If we 	 * leave this in, drivers that do this will print this continuously. 	 */
-block|if (dma_busy& (1<< chan) == 0) 		printf("pc98_dmadone: channel %d not busy\n", chan);
+block|if (dma_busy& (1<< chan) == 0) 		printf("isa_dmadone: channel %d not busy\n", chan);
 endif|#
 directive|endif
 if|if
@@ -4345,7 +4339,7 @@ end_comment
 
 begin_function
 name|int
-name|pc98_dmarangecheck
+name|isa_dmarangecheck
 parameter_list|(
 name|caddr_t
 name|va
@@ -4459,7 +4453,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"pc98_dmacheck: no physical page present"
+literal|"isa_dmacheck: no physical page present"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4598,7 +4592,7 @@ end_comment
 
 begin_function
 name|int
-name|pc98_nmi
+name|isa_nmi
 parameter_list|(
 name|cd
 parameter_list|)
@@ -4858,31 +4852,6 @@ modifier|*
 name|find_display
 parameter_list|()
 block|{
-ifdef|#
-directive|ifdef
-name|PC98
-name|struct
-name|isa_device
-modifier|*
-name|dvp
-decl_stmt|;
-for|for
-control|(
-name|dvp
-operator|=
-name|pc98_devtab_tty
-init|;
-name|dvp
-operator|->
-name|id_driver
-operator|!=
-name|NULL
-condition|;
-name|dvp
-operator|++
-control|)
-else|#
-directive|else
 name|struct
 name|isa_device
 modifier|*
@@ -4903,8 +4872,6 @@ condition|;
 name|dvp
 operator|++
 control|)
-endif|#
-directive|endif
 if|if
 condition|(
 name|dvp
@@ -4931,14 +4898,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * find an PC98 device in a given pc98_devtab_* table, given  * the table to search, the expected id_driver entry, and the unit number.  *  * this function is defined in pc98_device.h, and this location is debatable;  * i put it there because it's useless w/o, and directly operates on  * the other stuff in that file.  *  */
+comment|/*  * find an PC98 device in a given isa_devtab_* table, given  * the table to search, the expected id_driver entry, and the unit number.  *  * this function is defined in isa_device.h, and this location is debatable;  * i put it there because it's useless w/o, and directly operates on  * the other stuff in that file.  *  */
 end_comment
 
 begin_function
 name|struct
 name|isa_device
 modifier|*
-name|find_pc98dev
+name|find_isadev
 parameter_list|(
 name|table
 parameter_list|,
@@ -5016,7 +4983,7 @@ end_comment
 
 begin_function
 name|int
-name|pc98_irq_pending
+name|isa_irq_pending
 parameter_list|(
 name|dvp
 parameter_list|)

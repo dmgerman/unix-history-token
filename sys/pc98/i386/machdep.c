@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.2 1996/07/23 07:45:54 asami Exp $  */
+comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.3 1996/08/30 10:42:53 asami Exp $  */
 end_comment
 
 begin_include
@@ -389,17 +389,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<i386/isa/isa_device.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|PC98
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<pc98/pc98/pc98_device.h>
-end_include
 
 begin_include
 include|#
@@ -411,12 +411,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa_device.h>
-end_include
 
 begin_include
 include|#
@@ -5212,7 +5206,7 @@ operator|||
 name|NEPSON
 operator|>
 literal|0
-name|pc98_defaultirq
+name|isa_defaultirq
 argument_list|()
 expr_stmt|;
 endif|#
@@ -5392,7 +5386,7 @@ operator|<<
 literal|8
 operator|)
 expr_stmt|;
-comment|/* 	 * Print a warning if the official BIOS interface disagrees 	 * with the hackish interface used above.  Eventually only 	 * the official interface should be used. 	 */
+comment|/* 	 * Print a warning and set it to the safest value if the official 	 * BIOS interface (bootblock supplied) disagrees with the 	 * hackish interface used above.  Eventually only the official 	 * interface should be used.  This is necessary for some machines 	 * who 'steal' memory from the basemem for use as BIOS memory. 	 */
 if|if
 condition|(
 name|bootinfo
@@ -5408,9 +5402,24 @@ name|bi_basemem
 operator|!=
 name|biosbasemem
 condition|)
+block|{
+name|vm_offset_t
+name|pa
+decl_stmt|,
+name|va
+decl_stmt|,
+name|tmpva
+decl_stmt|;
+name|vm_size_t
+name|size
+decl_stmt|;
+name|unsigned
+modifier|*
+name|pte
+decl_stmt|;
 name|printf
 argument_list|(
-literal|"BIOS basemem (%ldK) != RTC basemem (%dK)\n"
+literal|"BIOS basemem (%ldK) != RTC basemem (%dK), "
 argument_list|,
 name|bootinfo
 operator|.
@@ -5419,6 +5428,89 @@ argument_list|,
 name|biosbasemem
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"setting to BIOS value.\n"
+argument_list|)
+expr_stmt|;
+name|biosbasemem
+operator|=
+name|bootinfo
+operator|.
+name|bi_basemem
+expr_stmt|;
+comment|/* 			 * XXX - Map this 'hole' of memory in the same manner 			 * as the ISA_HOLE (read/write/non-cacheable), since 			 * the BIOS 'fudges' it to become part of the ISA_HOLE. 			 * This code is similar to the code used in 			 * pmap_mapdev, but since no memory needs to be 			 * allocated we simply change the mapping. 			 */
+name|pa
+operator|=
+name|biosbasemem
+operator|*
+literal|1024
+expr_stmt|;
+name|va
+operator|=
+name|pa
+operator|+
+name|KERNBASE
+expr_stmt|;
+name|size
+operator|=
+name|roundup
+argument_list|(
+name|ISA_HOLE_START
+operator|-
+name|pa
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|tmpva
+operator|=
+name|va
+init|;
+name|size
+operator|>
+literal|0
+condition|;
+control|)
+block|{
+name|pte
+operator|=
+operator|(
+name|unsigned
+operator|*
+operator|)
+name|vtopte
+argument_list|(
+name|tmpva
+argument_list|)
+expr_stmt|;
+operator|*
+name|pte
+operator|=
+name|pa
+operator||
+name|PG_RW
+operator||
+name|PG_V
+operator||
+name|PG_N
+expr_stmt|;
+name|size
+operator|-=
+name|PAGE_SIZE
+expr_stmt|;
+name|tmpva
+operator|+=
+name|PAGE_SIZE
+expr_stmt|;
+name|pa
+operator|+=
+name|PAGE_SIZE
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|bootinfo

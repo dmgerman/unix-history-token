@@ -30,7 +30,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../../pc98/pc98_device.h"
+file|"../../pc98/pc98_bios.h"
 end_include
 
 begin_endif

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1994 Charles Hannum.  * Copyright (c) 1994 Jarle Gre
 end_comment
 
 begin_comment
-comment|/*  * $Id: aic6360.c,v 1.1.1.1 1996/06/14 10:04:42 asami Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
+comment|/*  * $Id: aic6360.c,v 1.2 1996/08/31 15:06:38 asami Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
 end_comment
 
 begin_comment
@@ -292,33 +292,11 @@ directive|include
 file|<machine/clock.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<pc98/pc98/pc98_device.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
 file|<i386/isa/isa_device.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -4270,35 +4248,6 @@ block|,
 literal|0
 block|,
 comment|/* filled in by dev_attach */
-ifdef|#
-directive|ifdef
-name|PC98
-literal|"aic"
-block|,
-literal|0
-block|,
-block|{
-name|MDDT_PC98
-block|,
-literal|0
-block|,
-literal|"bio"
-block|}
-block|,
-name|pc98_generic_externalize
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|PC98_EXTERNALLEN
-block|,
-operator|&
-name|kdc_nec0
-block|,
-comment|/* parent */
-else|#
-directive|else
 literal|"aic"
 block|,
 literal|0
@@ -4323,8 +4272,6 @@ operator|&
 name|kdc_isa0
 block|,
 comment|/* parent */
-endif|#
-directive|endif
 literal|0
 block|,
 comment|/* parentdata */

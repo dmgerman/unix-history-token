@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.3 1996/07/30 18:56:08 asami Exp $ */
+comment|/* $Id: scd.c,v 1.4 1996/08/31 15:07:16 asami Exp $ */
 end_comment
 
 begin_comment
@@ -161,33 +161,11 @@ directive|include
 file|<machine/stdarg.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<pc98/pc98/pc98_device.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
 file|<i386/isa/isa_device.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -1076,35 +1054,6 @@ block|,
 literal|0
 block|,
 comment|/* filled in by dev_attach */
-ifdef|#
-directive|ifdef
-name|PC98
-literal|"scd"
-block|,
-literal|0
-block|,
-block|{
-name|MDDT_PC98
-block|,
-literal|0
-block|,
-literal|"bio"
-block|}
-block|,
-name|pc98_generic_externalize
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|PC98_EXTERNALLEN
-block|,
-operator|&
-name|kdc_nec0
-block|,
-comment|/* parent */
-else|#
-directive|else
 literal|"scd"
 block|,
 literal|0
@@ -1129,8 +1078,6 @@ operator|&
 name|kdc_isa0
 block|,
 comment|/* parent */
-endif|#
-directive|endif
 literal|0
 block|,
 comment|/* parentdata */
@@ -1190,22 +1137,6 @@ name|id
 operator|->
 name|id_unit
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PC98
-name|kdc_scd
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|.
-name|kdc_pc98
-operator|=
-name|id
-expr_stmt|;
-else|#
-directive|else
 name|kdc_scd
 index|[
 name|id
@@ -1217,8 +1148,6 @@ name|kdc_isa
 operator|=
 name|id
 expr_stmt|;
-endif|#
-directive|endif
 name|dev_attach
 argument_list|(
 operator|&

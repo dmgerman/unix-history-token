@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 William F. Jolitz, TeleMuse  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software is a component of "386BSD" developed by  *	William F. Jolitz, TeleMuse.  * 4. Neither the name of the developer nor the name "386BSD"  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS A COMPONENT OF 386BSD DEVELOPED BY WILLIAM F. JOLITZ  * AND IS INTENDED FOR RESEARCH AND EDUCATIONAL PURPOSES ONLY. THIS  * SOFTWARE SHOULD NOT BE CONSIDERED TO BE A COMMERCIAL PRODUCT.  * THE DEVELOPER URGES THAT USERS WHO REQUIRE A COMMERCIAL PRODUCT  * NOT MAKE USE OF THIS WORK.  *  * FOR USERS WHO WISH TO UNDERSTAND THE 386BSD SYSTEM DEVELOPED  * BY WILLIAM F. JOLITZ, WE RECOMMEND THE USER STUDY WRITTEN  * REFERENCES SUCH AS THE  "PORTING UNIX TO THE 386" SERIES  * (BEGINNING JANUARY 1991 "DR. DOBBS JOURNAL", USA AND BEGINNING  * JUNE 1991 "UNIX MAGAZIN", GERMANY) BY WILLIAM F. JOLITZ AND  * LYNNE GREER JOLITZ, AS WELL AS OTHER BOOKS ON UNIX AND THE  * ON-LINE 386BSD USER MANUAL BEFORE USE. A BOOK DISCUSSING THE INTERNALS  * OF 386BSD ENTITLED "386BSD FROM THE INSIDE OUT" WILL BE AVAILABLE LATE 1992.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: unknown origin, 386BSD 0.1  *	$Id: lpt.c,v 1.2 1996/07/23 07:46:24 asami Exp $  */
+comment|/*  * Copyright (c) 1990 William F. Jolitz, TeleMuse  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software is a component of "386BSD" developed by  *	William F. Jolitz, TeleMuse.  * 4. Neither the name of the developer nor the name "386BSD"  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS A COMPONENT OF 386BSD DEVELOPED BY WILLIAM F. JOLITZ  * AND IS INTENDED FOR RESEARCH AND EDUCATIONAL PURPOSES ONLY. THIS  * SOFTWARE SHOULD NOT BE CONSIDERED TO BE A COMMERCIAL PRODUCT.  * THE DEVELOPER URGES THAT USERS WHO REQUIRE A COMMERCIAL PRODUCT  * NOT MAKE USE OF THIS WORK.  *  * FOR USERS WHO WISH TO UNDERSTAND THE 386BSD SYSTEM DEVELOPED  * BY WILLIAM F. JOLITZ, WE RECOMMEND THE USER STUDY WRITTEN  * REFERENCES SUCH AS THE  "PORTING UNIX TO THE 386" SERIES  * (BEGINNING JANUARY 1991 "DR. DOBBS JOURNAL", USA AND BEGINNING  * JUNE 1991 "UNIX MAGAZIN", GERMANY) BY WILLIAM F. JOLITZ AND  * LYNNE GREER JOLITZ, AS WELL AS OTHER BOOKS ON UNIX AND THE  * ON-LINE 386BSD USER MANUAL BEFORE USE. A BOOK DISCUSSING THE INTERNALS  * OF 386BSD ENTITLED "386BSD FROM THE INSIDE OUT" WILL BE AVAILABLE LATE 1992.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: unknown origin, 386BSD 0.1  *	$Id: lpt.c,v 1.3 1996/08/31 15:06:59 asami Exp $  */
 end_comment
 
 begin_comment
@@ -143,7 +143,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pc98/pc98/pc98_device.h>
+file|<i386/isa/isa_device.h>
 end_include
 
 begin_include
@@ -1298,35 +1298,6 @@ block|,
 literal|0
 block|,
 comment|/* filled in by dev_attach */
-ifdef|#
-directive|ifdef
-name|PC98
-literal|"lpt"
-block|,
-literal|0
-block|,
-block|{
-name|MDDT_PC98
-block|,
-literal|0
-block|,
-literal|"tty"
-block|}
-block|,
-name|pc98_generic_externalize
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|PC98_EXTERNALLEN
-block|,
-operator|&
-name|kdc_nec0
-block|,
-comment|/* parent */
-else|#
-directive|else
 literal|"lpt"
 block|,
 literal|0
@@ -1351,8 +1322,6 @@ operator|&
 name|kdc_isa0
 block|,
 comment|/* parent */
-endif|#
-directive|endif
 literal|0
 block|,
 comment|/* parentdata */
@@ -1413,22 +1382,6 @@ name|id
 operator|->
 name|id_unit
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PC98
-name|kdc_lpt
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|.
-name|kdc_pc98
-operator|=
-name|id
-expr_stmt|;
-else|#
-directive|else
 name|kdc_lpt
 index|[
 name|id
@@ -1440,8 +1393,6 @@ name|kdc_isa
 operator|=
 name|id
 expr_stmt|;
-endif|#
-directive|endif
 name|dev_attach
 argument_list|(
 operator|&
