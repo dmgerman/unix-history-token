@@ -291,7 +291,6 @@ break|break;
 case|case
 literal|'l'
 case|:
-comment|/* Undocumented; used by shutdown. */
 name|lflag
 operator|=
 literal|1
