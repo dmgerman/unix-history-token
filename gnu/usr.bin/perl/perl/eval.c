@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $RCSfile: eval.c,v $$Revision: 1.1.1.1 $$Date: 1994/09/10 06:27:32 $  *  *    Copyright (c) 1991, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  * $Log: eval.c,v $  * Revision 1.1.1.1  1994/09/10  06:27:32  gclarkii  * Initial import of Perl 4.046 bmaked  *  * Revision 1.1.1.1  1993/08/23  21:29:36  nate  * PERL!  *  * Revision 4.0.1.4  92/06/08  13:20:20  lwall  * patch20: added explicit time_t support  * patch20: fixed confusion between a *var's real name and its effective name  * patch20: added Atari ST portability  * patch20: new warning for use of x with non-numeric right operand  * patch20: modulus with highest bit in left operand set didn't always work  * patch20: dbmclose(%array) didn't work  * patch20: added ... as variant on ..  * patch20: O_PIPE conflicted with Atari  *  * Revision 4.0.1.3  91/11/05  17:15:21  lwall  * patch11: prepared for ctype implementations that don't define isascii()  * patch11: various portability fixes  * patch11: added sort {} LIST  * patch11: added eval {}  * patch11: sysread() in socket was substituting recv()  * patch11: a last statement outside any block caused occasional core dumps  * patch11: missing arguments caused core dump in -D8 code  * patch11: eval 'stuff' now optimized to eval {stuff}  *  * Revision 4.0.1.2  91/06/07  11:07:23  lwall  * patch4: new copyright notice  * patch4: length($`), length($&), length($') now optimized to avoid string copy  * patch4: assignment wasn't correctly de-tainting the assigned variable.  * patch4: default top-of-form format is now FILEHANDLE_TOP  * patch4: added $^P variable to control calling of perldb routines  * patch4: taintchecks could improperly modify parent in vfork()  * patch4: many, many itty-bitty portability fixes  *  * Revision 4.0.1.1  91/04/11  17:43:48  lwall  * patch1: fixed failed fork to return undef as documented  * patch1: reduced maximum branch distance in eval.c  *  * Revision 4.0  91/03/20  01:16:48  lwall  * 4.0 baseline.  *  */
+comment|/* $RCSfile: eval.c,v $$Revision: 1.2 $$Date: 1995/05/30 05:03:03 $  *  *    Copyright (c) 1991, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  * $Log: eval.c,v $  * Revision 1.2  1995/05/30 05:03:03  rgrimes  * Remove trailing whitespace.  *  * Revision 1.1.1.1  1994/09/10  06:27:32  gclarkii  * Initial import of Perl 4.046 bmaked  *  * Revision 1.1.1.1  1993/08/23  21:29:36  nate  * PERL!  *  * Revision 4.0.1.4  92/06/08  13:20:20  lwall  * patch20: added explicit time_t support  * patch20: fixed confusion between a *var's real name and its effective name  * patch20: added Atari ST portability  * patch20: new warning for use of x with non-numeric right operand  * patch20: modulus with highest bit in left operand set didn't always work  * patch20: dbmclose(%array) didn't work  * patch20: added ... as variant on ..  * patch20: O_PIPE conflicted with Atari  *  * Revision 4.0.1.3  91/11/05  17:15:21  lwall  * patch11: prepared for ctype implementations that don't define isascii()  * patch11: various portability fixes  * patch11: added sort {} LIST  * patch11: added eval {}  * patch11: sysread() in socket was substituting recv()  * patch11: a last statement outside any block caused occasional core dumps  * patch11: missing arguments caused core dump in -D8 code  * patch11: eval 'stuff' now optimized to eval {stuff}  *  * Revision 4.0.1.2  91/06/07  11:07:23  lwall  * patch4: new copyright notice  * patch4: length($`), length($&), length($') now optimized to avoid string copy  * patch4: assignment wasn't correctly de-tainting the assigned variable.  * patch4: default top-of-form format is now FILEHANDLE_TOP  * patch4: added $^P variable to control calling of perldb routines  * patch4: taintchecks could improperly modify parent in vfork()  * patch4: many, many itty-bitty portability fixes  *  * Revision 4.0.1.1  91/04/11  17:43:48  lwall  * patch1: fixed failed fork to return undef as documented  * patch1: reduced maximum branch distance in eval.c  *  * Revision 4.0  91/03/20  01:16:48  lwall  * 4.0 baseline.  *  */
 end_comment
 
 begin_include
@@ -17445,30 +17445,20 @@ goto|;
 case|case
 name|O_SPWENT
 case|:
-name|value
-operator|=
-operator|(
-name|double
-operator|)
 name|setpwent
 argument_list|()
 expr_stmt|;
 goto|goto
-name|donumset
+name|say_yes
 goto|;
 case|case
 name|O_EPWENT
 case|:
-name|value
-operator|=
-operator|(
-name|double
-operator|)
 name|endpwent
 argument_list|()
 expr_stmt|;
 goto|goto
-name|donumset
+name|say_yes
 goto|;
 else|#
 directive|else
