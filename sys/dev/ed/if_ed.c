@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the SMC Elite Ultra (8216), the 3Com 3c503, the NE1000 and NE2000,  *   and a variety of similar clones.  *  * $Id: if_ed.c,v 1.73 1995/05/30 08:01:58 rgrimes Exp $  */
+comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the SMC Elite Ultra (8216), the 3Com 3c503, the NE1000 and NE2000,  *   and a variety of similar clones.  *  * $Id: if_ed.c,v 1.74 1995/07/25 22:18:54 bde Exp $  */
 end_comment
 
 begin_include
@@ -6594,12 +6594,29 @@ if|if
 condition|(
 name|len
 operator|>
+operator|(
 name|ETHER_MAX_LEN
 operator|+
-literal|4
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ed_ring
+argument_list|)
+operator|)
+operator|||
+name|len
+operator|<
+operator|(
+name|ETHER_HDR_SIZE
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ed_ring
+argument_list|)
+operator|)
 condition|)
 block|{
-comment|/* len includes 4 byte header */
 comment|/* 			 * Length is a wild value. There's a good chance that 			 * this was caused by the NIC being old and buggy. 			 * The bug is that the length low byte is duplicated in 			 * the high byte. Try to recalculate the length based on 			 * the pointer to the next packet. 			 */
 comment|/* 			 * NOTE: sc->next_packet is pointing at the current packet. 			 */
 name|len
@@ -6668,6 +6685,16 @@ block|}
 comment|/* 		 * Be fairly liberal about what we allow as a "reasonable" length 		 * so that a [crufty] packet will make it to BPF (and can thus 		 * be analyzed). Note that all that is really important is that 		 * we have a length that will fit into one mbuf cluster or less; 		 * the upper layer protocols can then figure out the length from 		 * their own length field(s). 		 */
 if|if
 condition|(
+operator|(
+name|len
+operator|>
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ed_ring
+argument_list|)
+operator|)
+operator|&&
 operator|(
 name|len
 operator|<=
