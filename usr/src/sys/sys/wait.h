@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)wait.h	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)wait.h	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -282,26 +282,27 @@ name|BYTE_ORDER
 operator|==
 name|LITTLE_ENDIAN
 name|unsigned
-name|short
+name|int
 name|w_Termsig
 range|:
 literal|7
-decl_stmt|;
+decl_stmt|,
 comment|/* termination signal */
-name|unsigned
-name|short
 name|w_Coredump
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* core dump indicator */
-name|unsigned
-name|short
 name|w_Retcode
 range|:
 literal|8
-decl_stmt|;
+decl_stmt|,
 comment|/* exit code if w_termsig==0 */
+name|w_Filler
+range|:
+literal|16
+decl_stmt|;
+comment|/* upper bits filler */
 endif|#
 directive|endif
 if|#
@@ -310,24 +311,22 @@ name|BYTE_ORDER
 operator|==
 name|BIG_ENDIAN
 name|unsigned
-name|short
+name|int
 name|w_Filler
-decl_stmt|;
+range|:
+literal|16
+decl_stmt|,
 comment|/* upper bits filler */
-name|unsigned
-name|char
 name|w_Retcode
-decl_stmt|;
+range|:
+literal|8
+decl_stmt|,
 comment|/* exit code if w_termsig==0 */
-name|unsigned
-name|char
 name|w_Coredump
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* core dump indicator */
-name|unsigned
-name|char
 name|w_Termsig
 range|:
 literal|7
@@ -347,34 +346,44 @@ name|BYTE_ORDER
 operator|==
 name|LITTLE_ENDIAN
 name|unsigned
-name|short
+name|int
 name|w_Stopval
 range|:
 literal|8
-decl_stmt|;
+decl_stmt|,
 comment|/* == W_STOPPED if stopped */
-name|unsigned
-name|short
 name|w_Stopsig
 range|:
 literal|8
-decl_stmt|;
+decl_stmt|,
 comment|/* signal that stopped us */
-else|#
-directive|else
-name|unsigned
-name|short
 name|w_Filler
+range|:
+literal|16
 decl_stmt|;
 comment|/* upper bits filler */
+endif|#
+directive|endif
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
 name|unsigned
-name|char
+name|int
+name|w_Filler
+range|:
+literal|16
+decl_stmt|,
+comment|/* upper bits filler */
 name|w_Stopsig
-decl_stmt|;
+range|:
+literal|8
+decl_stmt|,
 comment|/* signal that stopped us */
-name|unsigned
-name|char
 name|w_Stopval
+range|:
+literal|8
 decl_stmt|;
 comment|/* == W_STOPPED if stopped */
 endif|#
