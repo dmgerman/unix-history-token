@@ -4,7 +4,7 @@ comment|/* vinuminterrupt.c: bottom half of the driver */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinuminterrupt.c,v 1.9 2000/02/16 01:59:02 grog Exp grog $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinuminterrupt.c,v 1.12 2000/11/24 03:41:42 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -100,6 +100,16 @@ name|drive
 modifier|*
 name|drive
 decl_stmt|;
+name|struct
+name|sd
+modifier|*
+name|sd
+decl_stmt|;
+name|char
+modifier|*
+name|gravity
+decl_stmt|;
+comment|/* for error messages */
 name|rqe
 operator|=
 operator|(
@@ -224,6 +234,20 @@ literal|0
 condition|)
 block|{
 comment|/* transfer in error */
+name|gravity
+operator|=
+literal|""
+expr_stmt|;
+name|sd
+operator|=
+operator|&
+name|SD
+index|[
+name|rqe
+operator|->
+name|sdno
+index|]
+expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -259,13 +283,8 @@ operator|=
 name|EIO
 expr_stmt|;
 comment|/* no: catchall "I/O error" */
-name|SD
-index|[
-name|rqe
+name|sd
 operator|->
-name|sdno
-index|]
-operator|.
 name|lasterror
 operator|=
 name|rq
@@ -282,21 +301,30 @@ name|BIO_READ
 condition|)
 block|{
 comment|/* read operation */
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"%s: fatal read I/O error\n"
-argument_list|,
-name|SD
-index|[
-name|rqe
+if|if
+condition|(
+operator|(
+name|rq
 operator|->
-name|sdno
-index|]
-operator|.
-name|name
-argument_list|)
+name|error
+operator|==
+name|ENXIO
+operator|)
+operator|||
+operator|(
+name|sd
+operator|->
+name|flags
+operator|&
+name|VF_RETRYERRORS
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|gravity
+operator|=
+literal|" fatal"
 expr_stmt|;
 name|set_sd_state
 argument_list|(
@@ -311,24 +339,55 @@ argument_list|)
 expr_stmt|;
 comment|/* subdisk is crashed */
 block|}
-else|else
-block|{
-comment|/* write operation */
 name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: fatal write I/O error\n"
+literal|"%s:%s read error, block %d for %ld bytes\n"
 argument_list|,
-name|SD
-index|[
-name|rqe
+name|gravity
+argument_list|,
+name|sd
 operator|->
-name|sdno
-index|]
-operator|.
 name|name
+argument_list|,
+name|bp
+operator|->
+name|b_blkno
+argument_list|,
+name|bp
+operator|->
+name|b_bcount
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* write operation */
+if|if
+condition|(
+operator|(
+name|rq
+operator|->
+name|error
+operator|==
+name|ENXIO
+operator|)
+operator|||
+operator|(
+name|sd
+operator|->
+name|flags
+operator|&
+name|VF_RETRYERRORS
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|gravity
+operator|=
+literal|"fatal "
 expr_stmt|;
 name|set_sd_state
 argument_list|(
@@ -343,6 +402,47 @@ argument_list|)
 expr_stmt|;
 comment|/* subdisk is stale */
 block|}
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s:%s write error, block %d for %ld bytes\n"
+argument_list|,
+name|gravity
+argument_list|,
+name|sd
+operator|->
+name|name
+argument_list|,
+name|bp
+operator|->
+name|b_blkno
+argument_list|,
+name|bp
+operator|->
+name|b_bcount
+argument_list|)
+expr_stmt|;
+block|}
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: user buffer block %d for %ld bytes\n"
+argument_list|,
+name|sd
+operator|->
+name|name
+argument_list|,
+name|ubp
+operator|->
+name|b_blkno
+argument_list|,
+name|ubp
+operator|->
+name|b_bcount
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rq
@@ -357,7 +457,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: fatal drive I/O error\n"
+literal|"%s: fatal drive I/O error, block %d for %ld bytes\n"
 argument_list|,
 name|DRIVE
 index|[
@@ -369,6 +469,14 @@ operator|.
 name|label
 operator|.
 name|name
+argument_list|,
+name|bp
+operator|->
+name|b_blkno
+argument_list|,
+name|bp
+operator|->
+name|b_bcount
 argument_list|)
 expr_stmt|;
 name|DRIVE
@@ -1068,6 +1176,31 @@ name|active
 operator|--
 expr_stmt|;
 comment|/* another request finished */
+if|if
+condition|(
+name|rq
+operator|->
+name|flags
+operator|&
+name|XFR_COPYBUF
+condition|)
+block|{
+name|Free
+argument_list|(
+name|ubp
+operator|->
+name|b_data
+argument_list|)
+expr_stmt|;
+name|ubp
+operator|->
+name|b_data
+operator|=
+name|rq
+operator|->
+name|save_data
+expr_stmt|;
+block|}
 name|bufdone
 argument_list|(
 name|ubp
