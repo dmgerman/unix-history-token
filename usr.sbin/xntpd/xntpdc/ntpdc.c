@@ -4212,10 +4212,10 @@ operator|=
 operator|(
 name|num
 operator|>
-name|MAX_CMDLINE
+name|MAXLINE
 operator|)
 condition|?
-name|MAX_CMDLINE
+name|MAXLINE
 else|:
 name|num
 expr_stmt|;
