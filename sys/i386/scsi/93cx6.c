@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Interface for the 93C66/56/46/26/06 serial eeprom parts.  *  * Copyright (c) 1995, 1996 Daniel M. Eischen  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Daniel M. Eischen.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *      $Id$  */
+comment|/*  * Interface for the 93C66/56/46/26/06 serial eeprom parts.  *  * Copyright (c) 1995, 1996 Daniel M. Eischen  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Daniel M. Eischen.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *      $Id: 93cx6.c,v 1.10 1997/02/22 09:38:36 peter Exp $  */
 end_comment
 
 begin_comment
@@ -27,12 +27,6 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 end_if
-
-begin_include
-include|#
-directive|include
-file|<machine/clock.h>
-end_include
 
 begin_include
 include|#
