@@ -840,7 +840,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|dyn_rst_lifetime
+name|dyn_short_lifetime
 argument_list|,
 literal|0
 argument_list|,
