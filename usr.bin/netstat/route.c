@@ -1012,7 +1012,7 @@ name|WID_IF_DEFAULT
 parameter_list|(
 name|af
 parameter_list|)
-value|6
+value|(Wflag ? 8 : 6)
 end_define
 
 begin_comment
@@ -1053,7 +1053,7 @@ name|WID_IF_DEFAULT
 parameter_list|(
 name|af
 parameter_list|)
-value|((af) == AF_INET6 ? 8 : 6)
+value|((af) == AF_INET6 ? 8 : (Wflag ? 8 : 6))
 end_define
 
 begin_endif
