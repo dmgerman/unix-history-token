@@ -9608,9 +9608,15 @@ decl_stmt|,
 name|offset
 init|=
 literal|0
-decl_stmt|,
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SCSI_LOW_INFORM
+name|u_int
 name|speed
 decl_stmt|;
+endif|#
+directive|endif
 name|u_char
 modifier|*
 name|s
