@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	4.6 82/12/25"
+literal|"@(#)rlogind.c	4.7 82/12/29"
 decl_stmt|;
 end_decl_stmt
 
@@ -1581,6 +1581,10 @@ decl_stmt|;
 name|rmut
 argument_list|()
 expr_stmt|;
+name|vhangup
+argument_list|()
+expr_stmt|;
+comment|/* XXX */
 name|ioctl
 argument_list|(
 name|netf
