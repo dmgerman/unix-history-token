@@ -2866,7 +2866,7 @@ literal|"%s/%s"
 argument_list|,
 name|Tmpdir
 argument_list|,
-literal|"cvsXXXXXXXXXX"
+literal|"cvsXXXXXX"
 argument_list|)
 expr_stmt|;
 name|retval
