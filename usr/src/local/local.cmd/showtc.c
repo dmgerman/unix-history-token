@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)showtc.c	1.6	(Berkeley) %G%"
+literal|"@(#)showtc.c	1.7	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -667,7 +667,7 @@ begin_decl_stmt
 name|char
 name|tcbuf
 index|[
-literal|1024
+literal|2048
 index|]
 decl_stmt|;
 end_decl_stmt
