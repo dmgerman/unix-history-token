@@ -1766,12 +1766,12 @@ literal|16
 argument|;     v86.edx = nblk<<
 literal|8
 argument|| dsk.drive;     v86int();     v86.ctl = V86_FLAGS;     if (V86_CY(v86.efl)) { 	printf(
-literal|"Disk error 0x%x (lba=0x%x)\n"
+literal|"Disk error 0x%x lba 0x%x\n"
 argument|, v86.eax>>
 literal|8
 argument|&
 literal|0xff
-argument|, 	       lba); 	return -
+argument|, lba); 	return -
 literal|1
 argument|;     }     return
 literal|0
