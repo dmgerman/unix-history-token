@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* csh.h 4.5 82/12/30 */
+comment|/* csh.h 4.6 83/02/03 */
 end_comment
 
 begin_include
@@ -323,7 +323,8 @@ comment|/* Temp name for<< shell files in /tmp */
 end_comment
 
 begin_decl_stmt
-name|time_t
+name|struct
+name|timeval
 name|time0
 decl_stmt|;
 end_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* proc.h 4.2 %G% */
+comment|/* proc.h 4.3 %G% */
 end_comment
 
 begin_comment
@@ -54,26 +54,28 @@ name|p_jobid
 decl_stmt|;
 comment|/* pid of job leader */
 comment|/* if a job is stopped/background p_jobid gives its pgrp */
-name|time_t
+name|struct
+name|timeval
 name|p_btime
 decl_stmt|;
 comment|/* begin time */
-name|time_t
+name|struct
+name|timeval
 name|p_etime
 decl_stmt|;
 comment|/* end time */
-name|long
-name|p_stime
-decl_stmt|;
-comment|/* system cpu time */
-name|long
-name|p_utime
-decl_stmt|;
-comment|/* user cpu time */
 name|struct
 name|rusage
 name|p_rusage
 decl_stmt|;
+name|long
+name|p_utime
+decl_stmt|;
+comment|/* XXX */
+name|long
+name|p_stime
+decl_stmt|;
+comment|/* XXX */
 name|char
 modifier|*
 name|p_command

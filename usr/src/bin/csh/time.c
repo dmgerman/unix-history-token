@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	time.c	4.2	82/12/30	*/
+comment|/*	time.c	4.3	83/02/03	*/
 end_comment
 
 begin_include
@@ -38,10 +38,17 @@ name|struct
 name|rusage
 name|ruch
 decl_stmt|;
-name|time
+name|gettimeofday
 argument_list|(
 operator|&
 name|time0
+argument_list|,
+operator|(
+expr|struct
+name|timezone
+operator|*
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 name|getrusage
@@ -83,7 +90,8 @@ end_macro
 
 begin_block
 block|{
-name|time_t
+name|struct
+name|timeval
 name|timedol
 decl_stmt|;
 name|struct
@@ -117,10 +125,17 @@ operator|&
 name|ruch
 argument_list|)
 expr_stmt|;
-name|time
+name|gettimeofday
 argument_list|(
 operator|&
 name|timedol
+argument_list|,
+operator|(
+expr|struct
+name|timezone
+operator|*
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 name|prusage
@@ -131,8 +146,10 @@ argument_list|,
 operator|&
 name|ru1
 argument_list|,
+operator|&
 name|timedol
-operator|-
+argument_list|,
+operator|&
 name|time0
 argument_list|)
 expr_stmt|;
@@ -379,7 +396,9 @@ name|r0
 argument_list|,
 name|r1
 argument_list|,
-name|sec
+name|e
+argument_list|,
+name|b
 argument_list|)
 specifier|register
 expr|struct
@@ -393,8 +412,13 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|time_t
-name|sec
+name|struct
+name|timeval
+modifier|*
+name|e
+decl_stmt|,
+modifier|*
+name|b
 decl_stmt|;
 end_decl_stmt
 
@@ -487,6 +511,33 @@ name|adrof
 argument_list|(
 literal|"time"
 argument_list|)
+decl_stmt|;
+name|int
+name|ms
+init|=
+operator|(
+name|e
+operator|->
+name|tv_sec
+operator|-
+name|b
+operator|->
+name|tv_sec
+operator|)
+operator|*
+literal|100
+operator|+
+operator|(
+name|e
+operator|->
+name|tv_usec
+operator|-
+name|b
+operator|->
+name|tv_usec
+operator|)
+operator|/
+literal|10000
 decl_stmt|;
 name|cp
 operator|=
@@ -595,7 +646,9 @@ literal|'E'
 case|:
 name|psecs
 argument_list|(
-name|sec
+name|ms
+operator|/
+literal|100
 argument_list|)
 expr_stmt|;
 break|break;
@@ -611,12 +664,14 @@ name|int
 call|)
 argument_list|(
 name|t
+operator|*
+literal|100
 operator|/
 operator|(
 operator|(
-name|sec
+name|ms
 condition|?
-name|sec
+name|ms
 else|:
 literal|1
 operator|)

@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)csh.c 4.9 %G%"
+literal|"@(#)csh.c 4.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3332,6 +3332,8 @@ operator|.
 name|st_mtime
 operator|>
 name|time0
+operator|.
+name|tv_sec
 expr_stmt|;
 if|if
 condition|(
