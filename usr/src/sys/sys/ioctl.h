@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	6.1	83/07/29	*/
+comment|/*	ioctl.h	6.2	84/03/20	*/
 end_comment
 
 begin_comment
@@ -1736,6 +1736,39 @@ end_define
 
 begin_comment
 comment|/* get ifnet list */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCSARP
+value|_IOW(i, 30, struct arpreq)
+end_define
+
+begin_comment
+comment|/* set arp entry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGARP
+value|_IOWR(i, 31, struct arpreq)
+end_define
+
+begin_comment
+comment|/* get arp entry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCDARP
+value|_IOW(i, 32, struct arpreq)
+end_define
+
+begin_comment
+comment|/* delete arp entry */
 end_comment
 
 begin_endif
