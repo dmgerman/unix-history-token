@@ -390,10 +390,6 @@ decl_stmt|;
 comment|/* Line number doing locking */
 endif|#
 directive|endif
-name|dev_t
-name|v_cachedfs
-decl_stmt|;
-comment|/* cached fs id */
 name|ino_t
 name|v_cachedid
 decl_stmt|;

@@ -12358,17 +12358,6 @@ index|[
 name|n
 index|]
 operator|.
-name|xv_dev
-operator|=
-name|vp
-operator|->
-name|v_cachedfs
-expr_stmt|;
-name|xvn
-index|[
-name|n
-index|]
-operator|.
 name|xv_ino
 operator|=
 name|vp
