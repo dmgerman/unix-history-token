@@ -12,7 +12,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioccom.h>
 end_include
 
 begin_include
@@ -24,31 +30,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
+file|<sys/mbuf.h>
 end_include
 
 begin_include
@@ -60,7 +48,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ioccom.h>
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
 end_include
 
 begin_include
@@ -78,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ng_device.h"
+file|<netgraph/ng_device.h>
 end_include
 
 begin_comment
@@ -1849,7 +1849,6 @@ name|p
 operator|=
 name|addr
 expr_stmt|;
-comment|/* NG_SEND_MSG_HOOK(error, here, msg, hook, retaddr) */
 name|NG_SEND_MSG_HOOK
 argument_list|(
 name|error
@@ -1864,7 +1863,7 @@ name|connection
 operator|->
 name|active_hook
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
