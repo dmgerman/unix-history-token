@@ -141,6 +141,18 @@ directive|include
 file|<netinet/ip_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/tcp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp_var.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
