@@ -8470,7 +8470,7 @@ operator|,
 literal|"\20\14OUT\15IN\16LOWSPEED\17SKIP\20ISO"
 operator|,
 operator|(
-name|int
+name|u_long
 operator|)
 operator|(
 name|uintptr_t
@@ -8483,8 +8483,6 @@ name|ed
 operator|.
 name|ed_tailp
 argument_list|)
-operator|,
-literal|"\20\1BIT1\2BIT2"
 operator|,
 operator|(
 name|int
