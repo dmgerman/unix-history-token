@@ -16,6 +16,27 @@ name|_PTHREAD_NP_H_
 end_define
 
 begin_comment
+comment|/*  * Non-POSIX type definitions:  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+argument_list|(
+argument|*pthread_switch_routine_t
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|pthread_t
+operator|,
+name|pthread_t
+operator|)
+argument_list|)
+expr_stmt|;
+end_typedef
+
+begin_comment
 comment|/*  * Non-POSIX thread function prototype definitions:  */
 end_comment
 
@@ -125,6 +146,26 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|int
+name|pthread_switch_add_np
+parameter_list|(
+name|pthread_switch_routine_t
+name|routine
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pthread_switch_delete_np
+parameter_list|(
+name|pthread_switch_routine_t
+name|routine
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_macro
 name|__END_DECLS

@@ -117,7 +117,7 @@ literal|0
 expr_stmt|;
 name|setitimer
 argument_list|(
-name|ITIMER_VIRTUAL
+name|_ITIMER_SCHED_TIMER
 argument_list|,
 operator|&
 name|itimer

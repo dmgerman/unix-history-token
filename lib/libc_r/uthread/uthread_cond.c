@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 John Birrell<jb@cimlogic.com.au>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * Copyright (c) 1995 John Birrell<jb@cimlogic.com.au>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -38,6 +38,47 @@ include|#
 directive|include
 file|"pthread_private.h"
 end_include
+
+begin_comment
+comment|/*  * Prototypes  */
+end_comment
+
+begin_function_decl
+specifier|static
+specifier|inline
+name|pthread_t
+name|cond_queue_deq
+parameter_list|(
+name|pthread_cond_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+specifier|inline
+name|void
+name|cond_queue_remove
+parameter_list|(
+name|pthread_cond_t
+parameter_list|,
+name|pthread_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+specifier|inline
+name|void
+name|cond_queue_enq
+parameter_list|(
+name|pthread_cond_t
+parameter_list|,
+name|pthread_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int
@@ -167,7 +208,7 @@ block|}
 else|else
 block|{
 comment|/* 				 * Initialise the condition variable 				 * structure: 				 */
-name|_thread_queue_init
+name|TAILQ_INIT
 argument_list|(
 operator|&
 name|pcond
@@ -186,6 +227,12 @@ operator|->
 name|c_type
 operator|=
 name|type
+expr_stmt|;
+name|pcond
+operator|->
+name|c_mutex
+operator|=
+name|NULL
 expr_stmt|;
 name|memset
 argument_list|(
@@ -368,6 +415,87 @@ comment|/* Fast condition variable: */
 case|case
 name|COND_TYPE_FAST
 case|:
+if|if
+condition|(
+operator|(
+name|mutex
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+operator|(
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|c_mutex
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|c_mutex
+operator|!=
+operator|*
+name|mutex
+operator|)
+operator|)
+condition|)
+block|{
+comment|/* Unlock the condition variable structure: */
+name|_SPINUNLOCK
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+comment|/* Return invalid argument error: */
+name|rval
+operator|=
+name|EINVAL
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Reset the timeout flag: */
+name|_thread_run
+operator|->
+name|timeout
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 				 * Queue the running thread for the condition 				 * variable: 				 */
+name|cond_queue_enq
+argument_list|(
+operator|*
+name|cond
+argument_list|,
+name|_thread_run
+argument_list|)
+expr_stmt|;
+comment|/* Remember the mutex that is being used: */
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|c_mutex
+operator|=
+operator|*
+name|mutex
+expr_stmt|;
 comment|/* Wait forever: */
 name|_thread_run
 operator|->
@@ -378,27 +506,13 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/* 			 * Queue the running thread for the condition 			 * variable: 			 */
-name|_thread_queue_enq
-argument_list|(
-operator|&
-operator|(
-operator|*
-name|cond
-operator|)
-operator|->
-name|c_queue
-argument_list|,
-name|_thread_run
-argument_list|)
-expr_stmt|;
 comment|/* Unlock the mutex: */
 if|if
 condition|(
 operator|(
 name|rval
 operator|=
-name|pthread_mutex_unlock
+name|_mutex_cv_unlock
 argument_list|(
 name|mutex
 argument_list|)
@@ -407,8 +521,19 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 				 * Cannot unlock the mutex, so remove the 				 * running thread from the condition 				 * variable queue:  				 */
-name|_thread_queue_deq
+comment|/* 					 * Cannot unlock the mutex, so remove 					 * the running thread from the condition 					 * variable queue: 					 */
+name|cond_queue_remove
+argument_list|(
+operator|*
+name|cond
+argument_list|,
+name|_thread_run
+argument_list|)
+expr_stmt|;
+comment|/* Check for no more waiters: */
+if|if
+condition|(
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 operator|(
@@ -418,6 +543,17 @@ operator|)
 operator|->
 name|c_queue
 argument_list|)
+operator|==
+name|NULL
+condition|)
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|c_mutex
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* Unlock the condition variable structure: */
 name|_SPINUNLOCK
@@ -434,7 +570,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Schedule the next thread: */
+comment|/* 					 * Schedule the next thread and unlock 					 * the condition variable structure: 					 */
 name|_thread_kern_sched_state_unlock
 argument_list|(
 name|PS_COND_WAIT
@@ -455,11 +591,12 @@ expr_stmt|;
 comment|/* Lock the mutex: */
 name|rval
 operator|=
-name|pthread_mutex_lock
+name|_mutex_cv_lock
 argument_list|(
 name|mutex
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 break|break;
 comment|/* Trap invalid condition variable types: */
@@ -580,6 +717,60 @@ comment|/* Fast condition variable: */
 case|case
 name|COND_TYPE_FAST
 case|:
+if|if
+condition|(
+operator|(
+name|mutex
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+operator|(
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|c_mutex
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|c_mutex
+operator|!=
+operator|*
+name|mutex
+operator|)
+operator|)
+condition|)
+block|{
+comment|/* Return invalid argument error: */
+name|rval
+operator|=
+name|EINVAL
+expr_stmt|;
+comment|/* Unlock the condition variable structure: */
+name|_SPINUNLOCK
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* Set the wakeup time: */
 name|_thread_run
 operator|->
@@ -608,19 +799,25 @@ name|timeout
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 			 * Queue the running thread for the condition 			 * variable: 			 */
-name|_thread_queue_enq
+comment|/* 				 * Queue the running thread for the condition 				 * variable: 				 */
+name|cond_queue_enq
 argument_list|(
-operator|&
+operator|*
+name|cond
+argument_list|,
+name|_thread_run
+argument_list|)
+expr_stmt|;
+comment|/* Remember the mutex that is being used: */
 operator|(
 operator|*
 name|cond
 operator|)
 operator|->
-name|c_queue
-argument_list|,
-name|_thread_run
-argument_list|)
+name|c_mutex
+operator|=
+operator|*
+name|mutex
 expr_stmt|;
 comment|/* Unlock the mutex: */
 if|if
@@ -628,7 +825,7 @@ condition|(
 operator|(
 name|rval
 operator|=
-name|pthread_mutex_unlock
+name|_mutex_cv_unlock
 argument_list|(
 name|mutex
 argument_list|)
@@ -637,8 +834,19 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 				 * Cannot unlock the mutex, so remove the 				 * running thread from the condition 				 * variable queue:  				 */
-name|_thread_queue_deq
+comment|/* 					 * Cannot unlock the mutex, so remove 					 * the running thread from the condition 					 * variable queue:  					 */
+name|cond_queue_remove
+argument_list|(
+operator|*
+name|cond
+argument_list|,
+name|_thread_run
+argument_list|)
+expr_stmt|;
+comment|/* Check for no more waiters: */
+if|if
+condition|(
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 operator|(
@@ -648,6 +856,17 @@ operator|)
 operator|->
 name|c_queue
 argument_list|)
+operator|==
+name|NULL
+condition|)
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|c_mutex
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* Unlock the condition variable structure: */
 name|_SPINUNLOCK
@@ -664,7 +883,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Schedule the next thread: */
+comment|/* 					 * Schedule the next thread and unlock 					 * the condition variable structure: 					 */
 name|_thread_kern_sched_state_unlock
 argument_list|(
 name|PS_COND_WAIT
@@ -682,35 +901,100 @@ argument_list|,
 name|__LINE__
 argument_list|)
 expr_stmt|;
-comment|/* Lock the mutex: */
-if|if
-condition|(
-operator|(
-name|rval
-operator|=
-name|pthread_mutex_lock
-argument_list|(
-name|mutex
-argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{ 				}
-comment|/* Check if the wait timed out: */
-elseif|else
+comment|/* Check if the wait timedout: */
 if|if
 condition|(
 name|_thread_run
 operator|->
 name|timeout
+operator|==
+literal|0
 condition|)
 block|{
+comment|/* Lock the mutex: */
+name|rval
+operator|=
+name|_mutex_cv_lock
+argument_list|(
+name|mutex
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Lock the condition variable structure: */
+name|_SPINLOCK
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+comment|/* 						 * The wait timed out; remove 						 * the thread from the condition 					 	 * variable queue: 						 */
+name|cond_queue_remove
+argument_list|(
+operator|*
+name|cond
+argument_list|,
+name|_thread_run
+argument_list|)
+expr_stmt|;
+comment|/* Check for no more waiters: */
+if|if
+condition|(
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|c_queue
+argument_list|)
+operator|==
+name|NULL
+condition|)
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|c_mutex
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* Unock the condition variable structure: */
+name|_SPINUNLOCK
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 comment|/* Return a timeout error: */
 name|rval
 operator|=
 name|ETIMEDOUT
 expr_stmt|;
+comment|/* 						 * Lock the mutex and ignore 						 * any errors: 						 */
+operator|(
+name|void
+operator|)
+name|_mutex_cv_lock
+argument_list|(
+name|mutex
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 break|break;
@@ -759,9 +1043,6 @@ name|rval
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|status
-decl_stmt|;
 name|pthread_t
 name|pthread
 decl_stmt|;
@@ -809,13 +1090,50 @@ comment|/* Fast condition variable: */
 case|case
 name|COND_TYPE_FAST
 case|:
-comment|/* Bring the next thread off the condition queue: */
-if|if
+comment|/* 			 * Enter a loop to dequeue threads from the condition 			 * queue until we find one that hasn't previously 			 * timed out. 			 */
+while|while
 condition|(
+operator|(
 operator|(
 name|pthread
 operator|=
-name|_thread_queue_deq
+name|cond_queue_deq
+argument_list|(
+operator|*
+name|cond
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
+name|pthread
+operator|->
+name|timeout
+operator|!=
+literal|0
+operator|)
+condition|)
+block|{ 			}
+if|if
+condition|(
+name|pthread
+operator|!=
+name|NULL
+condition|)
+comment|/* Allow the thread to run: */
+name|PTHREAD_NEW_STATE
+argument_list|(
+name|pthread
+argument_list|,
+name|PS_RUNNING
+argument_list|)
+expr_stmt|;
+comment|/* Check for no more waiters: */
+if|if
+condition|(
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 operator|(
@@ -825,20 +1143,18 @@ operator|)
 operator|->
 name|c_queue
 argument_list|)
-operator|)
-operator|!=
+operator|==
 name|NULL
 condition|)
-block|{
-comment|/* Allow the thread to run: */
-name|PTHREAD_NEW_STATE
-argument_list|(
-name|pthread
-argument_list|,
-name|PS_RUNNING
-argument_list|)
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|c_mutex
+operator|=
+name|NULL
 expr_stmt|;
-block|}
 break|break;
 comment|/* Trap invalid condition variable types: */
 default|default:
@@ -885,9 +1201,6 @@ name|rval
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|status
-decl_stmt|;
 name|pthread_t
 name|pthread
 decl_stmt|;
@@ -908,6 +1221,10 @@ name|EINVAL
 expr_stmt|;
 else|else
 block|{
+comment|/* 		 * Guard against preemption by a scheduling signal. 		 * A change of thread state modifies the waiting 		 * and priority queues.  In addition, we must assure 		 * that all threads currently waiting on the condition 		 * variable are signaled and are not timedout by a 		 * scheduling signal that causes a preemption. 		 */
+name|_thread_kern_sched_defer
+argument_list|()
+expr_stmt|;
 comment|/* Lock the condition variable structure: */
 name|_SPINLOCK
 argument_list|(
@@ -941,22 +1258,25 @@ condition|(
 operator|(
 name|pthread
 operator|=
-name|_thread_queue_deq
+name|cond_queue_deq
 argument_list|(
-operator|&
-operator|(
 operator|*
 name|cond
-operator|)
-operator|->
-name|c_queue
 argument_list|)
 operator|)
 operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Allow the thread to run: */
+comment|/* 				 * The thread is already running if the 				 * timeout flag is set. 				 */
+if|if
+condition|(
+name|pthread
+operator|->
+name|timeout
+operator|==
+literal|0
+condition|)
 name|PTHREAD_NEW_STATE
 argument_list|(
 name|pthread
@@ -965,6 +1285,16 @@ name|PS_RUNNING
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* There are no more waiting threads: */
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|c_mutex
+operator|=
+name|NULL
+expr_stmt|;
 break|break;
 comment|/* Trap invalid condition variable types: */
 default|default:
@@ -987,6 +1317,10 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+comment|/* Reenable preemption and yield if necessary. 		 */
+name|_thread_kern_sched_undefer
+argument_list|()
+expr_stmt|;
 block|}
 comment|/* Return the completion status: */
 return|return
@@ -994,6 +1328,229 @@ operator|(
 name|rval
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Dequeue a waiting thread from the head of a condition queue in  * descending priority order.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|pthread_t
+name|cond_queue_deq
+parameter_list|(
+name|pthread_cond_t
+name|cond
+parameter_list|)
+block|{
+name|pthread_t
+name|pthread
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|pthread
+operator|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|cond
+operator|->
+name|c_queue
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|cond
+operator|->
+name|c_queue
+argument_list|,
+name|pthread
+argument_list|,
+name|qe
+argument_list|)
+expr_stmt|;
+name|pthread
+operator|->
+name|flags
+operator|&=
+operator|~
+name|PTHREAD_FLAGS_QUEUED
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|pthread
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Remove a waiting thread from a condition queue in descending priority  * order.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|cond_queue_remove
+parameter_list|(
+name|pthread_cond_t
+name|cond
+parameter_list|,
+name|pthread_t
+name|pthread
+parameter_list|)
+block|{
+comment|/* 	 * Because pthread_cond_timedwait() can timeout as well 	 * as be signaled by another thread, it is necessary to 	 * guard against removing the thread from the queue if 	 * it isn't in the queue. 	 */
+if|if
+condition|(
+name|pthread
+operator|->
+name|flags
+operator|&
+name|PTHREAD_FLAGS_QUEUED
+condition|)
+block|{
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|cond
+operator|->
+name|c_queue
+argument_list|,
+name|pthread
+argument_list|,
+name|qe
+argument_list|)
+expr_stmt|;
+name|pthread
+operator|->
+name|flags
+operator|&=
+operator|~
+name|PTHREAD_FLAGS_QUEUED
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Enqueue a waiting thread to a condition queue in descending priority  * order.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|cond_queue_enq
+parameter_list|(
+name|pthread_cond_t
+name|cond
+parameter_list|,
+name|pthread_t
+name|pthread
+parameter_list|)
+block|{
+name|pthread_t
+name|tid
+init|=
+name|TAILQ_LAST
+argument_list|(
+operator|&
+name|cond
+operator|->
+name|c_queue
+argument_list|,
+name|cond_head
+argument_list|)
+decl_stmt|;
+comment|/* 	 * For the common case of all threads having equal priority, 	 * we perform a quick check against the priority of the thread 	 * at the tail of the queue. 	 */
+if|if
+condition|(
+operator|(
+name|tid
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|pthread
+operator|->
+name|active_priority
+operator|<=
+name|tid
+operator|->
+name|active_priority
+operator|)
+condition|)
+name|TAILQ_INSERT_TAIL
+argument_list|(
+operator|&
+name|cond
+operator|->
+name|c_queue
+argument_list|,
+name|pthread
+argument_list|,
+name|qe
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|tid
+operator|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|cond
+operator|->
+name|c_queue
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|pthread
+operator|->
+name|active_priority
+operator|<=
+name|tid
+operator|->
+name|active_priority
+condition|)
+name|tid
+operator|=
+name|TAILQ_NEXT
+argument_list|(
+name|tid
+argument_list|,
+name|qe
+argument_list|)
+expr_stmt|;
+name|TAILQ_INSERT_BEFORE
+argument_list|(
+name|tid
+argument_list|,
+name|pthread
+argument_list|,
+name|qe
+argument_list|)
+expr_stmt|;
+block|}
+name|pthread
+operator|->
+name|flags
+operator||=
+name|PTHREAD_FLAGS_QUEUED
+expr_stmt|;
 block|}
 end_function
 
