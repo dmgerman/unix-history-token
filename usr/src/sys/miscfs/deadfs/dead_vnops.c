@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)dead_vnops.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)dead_vnops.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -285,14 +285,16 @@ begin_comment
 comment|/*  * Vnode op for read  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_macro
 name|dead_read
 argument_list|(
 argument|vp
 argument_list|,
 argument|uio
-argument_list|,
-argument|offp
 argument_list|,
 argument|ioflag
 argument_list|,
@@ -317,13 +319,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|off_t
-modifier|*
-name|offp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|ioflag
 decl_stmt|;
@@ -341,11 +336,24 @@ begin_block
 block|{
 if|if
 condition|(
-operator|!
 name|chkvnlock
 argument_list|(
 name|vp
 argument_list|)
+condition|)
+name|panic
+argument_list|(
+literal|"dead_read: lock"
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Return EOF for character devices, EIO for others 	 */
+if|if
+condition|(
+name|vp
+operator|->
+name|v_type
+operator|!=
+name|VCHR
 condition|)
 return|return
 operator|(
@@ -354,18 +362,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|VOP_READ
-argument_list|(
-name|vp
-argument_list|,
-name|uio
-argument_list|,
-name|offp
-argument_list|,
-name|ioflag
-argument_list|,
-name|cred
-argument_list|)
+literal|0
 operator|)
 return|;
 block|}
@@ -375,14 +372,16 @@ begin_comment
 comment|/*  * Vnode op for write  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_expr_stmt
 name|dead_write
 argument_list|(
 name|vp
 argument_list|,
 name|uio
-argument_list|,
-name|offp
 argument_list|,
 name|ioflag
 argument_list|,
@@ -405,13 +404,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|off_t
-modifier|*
-name|offp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|ioflag
 decl_stmt|;
@@ -429,31 +421,19 @@ begin_block
 block|{
 if|if
 condition|(
-operator|!
 name|chkvnlock
 argument_list|(
 name|vp
 argument_list|)
 condition|)
+name|panic
+argument_list|(
+literal|"dead_write: lock"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EIO
-operator|)
-return|;
-return|return
-operator|(
-name|VOP_WRITE
-argument_list|(
-name|vp
-argument_list|,
-name|uio
-argument_list|,
-name|offp
-argument_list|,
-name|ioflag
-argument_list|,
-name|cred
-argument_list|)
 operator|)
 return|;
 block|}
