@@ -1234,7 +1234,11 @@ block|}
 comment|/*      * If the -r flag was specified, we have to compare the local and      * remote files, so we should really do a fetchStat() first, but I      * know of at least one HTTP server that only sends the content      * size in response to GET requests, and leaves it out of replies      * to HEAD requests. Also, in the (frequent) case that the local      * and remote files match but the local file is truncated, we have      * sufficient information *before* the compare to issue a correct      * request. Therefore, we always issue a GET request as if we were      * sure the local file was a truncated copy of the remote file; we      * can drop the connection later if we change our minds.      */
 if|if
 condition|(
+operator|(
 name|r_flag
+operator|||
+name|m_flag
+operator|)
 operator|&&
 operator|!
 name|o_stdout
@@ -1250,6 +1254,11 @@ operator|!=
 operator|-
 literal|1
 condition|)
+block|{
+if|if
+condition|(
+name|r_flag
+condition|)
 name|url
 operator|->
 name|offset
@@ -1258,13 +1267,17 @@ name|sb
 operator|.
 name|st_size
 expr_stmt|;
+block|}
 else|else
+block|{
 name|sb
 operator|.
 name|st_size
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
+block|}
 comment|/* start the transfer */
 if|if
 condition|(
@@ -1422,10 +1435,15 @@ condition|(
 name|sb
 operator|.
 name|st_size
+operator|!=
+operator|-
+literal|1
 condition|)
-name|warnx
+name|fprintf
 argument_list|(
-literal|"local: %lld / %ld"
+name|stderr
+argument_list|,
+literal|"local size / mtime: %lld / %ld\n"
 argument_list|,
 name|sb
 operator|.
@@ -1436,9 +1454,11 @@ operator|.
 name|st_mtime
 argument_list|)
 expr_stmt|;
-name|warnx
+name|fprintf
 argument_list|(
-literal|"remote: %lld / %ld"
+name|stderr
+argument_list|,
+literal|"remote size / mtime: %lld / %ld\n"
 argument_list|,
 name|us
 operator|.
@@ -1468,6 +1488,9 @@ condition|(
 name|sb
 operator|.
 name|st_size
+operator|!=
+operator|-
+literal|1
 condition|)
 block|{
 comment|/* resume mode, local file exists */
@@ -1652,13 +1675,9 @@ if|if
 condition|(
 name|m_flag
 operator|&&
-name|stat
-argument_list|(
-name|path
-argument_list|,
-operator|&
 name|sb
-argument_list|)
+operator|.
+name|st_size
 operator|!=
 operator|-
 literal|1
