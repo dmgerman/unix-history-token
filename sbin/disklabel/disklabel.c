@@ -246,7 +246,7 @@ begin_define
 define|#
 directive|define
 name|BIG_NEWFS_FRAG
-value|4096U
+value|2048U
 end_define
 
 begin_define
@@ -6195,7 +6195,7 @@ name|NXTNUM
 parameter_list|(
 name|n
 parameter_list|)
-value|do { \ 	if (tp == NULL) { \ 		fprintf(stderr, "line %d: too few numeric fields\n", lineno); \ 		return (1); \ 	} else { \ 		cp = tp, tp = word(cp); \ 		if (tp == NULL) \ 			tp = cp; \ 		(n) = atoi(cp); \ 	} \ } while (0)
+value|do { \ 	if (tp == NULL) { \ 		fprintf(stderr, "line %d: too few numeric fields\n", lineno); \ 		return (1); \ 	} else { \ 		cp = tp, tp = word(cp); \ 		(n) = atoi(cp); \ 	} \ } while (0)
 end_define
 
 begin_comment
@@ -6211,7 +6211,7 @@ name|w
 parameter_list|,
 name|n
 parameter_list|)
-value|do { \ 	if (tp == NULL) { \ 		fprintf(stderr, "line %d: too few numeric fields\n", lineno); \ 		return (1); \ 	} else { \ 	        char *tmp; \ 		cp = tp, tp = word(cp); \ 		if (tp == NULL) \ 			tp = cp; \ 	        (n) = strtol(cp,&tmp,10); \ 		if (tmp) (w) = *tmp; \ 	} \ } while (0)
+value|do { \ 	if (tp == NULL) { \ 		fprintf(stderr, "line %d: too few numeric fields\n", lineno); \ 		return (1); \ 	} else { \ 	        char *tmp; \ 		cp = tp, tp = word(cp); \ 	        (n) = strtol(cp,&tmp,10); \ 		if (tmp) (w) = *tmp; \ 	} \ } while (0)
 end_define
 
 begin_comment
@@ -6632,16 +6632,14 @@ name|pp
 operator|->
 name|p_fsize
 operator|=
-name|DEFAULT_NEWFS_BLOCK
+name|DEFAULT_NEWFS_FRAG
 expr_stmt|;
 name|pp
 operator|->
 name|p_frag
 operator|=
-operator|(
-name|unsigned
-name|char
-operator|)
+name|DEFAULT_NEWFS_BLOCK
+operator|/
 name|DEFAULT_NEWFS_FRAG
 expr_stmt|;
 name|pp
@@ -6657,16 +6655,14 @@ name|pp
 operator|->
 name|p_fsize
 operator|=
-name|BIG_NEWFS_BLOCK
+name|BIG_NEWFS_FRAG
 expr_stmt|;
 name|pp
 operator|->
 name|p_frag
 operator|=
-operator|(
-name|unsigned
-name|char
-operator|)
+name|BIG_NEWFS_BLOCK
+operator|/
 name|BIG_NEWFS_FRAG
 expr_stmt|;
 name|pp
