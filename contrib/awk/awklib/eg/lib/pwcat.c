@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * pwcat.c  *  * Generate a printable version of the password database  *  * Arnold Robbins  * arnold@gnu.org  * May 1993  * Public Domain  */
+comment|/*  * pwcat.c  *  * Generate a printable version of the password database  */
+end_comment
+
+begin_comment
+comment|/*  * Arnold Robbins, arnold@gnu.org, May 1993  * Public Domain  */
 end_comment
 
 begin_include

@@ -1,18 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for data structures and routines for the regular    expression library, version 0.12.    Copyright (C) 1985,89,90,91,92,93,95,96,97 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for data structures and routines for the regular    expression library, version 0.12.    Copyright (C) 1985,89,90,91,92,93,95,96,97,98 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__REGEXP_LIBRARY_H__
+name|_REGEX_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__REGEXP_LIBRARY_H__
+name|_REGEX_H
+value|1
 end_define
 
 begin_comment
@@ -36,20 +37,14 @@ if|#
 directive|if
 operator|!
 name|defined
-argument_list|(
 name|_POSIX_C_SOURCE
-argument_list|)
 operator|&&
 operator|!
 name|defined
-argument_list|(
 name|_POSIX_SOURCE
-argument_list|)
 operator|&&
 name|defined
-argument_list|(
 name|VMS
-argument_list|)
 comment|/* VMS doesn't have `size_t' in<sys/types.h>, even though POSIX says it    should be there.  */
 include|#
 directive|include
@@ -309,6 +304,17 @@ comment|/* If any error codes are removed, changed, or added, update the    `re_
 typedef|typedef
 enum|enum
 block|{
+ifdef|#
+directive|ifdef
+name|_XOPEN_SOURCE
+name|REG_ENOSYS
+init|=
+operator|-
+literal|1
+block|,
+comment|/* This will never happen for this implementation.  */
+endif|#
+directive|endif
 name|REG_NOERROR
 init|=
 literal|0
@@ -777,9 +783,13 @@ name|ends
 operator|)
 argument_list|)
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
 name|_REGEX_RE_COMP
+operator|||
+name|defined
+name|_LIBC
 ifndef|#
 directive|ifndef
 name|_CRAY
@@ -822,15 +832,15 @@ argument_list|(
 operator|(
 name|regex_t
 operator|*
-name|preg
+name|__preg
 operator|,
 specifier|const
 name|char
 operator|*
-name|pattern
+name|__pattern
 operator|,
 name|int
-name|cflags
+name|__cflags
 operator|)
 argument_list|)
 decl_stmt|;
@@ -843,22 +853,22 @@ operator|(
 specifier|const
 name|regex_t
 operator|*
-name|preg
+name|__preg
 operator|,
 specifier|const
 name|char
 operator|*
-name|string
+name|__string
 operator|,
 name|size_t
-name|nmatch
+name|__nmatch
 operator|,
 name|regmatch_t
-name|pmatch
+name|__pmatch
 index|[]
 operator|,
 name|int
-name|eflags
+name|__eflags
 operator|)
 argument_list|)
 decl_stmt|;
@@ -869,19 +879,19 @@ name|_RE_ARGS
 argument_list|(
 operator|(
 name|int
-name|errcode
+name|__errcode
 operator|,
 specifier|const
 name|regex_t
 operator|*
-name|preg
+name|__preg
 operator|,
 name|char
 operator|*
-name|errbuf
+name|__errbuf
 operator|,
 name|size_t
-name|errbuf_size
+name|__errbuf_size
 operator|)
 argument_list|)
 decl_stmt|;
@@ -893,7 +903,7 @@ argument_list|(
 operator|(
 name|regex_t
 operator|*
-name|preg
+name|__preg
 operator|)
 argument_list|)
 decl_stmt|;
@@ -918,7 +928,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not __REGEXP_LIBRARY_H__ */
+comment|/* regex.h */
 end_comment
 
 begin_escape

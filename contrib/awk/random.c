@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  *  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)random.c	5.5 (Berkeley) 7/6/88"
+literal|"@(#)random.c	8.2 (Berkeley) 5/19/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,21 +40,147 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"random.h"
 end_include
 
 begin_comment
-comment|/* GAWK ADDITION */
+comment|/* gawk addition */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__MINGW32__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|VMS
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
 begin_comment
-comment|/*  * random.c:  * An improved random number generation package.  In addition to the standard  * rand()/srand() like interface, this package also has a special state info  * interface.  The initstate() routine is called with a seed, an array of  * bytes, and a count of how many bytes are being passed in; this array is then  * initialized to contain information for random number generation with that  * much state information.  Good sizes for the amount of state information are  * 32, 64, 128, and 256 bytes.  The state can be switched by calling the  * setstate() routine with the same array as was initiallized with initstate().  * By default, the package runs with 128 bytes of state information and  * generates far better random numbers than a linear congruential generator.  * If the amount of state information is less than 32 bytes, a simple linear  * congruential R.N.G. is used.  * Internally, the state information is treated as an array of longs; the  * zeroeth element of the array is the type of R.N.G. being used (small  * integer); the remainder of the array is the state information for the  * R.N.G.  Thus, 32 bytes of state information will give 7 longs worth of  * state information, which will allow a degree seven polynomial.  (Note: the  * zeroeth word of state information also has some other information stored  * in it -- see setstate() for details).  * The random number generation technique is a linear feedback shift register  * approach, employing trinomials (since there are fewer terms to sum up that  * way).  In this approach, the least significant bit of all the numbers in  * the state table will act as a linear feedback shift register, and will have  * period 2^deg - 1 (where deg is the degree of the polynomial being used,  * assuming that the polynomial is irreducible and primitive).  The higher  * order bits will have longer periods, since their values are also influenced  * by pseudo-random carries out of the lower bits.  The total period of the  * generator is approximately deg*(2**deg - 1); thus doubling the amount of  * state information has a vast influence on the period of the generator.  * Note: the deg*(2**deg - 1) is an approximation only good for large deg,  * when the period of the shift register is the dominant factor.  With deg  * equal to seven, the period is actually much longer than the 7*(2**7 - 1)  * predicted by this formula.  */
+comment|/* for srandomdev() */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_comment
+comment|/* for clock() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ssize_t
+value|size_t
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined (_MSC_VER)&& !defined (__MINGW32__)&& !defined (VMS) */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_comment
+comment|/* For gawk, don't this, use the decl of random() in random.h */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_UNISTD_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_comment
+comment|/* for srandomdev() */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_FCNTL_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_comment
+comment|/* for srandomdev() */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * random.c:  *  * An improved random number generation package.  In addition to the standard  * rand()/srand() like interface, this package also has a special state info  * interface.  The initstate() routine is called with a seed, an array of  * bytes, and a count of how many bytes are being passed in; this array is  * then initialized to contain information for random number generation with  * that much state information.  Good sizes for the amount of state  * information are 32, 64, 128, and 256 bytes.  The state can be switched by  * calling the setstate() routine with the same array as was initiallized  * with initstate().  By default, the package runs with 128 bytes of state  * information and generates far better random numbers than a linear  * congruential generator.  If the amount of state information is less than  * 32 bytes, a simple linear congruential R.N.G. is used.  *  * Internally, the state information is treated as an array of longs; the  * zeroeth element of the array is the type of R.N.G. being used (small  * integer); the remainder of the array is the state information for the  * R.N.G.  Thus, 32 bytes of state information will give 7 longs worth of  * state information, which will allow a degree seven polynomial.  (Note:  * the zeroeth word of state information also has some other information  * stored in it -- see setstate() for details).  *  * The random number generation technique is a linear feedback shift register  * approach, employing trinomials (since there are fewer terms to sum up that  * way).  In this approach, the least significant bit of all the numbers in  * the state table will act as a linear feedback shift register, and will  * have period 2^deg - 1 (where deg is the degree of the polynomial being  * used, assuming that the polynomial is irreducible and primitive).  The  * higher order bits will have longer periods, since their values are also  * influenced by pseudo-random carries out of the lower bits.  The total  * period of the generator is approximately deg*(2**deg - 1); thus doubling  * the amount of state information has a vast influence on the period of the  * generator.  Note: the deg*(2**deg - 1) is an approximation only good for  * large deg, when the period of the shift register is the dominant factor.  * With deg equal to seven, the period is actually much longer than the  * 7*(2**7 - 1) predicted by this formula.  *  * Modified 28 December 1994 by Jacob S. Rosenberg.  * The following changes have been made:  * All references to the type u_int have been changed to unsigned long.  * All references to type int have been changed to type long.  Other  * cleanups have been made as well.  A warning for both initstate and  * setstate has been inserted to the effect that on Sparc platforms  * the 'arg_state' variable must be forced to begin on word boundaries.  * This can be easily done by casting a long integer array to char *.  * The overall logic has been left STRICTLY alone.  This software was  * tested on both a VAX and Sun SpacsStation with exactly the same  * results.  The new version and the original give IDENTICAL results.  * The new version is somewhat faster than the original.  As the  * documentation says:  "By default, the package runs with 128 bytes of  * state information and generates far better random numbers than a linear  * congruential generator.  If the amount of state information is less than  * 32 bytes, a simple linear congruential R.N.G. is used."  For a buffer of  * 128 bytes, this new version runs about 19 percent faster and for a 16  * byte buffer it is about 5 percent faster.  */
 end_comment
 
 begin_comment
@@ -189,39 +315,6 @@ name|SEP_3
 value|3
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_CRAY
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|DEG_3_P1
-value|32
-end_define
-
-begin_comment
-comment|/* bug - do addition here */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SEP_3_P1
-value|4
-end_define
-
-begin_comment
-comment|/* *_3 + 1 = _3_P1 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -255,7 +348,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * Array versions of the above information to make code run faster -- relies  * on fact that TYPE_i == i.  */
+comment|/*  * Array versions of the above information to make code run faster --  * relies on fact that TYPE_i == i.  */
 end_comment
 
 begin_define
@@ -271,7 +364,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
+name|long
 name|degrees
 index|[
 name|MAX_TYPES
@@ -293,7 +386,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|long
 name|seps
 index|[
 name|MAX_TYPES
@@ -314,7 +407,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Initially, everything is set up as if from :  *		initstate( 1,&randtbl, 128 );  * Note that this initialization takes advantage of the fact that srandom()  * advances the front and rear pointers 10*rand_deg times, and hence the  * rear pointer which starts at 0 will also end up at zero; thus the zeroeth  * element of the state information, which contains info about the current  * position of the rear pointer is just  *	MAX_TYPES*(rptr - state) + TYPE_3 == TYPE_3.  */
+comment|/*  * Initially, everything is set up as if from:  *  *	initstate(1, randtbl, 128);  *  * Note that this initialization takes advantage of the fact that srandom()  * advances the front and rear pointers 10*rand_deg times, and hence the  * rear pointer which starts at 0 will also end up at zero; thus the zeroeth  * element of the state information, which contains info about the current  * position of the rear pointer is just  *  *	MAX_TYPES * (rptr - state) + TYPE_3 == TYPE_3.  */
 end_comment
 
 begin_decl_stmt
@@ -330,6 +423,11 @@ init|=
 block|{
 name|TYPE_3
 block|,
+ifdef|#
+directive|ifdef
+name|USE_WEAK_SEEDING
+comment|/* Historic implementation compatibility */
+comment|/* The random sequences do not vary much with the seed */
 literal|0x9a319039
 block|,
 literal|0x32d9c024
@@ -391,38 +489,81 @@ block|,
 literal|0x8999220b
 block|,
 literal|0x27fb47b9
+block|,
+else|#
+directive|else
+comment|/* !USE_WEAK_SEEDING */
+literal|0x991539b1
+block|,
+literal|0x16a5bce3
+block|,
+literal|0x6774a4cd
+block|,
+literal|0x3e01511e
+block|,
+literal|0x4e508aaa
+block|,
+literal|0x61048c05
+block|,
+literal|0xf5500617
+block|,
+literal|0x846b7115
+block|,
+literal|0x6a19892c
+block|,
+literal|0x896a97af
+block|,
+literal|0xdb48f936
+block|,
+literal|0x14898454
+block|,
+literal|0x37ffd106
+block|,
+literal|0xb58bff9c
+block|,
+literal|0x59e17104
+block|,
+literal|0xcf918a49
+block|,
+literal|0x09378c83
+block|,
+literal|0x52c7a471
+block|,
+literal|0x8d293ea9
+block|,
+literal|0x1f4fc301
+block|,
+literal|0xc3db71be
+block|,
+literal|0x39b44e1c
+block|,
+literal|0xf8a44ef9
+block|,
+literal|0x4c8b80b1
+block|,
+literal|0x19edc328
+block|,
+literal|0x87bf4bdd
+block|,
+literal|0xc9b240e5
+block|,
+literal|0xe9ee4b1b
+block|,
+literal|0x4382aee7
+block|,
+literal|0x535b6b41
+block|,
+literal|0xf3bec5da
+endif|#
+directive|endif
+comment|/* !USE_WEAK_SEEDING */
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * fptr and rptr are two pointers into the state info, a front and a rear  * pointer.  These two pointers are always rand_sep places aparts, as they cycle  * cyclically through the state information.  (Yes, this does mean we could get  * away with just one pointer, but the code for random() is more efficient this  * way).  The pointers are left positioned as they would be from the call  *			initstate( 1, randtbl, 128 )  * (The position of the rear pointer, rptr, is really 0 (as explained above  * in the initialization of randtbl) because the state table pointer is set  * to point to randtbl[1] (as explained below).  */
+comment|/*  * fptr and rptr are two pointers into the state info, a front and a rear  * pointer.  These two pointers are always rand_sep places aparts, as they  * cycle cyclically through the state information.  (Yes, this does mean we  * could get away with just one pointer, but the code for random() is more  * efficient this way).  The pointers are left positioned as they would be  * from the call  *  *	initstate(1, randtbl, 128);  *  * (The position of the rear pointer, rptr, is really 0 (as explained above  * in the initialization of randtbl) because the state table pointer is set  * to point to randtbl[1] (as explained below).  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_CRAY
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|long
-modifier|*
-name|fptr
-init|=
-operator|&
-name|randtbl
-index|[
-name|SEP_3_P1
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_decl_stmt
 specifier|static
@@ -439,11 +580,6 @@ literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -460,7 +596,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The following things are the pointer to the state information table,  * the type of the current generator, the degree of the current polynomial  * being used, and the separation between the two pointers.  * Note that for efficiency of random(), we remember the first location of  * the state information, not the zeroeth.  Hence it is valid to access  * state[-1], which is used to store the type of the R.N.G.  * Also, we remember the last location, since this is more efficient than  * indexing every time to find the address of the last element to see if  * the front and rear pointers have wrapped.  */
+comment|/*  * The following things are the pointer to the state information table, the  * type of the current generator, the degree of the current polynomial being  * used, and the separation between the two pointers.  Note that for efficiency  * of random(), we remember the first location of the state information, not  * the zeroeth.  Hence it is valid to access state[-1], which is used to  * store the type of the R.N.G.  Also, we remember the last location, since  * this is more efficient than indexing every time to find the address of  * the last element to see if the front and rear pointers have wrapped.  */
 end_comment
 
 begin_decl_stmt
@@ -479,7 +615,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|long
 name|rand_type
 init|=
 name|TYPE_3
@@ -488,7 +624,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|long
 name|rand_deg
 init|=
 name|DEG_3
@@ -497,37 +633,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|long
 name|rand_sep
 init|=
 name|SEP_3
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_CRAY
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|long
-modifier|*
-name|end_ptr
-init|=
-operator|&
-name|randtbl
-index|[
-name|DEG_3_P1
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_decl_stmt
 specifier|static
@@ -545,13 +656,99 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
+begin_decl_stmt
+specifier|static
+name|long
+name|good_rand
+name|__P
+argument_list|(
+operator|(
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|long
+name|good_rand
+parameter_list|(
+name|x
+parameter_list|)
+specifier|register
+name|long
+name|x
+decl_stmt|;
+block|{
+ifdef|#
+directive|ifdef
+name|USE_WEAK_SEEDING
+comment|/*  * Historic implementation compatibility.  * The random sequences do not vary much with the seed,  * even with overflowing.  */
+return|return
+operator|(
+literal|1103515245
+operator|*
+name|x
+operator|+
+literal|12345
+operator|)
+return|;
+else|#
+directive|else
+comment|/* !USE_WEAK_SEEDING */
+comment|/*  * Compute x = (7^5 * x) mod (2^31 - 1)  * wihout overflowing 31 bits:  *      (2^31 - 1) = 127773 * (7^5) + 2836  * From "Random number generators: good ones are hard to find",  * Park and Miller, Communications of the ACM, vol. 31, no. 10,  * October 1988, p. 1195.  */
+specifier|register
+name|long
+name|hi
+decl_stmt|,
+name|lo
+decl_stmt|;
+name|hi
+operator|=
+name|x
+operator|/
+literal|127773
+expr_stmt|;
+name|lo
+operator|=
+name|x
+operator|%
+literal|127773
+expr_stmt|;
+name|x
+operator|=
+literal|16807
+operator|*
+name|lo
+operator|-
+literal|2836
+operator|*
+name|hi
+expr_stmt|;
+if|if
+condition|(
+name|x
+operator|<=
+literal|0
+condition|)
+name|x
+operator|+=
+literal|0x7fffffff
+expr_stmt|;
+return|return
+operator|(
+name|x
+operator|)
+return|;
 endif|#
 directive|endif
-end_endif
+comment|/* !USE_WEAK_SEEDING */
+block|}
+end_function
 
 begin_comment
-comment|/*  * srandom:  * Initialize the random number generator based on the given seed.  If the  * type is the trivial no-state-information type, just remember the seed.  * Otherwise, initializes state[] based on the given "seed" via a linear  * congruential generator.  Then, the pointers are set to known locations  * that are exactly rand_sep places apart.  Lastly, it cycles the state  * information a given number of times to get rid of any initial dependencies  * introduced by the L.C.R.N.G.  * Note that the initialization of randtbl[] for default usage relies on  * values produced by this routine.  */
+comment|/*  * srandom:  *  * Initialize the random number generator based on the given seed.  If the  * type is the trivial no-state-information type, just remember the seed.  * Otherwise, initializes state[] based on the given "seed" via a linear  * congruential generator.  Then, the pointers are set to known locations  * that are exactly rand_sep places apart.  Lastly, it cycles the state  * information a given number of times to get rid of any initial dependencies  * introduced by the L.C.R.N.G.  Note that the initialization of randtbl[]  * for default usage relies on values produced by this routine.  */
 end_comment
 
 begin_function
@@ -561,26 +758,20 @@ parameter_list|(
 name|x
 parameter_list|)
 name|unsigned
+name|long
 name|x
 decl_stmt|;
 block|{
 specifier|register
-name|int
-name|i
-decl_stmt|,
-name|j
-decl_stmt|;
 name|long
-name|random
-parameter_list|()
-function_decl|;
+name|i
+decl_stmt|;
 if|if
 condition|(
 name|rand_type
 operator|==
 name|TYPE_0
 condition|)
-block|{
 name|state
 index|[
 literal|0
@@ -588,13 +779,8 @@ index|]
 operator|=
 name|x
 expr_stmt|;
-block|}
 else|else
 block|{
-name|j
-operator|=
-literal|1
-expr_stmt|;
 name|state
 index|[
 literal|0
@@ -615,24 +801,21 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|state
 index|[
 name|i
 index|]
 operator|=
-literal|1103515245
-operator|*
+name|good_rand
+argument_list|(
 name|state
 index|[
 name|i
 operator|-
 literal|1
 index|]
-operator|+
-literal|12345
+argument_list|)
 expr_stmt|;
-block|}
 name|fptr
 operator|=
 operator|&
@@ -664,6 +847,9 @@ condition|;
 name|i
 operator|++
 control|)
+operator|(
+name|void
+operator|)
 name|random
 argument_list|()
 expr_stmt|;
@@ -672,7 +858,208 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * initstate:  * Initialize the state information in the given array of n bytes for  * future random number generation.  Based on the number of bytes we  * are given, and the break values for the different R.N.G.'s, we choose  * the best (largest) one we can and set things up for it.  srandom() is  * then called to initialize the state information.  * Note that on return from srandom(), we set state[-1] to be the type  * multiplexed with the current value of the rear pointer; this is so  * successive calls to initstate() won't lose this information and will  * be able to restart with setstate().  * Note: the first thing we do is save the current state, if any, just like  * setstate() so that it doesn't matter when initstate is called.  * Returns a pointer to the old state.  */
+comment|/*  * srandomdev:  *  * Many programs choose the seed value in a totally predictable manner.  * This often causes problems.  We seed the generator using the much more  * secure urandom(4) interface.  Note that this particular seeding  * procedure can generate states which are impossible to reproduce by  * calling srandom() with any value, since the succeeding terms in the  * state buffer are no longer derived from the LC algorithm applied to  * a fixed seed.  */
+end_comment
+
+begin_function
+name|void
+name|srandomdev
+parameter_list|()
+block|{
+name|int
+name|fd
+decl_stmt|,
+name|done
+decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
+if|if
+condition|(
+name|rand_type
+operator|==
+name|TYPE_0
+condition|)
+name|len
+operator|=
+sizeof|sizeof
+name|state
+index|[
+literal|0
+index|]
+expr_stmt|;
+else|else
+name|len
+operator|=
+name|rand_deg
+operator|*
+sizeof|sizeof
+name|state
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|done
+operator|=
+literal|0
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|O_RDONLY
+name|fd
+operator|=
+name|open
+argument_list|(
+literal|"/dev/urandom"
+argument_list|,
+name|O_RDONLY
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|>=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|read
+argument_list|(
+name|fd
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|state
+argument_list|,
+name|len
+argument_list|)
+operator|==
+operator|(
+name|ssize_t
+operator|)
+name|len
+condition|)
+name|done
+operator|=
+literal|1
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/*O_RDONLY*/
+if|if
+condition|(
+operator|!
+name|done
+condition|)
+block|{
+name|unsigned
+name|long
+name|junk
+decl_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__MINGW32__
+argument_list|)
+name|struct
+name|timeval
+name|tv
+decl_stmt|;
+name|gettimeofday
+argument_list|(
+operator|&
+name|tv
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|srandom
+argument_list|(
+name|getpid
+argument_list|()
+operator|^
+name|tv
+operator|.
+name|tv_sec
+operator|^
+name|tv
+operator|.
+name|tv_usec
+operator|^
+name|junk
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|clock_t
+name|ret_clock_t
+init|=
+name|clock
+argument_list|()
+decl_stmt|;
+comment|/* 		 * I don't like the idea of reading uninitialized memory 		 * even to generate a random number, but we do it anyway. 		 * SD. 		 */
+name|srandom
+argument_list|(
+name|getpid
+argument_list|()
+operator|^
+name|ret_clock_t
+operator|^
+name|junk
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return;
+block|}
+if|if
+condition|(
+name|rand_type
+operator|!=
+name|TYPE_0
+condition|)
+block|{
+name|fptr
+operator|=
+operator|&
+name|state
+index|[
+name|rand_sep
+index|]
+expr_stmt|;
+name|rptr
+operator|=
+operator|&
+name|state
+index|[
+literal|0
+index|]
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * initstate:  *  * Initialize the state information in the given array of n bytes for future  * random number generation.  Based on the number of bytes we are given, and  * the break values for the different R.N.G.'s, we choose the best (largest)  * one we can and set things up for it.  srandom() is then called to  * initialize the state information.  *  * Note that on return from srandom(), we set state[-1] to be the type  * multiplexed with the current value of the rear pointer; this is so  * successive calls to initstate() won't lose this information and will be  * able to restart with setstate().  *  * Note: the first thing we do is save the current state, if any, just like  * setstate() so that it doesn't matter when initstate is called.  *  * Returns a pointer to the old state.  *  * Note: The Sparc platform requires that arg_state begin on a long  * word boundary; otherwise a bus error will occur. Even so, lint will  * complain about mis-alignment, but you should disregard these messages.  */
 end_comment
 
 begin_function
@@ -687,15 +1074,16 @@ parameter_list|,
 name|n
 parameter_list|)
 name|unsigned
+name|long
 name|seed
 decl_stmt|;
-comment|/* seed for R. N. G. */
+comment|/* seed for R.N.G. */
 name|char
 modifier|*
 name|arg_state
 decl_stmt|;
 comment|/* pointer to state array */
-name|int
+name|long
 name|n
 decl_stmt|;
 comment|/* # bytes of state info */
@@ -717,6 +1105,17 @@ operator|-
 literal|1
 index|]
 operator|)
+decl_stmt|;
+specifier|register
+name|long
+modifier|*
+name|long_arg_state
+init|=
+operator|(
+name|long
+operator|*
+operator|)
+name|arg_state
 decl_stmt|;
 if|if
 condition|(
@@ -753,29 +1152,34 @@ if|if
 condition|(
 name|n
 operator|<
-name|BREAK_1
-condition|)
-block|{
-if|if
-condition|(
-name|n
-operator|<
 name|BREAK_0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"initstate: not enough state (%d bytes) with which to do jack; ignored.\n"
+literal|"random: not enough state (%ld bytes); ignored.\n"
 argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
+if|if
+condition|(
+name|n
+operator|<
+name|BREAK_1
+condition|)
+block|{
 name|rand_type
 operator|=
 name|TYPE_0
@@ -789,8 +1193,7 @@ operator|=
 name|SEP_0
 expr_stmt|;
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|n
@@ -811,8 +1214,7 @@ operator|=
 name|SEP_1
 expr_stmt|;
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|n
@@ -833,8 +1235,7 @@ operator|=
 name|SEP_2
 expr_stmt|;
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|n
@@ -870,23 +1271,16 @@ operator|=
 name|SEP_4
 expr_stmt|;
 block|}
-block|}
-block|}
-block|}
 name|state
 operator|=
-operator|&
-operator|(
-operator|(
 operator|(
 name|long
 operator|*
 operator|)
-name|arg_state
-operator|)
-index|[
+operator|(
+name|long_arg_state
+operator|+
 literal|1
-index|]
 operator|)
 expr_stmt|;
 comment|/* first location */
@@ -910,19 +1304,17 @@ name|rand_type
 operator|==
 name|TYPE_0
 condition|)
-name|state
+name|long_arg_state
 index|[
-operator|-
-literal|1
+literal|0
 index|]
 operator|=
 name|rand_type
 expr_stmt|;
 else|else
-name|state
+name|long_arg_state
 index|[
-operator|-
-literal|1
+literal|0
 index|]
 operator|=
 name|MAX_TYPES
@@ -944,7 +1336,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * setstate:  * Restore the state from the given state array.  * Note: it is important that we also remember the locations of the pointers  * in the current state information, and restore the locations of the pointers  * from the old state information.  This is done by multiplexing the pointer  * location into the zeroeth word of the state information.  * Note that due to the order in which things are done, it is OK to call  * setstate() with the same state as the current state.  * Returns a pointer to the old state information.  */
+comment|/*  * setstate:  *  * Restore the state from the given state array.  *  * Note: it is important that we also remember the locations of the pointers  * in the current state information, and restore the locations of the pointers  * from the old state information.  This is done by multiplexing the pointer  * location into the zeroeth word of the state information.  *  * Note that due to the order in which things are done, it is OK to call  * setstate() with the same state as the current state.  *  * Returns a pointer to the old state information.  *  * Note: The Sparc platform requires that arg_state begin on a long  * word boundary; otherwise a bus error will occur. Even so, lint will  * complain about mis-alignment, but you should disregard these messages.  */
 end_comment
 
 begin_function
@@ -958,6 +1350,7 @@ name|char
 modifier|*
 name|arg_state
 decl_stmt|;
+comment|/* pointer to state array */
 block|{
 specifier|register
 name|long
@@ -971,7 +1364,7 @@ operator|)
 name|arg_state
 decl_stmt|;
 specifier|register
-name|int
+name|long
 name|type
 init|=
 name|new_state
@@ -982,7 +1375,7 @@ operator|%
 name|MAX_TYPES
 decl_stmt|;
 specifier|register
-name|int
+name|long
 name|rear
 init|=
 name|new_state
@@ -1080,21 +1473,28 @@ index|]
 expr_stmt|;
 break|break;
 default|default:
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"setstate: state info has been munged; not changed.\n"
+literal|"random: state info corrupted; not changed.\n"
 argument_list|)
 expr_stmt|;
 block|}
 name|state
 operator|=
-operator|&
+operator|(
+name|long
+operator|*
+operator|)
+operator|(
 name|new_state
-index|[
+operator|+
 literal|1
-index|]
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -1144,7 +1544,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * random:  * If we are using the trivial TYPE_0 R.N.G., just do the old linear  * congruential bit.  Otherwise, we do our fancy trinomial stuff, which is the  * same in all ther other cases due to all the global variables that have been  * set up.  The basic operation is to add the number at the rear pointer into  * the one at the front pointer.  Then both pointers are advanced to the next  * location cyclically in the table.  The value returned is the sum generated,  * reduced to 31 bits by throwing away the "least random" low bit.  * Note: the code takes advantage of the fact that both the front and  * rear pointers can't wrap on the same call by not testing the rear  * pointer if the front one has wrapped.  * Returns a 31-bit random number.  */
+comment|/*  * random:  *  * If we are using the trivial TYPE_0 R.N.G., just do the old linear  * congruential bit.  Otherwise, we do our fancy trinomial stuff, which is  * the same in all the other cases due to all the global variables that have  * been set up.  The basic operation is to add the number at the rear pointer  * into the one at the front pointer.  Then both pointers are advanced to  * the next location cyclically in the table.  The value returned is the sum  * generated, reduced to 31 bits by throwing away the "least random" low bit.  *  * Note: the code takes advantage of the fact that both the front and  * rear pointers can't wrap on the same call by not testing the rear  * pointer if the front one has wrapped.  *  * Returns a 31-bit random number.  */
 end_comment
 
 begin_function
@@ -1152,8 +1552,17 @@ name|long
 name|random
 parameter_list|()
 block|{
+specifier|register
 name|long
 name|i
+decl_stmt|;
+specifier|register
+name|long
+modifier|*
+name|f
+decl_stmt|,
+modifier|*
+name|r
 decl_stmt|;
 if|if
 condition|(
@@ -1168,16 +1577,19 @@ name|state
 index|[
 literal|0
 index|]
-operator|=
-operator|(
+expr_stmt|;
 name|state
 index|[
 literal|0
 index|]
-operator|*
-literal|1103515245
-operator|+
-literal|12345
+operator|=
+name|i
+operator|=
+operator|(
+name|good_rand
+argument_list|(
+name|i
+argument_list|)
 operator|)
 operator|&
 literal|0x7fffffff
@@ -1185,17 +1597,26 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|*
+comment|/* 		 * Use local variables rather than static variables for speed. 		 */
+name|f
+operator|=
 name|fptr
+expr_stmt|;
+name|r
+operator|=
+name|rptr
+expr_stmt|;
+operator|*
+name|f
 operator|+=
 operator|*
-name|rptr
+name|r
 expr_stmt|;
 name|i
 operator|=
 operator|(
 operator|*
-name|fptr
+name|f
 operator|>>
 literal|1
 operator|)
@@ -1206,33 +1627,41 @@ comment|/* chucking least random bit */
 if|if
 condition|(
 operator|++
-name|fptr
+name|f
 operator|>=
 name|end_ptr
 condition|)
 block|{
-name|fptr
+name|f
 operator|=
 name|state
 expr_stmt|;
 operator|++
-name|rptr
+name|r
 expr_stmt|;
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 operator|++
-name|rptr
+name|r
 operator|>=
 name|end_ptr
 condition|)
-name|rptr
+block|{
+name|r
 operator|=
 name|state
 expr_stmt|;
 block|}
+name|fptr
+operator|=
+name|f
+expr_stmt|;
+name|rptr
+operator|=
+name|r
+expr_stmt|;
 block|}
 return|return
 operator|(

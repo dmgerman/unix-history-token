@@ -4,7 +4,7 @@ comment|/*  * msg.c - routines for error messages  */
 end_comment
 
 begin_comment
-comment|/*   * Copyright (C) 1986, 1988, 1989, 1991-2000 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Programming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2, or (at your option)  * any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA  */
+comment|/*   * Copyright (C) 1986, 1988, 1989, 1991-2001 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Programming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2, or (at your option)  * any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA  */
 end_comment
 
 begin_include
@@ -86,25 +86,19 @@ begin_function
 name|void
 name|err
 parameter_list|(
-name|s
-parameter_list|,
-name|emsg
-parameter_list|,
-name|argp
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|emsg
-decl_stmt|;
+parameter_list|,
 name|va_list
 name|argp
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -132,7 +126,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|GAWKDEBUG
 if|if
 condition|(
 name|srcfile
@@ -158,7 +152,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* DEBUG */
+comment|/* GAWKDEBUG */
 if|if
 condition|(
 name|sourceline
@@ -192,7 +186,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"cmd. line:"
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -306,7 +303,12 @@ begin_comment
 comment|/* msg --- take a varargs error message and print it */
 end_comment
 
-begin_if
+begin_comment
+comment|/*  * Function identifier purposely indented to avoid mangling  * by ansi2knr.  Sigh.  */
+end_comment
+
+begin_function
+name|void
 if|#
 directive|if
 name|defined
@@ -320,27 +322,22 @@ name|__STDC__
 argument_list|)
 operator|&&
 name|__STDC__
-end_if
-
-begin_decl_stmt
-name|void
 name|msg
-argument_list|(
+parameter_list|(
 name|char
-operator|*
+modifier|*
 name|mesg
-argument_list|,
-operator|...
-argument_list|)
+parameter_list|,
+modifier|...
+parameter_list|)
 else|#
 directive|else
 comment|/*VARARGS0*/
-name|void
-name|msg
-argument_list|(
+function|msg
+parameter_list|(
 name|va_alist
-argument_list|)
-name|va_dcl
+parameter_list|)
+function|va_dcl
 endif|#
 directive|endif
 block|{
@@ -405,13 +402,14 @@ name|args
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/* warning --- print a warning message */
 end_comment
 
-begin_if
+begin_decl_stmt
+name|void
 if|#
 directive|if
 name|defined
@@ -425,10 +423,6 @@ name|__STDC__
 argument_list|)
 operator|&&
 name|__STDC__
-end_if
-
-begin_decl_stmt
-name|void
 name|warning
 argument_list|(
 name|char
@@ -440,7 +434,6 @@ argument_list|)
 else|#
 directive|else
 comment|/*VARARGS0*/
-name|void
 name|warning
 argument_list|(
 name|va_alist
@@ -497,7 +490,10 @@ endif|#
 directive|endif
 name|err
 argument_list|(
+name|_
+argument_list|(
 literal|"warning: "
+argument_list|)
 argument_list|,
 name|mesg
 argument_list|,
@@ -512,7 +508,8 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
-begin_if
+begin_decl_stmt
+name|void
 if|#
 directive|if
 name|defined
@@ -526,10 +523,6 @@ name|__STDC__
 argument_list|)
 operator|&&
 name|__STDC__
-end_if
-
-begin_decl_stmt
-name|void
 name|error
 argument_list|(
 name|char
@@ -541,7 +534,6 @@ argument_list|)
 else|#
 directive|else
 comment|/*VARARGS0*/
-name|void
 name|error
 argument_list|(
 name|va_alist
@@ -598,7 +590,10 @@ endif|#
 directive|endif
 name|err
 argument_list|(
+name|_
+argument_list|(
 literal|"error: "
+argument_list|)
 argument_list|,
 name|mesg
 argument_list|,
@@ -621,17 +616,13 @@ begin_function
 name|void
 name|set_loc
 parameter_list|(
-name|file
-parameter_list|,
-name|line
-parameter_list|)
 name|char
 modifier|*
 name|file
-decl_stmt|;
+parameter_list|,
 name|int
 name|line
-decl_stmt|;
+parameter_list|)
 block|{
 name|srcfile
 operator|=
@@ -648,7 +639,8 @@ begin_comment
 comment|/* fatal --- print an error message and die */
 end_comment
 
-begin_if
+begin_function
+name|void
 if|#
 directive|if
 name|defined
@@ -662,27 +654,22 @@ name|__STDC__
 argument_list|)
 operator|&&
 name|__STDC__
-end_if
-
-begin_decl_stmt
-name|void
 name|r_fatal
-argument_list|(
+parameter_list|(
 name|char
-operator|*
+modifier|*
 name|mesg
-argument_list|,
-operator|...
-argument_list|)
+parameter_list|,
+modifier|...
+parameter_list|)
 else|#
 directive|else
 comment|/*VARARGS0*/
-name|void
-name|r_fatal
-argument_list|(
+function|r_fatal
+parameter_list|(
 name|va_alist
-argument_list|)
-name|va_dcl
+parameter_list|)
+function|va_dcl
 endif|#
 directive|endif
 block|{
@@ -734,7 +721,10 @@ endif|#
 directive|endif
 name|err
 argument_list|(
+name|_
+argument_list|(
 literal|"fatal: "
+argument_list|)
 argument_list|,
 name|mesg
 argument_list|,
@@ -748,7 +738,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|GAWKDEBUG
 name|abort
 argument_list|()
 expr_stmt|;
@@ -760,7 +750,7 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 end_unit
 

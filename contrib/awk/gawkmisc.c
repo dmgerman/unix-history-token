@@ -4,7 +4,7 @@ comment|/*  * gawkmisc.c --- miscellanious gawk routines that are OS specific.  
 end_comment
 
 begin_comment
-comment|/*   * Copyright (C) 1986, 1988, 1989, 1991-2000 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Programming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA  */
+comment|/*   * Copyright (C) 1986, 1988, 1989, 1991-2001 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Programming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA  */
 end_comment
 
 begin_include
@@ -12,6 +12,26 @@ include|#
 directive|include
 file|"awk.h"
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_FCNTL_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* some old compilers don't grok #elif. sigh */
@@ -47,6 +67,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* not MSDOS, not OS2, not WIN32 */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -67,6 +91,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* not VMS */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -79,13 +107,41 @@ end_if
 begin_include
 include|#
 directive|include
-file|"atari/gawkmisc.atr"
+file|"unsupported/atari/gawkmisc.atr"
 end_include
 
 begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* not atarist */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TANDEM
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|"tmiscc"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* not TANDEM */
+end_comment
 
 begin_include
 include|#
@@ -98,15 +154,36 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* not TANDEM */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* not atarist */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not VMS */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not MSDOS, not OS2, not WIN32 */
+end_comment
 
 begin_comment
 comment|/* xmalloc --- provide this so that other GNU library routines work */
@@ -166,11 +243,9 @@ begin_function
 name|pointer
 name|xmalloc
 parameter_list|(
-name|bytes
-parameter_list|)
 name|size_t
 name|bytes
-decl_stmt|;
+parameter_list|)
 block|{
 name|pointer
 name|p

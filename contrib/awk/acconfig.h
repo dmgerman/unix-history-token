@@ -4,17 +4,13 @@ comment|/*  * acconfig.h -- configuration definitions for gawk.  */
 end_comment
 
 begin_comment
-comment|/*   * Copyright (C) 1995-2000 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Programming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA  */
+comment|/*  * Copyright (C) 1995-2001 the Free Software Foundation, Inc.  *  * This file is part of GAWK, the GNU implementation of the  * AWK Programming Language.  *  * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *  * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA  */
 end_comment
 
 begin_expr_stmt
 unit|@
 name|TOP
 expr|@
-undef|#
-directive|undef
-name|HAVE_STRINGIZE
-comment|/* can use ANSI # operator in cpp */
 undef|#
 directive|undef
 name|REGEX_MALLOC
@@ -25,24 +21,28 @@ name|SPRINTF_RET
 comment|/* return type of sprintf */
 undef|#
 directive|undef
-name|BITOPS
-comment|/* bitwise ops (undocumented feature) */
+name|HAVE_MKTIME
+comment|/* we have the mktime function */
 undef|#
 directive|undef
-name|NONDECDATA
-comment|/* non-decimal input data (undocumented feature) */
+name|HAVE_SOCKETS
+comment|/* we have sockets on this system */
 undef|#
 directive|undef
-name|_FILE_OFFSET_BITS
-comment|/* bits in a file offset, where this matters */
+name|HAVE_PORTALS
+comment|/* we have portals on /p on this system */
 undef|#
 directive|undef
-name|_LARGEFILE_SOURCE
-comment|/* makes fseeko etc. visible on some hosts */
+name|DYNAMIC
+comment|/* allow dynamic addition of builtins */
 undef|#
 directive|undef
-name|_LARGE_FILES
-comment|/* emables large files on AIX-style hosts */
+name|STRTOD_NOT_C89
+comment|/* strtod doesn't have C89 semantics */
+undef|#
+directive|undef
+name|ssize_t
+comment|/* signed version of size_t */
 expr|@
 name|BOTTOM
 expr|@

@@ -4,7 +4,7 @@ name|char
 modifier|*
 name|version_string
 init|=
-literal|"@(#)GNU Awk 3.0"
+literal|"@(#)GNU Awk 3.1"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,6 +54,10 @@ end_comment
 
 begin_comment
 comment|/* 3.0		RS as regexp, RT variable, FS = "", fflush builtin, posix 		regexps, IGNORECASE applies to all comparison, autoconf, source 		code cleanup. See the NEWS file. */
+end_comment
+
+begin_comment
+comment|/* 3.1		PROCINFO array, LINT variable, mktime builtin, BINMODE variable, 		|&, tcp/ip, i18n stuff.  Automake.  See NEWS. */
 end_comment
 
 end_unit
