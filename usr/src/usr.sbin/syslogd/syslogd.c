@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.2 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -395,12 +395,12 @@ block|{
 name|char
 name|f_uname
 index|[
+name|MAXUNAMES
+index|]
+index|[
 name|UNAMESZ
 operator|+
 literal|1
-index|]
-index|[
-name|MAXUNAMES
 index|]
 decl_stmt|;
 struct|struct
