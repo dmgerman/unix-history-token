@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ps.c	5.49 (Berkeley) %G%"
+literal|"@(#)ps.c	5.50 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -449,7 +449,7 @@ name|char
 name|vfmt
 index|[]
 init|=
-literal|"pid state time sl re pagein vsz rss lim tsiz trs %cpu %mem command"
+literal|"pid state time sl re pagein vsz rss lim tsiz %cpu %mem command"
 decl_stmt|;
 end_decl_stmt
 
