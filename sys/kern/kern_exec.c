@@ -1329,6 +1329,13 @@ block|}
 comment|/* 	 * Implement correct POSIX saved-id behavior. 	 * 	 * XXX: It's not clear that the existing behavior is 	 * POSIX-compliant.  A number of sourses indicate that the saved 	 * uid/gid should only be updated if the new ruid is not equal to 	 * the old ruid, or the new euid is not equal to the old euid and 	 * the new euid is not equal to the old ruid.  The FreeBSD code 	 * always updates the saved uid/gid.  Also, this code uses the new 	 * (replaced) euid and egid as the source, which may or may not be 	 * the right ones to use. 	 */
 if|if
 condition|(
+name|newcred
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
 name|oldcred
 operator|->
 name|cr_svuid
@@ -1346,13 +1353,6 @@ operator|->
 name|cr_gid
 condition|)
 block|{
-comment|/* 		 * Avoid allocating a newcred if we don't have one yet and 		 * the saved uid/gid update would be a noop. 		 */
-if|if
-condition|(
-name|newcred
-operator|==
-name|NULL
-condition|)
 name|newcred
 operator|=
 name|crdup
@@ -1360,6 +1360,28 @@ argument_list|(
 name|oldcred
 argument_list|)
 expr_stmt|;
+name|change_svuid
+argument_list|(
+name|newcred
+argument_list|,
+name|newcred
+operator|->
+name|cr_uid
+argument_list|)
+expr_stmt|;
+name|change_svgid
+argument_list|(
+name|newcred
+argument_list|,
+name|newcred
+operator|->
+name|cr_gid
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
 name|change_svuid
 argument_list|(
 name|newcred
