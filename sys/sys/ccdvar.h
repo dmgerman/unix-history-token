@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: ccdvar.h,v 1.6 1997/02/22 09:44:51 peter Exp $ */
 end_comment
 
 begin_comment
@@ -297,14 +297,11 @@ modifier|*
 name|sc_itable
 decl_stmt|;
 comment|/* interleave table */
-name|int
-name|sc_nactive
+name|struct
+name|devstat
+name|device_stats
 decl_stmt|;
-comment|/* number of requests active */
-name|int
-name|sc_dk
-decl_stmt|;
-comment|/* disk index */
+comment|/* device statistics */
 name|struct
 name|ccdgeom
 name|sc_geom
