@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_pipe.c	4.5	81/11/21	*/
+comment|/*	uipc_pipe.c	4.6	81/11/21	*/
 end_comment
 
 begin_include
@@ -150,6 +150,8 @@ condition|(
 name|m_reserve
 argument_list|(
 name|PIPSIZ
+operator|/
+name|MSIZE
 argument_list|)
 operator|==
 literal|0

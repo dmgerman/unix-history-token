@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket2.c	4.5	81/11/21	*/
+comment|/*	uipc_socket2.c	4.6	81/11/21	*/
 end_comment
 
 begin_include
@@ -685,7 +685,13 @@ if|if
 condition|(
 name|m_reserve
 argument_list|(
+operator|(
 name|cc
+operator|*
+literal|2
+operator|)
+operator|/
+name|MSIZE
 argument_list|)
 operator|==
 literal|0
@@ -751,7 +757,7 @@ name|m_release
 argument_list|(
 name|sb
 operator|->
-name|sb_hiwat
+name|sb_mbmax
 argument_list|)
 expr_stmt|;
 name|sb
