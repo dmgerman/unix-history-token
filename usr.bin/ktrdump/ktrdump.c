@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -364,9 +370,9 @@ literal|'e'
 case|:
 name|strcpy
 argument_list|(
-name|optarg
-argument_list|,
 name|execfile
+argument_list|,
+name|optarg
 argument_list|)
 expr_stmt|;
 name|eflag
@@ -387,9 +393,9 @@ literal|'m'
 case|:
 name|strcpy
 argument_list|(
-name|optarg
-argument_list|,
 name|corefile
+argument_list|,
+name|optarg
 argument_list|)
 expr_stmt|;
 name|mflag
