@@ -1034,19 +1034,6 @@ begin_comment
 comment|/* vsprintf++ */
 end_comment
 
-begin_function_decl
-name|int
-name|main
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-index|[]
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|void
 modifier|*

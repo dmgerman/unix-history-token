@@ -77,19 +77,6 @@ begin_comment
 comment|/*  * talk:	A visual form of write. Using sockets, a two way  *		connection is set up between the two people talking.  *		With the aid of curses, the screen is split into two  *		windows, and each users text is added to the window,  *		one character at a time...  *  *		Written by Kipp Hickman  *  *		Modified to run under 4.1a by Clem Cole and Peter Moore  *		Modified to run between hosts by Peter Moore, 8/19/82  *		Modified to run under 4.1c by Peter Moore 3/17/83  *		Fixed to not run with unwriteable terminals MRVM 28/12/94  */
 end_comment
 
-begin_function_decl
-name|int
-name|main
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|int
 name|main
