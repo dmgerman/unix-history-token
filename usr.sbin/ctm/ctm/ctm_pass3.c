@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id$  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm_pass3.c,v 1.4 1994/09/22 02:49:20 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/* Pass3 -- Validate the incomming CTM-file.  */
+comment|/* Pass3 -- Validate the incoming CTM-file.  */
 end_comment
 
 begin_function
@@ -1032,16 +1032,6 @@ name|sp
 operator|->
 name|Key
 argument_list|,
-literal|"DR"
-argument_list|)
-operator|||
-operator|!
-name|strcmp
-argument_list|(
-name|sp
-operator|->
-name|Key
-argument_list|,
 literal|"FR"
 argument_list|)
 condition|)
@@ -1049,13 +1039,40 @@ block|{
 if|if
 condition|(
 literal|0
-operator|>
+operator|=
 name|unlink
 argument_list|(
 name|name
 argument_list|)
 condition|)
+continue|continue;
+block|}
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|sp
+operator|->
+name|Key
+argument_list|,
+literal|"DR"
+argument_list|)
+condition|)
 block|{
+if|if
+condition|(
+literal|0
+operator|=
+name|rmdir
+argument_list|(
+name|name
+argument_list|)
+condition|)
+continue|continue;
+ifdef|#
+directive|ifdef
+name|NOTDEF
 name|sprintf
 argument_list|(
 name|buf
@@ -1070,8 +1087,9 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-block|}
 continue|continue;
+endif|#
+directive|endif
 block|}
 name|WRONG
 block|}

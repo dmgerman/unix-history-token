@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id$  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm_pass1.c,v 1.4 1994/09/22 02:49:18 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/* Pass1 -- Validate the incomming CTM-file.  */
+comment|/* Pass1 -- Validate the incoming CTM-file.  */
 end_comment
 
 begin_function
@@ -81,7 +81,7 @@ literal|3
 condition|)
 name|printf
 argument_list|(
-literal|"Pass1 -- Checking integrity of incomming CTM-patch\n"
+literal|"Pass1 -- Checking integrity of incoming CTM-patch\n"
 argument_list|)
 expr_stmt|;
 name|MD5Init
