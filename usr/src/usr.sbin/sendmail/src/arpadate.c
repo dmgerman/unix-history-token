@@ -56,7 +56,7 @@ operator|)
 name|arpadate
 operator|.
 name|c
-literal|3.10
+literal|3.11
 operator|%
 name|G
 operator|%
@@ -253,7 +253,7 @@ operator|*
 name|q
 operator|++
 operator|=
-literal|'-'
+literal|' '
 expr_stmt|;
 name|p
 operator|=
@@ -292,7 +292,7 @@ operator|*
 name|q
 operator|++
 operator|=
-literal|'-'
+literal|' '
 expr_stmt|;
 name|p
 operator|=
@@ -484,7 +484,7 @@ operator|*
 name|q
 operator|++
 operator|=
-literal|'-'
+literal|' '
 expr_stmt|;
 operator|*
 name|q
