@@ -36,6 +36,13 @@ name|fptrdiff_t
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|u_long
+name|uintfptr_t
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define
