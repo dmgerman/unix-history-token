@@ -2316,7 +2316,7 @@ name|m
 operator|->
 name|m_len
 operator|>
-literal|3
+literal|1
 condition|)
 name|outsw
 argument_list|(
