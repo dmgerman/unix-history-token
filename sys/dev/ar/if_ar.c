@@ -9995,6 +9995,11 @@ operator|->
 name|unit
 argument_list|)
 expr_stmt|;
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
 name|arwatchdog
 argument_list|(
 name|sc
@@ -10003,9 +10008,14 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|s = splimp(); 			ar_down(sc); 			ar_up(sc); 			splx(s);
+block|ar_down(sc); 			ar_up(sc);
 endif|#
 directive|endif
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|inlast
@@ -10656,14 +10666,14 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|arstart
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 return|return
