@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rpcinfo.c,v 1.4 1997/02/22 19:56:45 peter Exp $"
+literal|"$Id: rpcinfo.c,v 1.5 1997/03/29 04:31:57 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,6 +39,18 @@ end_comment
 begin_comment
 comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
 
 begin_include
 include|#
@@ -80,12 +92,6 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_define
@@ -2919,21 +2925,14 @@ condition|(
 name|getuid
 argument_list|()
 condition|)
-block|{
 comment|/* This command allowed only to root */
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Sorry. You are not root\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"sorry, you are not root"
 argument_list|)
 expr_stmt|;
-block|}
 name|prog_num
 operator|=
 name|getprognum
@@ -2967,12 +2966,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"rpcinfo: Could not delete registration for prog %s version %s\n"
+literal|"could not delete registration for prog %s version %s"
 argument_list|,
 name|argv
 index|[
@@ -2985,12 +2983,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -3004,35 +2996,17 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: rpcinfo [ -n portnum ] -u host prognum [ versnum ]\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"       rpcinfo [ -n portnum ] -t host prognum [ versnum ]\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"usage: rpcinfo [-n portnum] -u host prognum [versnum]"
 argument_list|,
-literal|"       rpcinfo -p [ host ]\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"       rpcinfo [-n portnum] -t host prognum [versnum]"
 argument_list|,
-literal|"       rpcinfo -b prognum versnum\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"       rpcinfo -p [host]"
 argument_list|,
-literal|"       rpcinfo -d prognum versnum\n"
+literal|"       rpcinfo -b prognum versnum"
+argument_list|,
+literal|"       rpcinfo -d prognum versnum"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3082,22 +3056,15 @@ name|rpc
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"rpcinfo: %s is unknown service\n"
+literal|"%s is unknown service"
 argument_list|,
 name|arg
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|prognum
 operator|=
 name|rpc
@@ -3245,22 +3212,15 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"rpcinfo: %s is unknown host\n"
+literal|"%s is unknown host"
 argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|bcopy
 argument_list|(
 name|hp
