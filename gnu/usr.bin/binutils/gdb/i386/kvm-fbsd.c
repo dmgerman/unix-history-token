@@ -2195,14 +2195,6 @@ name|pcb
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|i386tss
-name|cts
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* substitutes for the stuff in libkvm which doesn't work */
 end_comment
@@ -2262,6 +2254,10 @@ name|addr
 decl_stmt|;
 name|int
 name|cfd
+decl_stmt|;
+name|struct
+name|i386tss
+name|cts
 decl_stmt|;
 if|if
 condition|(
@@ -3690,29 +3686,7 @@ name|int
 name|i
 decl_stmt|;
 name|int
-modifier|*
-name|pcb_regs
-init|=
-operator|(
-name|int
-operator|*
-operator|)
-operator|&
-name|pcb
-decl_stmt|;
-name|int
-modifier|*
-name|cts_regs
-init|=
-operator|(
-name|int
-operator|*
-operator|)
-operator|&
-name|cts
-decl_stmt|;
-name|int
-name|eip
+name|noreg
 decl_stmt|;
 name|CORE_ADDR
 name|nuaddr
@@ -3780,6 +3754,11 @@ name|uaddr
 argument_list|)
 expr_stmt|;
 comment|/*    * get the register values out of the sys pcb and    * store them where `read_register' will find them.    */
+comment|/*    * XXX many registers aren't available.    * XXX for the non-core case, the registers are stale - they are for    *     the last context switch to the debugger.    * XXX gcc's register numbers aren't all #defined in tm-i386.h.    */
+name|noreg
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -3793,6 +3772,7 @@ condition|;
 operator|++
 name|i
 control|)
+comment|/* eax,ecx,edx */
 name|supply_register
 argument_list|(
 name|i
@@ -3802,16 +3782,9 @@ name|char
 operator|*
 operator|)
 operator|&
-name|cts_regs
-index|[
-name|i
-operator|+
-literal|10
-index|]
+name|noreg
 argument_list|)
 expr_stmt|;
-comment|/* eax, ecx, edx */
-comment|/* get registers from the pcb */
 name|supply_register
 argument_list|(
 literal|3
@@ -3821,45 +3794,39 @@ name|char
 operator|*
 operator|)
 operator|&
-name|pcb_regs
-index|[
-literal|5
-index|]
+name|pcb
+operator|.
+name|pcb_ebx
 argument_list|)
 expr_stmt|;
-comment|/* ebx */
 name|supply_register
 argument_list|(
-literal|4
+name|SP_REGNUM
 argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
 operator|&
-name|pcb_regs
-index|[
-literal|4
-index|]
+name|pcb
+operator|.
+name|pcb_esp
 argument_list|)
 expr_stmt|;
-comment|/* esp */
 name|supply_register
 argument_list|(
-literal|5
+name|FP_REGNUM
 argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
 operator|&
-name|pcb_regs
-index|[
-literal|3
-index|]
+name|pcb
+operator|.
+name|pcb_ebp
 argument_list|)
 expr_stmt|;
-comment|/* ebp */
 name|supply_register
 argument_list|(
 literal|6
@@ -3869,13 +3836,11 @@ name|char
 operator|*
 operator|)
 operator|&
-name|pcb_regs
-index|[
-literal|2
-index|]
+name|pcb
+operator|.
+name|pcb_esi
 argument_list|)
 expr_stmt|;
-comment|/* esi */
 name|supply_register
 argument_list|(
 literal|7
@@ -3885,97 +3850,30 @@ name|char
 operator|*
 operator|)
 operator|&
-name|pcb_regs
-index|[
-literal|1
-index|]
+name|pcb
+operator|.
+name|pcb_edi
 argument_list|)
 expr_stmt|;
-comment|/* edi */
 name|supply_register
 argument_list|(
-literal|8
+name|PC_REGNUM
 argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
 operator|&
-name|pcb_regs
-index|[
-literal|6
-index|]
+name|pcb
+operator|.
+name|pcb_eip
 argument_list|)
 expr_stmt|;
-comment|/* eip */
-name|supply_register
-argument_list|(
-literal|9
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|cts_regs
-index|[
-literal|9
-index|]
-argument_list|)
-expr_stmt|;
-comment|/* eflags */
 for|for
 control|(
 name|i
 operator|=
-literal|10
-init|;
-name|i
-operator|<
-literal|13
-condition|;
-operator|++
-name|i
-control|)
-comment|/* cs, ss, ds */
-name|supply_register
-argument_list|(
-name|i
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|cts_regs
-index|[
-name|i
-operator|+
 literal|9
-index|]
-argument_list|)
-expr_stmt|;
-name|supply_register
-argument_list|(
-literal|13
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|cts_regs
-index|[
-literal|18
-index|]
-argument_list|)
-expr_stmt|;
-comment|/* es */
-for|for
-control|(
-name|i
-operator|=
-literal|14
 init|;
 name|i
 operator|<
@@ -3984,7 +3882,7 @@ condition|;
 operator|++
 name|i
 control|)
-comment|/* fs, gs */
+comment|/* eflags, cs, ss, ds, es, fs, gs */
 name|supply_register
 argument_list|(
 name|i
@@ -3994,23 +3892,9 @@ name|char
 operator|*
 operator|)
 operator|&
-name|cts_regs
-index|[
-name|i
-operator|+
-literal|8
-index|]
+name|noreg
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* doesn't work ??? */
-comment|/* Hmm... */
-block|if (target_read_memory (pcb_regs[5+10]+4,&eip, sizeof eip, 0))     error ("Cannot read PC.");   supply_register (8, (char *)&eip);
-comment|/* eip */
-endif|#
-directive|endif
 comment|/* XXX 80387 registers? */
 block|}
 end_function
