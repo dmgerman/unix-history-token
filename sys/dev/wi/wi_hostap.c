@@ -1392,7 +1392,7 @@ return|return;
 comment|/* XXX: I read somewhere you can deauth all the stations with 	 * a single broadcast.  Maybe try that someday. 	 */
 name|s
 operator|=
-name|splclock
+name|splimp
 argument_list|()
 expr_stmt|;
 name|sta
@@ -1666,7 +1666,7 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|splimp
+name|splnet
 argument_list|()
 expr_stmt|;
 if|if
@@ -4433,10 +4433,9 @@ block|{
 comment|/* any of the following will mess w/ the station list */
 name|s
 operator|=
-name|splclock
+name|splnet
 argument_list|()
 expr_stmt|;
-comment|/* XXX */
 switch|switch
 condition|(
 name|le16toh
@@ -4594,7 +4593,7 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|splclock
+name|splnet
 argument_list|()
 expr_stmt|;
 name|retval
@@ -4741,7 +4740,7 @@ return|;
 block|}
 name|s
 operator|=
-name|splclock
+name|splnet
 argument_list|()
 expr_stmt|;
 name|sta
