@@ -396,6 +396,16 @@ end_struct
 begin_define
 define|#
 directive|define
+name|E1000_WRITE_FLUSH
+parameter_list|(
+name|a
+parameter_list|)
+value|E1000_READ_REG(a, STATUS)
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_READ_REG
 parameter_list|(
 name|a

@@ -212,64 +212,71 @@ file|<dev/em/if_em_hw.h>
 end_include
 
 begin_comment
-comment|/* Tunables */
+comment|/* Tunables -- Begin */
+end_comment
+
+begin_comment
+comment|/*   * FlowControl  * Valid Range: 0-3 (0=none, 1=Rx only, 2=Tx only, 3=Rx&Tx)  * Default: Read flow control settings from the EEPROM  *   This parameter controls the automatic generation(Tx) and response(Rx) to  *   Ethernet PAUSE frames.  */
+end_comment
+
+begin_comment
+comment|/*   * TxDescriptors  * Valid Range: 80-256 for 82542 and 82543-based adapters  *            80-4096 for 82540, 82544, 82545, and 82546-based adapters  * Default Value: 256  *   This value is the number of transmit descriptors allocated by the driver.  *   Increasing this value allows the driver to queue more transmits. Each  *   descriptor is 16 bytes.   */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MAX_TXD
+name|EM_MAX_TXD
 value|256
 end_define
 
+begin_comment
+comment|/*  * RxDescriptors  * Valid Range: 80-256 for 82542 and 82543-based adapters  *            80-4096 for 82540, 82544, 82545, and 82546-based adapters  * Default Value: 256   *   This value is the number of receive descriptors allocated by the driver.  *   Increasing this value allows the driver to buffer more incoming packets.  *   Each descriptor is 16 bytes.  A receive buffer is also allocated for each  *   descriptor. The maximum MTU size is 16110.  *	  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|MAX_RXD
+name|EM_MAX_RXD
 value|256
 end_define
 
-begin_define
-define|#
-directive|define
-name|TX_CLEANUP_THRESHOLD
-value|MAX_TXD / 8
-end_define
+begin_comment
+comment|/*  * TxIntDelay  * Valid Range: 0-65535 (0=off)  * Default Value: 64  *   This value delays the generation of transmit interrupts in units of  *   1.024 microseconds. Transmit interrupt reduction can improve CPU  *   efficiency if properly tuned for specific network traffic. If the  *   system is reporting dropped transmits, this value may be set too high  *   causing the driver to run out of available transmit descriptors.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|TIDV
+name|EM_TIDV
 value|128
 end_define
 
-begin_define
-define|#
-directive|define
-name|RIDV
-value|28
-end_define
+begin_comment
+comment|/*  * RxIntDelay  * Valid Range: 0-65535 (0=off)  * Default Value: 0  *   This value delays the generation of receive interrupts in units of 1.024  *   microseconds.  Receive interrupt reduction can improve CPU efficiency if  *   properly tuned for specific network traffic. Increasing this value adds  *   extra latency to frame reception and can end up decreasing the throughput  *   of TCP traffic. If the system is reporting dropped receives, this value  *   may be set too high, causing the driver to run out of available receive  *   descriptors.  *  *   CAUTION: When setting RxIntDelay to a value other than 0, adapters  *            may hang (stop transmitting) under certain network conditions.   *            If this occurs a WATCHDOG message is logged in the system event log.  *            In addition, the controller is automatically reset, restoring the  *            network connection. To eliminate the potential for the hang  *            ensure that RxIntDelay is set to 0.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|DO_AUTO_NEG
-value|1
+name|EM_RDTR
+value|0
 end_define
+
+begin_comment
+comment|/*  * This parameter controls the maximum no of times the driver will loop  * in the isr.  *           Minimum Value = 1  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|WAIT_FOR_AUTO_NEG_DEFAULT
-value|1
+name|EM_MAX_INTR
+value|3
 end_define
 
-begin_define
-define|#
-directive|define
-name|AUTONEG_ADV_DEFAULT
-value|(ADVERTISE_10_HALF | ADVERTISE_10_FULL | \                                          ADVERTISE_100_HALF | ADVERTISE_100_FULL | \                                          ADVERTISE_1000_FULL)
-end_define
+begin_comment
+comment|/*  * This parameter determines when the hardware will report that it is  * done with the packet.  *           0 - "Done" is reported when the packet has been sent on the wire  *           1 - "Done" is reported when the packet has been DMA'ed and is on chip.  *           2 -  Determine the best method.  */
+end_comment
 
 begin_define
 define|#
@@ -278,6 +285,10 @@ name|EM_REPORT_TX_EARLY
 value|2
 end_define
 
+begin_comment
+comment|/*  * Inform the stack about transmit checksum offload capabilities.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -285,12 +296,9 @@ name|EM_CHECKSUM_FEATURES
 value|(CSUM_TCP | CSUM_UDP)
 end_define
 
-begin_define
-define|#
-directive|define
-name|EM_MAX_INTR
-value|3
-end_define
+begin_comment
+comment|/*  * This parameter controls the duration of transmit watchdog timer.  */
+end_comment
 
 begin_define
 define|#
@@ -302,6 +310,50 @@ end_define
 begin_comment
 comment|/* set to 5 seconds */
 end_comment
+
+begin_comment
+comment|/*  * This parameter controls when the driver calls the routine to reclaim  * transmit descriptors.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_TX_CLEANUP_THRESHOLD
+value|EM_MAX_TXD / 8
+end_define
+
+begin_comment
+comment|/*  * This parameter controls whether or not autonegotation is enabled.  *              0 - Disable autonegotiation  *              1 - Enable  autonegotiation  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DO_AUTO_NEG
+value|1
+end_define
+
+begin_comment
+comment|/*  * This parameter control whether or not the driver will wait for  * autonegotiation to complete.  *              1 - Wait for autonegotiation to complete  *              0 - Don't wait for autonegotiation to complete  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WAIT_FOR_AUTO_NEG_DEFAULT
+value|1
+end_define
+
+begin_comment
+comment|/* Tunables -- End */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUTONEG_ADV_DEFAULT
+value|(ADVERTISE_10_HALF | ADVERTISE_10_FULL | \                                          ADVERTISE_100_HALF | ADVERTISE_100_FULL | \                                          ADVERTISE_1000_FULL)
+end_define
 
 begin_define
 define|#
@@ -627,8 +679,10 @@ name|mbuf
 modifier|*
 name|m_head
 decl_stmt|;
-name|u_int32_t
-name|num_tx_desc_used
+name|struct
+name|em_tx_desc
+modifier|*
+name|used_tx_desc
 decl_stmt|;
 block|}
 struct|;
@@ -785,11 +839,6 @@ decl_stmt|;
 name|struct
 name|em_tx_desc
 modifier|*
-name|oldest_used_tx_desc
-decl_stmt|;
-name|struct
-name|em_tx_desc
-modifier|*
 name|tx_desc_base
 decl_stmt|;
 specifier|volatile
@@ -889,11 +938,11 @@ name|mbuf_cluster_failed
 decl_stmt|;
 name|unsigned
 name|long
-name|xmit_pullup
+name|no_tx_desc_avail1
 decl_stmt|;
 name|unsigned
 name|long
-name|no_tx_desc_avail
+name|no_tx_desc_avail2
 decl_stmt|;
 name|unsigned
 name|long
