@@ -92,6 +92,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|inline
 name|void
 name|simplelock_unlock
 parameter_list|(
