@@ -12348,13 +12348,17 @@ condition|)
 break|break;
 if|if
 condition|(
+operator|(
 name|ic
 operator|->
 name|ic_flags
 operator|&
 name|IEEE80211_F_PRIVACY
+operator|)
+operator|==
+literal|0
 condition|)
-block|{
+break|break;
 name|error
 operator|=
 name|wi_write_val
@@ -12460,7 +12464,6 @@ name|wkey
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|WI_INTERSIL
@@ -12577,11 +12580,15 @@ condition|)
 break|break;
 if|if
 condition|(
+operator|(
 name|val
 operator|&
 name|PRIVACY_INVOKED
+operator|)
+operator|==
+literal|0
 condition|)
-block|{
+break|break;
 name|error
 operator|=
 name|wi_write_val
@@ -12602,16 +12609,12 @@ condition|)
 break|break;
 if|if
 condition|(
-operator|(
 name|val
 operator|&
 name|HOST_DECRYPT
-operator|)
-operator|==
-literal|0
 condition|)
-block|{
-comment|/* 				 * It seems that the firmware accept 104bit key 				 * only if all the keys have 104bit length.  We 				 * get the length of the transmit key and use it 				 * for all other keys.  Perhaps we should use 				 * software WEP for such situation. 				 */
+break|break;
+comment|/* 		 * It seems that the firmware accept 104bit key only if 		 * all the keys have 104bit length.  We get the length of 		 * the transmit key and use it for all other keys. 		 * Perhaps we should use software WEP for such situation. 		 */
 if|if
 condition|(
 name|ic
@@ -12696,8 +12699,6 @@ condition|(
 name|error
 condition|)
 break|break;
-block|}
-block|}
 block|}
 break|break;
 block|}
