@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)os.c	5.1 (Berkeley) %G%"
+literal|"@(#)os.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -751,12 +751,6 @@ begin_comment
 comment|/*  * Returns NULL if the file can be opened and  * is an ordinary file, otherwise an error message  * (if it cannot be opened or is a directory, etc.)  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|STAT
-end_if
-
 begin_include
 include|#
 directive|include
@@ -927,49 +921,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function
-name|public
-name|char
-modifier|*
-name|bad_file
-parameter_list|(
-name|filename
-parameter_list|,
-name|message
-parameter_list|,
-name|len
-parameter_list|)
-name|char
-modifier|*
-name|filename
-decl_stmt|;
-name|char
-modifier|*
-name|message
-decl_stmt|;
-name|unsigned
-name|int
-name|len
-decl_stmt|;
-block|{
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * errno_message: Return an error message based on the value of "errno".  * okreadfail: Return true if the previous failure of a read  *	(on the input tty) should be considered ok.  */
