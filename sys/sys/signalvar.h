@@ -39,46 +39,46 @@ index|[
 name|_SIG_MAXSIG
 index|]
 decl_stmt|;
-comment|/* disposition of signals */
+comment|/* Disposition of signals. */
 name|sigset_t
 name|ps_catchmask
 index|[
 name|_SIG_MAXSIG
 index|]
 decl_stmt|;
-comment|/* signals to be blocked */
+comment|/* Signals to be blocked. */
 name|sigset_t
 name|ps_sigonstack
 decl_stmt|;
-comment|/* signals to take on sigstack */
+comment|/* Signals to take on sigstack. */
 name|sigset_t
 name|ps_sigintr
 decl_stmt|;
-comment|/* signals that interrupt syscalls */
+comment|/* Signals that interrupt syscalls. */
 name|sigset_t
 name|ps_sigreset
 decl_stmt|;
-comment|/* signals that reset when caught */
+comment|/* Signals that reset when caught. */
 name|sigset_t
 name|ps_signodefer
 decl_stmt|;
-comment|/* signals not masked while handled */
+comment|/* Signals not masked while handled. */
 name|sigset_t
 name|ps_siginfo
 decl_stmt|;
-comment|/* signals that want SA_SIGINFO args */
+comment|/* Signals that want SA_SIGINFO args. */
 name|sigset_t
 name|ps_freebsd4
 decl_stmt|;
-comment|/* signals that use freebsd4 ucontext */
+comment|/* Signals using freebsd4 ucontext. */
 name|sigset_t
 name|ps_osigset
 decl_stmt|;
-comment|/* signals that use<= 3.x osigset_t */
+comment|/* Signals using<= 3.x osigset_t. */
 name|sigset_t
 name|ps_usertramp
 decl_stmt|;
-comment|/* SunOS compat; libc sigtramp XXX */
+comment|/* SunOS compat; libc sigtramp XXX. */
 block|}
 struct|;
 end_struct
@@ -891,21 +891,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|tdsignal
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|int
-name|sig
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|void
 name|sigexit
@@ -921,6 +906,17 @@ argument_list|)
 name|__dead2
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|int
+name|sig_ffs
+parameter_list|(
+name|sigset_t
+modifier|*
+name|set
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -948,6 +944,21 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|tdsignal
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|int
+name|sig
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|trapsignal
 parameter_list|(
 name|struct
@@ -960,17 +971,6 @@ name|sig
 parameter_list|,
 name|u_long
 name|code
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|sig_ffs
-parameter_list|(
-name|sigset_t
-modifier|*
-name|set
 parameter_list|)
 function_decl|;
 end_function_decl
