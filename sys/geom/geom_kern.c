@@ -569,7 +569,7 @@ name|sb
 argument_list|,
 name|PZERO
 argument_list|,
-literal|"g_dot"
+literal|"g_conftxt"
 argument_list|,
 name|hz
 argument_list|)
@@ -663,7 +663,7 @@ name|sb
 argument_list|,
 name|PZERO
 argument_list|,
-literal|"g_dot"
+literal|"g_confdot"
 argument_list|,
 name|hz
 argument_list|)
@@ -757,7 +757,7 @@ name|sb
 argument_list|,
 name|PZERO
 argument_list|,
-literal|"g_xml"
+literal|"g_confxml"
 argument_list|,
 name|hz
 argument_list|)
