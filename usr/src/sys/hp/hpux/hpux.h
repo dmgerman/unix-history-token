@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux.h 1.19 92/01/20$  *  *	@(#)hpux.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux.h 1.27 92/12/23$  *  *	@(#)hpux.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -833,6 +833,42 @@ define|#
 directive|define
 name|HPUX_SYSCONF_CPUPA11
 value|0x210
+end_define
+
+begin_comment
+comment|/* mmap stuff */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HPUXMAP_FIXED
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|HPUXMAP_REPLACE
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|HPUXMAP_ANON
+value|0x10
+end_define
+
+begin_comment
+comment|/* rlimit stuff */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HPUXRLIMIT_NOFILE
+value|6
 end_define
 
 end_unit

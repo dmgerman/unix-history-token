@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_tty.c 1.1 90/07/09$  *  *	@(#)hpux_tty.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_tty.c 1.12 92/04/15$  *  *	@(#)hpux_tty.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2363,6 +2363,20 @@ directive|ifdef
 name|COMPAT_OHPUX
 end_ifdef
 
+begin_struct
+struct|struct
+name|ohpuxsgtty_args
+block|{
+name|int
+name|fdes
+decl_stmt|;
+name|caddr_t
+name|cmarg
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|ohpuxgtty
 argument_list|(
@@ -2382,21 +2396,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|fdes
-decl_stmt|;
-name|caddr_t
-name|cmarg
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|ohpuxsgtty_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -2447,21 +2453,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|fdes
-decl_stmt|;
-name|caddr_t
-name|cmarg
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|ohpuxsgtty_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
