@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vmstat.c,v 1.28 1998/10/05 04:04:27 ken Exp $"
+literal|"$Id: vmstat.c,v 1.29 1998/10/08 09:56:10 obrien Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1953,6 +1953,28 @@ index|[
 literal|80
 index|]
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|WANT_FD
+if|if
+condition|(
+literal|0
+operator|==
+name|strcmp
+argument_list|(
+literal|"fd"
+argument_list|,
+name|dev_select
+index|[
+name|i
+index|]
+operator|.
+name|device_name
+argument_list|)
+condition|)
+continue|continue;
+endif|#
+directive|endif
 name|sprintf
 argument_list|(
 name|tmpstr
@@ -3535,6 +3557,28 @@ index|[
 literal|80
 index|]
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|WANT_FD
+if|if
+condition|(
+literal|0
+operator|==
+name|strcmp
+argument_list|(
+literal|"fd"
+argument_list|,
+name|dev_select
+index|[
+name|i
+index|]
+operator|.
+name|device_name
+argument_list|)
+condition|)
+continue|continue;
+endif|#
+directive|endif
 name|sprintf
 argument_list|(
 name|tmpstr
