@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ln.c 4.1 %G%"
+literal|"@(#)ln.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,6 +47,12 @@ end_decl_stmt
 begin_comment
 comment|/* force flag set? */
 end_comment
+
+begin_decl_stmt
+name|int
+name|sflag
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -94,6 +100,8 @@ operator|,
 name|argv
 operator|++
 expr_stmt|;
+name|again
+label|:
 if|if
 condition|(
 name|argc
@@ -112,6 +120,33 @@ literal|0
 condition|)
 block|{
 name|fflag
+operator|++
+expr_stmt|;
+name|argv
+operator|++
+expr_stmt|;
+name|argc
+operator|--
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|argc
+operator|&&
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|"-s"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|sflag
 operator|++
 expr_stmt|;
 name|argv
@@ -151,6 +186,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|sflag
+operator|==
+literal|0
+operator|&&
 name|argc
 operator|>
 literal|2
@@ -158,7 +197,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|stat
+name|lstat
 argument_list|(
 name|argv
 index|[
@@ -239,7 +278,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: ln f1\nor: ln f1 f2\nln f1 ... fn d2\n"
+literal|"Usage: ln [ -s ] f1\nor: ln [ -s ] f1 f2\nln [ -s ] f1 ... fn d2\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -249,6 +288,16 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_decl_stmt
+name|int
+name|link
+argument_list|()
+decl_stmt|,
+name|symlink
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|linkit
@@ -275,14 +324,31 @@ name|char
 modifier|*
 name|tail
 decl_stmt|;
+name|int
+function_decl|(
+modifier|*
+name|linkf
+function_decl|)
+parameter_list|()
+init|=
+name|sflag
+condition|?
+name|symlink
+operator|:
+name|link
+function_decl|;
 comment|/* is target a directory? */
 if|if
 condition|(
+name|sflag
+operator|==
+literal|0
+operator|&&
 name|fflag
 operator|==
 literal|0
 operator|&&
-name|stat
+name|lstat
 argument_list|(
 name|from
 argument_list|,
@@ -318,7 +384,7 @@ return|;
 block|}
 if|if
 condition|(
-name|stat
+name|lstat
 argument_list|(
 name|to
 argument_list|,
@@ -380,7 +446,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|link
+call|(
+modifier|*
+name|linkf
+call|)
 argument_list|(
 name|from
 argument_list|,
