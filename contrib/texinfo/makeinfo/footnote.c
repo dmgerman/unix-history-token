@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* footnote.c -- footnotes for Texinfo.    $Id: footnote.c,v 1.10 1999/09/20 12:20:52 karl Exp $     Copyright (C) 1998, 99 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* footnote.c -- footnotes for Texinfo.    $Id: footnote.c,v 1.13 2002/03/02 15:05:21 karl Exp $     Copyright (C) 1998, 99, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|"makeinfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xml.h"
 end_include
 
 begin_comment
@@ -655,6 +661,32 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* output_pending_notes is non-reentrant (it uses a global data      structure pending_notes, which it frees before it returns), and      TeX doesn't grok footnotes inside footnotes anyway.  Disallow      that.  */
+if|if
+condition|(
+name|already_outputting_pending_notes
+condition|)
+block|{
+name|line_error
+argument_list|(
+name|_
+argument_list|(
+literal|"Footnotes inside footnotes are not allowed"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|marker
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|note
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 operator|!
@@ -698,6 +730,17 @@ literal|"*"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|xml
+condition|)
+name|xml_insert_footnote
+argument_list|(
+name|note
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|remember_note
 argument_list|(
 name|marker
@@ -710,15 +753,22 @@ if|if
 condition|(
 name|html
 condition|)
+block|{
+name|add_html_elt
+argument_list|(
+literal|"<a rel=footnote href="
+argument_list|)
+expr_stmt|;
 name|add_word_args
 argument_list|(
-literal|"<a rel=footnote href=\"#fn-%d\"><sup>%s</sup></a>"
+literal|"\"#fn-%d\"><sup>%s</sup></a>"
 argument_list|,
 name|current_footnote_number
 argument_list|,
 name|marker
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 comment|/* Your method should at least insert MARKER. */
 switch|switch
@@ -839,6 +889,7 @@ block|}
 name|current_footnote_number
 operator|++
 expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|marker
@@ -1063,6 +1114,9 @@ operator|->
 name|number
 argument_list|)
 expr_stmt|;
+name|already_outputting_pending_notes
+operator|++
+expr_stmt|;
 name|execute_string
 argument_list|(
 literal|"%s"
@@ -1071,6 +1125,9 @@ name|footnote
 operator|->
 name|note
 argument_list|)
+expr_stmt|;
+name|already_outputting_pending_notes
+operator|--
 expr_stmt|;
 name|add_word
 argument_list|(

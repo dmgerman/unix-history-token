@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* nodes.c -- how to get an Info file and node.    $Id: nodes.c,v 1.14 1999/08/15 10:18:09 karl Exp $     Copyright (C) 1993, 98, 99 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* nodes.c -- how to get an Info file and node.    $Id: nodes.c,v 1.15 2000/11/11 00:40:37 karl Exp $     Copyright (C) 1993, 98, 99, 2000 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -836,7 +836,7 @@ return|;
 endif|#
 directive|endif
 comment|/* HANDLE_MAN_PAGES */
-comment|/* The file appears to be already loaded, and it is not "dir".                Check to see if it has changed since the last time it was                loaded. */
+comment|/* The file appears to be already loaded, and is not "dir".  Check                to see if it's changed since the last time it was loaded.  */
 if|if
 condition|(
 name|stat
@@ -870,7 +870,6 @@ name|finfo
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|new_info
 operator|.
 name|st_size
@@ -878,9 +877,7 @@ operator|!=
 name|old_info
 operator|->
 name|st_size
-operator|)
 operator|||
-operator|(
 name|new_info
 operator|.
 name|st_mtime
@@ -888,7 +885,6 @@ operator|!=
 name|old_info
 operator|->
 name|st_mtime
-operator|)
 condition|)
 block|{
 comment|/* The file has changed.  Forget that we ever had loaded it                    in the first place. */
@@ -3413,6 +3409,19 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* If no tags at all (possibly a misformatted info file), quit.  */
+if|if
+condition|(
+operator|!
+name|file_buffer
+operator|->
+name|tags
+condition|)
+block|{
+return|return
+name|NULL
+return|;
+block|}
 for|for
 control|(
 name|i
@@ -3450,9 +3459,7 @@ block|{
 name|FILE_BUFFER
 modifier|*
 name|subfile
-decl_stmt|;
-name|subfile
-operator|=
+init|=
 name|info_find_file_internal
 argument_list|(
 name|tag
@@ -3461,7 +3468,7 @@ name|filename
 argument_list|,
 name|INFO_NO_TAGS
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 operator|!

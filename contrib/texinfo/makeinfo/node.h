@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* node.h -- declarations for Node.    $Id: node.h,v 1.5 1999/07/11 16:50:19 karl Exp $     Copyright (C) 1996, 97, 98, 99 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* node.h -- declarations for Node.    $Id: node.h,v 1.6 2002/01/16 15:52:45 karl Exp $     Copyright (C) 1996, 97, 98, 99, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_ifndef
@@ -77,6 +77,11 @@ name|int
 name|number
 decl_stmt|;
 comment|/* Number for this node, relevant for HTML                            splitting -- from use+define order, not just                            define. */
+name|char
+modifier|*
+name|html_fname
+decl_stmt|;
+comment|/* The HTML file to which this node is written 			   (non-NULL only for HTML splitting).  */
 block|}
 name|TAG_ENTRY
 typedef|;

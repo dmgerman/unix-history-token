@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* toc.c -- table of contents handling.    $Id: toc.c,v 1.14 1999/08/09 20:28:18 karl Exp $     Copyright (C) 1999 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Karl Heinz Marbaise<kama@hippo.fido.de>.  */
+comment|/* toc.c -- table of contents handling.    $Id: toc.c,v 1.21 2002/02/23 19:12:15 karl Exp $     Copyright (C) 1999, 2000, 01, 02 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Karl Heinz Marbaise<kama@hippo.fido.de>.  */
 end_comment
 
 begin_include
@@ -37,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|"node.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"html.h"
 end_include
 
 begin_include
@@ -197,6 +203,12 @@ decl_stmt|,
 modifier|*
 name|d
 decl_stmt|;
+name|char
+modifier|*
+name|filename
+init|=
+name|NULL
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -244,7 +256,7 @@ condition|(
 name|html
 condition|)
 block|{
-comment|/* We need to insert the expanded node name into the TOC, so 	 that when we eventually output the TOC, its<A REF= link will 	 point to the<A NAME= tag created by cm_node in the navigation 	 bar.  We cannot expand the containing_node member, for the 	 reasons explained in the WARNING below.  We also cannot wait 	 with the node name expansion until the TOC is actually output, 	 since by that time the macro definitions may have been changed. 	 So instead we store in the tocname member the expanded node 	 name and the TOC name concatenated together (with the necessary 	 HTML markup), since that's how they are output.  */
+comment|/* We need to insert the expanded node name into the TOC, so          that when we eventually output the TOC, its<A REF= link will          point to the<A NAME= tag created by cm_node in the navigation          bar.  We cannot expand the containing_node member, for the          reasons explained in the WARNING below.  We also cannot wait          with the node name expansion until the TOC is actually output,          since by that time the macro definitions may have been changed.          So instead we store in the tocname member the expanded node          name and the TOC name concatenated together (with the necessary          HTML markup), since that's how they are output.  */
 if|if
 condition|(
 operator|!
@@ -264,8 +276,34 @@ name|expanded_node
 operator|=
 name|anchor
 expr_stmt|;
-comment|/* Sigh...  Need to HTML-escape the expanded node name like 	 add_anchor_name does, except that we are not writing this to 	 the output, so can't use add_anchor_name...  */
-comment|/* The factor 5 in the next allocation is because the maximum 	 expansion of HTML-escaping is for the& character, which is 	 output as "&amp;".  2 is for "> that separates node from tocname.  */
+if|if
+condition|(
+name|splitting
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|anchor
+condition|)
+name|filename
+operator|=
+name|nodename_to_filename
+argument_list|(
+name|expanded_node
+argument_list|)
+expr_stmt|;
+else|else
+name|filename
+operator|=
+name|filename_part
+argument_list|(
+name|current_output_filename
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Sigh...  Need to HTML-escape the expanded node name like          add_anchor_name does, except that we are not writing this to          the output, so can't use add_anchor_name...  */
+comment|/* The factor 5 in the next allocation is because the maximum          expansion of HTML-escaping is for the& character, which is          output as "&amp;".  2 is for "> that separates node from tocname.  */
 name|d
 operator|=
 name|tocname_and_node
@@ -354,7 +392,7 @@ operator|*
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* do this manually since sprintf returns char * on 	             SunOS 4 and other old systems.  */
+comment|/* do this manually since sprintf returns char * on                      SunOS 4 and other old systems.  */
 while|while
 condition|(
 operator|*
@@ -458,6 +496,15 @@ operator|->
 name|number
 operator|=
 name|toc_counter
+expr_stmt|;
+name|toc_entry_alist
+index|[
+name|toc_counter
+index|]
+operator|->
+name|html_file
+operator|=
+name|filename
 expr_stmt|;
 comment|/* have to be done at least */
 return|return
@@ -619,7 +666,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* print table of contents in HTML, may be we can produce a standalone    HTML file? */
+comment|/* Print table of contents in HTML.  */
 end_comment
 
 begin_function
@@ -659,7 +706,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\n<h1>%s</h1>\n<ul>\n"
+literal|"\n<h2>%s</h2>\n<ul>\n"
 argument_list|,
 name|_
 argument_list|(
@@ -777,11 +824,96 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* No double entries in TOC.  */
+if|if
+condition|(
+operator|!
+operator|(
+name|i
+operator|&&
+name|strcmp
+argument_list|(
+name|toc_entry_alist
+index|[
+name|i
+index|]
+operator|->
+name|name
+argument_list|,
+name|toc_entry_alist
+index|[
+name|i
+operator|-
+literal|1
+index|]
+operator|->
+name|name
+argument_list|)
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+comment|/* each toc entry is a list item.  */
+name|fputs
+argument_list|(
+literal|"<li>"
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+comment|/* For chapters (only), insert an anchor that the short contents              will link to.  */
+if|if
+condition|(
+name|toc_entry_alist
+index|[
+name|i
+index|]
+operator|->
+name|level
+operator|==
+literal|0
+condition|)
+block|{
+name|char
+modifier|*
+name|p
+init|=
+name|toc_entry_alist
+index|[
+name|i
+index|]
+operator|->
+name|name
+decl_stmt|;
+comment|/* toc_entry_alist[i]->name has the form `foo">bar', 		 that is, it includes both the node name and anchor 		 text.  We need to find where `foo', the node name, 		 ends, and use that in toc_FOO.  */
+while|while
+condition|(
+operator|*
+name|p
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'"'
+condition|)
+name|p
+operator|++
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"<li><a href=\"#%s</a>\n"
+literal|"<a name=\"toc_%.*s\"></a>\n    "
+argument_list|,
+name|p
+operator|-
+name|toc_entry_alist
+index|[
+name|i
+index|]
+operator|->
+name|name
 argument_list|,
 name|toc_entry_alist
 index|[
@@ -791,6 +923,34 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* Insert link -- to an external file if splitting, or              within the current document if not splitting.  */
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"<a href=\"%s#%s</a>\n"
+argument_list|,
+name|splitting
+condition|?
+name|toc_entry_alist
+index|[
+name|i
+index|]
+operator|->
+name|html_file
+else|:
+literal|""
+argument_list|,
+name|toc_entry_alist
+index|[
+name|i
+index|]
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+block|}
 name|last_level
 operator|=
 name|toc_entry_alist
@@ -1011,6 +1171,10 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|char
+modifier|*
+name|toc_file
+decl_stmt|;
 comment|/* does exist any toc? */
 if|if
 condition|(
@@ -1026,12 +1190,23 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\n<h1>%s</h1>\n<ul>\n"
+literal|"\n<h2>%s</h2>\n<ul>\n"
 argument_list|,
 name|_
 argument_list|(
 literal|"Short Contents"
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|contents_filename
+condition|)
+name|toc_file
+operator|=
+name|filename_part
+argument_list|(
+name|contents_filename
 argument_list|)
 expr_stmt|;
 for|for
@@ -1048,38 +1223,66 @@ name|i
 operator|++
 control|)
 block|{
-if|if
-condition|(
-operator|(
+name|char
+modifier|*
+name|name
+init|=
 name|toc_entry_alist
 index|[
 name|i
 index|]
-operator|)
+operator|->
+name|name
+decl_stmt|;
+if|if
+condition|(
+name|toc_entry_alist
+index|[
+name|i
+index|]
 operator|->
 name|level
 operator|==
 literal|0
 condition|)
 block|{
-name|fputs
-argument_list|(
-literal|"<li>"
-argument_list|,
-name|fp
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
+name|contents_filename
+condition|)
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"<a href=\"#%s\n"
+literal|"<li><a href=\"%s#toc_%s</a>\n"
 argument_list|,
+name|splitting
+condition|?
+name|toc_file
+else|:
+literal|""
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"<a href=\"%s#%s</a>\n"
+argument_list|,
+name|splitting
+condition|?
 name|toc_entry_alist
 index|[
 name|i
 index|]
 operator|->
+name|html_file
+else|:
+literal|""
+argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
@@ -1092,11 +1295,20 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|contents_filename
+condition|)
+name|free
+argument_list|(
+name|toc_file
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/* short contents in ASCII (--no-headers).    May be we should create a new command line switch --ascii ?  */
+comment|/* short contents in ASCII (--no-headers).  */
 end_comment
 
 begin_function
@@ -1165,12 +1377,10 @@ control|)
 block|{
 if|if
 condition|(
-operator|(
 name|toc_entry_alist
 index|[
 name|i
 index|]
-operator|)
 operator|->
 name|level
 operator|==
@@ -1244,6 +1454,38 @@ block|{
 name|int
 name|idx
 decl_stmt|;
+comment|/* Can't rewrite standard output or the null device.  No point in      complaining.  */
+if|if
+condition|(
+name|STREQ
+argument_list|(
+name|fname
+argument_list|,
+literal|"-"
+argument_list|)
+operator|||
+name|FILENAME_CMP
+argument_list|(
+name|fname
+argument_list|,
+name|NULL_DEVICE
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|FILENAME_CMP
+argument_list|(
+name|fname
+argument_list|,
+name|ALSO_NULL_DEVICE
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|toc_buf
 operator|=
 name|find_and_load
@@ -1257,17 +1499,6 @@ operator|!
 name|toc_buf
 condition|)
 block|{
-comment|/* Can't rewrite standard output.  No point in complaining.  */
-if|if
-condition|(
-operator|!
-name|STREQ
-argument_list|(
-name|fname
-argument_list|,
-literal|"-"
-argument_list|)
-condition|)
 name|fs_error
 argument_list|(
 name|fname
@@ -1622,6 +1853,16 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+operator|!
+name|executing_string
+operator|&&
+name|html
+condition|)
+name|html_output_head
+argument_list|()
+expr_stmt|;
 name|contents_filename
 operator|=
 name|xstrdup
@@ -1708,6 +1949,16 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+operator|!
+name|executing_string
+operator|&&
+name|html
+condition|)
+name|html_output_head
+argument_list|()
+expr_stmt|;
 name|shortcontents_filename
 operator|=
 name|xstrdup

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* macro.c -- user-defined macros for Texinfo.    $Id: macro.c,v 1.10 1999/08/17 21:06:35 karl Exp $     Copyright (C) 1998, 99 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* macro.c -- user-defined macros for Texinfo.    $Id: macro.c,v 1.12 2002/03/02 15:05:21 karl Exp $     Copyright (C) 1998, 99, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -2187,17 +2187,12 @@ operator|>
 name|input_text_length
 condition|)
 block|{
-name|int
-name|temp_line
-init|=
-name|line_number
-decl_stmt|;
-name|line_number
-operator|=
-name|defining_line
-expr_stmt|;
-name|line_error
+name|file_line_error
 argument_list|(
+name|input_filename
+argument_list|,
+name|defining_line
+argument_list|,
 name|_
 argument_list|(
 literal|"%cend macro not found"
@@ -2205,10 +2200,6 @@ argument_list|)
 argument_list|,
 name|COMMAND_PREFIX
 argument_list|)
-expr_stmt|;
-name|line_number
-operator|=
-name|temp_line
 expr_stmt|;
 return|return;
 block|}
@@ -3982,6 +3973,13 @@ name|a
 operator|->
 name|alias
 operator|)
+argument_list|)
+expr_stmt|;
+name|canon_white
+argument_list|(
+name|a
+operator|->
+name|alias
 argument_list|)
 expr_stmt|;
 name|discard_until

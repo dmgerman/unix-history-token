@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* info.h -- Header file which includes all of the other headers.    $Id: info.h,v 1.14 1999/09/25 16:10:04 karl Exp $     Copyright (C) 1993, 97, 98, 99 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* info.h -- Header file which includes all of the other headers.    $Id: info.h,v 1.16 2002/02/23 19:12:02 karl Exp $     Copyright (C) 1993, 97, 98, 99, 2001 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_ifndef
@@ -29,6 +29,12 @@ begin_define
 define|#
 directive|define
 name|NAMED_FUNCTIONS
+end_define
+
+begin_define
+define|#
+directive|define
+name|INFOKEY
 end_define
 
 begin_comment
@@ -79,6 +85,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"doc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"display.h"
 end_include
 
@@ -92,12 +104,6 @@ begin_include
 include|#
 directive|include
 file|"echo-area.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"doc.h"
 end_include
 
 begin_include
@@ -436,6 +442,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Non-zero means don't remove ANSI escape sequences from man pages.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|raw_escapes_p
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Print FORMAT with ARG1 and ARG2.  If the window system was initialized,    then the message is printed in the echo area.  Otherwise, a message is    output to stderr. */
 end_comment
 
@@ -446,19 +463,6 @@ name|info_error
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* The version numbers of Info. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|info_major_version
-decl_stmt|,
-name|info_minor_version
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* Error message defines. */
@@ -595,10 +599,6 @@ end_decl_stmt
 begin_escape
 end_escape
 
-begin_comment
-comment|/* Found in info-utils.c. */
-end_comment
-
 begin_function_decl
 specifier|extern
 name|char
@@ -607,6 +607,40 @@ name|filename_non_directory
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Found in info-utils.c. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INFOKEY
+argument_list|)
+end_if
+
+begin_function_decl
+specifier|extern
+name|void
+name|set_variable_to_value
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Found in variables.c. */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INFOKEY */
+end_comment
 
 begin_if
 if|#
@@ -618,16 +652,16 @@ name|BUILDING_LIBRARY
 argument_list|)
 end_if
 
-begin_comment
-comment|/* Found in session.c */
-end_comment
-
 begin_decl_stmt
 specifier|extern
 name|int
 name|info_windows_initialized_p
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Found in session.c */
+end_comment
 
 begin_comment
 comment|/* Found in window.c. */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* makeinfo.h -- declarations for Makeinfo.    $Id: makeinfo.h,v 1.25 1999/09/18 18:09:22 karl Exp $     Copyright (C) 1996, 97, 98, 99 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* makeinfo.h -- declarations for Makeinfo.    $Id: makeinfo.h,v 1.31 2001/09/11 16:37:51 karl Exp $     Copyright (C) 1996, 97, 98, 99, 2000, 01 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_ifndef
@@ -503,6 +503,54 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* Nonzero means that we're generating XML. */
+end_comment
+
+begin_expr_stmt
+name|DECLARE
+argument_list|(
+name|int
+argument_list|,
+name|xml
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Nonzero means that we're generating DocBook. */
+end_comment
+
+begin_expr_stmt
+name|DECLARE
+argument_list|(
+name|int
+argument_list|,
+name|docbook
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Nonzero means true 8-bit output for Info and plain text.  */
+end_comment
+
+begin_expr_stmt
+name|DECLARE
+argument_list|(
+name|int
+argument_list|,
+name|enable_encoding
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Nonzero means escape characters in HTML output. */
 end_comment
 
@@ -598,6 +646,23 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* @documentdescription ... @end documentdescription. */
+end_comment
+
+begin_expr_stmt
+name|DECLARE
+argument_list|(
+name|char
+operator|*
+argument_list|,
+name|document_description
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Nonzero if the last character inserted has the syntax class of NEWLINE. */
 end_comment
 
@@ -683,6 +748,19 @@ argument_list|,
 name|line_number
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DECLARE
+argument_list|(
+name|char
+operator|*
+argument_list|,
+name|toplevel_output_filename
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -857,6 +935,22 @@ argument_list|(
 name|int
 argument_list|,
 name|number_sections
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Nonzero means split size.  When zero, DEFAULT_SPLIT_SIZE is used. */
+end_comment
+
+begin_expr_stmt
+name|DECLARE
+argument_list|(
+name|int
+argument_list|,
+name|split_size
 argument_list|,
 literal|0
 argument_list|)
@@ -1104,6 +1198,13 @@ define|#
 directive|define
 name|COMMAND_PREFIX
 value|'@'
+end_define
+
+begin_define
+define|#
+directive|define
+name|END_VERBATIM
+value|"end verbatim"
 end_define
 
 begin_comment
