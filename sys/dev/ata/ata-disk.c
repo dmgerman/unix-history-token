@@ -1524,6 +1524,14 @@ name|request
 operator|.
 name|currentsize
 expr_stmt|;
+name|request
+operator|.
+name|bytecount
+operator|-=
+name|request
+operator|.
+name|currentsize
+expr_stmt|;
 name|DELAY
 argument_list|(
 literal|20
