@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lookup.c	7.49 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lookup.c	7.50 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -135,12 +135,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-name|USES_VOP_ACCESS
-expr_stmt|;
-name|USES_VOP_BLKATOFF
-expr_stmt|;
-name|USES_VOP_VGET
-expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -221,7 +215,7 @@ name|vnode
 modifier|*
 name|tdp
 decl_stmt|;
-comment|/* returned by VOP_VGET */
+comment|/* returned by VFS_VGET */
 name|doff_t
 name|enduseful
 decl_stmt|;
@@ -1613,9 +1607,11 @@ if|if
 condition|(
 name|error
 operator|=
-name|VOP_VGET
+name|VFS_VGET
 argument_list|(
 name|vdp
+operator|->
+name|v_mount
 argument_list|,
 name|dp
 operator|->
@@ -1757,9 +1753,11 @@ if|if
 condition|(
 name|error
 operator|=
-name|VOP_VGET
+name|VFS_VGET
 argument_list|(
 name|vdp
+operator|->
+name|v_mount
 argument_list|,
 name|dp
 operator|->
@@ -1823,9 +1821,11 @@ if|if
 condition|(
 name|error
 operator|=
-name|VOP_VGET
+name|VFS_VGET
 argument_list|(
 name|vdp
+operator|->
+name|v_mount
 argument_list|,
 name|dp
 operator|->
@@ -1898,9 +1898,11 @@ if|if
 condition|(
 name|error
 operator|=
-name|VOP_VGET
+name|VFS_VGET
 argument_list|(
 name|vdp
+operator|->
+name|v_mount
 argument_list|,
 name|dp
 operator|->
@@ -2275,14 +2277,6 @@ modifier|*
 name|cnp
 decl_stmt|;
 block|{
-name|USES_VOP_BLKATOFF
-expr_stmt|;
-name|USES_VOP_BWRITE
-expr_stmt|;
-name|USES_VOP_TRUNCATE
-expr_stmt|;
-name|USES_VOP_WRITE
-expr_stmt|;
 specifier|register
 name|struct
 name|direct
@@ -3020,10 +3014,6 @@ modifier|*
 name|cnp
 decl_stmt|;
 block|{
-name|USES_VOP_BLKATOFF
-expr_stmt|;
-name|USES_VOP_BWRITE
-expr_stmt|;
 specifier|register
 name|struct
 name|inode
@@ -3223,10 +3213,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_BLKATOFF
-expr_stmt|;
-name|USES_VOP_BWRITE
-expr_stmt|;
 name|struct
 name|buf
 modifier|*
@@ -3635,8 +3621,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_VGET
-expr_stmt|;
 name|struct
 name|dirtemplate
 name|dirbuf
@@ -3891,9 +3875,11 @@ if|if
 condition|(
 name|error
 operator|=
-name|VOP_VGET
+name|VFS_VGET
 argument_list|(
 name|vp
+operator|->
+name|v_mount
 argument_list|,
 name|dirbuf
 operator|.
