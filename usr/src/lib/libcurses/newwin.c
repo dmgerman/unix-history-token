@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newwin.c	5.17 (Berkeley) %G%"
+literal|"@(#)newwin.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -346,6 +346,13 @@ decl_stmt|,
 name|nc
 decl_stmt|;
 block|{
+name|int
+name|i
+decl_stmt|;
+name|__LINE
+modifier|*
+name|lp
+decl_stmt|;
 specifier|register
 name|WINDOW
 modifier|*
@@ -497,6 +504,37 @@ name|orig
 operator|=
 name|orig
 expr_stmt|;
+comment|/* Initialize flags here so that refresh can also use __set_subwin. */
+for|for
+control|(
+name|lp
+operator|=
+name|win
+operator|->
+name|lspace
+operator|,
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|win
+operator|->
+name|maxy
+condition|;
+name|i
+operator|++
+operator|,
+name|lp
+operator|++
+control|)
+name|lp
+operator|->
+name|flags
+operator|=
+literal|0
+expr_stmt|;
 name|__set_subwin
 argument_list|(
 name|orig
@@ -637,12 +675,6 @@ operator|&
 name|olp
 operator|->
 name|lastch
-expr_stmt|;
-name|lp
-operator|->
-name|flags
-operator|=
-literal|0
 expr_stmt|;
 name|lp
 operator|->
