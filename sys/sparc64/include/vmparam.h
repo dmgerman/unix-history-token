@@ -212,7 +212,29 @@ begin_define
 define|#
 directive|define
 name|VM_KMEM_SIZE
-value|(12*1024*1024)
+value|(16*1024*1024)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * How many physical pages per KVA page allocated.  * min(max(VM_KMEM_SIZE, Physical memory/VM_KMEM_SIZE_SCALE), VM_KMEM_SIZE_MAX)  * is the total KVA space allocated for kmem_map.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_KMEM_SIZE_SCALE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|VM_KMEM_SIZE_SCALE
+value|(3)
 end_define
 
 begin_endif
