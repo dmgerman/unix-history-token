@@ -2249,7 +2249,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Driver to swallow Grackle host bridges from the PCI bus side.  * Same as the UniNorth 'swallower', so whoever probes first will win out.  * Maybe the UniNorth/Grackle code should be consolidated.  */
+comment|/*  * Driver to swallow Grackle host bridges from the PCI bus side.  */
 end_comment
 
 begin_function
@@ -2263,26 +2263,19 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|pci_get_class
+name|pci_get_devid
 argument_list|(
 name|dev
 argument_list|)
 operator|==
-name|PCIC_BRIDGE
-operator|&&
-name|pci_get_subclass
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-name|PCIS_BRIDGE_HOST
+literal|0x00021057
 condition|)
 block|{
 name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Host to PCI bridge"
+literal|"Grackle Host to PCI bridge"
 argument_list|)
 expr_stmt|;
 name|device_quiet
@@ -2292,8 +2285,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|10000
+literal|0
 operator|)
 return|;
 block|}
