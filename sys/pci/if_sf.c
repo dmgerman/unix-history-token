@@ -2773,7 +2773,10 @@ operator|)
 return|;
 break|break;
 case|case
-name|AD_SUBSYSID_62044
+name|AD_SUBSYSID_62044_REV0
+case|:
+case|case
+name|AD_SUBSYSID_62044_REV1
 case|:
 name|device_set_desc
 argument_list|(

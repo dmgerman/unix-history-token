@@ -30,7 +30,7 @@ value|0x6915
 end_define
 
 begin_comment
-comment|/*  * AIC-6915 subsystem IDs. Adaptec uses the subsystem ID to identify  * the exact kind of NIC on which the ASIC is mounted. Currently there  * are six different variations. Note: the Adaptec manual lists code 0x28  * for two different NICs: the 62044 and the 69011/TX. This is a typo:  * the code for the 62044 is really 0x18.  */
+comment|/*  * AIC-6915 subsystem IDs. Adaptec uses the subsystem ID to identify  * the exact kind of NIC on which the ASIC is mounted. Currently there  * are six different variations. Note: the Adaptec manual lists code 0x28  * for two different NICs: the 62044 and the 69011/TX. This is a typo:  * the code for the 62044 is really 0x18.  *  * Note that there also appears to be an 0x19 code for a newer rev  * 62044 card.  */
 end_comment
 
 begin_define
@@ -69,8 +69,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AD_SUBSYSID_62044
+name|AD_SUBSYSID_62044_REV0
 value|0x0018
+end_define
+
+begin_comment
+comment|/* quad port 10/100baseTX 64-bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AD_SUBSYSID_62044_REV1
+value|0x0019
 end_define
 
 begin_comment
