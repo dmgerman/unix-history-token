@@ -330,7 +330,7 @@ name|struct
 name|lcp_opt
 name|opt
 decl_stmt|;
-comment|/* Set by implementations OptInit() */
+comment|/* Set by implementation's OptInit() */
 block|}
 name|in
 struct|;
@@ -350,7 +350,7 @@ name|ccp_opt
 modifier|*
 name|opt
 decl_stmt|;
-comment|/* Set by implementations OptInit() */
+comment|/* Set by implementation's OptInit() */
 block|}
 name|out
 struct|;
