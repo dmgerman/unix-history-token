@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fnmatch.c	5.5 (Berkeley) %G%"
+literal|"@(#)fnmatch.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,7 +38,7 @@ comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_comment
-comment|/*  * Function fnmatch() as proposed in Posix 1003.2 B.6 (rev. 9).  * Compares a filename or pathname to a pattern.  */
+comment|/*  * Function fnmatch() as proposed in POSIX 1003.2 B.6 (D11.2).  * Compares a filename or pathname to a pattern.  */
 end_comment
 
 begin_include
@@ -62,12 +62,14 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|rangematch
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -431,6 +433,7 @@ end_block
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|rangematch
@@ -440,6 +443,7 @@ parameter_list|,
 name|test
 parameter_list|)
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|pattern
