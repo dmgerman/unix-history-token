@@ -922,6 +922,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Embed the rcs id of a source file in the resulting library.  Note that in  * more recent ELF binutils, we use .ident allowing the ID to be stripped.  * Usage:  *	__FBSDID("$FreeBSD$");  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -966,6 +970,7 @@ name|__FBSDID
 parameter_list|(
 name|s
 parameter_list|)
+value|struct __hack
 end_define
 
 begin_endif
