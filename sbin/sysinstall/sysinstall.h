@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|TITLE
-value|"FreeBSD 2.0.1-Development Installation"
+value|"FreeBSD 2.0-ALPHA Installation"
 end_define
 
 begin_define

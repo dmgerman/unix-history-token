@@ -4501,7 +4501,7 @@ else|#
 directive|else
 name|bcopy
 argument_list|(
-literal|"FreeBSD-2.0.ALPHA"
+name|TITLE
 argument_list|,
 name|utsname
 operator|.
@@ -4509,7 +4509,7 @@ name|sysname
 argument_list|,
 name|strlen
 argument_list|(
-literal|"FreeBSD-2.0.ALPHA"
+name|TITLE
 argument_list|)
 argument_list|)
 expr_stmt|;
