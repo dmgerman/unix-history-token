@@ -370,17 +370,6 @@ value|"gcc"
 end_define
 
 begin_comment
-comment|/* Define to the version of the distribution.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VERSION
-value|"2.95.2"
-end_define
-
-begin_comment
 comment|/* Define if using alloca.c.  */
 end_comment
 
