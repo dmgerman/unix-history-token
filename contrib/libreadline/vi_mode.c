@@ -8,7 +8,7 @@ comment|/* vi_mode.c -- A vi emulation mode for Bash.    Derived from code writt
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1987, 1989, 1992 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
+comment|/* Copyright (C) 1987-2004 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
 end_comment
 
 begin_define
@@ -202,6 +202,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|int
+name|_rl_vi_last_command
+init|=
+literal|'i'
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* default `.' puts you in insert mode */
+end_comment
+
 begin_comment
 comment|/* Non-zero means enter insertion mode. */
 end_comment
@@ -275,19 +287,6 @@ name|int
 name|vi_insert_buffer_size
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|_rl_vi_last_command
-init|=
-literal|'i'
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* default `.' puts you in insert mode */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -538,6 +537,47 @@ expr_stmt|;
 name|_rl_vi_last_arg_sign
 operator|=
 name|sign
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* A convenience function that calls _rl_vi_set_last to save the last command    information and enters insertion mode. */
+end_comment
+
+begin_function
+name|void
+name|rl_vi_start_inserting
+parameter_list|(
+name|key
+parameter_list|,
+name|repeat
+parameter_list|,
+name|sign
+parameter_list|)
+name|int
+name|key
+decl_stmt|,
+name|repeat
+decl_stmt|,
+name|sign
+decl_stmt|;
+block|{
+name|_rl_vi_set_last
+argument_list|(
+name|key
+argument_list|,
+name|repeat
+argument_list|,
+name|sign
+argument_list|)
+expr_stmt|;
+name|rl_vi_insertion_mode
+argument_list|(
+literal|1
+argument_list|,
+name|key
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -927,6 +967,9 @@ block|{
 case|case
 literal|'?'
 case|:
+name|_rl_free_saved_history_line
+argument_list|()
+expr_stmt|;
 name|rl_noninc_forward_search
 argument_list|(
 name|count
@@ -938,6 +981,9 @@ break|break;
 case|case
 literal|'/'
 case|:
+name|_rl_free_saved_history_line
+argument_list|()
+expr_stmt|;
 name|rl_noninc_reverse_search
 argument_list|(
 name|count
@@ -1078,8 +1124,7 @@ name|key
 operator|==
 literal|'\\'
 condition|)
-block|{
-name|_rl_vi_set_last
+name|rl_vi_start_inserting
 argument_list|(
 name|key
 argument_list|,
@@ -1088,14 +1133,6 @@ argument_list|,
 name|rl_arg_sign
 argument_list|)
 expr_stmt|;
-name|rl_vi_insertion_mode
-argument_list|(
-literal|1
-argument_list|,
-name|key
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -1129,21 +1166,13 @@ argument_list|,
 name|key
 argument_list|)
 expr_stmt|;
-name|_rl_vi_set_last
+name|rl_vi_start_inserting
 argument_list|(
 name|key
 argument_list|,
 literal|1
 argument_list|,
 name|rl_arg_sign
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
-name|rl_vi_insertion_mode
-argument_list|(
-literal|1
-argument_list|,
-name|key
 argument_list|)
 expr_stmt|;
 return|return
@@ -1609,7 +1638,6 @@ expr_stmt|;
 comment|/* Move to the next non-whitespace character (to the start of the 	 next word). */
 while|while
 condition|(
-operator|++
 name|rl_point
 operator|<
 name|rl_end
@@ -1622,7 +1650,9 @@ name|rl_point
 index|]
 argument_list|)
 condition|)
-empty_stmt|;
+name|rl_point
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|rl_point
@@ -2485,9 +2515,15 @@ else|else
 block|{
 if|if
 condition|(
+operator|(
 name|_rl_vi_last_key_before_insert
 operator|==
 literal|'i'
+operator|||
+name|_rl_vi_last_key_before_insert
+operator|==
+literal|'a'
+operator|)
 operator|&&
 name|rl_undo_list
 condition|)
@@ -2654,6 +2690,8 @@ index|]
 decl_stmt|;
 name|int
 name|mblen
+decl_stmt|,
+name|p
 decl_stmt|;
 name|mbstate_t
 name|ps
@@ -2762,13 +2800,20 @@ condition|(
 name|wc
 condition|)
 block|{
+name|p
+operator|=
+name|rl_point
+expr_stmt|;
 name|mblen
 operator|=
-name|wctomb
+name|wcrtomb
 argument_list|(
 name|mb
 argument_list|,
 name|wc
+argument_list|,
+operator|&
+name|ps
 argument_list|)
 expr_stmt|;
 if|if
@@ -2787,13 +2832,24 @@ expr_stmt|;
 name|rl_begin_undo_group
 argument_list|()
 expr_stmt|;
-name|rl_delete
+name|rl_vi_delete
 argument_list|(
 literal|1
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rl_point
+operator|<
+name|p
+condition|)
+comment|/* Did we retreat at EOL? */
+name|rl_point
+operator|++
+expr_stmt|;
+comment|/* XXX - should we advance more than 1 for mbchar? */
 name|rl_insert_text
 argument_list|(
 name|mb
@@ -2840,10 +2896,10 @@ decl_stmt|,
 name|ignore
 decl_stmt|;
 block|{
-name|char
+name|int
 name|c
-init|=
-literal|0
+decl_stmt|,
+name|p
 decl_stmt|;
 comment|/* Don't try this on an empty line. */
 if|if
@@ -2857,6 +2913,10 @@ operator|(
 literal|0
 operator|)
 return|;
+name|c
+operator|=
+literal|0
+expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -2952,15 +3012,29 @@ condition|(
 name|c
 condition|)
 block|{
+name|p
+operator|=
+name|rl_point
+expr_stmt|;
 name|rl_begin_undo_group
 argument_list|()
 expr_stmt|;
-name|rl_delete
+name|rl_vi_delete
 argument_list|(
 literal|1
 argument_list|,
 name|c
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rl_point
+operator|<
+name|p
+condition|)
+comment|/* Did we retreat at EOL? */
+name|rl_point
+operator|++
 expr_stmt|;
 name|_rl_insert_char
 argument_list|(
@@ -3036,6 +3110,11 @@ argument_list|,
 name|MB_FIND_NONZERO
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+name|count
+operator|--
+condition|)
 name|rl_yank
 argument_list|(
 literal|1
@@ -3227,6 +3306,10 @@ name|_rl_digit_value
 argument_list|(
 name|c
 argument_list|)
+expr_stmt|;
+name|rl_explicit_arg
+operator|=
+literal|1
 expr_stmt|;
 name|rl_digit_loop1
 argument_list|()
@@ -3958,20 +4041,13 @@ name|_rl_vi_doing_insert
 operator|=
 literal|1
 expr_stmt|;
-name|_rl_vi_set_last
+name|rl_vi_start_inserting
 argument_list|(
 name|key
 argument_list|,
-name|count
+name|rl_numeric_arg
 argument_list|,
 name|rl_arg_sign
-argument_list|)
-expr_stmt|;
-name|rl_vi_insertion_mode
-argument_list|(
-literal|1
-argument_list|,
-name|key
 argument_list|)
 expr_stmt|;
 block|}
@@ -4894,7 +4970,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* XXX - think about reading an entire mbchar with _rl_read_mbchar and    inserting it in one bunch instead of the loop below (like in    rl_vi_char_search or _rl_vi_change_mbchar_case.  Set c to mbchar[0]    for test against 033 or ^C.  Make sure that _rl_read_mbchar does    this right. */
+comment|/* XXX - think about reading an entire mbchar with _rl_read_mbchar and    inserting it in one bunch instead of the loop below (like in    rl_vi_char_search or _rl_vi_change_mbchar_case).  Set c to mbchar[0]    for test against 033 or ^C.  Make sure that _rl_read_mbchar does    this right. */
 end_comment
 
 begin_function
@@ -4913,6 +4989,8 @@ decl_stmt|;
 block|{
 name|int
 name|c
+decl_stmt|,
+name|p
 decl_stmt|;
 if|if
 condition|(
@@ -4959,6 +5037,9 @@ return|return
 operator|-
 literal|1
 return|;
+name|rl_begin_undo_group
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 name|count
@@ -4969,10 +5050,11 @@ operator|<
 name|rl_end
 condition|)
 block|{
-name|rl_begin_undo_group
-argument_list|()
+name|p
+operator|=
+name|rl_point
 expr_stmt|;
-name|rl_delete
+name|rl_vi_delete
 argument_list|(
 literal|1
 argument_list|,
@@ -4995,6 +5077,17 @@ name|rl_byte_oriented
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|rl_point
+operator|<
+name|p
+condition|)
+comment|/* Did we retreat at EOL? */
+name|rl_point
+operator|++
+expr_stmt|;
 while|while
 condition|(
 name|_rl_insert_char
@@ -5021,9 +5114,21 @@ name|RL_STATE_MOREINPUT
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 else|else
 endif|#
 directive|endif
+block|{
+if|if
+condition|(
+name|rl_point
+operator|<
+name|p
+condition|)
+comment|/* Did we retreat at EOL? */
+name|rl_point
+operator|++
+expr_stmt|;
 name|_rl_insert_char
 argument_list|(
 literal|1
@@ -5031,23 +5136,11 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|count
-operator|==
-literal|0
-condition|)
-name|rl_backward_char
-argument_list|(
-literal|1
-argument_list|,
-name|c
-argument_list|)
-expr_stmt|;
+block|}
+block|}
 name|rl_end_undo_group
 argument_list|()
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -5087,10 +5180,10 @@ operator|)
 condition|?
 literal|'c'
 else|:
-literal|' '
+literal|'l'
 argument_list|)
 expr_stmt|;
-comment|/* `S' == `cc', `s' == `c ' */
+comment|/* `S' == `cc', `s' == `cl' */
 return|return
 operator|(
 name|rl_vi_change_to
