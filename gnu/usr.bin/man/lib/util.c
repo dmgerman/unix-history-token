@@ -193,12 +193,14 @@ argument_list|)
 condition|)
 operator|*
 name|s
-operator|++
 operator|=
 name|tolower
 argument_list|(
 name|c
 argument_list|)
+expr_stmt|;
+name|s
+operator|++
 expr_stmt|;
 block|}
 block|}

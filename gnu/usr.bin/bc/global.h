@@ -4,11 +4,11 @@ comment|/* global.h:  The global variables for bc.  */
 end_comment
 
 begin_comment
-comment|/*  This file is part of bc written for MINIX.     Copyright (C) 1991, 1992 Free Software Foundation, Inc.      This program is free software; you can redistribute it and/or modify     it under the terms of the GNU General Public License as published by     the Free Software Foundation; either version 2 of the License , or     (at your option) any later version.      This program is distributed in the hope that it will be useful,     but WITHOUT ANY WARRANTY; without even the implied warranty of     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     GNU General Public License for more details.      You should have received a copy of the GNU General Public License     along with this program; see the file COPYING.  If not, write to     the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.      You may contact the author by:        e-mail:  phil@cs.wwu.edu       us-mail:  Philip A. Nelson                 Computer Science Department, 9062                 Western Washington University                 Bellingham, WA 98226-9062  *************************************************************************/
+comment|/*  This file is part of bc written for MINIX.     Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.      This program is free software; you can redistribute it and/or modify     it under the terms of the GNU General Public License as published by     the Free Software Foundation; either version 2 of the License , or     (at your option) any later version.      This program is distributed in the hope that it will be useful,     but WITHOUT ANY WARRANTY; without even the implied warranty of     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     GNU General Public License for more details.      You should have received a copy of the GNU General Public License     along with this program; see the file COPYING.  If not, write to     the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.      You may contact the author by:        e-mail:  phil@cs.wwu.edu       us-mail:  Philip A. Nelson                 Computer Science Department, 9062                 Western Washington University                 Bellingham, WA 98226-9062  *************************************************************************/
 end_comment
 
 begin_comment
-comment|/* For the current "break level" and if statements. */
+comment|/* The current break level's label. */
 end_comment
 
 begin_decl_stmt
@@ -18,12 +18,20 @@ name|break_label
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* The current if statement's else label or label after else. */
+end_comment
+
 begin_decl_stmt
 name|EXTERN
 name|int
 name|if_label
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* The current for statement label for continuing the loop. */
+end_comment
 
 begin_decl_stmt
 name|EXTERN
@@ -33,7 +41,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Label numbers. */
+comment|/* Next available label number. */
 end_comment
 
 begin_decl_stmt
@@ -44,7 +52,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Used for "code" generation. */
+comment|/* Byte code character storage.  Used in many places for generation of code. */
 end_comment
 
 begin_decl_stmt
@@ -57,12 +65,20 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Count of characters printed to the output in compile_only mode. */
+end_comment
+
 begin_decl_stmt
 name|EXTERN
 name|int
 name|out_count
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Have we generated any code since the last initialization of the code    generator.  */
+end_comment
 
 begin_decl_stmt
 name|EXTERN
@@ -72,7 +88,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Interactive and other flags. */
+comment|/* Is this run an interactive execution.  (Is stdin a terminal?) */
 end_comment
 
 begin_decl_stmt
@@ -82,12 +98,20 @@ name|interactive
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Just generate the byte code.  -c flag. */
+end_comment
+
 begin_decl_stmt
 name|EXTERN
 name|char
 name|compile_only
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Load the standard math functions.  -l flag. */
+end_comment
 
 begin_decl_stmt
 name|EXTERN
@@ -96,12 +120,20 @@ name|use_math
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Give a warning on use of any non-standard feature (non-POSIX).  -w flag. */
+end_comment
+
 begin_decl_stmt
 name|EXTERN
 name|char
 name|warn_not_std
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Accept POSIX bc only!  -s flag. */
+end_comment
 
 begin_decl_stmt
 name|EXTERN

@@ -4,7 +4,7 @@ comment|/* execute.c - run a bc program. */
 end_comment
 
 begin_comment
-comment|/*  This file is part of bc written for MINIX.     Copyright (C) 1991, 1992 Free Software Foundation, Inc.      This program is free software; you can redistribute it and/or modify     it under the terms of the GNU General Public License as published by     the Free Software Foundation; either version 2 of the License , or     (at your option) any later version.      This program is distributed in the hope that it will be useful,     but WITHOUT ANY WARRANTY; without even the implied warranty of     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     GNU General Public License for more details.      You should have received a copy of the GNU General Public License     along with this program; see the file COPYING.  If not, write to     the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.      You may contact the author by:        e-mail:  phil@cs.wwu.edu       us-mail:  Philip A. Nelson                 Computer Science Department, 9062                 Western Washington University                 Bellingham, WA 98226-9062  *************************************************************************/
+comment|/*  This file is part of bc written for MINIX.     Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.      This program is free software; you can redistribute it and/or modify     it under the terms of the GNU General Public License as published by     the Free Software Foundation; either version 2 of the License , or     (at your option) any later version.      This program is distributed in the hope that it will be useful,     but WITHOUT ANY WARRANTY; without even the implied warranty of     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     GNU General Public License for more details.      You should have received a copy of the GNU General Public License     along with this program; see the file COPYING.  If not, write to     the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.      You may contact the author by:        e-mail:  phil@cs.wwu.edu       us-mail:  Philip A. Nelson                 Computer Science Department, 9062                 Western Washington University                 Bellingham, WA 98226-9062  *************************************************************************/
 end_comment
 
 begin_include
@@ -831,6 +831,33 @@ name|ch
 condition|)
 block|{
 case|case
+literal|'a'
+case|:
+name|out_char
+argument_list|(
+literal|007
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'b'
+case|:
+name|out_char
+argument_list|(
+literal|'\b'
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'f'
+case|:
+name|out_char
+argument_list|(
+literal|'\f'
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'n'
 case|:
 name|out_char
@@ -840,11 +867,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'t'
+literal|'q'
 case|:
 name|out_char
 argument_list|(
-literal|'\t'
+literal|'"'
 argument_list|)
 expr_stmt|;
 break|break;
@@ -858,20 +885,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'b'
+literal|'t'
 case|:
 name|out_char
 argument_list|(
-literal|007
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'f'
-case|:
-name|out_char
-argument_list|(
-literal|'\f'
+literal|'\t'
 argument_list|)
 expr_stmt|;
 break|break;

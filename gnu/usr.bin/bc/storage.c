@@ -4,7 +4,7 @@ comment|/* storage.c:  Code and data storage manipulations.  This includes label
 end_comment
 
 begin_comment
-comment|/*  This file is part of bc written for MINIX.     Copyright (C) 1991, 1992 Free Software Foundation, Inc.      This program is free software; you can redistribute it and/or modify     it under the terms of the GNU General Public License as published by     the Free Software Foundation; either version 2 of the License , or     (at your option) any later version.      This program is distributed in the hope that it will be useful,     but WITHOUT ANY WARRANTY; without even the implied warranty of     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     GNU General Public License for more details.      You should have received a copy of the GNU General Public License     along with this program; see the file COPYING.  If not, write to     the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.      You may contact the author by:        e-mail:  phil@cs.wwu.edu       us-mail:  Philip A. Nelson                 Computer Science Department, 9062                 Western Washington University                 Bellingham, WA 98226-9062  *************************************************************************/
+comment|/*  This file is part of bc written for MINIX.     Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.      This program is free software; you can redistribute it and/or modify     it under the terms of the GNU General Public License as published by     the Free Software Foundation; either version 2 of the License , or     (at your option) any later version.      This program is distributed in the hope that it will be useful,     but WITHOUT ANY WARRANTY; without even the implied warranty of     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     GNU General Public License for more details.      You should have received a copy of the GNU General Public License     along with this program; see the file COPYING.  If not, write to     the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.      You may contact the author by:        e-mail:  phil@cs.wwu.edu       us-mail:  Philip A. Nelson                 Computer Science Department, 9062                 Western Washington University                 Bellingham, WA 98226-9062  *************************************************************************/
 end_comment
 
 begin_include
@@ -778,6 +778,8 @@ name|temp
 decl_stmt|;
 name|int
 name|retval
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -1644,6 +1646,8 @@ name|var_ptr
 decl_stmt|;
 name|long
 name|temp
+init|=
+literal|0
 decl_stmt|;
 name|char
 name|toobig
@@ -3183,11 +3187,6 @@ name|arg_list
 modifier|*
 name|params
 decl_stmt|;
-name|char
-name|warned
-init|=
-name|FALSE
-decl_stmt|;
 name|int
 name|ix
 decl_stmt|,
@@ -3456,22 +3455,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-operator|!
-name|warned
-condition|)
-block|{
 name|rt_error
 argument_list|(
 literal|"Parameter number mismatch"
 argument_list|)
 expr_stmt|;
-name|warned
-operator|=
-name|TRUE
-expr_stmt|;
-block|}
+return|return;
 block|}
 name|params
 operator|=
