@@ -107,14 +107,7 @@ begin_define
 define|#
 directive|define
 name|FTP_ANONYMOUS_USER
-value|"ftp"
-end_define
-
-begin_define
-define|#
-directive|define
-name|FTP_ANONYMOUS_PASSWORD
-value|"ftp"
+value|"anonymous"
 end_define
 
 begin_define
@@ -4011,7 +4004,7 @@ literal|0
 condition|)
 name|logname
 operator|=
-name|FTP_ANONYMOUS_PASSWORD
+name|FTP_ANONYMOUS_USER
 expr_stmt|;
 name|gethostname
 argument_list|(
