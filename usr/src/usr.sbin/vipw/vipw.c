@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vipw.c	5.8 (Berkeley) %G%"
+literal|"@(#)vipw.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -270,7 +270,7 @@ name|open
 argument_list|(
 name|temp
 argument_list|,
-name|O_WRONLY
+name|O_RDWR
 operator||
 name|O_CREAT
 operator||
@@ -444,11 +444,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|fsync
-argument_list|(
-name|fd
-argument_list|)
-operator|||
 operator|!
 operator|(
 name|tfp
