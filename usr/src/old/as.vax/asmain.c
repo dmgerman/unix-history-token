@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asmain.c	5.4 (Berkeley) %G%"
+literal|"@(#)asmain.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,7 +104,7 @@ begin_define
 define|#
 directive|define
 name|unix_lang_name
-value|"VAX/UNIX Assembler V%G% 5.4"
+value|"VAX/UNIX Assembler V%G% 5.5"
 end_define
 
 begin_comment
@@ -528,8 +528,6 @@ begin_decl_stmt
 name|char
 modifier|*
 name|outfile
-init|=
-literal|"a.out"
 decl_stmt|;
 end_decl_stmt
 
@@ -898,6 +896,17 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
+name|outfile
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|genbuildname
+argument_list|(
+literal|"a.out"
+argument_list|)
+expr_stmt|;
 name|innames
 operator|=
 operator|(
@@ -1128,10 +1137,17 @@ expr_stmt|;
 block|}
 name|outfile
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|genbuildname
+argument_list|(
 name|argv
 index|[
 literal|2
 index|]
+argument_list|)
 expr_stmt|;
 name|bumpone
 label|:
