@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.22 (Berkeley) %G%"
+literal|"@(#)main.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -317,35 +317,16 @@ block|}
 block|,
 define|#
 directive|define
-name|ISO_X25
-value|23
-block|{
-comment|/*"_x25_isopcb"*/
-literal|"_file"
-block|}
-block|,
-comment|/* fast gross hack to speed up */
-define|#
-directive|define
 name|N_TPSTAT
-value|24
+value|23
 block|{
 literal|"_tp_stat"
 block|}
 block|,
 define|#
 directive|define
-name|N_X25STAT
-value|25
-block|{
-comment|/*"_x25_stat"*/
-literal|"_file"
-block|}
-block|,
-define|#
-directive|define
 name|N_ESISSTAT
-value|26
+value|24
 block|{
 literal|"_esis_stat"
 block|}
@@ -353,7 +334,7 @@ block|,
 define|#
 directive|define
 name|N_NIMP
-value|27
+value|25
 block|{
 literal|"_nimp"
 block|}
@@ -361,7 +342,7 @@ block|,
 define|#
 directive|define
 name|N_RTREE
-value|28
+value|26
 block|{
 literal|"_radix_node_head"
 block|}
@@ -369,7 +350,7 @@ block|,
 define|#
 directive|define
 name|N_CLTP
-value|29
+value|27
 block|{
 literal|"_cltb"
 block|}
@@ -377,7 +358,7 @@ block|,
 define|#
 directive|define
 name|N_CLTPSTAT
-value|30
+value|28
 block|{
 literal|"_cltpstat"
 block|}
@@ -882,25 +863,6 @@ block|,
 literal|"cltp"
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|notdef
-block|{
-name|ISO_X25
-block|,
-name|N_X25STAT
-block|,
-literal|1
-block|,
-name|x25_protopr
-block|,
-name|x25_stats
-block|,
-literal|"x25"
-block|}
-block|,
-endif|#
-directive|endif
 block|{
 operator|-
 literal|1
