@@ -86,7 +86,7 @@ begin_define
 define|#
 directive|define
 name|OTHER_WRITE
-value|002
+value|020
 end_define
 
 begin_function
