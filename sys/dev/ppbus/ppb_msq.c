@@ -790,7 +790,7 @@ name|va_arg
 argument_list|(
 name|p_list
 argument_list|,
-name|char
+name|int
 argument_list|)
 expr_stmt|;
 break|break;
