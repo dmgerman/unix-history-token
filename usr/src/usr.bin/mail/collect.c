@@ -13,7 +13,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)collect.c	1.3 %G%"
+literal|"@(#)collect.c	1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,6 +65,21 @@ end_function_decl
 
 begin_comment
 comment|/* Previous SIGHUP value */
+end_comment
+
+begin_function_decl
+specifier|static
+name|int
+function_decl|(
+modifier|*
+name|savecont
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Previous SIGCONT value */
 end_comment
 
 begin_decl_stmt
@@ -163,6 +178,9 @@ decl_stmt|,
 name|stopdot
 decl_stmt|,
 name|collhup
+decl_stmt|,
+name|collcont
+argument_list|()
 decl_stmt|;
 specifier|register
 name|int
@@ -284,6 +302,15 @@ operator|,
 name|sighold
 argument_list|(
 name|SIGINT
+argument_list|)
+expr_stmt|;
+name|savecont
+operator|=
+name|sigset
+argument_list|(
+name|SIGCONT
+argument_list|,
+name|collcont
 argument_list|)
 expr_stmt|;
 name|newi
@@ -1443,6 +1470,13 @@ argument_list|(
 name|SIGHUP
 argument_list|,
 name|savehup
+argument_list|)
+expr_stmt|;
+name|sigset
+argument_list|(
+name|SIGCONT
+argument_list|,
+name|savecont
 argument_list|)
 expr_stmt|;
 name|noreset
@@ -3002,6 +3036,32 @@ block|}
 end_block
 
 begin_comment
+comment|/*  * Print (continue) when continued after ^Z.  */
+end_comment
+
+begin_macro
+name|collcont
+argument_list|(
+argument|s
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|printf
+argument_list|(
+literal|"(continue)\n"
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
 comment|/*  * On interrupt, go here to save the partial  * message on ~/dead.letter.  * Then restore signals and execute the normal  * signal routine.  We only come here if signals  * were previously set anyway.  */
 end_comment
 
@@ -3023,6 +3083,19 @@ specifier|register
 name|int
 name|c
 decl_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|SIGINT
+condition|)
+name|sigset
+argument_list|(
+name|SIGCONT
+argument_list|,
+name|collrub
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|s
@@ -3166,6 +3239,13 @@ argument_list|,
 name|savehup
 argument_list|)
 expr_stmt|;
+name|sigset
+argument_list|(
+name|SIGCONT
+argument_list|,
+name|savecont
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rcvmode
@@ -3184,7 +3264,9 @@ argument_list|)
 expr_stmt|;
 else|else
 name|stop
-argument_list|()
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -3209,6 +3291,11 @@ end_macro
 
 begin_block
 block|{
+name|sigrelse
+argument_list|(
+name|SIGCONT
+argument_list|)
+expr_stmt|;
 name|puts
 argument_list|(
 literal|"@"
