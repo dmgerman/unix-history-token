@@ -1568,6 +1568,18 @@ modifier|*
 name|pText
 parameter_list|)
 function_decl|;
+comment|/* ** ficlExecFD(FICL_VM *pVM, int fd);  * Evaluates text from file passed in via fd.  * Execution returns when all of file has been executed or an  * error occurs.  */
+name|int
+name|ficlExecFD
+parameter_list|(
+name|FICL_VM
+modifier|*
+name|pVM
+parameter_list|,
+name|int
+name|fd
+parameter_list|)
+function_decl|;
 comment|/* ** Create a new VM from the heap, and link it into the system VM list. ** Initializes the VM and binds default sized stacks to it. Returns the ** address of the VM, or NULL if an error occurs. ** Precondition: successful execution of ficlInitSystem */
 name|FICL_VM
 modifier|*
