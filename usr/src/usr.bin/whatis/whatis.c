@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)whatis.c	5.6 (Berkeley) %G%"
+literal|"@(#)whatis.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -168,6 +168,12 @@ decl_stmt|;
 name|progname
 operator|=
 literal|"whatis"
+expr_stmt|;
+name|p_augment
+operator|=
+name|p_path
+operator|=
+name|NULL
 expr_stmt|;
 while|while
 condition|(
