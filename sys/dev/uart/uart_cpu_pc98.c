@@ -56,12 +56,16 @@ end_include
 begin_decl_stmt
 name|bus_space_tag_t
 name|uart_bus_space_io
+init|=
+name|I386_BUS_SPACE_IO
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|bus_space_tag_t
 name|uart_bus_space_mem
+init|=
+name|I386_BUS_SPACE_MEM
 decl_stmt|;
 end_decl_stmt
 
@@ -127,7 +131,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * There are 2 built-in serial ports on pc98 hardware.  The  	 * first one is 8251 and the second one is I think an enhance 	 * version of that.  However, for the sio driver, flags selected 	 * which type of uart was in the sytem.  We use something similar 	 * to sort things out. 	 */
+comment|/* 	 * There is a serial port on all pc98 hardware.  It is 8251 or 	 * an enhance version of that.  Some pc98 have the second serial 	 * port which is 16550A compatible.  However, for the sio driver, 	 * flags selected which type of uart was in the sytem.  We use 	 * something similar to sort things out. 	 */
 for|for
 control|(
 name|i
