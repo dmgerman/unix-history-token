@@ -147,7 +147,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"** %s: Unable to find an rsa implemenation shared library.\n"
+literal|"** %s: Unable to find an RSA implemenation shared library.\n"
 argument_list|,
 name|sym
 argument_list|)
@@ -167,7 +167,21 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"** RSA library on your system and run this program again\n"
+literal|"** RSA library on your system and run this program again.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"** See Chapter 6.5 of the FreeBSD Handbook, located at\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"** http://www.freebsd.org/handbook/openssl.html, for more information.\n"
 argument_list|)
 expr_stmt|;
 name|whined

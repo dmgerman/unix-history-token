@@ -118,7 +118,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"** %s: Unable to find an rsaref shared library (%s).\n"
+literal|"** %s: Unable to find an RSAREF shared library (%s).\n"
 argument_list|,
 name|sym
 argument_list|,
@@ -129,7 +129,21 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"** Install an RSA package on your system and run this program again\n"
+literal|"** Install the /usr/ports/security/rsaref port or package and run this\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"** program again. See Chapter 6.5 in the FreeBSD Handbook, located at\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"** http://www.freebsd.org/handbook/openssl.html, for more information.\n"
 argument_list|)
 expr_stmt|;
 name|whined
