@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pw_user.c,v 1.24 1999/01/02 04:37:46 billf Exp $"
+literal|"$Id: pw_user.c,v 1.25 1999/01/04 14:07:53 billf Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1794,9 +1794,17 @@ name|pwd
 operator|==
 name|NULL
 operator|&&
-name|isdigit
+name|strspn
 argument_list|(
-operator|*
+name|a_name
+operator|->
+name|val
+argument_list|,
+literal|"0123456789"
+argument_list|)
+operator|==
+name|strlen
+argument_list|(
 name|a_name
 operator|->
 name|val
