@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.42 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.43 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	5.42		%G%"
+literal|"@(#)sendmail.h	5.43		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1986,6 +1986,17 @@ end_define
 
 begin_comment
 comment|/* don't complain if map not found */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MF_FOLDCASE
+value|00010
+end_define
+
+begin_comment
+comment|/* fold case in keys */
 end_comment
 
 begin_escape
