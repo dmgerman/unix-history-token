@@ -44,7 +44,7 @@ begin_define
 define|#
 directive|define
 name|MOPT_NOAUTO
-value|{ "auto",	1, MNT_NOAUTO, 0 }
+value|{ "auto",	1, 0, 0 }
 end_define
 
 begin_define

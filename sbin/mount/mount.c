@@ -380,12 +380,6 @@ literal|"local"
 block|}
 block|,
 block|{
-name|MNT_NOAUTO
-block|,
-literal|"noauto"
-block|}
-block|,
-block|{
 name|MNT_NODEV
 block|,
 literal|"nodev"
@@ -724,7 +718,6 @@ condition|)
 continue|continue;
 if|if
 condition|(
-operator|!
 name|strstr
 argument_list|(
 name|fs
@@ -734,7 +727,7 @@ argument_list|,
 literal|"noauto"
 argument_list|)
 condition|)
-block|{
+continue|continue;
 if|if
 condition|(
 name|mountfs
@@ -764,7 +757,6 @@ name|rval
 operator|=
 literal|1
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
