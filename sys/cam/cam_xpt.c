@@ -15190,6 +15190,18 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+comment|/* In Target mode, the peripheral driver knows best... */
+if|if
+condition|(
+name|work_ccb
+operator|->
+name|ccb_h
+operator|.
+name|func_code
+operator|==
+name|XPT_SCSI_IO
+condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -15201,6 +15213,14 @@ name|SID_CmdQue
 operator|)
 operator|!=
 literal|0
+operator|&&
+name|work_ccb
+operator|->
+name|csio
+operator|.
+name|tag_action
+operator|!=
+name|CAM_TAG_ACTION_NONE
 condition|)
 name|work_ccb
 operator|->
@@ -15211,7 +15231,7 @@ operator||=
 name|CAM_TAG_ACTION_VALID
 expr_stmt|;
 else|else
-comment|/* 			 * Clear this in case of a retried CCB that failed 			 * due to a rejected tag. 			 */
+comment|/* 				 * Clear this in case of a retried CCB that 				 * failed due to a rejected tag. 				 */
 name|work_ccb
 operator|->
 name|ccb_h
@@ -15221,6 +15241,7 @@ operator|&=
 operator|~
 name|CAM_TAG_ACTION_VALID
 expr_stmt|;
+block|}
 comment|/* 		 * Device queues can be shared among multiple sim instances 		 * that reside on different busses.  Use the SIM in the queue 		 * CCB's path, rather than the one in the bus that was passed 		 * into this function. 		 */
 name|sim
 operator|=
