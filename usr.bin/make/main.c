@@ -3021,11 +3021,9 @@ argument_list|)
 expr_stmt|;
 name|vpath
 operator|=
-name|Buf_GetAll
+name|Buf_Data
 argument_list|(
 name|buf
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 do|do

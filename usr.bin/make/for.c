@@ -975,15 +975,9 @@ name|Var_Subst
 argument_list|(
 name|var
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|Buf_GetAll
+name|Buf_Data
 argument_list|(
 name|buf
-argument_list|,
-name|NULL
 argument_list|)
 argument_list|,
 name|VAR_GLOBAL

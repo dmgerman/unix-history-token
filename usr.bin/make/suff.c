@@ -3374,11 +3374,9 @@ argument_list|)
 expr_stmt|;
 name|cp
 operator|=
-name|Buf_GetAll
+name|Buf_Data
 argument_list|(
 name|buf
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if
