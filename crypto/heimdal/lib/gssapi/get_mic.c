@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: get_mic.c,v 1.15 2001/01/29 02:08:58 assar Exp $"
+literal|"$Id: get_mic.c,v 1.17 2001/05/11 09:16:46 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -703,6 +703,9 @@ argument_list|(
 name|tmp
 argument_list|)
 expr_stmt|;
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -721,6 +724,8 @@ argument_list|,
 name|crypto
 argument_list|,
 name|KRB5_KU_USAGE_SIGN
+argument_list|,
+literal|0
 argument_list|,
 name|tmp
 argument_list|,
@@ -757,6 +762,9 @@ name|message_token
 operator|->
 name|value
 argument_list|)
+expr_stmt|;
+name|gssapi_krb5_set_error_string
+argument_list|()
 expr_stmt|;
 operator|*
 name|minor_status
@@ -898,6 +906,9 @@ operator|->
 name|value
 argument_list|)
 expr_stmt|;
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -943,6 +954,9 @@ name|message_token
 operator|->
 name|value
 argument_list|)
+expr_stmt|;
+name|gssapi_krb5_set_error_string
+argument_list|()
 expr_stmt|;
 operator|*
 name|minor_status
@@ -1076,6 +1090,9 @@ condition|(
 name|ret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: write_pid.c,v 1.4 2000/08/04 11:19:41 joda Exp $"
+literal|"$Id: write_pid.c,v 1.5 2001/02/20 01:44:55 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -248,7 +248,8 @@ name|NULL
 condition|)
 name|basename
 operator|=
-name|__progname
+name|getprogname
+argument_list|()
 expr_stmt|;
 name|pidfile_path
 operator|=

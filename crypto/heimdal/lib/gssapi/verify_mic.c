@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: verify_mic.c,v 1.12 2001/01/29 02:08:59 assar Exp $"
+literal|"$Id: verify_mic.c,v 1.13 2001/05/11 09:16:47 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -633,6 +633,9 @@ condition|(
 name|ret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -666,6 +669,9 @@ condition|(
 name|ret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 name|krb5_crypto_destroy
 argument_list|(
 name|gssapi_krb5_context
@@ -949,6 +955,9 @@ condition|(
 name|ret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 name|krb5_crypto_destroy
 argument_list|(
 name|gssapi_krb5_context
@@ -1044,6 +1053,9 @@ condition|(
 name|ret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=

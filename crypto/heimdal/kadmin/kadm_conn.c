@@ -29,7 +29,7 @@ end_endif
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kadm_conn.c,v 1.11 2001/01/29 08:43:01 assar Exp $"
+literal|"$Id: kadm_conn.c,v 1.13 2001/05/16 22:06:44 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -469,6 +469,8 @@ name|e
 operator|=
 name|krb5_sockaddr2address
 argument_list|(
+name|context
+argument_list|,
 name|sa
 argument_list|,
 operator|&
@@ -518,7 +520,7 @@ name|context
 argument_list|,
 name|e
 argument_list|,
-literal|"krb5_sockaddr2address"
+literal|"krb5_print_address"
 argument_list|)
 expr_stmt|;
 else|else
@@ -1079,6 +1081,8 @@ argument_list|,
 name|krb5_eai_to_heim_errno
 argument_list|(
 name|e
+argument_list|,
+name|errno
 argument_list|)
 argument_list|,
 literal|"%s"

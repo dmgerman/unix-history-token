@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: sys_bsd.c,v 1.26 2000/10/19 21:19:57 assar Exp $"
+literal|"$Id: sys_bsd.c,v 1.27 2001/03/06 20:10:14 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -399,24 +399,6 @@ directive|endif
 comment|/* LNOFLSH */
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KLUDGELINEMODE
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|kludgelinemode
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * TerminalSpecialChars()  *  * Look at an input character to see if it is a special character  * and decide what to do.  *  * Output:  *  *	0	Don't add this character.  *	1	Do add this character  */

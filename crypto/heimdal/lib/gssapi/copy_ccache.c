@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: copy_ccache.c,v 1.1 2001/01/30 00:35:47 assar Exp $"
+literal|"$Id: copy_ccache.c,v 1.2 2001/05/11 09:16:45 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -75,6 +75,9 @@ operator|*
 name|minor
 operator|=
 name|kret
+expr_stmt|;
+name|gssapi_krb5_set_error_string
+argument_list|()
 expr_stmt|;
 return|return
 name|GSS_S_FAILURE

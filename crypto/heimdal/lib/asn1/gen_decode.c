@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: gen_decode.c,v 1.15 2001/01/29 08:36:45 assar Exp $"
+literal|"$Id: gen_decode.c,v 1.16 2001/02/10 18:14:38 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -823,7 +823,7 @@ argument_list|(
 name|codefile
 argument_list|,
 literal|"#define FORW "
-literal|"if(e) return e; "
+literal|"if(e) goto fail; "
 literal|"p += l; "
 literal|"len -= l; "
 literal|"ret += l\n\n"
@@ -899,6 +899,13 @@ name|fprintf
 argument_list|(
 name|codefile
 argument_list|,
+literal|"memset(data, 0, sizeof(*data));\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|codefile
+argument_list|,
 literal|"i = 0;\n"
 argument_list|)
 expr_stmt|;
@@ -926,6 +933,19 @@ name|codefile
 argument_list|,
 literal|"if(size) *size = ret;\n"
 literal|"return 0;\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|codefile
+argument_list|,
+literal|"fail:\n"
+literal|"free_%s(data);\n"
+literal|"return e;\n"
+argument_list|,
+name|s
+operator|->
+name|gen_name
 argument_list|)
 expr_stmt|;
 break|break;

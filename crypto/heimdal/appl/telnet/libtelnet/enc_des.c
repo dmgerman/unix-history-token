@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: enc_des.c,v 1.16 1998/07/09 23:16:23 assar Exp $"
+literal|"$Id: enc_des.c,v 1.18 2001/02/24 05:47:39 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -106,11 +106,33 @@ directive|include
 file|"misc-proto.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_OPENSSL_DES_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<openssl/des.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<des.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -1955,9 +1977,19 @@ operator|==
 literal|0
 condition|)
 block|{
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|OLD_DES_RANDOM_KEY
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_OPENSSL_DES_H
+argument_list|)
 name|des_init_random_number_generator
 argument_list|(
 operator|&

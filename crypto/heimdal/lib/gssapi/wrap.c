@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: wrap.c,v 1.15 2001/01/29 02:08:59 assar Exp $"
+literal|"$Id: wrap.c,v 1.18 2001/05/11 09:16:47 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -139,6 +139,9 @@ condition|(
 name|ret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -446,13 +449,11 @@ operator|+=
 literal|16
 expr_stmt|;
 comment|/* confounder + data + pad */
-name|des_new_random_key
+name|krb5_generate_random_block
 argument_list|(
-operator|(
-name|des_cblock
-operator|*
-operator|)
 name|p
+argument_list|,
+literal|8
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -1094,17 +1095,13 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-name|des_new_random_key
+name|krb5_generate_random_block
 argument_list|(
-operator|(
-name|des_cblock
-operator|*
-operator|)
-operator|(
 name|p
 operator|+
 literal|28
-operator|)
+argument_list|,
+literal|8
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -1160,6 +1157,9 @@ condition|(
 name|ret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 name|free
 argument_list|(
 name|output_message_buffer
@@ -1186,6 +1186,8 @@ name|crypto
 argument_list|,
 name|KRB5_KU_USAGE_SIGN
 argument_list|,
+literal|0
+argument_list|,
 name|p
 operator|+
 literal|20
@@ -1210,6 +1212,9 @@ condition|(
 name|ret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 name|free
 argument_list|(
 name|output_message_buffer
@@ -1432,6 +1437,9 @@ condition|(
 name|ret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 name|free
 argument_list|(
 name|output_message_buffer
@@ -1520,6 +1528,9 @@ condition|(
 name|ret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 name|free
 argument_list|(
 name|output_message_buffer
@@ -1566,6 +1577,9 @@ condition|(
 name|ret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 name|free
 argument_list|(
 name|output_message_buffer
@@ -1681,6 +1695,9 @@ condition|(
 name|ret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=

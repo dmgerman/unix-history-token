@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: mcache.c,v 1.12 2000/11/15 02:12:51 assar Exp $"
+literal|"$Id: mcache.c,v 1.13 2001/05/14 06:14:49 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -340,9 +340,18 @@ name|m
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|KRB5_CC_NOMEM
 return|;
+block|}
 operator|(
 operator|*
 name|id
@@ -405,9 +414,18 @@ name|m
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|KRB5_CC_NOMEM
 return|;
+block|}
 operator|(
 operator|*
 name|id
@@ -765,9 +783,18 @@ name|l
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|KRB5_CC_NOMEM
 return|;
+block|}
 name|l
 operator|->
 name|next

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rsh.c,v 1.57 2000/12/31 07:36:54 assar Exp $"
+literal|"$Id: rsh.c,v 1.58 2001/02/20 01:44:47 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4159,7 +4159,7 @@ argument_list|,
 literal|"setuid"
 argument_list|)
 expr_stmt|;
-name|set_progname
+name|setprogname
 argument_list|(
 name|argv
 index|[

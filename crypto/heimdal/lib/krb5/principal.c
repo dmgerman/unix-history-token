@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2000 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997-2001 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -58,7 +58,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: principal.c,v 1.73 2000/10/16 03:42:14 assar Exp $"
+literal|"$Id: principal.c,v 1.74 2001/05/14 06:14:50 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -240,9 +240,18 @@ index|[
 literal|1
 index|]
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"trailing \\ in principal name"
+argument_list|)
+expr_stmt|;
 return|return
 name|KRB5_PARSE_MALFORMED
 return|;
+block|}
 name|p
 operator|++
 expr_stmt|;
@@ -278,9 +287,18 @@ name|comp
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 name|n
 operator|=
 literal|0
@@ -308,6 +326,13 @@ block|{
 name|free
 argument_list|(
 name|comp
+argument_list|)
+expr_stmt|;
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
 argument_list|)
 expr_stmt|;
 return|return
@@ -400,6 +425,13 @@ condition|(
 name|got_realm
 condition|)
 block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"part after realm in principal name"
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|KRB5_PARSE_MALFORMED
@@ -434,6 +466,13 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|ENOMEM
@@ -507,6 +546,13 @@ literal|'\0'
 operator|)
 condition|)
 block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"part after realm in principal name"
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|KRB5_PARSE_MALFORMED
@@ -545,6 +591,13 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|ENOMEM
@@ -617,6 +670,13 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|ENOMEM
@@ -676,6 +736,13 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|ENOMEM
@@ -1341,9 +1408,18 @@ name|name
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 name|ret
 operator|=
 name|unparse_name_fixed
@@ -1621,9 +1697,18 @@ name|tmp
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 name|princ_comp
 argument_list|(
 name|p
@@ -1656,9 +1741,18 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 name|memcpy
 argument_list|(
 name|princ_ncomp
@@ -1885,9 +1979,18 @@ name|p
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 name|princ_type
 argument_list|(
 name|p
@@ -1917,6 +2020,13 @@ block|{
 name|free
 argument_list|(
 name|p
+argument_list|)
+expr_stmt|;
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2220,9 +2330,18 @@ name|p
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 if|if
 condition|(
 name|copy_Principal
@@ -2232,9 +2351,23 @@ argument_list|,
 name|p
 argument_list|)
 condition|)
+block|{
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 operator|*
 name|outprinc
 operator|=
@@ -2957,6 +3090,11 @@ name|princ
 operator|=
 name|NULL
 expr_stmt|;
+name|krb5_clear_error_string
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
 return|return
 name|HEIM_ERR_V4_PRINC_NO_CONV
 return|;
@@ -3069,6 +3207,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
@@ -3310,6 +3455,11 @@ name|NULL
 condition|)
 block|{
 comment|/* this should be an error, just faking a name is not good */
+name|krb5_clear_error_string
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
 return|return
 name|HEIM_ERR_V4_PRINC_NO_CONV
 return|;
@@ -3389,6 +3539,11 @@ argument_list|(
 name|context
 argument_list|,
 name|pr
+argument_list|)
+expr_stmt|;
+name|krb5_clear_error_string
+argument_list|(
+name|context
 argument_list|)
 expr_stmt|;
 return|return
@@ -3499,6 +3654,11 @@ argument_list|(
 name|context
 argument_list|,
 name|pr
+argument_list|)
+expr_stmt|;
+name|krb5_clear_error_string
+argument_list|(
+name|context
 argument_list|)
 expr_stmt|;
 return|return
@@ -3996,6 +4156,21 @@ index|]
 expr_stmt|;
 break|break;
 default|default:
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"cannot convert a %d component principal"
+argument_list|,
+name|principal
+operator|->
+name|name
+operator|.
+name|name_string
+operator|.
+name|len
+argument_list|)
+expr_stmt|;
 return|return
 name|KRB5_PARSE_MALFORMED
 return|;
@@ -4097,9 +4272,18 @@ argument_list|)
 operator|>=
 name|aname_sz
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"too long name component to convert"
+argument_list|)
+expr_stmt|;
 return|return
 name|KRB5_PARSE_MALFORMED
 return|;
+block|}
 if|if
 condition|(
 name|strlcpy
@@ -4113,9 +4297,18 @@ argument_list|)
 operator|>=
 name|aname_sz
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"too long instance component to convert"
+argument_list|)
+expr_stmt|;
 return|return
 name|KRB5_PARSE_MALFORMED
 return|;
+block|}
 if|if
 condition|(
 name|strlcpy
@@ -4129,9 +4322,18 @@ argument_list|)
 operator|>=
 name|aname_sz
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"too long realm component to convert"
+argument_list|)
+expr_stmt|;
 return|return
 name|KRB5_PARSE_MALFORMED
 return|;
+block|}
 return|return
 literal|0
 return|;
@@ -4196,9 +4398,20 @@ name|type
 operator|!=
 name|KRB5_NT_UNKNOWN
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"unsupported name type %d"
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
 return|return
 name|KRB5_SNAME_UNSUPP_NAMETYPE
 return|;
+block|}
 if|if
 condition|(
 name|hostname

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: hpropd.c,v 1.31 2001/01/25 12:37:39 assar Exp $"
+literal|"$Id: hpropd.c,v 1.32 2001/02/20 01:44:50 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1131,7 +1131,7 @@ literal|1
 decl_stmt|;
 endif|#
 directive|endif
-name|set_progname
+name|setprogname
 argument_list|(
 name|argv
 index|[

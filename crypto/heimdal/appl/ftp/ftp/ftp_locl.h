@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995, 1996, 1997, 1998 Kungliga Tekniska Högskolan 
 end_comment
 
 begin_comment
-comment|/* $Id: ftp_locl.h,v 1.34 1999/12/02 16:58:29 joda Exp $ */
+comment|/* $Id: ftp_locl.h,v 1.35 2001/02/15 04:20:51 assar Exp $ */
 end_comment
 
 begin_ifndef
@@ -508,15 +508,37 @@ directive|include
 file|"security.h"
 end_include
 
+begin_comment
+comment|/* des_read_pw_string */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_OPENSSL_DES_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<openssl/des.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<des.h>
 end_include
 
-begin_comment
-comment|/* for des_read_pw_string */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

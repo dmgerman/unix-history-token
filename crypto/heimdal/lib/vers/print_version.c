@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: print_version.c,v 1.1 2000/07/01 19:47:35 assar Exp $"
+literal|"$Id: print_version.c,v 1.3 2001/04/21 16:05:48 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -95,7 +95,8 @@ name|NULL
 condition|)
 name|progname
 operator|=
-name|__progname
+name|getprogname
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -232,7 +233,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Copyright (c) 1999 - 2000 Kungliga Tekniska Högskolan\n"
+literal|"Copyright (c) 1999-2001 Kungliga Tekniska Högskolan\n"
 argument_list|)
 expr_stmt|;
 if|if

@@ -41,7 +41,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ftpd.c,v 1.153 2001/01/18 09:14:59 joda Exp $"
+literal|"$Id: ftpd.c,v 1.157 2001/04/19 14:41:29 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1464,7 +1464,7 @@ name|optind
 init|=
 literal|0
 decl_stmt|;
-name|set_progname
+name|setprogname
 argument_list|(
 name|argv
 index|[
@@ -5762,6 +5762,27 @@ condition|)
 block|{
 if|if
 condition|(
+call|(
+modifier|*
+name|closefunc
+call|)
+argument_list|(
+name|fout
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|perror_reply
+argument_list|(
+literal|552
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+if|if
+condition|(
 name|unique
 condition|)
 name|reply
@@ -5782,6 +5803,16 @@ literal|"Transfer complete."
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+else|else
+call|(
+modifier|*
+name|closefunc
+call|)
+argument_list|(
+name|fout
+argument_list|)
+expr_stmt|;
 name|fclose
 argument_list|(
 name|din
@@ -5813,14 +5844,6 @@ argument_list|,
 name|name
 argument_list|,
 name|byte_count
-argument_list|)
-expr_stmt|;
-call|(
-modifier|*
-name|closefunc
-call|)
-argument_list|(
-name|fout
 argument_list|)
 expr_stmt|;
 block|}
@@ -9923,6 +9946,8 @@ operator||
 name|GLOB_QUOTE
 operator||
 name|GLOB_TILDE
+operator||
+name|GLOB_LIMIT
 decl_stmt|;
 name|memset
 argument_list|(

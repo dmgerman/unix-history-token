@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: krbhst.c,v 1.25 2001/01/19 04:30:54 assar Exp $"
+literal|"$Id: krbhst.c,v 1.26 2001/05/14 06:14:49 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -32,6 +32,9 @@ specifier|static
 name|int
 name|add_string
 parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
 name|char
 modifier|*
 modifier|*
@@ -79,9 +82,18 @@ name|tmp
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 operator|*
 name|res
 operator|=
@@ -113,9 +125,18 @@ index|]
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 block|}
 else|else
 name|tmp
@@ -383,9 +404,18 @@ name|tmp
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 operator|*
 name|res
 operator|=
@@ -425,6 +455,8 @@ name|ret
 operator|=
 name|add_string
 argument_list|(
+name|context
+argument_list|,
 name|res
 argument_list|,
 name|count
@@ -454,6 +486,8 @@ name|ret
 operator|=
 name|add_string
 argument_list|(
+name|context
+argument_list|,
 name|res
 argument_list|,
 name|count
@@ -698,6 +732,8 @@ name|ret
 operator|=
 name|add_string
 argument_list|(
+name|context
+argument_list|,
 operator|&
 name|res
 argument_list|,
@@ -724,6 +760,8 @@ block|}
 block|}
 name|add_string
 argument_list|(
+name|context
+argument_list|,
 operator|&
 name|res
 argument_list|,

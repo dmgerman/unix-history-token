@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997 - 2000 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/*   * $Id: headers.h,v 1.10 2000/08/04 11:21:38 joda Exp $   */
+comment|/*   * $Id: headers.h,v 1.11 2001/02/15 04:20:53 assar Exp $   */
 end_comment
 
 begin_ifndef
@@ -272,11 +272,33 @@ directive|include
 file|<parse_units.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_OPENSSL_DES_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<openssl/des.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<des.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

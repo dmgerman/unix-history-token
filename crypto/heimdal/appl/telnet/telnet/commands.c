@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: commands.c,v 1.64 2000/12/11 01:44:01 assar Exp $"
+literal|"$Id: commands.c,v 1.65 2001/02/20 03:12:09 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4713,13 +4713,6 @@ directive|ifdef
 name|KLUDGELINEMODE
 end_ifdef
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|kludgelinemode
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|int
@@ -4864,10 +4857,6 @@ block|{
 name|unsigned
 name|char
 name|c
-decl_stmt|;
-specifier|extern
-name|int
-name|linemode
 decl_stmt|;
 if|if
 condition|(
@@ -6256,10 +6245,6 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-specifier|extern
-name|int
-name|resettermname
-decl_stmt|;
 if|if
 condition|(
 name|connected
@@ -7286,12 +7271,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|environ
-decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -9484,7 +9463,7 @@ comment|/*  * Function that gets called when SIGINFO is received.  */
 end_comment
 
 begin_function
-name|void
+name|RETSIGTYPE
 name|ayt_status
 parameter_list|(
 name|int
@@ -10267,6 +10246,10 @@ argument_list|(
 name|_hostname
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|hostp
+operator|=
+name|_hostname
 expr_stmt|;
 if|if
 condition|(

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997 - 2001 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: gssapi.h,v 1.20 2001/01/30 00:35:48 assar Exp $ */
+comment|/* $Id: gssapi.h,v 1.21 2001/05/04 13:52:02 assar Exp $ */
 end_comment
 
 begin_ifndef
@@ -27,29 +27,6 @@ begin_include
 include|#
 directive|include
 file|<stddef.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<config.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include

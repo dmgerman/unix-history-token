@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: osfc2.c,v 1.3 1999/12/02 17:04:56 joda Exp $"
+literal|"$Id: osfc2.c,v 1.4 2001/02/20 01:44:46 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -50,7 +50,8 @@ operator|(
 name|char
 operator|*
 operator|)
-name|__progname
+name|getprogname
+argument_list|()
 expr_stmt|;
 name|argv
 index|[

@@ -3,6 +3,31 @@ begin_comment
 comment|/*   * lib/krb5/os/k5dfspag.c  *  * New Kerberos module to issue the DFS PAG syscalls.   * It also contains the routine to fork and exec the  * k5dcecon routine to do most of the work.   *   * This file is designed to be as independent of DCE   * and DFS as possible. The only dependencies are on   * the syscall numbers.  If DFS not running or not installed,  * the sig handlers will catch and the signal and   * will  continue.   *  * krb5_dfs_newpag and krb5_dfs_getpag should not be real  * Kerberos routines, since they should be setpag and getpag  * in the DCE library, but without the DCE baggage.   * Thus they don't have context, and don't return a krb5 error.   *  *   *   * krb5_dfs_pag()  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<config.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_expr_stmt
+name|RCSID
+argument_list|(
+literal|"$Id: k5dfspag.c,v 1.4 2001/02/07 06:14:46 assar Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_include
 include|#
 directive|include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *   * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2000 - 2001 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *   * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: acl.c,v 1.1 2000/06/12 11:17:52 joda Exp $"
+literal|"$Id: acl.c,v 1.2 2001/05/14 06:14:43 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -178,6 +178,13 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 name|acl_free_list
 argument_list|(
 name|acl
@@ -535,6 +542,9 @@ block|{
 name|krb5_error_code
 name|ret
 decl_stmt|;
+name|krb5_boolean
+name|found
+decl_stmt|;
 name|struct
 name|acl_field
 modifier|*
@@ -576,7 +586,7 @@ condition|)
 return|return
 name|ret
 return|;
-name|ret
+name|found
 operator|=
 name|acl_match_acl
 argument_list|(
@@ -592,13 +602,28 @@ argument_list|(
 name|acl
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|found
+condition|)
+block|{
 return|return
-name|ret
-condition|?
 literal|0
-else|:
+return|;
+block|}
+else|else
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"ACL did not match"
+argument_list|)
+expr_stmt|;
+return|return
 name|EACCES
 return|;
+block|}
 block|}
 end_function
 
@@ -643,6 +668,9 @@ name|FILE
 modifier|*
 name|f
 decl_stmt|;
+name|krb5_boolean
+name|found
+decl_stmt|;
 name|f
 operator|=
 name|fopen
@@ -658,9 +686,30 @@ name|f
 operator|==
 name|NULL
 condition|)
-return|return
+block|{
+name|int
+name|save_errno
+init|=
 name|errno
+decl_stmt|;
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"open(%s): %s"
+argument_list|,
+name|file
+argument_list|,
+name|strerror
+argument_list|(
+name|save_errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|save_errno
 return|;
+block|}
 name|va_start
 argument_list|(
 name|ap
@@ -701,11 +750,10 @@ return|return
 name|ret
 return|;
 block|}
-name|ret
+name|found
 operator|=
-name|EACCES
+name|FALSE
 expr_stmt|;
-comment|/* XXX */
 while|while
 condition|(
 name|fgets
@@ -743,17 +791,13 @@ name|buf
 argument_list|)
 condition|)
 block|{
-name|ret
+name|found
 operator|=
-literal|0
+name|TRUE
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+break|break;
 block|}
 block|}
-name|out
-label|:
 name|fclose
 argument_list|(
 name|f
@@ -764,9 +808,28 @@ argument_list|(
 name|acl
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|found
+condition|)
+block|{
 return|return
-name|ret
+literal|0
 return|;
+block|}
+else|else
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"ACL did not match"
+argument_list|)
+expr_stmt|;
+return|return
+name|EACCES
+return|;
+block|}
 block|}
 end_function
 
