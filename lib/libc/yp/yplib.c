@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: yplib.c,v 1.25 1996/11/08 01:42:02 wpaul Exp $"
+literal|"$Id: yplib.c,v 1.24.2.1 1996/11/08 23:21:17 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -251,6 +251,21 @@ begin_decl_stmt
 name|void
 modifier|*
 name|ypresp_data
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|_yp_unbind
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|dom_binding
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -979,11 +994,9 @@ name|dom_client
 operator|!=
 name|NULL
 condition|)
-name|clnt_destroy
+name|_yp_unbind
 argument_list|(
 name|ysd
-operator|->
-name|dom_client
 argument_list|)
 expr_stmt|;
 name|ysd2
