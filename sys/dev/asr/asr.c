@@ -1452,7 +1452,7 @@ define|#
 directive|define
 name|PROBE_SET
 parameter_list|()
-value|u_long id = (pci_get_device(tag)<<16)|pci_get_vendor(tag)
+value|u_int32_t id = (pci_get_device(tag)<<16)|pci_get_vendor(tag)
 end_define
 
 begin_define
