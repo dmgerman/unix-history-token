@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.80 (Berkeley) %G%"
+literal|"@(#)conf.c	8.81 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2948,7 +2948,7 @@ if|#
 directive|if
 name|LA_TYPE
 operator|==
-name|LA_PROC
+name|LA_PROCSTR
 end_if
 
 begin_comment
@@ -2993,10 +2993,6 @@ name|fp
 init|=
 name|NULL
 decl_stmt|;
-name|avenrun
-operator|=
-literal|0.0
-expr_stmt|;
 if|if
 condition|(
 name|fp
