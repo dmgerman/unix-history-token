@@ -52,7 +52,7 @@ name|mtx_intr_enable
 parameter_list|(
 name|mutex
 parameter_list|)
-value|(mutex)->mtx_savecrit |= PSL_I
+value|do (mutex)->mtx_savecrit |= PSL_I; while (0)
 end_define
 
 begin_comment

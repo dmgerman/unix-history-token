@@ -40,7 +40,7 @@ name|mtx_intr_enable
 parameter_list|(
 name|mutex
 parameter_list|)
-value|(mutex)->mtx_savecrit |= IA64_PSR_I
+value|do (mutex)->mtx_savecrit |= IA64_PSR_I; while (0)
 end_define
 
 begin_endif

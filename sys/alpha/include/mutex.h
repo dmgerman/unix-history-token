@@ -46,7 +46,7 @@ name|mtx_intr_enable
 parameter_list|(
 name|mutex
 parameter_list|)
-value|(mutex)->mtx_savecrit = ALPHA_PSL_IPL_0
+value|do (mutex)->mtx_savecrit = ALPHA_PSL_IPL_0; while (0)
 end_define
 
 begin_endif
