@@ -2004,6 +2004,12 @@ name|SBUF_HASROOM
 argument_list|(
 name|s
 argument_list|)
+operator|&&
+operator|!
+name|SBUF_CANEXTEND
+argument_list|(
+name|s
+argument_list|)
 condition|)
 name|SBUF_SETFLAG
 argument_list|(
