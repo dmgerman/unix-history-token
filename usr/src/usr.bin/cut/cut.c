@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cut.c	5.2 (Berkeley) %G%"
+literal|"@(#)cut.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -369,7 +369,7 @@ begin_decl_stmt
 name|char
 name|positions
 index|[
-name|LINE_MAX
+name|_BSD_LINE_MAX
 operator|+
 literal|1
 index|]
@@ -576,7 +576,7 @@ if|if
 condition|(
 name|stop
 operator|>
-name|LINE_MAX
+name|_BSD_LINE_MAX
 condition|)
 block|{
 comment|/* positions used rather than allocate a new buffer */
@@ -591,7 +591,7 @@ literal|"%d too large (max %d)"
 argument_list|,
 name|stop
 argument_list|,
-name|LINE_MAX
+name|_BSD_LINE_MAX
 argument_list|)
 expr_stmt|;
 name|badlist
@@ -869,7 +869,7 @@ decl_stmt|;
 name|char
 name|lbuf
 index|[
-name|LINE_MAX
+name|_BSD_LINE_MAX
 operator|+
 literal|1
 index|]

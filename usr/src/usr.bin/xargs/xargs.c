@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xargs.c	5.3 (Berkeley) %G%"
+literal|"@(#)xargs.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -193,7 +193,7 @@ name|DEF_ARGC
 expr_stmt|;
 name|nline
 operator|=
-name|LINE_MAX
+name|_BSD_LINE_MAX
 expr_stmt|;
 while|while
 condition|(
