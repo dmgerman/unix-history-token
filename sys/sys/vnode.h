@@ -2011,12 +2011,6 @@ name|vnode
 struct_decl|;
 end_struct_decl
 
-begin_struct_decl
-struct_decl|struct
-name|vop_bwrite_args
-struct_decl|;
-end_struct_decl
-
 begin_extern
 extern|extern int	(*lease_check_hook
 end_extern
@@ -3219,21 +3213,6 @@ expr|struct
 name|mount
 operator|*
 name|mp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|vop_stdbwrite
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vop_bwrite_args
-operator|*
-name|ap
 operator|)
 argument_list|)
 decl_stmt|;

@@ -316,17 +316,6 @@ block|}
 block|,
 block|{
 operator|&
-name|vop_bwrite_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|vop_defaultop
-block|}
-block|,
-block|{
-operator|&
 name|vop_close_desc
 block|,
 operator|(

@@ -802,21 +802,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|nfs_bwrite
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vop_bwrite_args
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Global vfs data structures for nfs  */
 end_comment
@@ -879,17 +864,6 @@ name|vop_t
 operator|*
 operator|)
 name|nfs_bmap
-block|}
-block|,
-block|{
-operator|&
-name|vop_bwrite_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|nfs_bwrite
 block|}
 block|,
 block|{
@@ -16611,42 +16585,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Just call nfs_writebp() with the force argument set to 1.  *  * NOTE: B_DONE may or may not be set in a_bp on call.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|nfs_bwrite
-parameter_list|(
-name|ap
-parameter_list|)
-name|struct
-name|vop_bwrite_args
-comment|/* { 		struct vnode *a_bp; 	} */
-modifier|*
-name|ap
-decl_stmt|;
-block|{
-return|return
-operator|(
-name|nfs_writebp
-argument_list|(
-name|ap
-operator|->
-name|a_bp
-argument_list|,
-literal|1
-argument_list|,
-name|curproc
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * This is a clone of vn_bwrite(), except that B_WRITEINPROG isn't set unless  * the force flag is one and it also handles the B_NEEDCOMMIT flag.  We set  * B_CACHE if this is a VMIO buffer.  */
+comment|/*  * This is the "real" nfs::bwrite(struct buf*).  * B_WRITEINPROG isn't set unless the force flag is one and it   * handles the B_NEEDCOMMIT flag.  * We set B_CACHE if this is a VMIO buffer.  */
 end_comment
 
 begin_function

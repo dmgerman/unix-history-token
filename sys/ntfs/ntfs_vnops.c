@@ -4344,17 +4344,6 @@ block|}
 block|,
 block|{
 operator|&
-name|vop_bwrite_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|vop_stdbwrite
-block|}
-block|,
-block|{
-operator|&
 name|vop_read_desc
 block|,
 operator|(

@@ -551,14 +551,6 @@ block|,
 comment|/* advlock */
 block|{
 operator|&
-name|vop_bwrite_desc
-block|,
-name|coda_vop_error
-block|}
-block|,
-comment|/* bwrite */
-block|{
-operator|&
 name|vop_lease_desc
 block|,
 name|coda_vop_nop

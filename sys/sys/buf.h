@@ -150,6 +150,39 @@ name|bioops
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|buf_ops
+block|{
+name|char
+modifier|*
+name|bop_name
+decl_stmt|;
+name|int
+argument_list|(
+argument|*bop_write
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|buf
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|buf_ops
+name|buf_ops_bio
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * The buffer header describes an I/O operation in the kernel.  *  * NOTES:  *	b_bufsize, b_bcount.  b_bufsize is the allocation size of the  *	buffer, either DEV_BSIZE or PAGE_SIZE aligned.  b_bcount is the  *	originally requested buffer size and can serve as a bounds check  *	against EOF.  For most, but not all uses, b_bcount == b_bufsize.  *  *	b_dirtyoff, b_dirtyend.  Buffers support piecemeal, unaligned  *	ranges of dirty data that need to be written to backing store.  *	The range is typically clipped at b_bcount ( not b_bufsize ).  *  *	b_resid.  Number of bytes remaining in I/O.  After an I/O operation  *	completes, b_resid is usually 0 indicating 100% success.  */
 end_comment
@@ -212,6 +245,22 @@ define|#
 directive|define
 name|b_resid
 value|b_io.bio_resid
+name|struct
+name|buf_ops
+modifier|*
+name|b_op
+decl_stmt|;
+name|unsigned
+name|b_magic
+decl_stmt|;
+define|#
+directive|define
+name|B_MAGIC_BIO
+value|0x10b10b10
+define|#
+directive|define
+name|B_MAGIC_NFS
+value|0x67238234
 name|void
 argument_list|(
 argument|*b_iodone
@@ -1775,7 +1824,8 @@ name|BUF_WRITE
 parameter_list|(
 name|bp
 parameter_list|)
-value|VOP_BWRITE((bp)->b_vp, (bp))
+define|\
+value|(bp)->b_op->bop_write(bp)
 end_define
 
 begin_define

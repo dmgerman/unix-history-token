@@ -3506,7 +3506,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 			 * XXX Since there are no node locks for NFS, I 			 * believe there is a slight chance that a delayed 			 * write will occur while sleeping just above, so 			 * check for it.  Note that vfs_bio_awrite expects 			 * buffers to reside on a queue, while VOP_BWRITE and 			 * brelse do not. 			 */
+comment|/* 			 * XXX Since there are no node locks for NFS, I 			 * believe there is a slight chance that a delayed 			 * write will occur while sleeping just above, so 			 * check for it.  Note that vfs_bio_awrite expects 			 * buffers to reside on a queue, while BUF_WRITE and 			 * brelse do not. 			 */
 if|if
 condition|(
 operator|(
