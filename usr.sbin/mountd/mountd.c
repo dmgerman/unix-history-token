@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mountd.c,v 1.29 1998/06/15 15:41:41 joerg Exp $"
+literal|"$Id: mountd.c,v 1.30 1998/06/15 15:43:13 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -7952,6 +7952,8 @@ expr_stmt|;
 while|while
 condition|(
 name|checkgrp
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -7970,6 +7972,7 @@ name|gt_hostent
 operator|!=
 name|NULL
 operator|&&
+operator|(
 operator|!
 name|strcmp
 argument_list|(
@@ -7985,6 +7988,31 @@ name|hp
 operator|->
 name|h_name
 argument_list|)
+operator|||
+operator|*
+operator|(
+name|unsigned
+name|long
+operator|*
+operator|)
+name|checkgrp
+operator|->
+name|gr_ptr
+operator|.
+name|gt_hostent
+operator|->
+name|h_addr
+operator|==
+operator|*
+operator|(
+name|unsigned
+name|long
+operator|*
+operator|)
+name|hp
+operator|->
+name|h_addr
+operator|)
 condition|)
 block|{
 name|grp
