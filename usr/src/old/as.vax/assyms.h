@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)assyms.h 4.4 %G%  */
+comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)assyms.h 4.5 %G%  */
 end_comment
 
 begin_comment
@@ -140,7 +140,7 @@ value|for(copointer = symptrs, \ 	    walkpointer = *copointer; \ 	    copointer
 end_define
 
 begin_comment
-comment|/*  *	Symbols are allocated in non contiguous chunks by extending  *	the data area.  This way, it is extremely easy to  *	allow virtual memory temporary files, change the length  *	of NCPS, and allows for a much more flexible storage  *	allocation  */
+comment|/*  *	Symbols are allocated in non contiguous chunks by extending  *	the data area.  */
 end_comment
 
 begin_define
@@ -171,15 +171,8 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  *	Names are allocated in a string pool.  String pools are linked  *	together and are allocated dynamically by Calloc.  */
+comment|/*  *	Names are allocated in a dynamically extensible string pool.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|STRPOOLDALLOP
-value|NCPS
-end_define
 
 begin_struct
 struct|struct

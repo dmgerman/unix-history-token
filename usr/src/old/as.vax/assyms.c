@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)assyms.c 4.9 %G%"
+literal|"@(#)assyms.c 4.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -222,7 +222,7 @@ comment|/* number of label entries */
 end_comment
 
 begin_comment
-comment|/*  *	Managers of the symbol literal storage.  *	If we have flexible names, then we allocate BUFSIZ long  *	string, and pack strings into that.  Otherwise, we allocate  *	symbol storage in fixed hunks NCPS long when we allocate space  *	for other symbol attributes.  */
+comment|/*  *	Managers of the symbol literal storage.  */
 end_comment
 
 begin_decl_stmt
@@ -1607,9 +1607,9 @@ literal|"\tSeg: %d \"%*.*s\" value: %d index: %d tag %s\n"
 argument_list|,
 name|segno
 argument_list|,
-name|NCPS
+name|NCPName
 argument_list|,
-name|NCPS
+name|NCPName
 argument_list|,
 name|sp
 operator|->
@@ -2103,7 +2103,7 @@ init|;
 operator|(
 name|len
 operator|<
-name|NCPS
+name|NCPName
 operator|)
 operator|&&
 operator|*
@@ -2129,7 +2129,7 @@ if|if
 condition|(
 name|len
 operator|>=
-name|NCPS
+name|NCPName
 condition|)
 comment|/*both are maximal length*/
 return|return
@@ -2292,7 +2292,7 @@ name|s_name
 argument_list|,
 name|yytext
 argument_list|,
-name|NCPS
+name|NCPName
 argument_list|)
 expr_stmt|;
 else|#

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asscan2.c 4.7 %G%"
+literal|"@(#)asscan2.c 4.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,13 +39,6 @@ init|=
 name|NL
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|ASINBUFSIZ
-value|4096
-end_define
 
 begin_define
 define|#
@@ -84,6 +77,71 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FLEXNAMES
+end_ifndef
+
+begin_decl_stmt
+name|char
+name|strtext
+index|[
+name|NCPString
+operator|+
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+else|FLEXNAMES
+end_else
+
+begin_if
+if|#
+directive|if
+name|NCPName
+operator|<
+name|NCPString
+end_if
+
+begin_decl_stmt
+name|char
+name|strtext
+index|[
+name|NCPString
+operator|+
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|strtext
+value|yytext
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+endif|FLEXNAMES
+end_endif
 
 begin_comment
 comment|/*  *	fill the inbuffer from the standard input.  *	Assert: there are always n COMPLETE! lines in the buffer area.  *	Assert: there is always a \n terminating the last line  *		in the buffer area.  *	Assert: after the \n, there is an EOFCHAR (hard end of file)  *		or a NEEDCHAR (end of buffer)  *	Assert:	fgets always null pads the string it reads.  *	Assert:	no ungetc's are done at the end of a line or at the  *		beginning of a line.  *	  *	We read a complete buffer of characters in one single read.  *	We then back scan within this buffer to find the end of the  *	last complete line, and force the assertions, and save a pointer  *	to the incomplete line.  *	The next call to fillinbuffer will move the unread characters  *	to the end of the first buffer, and then read another two buffers,  *	completing the cycle.  */
@@ -1223,7 +1281,7 @@ operator|<
 operator|&
 name|yytext
 index|[
-name|NCPS
+name|NCPName
 index|]
 condition|)
 operator|*
@@ -1512,11 +1570,11 @@ for|for
 control|(
 name|rcp
 operator|=
-name|yytext
+name|strtext
 operator|,
 name|maxstrlg
 operator|=
-name|NCPS
+name|NCPString
 init|;
 name|maxstrlg
 operator|>
@@ -1809,7 +1867,7 @@ name|linescrossed
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 *	put the string in yytext into the string pool 		 * 		 *	The value in ryylval points to the string; 		 *	the previous 2 bytes is the length of the string 		 * 		 *	Cheat: append a trailing null to the string 		 *	and then adjust the string length to ignore 		 *	the trailing null.  If any STRING client requires 		 *	the trailing null, the client can just change STRLEN 		 */
+comment|/* 		 *	put the string in strtext into the string pool 		 * 		 *	The value in ryylval points to the string; 		 *	the previous 2 bytes is the length of the string 		 * 		 *	Cheat: append a trailing null to the string 		 *	and then adjust the string length to ignore 		 *	the trailing null.  If any STRING client requires 		 *	the trailing null, the client can just change STRLEN 		 */
 name|val
 operator|=
 name|STRING
@@ -1827,11 +1885,11 @@ name|int
 operator|)
 name|savestr
 argument_list|(
-name|yytext
+name|strtext
 argument_list|,
 name|rcp
 operator|-
-name|yytext
+name|strtext
 argument_list|)
 expr_stmt|;
 name|STRLEN

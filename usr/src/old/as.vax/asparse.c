@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asparse.c 4.12 %G%"
+literal|"@(#)asparse.c 4.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -144,7 +144,7 @@ begin_decl_stmt
 name|char
 name|yytext
 index|[
-name|NCPS
+name|NCPName
 operator|+
 literal|2
 index|]
@@ -642,7 +642,7 @@ directive|else
 else|not FLEXNAMES
 argument|yyerror(
 literal|"\"%.*s\" is not followed by a ':' for a label definition"
-argument|, 					NCPS,
+argument|, 					NCPName,
 endif|#
 directive|endif
 endif|not FLEXNAMES
@@ -676,7 +676,7 @@ directive|else
 else|not FLEXNAMES
 argument|yyerror(
 literal|"%.*s redefined"
-argument|, 							NCPS,
+argument|, 							NCPName,
 endif|#
 directive|endif
 endif|not FLEXNAMES
@@ -692,7 +692,7 @@ directive|else
 else|not FLEXNAMES
 argument|yyerror(
 literal|"%.*s redefined: PHASE ERROR, 1st: %d, 2nd: %d"
-argument|, 							NCPS,
+argument|, 							NCPName,
 endif|#
 directive|endif
 endif|not FLEXNAMES
@@ -739,7 +739,7 @@ name|FLEXNAMES
 argument|stpt->s_name = np->s_name;
 else|#
 directive|else
-argument|movestr(stpt->s_name, np->s_name, NCPS);
+argument|movestr(stpt->s_name, np->s_name, NCPName);
 endif|#
 directive|endif
 argument|np->s_tag = OBSOLETE;
@@ -985,7 +985,7 @@ literal|0
 argument|) 		yyerror(
 literal|"Backwards 'org'"
 argument|); 	goto ospace; 	break;
-comment|/*  *  *	Process stabs.  Stabs are created only by the f77  *	and the C compiler with the -g flag set.  *	We only look at the stab ONCE, during pass 1, and  *	virtually remove the stab from the intermediate file  *	so it isn't seen during pass2.  This makes for some  *	hairy processing to handle labels occuring in  *	stab entries, but since most expressions in the  *	stab are integral we save lots of time in the second  *	pass by not looking at the stabs.  *	A stab that is tagged floating will be bumped during  *	the jxxx resolution phase.  A stab tagged fixed will  *	not be be bumped.  *  *	.stab:	Old fashioned stabs  *	.stabn: For stabs without names  *	.stabs:	For stabs with string names  *	.stabd: For stabs for line numbers or bracketing,  *		without a string name, without  *		a final expression.  The value of the  *		final expression is taken to be  the current  *		location counter, and is patched by the 2nd pass  *  *	.stab{<expr>,}*NCPS,<expr>,<expr>,<expr>,<expr>  *	.stabn<expr>,<expr>,<expr>,<expr>  *	.stabs   STRING,<expr>,<expr>,<expr>,<expr>  *	.stabd<expr>,<expr>,<expr> # .   */
+comment|/*  *  *	Process stabs.  Stabs are created only by the f77  *	and the C compiler with the -g flag set.  *	We only look at the stab ONCE, during pass 1, and  *	virtually remove the stab from the intermediate file  *	so it isn't seen during pass2.  This makes for some  *	hairy processing to handle labels occuring in  *	stab entries, but since most expressions in the  *	stab are integral we save lots of time in the second  *	pass by not looking at the stabs.  *	A stab that is tagged floating will be bumped during  *	the jxxx resolution phase.  A stab tagged fixed will  *	not be be bumped.  *  *	.stab:	Old fashioned stabs  *	.stabn: For stabs without names  *	.stabs:	For stabs with string names  *	.stabd: For stabs for line numbers or bracketing,  *		without a string name, without  *		a final expression.  The value of the  *		final expression is taken to be  the current  *		location counter, and is patched by the 2nd pass  *  *	.stab{<expr>,}*NCPName,<expr>,<expr>,<expr>,<expr>  *	.stabn<expr>,<expr>,<expr>,<expr>  *	.stabs   STRING,<expr>,<expr>,<expr>,<expr>  *	.stabd<expr>,<expr>,<expr> # .   */
 argument|case ISTAB:
 ifndef|#
 directive|ifndef
@@ -998,7 +998,7 @@ argument|)	goto errorfix; 	stpt = (struct symtab *)yylval;
 comment|/* 	 *	Make a pointer to the .stab slot. 	 *	There is a pointer in the way (stpt), and 	 *	tokptr points to the next token. 	 */
 argument|stabstart = tokptr; 	(char *)stabstart -= sizeof(struct symtab *); 	(char *)stabstart -= sizeof(bytetoktype); 	shift; 	for (argcnt =
 literal|0
-argument|; argcnt< NCPS; argcnt++){ 		expr(locxp, val); 		stpt->s_name[argcnt] = locxp->e_xvalue; 		xp = explist; 		shiftover(CM); 	} 	goto tailstab;
+argument|; argcnt< NCPName; argcnt++){ 		expr(locxp, val); 		stpt->s_name[argcnt] = locxp->e_xvalue; 		xp = explist; 		shiftover(CM); 	} 	goto tailstab;
 else|#
 directive|else
 else|FLEXNAMES
@@ -1053,7 +1053,7 @@ argument|) goto errorfix; 	stpt = (struct symtab *)yylval; 	stabstart = tokptr; 
 ifndef|#
 directive|ifndef
 name|FLEXNAMES
-argument|movestr(stpt->s_name, stringp, min(STRLEN(stringp), NCPS));
+argument|movestr(stpt->s_name, stringp, min(STRLEN(stringp), NCPName));
 else|#
 directive|else
 argument|stpt->s_name = stringp;
@@ -1067,7 +1067,7 @@ argument|shiftover(CM); 	} else {
 ifndef|#
 directive|ifndef
 name|FLEXNAMES
-argument|static char nullstr[NCPS]; 		movestr(stpt->s_name, nullstr, NCPS);
+argument|static char nullstr[NCPName]; 		movestr(stpt->s_name, nullstr, NCPName);
 else|#
 directive|else
 argument|static char nullstr[
@@ -1099,7 +1099,7 @@ directive|else
 else|not FLEXNAMES
 argument|yyerror(
 literal|"Redefinition of %.*s"
-argument|, 			NCPS,
+argument|, 			NCPName,
 endif|#
 directive|endif
 endif|not FLEXNAMES
