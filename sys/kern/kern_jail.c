@@ -1460,7 +1460,7 @@ argument_list|)
 expr_stmt|;
 name|taskqueue_enqueue
 argument_list|(
-name|taskqueue_swi
+name|taskqueue_thread
 argument_list|,
 operator|&
 name|pr
