@@ -1512,7 +1512,7 @@ name|locktype
 operator|=
 name|noexec
 condition|?
-name|LOCK_NONE
+name|CVS_LOCK_NONE
 else|:
 name|frame
 operator|->
@@ -1537,7 +1537,7 @@ name|server_active
 operator|&&
 name|locktype
 operator|!=
-name|LOCK_NONE
+name|CVS_LOCK_NONE
 condition|)
 name|server_pause_check
 argument_list|()
@@ -1966,7 +1966,7 @@ if|if
 condition|(
 name|locktype
 operator|==
-name|LOCK_READ
+name|CVS_LOCK_READ
 condition|)
 block|{
 if|if
@@ -1993,7 +1993,7 @@ if|if
 condition|(
 name|locktype
 operator|==
-name|LOCK_WRITE
+name|CVS_LOCK_WRITE
 condition|)
 name|lock_dir_for_write
 argument_list|(
@@ -2071,7 +2071,7 @@ if|if
 condition|(
 name|locktype
 operator|!=
-name|LOCK_NONE
+name|CVS_LOCK_NONE
 condition|)
 name|Lock_Cleanup
 argument_list|()

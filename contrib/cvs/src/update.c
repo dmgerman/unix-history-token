@@ -1968,7 +1968,7 @@ name|which
 argument_list|,
 name|aflag
 argument_list|,
-name|LOCK_READ
+name|CVS_LOCK_READ
 argument_list|,
 name|preload_update_dir
 argument_list|,
@@ -2013,7 +2013,7 @@ name|which
 argument_list|,
 name|aflag
 argument_list|,
-name|LOCK_READ
+name|CVS_LOCK_READ
 argument_list|,
 name|preload_update_dir
 argument_list|,

@@ -323,7 +323,7 @@ name|W_LOCAL
 argument_list|,
 literal|0
 argument_list|,
-name|LOCK_NONE
+name|CVS_LOCK_NONE
 argument_list|,
 operator|(
 name|char
@@ -433,7 +433,7 @@ name|W_LOCAL
 argument_list|,
 literal|0
 argument_list|,
-name|LOCK_READ
+name|CVS_LOCK_READ
 argument_list|,
 operator|(
 name|char

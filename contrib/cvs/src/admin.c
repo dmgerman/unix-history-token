@@ -1168,9 +1168,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CVS_ADMIN_GROUP
-comment|/* The use of `cvs admin -k' is unrestricted.  However, any other        option is restricted if the group CVS_ADMIN_GROUP exists.  */
+comment|/* The use of `cvs admin -k' is unrestricted.  However, any other        option is restricted if the group CVS_ADMIN_GROUP exists on the        server.  */
 if|if
 condition|(
+ifdef|#
+directive|ifdef
+name|CLIENT_SUPPORT
+comment|/* This is only "secure" on the server, since the user could edit the 	 * RCS file on a local host, but some people like this kind of 	 * check anyhow.  The alternative would be to check only when 	 * (server_active) rather than when not on the client. 	 */
+operator|!
+name|current_parsed_root
+operator|->
+name|isremote
+operator|&&
+endif|#
+directive|endif
+comment|/* CLIENT_SUPPORT */
 operator|!
 name|only_k_option
 operator|&&
@@ -1389,6 +1401,7 @@ directive|endif
 block|}
 endif|#
 directive|endif
+comment|/* defined CVS_ADMIN_GROUP */
 for|for
 control|(
 name|i
@@ -1936,7 +1949,7 @@ name|W_LOCAL
 argument_list|,
 literal|0
 argument_list|,
-name|LOCK_NONE
+name|CVS_LOCK_NONE
 argument_list|,
 operator|(
 name|char

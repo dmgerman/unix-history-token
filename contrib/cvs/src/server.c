@@ -1333,7 +1333,7 @@ comment|/* nothing to do */
 comment|/* Allocate some space for our directory-munging string. */
 name|p
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -1354,7 +1354,7 @@ name|ENOMEM
 return|;
 name|dir_where_cvsadm_lives
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -1381,7 +1381,7 @@ return|;
 comment|/* Allocate some space for the temporary string in which we will        construct filenames. */
 name|tmp
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -1523,7 +1523,7 @@ name|empty
 decl_stmt|;
 name|empty
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -1934,7 +1934,7 @@ name|char
 modifier|*
 name|q
 init|=
-name|malloc
+name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -2370,7 +2370,7 @@ literal|0
 return|;
 name|pending_error_text
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 name|size
 argument_list|)
@@ -2846,7 +2846,7 @@ argument_list|)
 expr_stmt|;
 name|path
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -2946,7 +2946,7 @@ directive|ifdef
 name|HAVE_PUTENV
 name|env
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -3383,7 +3383,7 @@ condition|)
 return|return;
 name|p
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -3572,17 +3572,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|dir_name
-operator|!=
-name|NULL
-condition|)
-name|free
-argument_list|(
-name|dir_name
-argument_list|)
-expr_stmt|;
 name|dir_len
 operator|=
 name|strlen
@@ -3627,9 +3616,20 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|dir_name
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|dir_name
+argument_list|)
+expr_stmt|;
 name|dir_name
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -4381,7 +4381,7 @@ else|else
 block|{
 name|pending_error_text
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 literal|80
 operator|+
@@ -4797,7 +4797,7 @@ else|else
 block|{
 name|pending_error_text
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 literal|80
 argument_list|)
@@ -5075,7 +5075,7 @@ name|p
 decl_stmt|;
 name|filebuf
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 name|size
 argument_list|)
@@ -5138,7 +5138,7 @@ else|else
 block|{
 name|pending_error_text
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 literal|80
 argument_list|)
@@ -5289,7 +5289,7 @@ name|char
 modifier|*
 name|p
 init|=
-name|realloc
+name|xrealloc
 argument_list|(
 name|pending_error_text
 argument_list|,
@@ -5496,7 +5496,7 @@ else|else
 block|{
 name|pending_error_text
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 literal|80
 operator|+
@@ -5592,7 +5592,7 @@ else|else
 block|{
 name|pending_error_text
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 literal|80
 operator|+
@@ -6430,7 +6430,7 @@ expr|struct
 name|an_entry
 operator|*
 operator|)
-name|malloc
+name|xmalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -6456,7 +6456,7 @@ name|p
 operator|->
 name|entry
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -6610,7 +6610,7 @@ expr|struct
 name|an_entry
 operator|*
 operator|)
-name|malloc
+name|xmalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -6635,7 +6635,7 @@ block|}
 comment|/* Leave space for serve_unchanged to write '=' if it wants.  */
 name|cp
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -6782,7 +6782,7 @@ return|return;
 block|}
 name|kopt
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -7166,17 +7166,17 @@ begin_struct
 struct|struct
 name|notify_note
 block|{
-comment|/* Directory in which this notification happens.  malloc'd*/
+comment|/* Directory in which this notification happens.  xmalloc'd*/
 name|char
 modifier|*
 name|dir
 decl_stmt|;
-comment|/* malloc'd.  */
+comment|/* xmalloc'd.  */
 name|char
 modifier|*
 name|filename
 decl_stmt|;
-comment|/* The following three all in one malloc'd block, pointed to by TYPE.        Each '\0' terminated.  */
+comment|/* The following three all in one xmalloc'd block, pointed to by TYPE.        Each '\0' terminated.  */
 comment|/* "E" or "U".  */
 name|char
 modifier|*
@@ -7294,7 +7294,7 @@ expr|struct
 name|notify_note
 operator|*
 operator|)
-name|malloc
+name|xmalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -7320,7 +7320,7 @@ name|new
 operator|->
 name|dir
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -7334,7 +7334,7 @@ name|new
 operator|->
 name|filename
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -7441,7 +7441,7 @@ else|else
 block|{
 name|pending_error_text
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 literal|80
 operator|+
@@ -8086,7 +8086,7 @@ name|char
 operator|*
 operator|*
 operator|)
-name|realloc
+name|xrealloc
 argument_list|(
 operator|(
 name|char
@@ -8119,7 +8119,7 @@ block|}
 block|}
 name|p
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -8193,7 +8193,7 @@ index|]
 expr_stmt|;
 name|p
 operator|=
-name|realloc
+name|xrealloc
 argument_list|(
 name|p
 argument_list|,
@@ -14301,7 +14301,7 @@ block|{
 comment|/* 	 * The client has not sent a "Repository" line.  Check out 	 * into a pristine directory. 	 */
 name|tempdir
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -19131,7 +19131,7 @@ literal|0
 decl_stmt|;
 name|server_temp_dir
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(

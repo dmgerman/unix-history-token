@@ -3430,7 +3430,7 @@ name|which
 argument_list|,
 name|aflag
 argument_list|,
-name|LOCK_NONE
+name|CVS_LOCK_NONE
 argument_list|,
 operator|(
 name|char

@@ -622,11 +622,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* SCRAMBLE and DESCRAMBLE work like this:  *  * scramble(STR) returns SCRM, a scrambled copy of STR.  SCRM[0] is a  * single letter indicating the scrambling method.  As of this  * writing, the only legal method is 'A', but check the code for more  * up-to-date information.  The copy will have been allocated with  * malloc().   *  * descramble(SCRM) returns STR, again in its own malloc'd space.  * descramble() uses SCRM[0] to determine which method of unscrambling  * to use.  If it does not recognize the method, it dies with error.  */
+comment|/* SCRAMBLE and DESCRAMBLE work like this:  *  * scramble(STR) returns SCRM, a scrambled copy of STR.  SCRM[0] is a  * single letter indicating the scrambling method.  As of this  * writing, the only legal method is 'A', but check the code for more  * up-to-date information.  The copy will have been allocated with  * xmalloc().   *  * descramble(SCRM) returns STR, again in its own xmalloc'd space.  * descramble() uses SCRM[0] to determine which method of unscrambling  * to use.  If it does not recognize the method, it dies with error.  */
 end_comment
 
 begin_comment
-comment|/* Return a malloc'd, scrambled version of STR. */
+comment|/* Return a xmalloc'd, scrambled version of STR. */
 end_comment
 
 begin_function

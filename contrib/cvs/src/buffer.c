@@ -661,7 +661,7 @@ expr|struct
 name|buffer_data
 operator|*
 operator|)
-name|malloc
+name|xmalloc
 argument_list|(
 name|ALLOC_COUNT
 operator|*
@@ -854,7 +854,7 @@ name|SERVER_FLOWCONTROL
 end_ifdef
 
 begin_comment
-comment|/*  * Count how much data is stored in the buffer..  * Note that each buffer is a malloc'ed chunk BUFFER_DATA_SIZE.  */
+comment|/*  * Count how much data is stored in the buffer..  * Note that each buffer is a xmalloc'ed chunk BUFFER_DATA_SIZE.  */
 end_comment
 
 begin_function
@@ -3077,7 +3077,7 @@ name|nldata
 decl_stmt|;
 name|p
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 name|len
 operator|+
@@ -4709,7 +4709,7 @@ name|stdio_buffer_closure
 modifier|*
 name|bc
 init|=
-name|malloc
+name|xmalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -6430,7 +6430,7 @@ decl_stmt|;
 comment|/* We didn't allocate enough space in the initialize                function.  */
 name|n
 operator|=
-name|realloc
+name|xrealloc
 argument_list|(
 name|pb
 operator|->
@@ -6634,7 +6634,7 @@ else|else
 block|{
 name|outbuf
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 name|count
 argument_list|)
@@ -6951,7 +6951,7 @@ operator|>
 name|BUFFER_DATA_SIZE
 condition|)
 block|{
-comment|/* It would be easy to malloc a buffer, but I don't think this            case can ever arise.  */
+comment|/* It would be easy to xmalloc a buffer, but I don't think this            case can ever arise.  */
 name|abort
 argument_list|()
 expr_stmt|;

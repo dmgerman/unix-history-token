@@ -32,16 +32,6 @@ begin_comment
 comment|/* CONFIG_H */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"options.h"
-end_include
-
-begin_comment
-comment|/* these are some larger questions which 				   can't easily be automatically checked 				   for */
-end_comment
-
 begin_comment
 comment|/* Changed from if __STDC__ to ifdef __STDC__ because of Sun's acc compiler */
 end_comment
@@ -1233,10 +1223,6 @@ begin_comment
 comment|/* Temporary directory */
 end_comment
 
-begin_comment
-comment|/* #define	TMPDIR_DFLT		   Set by options.h */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1268,10 +1254,6 @@ end_define
 
 begin_comment
 comment|/* which editor to use */
-end_comment
-
-begin_comment
-comment|/* #define	EDITOR_DFLT		   Set by options.h */
 end_comment
 
 begin_define
@@ -1327,10 +1309,6 @@ end_define
 
 begin_comment
 comment|/* Effective umask for repository */
-end_comment
-
-begin_comment
-comment|/* #define	CVSUMASK_DFLT		   Set by options.h */
 end_comment
 
 begin_comment
@@ -1576,21 +1554,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LOCK_NONE
+name|CVS_LOCK_NONE
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOCK_READ
+name|CVS_LOCK_READ
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOCK_WRITE
+name|CVS_LOCK_WRITE
 value|2
 end_define
 
