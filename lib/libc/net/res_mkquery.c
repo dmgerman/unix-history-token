@@ -824,6 +824,17 @@ name|cp
 operator|+=
 name|INT16SZ
 expr_stmt|;
+if|if
+condition|(
+name|anslen
+operator|>
+literal|0xffff
+condition|)
+name|anslen
+operator|=
+literal|0xffff
+expr_stmt|;
+comment|/* limit to 16bit value */
 name|__putshort
 argument_list|(
 name|anslen
