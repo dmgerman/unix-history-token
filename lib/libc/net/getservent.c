@@ -126,22 +126,16 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|extern
-name|int
-name|_yp_check
-parameter_list|(
-name|char
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
+end_include
 
 begin_define
 define|#

@@ -46,6 +46,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -290,8 +296,12 @@ argument_list|(
 name|num
 argument_list|)
 argument_list|,
-literal|"%d"
+literal|"%u"
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|ntohs
 argument_list|(
 name|rport

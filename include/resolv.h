@@ -1826,6 +1826,56 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* XXX These must be exported for BIND4 compatibility. */
+end_comment
+
+begin_function_decl
+name|void
+name|__putlong
+parameter_list|(
+name|u_int32_t
+parameter_list|,
+name|u_char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|__putshort
+parameter_list|(
+name|u_int16_t
+parameter_list|,
+name|u_char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int32_t
+name|_getlong
+parameter_list|(
+specifier|const
+name|u_char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int16_t
+name|_getshort
+parameter_list|(
+specifier|const
+name|u_char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* XXX The following depend on the ns_updrec typedef in arpa/nameser.h */
 end_comment
 

@@ -186,6 +186,12 @@ directive|include
 file|"un-namespace.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
+end_include
+
 begin_if
 if|#
 directive|if
@@ -1198,18 +1204,6 @@ name|void
 modifier|*
 parameter_list|,
 name|va_list
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|_yp_check
-parameter_list|(
-name|char
-modifier|*
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -192,6 +192,32 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * yplib internal interfaces  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|YP
+end_ifdef
+
+begin_function_decl
+name|int
+name|_yp_check
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * This is a pointer in the C run-time startup code. It is used  * by getprogname() and setprogname().  */
 end_comment
 

@@ -155,6 +155,12 @@ directive|include
 file|"un-namespace.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"rpc_com.h"
+end_include
+
 begin_function_decl
 specifier|static
 name|bool_t
