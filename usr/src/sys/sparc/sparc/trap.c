@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)trap.c	8.4 (Berkeley) %G%  *  * from: $Header: trap.c,v 1.34 93/05/28 04:34:50 torek Exp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)trap.c	8.5 (Berkeley) %G%  *  * from: $Header: trap.c,v 1.34 93/05/28 04:34:50 torek Exp $  */
 end_comment
 
 begin_include
@@ -2980,6 +2980,37 @@ literal|4
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|KTRACE
+if|if
+condition|(
+name|KTRPOINT
+argument_list|(
+name|p
+argument_list|,
+name|KTR_SYSCALL
+argument_list|)
+condition|)
+name|ktrsyscall
+argument_list|(
+name|p
+operator|->
+name|p_tracep
+argument_list|,
+name|code
+argument_list|,
+name|callp
+operator|->
+name|sy_narg
+argument_list|,
+name|args
+operator|.
+name|i
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|rval
 index|[
 literal|0
