@@ -3443,7 +3443,7 @@ parameter_list|,
 name|int
 name|len
 parameter_list|,
-name|caddr_t
+name|c_caddr_t
 name|cp
 parameter_list|)
 block|{
