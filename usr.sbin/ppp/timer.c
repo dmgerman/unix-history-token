@@ -195,6 +195,10 @@ name|tp
 parameter_list|)
 block|{
 name|struct
+name|itimerval
+name|itimer
+decl_stmt|;
+name|struct
 name|pppTimer
 modifier|*
 name|t
@@ -262,6 +266,41 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* Adjust our first delta so that it reflects what's really happening */
+if|if
+condition|(
+name|TimerList
+operator|&&
+name|getitimer
+argument_list|(
+name|ITIMER_REAL
+argument_list|,
+operator|&
+name|itimer
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|TimerList
+operator|->
+name|rest
+operator|=
+name|itimer
+operator|.
+name|it_value
+operator|.
+name|tv_sec
+operator|*
+name|SECTICKS
+operator|+
+name|itimer
+operator|.
+name|it_value
+operator|.
+name|tv_usec
+operator|/
+name|TICKUNIT
+expr_stmt|;
 name|pt
 operator|=
 name|NULL
@@ -390,10 +429,12 @@ name|tp
 expr_stmt|;
 name|timer_InitService
 argument_list|(
-literal|0
+name|t
+operator|!=
+name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* Start the Timer Service */
+comment|/* [re]Start the Timer Service */
 block|}
 if|if
 condition|(
