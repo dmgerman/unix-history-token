@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.40.2.7 1998/03/26 22:28:42 se Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.40.2.8 1998/06/17 15:29:09 kato Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_include
@@ -575,6 +575,22 @@ case|:
 return|return
 operator|(
 literal|"Intel 82454GX (Orion) host to PCI bridge"
+operator|)
+return|;
+case|case
+literal|0x84ca8086
+case|:
+return|return
+operator|(
+literal|"Intel 82451NX Memory and I/O Controller"
+operator|)
+return|;
+case|case
+literal|0x84cb8086
+case|:
+return|return
+operator|(
+literal|"Intel 82454NX PCI Expander Bridge"
 operator|)
 return|;
 case|case
@@ -5037,6 +5053,166 @@ end_function
 begin_function
 specifier|static
 name|void
+name|config_450nx
+parameter_list|(
+name|pcici_t
+name|tag
+parameter_list|)
+block|{
+name|unsigned
+name|long
+name|devmap
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+comment|/* Read the MIOC devmap to determine which PCI expanders are present */
+name|devmap
+operator|=
+operator|(
+name|pci_conf_read
+argument_list|(
+name|tag
+argument_list|,
+literal|0xd4
+argument_list|)
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0x3c
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|devmap
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Error: 450NX MIOC: No PCI Expander Bridge present.\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|#
+directive|if
+literal|0
+comment|/* 	 * This hack is in the spirit of the config_orion() routine. 	 * It *would* work, except that some 450NX-based servers are 	 * set up to SKIP PCI busses, presumably to support hot-plug 	 * PCI cards that contain a single PCI-PCI bridge chip. 	 */
+comment|/* Now pciroots just needs to get set to the number of bits set... */
+block|pciroots = 0; 	for (i = 2; i< 6; i++) 		if (devmap& (1<< i)) 			pciroots++;
+else|#
+directive|else
+comment|/* 	 * Since the buses are configured in order, we just have to 	 * find the highest bus, and use those numbers. 	 * This is `wrong', but there is nothing else I can really do... 	 */
+if|if
+condition|(
+name|devmap
+operator|&
+literal|0x20
+condition|)
+block|{
+comment|/* B1, 0xd5 */
+name|pciroots
+operator|=
+operator|(
+name|pci_conf_read
+argument_list|(
+name|tag
+argument_list|,
+literal|0xd4
+argument_list|)
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0xff
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|devmap
+operator|&
+literal|0x10
+condition|)
+block|{
+comment|/* A1, 0xd4 */
+name|pciroots
+operator|=
+name|pci_conf_read
+argument_list|(
+name|tag
+argument_list|,
+literal|0xd4
+argument_list|)
+operator|&
+literal|0xff
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|devmap
+operator|&
+literal|0x8
+condition|)
+block|{
+comment|/* B0, 0xd2 */
+name|pciroots
+operator|=
+operator|(
+name|pci_conf_read
+argument_list|(
+name|tag
+argument_list|,
+literal|0xd0
+argument_list|)
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0xff
+expr_stmt|;
+block|}
+else|else
+comment|/* if (devmap& 0x4) */
+block|{
+comment|/* A0, 0xd1 */
+name|pciroots
+operator|=
+operator|(
+name|pci_conf_read
+argument_list|(
+name|tag
+argument_list|,
+literal|0xd0
+argument_list|)
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0xff
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"config_450nx: %d PCI busses found\n"
+argument_list|,
+name|pciroots
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|chipset_attach
 parameter_list|(
 name|pcici_t
@@ -5081,6 +5257,16 @@ literal|0x00051166
 case|:
 comment|/* Ross ??? */
 name|config_Ross
+argument_list|(
+name|config_id
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x84ca8086
+case|:
+comment|/* Intel 450NX */
+name|config_450nx
 argument_list|(
 name|config_id
 argument_list|)
