@@ -26,7 +26,19 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/setjmp.h>
 end_include
 
 begin_else
@@ -40,18 +52,6 @@ directive|include
 file|<ctype.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -60,41 +60,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<machine/setjmp.h>
-end_include
-
-begin_comment
-comment|/* All this mess for a single struct definition */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/namei.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/disklabel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mount.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/conf.h>
 end_include
 
 begin_include
@@ -149,12 +115,6 @@ end_else
 begin_comment
 comment|/* get it from the headers */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
 
 begin_define
 define|#
