@@ -5449,10 +5449,7 @@ name|ACPI_VALID_HID
 operator|)
 operator|!=
 literal|0
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|strcmp
 argument_list|(
 name|hid
@@ -5470,7 +5467,6 @@ name|ret
 operator|=
 name|TRUE
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
