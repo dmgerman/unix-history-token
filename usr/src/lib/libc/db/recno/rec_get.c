@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_get.c	5.6 (Berkeley) %G%"
+literal|"@(#)rec_get.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -673,13 +673,15 @@ name|t
 operator|->
 name|bt_dbuf
 expr_stmt|;
-name|sz
-operator|=
 name|t
 operator|->
 name|bt_dbufsz
 operator|+=
+operator|(
+name|sz
+operator|=
 literal|256
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -694,7 +696,9 @@ name|t
 operator|->
 name|bt_dbuf
 argument_list|,
-name|sz
+name|t
+operator|->
+name|bt_dbufsz
 argument_list|)
 operator|)
 operator|==
