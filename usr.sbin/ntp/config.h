@@ -494,9 +494,12 @@ begin_comment
 comment|/* NMEA GPS receiver */
 end_comment
 
-begin_comment
-comment|/* #undef CLOCK_NMEA */
-end_comment
+begin_define
+define|#
+directive|define
+name|CLOCK_NMEA
+value|1
+end_define
 
 begin_comment
 comment|/* Palisade clock */
@@ -564,9 +567,12 @@ begin_comment
 comment|/* Motorola UT Oncore GPS */
 end_comment
 
-begin_comment
-comment|/* #undef CLOCK_ONCORE */
-end_comment
+begin_define
+define|#
+directive|define
+name|CLOCK_ONCORE
+value|1
+end_define
 
 begin_comment
 comment|/* KSI/Odetics TPRO/S GPS receiver/IRIG interface */
