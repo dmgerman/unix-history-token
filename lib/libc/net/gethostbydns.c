@@ -2205,6 +2205,10 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|name
 index|[
 literal|0
@@ -2371,6 +2375,10 @@ condition|(
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)
@@ -2387,6 +2395,10 @@ condition|(
 operator|(
 name|isxdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|name
 index|[
 literal|0
@@ -2550,6 +2562,10 @@ condition|(
 operator|!
 name|isxdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)
