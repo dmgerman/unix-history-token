@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccd.c,v 1.8 1996/03/21 04:13:25 asami Exp $ */
+comment|/* $Id: ccd.c,v 1.9 1996/03/26 02:29:11 asami Exp $ */
 end_comment
 
 begin_comment
@@ -850,13 +850,14 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
+name|int
 name|ccd_devsw_installed
-operator|=
+init|=
 literal|0
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Called by main() during pseudo-device attachment.  All we need  * to do is allocate enough space for devices to be configured later, and  * add devsw entries.  */
