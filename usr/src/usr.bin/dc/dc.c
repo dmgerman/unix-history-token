@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dc.c	4.3	(Berkeley)	%G%"
+literal|"@(#)dc.c	4.4	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3332,11 +3332,21 @@ argument_list|(
 name|ddivr
 argument_list|)
 expr_stmt|;
-name|errorrt
+name|printf
 argument_list|(
 literal|"divide by 0\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+operator|(
+expr|struct
+name|blk
+operator|*
+operator|)
+literal|1
+operator|)
+return|;
 block|}
 name|divsign
 operator|=
