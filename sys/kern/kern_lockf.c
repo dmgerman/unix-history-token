@@ -621,8 +621,19 @@ name|ap
 operator|->
 name|a_id
 expr_stmt|;
-comment|/*	lock->lf_inode = ip; */
-comment|/* XXX JH */
+comment|/* 	 * XXX The problem is that VTOI is ufs specific, so it will 	 * break LOCKF_DEBUG for all other FS's other than UFS because 	 * it casts the vnode->data ptr to struct inode *. 	 */
+comment|/*	lock->lf_inode = VTOI(ap->a_vp); */
+name|lock
+operator|->
+name|lf_inode
+operator|=
+operator|(
+expr|struct
+name|inode
+operator|*
+operator|)
+literal|0
+expr_stmt|;
 name|lock
 operator|->
 name|lf_type
@@ -3180,6 +3191,19 @@ operator|->
 name|lf_id
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|lock
+operator|->
+name|lf_inode
+operator|!=
+operator|(
+expr|struct
+name|inode
+operator|*
+operator|)
+literal|0
+condition|)
 comment|/* XXX no %qd in kernel.  Truncate. */
 name|printf
 argument_list|(
@@ -3211,6 +3235,52 @@ name|lf_inode
 operator|->
 name|i_dev
 argument_list|)
+argument_list|,
+name|lock
+operator|->
+name|lf_type
+operator|==
+name|F_RDLCK
+condition|?
+literal|"shared"
+else|:
+name|lock
+operator|->
+name|lf_type
+operator|==
+name|F_WRLCK
+condition|?
+literal|"exclusive"
+else|:
+name|lock
+operator|->
+name|lf_type
+operator|==
+name|F_UNLCK
+condition|?
+literal|"unlock"
+else|:
+literal|"unknown"
+argument_list|,
+operator|(
+name|long
+operator|)
+name|lock
+operator|->
+name|lf_start
+argument_list|,
+operator|(
+name|long
+operator|)
+name|lock
+operator|->
+name|lf_end
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|" %s, start %ld, end %ld"
 argument_list|,
 name|lock
 operator|->
@@ -3317,6 +3387,20 @@ decl_stmt|,
 modifier|*
 name|blk
 decl_stmt|;
+if|if
+condition|(
+name|lock
+operator|->
+name|lf_inode
+operator|==
+operator|(
+expr|struct
+name|inode
+operator|*
+operator|)
+literal|0
+condition|)
+return|return;
 name|printf
 argument_list|(
 literal|"%s: Lock list for ino %lu on dev<%d, %d>:\n"
