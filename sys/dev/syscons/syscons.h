@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: syscons.h,v 1.11 1995/09/10 21:35:13 bde Exp $  */
+comment|/*-  * Copyright (c) 1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: syscons.h,v 1.12 1995/11/04 17:07:52 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -190,6 +190,59 @@ define|#
 directive|define
 name|CHAR_CURSOR
 value|0x00004
+end_define
+
+begin_comment
+comment|/* attribute flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NORMAL_ATTR
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLINK_ATTR
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|BOLD_ATTR
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNDERLINE_ATTR
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|REVERSE_ATTR
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|FOREGROUND_CHANGED
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|BACKGROUND_CHANGED
+value|0x20
 end_define
 
 begin_comment
@@ -543,15 +596,23 @@ comment|/* contains ESC parameters */
 name|int
 name|cur_attr
 decl_stmt|;
-comment|/* current attributes */
+comment|/* current hardware attributes word */
 name|int
-name|std_attr
+name|attr_mask
 decl_stmt|;
-comment|/* normal attributes */
+comment|/* current logical attributes mask */
 name|int
-name|rev_attr
+name|cur_color
 decl_stmt|;
-comment|/* reverse attributes */
+comment|/* current hardware color */
+name|int
+name|std_color
+decl_stmt|;
+comment|/* normal hardware color */
+name|int
+name|rev_color
+decl_stmt|;
+comment|/* reverse hardware color */
 block|}
 name|term_stat
 typedef|;
@@ -721,13 +782,13 @@ struct|struct
 name|default_attr
 block|{
 name|int
-name|std_attr
+name|std_color
 decl_stmt|;
-comment|/* normal attributes */
+comment|/* normal hardware color */
 name|int
-name|rev_attr
+name|rev_color
 decl_stmt|;
-comment|/* reverse attributes */
+comment|/* reverse hardware color */
 block|}
 name|default_attr
 typedef|;
