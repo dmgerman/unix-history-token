@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	8.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	8.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1138,6 +1138,12 @@ condition|(
 name|clean
 operator|<=
 literal|2
+operator|||
+name|fs
+operator|->
+name|lfs_avail
+operator|<=
+literal|0
 condition|)
 block|{
 comment|/* printf ("segs clean: %d\n", clean); */
@@ -1145,6 +1151,14 @@ name|wakeup
 argument_list|(
 operator|&
 name|lfs_allclean_wakeup
+argument_list|)
+expr_stmt|;
+name|wakeup
+argument_list|(
+operator|&
+name|fs
+operator|->
+name|lfs_nextseg
 argument_list|)
 expr_stmt|;
 if|if
@@ -1179,6 +1193,12 @@ condition|(
 name|clean
 operator|<=
 literal|2
+operator|||
+name|fs
+operator|->
+name|lfs_avail
+operator|<=
+literal|0
 condition|)
 do|;
 comment|/* 	 * Allocate a segment structure and enough space to hold pointers to 	 * the maximum possible number of buffers which can be described in a 	 * single summary block. 	 */
@@ -3288,6 +3308,19 @@ name|daddr
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"lfs: bp = 0x%x, addr = 0x%x\n"
+argument_list|,
+name|bp
+argument_list|,
+name|bp
+operator|->
+name|b_un
+operator|.
+name|b_addr
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"Negative Bytes"
@@ -3383,6 +3416,14 @@ name|wakeup
 argument_list|(
 operator|&
 name|lfs_allclean_wakeup
+argument_list|)
+expr_stmt|;
+name|wakeup
+argument_list|(
+operator|&
+name|fs
+operator|->
+name|lfs_nextseg
 argument_list|)
 expr_stmt|;
 name|lfs_newseg
@@ -4031,10 +4072,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|p
-decl_stmt|;
-name|long
-modifier|*
-name|lp
 decl_stmt|;
 comment|/* 	 * If there are no buffers other than the segment summary to write 	 * and it is not a checkpoint, don't do anything.  On a checkpoint, 	 * even if there aren't any buffers, you need to write the superblock. 	 */
 if|if
@@ -5738,6 +5775,10 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * This is vrele except that we do not want to VOP_INACTIVE this vnode. We  * inline vrele here to avoid the vn_lock and VOP_INACTIVE call at the end.  */
+end_comment
+
 begin_function
 name|void
 name|lfs_vunref
@@ -5751,26 +5792,118 @@ modifier|*
 name|vp
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|lfs_no_inactive
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
 decl_stmt|;
-comment|/* 	 * This is vrele except that we do not want to VOP_INACTIVE 	 * this vnode. Rather than inline vrele here, we use a global 	 * flag to tell lfs_inactive not to run. Yes, its gross. 	 */
-name|lfs_no_inactive
-operator|=
-literal|1
-expr_stmt|;
-name|vrele
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-name|lfs_no_inactive
-operator|=
-literal|0
-expr_stmt|;
-block|}
+comment|/* XXX */
+specifier|extern
+name|struct
+name|simplelock
+name|vnode_free_list_slock
+decl_stmt|;
+comment|/* XXX */
+extern|extern TAILQ_HEAD(freelst
+operator|,
+extern|vnode
+block|)
+function|vnode_free_list;
 end_function
 
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_expr_stmt
+name|simple_lock
+argument_list|(
+operator|&
+name|vp
+operator|->
+name|v_interlock
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|vp
+operator|->
+name|v_usecount
+operator|--
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|vp
+operator|->
+name|v_usecount
+operator|>
+literal|0
+condition|)
+block|{
+name|simple_unlock
+argument_list|(
+operator|&
+name|vp
+operator|->
+name|v_interlock
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+end_if
+
+begin_comment
+comment|/* 	 * insert at tail of LRU list 	 */
+end_comment
+
+begin_expr_stmt
+name|simple_lock
+argument_list|(
+operator|&
+name|vnode_free_list_slock
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TAILQ_INSERT_TAIL
+argument_list|(
+operator|&
+name|vnode_free_list
+argument_list|,
+name|vp
+argument_list|,
+name|v_freelist
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|simple_unlock
+argument_list|(
+operator|&
+name|vnode_free_list_slock
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|simple_unlock
+argument_list|(
+operator|&
+name|vp
+operator|->
+name|v_interlock
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+unit|}
 end_unit
 
