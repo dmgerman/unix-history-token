@@ -274,6 +274,16 @@ name|mdrootready
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|void
+name|mdcreate_malloc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -379,6 +389,14 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|cdevsw
+name|mddisk_cdevsw
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|md_s
@@ -414,10 +432,6 @@ name|type
 enum|;
 name|unsigned
 name|nsect
-decl_stmt|;
-name|struct
-name|cdevsw
-name|devsw
 decl_stmt|;
 comment|/* MD_MALLOC related fields */
 name|unsigned
@@ -502,6 +516,19 @@ operator|=
 name|dev
 operator|->
 name|si_drv1
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|unit
+operator|+
+literal|1
+operator|==
+name|mdunits
+condition|)
+name|mdcreate_malloc
+argument_list|()
 expr_stmt|;
 name|dl
 operator|=
@@ -1701,10 +1728,7 @@ name|md_s
 modifier|*
 name|mdcreate
 parameter_list|(
-name|struct
-name|cdevsw
-modifier|*
-name|devsw
+name|void
 parameter_list|)
 block|{
 name|struct
@@ -1798,12 +1822,11 @@ name|disk
 argument_list|,
 literal|0
 argument_list|,
-name|devsw
+operator|&
+name|md_cdevsw
 argument_list|,
 operator|&
-name|sc
-operator|->
-name|devsw
+name|mddisk_cdevsw
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1843,10 +1866,7 @@ decl_stmt|;
 name|sc
 operator|=
 name|mdcreate
-argument_list|(
-operator|&
-name|md_cdevsw
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|sc
 operator|->
@@ -1905,10 +1925,7 @@ decl_stmt|;
 name|sc
 operator|=
 name|mdcreate
-argument_list|(
-operator|&
-name|md_cdevsw
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|sc
 operator|->
@@ -1962,6 +1979,15 @@ operator|->
 name|nsecp
 operator|=
 literal|1
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"md%d: Malloc disk\n"
+argument_list|,
+name|sc
+operator|->
+name|unit
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -2142,13 +2168,6 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"md%d: Malloc disk\n"
-argument_list|,
-name|mdunits
-argument_list|)
-expr_stmt|;
 name|mdcreate_malloc
 argument_list|()
 expr_stmt|;
