@@ -2813,6 +2813,18 @@ argument_list|)
 block|}
 block|,
 block|{
+literal|" Periodic SNAPs at ftp.freebsd.org, "
+name|ftp
+operator|.
+name|freebsd
+operator|.
+name|org
+literal|", NULL, dmenuSetVariable, NULL, 	VAR_FTP_PATH _AS("
+operator|=
+name|ftp
+operator|:
+comment|//ftp.freebsd.org/pub/FreeBSD/snapshots/") },
+block|{
 literal|"Argentina"
 block|,
 literal|"ftp.ar.freebsd.org"
@@ -4311,13 +4323,10 @@ name|NULL
 block|}
 block|}
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuMediaTape
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -4342,13 +4351,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuNetworkDevice
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -4375,17 +4381,11 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/* The media selection menu */
-end_comment
-
-begin_decl_stmt
 name|DMenu
 name|MenuMedia
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -4509,17 +4509,11 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/* The distributions menu */
-end_comment
-
-begin_decl_stmt
 name|DMenu
 name|MenuDistributions
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -4696,13 +4690,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuSubDistributions
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -5196,11 +5187,11 @@ block|{
 name|NULL
 block|}
 block|}
-decl_stmt|,
+block|, }
+decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-unit|};
 name|DMenu
 name|MenuCRYPTODistributions
 init|=
