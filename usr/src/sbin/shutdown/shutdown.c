@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)shutdown.c	4.3 (Berkeley/Melbourne) 81/04/03	*/
+comment|/*	@(#)shutdown.c	4.4 (Berkeley/Melbourne) 81/04/21	*/
 end_comment
 
 begin_include
@@ -1889,6 +1889,13 @@ argument_list|,
 literal|"a"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|==
+literal|0
+condition|)
+return|return;
 name|fseek
 argument_list|(
 name|fp
