@@ -311,6 +311,9 @@ name|void
 modifier|*
 name|lock
 decl_stmt|;
+name|int
+name|spdif_enabled
+decl_stmt|;
 name|unsigned
 name|int
 name|bufsz
@@ -1819,6 +1822,7 @@ name|speed
 operator|<
 literal|44100
 condition|)
+block|{
 comment|/* disable if req before rate change */
 name|cmi_spdif_speed
 argument_list|(
@@ -1829,6 +1833,7 @@ argument_list|,
 name|speed
 argument_list|)
 expr_stmt|;
+block|}
 name|cmi_partial_wr4
 argument_list|(
 name|ch
@@ -1849,7 +1854,14 @@ condition|(
 name|speed
 operator|>=
 literal|44100
+operator|&&
+name|ch
+operator|->
+name|parent
+operator|->
+name|spdif_enabled
 condition|)
+block|{
 comment|/* enable if req after rate change */
 name|cmi_spdif_speed
 argument_list|(
@@ -1860,6 +1872,7 @@ argument_list|,
 name|speed
 argument_list|)
 expr_stmt|;
+block|}
 name|rsp
 operator|=
 name|cmi_rd
@@ -3559,6 +3572,72 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Optional SPDIF support. */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|cmi_initsys
+parameter_list|(
+name|struct
+name|sc_info
+modifier|*
+name|sc
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|SND_DYNSYSCTL
+name|SYSCTL_ADD_INT
+argument_list|(
+name|snd_sysctl_tree
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|snd_sysctl_tree_top
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"spdif_enabled"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|spdif_enabled
+argument_list|,
+literal|0
+argument_list|,
+literal|"enable SPDIF output at 44.1 kHz and above"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* SND_DYNSYSCTL */
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* ------------------------------------------------------------------------- */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|kobj_method_t
@@ -4022,6 +4101,12 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
+name|dev
+operator|=
+name|dev
+expr_stmt|;
+name|sc
+operator|->
 name|regid
 operator|=
 name|PCIR_MAPS
@@ -4285,6 +4370,11 @@ condition|)
 goto|goto
 name|bad
 goto|;
+name|cmi_initsys
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|pcm_addchan
 argument_list|(
 name|dev
