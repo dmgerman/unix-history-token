@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)verify.c	5.6 (Berkeley) %G%"
+literal|"@(#)verify.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -156,6 +156,15 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|int
+name|ftsdepth
+init|=
+literal|0
+decl_stmt|,
+name|specdepth
+init|=
+literal|0
+decl_stmt|;
 name|argv
 index|[
 literal|0
@@ -256,6 +265,9 @@ literal|"."
 argument_list|)
 condition|)
 continue|continue;
+name|ftsdepth
+operator|++
+expr_stmt|;
 break|break;
 case|case
 name|FTS_DC
@@ -279,22 +291,6 @@ continue|continue;
 case|case
 name|FTS_DNR
 case|:
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"mtree: %s: unable to read.\n"
-argument_list|,
-name|RP
-argument_list|(
-name|p
-argument_list|)
-argument_list|)
-expr_stmt|;
-continue|continue;
 case|case
 name|FTS_DNX
 case|:
@@ -305,7 +301,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"mtree: %s: unable to search.\n"
+literal|"mtree: %s: unable to read or search.\n"
 argument_list|,
 name|RP
 argument_list|(
@@ -313,10 +309,19 @@ name|p
 argument_list|)
 argument_list|)
 expr_stmt|;
-continue|continue;
 case|case
 name|FTS_DP
 case|:
+name|ftsdepth
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|specdepth
+operator|>
+name|ftsdepth
+condition|)
+block|{
 for|for
 control|(
 name|level
@@ -336,6 +341,10 @@ operator|->
 name|prev
 control|)
 empty_stmt|;
+name|specdepth
+operator|--
+expr_stmt|;
+block|}
 continue|continue;
 case|case
 name|FTS_ERR
@@ -495,12 +504,17 @@ name|fts_info
 operator|==
 name|FTS_D
 condition|)
+block|{
 name|level
 operator|=
 name|ep
 operator|->
 name|child
 expr_stmt|;
+name|specdepth
+operator|++
+expr_stmt|;
+block|}
 break|break;
 block|}
 if|if
