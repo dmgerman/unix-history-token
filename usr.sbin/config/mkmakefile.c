@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mkmakefile.c,v 1.22 1997/09/15 06:37:09 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"configvers.h"
 end_include
 
 begin_define
@@ -636,6 +642,9 @@ name|warn_make_clean
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|versreq
+decl_stmt|;
 name|read_files
 argument_list|()
 expr_stmt|;
@@ -1165,6 +1174,74 @@ argument_list|(
 name|ofp
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|line
+argument_list|,
+literal|"%VERSREQ="
+argument_list|,
+sizeof|sizeof
+argument_list|(
+literal|"%VERSREQ="
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|versreq
+operator|=
+name|atoi
+argument_list|(
+name|line
+operator|+
+sizeof|sizeof
+argument_list|(
+literal|"%VERSREQ="
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|versreq
+operator|!=
+name|CONFIGVERS
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"WARNING: version of config(8) does not match kernel!\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"config version = %d, "
+argument_list|,
+name|CONFIGVERS
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"version required = %d\n"
+argument_list|,
+name|versreq
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 else|else
 name|fprintf
 argument_list|(
