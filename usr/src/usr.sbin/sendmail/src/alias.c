@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.27 (Berkeley) %G%"
+literal|"@(#)alias.c	8.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1467,7 +1467,17 @@ name|FALSE
 decl_stmt|;
 name|sigfunc_t
 name|oldsigint
+decl_stmt|,
+name|oldsigquit
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SIGTSTP
+name|sigfunc_t
+name|oldsigtstp
+decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -1688,6 +1698,10 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
+comment|/* avoid denial-of-service attacks */
+name|resetlimits
+argument_list|()
+expr_stmt|;
 name|oldsigint
 operator|=
 name|setsignal
@@ -1697,6 +1711,29 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+name|oldsigquit
+operator|=
+name|setsignal
+argument_list|(
+name|SIGQUIT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SIGTSTP
+name|oldsigtstp
+operator|=
+name|setsignal
+argument_list|(
+name|SIGTSTP
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|map
@@ -1839,7 +1876,7 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-comment|/* restore the old signal */
+comment|/* restore the old signals */
 operator|(
 name|void
 operator|)
@@ -1850,6 +1887,31 @@ argument_list|,
 name|oldsigint
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setsignal
+argument_list|(
+name|SIGQUIT
+argument_list|,
+name|oldsigquit
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SIGTSTP
+operator|(
+name|void
+operator|)
+name|setsignal
+argument_list|(
+name|SIGTSTP
+argument_list|,
+name|oldsigtstp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
