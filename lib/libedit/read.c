@@ -11,6 +11,12 @@ name|defined
 argument_list|(
 name|lint
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SCCSID
+argument_list|)
 end_if
 
 begin_if
@@ -42,7 +48,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not lint */
+comment|/* not lint&& not SCCSID */
 end_comment
 
 begin_comment
