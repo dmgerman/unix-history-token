@@ -172,8 +172,6 @@ begin_decl_stmt
 name|FILE
 modifier|*
 name|output
-init|=
-name|stdout
 decl_stmt|;
 end_decl_stmt
 
@@ -408,6 +406,11 @@ name|outfile
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|output
+operator|=
+name|stdout
+expr_stmt|;
 if|if
 condition|(
 name|base64
