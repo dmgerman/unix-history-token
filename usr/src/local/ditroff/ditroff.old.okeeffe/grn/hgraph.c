@@ -105,6 +105,17 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|oldstipmap
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* use old-style stipple mapping */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|double
 name|troffscale
 decl_stmt|;
@@ -515,50 +526,32 @@ name|didstipple
 operator|=
 literal|1
 expr_stmt|;
-if|if
-condition|(
+name|printf
+argument_list|(
 name|element
 operator|->
 name|brushf
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"\\D'p %d"
-argument_list|,
-name|element
-operator|->
-name|size
-operator|<=
-name|NSTIPPLES
 condition|?
-name|stipple_index
-index|[
-name|element
-operator|->
-name|size
-operator|-
-literal|1
-index|]
+literal|"\\D'p %d"
 else|:
-name|element
-operator|->
-name|size
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
 literal|"\\D'P %d"
 argument_list|,
+operator|(
 name|element
 operator|->
 name|size
-operator|<=
+operator|>
 name|NSTIPPLES
+operator|||
+name|oldstipmap
+operator|==
+name|FALSE
+operator|)
 condition|?
+name|element
+operator|->
+name|size
+else|:
 name|stipple_index
 index|[
 name|element
@@ -567,13 +560,8 @@ name|size
 operator|-
 literal|1
 index|]
-else|:
-name|element
-operator|->
-name|size
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -584,7 +572,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"no stipple font requested for picture at line %d"
+literal|"no stipple for picture at line %d"
 argument_list|,
 name|baseline
 argument_list|)
