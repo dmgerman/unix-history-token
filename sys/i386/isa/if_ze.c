@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.14 1995/05/02 04:03:07 phk Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.15 1995/05/03 22:58:07 phk Exp $  */
 end_comment
 
 begin_include
@@ -564,6 +564,17 @@ value|"IBM Corp.~Ethernet~0934214"
 end_define
 
 begin_comment
+comment|/* */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CARD3_INFO
+value|"National Semiconductor~InfoMover NE4"
+end_define
+
+begin_comment
 comment|/*  * scan the card information structure looking for the version/product info  * tuple.  when we find it, compare it to the string we are looking for.  * return 1 if we find it, 0 otherwise.  */
 end_comment
 
@@ -725,6 +736,24 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 name|CARD2_INFO
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+name|memcmp
+argument_list|(
+name|card_info
+argument_list|,
+name|CARD3_INFO
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|CARD3_INFO
 argument_list|)
 operator|-
 literal|1
