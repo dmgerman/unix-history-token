@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ppc.c,v 1.7 1998/09/13 18:26:44 nsouch Exp $  *  */
+comment|/*-  * Copyright (c) 1997, 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ppc.c,v 1.8 1998/09/13 20:57:06 nsouch Exp $  *  */
 end_comment
 
 begin_include
@@ -848,8 +848,6 @@ parameter_list|,
 name|struct
 name|ppb_microseq
 modifier|*
-parameter_list|,
-name|int
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3838,11 +3836,8 @@ parameter_list|,
 name|struct
 name|ppb_microseq
 modifier|*
-name|msq
-parameter_list|,
-name|int
 modifier|*
-name|ppbpc
+name|p_msq
 parameter_list|)
 block|{
 name|struct
@@ -3858,7 +3853,7 @@ decl_stmt|;
 name|struct
 name|ppb_microseq
 modifier|*
-name|pc
+name|mi
 decl_stmt|;
 name|char
 name|cc
@@ -3900,14 +3895,7 @@ decl_stmt|;
 name|struct
 name|ppb_microseq
 modifier|*
-name|microseq_stack
-init|=
-literal|0
-decl_stmt|;
-name|struct
-name|ppb_microseq
-modifier|*
-name|pc_stack
+name|stack
 init|=
 literal|0
 decl_stmt|;
@@ -3935,22 +3923,12 @@ value|outb((ppc)->ppc_base + register, byte)
 define|#
 directive|define
 name|INCR_PC
-value|(pc ++)
+value|(mi ++)
 comment|/* increment program counter */
-define|#
-directive|define
 name|mi
-value|pc
-comment|/* microinstruction currently executed */
-comment|/* get the state of pc from ppb level of execution */
-name|pc
 operator|=
-operator|&
-name|msq
-index|[
 operator|*
-name|ppbpc
-index|]
+name|p_msq
 expr_stmt|;
 for|for
 control|(
@@ -4534,7 +4512,7 @@ name|ppc_accum
 operator|>
 literal|0
 condition|)
-name|pc
+name|mi
 operator|+=
 name|mi
 operator|->
@@ -4589,7 +4567,7 @@ index|]
 operator|.
 name|i
 condition|)
-name|pc
+name|mi
 operator|+=
 name|mi
 operator|->
@@ -4634,7 +4612,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|pc
+name|mi
 operator|+=
 name|mi
 operator|->
@@ -4703,7 +4681,7 @@ index|]
 operator|.
 name|i
 condition|)
-name|pc
+name|mi
 operator|+=
 name|mi
 operator|->
@@ -4787,7 +4765,7 @@ name|MS_OP_CALL
 case|:
 if|if
 condition|(
-name|microseq_stack
+name|stack
 condition|)
 name|panic
 argument_list|(
@@ -4809,16 +4787,12 @@ name|p
 condition|)
 block|{
 comment|/* store the state of the actual 				 * microsequence 				 */
-name|microseq_stack
+name|stack
 operator|=
-name|msq
-expr_stmt|;
-name|pc_stack
-operator|=
-name|pc
+name|mi
 expr_stmt|;
 comment|/* jump to the new microsequence */
-name|msq
+name|mi
 operator|=
 operator|(
 expr|struct
@@ -4834,10 +4808,6 @@ index|]
 operator|.
 name|p
 expr_stmt|;
-name|pc
-operator|=
-name|msq
-expr_stmt|;
 block|}
 else|else
 name|INCR_PC
@@ -4847,16 +4817,12 @@ case|case
 name|MS_OP_SUBRET
 case|:
 comment|/* retrieve microseq and pc state before the call */
-name|msq
+name|mi
 operator|=
-name|microseq_stack
-expr_stmt|;
-name|pc
-operator|=
-name|pc_stack
+name|stack
 expr_stmt|;
 comment|/* reset the stack */
-name|microseq_stack
+name|stack
 operator|=
 literal|0
 expr_stmt|;
@@ -4876,7 +4842,7 @@ case|:
 comment|/* can't return to ppb level during the execution 			 * of a submicrosequence */
 if|if
 condition|(
-name|microseq_stack
+name|stack
 condition|)
 name|panic
 argument_list|(
@@ -4887,16 +4853,9 @@ argument_list|)
 expr_stmt|;
 comment|/* update pc for ppb level of execution */
 operator|*
-name|ppbpc
+name|p_msq
 operator|=
-call|(
-name|int
-call|)
-argument_list|(
-name|pc
-operator|-
-name|msq
-argument_list|)
+name|mi
 expr_stmt|;
 comment|/* return to ppb level of execution */
 return|return
