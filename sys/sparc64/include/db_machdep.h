@@ -48,36 +48,12 @@ name|db_expr_t
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|struct
-name|trapframe
-name|db_regs_t
-typedef|;
-end_typedef
-
-begin_decl_stmt
-specifier|extern
-name|db_regs_t
-name|ddb_regs
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|DDB_REGS
-value|(&ddb_regs)
-end_define
-
 begin_define
 define|#
 directive|define
 name|PC_REGS
-parameter_list|(
-name|regs
-parameter_list|)
-value|((db_addr_t)(regs)->tf_tpc)
+parameter_list|()
+value|((db_addr_t)kdb_thrctx->pcb_pc)
 end_define
 
 begin_define
@@ -108,25 +84,21 @@ begin_define
 define|#
 directive|define
 name|BKPT_SKIP
-value|do {							\ 	ddb_regs.tf_tpc = ddb_regs.tf_tnpc + 4;				\ 	ddb_regs.tf_tnpc += 8;						\ } while (0)
+value|do {							\ 	kdb_frame->tf_tpc = kdb_frame->tf_tnpc + 4;			\ 	kdb_frame->tf_tnpc += 8;					\ } while (0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|db_clear_single_step
-parameter_list|(
-name|regs
-parameter_list|)
+value|kdb_cpu_clear_singlestep
 end_define
 
 begin_define
 define|#
 directive|define
 name|db_set_single_step
-parameter_list|(
-name|regs
-parameter_list|)
+value|kdb_cpu_set_singlestep
 end_define
 
 begin_define

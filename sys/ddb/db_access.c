@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ddb/ddb.h>
 end_include
 
@@ -100,6 +106,8 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
 name|db_read_bytes
 argument_list|(
 name|addr
@@ -108,7 +116,25 @@ name|size
 argument_list|,
 name|data
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|db_printf
+argument_list|(
+literal|"*** error reading from address %llx ***\n"
+argument_list|,
+operator|(
+name|long
+name|long
+operator|)
+name|addr
+argument_list|)
 expr_stmt|;
+name|kdb_reenter
+argument_list|()
+expr_stmt|;
+block|}
 name|value
 operator|=
 literal|0
@@ -292,6 +318,8 @@ operator|>>=
 literal|8
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|db_write_bytes
 argument_list|(
 name|addr
@@ -300,7 +328,25 @@ name|size
 argument_list|,
 name|data
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|db_printf
+argument_list|(
+literal|"*** error writing to address %llx ***\n"
+argument_list|,
+operator|(
+name|long
+name|long
+operator|)
+name|addr
+argument_list|)
 expr_stmt|;
+name|kdb_reenter
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 end_function
 

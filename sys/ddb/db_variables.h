@@ -110,7 +110,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|void
+name|int
 name|db_read_variable
 parameter_list|(
 name|struct
@@ -119,6 +119,19 @@ modifier|*
 parameter_list|,
 name|db_expr_t
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|db_write_variable
+parameter_list|(
+name|struct
+name|db_variable
+modifier|*
+parameter_list|,
+name|db_expr_t
 parameter_list|)
 function_decl|;
 end_function_decl

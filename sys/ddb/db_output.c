@@ -46,6 +46,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -331,7 +337,7 @@ comment|/* 	 * If not in the debugger or the user requests it, output data to 	 
 if|if
 condition|(
 operator|!
-name|db_active
+name|kdb_active
 operator|||
 name|ddb_use_printf
 condition|)
@@ -346,7 +352,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|db_active
+name|kdb_active
 condition|)
 return|return;
 if|if

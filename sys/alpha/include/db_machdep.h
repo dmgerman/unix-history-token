@@ -23,27 +23,6 @@ directive|define
 name|_ALPHA_DB_MACHDEP_H_
 end_define
 
-begin_comment
-comment|/*  * Machine-dependent defines for new kernel debugger.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|KLD_MODULE
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|"opt_ddb.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -90,51 +69,12 @@ begin_comment
 comment|/* expression - signed */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|struct
-name|trapframe
-name|db_regs_t
-typedef|;
-end_typedef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DDB
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|db_regs_t
-name|ddb_regs
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* register state */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|DDB_REGS
-value|(&ddb_regs)
-end_define
-
 begin_define
 define|#
 directive|define
 name|PC_REGS
-parameter_list|(
-name|regs
-parameter_list|)
-value|((db_addr_t)(regs)->tf_regs[FRAME_PC])
+parameter_list|()
+value|((db_addr_t)kdb_thrctx->pcb_context[7])
 end_define
 
 begin_define
@@ -173,8 +113,7 @@ begin_define
 define|#
 directive|define
 name|FIXUP_PC_AFTER_BREAK
-define|\
-value|(ddb_regs.tf_regs[FRAME_PC] -= BKPT_SIZE);
+value|(kdb_frame->tf_regs[FRAME_PC] -= BKPT_SIZE);
 end_define
 
 begin_define
@@ -197,7 +136,8 @@ name|type
 parameter_list|,
 name|code
 parameter_list|)
-value|((type) == ALPHA_KENTRY_IF&& \ 					 (code) == ALPHA_IF_CODE_BPT)
+define|\
+value|((type) == ALPHA_KENTRY_IF&& (code) == ALPHA_IF_CODE_BPT)
 end_define
 
 begin_define
@@ -295,10 +235,6 @@ name|inst
 parameter_list|,
 name|db_addr_t
 name|pc
-parameter_list|,
-name|db_regs_t
-modifier|*
-name|regs
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -382,11 +318,8 @@ parameter_list|(
 name|ins
 parameter_list|,
 name|pc
-parameter_list|,
-name|regs
 parameter_list|)
-define|\
-value|db_branch_taken((ins), (pc), (regs))
+value|db_branch_taken(ins, pc)
 end_define
 
 begin_comment
@@ -409,33 +342,7 @@ begin_function_decl
 name|u_long
 name|db_register_value
 parameter_list|(
-name|db_regs_t
-modifier|*
-parameter_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|kdb_trap
-parameter_list|(
-name|unsigned
-name|long
-parameter_list|,
-name|unsigned
-name|long
-parameter_list|,
-name|unsigned
-name|long
-parameter_list|,
-name|unsigned
-name|long
-parameter_list|,
-name|struct
-name|trapframe
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

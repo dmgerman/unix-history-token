@@ -116,23 +116,8 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|char
-modifier|*
-name|esym
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|db_expr_t
 name|db_maxoff
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|db_active
 decl_stmt|;
 end_decl_stmt
 
@@ -194,32 +179,15 @@ end_decl_stmt
 
 begin_struct_decl
 struct_decl|struct
-name|vm_map
+name|thread
 struct_decl|;
 end_struct_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ALT_BREAK_TO_DEBUGGER
-end_ifdef
-
-begin_function_decl
-name|int
-name|db_alt_break
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_struct_decl
+struct_decl|struct
+name|vm_map
+struct_decl|;
+end_struct_decl
 
 begin_function_decl
 name|void
@@ -361,6 +329,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|db_print_thread
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|db_printf
 parameter_list|(
 specifier|const
@@ -383,7 +360,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
-name|void
+name|int
 name|db_read_bytes
 parameter_list|(
 name|vm_offset_t
@@ -423,6 +400,16 @@ name|db_restart_at_pc
 parameter_list|(
 name|boolean_t
 name|watchpt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|db_set_variable
+parameter_list|(
+name|db_expr_t
+name|value
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -483,13 +470,22 @@ end_define
 
 begin_function_decl
 name|void
-name|db_trap
+name|db_trace_self
 parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
-name|type
+name|db_trace_thread
+parameter_list|(
+name|struct
+name|thread
+modifier|*
 parameter_list|,
 name|int
-name|code
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -511,7 +507,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|db_write_bytes
 parameter_list|(
 name|vm_offset_t
@@ -523,39 +519,6 @@ parameter_list|,
 name|char
 modifier|*
 name|data
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* machine-dependent */
-end_comment
-
-begin_function_decl
-name|void
-name|db_stack_thread
-parameter_list|(
-name|db_expr_t
-name|addr
-parameter_list|,
-name|boolean_t
-name|have_addr
-parameter_list|,
-name|db_expr_t
-name|count
-parameter_list|,
-name|char
-modifier|*
-name|modif
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|kdb_init
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -634,7 +597,19 @@ end_decl_stmt
 
 begin_decl_stmt
 name|db_cmdfcn_t
+name|db_set_thread
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|db_cmdfcn_t
 name|db_show_regs
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|db_cmdfcn_t
+name|db_show_threads
 decl_stmt|;
 end_decl_stmt
 
@@ -675,41 +650,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|db_cmdfcn_t
-name|db_show_one_thread
-decl_stmt|;
-end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|db_cmdfcn_t	db_help_cmd; db_cmdfcn_t	db_show_all_threads; db_cmdfcn_t	ipc_port_print; db_cmdfcn_t	vm_page_print;
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
 name|db_page_calloutfcn_t
 name|db_simple_pager
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Scare the user with backtrace of curthread to console. */
-end_comment
-
-begin_function_decl
-name|void
-name|db_print_backtrace
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  * Command table.  */
@@ -757,49 +701,6 @@ comment|/* another level of command */
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/* XXX: UGLY hack */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CN_DEAD
-end_ifdef
-
-begin_comment
-comment|/*  * Routines to support GDB on an sio port.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|void
-modifier|*
-name|gdb_arg
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|cn_getc_t
-modifier|*
-name|gdb_getc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|cn_putc_t
-modifier|*
-name|gdb_putc
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

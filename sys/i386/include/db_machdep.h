@@ -24,21 +24,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/psl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/trap.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|i386_saved_state
-value|trapframe
-end_define
 
 begin_typedef
 typedef|typedef
@@ -62,40 +49,12 @@ begin_comment
 comment|/* expression - signed */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|struct
-name|i386_saved_state
-name|db_regs_t
-typedef|;
-end_typedef
-
-begin_decl_stmt
-specifier|extern
-name|db_regs_t
-name|ddb_regs
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* register state */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DDB_REGS
-value|(&ddb_regs)
-end_define
-
 begin_define
 define|#
 directive|define
 name|PC_REGS
-parameter_list|(
-name|regs
-parameter_list|)
-value|((db_addr_t)(regs)->tf_eip)
+parameter_list|()
+value|((db_addr_t)kdb_thrctx->pcb_eip)
 end_define
 
 begin_define
@@ -134,34 +93,28 @@ begin_define
 define|#
 directive|define
 name|BKPT_SKIP
-value|ddb_regs.tf_eip += 1
+value|kdb_frame->tf_eip += 1
 end_define
 
 begin_define
 define|#
 directive|define
 name|FIXUP_PC_AFTER_BREAK
-value|ddb_regs.tf_eip -= 1;
+value|kdb_frame->tf_eip -= 1;
 end_define
 
 begin_define
 define|#
 directive|define
 name|db_clear_single_step
-parameter_list|(
-name|regs
-parameter_list|)
-value|((regs)->tf_eflags&= ~PSL_T)
+value|kdb_cpu_clear_singlestep
 end_define
 
 begin_define
 define|#
 directive|define
 name|db_set_single_step
-parameter_list|(
-name|regs
-parameter_list|)
-value|((regs)->tf_eflags |=  PSL_T)
+value|kdb_cpu_set_singlestep
 end_define
 
 begin_define
