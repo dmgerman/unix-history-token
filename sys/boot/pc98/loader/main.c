@@ -228,7 +228,10 @@ operator|->
 name|bootinfo
 argument_list|)
 expr_stmt|;
-comment|/*       * Initialise the heap as early as possible.  Once this is done, malloc() is usable.      *      * XXX better to locate end of memory and use that      */
+comment|/*       * Initialise the heap as early as possible.  Once this is done, malloc() is usable.      */
+name|bios_getmem
+argument_list|()
+expr_stmt|;
 name|setheap
 argument_list|(
 operator|(
@@ -241,15 +244,7 @@ operator|(
 name|void
 operator|*
 operator|)
-operator|(
-name|end
-operator|+
-operator|(
-literal|384
-operator|*
-literal|1024
-operator|)
-operator|)
+name|bios_basemem
 argument_list|)
 expr_stmt|;
 comment|/*       * XXX Chicken-and-egg problem; we want to have console output early, but some      * console attributes may depend on reading from eg. the boot device, which we      * can't do yet.      *      * We can use printf() etc. once this is done.      * If the previous boot stage has requested a serial console, prefer that.      */
@@ -321,22 +316,29 @@ operator|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"BIOS %dkB/%dkB available memory\n"
+argument_list|,
+name|bios_basemem
+operator|/
+literal|1024
+argument_list|,
+name|bios_extmem
+operator|/
+literal|1024
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s, Revision %s  %d/%dkB\n"
+literal|"%s, Revision %s\n"
 argument_list|,
 name|bootprog_name
 argument_list|,
 name|bootprog_rev
-argument_list|,
-name|getbasemem
-argument_list|()
-argument_list|,
-name|getextmem
-argument_list|()
 argument_list|)
 expr_stmt|;
 name|printf
