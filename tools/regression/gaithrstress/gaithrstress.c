@@ -142,6 +142,25 @@ name|nrandwords
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|addrinfo
+modifier|*
+name|hints
+decl_stmt|,
+name|hintipv4only
+init|=
+block|{
+operator|.
+name|ai_family
+operator|=
+name|AF_INET
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * We don't have good random(3)-type functions that are thread-safe,  * unfortunately.  */
 end_comment
@@ -268,7 +287,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Start looking up arbitrary hostnames and record the successes/failures.  * Between lookups, sleep a random amount of time to make sure threads  * stay well out of synchronization.  */
+comment|/*  * Start looking up arbitrary hostnames and record the successes/failures.  * Between lookups, sleep a random amount of time to make sure threads  * stay well out of synchronization.  *  * Host name:	part		probability  *		----		-----------  *		www.		1/2  *		random word	always, equal  *		random word	1/3, equal  *		.(net|com|org)	equal  */
 end_comment
 
 begin_function
@@ -289,7 +308,7 @@ name|w
 init|=
 name|arg
 decl_stmt|;
-comment|/* Turn off domain name list searching. */
+comment|/* Turn off domain name list searching as much as possible. */
 if|if
 condition|(
 name|_res
@@ -447,7 +466,7 @@ name|hostname
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+name|hints
 argument_list|,
 operator|&
 name|res
@@ -882,7 +901,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"s:t:w:"
+literal|"4s:t:w:"
 argument_list|)
 operator|)
 operator|!=
@@ -895,6 +914,15 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'4'
+case|:
+name|hints
+operator|=
+operator|&
+name|hintipv4only
+expr_stmt|;
+break|break;
 case|case
 literal|'s'
 case|:
@@ -960,8 +988,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-s sleep] [-t threads] "
-literal|"[-w wordfile]\n"
+literal|"usage: %s [-4] [-s sleep] "
+literal|"[-t threads] [-w wordfile]\n"
 argument_list|,
 name|getprogname
 argument_list|()
