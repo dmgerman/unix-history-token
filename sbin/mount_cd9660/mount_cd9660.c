@@ -268,8 +268,6 @@ name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|int
-name|error
-decl_stmt|,
 name|verbose
 decl_stmt|;
 name|mntflags
