@@ -2559,14 +2559,12 @@ argument_list|(
 name|isp
 argument_list|)
 expr_stmt|;
-name|isp
-operator|->
-name|isp_osinfo
-operator|.
-name|intsok
-operator|=
-literal|1
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|isp->isp_osinfo.intsok = 1;
+endif|#
+directive|endif
 block|}
 comment|/* Release our hook so that the boot can continue. */
 name|config_intrhook_disestablish
