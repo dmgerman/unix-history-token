@@ -205,7 +205,7 @@ begin_define
 define|#
 directive|define
 name|LIBGCC_SPEC
-value|"%{!pg: -lgcc} %{pg: -lgcc_p}"
+value|"%{shared: -lgcc_pic} \     %{!shared: %{!pg: -lgcc} %{pg: -lgcc_p}}"
 end_define
 
 begin_define
