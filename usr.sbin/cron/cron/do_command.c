@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: do_command.c,v 1.10 1997/02/22 16:04:43 peter Exp $"
+literal|"$Id: do_command.c,v 1.11 1997/03/14 13:48:04 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -282,10 +282,6 @@ name|struct
 name|passwd
 modifier|*
 name|pwd
-decl_stmt|;
-name|login_cap_t
-modifier|*
-name|lc
 decl_stmt|;
 endif|#
 directive|endif
@@ -707,29 +703,10 @@ expr_stmt|;
 if|if
 condition|(
 name|pwd
-condition|)
-name|lc
-operator|=
-name|login_getclass
-argument_list|(
-name|pwd
-argument_list|)
-expr_stmt|;
-else|else
-name|lc
-operator|=
-name|NULL
-expr_stmt|;
-if|if
-condition|(
-name|lc
 operator|&&
-name|pwd
-condition|)
-block|{
 name|setusercontext
 argument_list|(
-name|lc
+name|NULL
 argument_list|,
 name|pwd
 argument_list|,
@@ -746,16 +723,24 @@ operator||
 name|LOGIN_SETENV
 operator|)
 argument_list|)
+operator|==
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|endpwent
+argument_list|()
 expr_stmt|;
-name|login_close
-argument_list|(
-name|lc
-argument_list|)
-expr_stmt|;
-block|}
 else|else
 block|{
 comment|/* fall back to the old method */
+operator|(
+name|void
+operator|)
+name|endpwent
+argument_list|()
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* set our directory, uid and gid.  Set gid first, 			 * since once we set uid, we've lost root privledges. 			 */
