@@ -3243,7 +3243,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|u_long
+name|u_int
 parameter_list|,
 name|struct
 name|rpc_msg

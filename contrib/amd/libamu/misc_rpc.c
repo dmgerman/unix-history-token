@@ -384,7 +384,7 @@ parameter_list|,
 name|int
 name|buflen
 parameter_list|,
-name|u_long
+name|u_int
 name|proc
 parameter_list|,
 name|struct
