@@ -568,13 +568,6 @@ name|locking
 operator|=
 name|ata_pci_locknoop
 expr_stmt|;
-name|ctlr
-operator|->
-name|chipinit
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__sparc64__
@@ -683,6 +676,13 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Busmastering DMA not supported\n"
+argument_list|)
+expr_stmt|;
+name|ctlr
+operator|->
+name|chipinit
+argument_list|(
+name|dev
 argument_list|)
 expr_stmt|;
 comment|/* attach all channels on this controller */
