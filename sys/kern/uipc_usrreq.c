@@ -979,6 +979,26 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+comment|/* 		 * XXX: It seems that this test always fails even when 		 * connection is established.  So, this else clause is 		 * added as workaround to return PF_LOCAL sockaddr. 		 */
+operator|*
+name|nam
+operator|=
+name|dup_sockaddr
+argument_list|(
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+operator|&
+name|sun_noname
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 literal|0
 return|;
