@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.14 1997/10/08 07:47:26 charnier Exp $"
+literal|"$Id: main.c,v 1.15 1997/12/26 05:29:29 hoek Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -148,6 +148,23 @@ name|start
 operator|=
 name|argv
 expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|==
+literal|1
+condition|)
+block|{
+name|AllInstalled
+operator|=
+name|TRUE
+expr_stmt|;
+name|Flags
+operator|=
+name|SHOW_INDEX
+expr_stmt|;
+block|}
+else|else
 while|while
 condition|(
 operator|(
@@ -166,6 +183,7 @@ operator|!=
 operator|-
 literal|1
 condition|)
+block|{
 switch|switch
 condition|(
 name|ch
@@ -348,6 +366,7 @@ name|usage
 argument_list|()
 expr_stmt|;
 break|break;
+block|}
 block|}
 name|argc
 operator|-=
