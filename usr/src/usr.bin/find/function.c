@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)function.c	5.14 (Berkeley) %G%"
+literal|"@(#)function.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -394,7 +394,7 @@ name|FTS_NOSTAT
 expr_stmt|;
 name|NEW
 argument_list|(
-name|T_ATIME
+name|N_ATIME
 argument_list|,
 name|f_atime
 argument_list|)
@@ -508,7 +508,7 @@ name|FTS_NOSTAT
 expr_stmt|;
 name|NEW
 argument_list|(
-name|T_CTIME
+name|N_CTIME
 argument_list|,
 name|f_ctime
 argument_list|)
@@ -597,7 +597,7 @@ literal|1
 expr_stmt|;
 name|NEW
 argument_list|(
-name|T_DEPTH
+name|N_DEPTH
 argument_list|,
 name|f_always_true
 argument_list|)
@@ -883,7 +883,7 @@ literal|1
 expr_stmt|;
 name|NEW
 argument_list|(
-name|T_EXEC
+name|N_EXEC
 argument_list|,
 name|f_exec
 argument_list|)
@@ -1183,7 +1183,7 @@ name|FTS_LOGICAL
 expr_stmt|;
 name|NEW
 argument_list|(
-name|T_FOLLOW
+name|N_FOLLOW
 argument_list|,
 name|f_always_true
 argument_list|)
@@ -1475,7 +1475,7 @@ name|FTS_NOSTAT
 expr_stmt|;
 name|NEW
 argument_list|(
-name|T_FSTYPE
+name|N_FSTYPE
 argument_list|,
 name|f_fstype
 argument_list|)
@@ -1772,7 +1772,7 @@ name|gr_gid
 expr_stmt|;
 name|NEW
 argument_list|(
-name|T_GROUP
+name|N_GROUP
 argument_list|,
 name|f_group
 argument_list|)
@@ -1859,7 +1859,7 @@ name|FTS_NOSTAT
 expr_stmt|;
 name|NEW
 argument_list|(
-name|T_INUM
+name|N_INUM
 argument_list|,
 name|f_inum
 argument_list|)
@@ -1959,7 +1959,7 @@ name|FTS_NOSTAT
 expr_stmt|;
 name|NEW
 argument_list|(
-name|T_LINKS
+name|N_LINKS
 argument_list|,
 name|f_links
 argument_list|)
@@ -2076,7 +2076,7 @@ literal|1
 expr_stmt|;
 name|NEW
 argument_list|(
-name|T_LS
+name|N_LS
 argument_list|,
 name|f_ls
 argument_list|)
@@ -2155,7 +2155,7 @@ name|new
 decl_stmt|;
 name|NEW
 argument_list|(
-name|T_NAME
+name|N_NAME
 argument_list|,
 name|f_name
 argument_list|)
@@ -2270,7 +2270,7 @@ expr_stmt|;
 block|}
 name|NEW
 argument_list|(
-name|T_NEWER
+name|N_NEWER
 argument_list|,
 name|f_newer
 argument_list|)
@@ -2367,7 +2367,7 @@ name|FTS_NOSTAT
 expr_stmt|;
 name|NEW
 argument_list|(
-name|T_NOGROUP
+name|N_NOGROUP
 argument_list|,
 name|f_nogroup
 argument_list|)
@@ -2456,7 +2456,7 @@ name|FTS_NOSTAT
 expr_stmt|;
 name|NEW
 argument_list|(
-name|T_NOUSER
+name|N_NOUSER
 argument_list|,
 name|f_nouser
 argument_list|)
@@ -2587,7 +2587,7 @@ name|FTS_NOSTAT
 expr_stmt|;
 name|NEW
 argument_list|(
-name|T_PERM
+name|N_PERM
 argument_list|,
 name|f_perm
 argument_list|)
@@ -2718,7 +2718,7 @@ literal|1
 expr_stmt|;
 name|NEW
 argument_list|(
-name|T_PRINT
+name|N_PRINT
 argument_list|,
 name|f_print
 argument_list|)
@@ -2816,7 +2816,7 @@ name|new
 decl_stmt|;
 name|NEW
 argument_list|(
-name|T_PRUNE
+name|N_PRUNE
 argument_list|,
 name|f_prune
 argument_list|)
@@ -2939,7 +2939,7 @@ name|FTS_NOSTAT
 expr_stmt|;
 name|NEW
 argument_list|(
-name|T_SIZE
+name|N_SIZE
 argument_list|,
 name|f_size
 argument_list|)
@@ -3130,7 +3130,7 @@ expr_stmt|;
 block|}
 name|NEW
 argument_list|(
-name|T_TYPE
+name|N_TYPE
 argument_list|,
 name|f_type
 argument_list|)
@@ -3278,7 +3278,7 @@ name|pw_uid
 expr_stmt|;
 name|NEW
 argument_list|(
-name|T_USER
+name|N_USER
 argument_list|,
 name|f_user
 argument_list|)
@@ -3317,7 +3317,7 @@ name|FTS_XDEV
 expr_stmt|;
 name|NEW
 argument_list|(
-name|T_XDEV
+name|N_XDEV
 argument_list|,
 name|f_always_true
 argument_list|)
@@ -3412,7 +3412,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * T_OPENPAREN and T_CLOSEPAREN nodes are temporary place markers.  They are  * eliminated during phase 2 of find_formplan() --- the '(' node is converted  * to a T_EXPR node containing the expression and the ')' node is discarded.  */
+comment|/*  * N_OPENPAREN and N_CLOSEPAREN nodes are temporary place markers.  They are  * eliminated during phase 2 of find_formplan() --- the '(' node is converted  * to a N_EXPR node containing the expression and the ')' node is discarded.  */
 end_comment
 
 begin_function
@@ -3427,7 +3427,7 @@ name|new
 decl_stmt|;
 name|NEW
 argument_list|(
-name|T_OPENPAREN
+name|N_OPENPAREN
 argument_list|,
 operator|(
 name|int
@@ -3460,7 +3460,7 @@ name|new
 decl_stmt|;
 name|NEW
 argument_list|(
-name|T_CLOSEPAREN
+name|N_CLOSEPAREN
 argument_list|,
 operator|(
 name|int
@@ -3563,7 +3563,7 @@ name|FTS_NOSTAT
 expr_stmt|;
 name|NEW
 argument_list|(
-name|T_MTIME
+name|N_MTIME
 argument_list|,
 name|f_mtime
 argument_list|)
@@ -3689,7 +3689,7 @@ name|new
 decl_stmt|;
 name|NEW
 argument_list|(
-name|T_NOT
+name|N_NOT
 argument_list|,
 name|f_not
 argument_list|)
@@ -3839,7 +3839,7 @@ name|new
 decl_stmt|;
 name|NEW
 argument_list|(
-name|T_OR
+name|N_OR
 argument_list|,
 name|f_or
 argument_list|)

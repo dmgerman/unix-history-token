@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)operator.c	5.2 (Berkeley) %G%"
+literal|"@(#)operator.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -121,7 +121,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * yankexpr --  *	Removes one expression from the plan.  This is used mainly by  *	paren_squish.  In comments below, an expression is either a  *	simple node or a T_EXPR node containing a list of simple nodes.  */
+comment|/*  * yankexpr --  *	Removes one expression from the plan.  This is used mainly by  *	paren_squish.  In comments below, an expression is either a  *	simple node or a N_EXPR node containing a list of simple nodes.  */
 end_comment
 
 begin_function
@@ -189,7 +189,7 @@ name|node
 operator|->
 name|type
 operator|==
-name|T_OPENPAREN
+name|N_OPENPAREN
 condition|)
 for|for
 control|(
@@ -222,14 +222,14 @@ argument_list|,
 literal|"missing closing ')'"
 argument_list|)
 expr_stmt|;
-comment|/* 			 * If we find a closing ')' we store the collected 			 * subplan in our '(' node and convert the node to 			 * a T_EXPR.  The ')' we found is ignored.  Otherwise, 			 * we just continue to add whatever we get to our 			 * subplan. 			 */
+comment|/* 			 * If we find a closing ')' we store the collected 			 * subplan in our '(' node and convert the node to 			 * a N_EXPR.  The ')' we found is ignored.  Otherwise, 			 * we just continue to add whatever we get to our 			 * subplan. 			 */
 if|if
 condition|(
 name|next
 operator|->
 name|type
 operator|==
-name|T_CLOSEPAREN
+name|N_CLOSEPAREN
 condition|)
 block|{
 if|if
@@ -258,7 +258,7 @@ name|node
 operator|->
 name|type
 operator|=
-name|T_EXPR
+name|N_EXPR
 expr_stmt|;
 name|node
 operator|->
@@ -374,7 +374,7 @@ name|expr
 operator|->
 name|type
 operator|==
-name|T_CLOSEPAREN
+name|N_CLOSEPAREN
 condition|)
 name|bad_arg
 argument_list|(
@@ -452,7 +452,7 @@ name|PLAN
 modifier|*
 name|node
 decl_stmt|;
-comment|/* temporary node used in T_NOT processing */
+comment|/* temporary node used in N_NOT processing */
 specifier|register
 name|PLAN
 modifier|*
@@ -494,7 +494,7 @@ name|next
 operator|->
 name|type
 operator|==
-name|T_EXPR
+name|N_EXPR
 condition|)
 name|next
 operator|->
@@ -520,7 +520,7 @@ name|next
 operator|->
 name|type
 operator|==
-name|T_NOT
+name|N_NOT
 condition|)
 block|{
 name|int
@@ -542,7 +542,7 @@ name|node
 operator|->
 name|type
 operator|==
-name|T_NOT
+name|N_NOT
 condition|)
 block|{
 operator|++
@@ -576,7 +576,7 @@ name|node
 operator|->
 name|type
 operator|==
-name|T_OR
+name|N_OR
 condition|)
 name|bad_arg
 argument_list|(
@@ -713,7 +713,7 @@ name|next
 operator|->
 name|type
 operator|==
-name|T_EXPR
+name|N_EXPR
 condition|)
 name|next
 operator|->
@@ -739,7 +739,7 @@ name|next
 operator|->
 name|type
 operator|==
-name|T_NOT
+name|N_NOT
 condition|)
 name|next
 operator|->
@@ -765,7 +765,7 @@ name|next
 operator|->
 name|type
 operator|==
-name|T_OR
+name|N_OR
 condition|)
 block|{
 if|if

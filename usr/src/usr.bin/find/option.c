@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)option.c	5.5 (Berkeley) %G%"
+literal|"@(#)option.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,10 +80,11 @@ modifier|*
 name|name
 decl_stmt|;
 comment|/* option name */
-name|int
+name|enum
+name|ntype
 name|token
 decl_stmt|;
-comment|/* token value */
+comment|/* token type */
 name|PLAN
 modifier|*
 function_decl|(
@@ -112,7 +113,7 @@ define|#
 directive|define
 name|O_ARGVP
 value|0x08
-comment|/* pass: *argv, T_OK || T_EXEC */
+comment|/* pass: *argv, N_OK || N_EXEC */
 define|#
 directive|define
 name|O_MASK
@@ -252,7 +253,7 @@ init|=
 block|{
 literal|"!"
 block|,
-name|T_NOT
+name|N_NOT
 block|,
 name|c_not
 block|,
@@ -260,7 +261,7 @@ name|O_ZERO
 block|,
 literal|"("
 block|,
-name|T_OPENPAREN
+name|N_OPENPAREN
 block|,
 name|c_openparen
 block|,
@@ -268,7 +269,7 @@ name|O_ZERO
 block|,
 literal|")"
 block|,
-name|T_CLOSEPAREN
+name|N_CLOSEPAREN
 block|,
 name|c_closeparen
 block|,
@@ -276,7 +277,7 @@ name|O_ZERO
 block|,
 literal|"a"
 block|,
-name|T_AND
+name|N_AND
 block|,
 name|NULL
 block|,
@@ -286,7 +287,7 @@ name|O_OLD
 block|,
 literal|"and"
 block|,
-name|T_AND
+name|N_AND
 block|,
 name|NULL
 block|,
@@ -296,7 +297,7 @@ name|O_NEW
 block|,
 literal|"atime"
 block|,
-name|T_ATIME
+name|N_ATIME
 block|,
 name|c_atime
 block|,
@@ -304,7 +305,7 @@ name|O_ARGV
 block|,
 literal|"ctime"
 block|,
-name|T_CTIME
+name|N_CTIME
 block|,
 name|c_ctime
 block|,
@@ -312,7 +313,7 @@ name|O_ARGV
 block|,
 literal|"depth"
 block|,
-name|T_DEPTH
+name|N_DEPTH
 block|,
 name|c_depth
 block|,
@@ -322,7 +323,7 @@ name|O_OLD
 block|,
 literal|"exec"
 block|,
-name|T_EXEC
+name|N_EXEC
 block|,
 name|c_exec
 block|,
@@ -330,7 +331,7 @@ name|O_ARGVP
 block|,
 literal|"follow"
 block|,
-name|T_FOLLOW
+name|N_FOLLOW
 block|,
 name|c_follow
 block|,
@@ -340,7 +341,7 @@ name|O_OLD
 block|,
 literal|"fstype"
 block|,
-name|T_FSTYPE
+name|N_FSTYPE
 block|,
 name|c_fstype
 block|,
@@ -348,7 +349,7 @@ name|O_ARGV
 block|,
 literal|"group"
 block|,
-name|T_GROUP
+name|N_GROUP
 block|,
 name|c_group
 block|,
@@ -356,7 +357,7 @@ name|O_ARGV
 block|,
 literal|"inum"
 block|,
-name|T_INUM
+name|N_INUM
 block|,
 name|c_inum
 block|,
@@ -364,7 +365,7 @@ name|O_ARGV
 block|,
 literal|"links"
 block|,
-name|T_LINKS
+name|N_LINKS
 block|,
 name|c_links
 block|,
@@ -372,7 +373,7 @@ name|O_ARGV
 block|,
 literal|"ls"
 block|,
-name|T_LS
+name|N_LS
 block|,
 name|c_ls
 block|,
@@ -380,7 +381,7 @@ name|O_ZERO
 block|,
 literal|"mtime"
 block|,
-name|T_MTIME
+name|N_MTIME
 block|,
 name|c_mtime
 block|,
@@ -388,7 +389,7 @@ name|O_ARGV
 block|,
 literal|"name"
 block|,
-name|T_NAME
+name|N_NAME
 block|,
 name|c_name
 block|,
@@ -396,7 +397,7 @@ name|O_ARGV
 block|,
 literal|"newer"
 block|,
-name|T_NEWER
+name|N_NEWER
 block|,
 name|c_newer
 block|,
@@ -404,7 +405,7 @@ name|O_ARGV
 block|,
 literal|"nogroup"
 block|,
-name|T_NOGROUP
+name|N_NOGROUP
 block|,
 name|c_nogroup
 block|,
@@ -412,7 +413,7 @@ name|O_ZERO
 block|,
 literal|"nouser"
 block|,
-name|T_NOUSER
+name|N_NOUSER
 block|,
 name|c_nouser
 block|,
@@ -420,7 +421,7 @@ name|O_ZERO
 block|,
 literal|"o"
 block|,
-name|T_OR
+name|N_OR
 block|,
 name|c_or
 block|,
@@ -430,7 +431,7 @@ name|O_OLD
 block|,
 literal|"ok"
 block|,
-name|T_OK
+name|N_OK
 block|,
 name|c_exec
 block|,
@@ -438,7 +439,7 @@ name|O_ARGVP
 block|,
 literal|"or"
 block|,
-name|T_OR
+name|N_OR
 block|,
 name|c_or
 block|,
@@ -448,7 +449,7 @@ name|O_NEW
 block|,
 literal|"perm"
 block|,
-name|T_PERM
+name|N_PERM
 block|,
 name|c_perm
 block|,
@@ -456,7 +457,7 @@ name|O_ARGV
 block|,
 literal|"print"
 block|,
-name|T_PRINT
+name|N_PRINT
 block|,
 name|c_print
 block|,
@@ -464,7 +465,7 @@ name|O_ZERO
 block|,
 literal|"prune"
 block|,
-name|T_PRUNE
+name|N_PRUNE
 block|,
 name|c_prune
 block|,
@@ -472,7 +473,7 @@ name|O_ZERO
 block|,
 literal|"size"
 block|,
-name|T_SIZE
+name|N_SIZE
 block|,
 name|c_size
 block|,
@@ -480,7 +481,7 @@ name|O_ARGV
 block|,
 literal|"type"
 block|,
-name|T_TYPE
+name|N_TYPE
 block|,
 name|c_type
 block|,
@@ -488,7 +489,7 @@ name|O_ARGV
 block|,
 literal|"user"
 block|,
-name|T_USER
+name|N_USER
 block|,
 name|c_user
 block|,
@@ -496,7 +497,7 @@ name|O_ARGV
 block|,
 literal|"xdev"
 block|,
-name|T_XDEV
+name|N_XDEV
 block|,
 name|c_xdev
 block|,
@@ -754,7 +755,7 @@ name|p
 operator|->
 name|token
 operator|==
-name|T_OK
+name|N_OK
 argument_list|)
 expr_stmt|;
 break|break;
