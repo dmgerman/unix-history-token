@@ -4,6 +4,10 @@ comment|/* Alpha specific support for 64-bit ELF    Copyright 1996, 1997, 1998, 
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* We need a published ABI spec for this.  Until one comes out, don't    assume this'll remain unchanged forever.  */
 end_comment
 
@@ -19583,10 +19587,25 @@ goto|goto
 name|default_reloc
 goto|;
 case|case
-name|R_ALPHA_GPREL16
-case|:
-case|case
 name|R_ALPHA_GPREL32
+case|:
+comment|/* If the target section was a removed linkonce section, 	     r_symndx will be zero.  In this case, assume that the 	     switch will not be used, so don't fill it in.  If we 	     do nothing here, we'll get relocation truncated messages, 	     due to the placement of the application above 4GB.  */
+if|if
+condition|(
+name|r_symndx
+operator|==
+literal|0
+condition|)
+block|{
+name|r
+operator|=
+name|bfd_reloc_ok
+expr_stmt|;
+break|break;
+block|}
+comment|/* FALLTHRU */
+case|case
+name|R_ALPHA_GPREL16
 case|:
 case|case
 name|R_ALPHA_GPRELLOW
