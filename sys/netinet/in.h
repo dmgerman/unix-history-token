@@ -2338,6 +2338,17 @@ begin_comment
 comment|/* get entire dummynet pipes */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IP_RECVTTL
+value|65
+end_define
+
+begin_comment
+comment|/* bool; receive IP TTL w/dgram */
+end_comment
+
 begin_comment
 comment|/*  * Defaults and limits for options  */
 end_comment

@@ -975,6 +975,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|INP_RECVTTL
+value|0x400
+end_define
+
+begin_comment
+comment|/* receive incoming IP TTL */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IN6P_IPV6_V6ONLY
 value|0x008000
 end_define
@@ -1064,7 +1075,7 @@ begin_define
 define|#
 directive|define
 name|INP_CONTROLOPTS
-value|(INP_RECVOPTS|INP_RECVRETOPTS|INP_RECVDSTADDR|\ 					INP_RECVIF|\ 				 IN6P_PKTINFO|IN6P_HOPLIMIT|IN6P_HOPOPTS|\ 				 IN6P_DSTOPTS|IN6P_RTHDR|IN6P_RTHDRDSTOPTS|\ 				 IN6P_AUTOFLOWLABEL)
+value|(INP_RECVOPTS|INP_RECVRETOPTS|INP_RECVDSTADDR|\ 				 INP_RECVIF|INP_RECVTTL|\ 				 IN6P_PKTINFO|IN6P_HOPLIMIT|IN6P_HOPOPTS|\ 				 IN6P_DSTOPTS|IN6P_RTHDR|IN6P_RTHDRDSTOPTS|\ 				 IN6P_AUTOFLOWLABEL)
 end_define
 
 begin_define
