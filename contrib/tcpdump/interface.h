@@ -272,6 +272,40 @@ name|snapend
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* True if  "l" bytes of "var" were captured */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TTEST2
+parameter_list|(
+name|var
+parameter_list|,
+name|l
+parameter_list|)
+value|((u_char *)&(var)<= snapend - (l))
+end_define
+
+begin_comment
+comment|/* True if "var" was captured */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TTEST
+parameter_list|(
+name|var
+parameter_list|)
+value|TTEST2(var, sizeof(var))
+end_define
+
+begin_comment
+comment|/* Bail if "l" bytes of "var" were not captured */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -281,8 +315,12 @@ name|var
 parameter_list|,
 name|l
 parameter_list|)
-value|if ((u_char *)&(var)> snapend - (l)) goto trunc
+value|if (!TTEST2(var, l)) goto trunc
 end_define
+
+begin_comment
+comment|/* Bail if "var" was not captured */
+end_comment
 
 begin_define
 define|#
