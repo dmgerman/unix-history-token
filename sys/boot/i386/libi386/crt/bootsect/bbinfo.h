@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id$  * From: $NetBSD: bbinfo.h,v 1.3 1997/11/07 16:59:41 drochner Exp $  */
+comment|/*  * $Id: bbinfo.h,v 1.1.1.1 1998/08/21 03:17:41 msmith Exp $  * From: $NetBSD: bbinfo.h,v 1.3 1997/11/07 16:59:41 drochner Exp $  */
 end_comment
 
 begin_comment
@@ -83,7 +83,7 @@ begin_define
 define|#
 directive|define
 name|MAXFLENTRIES
-value|10
+value|20
 end_define
 
 begin_endif

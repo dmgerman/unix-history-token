@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: elf_freebsd.c,v 1.1.1.1 1998/08/21 03:17:42 msmith Exp $ */
+comment|/* $Id: elf_freebsd.c,v 1.2 1998/08/31 21:10:40 msmith Exp $ */
 end_comment
 
 begin_comment
@@ -327,14 +327,8 @@ block|}
 comment|/*       * Ok, we think this is for us.      */
 name|mp
 operator|=
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|loaded_module
-argument_list|)
-argument_list|)
+name|mod_allocmodule
+argument_list|()
 expr_stmt|;
 name|mp
 operator|->
@@ -356,19 +350,6 @@ literal|"elf kernel"
 argument_list|)
 expr_stmt|;
 comment|/* XXX only if that's what we really are */
-name|mp
-operator|->
-name|m_args
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* XXX should we put the bootstrap args here and parse later? */
-name|mp
-operator|->
-name|m_metadata
-operator|=
-name|NULL
-expr_stmt|;
 name|dest
 operator|=
 operator|(

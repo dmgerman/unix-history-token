@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aout_freebsd.c,v 1.1.1.1 1998/08/21 03:17:41 msmith Exp $  */
+comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aout_freebsd.c,v 1.2 1998/08/31 21:10:43 msmith Exp $  */
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|<sys/reboot.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/linker.h>
 end_include
 
 begin_include
@@ -274,61 +280,6 @@ argument_list|(
 name|currdev
 argument_list|)
 expr_stmt|;
-comment|/* Device data is kept in the kernel argv array */
-name|argv
-index|[
-literal|0
-index|]
-operator|=
-name|bi_getboothowto
-argument_list|(
-name|mp
-operator|->
-name|m_args
-argument_list|)
-expr_stmt|;
-name|argv
-index|[
-literal|1
-index|]
-operator|=
-name|bootdevnr
-expr_stmt|;
-name|argv
-index|[
-literal|2
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|argv
-index|[
-literal|3
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|argv
-index|[
-literal|4
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|argv
-index|[
-literal|5
-index|]
-operator|=
-operator|(
-name|u_int32_t
-operator|)
-name|vtophys
-argument_list|(
-operator|&
-name|bi
-argument_list|)
-expr_stmt|;
 comment|/* legacy bootinfo structure */
 name|bi
 operator|.
@@ -433,6 +384,66 @@ name|ehdr
 operator|->
 name|a_syms
 expr_stmt|;
+comment|/* Device data is kept in the kernel argv array */
+name|argv
+index|[
+literal|0
+index|]
+operator|=
+name|bi_getboothowto
+argument_list|(
+name|mp
+operator|->
+name|m_args
+argument_list|)
+expr_stmt|;
+comment|/* boothowto */
+name|argv
+index|[
+literal|1
+index|]
+operator|=
+name|bootdevnr
+expr_stmt|;
+comment|/* bootdev */
+name|argv
+index|[
+literal|2
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* old cyloffset */
+name|argv
+index|[
+literal|3
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* old esym */
+name|argv
+index|[
+literal|4
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* "new" bootinfo magic */
+name|argv
+index|[
+literal|5
+index|]
+operator|=
+operator|(
+name|u_int32_t
+operator|)
+name|vtophys
+argument_list|(
+operator|&
+name|bi
+argument_list|)
+expr_stmt|;
 comment|/* find the last module in the chain */
 for|for
 control|(
@@ -491,7 +502,13 @@ operator|+=
 name|pad
 expr_stmt|;
 block|}
-comment|/* copy our environment  XXX save addr here as env pointer, store in bootinfo? */
+comment|/* copy our environment */
+name|bi
+operator|.
+name|bi_envp
+operator|=
+name|addr
+expr_stmt|;
 name|addr
 operator|=
 name|bi_copyenv
@@ -527,11 +544,26 @@ operator|+=
 name|pad
 expr_stmt|;
 block|}
-comment|/* copy module list and metadata  XXX save addr here as env pointer, store in bootinfo? */
+comment|/* copy module list and metadata */
+name|bi
+operator|.
+name|bi_modulep
+operator|=
+name|addr
+expr_stmt|;
+name|addr
+operator|=
 name|bi_copymodules
 argument_list|(
 name|addr
 argument_list|)
+expr_stmt|;
+comment|/* all done copying stuff in, save end of loaded object space */
+name|bi
+operator|.
+name|bi_kernend
+operator|=
+name|addr
 expr_stmt|;
 name|entry
 operator|=

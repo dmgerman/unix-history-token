@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bootstrap.h,v 1.3 1998/09/03 02:10:07 msmith Exp $  */
+comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bootstrap.h,v 1.4 1998/09/04 02:43:26 msmith Exp $  */
 end_comment
 
 begin_include
@@ -143,6 +143,32 @@ parameter_list|(
 name|char
 modifier|*
 name|filename
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* interp_parse.c */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|parse
+parameter_list|(
+name|int
+modifier|*
+name|argc
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+modifier|*
+name|argv
+parameter_list|,
+name|char
+modifier|*
+name|str
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -330,13 +356,39 @@ end_comment
 
 begin_struct
 struct|struct
-name|pnpinfo
+name|pnpident
 block|{
 name|char
 modifier|*
-name|pi_ident
+name|id_ident
 decl_stmt|;
 comment|/* ASCII identifier, actual format varies with bus/handler */
+name|struct
+name|pnpident
+modifier|*
+name|id_next
+decl_stmt|;
+comment|/* the next identifier */
+block|}
+struct|;
+end_struct
+
+begin_struct_decl
+struct_decl|struct
+name|pnphandler
+struct_decl|;
+end_struct_decl
+
+begin_struct
+struct|struct
+name|pnpinfo
+block|{
+name|struct
+name|pnpident
+modifier|*
+name|pi_ident
+decl_stmt|;
+comment|/* list of identifiers */
 name|int
 name|pi_revision
 decl_stmt|;
@@ -355,7 +407,9 @@ modifier|*
 modifier|*
 name|pi_argv
 decl_stmt|;
-name|int
+name|struct
+name|pnphandler
+modifier|*
 name|pi_handler
 decl_stmt|;
 comment|/* handler which detected this device */
@@ -365,7 +419,11 @@ modifier|*
 name|pi_next
 decl_stmt|;
 block|}
-decl|struct
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|pnphandler
 block|{
 name|char
@@ -373,19 +431,19 @@ modifier|*
 name|pp_name
 decl_stmt|;
 comment|/* handler/bus name */
+name|void
+function_decl|(
+modifier|*
+name|pp_enumerate
+function_decl|)
+parameter_list|(
 name|struct
 name|pnpinfo
 modifier|*
-function_decl|(
-name|pp_enumerate
 modifier|*
-function_decl|)
-parameter_list|(
-name|int
-name|index
 parameter_list|)
 function_decl|;
-comment|/* return a string identifying device (index) */
+comment|/* add detected devices to chain */
 block|}
 struct|;
 end_struct
@@ -403,6 +461,23 @@ end_decl_stmt
 begin_comment
 comment|/* provided by MD code */
 end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|pnp_addident
+parameter_list|(
+name|struct
+name|pnpinfo
+modifier|*
+name|pi
+parameter_list|,
+name|char
+modifier|*
+name|ident
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Module metadata header.  *  * Metadata are allocated on our heap, and copied into kernel space  * before executing the kernel.  */
@@ -658,12 +733,66 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|struct
+name|loaded_module
+modifier|*
+name|mod_allocmodule
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*  * Module information subtypes  */
+comment|/* MI module loaders */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|aout_loadmodule
+parameter_list|(
+name|char
+modifier|*
+name|filename
+parameter_list|,
+name|vm_offset_t
+name|dest
+parameter_list|,
+name|struct
+name|loaded_module
+modifier|*
+modifier|*
+name|result
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|vm_offset_t
+name|aout_findsym
+parameter_list|(
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|struct
+name|loaded_module
+modifier|*
+name|mp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* extern int	elf_loadmodule(char *filename, vm_offset_t dest, struct loaded_module **result); */
 end_comment
 
 begin_comment
-comment|/* XXX these belong in<machine/bootinfo.h> */
+comment|/*  * Module information subtypes  *   * XXX these are copies of the defines in<sys/linker.h>, and should be nuked  * XXX before being committed.  */
 end_comment
 
 begin_define
@@ -732,52 +861,6 @@ end_define
 
 begin_comment
 comment|/* don't copy this metadata to the kernel */
-end_comment
-
-begin_comment
-comment|/* MI module loaders */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|aout_loadmodule
-parameter_list|(
-name|char
-modifier|*
-name|filename
-parameter_list|,
-name|vm_offset_t
-name|dest
-parameter_list|,
-name|struct
-name|loaded_module
-modifier|*
-modifier|*
-name|result
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|vm_offset_t
-name|aout_findsym
-parameter_list|(
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|struct
-name|loaded_module
-modifier|*
-name|mp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* extern int	elf_loadmodule(char *filename, vm_offset_t dest, struct loaded_module **result); */
 end_comment
 
 begin_define
@@ -1143,6 +1226,30 @@ name|size_t
 name|len
 parameter_list|)
 function_decl|;
+comment|/* Perform ISA byte port I/O (only for systems with ISA) */
+name|int
+function_decl|(
+modifier|*
+name|arch_isainb
+function_decl|)
+parameter_list|(
+name|int
+name|port
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|arch_isaoutb
+function_decl|)
+parameter_list|(
+name|int
+name|port
+parameter_list|,
+name|int
+name|value
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -1154,6 +1261,21 @@ name|arch_switch
 name|archsw
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* This must be provided by the MD code, but should it be in the archsw? */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|delay
+parameter_list|(
+name|int
+name|delay
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * XXX these belong in a system header  */

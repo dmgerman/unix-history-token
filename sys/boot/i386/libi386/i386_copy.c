@@ -205,19 +205,6 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|resid
-operator|!=
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"i386_readin: %d bytes short\n"
-argument_list|,
-name|resid
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|len
