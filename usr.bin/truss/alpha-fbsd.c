@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: alpha-fbsd.c,v 1.1 1998/10/03 00:43:05 sef Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,6 +32,12 @@ end_comment
 begin_comment
 comment|/*  * FreeBSD/alpha-specific system call handling.  This is probably the most  * complex part of the entire truss program, although I've got lots of  * it handled relatively cleanly now.  The system call names are generated  * automatically, thanks to /usr/src/sys/kern/syscalls.master.  The  * names used for the various structures are confusing, I sadly admit.  *  * This file is almost nothing more than a slightly-edited i386-fbsd.c.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -333,7 +339,9 @@ name|reg
 name|regs
 init|=
 block|{
+block|{
 literal|0
+block|}
 block|}
 decl_stmt|;
 name|int
