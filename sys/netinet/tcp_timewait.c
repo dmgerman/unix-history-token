@@ -1872,6 +1872,7 @@ name|tcphdr
 argument_list|)
 expr_stmt|;
 block|}
+else|else
 endif|#
 directive|endif
 block|{
