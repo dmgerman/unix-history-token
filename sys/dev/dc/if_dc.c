@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997, 1998, 1999  *	Bill Paul<wpaul@ee.columbia.edu>
 end_comment
 
 begin_comment
-comment|/*  * DEC "tulip" clone ethernet driver. Supports the DEC/Intel 21143  * series chips and several workalikes including the following:  *  * Macronix 98713/98715/98725 PMAC (www.macronix.com)  * Macronix/Lite-On 82c115 PNIC II (www.macronix.com)  * Lite-On 82c168/82c169 PNIC (www.litecom.com)  * ASIX Electronics AX88140A (www.asix.com.tw)  * ASIX Electronics AX88141 (www.asix.com.tw)  * ADMtek AL981 (www.admtek.com.tw)  * ADMtek AN985 (www.admtek.com.tw)  * Davicom DM9100, DM9102, DM9102A (www.davicom8.com)  * Accton EN1217 (www.accton.com)  *  * Datasheets for the 21143 are available at developer.intel.com.  * Datasheets for the clone parts can be found at their respective sites.  * (Except for the PNIC; see www.freebsd.org/~wpaul/PNIC/pnic.ps.gz.)  * The PNIC II is essentially a Macronix 98715A chip; the only difference  * worth noting is that its multicast hash table is only 128 bits wide  * instead of 512.  *  * Written by Bill Paul<wpaul@ee.columbia.edu>  * Electrical Engineering Department  * Columbia University, New York City  */
+comment|/*  * DEC "tulip" clone ethernet driver. Supports the DEC/Intel 21143  * series chips and several workalikes including the following:  *  * Macronix 98713/98715/98725/98727/98732 PMAC (www.macronix.com)  * Macronix/Lite-On 82c115 PNIC II (www.macronix.com)  * Lite-On 82c168/82c169 PNIC (www.litecom.com)  * ASIX Electronics AX88140A (www.asix.com.tw)  * ASIX Electronics AX88141 (www.asix.com.tw)  * ADMtek AL981 (www.admtek.com.tw)  * ADMtek AN985 (www.admtek.com.tw)  * Davicom DM9100, DM9102, DM9102A (www.davicom8.com)  * Accton EN1217 (www.accton.com)  *  * Datasheets for the 21143 are available at developer.intel.com.  * Datasheets for the clone parts can be found at their respective sites.  * (Except for the PNIC; see www.freebsd.org/~wpaul/PNIC/pnic.ps.gz.)  * The PNIC II is essentially a Macronix 98715A chip; the only difference  * worth noting is that its multicast hash table is only 128 bits wide  * instead of 512.  *  * Written by Bill Paul<wpaul@ee.columbia.edu>  * Electrical Engineering Department  * Columbia University, New York City  */
 end_comment
 
 begin_comment
@@ -369,6 +369,14 @@ block|,
 name|DC_DEVICEID_987x5
 block|,
 literal|"Macronix 98725 10/100BaseTX"
+block|}
+block|,
+block|{
+name|DC_VENDORID_MX
+block|,
+name|DC_DEVICEID_98727
+block|,
+literal|"Macronix 98727/98732 10/100BaseTX"
 block|}
 block|,
 block|{
@@ -7109,6 +7117,32 @@ name|dc_flags
 operator||=
 name|DC_128BIT_HASH
 expr_stmt|;
+name|sc
+operator|->
+name|dc_type
+operator|=
+name|DC_TYPE_987x5
+expr_stmt|;
+name|sc
+operator|->
+name|dc_flags
+operator||=
+name|DC_TX_POLL
+operator||
+name|DC_TX_USE_TX_INTR
+expr_stmt|;
+name|sc
+operator|->
+name|dc_flags
+operator||=
+name|DC_REDUCED_MII_POLL
+operator||
+name|DC_21143_NWAY
+expr_stmt|;
+break|break;
+case|case
+name|DC_DEVICEID_98727
+case|:
 name|sc
 operator|->
 name|dc_type
