@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kenneth Almquist.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: output.c,v 1.3 1996/09/01 10:21:23 peter Exp $  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kenneth Almquist.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: output.c,v 1.4 1996/09/03 14:15:56 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -12,6 +12,7 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
+specifier|const
 name|sccsid
 index|[]
 init|=
@@ -35,18 +36,18 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
 begin_comment
 comment|/* quad_t */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
 
 begin_include
 include|#
@@ -221,10 +222,6 @@ literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_decl_stmt
 name|struct
@@ -457,13 +454,11 @@ name|p
 parameter_list|,
 name|file
 parameter_list|)
-specifier|register
 specifier|const
 name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|struct
 name|output
 modifier|*
@@ -1340,7 +1335,7 @@ comment|/* __STDC__ */
 end_comment
 
 begin_comment
-comment|/*  * Formatted output.  This routine handles a subset of the printf formats:  * - Formats supported: d, u, o, X, s, and c.  * - The x format is also accepted but is treated like X.  * - The l and q modifiers is accepted.  * - The - and # flags are accepted; # only works with the o format.  * - Width and precision may be specified with any format except c.  * - An * may be given for the width or precision.  * - The obsolete practice of preceding the width with a zero to get  *   zero padding is not supported; use the precision field.  * - A % may be printed by writing %% in the format string.  */
+comment|/*  * Formatted output.  This routine handles a subset of the printf formats:  * - Formats supported: d, u, o, X, s, and c.  * - The x format is also accepted but is treated like X.  * - The l and q modifiers are accepted.  * - The - and # flags are accepted; # only works with the o format.  * - Width and precision may be specified with any format except c.  * - An * may be given for the width or precision.  * - The obsolete practice of preceding the width with a zero to get  *   zero padding is not supported; use the precision field.  * - A % may be printed by writing %% in the format string.  */
 end_comment
 
 begin_define
@@ -1349,12 +1344,6 @@ directive|define
 name|TEMPSIZE
 value|24
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -1367,29 +1356,6 @@ literal|"0123456789ABCDEF"
 decl_stmt|;
 end_decl_stmt
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|digit
-index|[
-literal|17
-index|]
-init|=
-literal|"0123456789ABCDEF"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|void
 name|doformat
@@ -1400,13 +1366,11 @@ name|f
 parameter_list|,
 name|ap
 parameter_list|)
-specifier|register
 name|struct
 name|output
 modifier|*
 name|dest
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|f
@@ -1416,7 +1380,6 @@ name|va_list
 name|ap
 decl_stmt|;
 block|{
-specifier|register
 name|char
 name|c
 decl_stmt|;
@@ -1706,20 +1669,6 @@ literal|'d'
 case|:
 if|if
 condition|(
-name|islong
-condition|)
-name|l
-operator|=
-name|va_arg
-argument_list|(
-name|ap
-argument_list|,
-name|long
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
 name|isquad
 condition|)
 name|l
@@ -1729,6 +1678,20 @@ argument_list|(
 name|ap
 argument_list|,
 name|quad_t
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|islong
+condition|)
+name|l
+operator|=
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|long
 argument_list|)
 expr_stmt|;
 else|else
@@ -1813,20 +1776,6 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|islong
-condition|)
-name|num
-operator|=
-name|va_arg
-argument_list|(
-argument|ap
-argument_list|,
-argument|unsigned long
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
 name|isquad
 condition|)
 name|num
@@ -1836,6 +1785,20 @@ argument_list|(
 name|ap
 argument_list|,
 name|u_quad_t
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|islong
+condition|)
+name|num
+operator|=
+name|va_arg
+argument_list|(
+argument|ap
+argument_list|,
+argument|unsigned long
 argument_list|)
 expr_stmt|;
 else|else

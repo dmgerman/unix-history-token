@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kenneth Almquist.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: redir.c,v 1.4 1995/10/21 00:47:31 joerg Exp $  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kenneth Almquist.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: redir.c,v 1.5 1996/09/01 10:21:36 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -12,6 +12,7 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
+specifier|const
 name|sccsid
 index|[]
 init|=
@@ -262,6 +263,9 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
+name|int
+name|try
+decl_stmt|;
 name|char
 name|memory
 index|[
@@ -373,6 +377,10 @@ name|nfile
 operator|.
 name|fd
 expr_stmt|;
+name|try
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -402,7 +410,7 @@ operator|==
 name|fd
 condition|)
 continue|continue;
-comment|/* redirect from/to myself */
+comment|/* redirect from/to same file descriptor */
 if|if
 condition|(
 operator|(
@@ -423,20 +431,78 @@ condition|)
 block|{
 name|INTOFF
 expr_stmt|;
+name|again
+label|:
 if|if
 condition|(
 operator|(
 name|i
 operator|=
-name|copyfd
+name|fcntl
 argument_list|(
 name|fd
+argument_list|,
+name|F_DUPFD
 argument_list|,
 literal|10
 argument_list|)
 operator|)
-operator|!=
-name|EMPTY
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+switch|switch
+condition|(
+name|errno
+condition|)
+block|{
+case|case
+name|EBADF
+case|:
+if|if
+condition|(
+operator|!
+name|try
+condition|)
+block|{
+name|openredirect
+argument_list|(
+name|n
+argument_list|,
+name|memory
+argument_list|)
+expr_stmt|;
+name|try
+operator|++
+expr_stmt|;
+goto|goto
+name|again
+goto|;
+block|}
+comment|/* FALLTHROUGH*/
+default|default:
+name|INTON
+expr_stmt|;
+name|error
+argument_list|(
+literal|"%d: %s"
+argument_list|,
+name|fd
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
+if|if
+condition|(
+operator|!
+name|try
 condition|)
 block|{
 name|sv
@@ -456,17 +522,6 @@ expr_stmt|;
 block|}
 name|INTON
 expr_stmt|;
-if|if
-condition|(
-name|i
-operator|==
-name|EMPTY
-condition|)
-name|error
-argument_list|(
-literal|"Out of file descriptors"
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -485,6 +540,11 @@ condition|)
 name|fd0_redirected
 operator|++
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|try
+condition|)
 name|openredirect
 argument_list|(
 name|n
@@ -1157,7 +1217,6 @@ name|void
 name|popredir
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|redirtab
 modifier|*
@@ -1331,7 +1390,6 @@ name|void
 name|clearredir
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|redirtab
 modifier|*
@@ -1444,7 +1502,10 @@ condition|(
 name|newfd
 operator|<
 literal|0
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|errno
 operator|==
 name|EMFILE
@@ -1452,12 +1513,7 @@ condition|)
 return|return
 name|EMPTY
 return|;
-if|if
-condition|(
-name|newfd
-operator|<
-literal|0
-condition|)
+else|else
 name|error
 argument_list|(
 literal|"%d: %s"
@@ -1470,6 +1526,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|newfd
 return|;

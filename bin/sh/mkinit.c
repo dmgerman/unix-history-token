@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kenneth Almquist.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mkinit.c,v 1.5 1995/10/01 15:13:31 joerg Exp $  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kenneth Almquist.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mkinit.c,v 1.6 1996/09/01 10:20:50 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -12,6 +12,7 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
+specifier|const
 name|copyright
 index|[]
 init|=
@@ -37,6 +38,7 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
+specifier|const
 name|sccsid
 index|[]
 init|=
@@ -100,7 +102,7 @@ file|<unistd.h>
 end_include
 
 begin_comment
-comment|/*  * OUTFILE is the name of the output file.  Output is initially written  * to the file OUTTEMP, which is then moved to OUTFILE if OUTTEMP and  * OUTFILE are different.  */
+comment|/*  * OUTFILE is the name of the output file.  Output is initially written  * to the file OUTTEMP, which is then moved to OUTFILE.  */
 end_comment
 
 begin_define
@@ -579,6 +581,7 @@ name|argv
 parameter_list|)
 name|int
 name|argc
+name|__unused
 decl_stmt|;
 name|char
 modifier|*
@@ -591,17 +594,6 @@ modifier|*
 modifier|*
 name|ap
 decl_stmt|;
-if|if
-condition|(
-name|argc
-operator|<
-literal|2
-condition|)
-name|error
-argument_list|(
-literal|"Usage:  mkinit file..."
-argument_list|)
-expr_stmt|;
 name|header_files
 index|[
 literal|0
@@ -639,21 +631,11 @@ expr_stmt|;
 name|output
 argument_list|()
 expr_stmt|;
-name|unlink
-argument_list|(
-name|OUTFILE
-argument_list|)
-expr_stmt|;
-name|link
+name|rename
 argument_list|(
 name|OUTTEMP
 argument_list|,
 name|OUTFILE
-argument_list|)
-expr_stmt|;
-name|unlink
-argument_list|(
-name|OUTTEMP
 argument_list|)
 expr_stmt|;
 name|exit
@@ -685,11 +667,6 @@ name|fp
 decl_stmt|;
 name|char
 name|line
-index|[
-literal|1024
-index|]
-decl_stmt|,
-name|line2
 index|[
 literal|1024
 index|]
@@ -851,6 +828,20 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+name|char
+name|line2
+index|[
+literal|1024
+index|]
+decl_stmt|;
+specifier|static
+specifier|const
+name|char
+name|undef
+index|[]
+init|=
+literal|"#undef "
+decl_stmt|;
 name|strcpy
 argument_list|(
 name|line2
@@ -862,22 +853,26 @@ name|memcpy
 argument_list|(
 name|line2
 argument_list|,
-literal|"#undef "
+name|undef
 argument_list|,
-name|strlen
+sizeof|sizeof
 argument_list|(
-literal|"#undef "
+name|undef
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|cp
 operator|=
 name|line2
 operator|+
-name|strlen
+sizeof|sizeof
 argument_list|(
-literal|"#undef "
+name|undef
 argument_list|)
+operator|-
+literal|1
 expr_stmt|;
 while|while
 condition|(
@@ -976,7 +971,6 @@ modifier|*
 name|line
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -1054,7 +1048,6 @@ modifier|*
 name|line
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -1167,7 +1160,6 @@ name|fp
 parameter_list|,
 name|fname
 parameter_list|)
-specifier|register
 name|struct
 name|event
 modifier|*
@@ -1392,7 +1384,6 @@ modifier|*
 name|line
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -1401,7 +1392,6 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 modifier|*
@@ -1560,7 +1550,6 @@ index|[
 literal|1024
 index|]
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -1666,28 +1655,21 @@ literal|6
 init|;
 operator|*
 name|p
-operator|!=
-literal|'\0'
 operator|&&
+name|strchr
+argument_list|(
+literal|"=/\n"
+argument_list|,
 operator|*
 name|p
-operator|!=
-literal|'='
-operator|&&
-operator|*
-name|p
-operator|!=
-literal|'/'
-operator|&&
-operator|*
-name|p
-operator|!=
-literal|'\n'
+argument_list|)
+operator|==
+name|NULL
 condition|;
 name|p
 operator|++
 control|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 operator|*
@@ -1958,12 +1940,10 @@ name|s
 parameter_list|,
 name|text
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|s
 decl_stmt|;
-specifier|register
 name|struct
 name|text
 modifier|*
@@ -2020,7 +2000,6 @@ parameter_list|)
 name|int
 name|c
 decl_stmt|;
-specifier|register
 name|struct
 name|text
 modifier|*
@@ -2274,7 +2253,6 @@ name|int
 name|nbytes
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -2315,7 +2293,6 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
