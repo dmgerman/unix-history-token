@@ -922,6 +922,10 @@ define|#
 directive|define
 name|ATAPICMD
 value|7
+define|#
+directive|define
+name|ATAREBUILD
+value|8
 union|union
 block|{
 struct|struct
