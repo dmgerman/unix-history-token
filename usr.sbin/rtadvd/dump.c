@@ -1043,6 +1043,17 @@ modifier|*
 name|dumpfile
 decl_stmt|;
 block|{
+name|syslog
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"<%s> dump current status to %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|dumpfile
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
