@@ -4399,7 +4399,7 @@ name|facilitynames
 init|;
 name|c
 operator|->
-name|name
+name|c_name
 condition|;
 name|c
 operator|++
@@ -4431,7 +4431,7 @@ name|prioritynames
 init|;
 name|c
 operator|->
-name|name
+name|c_name
 condition|;
 name|c
 operator|++
