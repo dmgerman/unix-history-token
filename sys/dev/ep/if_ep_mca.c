@@ -218,7 +218,7 @@ name|EP_MCA_IOPORT
 parameter_list|(
 name|pos
 parameter_list|)
-value|((((u_int32_t)pos& EP_MCA_IOPORT_MASK) \ 					| 0x02)<< 8)
+value|((((uint32_t)pos& EP_MCA_IOPORT_MASK) \ 					| 0x02)<< 8)
 end_define
 
 begin_define
@@ -283,17 +283,17 @@ name|char
 modifier|*
 name|desc
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|iobase
 init|=
 literal|0
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|irq
 init|=
 literal|0
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|pos
 decl_stmt|;
 name|desc

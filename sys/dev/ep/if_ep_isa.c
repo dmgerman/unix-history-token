@@ -132,7 +132,7 @@ end_ifdef
 
 begin_function_decl
 specifier|static
-name|u_int16_t
+name|uint16_t
 name|get_eeprom_data
 parameter_list|(
 name|int
@@ -196,7 +196,7 @@ begin_struct
 struct|struct
 name|isa_ident
 block|{
-name|u_int32_t
+name|uint32_t
 name|id
 decl_stmt|;
 name|char
@@ -213,7 +213,7 @@ name|char
 modifier|*
 name|ep_isa_match_id
 parameter_list|(
-name|u_int32_t
+name|uint32_t
 parameter_list|,
 name|struct
 name|isa_ident
@@ -435,7 +435,7 @@ end_ifdef
 
 begin_function
 specifier|static
-name|u_int16_t
+name|uint16_t
 name|get_eeprom_data
 parameter_list|(
 name|int
@@ -448,7 +448,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|data
 init|=
 literal|0
@@ -525,7 +525,7 @@ name|char
 modifier|*
 name|ep_isa_match_id
 parameter_list|(
-name|u_int32_t
+name|uint32_t
 name|id
 parameter_list|,
 name|struct
@@ -633,16 +633,16 @@ name|char
 modifier|*
 name|desc
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|data
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|irq
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|ioport
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|isa_id
 decl_stmt|;
 name|device_t
@@ -1458,18 +1458,18 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|val
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|cksum
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|cksum_high
 init|=
 literal|0
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|cksum_low
 init|=
 literal|0
@@ -1551,7 +1551,7 @@ case|:
 name|cksum_low
 operator|^=
 call|(
-name|u_int8_t
+name|uint8_t
 call|)
 argument_list|(
 name|val
@@ -1560,7 +1560,7 @@ literal|0x00ff
 argument_list|)
 operator|^
 call|(
-name|u_int8_t
+name|uint8_t
 call|)
 argument_list|(
 operator|(
@@ -1577,7 +1577,7 @@ default|default:
 name|cksum_high
 operator|^=
 call|(
-name|u_int8_t
+name|uint8_t
 call|)
 argument_list|(
 name|val
@@ -1586,7 +1586,7 @@ literal|0x00ff
 argument_list|)
 operator|^
 call|(
-name|u_int8_t
+name|uint8_t
 call|)
 argument_list|(
 operator|(
@@ -1607,12 +1607,12 @@ name|cksum
 operator|!=
 operator|(
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|)
 name|cksum_low
 operator||
 call|(
-name|u_int16_t
+name|uint16_t
 call|)
 argument_list|(
 name|cksum_high

@@ -641,7 +641,7 @@ name|eisa_io
 init|=
 name|NULL
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|eisa_iobase
 decl_stmt|;
 name|int

@@ -180,7 +180,7 @@ name|char
 modifier|*
 name|desc
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|result
 decl_stmt|;
 name|int
@@ -573,7 +573,7 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|result
 decl_stmt|;
 name|int

@@ -211,9 +211,9 @@ name|struct
 name|ep_softc
 modifier|*
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|)
 function_decl|;
