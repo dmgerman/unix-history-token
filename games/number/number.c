@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)number.c	8.2 (Berkeley) 3/31/94"
+literal|"@(#)number.c	8.3 (Berkeley) 5/4/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -86,7 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<err.h>
+file|<unistd.h>
 end_include
 
 begin_define
