@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: tree.h,v 1.6 2002/06/11 22:09:52 provos Exp $	*/
+comment|/*	$OpenBSD: tree.h,v 1.7 2002/10/17 21:51:54 art Exp $	*/
 end_comment
 
 begin_comment
@@ -553,7 +553,7 @@ name|tmp
 parameter_list|,
 name|field
 parameter_list|)
-value|do {			\ 	(tmp) = RB_RIGHT(elm, field);					\ 	if ((RB_RIGHT(elm, field) = RB_LEFT(tmp, field))) {		\ 		RB_PARENT(RB_LEFT(tmp, field), field) = (elm);		\ 	}								\ 	RB_AUGMENT(elm);						\ 	if ((RB_PARENT(tmp, field) = RB_PARENT(elm, field))) {		\ 		if ((elm) == RB_LEFT(RB_PARENT(elm, field), field))	\ 			RB_LEFT(RB_PARENT(elm, field), field) = (tmp);	\ 		else							\ 			RB_RIGHT(RB_PARENT(elm, field), field) = (tmp);	\ 		RB_AUGMENT(RB_PARENT(elm, field));			\ 	} else								\ 		(head)->rbh_root = (tmp);				\ 	RB_LEFT(tmp, field) = (elm);					\ 	RB_PARENT(elm, field) = (tmp);					\ 	RB_AUGMENT(tmp);						\ } while (0)
+value|do {			\ 	(tmp) = RB_RIGHT(elm, field);					\ 	if ((RB_RIGHT(elm, field) = RB_LEFT(tmp, field))) {		\ 		RB_PARENT(RB_LEFT(tmp, field), field) = (elm);		\ 	}								\ 	RB_AUGMENT(elm);						\ 	if ((RB_PARENT(tmp, field) = RB_PARENT(elm, field))) {		\ 		if ((elm) == RB_LEFT(RB_PARENT(elm, field), field))	\ 			RB_LEFT(RB_PARENT(elm, field), field) = (tmp);	\ 		else							\ 			RB_RIGHT(RB_PARENT(elm, field), field) = (tmp);	\ 	} else								\ 		(head)->rbh_root = (tmp);				\ 	RB_LEFT(tmp, field) = (elm);					\ 	RB_PARENT(elm, field) = (tmp);					\ 	RB_AUGMENT(tmp);						\ 	if ((RB_PARENT(tmp, field)))					\ 		RB_AUGMENT(RB_PARENT(tmp, field));			\ } while (0)
 end_define
 
 begin_define
@@ -569,7 +569,7 @@ name|tmp
 parameter_list|,
 name|field
 parameter_list|)
-value|do {			\ 	(tmp) = RB_LEFT(elm, field);					\ 	if ((RB_LEFT(elm, field) = RB_RIGHT(tmp, field))) {		\ 		RB_PARENT(RB_RIGHT(tmp, field), field) = (elm);		\ 	}								\ 	RB_AUGMENT(elm);						\ 	if ((RB_PARENT(tmp, field) = RB_PARENT(elm, field))) {		\ 		if ((elm) == RB_LEFT(RB_PARENT(elm, field), field))	\ 			RB_LEFT(RB_PARENT(elm, field), field) = (tmp);	\ 		else							\ 			RB_RIGHT(RB_PARENT(elm, field), field) = (tmp);	\ 		RB_AUGMENT(RB_PARENT(elm, field));			\ 	} else								\ 		(head)->rbh_root = (tmp);				\ 	RB_RIGHT(tmp, field) = (elm);					\ 	RB_PARENT(elm, field) = (tmp);					\ 	RB_AUGMENT(tmp);						\ } while (0)
+value|do {			\ 	(tmp) = RB_LEFT(elm, field);					\ 	if ((RB_LEFT(elm, field) = RB_RIGHT(tmp, field))) {		\ 		RB_PARENT(RB_RIGHT(tmp, field), field) = (elm);		\ 	}								\ 	RB_AUGMENT(elm);						\ 	if ((RB_PARENT(tmp, field) = RB_PARENT(elm, field))) {		\ 		if ((elm) == RB_LEFT(RB_PARENT(elm, field), field))	\ 			RB_LEFT(RB_PARENT(elm, field), field) = (tmp);	\ 		else							\ 			RB_RIGHT(RB_PARENT(elm, field), field) = (tmp);	\ 	} else								\ 		(head)->rbh_root = (tmp);				\ 	RB_RIGHT(tmp, field) = (elm);					\ 	RB_PARENT(elm, field) = (tmp);					\ 	RB_AUGMENT(tmp);						\ 	if ((RB_PARENT(tmp, field)))					\ 		RB_AUGMENT(RB_PARENT(tmp, field));			\ } while (0)
 end_define
 
 begin_comment
