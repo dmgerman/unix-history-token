@@ -4,7 +4,7 @@ comment|/*	$OpenBSD: if_tx.c,v 1.3 1998/10/10 04:30:09 jason Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_tx.c,v 1.26 1999/05/09 17:07:02 peter Exp $ */
+comment|/*	$Id: if_tx.c,v 1.27 1999/05/10 00:20:46 peter Exp $ */
 end_comment
 
 begin_comment
@@ -100,22 +100,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pci.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_bdg.h"
 end_include
-
-begin_if
-if|#
-directive|if
-name|NPCI
-operator|>
-literal|0
-end_if
 
 begin_include
 include|#
@@ -9374,15 +9360,6 @@ expr_stmt|;
 block|}
 block|}
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NPCI> 0 */
-end_comment
 
 end_unit
 

@@ -13,14 +13,6 @@ directive|include
 file|"meteor.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|NMETEOR
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
@@ -147,20 +139,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pci.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NPCI
-operator|>
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
 file|<pci/pcivar.h>
 end_include
 
@@ -169,11 +147,6 @@ include|#
 directive|include
 file|<pci/pcireg.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -9415,15 +9388,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NMETEOR> 0 */
-end_comment
 
 end_unit
 

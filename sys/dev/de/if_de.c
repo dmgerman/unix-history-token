@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_de.c,v 1.82 1999/02/28 17:08:51 explorer Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_de.c,v 1.105 1999/05/09 17:06:49 peter Exp $ */
+comment|/*	$Id: if_de.c,v 1.106 1999/05/10 14:12:26 peter Exp $ */
 end_comment
 
 begin_comment
@@ -464,20 +464,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pci.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NPCI
-operator|>
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
 file|<pci/pcivar.h>
 end_include
 
@@ -493,11 +479,6 @@ directive|define
 name|DEVAR_INCLUDE
 value|"pci/if_devar.h"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#

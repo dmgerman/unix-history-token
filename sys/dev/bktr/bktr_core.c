@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: brooktree848.c,v 1.85 1999/06/12 14:54:54 roger Exp $ */
+comment|/* $Id: brooktree848.c,v 1.86 1999/06/13 16:05:00 roger Exp $ */
 end_comment
 
 begin_comment
@@ -65,12 +65,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pci.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"smbus.h"
 end_include
 
@@ -119,17 +113,9 @@ name|__FreeBSD__
 argument_list|)
 operator|||
 operator|(
-operator|(
 name|NBKTR
 operator|>
 literal|0
-operator|)
-operator|&&
-operator|(
-name|NPCI
-operator|>
-literal|0
-operator|)
 operator|)
 end_if
 
@@ -30516,7 +30502,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !defined(__FreeBSD__) || (NBKTR> 0&& NPCI> 0) */
+comment|/* !defined(__FreeBSD__) || (NBKTR> 0) */
 end_comment
 
 begin_comment

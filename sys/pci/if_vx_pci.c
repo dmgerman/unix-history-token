@@ -6,20 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"pci.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NPCI
-operator|>
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
 file|"vx.h"
 end_include
 
@@ -445,15 +431,6 @@ end_endif
 
 begin_comment
 comment|/* NVX */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NPCI */
 end_comment
 
 end_unit

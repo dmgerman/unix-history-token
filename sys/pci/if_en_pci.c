@@ -20,28 +20,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pci.h"
-end_include
-
-begin_if
-if|#
-directive|if
-operator|(
-name|NEN
-operator|>
-literal|0
-operator|)
-operator|&&
-operator|(
-name|NPCI
-operator|>
-literal|0
-operator|)
-end_if
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -1901,15 +1879,6 @@ end_endif
 
 begin_comment
 comment|/* !MIDWAY_ADPONLY */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NEN> 0&& NPCI> 0 */
 end_comment
 
 end_unit
