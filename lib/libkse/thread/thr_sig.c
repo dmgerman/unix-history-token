@@ -1212,8 +1212,6 @@ literal|1
 index|]
 operator|.
 name|sa_flags
-operator|&
-name|SA_SIGINFO
 expr_stmt|;
 if|if
 condition|(
@@ -1616,8 +1614,6 @@ literal|1
 index|]
 operator|.
 name|sa_flags
-operator|&
-name|SA_SIGINFO
 expr_stmt|;
 name|sigmask
 operator|=
