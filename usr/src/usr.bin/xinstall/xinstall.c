@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xinstall.c	5.14 (Berkeley) %G%"
+literal|"@(#)xinstall.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -863,28 +863,6 @@ name|from_name
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* set owner, group, mode for target */
-if|if
-condition|(
-name|fchmod
-argument_list|(
-name|to_fd
-argument_list|,
-name|mode
-argument_list|)
-condition|)
-block|{
-name|PERROR
-argument_list|(
-literal|"install: fchmod: "
-argument_list|,
-name|to_name
-argument_list|)
-expr_stmt|;
-name|bad
-argument_list|()
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -920,6 +898,28 @@ block|{
 name|PERROR
 argument_list|(
 literal|"install: fchown: "
+argument_list|,
+name|to_name
+argument_list|)
+expr_stmt|;
+name|bad
+argument_list|()
+expr_stmt|;
+block|}
+comment|/* set owner, group, mode for target */
+if|if
+condition|(
+name|fchmod
+argument_list|(
+name|to_fd
+argument_list|,
+name|mode
+argument_list|)
+condition|)
+block|{
+name|PERROR
+argument_list|(
+literal|"install: fchmod: "
 argument_list|,
 name|to_name
 argument_list|)
