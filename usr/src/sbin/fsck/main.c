@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	2.6	(Berkeley)	%G%"
+literal|"@(#)main.c	2.7	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6116,9 +6116,16 @@ decl_stmt|;
 name|ino_t
 name|number
 decl_stmt|;
-name|int
+enum|enum
+block|{
+name|DONTKNOW
+block|,
+name|NOFIX
+block|,
+name|FIX
+block|}
 name|fix
-decl_stmt|;
+enum|;
 block|}
 struct|;
 end_struct
@@ -6233,7 +6240,7 @@ name|dirp
 operator|.
 name|fix
 operator|=
-literal|0
+name|DONTKNOW
 expr_stmt|;
 block|}
 for|for
@@ -6508,7 +6515,7 @@ name|dirp
 operator|->
 name|fix
 operator|==
-literal|0
+name|DONTKNOW
 condition|)
 block|{
 name|pwarn
@@ -6524,7 +6531,7 @@ name|dirp
 operator|->
 name|fix
 operator|=
-literal|1
+name|NOFIX
 expr_stmt|;
 if|if
 condition|(
@@ -6540,7 +6547,7 @@ name|dirp
 operator|->
 name|fix
 operator|=
-literal|2
+name|FIX
 expr_stmt|;
 block|}
 elseif|else
@@ -6557,7 +6564,7 @@ name|dirp
 operator|->
 name|fix
 operator|=
-literal|2
+name|FIX
 expr_stmt|;
 block|}
 if|if
@@ -6565,8 +6572,8 @@ condition|(
 name|dirp
 operator|->
 name|fix
-operator|<
-literal|2
+operator|!=
+name|FIX
 condition|)
 continue|continue;
 name|dp
@@ -6740,7 +6747,7 @@ name|dirp
 operator|->
 name|fix
 operator|==
-literal|0
+name|DONTKNOW
 condition|)
 block|{
 name|pwarn
@@ -6756,7 +6763,7 @@ name|dirp
 operator|->
 name|fix
 operator|=
-literal|1
+name|NOFIX
 expr_stmt|;
 if|if
 condition|(
@@ -6772,7 +6779,7 @@ name|dirp
 operator|->
 name|fix
 operator|=
-literal|2
+name|FIX
 expr_stmt|;
 block|}
 elseif|else
@@ -6789,7 +6796,7 @@ name|dirp
 operator|->
 name|fix
 operator|=
-literal|2
+name|FIX
 expr_stmt|;
 block|}
 if|if
@@ -6797,8 +6804,8 @@ condition|(
 name|dirp
 operator|->
 name|fix
-operator|>
-literal|2
+operator|==
+name|FIX
 condition|)
 block|{
 name|dp
