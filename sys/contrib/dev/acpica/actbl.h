@@ -481,6 +481,18 @@ define|\
 value|UINT8                   Type; \     UINT8                   Length;
 end_define
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|apic_header
+comment|/* APIC common table header */
+block|{
+name|APIC_HEADER_DEF
+block|}
+name|APIC_HEADER
+typedef|;
+end_typedef
+
 begin_comment
 comment|/* Values for MPS INTI flags */
 end_comment
@@ -696,7 +708,7 @@ name|UINT16
 name|Reserved
 decl_stmt|;
 comment|/* Reserved - must be zero */
-name|UINT32
+name|UINT64
 name|Address
 decl_stmt|;
 comment|/* APIC physical address */
