@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gettable.c	5.3 (Berkeley) %G%"
+literal|"@(#)gettable.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -362,9 +362,18 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"gettable: %s: host unknown\n"
+literal|"gettable: %s: "
 argument_list|,
 name|host
+argument_list|)
+expr_stmt|;
+name|herror
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|exit

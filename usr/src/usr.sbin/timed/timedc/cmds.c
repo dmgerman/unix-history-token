@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	2.5 (Berkeley) %G%"
+literal|"@(#)cmds.c	2.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -241,12 +241,23 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"%s: unknown host\n"
+name|stderr
+argument_list|,
+literal|"timed: %s: "
 argument_list|,
 operator|*
 name|argv
+argument_list|)
+expr_stmt|;
+name|herror
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -552,9 +563,22 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
-literal|"gethostbyname"
+name|stderr
+argument_list|,
+literal|"timed: %s: "
+argument_list|,
+name|hostname
+argument_list|)
+expr_stmt|;
+name|herror
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return;
@@ -952,12 +976,23 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"%s: unknown host\n"
+name|stderr
+argument_list|,
+literal|"timed: %s: "
 argument_list|,
 operator|*
 name|argv
+argument_list|)
+expr_stmt|;
+name|herror
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|argc
