@@ -104,27 +104,6 @@ begin_comment
 comment|/* FP_SUPPORT */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__STDC__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|const
-end_define
-
-begin_comment
-comment|/* as nothing */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef

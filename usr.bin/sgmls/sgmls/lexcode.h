@@ -39,6 +39,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MINLITC
+value|13
+end_define
+
+begin_comment
+comment|/* LIT LITA as literal terminator in minimum data */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MSC3
 value|15
 end_define

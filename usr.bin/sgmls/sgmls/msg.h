@@ -856,11 +856,11 @@ block|}
 block|,
 comment|/*  93 */
 block|{
-literal|"Short ref in map \"%2$s\" to undeclared entity \"%1$s\" treated as data"
+literal|"General entity \"%s\" in short reference map \"%s\" undeclared"
 block|,
 literal|'E'
 block|,
-literal|'C'
+literal|'D'
 block|}
 block|,
 comment|/*  94 */
@@ -1371,7 +1371,7 @@ comment|/* 150 */
 block|{
 literal|"Could not find entity \"%s\" using default declaration"
 block|,
-literal|'E'
+literal|'I'
 block|,
 literal|'R'
 block|}
@@ -1387,9 +1387,9 @@ block|}
 block|,
 comment|/* 152 */
 block|{
-literal|"Short reference map \"%s\" used in DTD but not defined"
+literal|"Short reference map \"%s\" used in USEMAP declaration but not defined; declaration will be ignored"
 block|,
-literal|'I'
+literal|'E'
 block|,
 literal|'D'
 block|}
@@ -1450,11 +1450,11 @@ block|}
 block|,
 comment|/* 159 */
 block|{
-literal|"Short reference map for element \"%s\" not defined; ignored"
+literal|"Parameter must be a number or CONTROLS or NONE"
 block|,
 literal|'E'
 block|,
-literal|'C'
+literal|'D'
 block|}
 block|,
 comment|/* 160 */
@@ -1722,27 +1722,27 @@ comment|/* 189 */
 block|{
 literal|"Invalid formal public identifier"
 block|,
-literal|'I'
+literal|'W'
 block|,
 literal|'D'
 block|}
 block|,
 comment|/* 190 */
 block|{
-literal|"Public text class should have been \"%s\""
+literal|"Public text class must be \"%s\""
 block|,
-literal|'I'
+literal|'W'
 block|,
 literal|'D'
 block|}
 block|,
 comment|/* 191 */
 block|{
-literal|"Character number %s must be non-SGML"
+literal|"Use of character number %s as an SGML character is not supported"
 block|,
 literal|'W'
 block|,
-literal|'D'
+literal|'U'
 block|}
 block|,
 comment|/* 192 */
@@ -1810,7 +1810,7 @@ block|}
 block|,
 comment|/* 199 */
 block|{
-literal|"Character number %s does not exist in the base character set"
+literal|"Character number %s not in the base character set; assuming UNUSED"
 block|,
 literal|'E'
 block|,
@@ -1855,7 +1855,7 @@ block|}
 block|,
 comment|/* 204 */
 block|{
-literal|"Duplication specification for added funtion \"%s\""
+literal|"Duplication specification for added function \"%s\""
 block|,
 literal|'E'
 block|,
@@ -1963,7 +1963,7 @@ block|}
 block|,
 comment|/* 216 */
 block|{
-literal|"Exclusions attempt to change required status of group in \"%s\""
+literal|"%s element cannot be excluded from %s element because it is neither inherently optional nor a member of an or group"
 block|,
 literal|'E'
 block|,
@@ -1972,7 +1972,7 @@ block|}
 block|,
 comment|/* 217 */
 block|{
-literal|"Exclusion cannot apply to token \"%s\" in content model for \"%s\""
+literal|"Marked section not allowed in other prolog"
 block|,
 literal|'E'
 block|,
@@ -2085,6 +2085,60 @@ block|,
 literal|'E'
 block|,
 literal|'R'
+block|}
+block|,
+comment|/* 230 */
+block|{
+literal|"DSC within marked section; marked section terminated"
+block|,
+literal|'E'
+block|,
+literal|'C'
+block|}
+block|,
+comment|/* 231 */
+block|{
+literal|"Document element end tag can only occur in document element because entity end not allowed in other prolog"
+block|,
+literal|'E'
+block|,
+literal|'C'
+block|}
+block|,
+comment|/* 232 */
+block|{
+literal|"Character reference not allowed in other prolog"
+block|,
+literal|'E'
+block|,
+literal|'C'
+block|}
+block|,
+comment|/* 233 */
+block|{
+literal|"USEMAP declaration not allowed in other prolog"
+block|,
+literal|'E'
+block|,
+literal|'D'
+block|}
+block|,
+comment|/* 234 */
+block|{
+literal|"Entity reference not allowed in other prolog"
+block|,
+literal|'E'
+block|,
+literal|'C'
+block|}
+block|,
+comment|/* 235 */
+block|{
+literal|"Value assigned to capacity %s exceeds value assigned to TOTALCAP"
+block|,
+literal|'W'
+block|,
+literal|'D'
 block|}
 block|, }
 struct|;

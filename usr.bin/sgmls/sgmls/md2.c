@@ -343,12 +343,6 @@ literal|1
 expr_stmt|;
 comment|/* Subject name for error messages. */
 comment|/* PARAMETER 2: Entity text keyword (optional).      */
-name|pcbmd
-operator|.
-name|newstate
-operator|=
-literal|0
-expr_stmt|;
 name|parsemd
 argument_list|(
 name|tbuf
@@ -541,12 +535,6 @@ operator|=
 name|ESM
 expr_stmt|;
 block|}
-name|pcbmd
-operator|.
-name|newstate
-operator|=
-literal|0
-expr_stmt|;
 name|parsemd
 argument_list|(
 name|tbuf
@@ -780,12 +768,6 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* PARAMETER 4: End of declaration.      */
-name|pcbmd
-operator|.
-name|newstate
-operator|=
-literal|0
-expr_stmt|;
 name|parsemd
 argument_list|(
 name|tbuf
@@ -1479,12 +1461,6 @@ goto|goto
 name|parm3
 goto|;
 comment|/* PARAMETER 2: Public ID literal.      */
-name|pcbmd
-operator|.
-name|newstate
-operator|=
-literal|0
-expr_stmt|;
 comment|/* The length of a minimum literal cannot exceed the value of LITLEN 	in the reference quantity set. */
 name|parsemd
 argument_list|(
@@ -1563,12 +1539,6 @@ block|}
 comment|/* PARAMETER 3: System ID literal.      */
 name|parm3
 label|:
-name|pcbmd
-operator|.
-name|newstate
-operator|=
-literal|0
-expr_stmt|;
 name|parsemd
 argument_list|(
 name|sysibuf
@@ -1613,12 +1583,6 @@ operator|->
 name|fpisysis
 operator|=
 name|sysibuf
-expr_stmt|;
-name|pcbmd
-operator|.
-name|newstate
-operator|=
-literal|0
 expr_stmt|;
 name|parsemd
 argument_list|(
@@ -1773,13 +1737,6 @@ name|nedcn
 operator|=
 literal|0
 expr_stmt|;
-name|pcbmd
-operator|.
-name|newstate
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Parse next token for caller. */
 name|parsemd
 argument_list|(
 name|tbuf
@@ -1797,12 +1754,6 @@ name|genfpi
 goto|;
 block|}
 comment|/* PARAMETER 5: Notation name.      */
-name|pcbmd
-operator|.
-name|newstate
-operator|=
-literal|0
-expr_stmt|;
 name|parsemd
 argument_list|(
 name|lbuf
@@ -1873,12 +1824,6 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* PARAMETER 6: Data attribute specification.      */
-name|pcbmd
-operator|.
-name|newstate
-operator|=
-literal|0
-expr_stmt|;
 name|parsemd
 argument_list|(
 name|lbuf
@@ -2067,13 +2012,6 @@ name|pcbeal
 argument_list|)
 expr_stmt|;
 comment|/* Parse the list ending. */
-name|pcbmd
-operator|.
-name|newstate
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Parse next token for caller. */
 name|parsemd
 argument_list|(
 name|tbuf
@@ -2152,20 +2090,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|FORMAL
-operator|==
-name|NO
-condition|)
-name|fpis
-operator|->
-name|fpiversw
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-elseif|else
-if|if
-condition|(
 name|parsefpi
 argument_list|(
 name|fpis
@@ -2174,6 +2098,12 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|FORMAL
+operator|==
+name|YES
+condition|)
 name|mderr
 argument_list|(
 literal|88
@@ -2428,6 +2358,7 @@ expr_stmt|;
 comment|/* Point to EOS of identifier. */
 if|if
 condition|(
+operator|(
 operator|*
 name|p
 operator|==
@@ -2437,9 +2368,24 @@ operator|*
 name|p
 operator|==
 literal|'-'
+operator|)
+operator|&&
+name|p
+index|[
+literal|1
+index|]
+operator|==
+literal|'/'
+operator|&&
+name|p
+index|[
+literal|2
+index|]
+operator|==
+literal|'/'
 condition|)
 block|{
-comment|/* If owner registered, unregistered. */
+comment|/* If owner registered, 					     unregistered. */
 name|f
 operator|->
 name|fpiot
@@ -2448,20 +2394,10 @@ operator|*
 name|p
 expr_stmt|;
 comment|/* Save owner type. */
-if|if
-condition|(
-operator|(
 name|p
 operator|+=
 literal|3
-operator|)
-operator|>=
-name|l
-condition|)
-return|return
-literal|1
-return|;
-comment|/* Get to owner ID field. */
+expr_stmt|;
 block|}
 else|else
 name|f
@@ -2605,9 +2541,23 @@ operator|*
 name|p
 operator|==
 literal|'-'
+operator|&&
+name|p
+index|[
+literal|1
+index|]
+operator|==
+literal|'/'
+operator|&&
+name|p
+index|[
+literal|2
+index|]
+operator|==
+literal|'/'
 condition|)
 block|{
-comment|/* If text is unavailable public text.*/
+comment|/* If text is unavailable 						     public text.*/
 name|f
 operator|->
 name|fpitt
@@ -2616,20 +2566,10 @@ operator|*
 name|p
 expr_stmt|;
 comment|/* Save text type. */
-if|if
-condition|(
-operator|(
 name|p
 operator|+=
 literal|3
-operator|)
-operator|>=
-name|l
-condition|)
-return|return
-literal|5
-return|;
-comment|/* Get to text description field. */
+expr_stmt|;
 block|}
 else|else
 name|f
@@ -2710,6 +2650,16 @@ name|i
 decl_stmt|;
 comment|/* Language must be all upper-case letters. */
 comment|/* The standard only says that it *should* be two letters, so 	     don't enforce that. */
+comment|/* Language must be a name, which means it can't be empty. */
+if|if
+condition|(
+name|len
+operator|==
+literal|0
+condition|)
+return|return
+literal|7
+return|;
 for|for
 control|(
 name|i
@@ -3475,12 +3425,6 @@ literal|1
 expr_stmt|;
 comment|/* Save notation name for error msgs. */
 comment|/* PARAMETER 2: External identifier keyword.      */
-name|pcbmd
-operator|.
-name|newstate
-operator|=
-literal|0
-expr_stmt|;
 name|parsemd
 argument_list|(
 name|tbuf
@@ -4008,12 +3952,6 @@ expr_stmt|;
 comment|/* Save map name for error msgs. */
 while|while
 condition|(
-name|pcbmd
-operator|.
-name|newstate
-operator|=
-literal|0
-operator|,
 name|parsemd
 argument_list|(
 name|tbuf
@@ -4079,12 +4017,6 @@ name|cleanup
 goto|;
 block|}
 comment|/* PARAMETER 3: Entity name.           */
-name|pcbmd
-operator|.
-name|newstate
-operator|=
-literal|0
-expr_stmt|;
 name|parsemd
 argument_list|(
 name|tbuf
@@ -4705,12 +4637,6 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* PARAMETER 2: Element name or a group of them. (In DTD only.)      */
-name|pcbmd
-operator|.
-name|newstate
-operator|=
-literal|0
-expr_stmt|;
 name|parsemd
 argument_list|(
 name|tbuf
@@ -4850,6 +4776,30 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|docelsw
+condition|)
+block|{
+name|mderr
+argument_list|(
+literal|233
+argument_list|,
+operator|(
+name|UNCH
+operator|*
+operator|)
+literal|0
+argument_list|,
+operator|(
+name|UNCH
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|tags
 index|[
 name|ts
@@ -4910,12 +4860,6 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* PARAMETER 3: End of declaration.      */
-name|pcbmd
-operator|.
-name|newstate
-operator|=
-literal|0
-expr_stmt|;
 name|parsemd
 argument_list|(
 name|tbuf

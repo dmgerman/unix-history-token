@@ -121,6 +121,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|docelsw
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 1=had document element; 0=no */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|dostag
 decl_stmt|;
 end_decl_stmt
@@ -325,6 +336,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* Tag source chars read. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tages
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ES level at start of tag. */
 end_comment
 
 begin_decl_stmt
@@ -575,6 +597,19 @@ specifier|extern
 name|struct
 name|etd
 modifier|*
+name|lastetd
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Most recently ended ETD. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|etd
+modifier|*
 name|stagreal
 decl_stmt|;
 end_decl_stmt
@@ -666,17 +701,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Subject of markup declaration (e.g., GI). */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|Tstart
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Save starting token for AND group testing. */
 end_comment
 
 begin_decl_stmt

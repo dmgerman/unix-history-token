@@ -4,7 +4,7 @@ name|char
 modifier|*
 name|version_string
 init|=
-literal|"1.1"
+literal|"1.1.91"
 decl_stmt|;
 end_decl_stmt
 

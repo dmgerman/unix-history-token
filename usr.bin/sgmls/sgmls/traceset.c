@@ -515,7 +515,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%-8s %2u-%2u-%2u-%2u from %s [%3d] in %s, %d:%d.\n"
+literal|"%-8s %2u-%2u-%2u-%2u from %s [%3d] in %s, %lu:%d.\n"
 argument_list|,
 name|pcb
 operator|->
@@ -589,7 +589,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"TOKEN    %2d-%2d       from %s [%3d] in %s, %d:%d.\n"
+literal|"TOKEN    %2d-%2d       from %s [%3d] in %s, %lu:%d.\n"
 argument_list|,
 name|scope
 argument_list|,
@@ -1901,45 +1901,27 @@ argument_list|)
 operator|==
 name|ANOTEGRP
 condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"=>%s"
-argument_list|,
-operator|(
-name|ADDATA
-argument_list|(
-name|al
-argument_list|,
-name|i
-argument_list|)
-operator|.
-name|x
-operator|->
-name|dcnid
-operator|!=
-literal|0
-operator|)
-condition|?
-operator|(
-name|char
-operator|*
-operator|)
-name|ADDATA
-argument_list|(
-name|al
-argument_list|,
-name|i
-argument_list|)
-operator|.
-name|x
-operator|->
-name|dcnid
-else|:
-literal|"[UNDEFINED]"
+literal|"=>"
 argument_list|)
 expr_stmt|;
+name|tracedcn
+argument_list|(
+name|ADDATA
+argument_list|(
+name|al
+argument_list|,
+name|i
+argument_list|)
+operator|.
+name|x
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 name|fprintf
@@ -2735,8 +2717,6 @@ parameter_list|,
 name|mod
 parameter_list|,
 name|pos
-parameter_list|,
-name|Tstart
 parameter_list|)
 name|char
 modifier|*
@@ -2760,10 +2740,6 @@ name|pos
 index|[]
 decl_stmt|;
 comment|/* Position in open element's model. */
-name|int
-name|Tstart
-decl_stmt|;
-comment|/* Initial T for this group. */
 block|{
 name|int
 name|i
@@ -2947,8 +2923,6 @@ parameter_list|,
 name|rc
 parameter_list|,
 name|opt
-parameter_list|,
-name|Tstart
 parameter_list|)
 name|char
 modifier|*
@@ -2974,10 +2948,6 @@ name|int
 name|opt
 decl_stmt|;
 comment|/* ALLHIT parm: 1=test optionals; 0=ignore. */
-name|int
-name|Tstart
-decl_stmt|;
-comment|/* Initial T for this group. */
 block|{
 name|int
 name|i

@@ -48,6 +48,53 @@ value|"SGML_PATH"
 end_define
 
 begin_comment
+comment|/* A macro that returns non-zero if the filename is relative to the    current directory. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FILE_IS_RELATIVE
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)[0] != '/')
+end_define
+
+begin_comment
+comment|/* A string containing the characters that can separate the directory    part of a filename from the basename. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DIR_BASE_SEP
+value|"/"
+end_define
+
+begin_comment
+comment|/* The environment variable that contains the list of catalog entry files.    Filenames are separated by PATH_FILE_SEP. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CATALOG_FILES_ENV_VAR
+value|"SGML_CATALOG_FILES"
+end_define
+
+begin_comment
+comment|/* Default list of catalog entry files. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_CATALOG_FILES
+value|"CATALOG:/usr/share/sgml/CATALOG"
+end_define
+
+begin_comment
 comment|/* MIN_DAT_SUBS_FROM and MIN_DATS_SUBS_TO tell sgmls how to transform a name or system identifier into a legal filename.  A character in MIN_DAT_SUBS_FROM will be transformed into the character in the corresponding position in MIN_DAT_SUBS_TO.  If there is no such position, then the character is removed. */
 end_comment
 
@@ -100,9 +147,12 @@ begin_comment
 comment|/* Define HAVE_CAT if your system provides the X/Open message catalogue functions catopen() and catgets(), and you want to use them. An implementations of these functions is included and will be used if you don't define this.  On SunOS 4.1.1, if you do define this you should set CC=/usr/xpg2bin/cc in the makefile. */
 end_comment
 
-begin_comment
-comment|/* #define HAVE_CAT 1 */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_CAT
+value|1
+end_define
 
 begin_ifdef
 ifdef|#

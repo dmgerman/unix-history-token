@@ -869,49 +869,13 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+literal|0
 comment|/* "-" should not be specified for the end-tag minimization if 	the element has a content reference attribute. */
-if|if
-condition|(
-name|GET
-argument_list|(
-name|p
-operator|->
-name|adl
-index|[
-literal|0
-index|]
-operator|.
-name|adflags
-argument_list|,
-name|ADLCONR
-argument_list|)
-operator|&&
-name|BITON
-argument_list|(
-name|p
-operator|->
-name|etdmin
-argument_list|,
-name|EMM
-argument_list|)
-condition|)
-name|mderr
-argument_list|(
-literal|153
-argument_list|,
-operator|(
-name|UNCH
-operator|*
-operator|)
-literal|0
-argument_list|,
-operator|(
-name|UNCH
-operator|*
-operator|)
-literal|0
-argument_list|)
-expr_stmt|;
+block|if (GET(p->adl[0].adflags, ADLCONR)&& BITON(p->etdmin, EMM)) 	  mderr(153, (UNCH *)0, (UNCH *)0);
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -3732,12 +3696,6 @@ literal|1
 expr_stmt|;
 comment|/* Subject of declaration for error msgs. */
 comment|/* PARAMETER 2: External identifier keyword or MDS.      */
-name|pcbmd
-operator|.
-name|newstate
-operator|=
-literal|0
-expr_stmt|;
 name|parsemd
 argument_list|(
 name|tbuf
@@ -4042,7 +4000,7 @@ name|pcbmd
 operator|.
 name|newstate
 operator|=
-literal|0
+name|pcbmdtk
 expr_stmt|;
 name|parsemd
 argument_list|(
@@ -4445,7 +4403,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Must omit omitted end-tag minimization, if omitted 	start-tag minimization was omitted (because OMITTAG == NO). */
+comment|/* Must omit omitted end-tag minimization, if omitted  	start-tag minimization was omitted (because OMITTAG == NO). */
 if|if
 condition|(
 operator|!
@@ -4526,6 +4484,12 @@ name|EMO
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|MGRP
+case|:
+name|REPEATCC
+expr_stmt|;
+comment|/* fall through */
 case|case
 name|CDR
 case|:

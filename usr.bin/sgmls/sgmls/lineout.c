@@ -1724,7 +1724,13 @@ argument_list|)
 operator|==
 name|ACHARS
 condition|)
-name|output_attribute_token
+block|{
+name|putchar
+argument_list|(
+literal|' '
+argument_list|)
+expr_stmt|;
+name|print_string
 argument_list|(
 name|ustrlen
 argument_list|(
@@ -1742,8 +1748,11 @@ name|al
 argument_list|,
 name|aln
 argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|output_attribute_token
 argument_list|(
@@ -2730,13 +2739,23 @@ argument_list|(
 literal|' '
 argument_list|)
 expr_stmt|;
-name|print_string
-argument_list|(
+for|for
+control|(
+init|;
 name|vallen
-argument_list|,
-name|val
-argument_list|,
+operator|>
 literal|0
+condition|;
+operator|--
+name|vallen
+operator|,
+operator|++
+name|val
+control|)
+name|putchar
+argument_list|(
+operator|*
+name|val
 argument_list|)
 expr_stmt|;
 block|}

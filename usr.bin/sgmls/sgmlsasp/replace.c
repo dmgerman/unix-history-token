@@ -1427,9 +1427,6 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-name|EOF
-return|;
 block|}
 end_function
 

@@ -161,6 +161,10 @@ name|litc
 decl_stmt|;
 comment|/* LEXLMS: Literal close delimiter enabled. */
 name|UNCH
+name|minlitc
+decl_stmt|;
+comment|/* LEXMIN: Literal close delimiter enabled. */
+name|UNCH
 name|msc
 decl_stmt|;
 comment|/* LEXLMS: Marked section close delim enabled. */
@@ -274,6 +278,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* Lexical table: literals and marked sections. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|UNCH
+name|lexmin
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Lexical table: minimum data literal. */
 end_comment
 
 begin_decl_stmt
