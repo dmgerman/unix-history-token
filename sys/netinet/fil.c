@@ -3971,6 +3971,33 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* M_CANFASTFWD */
+comment|/* 	 * disable delayed checksums. 	 */
+if|if
+condition|(
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|&
+name|CSUM_DELAY_DATA
+condition|)
+block|{
+name|in_delayed_cksum
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|&=
+operator|~
+name|CSUM_DELAY_DATA
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(

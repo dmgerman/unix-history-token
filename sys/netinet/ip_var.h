@@ -979,6 +979,18 @@ name|ip_fw_fwd_addr
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|in_delayed_cksum
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
