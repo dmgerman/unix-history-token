@@ -463,7 +463,7 @@ name|unpcb
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -950,8 +950,6 @@ argument_list|(
 name|unp
 argument_list|,
 name|td
-operator|->
-name|td_proc
 argument_list|)
 return|;
 block|}
@@ -6544,7 +6542,7 @@ name|unp_listen
 parameter_list|(
 name|unp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|unpcb
@@ -6552,16 +6550,16 @@ modifier|*
 name|unp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|cru2x
 argument_list|(
-name|p
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 operator|&
 name|unp
