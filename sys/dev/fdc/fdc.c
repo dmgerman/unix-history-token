@@ -6783,9 +6783,6 @@ name|dev
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|notyet
 if|if
 condition|(
 name|w
@@ -6805,8 +6802,6 @@ operator|(
 name|EROFS
 operator|)
 return|;
-endif|#
-directive|endif
 name|pp
 operator|->
 name|sectorsize
