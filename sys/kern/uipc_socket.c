@@ -589,7 +589,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * so_global_mtx protects so_gencnt, numopensockets, and the per-socket  * so_gencnt field.  *  * XXXRW: These variables might be better manipulated using atomic operations  * for improved efficiency.  */
+comment|/*  * so_global_mtx protects so_gencnt, numopensockets, and the per-socket  * so_gencnt field.  */
 end_comment
 
 begin_decl_stmt
@@ -4014,7 +4014,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The part of soreceive() that implements reading non-inline out-of-band  * data from a socket.  For more complete comments, see soreceive(), from  * which this code originated.  *  * XXXRW: Note that soreceive_rcvoob(), unlike the remainder of soreiceve(),  * is unable to return an mbuf chain to the caller.  */
+comment|/*  * The part of soreceive() that implements reading non-inline out-of-band  * data from a socket.  For more complete comments, see soreceive(), from  * which this code originated.  *  * Note that soreceive_rcvoob(), unlike the remainder of soreiceve(), is  * unable to return an mbuf chain to the caller.  */
 end_comment
 
 begin_function
@@ -6869,7 +6869,7 @@ name|struct
 name|sockbuf
 name|asb
 decl_stmt|;
-comment|/* 	 * XXXRW: This is quite ugly.  The existing code made a copy of the 	 * socket buffer, then zero'd the original to clear the buffer 	 * fields.  However, with mutexes in the socket buffer, this causes 	 * problems.  We only clear the zeroable bits of the original; 	 * however, we have to initialize and destroy the mutex in the copy 	 * so that dom_dispose() and sbrelease() can lock t as needed. 	 */
+comment|/* 	 * XXXRW: This is quite ugly.  Previously, this code made a copy of 	 * the socket buffer, then zero'd the original to clear the buffer 	 * fields.  However, with mutexes in the socket buffer, this causes 	 * problems.  We only clear the zeroable bits of the original; 	 * however, we have to initialize and destroy the mutex in the copy 	 * so that dom_dispose() and sbrelease() can lock t as needed. 	 */
 name|SOCKBUF_LOCK
 argument_list|(
 name|sb
@@ -8850,7 +8850,6 @@ directive|endif
 case|case
 name|SO_LINGER
 case|:
-comment|/* 			 * XXXRW: We grab the lock here to get a consistent 			 * snapshot of both fields.  This may not really 			 * be necessary. 			 */
 name|SOCK_LOCK
 argument_list|(
 name|so
