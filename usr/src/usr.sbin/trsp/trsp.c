@@ -15,15 +15,16 @@ control|(
 literal|8c
 control|)
 operator|.
-comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1985, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
 ifndef|#
 directive|ifndef
 name|lint
+specifier|static
 name|char
 name|copyright
 index|[]
 operator|=
-literal|"@(#) Copyright (c) 1985 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1985, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
 expr_stmt|;
 end_for
 
@@ -48,7 +49,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trsp.c	6.9 (Berkeley) %G%"
+literal|"@(#)trsp.c	8.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
