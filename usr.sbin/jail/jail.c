@@ -143,6 +143,8 @@ block|{
 name|login_cap_t
 modifier|*
 name|lcap
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|jail
@@ -152,6 +154,8 @@ name|struct
 name|passwd
 modifier|*
 name|pwd
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|in_addr
