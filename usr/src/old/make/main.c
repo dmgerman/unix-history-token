@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	4.7 (Berkeley) 85/08/30"
+literal|"@(#)main.c	4.8 (Berkeley) 86/01/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -1574,6 +1574,10 @@ condition|(
 name|fin
 operator|!=
 name|NULL
+operator|&&
+name|fin
+operator|!=
+name|stdin
 condition|)
 name|fclose
 argument_list|(
