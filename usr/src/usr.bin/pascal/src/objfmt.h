@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static	char sccsid[] = "@(#)objfmt.h 1.4 %G%"; */
+comment|/* static char sccsid[] = "@(#)objfmt.h 1.5 %G%"; */
 end_comment
 
 begin_ifdef
@@ -21,10 +21,10 @@ begin_struct
 struct|struct
 name|pxhdr
 block|{
-name|int
+name|long
 name|maketime
 decl_stmt|;
-name|int
+name|long
 name|objsize
 decl_stmt|;
 name|short
@@ -54,6 +54,17 @@ end_define
 
 begin_comment
 comment|/* px_header's name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PI_COMP
+value|"/usr/ucb/pi"
+end_define
+
+begin_comment
+comment|/* the compiler's name */
 end_comment
 
 begin_define
@@ -108,6 +119,20 @@ name|ERR_PATHLEN
 value|9
 end_define
 
+begin_define
+define|#
+directive|define
+name|HOW_STRNGS
+value|"/usr/lib/how_pi\0"
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOW_PATHLEN
+value|9
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -131,6 +156,20 @@ begin_define
 define|#
 directive|define
 name|ERR_PATHLEN
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOW_STRNGS
+value|"/usr/lib/how_pc\0"
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOW_PATHLEN
 value|9
 end_define
 
@@ -169,6 +208,20 @@ define|#
 directive|define
 name|PTR_IND
 value|O_IND4
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTR_CON
+value|O_CON4
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTR_DUP
+value|O_SDUP4
 end_define
 
 begin_define
@@ -354,6 +407,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|PTR_CON
+value|O_CON2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTR_DUP
+value|O_SDUP2
+end_define
+
+begin_define
+define|#
+directive|define
 name|PTR_DCL
 value|char *
 end_define
@@ -386,9 +453,20 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DPOFF2
-value|16
+name|DPOFF1
+value|0
 end_define
+
+begin_define
+define|#
+directive|define
+name|DPOFF2
+value|18
+end_define
+
+begin_comment
+comment|/* sizeof(struct stack) */
+end_comment
 
 begin_define
 define|#

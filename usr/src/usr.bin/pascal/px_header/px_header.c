@@ -1,8 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * pxheader - program to sit in front of interpreter code to make shell mods  *	      unnecessary to make Pascal obj's look like real programs.  *  * This program lives in /usr/lib/px_header  * Bill Joy UCB February 6, 1978  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)px_header.c 1.2 %G%"
+decl_stmt|;
+end_decl_stmt
+
 begin_include
 include|#
 directive|include
-file|<pagsiz.h>
+file|<stdio.h>
 end_include
 
 begin_include
@@ -29,31 +43,6 @@ directive|include
 file|"objfmt.h"
 end_include
 
-begin_comment
-comment|/*  * pxheader - program to sit in front of interpreter code to make shell mods  *	      unnecessary to make Pascal obj's look like real programs.  *  * This program lives in /usr/lib/px_header  * Bill Joy UCB February 6, 1978  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|sccsid
-init|=
-literal|"@(#)px_header.c	1.1 (Berkeley) %G%"
-decl_stmt|;
-end_decl_stmt
-
-begin_extern
-extern|extern	errno;
-end_extern
-
-begin_define
-define|#
-directive|define
-name|BUFSIZ
-value|BSIZE
-end_define
-
 begin_define
 define|#
 directive|define
@@ -67,6 +56,10 @@ directive|define
 name|ADDR_LC
 value|HEADER_BYTES - sizeof (struct exec) - sizeof (struct pxhdr)
 end_define
+
+begin_extern
+extern|extern	errno;
+end_extern
 
 begin_function
 name|main
@@ -237,7 +230,7 @@ name|pxhdr
 operator|*
 operator|)
 operator|(
-name|ADDR_LC
+name|ip
 operator|)
 operator|)
 operator|->
