@@ -6302,14 +6302,6 @@ name|v_data
 operator|=
 name|ip
 expr_stmt|;
-name|vp
-operator|->
-name|v_bsize
-operator|=
-name|fs
-operator|->
-name|fs_bsize
-expr_stmt|;
 name|ip
 operator|->
 name|i_vnode
