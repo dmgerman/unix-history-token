@@ -463,6 +463,9 @@ case|case
 literal|0x00041103
 case|:
 case|case
+literal|0x00051103
+case|:
+case|case
 literal|0x00081103
 case|:
 return|return

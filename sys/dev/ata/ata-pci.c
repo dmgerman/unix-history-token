@@ -1164,6 +1164,27 @@ return|return
 name|NULL
 return|;
 case|case
+literal|0x00051103
+case|:
+switch|switch
+condition|(
+name|pci_get_revid
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+block|{
+case|case
+literal|0x01
+case|:
+return|return
+literal|"HighPoint HPT372 ATA133 controller"
+return|;
+block|}
+return|return
+name|NULL
+return|;
+case|case
 literal|0x00081103
 case|:
 switch|switch
@@ -1607,26 +1628,18 @@ break|break;
 case|case
 literal|0x00041103
 case|:
-comment|/* HighPoint HPT 366/368/370/372 */
-case|case
-literal|0x00081103
-case|:
-comment|/* HighPoint HPT 374 */
-switch|switch
+comment|/* HighPoint HPT366/368/370/372 */
+if|if
 condition|(
 name|pci_get_revid
 argument_list|(
 name|dev
 argument_list|)
+operator|<
+literal|2
 condition|)
 block|{
-case|case
-literal|0x00
-case|:
 comment|/* HPT 366 */
-case|case
-literal|0x01
-case|:
 comment|/* turn off interrupt prediction */
 name|pci_write_config
 argument_list|(
@@ -1652,25 +1665,16 @@ literal|1
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
+comment|/* FALLTHROUGH */
 case|case
-literal|0x02
+literal|0x00051103
 case|:
-comment|/* HPT 368 */
+comment|/* HighPoint HPT372 */
 case|case
-literal|0x03
+literal|0x00081103
 case|:
-comment|/* HPT 370 */
-case|case
-literal|0x04
-case|:
-case|case
-literal|0x05
-case|:
-comment|/* HPT 372 */
-case|case
-literal|0x07
-case|:
-comment|/* HPT 374 */
+comment|/* HighPoint HPT374 */
 comment|/* turn off interrupt prediction */
 name|pci_write_config
 argument_list|(
@@ -1742,7 +1746,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|0x05711106
@@ -2098,6 +2101,10 @@ case|case
 literal|0x00041103
 case|:
 comment|/* HighPoint HPT366/368/370/372 */
+case|case
+literal|0x00051103
+case|:
+comment|/* HighPoint HPT372 */
 case|case
 literal|0x00081103
 case|:
