@@ -1,7 +1,56 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) University of British Columbia, 1984 */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_var.h	7.2 (Berkeley) %G%  */
 end_comment
+
+begin_comment
+comment|/*  * Protocol-Protocol Packet Buffer.  * (Eventually will be replace by system-wide structure).  */
+end_comment
+
+begin_struct
+struct|struct
+name|pq
+block|{
+name|int
+function_decl|(
+modifier|*
+name|pq_put
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* How to process data */
+name|struct
+name|mbuf
+modifier|*
+name|pq_data
+decl_stmt|;
+comment|/* Queued data */
+name|int
+name|pq_space
+decl_stmt|;
+comment|/* For accounting */
+name|int
+name|pq_flags
+decl_stmt|;
+name|int
+function_decl|(
+modifier|*
+name|pq_unblock
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* called& cleared when unblocking */
+name|caddr_t
+name|pq_proto
+decl_stmt|;
+comment|/* for other service entries */
+name|caddr_t
+name|pq_next
+decl_stmt|;
+comment|/* next q, or route, or pcb */
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  *  *  X.25 Logical Channel Descriptor  *  */
@@ -11,6 +60,13 @@ begin_struct
 struct|struct
 name|pklcd
 block|{
+name|struct
+name|pq
+name|lcd_downq
+decl_stmt|,
+name|lcd_upq
+decl_stmt|;
+comment|/* protocol glue for datagram service */
 name|short
 name|lcd_lcn
 decl_stmt|;
@@ -130,9 +186,9 @@ name|lcd_listen
 decl_stmt|;
 comment|/* Next lcd on listen queue */
 name|struct
-name|pkcb
+name|ifaddr
 modifier|*
-name|lcd_pkp
+name|lcd_ifa
 decl_stmt|;
 comment|/* network this lcd is attached to */
 block|}
@@ -140,49 +196,95 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Per network information, allocated dynamically  * when a new network is configured.  */
+comment|/*  *	Interface address, x25 version. Exactly one of these structures is   *	allocated for each interface with an x25 address.  *  *	The ifaddr structure conatins the protocol-independent part  *	of the structure, and is assumed to be first.  */
 end_comment
 
 begin_struct
 struct|struct
-name|pkcb
+name|x25_ifaddr
 block|{
 name|struct
-name|pkcb
+name|ifaddr
+name|ia_ifa
+decl_stmt|;
+comment|/* protocol-independent info */
+define|#
+directive|define
+name|ia_ifp
+value|ia_ifa.ifa_ifp
+define|#
+directive|define
+name|ia_flags
+value|ia_ifa.ifa_flags
+name|struct
+name|x25_ifaddr
 modifier|*
-name|pk_next
+name|ia_next
 decl_stmt|;
-name|short
-name|pk_state
+comment|/* next in list of x25 addresses */
+name|struct
+name|sockaddr_x25
+name|ia_addr
 decl_stmt|;
-comment|/* packet level status */
-name|short
-name|pk_maxlcn
+comment|/* reserve space for interface name */
+name|struct
+name|sockaddr_x25
+name|ia_sockmask
 decl_stmt|;
-comment|/* local copy of xc_maxlcn */
-name|int
-function_decl|(
-modifier|*
-name|pk_output
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* link level output procedure */
+comment|/* reserve space for netmask */
 name|struct
 name|x25config
 modifier|*
-name|pk_xcp
+name|ia_xcp
 decl_stmt|;
 comment|/* network specific configuration */
 name|struct
+name|x25config
+modifier|*
+name|ia_xc
+decl_stmt|;
+comment|/* network specific configuration */
+name|short
+name|ia_state
+decl_stmt|;
+comment|/* packet level status */
+define|#
+directive|define
+name|ia_maxlcn
+value|ia->ia_xc.xc_maxlcn
+comment|/* local copy of xc_maxlcn */
+name|struct
 name|pklcd
 modifier|*
-name|pk_chan
-index|[
-literal|1
-index|]
+modifier|*
+name|ia_chan
 decl_stmt|;
-comment|/* actual size == xc_maxlcn+1 */
+comment|/* dispatch vector for ciruits */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * ``Link-Level'' extension to Routing Entry for upper level  * packet switching via X.25 virtual circuits.  */
+end_comment
+
+begin_struct
+struct|struct
+name|rtext_x25
+block|{
+name|struct
+name|pklcd
+modifier|*
+name|rtx_lcd
+decl_stmt|;
+name|int
+name|rtx_state
+decl_stmt|;
+name|struct
+name|rtentry
+modifier|*
+name|rtx_rt
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -195,9 +297,9 @@ end_ifdef
 
 begin_decl_stmt
 name|struct
-name|pkcb
+name|x25_ifaddr
 modifier|*
-name|pkcbhead
+name|x25_ifaddr
 decl_stmt|;
 end_decl_stmt
 
