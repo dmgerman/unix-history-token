@@ -125,6 +125,43 @@ begin_comment
 comment|/* nothing */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|month
+index|[
+literal|12
+index|]
+init|=
+block|{
+literal|"Jan"
+block|,
+literal|"Feb"
+block|,
+literal|"Mar"
+block|,
+literal|"Apr"
+block|,
+literal|"May"
+block|,
+literal|"Jun"
+block|,
+literal|"Jul"
+block|,
+literal|"Aug"
+block|,
+literal|"Sep"
+block|,
+literal|"Oct"
+block|,
+literal|"Nov"
+block|,
+literal|"Dec"
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Look up skey info for user 'name'. If successful, fill in the caller's  * skey structure and return 0. If unsuccessful (e.g., if name is unknown)  * return -1. If an optional challenge string buffer is given, update it.  *  * The file read/write pointer is left at the start of the  * record.  */
 end_comment
@@ -821,6 +858,11 @@ name|tbuf
 index|[
 literal|27
 index|]
+decl_stmt|,
+name|fbuf
+index|[
+literal|20
+index|]
 decl_stmt|;
 name|char
 modifier|*
@@ -843,18 +885,35 @@ operator|&
 name|now
 argument_list|)
 expr_stmt|;
+comment|/* can't use %b here, because it can be in national form */
 name|strftime
 argument_list|(
-name|tbuf
+name|fbuf
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|tbuf
+name|fbuf
 argument_list|)
 argument_list|,
-literal|" %b %d,%Y %T"
+literal|"%d,%Y %T"
 argument_list|,
 name|tm
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|tbuf
+argument_list|,
+literal|" %s %s"
+argument_list|,
+name|month
+index|[
+name|tm
+operator|->
+name|tm_mon
+index|]
+argument_list|,
+name|fbuf
 argument_list|)
 expr_stmt|;
 if|if
