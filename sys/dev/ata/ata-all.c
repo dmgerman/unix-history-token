@@ -5429,6 +5429,21 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
+name|struct
+name|ata_pci_softc
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|scp
+operator|->
+name|dev
+argument_list|)
+argument_list|)
+decl_stmt|;
 name|u_int8_t
 name|dmastat
 init|=
@@ -5488,10 +5503,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|0x06461095
-case|:
-comment|/* CMD 646 */
-case|case
 literal|0x06481095
 case|:
 comment|/* CMD 648 */
@@ -5548,22 +5559,6 @@ case|case
 literal|0x0d30105a
 case|:
 comment|/* Promise OEM ATA100 */
-block|{
-name|struct
-name|ata_pci_softc
-modifier|*
-name|sc
-init|=
-name|device_get_softc
-argument_list|(
-name|device_get_parent
-argument_list|(
-name|scp
-operator|->
-name|dev
-argument_list|)
-argument_list|)
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -5592,7 +5587,7 @@ operator|)
 operator|)
 condition|)
 return|return;
-block|}
+comment|/* FALLTHROUGH */
 name|out
 label|:
 endif|#
