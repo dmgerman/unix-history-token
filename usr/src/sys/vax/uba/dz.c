@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	3.6	%H%	*/
+comment|/*	dz.c	3.7	%H%	*/
 end_comment
 
 begin_comment
@@ -1641,13 +1641,11 @@ end_else
 begin_expr_stmt
 name|c
 operator|=
-literal|0177
+name|tun
+operator|.
+name|t_intrc
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/* tun.t_intrc? */
-end_comment
 
 begin_endif
 endif|#
@@ -2840,25 +2838,7 @@ operator|)
 condition|)
 block|{
 comment|/* carrier lost */
-if|if
-condition|(
-name|tp
-operator|->
-name|t_state
-operator|&
-name|ISOPEN
-operator|&&
-operator|(
-name|tp
-operator|->
-name|t_local
-operator|&
-name|LNOHANG
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
+comment|/* 				if (tp->t_state&ISOPEN&& 				    (tp->t_local&LNOHANG) == 0) {  */
 name|gsignal
 argument_list|(
 name|tp
@@ -2880,7 +2860,7 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-block|}
+comment|/* 				}  */
 name|tp
 operator|->
 name|t_state
