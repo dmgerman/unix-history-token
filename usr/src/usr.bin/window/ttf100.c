@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ttf100.c	3.1 3.1"
+literal|"@(#)ttf100.c	3.2 3.2"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,6 +127,14 @@ end_macro
 
 begin_block
 block|{
+name|int
+name|ret
+decl_stmt|;
+name|ret
+operator|=
+name|tt_generic
+argument_list|()
+expr_stmt|;
 name|tt
 operator|.
 name|tt_frame
@@ -142,8 +150,7 @@ operator|=
 literal|"\033'"
 expr_stmt|;
 return|return
-name|tt_generic
-argument_list|()
+name|ret
 return|;
 block|}
 end_block
