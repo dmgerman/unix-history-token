@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: label.c,v 1.32.2.13 1995/10/16 23:02:22 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: label.c,v 1.32.2.14 1995/10/17 02:56:53 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -108,7 +108,7 @@ begin_define
 define|#
 directive|define
 name|ROOT_MIN_SIZE
-value|(20 * ONE_MEG)
+value|20
 end_define
 
 begin_comment
@@ -119,7 +119,7 @@ begin_define
 define|#
 directive|define
 name|SWAP_MIN_SIZE
-value|(16 * ONE_MEG)
+value|16
 end_define
 
 begin_comment
@@ -130,7 +130,7 @@ begin_define
 define|#
 directive|define
 name|USR_MIN_SIZE
-value|(80 * ONE_MEG)
+value|80
 end_define
 
 begin_comment
@@ -141,7 +141,7 @@ begin_define
 define|#
 directive|define
 name|VAR_MIN_SIZE
-value|(30 * ONE_MEG)
+value|30
 end_define
 
 begin_comment
@@ -2824,7 +2824,20 @@ name|physmem
 decl_stmt|;
 name|size_t
 name|size
+decl_stmt|,
+name|swsize
 decl_stmt|;
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+name|cp
+operator|=
+name|variable_get
+argument_list|(
+name|ROOT_SIZE
+argument_list|)
+expr_stmt|;
 name|tmp
 operator|=
 name|Create_Chunk_DWIM
@@ -2845,7 +2858,16 @@ index|]
 operator|.
 name|c
 argument_list|,
+operator|(
+name|cp
+condition|?
+name|atoi
+argument_list|(
+name|cp
+argument_list|)
+else|:
 literal|32
+operator|)
 operator|*
 name|ONE_MEG
 argument_list|,
@@ -2895,6 +2917,28 @@ argument_list|(
 name|devs
 argument_list|)
 expr_stmt|;
+name|cp
+operator|=
+name|variable_get
+argument_list|(
+name|SWAP_SIZE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+condition|)
+name|swsize
+operator|=
+name|atoi
+argument_list|(
+name|cp
+argument_list|)
+operator|*
+name|ONE_MEG
+expr_stmt|;
+else|else
+block|{
 name|mib
 index|[
 literal|0
@@ -2938,6 +2982,21 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+name|swsize
+operator|=
+literal|16
+operator|*
+name|ONE_MEG
+operator|+
+operator|(
+name|physmem
+operator|*
+literal|2
+operator|/
+literal|512
+operator|)
+expr_stmt|;
+block|}
 name|tmp
 operator|=
 name|Create_Chunk_DWIM
@@ -2958,17 +3017,7 @@ index|]
 operator|.
 name|c
 argument_list|,
-literal|16
-operator|*
-name|ONE_MEG
-operator|+
-operator|(
-name|physmem
-operator|*
-literal|2
-operator|/
-literal|512
-operator|)
+name|swsize
 argument_list|,
 name|part
 argument_list|,
@@ -3007,6 +3056,13 @@ argument_list|(
 name|devs
 argument_list|)
 expr_stmt|;
+name|cp
+operator|=
+name|variable_get
+argument_list|(
+name|VAR_SIZE
+argument_list|)
+expr_stmt|;
 name|tmp
 operator|=
 name|Create_Chunk_DWIM
@@ -3027,7 +3083,18 @@ index|]
 operator|.
 name|c
 argument_list|,
+operator|(
+name|cp
+condition|?
+name|atoi
+argument_list|(
+name|cp
+argument_list|)
+else|:
 name|VAR_MIN_SIZE
+operator|)
+operator|*
+name|ONE_MEG
 argument_list|,
 name|part
 argument_list|,
@@ -3047,9 +3114,16 @@ argument_list|(
 literal|"Less than %dMB free for /var - you will need to\n"
 literal|"partition your disk manually with a custom install!"
 argument_list|,
+operator|(
+name|cp
+condition|?
+name|atoi
+argument_list|(
+name|cp
+argument_list|)
+else|:
 name|VAR_MIN_SIZE
-operator|/
-name|ONE_MEG
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3080,6 +3154,27 @@ argument_list|(
 name|devs
 argument_list|)
 expr_stmt|;
+name|cp
+operator|=
+name|variable_get
+argument_list|(
+name|USR_SIZE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+condition|)
+name|sz
+operator|=
+name|atoi
+argument_list|(
+name|cp
+argument_list|)
+operator|*
+name|ONE_MEG
+expr_stmt|;
+else|else
 name|sz
 operator|=
 name|space_free
@@ -3099,7 +3194,11 @@ name|sz
 operator|||
 name|sz
 operator|<
+operator|(
 name|USR_MIN_SIZE
+operator|*
+name|ONE_MEG
+operator|)
 condition|)
 block|{
 name|msgConfirm
@@ -3108,20 +3207,10 @@ literal|"Less than %dMB free for /usr - you will need to\n"
 literal|"partition your disk manually with a custom install!"
 argument_list|,
 name|USR_MIN_SIZE
-operator|/
-name|ONE_MEG
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* At this point, we're reasonably "labelled" */
-name|variable_set2
-argument_list|(
-name|DISK_LABELLED
-argument_list|,
-literal|"yes"
-argument_list|)
-expr_stmt|;
 name|tmp
 operator|=
 name|Create_Chunk_DWIM
@@ -3165,6 +3254,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* At this point, we're reasonably "labelled" */
+name|variable_set2
+argument_list|(
+name|DISK_LABELLED
+argument_list|,
+literal|"yes"
+argument_list|)
+expr_stmt|;
 name|tmp
 operator|->
 name|private
@@ -3551,7 +3648,11 @@ if|if
 condition|(
 name|size
 operator|<
+operator|(
 name|ROOT_MIN_SIZE
+operator|*
+name|ONE_MEG
+operator|)
 condition|)
 name|msgConfirm
 argument_list|(
@@ -3560,8 +3661,6 @@ literal|"root partition.  For a variety of reasons, root\n"
 literal|"partitions should usually be at least %dMB in size"
 argument_list|,
 name|ROOT_MIN_SIZE
-operator|/
-name|ONE_MEG
 argument_list|)
 expr_stmt|;
 block|}

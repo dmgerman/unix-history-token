@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated for what's essentially a complete rewrite.  *  * $Id: dmenu.c,v 1.12.2.2 1995/10/07 11:55:18 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated for what's essentially a complete rewrite.  *  * $Id: dmenu.c,v 1.12.2.3 1995/10/15 12:40:59 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|MAX_MENU
-value|8
+value|18
 end_define
 
 begin_comment
@@ -322,6 +322,68 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|menu_height
+parameter_list|(
+name|DMenu
+modifier|*
+name|menu
+parameter_list|,
+name|int
+name|n
+parameter_list|)
+block|{
+name|int
+name|max
+decl_stmt|;
+name|char
+modifier|*
+name|t
+decl_stmt|;
+for|for
+control|(
+name|t
+operator|=
+name|menu
+operator|->
+name|title
+operator|,
+name|max
+operator|=
+name|MAX_MENU
+init|;
+operator|*
+name|t
+condition|;
+name|t
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|*
+name|t
+operator|==
+literal|'\n'
+condition|)
+operator|--
+name|max
+expr_stmt|;
+block|}
+return|return
+name|n
+operator|>
+name|max
+condition|?
+name|max
+else|:
+name|n
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/* Traverse over an internal menu */
 end_comment
@@ -508,7 +570,6 @@ name|options
 operator|&
 name|DMENU_NORMAL_TYPE
 condition|)
-block|{
 name|rval
 operator|=
 name|dialog_menu
@@ -535,13 +596,12 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
+name|menu_height
+argument_list|(
+name|menu
+argument_list|,
 name|n
-operator|>
-name|MAX_MENU
-condition|?
-name|MAX_MENU
-else|:
-name|n
+argument_list|)
 argument_list|,
 name|n
 argument_list|,
@@ -563,7 +623,6 @@ argument_list|,
 name|scroll
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -573,7 +632,6 @@ name|options
 operator|&
 name|DMENU_RADIO_TYPE
 condition|)
-block|{
 name|rval
 operator|=
 name|dialog_radiolist
@@ -600,13 +658,12 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
+name|menu_height
+argument_list|(
+name|menu
+argument_list|,
 name|n
-operator|>
-name|MAX_MENU
-condition|?
-name|MAX_MENU
-else|:
-name|n
+argument_list|)
 argument_list|,
 name|n
 argument_list|,
@@ -624,7 +681,6 @@ operator|)
 name|result
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -634,7 +690,6 @@ name|options
 operator|&
 name|DMENU_MULTIPLE_TYPE
 condition|)
-block|{
 name|rval
 operator|=
 name|dialog_checklist
@@ -661,13 +716,12 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
+name|menu_height
+argument_list|(
+name|menu
+argument_list|,
 name|n
-operator|>
-name|MAX_MENU
-condition|?
-name|MAX_MENU
-else|:
-name|n
+argument_list|)
 argument_list|,
 name|n
 argument_list|,
@@ -685,7 +739,6 @@ operator|)
 name|result
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* This seems to be the only technique that works for getting the display to look right */
 name|dialog_clear
 argument_list|()

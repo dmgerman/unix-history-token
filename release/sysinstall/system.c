@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.44.2.8 1995/10/16 23:02:29 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.44.2.9 1995/10/17 02:57:03 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -866,7 +866,7 @@ argument_list|()
 condition|)
 name|msgInfo
 argument_list|(
-literal|"Command output is on debugging screen - type ALT-F2 to see it"
+literal|"Command output is on VTY2 - type ALT-F2 to see it"
 argument_list|)
 expr_stmt|;
 name|dup2
@@ -1334,54 +1334,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|RET_SUCCESS
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Specify which package to load for a browser */
-end_comment
-
-begin_function
-name|int
-name|docSelectBrowserPkg
-parameter_list|(
-name|char
-modifier|*
-name|str
-parameter_list|)
-block|{
-return|return
-name|variable_get_value
-argument_list|(
-name|BROWSER_PACKAGE
-argument_list|,
-literal|"Please specify the name of the HTML browser package:"
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Specify which binary to load for a browser */
-end_comment
-
-begin_function
-name|int
-name|docSelectBrowserBin
-parameter_list|(
-name|char
-modifier|*
-name|str
-parameter_list|)
-block|{
-return|return
-name|variable_get_value
-argument_list|(
-name|BROWSER_BINARY
-argument_list|,
-literal|"Please specify a full pathname to the HTML browser binary:"
-argument_list|)
 return|;
 block|}
 end_function

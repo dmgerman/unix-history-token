@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.42.2.23 1995/10/16 23:02:25 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.42.2.24 1995/10/17 02:56:56 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -174,6 +174,18 @@ literal|0
 block|,
 literal|0
 block|}
+block|,
+block|{
+literal|"Load"
+block|,
+literal|"Load a pre-configuration disk."
+block|,
+name|DMENU_CALL
+block|,
+name|installPreconfig
+block|,
+literal|0
+block|,		}
 block|,
 block|{
 name|NULL
@@ -884,9 +896,9 @@ name|DMENU_NORMAL_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
-literal|"Choose a network interface type"
+literal|"Network interface information required"
 block|,
-literal|"If you are using PPP over a serial device (cuaa0 or cuaa1) as opposed\n\ to a direct ethernet connection, then you may first need to dial your\n\ service provider using the ppp utility we provide for that purpose.\n\ You can also install over a parallel port using a special \"laplink\"\n\ cable, though this only works if you have another FreeBSD machine running\n\ a fairly recent (2.0R or later) release to talk to.\n\n\ To use PPP select one of the serial devices, otherwise select lp0 for\n\ the parallel port or one of the ethernet controllers (if you have one)\n\ for an ethernet installation."
+literal|"If you are using PPP over a serial device (cuaa0 or cuaa1) as opposed\n\ to a direct ethernet connection, then you may first need to dial your\n\ service provider using the ppp utility we provide for that purpose.\n\ You can also install over a parallel port using a special \"laplink\"\n\ cable, though this only works if you have another FreeBSD machine running\n\ a fairly recent (2.0R or later) release to talk to.\n\n\ To use PPP, select one of the serial devices, otherwise select lp0 for\n\ the parallel port or one of the ethernet controllers (if you have one)\n\ for an ethernet installation."
 block|,
 literal|"Press F1 to read network configuration manual"
 block|,
@@ -911,12 +923,10 @@ name|MenuMedia
 init|=
 block|{
 name|DMENU_NORMAL_TYPE
-operator||
-name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Choose Installation Media"
 block|,
-literal|"FreeBSD can be installed from a variety of different installation\n\ media, ranging from floppies to the Internet.  If you're installing\n\ FreeBSD from a supported CDROM drive then this is generally the best\n\ media to use, unless you have some overriding reason for using another\n\ media."
+literal|"FreeBSD can be installed from a variety of different installation\n\ media, ranging from floppies to an Internet FTP server.  If you're\n\ installing FreeBSD from a supported CDROM drive then this is generally\n\ the best media to use if you have no overriding reason for using other\n\ media."
 block|,
 literal|"Press F1 for more information on the various media types"
 block|,
@@ -954,7 +964,7 @@ block|,
 block|{
 literal|"File System"
 block|,
-literal|"Install from a mounted filesystem"
+literal|"Install from an existing filesystem"
 block|,
 name|DMENU_CALL
 block|,
@@ -3001,7 +3011,7 @@ block|,
 literal|"FreeBSD Configuration Menu"
 block|,
 comment|/* title */
-literal|"If you've already installed FreeBSD, you may use this menu to\n\ customize it somewhat to suit your particular configuration.  Most\n\ importantly, you can use the Packages utility to load extra \"3rd party\"\n\ software not provided in the base distributions."
+literal|"If you've already installed FreeBSD, you may use this menu to customize\n\ it somewhat to suit your particular configuration.  Most importantly,\n\ you can use the Packages utility to load extra \"3rd party\"\n\ software not provided in the base distributions."
 block|,
 literal|"Press F1 for more information on these options"
 block|,
@@ -3015,7 +3025,7 @@ literal|"Add users to the system"
 block|,
 name|DMENU_SYSTEM_COMMAND
 block|,
-literal|"adduser -silent"
+literal|"adduser -s"
 block|,
 literal|0
 block|,
@@ -3112,7 +3122,7 @@ block|,
 block|{
 literal|"Packages"
 block|,
-literal|"Install extra FreeBSD packaged software"
+literal|"Install pre-packaged software for FreeBSD"
 block|,
 name|DMENU_CALL
 block|,

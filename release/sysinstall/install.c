@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.34 1995/10/16 15:14:06 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.35 1995/10/16 23:02:20 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -45,11 +45,23 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|MSDOSFS
+end_define
+
 begin_include
 include|#
 directive|include
 file|<sys/mount.h>
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|MSDOSFS
+end_undef
 
 begin_include
 include|#
@@ -61,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mount.h>
 end_include
 
 begin_function_decl
@@ -92,6 +110,13 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|TERMCAP_FILE
+value|"/usr/share/misc/termcap"
+end_define
 
 begin_function
 specifier|static
@@ -749,7 +774,10 @@ comment|/* stick a helpful shell over on the 4th VTY */
 if|if
 condition|(
 name|OnVTY
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 name|fork
 argument_list|()
@@ -771,11 +799,6 @@ argument_list|(
 name|int
 argument_list|)
 decl_stmt|;
-name|msgDebug
-argument_list|(
-literal|"Starting an emergency holographic shell over on the 4th screen\n"
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -784,7 +807,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|64
+literal|3
 condition|;
 name|i
 operator|++
@@ -837,18 +860,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|msgNotify
+name|msgDebug
 argument_list|(
-literal|"Can't set controlling terminal"
+literal|"Doctor: I can't set the controlling terminal.\n"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|signal
 argument_list|(
 name|SIGTTOU
@@ -894,16 +910,16 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|printf
+name|msgDebug
 argument_list|(
-literal|"WARNING: Unable to set erase character.\n"
+literal|"Doctor: I'm unable to set the erase character.\n"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|printf
+name|msgDebug
 argument_list|(
-literal|"WARNING: Unable to get terminal attributes!\n"
+literal|"Doctor: I'm unable to get the terminal attributes!\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -920,9 +936,21 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|msgDebug
+argument_list|(
+literal|"Was unable to execute sh for Holographic shell!\n"
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|msgNotify
+argument_list|(
+literal|"Starting an emergency holographic shell on VTY4"
 argument_list|)
 expr_stmt|;
 block|}
@@ -974,14 +1002,11 @@ name|fspec
 operator|=
 literal|"/dev/fd0"
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|mkdir
+name|Mkdir
 argument_list|(
 literal|"/mnt2"
 argument_list|,
-literal|0755
+name|NULL
 argument_list|)
 expr_stmt|;
 while|while
@@ -1039,7 +1064,6 @@ name|DialogActive
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* Try to leach a big /tmp off the fixit floppy */
 if|if
 condition|(
 operator|!
@@ -1061,55 +1085,72 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|file_readable
+name|file_executable
 argument_list|(
 literal|"/var/tmp/vi.recover"
 argument_list|)
 condition|)
-block|{
+if|if
+condition|(
 name|Mkdir
 argument_list|(
-literal|"/var"
+literal|"/var/tmp/vi.recover"
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|symlink
+operator|!=
+name|RET_SUCCESS
+condition|)
+name|msgConfirm
 argument_list|(
-literal|"/mnt2/tmp"
-argument_list|,
-literal|"/var/tmp"
+literal|"Warning:  Was unable to create a /var/tmp/vi.recover directory.\n"
+literal|"vi will kvetch and moan about it as a result but should still\n"
+literal|"be essentially usable."
 argument_list|)
 expr_stmt|;
-name|Mkdir
-argument_list|(
-literal|"/mnt2/tmp/vi.recover"
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Link the spwd.db file */
+if|if
+condition|(
 name|Mkdir
 argument_list|(
 literal|"/etc"
 argument_list|,
 name|NULL
 argument_list|)
+operator|!=
+name|RET_SUCCESS
+condition|)
+name|msgConfirm
+argument_list|(
+literal|"Unable to create an /etc directory!  Things are weird on this floppy.."
+argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+elseif|else
+if|if
+condition|(
 name|symlink
 argument_list|(
 literal|"/mnt2/etc/spwd.db"
 argument_list|,
 literal|"/etc/spwd.db"
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|msgConfirm
+argument_list|(
+literal|"Couldn't symlink the /etc/spwd.db file!  I'm not sure I like this.."
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|file_readable
+argument_list|(
+name|TERMCAP_FILE
+argument_list|)
+condition|)
 name|create_termcap
 argument_list|()
 expr_stmt|;
@@ -1163,7 +1204,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|64
+literal|3
 condition|;
 name|i
 operator|++
@@ -1216,18 +1257,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|msgNotify
+name|msgDebug
 argument_list|(
-literal|"Can't set controlling terminal"
+literal|"fixit shell: Couldn't set controlling terminal!\n"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|signal
 argument_list|(
 name|SIGTTOU
@@ -1273,16 +1307,16 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|printf
+name|msgDebug
 argument_list|(
-literal|"WARNING: Unable to set erase character.\n"
+literal|"fixit shell: Unable to set erase character.\n"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|printf
+name|msgDebug
 argument_list|(
-literal|"WARNING: Unable to get terminal attributes!\n"
+literal|"fixit shell: Unable to get terminal attributes!\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1306,6 +1340,11 @@ argument_list|,
 literal|"-sh"
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|msgDebug
+argument_list|(
+literal|"fixit shell: Failed to execute shell!\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1488,7 +1527,8 @@ literal|"Since you're running the express installation, a few post-configuration
 literal|"questions will be asked at this point.\n\n"
 literal|"The FreeBSD package collection is a collection of over 300 ready-to-run\n"
 literal|"applications, from text editors to games to WEB servers.  If you've never\n"
-literal|"done so, it's definitely worth browsing through.  Would you like to do so now?"
+literal|"done so, it's definitely worth browsing through.\n\n"
+literal|"Would you like to do so now?"
 argument_list|)
 condition|)
 name|configPackages
@@ -1560,7 +1600,7 @@ name|RET_FAIL
 return|;
 name|i
 operator|=
-name|RET_SUCCESS
+name|RET_DONE
 expr_stmt|;
 if|if
 condition|(
@@ -1695,18 +1735,16 @@ condition|)
 name|msgConfirm
 argument_list|(
 literal|"Installation completed with some errors.  You may wish to\n"
-literal|"scroll through the debugging messages on ALT-F2 with the\n"
-literal|"scroll-lock feature.  Press [ENTER] to return to the\n"
-literal|"installation menu."
+literal|"scroll through the debugging messages on VTY1 with the\n"
+literal|"scroll-lock feature."
 argument_list|)
 expr_stmt|;
 else|else
 name|msgConfirm
 argument_list|(
-literal|"Installation completed successfully, now press [ENTER] to return\n"
-literal|"to the main menu. If you have any network devices you have not yet\n"
-literal|"configured, see the Interface configuration item on the\n"
-literal|"Configuration menu."
+literal|"Installation completed successfully.\n\n"
+literal|"If you have any network devices you have not yet configured,\n"
+literal|"see the Interfaces configuration item on the Configuration menu."
 argument_list|)
 expr_stmt|;
 block|}
@@ -1738,7 +1776,10 @@ name|file_readable
 argument_list|(
 literal|"/kernel"
 argument_list|)
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|file_readable
 argument_list|(
 literal|"/kernel.GENERIC"
@@ -1775,6 +1816,7 @@ expr_stmt|;
 return|return
 name|RET_FAIL
 return|;
+block|}
 block|}
 comment|/* Resurrect /dev after bin distribution screws it up */
 if|if
@@ -2326,7 +2368,7 @@ name|msgConfirm
 argument_list|(
 literal|"Warning:  You have selected a Read-Only root device and\n"
 literal|"and may be unable to find the appropriate device entries\n"
-literal|"on it if it is from an older pre-slice version of FreeBSD."
+literal|"on it if it is from an older, pre-slice version of FreeBSD."
 argument_list|)
 expr_stmt|;
 name|msgNotify
@@ -2778,6 +2820,440 @@ block|}
 end_function
 
 begin_comment
+comment|/* From the top menu - try to mount the floppy and read a configuration file from it */
+end_comment
+
+begin_function
+name|int
+name|installPreconfig
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|)
+block|{
+name|struct
+name|ufs_args
+name|u_args
+decl_stmt|;
+name|struct
+name|msdosfs_args
+name|m_args
+decl_stmt|;
+name|int
+name|fd
+decl_stmt|,
+name|i
+decl_stmt|;
+name|char
+name|buf
+index|[
+literal|128
+index|]
+decl_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|u_args
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|u_args
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|u_args
+operator|.
+name|fspec
+operator|=
+literal|"/dev/fd0"
+expr_stmt|;
+name|Mkdir
+argument_list|(
+literal|"/mnt2"
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|m_args
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|m_args
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|m_args
+operator|.
+name|fspec
+operator|=
+literal|"/dev/fd0"
+expr_stmt|;
+name|m_args
+operator|.
+name|uid
+operator|=
+name|m_args
+operator|.
+name|gid
+operator|=
+literal|0
+expr_stmt|;
+name|m_args
+operator|.
+name|mask
+operator|=
+literal|0777
+expr_stmt|;
+name|i
+operator|=
+name|RET_FAIL
+expr_stmt|;
+while|while
+condition|(
+literal|1
+condition|)
+block|{
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+if|if
+condition|(
+name|variable_get_value
+argument_list|(
+name|CONFIG_FILE
+argument_list|,
+literal|"Please insert the floppy containing this configuration file\n"
+literal|"into drive A now and press [ENTER]."
+argument_list|)
+operator|!=
+name|RET_SUCCESS
+condition|)
+break|break;
+if|if
+condition|(
+name|mount
+argument_list|(
+name|MOUNT_UFS
+argument_list|,
+literal|"/mnt2"
+argument_list|,
+name|MNT_RDONLY
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|u_args
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+name|mount
+argument_list|(
+name|MOUNT_MSDOS
+argument_list|,
+literal|"/mnt2"
+argument_list|,
+name|MNT_RDONLY
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|m_args
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+name|msgYesNo
+argument_list|(
+literal|"Unable to mount the configuration floppy - do you want to try again?"
+argument_list|)
+condition|)
+break|break;
+else|else
+continue|continue;
+block|}
+block|}
+name|cp
+operator|=
+name|variable_get
+argument_list|(
+name|CONFIG_FILE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cp
+condition|)
+break|break;
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"/mnt2/%s"
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+name|fd
+operator|=
+name|open
+argument_list|(
+name|buf
+argument_list|,
+name|O_RDONLY
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+name|msgYesNo
+argument_list|(
+literal|"Unable to find the configuration file `%s' - do you want to\n"
+literal|"try again?"
+argument_list|,
+name|buf
+argument_list|)
+condition|)
+block|{
+name|unmount
+argument_list|(
+literal|"/mnt2"
+argument_list|,
+name|MNT_FORCE
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
+else|else
+block|{
+name|Attribs
+modifier|*
+name|cattr
+init|=
+name|safe_malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|Attribs
+argument_list|)
+operator|*
+name|MAX_ATTRIBS
+argument_list|)
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+if|if
+condition|(
+name|attr_parse
+argument_list|(
+name|cattr
+argument_list|,
+name|fd
+argument_list|)
+operator|==
+name|RET_FAIL
+condition|)
+name|msgConfirm
+argument_list|(
+literal|"Cannot parse configuration file %s!  Please verify your media."
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|cattr
+index|[
+name|i
+index|]
+operator|.
+name|name
+index|[
+literal|0
+index|]
+condition|;
+name|i
+operator|++
+control|)
+name|variable_set2
+argument_list|(
+name|cattr
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|,
+name|cattr
+index|[
+name|i
+index|]
+operator|.
+name|value
+argument_list|)
+expr_stmt|;
+name|i
+operator|=
+name|RET_SUCCESS
+expr_stmt|;
+block|}
+name|mediaDevice
+operator|->
+name|close
+argument_list|(
+name|mediaDevice
+argument_list|,
+name|fd
+argument_list|)
+expr_stmt|;
+name|safe_free
+argument_list|(
+name|cattr
+argument_list|)
+expr_stmt|;
+name|unmount
+argument_list|(
+literal|"/mnt2"
+argument_list|,
+name|MNT_FORCE
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
+return|return
+name|i
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|installVarDefaults
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* Set default startup options */
+name|OptFlags
+operator|=
+name|OPT_DEFAULT_FLAGS
+expr_stmt|;
+name|variable_set2
+argument_list|(
+literal|"routedflags"
+argument_list|,
+literal|"-q"
+argument_list|)
+expr_stmt|;
+name|variable_set2
+argument_list|(
+name|RELNAME
+argument_list|,
+name|RELEASE_NAME
+argument_list|)
+expr_stmt|;
+name|variable_set2
+argument_list|(
+name|CPIO_VERBOSITY_LEVEL
+argument_list|,
+literal|"high"
+argument_list|)
+expr_stmt|;
+name|variable_set2
+argument_list|(
+name|TAPE_BLOCKSIZE
+argument_list|,
+name|DEFAULT_TAPE_BLOCKSIZE
+argument_list|)
+expr_stmt|;
+name|variable_set2
+argument_list|(
+name|FTP_USER
+argument_list|,
+literal|"ftp"
+argument_list|)
+expr_stmt|;
+name|variable_set2
+argument_list|(
+name|BROWSER_PACKAGE
+argument_list|,
+literal|"lynx-2.4.2"
+argument_list|)
+expr_stmt|;
+name|variable_set2
+argument_list|(
+name|BROWSER_BINARY
+argument_list|,
+literal|"/usr/local/bin/lynx"
+argument_list|)
+expr_stmt|;
+name|variable_set2
+argument_list|(
+name|CONFIG_FILE
+argument_list|,
+literal|"freebsd.cfg"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|getpid
+argument_list|()
+operator|!=
+literal|1
+operator|&&
+operator|!
+name|variable_get
+argument_list|(
+name|SYSTEM_INSTALLED
+argument_list|)
+condition|)
+name|variable_set2
+argument_list|(
+name|SYSTEM_INSTALLED
+argument_list|,
+literal|"update"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* Copy the boot floppy contents into /stand */
 end_comment
 
@@ -2935,7 +3411,7 @@ name|mediaDevice
 argument_list|,
 literal|"floppies/root.flp"
 argument_list|,
-name|NULL
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -3122,7 +3598,7 @@ condition|(
 operator|!
 name|file_readable
 argument_list|(
-literal|"/usr/share/misc/termcap"
+name|TERMCAP_FILE
 argument_list|)
 condition|)
 block|{
@@ -3137,7 +3613,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-literal|"/usr/share/misc/termcap"
+name|TERMCAP_FILE
 argument_list|,
 literal|"w"
 argument_list|)
@@ -3183,30 +3659,6 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_function
-
-begin_comment
-comment|/* Specify which release to load from FTP or CD */
-end_comment
-
-begin_function
-name|int
-name|installSelectRelease
-parameter_list|(
-name|char
-modifier|*
-name|str
-parameter_list|)
-block|{
-return|return
-name|variable_get_value
-argument_list|(
-name|RELNAME
-argument_list|,
-literal|"Please specify the release you wish to load"
-argument_list|)
-return|;
 block|}
 end_function
 
