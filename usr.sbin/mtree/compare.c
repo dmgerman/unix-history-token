@@ -121,7 +121,7 @@ define|#
 directive|define
 name|LABEL
 define|\
-value|if (!label++) { \ 		len = printf("%s: ", RP(p)); \ 		if (len> INDENTNAMELEN) { \ 			tab = "\t"; \ 			(void)printf("\n"); \ 		} else { \ 			tab = ""; \ 			(void)printf("%*s", INDENTNAMELEN - len, ""); \ 		} \ 	}
+value|if (!label++) { \ 		len = printf("%s: ", RP(p)); \ 		if (len> INDENTNAMELEN) { \ 			tab = "\t"; \ 			(void)printf("\n"); \ 		} else { \ 			tab = ""; \ 			(void)printf("%*s", INDENTNAMELEN - (int)len, ""); \ 		} \ 	}
 end_define
 
 begin_function
@@ -169,6 +169,8 @@ name|cp
 decl_stmt|,
 modifier|*
 name|tab
+init|=
+literal|""
 decl_stmt|;
 name|label
 operator|=
@@ -373,7 +375,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%suser (%u, %u"
+literal|"%suser (%lu, %lu"
 argument_list|,
 name|tab
 argument_list|,
@@ -474,7 +476,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%sgid (%u, %u"
+literal|"%sgid (%lu, %lu"
 argument_list|,
 name|tab
 argument_list|,
@@ -746,6 +748,7 @@ block|}
 comment|/* 	 * XXX 	 * Catches nano-second differences, but doesn't display them. 	 */
 if|if
 condition|(
+operator|(
 name|s
 operator|->
 name|flags
@@ -765,7 +768,9 @@ operator|->
 name|st_mtimespec
 operator|.
 name|ts_sec
+operator|)
 operator|||
+operator|(
 name|s
 operator|->
 name|st_mtimespec
@@ -779,6 +784,7 @@ operator|->
 name|st_mtimespec
 operator|.
 name|ts_nsec
+operator|)
 condition|)
 block|{
 name|LABEL

@@ -103,6 +103,7 @@ end_include
 
 begin_decl_stmt
 specifier|extern
+name|long
 name|int
 name|crc_total
 decl_stmt|;
@@ -123,6 +124,10 @@ decl_stmt|,
 name|dflag
 decl_stmt|,
 name|eflag
+decl_stmt|,
+name|iflag
+decl_stmt|,
+name|nflag
 decl_stmt|,
 name|rflag
 decl_stmt|,
@@ -215,7 +220,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cdef:K:k:p:rs:ux"
+literal|"cdef:iK:k:np:rs:ux"
 argument_list|)
 operator|)
 operator|!=
@@ -281,6 +286,14 @@ argument_list|(
 name|errno
 argument_list|)
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'i'
+case|:
+name|iflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -357,6 +370,14 @@ name|p
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+name|nflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -524,7 +545,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mtree [-cderux] [-f spec] [-K key] [-k key] [-p path] [-s seed]\n"
+literal|"usage: mtree [-cdeinrux] [-f spec] [-K key] [-k key] [-p path] [-s seed]\n"
 argument_list|)
 expr_stmt|;
 name|exit

@@ -90,9 +90,15 @@ end_include
 
 begin_decl_stmt
 specifier|extern
+name|long
 name|int
 name|crc_total
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|ftsoptions
 decl_stmt|;
 end_decl_stmt
@@ -296,12 +302,14 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|p
 operator|=
 name|fts_read
 argument_list|(
 name|t
 argument_list|)
+operator|)
 condition|)
 block|{
 switch|switch
@@ -408,6 +416,7 @@ name|next
 control|)
 if|if
 condition|(
+operator|(
 name|ep
 operator|->
 name|flags
@@ -427,6 +436,7 @@ name|fts_name
 argument_list|,
 name|FNM_PATHNAME
 argument_list|)
+operator|)
 operator|||
 operator|!
 name|strcmp

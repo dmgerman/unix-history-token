@@ -174,6 +174,10 @@ index|[
 literal|2048
 index|]
 decl_stmt|;
+name|centry
+operator|=
+name|last
+operator|=
 name|root
 operator|=
 name|NULL
@@ -711,6 +715,8 @@ name|kw
 decl_stmt|,
 modifier|*
 name|val
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|group
@@ -736,6 +742,7 @@ decl_stmt|;
 for|for
 control|(
 init|;
+operator|(
 name|kw
 operator|=
 name|strtok
@@ -744,6 +751,7 @@ name|t
 argument_list|,
 literal|"= \t\n"
 argument_list|)
+operator|)
 condition|;
 name|t
 operator|=
@@ -1328,6 +1336,7 @@ name|p
 decl_stmt|;
 while|while
 condition|(
+operator|(
 name|p
 operator|=
 name|strtok
@@ -1336,6 +1345,7 @@ name|t
 argument_list|,
 literal|"\n\t "
 argument_list|)
+operator|)
 condition|)
 name|ip
 operator|->
