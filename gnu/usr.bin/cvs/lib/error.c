@@ -11,6 +11,12 @@ begin_comment
 comment|/* Brian Berliner added support for CVS */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"cvs.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -19,6 +25,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
@@ -26,6 +33,14 @@ init|=
 literal|"$CVSid: @(#)error.c 1.13 94/09/30 $"
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|USE
+argument_list|(
+name|rcsid
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -36,23 +51,6 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"config.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -60,65 +58,14 @@ file|<stdio.h>
 end_include
 
 begin_comment
-comment|/* turn on CVS support by default, since this is the CVS distribution */
+comment|/* If non-zero, error will use the CVS protocol to stdout to report error    messages.  This will only be set in the CVS server parent process;    most other code is run via do_cvs_command, which forks off a child    process and packages up its stderr in the protocol.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CVS_SUPPORT
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CVS_SUPPORT
-end_ifdef
-
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_function_decl
-name|void
-name|Lock_Cleanup
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-name|void
-name|Lock_Cleanup
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __STDC__ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CVS_SUPPORT */
-end_comment
+begin_decl_stmt
+name|int
+name|error_use_protocol
+decl_stmt|;
+end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -306,6 +253,53 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|fn_returning_void
+function_decl|)
+parameter_list|()
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/* Function to call before exiting.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|fn_returning_void
+name|cleanup_fn
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|fn_returning_void
+name|error_set_cleanup
+parameter_list|(
+name|arg
+parameter_list|)
+name|fn_returning_void
+name|arg
+decl_stmt|;
+block|{
+name|fn_returning_void
+name|retval
+init|=
+name|cleanup_fn
+decl_stmt|;
+name|cleanup_fn
+operator|=
+name|arg
+expr_stmt|;
+return|return
+name|retval
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/* Print the program name and error message MESSAGE, which is a printf-style    format string with optional args.    If ERRNUM is nonzero, print its corresponding system error message.    Exit with status STATUS if it is nonzero. */
 end_comment
@@ -332,6 +326,7 @@ argument_list|,
 name|int
 name|errnum
 argument_list|,
+specifier|const
 name|char
 operator|*
 name|message
@@ -362,6 +357,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|message
@@ -379,21 +375,22 @@ end_endif
 
 begin_block
 block|{
+name|FILE
+modifier|*
+name|out
+init|=
+name|stderr
+decl_stmt|;
 specifier|extern
 name|char
 modifier|*
 name|program_name
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CVS_SUPPORT
 specifier|extern
 name|char
 modifier|*
 name|command_name
 decl_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|HAVE_VPRINTF
@@ -402,9 +399,21 @@ name|args
 decl_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|CVS_SUPPORT
+if|if
+condition|(
+name|error_use_protocol
+condition|)
+block|{
+name|out
+operator|=
+name|stdout
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"E "
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|command_name
@@ -418,7 +427,7 @@ name|status
 condition|)
 name|fprintf
 argument_list|(
-name|stderr
+name|out
 argument_list|,
 literal|"%s [%s aborted]: "
 argument_list|,
@@ -430,7 +439,7 @@ expr_stmt|;
 else|else
 name|fprintf
 argument_list|(
-name|stderr
+name|out
 argument_list|,
 literal|"%s %s: "
 argument_list|,
@@ -442,26 +451,13 @@ expr_stmt|;
 else|else
 name|fprintf
 argument_list|(
-name|stderr
+name|out
 argument_list|,
 literal|"%s: "
 argument_list|,
 name|program_name
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: "
-argument_list|,
-name|program_name
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|HAVE_VPRINTF
@@ -474,7 +470,7 @@ argument_list|)
 expr_stmt|;
 name|vfprintf
 argument_list|(
-name|stderr
+name|out
 argument_list|,
 name|message
 argument_list|,
@@ -498,14 +494,14 @@ argument_list|,
 operator|&
 name|args
 argument_list|,
-name|stderr
+name|out
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
 name|fprintf
 argument_list|(
-name|stderr
+name|out
 argument_list|,
 name|message
 argument_list|,
@@ -536,7 +532,7 @@ name|errnum
 condition|)
 name|fprintf
 argument_list|(
-name|stderr
+name|out
 argument_list|,
 literal|": %s"
 argument_list|,
@@ -550,12 +546,12 @@ name|putc
 argument_list|(
 literal|'\n'
 argument_list|,
-name|stderr
+name|out
 argument_list|)
 expr_stmt|;
 name|fflush
 argument_list|(
-name|stderr
+name|out
 argument_list|)
 expr_stmt|;
 if|if
@@ -563,14 +559,16 @@ condition|(
 name|status
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|CVS_SUPPORT
-name|Lock_Cleanup
+if|if
+condition|(
+name|cleanup_fn
+condition|)
+call|(
+modifier|*
+name|cleanup_fn
+call|)
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 name|exit
 argument_list|(
 name|status
@@ -579,12 +577,6 @@ expr_stmt|;
 block|}
 block|}
 end_block
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CVS_SUPPORT
-end_ifdef
 
 begin_comment
 comment|/* Print the program name and error message MESSAGE, which is a printf-style    format string with optional args to the file specified by FP.    If ERRNUM is nonzero, print its corresponding system error message.    Exit with status STATUS if it is nonzero. */
@@ -777,14 +769,16 @@ condition|(
 name|status
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|CVS_SUPPORT
-name|Lock_Cleanup
+if|if
+condition|(
+name|cleanup_fn
+condition|)
+call|(
+modifier|*
+name|cleanup_fn
+call|)
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 name|exit
 argument_list|(
 name|status
@@ -793,15 +787,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CVS_SUPPORT */
-end_comment
 
 end_unit
 
