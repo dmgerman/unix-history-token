@@ -750,7 +750,7 @@ operator|&
 name|_stackq
 argument_list|)
 expr_stmt|;
-comment|/* Create the red zone for the main stack. */
+comment|/* 		 * Create a red zone below the main stack.  All other stacks are 		 * constrained to a maximum size by the paramters passed to 		 * mmap(), but this stack is only limited by resource limits, so 		 * this stack needs an explicitly mapped red zone to protect the 		 * thread stack that is just beyond. 		 */
 if|if
 condition|(
 name|mmap
@@ -762,6 +762,8 @@ operator|)
 name|USRSTACK
 operator|-
 name|PTHREAD_STACK_INITIAL
+operator|-
+name|PTHREAD_STACK_GUARD
 argument_list|,
 name|PTHREAD_STACK_GUARD
 argument_list|,
@@ -777,13 +779,11 @@ argument_list|)
 operator|==
 name|MAP_FAILED
 condition|)
-block|{
 name|PANIC
 argument_list|(
 literal|"Cannot allocate red zone for initial thread"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 		 * Write a magic value to the thread structure 		 * to help identify valid ones: 		 */
 name|_thread_initial
 operator|->
