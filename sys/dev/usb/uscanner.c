@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uscanner.c,v 1.6 2000/10/13 18:16:36 augustss Exp $	*/
+comment|/*	$NetBSD: uscanner.c,v 1.9 2000/11/14 13:57:16 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1055,7 +1055,7 @@ name|device
 argument_list|,
 literal|1
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
@@ -1431,6 +1431,12 @@ operator|)
 return|;
 name|sc
 operator|->
+name|sc_state
+operator||=
+name|USCANNER_OPEN
+expr_stmt|;
+name|sc
+operator|->
 name|sc_bulkin_buffer
 operator|=
 name|malloc
@@ -1740,7 +1746,9 @@ name|sc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2875,6 +2883,36 @@ expr_stmt|;
 return|return
 operator|(
 name|revents
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|uscannerioctl
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|,
+name|u_long
+name|cmd
+parameter_list|,
+name|caddr_t
+name|addr
+parameter_list|,
+name|int
+name|flag
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|)
+block|{
+return|return
+operator|(
+name|EINVAL
 operator|)
 return|;
 block|}
