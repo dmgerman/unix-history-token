@@ -4990,8 +4990,16 @@ operator||
 name|WI_TXCNTL_TX_EX
 argument_list|)
 expr_stmt|;
+comment|/* XXX check key for SWCRYPT instead of using operating mode */
 if|if
 condition|(
+name|ic
+operator|->
+name|ic_opmode
+operator|==
+name|IEEE80211_M_HOSTAP
+operator|&&
+operator|(
 name|wh
 operator|->
 name|i_fc
@@ -5000,6 +5008,7 @@ literal|1
 index|]
 operator|&
 name|IEEE80211_FC1_WEP
+operator|)
 condition|)
 block|{
 name|struct
@@ -5038,14 +5047,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-if|if
-condition|(
-name|k
-operator|->
-name|wk_flags
-operator|&
-name|IEEE80211_KEY_SWCRYPT
-condition|)
 name|frmhdr
 operator|.
 name|wi_tx_ctl
@@ -7742,6 +7743,41 @@ argument_list|,
 name|WI_EV_RX
 argument_list|)
 expr_stmt|;
+name|wh
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ieee80211_frame
+operator|*
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wh
+operator|->
+name|i_fc
+index|[
+literal|1
+index|]
+operator|&
+name|IEEE80211_FC1_WEP
+condition|)
+block|{
+comment|/* 		 * WEP is decrypted by hardware and the IV 		 * is stripped.  Clear WEP bit so we don't 		 * try to process it in ieee80211_input. 		 * XXX fix for TKIP, et. al. 		 */
+name|wh
+operator|->
+name|i_fc
+index|[
+literal|1
+index|]
+operator|&=
+operator|~
+name|IEEE80211_FC1_WEP
+expr_stmt|;
+block|}
 if|#
 directive|if
 name|NBPFILTER
@@ -7811,6 +7847,7 @@ name|wr_flags
 operator||=
 name|IEEE80211_RADIOTAP_F_CFP
 expr_stmt|;
+comment|/* XXX IEEE80211_RADIOTAP_F_WEP */
 name|bpf_mtap2
 argument_list|(
 name|sc
@@ -7832,17 +7869,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|wh
-operator|=
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-expr|struct
-name|ieee80211_frame
-operator|*
-argument_list|)
-expr_stmt|;
 comment|/* synchronize driver's BSSID with firmware's BSSID */
 name|dir
 operator|=
@@ -14515,6 +14541,22 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 			 * XXX hack; unceremoniously clear  			 * IEEE80211_F_DROPUNENC when operating with 			 * wep enabled so we don't drop unencoded frames 			 * at the 802.11 layer.  This is necessary because 			 * we must strip the WEP bit from the 802.11 header 			 * before passing frames to ieee80211_input because 			 * the card has already stripped the WEP crypto  			 * header from the packet. 			 */
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_flags
+operator|&
+name|IEEE80211_F_PRIVACY
+condition|)
+name|ic
+operator|->
+name|ic_flags
+operator|&=
+operator|~
+name|IEEE80211_F_DROPUNENC
+expr_stmt|;
 comment|/* XXX check return value */
 name|buflen
 operator|=
