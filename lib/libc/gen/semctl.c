@@ -68,6 +68,26 @@ decl_stmt|;
 endif|#
 directive|endif
 block|{
+ifdef|#
+directive|ifdef
+name|__NETBSD_SYSCALLS
+return|return
+operator|(
+name|__semctl
+argument_list|(
+name|semid
+argument_list|,
+name|semnum
+argument_list|,
+name|cmd
+argument_list|,
+operator|&
+name|semun
+argument_list|)
+operator|)
+return|;
+else|#
+directive|else
 return|return
 operator|(
 name|semsys
@@ -85,6 +105,8 @@ name|semun
 argument_list|)
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
