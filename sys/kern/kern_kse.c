@@ -1622,7 +1622,11 @@ name|td_kse
 operator|->
 name|ke_flags
 operator|&
+operator|(
 name|KEF_DOUPCALL
+operator||
+name|KEF_ASTPENDING
+operator|)
 operator|)
 operator|&&
 operator|(
@@ -1634,7 +1638,6 @@ name|NULL
 operator|)
 condition|)
 block|{
-comment|/* XXXKSE also look for waiting signals etc. */
 comment|/* 		 * The KSE will however be lendable. 		 */
 name|TD_SET_IDLE
 argument_list|(
