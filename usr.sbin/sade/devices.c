@@ -149,7 +149,7 @@ block|{
 block|{
 name|DEVICE_TYPE_CDROM
 block|,
-literal|"cd%dc"
+literal|"cd%d"
 block|,
 literal|"SCSI CDROM drive"
 block|,
@@ -165,7 +165,7 @@ block|,
 block|{
 name|DEVICE_TYPE_CDROM
 block|,
-literal|"mcd%da"
+literal|"mcd%d"
 block|,
 literal|"Mitsumi (old model) CDROM drive"
 block|,
@@ -181,7 +181,7 @@ block|,
 block|{
 name|DEVICE_TYPE_CDROM
 block|,
-literal|"scd%da"
+literal|"scd%d"
 block|,
 literal|"Sony CDROM drive - CDU31/33A type"
 block|,
@@ -200,7 +200,7 @@ name|notdef
 block|{
 name|DEVICE_TYPE_CDROM
 block|,
-literal|"matcd%da"
+literal|"matcd%d"
 block|,
 literal|"Matsushita CDROM ('sound blaster' type)"
 block|,
@@ -218,7 +218,7 @@ directive|endif
 block|{
 name|DEVICE_TYPE_CDROM
 block|,
-literal|"acd%dc"
+literal|"acd%d"
 block|,
 literal|"ATAPI/IDE CDROM"
 block|,
