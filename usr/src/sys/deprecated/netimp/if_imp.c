@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.21	82/03/30	*/
+comment|/*	if_imp.c	4.22	82/04/07	*/
 end_comment
 
 begin_include
@@ -1522,8 +1522,8 @@ name|IMPOUTPUT
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Don't even try if the IMP is unavailable. 	 */
-name|x
-operator|=
+if|if
+condition|(
 name|imp_softc
 index|[
 name|ifp
@@ -1532,16 +1532,8 @@ name|if_unit
 index|]
 operator|.
 name|imp_state
-expr_stmt|;
-if|if
-condition|(
-name|x
-operator|==
-name|IMPS_DOWN
-operator|||
-name|x
-operator|==
-name|IMPS_GOINGDOWN
+operator|!=
+name|IMPS_UP
 condition|)
 goto|goto
 name|drop
