@@ -861,6 +861,7 @@ name|int
 name|ksq_cpus
 decl_stmt|;
 comment|/* Count of CPUs in this kseq. */
+specifier|volatile
 name|struct
 name|kse
 modifier|*
@@ -2303,6 +2304,12 @@ name|ke
 decl_stmt|;
 do|do
 block|{
+operator|(
+specifier|volatile
+expr|struct
+name|kse
+operator|*
+operator|)
 name|ke
 operator|=
 name|kseq
@@ -2407,6 +2414,12 @@ expr_stmt|;
 comment|/* 	 * Place a KSE on another cpu's queue and force a resched. 	 */
 do|do
 block|{
+operator|(
+specifier|volatile
+expr|struct
+name|kse
+operator|*
+operator|)
 name|ke
 operator|->
 name|ke_assign
