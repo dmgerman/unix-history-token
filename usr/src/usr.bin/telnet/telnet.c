@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	4.23 (Berkeley) %G%"
+literal|"@(#)telnet.c	4.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -788,7 +788,7 @@ argument_list|,
 literal|"-d"
 argument_list|)
 condition|)
-name|options
+name|debug
 operator|=
 name|SO_DEBUG
 operator|,
@@ -3672,6 +3672,10 @@ expr_stmt|;
 if|if
 condition|(
 name|debug
+operator|&&
+name|net
+operator|>
+literal|0
 operator|&&
 name|setsockopt
 argument_list|(
