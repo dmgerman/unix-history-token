@@ -1,72 +1,78 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Scooter Morris at Genentech Inc.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lockf.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Scooter Morris at Genentech Inc.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lockf.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"file.h"
+file|<sys/file.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vnode.h"
+file|<sys/vnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"malloc.h"
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"fcntl.h"
+file|<sys/fcntl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lockf.h"
+file|<ufs/ufs/lockf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"quota.h"
+file|<ufs/ufs/quota.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"inode.h"
+file|<ufs/ufs/inode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/ufs_extern.h>
 end_include
 
 begin_comment
@@ -100,10 +106,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* LOCKF_DEBUG */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -129,20 +131,18 @@ begin_comment
 comment|/*  * Set a byte-range lock.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|lf_setlock
-argument_list|(
+parameter_list|(
 name|lock
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|lockf
-operator|*
+modifier|*
 name|lock
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -938,26 +938,24 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Remove a byte-range lock on an inode.  *  * Generally, find the lock (or an overlap to that lock)  * and remove it (or shrink it), then wakeup anyone we can.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|lf_clearlock
-argument_list|(
+parameter_list|(
 name|unlock
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|lockf
-operator|*
+modifier|*
 name|unlock
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|struct
 name|inode
@@ -1229,37 +1227,32 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Check whether there is a blocking lock,  * and if so return its process identifier.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|lf_getlock
-argument_list|(
+parameter_list|(
 name|lock
-argument_list|,
+parameter_list|,
 name|fl
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|lockf
-operator|*
+modifier|*
 name|lock
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|flock
 modifier|*
 name|fl
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1404,7 +1397,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Walk the list of locks for an inode and  * return the first blocking lock.  */
@@ -1517,42 +1510,34 @@ begin_comment
 comment|/*  * Walk the list of locks for an inode to  * find an overlapping lock (if any).  *  * NOTE: this returns only the FIRST overlapping lock.  There  *	 may be more than one.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|lf_findoverlap
-argument_list|(
+parameter_list|(
 name|lf
-argument_list|,
+parameter_list|,
 name|lock
-argument_list|,
+parameter_list|,
 name|type
-argument_list|,
+parameter_list|,
 name|prev
-argument_list|,
+parameter_list|,
 name|overlap
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|lockf
-operator|*
+modifier|*
 name|lf
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|struct
 name|lockf
 modifier|*
 name|lock
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|type
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|lockf
 modifier|*
@@ -1560,18 +1545,12 @@ modifier|*
 modifier|*
 name|prev
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|lockf
 modifier|*
 modifier|*
 name|overlap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|off_t
 name|start
@@ -2084,38 +2063,30 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Add a lock to the end of the blocked list.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|lf_addblock
-argument_list|(
-argument|lock
-argument_list|,
-argument|blocked
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|lock
+parameter_list|,
+name|blocked
+parameter_list|)
 name|struct
 name|lockf
 modifier|*
 name|lock
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|lockf
 modifier|*
 name|blocked
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2201,37 +2172,32 @@ name|blocked
 expr_stmt|;
 return|return;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Split a lock and a contained region into  * two or three locks as necessary.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|lf_split
-argument_list|(
+parameter_list|(
 name|lock1
-argument_list|,
+parameter_list|,
 name|lock2
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|lockf
-operator|*
+modifier|*
 name|lock1
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|lockf
 modifier|*
 name|lock2
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2417,28 +2383,23 @@ operator|=
 name|lock2
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Wakeup a blocklist  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|lf_wakelock
-argument_list|(
-argument|listhead
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|listhead
+parameter_list|)
 name|struct
 name|lockf
 modifier|*
 name|listhead
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2519,7 +2480,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -2531,32 +2492,24 @@ begin_comment
 comment|/*  * Print out a lock.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|lf_print
-argument_list|(
-argument|tag
-argument_list|,
-argument|lock
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|tag
+parameter_list|,
+name|lock
+parameter_list|)
 name|char
 modifier|*
 name|tag
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|lockf
 modifier|*
 name|lock
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|printf
 argument_list|(
@@ -2690,33 +2643,25 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|lf_printlist
-argument_list|(
-argument|tag
-argument_list|,
-argument|lock
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|tag
+parameter_list|,
+name|lock
+parameter_list|)
 name|char
 modifier|*
 name|tag
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|lockf
 modifier|*
 name|lock
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2881,7 +2826,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
