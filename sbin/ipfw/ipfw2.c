@@ -17470,19 +17470,6 @@ name|TOK_MAC
 case|:
 if|if
 condition|(
-name|ac
-operator|<
-literal|2
-condition|)
-name|errx
-argument_list|(
-name|EX_USAGE
-argument_list|,
-literal|"MAC dst-mac src-mac"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|add_mac
 argument_list|(
 name|cmd
