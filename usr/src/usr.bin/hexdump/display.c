@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)display.c	5.5 (Berkeley) %G%"
+literal|"@(#)display.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,6 +75,15 @@ include|#
 directive|include
 file|"hexdump.h"
 end_include
+
+begin_decl_stmt
+name|enum
+name|_vflag
+name|vflag
+init|=
+name|FIRST
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
