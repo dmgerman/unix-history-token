@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: route6d.h,v 1.4 2001/01/15 03:50:54 inoue Exp $	*/
+comment|/*	$KAME: route6d.h,v 1.8 2003/05/28 09:11:13 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -90,32 +90,13 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-union|union
-block|{
 name|struct
 name|netinfo6
-name|ru6_nets
-index|[
-literal|1
-index|]
-decl_stmt|;
-name|char
-name|ru6_tracefile
-index|[
-literal|1
-index|]
-decl_stmt|;
-block|}
-name|rip6un
-union|;
-define|#
-directive|define
 name|rip6_nets
-value|rip6un.ru6_nets
-define|#
-directive|define
-name|rip6_tracefile
-value|rip6un.ru6_tracefile
+index|[
+literal|1
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -145,7 +126,7 @@ begin_define
 define|#
 directive|define
 name|IFMINMTU
-value|576
+value|1280
 end_define
 
 begin_ifndef
