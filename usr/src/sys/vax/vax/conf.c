@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.19	%G%	*/
+comment|/*	conf.c	4.20	%G%	*/
 end_comment
 
 begin_include
@@ -2081,56 +2081,6 @@ name|int
 name|nldisp
 init|=
 literal|4
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|buf
-name|buf
-index|[
-name|NBUF
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|file
-name|file
-index|[
-name|NFILE
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|inode
-name|inode
-index|[
-name|NINODE
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|text
-name|text
-index|[
-name|NTEXT
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|proc
-name|proc
-index|[
-name|NPROC
-index|]
 decl_stmt|;
 end_decl_stmt
 
