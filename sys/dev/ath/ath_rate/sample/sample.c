@@ -300,7 +300,7 @@ block|{
 if|if
 condition|(
 name|size
-operator|<
+operator|<=
 name|packet_size_bins
 index|[
 name|x
