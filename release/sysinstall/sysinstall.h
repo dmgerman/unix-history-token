@@ -282,6 +282,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VAR_DISKINTERACTIVE
+value|"diskInteractive"
+end_define
+
+begin_define
+define|#
+directive|define
 name|VAR_DISTS
 value|"dists"
 end_define

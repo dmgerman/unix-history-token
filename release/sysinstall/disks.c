@@ -3452,6 +3452,12 @@ name|variable_get
 argument_list|(
 name|VAR_NONINTERACTIVE
 argument_list|)
+operator|&&
+operator|!
+name|variable_get
+argument_list|(
+name|VAR_DISKINTERACTIVE
+argument_list|)
 condition|)
 name|diskPartitionNonInteractive
 argument_list|(
@@ -3497,6 +3503,12 @@ condition|(
 name|variable_get
 argument_list|(
 name|VAR_NONINTERACTIVE
+argument_list|)
+operator|&&
+operator|!
+name|variable_get
+argument_list|(
+name|VAR_DISKINTERACTIVE
 argument_list|)
 condition|)
 name|diskPartitionNonInteractive
