@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.55 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.56 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -553,14 +553,8 @@ literal|"\201n"
 argument_list|,
 name|buf
 argument_list|,
-operator|&
-name|buf
-index|[
 sizeof|sizeof
 name|buf
-operator|-
-literal|1
-index|]
 argument_list|,
 name|e
 argument_list|)
@@ -1041,14 +1035,8 @@ literal|"\201z/dead.letter"
 argument_list|,
 name|buf
 argument_list|,
-operator|&
-name|buf
-index|[
 sizeof|sizeof
 name|buf
-operator|-
-literal|1
-index|]
 argument_list|,
 name|e
 argument_list|)
@@ -2100,14 +2088,8 @@ literal|"\201n"
 argument_list|,
 name|buf
 argument_list|,
-operator|&
-name|buf
-index|[
 sizeof|sizeof
 name|buf
-operator|-
-literal|1
-index|]
 argument_list|,
 name|e
 argument_list|)
@@ -2580,14 +2562,8 @@ literal|"from \201_"
 argument_list|,
 name|buf
 argument_list|,
-operator|&
-name|buf
-index|[
 sizeof|sizeof
 name|buf
-operator|-
-literal|1
-index|]
 argument_list|,
 name|e
 operator|->
@@ -2673,14 +2649,8 @@ name|buf
 argument_list|,
 name|buf
 argument_list|,
-operator|&
-name|buf
-index|[
 sizeof|sizeof
 name|buf
-operator|-
-literal|1
-index|]
 argument_list|,
 name|e
 argument_list|)
@@ -2718,14 +2688,8 @@ name|ErrMsgFile
 argument_list|,
 name|buf
 argument_list|,
-operator|&
-name|buf
-index|[
 sizeof|sizeof
 name|buf
-operator|-
-literal|1
-index|]
 argument_list|,
 name|e
 argument_list|)

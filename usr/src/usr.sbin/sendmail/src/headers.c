@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.49 (Berkeley) %G%"
+literal|"@(#)headers.c	8.50 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -673,12 +673,8 @@ name|fancy
 argument_list|,
 name|buf
 argument_list|,
-operator|&
-name|buf
-index|[
 sizeof|sizeof
 name|buf
-index|]
 argument_list|,
 name|e
 argument_list|)
@@ -1584,12 +1580,8 @@ name|h_value
 argument_list|,
 name|buf
 argument_list|,
-operator|&
-name|buf
-index|[
 sizeof|sizeof
 name|buf
-index|]
 argument_list|,
 name|e
 argument_list|)
@@ -4073,12 +4065,8 @@ name|p
 argument_list|,
 name|buf
 argument_list|,
-operator|&
-name|buf
-index|[
 sizeof|sizeof
 name|buf
-index|]
 argument_list|,
 name|e
 argument_list|)

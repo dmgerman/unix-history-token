@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.73 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.74 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.73 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.74 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -430,14 +430,8 @@ literal|"\201j"
 argument_list|,
 name|jbuf
 argument_list|,
-operator|&
-name|jbuf
-index|[
 sizeof|sizeof
 name|jbuf
-operator|-
-literal|1
-index|]
 argument_list|,
 name|CurEnv
 argument_list|)

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.38 (Berkeley) %G%"
+literal|"@(#)alias.c	8.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3061,14 +3061,8 @@ name|pp
 argument_list|,
 name|buf
 argument_list|,
-operator|&
-name|buf
-index|[
 sizeof|sizeof
 name|buf
-operator|-
-literal|1
-index|]
 argument_list|,
 name|e
 argument_list|)

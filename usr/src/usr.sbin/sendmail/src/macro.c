@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)macro.c	8.9 (Berkeley) %G%"
+literal|"@(#)macro.c	8.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,7 @@ comment|/* codes for long named macros */
 end_comment
 
 begin_comment
-comment|/* **  EXPAND -- macro expand a string using $x escapes. ** **	Parameters: **		s -- the string to expand. **		buf -- the place to put the expansion. **		buflim -- the buffer limit, i.e., the address **			of the first byte after buf. **		e -- envelope in which to work. ** **	Returns: **		none. ** **	Side Effects: **		none. */
+comment|/* **  EXPAND -- macro expand a string using $x escapes. ** **	Parameters: **		s -- the string to expand. **		buf -- the place to put the expansion. **		bufsize -- the size of the buffer. **		e -- envelope in which to work. ** **	Returns: **		none. ** **	Side Effects: **		none. */
 end_comment
 
 begin_function
@@ -78,7 +78,7 @@ name|s
 parameter_list|,
 name|buf
 parameter_list|,
-name|buflim
+name|bufsize
 parameter_list|,
 name|e
 parameter_list|)
@@ -92,9 +92,8 @@ name|char
 modifier|*
 name|buf
 decl_stmt|;
-name|char
-modifier|*
-name|buflim
+name|size_t
+name|bufsize
 decl_stmt|;
 specifier|register
 name|ENVELOPE
@@ -449,7 +448,7 @@ name|xbuf
 argument_list|,
 name|buf
 argument_list|,
-name|buflim
+name|bufsize
 argument_list|,
 name|e
 argument_list|)
@@ -459,25 +458,21 @@ block|}
 comment|/* copy results out */
 name|i
 operator|=
-name|buflim
+name|xp
 operator|-
-name|buf
-operator|-
-literal|1
+name|xbuf
 expr_stmt|;
 if|if
 condition|(
 name|i
-operator|>
-name|xp
-operator|-
-name|xbuf
+operator|>=
+name|bufsize
 condition|)
 name|i
 operator|=
-name|xp
+name|bufsize
 operator|-
-name|xbuf
+literal|1
 expr_stmt|;
 name|bcopy
 argument_list|(

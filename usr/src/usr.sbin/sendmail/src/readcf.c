@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.73 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.74 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -749,12 +749,8 @@ index|]
 argument_list|,
 name|exbuf
 argument_list|,
-operator|&
-name|exbuf
-index|[
 sizeof|sizeof
 name|exbuf
-index|]
 argument_list|,
 name|e
 argument_list|)
@@ -1021,12 +1017,8 @@ name|q
 argument_list|,
 name|exbuf
 argument_list|,
-operator|&
-name|exbuf
-index|[
 sizeof|sizeof
 name|exbuf
-index|]
 argument_list|,
 name|e
 argument_list|)
@@ -1625,12 +1617,8 @@ name|ep
 argument_list|,
 name|exbuf
 argument_list|,
-operator|&
-name|exbuf
-index|[
 sizeof|sizeof
 name|exbuf
-index|]
 argument_list|,
 name|e
 argument_list|)

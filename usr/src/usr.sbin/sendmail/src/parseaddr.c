@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.57 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.58 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1930,15 +1930,11 @@ literal|"\201o"
 argument_list|,
 name|obuf
 argument_list|,
-operator|&
-name|obuf
-index|[
 sizeof|sizeof
 name|obuf
 operator|-
 sizeof|sizeof
 name|DELIMCHARS
-index|]
 argument_list|,
 name|CurEnv
 argument_list|)
@@ -8016,12 +8012,8 @@ literal|"<\201g>"
 argument_list|,
 name|buf
 argument_list|,
-operator|&
-name|buf
-index|[
 sizeof|sizeof
 name|buf
-index|]
 argument_list|,
 name|e
 argument_list|)
@@ -8033,12 +8025,8 @@ name|fancy
 argument_list|,
 name|buf
 argument_list|,
-operator|&
-name|buf
-index|[
 sizeof|sizeof
 name|buf
-index|]
 argument_list|,
 name|e
 argument_list|)

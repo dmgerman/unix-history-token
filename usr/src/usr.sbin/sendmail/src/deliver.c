@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.129 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.130 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2746,12 +2746,8 @@ name|mvp
 argument_list|,
 name|buf
 argument_list|,
-operator|&
-name|buf
-index|[
 sizeof|sizeof
 name|buf
-index|]
 argument_list|,
 name|e
 argument_list|)
@@ -3449,12 +3445,8 @@ name|mvp
 argument_list|,
 name|buf
 argument_list|,
-operator|&
-name|buf
-index|[
 sizeof|sizeof
 name|buf
-index|]
 argument_list|,
 name|e
 argument_list|)
@@ -3545,12 +3537,8 @@ name|mvp
 argument_list|,
 name|buf
 argument_list|,
-operator|&
-name|buf
-index|[
 sizeof|sizeof
 name|buf
-index|]
 argument_list|,
 name|e
 argument_list|)
@@ -5085,12 +5073,8 @@ name|p
 argument_list|,
 name|buf
 argument_list|,
-operator|&
-name|buf
-index|[
 sizeof|sizeof
 name|buf
-index|]
 argument_list|,
 name|e
 argument_list|)
@@ -8974,14 +8958,8 @@ literal|"\201g"
 argument_list|,
 name|buf
 argument_list|,
-operator|&
-name|buf
-index|[
 sizeof|sizeof
 name|buf
-operator|-
-literal|1
-index|]
 argument_list|,
 name|e
 argument_list|)
@@ -9051,14 +9029,8 @@ name|template
 argument_list|,
 name|buf
 argument_list|,
-operator|&
-name|buf
-index|[
 sizeof|sizeof
 name|buf
-operator|-
-literal|1
-index|]
 argument_list|,
 name|e
 argument_list|)

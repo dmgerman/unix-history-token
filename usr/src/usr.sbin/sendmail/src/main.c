@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.90 (Berkeley) %G%"
+literal|"@(#)main.c	8.91 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3623,14 +3623,8 @@ literal|"\201j"
 argument_list|,
 name|jbuf
 argument_list|,
-operator|&
-name|jbuf
-index|[
 sizeof|sizeof
 name|jbuf
-operator|-
-literal|1
-index|]
 argument_list|,
 name|CurEnv
 argument_list|)
