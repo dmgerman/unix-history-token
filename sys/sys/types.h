@@ -581,6 +581,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PID_T_DECLARED
+end_ifndef
+
 begin_typedef
 typedef|typedef
 name|__pid_t
@@ -591,6 +597,17 @@ end_typedef
 begin_comment
 comment|/* process id */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|_PID_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
