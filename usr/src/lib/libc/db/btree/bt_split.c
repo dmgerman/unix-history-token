@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_split.c	5.3 (Berkeley) %G%"
+literal|"@(#)bt_split.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -459,32 +459,15 @@ argument_list|,
 name|BTF_RECNO
 argument_list|)
 condition|)
-block|{
 name|WR_RLEAF
 argument_list|(
-name|dest
+argument|dest
 argument_list|,
-name|data
+argument|data
 argument_list|,
-name|flags
+argument|flags
 argument_list|)
-operator|++
-name|t
-operator|->
-name|bt_nrecs
-expr_stmt|;
-name|SET
-argument_list|(
-name|t
-argument_list|,
-name|BTF_METADIRTY
-operator||
-name|BTF_MODIFIED
-argument_list|)
-expr_stmt|;
-block|}
 else|else
-block|{
 name|WR_BLEAF
 argument_list|(
 argument|dest
@@ -495,14 +478,6 @@ argument|data
 argument_list|,
 argument|flags
 argument_list|)
-name|SET
-argument_list|(
-name|t
-argument_list|,
-name|BTF_MODIFIED
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Now we walk the parent page stack -- a LIFO stack of the pages that 	 * were traversed when we searched for the page that split.  Each stack 	 * entry is a page number and a page index offset.  The offset is for 	 * the page traversed on the search.  We've just split a page, so we 	 * have to insert a new key into the parent page. 	 * 	 * If the insert into the parent page causes it to split, may have to 	 * continue splitting all the way up the tree.  We stop if the root 	 * splits or the page inserted into didn't have to split to hold the 	 * new key.  Some algorithms replace the key for the old page as well 	 * as the new page.  We don't, as there's no reason to believe that the 	 * first key on the old page is any better than the key we have, and, 	 * in the case of a key being placed at index 0 causing the split, the 	 * key is unavailable. 	 * 	 * There are a maximum of 5 pages pinned at any time.  We keep the left 	 * and right pages pinned while working on the parent.   The 5 are the 	 * two children, left parent and right parent (when the parent splits) 	 * and the root page or the overflow key page when calling bt_preserve. 	 * This code must make sure that all pins are released other than the 	 * root page or overflow page which is unlocked elsewhere. 	 */
 for|for
 control|(
@@ -565,7 +540,7 @@ name|index
 operator|+
 literal|1
 expr_stmt|;
-comment|/* 		 * Calculate the space needed on the parent page. 		 * 		 * Space hack when insertin into BINTERNAL pages.  Only need to 		 * retain the number of bytes that will distinguish between the 		 * new entry and the LAST entry on the page to its left.  If 		 * the keys compare equal, only need to retain one byte as a 		 * placeholder.  Special cases are that the entire key must be 		 * retained for the next-to-leftmost key on the leftmost page 		 * of each level, or the search will fail, and can't mess with 		 * overflow keys. 		 */
+comment|/* 		 * Calculate the space needed on the parent page. 		 * 		 * Space hack when inserting into BINTERNAL pages.  Only need to 		 * retain the number of bytes that will distinguish between the 		 * new entry and the LAST entry on the page to its left.  If the 		 * keys compare equal, retain the entire key.  Note, we don't 		 * touch overflow keys and the entire key must be retained for 		 * the next-to-leftmost key on the leftmost page of each level, 		 * or the search will fail. 		 */
 switch|switch
 condition|(
 name|rchild
@@ -1102,11 +1077,11 @@ name|rchild
 operator|->
 name|pgno
 argument_list|,
-name|rchild
+name|bl
 operator|->
 name|flags
 operator|&
-name|P_OVERFLOW
+name|P_BIGKEY
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -1436,81 +1411,7 @@ argument_list|,
 name|MPOOL_DIRTY
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If it's a recno tree, increment the count on all remaining parent 	 * pages.  Otherwise, clear the stack. 	 */
-if|if
-condition|(
-name|ISSET
-argument_list|(
-name|t
-argument_list|,
-name|BTF_RECNO
-argument_list|)
-condition|)
-while|while
-condition|(
-operator|(
-name|parent
-operator|=
-name|BT_POP
-argument_list|(
-name|t
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|h
-operator|=
-name|mpool_get
-argument_list|(
-name|t
-operator|->
-name|bt_mp
-argument_list|,
-name|parent
-operator|->
-name|pgno
-argument_list|,
-literal|0
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|RET_ERROR
-operator|)
-return|;
-operator|++
-name|GETRINTERNAL
-argument_list|(
-name|h
-argument_list|,
-name|parent
-operator|->
-name|index
-argument_list|)
-operator|->
-name|nrecs
-expr_stmt|;
-name|mpool_put
-argument_list|(
-name|t
-operator|->
-name|bt_mp
-argument_list|,
-name|h
-argument_list|,
-name|MPOOL_DIRTY
-argument_list|)
-expr_stmt|;
-block|}
-else|else
+comment|/* Clear any pages left on the stack. */
 name|BT_CLR
 argument_list|(
 name|t
@@ -1997,7 +1898,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * BT_RSPLIT -- Split the root page of a btree.  *  * Parameters:  *	t:	tree  *	h:	root page  *	lp:	pointer to left page pointer  *	rp:	pointer to right page pointer  *	skip:	pointer to index to leave open  *  * Returns:  *	Pointer to page in which to insert or NULL on error.  */
+comment|/*  * BT_ROOT -- Split the root page of a btree.  *  * Parameters:  *	t:	tree  *	h:	root page  *	lp:	pointer to left page pointer  *	rp:	pointer to right page pointer  *	skip:	pointer to index to leave open  *  * Returns:  *	Pointer to page in which to insert or NULL on error.  */
 end_comment
 
 begin_function
@@ -2809,7 +2710,7 @@ name|l
 parameter_list|,
 name|r
 parameter_list|,
-name|skip
+name|pskip
 parameter_list|)
 name|BTREE
 modifier|*
@@ -2830,7 +2731,7 @@ end_function
 begin_decl_stmt
 name|int
 modifier|*
-name|skip
+name|pskip
 decl_stmt|;
 end_decl_stmt
 
@@ -2859,7 +2760,7 @@ decl_stmt|;
 name|index_t
 name|half
 decl_stmt|,
-name|sval
+name|skip
 decl_stmt|;
 name|size_t
 name|nbytes
@@ -2884,10 +2785,10 @@ name|bigkeycnt
 operator|=
 literal|0
 expr_stmt|;
-name|sval
+name|skip
 operator|=
 operator|*
-name|skip
+name|pskip
 expr_stmt|;
 name|half
 operator|=
@@ -2926,7 +2827,7 @@ control|)
 block|{
 if|if
 condition|(
-name|sval
+name|skip
 operator|==
 name|off
 condition|)
@@ -3125,7 +3026,7 @@ argument_list|(
 name|index_t
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we're splitting the page that the cursor was on, have to adjust 	 * the cursor to point to the same record as before the split. 	 */
+comment|/* 	 * If splitting the page that the cursor was on, the cursor has to be 	 * adjusted to point to the same record as before the split.  If the 	 * skipped slot and the cursor are both on the left page and the cursor 	 * is on or past the skipped slot, the cursor is incremented by one. 	 * If the skipped slot and the cursor are both on the right page and 	 * the cursor is on or past the skipped slot, the cursor is incremented 	 * by one.  If the skipped slot and the cursor aren't on the same page, 	 * the cursor isn't changed.  Regardless of the relationship of the 	 * skipped slot and the cursor, if the cursor is on the right page it 	 * is decremented by the number of records split to the left page. 	 * 	 * Don't bother checking for the BTF_SEQINIT flag, the page number will 	 * be P_INVALID. 	 */
 name|c
 operator|=
 operator|&
@@ -3151,6 +3052,8 @@ name|index
 operator|<
 name|off
 condition|)
+block|{
+comment|/* left page */
 name|c
 operator|->
 name|pgno
@@ -3159,8 +3062,23 @@ name|l
 operator|->
 name|pgno
 expr_stmt|;
+if|if
+condition|(
+name|c
+operator|->
+name|index
+operator|>=
+name|skip
+condition|)
+operator|++
+name|c
+operator|->
+name|index
+expr_stmt|;
+block|}
 else|else
 block|{
+comment|/* right page */
 name|c
 operator|->
 name|pgno
@@ -3168,6 +3086,23 @@ operator|=
 name|r
 operator|->
 name|pgno
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|->
+name|index
+operator|>=
+name|skip
+operator|&&
+name|skip
+operator|>
+name|off
+condition|)
+operator|++
+name|c
+operator|->
+name|index
 expr_stmt|;
 name|c
 operator|->
@@ -3179,7 +3114,7 @@ block|}
 comment|/* 	 * Decide which page to return, and adjust the skip index if the 	 * to-be-inserted-upon page has changed. 	 */
 if|if
 condition|(
-name|sval
+name|skip
 operator|>
 name|off
 condition|)
@@ -3189,7 +3124,7 @@ operator|=
 name|r
 expr_stmt|;
 operator|*
-name|skip
+name|pskip
 operator|-=
 name|off
 operator|+
@@ -3217,12 +3152,12 @@ control|)
 block|{
 if|if
 condition|(
-name|sval
+name|skip
 operator|==
 name|nxt
 condition|)
 block|{
-name|sval
+name|skip
 operator|=
 literal|0
 expr_stmt|;
@@ -3371,7 +3306,7 @@ expr_stmt|;
 comment|/* If the key is being appended to the page, adjust the index. */
 if|if
 condition|(
-name|sval
+name|skip
 operator|==
 name|top
 condition|)
