@@ -4905,6 +4905,7 @@ argument_list|,
 name|ST_CLOSED
 argument_list|)
 expr_stmt|;
+break|break;
 default|default:
 name|NewState
 argument_list|(
