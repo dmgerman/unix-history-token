@@ -216,15 +216,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|line
-index|[
-name|MAXLINELEN
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
 name|confname
 index|[
 name|MAXPATHLEN
@@ -286,6 +277,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* user-supplied header for *.mk */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|objprefix
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* where are the objects ? */
 end_comment
 
 begin_decl_stmt
@@ -473,6 +475,37 @@ name|execfname
 operator|=
 literal|'\0'
 expr_stmt|;
+name|p
+operator|=
+name|getenv
+argument_list|(
+literal|"MAKEOBJDIRPREFIX"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+operator|||
+operator|*
+name|p
+operator|==
+literal|'\0'
+condition|)
+name|objprefix
+operator|=
+literal|"/usr/obj"
+expr_stmt|;
+comment|/* default */
+else|else
+name|objprefix
+operator|=
+name|strdup
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -484,7 +517,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"lh:m:c:e:foq"
+literal|"lh:m:c:e:p:foq"
 argument_list|)
 operator|)
 operator|!=
@@ -528,6 +561,17 @@ name|strcpy
 argument_list|(
 name|outmkname
 argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+name|objprefix
+operator|=
+name|strdup
+argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
@@ -719,18 +763,28 @@ argument_list|,
 name|confname
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|cachename
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cachename
+argument_list|)
 argument_list|,
 literal|"%s.cache"
 argument_list|,
 name|confname
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|tempfname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tempfname
+argument_list|)
 argument_list|,
 literal|".tmp_%sXXXXXX"
 argument_list|,
@@ -794,9 +848,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: crunchgen [-foq] [-m<makefile>] [-c<c file>]"
+literal|"usage: crunchgen [-foq] [-h<makefile-header-name>] [-m<makefile>]"
 argument_list|,
-literal|"                 [-e<exec file>]<conffile>"
+literal|"	[-p<obj-prefix>] [-c<c-file-name>] [-e<exec-file>]<conffile>"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1051,6 +1105,12 @@ function_decl|;
 name|FILE
 modifier|*
 name|cf
+decl_stmt|;
+name|char
+name|line
+index|[
+name|MAXLINELEN
+index|]
 decl_stmt|;
 name|sprintf
 argument_list|(
@@ -2719,9 +2779,17 @@ name|strlst_t
 modifier|*
 name|s
 decl_stmt|;
-name|sprintf
+name|char
+name|line
+index|[
+name|MAXLINELEN
+index|]
+decl_stmt|;
+name|snprintf
 argument_list|(
 name|line
+argument_list|,
+name|MAXLINELEN
 argument_list|,
 literal|"filling in parms for %s"
 argument_list|,
@@ -2774,9 +2842,11 @@ if|if
 condition|(
 name|srcparent
 condition|)
-name|sprintf
+name|snprintf
 argument_list|(
-name|path
+name|line
+argument_list|,
+name|MAXLINELEN
 argument_list|,
 literal|"%s/%s"
 argument_list|,
@@ -2791,7 +2861,7 @@ if|if
 condition|(
 name|is_dir
 argument_list|(
-name|path
+name|line
 argument_list|)
 condition|)
 name|p
@@ -2800,7 +2870,7 @@ name|srcdir
 operator|=
 name|strdup
 argument_list|(
-name|path
+name|line
 argument_list|)
 expr_stmt|;
 block|}
@@ -2820,17 +2890,6 @@ name|FILE
 modifier|*
 name|f
 decl_stmt|;
-name|sprintf
-argument_list|(
-name|path
-argument_list|,
-literal|"cd %s&& echo -n /usr/obj`/bin/pwd`"
-argument_list|,
-name|p
-operator|->
-name|srcdir
-argument_list|)
-expr_stmt|;
 name|p
 operator|->
 name|objdir
@@ -2839,11 +2898,26 @@ name|p
 operator|->
 name|srcdir
 expr_stmt|;
+name|snprintf
+argument_list|(
+name|line
+argument_list|,
+name|MAXLINELEN
+argument_list|,
+literal|"cd %s&& echo -n %s`/bin/pwd`"
+argument_list|,
+name|p
+operator|->
+name|srcdir
+argument_list|,
+name|objprefix
+argument_list|)
+expr_stmt|;
 name|f
 operator|=
 name|popen
 argument_list|(
-name|path
+name|line
 argument_list|,
 literal|"r"
 argument_list|)
@@ -2853,6 +2927,13 @@ condition|(
 name|f
 condition|)
 block|{
+name|path
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|fgets
 argument_list|(
 name|path
@@ -2892,9 +2973,14 @@ block|}
 block|}
 block|}
 comment|/*  * XXX look for a Makefile.{name} in local directory first.  * This lets us override the original Makefile.  */
-name|sprintf
+name|snprintf
 argument_list|(
 name|path
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|path
+argument_list|)
 argument_list|,
 literal|"Makefile.%s"
 argument_list|,
@@ -2911,9 +2997,11 @@ name|path
 argument_list|)
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|line
+argument_list|,
+name|MAXLINELEN
 argument_list|,
 literal|"Using %s for %s"
 argument_list|,
@@ -2937,9 +3025,14 @@ name|p
 operator|->
 name|srcdir
 condition|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|path
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|path
+argument_list|)
 argument_list|,
 literal|"%s/Makefile"
 argument_list|,
@@ -3005,9 +3098,11 @@ operator|->
 name|next
 control|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|line
+argument_list|,
+name|MAXLINELEN
 argument_list|,
 literal|"%s/%s"
 argument_list|,
@@ -3138,6 +3233,12 @@ decl_stmt|;
 name|strlst_t
 modifier|*
 name|s
+decl_stmt|;
+name|char
+name|line
+index|[
+name|MAXLINELEN
+index|]
 decl_stmt|;
 comment|/* discover the objs from the srcdir Makefile */
 if|if
@@ -3317,9 +3418,11 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|line
+argument_list|,
+name|MAXLINELEN
 argument_list|,
 literal|"make -f %s crunchgen_objs 2>&1"
 argument_list|,
@@ -3605,9 +3708,17 @@ name|prog_t
 modifier|*
 name|p
 decl_stmt|;
-name|sprintf
+name|char
+name|line
+index|[
+name|MAXLINELEN
+index|]
+decl_stmt|;
+name|snprintf
 argument_list|(
 name|line
+argument_list|,
+name|MAXLINELEN
 argument_list|,
 literal|"generating %s"
 argument_list|,
@@ -3799,9 +3910,17 @@ name|FILE
 modifier|*
 name|outmk
 decl_stmt|;
-name|sprintf
+name|char
+name|line
+index|[
+name|MAXLINELEN
+index|]
+decl_stmt|;
+name|snprintf
 argument_list|(
 name|line
+argument_list|,
+name|MAXLINELEN
 argument_list|,
 literal|"generating %s"
 argument_list|,
@@ -3946,9 +4065,17 @@ name|strlst_t
 modifier|*
 name|s
 decl_stmt|;
-name|sprintf
+name|char
+name|line
+index|[
+name|MAXLINELEN
+index|]
+decl_stmt|;
+name|snprintf
 argument_list|(
 name|line
+argument_list|,
+name|MAXLINELEN
 argument_list|,
 literal|"generating %s"
 argument_list|,
@@ -4294,9 +4421,11 @@ operator|->
 name|next
 control|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|path
+argument_list|,
+name|MAXPATHLEN
 argument_list|,
 literal|"%s/%s"
 argument_list|,
@@ -5128,17 +5257,11 @@ condition|(
 name|p2
 condition|)
 block|{
-name|memset
-argument_list|(
 name|p2
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|strlst_t
-argument_list|)
-argument_list|)
+operator|->
+name|next
+operator|=
+name|NULL
 expr_stmt|;
 name|p2
 operator|->
@@ -5162,12 +5285,6 @@ name|str
 condition|)
 name|out_of_memory
 argument_list|()
-expr_stmt|;
-name|p2
-operator|->
-name|next
-operator|=
-name|NULL
 expr_stmt|;
 if|if
 condition|(
