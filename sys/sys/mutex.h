@@ -808,7 +808,7 @@ name|m
 parameter_list|,
 name|what
 parameter_list|)
-value|{						\ 	switch ((what)) {						\ 	case MA_OWNED:							\ 		if (!mtx_owned((m)))					\ 			panic("mutex %s not owned at %s:%d",		\ 			    (m)->mtx_description, __FILE__, __LINE__);	\ 		break;							\ 	case MA_NOTOWNED:						\ 		if (mtx_owned((m)))					\ 			panic("mutex %s owned at %s:%d",		\ 			    (m)->mtx_description, __FILE__, __LINE__);	\ 		break;							\ 	default:							\ 		panic("unknown mtx_assert at %s:%d", __FILE__, __LINE__); \ 	}								\ }
+value|do {					\ 	switch ((what)) {						\ 	case MA_OWNED:							\ 		if (!mtx_owned((m)))					\ 			panic("mutex %s not owned at %s:%d",		\ 			    (m)->mtx_description, __FILE__, __LINE__);	\ 		break;							\ 	case MA_NOTOWNED:						\ 		if (mtx_owned((m)))					\ 			panic("mutex %s owned at %s:%d",		\ 			    (m)->mtx_description, __FILE__, __LINE__);	\ 		break;							\ 	default:							\ 		panic("unknown mtx_assert at %s:%d", __FILE__, __LINE__); \ 	}								\ } while(0)
 end_define
 
 begin_else
