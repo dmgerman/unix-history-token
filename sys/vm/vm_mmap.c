@@ -300,6 +300,10 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -354,6 +358,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -519,6 +527,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_function
 name|int
@@ -935,17 +947,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|EBADF
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
 block|}
 if|if
 condition|(
@@ -956,17 +964,13 @@ operator|!=
 name|DTYPE_VNODE
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
 block|}
 comment|/* 		 * don't let the descriptor disappear on us if we block 		 */
 name|fhold
@@ -1433,6 +1437,8 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+name|done2
+label|:
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -1731,6 +1737,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|int
 name|msync
@@ -1905,17 +1915,14 @@ operator|==
 name|FALSE
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
+name|rv
+operator|=
+operator|-
+literal|1
 expr_stmt|;
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 block|}
 name|addr
 operator|=
@@ -1964,6 +1971,8 @@ operator|!=
 literal|0
 argument_list|)
 expr_stmt|;
+name|done2
+label|:
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -1978,7 +1987,11 @@ block|{
 case|case
 name|KERN_SUCCESS
 case|:
-break|break;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 case|case
 name|KERN_INVALID_ADDRESS
 case|:
@@ -2003,11 +2016,6 @@ name|EINVAL
 operator|)
 return|;
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -2036,6 +2044,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_function
 name|int
@@ -2291,6 +2303,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|int
 name|mprotect
@@ -2497,6 +2513,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|int
 name|minherit
@@ -2680,6 +2700,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -2913,6 +2937,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -2957,6 +2985,8 @@ name|vec
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|vecindex
@@ -3348,17 +3378,13 @@ condition|(
 name|error
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|EFAULT
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
 block|}
 operator|++
 name|lastvecindex
@@ -3381,17 +3407,13 @@ condition|(
 name|error
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|EFAULT
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
 block|}
 comment|/* 			 * If the map has changed, due to the subyte, the previous 			 * output may be invalid. 			 */
 name|vm_map_lock_read
@@ -3463,17 +3485,13 @@ condition|(
 name|error
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|EFAULT
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
 block|}
 operator|++
 name|lastvecindex
@@ -3501,6 +3519,8 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
+name|done2
+label|:
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -3509,7 +3529,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -3541,6 +3561,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_function
 name|int
@@ -3770,6 +3794,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|int
 name|mlockall
@@ -3818,6 +3846,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_function
 name|int
@@ -3872,6 +3904,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_function
 name|int
@@ -4026,7 +4062,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Internal version of mmap.  * Currently used by mmap, exec, and sys5 shared memory.  * Handle is either a vnode pointer or NULL for MAP_ANON.  */
+comment|/*  * vm_mmap()  *  * MPSAFE  *  * Internal version of mmap.  Currently used by mmap, exec, and sys5  * shared memory.  Handle is either a vnode pointer or NULL for MAP_ANON.  */
 end_comment
 
 begin_function
@@ -4568,13 +4604,14 @@ name|rv
 operator|!=
 name|KERN_SUCCESS
 condition|)
+block|{
 comment|/* 		 * Lose the object reference. Will destroy the 		 * object if it's an unnamed anonymous mapping 		 * or named anonymous without other references. 		 */
 name|vm_object_deallocate
 argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Shared memory is also shared with children. 	 */
+block|}
 elseif|else
 if|if
 condition|(
@@ -4583,6 +4620,7 @@ operator|&
 name|MAP_SHARED
 condition|)
 block|{
+comment|/* 		 * Shared memory is also shared with children. 		 */
 name|rv
 operator|=
 name|vm_map_inherit
