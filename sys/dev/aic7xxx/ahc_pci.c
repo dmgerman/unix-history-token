@@ -309,6 +309,16 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
+name|ahc_set_unit
+argument_list|(
+name|ahc
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Allocate a dmatag for our SCB DMA maps */
 comment|/* XXX Should be a child of the PCI bus dma tag */
 name|error

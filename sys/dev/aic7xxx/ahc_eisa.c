@@ -115,6 +115,10 @@ argument_list|,
 name|RESVADDR_NONE
 argument_list|)
 expr_stmt|;
+name|rid
+operator|=
+literal|0
+expr_stmt|;
 name|regs
 operator|=
 name|bus_alloc_resource
@@ -415,7 +419,7 @@ name|ahc
 operator|=
 name|ahc_alloc
 argument_list|(
-name|NULL
+name|dev
 argument_list|,
 name|name
 argument_list|)
@@ -431,6 +435,16 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
+name|ahc_set_unit
+argument_list|(
+name|ahc
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Allocate a dmatag for our SCB DMA maps */
 comment|/* XXX Should be a child of the PCI bus dma tag */
 name|error
@@ -566,6 +580,10 @@ decl_stmt|;
 name|int
 name|rid
 decl_stmt|;
+name|rid
+operator|=
+literal|0
+expr_stmt|;
 name|regs
 operator|=
 name|bus_alloc_resource
