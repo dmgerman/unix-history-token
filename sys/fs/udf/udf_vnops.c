@@ -2077,8 +2077,6 @@ decl_stmt|;
 name|int
 name|size
 decl_stmt|,
-name|n
-decl_stmt|,
 name|fsize
 decl_stmt|,
 name|offset
@@ -2104,10 +2102,6 @@ name|fentry
 operator|->
 name|inf_len
 expr_stmt|;
-name|size
-operator|=
-literal|0
-expr_stmt|;
 while|while
 condition|(
 name|uio
@@ -2128,6 +2122,12 @@ operator|=
 name|uio
 operator|->
 name|uio_offset
+expr_stmt|;
+name|size
+operator|=
+name|uio
+operator|->
+name|uio_resid
 expr_stmt|;
 name|error
 operator|=
@@ -2156,19 +2156,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|n
-operator|=
-name|min
-argument_list|(
-name|size
-argument_list|,
-name|size
-operator|-
-name|bp
-operator|->
-name|b_resid
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|uiomove
@@ -2178,7 +2165,7 @@ name|caddr_t
 operator|)
 name|data
 argument_list|,
-name|n
+name|size
 argument_list|,
 name|uio
 argument_list|)
@@ -2193,10 +2180,6 @@ name|brelse
 argument_list|(
 name|bp
 argument_list|)
-expr_stmt|;
-name|size
-operator|-=
-name|n
 expr_stmt|;
 if|if
 condition|(
@@ -3051,13 +3034,9 @@ index|[
 name|off
 index|]
 expr_stmt|;
-comment|/* Check to see if the fid is fragmented */
+comment|/* 		 * Check to see if the fid is fragmented. The first test 		 * ensures that we don't wander off the end of the buffer 		 * looking for the l_iu and l_fi fields. 		 */
 if|if
 condition|(
-name|off
-operator|>=
-name|size
-operator|||
 name|off
 operator|+
 name|fid_size
@@ -3248,6 +3227,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|bp
+operator|!=
+name|NULL
+condition|)
 name|brelse
 argument_list|(
 name|bp
@@ -4331,13 +4316,9 @@ index|[
 name|off
 index|]
 expr_stmt|;
-comment|/* Check to see if the fid is fragmented */
+comment|/* 		 * Check to see if the fid is fragmented. The first test 		 * ensures that we don't wander off the end of the buffer 		 * looking for the l_iu and l_fi fields. 		 */
 if|if
 condition|(
-name|off
-operator|>=
-name|size
-operator|||
 name|off
 operator|+
 name|fid_size
@@ -4537,6 +4518,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|bp
+operator|!=
+name|NULL
+condition|)
 name|brelse
 argument_list|(
 name|bp
@@ -5230,6 +5217,7 @@ name|error
 operator|)
 return|;
 block|}
+comment|/* Adjust the size so that it is within range */
 if|if
 condition|(
 operator|*
@@ -5247,7 +5235,6 @@ name|size
 operator|=
 name|max_size
 expr_stmt|;
-comment|/* XXX Read only one block at a time? Could read-ahead help? */
 operator|*
 name|size
 operator|=
@@ -5256,23 +5243,9 @@ argument_list|(
 operator|*
 name|size
 argument_list|,
-name|udfmp
-operator|->
-name|bsize
+name|MAXBSIZE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|*
-name|size
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|EIO
-operator|)
-return|;
 if|if
 condition|(
 operator|(
