@@ -57,6 +57,7 @@ name|void
 name|Lst_Close
 parameter_list|(
 name|Lst
+modifier|*
 name|list
 parameter_list|)
 block|{

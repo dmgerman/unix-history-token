@@ -48,6 +48,7 @@ end_include
 begin_decl_stmt
 specifier|static
 name|Lst
+modifier|*
 name|sufflist
 decl_stmt|;
 end_decl_stmt
@@ -59,6 +60,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|Lst
+modifier|*
 name|suffClean
 decl_stmt|;
 end_decl_stmt
@@ -70,6 +72,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|Lst
+modifier|*
 name|srclist
 decl_stmt|;
 end_decl_stmt
@@ -81,6 +84,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|Lst
+modifier|*
 name|transforms
 decl_stmt|;
 end_decl_stmt
@@ -140,6 +144,7 @@ name|SUFF_NULL
 value|0x04
 comment|/* The empty suffix */
 name|Lst
+modifier|*
 name|searchPath
 decl_stmt|;
 comment|/* The path along which files of this suffix 				 * may be found */
@@ -152,14 +157,17 @@ name|refCount
 decl_stmt|;
 comment|/* Reference count of list membership */
 name|Lst
+modifier|*
 name|parents
 decl_stmt|;
 comment|/* Suffixes we have a transformation to */
 name|Lst
+modifier|*
 name|children
 decl_stmt|;
 comment|/* Suffixes we have a transformation from */
 name|Lst
+modifier|*
 name|ref
 decl_stmt|;
 comment|/* List of lists this suffix is referenced */
@@ -211,6 +219,7 @@ ifdef|#
 directive|ifdef
 name|DEBUG_SRC
 name|Lst
+modifier|*
 name|cp
 decl_stmt|;
 comment|/* Debug; children list */
@@ -230,6 +239,7 @@ typedef|typedef
 struct|struct
 block|{
 name|Lst
+modifier|*
 name|l
 decl_stmt|;
 name|Src
@@ -368,6 +378,7 @@ name|void
 name|SuffInsert
 parameter_list|(
 name|Lst
+modifier|*
 parameter_list|,
 name|Suff
 modifier|*
@@ -381,6 +392,7 @@ name|void
 name|SuffRemove
 parameter_list|(
 name|Lst
+modifier|*
 parameter_list|,
 name|Suff
 modifier|*
@@ -441,6 +453,7 @@ name|int
 name|SuffRemoveSrc
 parameter_list|(
 name|Lst
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -451,6 +464,7 @@ name|void
 name|SuffAddLevel
 parameter_list|(
 name|Lst
+modifier|*
 parameter_list|,
 name|Src
 modifier|*
@@ -465,8 +479,10 @@ modifier|*
 name|SuffFindThem
 parameter_list|(
 name|Lst
+modifier|*
 parameter_list|,
 name|Lst
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -481,6 +497,7 @@ name|Src
 modifier|*
 parameter_list|,
 name|Lst
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -528,6 +545,7 @@ name|GNode
 modifier|*
 parameter_list|,
 name|Lst
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -541,6 +559,7 @@ name|GNode
 modifier|*
 parameter_list|,
 name|Lst
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -554,6 +573,7 @@ name|GNode
 modifier|*
 parameter_list|,
 name|Lst
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -998,6 +1018,7 @@ name|void
 name|SuffRemove
 parameter_list|(
 name|Lst
+modifier|*
 name|l
 parameter_list|,
 name|Suff
@@ -1006,6 +1027,7 @@ name|s
 parameter_list|)
 block|{
 name|LstNode
+modifier|*
 name|ln
 init|=
 name|Lst_Member
@@ -1048,6 +1070,7 @@ name|void
 name|SuffInsert
 parameter_list|(
 name|Lst
+modifier|*
 name|l
 parameter_list|,
 name|Suff
@@ -1056,6 +1079,7 @@ name|s
 parameter_list|)
 block|{
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 comment|/* current element in l we're examining */
@@ -1336,6 +1360,7 @@ name|targPtr
 parameter_list|)
 block|{
 name|LstNode
+modifier|*
 name|srcLn
 decl_stmt|;
 comment|/* element in suffix list of trans source*/
@@ -1345,6 +1370,7 @@ name|src
 decl_stmt|;
 comment|/* Source of transformation */
 name|LstNode
+modifier|*
 name|targLn
 decl_stmt|;
 comment|/* element in suffix list of trans target*/
@@ -1354,6 +1380,7 @@ name|str2
 decl_stmt|;
 comment|/* Extra pointer (maybe target suffix) */
 name|LstNode
+modifier|*
 name|singleLn
 decl_stmt|;
 comment|/* element in suffix list of any suffix 				     * that exactly matches str */
@@ -1597,6 +1624,7 @@ name|t
 decl_stmt|;
 comment|/* target suffix */
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 comment|/* Node for existing transformation */
@@ -1925,6 +1953,7 @@ modifier|*
 name|cp
 decl_stmt|;
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 name|Suff
@@ -2154,6 +2183,7 @@ name|s
 decl_stmt|;
 comment|/* new suffix descriptor */
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 name|ln
@@ -2278,6 +2308,7 @@ end_comment
 
 begin_function
 name|Lst
+modifier|*
 name|Suff_GetPath
 parameter_list|(
 name|char
@@ -2286,6 +2317,7 @@ name|sname
 parameter_list|)
 block|{
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 name|Suff
@@ -2352,6 +2384,7 @@ modifier|*
 name|s
 decl_stmt|;
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 name|char
@@ -2359,10 +2392,12 @@ modifier|*
 name|ptr
 decl_stmt|;
 name|Lst
+modifier|*
 name|inIncludes
 decl_stmt|;
 comment|/* Cumulative .INCLUDES path */
 name|Lst
+modifier|*
 name|inLibs
 decl_stmt|;
 comment|/* Cumulative .LIBS path */
@@ -2582,6 +2617,7 @@ name|sname
 parameter_list|)
 block|{
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 name|Suff
@@ -2637,6 +2673,7 @@ name|sname
 parameter_list|)
 block|{
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 name|Suff
@@ -3028,6 +3065,7 @@ name|void
 name|SuffAddLevel
 parameter_list|(
 name|Lst
+modifier|*
 name|l
 parameter_list|,
 name|Src
@@ -3077,10 +3115,12 @@ name|int
 name|SuffRemoveSrc
 parameter_list|(
 name|Lst
+modifier|*
 name|l
 parameter_list|)
 block|{
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 name|Src
@@ -3203,6 +3243,7 @@ ifdef|#
 directive|ifdef
 name|DEBUG_SRC
 name|LstNode
+modifier|*
 name|ln
 init|=
 name|Lst_Member
@@ -3361,9 +3402,11 @@ modifier|*
 name|SuffFindThem
 parameter_list|(
 name|Lst
+modifier|*
 name|srcs
 parameter_list|,
 name|Lst
+modifier|*
 name|slst
 parameter_list|)
 block|{
@@ -3558,10 +3601,12 @@ modifier|*
 name|targ
 parameter_list|,
 name|Lst
+modifier|*
 name|slst
 parameter_list|)
 block|{
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 comment|/* General-purpose list node */
@@ -3906,10 +3951,12 @@ name|gn
 decl_stmt|;
 comment|/* New source 8) */
 name|LstNode
+modifier|*
 name|prevLN
 decl_stmt|;
 comment|/* Node after which new source should be put */
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 comment|/* List element for old source */
@@ -3981,6 +4028,7 @@ name|NULL
 condition|)
 block|{
 name|Lst
+modifier|*
 name|members
 init|=
 name|Lst_Init
@@ -4376,10 +4424,12 @@ argument_list|)
 condition|)
 block|{
 name|Lst
+modifier|*
 name|exp
 decl_stmt|;
 comment|/* List of expansions */
 name|Lst
+modifier|*
 name|path
 decl_stmt|;
 comment|/* Search path along which to expand */
@@ -4647,6 +4697,7 @@ name|s
 parameter_list|)
 block|{
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 comment|/* General node */
@@ -4939,6 +4990,7 @@ modifier|*
 name|gn
 parameter_list|,
 name|Lst
+modifier|*
 name|slst
 parameter_list|)
 block|{
@@ -5204,6 +5256,7 @@ condition|)
 block|{
 comment|/* 	 * Member has a known suffix, so look for a transformation rule from 	 * it to a possible suffix of the archive. Rather than searching 	 * through the entire list, we just look at suffixes to which the 	 * member's suffix may be transformed... 	 */
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 comment|/* 	 * Use first matching suffix... 	 */
@@ -5328,6 +5381,7 @@ modifier|*
 name|gn
 parameter_list|,
 name|Lst
+modifier|*
 name|slst
 parameter_list|)
 block|{
@@ -5342,14 +5396,17 @@ name|sopref
 decl_stmt|;
 comment|/* Start of prefix */
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 comment|/* Next suffix node to check */
 name|Lst
+modifier|*
 name|srcs
 decl_stmt|;
 comment|/* List of sources at which to look */
 name|Lst
+modifier|*
 name|targs
 decl_stmt|;
 comment|/* List of targets to which things can be 			     * transformed. They all have the same file, 			     * but different suff and pref fields */
@@ -6633,6 +6690,7 @@ modifier|*
 name|gn
 parameter_list|,
 name|Lst
+modifier|*
 name|slst
 parameter_list|)
 block|{
@@ -6699,6 +6757,7 @@ condition|)
 block|{
 comment|/* 	 * If the node is a library, it is the arch module's job to find it 	 * and set the TARGET variable accordingly. We merely provide the 	 * search path, assuming all libraries end in ".a" (if the suffix 	 * hasn't been defined, there's nothing we can do for it, so we just 	 * set the TARGET variable to the node's name in order to give it a 	 * value). 	 */
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 name|Suff
@@ -6826,6 +6885,7 @@ modifier|*
 name|s
 decl_stmt|;
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 name|ln

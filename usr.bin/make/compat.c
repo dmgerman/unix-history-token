@@ -628,6 +628,7 @@ name|rstat
 decl_stmt|;
 comment|/* Status of fork */
 name|LstNode
+modifier|*
 name|cmdNode
 decl_stmt|;
 comment|/* Node where current command is located */
@@ -2127,6 +2128,7 @@ name|void
 name|Compat_Run
 parameter_list|(
 name|Lst
+modifier|*
 name|targs
 parameter_list|)
 block|{

@@ -54,9 +54,11 @@ end_comment
 
 begin_function
 name|Lst
+modifier|*
 name|Lst_Duplicate
 parameter_list|(
 name|Lst
+modifier|*
 name|list
 parameter_list|,
 name|DuplicateProc
@@ -65,9 +67,11 @@ name|copyProc
 parameter_list|)
 block|{
 name|Lst
+modifier|*
 name|nl
 decl_stmt|;
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 if|if

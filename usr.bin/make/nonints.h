@@ -16,6 +16,7 @@ modifier|*
 modifier|*
 parameter_list|,
 name|Lst
+modifier|*
 parameter_list|,
 name|GNode
 modifier|*
@@ -71,6 +72,7 @@ name|GNode
 modifier|*
 parameter_list|,
 name|Lst
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -112,6 +114,7 @@ name|void
 name|Compat_Run
 parameter_list|(
 name|Lst
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -448,6 +451,7 @@ end_function_decl
 
 begin_function_decl
 name|Lst
+modifier|*
 name|Parse_MainName
 parameter_list|(
 name|void
@@ -623,6 +627,7 @@ end_function_decl
 
 begin_function_decl
 name|Lst
+modifier|*
 name|Suff_GetPath
 parameter_list|(
 name|char
@@ -755,9 +760,11 @@ end_function_decl
 
 begin_function_decl
 name|Lst
+modifier|*
 name|Targ_FindList
 parameter_list|(
 name|Lst
+modifier|*
 parameter_list|,
 name|int
 parameter_list|)

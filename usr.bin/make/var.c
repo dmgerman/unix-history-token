@@ -119,6 +119,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|Lst
+modifier|*
 name|allVars
 decl_stmt|;
 end_decl_stmt
@@ -433,6 +434,7 @@ name|Boolean
 name|localCheckEnvFirst
 decl_stmt|;
 name|LstNode
+modifier|*
 name|var
 decl_stmt|;
 name|Var
@@ -1095,6 +1097,7 @@ name|ctxt
 parameter_list|)
 block|{
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 name|DEBUGF

@@ -57,6 +57,7 @@ name|Boolean
 name|Lst_IsAtEnd
 parameter_list|(
 name|Lst
+modifier|*
 name|list
 parameter_list|)
 block|{

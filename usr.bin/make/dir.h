@@ -92,8 +92,10 @@ name|char
 modifier|*
 parameter_list|,
 name|Lst
+modifier|*
 parameter_list|,
 name|Lst
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -107,6 +109,7 @@ name|char
 modifier|*
 parameter_list|,
 name|Lst
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -126,6 +129,7 @@ name|void
 name|Dir_AddDir
 parameter_list|(
 name|Lst
+modifier|*
 parameter_list|,
 name|char
 modifier|*
@@ -142,6 +146,7 @@ name|char
 modifier|*
 parameter_list|,
 name|Lst
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -151,6 +156,7 @@ name|void
 name|Dir_ClearPath
 parameter_list|(
 name|Lst
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -160,8 +166,10 @@ name|void
 name|Dir_Concat
 parameter_list|(
 name|Lst
+modifier|*
 parameter_list|,
 name|Lst
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -180,6 +188,7 @@ name|void
 name|Dir_PrintPath
 parameter_list|(
 name|Lst
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

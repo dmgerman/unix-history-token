@@ -75,6 +75,7 @@ end_comment
 
 begin_decl_stmt
 name|Lst
+modifier|*
 name|dirSearchPath
 decl_stmt|;
 end_decl_stmt
@@ -86,6 +87,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|Lst
+modifier|*
 name|openDirectories
 decl_stmt|;
 end_decl_stmt
@@ -251,6 +253,7 @@ name|void
 parameter_list|)
 block|{
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 name|Dir_AddDir
@@ -529,6 +532,7 @@ modifier|*
 name|p
 parameter_list|,
 name|Lst
+modifier|*
 name|expansions
 parameter_list|)
 block|{
@@ -687,9 +691,11 @@ modifier|*
 name|brace
 parameter_list|,
 name|Lst
+modifier|*
 name|path
 parameter_list|,
 name|Lst
+modifier|*
 name|expansions
 parameter_list|)
 block|{
@@ -1052,13 +1058,16 @@ modifier|*
 name|word
 parameter_list|,
 name|Lst
+modifier|*
 name|path
 parameter_list|,
 name|Lst
+modifier|*
 name|expansions
 parameter_list|)
 block|{
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 comment|/* Current node */
@@ -1172,9 +1181,11 @@ modifier|*
 name|word
 parameter_list|,
 name|Lst
+modifier|*
 name|path
 parameter_list|,
 name|Lst
+modifier|*
 name|expansions
 parameter_list|)
 block|{
@@ -1537,6 +1548,7 @@ modifier|*
 name|name
 parameter_list|,
 name|Lst
+modifier|*
 name|path
 parameter_list|)
 block|{
@@ -1551,6 +1563,7 @@ name|p2
 decl_stmt|;
 comment|/* pointer into name */
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 comment|/* a list element */
@@ -2785,6 +2798,7 @@ name|void
 name|Dir_AddDir
 parameter_list|(
 name|Lst
+modifier|*
 name|path
 parameter_list|,
 name|char
@@ -2793,6 +2807,7 @@ name|name
 parameter_list|)
 block|{
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 comment|/* node in case Path structure is found */
@@ -3084,6 +3099,7 @@ modifier|*
 name|flag
 parameter_list|,
 name|Lst
+modifier|*
 name|path
 parameter_list|)
 block|{
@@ -3098,6 +3114,7 @@ name|tstr
 decl_stmt|;
 comment|/* the current directory preceded by 'flag' */
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 comment|/* the node of the current directory */
@@ -3214,6 +3231,7 @@ literal|0
 condition|)
 block|{
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 name|ln
@@ -3259,6 +3277,7 @@ name|void
 name|Dir_ClearPath
 parameter_list|(
 name|Lst
+modifier|*
 name|path
 parameter_list|)
 block|{
@@ -3294,13 +3313,16 @@ name|void
 name|Dir_Concat
 parameter_list|(
 name|Lst
+modifier|*
 name|path1
 parameter_list|,
 name|Lst
+modifier|*
 name|path2
 parameter_list|)
 block|{
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 name|Path
@@ -3371,6 +3393,7 @@ name|void
 parameter_list|)
 block|{
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 name|Path
@@ -3519,6 +3542,7 @@ name|void
 name|Dir_PrintPath
 parameter_list|(
 name|Lst
+modifier|*
 name|path
 parameter_list|)
 block|{

@@ -508,6 +508,7 @@ end_comment
 begin_decl_stmt
 name|STATIC
 name|Lst
+modifier|*
 name|jobs
 decl_stmt|;
 end_decl_stmt
@@ -620,6 +621,7 @@ end_comment
 begin_decl_stmt
 name|STATIC
 name|Lst
+modifier|*
 name|stoppedJobs
 decl_stmt|;
 end_decl_stmt
@@ -1422,6 +1424,7 @@ name|cmdStart
 decl_stmt|;
 comment|/* Start of expanded command */
 name|LstNode
+modifier|*
 name|cmdNode
 decl_stmt|;
 comment|/* Node for replacing the command */
@@ -4967,6 +4970,7 @@ block|}
 else|else
 block|{
 name|LstNode
+modifier|*
 name|ln
 init|=
 name|Lst_Next
@@ -6365,6 +6369,7 @@ name|job
 decl_stmt|;
 comment|/* job descriptor for dead child */
 name|LstNode
+modifier|*
 name|jnode
 decl_stmt|;
 comment|/* list element for finding job */
@@ -6660,6 +6665,7 @@ name|fd_set
 name|readfds
 decl_stmt|;
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 name|Job
@@ -9106,6 +9112,7 @@ name|signo
 parameter_list|)
 block|{
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 comment|/* element in job table */
@@ -9467,6 +9474,7 @@ name|void
 parameter_list|)
 block|{
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 comment|/* element in job table */

@@ -58,6 +58,7 @@ modifier|*
 name|Lst_DeQueue
 parameter_list|(
 name|Lst
+modifier|*
 name|l
 parameter_list|)
 block|{
@@ -66,6 +67,7 @@ modifier|*
 name|rd
 decl_stmt|;
 name|LstNode
+modifier|*
 name|tln
 decl_stmt|;
 name|tln

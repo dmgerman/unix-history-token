@@ -50,9 +50,11 @@ end_include
 
 begin_function
 name|LstNode
+modifier|*
 name|Lst_Member
 parameter_list|(
 name|Lst
+modifier|*
 name|list
 parameter_list|,
 name|void
@@ -61,6 +63,7 @@ name|d
 parameter_list|)
 block|{
 name|LstNode
+modifier|*
 name|lNode
 decl_stmt|;
 name|lNode

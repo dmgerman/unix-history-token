@@ -57,9 +57,11 @@ name|ReturnStatus
 name|Lst_Concat
 parameter_list|(
 name|Lst
+modifier|*
 name|list1
 parameter_list|,
 name|Lst
+modifier|*
 name|list2
 parameter_list|,
 name|int
@@ -67,17 +69,20 @@ name|flags
 parameter_list|)
 block|{
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 comment|/* original LstNode */
 name|LstNode
+modifier|*
 name|nln
 decl_stmt|;
 comment|/* new LstNode */
 name|LstNode
+modifier|*
 name|last
 decl_stmt|;
-comment|/* the last element in the list. Keeps 			 * bookkeeping until the end */
+comment|/* the last element in the list. Keeps 		         * bookkeeping until the end */
 if|if
 condition|(
 operator|!

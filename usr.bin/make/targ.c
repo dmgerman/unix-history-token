@@ -54,6 +54,7 @@ end_include
 begin_decl_stmt
 specifier|static
 name|Lst
+modifier|*
 name|allTargets
 decl_stmt|;
 end_decl_stmt
@@ -65,6 +66,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|Lst
+modifier|*
 name|allGNs
 decl_stmt|;
 end_decl_stmt
@@ -661,9 +663,11 @@ end_comment
 
 begin_function
 name|Lst
+modifier|*
 name|Targ_FindList
 parameter_list|(
 name|Lst
+modifier|*
 name|names
 parameter_list|,
 name|int
@@ -671,10 +675,12 @@ name|flags
 parameter_list|)
 block|{
 name|Lst
+modifier|*
 name|nodes
 decl_stmt|;
 comment|/* result list */
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 comment|/* name list element */

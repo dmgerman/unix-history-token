@@ -57,9 +57,11 @@ name|void
 name|Lst_ForEachFrom
 parameter_list|(
 name|Lst
+modifier|*
 name|list
 parameter_list|,
 name|LstNode
+modifier|*
 name|ln
 parameter_list|,
 name|DoProc
@@ -72,6 +74,7 @@ name|d
 parameter_list|)
 block|{
 name|LstNode
+modifier|*
 name|next
 decl_stmt|;
 name|Boolean

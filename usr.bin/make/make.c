@@ -48,6 +48,7 @@ end_include
 begin_decl_stmt
 specifier|static
 name|Lst
+modifier|*
 name|toBeMade
 decl_stmt|;
 end_decl_stmt
@@ -628,6 +629,7 @@ init|=
 name|gnp
 decl_stmt|;
 name|Lst
+modifier|*
 name|l
 init|=
 name|lp
@@ -688,6 +690,7 @@ name|gn
 decl_stmt|;
 comment|/* A child of the .USE node */
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 comment|/* An element in the children list */
@@ -913,6 +916,7 @@ name|cname
 decl_stmt|;
 comment|/* the child's name */
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 comment|/* Element in parents and iParents lists */
@@ -1716,6 +1720,7 @@ argument_list|)
 condition|)
 block|{
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 for|for
@@ -2057,6 +2062,7 @@ name|Boolean
 name|Make_Run
 parameter_list|(
 name|Lst
+modifier|*
 name|targs
 parameter_list|)
 block|{
@@ -2066,6 +2072,7 @@ name|gn
 decl_stmt|;
 comment|/* a temporary pointer */
 name|Lst
+modifier|*
 name|examine
 decl_stmt|;
 comment|/* List of targets to examine */

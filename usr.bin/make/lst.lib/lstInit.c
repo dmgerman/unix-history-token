@@ -54,12 +54,14 @@ end_comment
 
 begin_function
 name|Lst
+modifier|*
 name|Lst_Init
 parameter_list|(
 name|void
 parameter_list|)
 block|{
 name|Lst
+modifier|*
 name|nList
 decl_stmt|;
 name|nList

@@ -57,9 +57,11 @@ name|ReturnStatus
 name|Lst_Insert
 parameter_list|(
 name|Lst
+modifier|*
 name|list
 parameter_list|,
 name|LstNode
+modifier|*
 name|ln
 parameter_list|,
 name|void
@@ -68,6 +70,7 @@ name|d
 parameter_list|)
 block|{
 name|LstNode
+modifier|*
 name|nLNode
 decl_stmt|;
 comment|/* new lnode for d */

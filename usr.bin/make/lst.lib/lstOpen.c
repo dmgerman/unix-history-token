@@ -57,6 +57,7 @@ name|ReturnStatus
 name|Lst_Open
 parameter_list|(
 name|Lst
+modifier|*
 name|l
 parameter_list|)
 block|{

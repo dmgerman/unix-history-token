@@ -148,34 +148,42 @@ name|cmtime
 decl_stmt|;
 comment|/* The modification time of its youngest 				 * child */
 name|Lst
+modifier|*
 name|iParents
 decl_stmt|;
 comment|/* Links to parents for which this is an 				 * implied source, if any */
 name|Lst
+modifier|*
 name|cohorts
 decl_stmt|;
 comment|/* Other nodes for the :: operator */
 name|Lst
+modifier|*
 name|parents
 decl_stmt|;
 comment|/* Nodes that depend on this one */
 name|Lst
+modifier|*
 name|children
 decl_stmt|;
 comment|/* Nodes on which this one depends */
 name|Lst
+modifier|*
 name|successors
 decl_stmt|;
 comment|/* Nodes that must be made after this one */
 name|Lst
+modifier|*
 name|preds
 decl_stmt|;
 comment|/* Nodes that must be made before this one */
 name|Lst
+modifier|*
 name|context
 decl_stmt|;
 comment|/* The local variables */
 name|Lst
+modifier|*
 name|commands
 decl_stmt|;
 comment|/* Creation commands */
@@ -787,6 +795,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|Lst
+modifier|*
 name|create
 decl_stmt|;
 end_decl_stmt
@@ -798,6 +807,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|Lst
+modifier|*
 name|dirSearchPath
 decl_stmt|;
 end_decl_stmt
@@ -820,6 +830,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|Lst
+modifier|*
 name|parseIncPath
 decl_stmt|;
 end_decl_stmt
@@ -963,6 +974,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|Lst
+modifier|*
 name|envFirstVars
 decl_stmt|;
 end_decl_stmt
@@ -1044,6 +1056,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|Lst
+modifier|*
 name|sysIncPath
 decl_stmt|;
 end_decl_stmt
@@ -1273,6 +1286,7 @@ name|Boolean
 name|Make_Run
 parameter_list|(
 name|Lst
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

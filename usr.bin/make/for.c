@@ -94,6 +94,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|Lst
+modifier|*
 name|forLst
 decl_stmt|;
 end_decl_stmt
@@ -121,6 +122,7 @@ name|var
 decl_stmt|;
 comment|/* Index name		*/
 name|Lst
+modifier|*
 name|lst
 decl_stmt|;
 comment|/* List of variables	*/

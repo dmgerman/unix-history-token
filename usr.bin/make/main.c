@@ -221,6 +221,7 @@ end_define
 
 begin_decl_stmt
 name|Lst
+modifier|*
 name|create
 decl_stmt|;
 end_decl_stmt
@@ -274,6 +275,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|Lst
+modifier|*
 name|makefiles
 decl_stmt|;
 end_decl_stmt
@@ -296,6 +298,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|Lst
+modifier|*
 name|variables
 decl_stmt|;
 end_decl_stmt
@@ -447,6 +450,7 @@ end_comment
 
 begin_decl_stmt
 name|Lst
+modifier|*
 name|envFirstVars
 decl_stmt|;
 end_decl_stmt
@@ -1685,6 +1689,7 @@ name|argv
 parameter_list|)
 block|{
 name|Lst
+modifier|*
 name|targs
 decl_stmt|;
 comment|/* target nodes to create -- passed to Make_Init */
@@ -1757,6 +1762,7 @@ literal|"MACHINE_CPU"
 argument_list|)
 decl_stmt|;
 name|Lst
+modifier|*
 name|sysMkPath
 decl_stmt|;
 comment|/* Path of sys.mk */
@@ -2540,6 +2546,7 @@ argument_list|)
 condition|)
 block|{
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 for|for
@@ -2680,6 +2687,7 @@ name|noBuiltins
 condition|)
 block|{
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 name|sysMkPath
@@ -2752,6 +2760,7 @@ argument_list|)
 condition|)
 block|{
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 name|ln
@@ -2996,6 +3005,7 @@ argument_list|)
 condition|)
 block|{
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 for|for

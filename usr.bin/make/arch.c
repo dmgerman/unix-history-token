@@ -102,6 +102,7 @@ end_include
 begin_decl_stmt
 specifier|static
 name|Lst
+modifier|*
 name|archives
 decl_stmt|;
 end_decl_stmt
@@ -359,6 +360,7 @@ modifier|*
 name|linePtr
 parameter_list|,
 name|Lst
+modifier|*
 name|nodeLst
 parameter_list|,
 name|GNode
@@ -902,6 +904,7 @@ argument_list|)
 condition|)
 block|{
 name|Lst
+modifier|*
 name|members
 init|=
 name|Lst_Init
@@ -1308,6 +1311,7 @@ name|SARMAG
 index|]
 decl_stmt|;
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 comment|/* Lst member containing archive descriptor */
@@ -3471,6 +3475,7 @@ name|gn
 parameter_list|)
 block|{
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 name|GNode
@@ -3644,6 +3649,7 @@ modifier|*
 name|gn
 parameter_list|,
 name|Lst
+modifier|*
 name|path
 parameter_list|)
 block|{

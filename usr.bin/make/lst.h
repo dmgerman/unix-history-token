@@ -82,7 +82,6 @@ begin_typedef
 typedef|typedef
 name|struct
 name|LstNode
-modifier|*
 name|LstNode
 typedef|;
 end_typedef
@@ -127,10 +126,12 @@ struct|struct
 name|Lst
 block|{
 name|LstNode
+modifier|*
 name|firstPtr
 decl_stmt|;
 comment|/* first node in list */
 name|LstNode
+modifier|*
 name|lastPtr
 decl_stmt|;
 comment|/* last node in list */
@@ -144,10 +145,12 @@ name|isOpen
 decl_stmt|;
 comment|/* true if list has been Lst_Open'ed */
 name|LstNode
+modifier|*
 name|curPtr
 decl_stmt|;
 comment|/* current node, if open. NULL if 				   * *just* opened */
 name|LstNode
+modifier|*
 name|prevPtr
 decl_stmt|;
 comment|/* Previous node, if open. Used by 				   * Lst_Remove */
@@ -159,7 +162,6 @@ begin_typedef
 typedef|typedef
 name|struct
 name|Lst
-modifier|*
 name|Lst
 typedef|;
 end_typedef
@@ -265,6 +267,7 @@ end_comment
 
 begin_function_decl
 name|Lst
+modifier|*
 name|Lst_Init
 parameter_list|(
 name|void
@@ -278,9 +281,11 @@ end_comment
 
 begin_function_decl
 name|Lst
+modifier|*
 name|Lst_Duplicate
 parameter_list|(
 name|Lst
+modifier|*
 parameter_list|,
 name|DuplicateProc
 modifier|*
@@ -297,6 +302,7 @@ name|void
 name|Lst_Destroy
 parameter_list|(
 name|Lst
+modifier|*
 parameter_list|,
 name|FreeProc
 modifier|*
@@ -317,8 +323,10 @@ name|ReturnStatus
 name|Lst_Insert
 parameter_list|(
 name|Lst
+modifier|*
 parameter_list|,
 name|LstNode
+modifier|*
 parameter_list|,
 name|void
 modifier|*
@@ -335,8 +343,10 @@ name|ReturnStatus
 name|Lst_Append
 parameter_list|(
 name|Lst
+modifier|*
 parameter_list|,
 name|LstNode
+modifier|*
 parameter_list|,
 name|void
 modifier|*
@@ -385,8 +395,10 @@ name|ReturnStatus
 name|Lst_Remove
 parameter_list|(
 name|Lst
+modifier|*
 parameter_list|,
 name|LstNode
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -416,8 +428,10 @@ name|ReturnStatus
 name|Lst_Concat
 parameter_list|(
 name|Lst
+modifier|*
 parameter_list|,
 name|Lst
+modifier|*
 parameter_list|,
 name|int
 parameter_list|)
@@ -512,11 +526,14 @@ end_comment
 
 begin_function_decl
 name|LstNode
+modifier|*
 name|Lst_FindFrom
 parameter_list|(
 name|Lst
+modifier|*
 parameter_list|,
 name|LstNode
+modifier|*
 parameter_list|,
 name|void
 modifier|*
@@ -533,9 +550,11 @@ end_comment
 
 begin_function_decl
 name|LstNode
+modifier|*
 name|Lst_Member
 parameter_list|(
 name|Lst
+modifier|*
 parameter_list|,
 name|void
 modifier|*
@@ -552,6 +571,7 @@ name|void
 name|Lst_ForEach
 parameter_list|(
 name|Lst
+modifier|*
 parameter_list|,
 name|DoProc
 modifier|*
@@ -585,8 +605,10 @@ name|void
 name|Lst_ForEachFrom
 parameter_list|(
 name|Lst
+modifier|*
 parameter_list|,
 name|LstNode
+modifier|*
 parameter_list|,
 name|DoProc
 modifier|*
@@ -610,6 +632,7 @@ name|ReturnStatus
 name|Lst_Open
 parameter_list|(
 name|Lst
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -620,9 +643,11 @@ end_comment
 
 begin_function_decl
 name|LstNode
+modifier|*
 name|Lst_Next
 parameter_list|(
 name|Lst
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -636,6 +661,7 @@ name|Boolean
 name|Lst_IsAtEnd
 parameter_list|(
 name|Lst
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -649,6 +675,7 @@ name|void
 name|Lst_Close
 parameter_list|(
 name|Lst
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -683,6 +710,7 @@ modifier|*
 name|Lst_DeQueue
 parameter_list|(
 name|Lst
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -49,7 +49,7 @@ file|"lst.h"
 end_include
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Lst_Append --  *	Create a new node and add it to the given list after the given node.  *  * Results:  *	SUCCESS if all went well.  *  * Arguments:  *	l	affected list  *	ln	node after which to append the datum  *	d	said datum  *  * Side Effects:  *	A new ListNode is created and linked in to the List. The lastPtr  *	field of the List will be altered if ln is the last node in the  *	list. lastPtr and firstPtr will alter if the list was empty and  *	ln was NULL.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Lst_Append --  *	Create a new node and add it to the given list after the given node.  *  * Results:  *	SUCCESS if all went well.  *  * Arguments:  *	l	affected list  *	ln	node after which to append the datum  *	d	said datum  *  * Side Effects:  *	A new LstNode is created and linked in to the List. The lastPtr  *	field of the List will be altered if ln is the last node in the  *	list. lastPtr and firstPtr will alter if the list was empty and  *	ln was NULL.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -57,9 +57,11 @@ name|ReturnStatus
 name|Lst_Append
 parameter_list|(
 name|Lst
+modifier|*
 name|list
 parameter_list|,
 name|LstNode
+modifier|*
 name|ln
 parameter_list|,
 name|void
@@ -68,6 +70,7 @@ name|d
 parameter_list|)
 block|{
 name|LstNode
+modifier|*
 name|nLNode
 decl_stmt|;
 if|if

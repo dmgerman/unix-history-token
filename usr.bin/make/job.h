@@ -95,6 +95,7 @@ name|node
 decl_stmt|;
 comment|/* The target the child is making */
 name|LstNode
+modifier|*
 name|tailCmds
 decl_stmt|;
 comment|/* The node of the first command to be 			     * saved when the job has been run */

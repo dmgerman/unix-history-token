@@ -57,9 +57,11 @@ name|ReturnStatus
 name|Lst_Remove
 parameter_list|(
 name|Lst
+modifier|*
 name|list
 parameter_list|,
 name|LstNode
+modifier|*
 name|ln
 parameter_list|)
 block|{

@@ -102,6 +102,7 @@ end_define
 begin_decl_stmt
 specifier|static
 name|Lst
+modifier|*
 name|targets
 decl_stmt|;
 end_decl_stmt
@@ -113,6 +114,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|Lst
+modifier|*
 name|targCmds
 decl_stmt|;
 end_decl_stmt
@@ -166,6 +168,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|Lst
+modifier|*
 name|includes
 decl_stmt|;
 end_decl_stmt
@@ -176,6 +179,7 @@ end_comment
 
 begin_decl_stmt
 name|Lst
+modifier|*
 name|parseIncPath
 decl_stmt|;
 end_decl_stmt
@@ -186,6 +190,7 @@ end_comment
 
 begin_decl_stmt
 name|Lst
+modifier|*
 name|sysIncPath
 decl_stmt|;
 end_decl_stmt
@@ -656,6 +661,7 @@ name|char
 modifier|*
 parameter_list|,
 name|Lst
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1285,6 +1291,7 @@ modifier|*
 name|cohort
 decl_stmt|;
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 name|cohort
@@ -1454,6 +1461,7 @@ modifier|*
 name|src
 parameter_list|,
 name|Lst
+modifier|*
 name|allsrc
 parameter_list|)
 block|{
@@ -1675,6 +1683,7 @@ modifier|*
 name|cohort
 decl_stmt|;
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 for|for
@@ -1936,6 +1945,7 @@ name|savec
 decl_stmt|;
 comment|/* a place to save a character */
 name|Lst
+modifier|*
 name|paths
 decl_stmt|;
 comment|/* List of search paths to alter when parsing 				 * a list of .PATH targets */
@@ -1944,14 +1954,17 @@ name|tOp
 decl_stmt|;
 comment|/* operator from special target */
 name|Lst
+modifier|*
 name|sources
 decl_stmt|;
 comment|/* list of archive source names after 				 * expansion */
 name|Lst
+modifier|*
 name|curTargs
 decl_stmt|;
 comment|/* list of target names to be found and added 				 * to the targets list */
 name|Lst
+modifier|*
 name|curSrcs
 decl_stmt|;
 comment|/* list of sources in order */
@@ -2496,6 +2509,7 @@ condition|)
 block|{
 comment|/* 		 * .PATH<suffix> has to be handled specially. 		 * Call on the suffix module to give us a path to 		 * modify. 		 */
 name|Lst
+modifier|*
 name|path
 decl_stmt|;
 name|specType
@@ -2541,9 +2555,6 @@ if|if
 condition|(
 name|paths
 operator|==
-operator|(
-name|Lst
-operator|)
 name|NULL
 condition|)
 block|{
@@ -2590,6 +2601,7 @@ condition|)
 block|{
 comment|/* 		 * Targets are to be sought only in the current directory, 		 * so create an empty path for the thing. Note we need to 		 * use Dir_Destroy in the destruction of the path as the 		 * Dir module could have added a directory to the path... 		 */
 name|Lst
+modifier|*
 name|emptyPath
 init|=
 name|Lst_Init
@@ -7402,12 +7414,14 @@ end_comment
 
 begin_function
 name|Lst
+modifier|*
 name|Parse_MainName
 parameter_list|(
 name|void
 parameter_list|)
 block|{
 name|Lst
+modifier|*
 name|listmain
 decl_stmt|;
 comment|/* result list */

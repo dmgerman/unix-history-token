@@ -57,6 +57,7 @@ name|void
 name|Lst_Destroy
 parameter_list|(
 name|Lst
+modifier|*
 name|list
 parameter_list|,
 name|FreeProc
@@ -65,9 +66,11 @@ name|freeProc
 parameter_list|)
 block|{
 name|LstNode
+modifier|*
 name|ln
 decl_stmt|;
 name|LstNode
+modifier|*
 name|tln
 decl_stmt|;
 if|if

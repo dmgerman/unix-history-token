@@ -54,12 +54,15 @@ end_comment
 
 begin_function
 name|LstNode
+modifier|*
 name|Lst_FindFrom
 parameter_list|(
 name|Lst
+modifier|*
 name|l
 parameter_list|,
 name|LstNode
+modifier|*
 name|ln
 parameter_list|,
 name|void
@@ -72,6 +75,7 @@ name|cProc
 parameter_list|)
 block|{
 name|LstNode
+modifier|*
 name|tln
 decl_stmt|;
 name|Boolean

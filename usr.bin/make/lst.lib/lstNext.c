@@ -54,13 +54,16 @@ end_comment
 
 begin_function
 name|LstNode
+modifier|*
 name|Lst_Next
 parameter_list|(
 name|Lst
+modifier|*
 name|list
 parameter_list|)
 block|{
 name|LstNode
+modifier|*
 name|tln
 decl_stmt|;
 if|if
