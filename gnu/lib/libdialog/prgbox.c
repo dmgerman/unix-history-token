@@ -795,6 +795,17 @@ argument_list|,
 literal|' '
 argument_list|)
 expr_stmt|;
+name|display_helpline
+argument_list|(
+name|dialog
+argument_list|,
+name|height
+operator|-
+literal|1
+argument_list|,
+name|width
+argument_list|)
+expr_stmt|;
 name|print_button
 argument_list|(
 name|dialog

@@ -1817,6 +1817,12 @@ name|sx
 decl_stmt|,
 name|sy
 decl_stmt|;
+name|WINDOW
+modifier|*
+name|newscr
+init|=
+name|win
+decl_stmt|;
 if|if
 condition|(
 name|has_colors
