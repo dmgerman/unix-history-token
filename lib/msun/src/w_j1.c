@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: w_j1.c,v 1.1.1.1 1994/08/19 09:39:53 jkh Exp $"
+literal|"$Id: w_j1.c,v 1.5 1997/02/22 15:12:15 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,7 +29,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * wrapper of j1,y1  */
+comment|/*  * wrapper of j1  */
 end_comment
 
 begin_include
@@ -127,133 +127,6 @@ literal|36
 argument_list|)
 return|;
 comment|/* j1(|x|>X_TLOSS) */
-block|}
-else|else
-return|return
-name|z
-return|;
-endif|#
-directive|endif
-block|}
-end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_function
-name|double
-name|y1
-parameter_list|(
-name|double
-name|x
-parameter_list|)
-comment|/* wrapper y1 */
-else|#
-directive|else
-function|double y1
-parameter_list|(
-name|x
-parameter_list|)
-comment|/* wrapper y1 */
-name|double
-name|x
-decl_stmt|;
-endif|#
-directive|endif
-block|{
-ifdef|#
-directive|ifdef
-name|_IEEE_LIBM
-return|return
-name|__ieee754_y1
-argument_list|(
-name|x
-argument_list|)
-return|;
-else|#
-directive|else
-name|double
-name|z
-decl_stmt|;
-name|z
-operator|=
-name|__ieee754_y1
-argument_list|(
-name|x
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|_LIB_VERSION
-operator|==
-name|_IEEE_
-operator|||
-name|isnan
-argument_list|(
-name|x
-argument_list|)
-condition|)
-return|return
-name|z
-return|;
-if|if
-condition|(
-name|x
-operator|<=
-literal|0.0
-condition|)
-block|{
-if|if
-condition|(
-name|x
-operator|==
-literal|0.0
-condition|)
-comment|/* d= -one/(x-x); */
-return|return
-name|__kernel_standard
-argument_list|(
-name|x
-argument_list|,
-name|x
-argument_list|,
-literal|10
-argument_list|)
-return|;
-else|else
-comment|/* d = zero/(x-x); */
-return|return
-name|__kernel_standard
-argument_list|(
-name|x
-argument_list|,
-name|x
-argument_list|,
-literal|11
-argument_list|)
-return|;
-block|}
-if|if
-condition|(
-name|x
-operator|>
-name|X_TLOSS
-condition|)
-block|{
-return|return
-name|__kernel_standard
-argument_list|(
-name|x
-argument_list|,
-name|x
-argument_list|,
-literal|37
-argument_list|)
-return|;
-comment|/* y1(x>X_TLOSS) */
 block|}
 else|else
 return|return
