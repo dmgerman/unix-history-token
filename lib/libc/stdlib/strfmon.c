@@ -370,10 +370,6 @@ name|tmpptr
 decl_stmt|;
 comment|/* temporary vars */
 name|int
-modifier|*
-name|ntmp
-decl_stmt|;
-name|int
 name|sverrno
 decl_stmt|;
 name|va_start
