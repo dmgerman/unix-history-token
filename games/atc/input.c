@@ -2320,7 +2320,7 @@ condition|(
 name|p
 operator|.
 name|new_dir
-operator|>
+operator|>=
 name|MAXDIR
 condition|)
 name|p
@@ -2400,7 +2400,7 @@ condition|(
 name|p
 operator|.
 name|new_dir
-operator|>
+operator|>=
 name|MAXDIR
 condition|)
 name|p
