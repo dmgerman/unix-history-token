@@ -446,9 +446,10 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|pwok
-operator|=
-literal|1
+name|PAM_RETURN
+argument_list|(
+name|PAM_AUTH_ERR
+argument_list|)
 expr_stmt|;
 end_if
 
