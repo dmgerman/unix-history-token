@@ -1326,9 +1326,14 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|vsprintf
+name|vsnprintf
 argument_list|(
 name|lastmsg
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|lastmsg
+argument_list|)
 argument_list|,
 name|fmt
 argument_list|,
