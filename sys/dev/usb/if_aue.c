@@ -4090,7 +4090,7 @@ name|char
 operator|*
 argument_list|)
 argument_list|,
-name|AUE_BUFSZ
+name|AUE_CUTOFF
 argument_list|,
 name|USBD_SHORT_XFER_OK
 argument_list|,
