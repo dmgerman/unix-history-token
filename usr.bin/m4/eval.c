@@ -374,12 +374,6 @@ case|case
 name|LENGTYPE
 case|:
 comment|/* 	 * dolen - find the length of the 	 * argument 	 */
-if|if
-condition|(
-name|argc
-operator|>
-literal|2
-condition|)
 name|pbnum
 argument_list|(
 operator|(
