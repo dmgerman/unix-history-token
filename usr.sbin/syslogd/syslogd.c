@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslogd.c,v 1.32 1998/05/19 12:02:41 phk Exp $"
+literal|"$Id: syslogd.c,v 1.33 1998/06/10 04:34:56 julian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -429,6 +429,17 @@ end_define
 
 begin_comment
 comment|/* this message is a mark */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISKERNEL
+value|0x010
+end_define
+
+begin_comment
+comment|/* kernel generated message */
 end_comment
 
 begin_comment
@@ -2842,20 +2853,10 @@ name|flags
 decl_stmt|;
 name|char
 modifier|*
-name|lp
-decl_stmt|,
-modifier|*
 name|p
 decl_stmt|,
 modifier|*
 name|q
-decl_stmt|,
-name|line
-index|[
-name|MAXLINE
-operator|+
-literal|1
-index|]
 decl_stmt|;
 for|for
 control|(
@@ -2870,14 +2871,15 @@ literal|'\0'
 condition|;
 control|)
 block|{
-comment|/* Get message priority, if any */
 name|flags
 operator|=
+name|ISKERNEL
+operator||
 name|SYNC_FILE
 operator||
 name|ADDDATE
 expr_stmt|;
-comment|/* fsync file after write */
+comment|/* fsync after write */
 name|pri
 operator|=
 name|DEFSPRI
@@ -2950,7 +2952,6 @@ name|pri
 operator|=
 name|DEFSPRI
 expr_stmt|;
-comment|/* See if kernel provided a prefix; if not, use kernel name */
 for|for
 control|(
 name|q
@@ -2959,12 +2960,13 @@ name|p
 init|;
 operator|*
 name|q
+operator|!=
+literal|'\0'
 operator|&&
-name|isalnum
-argument_list|(
 operator|*
 name|q
-argument_list|)
+operator|!=
+literal|'\n'
 condition|;
 name|q
 operator|++
@@ -2974,85 +2976,12 @@ if|if
 condition|(
 operator|*
 name|q
-operator|==
-literal|':'
-condition|)
-block|{
-name|lp
-operator|=
-name|line
-expr_stmt|;
-block|}
-else|else
-block|{
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|line
-argument_list|,
-name|bootfile
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|line
-argument_list|,
-literal|": "
-argument_list|)
-expr_stmt|;
-name|lp
-operator|=
-name|line
-operator|+
-name|strlen
-argument_list|(
-name|line
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Append message body to prefix */
-name|q
-operator|=
-name|lp
-expr_stmt|;
-while|while
-condition|(
-operator|*
-name|p
 operator|!=
 literal|'\0'
-operator|&&
-operator|(
-name|c
-operator|=
-operator|*
-name|p
-operator|++
-operator|)
-operator|!=
-literal|'\n'
-operator|&&
-name|q
-operator|<
-operator|&
-name|line
-index|[
-name|MAXLINE
-index|]
 condition|)
 operator|*
 name|q
 operator|++
-operator|=
-name|c
-expr_stmt|;
-operator|*
-name|q
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -3060,12 +2989,16 @@ name|logmsg
 argument_list|(
 name|pri
 argument_list|,
-name|line
+name|p
 argument_list|,
 name|LocalHostName
 argument_list|,
 name|flags
 argument_list|)
+expr_stmt|;
+name|p
+operator|=
+name|q
 expr_stmt|;
 block|}
 block|}
@@ -3119,6 +3052,8 @@ modifier|*
 name|f
 decl_stmt|;
 name|int
+name|i
+decl_stmt|,
 name|fac
 decl_stmt|,
 name|msglen
@@ -3139,8 +3074,13 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-name|int
-name|i
+name|char
+name|buf
+index|[
+name|MAXLINE
+operator|+
+literal|1
+index|]
 decl_stmt|;
 name|dprintf
 argument_list|(
@@ -3351,6 +3291,42 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+comment|/* add kernel prefix for kernel messages */
+if|if
+condition|(
+name|flags
+operator|&
+name|ISKERNEL
+condition|)
+block|{
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%s: %s"
+argument_list|,
+name|bootfile
+argument_list|,
+name|msg
+argument_list|)
+expr_stmt|;
+name|msg
+operator|=
+name|buf
+expr_stmt|;
+name|msglen
+operator|=
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* log the message to the particular outputs */
 if|if
 condition|(
