@@ -503,6 +503,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Nonzero means do not warn that K&R style main() is not a function prototype. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|flag_bsd_no_warn_kr_main
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Nonzero means warn for any global function def    without separate previous prototype decl.  */
 end_comment
 
@@ -722,6 +732,16 @@ end_comment
 begin_decl_stmt
 name|int
 name|flag_isoc99
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means allow the BSD kernel printf enhancements.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|flag_bsd_format
 decl_stmt|;
 end_decl_stmt
 
