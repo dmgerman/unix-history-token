@@ -239,6 +239,14 @@ operator|=
 name|c
 expr_stmt|;
 comment|/* Give interrupts a chance. */
+name|mtx_exit
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -248,6 +256,14 @@ name|s
 operator|=
 name|splhigh
 argument_list|()
+expr_stmt|;
+name|mtx_enter
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
 expr_stmt|;
 name|c
 operator|=
