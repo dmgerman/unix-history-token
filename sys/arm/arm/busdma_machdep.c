@@ -583,11 +583,27 @@ name|newtag
 operator|==
 name|NULL
 condition|)
+block|{
+name|CTR3
+argument_list|(
+name|KTR_BUSDMA
+argument_list|,
+literal|"bus_dma_tag_create returned tag %p tag "
+literal|"flags 0x%x error %d"
+argument_list|,
+name|newtag
+argument_list|,
+literal|0
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
 operator|)
 return|;
+block|}
 name|newtag
 operator|->
 name|parent
@@ -877,6 +893,30 @@ name|dmat
 operator|=
 name|newtag
 expr_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_BUSDMA
+argument_list|,
+literal|"bus_dma_tag_create returned tag %p tag flags 0x%x "
+literal|"error %d"
+argument_list|,
+name|newtag
+argument_list|,
+operator|(
+name|newtag
+operator|!=
+name|NULL
+condition|?
+name|newtag
+operator|->
+name|flags
+else|:
+literal|0
+operator|)
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -893,6 +933,11 @@ name|bus_dma_tag_t
 name|dmat
 parameter_list|)
 block|{
+name|bus_dma_tag_t
+name|dmat_copy
+init|=
+name|dmat
+decl_stmt|;
 if|if
 condition|(
 name|dmat
@@ -968,6 +1013,15 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
+name|CTR1
+argument_list|(
+name|KTR_BUSDMA
+argument_list|,
+literal|"bus_dma_tag_destroy tag %p"
+argument_list|,
+name|dmat_copy
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -998,6 +1052,11 @@ block|{
 name|bus_dmamap_t
 name|newmap
 decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
 name|newmap
 operator|=
 name|malloc
@@ -1021,11 +1080,24 @@ name|newmap
 operator|==
 name|NULL
 condition|)
+block|{
+name|CTR2
+argument_list|(
+name|KTR_BUSDMA
+argument_list|,
+literal|"bus_dmamap_create: tag %p error %d"
+argument_list|,
+name|dmat
+argument_list|,
+name|ENOMEM
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
 operator|)
 return|;
+block|}
 operator|*
 name|mapp
 operator|=
@@ -1047,6 +1119,21 @@ name|dmat
 operator|->
 name|map_count
 operator|++
+expr_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_BUSDMA
+argument_list|,
+literal|"bus_dmamap_create: tag %p tag flags 0x%x error %d"
+argument_list|,
+name|dmat
+argument_list|,
+name|dmat
+operator|->
+name|flags
+argument_list|,
+name|error
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1082,6 +1169,15 @@ name|dmat
 operator|->
 name|map_count
 operator|--
+expr_stmt|;
+name|CTR1
+argument_list|(
+name|KTR_BUSDMA
+argument_list|,
+literal|"bus_dmamap_destroy: tag %p error 0"
+argument_list|,
+name|dmat
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1178,11 +1274,29 @@ name|newmap
 operator|==
 name|NULL
 condition|)
+block|{
+name|CTR3
+argument_list|(
+name|KTR_BUSDMA
+argument_list|,
+literal|"bus_dmamem_alloc: tag %p tag "
+literal|"flags %0x%x error Md"
+argument_list|,
+name|dmat
+argument_list|,
+name|dmat
+operator|->
+name|flags
+argument_list|,
+name|ENOMEM
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
 operator|)
 return|;
+block|}
 name|dmat
 operator|->
 name|map_count
@@ -1274,7 +1388,10 @@ operator|*
 name|vaddr
 operator|==
 name|NULL
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|newmap
 operator|!=
 name|NULL
@@ -1292,6 +1409,7 @@ operator|->
 name|map_count
 operator|--
 expr_stmt|;
+block|}
 operator|*
 name|mapp
 operator|=
@@ -1369,6 +1487,19 @@ argument_list|(
 name|map
 argument_list|,
 name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_BUSDMA
+argument_list|,
+literal|"bus_dmamem_free: tag %p flags 0x%x"
+argument_list|,
+name|dmat
+argument_list|,
+name|dmat
+operator|->
+name|flags
 argument_list|)
 expr_stmt|;
 block|}
@@ -1528,6 +1659,26 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+name|CTR4
+argument_list|(
+name|KTR_BUSDMA
+argument_list|,
+literal|"bus_dmamap_load: tag %p tag flags 0x%x error %d "
+literal|"nsegs %d"
+argument_list|,
+name|dmat
+argument_list|,
+name|dmat
+operator|->
+name|flags
+argument_list|,
+name|nsegs
+operator|+
+literal|1
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1634,6 +1785,26 @@ name|boundary
 operator|-
 literal|1
 operator|)
+expr_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_BUSDMA
+argument_list|,
+literal|"lowaddr= %d boundary= %d, "
+literal|"alignment= %d"
+argument_list|,
+name|dmat
+operator|->
+name|lowaddr
+argument_list|,
+name|dmat
+operator|->
+name|boundary
+argument_list|,
+name|dmat
+operator|->
+name|alignment
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -2332,6 +2503,26 @@ name|error
 argument_list|)
 expr_stmt|;
 block|}
+name|CTR4
+argument_list|(
+name|KTR_BUSDMA
+argument_list|,
+literal|"bus_dmamap_load_mbuf: tag %p tag flags 0x%x "
+literal|"error %d nsegs %d"
+argument_list|,
+name|dmat
+argument_list|,
+name|dmat
+operator|->
+name|flags
+argument_list|,
+name|error
+argument_list|,
+name|nsegs
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2820,6 +3011,26 @@ name|error
 argument_list|)
 expr_stmt|;
 block|}
+name|CTR4
+argument_list|(
+name|KTR_BUSDMA
+argument_list|,
+literal|"bus_dmamap_load_uio: tag %p tag flags 0x%x "
+literal|"error %d nsegs %d"
+argument_list|,
+name|dmat
+argument_list|,
+name|dmat
+operator|->
+name|flags
+argument_list|,
+name|error
+argument_list|,
+name|nsegs
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -3010,6 +3221,19 @@ operator|&
 name|DMAMAP_COHERENT
 condition|)
 return|return;
+name|CTR2
+argument_list|(
+name|KTR_BUSDMA
+argument_list|,
+literal|"bus_dmamap_sync: op %x flags %x"
+argument_list|,
+name|op
+argument_list|,
+name|map
+operator|->
+name|flags
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|map
