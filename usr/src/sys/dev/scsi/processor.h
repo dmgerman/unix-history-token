@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)processor.h	5.2 (Berkeley) %G%  *  * from: $Header: processor.h,v 1.2 92/05/15 11:24:01 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)processor.h	5.3 (Berkeley) %G%  *  * from: $Header: processor.h,v 1.3 92/12/02 03:52:27 torek Exp $ (LBL)  */
 end_comment
 
 begin_comment
@@ -41,16 +41,9 @@ name|u_char
 name|cdb_cmd
 decl_stmt|,
 comment|/* 0x8 or 0xa */
-name|cdb_lun
-range|:
-literal|3
+name|cdb_lun_xxx
 decl_stmt|,
-comment|/* logical unit number */
-name|cdb_xxx
-range|:
-literal|5
-decl_stmt|,
-comment|/* reserved */
+comment|/* logical unit number + reserved */
 name|cdb_lenh
 decl_stmt|,
 comment|/* buffer or data length (MSB) */
