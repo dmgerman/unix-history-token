@@ -74,10 +74,7 @@ argument_list|(
 name|LOADER_NET_SUPPORT
 argument_list|)
 operator|&
-name|ofwnet
-block|,
-operator|&
-name|ofwnet
+name|netdev
 block|,
 endif|#
 directive|endif
@@ -135,14 +132,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|struct
-name|netif_driver
-name|of_net
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|netif_driver
 modifier|*
@@ -154,7 +143,7 @@ ifdef|#
 directive|ifdef
 name|LOADER_NET_SUPPORT
 operator|&
-name|of_net
+name|ofwnet
 block|,
 endif|#
 directive|endif

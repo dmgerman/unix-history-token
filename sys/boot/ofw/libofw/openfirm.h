@@ -181,6 +181,7 @@ begin_function_decl
 name|int
 name|OF_canon
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -196,6 +197,7 @@ begin_function_decl
 name|phandle_t
 name|OF_finddevice
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -365,7 +367,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__dead
 name|void
 name|OF_exit
 parameter_list|(
