@@ -2445,7 +2445,6 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * I don't know where this is set in the SEEPROM or by the 	 * BIOS, so we default to 100% on Ultra or slower controllers 	 * and 75% on ULTRA2 controllers. 	 */
 if|if
 condition|(
 operator|(
@@ -2465,9 +2464,9 @@ name|ahc
 argument_list|,
 name|DFF_THRSH
 argument_list|,
-name|RD_DFTHRSH_75
+name|RD_DFTHRSH_MAX
 operator||
-name|WR_DFTHRSH_75
+name|WR_DFTHRSH_MAX
 argument_list|)
 expr_stmt|;
 block|}
@@ -2622,6 +2621,9 @@ modifier|*
 name|ahc
 parameter_list|)
 block|{
+name|u_int
+name|chip
+decl_stmt|;
 name|int
 name|ramps
 decl_stmt|;
@@ -2631,6 +2633,14 @@ decl_stmt|;
 name|uint32_t
 name|devconfig
 decl_stmt|;
+name|chip
+operator|=
+name|ahc
+operator|->
+name|chip
+operator|&
+name|AHC_CHIPID_MASK
+expr_stmt|;
 name|devconfig
 operator|=
 name|ahc_pci_read_config
@@ -2685,13 +2695,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-operator|(
-name|ahc
-operator|->
 name|chip
-operator|&
-name|AHC_CHIPID_MASK
-operator|)
 operator|>=
 name|AHC_AIC7870
 condition|)

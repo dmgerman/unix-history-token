@@ -583,6 +583,16 @@ init|=
 literal|0x10000
 block|,
 comment|/* Automatic pause on register access */
+name|AHC_TARGETMODE
+init|=
+literal|0x20000
+block|,
+comment|/* Has tested target mode support */
+name|AHC_MULTIROLE
+init|=
+literal|0x40000
+block|,
+comment|/* Space for two roles at a time */
 name|AHC_AIC7770_FE
 init|=
 name|AHC_FENONE
@@ -592,6 +602,8 @@ init|=
 name|AHC_SPIOCAP
 operator||
 name|AHC_AUTOPAUSE
+operator||
+name|AHC_TARGETMODE
 block|,
 name|AHC_AIC7855_FE
 init|=
@@ -605,12 +617,15 @@ name|AHC_ULTRA
 block|,
 name|AHC_AIC7870_FE
 init|=
-name|AHC_FENONE
+name|AHC_TARGETMODE
 block|,
 name|AHC_AIC7880_FE
 init|=
+name|AHC_AIC7870_FE
+operator||
 name|AHC_ULTRA
 block|,
+comment|/* 	 * Although we have space for both the initiator and 	 * target roles on ULTRA2 chips, we currently disable 	 * the initiator role to allow multi-scsi-id target mode 	 * configurations.  We can only respond on the same SCSI 	 * ID as our initiator role if we allow initiator operation. 	 * At some point, we should add a configuration knob to 	 * allow both roles to be loaded. 	 */
 name|AHC_AIC7890_FE
 init|=
 name|AHC_MORE_SRAM
@@ -630,6 +645,8 @@ operator||
 name|AHC_NEW_TERMCTL
 operator||
 name|AHC_LARGE_SCBS
+operator||
+name|AHC_TARGETMODE
 block|,
 name|AHC_AIC7892_FE
 init|=
@@ -755,6 +772,10 @@ init|=
 literal|0x004
 block|,
 comment|/* 					 * For cards without an seeprom 					 * or a BIOS to initialize the chip's 					 * SRAM, we use the default target 					 * settings. 					 */
+name|AHC_SEQUENCER_DEBUG
+init|=
+literal|0x008
+block|,
 name|AHC_SHARED_SRAM
 init|=
 literal|0x010
@@ -788,12 +809,12 @@ name|AHC_TERM_ENB_B
 init|=
 literal|0x800
 block|,
-name|AHC_INITIATORMODE
+name|AHC_INITIATORROLE
 init|=
 literal|0x1000
 block|,
 comment|/* 					  * Allow initiator operations on 					  * this controller. 					  */
-name|AHC_TARGETMODE
+name|AHC_TARGETROLE
 init|=
 literal|0x2000
 block|,
@@ -1083,6 +1104,10 @@ name|SCB_SENSE
 init|=
 literal|0x0008
 block|,
+name|SCB_CDB32_PTR
+init|=
+literal|0x0010
+block|,
 name|SCB_RECOVERY_SCB
 init|=
 literal|0x0040
@@ -1174,9 +1199,6 @@ name|sg_list
 decl_stmt|;
 name|bus_addr_t
 name|sg_list_phys
-decl_stmt|;
-name|bus_addr_t
-name|cdb32_busaddr
 decl_stmt|;
 name|u_int
 name|sg_count
@@ -2647,17 +2669,12 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ahc_qinfifo_requeue
+name|ahc_qinfifo_requeue_tail
 parameter_list|(
 name|struct
 name|ahc_softc
 modifier|*
 name|ahc
-parameter_list|,
-name|struct
-name|scb
-modifier|*
-name|prev_scb
 parameter_list|,
 name|struct
 name|scb
@@ -2669,12 +2686,32 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ahc_qinfifo_count
+name|ahc_match_scb
 parameter_list|(
 name|struct
 name|ahc_softc
 modifier|*
 name|ahc
+parameter_list|,
+name|struct
+name|scb
+modifier|*
+name|scb
+parameter_list|,
+name|int
+name|target
+parameter_list|,
+name|char
+name|channel
+parameter_list|,
+name|int
+name|lun
+parameter_list|,
+name|u_int
+name|tag
+parameter_list|,
+name|role_t
+name|role
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3178,6 +3215,11 @@ modifier|*
 name|ahc
 parameter_list|,
 name|struct
+name|ahc_initiator_tinfo
+modifier|*
+name|tinfo
+parameter_list|,
+name|struct
 name|ahc_syncrate
 modifier|*
 name|syncrate
@@ -3188,6 +3230,9 @@ name|offset
 parameter_list|,
 name|int
 name|wide
+parameter_list|,
+name|role_t
+name|role
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3201,9 +3246,17 @@ name|ahc_softc
 modifier|*
 name|ahc
 parameter_list|,
+name|struct
+name|ahc_initiator_tinfo
+modifier|*
+name|tinfo
+parameter_list|,
 name|u_int
 modifier|*
 name|bus_width
+parameter_list|,
+name|role_t
+name|role
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3391,6 +3444,24 @@ name|devinfo
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AHC_TMODE_ENABLE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|AHC_TMODE_ENABLE
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
