@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.34 2002/09/10 06:29:09 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.35 2002/10/11 05:40:13 imp Exp   */
 end_comment
 
 begin_comment
@@ -571,6 +571,17 @@ end_define
 
 begin_comment
 comment|/* NewMedia */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_PLANEX2
+value|0x14ea
+end_define
+
+begin_comment
+comment|/* PLANEX */
 end_comment
 
 begin_define
@@ -2831,6 +2842,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCMCIA_CIS_NEWMEDIA_BUSTOASTER2
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_NEWMEDIA_BUSTOASTER2
+value|0xa002
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_NEWMEDIA_BUSTOASTER2
+value|"New Media SCSI Bus Toaster"
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_CIS_NEWMEDIA_BUSTOASTER
 value|{ NULL, NULL, NULL, NULL }
 end_define
@@ -3186,6 +3218,31 @@ define|#
 directive|define
 name|PCMCIA_STR_PANASONIC_KME
 value|"Panasonic CD-R/RW Interface"
+end_define
+
+begin_comment
+comment|/* Planex */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_PLANEX2_GWNS11H
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_PLANEX2_GWNS11H
+value|0xb001
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_PLANEX2_GWNS11H
+value|"Planex GW-NS11H"
 end_define
 
 begin_comment
