@@ -65,7 +65,16 @@ argument|inode
 argument_list|)
 name|i_nextsnap
 expr_stmt|;
-comment|/* snapshot file list */
+comment|/* snapshot file list. */
+name|daddr_t
+name|i_snaplistsize
+decl_stmt|;
+comment|/* size of snapblklist. */
+name|daddr_t
+modifier|*
+name|i_snapblklist
+decl_stmt|;
+comment|/* list of known snapshot blocks. */
 name|struct
 name|vnode
 modifier|*
