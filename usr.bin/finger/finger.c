@@ -159,6 +159,8 @@ decl_stmt|,
 name|sflag
 decl_stmt|,
 name|oflag
+decl_stmt|,
+name|Tflag
 decl_stmt|;
 end_decl_stmt
 
@@ -237,7 +239,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"lmpsho"
+literal|"lmpshoT"
 argument_list|)
 operator|)
 operator|!=
@@ -303,6 +305,15 @@ expr_stmt|;
 comment|/* office info */
 break|break;
 case|case
+literal|'T'
+case|:
+name|Tflag
+operator|=
+literal|1
+expr_stmt|;
+comment|/* disable T/TCP */
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
@@ -313,7 +324,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: finger [-lmpsho] [login ...]\n"
+literal|"usage: finger [-lmpshoT] [login ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
