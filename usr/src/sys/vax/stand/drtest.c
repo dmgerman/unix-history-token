@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	drtest.c	4.10	83/03/01	*/
+comment|/*	drtest.c	4.11	83/03/02	*/
 end_comment
 
 begin_comment
@@ -170,6 +170,13 @@ name|nsect
 operator|*
 name|SECTSIZ
 expr_stmt|;
+name|bp
+operator|=
+name|malloc
+argument_list|(
+name|tracksize
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Reading in %d byte records\n"
@@ -199,7 +206,7 @@ name|ncyl
 operator|*
 name|st
 operator|.
-name|ntrak
+name|nspc
 expr_stmt|;
 for|for
 control|(
@@ -212,7 +219,10 @@ operator|<
 name|lastsector
 condition|;
 name|sector
-operator|++
+operator|+=
+name|st
+operator|.
+name|nsect
 control|)
 block|{
 if|if
