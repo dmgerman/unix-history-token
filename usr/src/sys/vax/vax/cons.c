@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cons.c	4.8	81/03/11	*/
+comment|/*	cons.c	4.9	81/05/05	*/
 end_comment
 
 begin_comment
@@ -808,9 +808,6 @@ operator|==
 literal|0
 condition|)
 return|return;
-if|if
-condition|(
-operator|(
 name|c
 operator|=
 name|getc
@@ -820,14 +817,6 @@ name|tp
 operator|->
 name|t_outq
 argument_list|)
-operator|)
-operator|>=
-literal|0
-condition|)
-block|{
-name|consdone
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -901,7 +890,10 @@ goto|goto
 name|out
 goto|;
 block|}
-block|}
+name|consdone
+operator|=
+literal|0
+expr_stmt|;
 name|tp
 operator|->
 name|t_state
