@@ -2830,6 +2830,12 @@ argument_list|)
 expr_stmt|;
 name|sopt
 operator|.
+name|sopt_dir
+operator|=
+name|SOPT_SET
+expr_stmt|;
+name|sopt
+operator|.
 name|sopt_level
 operator|=
 name|SOL_SOCKET
