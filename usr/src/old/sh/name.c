@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)name.c	4.2 %G%"
+literal|"@(#)name.c	4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1395,7 +1395,7 @@ end_function
 
 begin_function
 name|VOID
-name|getenv
+name|setupenv
 parameter_list|()
 block|{
 name|REG
