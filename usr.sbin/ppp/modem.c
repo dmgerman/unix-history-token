@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.86 1998/05/28 23:15:38 brian Exp $  *  *  TODO:  */
+comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.87 1998/05/28 23:17:51 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -666,6 +666,16 @@ operator|->
 name|Utmp
 operator|=
 literal|0
+expr_stmt|;
+name|p
+operator|->
+name|session_owner
+operator|=
+operator|(
+name|pid_t
+operator|)
+operator|-
+literal|1
 expr_stmt|;
 name|p
 operator|->
@@ -4308,6 +4318,39 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|modem
+operator|->
+name|session_owner
+operator|!=
+operator|(
+name|pid_t
+operator|)
+operator|-
+literal|1
+condition|)
+block|{
+name|ID0kill
+argument_list|(
+name|modem
+operator|->
+name|session_owner
+argument_list|,
+name|SIGHUP
+argument_list|)
+expr_stmt|;
+name|modem
+operator|->
+name|session_owner
+operator|=
+operator|(
+name|pid_t
+operator|)
+operator|-
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|newsid
 condition|)
 name|bundle_setsid
@@ -4958,7 +5001,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Device:          %s\n"
+literal|" Device:          %s"
 argument_list|,
 operator|*
 name|modem
@@ -4984,13 +5027,41 @@ else|:
 literal|"N/A"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|modem
+operator|->
+name|session_owner
+operator|!=
+operator|(
+name|pid_t
+operator|)
+operator|-
+literal|1
+condition|)
 name|prompt_Printf
 argument_list|(
 name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Link Type:       %s\n"
+literal|" (session owner: %d)"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|modem
+operator|->
+name|session_owner
+argument_list|)
+expr_stmt|;
+name|prompt_Printf
+argument_list|(
+name|arg
+operator|->
+name|prompt
+argument_list|,
+literal|"\n Link Type:       %s\n"
 argument_list|,
 name|mode2Nam
 argument_list|(
@@ -6381,6 +6452,15 @@ operator|->
 name|Timer
 argument_list|)
 expr_stmt|;
+name|p
+operator|->
+name|Timer
+operator|.
+name|state
+operator|=
+name|TIMER_RUNNING
+expr_stmt|;
+comment|/* Special - see iov2modem() */
 if|if
 condition|(
 name|tcgetpgrp
@@ -6395,13 +6475,12 @@ argument_list|()
 condition|)
 name|p
 operator|->
-name|Timer
-operator|.
-name|state
+name|session_owner
 operator|=
-name|TIMER_RUNNING
+name|getpid
+argument_list|()
 expr_stmt|;
-comment|/* Special - see iov2modem() */
+comment|/* So I'll eventually get HUP'd */
 block|}
 name|timer_Stop
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Eivind Eklund<eivind@yes.no>  *    for Yes Interactive  *  * Copyright (C) 1998, Yes Interactive.  All rights reserved.  *  * Redistribution and use in any form is permitted.  Redistribution in  * source form should include the above copyright and this set of  * conditions, because large sections american law seems to have been  * created by a bunch of jerks on drugs that are now illegal, forcing  * me to include this copyright-stuff instead of placing this in the  * public domain.  The name of of 'Yes Interactive' or 'Eivind Eklund'  * may not be used to endorse or promote products derived from this  * software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *  $Id: physical.h,v 1.1.2.26 1998/05/15 23:58:26 brian Exp $  *  */
+comment|/*  * Written by Eivind Eklund<eivind@yes.no>  *    for Yes Interactive  *  * Copyright (C) 1998, Yes Interactive.  All rights reserved.  *  * Redistribution and use in any form is permitted.  Redistribution in  * source form should include the above copyright and this set of  * conditions, because large sections american law seems to have been  * created by a bunch of jerks on drugs that are now illegal, forcing  * me to include this copyright-stuff instead of placing this in the  * public domain.  The name of of 'Yes Interactive' or 'Eivind Eklund'  * may not be used to endorse or promote products derived from this  * software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *  $Id: physical.h,v 1.2 1998/05/21 21:47:40 brian Exp $  *  */
 end_comment
 
 begin_struct_decl
@@ -85,6 +85,10 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* Are we in utmp ? */
+name|pid_t
+name|session_owner
+decl_stmt|;
+comment|/* HUP this when closing the link */
 comment|/* XXX-ML Most of the below is device specific, and probably do not       belong in the generic physical struct. It comes from modem.c. */
 struct|struct
 block|{
