@@ -3655,6 +3655,9 @@ operator|.
 name|my_dir
 argument_list|)
 decl_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgNotify
 argument_list|(
 literal|"Extracting %s into %s directory..."
@@ -3753,6 +3756,9 @@ name|cpid
 argument_list|)
 expr_stmt|;
 comment|/* And go for all the chunks */
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|chunk
@@ -4238,6 +4244,9 @@ operator|!
 name|status
 condition|)
 block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|me
@@ -4292,9 +4301,6 @@ name|status
 condition|)
 operator|--
 name|i
-expr_stmt|;
-name|dialog_clear
-argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -4620,6 +4626,9 @@ argument_list|,
 name|DistTable
 argument_list|)
 expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 comment|/* Only do bin fixup if bin dist was successfully extracted */
 if|if
 condition|(
@@ -4678,6 +4687,9 @@ literal|0
 index|]
 operator|=
 literal|'\0'
+expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
 expr_stmt|;
 name|printSelected
 argument_list|(
