@@ -119,6 +119,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/laptops.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<i386/isa/isa.h>
 end_include
 
@@ -156,12 +162,6 @@ begin_include
 include|#
 directive|include
 file|<pccard/slot.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/include/laptops.h>
 end_include
 
 begin_decl_stmt
@@ -323,6 +323,12 @@ name|pcictimeout
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LKM
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -341,6 +347,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static

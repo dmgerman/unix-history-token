@@ -105,6 +105,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<machine/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/laptops.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<i386/isa/isa.h>
 end_include
 
@@ -136,12 +148,6 @@ begin_include
 include|#
 directive|include
 file|<pccard/slot.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/include/laptops.h>
 end_include
 
 begin_decl_stmt
