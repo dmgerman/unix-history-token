@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: create_chunk.c,v 1.30 1998/03/20 23:43:03 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: create_chunk.c,v 1.31 1998/09/15 10:23:17 gibbs Exp $  *  */
 end_comment
 
 begin_include
@@ -1529,6 +1529,10 @@ operator|,
 name|cmaj
 operator|=
 literal|3
+operator|,
+name|p
+operator|+=
+literal|2
 expr_stmt|;
 elseif|else
 if|if
@@ -1550,6 +1554,10 @@ operator|,
 name|cmaj
 operator|=
 literal|13
+operator|,
+name|p
+operator|+=
+literal|2
 expr_stmt|;
 elseif|else
 if|if
@@ -1571,6 +1579,10 @@ operator|,
 name|cmaj
 operator|=
 literal|87
+operator|,
+name|p
+operator|+=
+literal|3
 expr_stmt|;
 elseif|else
 if|if
@@ -1593,6 +1605,10 @@ operator|,
 name|cmaj
 operator|=
 literal|13
+operator|,
+name|p
+operator|+=
+literal|2
 expr_stmt|;
 else|else
 block|{
@@ -1607,10 +1623,6 @@ return|return
 literal|0
 return|;
 block|}
-name|p
-operator|+=
-literal|2
-expr_stmt|;
 if|if
 condition|(
 operator|!
