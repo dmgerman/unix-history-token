@@ -2307,7 +2307,7 @@ operator|->
 name|pm_gid
 condition|)
 return|return
-name|EOPNOTSUPP
+name|EINVAL
 return|;
 block|}
 if|if
