@@ -69,6 +69,44 @@ directive|include
 file|<sys/umtx.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|UMTX_LOCK
+parameter_list|()
+value|mtx_lock(&umtx_lock);
+end_define
+
+begin_define
+define|#
+directive|define
+name|UMTX_UNLOCK
+parameter_list|()
+value|mtx_unlock(&umtx_lock);
+end_define
+
+begin_decl_stmt
+name|struct
+name|mtx
+name|umtx_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|umtx
+argument_list|,
+operator|&
+name|umtx_lock
+argument_list|,
+literal|"User-land mutex lock"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|int
 name|_umtx_lock
@@ -115,12 +153,8 @@ name|uap
 operator|->
 name|umtx
 expr_stmt|;
-name|PROC_LOCK
-argument_list|(
-name|td
-operator|->
-name|td_proc
-argument_list|)
+name|UMTX_LOCK
+argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -238,7 +272,7 @@ goto|;
 block|}
 comment|/* We didn't set the contested bit, try again. */
 block|}
-comment|/* 	 * We are now protected from further races via the proc lock. 	 * If userland messes with their mutex without using cmpset 	 * they will deadlock themselves but they will still be 	 * killable via signals. 	 */
+comment|/* 	 * We are now protected from further races via umtx_lock. 	 * If userland messes with their mutex without using cmpset 	 * they will deadlock themselves but they will still be 	 * killable via signals. 	 */
 if|if
 condition|(
 operator|(
@@ -377,11 +411,7 @@ operator|->
 name|td_umtx
 argument_list|,
 operator|&
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_mtx
+name|umtx_lock
 argument_list|,
 name|td
 operator|->
@@ -451,12 +481,8 @@ break|break;
 block|}
 name|out
 label|:
-name|PROC_UNLOCK
-argument_list|(
-name|td
-operator|->
-name|td_proc
-argument_list|)
+name|UMTX_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -514,12 +540,8 @@ name|uap
 operator|->
 name|umtx
 expr_stmt|;
-name|PROC_LOCK
-argument_list|(
-name|td
-operator|->
-name|td_proc
-argument_list|)
+name|UMTX_LOCK
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Make sure we own this mtx. 	 * 	 * XXX Need a {fu,su}ptr this is not correct on arch where 	 * sizeof(intptr_t) != sizeof(long). 	 */
 if|if
@@ -917,12 +939,8 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|PROC_UNLOCK
-argument_list|(
-name|td
-operator|->
-name|td_proc
-argument_list|)
+name|UMTX_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
