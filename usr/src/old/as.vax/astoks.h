@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1980 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* "@(#)astoks.h 4.1 %G%" */
+comment|/* "@(#)astoks.h 4.2 %G%" */
 end_comment
 
 begin_comment
@@ -167,6 +167,13 @@ define|#
 directive|define
 name|IFILL
 value|21
+end_define
+
+begin_define
+define|#
+directive|define
+name|IQUAD
+value|22
 end_define
 
 begin_comment

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asparse.c 4.2 %G%"
+literal|"@(#)asparse.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1112,7 +1112,7 @@ argument|){ 		yyerror(
 literal|"More than 6 arguments"
 argument|); 		goto errorfix; 	}  	insout(seg_type, arglist, 		auxval == INSTn ? argcnt : - argcnt); 	break;     case IFLOAT:	curlen =
 literal|4
-argument|;	goto floatlist;    case IDOUBLE:  	curlen =
+argument|;	goto floatlist;    case IQUAD:    case IDOUBLE:  	curlen =
 literal|8
 argument|;       floatlist:
 comment|/* 	 *	eat a list of floating point numbers 	 */

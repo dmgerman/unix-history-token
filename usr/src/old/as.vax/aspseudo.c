@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)aspseudo.c 4.2 %G%"
+literal|"@(#)aspseudo.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,6 +127,15 @@ argument_list|,
 literal|0
 argument_list|,
 name|IINT
+argument_list|)
+block|,
+name|PSEUDO
+argument_list|(
+literal|".quad"
+argument_list|,
+literal|0
+argument_list|,
+name|IQUAD
 argument_list|)
 block|,
 name|PSEUDO
