@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)init_main.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)init_main.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -402,6 +402,23 @@ name|s_leader
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KTRACE
+name|p
+operator|->
+name|p_tracep
+operator|=
+name|NULL
+expr_stmt|;
+name|p
+operator|->
+name|p_traceflag
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * These assume that the u. area is always mapped  	 * to the same virtual address. Otherwise must be 	 * handled when copying the u. area in newproc(). 	 */
 name|u
 operator|.
