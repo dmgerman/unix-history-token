@@ -21,6 +21,77 @@ value|1
 end_define
 
 begin_comment
+comment|/*  * Swap device table  */
+end_comment
+
+begin_struct
+struct|struct
+name|swdevt
+block|{
+name|udev_t
+name|sw_dev
+decl_stmt|;
+comment|/* For quasibogus swapdev reporting */
+name|int
+name|sw_flags
+decl_stmt|;
+name|int
+name|sw_nblks
+decl_stmt|;
+name|int
+name|sw_used
+decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+name|sw_vp
+decl_stmt|;
+name|dev_t
+name|sw_device
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|SW_FREED
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_SEQUENTIAL
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_CLOSING
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|sw_freed
+value|sw_flags
+end_define
+
+begin_comment
+comment|/* XXX compat */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_comment
 comment|/*  * SWB_NPAGES must be a power of 2.  It may be set to 1, 2, 4, 8, or 16  * pages per allocation.  We recommend you stick with the default of 8.  * The 16-page limit is due to the radix code (kern/subr_blist.c).  */
 end_comment
 
@@ -101,12 +172,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_decl_stmt
 specifier|extern

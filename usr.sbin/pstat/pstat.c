@@ -122,12 +122,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/blist.h>
 end_include
 
@@ -141,6 +135,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/swap_pager.h>
 end_include
 
 begin_include
