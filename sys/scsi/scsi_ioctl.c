@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Contributed by HD Associates (hd@world.std.com).  * Copyright (c) 1992, 1993 HD Associates  *  * Berkeley style copyright.    *  *  * $Id$  */
+comment|/*   * Contributed by HD Associates (hd@world.std.com).  * Copyright (c) 1992, 1993 HD Associates  *  * Berkeley style copyright.    *  *  * $Id: scsi_ioctl.c,v 1.7 1994/08/02 07:52:33 davidg Exp $  */
 end_comment
 
 begin_include
@@ -836,9 +836,6 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|phys
-decl_stmt|;
 name|SC_DEBUG
 argument_list|(
 name|sc_link
@@ -979,10 +976,6 @@ case|case
 name|SCIOCREPROBE
 case|:
 block|{
-specifier|extern
-name|int
-name|scsibus
-decl_stmt|;
 name|struct
 name|scsi_addr
 modifier|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.12 1994/08/31 06:17:44 davidg Exp $  */
+comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.13 1994/10/02 17:48:51 phk Exp $  */
 end_comment
 
 begin_define
@@ -2875,8 +2875,11 @@ name|SSD_KEY
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" DELAYED ERROR, key = 0x%x\n"
+literal|" DELAYED ERROR, key = 0x%lx\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|key
 argument_list|)
 expr_stmt|;
@@ -2997,7 +3000,7 @@ case|:
 comment|/* BLANK CHECK */
 name|printf
 argument_list|(
-literal|", requested size: %d (decimal)"
+literal|", requested size: %ld (decimal)"
 argument_list|,
 name|info
 argument_list|)
@@ -3006,7 +3009,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|", info = %d (decimal)"
+literal|", info = %ld (decimal)"
 argument_list|,
 name|info
 argument_list|)

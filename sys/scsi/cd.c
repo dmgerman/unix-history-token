@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *      $Id: cd.c,v 1.23 1994/08/31 22:50:08 se Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *      $Id: cd.c,v 1.24 1994/09/16 23:43:28 se Exp $  */
 end_comment
 
 begin_define
@@ -203,6 +203,135 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
+name|errval
+name|cd_pause
+name|__P
+argument_list|(
+operator|(
+name|u_int32
+operator|,
+name|u_int32
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|errval
+name|cd_reset
+name|__P
+argument_list|(
+operator|(
+name|u_int32
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|errval
+name|cd_play_msf
+name|__P
+argument_list|(
+operator|(
+name|u_int32
+operator|,
+name|u_int32
+operator|,
+name|u_int32
+operator|,
+name|u_int32
+operator|,
+name|u_int32
+operator|,
+name|u_int32
+operator|,
+name|u_int32
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|errval
+name|cd_play
+name|__P
+argument_list|(
+operator|(
+name|u_int32
+operator|,
+name|u_int32
+operator|,
+name|u_int32
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|errval
+name|cd_play_tracks
+name|__P
+argument_list|(
+operator|(
+name|u_int32
+operator|,
+name|u_int32
+operator|,
+name|u_int32
+operator|,
+name|u_int32
+operator|,
+name|u_int32
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|errval
+name|cd_read_subchannel
+name|__P
+argument_list|(
+operator|(
+name|u_int32
+operator|,
+name|u_int32
+operator|,
+name|u_int32
+operator|,
+name|int
+operator|,
+expr|struct
+name|cd_sub_channel_info
+operator|*
+operator|,
+name|u_int32
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|errval
+name|cd_getdisklabel
+name|__P
+argument_list|(
+operator|(
+name|u_int8
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int32
 name|cdstrats
 decl_stmt|,
@@ -351,9 +480,11 @@ comment|/* we are to be refered to by this name */
 literal|0
 block|,
 comment|/* no device specific flags */
+block|{
 literal|0
 block|,
 literal|0
+block|}
 comment|/* spares not used */
 block|}
 decl_stmt|;
@@ -494,13 +625,6 @@ decl_stmt|;
 block|{
 name|u_int32
 name|unit
-decl_stmt|,
-name|i
-decl_stmt|;
-name|unsigned
-name|char
-modifier|*
-name|tbl
 decl_stmt|;
 name|struct
 name|cd_data
@@ -583,7 +707,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cd%d: malloc failed for cdrealloc\n"
+literal|"cd%ld: malloc failed for cdrealloc\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -679,7 +803,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cd%d: Already has storage!\n"
+literal|"cd%ld: Already has storage!\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -721,7 +845,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cd%d: malloc failed for cd_data\n"
+literal|"cd%ld: malloc failed for cd_data\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -874,7 +998,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cd%d: cd present.[%d x %d byte records]\n"
+literal|"cd%ld: cd present.[%ld x %ld byte records]\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -896,7 +1020,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"cd%d: drive empty\n"
+literal|"cd%ld: drive empty\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -941,10 +1065,6 @@ decl_stmt|,
 name|part
 decl_stmt|;
 name|struct
-name|cd_parms
-name|cd_parms
-decl_stmt|;
-name|struct
 name|cd_data
 modifier|*
 name|cd
@@ -953,9 +1073,6 @@ name|struct
 name|scsi_link
 modifier|*
 name|sc_link
-decl_stmt|;
-name|u_int32
-name|heldflags
 decl_stmt|;
 name|unit
 operator|=
@@ -1190,7 +1307,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Make up some partition information 	 */
-name|cdgetdisklabel
+name|cd_getdisklabel
 argument_list|(
 name|unit
 argument_list|)
@@ -1397,9 +1514,6 @@ name|unit
 decl_stmt|,
 name|part
 decl_stmt|;
-name|u_int32
-name|old_priority
-decl_stmt|;
 name|struct
 name|cd_data
 modifier|*
@@ -1446,7 +1560,7 @@ argument_list|,
 name|SDEV_DB2
 argument_list|,
 operator|(
-literal|"cd%d: closing part %d\n"
+literal|"cd%ld: closing part %d\n"
 operator|,
 name|unit
 operator|,
@@ -1631,7 +1745,7 @@ argument_list|,
 name|SDEV_DB1
 argument_list|,
 operator|(
-literal|"cd%d: %d bytes @ blk%d\n"
+literal|"cd%ld: %d bytes @ blk%d\n"
 operator|,
 name|unit
 operator|,
@@ -2233,7 +2347,7 @@ name|bad
 label|:
 name|printf
 argument_list|(
-literal|"cd%d: oops not queued"
+literal|"cd%ld: oops not queued"
 argument_list|,
 name|unit
 argument_list|)
@@ -2288,9 +2402,6 @@ name|errval
 name|error
 init|=
 literal|0
-decl_stmt|;
-name|u_int32
-name|opri
 decl_stmt|;
 name|u_int8
 name|unit
@@ -2512,8 +2623,6 @@ name|struct
 name|cd_mode_data
 name|data
 decl_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|cd_get_mode
@@ -2525,6 +2634,10 @@ name|data
 argument_list|,
 name|AUDIO_PAGE
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
 name|data
@@ -2548,8 +2661,6 @@ name|flags
 operator||=
 name|CD_PA_IMMED
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|cd_set_mode
@@ -2559,6 +2670,10 @@ argument_list|,
 operator|&
 name|data
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
 return|return
@@ -2607,8 +2722,6 @@ name|struct
 name|cd_mode_data
 name|data
 decl_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|cd_get_mode
@@ -2620,6 +2733,10 @@ name|data
 argument_list|,
 name|AUDIO_PAGE
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
 name|data
@@ -2643,8 +2760,6 @@ name|flags
 operator||=
 name|CD_PA_IMMED
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|cd_set_mode
@@ -2654,6 +2769,10 @@ argument_list|,
 operator|&
 name|data
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
 return|return
@@ -2710,8 +2829,6 @@ name|struct
 name|cd_mode_data
 name|data
 decl_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|cd_get_mode
@@ -2723,6 +2840,10 @@ name|data
 argument_list|,
 name|AUDIO_PAGE
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
 name|data
@@ -2746,8 +2867,6 @@ name|flags
 operator||=
 name|CD_PA_IMMED
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|cd_set_mode
@@ -2757,6 +2876,10 @@ argument_list|,
 operator|&
 name|data
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
 return|return
@@ -2828,8 +2951,6 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-if|if
-condition|(
 name|error
 operator|=
 name|cd_read_subchannel
@@ -2853,10 +2974,12 @@ name|data
 argument_list|,
 name|len
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
-block|{
 break|break;
-block|}
 name|len
 operator|=
 name|min
@@ -2927,8 +3050,6 @@ name|struct
 name|ioc_toc_header
 name|th
 decl_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|cd_read_toc
@@ -2950,12 +3071,17 @@ argument_list|,
 sizeof|sizeof
 name|th
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
 name|th
 operator|.
 name|len
 operator|=
+operator|(
 operator|(
 name|th
 operator|.
@@ -2965,6 +3091,7 @@ literal|0xff
 operator|)
 operator|<<
 literal|8
+operator|)
 operator|+
 operator|(
 operator|(
@@ -3069,8 +3196,6 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-if|if
-condition|(
 name|error
 operator|=
 name|cd_read_toc
@@ -3101,6 +3226,10 @@ expr|struct
 name|ioc_toc_header
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
 name|len
@@ -3197,8 +3326,6 @@ name|struct
 name|cd_mode_data
 name|data
 decl_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|cd_get_mode
@@ -3210,6 +3337,10 @@ name|data
 argument_list|,
 name|AUDIO_PAGE
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
 name|data
@@ -3292,8 +3423,6 @@ index|[
 literal|3
 index|]
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|cd_set_mode
@@ -3303,6 +3432,10 @@ argument_list|,
 operator|&
 name|data
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
 comment|/* eh? */
@@ -3328,8 +3461,6 @@ name|struct
 name|cd_mode_data
 name|data
 decl_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|cd_get_mode
@@ -3341,6 +3472,10 @@ name|data
 argument_list|,
 name|AUDIO_PAGE
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
 name|arg
@@ -3445,8 +3580,6 @@ name|struct
 name|cd_mode_data
 name|data
 decl_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|cd_get_mode
@@ -3458,6 +3591,10 @@ name|data
 argument_list|,
 name|AUDIO_PAGE
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
 name|data
@@ -3570,8 +3707,6 @@ index|[
 literal|3
 index|]
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|cd_set_mode
@@ -3581,6 +3716,10 @@ argument_list|,
 operator|&
 name|data
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
 block|}
@@ -3590,23 +3729,9 @@ name|CDIOCSETMONO
 case|:
 block|{
 name|struct
-name|ioc_vol
-modifier|*
-name|arg
-init|=
-operator|(
-expr|struct
-name|ioc_vol
-operator|*
-operator|)
-name|addr
-decl_stmt|;
-name|struct
 name|cd_mode_data
 name|data
 decl_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|cd_get_mode
@@ -3618,6 +3743,10 @@ name|data
 argument_list|,
 name|AUDIO_PAGE
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
 name|data
@@ -3688,8 +3817,6 @@ name|channels
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|cd_set_mode
@@ -3699,6 +3826,10 @@ argument_list|,
 operator|&
 name|data
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
 block|}
@@ -3708,23 +3839,9 @@ name|CDIOCSETSTERIO
 case|:
 block|{
 name|struct
-name|ioc_vol
-modifier|*
-name|arg
-init|=
-operator|(
-expr|struct
-name|ioc_vol
-operator|*
-operator|)
-name|addr
-decl_stmt|;
-name|struct
 name|cd_mode_data
 name|data
 decl_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|cd_get_mode
@@ -3736,6 +3853,10 @@ name|data
 argument_list|,
 name|AUDIO_PAGE
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
 name|data
@@ -3798,8 +3919,6 @@ name|channels
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|cd_set_mode
@@ -3809,6 +3928,10 @@ argument_list|,
 operator|&
 name|data
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
 block|}
@@ -3818,23 +3941,9 @@ name|CDIOCSETMUTE
 case|:
 block|{
 name|struct
-name|ioc_vol
-modifier|*
-name|arg
-init|=
-operator|(
-expr|struct
-name|ioc_vol
-operator|*
-operator|)
-name|addr
-decl_stmt|;
-name|struct
 name|cd_mode_data
 name|data
 decl_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|cd_get_mode
@@ -3846,6 +3955,10 @@ name|data
 argument_list|,
 name|AUDIO_PAGE
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
 name|data
@@ -3908,8 +4021,6 @@ name|channels
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|cd_set_mode
@@ -3919,6 +4030,10 @@ argument_list|,
 operator|&
 name|data
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
 block|}
@@ -3928,23 +4043,9 @@ name|CDIOCSETLEFT
 case|:
 block|{
 name|struct
-name|ioc_vol
-modifier|*
-name|arg
-init|=
-operator|(
-expr|struct
-name|ioc_vol
-operator|*
-operator|)
-name|addr
-decl_stmt|;
-name|struct
 name|cd_mode_data
 name|data
 decl_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|cd_get_mode
@@ -3956,6 +4057,10 @@ name|data
 argument_list|,
 name|AUDIO_PAGE
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
 name|data
@@ -4018,8 +4123,6 @@ name|channels
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|cd_set_mode
@@ -4029,6 +4132,10 @@ argument_list|,
 operator|&
 name|data
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
 block|}
@@ -4038,23 +4145,9 @@ name|CDIOCSETRIGHT
 case|:
 block|{
 name|struct
-name|ioc_vol
-modifier|*
-name|arg
-init|=
-operator|(
-expr|struct
-name|ioc_vol
-operator|*
-operator|)
-name|addr
-decl_stmt|;
-name|struct
 name|cd_mode_data
 name|data
 decl_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|cd_get_mode
@@ -4066,6 +4159,10 @@ name|data
 argument_list|,
 name|AUDIO_PAGE
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
 name|data
@@ -4128,8 +4225,6 @@ name|channels
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|cd_set_mode
@@ -4139,6 +4234,10 @@ argument_list|,
 operator|&
 name|data
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
 block|}
@@ -4340,7 +4439,7 @@ end_comment
 
 begin_function
 name|errval
-name|cdgetdisklabel
+name|cd_getdisklabel
 parameter_list|(
 name|unit
 parameter_list|)
@@ -4349,10 +4448,6 @@ name|unit
 decl_stmt|;
 block|{
 comment|/*unsigned int n, m; */
-name|char
-modifier|*
-name|errstring
-decl_stmt|;
 name|struct
 name|cd_data
 modifier|*
@@ -4823,7 +4918,7 @@ argument_list|,
 name|SDEV_DB3
 argument_list|,
 operator|(
-literal|"cd%d: %d %d byte blocks\n"
+literal|"cd%ld: %d %d byte blocks\n"
 operator|,
 name|unit
 operator|,
@@ -5139,9 +5234,6 @@ name|struct
 name|scsi_play
 name|scsi_cmd
 decl_stmt|;
-name|errval
-name|retval
-decl_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -5310,9 +5402,6 @@ block|{
 name|struct
 name|scsi_play_big
 name|scsi_cmd
-decl_stmt|;
-name|errval
-name|retval
 decl_stmt|;
 name|bzero
 argument_list|(
@@ -5520,9 +5609,6 @@ block|{
 name|struct
 name|scsi_play_track
 name|scsi_cmd
-decl_stmt|;
-name|errval
-name|retval
 decl_stmt|;
 name|bzero
 argument_list|(
@@ -5926,9 +6012,6 @@ name|struct
 name|scsi_read_subchannel
 name|scsi_cmd
 decl_stmt|;
-name|errval
-name|error
-decl_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -6088,9 +6171,6 @@ block|{
 name|struct
 name|scsi_read_toc
 name|scsi_cmd
-decl_stmt|;
-name|errval
-name|error
 decl_stmt|;
 name|u_int32
 name|ntoc

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.32 1994/10/04 06:39:27 rgrimes Exp $  */
+comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.33 1994/10/04 06:45:57 rgrimes Exp $  */
 end_comment
 
 begin_define
@@ -610,7 +610,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Too many scsi disks..(%d> %d) reconfigure kernel\n"
+literal|"Too many scsi disks..(%ld> %d) reconfigure kernel\n"
 argument_list|,
 operator|(
 name|unit
@@ -635,7 +635,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"sd%d: unit already has storage allocated!\n"
+literal|"sd%ld: unit already has storage allocated!\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -818,7 +818,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"sd%d: %dMB (%d total sec), %d cyl, %d head, %d sec, bytes/sec %d\n"
+literal|"sd%ld: %ldMB (%ld total sec), %d cyl, %d head, %d sec, bytes/sec %d\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -1118,7 +1118,7 @@ block|{
 comment|/* XXX One day... */
 name|printf
 argument_list|(
-literal|"sd%d: Can't deal with %d bytes logical blocks\n"
+literal|"sd%ld: Can't deal with %d bytes logical blocks\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -1783,8 +1783,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"blkno=%d bcount=%d flags=0x%x\n"
+literal|"blkno=%lu bcount=%ld flags=0x%lx\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|bp
 operator|->
 name|b_blkno
@@ -2214,7 +2217,7 @@ name|bad
 label|:
 name|printf
 argument_list|(
-literal|"sd%d: oops not queued"
+literal|"sd%ld: oops not queued"
 argument_list|,
 name|unit
 argument_list|)
@@ -2924,8 +2927,6 @@ expr_stmt|;
 comment|/* as long as it's not 0 - readdisklabel divides by it (?) */
 block|}
 comment|/* 	 * Call the generic disklabel extraction routine 	 */
-if|if
-condition|(
 name|errstring
 operator|=
 name|readdisklabel
@@ -2969,6 +2970,10 @@ literal|0
 endif|#
 directive|endif
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errstring
 condition|)
 block|{
 name|printf
@@ -4511,7 +4516,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%d "
+literal|"%ld "
 argument_list|,
 name|num
 operator|/
