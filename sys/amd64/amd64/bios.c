@@ -142,12 +142,6 @@ begin_decl_stmt
 name|struct
 name|bios32_SDentry
 name|PCIbios
-init|=
-block|{
-name|entry
-operator|:
-literal|0
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -156,8 +150,6 @@ name|struct
 name|PnPBIOS_table
 modifier|*
 name|PnPBIOStable
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -165,8 +157,6 @@ begin_decl_stmt
 specifier|static
 name|u_int
 name|bios32_SDCI
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
