@@ -865,6 +865,18 @@ operator|->
 name|cr_rgid
 expr_stmt|;
 comment|/* (7) The terminal from which the process was started */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|SESS_LOCK
+argument_list|(
+name|p
+operator|->
+name|p_session
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -906,6 +918,18 @@ operator|.
 name|ac_tty
 operator|=
 name|NOUDEV
+expr_stmt|;
+name|SESS_UNLOCK
+argument_list|(
+name|p
+operator|->
+name|p_session
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 comment|/* (8) The boolean flags that tell how the process terminated, etc. */
 name|acct

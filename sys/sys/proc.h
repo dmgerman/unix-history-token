@@ -124,7 +124,7 @@ comment|/* Machine-dependent proc substruct. */
 end_comment
 
 begin_comment
-comment|/*  * One structure allocated per session.  */
+comment|/*  * One structure allocated per session.  *  * List of locks  * (m)		locked by s_mtx mtx  * (ps)		locked by pgrpsess_lock sx  * (c)		const until freeing  */
 end_comment
 
 begin_struct
@@ -134,30 +134,30 @@ block|{
 name|int
 name|s_count
 decl_stmt|;
-comment|/* Ref cnt; pgrps in session. */
+comment|/* (m)		Ref cnt; pgrps in session. */
 name|struct
 name|proc
 modifier|*
 name|s_leader
 decl_stmt|;
-comment|/* Session leader. */
+comment|/* (m, ps)	Session leader. */
 name|struct
 name|vnode
 modifier|*
 name|s_ttyvp
 decl_stmt|;
-comment|/* Vnode of controlling terminal. */
+comment|/* (m)		Vnode of controlling terminal. */
 name|struct
 name|tty
 modifier|*
 name|s_ttyp
 decl_stmt|;
-comment|/* Controlling terminal. */
+comment|/* (m)		Controlling terminal. */
 name|pid_t
 name|s_sid
 decl_stmt|;
-comment|/* Session ID. */
-comment|/* Setlogin() name: */
+comment|/* (c)		Session ID. */
+comment|/* (m)		Setlogin() name: */
 name|char
 name|s_login
 index|[
@@ -172,12 +172,17 @@ argument_list|)
 argument_list|)
 index|]
 decl_stmt|;
+name|struct
+name|mtx
+name|s_mtx
+decl_stmt|;
+comment|/* 		Mutex to protect members */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * One structure allocated per process group.  */
+comment|/*  * One structure allocated per process group.  *  * List of locks  * (m)		locked by pg_mtx mtx  * (ps)		locked by pgrpsess_lock sx  * (c)		const until freeing  */
 end_comment
 
 begin_struct
@@ -190,7 +195,7 @@ argument|pgrp
 argument_list|)
 name|pg_hash
 expr_stmt|;
-comment|/* Hash chain. */
+comment|/* (ps)		Hash chain. */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -198,26 +203,31 @@ argument|proc
 argument_list|)
 name|pg_members
 expr_stmt|;
-comment|/* Pointer to pgrp members. */
+comment|/* (m, ps)	Pointer to pgrp members. */
 name|struct
 name|session
 modifier|*
 name|pg_session
 decl_stmt|;
-comment|/* Pointer to session. */
+comment|/* (c)		Pointer to session. */
 name|struct
 name|sigiolst
 name|pg_sigiolst
 decl_stmt|;
-comment|/* List of sigio sources. */
+comment|/* (m)		List of sigio sources. */
 name|pid_t
 name|pg_id
 decl_stmt|;
-comment|/* Pgrp id. */
+comment|/* (c)		Pgrp id. */
 name|int
 name|pg_jobc
 decl_stmt|;
-comment|/* # procs qualifying pgrp for job control */
+comment|/* (m)		# procs qualifying pgrp for job control */
+name|struct
+name|mtx
+name|pg_mtx
+decl_stmt|;
+comment|/* 		Mutex to protect members */
 block|}
 struct|;
 end_struct
@@ -300,7 +310,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*-  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(CPU)" below,  * which might be addressable only on a processor on which the process  * is running.  *  * Below is a key of locks used to protect each member of struct proc.  The  * lock is indicated by a reference to a specific character in parens in the  * associated comment.  *      * - not yet protected  *      a - only touched by curproc or parent during fork/wait  *      b - created at fork, never changes  *      	(exception aiods switch vmspaces, but they are also  *      	marked 'P_SYSTEM' so hopefully it will be left alone)  *      c - locked by proc mtx  *      d - locked by allproc_lock lock  *      e - locked by proctree_lock lock  *      f - session mtx  *      g - process group mtx  *      h - callout_lock mtx  *      i - by curproc or the master session mtx  *      j - locked by sched_lock mtx  *      k - only accessed by curthread  *      l - the attaching proc or attaching proc parent  *      m - Giant  *      n - not locked, lazy  *  * If the locking key specifies two identifiers (for example, p_pptr) then  * either lock is sufficient for read access, but both locks must be held  * for write access.  */
+comment|/*-  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(CPU)" below,  * which might be addressable only on a processor on which the process  * is running.  *  * Below is a key of locks used to protect each member of struct proc.  The  * lock is indicated by a reference to a specific character in parens in the  * associated comment.  *      * - not yet protected  *      a - only touched by curproc or parent during fork/wait  *      b - created at fork, never changes  *      	(exception aiods switch vmspaces, but they are also  *      	marked 'P_SYSTEM' so hopefully it will be left alone)  *      c - locked by proc mtx  *      d - locked by allproc_lock lock  *      e - locked by proctree_lock lock  *      f - session mtx  *      g - process group mtx  *      h - callout_lock mtx  *      i - by curproc or the master session mtx  *      j - locked by sched_lock mtx  *      k - only accessed by curthread  *      l - the attaching proc or attaching proc parent  *      m - Giant  *      n - not locked, lazy  *      o - locked by pgrpsess_lock sx  *  * If the locking key specifies two identifiers (for example, p_pptr) then  * either lock is sufficient for read access, but both locks must be held  * for write access.  */
 end_comment
 
 begin_struct_decl
@@ -974,7 +984,7 @@ argument|proc
 argument_list|)
 name|p_pglist
 expr_stmt|;
-comment|/* (c) List of processes in pgrp. */
+comment|/* (g + o) List of processes in pgrp. */
 name|struct
 name|proc
 modifier|*
@@ -1143,7 +1153,7 @@ name|pgrp
 modifier|*
 name|p_pgrp
 decl_stmt|;
-comment|/* (e?/c?) Pointer to process group. */
+comment|/* (c + o) Pointer to process group. */
 name|struct
 name|sysentvec
 modifier|*
@@ -1777,6 +1787,14 @@ end_expr_stmt
 begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(
+name|M_PGRP
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
 name|M_SESSION
 argument_list|)
 expr_stmt|;
@@ -2194,6 +2212,184 @@ parameter_list|)
 value|mtx_assert(&(p)->p_mtx, (type))
 end_define
 
+begin_define
+define|#
+directive|define
+name|PGRPSESS_SLOCK
+parameter_list|()
+value|sx_slock(&pgrpsess_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PGRPSESS_XLOCK
+parameter_list|()
+value|sx_xlock(&pgrpsess_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PGRPSESS_SUNLOCK
+parameter_list|()
+value|sx_sunlock(&pgrpsess_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PGRPSESS_XUNLOCK
+parameter_list|()
+value|sx_xunlock(&pgrpsess_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PGRPSESS_LOCK_ASSERT
+parameter_list|(
+name|type
+parameter_list|)
+value|sx_assert(&pgrpsess_lock, (type))
+end_define
+
+begin_comment
+comment|/* Lock and unlock a process group. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PGRP_LOCK
+parameter_list|(
+name|pg
+parameter_list|)
+value|mtx_lock(&(pg)->pg_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PGRP_UNLOCK
+parameter_list|(
+name|pg
+parameter_list|)
+value|mtx_unlock(&(pg)->pg_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PGRP_UNLOCK_NOSWITCH
+parameter_list|(
+name|pg
+parameter_list|)
+define|\
+value|mtx_unlock_flags(&(pg)->pg_mtx, MTX_NOSWITCH)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PGRP_LOCKED
+parameter_list|(
+name|pg
+parameter_list|)
+value|mtx_owned(&(pg)->pg_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PGRP_LOCK_ASSERT
+parameter_list|(
+name|pg
+parameter_list|,
+name|type
+parameter_list|)
+value|mtx_assert(&(pg)->pg_mtx, (type))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PGRP_LOCK_PGSIGNAL
+parameter_list|(
+name|pg
+parameter_list|)
+define|\
+value|do {								\ 		if ((pg) != NULL)					\ 			PGRP_LOCK(pg);					\ 	} while (0);
+end_define
+
+begin_define
+define|#
+directive|define
+name|PGRP_UNLOCK_PGSIGNAL
+parameter_list|(
+name|pg
+parameter_list|)
+define|\
+value|do {								\ 		if ((pg) != NULL)					\ 			PGRP_UNLOCK(pg);				\ 	} while (0);
+end_define
+
+begin_comment
+comment|/* Lock and unlock a session. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SESS_LOCK
+parameter_list|(
+name|s
+parameter_list|)
+value|mtx_lock(&(s)->s_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SESS_UNLOCK
+parameter_list|(
+name|s
+parameter_list|)
+value|mtx_unlock(&(s)->s_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SESS_UNLOCK_NOSWITCH
+parameter_list|(
+name|s
+parameter_list|)
+define|\
+value|mtx_unlock_flags(&(s)->s_mtx, MTX_NOSWITCH)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SESS_LOCKED
+parameter_list|(
+name|s
+parameter_list|)
+value|mtx_owned(&(s)->s_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SESS_LOCK_ASSERT
+parameter_list|(
+name|s
+parameter_list|,
+name|type
+parameter_list|)
+value|mtx_assert(&(s)->s_mtx, (type))
+end_define
+
 begin_comment
 comment|/* Hold process U-area in memory, normally for ptrace/procfs work. */
 end_comment
@@ -2311,6 +2507,14 @@ specifier|extern
 name|struct
 name|sx
 name|proctree_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|sx
+name|pgrpsess_lock
 decl_stmt|;
 end_decl_stmt
 
@@ -2629,23 +2833,53 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|enterpgrp
-parameter_list|(
-name|struct
+name|__P
+argument_list|(
+operator|(
+expr|struct
 name|proc
-modifier|*
+operator|*
 name|p
-parameter_list|,
+operator|,
 name|pid_t
 name|pgid
-parameter_list|,
+operator|,
+expr|struct
+name|pgrp
+operator|*
+name|pgrp
+operator|,
+expr|struct
+name|session
+operator|*
+name|sess
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
-name|mksess
-parameter_list|)
-function_decl|;
-end_function_decl
+name|enterthispgrp
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+name|p
+operator|,
+expr|struct
+name|pgrp
+operator|*
+name|pgrp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void

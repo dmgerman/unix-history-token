@@ -664,6 +664,7 @@ expr_stmt|;
 block|}
 block|}
 else|else
+block|{
 name|PROC_UNLOCK
 argument_list|(
 name|p
@@ -691,6 +692,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
 return|return
 name|error
 return|;

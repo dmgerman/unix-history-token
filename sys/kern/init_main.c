@@ -1080,6 +1080,18 @@ argument_list|,
 name|p_hash
 argument_list|)
 expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|pgrp0
+operator|.
+name|pg_mtx
+argument_list|,
+literal|"process group"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_pgrp
@@ -1126,6 +1138,18 @@ name|pg_session
 operator|=
 operator|&
 name|session0
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|session0
+operator|.
+name|s_mtx
+argument_list|,
+literal|"session"
+argument_list|,
+name|MTX_DEF
+argument_list|)
 expr_stmt|;
 name|session0
 operator|.

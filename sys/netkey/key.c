@@ -32671,12 +32671,12 @@ comment|/*  * get username@FQDN for the host/user.  */
 end_comment
 
 begin_comment
-unit|static const char * key_getuserfqdn() { 	const char *host; 	static char userfqdn[MAXHOSTNAMELEN + MAXLOGNAME + 2]; 	struct proc *p = curproc; 	char *q;  	if (!p || !p->p_pgrp || !p->p_pgrp->pg_session) 		return NULL; 	if (!(host = key_getfqdn())) 		return NULL;
+unit|static const char * key_getuserfqdn() { 	const char *host; 	static char userfqdn[MAXHOSTNAMELEN + MAXLOGNAME + 2]; 	struct proc *p = curproc; 	char *q;  	if (p == NULL) 		return NULL; 	bzero(userfqdn, sizeof(userfqdn)); 	if (!(host = key_getfqdn())) { 		PROC_UNLOCK(p); 		return NULL; 	} 	PROC_LOCK(p); 	if (!p->p_pgrp || !p->p_pgrp->pg_session) { 		PROC_UNLOCK(p); 		return NULL; 	}
 comment|/* NOTE: s_login may not be-NUL terminated. */
 end_comment
 
 begin_comment
-unit|bzero(userfqdn, sizeof(userfqdn)); 	bcopy(p->p_pgrp->pg_session->s_login, userfqdn, MAXLOGNAME); 	userfqdn[MAXLOGNAME] = '\0';
+unit|SESS_LOCK(p->p_session); 	bcopy(p->p_session->s_login, userfqdn, MAXLOGNAME); 	SESS_UNLOCK(p->p_session); 	PROC_UNLOCK(p); 	userfqdn[MAXLOGNAME] = '\0';
 comment|/* safeguard */
 end_comment
 

@@ -2041,11 +2041,6 @@ else|:
 literal|0
 argument_list|)
 expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|PS_ADD
 argument_list|(
 literal|"pgrp"
@@ -2068,6 +2063,11 @@ operator|->
 name|p_session
 operator|->
 name|s_sid
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 name|PS_ADD

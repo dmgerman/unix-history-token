@@ -796,6 +796,12 @@ if|if
 condition|(
 name|pp
 condition|)
+block|{
+name|PROC_UNLOCK
+argument_list|(
+name|pp
+argument_list|)
+expr_stmt|;
 name|proc_reparent
 argument_list|(
 name|p
@@ -803,6 +809,7 @@ argument_list|,
 name|pp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 name|PROC_LOCK

@@ -1627,6 +1627,9 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * by process group 		 */
+name|PGRPSESS_SLOCK
+argument_list|()
+expr_stmt|;
 name|pg
 operator|=
 name|pgfind
@@ -1644,6 +1647,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|PGRPSESS_SUNLOCK
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|ESRCH
@@ -1652,6 +1658,12 @@ goto|goto
 name|done
 goto|;
 block|}
+comment|/* 		 * ktrops() may call vrele(). Lock pg_members 		 * by the pgrpsess_lock rather than pg_mtx. 		 */
+name|PGRP_UNLOCK
+argument_list|(
+name|pg
+argument_list|)
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|p
@@ -1694,6 +1706,9 @@ name|facs
 argument_list|,
 name|vp
 argument_list|)
+expr_stmt|;
+name|PGRPSESS_SUNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 else|else

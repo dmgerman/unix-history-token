@@ -218,7 +218,7 @@ value|(sizeof(struct file *) + sizeof(char))
 end_define
 
 begin_comment
-comment|/*  * This structure holds the information needed to send a SIGIO or  * a SIGURG signal to a process or process group when new data arrives  * on a device or socket.  The structure is placed on an SLIST belonging  * to the proc or pgrp so that the entire list may be revoked when the  * process exits or the process group disappears.  */
+comment|/*  * This structure holds the information needed to send a SIGIO or  * a SIGURG signal to a process or process group when new data arrives  * on a device or socket.  The structure is placed on an SLIST belonging  * to the proc or pgrp so that the entire list may be revoked when the  * process exits or the process group disappears.  *  * (c)	const  * (pg)	locked by either the process or process group lock  */
 end_comment
 
 begin_struct
@@ -232,13 +232,13 @@ name|proc
 modifier|*
 name|siu_proc
 decl_stmt|;
-comment|/* process to receive SIGIO/SIGURG */
+comment|/* (c)	process to receive SIGIO/SIGURG */
 name|struct
 name|pgrp
 modifier|*
 name|siu_pgrp
 decl_stmt|;
-comment|/* process group to receive ... */
+comment|/* (c)	process group to receive ... */
 block|}
 name|sio_u
 union|;
@@ -248,24 +248,24 @@ argument|sigio
 argument_list|)
 name|sio_pgsigio
 expr_stmt|;
-comment|/* sigio's for process or group */
+comment|/* (pg)	sigio's for process or group */
 name|struct
 name|sigio
 modifier|*
 modifier|*
 name|sio_myref
 decl_stmt|;
-comment|/* location of the pointer that holds 					 * the reference to this structure */
+comment|/* (c)	location of the pointer that holds 					 * 	the reference to this structure */
 name|struct
 name|ucred
 modifier|*
 name|sio_ucred
 decl_stmt|;
-comment|/* current credentials */
+comment|/* (c)	current credentials */
 name|pid_t
 name|sio_pgid
 decl_stmt|;
-comment|/* pgid for signals */
+comment|/* (c)	pgid for signals */
 block|}
 struct|;
 end_struct

@@ -920,6 +920,13 @@ name|lock_class_mtx_sleep
 block|}
 block|,
 block|{
+literal|"pgrpsess"
+block|,
+operator|&
+name|lock_class_sx
+block|}
+block|,
+block|{
 literal|"proctree"
 block|,
 operator|&
@@ -934,7 +941,21 @@ name|lock_class_sx
 block|}
 block|,
 block|{
+literal|"process group"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
 literal|"process lock"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"session"
 block|,
 operator|&
 name|lock_class_mtx_sleep
@@ -1098,6 +1119,8 @@ index|[]
 init|=
 block|{
 literal|"process lock"
+block|,
+literal|"process group"
 block|,
 name|NULL
 block|}

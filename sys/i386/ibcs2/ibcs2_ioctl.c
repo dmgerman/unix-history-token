@@ -3198,6 +3198,13 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|SESS_LOCK
+argument_list|(
+name|p
+operator|->
+name|p_session
+argument_list|)
+expr_stmt|;
 name|ibcs2_jwinsize
 operator|.
 name|bytex
@@ -3239,6 +3246,13 @@ operator|->
 name|t_winsize
 operator|.
 name|ws_ypixel
+expr_stmt|;
+name|SESS_UNLOCK
+argument_list|(
+name|p
+operator|->
+name|p_session
+argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
