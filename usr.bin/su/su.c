@@ -201,13 +201,6 @@ parameter_list|)
 value|do {				\ 	int local_ret;						\ 	local_ret = pam_set_item(pamh, what, item);		\ 	if (local_ret != PAM_SUCCESS) {				\ 		syslog(LOG_ERR, "pam_set_item(" #what "): %s",	\ 			pam_strerror(pamh, local_ret));		\ 		errx(1, "pam_set_item(" #what "): %s",		\ 			pam_strerror(pamh, local_ret));		\ 	}							\ } while (0)
 end_define
 
-begin_define
-define|#
-directive|define
-name|ARGSTR
-value|"-flmc:"
-end_define
-
 begin_enum
 enum|enum
 name|tristate
@@ -460,7 +453,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-name|ARGSTR
+literal|"-flmc:"
 argument_list|)
 operator|)
 operator|!=
@@ -1977,7 +1970,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: su [-] [-flm] [-c class] [login [args]]"
+literal|"usage: su [-] [-flm] [-c class] [login [args]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
