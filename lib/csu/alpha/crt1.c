@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 1996-1998 John D. Polstra.  * All rights reserved.  * Copyright (c) 1995 Christopher G. Demetriou  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Christopher G. Demetriou  *    for the NetBSD Project.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *      $Id: crt1.c,v 1.3 1999/01/07 20:18:18 steve Exp $  */
+comment|/*-  * Copyright 1996-1998 John D. Polstra.  * All rights reserved.  * Copyright (c) 1995 Christopher G. Demetriou  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Christopher G. Demetriou  *    for the NetBSD Project.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *      $Id: crt1.c,v 1.5 1999/04/24 02:07:17 jdp Exp $  */
 end_comment
 
 begin_ifndef
@@ -26,78 +26,17 @@ directive|include
 file|<stdlib.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/exec.h>
-end_include
+begin_struct_decl
+struct_decl|struct
+name|Struct_Obj_Entry
+struct_decl|;
+end_struct_decl
 
-begin_include
-include|#
-directive|include
-file|<sys/syscall.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<rtld.h>
-end_include
-
-begin_decl_stmt
-specifier|const
-name|Obj_Entry
-modifier|*
-name|__mainprog_obj
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|int
-name|__syscall
-parameter_list|(
-name|int
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|_exit
-parameter_list|(
-name|v
-parameter_list|)
-value|__syscall(SYS_exit, (v))
-end_define
-
-begin_define
-define|#
-directive|define
-name|write
-parameter_list|(
-name|fd
-parameter_list|,
-name|s
-parameter_list|,
-name|n
-parameter_list|)
-value|__syscall(SYS_write, (fd), (s), (n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|_FATAL
-parameter_list|(
-name|str
-parameter_list|)
-define|\
-value|do {					\ 		write(2, str, sizeof(str));	\ 		_exit(1);			\ 	} while (0)
-end_define
+begin_struct_decl
+struct_decl|struct
+name|ps_strings
+struct_decl|;
+end_struct_decl
 
 begin_pragma
 pragma|#
@@ -191,8 +130,8 @@ name|void
 parameter_list|)
 parameter_list|,
 comment|/* from shared loader */
-specifier|const
-name|Obj_Entry
+name|struct
+name|Struct_Obj_Entry
 modifier|*
 name|obj
 parameter_list|,
@@ -303,51 +242,11 @@ name|_DYNAMIC
 operator|!=
 name|NULL
 condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|obj
-operator|==
-name|NULL
-operator|)
-operator|||
-operator|(
-name|obj
-operator|->
-name|magic
-operator|!=
-name|RTLD_MAGIC
-operator|)
-condition|)
-name|_FATAL
-argument_list|(
-literal|"Corrupt Obj_Entry pointer in GOT"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|obj
-operator|->
-name|version
-operator|!=
-name|RTLD_VERSION
-condition|)
-name|_FATAL
-argument_list|(
-literal|"Dynamic linker version mismatch"
-argument_list|)
-expr_stmt|;
-name|__mainprog_obj
-operator|=
-name|obj
-expr_stmt|;
 name|atexit
 argument_list|(
 name|cleanup
 argument_list|)
 expr_stmt|;
-block|}
 name|atexit
 argument_list|(
 name|_fini
