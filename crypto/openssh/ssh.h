@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$OpenBSD: ssh.h,v 1.71 2002/06/22 02:00:29 stevesk Exp $	*/
+end_comment
+
+begin_comment
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
 comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
-end_comment
-
-begin_comment
-comment|/* RCSID("$OpenBSD: ssh.h,v 1.62 2001/01/23 10:45:10 markus Exp $"); */
-end_comment
-
-begin_comment
-comment|/* RCSID("$FreeBSD$"); */
 end_comment
 
 begin_ifndef
@@ -22,6 +22,83 @@ define|#
 directive|define
 name|SSH_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_comment
+comment|/* For struct sockaddr_in */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_comment
+comment|/* For struct pw */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_comment
+comment|/* For va_list */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
+end_include
+
+begin_comment
+comment|/* For LOG_AUTH and friends */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_comment
+comment|/* For struct sockaddr_storage */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"openbsd-compat/fake-socket.h"
+end_include
+
+begin_comment
+comment|/* For struct sockaddr_storage */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_SELECT_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/select.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Cipher used for encrypting authentication files. */
@@ -68,7 +145,7 @@ value|100
 end_define
 
 begin_comment
-comment|/*  * Major protocol version.  Different version indicates major incompatiblity  * that prevents communication.  *  * Minor protocol version.  Different version indicates minor incompatibility  * that does not prevent interoperation.  */
+comment|/*  * Major protocol version.  Different version indicates major incompatibility  * that prevents communication.  *  * Minor protocol version.  Different version indicates minor incompatibility  * that does not prevent interoperation.  */
 end_comment
 
 begin_define
@@ -114,8 +191,35 @@ name|SSH_SERVICE_NAME
 value|"ssh"
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_PAM
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SSHD_PAM_SERVICE
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SSHD_PAM_SERVICE
+value|__progname
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * Name of the environment variable containing the pathname of the  * authentication socket.  */
+comment|/*  * Name of the environment variable containing the process ID of the  * authentication agent.  */
 end_comment
 
 begin_define
@@ -181,31 +285,32 @@ value|"rcmd"
 end_define
 
 begin_comment
-comment|/* Kerberos IV tickets can't be forwarded. This is an AFS hack! */
+comment|/* Used to identify ``EscapeChar none'' */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SSH_CMSG_HAVE_KRB4_TGT
-value|SSH_CMSG_HAVE_KERBEROS_TGT
+name|SSH_ESCAPECHAR_NONE
+value|-2
 end_define
 
 begin_comment
-comment|/* credentials (s) */
+comment|/*  * unprivileged user when UsePrivilegeSeparation=yes;  * sshd will change its privileges to this user and its  * primary group.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_PAM
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SSH_PRIVSEP_USER
+end_ifndef
 
-begin_include
-include|#
-directive|include
-file|"auth-pam.h"
-end_include
+begin_define
+define|#
+directive|define
+name|SSH_PRIVSEP_USER
+value|"sshd"
+end_define
 
 begin_endif
 endif|#
@@ -213,8 +318,15 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* USE_PAM */
+comment|/* Minimum modulus size (n) for RSA keys. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SSH_RSA_MINIMUM_MODULUS_SIZE
+value|768
+end_define
 
 begin_endif
 endif|#

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: xmalloc.c,v 1.15 2001/04/16 08:05:34 deraadt Exp $"
+literal|"$OpenBSD: xmalloc.c,v 1.16 2001/07/23 18:21:46 stevesk Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -196,28 +196,19 @@ parameter_list|)
 block|{
 name|size_t
 name|len
-init|=
+decl_stmt|;
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+name|len
+operator|=
 name|strlen
 argument_list|(
 name|str
 argument_list|)
 operator|+
 literal|1
-decl_stmt|;
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-if|if
-condition|(
-name|len
-operator|==
-literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"xstrdup: zero size"
-argument_list|)
 expr_stmt|;
 name|cp
 operator|=

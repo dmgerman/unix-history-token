@@ -12,16 +12,10 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: atomicio.c,v 1.9 2001/03/02 18:54:30 deraadt Exp $"
+literal|"$OpenBSD: atomicio.c,v 1.10 2001/05/08 22:48:07 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_include
-include|#
-directive|include
-file|"xmalloc.h"
-end_include
 
 begin_include
 include|#
@@ -121,6 +115,25 @@ case|case
 operator|-
 literal|1
 case|:
+ifdef|#
+directive|ifdef
+name|EWOULDBLOCK
+if|if
+condition|(
+name|errno
+operator|==
+name|EINTR
+operator|||
+name|errno
+operator|==
+name|EAGAIN
+operator|||
+name|errno
+operator|==
+name|EWOULDBLOCK
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 name|errno
@@ -131,6 +144,8 @@ name|errno
 operator|==
 name|EAGAIN
 condition|)
+endif|#
+directive|endif
 continue|continue;
 case|case
 literal|0

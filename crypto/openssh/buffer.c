@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: buffer.c,v 1.13 2001/04/12 19:15:24 markus Exp $"
+literal|"$OpenBSD: buffer.c,v 1.16 2002/06/26 08:54:18 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -157,7 +157,7 @@ modifier|*
 name|buffer
 parameter_list|,
 specifier|const
-name|char
+name|void
 modifier|*
 name|data
 parameter_list|,
@@ -165,23 +165,22 @@ name|u_int
 name|len
 parameter_list|)
 block|{
-name|char
+name|void
 modifier|*
-name|cp
+name|p
 decl_stmt|;
+name|p
+operator|=
 name|buffer_append_space
 argument_list|(
 name|buffer
-argument_list|,
-operator|&
-name|cp
 argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
 name|memcpy
 argument_list|(
-name|cp
+name|p
 argument_list|,
 name|data
 argument_list|,
@@ -197,21 +196,34 @@ end_comment
 
 begin_function
 name|void
+modifier|*
 name|buffer_append_space
 parameter_list|(
 name|Buffer
 modifier|*
 name|buffer
 parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|datap
-parameter_list|,
 name|u_int
 name|len
 parameter_list|)
 block|{
+name|void
+modifier|*
+name|p
+decl_stmt|;
+if|if
+condition|(
+name|len
+operator|>
+literal|0x100000
+condition|)
+name|fatal
+argument_list|(
+literal|"buffer_append_space: len %u not supported"
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
 comment|/* If the buffer is empty, start using it from the beginning. */
 if|if
 condition|(
@@ -253,8 +265,7 @@ operator|->
 name|alloc
 condition|)
 block|{
-operator|*
-name|datap
+name|p
 operator|=
 name|buffer
 operator|->
@@ -270,7 +281,9 @@ name|end
 operator|+=
 name|len
 expr_stmt|;
-return|return;
+return|return
+name|p
+return|;
 block|}
 comment|/* 	 * If the buffer is quite empty, but all data is at the end, move the 	 * data to the beginning and retry. 	 */
 if|if
@@ -336,6 +349,23 @@ name|len
 operator|+
 literal|32768
 expr_stmt|;
+if|if
+condition|(
+name|buffer
+operator|->
+name|alloc
+operator|>
+literal|0xa00000
+condition|)
+name|fatal
+argument_list|(
+literal|"buffer_append_space: alloc %u not supported"
+argument_list|,
+name|buffer
+operator|->
+name|alloc
+argument_list|)
+expr_stmt|;
 name|buffer
 operator|->
 name|buf
@@ -354,6 +384,7 @@ expr_stmt|;
 goto|goto
 name|restart
 goto|;
+comment|/* NOTREACHED */
 block|}
 end_function
 
@@ -394,7 +425,7 @@ name|Buffer
 modifier|*
 name|buffer
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|buf
 parameter_list|,
@@ -542,7 +573,7 @@ comment|/* Returns a pointer to the first used byte in the buffer. */
 end_comment
 
 begin_function
-name|char
+name|void
 modifier|*
 name|buffer_ptr
 parameter_list|(
@@ -583,10 +614,6 @@ name|u_char
 modifier|*
 name|ucp
 init|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|buffer
 operator|->
 name|buf

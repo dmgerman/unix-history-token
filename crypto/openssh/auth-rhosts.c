@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-rhosts.c,v 1.23 2001/04/12 19:15:24 markus Exp $"
+literal|"$OpenBSD: auth-rhosts.c,v 1.28 2002/05/13 21:26:49 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -21,12 +21,6 @@ begin_include
 include|#
 directive|include
 file|"packet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"xmalloc.h"
 end_include
 
 begin_include
@@ -76,11 +70,19 @@ name|options
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|use_privsep
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * This function processes an rhosts-style file (.rhosts, .shosts, or  * /etc/hosts.equiv).  This returns true if authentication can be granted  * based on the file, and returns zero otherwise.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|check_rhosts_file
 parameter_list|(
@@ -255,7 +257,7 @@ block|{
 case|case
 literal|0
 case|:
-name|packet_send_debug
+name|auth_debug_add
 argument_list|(
 literal|"Found empty line in %.100s."
 argument_list|,
@@ -288,7 +290,7 @@ break|break;
 case|case
 literal|3
 case|:
-name|packet_send_debug
+name|auth_debug_add
 argument_list|(
 literal|"Found garbage in %.100s."
 argument_list|,
@@ -392,7 +394,7 @@ index|]
 condition|)
 block|{
 comment|/* We come here if either was '+' or '-'. */
-name|packet_send_debug
+name|auth_debug_add
 argument_list|(
 literal|"Ignoring wild host/user names in %.100s."
 argument_list|,
@@ -520,7 +522,7 @@ condition|(
 name|negated
 condition|)
 block|{
-name|packet_send_debug
+name|auth_debug_add
 argument_list|(
 literal|"Matched negative entry in %.100s."
 argument_list|,
@@ -575,16 +577,13 @@ decl_stmt|,
 modifier|*
 name|ipaddr
 decl_stmt|;
-name|int
-name|ret
-decl_stmt|;
 name|hostname
 operator|=
 name|get_canonical_hostname
 argument_list|(
 name|options
 operator|.
-name|reverse_mapping_check
+name|verify_reverse_mapping
 argument_list|)
 expr_stmt|;
 name|ipaddr
@@ -592,8 +591,7 @@ operator|=
 name|get_remote_ipaddr
 argument_list|()
 expr_stmt|;
-name|ret
-operator|=
+return|return
 name|auth_rhosts2
 argument_list|(
 name|pw
@@ -604,16 +602,14 @@ name|hostname
 argument_list|,
 name|ipaddr
 argument_list|)
-expr_stmt|;
-return|return
-name|ret
 return|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|int
-name|auth_rhosts2
+name|auth_rhosts2_raw
 parameter_list|(
 name|struct
 name|passwd
@@ -805,7 +801,7 @@ name|pw_name
 argument_list|)
 condition|)
 block|{
-name|packet_send_debug
+name|auth_debug_add
 argument_list|(
 literal|"Accepted for %.100s [%.100s] by /etc/hosts.equiv."
 argument_list|,
@@ -836,7 +832,7 @@ name|pw_name
 argument_list|)
 condition|)
 block|{
-name|packet_send_debug
+name|auth_debug_add
 argument_list|(
 literal|"Accepted for %.100s [%.100s] by %.100s."
 argument_list|,
@@ -870,7 +866,8 @@ condition|)
 block|{
 name|log
 argument_list|(
-literal|"Rhosts authentication refused for %.100s: no home directory %.200s"
+literal|"Rhosts authentication refused for %.100s: "
+literal|"no home directory %.200s"
 argument_list|,
 name|pw
 operator|->
@@ -881,9 +878,10 @@ operator|->
 name|pw_dir
 argument_list|)
 expr_stmt|;
-name|packet_send_debug
+name|auth_debug_add
 argument_list|(
-literal|"Rhosts authentication refused for %.100s: no home directory %.200s"
+literal|"Rhosts authentication refused for %.100s: "
+literal|"no home directory %.200s"
 argument_list|,
 name|pw
 operator|->
@@ -935,16 +933,18 @@ condition|)
 block|{
 name|log
 argument_list|(
-literal|"Rhosts authentication refused for %.100s: bad ownership or modes for home directory."
+literal|"Rhosts authentication refused for %.100s: "
+literal|"bad ownership or modes for home directory."
 argument_list|,
 name|pw
 operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
-name|packet_send_debug
+name|auth_debug_add
 argument_list|(
-literal|"Rhosts authentication refused for %.100s: bad ownership or modes for home directory."
+literal|"Rhosts authentication refused for %.100s: "
+literal|"bad ownership or modes for home directory."
 argument_list|,
 name|pw
 operator|->
@@ -1057,7 +1057,7 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-name|packet_send_debug
+name|auth_debug_add
 argument_list|(
 literal|"Bad file modes for %.200s"
 argument_list|,
@@ -1074,7 +1074,7 @@ operator|.
 name|ignore_rhosts
 condition|)
 block|{
-name|packet_send_debug
+name|auth_debug_add
 argument_list|(
 literal|"Server has been configured to ignore %.100s."
 argument_list|,
@@ -1105,7 +1105,7 @@ name|pw_name
 argument_list|)
 condition|)
 block|{
-name|packet_send_debug
+name|auth_debug_add
 argument_list|(
 literal|"Accepted by %.100s."
 argument_list|,
@@ -1119,6 +1119,21 @@ comment|/* Restore the privileged uid. */
 name|restore_uid
 argument_list|()
 expr_stmt|;
+name|auth_debug_add
+argument_list|(
+literal|"Accepted host %s ip %s client_user %s server_user %s"
+argument_list|,
+name|hostname
+argument_list|,
+name|ipaddr
+argument_list|,
+name|client_user
+argument_list|,
+name|pw
+operator|->
+name|pw_name
+argument_list|)
+expr_stmt|;
 return|return
 literal|1
 return|;
@@ -1130,6 +1145,64 @@ argument_list|()
 expr_stmt|;
 return|return
 literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|auth_rhosts2
+parameter_list|(
+name|struct
+name|passwd
+modifier|*
+name|pw
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|client_user
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|hostname
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|ipaddr
+parameter_list|)
+block|{
+name|int
+name|ret
+decl_stmt|;
+name|auth_debug_reset
+argument_list|()
+expr_stmt|;
+name|ret
+operator|=
+name|auth_rhosts2_raw
+argument_list|(
+name|pw
+argument_list|,
+name|client_user
+argument_list|,
+name|hostname
+argument_list|,
+name|ipaddr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|use_privsep
+condition|)
+name|auth_debug_send
+argument_list|()
+expr_stmt|;
+return|return
+name|ret
 return|;
 block|}
 end_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: sftp.h,v 1.3 2001/03/07 10:11:23 djm Exp $	*/
+comment|/*	$OpenBSD: sftp.h,v 1.4 2002/02/13 00:59:23 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -65,6 +65,13 @@ begin_define
 define|#
 directive|define
 name|SSH2_FXP_LSTAT
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH2_FXP_STAT_VERSION_0
 value|7
 end_define
 

@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: deattack.c,v 1.13 2001/03/01 02:45:10 deraadt Exp $	*/
-end_comment
-
-begin_comment
 comment|/*  * Cryptographic attack detector for ssh - source code  *  * Copyright (c) 1998 CORE SDI S.A., Buenos Aires, Argentina.  *  * All rights reserved. Redistribution and use in source and binary  * forms, with or without modification, are permitted provided that  * this copyright notice is retained.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES ARE DISCLAIMED. IN NO EVENT SHALL CORE SDI S.A. BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY OR  * CONSEQUENTIAL DAMAGES RESULTING FROM THE USE OR MISUSE OF THIS  * SOFTWARE.  *  * Ariel Futoransky<futo@core-sdi.com>  *<http://www.core-sdi.com>  */
 end_comment
 
@@ -12,6 +8,14 @@ include|#
 directive|include
 file|"includes.h"
 end_include
+
+begin_expr_stmt
+name|RCSID
+argument_list|(
+literal|"$OpenBSD: deattack.c,v 1.18 2002/03/04 17:27:39 stevesk Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -41,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|"xmalloc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"deattack.h"
 end_include
 
 begin_comment
@@ -144,6 +154,7 @@ value|(memcmp(a, b, SSH_BLOCKSIZE))
 end_define
 
 begin_function
+specifier|static
 name|void
 name|crc_update
 parameter_list|(
@@ -186,6 +197,7 @@ comment|/* detect if a block is used in a particular pattern */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|check_crc
 parameter_list|(
@@ -360,7 +372,6 @@ name|HASH_MINSIZE
 operator|/
 name|HASH_ENTRYSIZE
 decl_stmt|;
-specifier|register
 name|u_int32_t
 name|i
 decl_stmt|,
@@ -369,7 +380,6 @@ decl_stmt|;
 name|u_int32_t
 name|l
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|c

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-keygen.c,v 1.60 2001/04/23 22:14:13 markus Exp $"
+literal|"$OpenBSD: ssh-keygen.c,v 1.101 2002/06/23 09:39:55 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -88,6 +88,23 @@ include|#
 directive|include
 file|"readpass.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMARTCARD
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"scard.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Number of bits in the RSA/DSA key.  This value can be changed on the command line. */
@@ -241,22 +258,24 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* default to RSA for SSH-1 */
-end_comment
-
 begin_decl_stmt
 name|char
 modifier|*
 name|key_type_name
 init|=
-literal|"rsa1"
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* argv0 */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE___PROGNAME
+end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -265,6 +284,23 @@ modifier|*
 name|__progname
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|char
+modifier|*
+name|__progname
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|char
@@ -276,6 +312,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|ask_filename
 parameter_list|(
@@ -302,6 +339,17 @@ name|name
 init|=
 name|NULL
 decl_stmt|;
+if|if
+condition|(
+name|key_type_name
+operator|==
+name|NULL
+condition|)
+name|name
+operator|=
+name|_PATH_SSH_CLIENT_ID_RSA
+expr_stmt|;
+else|else
 switch|switch
 condition|(
 name|key_type_from_name
@@ -454,9 +502,10 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|Key
 modifier|*
-name|try_load_pem_key
+name|load_identity
 parameter_list|(
 name|char
 modifier|*
@@ -489,13 +538,25 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|identity_passphrase
+condition|)
+name|pass
+operator|=
+name|xstrdup
+argument_list|(
+name|identity_passphrase
+argument_list|)
+expr_stmt|;
+else|else
 name|pass
 operator|=
 name|read_passphrase
 argument_list|(
 literal|"Enter passphrase: "
 argument_list|,
-literal|1
+name|RP_ALLOW_STDIN
 argument_list|)
 expr_stmt|;
 name|prv
@@ -562,6 +623,7 @@ value|0x3f6ff9eb
 end_define
 
 begin_function
+specifier|static
 name|void
 name|do_convert_to_ssh2
 parameter_list|(
@@ -575,7 +637,7 @@ name|Key
 modifier|*
 name|k
 decl_stmt|;
-name|int
+name|u_int
 name|len
 decl_stmt|;
 name|u_char
@@ -643,7 +705,7 @@ condition|(
 operator|(
 name|k
 operator|=
-name|try_load_pem_key
+name|load_identity
 argument_list|(
 name|identity_file
 argument_list|)
@@ -666,6 +728,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
 name|key_to_blob
 argument_list|(
 name|k
@@ -676,7 +740,23 @@ argument_list|,
 operator|&
 name|len
 argument_list|)
+operator|<=
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"key_to_blob failed\n"
+argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|fprintf
 argument_list|(
 name|stdout
@@ -690,7 +770,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"Comment: \"%d-bit %s, converted from OpenSSH by %s@%s\"\n"
+literal|"Comment: \"%u-bit %s, converted from OpenSSH by %s@%s\"\n"
 argument_list|,
 name|key_size
 argument_list|(
@@ -746,6 +826,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|buffer_get_bignum_bits
 parameter_list|(
@@ -801,10 +882,6 @@ argument_list|)
 expr_stmt|;
 name|BN_bin2bn
 argument_list|(
-operator|(
-name|u_char
-operator|*
-operator|)
 name|buffer_ptr
 argument_list|(
 name|b
@@ -826,15 +903,16 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|Key
 modifier|*
 name|do_convert_private_ssh2_from_blob
 parameter_list|(
-name|char
+name|u_char
 modifier|*
 name|blob
 parameter_list|,
-name|int
+name|u_int
 name|blen
 parameter_list|)
 block|{
@@ -847,21 +925,42 @@ name|key
 init|=
 name|NULL
 decl_stmt|;
-name|int
-name|ignore
-decl_stmt|,
-name|magic
-decl_stmt|,
-name|rlen
-decl_stmt|,
-name|ktype
-decl_stmt|;
 name|char
 modifier|*
 name|type
 decl_stmt|,
 modifier|*
 name|cipher
+decl_stmt|;
+name|u_char
+modifier|*
+name|sig
+decl_stmt|,
+name|data
+index|[]
+init|=
+literal|"abcde12345"
+decl_stmt|;
+name|int
+name|magic
+decl_stmt|,
+name|rlen
+decl_stmt|,
+name|ktype
+decl_stmt|,
+name|i1
+decl_stmt|,
+name|i2
+decl_stmt|,
+name|i3
+decl_stmt|,
+name|i4
+decl_stmt|;
+name|u_int
+name|slen
+decl_stmt|;
+name|u_long
+name|e
 decl_stmt|;
 name|buffer_init
 argument_list|(
@@ -913,7 +1012,7 @@ return|return
 name|NULL
 return|;
 block|}
-name|ignore
+name|i1
 operator|=
 name|buffer_get_int
 argument_list|(
@@ -941,7 +1040,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|ignore
+name|i2
 operator|=
 name|buffer_get_int
 argument_list|(
@@ -949,7 +1048,7 @@ operator|&
 name|b
 argument_list|)
 expr_stmt|;
-name|ignore
+name|i3
 operator|=
 name|buffer_get_int
 argument_list|(
@@ -957,12 +1056,25 @@ operator|&
 name|b
 argument_list|)
 expr_stmt|;
-name|ignore
+name|i4
 operator|=
 name|buffer_get_int
 argument_list|(
 operator|&
 name|b
+argument_list|)
+expr_stmt|;
+name|debug
+argument_list|(
+literal|"ignore (%d %d %d %d)"
+argument_list|,
+name|i1
+argument_list|,
+name|i2
+argument_list|,
+name|i3
+argument_list|,
+name|i4
 argument_list|)
 expr_stmt|;
 if|if
@@ -1137,6 +1249,67 @@ break|break;
 case|case
 name|KEY_RSA
 case|:
+name|e
+operator|=
+name|buffer_get_char
+argument_list|(
+operator|&
+name|b
+argument_list|)
+expr_stmt|;
+name|debug
+argument_list|(
+literal|"e %lx"
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|e
+operator|<
+literal|30
+condition|)
+block|{
+name|e
+operator|<<=
+literal|8
+expr_stmt|;
+name|e
+operator|+=
+name|buffer_get_char
+argument_list|(
+operator|&
+name|b
+argument_list|)
+expr_stmt|;
+name|debug
+argument_list|(
+literal|"e %lx"
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+name|e
+operator|<<=
+literal|8
+expr_stmt|;
+name|e
+operator|+=
+name|buffer_get_char
+argument_list|(
+operator|&
+name|b
+argument_list|)
+expr_stmt|;
+name|debug
+argument_list|(
+literal|"e %lx"
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -1148,14 +1321,7 @@ name|rsa
 operator|->
 name|e
 argument_list|,
-operator|(
-name|u_long
-operator|)
-name|buffer_get_char
-argument_list|(
-operator|&
-name|b
-argument_list|)
+name|e
 argument_list|)
 condition|)
 block|{
@@ -1234,7 +1400,7 @@ operator|->
 name|p
 argument_list|)
 expr_stmt|;
-name|generate_additional_parameters
+name|rsa_generate_additional_parameters
 argument_list|(
 name|key
 operator|->
@@ -1271,24 +1437,7 @@ operator|&
 name|b
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG_PK
-block|{
-name|u_int
-name|slen
-decl_stmt|;
-name|u_char
-modifier|*
-name|sig
-decl_stmt|,
-name|data
-index|[
-literal|10
-index|]
-init|=
-literal|"abcde12345"
-decl_stmt|;
+comment|/* try the key */
 name|key_sign
 argument_list|(
 name|key
@@ -1302,7 +1451,9 @@ argument_list|,
 name|data
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|data
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|key_verify
@@ -1316,7 +1467,9 @@ argument_list|,
 name|data
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|data
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|xfree
@@ -1324,9 +1477,6 @@ argument_list|(
 name|sig
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 return|return
 name|key
 return|;
@@ -1334,6 +1484,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|do_convert_from_ssh2
 parameter_list|(
@@ -1350,6 +1501,9 @@ decl_stmt|;
 name|int
 name|blen
 decl_stmt|;
+name|u_int
+name|len
+decl_stmt|;
 name|char
 name|line
 index|[
@@ -1359,7 +1513,7 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
-name|char
+name|u_char
 name|blob
 index|[
 literal|8096
@@ -1558,6 +1712,20 @@ name|private
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|strstr
+argument_list|(
+name|line
+argument_list|,
+literal|" END "
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+break|break;
+block|}
 comment|/* fprintf(stderr, "ignore: %s", line); */
 continue|continue;
 block|}
@@ -1590,16 +1758,73 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|len
+operator|=
+name|strlen
+argument_list|(
+name|encoded
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|(
+name|len
+operator|%
+literal|4
+operator|)
+operator|==
+literal|3
+operator|)
+operator|&&
+operator|(
+name|encoded
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|==
+literal|'='
+operator|)
+operator|&&
+operator|(
+name|encoded
+index|[
+name|len
+operator|-
+literal|2
+index|]
+operator|==
+literal|'='
+operator|)
+operator|&&
+operator|(
+name|encoded
+index|[
+name|len
+operator|-
+literal|3
+index|]
+operator|==
+literal|'='
+operator|)
+condition|)
+name|encoded
+index|[
+name|len
+operator|-
+literal|3
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|blen
 operator|=
 name|uudecode
 argument_list|(
 name|encoded
 argument_list|,
-operator|(
-name|u_char
-operator|*
-operator|)
 name|blob
 argument_list|,
 sizeof|sizeof
@@ -1747,6 +1972,11 @@ argument_list|(
 name|k
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|private
+condition|)
 name|fprintf
 argument_list|(
 name|stdout
@@ -1768,6 +1998,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|do_print_public
 parameter_list|(
@@ -1823,7 +2054,7 @@ expr_stmt|;
 block|}
 name|prv
 operator|=
-name|try_load_pem_key
+name|load_identity
 argument_list|(
 name|identity_file
 argument_list|)
@@ -1885,7 +2116,251 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMARTCARD
+end_ifdef
+
 begin_function
+specifier|static
+name|void
+name|do_upload
+parameter_list|(
+name|struct
+name|passwd
+modifier|*
+name|pw
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|sc_reader_id
+parameter_list|)
+block|{
+name|Key
+modifier|*
+name|prv
+init|=
+name|NULL
+decl_stmt|;
+name|struct
+name|stat
+name|st
+decl_stmt|;
+name|int
+name|ret
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|have_identity
+condition|)
+name|ask_filename
+argument_list|(
+name|pw
+argument_list|,
+literal|"Enter file in which the key is"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|stat
+argument_list|(
+name|identity_file
+argument_list|,
+operator|&
+name|st
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+name|identity_file
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|prv
+operator|=
+name|load_identity
+argument_list|(
+name|identity_file
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|prv
+operator|==
+name|NULL
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"load failed"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|ret
+operator|=
+name|sc_put_key
+argument_list|(
+name|prv
+argument_list|,
+name|sc_reader_id
+argument_list|)
+expr_stmt|;
+name|key_free
+argument_list|(
+name|prv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|<
+literal|0
+condition|)
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|log
+argument_list|(
+literal|"loading key done"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|do_download
+parameter_list|(
+name|struct
+name|passwd
+modifier|*
+name|pw
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|sc_reader_id
+parameter_list|)
+block|{
+name|Key
+modifier|*
+modifier|*
+name|keys
+init|=
+name|NULL
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|keys
+operator|=
+name|sc_get_keys
+argument_list|(
+name|sc_reader_id
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|keys
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"cannot read public key from smartcard"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|keys
+index|[
+name|i
+index|]
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|key_write
+argument_list|(
+name|keys
+index|[
+name|i
+index|]
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
+name|key_free
+argument_list|(
+name|keys
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+name|xfree
+argument_list|(
+name|keys
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SMARTCARD */
+end_comment
+
+begin_function
+specifier|static
 name|void
 name|do_fingerprint
 parameter_list|(
@@ -1939,9 +2414,13 @@ decl_stmt|,
 name|invalid
 init|=
 literal|1
-decl_stmt|,
+decl_stmt|;
+name|enum
+name|fp_rep
 name|rep
-decl_stmt|,
+decl_stmt|;
+name|enum
+name|fp_type
 name|fptype
 decl_stmt|;
 name|struct
@@ -2030,7 +2509,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%d %s %s\n"
+literal|"%u %s %s\n"
 argument_list|,
 name|key_size
 argument_list|(
@@ -2395,7 +2874,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%d %s %s\n"
+literal|"%u %s %s\n"
 argument_list|,
 name|key_size
 argument_list|(
@@ -2439,7 +2918,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s is not a valid key file.\n"
+literal|"%s is not a public key file.\n"
 argument_list|,
 name|identity_file
 argument_list|)
@@ -2463,6 +2942,7 @@ comment|/*  * Perform changing a passphrase.  The argument is the passwd structu
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|do_change_passphrase
 parameter_list|(
@@ -2568,7 +3048,7 @@ name|read_passphrase
 argument_list|(
 literal|"Enter old passphrase: "
 argument_list|,
-literal|1
+name|RP_ALLOW_STDIN
 argument_list|)
 expr_stmt|;
 name|private
@@ -2650,9 +3130,10 @@ name|passphrase1
 operator|=
 name|read_passphrase
 argument_list|(
-literal|"Enter new passphrase (empty for no passphrase): "
+literal|"Enter new passphrase (empty for no "
+literal|"passphrase): "
 argument_list|,
-literal|1
+name|RP_ALLOW_STDIN
 argument_list|)
 expr_stmt|;
 name|passphrase2
@@ -2661,7 +3142,7 @@ name|read_passphrase
 argument_list|(
 literal|"Enter same passphrase again: "
 argument_list|,
-literal|1
+name|RP_ALLOW_STDIN
 argument_list|)
 expr_stmt|;
 comment|/* Verify that they are the same. */
@@ -2844,6 +3325,7 @@ comment|/*  * Change the comment of a private key file.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|do_change_comment
 parameter_list|(
@@ -2969,7 +3451,7 @@ name|read_passphrase
 argument_list|(
 literal|"Enter passphrase: "
 argument_list|,
-literal|1
+name|RP_ALLOW_STDIN
 argument_list|)
 expr_stmt|;
 comment|/* Try to load using the passphrase. */
@@ -3371,20 +3853,147 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"Usage: %s [-ceilpqyB] [-t type] [-b bits] [-f file] [-C comment] "
-literal|"[-N new-pass] [-P pass]\n"
+name|stderr
+argument_list|,
+literal|"Usage: %s [options]\n"
 argument_list|,
 name|__progname
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Options:\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -b bits     Number of bits in the key to create.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -c          Change comment in private and public key files.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -e          Convert OpenSSH to IETF SECSH key file.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -f filename Filename of the key file.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -i          Convert IETF SECSH to OpenSSH key file.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -l          Show fingerprint of key file.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -p          Change passphrase of private key file.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -q          Quiet.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -y          Read private key file and print public key.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -t type     Specify type of key to create.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -B          Show bubblebabble digest of key file.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -C comment  Provide new comment.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -N phrase   Provide new passphrase.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -P phrase   Provide old passphrase.\n"
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMARTCARD
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -D reader   Download public key from smartcard.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -U reader   Upload private key to smartcard.\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* SMARTCARD */
 name|exit
 argument_list|(
 literal|1
@@ -3413,9 +4022,7 @@ block|{
 name|char
 name|dotsshdir
 index|[
-literal|16
-operator|*
-literal|1024
+name|MAXPATHLEN
 index|]
 decl_stmt|,
 name|comment
@@ -3429,6 +4036,12 @@ decl_stmt|,
 modifier|*
 name|passphrase2
 decl_stmt|;
+name|char
+modifier|*
+name|reader_id
+init|=
+name|NULL
+decl_stmt|;
 name|Key
 modifier|*
 name|private
@@ -3441,16 +4054,20 @@ name|passwd
 modifier|*
 name|pw
 decl_stmt|;
+name|struct
+name|stat
+name|st
+decl_stmt|;
 name|int
 name|opt
 decl_stmt|,
 name|type
 decl_stmt|,
 name|fd
-decl_stmt|;
-name|struct
-name|stat
-name|st
+decl_stmt|,
+name|download
+init|=
+literal|0
 decl_stmt|;
 name|FILE
 modifier|*
@@ -3465,6 +4082,16 @@ name|char
 modifier|*
 name|optarg
 decl_stmt|;
+name|__progname
+operator|=
+name|get_progname
+argument_list|(
+name|av
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
 name|SSLeay_add_all_algorithms
 argument_list|()
 expr_stmt|;
@@ -3531,7 +4158,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"deiqpclBRxXyb:f:t:P:N:C:"
+literal|"deiqpclBRxXyb:f:t:U:D:P:N:C:"
 argument_list|)
 operator|)
 operator|!=
@@ -3720,6 +4347,21 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
+literal|'D'
+case|:
+name|download
+operator|=
+literal|1
+expr_stmt|;
+case|case
+literal|'U'
+case|:
+name|reader_id
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
@@ -3782,15 +4424,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|change_comment
-condition|)
-name|do_change_comment
-argument_list|(
-name|pw
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|convert_to_ssh2
 condition|)
 name|do_convert_to_ssh2
@@ -3800,9 +4433,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|convert_from_ssh2
+name|change_comment
 condition|)
-name|do_convert_from_ssh2
+name|do_change_comment
 argument_list|(
 name|pw
 argument_list|)
@@ -3816,9 +4449,81 @@ argument_list|(
 name|pw
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|reader_id
+operator|!=
+name|NULL
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|SMARTCARD
+if|if
+condition|(
+name|download
+condition|)
+name|do_download
+argument_list|(
+name|pw
+argument_list|,
+name|reader_id
+argument_list|)
+expr_stmt|;
+else|else
+name|do_upload
+argument_list|(
+name|pw
+argument_list|,
+name|reader_id
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* SMARTCARD */
+name|fatal
+argument_list|(
+literal|"no support for smartcards."
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* SMARTCARD */
+block|}
+name|init_rng
+argument_list|()
+expr_stmt|;
+name|seed_rng
+argument_list|()
+expr_stmt|;
 name|arc4random_stir
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|convert_from_ssh2
+condition|)
+name|do_convert_from_ssh2
+argument_list|(
+name|pw
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|key_type_name
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"You must specify a key type (-t).\n"
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
 name|type
 operator|=
 name|key_type_from_name
@@ -4091,9 +4796,10 @@ name|passphrase1
 operator|=
 name|read_passphrase
 argument_list|(
-literal|"Enter passphrase (empty for no passphrase): "
+literal|"Enter passphrase (empty for no "
+literal|"passphrase): "
 argument_list|,
-literal|1
+name|RP_ALLOW_STDIN
 argument_list|)
 expr_stmt|;
 name|passphrase2
@@ -4102,7 +4808,7 @@ name|read_passphrase
 argument_list|(
 literal|"Enter same passphrase again: "
 argument_list|,
-literal|1
+name|RP_ALLOW_STDIN
 argument_list|)
 expr_stmt|;
 if|if
@@ -4117,7 +4823,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* The passphrases do not match.  Clear them and retry. */
+comment|/* 			 * The passphrases do not match.  Clear them and 			 * retry. 			 */
 name|memset
 argument_list|(
 name|passphrase1

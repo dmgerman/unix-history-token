@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: bufaux.c,v 1.17 2001/01/21 19:05:45 markus Exp $"
+literal|"$OpenBSD: bufaux.c,v 1.27 2002/06/26 08:53:12 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -187,7 +187,7 @@ comment|/*  * Retrieves an BIGNUM from the buffer.  */
 end_comment
 
 begin_function
-name|int
+name|void
 name|buffer_get_bignum
 parameter_list|(
 name|Buffer
@@ -247,6 +247,21 @@ literal|8
 expr_stmt|;
 if|if
 condition|(
+name|bytes
+operator|>
+literal|8
+operator|*
+literal|1024
+condition|)
+name|fatal
+argument_list|(
+literal|"buffer_get_bignum: cannot handle BN of size %d"
+argument_list|,
+name|bytes
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|buffer_len
 argument_list|(
 name|buffer
@@ -261,10 +276,6 @@ argument_list|)
 expr_stmt|;
 name|bin
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|buffer_ptr
 argument_list|(
 name|buffer
@@ -286,11 +297,6 @@ argument_list|,
 name|bytes
 argument_list|)
 expr_stmt|;
-return|return
-literal|2
-operator|+
-name|bytes
-return|;
 block|}
 end_function
 
@@ -485,8 +491,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* XXX does not handle negative BNs */
+end_comment
+
 begin_function
-name|int
+name|void
 name|buffer_get_bignum2
 parameter_list|(
 name|Buffer
@@ -498,30 +508,36 @@ modifier|*
 name|value
 parameter_list|)
 block|{
-comment|/**XXX should be two's-complement */
-name|int
+name|u_int
 name|len
 decl_stmt|;
 name|u_char
 modifier|*
 name|bin
 init|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|buffer_get_string
 argument_list|(
 name|buffer
 argument_list|,
-operator|(
-name|u_int
-operator|*
-operator|)
 operator|&
 name|len
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|len
+operator|>
+literal|8
+operator|*
+literal|1024
+condition|)
+name|fatal
+argument_list|(
+literal|"buffer_get_bignum2: cannot handle BN of size %d"
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
 name|BN_bin2bn
 argument_list|(
 name|bin
@@ -536,15 +552,49 @@ argument_list|(
 name|bin
 argument_list|)
 expr_stmt|;
-return|return
-name|len
-return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Returns an integer from the buffer (4 bytes, msb first).  */
+comment|/*  * Returns integers from the buffer (msb first).  */
 end_comment
+
+begin_function
+name|u_short
+name|buffer_get_short
+parameter_list|(
+name|Buffer
+modifier|*
+name|buffer
+parameter_list|)
+block|{
+name|u_char
+name|buf
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|buffer_get
+argument_list|(
+name|buffer
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|buf
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+return|return
+name|GET_16BIT
+argument_list|(
+name|buf
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_function
 name|u_int
@@ -583,6 +633,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_U_INT64_T
+end_ifdef
+
 begin_function
 name|u_int64_t
 name|buffer_get_int64
@@ -620,9 +676,51 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * Stores an integer in the buffer in 4 bytes, msb first.  */
+comment|/*  * Stores integers in the buffer, msb first.  */
 end_comment
+
+begin_function
+name|void
+name|buffer_put_short
+parameter_list|(
+name|Buffer
+modifier|*
+name|buffer
+parameter_list|,
+name|u_short
+name|value
+parameter_list|)
+block|{
+name|char
+name|buf
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|PUT_16BIT
+argument_list|(
+name|buf
+argument_list|,
+name|value
+argument_list|)
+expr_stmt|;
+name|buffer_append
+argument_list|(
+name|buffer
+argument_list|,
+name|buf
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|void
@@ -661,6 +759,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_U_INT64_T
+end_ifdef
+
 begin_function
 name|void
 name|buffer_put_int64
@@ -698,12 +802,17 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Returns an arbitrary binary string from the buffer.  The string cannot  * be longer than 256k.  The returned value points to memory allocated  * with xmalloc; it is the responsibility of the calling function to free  * the data.  If length_ptr is non-NULL, the length of the returned data  * will be stored there.  A null character will be automatically appended  * to the returned string, and is not counted in length.  */
 end_comment
 
 begin_function
-name|char
+name|void
 modifier|*
 name|buffer_get_string
 parameter_list|(
@@ -716,12 +825,12 @@ modifier|*
 name|length_ptr
 parameter_list|)
 block|{
-name|u_int
-name|len
-decl_stmt|;
-name|char
+name|u_char
 modifier|*
 name|value
+decl_stmt|;
+name|u_int
+name|len
 decl_stmt|;
 comment|/* Get the length. */
 name|len
@@ -741,7 +850,7 @@ literal|1024
 condition|)
 name|fatal
 argument_list|(
-literal|"Received packet with bad string length %d"
+literal|"buffer_get_string: bad string length %d"
 argument_list|,
 name|len
 argument_list|)
@@ -844,6 +953,17 @@ modifier|*
 name|s
 parameter_list|)
 block|{
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"buffer_put_cstring: s == NULL"
+argument_list|)
+expr_stmt|;
 name|buffer_put_string
 argument_list|(
 name|buffer

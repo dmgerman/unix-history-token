@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: radix.h,v 1.2 2001/01/29 01:58:17 niklas Exp $	*/
+comment|/*	$OpenBSD: radix.h,v 1.4 2001/06/26 17:27:24 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -13,14 +13,11 @@ name|creds_to_radix
 parameter_list|(
 name|CREDENTIALS
 modifier|*
-name|creds
 parameter_list|,
 name|u_char
 modifier|*
-name|buf
 parameter_list|,
 name|size_t
-name|buflen
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -32,11 +29,9 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|buf
 parameter_list|,
 name|CREDENTIALS
 modifier|*
-name|creds
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: clientloop.h,v 1.4 2001/02/06 22:43:02 markus Exp $	*/
+comment|/*	$OpenBSD: clientloop.h,v 1.7 2002/04/22 21:04:52 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -20,13 +20,27 @@ name|int
 name|client_loop
 parameter_list|(
 name|int
-name|have_pty
 parameter_list|,
 name|int
-name|escape_char
 parameter_list|,
 name|int
-name|id
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|client_global_request_reply
+parameter_list|(
+name|int
+name|type
+parameter_list|,
+name|u_int32_t
+name|seq
+parameter_list|,
+name|void
+modifier|*
+name|ctxt
 parameter_list|)
 function_decl|;
 end_function_decl

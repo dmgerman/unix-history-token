@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: deattack.h,v 1.5 2001/01/29 01:58:15 niklas Exp $	*/
+comment|/*	$OpenBSD: deattack.h,v 1.7 2001/06/26 17:27:23 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -43,13 +43,10 @@ name|detect_attack
 parameter_list|(
 name|u_char
 modifier|*
-name|buf
 parameter_list|,
 name|u_int32_t
-name|len
 parameter_list|,
 name|u_char
-name|IV
 index|[
 literal|8
 index|]

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000 Markus Friedl.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2000, 2001, 2002 Markus Friedl.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sftp-server.c,v 1.25 2001/04/05 10:42:53 markus Exp $"
+literal|"$OpenBSD: sftp-server.c,v 1.37 2002/06/24 17:57:20 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -96,6 +96,37 @@ name|TRACE
 value|debug
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE___PROGNAME
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|__progname
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|char
+modifier|*
+name|__progname
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* input and output queue */
 end_comment
@@ -154,6 +185,7 @@ struct|;
 end_struct
 
 begin_function
+specifier|static
 name|int
 name|errno_to_portable
 parameter_list|(
@@ -235,6 +267,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|flags_from_portable
 parameter_list|(
@@ -330,6 +363,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|Attrib
 modifier|*
 name|get_attrib
@@ -403,6 +437,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|handle_init
 parameter_list|(
@@ -446,6 +481,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|handle_new
 parameter_list|(
@@ -550,6 +586,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|handle_is_ok
 parameter_list|(
@@ -590,6 +627,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|handle_to_string
 parameter_list|(
@@ -654,6 +692,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|handle_from_string
 parameter_list|(
@@ -715,6 +754,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|handle_to_name
@@ -754,6 +794,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|DIR
 modifier|*
 name|handle_to_dir
@@ -786,6 +827,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|handle_to_fd
 parameter_list|(
@@ -818,6 +860,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|handle_close
 parameter_list|(
@@ -910,6 +953,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|get_handle
 parameter_list|(
@@ -968,6 +1012,7 @@ comment|/* send replies */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|send_msg
 parameter_list|(
@@ -1016,6 +1061,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|send_status
 parameter_list|(
@@ -1069,7 +1115,7 @@ block|}
 decl_stmt|;
 name|TRACE
 argument_list|(
-literal|"sent status id %d error %d"
+literal|"sent status id %u error %u"
 argument_list|,
 name|id
 argument_list|,
@@ -1154,6 +1200,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|send_data_or_handle
 parameter_list|(
@@ -1222,6 +1269,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|send_data
 parameter_list|(
@@ -1238,7 +1286,7 @@ parameter_list|)
 block|{
 name|TRACE
 argument_list|(
-literal|"sent data id %d len %d"
+literal|"sent data id %u len %d"
 argument_list|,
 name|id
 argument_list|,
@@ -1260,6 +1308,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|send_handle
 parameter_list|(
@@ -1290,7 +1339,7 @@ argument_list|)
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"sent handle id %d handle %d"
+literal|"sent handle id %u handle %d"
 argument_list|,
 name|id
 argument_list|,
@@ -1317,6 +1366,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|send_names
 parameter_list|(
@@ -1369,7 +1419,7 @@ argument_list|)
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"sent names id %d count %d"
+literal|"sent names id %u count %d"
 argument_list|,
 name|id
 argument_list|,
@@ -1447,6 +1497,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|send_attrib
 parameter_list|(
@@ -1463,7 +1514,7 @@ name|msg
 decl_stmt|;
 name|TRACE
 argument_list|(
-literal|"sent attrib id %d have 0x%x"
+literal|"sent attrib id %u have 0x%x"
 argument_list|,
 name|id
 argument_list|,
@@ -1522,6 +1573,7 @@ comment|/* parse incoming */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|process_init
 parameter_list|(
@@ -1533,11 +1585,8 @@ name|msg
 decl_stmt|;
 name|version
 operator|=
-name|buffer_get_int
-argument_list|(
-operator|&
-name|iqueue
-argument_list|)
+name|get_int
+argument_list|()
 expr_stmt|;
 name|TRACE
 argument_list|(
@@ -1584,6 +1633,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|process_open
 parameter_list|(
@@ -1664,7 +1714,7 @@ literal|0666
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"open id %d name %s flags %d mode 0%o"
+literal|"open id %u name %s flags %d mode 0%o"
 argument_list|,
 name|id
 argument_list|,
@@ -1769,6 +1819,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|process_close
 parameter_list|(
@@ -1799,7 +1850,7 @@ argument_list|()
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"close id %d handle %d"
+literal|"close id %u handle %d"
 argument_list|,
 name|id
 argument_list|,
@@ -1840,6 +1891,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|process_read
 parameter_list|(
@@ -1895,16 +1947,14 @@ argument_list|()
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"read id %d handle %d off %llu len %d"
+literal|"read id %u handle %d off %llu len %d"
 argument_list|,
 name|id
 argument_list|,
 name|handle
 argument_list|,
 operator|(
-name|unsigned
-name|long
-name|long
+name|u_int64_t
 operator|)
 name|off
 argument_list|,
@@ -2049,6 +2099,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|process_write
 parameter_list|(
@@ -2104,16 +2155,14 @@ argument_list|)
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"write id %d handle %d off %llu len %d"
+literal|"write id %u handle %d off %llu len %d"
 argument_list|,
 name|id
 argument_list|,
 name|handle
 argument_list|,
 operator|(
-name|unsigned
-name|long
-name|long
+name|u_int64_t
 operator|)
 name|off
 argument_list|,
@@ -2235,6 +2284,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|process_do_stat
 parameter_list|(
@@ -2277,7 +2327,7 @@ argument_list|)
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"%sstat id %d name %s"
+literal|"%sstat id %u name %s"
 argument_list|,
 name|do_lstat
 condition|?
@@ -2371,6 +2421,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|process_stat
 parameter_list|(
@@ -2386,6 +2437,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|process_lstat
 parameter_list|(
@@ -2401,6 +2453,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|process_fstat
 parameter_list|(
@@ -2440,7 +2493,7 @@ argument_list|()
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"fstat id %d handle %d"
+literal|"fstat id %u handle %d"
 argument_list|,
 name|id
 argument_list|,
@@ -2528,6 +2581,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|timeval
 modifier|*
@@ -2593,6 +2647,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|process_setstat
 parameter_list|(
@@ -2611,12 +2666,11 @@ modifier|*
 name|name
 decl_stmt|;
 name|int
-name|ret
-decl_stmt|;
-name|int
 name|status
 init|=
 name|SSH2_FX_OK
+decl_stmt|,
+name|ret
 decl_stmt|;
 name|id
 operator|=
@@ -2637,13 +2691,48 @@ argument_list|()
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"setstat id %d name %s"
+literal|"setstat id %u name %s"
 argument_list|,
 name|id
 argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|a
+operator|->
+name|flags
+operator|&
+name|SSH2_FILEXFER_ATTR_SIZE
+condition|)
+block|{
+name|ret
+operator|=
+name|truncate
+argument_list|(
+name|name
+argument_list|,
+name|a
+operator|->
+name|size
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+operator|-
+literal|1
+condition|)
+name|status
+operator|=
+name|errno_to_portable
+argument_list|(
+name|errno
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|a
@@ -2772,6 +2861,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|process_fsetstat
 parameter_list|(
@@ -2797,6 +2887,10 @@ name|status
 init|=
 name|SSH2_FX_OK
 decl_stmt|;
+name|char
+modifier|*
+name|name
+decl_stmt|;
 name|id
 operator|=
 name|get_int
@@ -2814,7 +2908,7 @@ argument_list|()
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"fsetstat id %d handle %d"
+literal|"fsetstat id %u handle %d"
 argument_list|,
 name|id
 argument_list|,
@@ -2828,11 +2922,22 @@ argument_list|(
 name|handle
 argument_list|)
 expr_stmt|;
+name|name
+operator|=
+name|handle_to_name
+argument_list|(
+name|handle
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fd
 operator|<
 literal|0
+operator|||
+name|name
+operator|==
+name|NULL
 condition|)
 block|{
 name|status
@@ -2848,9 +2953,47 @@ name|a
 operator|->
 name|flags
 operator|&
+name|SSH2_FILEXFER_ATTR_SIZE
+condition|)
+block|{
+name|ret
+operator|=
+name|ftruncate
+argument_list|(
+name|fd
+argument_list|,
+name|a
+operator|->
+name|size
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+operator|-
+literal|1
+condition|)
+name|status
+operator|=
+name|errno_to_portable
+argument_list|(
+name|errno
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|a
+operator|->
+name|flags
+operator|&
 name|SSH2_FILEXFER_ATTR_PERMISSIONS
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_FCHMOD
 name|ret
 operator|=
 name|fchmod
@@ -2864,6 +3007,23 @@ operator|&
 literal|0777
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|ret
+operator|=
+name|chmod
+argument_list|(
+name|name
+argument_list|,
+name|a
+operator|->
+name|perm
+operator|&
+literal|0777
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ret
@@ -2888,6 +3048,9 @@ operator|&
 name|SSH2_FILEXFER_ATTR_ACMODTIME
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_FUTIMES
 name|ret
 operator|=
 name|futimes
@@ -2900,6 +3063,22 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|ret
+operator|=
+name|utimes
+argument_list|(
+name|name
+argument_list|,
+name|attrib_to_tv
+argument_list|(
+name|a
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ret
@@ -2924,6 +3103,9 @@ operator|&
 name|SSH2_FILEXFER_ATTR_UIDGID
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_FCHOWN
 name|ret
 operator|=
 name|fchown
@@ -2939,6 +3121,25 @@ operator|->
 name|gid
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|ret
+operator|=
+name|chown
+argument_list|(
+name|name
+argument_list|,
+name|a
+operator|->
+name|uid
+argument_list|,
+name|a
+operator|->
+name|gid
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ret
@@ -2966,6 +3167,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|process_opendir
 parameter_list|(
@@ -3006,7 +3208,7 @@ argument_list|)
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"opendir id %d path %s"
+literal|"opendir id %u path %s"
 argument_list|,
 name|id
 argument_list|,
@@ -3107,6 +3309,7 @@ comment|/*  * drwxr-xr-x    5 markus   markus       1024 Jan 13 18:39 .ssh  */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|ls_file
@@ -3122,6 +3325,10 @@ name|st
 parameter_list|)
 block|{
 name|int
+name|ulen
+decl_stmt|,
+name|glen
+decl_stmt|,
 name|sz
 init|=
 literal|0
@@ -3231,8 +3438,11 @@ argument_list|,
 sizeof|sizeof
 name|ubuf
 argument_list|,
-literal|"%d"
+literal|"%u"
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|st
 operator|->
 name|st_uid
@@ -3275,8 +3485,11 @@ argument_list|,
 sizeof|sizeof
 name|gbuf
 argument_list|,
-literal|"%d"
+literal|"%u"
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|st
 operator|->
 name|st_gid
@@ -3360,6 +3573,30 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+name|ulen
+operator|=
+name|MAX
+argument_list|(
+name|strlen
+argument_list|(
+name|user
+argument_list|)
+argument_list|,
+literal|8
+argument_list|)
+expr_stmt|;
+name|glen
+operator|=
+name|MAX
+argument_list|(
+name|strlen
+argument_list|(
+name|group
+argument_list|)
+argument_list|,
+literal|8
+argument_list|)
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|buf
@@ -3367,7 +3604,7 @@ argument_list|,
 sizeof|sizeof
 name|buf
 argument_list|,
-literal|"%s %3d %-8.8s %-8.8s %8llu %s %s"
+literal|"%s %3d %-*s %-*s %8llu %s %s"
 argument_list|,
 name|mode
 argument_list|,
@@ -3375,14 +3612,16 @@ name|st
 operator|->
 name|st_nlink
 argument_list|,
+name|ulen
+argument_list|,
 name|user
+argument_list|,
+name|glen
 argument_list|,
 name|group
 argument_list|,
 operator|(
-name|unsigned
-name|long
-name|long
+name|u_int64_t
 operator|)
 name|st
 operator|->
@@ -3403,6 +3642,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|process_readdir
 parameter_list|(
@@ -3440,7 +3680,7 @@ argument_list|()
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"readdir id %d handle %d"
+literal|"readdir id %u handle %d"
 argument_list|,
 name|id
 argument_list|,
@@ -3567,9 +3807,20 @@ argument_list|,
 sizeof|sizeof
 name|pathname
 argument_list|,
-literal|"%s/%s"
+literal|"%s%s%s"
 argument_list|,
 name|path
+argument_list|,
+name|strcmp
+argument_list|(
+name|path
+argument_list|,
+literal|"/"
+argument_list|)
+condition|?
+literal|"/"
+else|:
+literal|""
 argument_list|,
 name|dp
 operator|->
@@ -3721,6 +3972,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|process_remove
 parameter_list|(
@@ -3756,7 +4008,7 @@ argument_list|)
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"remove id %d name %s"
+literal|"remove id %u name %s"
 argument_list|,
 name|id
 argument_list|,
@@ -3802,6 +4054,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|process_mkdir
 parameter_list|(
@@ -3865,7 +4118,7 @@ literal|0777
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"mkdir id %d name %s mode 0%o"
+literal|"mkdir id %u name %s mode 0%o"
 argument_list|,
 name|id
 argument_list|,
@@ -3915,6 +4168,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|process_rmdir
 parameter_list|(
@@ -3947,7 +4201,7 @@ argument_list|)
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"rmdir id %d name %s"
+literal|"rmdir id %u name %s"
 argument_list|,
 name|id
 argument_list|,
@@ -3993,6 +4247,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|process_realpath
 parameter_list|(
@@ -4049,7 +4304,7 @@ expr_stmt|;
 block|}
 name|TRACE
 argument_list|(
-literal|"realpath id %d path %s"
+literal|"realpath id %u path %s"
 argument_list|,
 name|id
 argument_list|,
@@ -4122,6 +4377,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|process_rename
 parameter_list|(
@@ -4170,7 +4426,7 @@ argument_list|)
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"rename id %d old %s new %s"
+literal|"rename id %u old %s new %s"
 argument_list|,
 name|id
 argument_list|,
@@ -4241,6 +4497,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|process_readlink
 parameter_list|(
@@ -4249,6 +4506,9 @@ parameter_list|)
 block|{
 name|u_int32_t
 name|id
+decl_stmt|;
+name|int
+name|len
 decl_stmt|;
 name|char
 name|link
@@ -4274,7 +4534,7 @@ argument_list|)
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"readlink id %d path %s"
+literal|"readlink id %u path %s"
 argument_list|,
 name|id
 argument_list|,
@@ -4283,6 +4543,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|len
+operator|=
 name|readlink
 argument_list|(
 name|path
@@ -4296,6 +4559,7 @@ argument_list|)
 operator|-
 literal|1
 argument_list|)
+operator|)
 operator|==
 operator|-
 literal|1
@@ -4317,12 +4581,7 @@ name|s
 decl_stmt|;
 name|link
 index|[
-sizeof|sizeof
-argument_list|(
-name|link
-argument_list|)
-operator|-
-literal|1
+name|len
 index|]
 operator|=
 literal|'\0'
@@ -4365,6 +4624,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|process_symlink
 parameter_list|(
@@ -4413,7 +4673,7 @@ argument_list|)
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"symlink id %d old %s new %s"
+literal|"symlink id %u old %s new %s"
 argument_list|,
 name|id
 argument_list|,
@@ -4484,6 +4744,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|process_extended
 parameter_list|(
@@ -4530,6 +4791,7 @@ comment|/* stolen from ssh-agent */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|process
 parameter_list|(
@@ -4540,19 +4802,29 @@ name|u_int
 name|msg_len
 decl_stmt|;
 name|u_int
+name|buf_len
+decl_stmt|;
+name|u_int
+name|consumed
+decl_stmt|;
+name|u_int
 name|type
 decl_stmt|;
 name|u_char
 modifier|*
 name|cp
 decl_stmt|;
-if|if
-condition|(
+name|buf_len
+operator|=
 name|buffer_len
 argument_list|(
 operator|&
 name|iqueue
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|buf_len
 operator|<
 literal|5
 condition|)
@@ -4560,10 +4832,6 @@ return|return;
 comment|/* Incomplete message. */
 name|cp
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|buffer_ptr
 argument_list|(
 operator|&
@@ -4599,11 +4867,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|buffer_len
-argument_list|(
-operator|&
-name|iqueue
-argument_list|)
+name|buf_len
 operator|<
 name|msg_len
 operator|+
@@ -4617,6 +4881,10 @@ name|iqueue
 argument_list|,
 literal|4
 argument_list|)
+expr_stmt|;
+name|buf_len
+operator|-=
+literal|4
 expr_stmt|;
 name|type
 operator|=
@@ -4781,6 +5049,63 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* discard the remaining bytes from the current packet */
+if|if
+condition|(
+name|buf_len
+operator|<
+name|buffer_len
+argument_list|(
+operator|&
+name|iqueue
+argument_list|)
+condition|)
+name|fatal
+argument_list|(
+literal|"iqueue grows"
+argument_list|)
+expr_stmt|;
+name|consumed
+operator|=
+name|buf_len
+operator|-
+name|buffer_len
+argument_list|(
+operator|&
+name|iqueue
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|msg_len
+operator|<
+name|consumed
+condition|)
+name|fatal
+argument_list|(
+literal|"msg_len %d< consumed %d"
+argument_list|,
+name|msg_len
+argument_list|,
+name|consumed
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|msg_len
+operator|>
+name|consumed
+condition|)
+name|buffer_consume
+argument_list|(
+operator|&
+name|iqueue
+argument_list|,
+name|msg_len
+operator|-
+name|consumed
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4819,6 +5144,16 @@ decl_stmt|,
 name|set_size
 decl_stmt|;
 comment|/* XXX should use getopt */
+name|__progname
+operator|=
+name|get_progname
+argument_list|(
+name|av
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
 name|handle_init
 argument_list|()
 expr_stmt|;
@@ -4852,6 +5187,25 @@ argument_list|(
 name|STDOUT_FILENO
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_CYGWIN
+name|setmode
+argument_list|(
+name|in
+argument_list|,
+name|O_BINARY
+argument_list|)
+expr_stmt|;
+name|setmode
+argument_list|(
+name|out
+argument_list|,
+name|O_BINARY
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|max
 operator|=
 literal|0

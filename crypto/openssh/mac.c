@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: mac.c,v 1.2 2001/04/05 10:42:51 markus Exp $"
+literal|"$OpenBSD: mac.c,v 1.5 2002/05/16 22:02:50 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -66,6 +66,7 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
+specifier|const
 name|EVP_MD
 modifier|*
 function_decl|(
@@ -225,11 +226,12 @@ name|mac
 operator|->
 name|mac_len
 operator|=
+name|EVP_MD_size
+argument_list|(
 name|mac
 operator|->
 name|md
-operator|->
-name|md_size
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
