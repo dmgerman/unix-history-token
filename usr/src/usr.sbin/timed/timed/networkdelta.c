@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)networkdelta.c	8.1 (Berkeley) %G%"
+literal|"@(#)networkdelta.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -208,18 +208,10 @@ condition|)
 return|return
 literal|0
 return|;
+comment|/* get average of trusted values */
 name|med
 operator|/=
 name|numdelta
-expr_stmt|;
-name|eps
-operator|=
-name|med
-operator|-
-name|x
-index|[
-literal|0
-index|]
 expr_stmt|;
 if|if
 condition|(
@@ -235,6 +227,16 @@ name|numdelta
 argument_list|,
 name|med
 argument_list|)
+expr_stmt|;
+comment|/* get median of all trusted values, using average as initial guess */
+name|eps
+operator|=
+name|med
+operator|-
+name|x
+index|[
+literal|0
+index|]
 expr_stmt|;
 name|med
 operator|=
@@ -258,7 +260,7 @@ argument_list|,
 name|VALID_RANGE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * compute the median of all values near the good median 	 */
+comment|/* Compute the median of all good values. 	 * Good values are those of all clocks, including untrusted clocks, 	 * that are 	 *	- trusted and somewhat close to the median of the 	 *		trusted clocks 	 *	- trusted or untrusted and very close to the median of the 	 *		trusted clocks 	 */
 name|hidelta
 operator|=
 name|med
@@ -755,7 +757,8 @@ name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"%ld in %d passes; early out balance=%d\n"
+literal|"%ld in %d passes;"
+literal|" early out balance=%d\n"
 argument_list|,
 operator|(
 name|long
@@ -807,11 +810,10 @@ argument_list|,
 name|aa
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 if|if
 condition|(
 name|aa
-operator|>
+operator|>=
 name|ap
 condition|)
 name|aa
@@ -850,11 +852,10 @@ argument_list|,
 name|aa
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 if|if
 condition|(
 name|aa
-operator|<
+operator|<=
 name|am
 condition|)
 name|aa
@@ -888,7 +889,8 @@ name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"%ld in %d passes; force out balance=%d\n"
+literal|"%ld in %d passes;"
+literal|" force out balance=%d\n"
 argument_list|,
 operator|(
 name|long
