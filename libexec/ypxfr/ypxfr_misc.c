@@ -622,7 +622,7 @@ name|yplib
 condition|)
 block|{
 name|unsigned
-name|long
+name|int
 name|order
 decl_stmt|;
 name|int
@@ -639,10 +639,6 @@ name|domain
 argument_list|,
 name|map
 argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
 operator|&
 name|order
 argument_list|)
