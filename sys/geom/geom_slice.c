@@ -1029,6 +1029,16 @@ condition|(
 name|gp
 operator|!=
 name|NULL
+operator|&&
+operator|(
+name|pp
+operator|==
+name|NULL
+operator|&&
+name|cp
+operator|==
+name|NULL
+operator|)
 condition|)
 block|{
 name|sbuf_printf

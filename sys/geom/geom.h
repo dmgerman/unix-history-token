@@ -39,6 +39,18 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/ioccom.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sbuf.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1464,6 +1476,13 @@ end_endif
 begin_comment
 comment|/* _KERNEL */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|GEOMGETCONF
+value|_IOWR('G',  0, struct sbuf)
+end_define
 
 begin_endif
 endif|#
