@@ -615,7 +615,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"APM Managment: %s\n"
+literal|"APM Management: %s\n"
 argument_list|,
 operator|(
 name|aip
