@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright (c) 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -89,18 +89,18 @@ block|{
 name|u_int8_t
 name|pim_typever
 decl_stmt|;
-comment|/* upper 4bit: the PIM message type, currently they are: 			 * Hello, Register, Register-Stop, Join/Prune, 			 * Bootstrap, Assert, Graft (PIM-DM only), 			 * Graft-Ack (PIM-DM only), C-RP-Adv 			 */
-comment|/* lower 4bit: PIM version number; 2 for PIMv2 */
+comment|/* upper 4bit: PIM version number; 2 for PIMv2 */
+comment|/* lower 4bit: the PIM message type, currently they are: 			 * Hello, Register, Register-Stop, Join/Prune, 			 * Bootstrap, Assert, Graft (PIM-DM only), 			 * Graft-Ack (PIM-DM only), C-RP-Adv 			 */
 define|#
 directive|define
-name|PIM_TYPE
+name|PIM_VER
 parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0xf0)>> 4)
 define|#
 directive|define
-name|PIM_VER
+name|PIM_TYPE
 parameter_list|(
 name|x
 parameter_list|)
@@ -1894,7 +1894,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"v2"
+literal|"pim v2"
 argument_list|)
 expr_stmt|;
 name|pimv2_print
@@ -1911,7 +1911,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"v%d"
+literal|"pim v%d"
 argument_list|,
 name|PIM_VER
 argument_list|(
@@ -2541,6 +2541,20 @@ operator|>=
 name|ep
 condition|)
 return|return;
+if|if
+condition|(
+name|ep
+operator|>
+name|bp
+operator|+
+name|len
+condition|)
+name|ep
+operator|=
+name|bp
+operator|+
+name|len
+expr_stmt|;
 name|TCHECK
 argument_list|(
 name|pim
