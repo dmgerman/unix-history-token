@@ -2630,7 +2630,7 @@ operator|&&
 operator|(
 name|tp
 operator|->
-name|t_iflag
+name|t_lflag
 operator|&
 name|ICANON
 operator|)
@@ -3155,7 +3155,7 @@ operator|!
 operator|(
 name|tp
 operator|->
-name|t_iflag
+name|t_lflag
 operator|&
 name|ICANON
 operator|)
