@@ -227,6 +227,17 @@ comment|/* dofork should just die if fork() fails */
 end_comment
 
 begin_comment
+comment|/*  * The buffer size to use when reading/writing spool files.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPL_BUFSIZ
+value|BUFSIZ
+end_define
+
+begin_comment
 comment|/*  * Error tokens  */
 end_comment
 
@@ -3170,7 +3181,7 @@ index|]
 decl_stmt|,
 name|buf
 index|[
-name|BUFSIZ
+name|SPL_BUFSIZ
 index|]
 decl_stmt|;
 name|pid_t
@@ -3376,7 +3387,7 @@ name|fi
 argument_list|,
 name|buf
 argument_list|,
-name|BUFSIZ
+name|SPL_BUFSIZ
 argument_list|)
 operator|)
 operator|>
@@ -4767,7 +4778,10 @@ name|cp
 decl_stmt|,
 name|last
 index|[
-name|BUFSIZ
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 index|]
 decl_stmt|;
 comment|/* 	 * open control file 	 */
@@ -5328,7 +5342,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-name|BUFSIZ
+name|SPL_BUFSIZ
 index|]
 decl_stmt|,
 name|opt_c
@@ -6086,12 +6100,12 @@ name|st_size
 condition|;
 name|i
 operator|+=
-name|BUFSIZ
+name|SPL_BUFSIZ
 control|)
 block|{
 name|amt
 operator|=
-name|BUFSIZ
+name|SPL_BUFSIZ
 expr_stmt|;
 if|if
 condition|(

@@ -188,6 +188,17 @@ parameter_list|()
 value|(void) write(STDOUT_FILENO, sp, (size_t)1);
 end_define
 
+begin_comment
+comment|/*  * The buffer size to use when reading/writing spool files.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPL_BUFSIZ
+value|BUFSIZ
+end_define
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -1215,7 +1226,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-name|BUFSIZ
+name|SPL_BUFSIZ
 index|]
 decl_stmt|;
 name|size_t
@@ -1289,12 +1300,12 @@ name|size
 condition|;
 name|i
 operator|+=
-name|BUFSIZ
+name|SPL_BUFSIZ
 control|)
 block|{
 name|amt
 operator|=
-name|BUFSIZ
+name|SPL_BUFSIZ
 expr_stmt|;
 name|cp
 operator|=
@@ -1363,7 +1374,7 @@ condition|)
 do|;
 name|amt
 operator|=
-name|BUFSIZ
+name|SPL_BUFSIZ
 expr_stmt|;
 if|if
 condition|(
