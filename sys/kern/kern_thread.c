@@ -7088,14 +7088,6 @@ operator|>
 name|max_threads_per_proc
 condition|)
 block|{
-if|if
-condition|(
-name|P_SHOULDSTOP
-argument_list|(
-name|p
-argument_list|)
-condition|)
-break|break;
 name|upcalls
 operator|=
 literal|0
@@ -7144,6 +7136,8 @@ operator|->
 name|p_maxthrwaits
 operator|++
 expr_stmt|;
+if|if
+condition|(
 name|msleep
 argument_list|(
 operator|&
@@ -7164,7 +7158,8 @@ literal|"maxthreads"
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
+condition|)
+break|break;
 name|p
 operator|->
 name|p_maxthrwaits
