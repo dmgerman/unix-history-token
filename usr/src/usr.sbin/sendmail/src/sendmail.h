@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.134 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.135 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.134		%G%"
+literal|"@(#)sendmail.h	8.135		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5706,6 +5706,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* path to /etc/hosts file */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|MaxQueueRun
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* maximum number of jobs in one queue run */
 end_comment
 
 begin_decl_stmt

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.82 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.83 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.82 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.83 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4186,9 +4186,13 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
+name|MaxQueueRun
+operator|>
+literal|0
+operator|&&
 name|WorkListSize
 operator|>=
-name|MAXQUEUESIZE
+name|MaxQueueRun
 condition|)
 block|{
 ifdef|#

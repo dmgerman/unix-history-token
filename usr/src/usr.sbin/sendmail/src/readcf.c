@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.93 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.94 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5483,6 +5483,16 @@ name|O_COLONOKINADDR
 block|,
 name|TRUE
 block|,
+define|#
+directive|define
+name|O_MAXQUEUERUN
+value|0x8c
+literal|"MaxQueueRunSize"
+block|,
+name|O_MAXQUEUERUN
+block|,
+name|TRUE
+block|,
 name|NULL
 block|,
 literal|'\0'
@@ -7850,6 +7860,18 @@ comment|/* old style handling of colon addresses */
 name|ColonOkInAddr
 operator|=
 name|atobool
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|O_MAXQUEUERUN
+case|:
+comment|/* max # of jobs in a single queue run */
+name|MaxQueueRun
+operator|=
+name|atol
 argument_list|(
 name|p
 argument_list|)
