@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.10 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.11 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.10 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.11 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2002,6 +2002,48 @@ argument_list|(
 name|ev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|mci
+operator|->
+name|mci_out
+argument_list|)
+condition|)
+block|{
+comment|/* error during processing -- don't send the dot */
+name|mci
+operator|->
+name|mci_errno
+operator|=
+name|EIO
+expr_stmt|;
+name|mci
+operator|->
+name|mci_exitstat
+operator|=
+name|EX_IOERR
+expr_stmt|;
+name|mci
+operator|->
+name|mci_state
+operator|=
+name|MCIS_ERROR
+expr_stmt|;
+name|smtpquit
+argument_list|(
+name|m
+argument_list|,
+name|mci
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+return|return
+name|EX_IOERR
+return|;
+block|}
 comment|/* terminate the message */
 name|fprintf
 argument_list|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.12 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,7 +70,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  READCF -- read control file. ** **	This routine reads the control file and builds the internal **	form. ** **	The file is formatted as a sequence of lines, each taken **	atomically.  The first character of each line describes how **	the line is to be interpreted.  The lines are: **		Dxval		Define macro x to have value val. **		Cxword		Put word into class x. **		Fxfile [fmt]	Read file for lines to put into **				class x.  Use scanf string 'fmt' **				or "%s" if not present.  Fmt should **				only produce one string-valued result. **		Hname: value	Define header with field-name 'name' **				and value as specified; this will be **				macro expanded immediately before **				use. **		Sn		Use rewriting set n. **		Rlhs rhs	Rewrite addresses that match lhs to **				be rhs. **		Mn arg=val...	Define mailer.  n is the internal name. **				Args specify mailer parameters. **		Oxvalue		Set option x to value. **		Pname=value	Set precedence name to value. **		Vversioncode	Version level of configuration syntax. **		Kmapname mapclass arguments.... **				Define keyed lookup of a given class. **				Arguments are class dependent. ** **	Parameters: **		cfname -- control file name. **		safe -- TRUE if this is the system config file; **			FALSE otherwise. **		e -- the main envelope. ** **	Returns: **		none. ** **	Side Effects: **		Builds several internal tables. */
+comment|/* **  READCF -- read control file. ** **	This routine reads the control file and builds the internal **	form. ** **	The file is formatted as a sequence of lines, each taken **	atomically.  The first character of each line describes how **	the line is to be interpreted.  The lines are: **		Dxval		Define macro x to have value val. **		Cxword		Put word into class x. **		Fxfile [fmt]	Read file for lines to put into **				class x.  Use scanf string 'fmt' **				or "%s" if not present.  Fmt should **				only produce one string-valued result. **		Hname: value	Define header with field-name 'name' **				and value as specified; this will be **				macro expanded immediately before **				use. **		Sn		Use rewriting set n. **		Rlhs rhs	Rewrite addresses that match lhs to **				be rhs. **		Mn arg=val...	Define mailer.  n is the internal name. **				Args specify mailer parameters. **		Oxvalue		Set option x to value. **		Pname=value	Set precedence name to value. **		Vversioncode[/vendorcode] **				Version level/vendor name of **				configuration syntax. **		Kmapname mapclass arguments.... **				Define keyed lookup of a given class. **				Arguments are class dependent. ** **	Parameters: **		cfname -- control file name. **		safe -- TRUE if this is the system config file; **			FALSE otherwise. **		e -- the main envelope. ** **	Returns: **		none. ** **	Side Effects: **		Builds several internal tables. */
 end_comment
 
 begin_macro
@@ -126,6 +126,11 @@ decl_stmt|;
 name|char
 modifier|*
 name|bp
+decl_stmt|;
+specifier|auto
+name|char
+modifier|*
+name|ep
 decl_stmt|;
 name|int
 name|nfuzzy
@@ -553,6 +558,10 @@ name|MACROEXPAND
 expr_stmt|;
 block|}
 comment|/* interpret this line */
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|bp
@@ -1830,9 +1839,14 @@ break|break;
 block|}
 name|ConfigLevel
 operator|=
-name|atoi
+name|strtol
 argument_list|(
 name|p
+argument_list|,
+operator|&
+name|ep
+argument_list|,
+literal|10
 argument_list|)
 expr_stmt|;
 if|if
@@ -1875,6 +1889,59 @@ operator|*
 name|p
 operator|=
 literal|'\0'
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|*
+name|ep
+operator|++
+operator|==
+literal|'/'
+condition|)
+block|{
+comment|/* extract vendor code */
+for|for
+control|(
+name|p
+operator|=
+name|ep
+init|;
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
+name|isalpha
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|;
+control|)
+name|p
+operator|++
+expr_stmt|;
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|setvendor
+argument_list|(
+name|ep
+argument_list|)
+condition|)
+name|syserr
+argument_list|(
+literal|"invalid V line vendor code: \"%s\""
+argument_list|,
+name|ep
+argument_list|)
 expr_stmt|;
 block|}
 break|break;
@@ -3735,6 +3802,10 @@ name|RefuseLA
 decl_stmt|;
 specifier|extern
 name|bool
+name|Warn_Q_option
+decl_stmt|;
+specifier|extern
+name|bool
 name|trusteduser
 parameter_list|()
 function_decl|;
@@ -4867,14 +4938,9 @@ operator|&&
 operator|!
 name|safe
 condition|)
-name|auth_warning
-argument_list|(
-name|e
-argument_list|,
-literal|"Processed from queue %s"
-argument_list|,
-name|QueueDir
-argument_list|)
+name|Warn_Q_option
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 case|case

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.13 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2232,6 +2232,91 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	**  Output introductory information. 	*/
+for|for
+control|(
+name|q
+operator|=
+name|e
+operator|->
+name|e_parent
+operator|->
+name|e_sendqueue
+init|;
+name|q
+operator|!=
+name|NULL
+condition|;
+name|q
+operator|=
+name|q
+operator|->
+name|q_next
+control|)
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|QBADADDR
+argument_list|,
+name|q
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+break|break;
+if|if
+condition|(
+name|q
+operator|==
+name|NULL
+condition|)
+block|{
+name|putline
+argument_list|(
+literal|"    **********************************************"
+argument_list|,
+name|fp
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+literal|"    **      THIS IS A WARNING MESSAGE ONLY      **"
+argument_list|,
+name|fp
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+literal|"    **  YOU DO NOT NEED TO RESEND YOUR MESSAGE  **"
+argument_list|,
+name|fp
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+literal|"    **********************************************"
+argument_list|,
+name|fp
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+literal|""
+argument_list|,
+name|fp
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+block|}
 name|sprintf
 argument_list|(
 name|buf
@@ -2240,7 +2325,15 @@ literal|"The original message was received at %s"
 argument_list|,
 name|arpadate
 argument_list|(
-name|NULL
+name|ctime
+argument_list|(
+operator|&
+name|e
+operator|->
+name|e_parent
+operator|->
+name|e_ctime
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;

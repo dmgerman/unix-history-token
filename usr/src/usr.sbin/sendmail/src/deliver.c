@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.30 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2126,6 +2126,11 @@ modifier|*
 name|fdopen
 parameter_list|()
 function_decl|;
+specifier|extern
+name|char
+name|SmtpError
+index|[]
+decl_stmt|;
 name|errno
 operator|=
 literal|0
@@ -2203,6 +2208,13 @@ operator|->
 name|e_statmsg
 operator|=
 name|NULL
+expr_stmt|;
+name|SmtpError
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -2613,7 +2625,7 @@ comment|/* SMTP */
 comment|/* oops!  we don't implement SMTP */
 name|syserr
 argument_list|(
-literal|"554 SMTP style mailer"
+literal|"554 SMTP style mailer not implemented"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3352,6 +3364,10 @@ name|SmtpPhase
 operator|=
 name|NULL
 expr_stmt|;
+name|mci
+operator|=
+name|NULL
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|XDEBUG
@@ -3554,7 +3570,7 @@ argument_list|)
 expr_stmt|;
 name|rcode
 operator|=
-name|EX_OSERR
+name|EX_CONFIG
 expr_stmt|;
 goto|goto
 name|give_up
@@ -3586,10 +3602,6 @@ literal|0
 expr_stmt|;
 name|tryhost
 label|:
-name|mci
-operator|=
-name|NULL
-expr_stmt|;
 while|while
 condition|(
 operator|*
@@ -3610,10 +3622,6 @@ index|[
 name|MAXNAME
 index|]
 decl_stmt|;
-name|mci
-operator|=
-name|NULL
-expr_stmt|;
 comment|/* pull the next host from the signature */
 name|p
 operator|=
@@ -3641,6 +3649,20 @@ name|curhost
 argument_list|)
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|curhost
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"deliver: null host name in signature"
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|strncpy
 argument_list|(
 name|hostbuf
@@ -3873,6 +3895,27 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
+comment|/* should print some message here for -v mode */
+block|}
+if|if
+condition|(
+name|mci
+operator|==
+name|NULL
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"deliver: no host name"
+argument_list|)
+expr_stmt|;
+name|rcode
+operator|=
+name|EX_OSERR
+expr_stmt|;
+goto|goto
+name|give_up
+goto|;
 block|}
 name|mci
 operator|->
@@ -3902,9 +3945,13 @@ argument_list|(
 literal|"openmailer: NULL\n"
 argument_list|)
 expr_stmt|;
-return|return
-name|NULL
-return|;
+name|rcode
+operator|=
+name|EX_UNAVAILABLE
+expr_stmt|;
+goto|goto
+name|give_up
+goto|;
 endif|#
 directive|endif
 comment|/* DAEMON */
@@ -5512,6 +5559,10 @@ directive|endif
 comment|/* arrange a return receipt if requested */
 if|if
 condition|(
+name|rcode
+operator|==
+name|EX_OK
+operator|&&
 name|e
 operator|->
 name|e_receiptto
@@ -5604,6 +5655,38 @@ operator|->
 name|e_nsent
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|e
+operator|->
+name|e_receiptto
+operator|!=
+name|NULL
+operator|&&
+name|bitnset
+argument_list|(
+name|M_LOCALMAILER
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|e
+operator|->
+name|e_xfp
+argument_list|,
+literal|"%s... Successfully delivered\n"
+argument_list|,
+name|to
+operator|->
+name|q_paddr
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* 	**  Restore state and return. 	*/
@@ -6405,6 +6488,12 @@ name|stat
 operator|==
 name|EX_TEMPFAIL
 condition|)
+block|{
+specifier|extern
+name|char
+name|MsgBuf
+index|[]
+decl_stmt|;
 name|message
 argument_list|(
 operator|&
@@ -6419,6 +6508,34 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|stat
+operator|==
+name|EX_TEMPFAIL
+operator|&&
+name|e
+operator|->
+name|e_xfp
+operator|!=
+name|NULL
+condition|)
+name|fprintf
+argument_list|(
+name|e
+operator|->
+name|e_xfp
+argument_list|,
+literal|"%s\n"
+argument_list|,
+operator|&
+name|MsgBuf
+index|[
+literal|4
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 name|Errors
@@ -7296,7 +7413,11 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"putbody: read error"
+literal|"putbody: %s: read error"
+argument_list|,
+name|e
+operator|->
+name|e_df
 argument_list|)
 expr_stmt|;
 name|ExitStat

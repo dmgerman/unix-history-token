@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.37 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.38 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -774,6 +774,132 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* ** DG/UX 5.4.2 */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DGUX
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SYSTEM5
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_SUBR
+end_define
+
+begin_define
+define|#
+directive|define
+name|HASSTATFS
+value|1
+end_define
+
+begin_comment
+comment|/* has the statfs(2) syscall */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETREUID
+value|1
+end_define
+
+begin_comment
+comment|/* has setreuid(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASUNAME
+value|1
+end_define
+
+begin_comment
+comment|/* use System V uname(2) system call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETSID
+value|1
+end_define
+
+begin_comment
+comment|/* has Posix setsid(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASINITGROUPS
+value|1
+end_define
+
+begin_comment
+comment|/* has initgroups(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETVBUF
+value|1
+end_define
+
+begin_comment
+comment|/* we have setvbuf(3) in libc */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|IDENTPROTO
+end_undef
+
+begin_comment
+comment|/* TCP/IP implementation is broken */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SETPROCTITLE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|inet_addr
+value|dgux_inet_addr
+end_define
+
+begin_function_decl
+specifier|extern
+name|long
+name|dgux_inet_addr
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* **  Digital Ultrix 4.2A or 4.3 ** **	Apparently, fcntl locking is broken on 4.2A, in that locks are **	not dropped when the process exits.  This causes major problems, **	so flock is the only alternative. */
 end_comment
 
@@ -1334,7 +1460,7 @@ begin_define
 define|#
 directive|define
 name|LA_TYPE
-value|LA_ZERO
+value|LA_SHORT
 end_define
 
 begin_endif
@@ -1698,6 +1824,16 @@ end_define
 
 begin_comment
 comment|/* sigfunc_t already defined */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|IDENTPROTO
+end_undef
+
+begin_comment
+comment|/* TCP/IP implementation is broken */
 end_comment
 
 begin_define
@@ -2138,7 +2274,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* has setsid(2) call */
+comment|/* has Posix setsid(2) call */
 end_comment
 
 begin_define
@@ -2149,7 +2285,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* has waitpid(2) call */
+comment|/* has Posix waitpid(2) call */
 end_comment
 
 begin_endif
@@ -2269,6 +2405,21 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* pseudo-code used in server SMTP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EX_QUIT
+value|22
+end_define
+
+begin_comment
+comment|/* drop out of server immediately */
+end_comment
 
 begin_comment
 comment|/* **  These are used in a few cases where we need some special **  error codes, but where the system doesn't provide something **  reasonable.  They are printed in errstring. */

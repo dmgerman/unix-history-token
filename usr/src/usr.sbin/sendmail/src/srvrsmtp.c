@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.16 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.17 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.16 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.17 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -397,18 +397,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|bool
-name|InChild
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* true if running in a subprocess */
-end_comment
-
-begin_decl_stmt
-name|bool
 name|OneXact
 init|=
 name|FALSE
@@ -417,17 +405,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* one xaction only this run */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EX_QUIT
-value|22
-end_define
-
-begin_comment
-comment|/* special code for QUIT command */
 end_comment
 
 begin_function_decl
@@ -1824,7 +1801,20 @@ condition|)
 block|{
 name|message
 argument_list|(
-literal|"250 Recipient ok"
+literal|"250 Recipient ok%s"
+argument_list|,
+name|bitset
+argument_list|(
+name|QQUEUEUP
+argument_list|,
+name|a
+operator|->
+name|q_flags
+argument_list|)
+condition|?
+literal|" (will queue)"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 name|nrcpts
@@ -1871,9 +1861,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|e
-operator|->
-name|e_nrcpts
+name|nrcpts
 operator|<=
 literal|0
 condition|)

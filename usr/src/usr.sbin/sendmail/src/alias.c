@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.16 (Berkeley) %G%"
+literal|"@(#)alias.c	8.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -938,33 +938,30 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  ALIASWAIT -- wait for distinguished @:@ token to appear. ** **	This can decide to reopen or rebuild the alias file */
+comment|/* **  ALIASWAIT -- wait for distinguished @:@ token to appear. ** **	This can decide to reopen or rebuild the alias file ** **	Parameters: **		map -- a pointer to the map descriptor for this alias file. **		ext -- the filename extension (e.g., ".db") for the **			database file. **		isopen -- if set, the database is already open, and we **			should check for validity; otherwise, we are **			just checking to see if it should be created. ** **	Returns: **		TRUE -- if the database is open when we return. **		FALSE -- if the database is closed when we return. */
 end_comment
 
-begin_macro
+begin_function
+name|bool
 name|aliaswait
-argument_list|(
-argument|map
-argument_list|,
-argument|ext
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|map
+parameter_list|,
+name|ext
+parameter_list|,
+name|isopen
+parameter_list|)
 name|MAP
 modifier|*
 name|map
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|ext
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|isopen
+decl_stmt|;
 block|{
 name|int
 name|atcnt
@@ -1043,6 +1040,8 @@ name|st
 decl_stmt|;
 while|while
 condition|(
+name|isopen
+operator|&&
 name|atcnt
 operator|--
 operator|>=
@@ -1096,6 +1095,8 @@ argument_list|(
 literal|30
 argument_list|)
 expr_stmt|;
+name|isopen
+operator|=
 name|map
 operator|->
 name|map_class
@@ -1146,7 +1147,9 @@ operator|&=
 operator|~
 name|MF_ALIASWAIT
 expr_stmt|;
-return|return;
+return|return
+name|isopen
+return|;
 block|}
 if|if
 condition|(
@@ -1184,7 +1187,9 @@ operator|&=
 operator|~
 name|MF_ALIASWAIT
 expr_stmt|;
-return|return;
+return|return
+name|isopen
+return|;
 block|}
 name|mtime
 operator|=
@@ -1269,11 +1274,37 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|isopen
+condition|)
+name|map
+operator|->
+name|map_class
+operator|->
+name|map_close
+argument_list|(
+name|map
+argument_list|)
+expr_stmt|;
 name|rebuildaliases
 argument_list|(
 name|map
 argument_list|,
 name|TRUE
+argument_list|)
+expr_stmt|;
+name|isopen
+operator|=
+name|map
+operator|->
+name|map_class
+operator|->
+name|map_open
+argument_list|(
+name|map
+argument_list|,
+name|O_RDONLY
 argument_list|)
 expr_stmt|;
 block|}
@@ -1316,8 +1347,11 @@ operator|&=
 operator|~
 name|MF_ALIASWAIT
 expr_stmt|;
+return|return
+name|isopen
+return|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape

@@ -4285,6 +4285,17 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
+name|bool
+name|InChild
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* true if running in an SMTP subprocess */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
 name|char
 name|SpaceSub
 decl_stmt|;

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.29 (Berkeley) %G%"
+literal|"@(#)main.c	8.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -223,6 +223,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* command line args for pid file */
+end_comment
+
+begin_decl_stmt
+name|bool
+name|Warn_Q_option
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* warn about Q option use */
 end_comment
 
 begin_comment
@@ -410,6 +422,16 @@ name|bool
 name|safecf
 init|=
 name|TRUE
+decl_stmt|;
+name|bool
+name|warn_C_flag
+init|=
+name|FALSE
+decl_stmt|;
+name|char
+name|warn_f_flag
+init|=
+literal|'\0'
 decl_stmt|;
 specifier|static
 name|bool
@@ -2167,16 +2189,9 @@ name|RealUid
 operator|!=
 literal|0
 condition|)
-name|auth_warning
-argument_list|(
-name|CurEnv
-argument_list|,
-literal|"Processed by %s with -C %s"
-argument_list|,
-name|RealUserName
-argument_list|,
-name|optarg
-argument_list|)
+name|warn_C_flag
+operator|=
+name|TRUE
 expr_stmt|;
 name|ConfFile
 operator|=
@@ -2252,18 +2267,9 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|auth_warning
-argument_list|(
-name|CurEnv
-argument_list|,
-literal|"%s set sender to %s using -%c"
-argument_list|,
-name|RealUserName
-argument_list|,
-name|from
-argument_list|,
+name|warn_f_flag
+operator|=
 name|j
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2820,6 +2826,66 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+end_if
+
+begin_comment
+comment|/* 	**  Process authorization warnings from command line. 	*/
+end_comment
+
+begin_if
+if|if
+condition|(
+name|warn_C_flag
+condition|)
+name|auth_warning
+argument_list|(
+name|CurEnv
+argument_list|,
+literal|"Processed by %s with -C %s"
+argument_list|,
+name|RealUserName
+argument_list|,
+name|ConfFile
+argument_list|)
+expr_stmt|;
+end_if
+
+begin_if
+if|if
+condition|(
+name|warn_f_flag
+operator|!=
+literal|'\0'
+condition|)
+name|auth_warning
+argument_list|(
+name|CurEnv
+argument_list|,
+literal|"%s set sender to %s using -%c"
+argument_list|,
+name|RealUserName
+argument_list|,
+name|from
+argument_list|,
+name|warn_f_flag
+argument_list|)
+expr_stmt|;
+end_if
+
+begin_if
+if|if
+condition|(
+name|Warn_Q_option
+condition|)
+name|auth_warning
+argument_list|(
+name|CurEnv
+argument_list|,
+literal|"Processed from queue %s"
+argument_list|,
+name|QueueDir
+argument_list|)
+expr_stmt|;
 end_if
 
 begin_comment

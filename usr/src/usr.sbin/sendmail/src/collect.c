@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.4 (Berkeley) %G%"
+literal|"@(#)collect.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -92,6 +92,11 @@ name|workbuf
 decl_stmt|,
 modifier|*
 name|freebuf
+decl_stmt|;
+name|bool
+name|inputerr
+init|=
+name|FALSE
 decl_stmt|;
 specifier|extern
 name|char
@@ -695,7 +700,11 @@ name|buf2
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Collect the body of the message. 	*/
-do|do
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 specifier|register
 name|char
@@ -805,8 +814,7 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-block|}
-do|while
+if|if
 condition|(
 name|sfgets
 argument_list|(
@@ -822,12 +830,33 @@ name|to_datablock
 argument_list|,
 literal|"message body read"
 argument_list|)
-operator|!=
+operator|==
 name|NULL
 condition|)
-do|;
+goto|goto
+name|readerr
+goto|;
+block|}
+if|if
+condition|(
+name|feof
+argument_list|(
+name|InChannel
+argument_list|)
+operator|||
+name|ferror
+argument_list|(
+name|InChannel
+argument_list|)
+condition|)
+block|{
 name|readerr
 label|:
+name|inputerr
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|fflush
@@ -866,17 +895,7 @@ expr_stmt|;
 comment|/* An EOF when running SMTP is an error */
 if|if
 condition|(
-operator|(
-name|feof
-argument_list|(
-name|InChannel
-argument_list|)
-operator|||
-name|ferror
-argument_list|(
-name|InChannel
-argument_list|)
-operator|)
+name|inputerr
 operator|&&
 name|OpMode
 operator|==
@@ -886,6 +905,10 @@ block|{
 name|char
 modifier|*
 name|host
+decl_stmt|;
+name|char
+modifier|*
+name|problem
 decl_stmt|;
 name|host
 operator|=
@@ -900,6 +923,34 @@ condition|)
 name|host
 operator|=
 literal|"localhost"
+expr_stmt|;
+if|if
+condition|(
+name|feof
+argument_list|(
+name|InChannel
+argument_list|)
+condition|)
+name|problem
+operator|=
+literal|"unexpected close"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|InChannel
+argument_list|)
+condition|)
+name|problem
+operator|=
+literal|"I/O error"
+expr_stmt|;
+else|else
+name|problem
+operator|=
+literal|"read timeout"
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -919,7 +970,9 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"collect: unexpected close on connection from %s, sender=%s: %m\n"
+literal|"collect: %s on connection from %s, sender=%s: %m\n"
+argument_list|,
+name|problem
 argument_list|,
 name|host
 argument_list|,
@@ -943,7 +996,9 @@ else|:
 name|syserr
 operator|)
 operator|(
-literal|"451 collect: unexpected close on connection from %s, from=%s"
+literal|"451 collect: %s on connection from %s, from=%s"
+operator|,
+name|problem
 operator|,
 name|host
 operator|,
@@ -975,6 +1030,14 @@ operator||=
 name|EF_CLRQUEUE
 expr_stmt|;
 comment|/* and don't try to deliver the partial message either */
+if|if
+condition|(
+name|InChild
+condition|)
+name|ExitStat
+operator|=
+name|EX_QUIT
+expr_stmt|;
 name|finis
 argument_list|()
 expr_stmt|;
