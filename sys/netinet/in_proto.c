@@ -930,7 +930,7 @@ name|div_input
 block|,
 literal|0
 block|,
-literal|0
+name|div_ctlinput
 block|,
 name|ip_ctloutput
 block|,

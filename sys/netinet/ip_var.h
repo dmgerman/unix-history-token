@@ -999,6 +999,22 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|div_ctlinput
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|divert_packet
 parameter_list|(
 name|struct
