@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994, 1995, 1996, 1997, 1998, 1999, 2000 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/src/aic7xxx/aic7xxx.h#6 $  *  * $FreeBSD$  */
+comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994, 1995, 1996, 1997, 1998, 1999, 2000 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/src/aic7xxx/aic7xxx.h#14 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -317,6 +317,30 @@ define|\
 value|((lun) | (((scsiid)& TID)<< 4))
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AHC_TARGET_MODE
+end_ifndef
+
+begin_undef
+undef|#
+directive|undef
+name|AHC_TMODE_ENABLE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|AHC_TMODE_ENABLE
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/**************************** Driver Constants ********************************/
 end_comment
@@ -333,14 +357,14 @@ value|16
 end_define
 
 begin_comment
-comment|/*  * The maximum number of supported luns.  * Although the identify message only supports 64 luns in SPI3, you  * can have 2^64 luns when information unit transfers are enabled.  * The max we can do sanely given the 8bit nature of the RISC engine  * on these chips is 256.  */
+comment|/*  * The maximum number of supported luns.  * The identify message only supports 64 luns in SPI3.  * You can have 2^64 luns when information unit transfers are enabled,  * but it is doubtful this driver will ever support IUTs.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|AHC_NUM_LUNS
-value|256
+value|64
 end_define
 
 begin_comment
@@ -845,6 +869,10 @@ comment|/* 					   * The busy targets table is 					   * stored in SCB space rat
 name|AHC_BIOS_ENABLED
 init|=
 literal|0x80000
+block|,
+name|AHC_ALL_INTERRUPTS
+init|=
+literal|0x100000
 block|}
 name|ahc_flag
 typedef|;
@@ -1579,15 +1607,14 @@ name|tmode_lstate
 modifier|*
 name|enabled_luns
 index|[
-literal|64
+name|AHC_NUM_LUNS
 index|]
 decl_stmt|;
-comment|/* NULL == disabled */
 name|struct
 name|ahc_initiator_tinfo
 name|transinfo
 index|[
-literal|16
+name|AHC_NUM_TARGETS
 index|]
 decl_stmt|;
 comment|/* 	 * Per initiator state bitmasks. 	 */
@@ -2125,6 +2152,78 @@ end_expr_stmt
 
 begin_struct
 struct|struct
+name|ahc_suspend_channel_state
+block|{
+name|uint8_t
+name|scsiseq
+decl_stmt|;
+name|uint8_t
+name|sxfrctl0
+decl_stmt|;
+name|uint8_t
+name|sxfrctl1
+decl_stmt|;
+name|uint8_t
+name|simode0
+decl_stmt|;
+name|uint8_t
+name|simode1
+decl_stmt|;
+name|uint8_t
+name|seltimer
+decl_stmt|;
+name|uint8_t
+name|seqctl
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ahc_suspend_state
+block|{
+name|struct
+name|ahc_suspend_channel_state
+name|channel
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|uint8_t
+name|optionmode
+decl_stmt|;
+name|uint8_t
+name|dscommand0
+decl_stmt|;
+name|uint8_t
+name|dspcistatus
+decl_stmt|;
+comment|/* hsmailbox */
+name|uint8_t
+name|crccontrol1
+decl_stmt|;
+name|uint8_t
+name|scbbaddr
+decl_stmt|;
+comment|/* Host and sequencer SCB counts */
+name|uint8_t
+name|dff_thrsh
+decl_stmt|;
+name|uint8_t
+modifier|*
+name|scratch_ram
+decl_stmt|;
+name|uint8_t
+modifier|*
+name|btt
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|ahc_softc
 block|{
 name|bus_space_tag_t
@@ -2169,7 +2268,7 @@ name|struct
 name|scb_tailq
 name|untagged_queues
 index|[
-literal|16
+name|AHC_NUM_TARGETS
 index|]
 decl_stmt|;
 comment|/* 	 * Platform specific data. 	 */
@@ -2188,7 +2287,7 @@ name|tmode_tstate
 modifier|*
 name|enabled_targets
 index|[
-literal|16
+name|AHC_NUM_TARGETS
 index|]
 decl_stmt|;
 comment|/* 	 * The black hole device responsible for handling requests for 	 * disabled luns on enabled targets. 	 */
@@ -2335,6 +2434,11 @@ comment|/* 	 * Bus address of the one byte buffer used to 	 * work-around a DMA 
 name|bus_addr_t
 name|dma_bug_buf
 decl_stmt|;
+comment|/* Information saved through suspend/resume cycles */
+name|struct
+name|ahc_suspend_state
+name|suspend_state
+decl_stmt|;
 comment|/* Number of enabled target mode device on this card */
 name|u_int
 name|enabled_luns
@@ -2359,6 +2463,13 @@ name|name
 decl_stmt|;
 name|int
 name|unit
+decl_stmt|;
+comment|/* Selection Timer settings */
+name|int
+name|seltime
+decl_stmt|;
+name|int
+name|seltime_b
 decl_stmt|;
 name|uint16_t
 name|user_discenable
@@ -2492,7 +2603,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 specifier|const
-name|int
+name|u_int
 name|ahc_num_pci_devs
 decl_stmt|;
 end_decl_stmt
@@ -2561,6 +2672,54 @@ end_comment
 begin_comment
 comment|/******************************************************************************/
 end_comment
+
+begin_function_decl
+name|u_int
+name|ahc_index_busy_tcl
+parameter_list|(
+name|struct
+name|ahc_softc
+modifier|*
+name|ahc
+parameter_list|,
+name|u_int
+name|tcl
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ahc_unbusy_tcl
+parameter_list|(
+name|struct
+name|ahc_softc
+modifier|*
+name|ahc
+parameter_list|,
+name|u_int
+name|tcl
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ahc_busy_tcl
+parameter_list|(
+name|struct
+name|ahc_softc
+modifier|*
+name|ahc
+parameter_list|,
+name|u_int
+name|tcl
+parameter_list|,
+name|u_int
+name|busyid
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/***************************** PCI Front End *********************************/
@@ -2782,6 +2941,42 @@ end_function_decl
 begin_function_decl
 name|int
 name|ahc_init
+parameter_list|(
+name|struct
+name|ahc_softc
+modifier|*
+name|ahc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ahc_pause_and_flushwork
+parameter_list|(
+name|struct
+name|ahc_softc
+modifier|*
+name|ahc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ahc_suspend
+parameter_list|(
+name|struct
+name|ahc_softc
+modifier|*
+name|ahc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ahc_resume
 parameter_list|(
 name|struct
 name|ahc_softc
@@ -3257,6 +3452,34 @@ name|bus_width
 parameter_list|,
 name|role_t
 name|role
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ahc_update_target_msg_request
+parameter_list|(
+name|struct
+name|ahc_softc
+modifier|*
+name|ahc
+parameter_list|,
+name|struct
+name|ahc_devinfo
+modifier|*
+name|dinfo
+parameter_list|,
+name|struct
+name|ahc_initiator_tinfo
+modifier|*
+name|tinfo
+parameter_list|,
+name|int
+name|force
+parameter_list|,
+name|int
+name|paused
 parameter_list|)
 function_decl|;
 end_function_decl

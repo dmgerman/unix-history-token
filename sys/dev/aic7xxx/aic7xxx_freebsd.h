@@ -38,16 +38,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stddef.h>
-end_include
-
-begin_comment
-comment|/* For offsetof */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -66,6 +56,12 @@ end_include
 begin_comment
 comment|/* For device_t */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/eventhandler.h>
+end_include
 
 begin_include
 include|#
@@ -304,6 +300,29 @@ parameter_list|)
 define|\
 value|(SCB_GET_CHANNEL(ahc, scb) == 'A' ? (ahc)->platform_data->sim \ 					  : (ahc)->platform_data->sim_b)
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|offsetof
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|offsetof
+parameter_list|(
+name|type
+parameter_list|,
+name|member
+parameter_list|)
+value|((size_t)(&((type *)0)->member))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/************************* Forward Declarations *******************************/
@@ -584,6 +603,9 @@ name|void
 modifier|*
 name|ih
 decl_stmt|;
+name|eventhandler_tag
+name|eh
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -594,6 +616,134 @@ name|scb_platform_data
 block|{ }
 struct|;
 end_struct
+
+begin_comment
+comment|/********************************* Byte Order *********************************/
+end_comment
+
+begin_comment
+comment|/*  * XXX Waiting for FreeBSD byte swapping functions.  * For now assume host is Little Endian.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ahc_htobe16
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_define
+define|#
+directive|define
+name|ahc_htobe32
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_define
+define|#
+directive|define
+name|ahc_htobe64
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_define
+define|#
+directive|define
+name|ahc_htole16
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_define
+define|#
+directive|define
+name|ahc_htole32
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_define
+define|#
+directive|define
+name|ahc_htole64
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_define
+define|#
+directive|define
+name|ahc_be16toh
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_define
+define|#
+directive|define
+name|ahc_be32toh
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_define
+define|#
+directive|define
+name|ahc_be64toh
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_define
+define|#
+directive|define
+name|ahc_le16toh
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_define
+define|#
+directive|define
+name|ahc_le32toh
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_define
+define|#
+directive|define
+name|ahc_le64toh
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
 
 begin_comment
 comment|/***************************** Core Includes **********************************/
@@ -2174,7 +2324,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/***************************** Initialization *********************************/
+comment|/************************* Initialization/Teardown ****************************/
 end_comment
 
 begin_function_decl
@@ -2232,6 +2382,57 @@ name|rahc
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|int
+name|ahc_detach
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/****************************** Interrupts ************************************/
+end_comment
+
+begin_function_decl
+name|void
+name|ahc_platform_intr
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|__inline
+name|void
+name|ahc_platform_flushwork
+parameter_list|(
+name|struct
+name|ahc_softc
+modifier|*
+name|ahc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ahc_platform_flushwork
+parameter_list|(
+name|struct
+name|ahc_softc
+modifier|*
+name|ahc
+parameter_list|)
+block|{ }
+end_function
 
 begin_comment
 comment|/************************ Misc Function Declarations **************************/
