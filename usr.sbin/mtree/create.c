@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: create.c,v 1.11 1998/08/02 14:41:34 bde Exp $"
+literal|"$Id: create.c,v 1.12 1999/01/12 02:58:23 jkoshy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -721,6 +721,8 @@ operator|->
 name|fts_name
 argument_list|,
 name|VIS_WHITE
+operator||
+name|VIS_OCTAL
 argument_list|)
 expr_stmt|;
 if|if
