@@ -512,6 +512,7 @@ modifier|*
 name|ptr
 decl_stmt|;
 block|}
+name|l
 union|;
 block|}
 struct|;
@@ -1968,6 +1969,8 @@ condition|)
 block|{
 name|uidlist
 operator|.
+name|l
+operator|.
 name|ptr
 operator|=
 name|malloc
@@ -1981,6 +1984,8 @@ expr_stmt|;
 if|if
 condition|(
 name|uidlist
+operator|.
+name|l
 operator|.
 name|ptr
 operator|==
@@ -2009,6 +2014,8 @@ literal|1
 expr_stmt|;
 operator|*
 name|uidlist
+operator|.
+name|l
 operator|.
 name|uids
 operator|=
@@ -2063,6 +2070,8 @@ operator|=
 operator|*
 name|pgrplist
 operator|.
+name|l
+operator|.
 name|pids
 expr_stmt|;
 name|nselectors
@@ -2090,6 +2099,8 @@ name|flag
 operator|=
 operator|*
 name|pidlist
+operator|.
+name|l
 operator|.
 name|pids
 expr_stmt|;
@@ -2119,6 +2130,8 @@ operator|=
 operator|*
 name|ruidlist
 operator|.
+name|l
+operator|.
 name|uids
 expr_stmt|;
 name|nselectors
@@ -2129,7 +2142,7 @@ if|#
 directive|if
 literal|0
 comment|/*- 		 * XXX - KERN_PROC_SESSION causes error in kvm_getprocs? 		 *	For now, always do sid-matching in this routine. 		 */
-block|} else if (sesslist.count == 1) { 			what = KERN_PROC_SESSION | showthreads; 			flag = *sesslist.pids; 			nselectors = 0;
+block|} else if (sesslist.count == 1) { 			what = KERN_PROC_SESSION | showthreads; 			flag = *sesslist.l.pids; 			nselectors = 0;
 endif|#
 directive|endif
 block|}
@@ -2153,6 +2166,8 @@ name|flag
 operator|=
 operator|*
 name|ttylist
+operator|.
+name|l
 operator|.
 name|ttys
 expr_stmt|;
@@ -2181,6 +2196,8 @@ name|flag
 operator|=
 operator|*
 name|uidlist
+operator|.
+name|l
 operator|.
 name|uids
 expr_stmt|;
@@ -2341,6 +2358,8 @@ name|ki_pid
 operator|==
 name|pidlist
 operator|.
+name|l
+operator|.
 name|pids
 index|[
 name|elem
@@ -2421,6 +2440,8 @@ name|ki_rgid
 operator|==
 name|gidlist
 operator|.
+name|l
+operator|.
 name|gids
 index|[
 name|elem
@@ -2461,6 +2482,8 @@ operator|->
 name|ki_pgid
 operator|==
 name|pgrplist
+operator|.
+name|l
 operator|.
 name|pids
 index|[
@@ -2503,6 +2526,8 @@ name|ki_ruid
 operator|==
 name|ruidlist
 operator|.
+name|l
+operator|.
 name|uids
 index|[
 name|elem
@@ -2543,6 +2568,8 @@ operator|->
 name|ki_sid
 operator|==
 name|sesslist
+operator|.
+name|l
 operator|.
 name|pids
 index|[
@@ -2585,6 +2612,8 @@ name|ki_tdev
 operator|==
 name|ttylist
 operator|.
+name|l
+operator|.
 name|ttys
 index|[
 name|elem
@@ -2625,6 +2654,8 @@ operator|->
 name|ki_uid
 operator|==
 name|uidlist
+operator|.
+name|l
 operator|.
 name|uids
 index|[
@@ -3065,6 +3096,8 @@ argument_list|)
 expr_stmt|;
 name|inf
 operator|->
+name|l
+operator|.
 name|gids
 index|[
 operator|(
@@ -3246,6 +3279,8 @@ argument_list|)
 expr_stmt|;
 name|inf
 operator|->
+name|l
+operator|.
 name|pids
 index|[
 operator|(
@@ -3442,6 +3477,8 @@ argument_list|)
 expr_stmt|;
 name|inf
 operator|->
+name|l
+operator|.
 name|ttys
 index|[
 operator|(
@@ -3670,6 +3707,8 @@ argument_list|)
 expr_stmt|;
 name|inf
 operator|->
+name|l
+operator|.
 name|uids
 index|[
 operator|(
@@ -4034,6 +4073,8 @@ name|realloc
 argument_list|(
 name|inf
 operator|->
+name|l
+operator|.
 name|ptr
 argument_list|,
 name|newmax
@@ -4054,6 +4095,8 @@ name|free
 argument_list|(
 name|inf
 operator|->
+name|l
+operator|.
 name|ptr
 argument_list|)
 expr_stmt|;
@@ -4079,6 +4122,8 @@ name|newmax
 expr_stmt|;
 name|inf
 operator|->
+name|l
+operator|.
 name|ptr
 operator|=
 name|newlist
@@ -4120,6 +4165,8 @@ if|if
 condition|(
 name|inf
 operator|->
+name|l
+operator|.
 name|ptr
 operator|!=
 name|NULL
@@ -4128,6 +4175,8 @@ name|free
 argument_list|(
 name|inf
 operator|->
+name|l
+operator|.
 name|ptr
 argument_list|)
 expr_stmt|;
@@ -4145,6 +4194,8 @@ name|NULL
 expr_stmt|;
 name|inf
 operator|->
+name|l
+operator|.
 name|ptr
 operator|=
 name|NULL
@@ -4204,6 +4255,8 @@ name|lname
 expr_stmt|;
 name|inf
 operator|->
+name|l
+operator|.
 name|ptr
 operator|=
 name|NULL
