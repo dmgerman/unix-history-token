@@ -2814,6 +2814,9 @@ name|ifru_hwaddr
 decl_stmt|;
 name|l_short
 name|ifru_flags
+index|[
+literal|1
+index|]
 decl_stmt|;
 name|l_int
 name|ifru_metric
