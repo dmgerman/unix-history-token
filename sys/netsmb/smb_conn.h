@@ -298,7 +298,7 @@ value|0x0080
 end_define
 
 begin_comment
-comment|/* only one share connectin should be allowed */
+comment|/* only one share connecting should be allowed */
 end_comment
 
 begin_define
@@ -309,7 +309,7 @@ value|0x0100
 end_define
 
 begin_comment
-comment|/* lookup for create opeartion */
+comment|/* lookup for create operation */
 end_comment
 
 begin_comment
@@ -474,7 +474,7 @@ comment|/* session key */
 name|u_int32_t
 name|sv_caps
 decl_stmt|;
-comment|/* capabilites SMB_CAP_ */
+comment|/* capabilities SMB_CAP_ */
 block|}
 struct|;
 end_struct
@@ -1018,12 +1018,6 @@ name|smb_sopt
 name|vc_sopt
 decl_stmt|;
 comment|/* server options */
-name|struct
-name|smb_cred
-modifier|*
-name|vc_scred
-decl_stmt|;
-comment|/* used in reconnect procedure */
 name|int
 name|vc_txmax
 decl_stmt|;
@@ -1137,12 +1131,6 @@ name|struct
 name|smb_slock
 name|ss_stlock
 decl_stmt|;
-name|struct
-name|smb_cred
-modifier|*
-name|ss_cred
-decl_stmt|;
-comment|/* used in reconnect procedure */
 block|}
 struct|;
 end_struct

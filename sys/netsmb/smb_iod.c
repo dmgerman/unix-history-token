@@ -295,7 +295,7 @@ name|smb_rq
 modifier|*
 name|rqp
 decl_stmt|;
-comment|/*          * Invalidate all outstanding requests for this connection 	 */
+comment|/* 	 * Invalidate all outstanding requests for this connection 	 */
 name|SMB_IOD_RQLOCK
 argument_list|(
 name|iod
