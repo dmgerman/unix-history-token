@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -164,6 +165,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|getdev
@@ -206,14 +208,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|char
-modifier|*
-name|user_from_uid
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_define
 define|#
@@ -305,7 +299,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -331,12 +324,13 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|acctfile
 decl_stmt|;
 name|int
-name|time
+name|flags
 init|=
 literal|0
 decl_stmt|;
@@ -381,7 +375,7 @@ break|break;
 case|case
 literal|'u'
 case|:
-name|time
+name|flags
 operator||=
 name|AC_UTIME
 expr_stmt|;
@@ -390,7 +384,7 @@ break|break;
 case|case
 literal|'s'
 case|:
-name|time
+name|flags
 operator||=
 name|AC_STIME
 expr_stmt|;
@@ -399,7 +393,7 @@ break|break;
 case|case
 literal|'e'
 case|:
-name|time
+name|flags
 operator||=
 name|AC_ETIME
 expr_stmt|;
@@ -408,7 +402,7 @@ break|break;
 case|case
 literal|'c'
 case|:
-name|time
+name|flags
 operator||=
 name|AC_CTIME
 expr_stmt|;
@@ -417,7 +411,7 @@ break|break;
 case|case
 literal|'S'
 case|:
-name|time
+name|flags
 operator||=
 name|AC_BTIME
 expr_stmt|;
@@ -427,7 +421,7 @@ case|case
 literal|'E'
 case|:
 comment|/* exit time (starting time + elapsed time )*/
-name|time
+name|flags
 operator||=
 name|AC_FTIME
 expr_stmt|;
@@ -444,10 +438,10 @@ comment|/* default user + system time and starting time */
 if|if
 condition|(
 operator|!
-name|time
+name|flags
 condition|)
 block|{
-name|time
+name|flags
 operator|=
 name|AC_CTIME
 operator||
@@ -518,6 +512,9 @@ expr_stmt|;
 comment|/* Check if any records to display. */
 if|if
 condition|(
+operator|(
+name|unsigned
+operator|)
 name|size
 operator|<
 sizeof|sizeof
@@ -784,7 +781,7 @@ expr_stmt|;
 comment|/* user + system time */
 if|if
 condition|(
-name|time
+name|flags
 operator|&
 name|AC_CTIME
 condition|)
@@ -819,7 +816,7 @@ block|}
 comment|/* usr time */
 if|if
 condition|(
-name|time
+name|flags
 operator|&
 name|AC_UTIME
 condition|)
@@ -845,7 +842,7 @@ block|}
 comment|/* system time */
 if|if
 condition|(
-name|time
+name|flags
 operator|&
 name|AC_STIME
 condition|)
@@ -871,7 +868,7 @@ block|}
 comment|/* elapsed time */
 if|if
 condition|(
-name|time
+name|flags
 operator|&
 name|AC_ETIME
 condition|)
@@ -897,7 +894,7 @@ block|}
 comment|/* starting time */
 if|if
 condition|(
-name|time
+name|flags
 operator|&
 name|AC_BTIME
 condition|)
@@ -922,7 +919,7 @@ block|}
 comment|/* exit time (starting time + elapsed time )*/
 if|if
 condition|(
-name|time
+name|flags
 operator|&
 name|AC_FTIME
 condition|)
@@ -988,7 +985,6 @@ name|u_int
 name|t
 decl_stmt|;
 block|{
-specifier|register
 name|time_t
 name|nt
 decl_stmt|;
@@ -1030,7 +1026,6 @@ name|flagbits
 parameter_list|(
 name|f
 parameter_list|)
-specifier|register
 name|int
 name|f
 decl_stmt|;
@@ -1119,20 +1114,18 @@ name|argv
 parameter_list|,
 name|acp
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|argv
 index|[]
 decl_stmt|;
-specifier|register
 name|struct
 name|acct
 modifier|*
 name|acp
 decl_stmt|;
 block|{
-specifier|register
+specifier|const
 name|char
 modifier|*
 name|p
@@ -1230,6 +1223,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|getdev
@@ -1251,6 +1245,7 @@ operator|-
 literal|1
 decl_stmt|;
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|lastname
