@@ -1,7 +1,73 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_extern.h	8.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_extern.h	8.6 (Berkeley) %G%  */
 end_comment
+
+begin_comment
+comment|/*  * Sysctl values for the fast filesystem.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FFS_CLUSTERREAD
+value|1
+end_define
+
+begin_comment
+comment|/* cluster reading enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FFS_CLUSTERWRITE
+value|2
+end_define
+
+begin_comment
+comment|/* cluster writing enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FFS_REALLOCBLKS
+value|3
+end_define
+
+begin_comment
+comment|/* block reallocation enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FFS_ASYNCFREE
+value|4
+end_define
+
+begin_comment
+comment|/* asynchronous block freeing enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FFS_MAXID
+value|5
+end_define
+
+begin_comment
+comment|/* number of valid ffs ids */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FFS_NAMES
+value|{ \ 	{ 0, 0 }, \ 	{ "doclusterread", CTLTYPE_INT }, \ 	{ "doclusterwrite", CTLTYPE_INT }, \ 	{ "doreallocblks", CTLTYPE_INT }, \ 	{ "doasyncfree", CTLTYPE_INT }, \ }
+end_define
 
 begin_struct_decl
 struct_decl|struct
@@ -78,6 +144,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|mbuf
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|vfsconf
 struct_decl|;
 end_struct_decl
 
@@ -300,7 +372,9 @@ name|ffs_init
 name|__P
 argument_list|(
 operator|(
-name|void
+expr|struct
+name|vfsconf
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -515,6 +589,36 @@ operator|,
 expr|struct
 name|ucred
 operator|*
+operator|,
+expr|struct
+name|proc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ffs_sysctl
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|*
+operator|,
+name|u_int
+operator|,
+name|void
+operator|*
+operator|,
+name|size_t
+operator|*
+operator|,
+name|void
+operator|*
+operator|,
+name|size_t
 operator|,
 expr|struct
 name|proc
