@@ -231,7 +231,7 @@ name|sockaddr_at
 operator|*
 operator|,
 expr|struct
-name|ifaddr
+name|ifaddrhead
 operator|*
 operator|)
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)in_var.h	8.2 (Berkeley) 1/9/95  *	$Id: in_var.h,v 1.16 1996/02/05 20:35:59 wollman Exp $  */
+comment|/*  * Copyright (c) 1985, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)in_var.h	8.2 (Berkeley) 1/9/95  *	$Id: in_var.h,v 1.17 1996/03/14 16:59:19 fenner Exp $  */
 end_comment
 
 begin_ifndef
@@ -64,6 +64,13 @@ name|in_addr
 name|ia_netbroadcast
 decl_stmt|;
 comment|/* to recognize net broadcasts */
+name|TAILQ_ENTRY
+argument_list|(
+argument|in_ifaddr
+argument_list|)
+name|ia_link
+expr_stmt|;
+comment|/* tailq macro glue */
 name|struct
 name|in_ifaddr
 modifier|*
@@ -176,14 +183,17 @@ directive|ifdef
 name|KERNEL
 end_ifdef
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|in_ifaddr
-modifier|*
-name|in_ifaddr
-decl_stmt|;
-end_decl_stmt
+begin_extern
+extern|extern	TAILQ_HEAD(in_ifaddrhead
+operator|,
+extern|in_ifaddr
+end_extern
+
+begin_expr_stmt
+unit|)
+name|in_ifaddrhead
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -264,7 +274,7 @@ comment|/* struct in_addr addr; */
 define|\
 comment|/* struct ifnet *ifp; */
 define|\
-value|{ \ 	register struct in_ifaddr *ia; \ \ 	for (ia = in_ifaddr; \ 	    ia != NULL&& ((ia->ia_ifp->if_flags& IFF_POINTOPOINT)? \ 		IA_DSTSIN(ia):IA_SIN(ia))->sin_addr.s_addr != (addr).s_addr; \ 	    ia = ia->ia_next) \ 		 continue; \ 	if (ia == NULL) \ 	    for (ia = in_ifaddr; \ 		ia != NULL; \ 		ia = ia->ia_next) \ 		    if (ia->ia_ifp->if_flags& IFF_POINTOPOINT&& \ 			IA_SIN(ia)->sin_addr.s_addr == (addr).s_addr) \ 			    break; \ 	(ifp) = (ia == NULL) ? NULL : ia->ia_ifp; \ }
+value|{ \ 	register struct in_ifaddr *ia; \ \ 	for (ia = in_ifaddrhead.tqh_first; \ 	    ia != NULL&& ((ia->ia_ifp->if_flags& IFF_POINTOPOINT)? \ 		IA_DSTSIN(ia):IA_SIN(ia))->sin_addr.s_addr != (addr).s_addr; \ 	    ia = ia->ia_link.tqe_next) \ 		 continue; \ 	if (ia == NULL) \ 	    for (ia = in_ifaddrhead.tqh_first; \ 		ia != NULL; \ 		ia = ia->ia_link.tqe_next) \ 		    if (ia->ia_ifp->if_flags& IFF_POINTOPOINT&& \ 			IA_SIN(ia)->sin_addr.s_addr == (addr).s_addr) \ 			    break; \ 	(ifp) = (ia == NULL) ? NULL : ia->ia_ifp; \ }
 end_define
 
 begin_comment
@@ -285,7 +295,7 @@ comment|/* struct ifnet *ifp; */
 define|\
 comment|/* struct in_ifaddr *ia; */
 define|\
-value|{ \ 	for ((ia) = in_ifaddr; \ 	    (ia) != NULL&& (ia)->ia_ifp != (ifp); \ 	    (ia) = (ia)->ia_next) \ 		continue; \ }
+value|{ \ 	for ((ia) = in_ifaddrhead.tqh_first; \ 	    (ia) != NULL&& (ia)->ia_ifp != (ifp); \ 	    (ia) = (ia)->ia_link.tqe_next) \ 		continue; \ }
 end_define
 
 begin_endif
@@ -427,7 +437,7 @@ comment|/* struct ifnet *ifp; */
 define|\
 comment|/* struct in_multi *inm; */
 define|\
-value|{ \ 	register struct in_ifaddr *ia; \ \ 	IFP_TO_IA((ifp), ia); \ 	if (ia == NULL) \ 		(inm) = NULL; \ 	else \ 		for ((inm) = ia->ia_multiaddrs.lh_first; \ 		    (inm) != NULL&& (inm)->inm_addr.s_addr != (addr).s_addr; \ 		     (inm) = inm->inm_entry.le_next) \ 			 continue; \ }
+value|do { \ 	register struct in_ifaddr *ia; \ \ 	IFP_TO_IA((ifp), ia); \ 	if (ia == NULL) \ 		(inm) = NULL; \ 	else \ 		for ((inm) = ia->ia_multiaddrs.lh_first; \ 		    (inm) != NULL&& (inm)->inm_addr.s_addr != (addr).s_addr; \ 		     (inm) = inm->inm_entry.le_next) \ 			 continue; \ } while(0)
 end_define
 
 begin_comment
@@ -448,7 +458,7 @@ comment|/* struct in_multistep  step; */
 define|\
 comment|/* struct in_multi *inm; */
 define|\
-value|{ \ 	if (((inm) = (step).i_inm) != NULL) \ 		(step).i_inm = (inm)->inm_entry.le_next; \ 	else \ 		while ((step).i_ia != NULL) { \ 			(inm) = (step).i_ia->ia_multiaddrs.lh_first; \ 			(step).i_ia = (step).i_ia->ia_next; \ 			if ((inm) != NULL) { \ 				(step).i_inm = (inm)->inm_entry.le_next; \ 				break; \ 			} \ 		} \ }
+value|do { \ 	if (((inm) = (step).i_inm) != NULL) \ 		(step).i_inm = (inm)->inm_entry.le_next; \ 	else \ 		while ((step).i_ia != NULL) { \ 			(inm) = (step).i_ia->ia_multiaddrs.lh_first; \ 			(step).i_ia = (step).i_ia->ia_link.tqe_next; \ 			if ((inm) != NULL) { \ 				(step).i_inm = (inm)->inm_entry.le_next; \ 				break; \ 			} \ 		} \ } while(0)
 end_define
 
 begin_define
@@ -465,7 +475,7 @@ comment|/* struct in_multistep step; */
 define|\
 comment|/* struct in_multi *inm; */
 define|\
-value|{ \ 	(step).i_ia = in_ifaddr; \ 	(step).i_inm = NULL; \ 	IN_NEXT_MULTI((step), (inm)); \ }
+value|do { \ 	(step).i_ia = in_ifaddrhead.tqh_first; \ 	(step).i_inm = NULL; \ 	IN_NEXT_MULTI((step), (inm)); \ } while(0)
 end_define
 
 begin_decl_stmt

@@ -5422,15 +5422,19 @@ decl_stmt|;
 comment|/* Check that interface has valid address */
 if|if
 condition|(
-operator|!
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
 name|sc
 operator|->
 name|arpcom
 operator|.
 name|ac_if
 operator|.
-name|if_addrlist
+name|if_addrhead
+argument_list|)
 condition|)
+comment|/* XXX unlikely */
 return|return;
 comment|/* Shut down interface */
 name|s

@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.32 1996/07/12 04:11:23 bde Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.33 1996/08/06 21:14:11 phk Exp $  */
 end_comment
 
 begin_include
@@ -2893,18 +2893,16 @@ expr_stmt|;
 comment|/* address not known */
 if|if
 condition|(
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
 name|ifp
 operator|->
-name|if_addrlist
-operator|==
-operator|(
-expr|struct
-name|ifaddr
-operator|*
-operator|)
-literal|0
+name|if_addrhead
+argument_list|)
 condition|)
 return|return;
+comment|/* XXX unlikely! */
 comment|/* 	 * Initialize the NIC in the exact order outlined in the NS manual. 	 *	This init procedure is "mandatory"...don't change what or when 	 *	things happen. 	 */
 name|s
 operator|=

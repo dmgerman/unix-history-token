@@ -1015,7 +1015,9 @@ name|ifa
 operator|=
 name|ifp
 operator|->
-name|if_addrlist
+name|if_addrhead
+operator|.
+name|tqh_first
 init|;
 name|ifa
 condition|;
@@ -1023,7 +1025,9 @@ name|ifa
 operator|=
 name|ifa
 operator|->
-name|ifa_next
+name|ifa_link
+operator|.
+name|tqe_next
 control|)
 block|{
 if|if
@@ -1174,7 +1178,9 @@ name|ifa
 operator|=
 name|ifp
 operator|->
-name|if_addrlist
+name|if_addrhead
+operator|.
+name|tqh_first
 init|;
 name|ifa
 condition|;
@@ -1182,7 +1188,9 @@ name|ifa
 operator|=
 name|ifa
 operator|->
-name|ifa_next
+name|ifa_link
+operator|.
+name|tqe_next
 control|)
 if|if
 condition|(

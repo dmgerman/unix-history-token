@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1991, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)in_pcb.c	8.4 (Berkeley) 5/24/95  *	$Id: in_pcb.c,v 1.22 1996/10/07 19:06:07 davidg Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1991, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)in_pcb.c	8.4 (Berkeley) 5/24/95  *	$Id: in_pcb.c,v 1.23 1996/10/30 06:13:09 peter Exp $  */
 end_comment
 
 begin_include
@@ -760,10 +760,13 @@ name|error
 decl_stmt|;
 if|if
 condition|(
-name|in_ifaddr
-operator|==
-literal|0
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|in_ifaddrhead
+argument_list|)
 condition|)
+comment|/* XXX broken! */
 return|return
 operator|(
 name|EADDRNOTAVAIL
@@ -1451,7 +1454,12 @@ operator|)
 return|;
 if|if
 condition|(
-name|in_ifaddr
+operator|!
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|in_ifaddrhead
+argument_list|)
 condition|)
 block|{
 comment|/* 		 * If the destination address is INADDR_ANY, 		 * use the primary local address. 		 * If the supplied address is INADDR_BROADCAST, 		 * and the primary interface supports broadcast, 		 * choose the broadcast address for that interface. 		 */
@@ -1492,7 +1500,9 @@ name|sin_addr
 operator|=
 name|IA_SIN
 argument_list|(
-name|in_ifaddr
+name|in_ifaddrhead
+operator|.
+name|tqh_first
 argument_list|)
 operator|->
 name|sin_addr
@@ -1512,7 +1522,9 @@ operator|)
 name|INADDR_BROADCAST
 operator|&&
 operator|(
-name|in_ifaddr
+name|in_ifaddrhead
+operator|.
+name|tqh_first
 operator|->
 name|ia_ifp
 operator|->
@@ -1528,7 +1540,9 @@ operator|=
 name|satosin
 argument_list|(
 operator|&
-name|in_ifaddr
+name|in_ifaddrhead
+operator|.
+name|tqh_first
 operator|->
 name|ia_broadaddr
 argument_list|)
@@ -1808,7 +1822,9 @@ literal|0
 condition|)
 name|ia
 operator|=
-name|in_ifaddr
+name|in_ifaddrhead
+operator|.
+name|tqh_first
 expr_stmt|;
 if|if
 condition|(
@@ -1879,7 +1895,9 @@ for|for
 control|(
 name|ia
 operator|=
-name|in_ifaddr
+name|in_ifaddrhead
+operator|.
+name|tqh_first
 init|;
 name|ia
 condition|;
@@ -1887,7 +1905,9 @@ name|ia
 operator|=
 name|ia
 operator|->
-name|ia_next
+name|ia_link
+operator|.
+name|tqe_next
 control|)
 if|if
 condition|(
