@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: rd.c 1.17 92/06/18$  *  *	@(#)rd.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: rd.c 1.17 92/06/18$  *  *	@(#)rd.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1333,6 +1333,11 @@ name|ri
 operator|->
 name|nbpc
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -1393,6 +1398,19 @@ decl_stmt|;
 name|char
 name|stat
 decl_stmt|;
+if|if
+condition|(
+name|io
+operator|->
+name|i_cc
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|rs
 operator|->
 name|sc_retry
