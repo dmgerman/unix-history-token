@@ -1116,7 +1116,7 @@ comment|/* read */
 name|physread
 block|,
 comment|/* write */
-name|nowrite
+name|physwrite
 block|,
 comment|/* ioctl */
 name|cdioctl
@@ -2600,9 +2600,9 @@ name|softc
 operator|->
 name|disk
 argument_list|,
-name|DSO_NOLABELS
-operator||
 name|DSO_ONESLICE
+operator||
+name|DSO_COMPATLABEL
 argument_list|,
 operator|&
 name|cd_cdevsw
@@ -2981,6 +2981,11 @@ name|changer_links
 argument_list|)
 expr_stmt|;
 block|}
+name|xpt_free_path
+argument_list|(
+name|path
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -3342,6 +3347,11 @@ argument_list|,
 name|nsoftc
 argument_list|,
 name|changer_links
+argument_list|)
+expr_stmt|;
+name|xpt_free_path
+argument_list|(
+name|path
 argument_list|)
 expr_stmt|;
 block|}
