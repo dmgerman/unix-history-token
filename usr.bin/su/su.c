@@ -361,9 +361,6 @@ union|;
 name|uid_t
 name|ruid
 decl_stmt|;
-name|gid_t
-name|gid
-decl_stmt|;
 name|int
 name|asme
 decl_stmt|,
@@ -749,12 +746,6 @@ literal|1
 argument_list|,
 literal|"who are you?"
 argument_list|)
-expr_stmt|;
-name|gid
-operator|=
-name|pwd
-operator|->
-name|pw_gid
 expr_stmt|;
 name|username
 operator|=
