@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpc.c	5.2 (Berkeley) %G%"
+literal|"@(#)lpc.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -897,6 +897,8 @@ operator|&
 name|cmdtab
 index|[
 name|NCMDS
+operator|-
+literal|1
 index|]
 condition|;
 name|c
