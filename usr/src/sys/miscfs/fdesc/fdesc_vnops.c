@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vnops.c	1.2 (Berkeley) %G%  *  * $Id: fdesc_vnops.c,v 1.7 1992/05/30 10:05:34 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vnops.c	1.3 (Berkeley) %G%  *  * $Id: fdesc_vnops.c,v 1.7 1992/05/30 10:05:34 jsp Exp jsp $  */
 end_comment
 
 begin_comment
@@ -118,7 +118,6 @@ end_decl_stmt
 
 begin_block
 block|{
-comment|/*USES_VOP_LOCK;*/
 name|struct
 name|vnode
 modifier|*
@@ -557,8 +556,6 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
-name|USES_VOP_GETATTR
-expr_stmt|;
 name|struct
 name|filedesc
 modifier|*
@@ -975,8 +972,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_SETATTR
-expr_stmt|;
 name|struct
 name|filedesc
 modifier|*
@@ -1235,13 +1230,7 @@ operator|->
 name|fd_nfiles
 condition|)
 block|{
-operator|*
-name|ap
-operator|->
-name|a_eofflagp
-operator|=
-literal|1
-expr_stmt|;
+comment|/* *ap->a_eofflagp = 1; */
 break|break;
 block|}
 if|if
@@ -2149,14 +2138,6 @@ name|fdesc_blkatoff
 block|}
 block|,
 comment|/* blkatoff */
-block|{
-operator|&
-name|vop_vget_desc
-block|,
-name|fdesc_vget
-block|}
-block|,
-comment|/* vget */
 block|{
 operator|&
 name|vop_valloc_desc
