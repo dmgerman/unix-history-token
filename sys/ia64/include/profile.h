@@ -56,7 +56,7 @@ name|MCOUNT_ENTER
 parameter_list|(
 name|s
 parameter_list|)
-value|\n\ 	_c = cpu_critical_enter()
+value|\n\ 	_c = intr_disable()
 end_define
 
 begin_define
@@ -66,7 +66,7 @@ name|MCOUNT_EXIT
 parameter_list|(
 name|s
 parameter_list|)
-value|\n\ 	cpu_critical_exit(_c)
+value|\n\ 	intr_restore(_c)
 end_define
 
 begin_define
