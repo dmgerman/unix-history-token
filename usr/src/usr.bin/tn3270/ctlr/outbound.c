@@ -61,7 +61,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ebc_disp.h"
+file|"../apilib/ebc_disp.h"
 end_include
 
 begin_include
