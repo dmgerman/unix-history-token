@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Qlogic ISP SCSI Host Adapter FreeBSD Wrapper Definitions (CAM version)  * Copyright (c) 1997, 1998, 1999, 2000, 2001 by Matthew Jacob  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Qlogic ISP SCSI Host Adapter FreeBSD Wrapper Definitions  * Copyright (c) 1997, 1998, 1999, 2000, 2001 by Matthew Jacob  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|ISP_PLATFORM_VERSION_MINOR
-value|11
+value|13
 end_define
 
 begin_include
@@ -177,6 +177,13 @@ directive|include
 file|"opt_isp.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|HANDLE_LOOPSTATE_IN_OUTER_LAYERS
+value|1
+end_define
+
 begin_typedef
 typedef|typedef
 name|void
@@ -227,6 +234,9 @@ decl_stmt|;
 name|lun_id_t
 name|lun
 decl_stmt|;
+name|int
+name|bus
+decl_stmt|;
 name|u_int32_t
 name|hold
 decl_stmt|;
@@ -234,10 +244,6 @@ block|}
 name|tstate_t
 typedef|;
 end_typedef
-
-begin_comment
-comment|/*  * This should work very well for 100% of parallel SCSI cases, 100%  * of non-SCCLUN FC cases, and hopefully some larger fraction of the  * SCCLUN FC cases. Basically, we index by the low 5 bits of lun and  * then linear search. This has to be reasonably zippy, but not crucially  * so.  */
-end_comment
 
 begin_define
 define|#
@@ -251,9 +257,14 @@ define|#
 directive|define
 name|LUN_HASH_FUNC
 parameter_list|(
+name|isp
+parameter_list|,
+name|port
+parameter_list|,
 name|lun
 parameter_list|)
-value|((lun)& 0x1f)
+define|\
+value|((IS_DUALBUS(isp)) ?						\ 		(((lun)& ((LUN_HASH_SIZE>> 1) - 1))<< (port)) :	\ 		((lun)& (LUN_HASH_SIZE - 1)))
 end_define
 
 begin_endif
@@ -315,39 +326,32 @@ decl_stmt|;
 name|u_int8_t
 name|intsok
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ISP_SMPLOCK
-name|struct
-name|mtx
-name|lock
-decl_stmt|;
-else|#
-directive|else
-specifier|volatile
-name|u_int32_t
+name|int
 name|islocked
 decl_stmt|;
 name|int
 name|splsaved
 decl_stmt|;
-endif|#
-directive|endif
+name|struct
+name|proc
+modifier|*
+name|kproc
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|ISP_TARGET_MODE
 define|#
 directive|define
 name|TM_WANTED
-value|0x01
+value|0x80
 define|#
 directive|define
 name|TM_BUSY
-value|0x02
+value|0x40
 define|#
 directive|define
 name|TM_TMODE_ENABLED
-value|0x80
+value|0x03
 name|u_int8_t
 name|tmflags
 decl_stmt|;
@@ -359,7 +363,11 @@ name|rollinfo
 decl_stmt|;
 name|tstate_t
 name|tsdflt
+index|[
+literal|2
+index|]
 decl_stmt|;
+comment|/* two busses */
 name|tstate_t
 modifier|*
 name|lun_hash
@@ -373,59 +381,48 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|isp_lock
+value|isp_osinfo.lock
+end_define
+
 begin_comment
 comment|/*  * Locking macros...  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ISP_SMPLOCK
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|ISP_LOCK
-parameter_list|(
-name|x
-parameter_list|)
-value|mtx_enter(&(x)->isp_osinfo.lock, MTX_DEF)
+value|isp_lockspl
 end_define
 
 begin_define
 define|#
 directive|define
 name|ISP_UNLOCK
+value|isp_unlockspl
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISPLOCK_2_CAMLOCK
 parameter_list|(
 name|x
 parameter_list|)
-value|mtx_exit(&(x)->isp_osinfo.lock, MTX_DEF)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ISP_LOCK
-value|isp_lock
 end_define
 
 begin_define
 define|#
 directive|define
-name|ISP_UNLOCK
-value|isp_unlock
+name|CAMLOCK_2_ISPLOCK
+parameter_list|(
+name|x
+parameter_list|)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Required Macros/Defines  */
@@ -1381,17 +1378,11 @@ begin_comment
 comment|/*  * Platform specific inline functions  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ISP_SMPLOCK
-end_ifndef
-
 begin_function_decl
 specifier|static
 name|INLINE
 name|void
-name|isp_lock
+name|isp_lockspl
 parameter_list|(
 name|struct
 name|ispsoftc
@@ -1404,7 +1395,7 @@ begin_function
 specifier|static
 name|INLINE
 name|void
-name|isp_lock
+name|isp_lockspl
 parameter_list|(
 name|struct
 name|ispsoftc
@@ -1454,7 +1445,7 @@ begin_function_decl
 specifier|static
 name|INLINE
 name|void
-name|isp_unlock
+name|isp_unlockspl
 parameter_list|(
 name|struct
 name|ispsoftc
@@ -1467,7 +1458,7 @@ begin_function
 specifier|static
 name|INLINE
 name|void
-name|isp_unlock
+name|isp_unlockspl
 parameter_list|(
 name|struct
 name|ispsoftc
@@ -1509,11 +1500,6 @@ block|}
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -1557,39 +1543,6 @@ name|mboxwaiting
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ISP_SMPLOCK
-operator|(
-name|void
-operator|)
-name|msleep
-argument_list|(
-operator|&
-name|isp
-operator|->
-name|isp_osinfo
-operator|.
-name|mboxwaiting
-argument_list|,
-operator|&
-name|isp
-operator|->
-name|isp_osinfo
-operator|.
-name|lock
-argument_list|,
-name|PRIBIO
-argument_list|,
-literal|"isp_mboxwaiting"
-argument_list|,
-literal|10
-operator|*
-name|hz
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 operator|(
 name|void
 operator|)
@@ -1611,8 +1564,6 @@ operator|*
 name|hz
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|isp

@@ -176,135 +176,119 @@ struct|struct
 name|ispmdvec
 block|{
 name|u_int16_t
-argument_list|(
-argument|*dv_rd_reg
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
+function_decl|(
+modifier|*
+name|dv_rd_reg
+function_decl|)
+parameter_list|(
+name|struct
 name|ispsoftc
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 name|void
-argument_list|(
-argument|*dv_wr_reg
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
+function_decl|(
+modifier|*
+name|dv_wr_reg
+function_decl|)
+parameter_list|(
+name|struct
 name|ispsoftc
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|u_int16_t
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 name|int
-argument_list|(
-argument|*dv_mbxdma
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
+function_decl|(
+modifier|*
+name|dv_mbxdma
+function_decl|)
+parameter_list|(
+name|struct
 name|ispsoftc
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 name|int
-argument_list|(
-argument|*dv_dmaset
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
+function_decl|(
+modifier|*
+name|dv_dmaset
+function_decl|)
+parameter_list|(
+name|struct
 name|ispsoftc
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|XS_T
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|ispreq_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_int16_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_int16_t
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 name|void
-argument_list|(
-argument|*dv_dmaclr
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
+function_decl|(
+modifier|*
+name|dv_dmaclr
+function_decl|)
+parameter_list|(
+name|struct
 name|ispsoftc
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|XS_T
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_int16_t
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 name|void
-argument_list|(
-argument|*dv_reset0
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
+function_decl|(
+modifier|*
+name|dv_reset0
+function_decl|)
+parameter_list|(
+name|struct
 name|ispsoftc
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 name|void
-argument_list|(
-argument|*dv_reset1
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
+function_decl|(
+modifier|*
+name|dv_reset1
+function_decl|)
+parameter_list|(
+name|struct
 name|ispsoftc
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 name|void
-argument_list|(
-argument|*dv_dregs
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
+function_decl|(
+modifier|*
+name|dv_dregs
+function_decl|)
+parameter_list|(
+name|struct
 name|ispsoftc
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 specifier|const
 name|u_int16_t
 modifier|*
@@ -1010,7 +994,7 @@ range|:
 literal|16
 decl_stmt|,
 range|:
-literal|3
+literal|2
 decl_stmt|,
 name|isp_iid_set
 range|:
@@ -1022,7 +1006,7 @@ literal|1
 decl_stmt|,
 name|isp_loopstate
 range|:
-literal|3
+literal|4
 decl_stmt|,
 comment|/* Current Loop State */
 name|isp_fwstate
@@ -1099,7 +1083,11 @@ range|:
 literal|8
 decl_stmt|,
 range|:
-literal|2
+literal|1
+decl_stmt|,
+name|force_logout
+range|:
+literal|1
 decl_stmt|,
 name|was_fabric_dev
 range|:
@@ -1255,21 +1243,21 @@ begin_define
 define|#
 directive|define
 name|LOOP_LSCAN_DONE
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|LOOP_SYNCING_PDB
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_READY
+name|LOOP_SYNCING_PDB
 value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOOP_READY
+value|8
 end_define
 
 begin_define
@@ -1654,7 +1642,7 @@ comment|/* insist on {N/F}L-Port connection */
 end_comment
 
 begin_comment
-comment|/*  * Prior to calling isp_reset for the first time, the outer layer  * should set isp_role to one of NONE, INITIATOR, TARGET, BOTH.  *  * If you set ISP_ROLE_NONE, the cards will be reset, new firmware loaded,  * NVRAM read, and defaults set, but any further initialization (e.g.  * INITIALIZE CONTROL BLOCK commands for 2X00 cards) won't be done.  *  * If INITIATOR MODE isn't set, attempts to run commands will be stopped  * at isp_start and completed with the moral equivalent of SELECTION TIMEOUT.  *  * If TARGET MODE is set, it doesn't mean that the rest of target mode support  * needs to be enabled, or will even work. What happens with the 2X00 cards  * here is that if you have enabled it with TARGET MODE as part of the ICB  * options, but you haven't given the f/w any ram resources for ATIOs or  * Immediate Notifies, the f/w just handles what it can and you never see  * anything. Basically, it sends a single byte of data (the first byte,  * which you can set as part of the INITIALIZE CONTROL BLOCK command) for  * INQUIRY, and sends back QUEUE FULL status for any other command.  *   */
+comment|/*  * Prior to calling isp_reset for the first time, the outer layer  * should set isp_role to one of NONE, INITIATOR, TARGET, BOTH.  *  * If you set ISP_ROLE_NONE, the cards will be reset, new firmware loaded,  * NVRAM read, and defaults set, but any further initialization (e.g.  * INITIALIZE CONTROL BLOCK commands for 2X00 cards) won't be done.  *  * If INITIATOR MODE isn't set, attempts to run commands will be stopped  * at isp_start and completed with the moral equivalent of SELECTION TIMEOUT.  *  * If TARGET MODE is set, it doesn't mean that the rest of target mode support  * needs to be enabled, or will even work. What happens with the 2X00 cards  * here is that if you have enabled it with TARGET MODE as part of the ICB  * options, but you haven't given the f/w any ram resources for ATIOs or  * Immediate Notifies, the f/w just handles what it can and you never see  * anything. Basically, it sends a single byte of data (the first byte,  * which you can set as part of the INITIALIZE CONTROL BLOCK command) for  * INQUIRY, and sends back QUEUE FULL status for any other command.  *  */
 end_comment
 
 begin_define
@@ -1887,6 +1875,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ISP_HA_FC_2300
+value|0x30
+end_define
+
+begin_define
+define|#
+directive|define
 name|IS_SCSI
 parameter_list|(
 name|isp
@@ -1981,7 +1976,7 @@ name|IS_FC
 parameter_list|(
 name|isp
 parameter_list|)
-value|(isp->isp_type& ISP_HA_FC)
+value|((isp)->isp_type& ISP_HA_FC)
 end_define
 
 begin_define
@@ -1991,7 +1986,7 @@ name|IS_2100
 parameter_list|(
 name|isp
 parameter_list|)
-value|(isp->isp_type == ISP_HA_FC_2100)
+value|((isp)->isp_type == ISP_HA_FC_2100)
 end_define
 
 begin_define
@@ -2001,7 +1996,28 @@ name|IS_2200
 parameter_list|(
 name|isp
 parameter_list|)
-value|(isp->isp_type == ISP_HA_FC_2200)
+value|((isp)->isp_type == ISP_HA_FC_2200)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_2300
+parameter_list|(
+name|isp
+parameter_list|)
+value|((isp)->isp_type == ISP_HA_FC_2300)
+end_define
+
+begin_comment
+comment|/* 2300 Support isn't ready yet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_DISABLE_2300_SUPPORT
+value|1
 end_define
 
 begin_comment
@@ -2036,89 +2052,74 @@ begin_comment
 comment|/*  * Reset Hardware. Totally. Assumes that you'll follow this with  * a call to isp_init.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|isp_reset
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ispsoftc
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Initialize Hardware to known state  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|isp_init
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ispsoftc
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Reset the ISP and call completion for any orphaned commands.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|isp_reinit
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ispsoftc
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Interrupt Service Routine  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|isp_intr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Command Entry Point- Platform Dependent layers call into this  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|isp_start
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|XS_T
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* these values are what isp_start returns */
@@ -2172,18 +2173,15 @@ begin_comment
 comment|/*  * Command Completion Point- Core layers call out from this with completed cmds  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|isp_done
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|XS_T
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Platform Dependent to External to Internal Control Function  *  * Assumes locks are held on entry. You should note that with many of  * these commands and locks may be released while this is occurring.  *  * A few notes about some of these functions:  *  * ISPCTL_FCLINK_TEST tests to make sure we have good fibre channel link.  * The argument is a pointer to an integer which is the time, in microseconds,  * we should wait to see whether we have good link. This test, if successful,  * lets us know our connection topology and our Loop ID/AL_PA and so on.  * You can't get anywhere without this.  *  * ISPCTL_SCAN_FABRIC queries the name server (if we're on a fabric) for  * all entities using the FC Generic Services subcommand GET ALL NEXT.  * For each found entity, an ISPASYNC_FABRICDEV event is generated (see  * below).  *  * ISPCTL_SCAN_LOOP does a local loop scan. This is only done if the connection  * topology is NL or FL port (private or public loop). Since the Qlogic f/w  * 'automatically' manages local loop connections, this function essentially  * notes the arrival, departure, and possible shuffling around of local loop  * entities. Thus for each arrival and departure this generates an isp_async  * event of ISPASYNC_PROMENADE (see below).  *  * ISPCTL_PDB_SYNC is somewhat misnamed. It actually is the final step, in  * order, of ISPCTL_FCLINK_TEST, ISPCTL_SCAN_FABRIC, and ISPCTL_SCAN_LOOP.  * The main purpose of ISPCTL_PDB_SYNC is to complete management of logging  * and logging out of fabric devices (if one is on a fabric) and then marking  * the 'loop state' as being ready to now be used for sending commands to  * devices. Originally fabric name server and local loop scanning were  * part of this function. It's now been seperated to allow for finer control.  */
@@ -2233,24 +2231,21 @@ name|ispctl_t
 typedef|;
 end_typedef
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|isp_control
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ispsoftc
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|ispctl_t
-operator|,
+parameter_list|,
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Platform Dependent to Internal to External Control Function  * (each platform must provide such a function)  *  * Assumes locks are held.  *  * A few notes about some of these functions:  *  * ISPASYNC_CHANGE_NOTIFY notifies the outer layer that a change has  * occurred that invalidates the list of fabric devices known and/or  * the list of known loop devices. The argument passed is a pointer  * whose values are defined below  (local loop change, name server  * change, other). 'Other' may simply be a LIP, or a change in  * connection topology.  *  * ISPASYNC_FABRIC_DEV announces the next element in a list of  * fabric device names we're getting out of the name server. The  * argument points to a GET ALL NEXT response structure. The list  * is known to terminate with an entry that refers to ourselves.  * One of the main purposes of this function is to allow outer  * layers, which are OS dependent, to set policy as to which fabric  * devices might actually be logged into (and made visible) later  * at ISPCTL_PDB_SYNC time. Since there's a finite number of fabric  * devices that we can log into (256 less 3 'reserved' for F-port  * topologies), and fabrics can grow up to 8 million or so entries  * (24 bits of Port Address, less a wad of reserved spaces), clearly  * we had better let the OS determine login policy.  *  * ISPASYNC_PROMENADE has an argument that is a pointer to an integer which  * is an index into the portdb in the softc ('target'). Whether that entrie's  * valid tag is set or not says whether something has arrived or departed.  * The name refers to a favorite pastime of many city dwellers- watching  * people come and go, talking of Michaelangelo, and so on..  *  * ISPASYNC_UNHANDLED_RESPONSE gives outer layers a chance to parse a  * response queue entry not otherwise handled. The outer layer should  * return non-zero if it handled it. The 'arg' points to a (possibly only  * partially) massaged response queue entry (see the platform's  * ISP_UNSWIZZLE_RESPONSE macro).  */
@@ -2272,6 +2267,12 @@ comment|/* FC Loop Down */
 name|ISPASYNC_LOOP_UP
 block|,
 comment|/* FC Loop Up */
+name|ISPASYNC_LIP
+block|,
+comment|/* LIP Received */
+name|ISPASYNC_LOOP_RESET
+block|,
+comment|/* Loop Reset Received */
 name|ISPASYNC_CHANGE_NOTIFY
 block|,
 comment|/* FC Change Notification */
@@ -2294,30 +2295,30 @@ name|ISPASYNC_CONF_CHANGE
 block|,
 comment|/* Platform Configuration Change */
 name|ISPASYNC_UNHANDLED_RESPONSE
+block|,
 comment|/* Unhandled Response Entry */
+name|ISPASYNC_FW_CRASH
+comment|/* Firmware has crashed */
 block|}
 name|ispasync_t
 typedef|;
 end_typedef
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|isp_async
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ispsoftc
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|ispasync_t
-operator|,
+parameter_list|,
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -2350,69 +2351,63 @@ directive|ifdef
 name|__GNUC__
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|isp_prt
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ispsoftc
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
 name|level
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-name|__attribute__
-argument_list|(
-operator|(
-name|__format__
-argument_list|(
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__format__
+parameter_list|(
 name|__printf__
-argument_list|,
-literal|3
-argument_list|,
-literal|4
-argument_list|)
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|,
+function_decl|3
+operator|,
+function_decl|4
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
 
 begin_else
 else|#
 directive|else
 end_else
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|isp_prt
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ispsoftc
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
 name|level
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -2511,6 +2506,17 @@ begin_define
 define|#
 directive|define
 name|ISP_LOGDEBUG3
+value|0x80
+end_define
+
+begin_comment
+comment|/* log high frequency debug messages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_LOGDEBUG4
 value|0x100
 end_define
 
@@ -2552,7 +2558,7 @@ comment|/* log all debug messages (target) */
 end_comment
 
 begin_comment
-comment|/*  * Each Platform provides it's own isposinfo substructure of the ispsoftc  * defined above.  *  * Each platform must also provide the following macros/defines:  *  *  *	INLINE		-	platform specific define for 'inline' functions  *  *	ISP2100_SCRLEN	-	length for the Fibre Channel scratch DMA area  *  *	MEMZERO(dst, src)			platform zeroing function  *	MEMCPY(dst, src, count)			platform copying function  *	SNPRINTF(buf, bufsize, fmt, ...)	snprintf  *	STRNCAT(dstbuf, size, srcbuf)		strncat  *	USEC_DELAY(usecs)			microsecond spindelay function  *	USEC_SLEEP(isp, usecs)			microsecond sleep function  *  *	NANOTIME_T				nanosecond time type  *  *	GET_NANOTIME(NANOTIME_T *)		get current nanotime.  *  *	GET_NANOSEC(NANOTIME_T *)		get u_int64_t from NANOTIME_T  *  *	NANOTIME_SUB(NANOTIME_T *, NANOTIME_T *)  *						subtract two NANOTIME_T values  *  *  *	MAXISPREQUEST(struct ispsoftc *)	maximum request queue size  *						for this particular board type  *  *	MEMORYBARRIER(struct ispsoftc *, barrier_type, offset, size)  *  *		Function/Macro the provides memory synchronization on  *		various objects so that the ISP's and the system's view  *		of the same object is consistent.  *  *	MBOX_ACQUIRE(struct ispsoftc *)		acquire lock on mailbox regs  *	MBOX_WAIT_COMPLETE(struct ispsoftc *)	wait for mailbox cmd to be done  *	MBOX_NOTIFY_COMPLETE(struct ispsoftc *)	notification of mbox cmd donee  *	MBOX_RELEASE(struct ispsoftc *)		release lock on mailbox regs  *  *  *	SCSI_GOOD	SCSI 'Good' Status  *	SCSI_CHECK	SCSI 'Check Condition' Status  *	SCSI_BUSY	SCSI 'Busy' Status  *	SCSI_QFULL	SCSI 'Queue Full' Status  *  *	XS_T		Platform SCSI transaction type (i.e., command for HBA)  *	XS_ISP(xs)	gets an instance out of an XS_T  *	XS_CHANNEL(xs)	gets the channel (bus # for DUALBUS cards) ""  *	XS_TGT(xs)	gets the target ""  *	XS_LUN(xs)	gets the lun ""  *	XS_CDBP(xs)	gets a pointer to the scsi CDB ""  *	XS_CDBLEN(xs)	gets the CDB's length ""  *	XS_XFRLEN(xs)	gets the associated data transfer length ""  *	XS_TIME(xs)	gets the time (in milliseconds) for this command  *	XS_RESID(xs)	gets the current residual count  *	XS_STSP(xs)	gets a pointer to the SCSI status byte ""  *	XS_SNSP(xs)	gets a pointer to the associate sense data  *	XS_SNSLEN(xs)	gets the length of sense data storage  *	XS_SNSKEY(xs)	dereferences XS_SNSP to get the current stored Sense Key  *	XS_TAG_P(xs)	predicate of whether this command should be tagged  *	XS_TAG_TYPE(xs)	which type of tag to use  *	XS_SETERR(xs)	set error state  *  *		HBA_NOERROR	command has no erros  *		HBA_BOTCH	hba botched something  *		HBA_CMDTIMEOUT	command timed out  *		HBA_SELTIMEOUT	selection timed out (also port logouts for FC)  *		HBA_TGTBSY	target returned a BUSY status  *		HBA_BUSRESET	bus reset destroyed command  *		HBA_ABORTED	command was aborted (by request)  *		HBA_DATAOVR	a data overrun was detected  *		HBA_ARQFAIL	Automatic Request Sense failed  *  *	XS_ERR(xs)	return current error state  *	XS_NOERR(xs)	there is no error currently set  *	XS_INITERR(xs)	initialize error state  *  *	XS_SAVE_SENSE(xs, sp)		save sense data  *  *	XS_SET_STATE_STAT(isp, sp, xs)	platform dependent interpreter of  *					response queue entry status bits  *  *  *	DEFAULT_IID(struct ispsoftc *)		Default SCSI initiator ID  *	DEFAULT_LOOPID(struct ispsoftc *)	Default FC Loop ID  *	DEFAULT_NODEWWN(struct ispsoftc *)	Default Node WWN  *	DEFAULT_PORTWWN(struct ispsoftc *)	Default Port WWN  *		These establish reasonable defaults for each platform.  * 		These must be available independent of card NVRAM and are  *		to be used should NVRAM not be readable.  *  *	ISP_NODEWWN(struct ispsoftc *)	FC Node WWN to use  *	ISP_PORTWWN(struct ispsoftc *)	FC Port WWN to use  *  *		These are to be used after NVRAM is read. The tags  *		in fcparam.isp_{node,port}wwn reflect the values  *		read from NVRAM (possibly corrected for card botches).  *		Each platform can take that information and override  *		it or ignore and return the Node and Port WWNs to be  * 		used when sending the Qlogic f/w the Initialization Control  *		Block.  *  *	(XXX these do endian specific transformations- in transition XXX)  *	ISP_SWIZZLE_ICB  *	ISP_UNSWIZZLE_AND_COPY_PDBP  *	ISP_SWIZZLE_CONTINUATION  *	ISP_SWIZZLE_REQUEST  *	ISP_UNSWIZZLE_RESPONSE  *	ISP_SWIZZLE_SNS_REQ  *	ISP_UNSWIZZLE_SNS_RSP  *	ISP_SWIZZLE_NVRAM_WORD  *  *  */
+comment|/*  * Each Platform provides it's own isposinfo substructure of the ispsoftc  * defined above.  *  * Each platform must also provide the following macros/defines:  *  *  *	INLINE		-	platform specific define for 'inline' functions  *  *	ISP2100_SCRLEN	-	length for the Fibre Channel scratch DMA area  *  *	MEMZERO(dst, src)			platform zeroing function  *	MEMCPY(dst, src, count)			platform copying function  *	SNPRINTF(buf, bufsize, fmt, ...)	snprintf  *	STRNCAT(dstbuf, size, srcbuf)		strncat  *	USEC_DELAY(usecs)			microsecond spindelay function  *	USEC_SLEEP(isp, usecs)			microsecond sleep function  *  *	NANOTIME_T				nanosecond time type  *  *	GET_NANOTIME(NANOTIME_T *)		get current nanotime.  *  *	GET_NANOSEC(NANOTIME_T *)		get u_int64_t from NANOTIME_T  *  *	NANOTIME_SUB(NANOTIME_T *, NANOTIME_T *)  *						subtract two NANOTIME_T values  *  *  *	MAXISPREQUEST(struct ispsoftc *)	maximum request queue size  *						for this particular board type  *  *	MEMORYBARRIER(struct ispsoftc *, barrier_type, offset, size)  *  *		Function/Macro the provides memory synchronization on  *		various objects so that the ISP's and the system's view  *		of the same object is consistent.  *  *	MBOX_ACQUIRE(struct ispsoftc *)		acquire lock on mailbox regs  *	MBOX_WAIT_COMPLETE(struct ispsoftc *)	wait for mailbox cmd to be done  *	MBOX_NOTIFY_COMPLETE(struct ispsoftc *)	notification of mbox cmd donee  *	MBOX_RELEASE(struct ispsoftc *)		release lock on mailbox regs  *  *  *	SCSI_GOOD	SCSI 'Good' Status  *	SCSI_CHECK	SCSI 'Check Condition' Status  *	SCSI_BUSY	SCSI 'Busy' Status  *	SCSI_QFULL	SCSI 'Queue Full' Status  *  *	XS_T		Platform SCSI transaction type (i.e., command for HBA)  *	XS_ISP(xs)	gets an instance out of an XS_T  *	XS_CHANNEL(xs)	gets the channel (bus # for DUALBUS cards) ""  *	XS_TGT(xs)	gets the target ""  *	XS_LUN(xs)	gets the lun ""  *	XS_CDBP(xs)	gets a pointer to the scsi CDB ""  *	XS_CDBLEN(xs)	gets the CDB's length ""  *	XS_XFRLEN(xs)	gets the associated data transfer length ""  *	XS_TIME(xs)	gets the time (in milliseconds) for this command  *	XS_RESID(xs)	gets the current residual count  *	XS_STSP(xs)	gets a pointer to the SCSI status byte ""  *	XS_SNSP(xs)	gets a pointer to the associate sense data  *	XS_SNSLEN(xs)	gets the length of sense data storage  *	XS_SNSKEY(xs)	dereferences XS_SNSP to get the current stored Sense Key  *	XS_TAG_P(xs)	predicate of whether this command should be tagged  *	XS_TAG_TYPE(xs)	which type of tag to use  *	XS_SETERR(xs)	set error state  *  *		HBA_NOERROR	command has no erros  *		HBA_BOTCH	hba botched something  *		HBA_CMDTIMEOUT	command timed out  *		HBA_SELTIMEOUT	selection timed out (also port logouts for FC)  *		HBA_TGTBSY	target returned a BUSY status  *		HBA_BUSRESET	bus reset destroyed command  *		HBA_ABORTED	command was aborted (by request)  *		HBA_DATAOVR	a data overrun was detected  *		HBA_ARQFAIL	Automatic Request Sense failed  *  *	XS_ERR(xs)	return current error state  *	XS_NOERR(xs)	there is no error currently set  *	XS_INITERR(xs)	initialize error state  *  *	XS_SAVE_SENSE(xs, sp)		save sense data  *  *	XS_SET_STATE_STAT(isp, sp, xs)	platform dependent interpreter of  *					response queue entry status bits  *  *  *	DEFAULT_IID(struct ispsoftc *)		Default SCSI initiator ID  *	DEFAULT_LOOPID(struct ispsoftc *)	Default FC Loop ID  *	DEFAULT_NODEWWN(struct ispsoftc *)	Default Node WWN  *	DEFAULT_PORTWWN(struct ispsoftc *)	Default Port WWN  *		These establish reasonable defaults for each platform.  * 		These must be available independent of card NVRAM and are  *		to be used should NVRAM not be readable.  *  *	ISP_NODEWWN(struct ispsoftc *)	FC Node WWN to use  *	ISP_PORTWWN(struct ispsoftc *)	FC Port WWN to use  *  *		These are to be used after NVRAM is read. The tags  *		in fcparam.isp_{node,port}wwn reflect the values  *		read from NVRAM (possibly corrected for card botches).  *		Each platform can take that information and override  *		it or ignore and return the Node and Port WWNs to be  * 		used when sending the Qlogic f/w the Initialization Control  *		Block.  *  *	(XXX these do endian specific transformations- in transition XXX)  *	ISP_SWIZZLE_ICB  *	ISP_UNSWIZZLE_AND_COPY_PDBP  *	ISP_SWIZZLE_CONTINUATION  *	ISP_SWIZZLE_REQUEST  *	ISP_UNSWIZZLE_RESPONSE  *	ISP_SWIZZLE_SNS_REQ  *	ISP_UNSWIZZLE_SNS_RSP  *	ISP_SWIZZLE_NVRAM_WORD  */
 end_comment
 
 begin_endif
