@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1986, 1989, 1993 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Berkeley Software Design Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_bio.c	8.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1986, 1989, 1993 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Berkeley Software Design Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_bio.c	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1349,6 +1349,30 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|b_vp
+operator|&&
+operator|(
+name|bp
+operator|->
+name|b_vp
+operator|->
+name|v_mount
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_ASYNC
+operator|)
+condition|)
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ASYNC
+expr_stmt|;
 name|flag
 operator|=
 name|bp

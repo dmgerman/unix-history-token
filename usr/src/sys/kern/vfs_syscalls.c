@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -716,6 +716,8 @@ operator||
 name|MNT_SYNCHRONOUS
 operator||
 name|MNT_UNION
+operator||
+name|MNT_ASYNC
 operator|)
 expr_stmt|;
 name|mp
@@ -736,6 +738,8 @@ operator||
 name|MNT_SYNCHRONOUS
 operator||
 name|MNT_UNION
+operator||
+name|MNT_ASYNC
 operator|)
 expr_stmt|;
 comment|/* 	 * Mount the filesystem. 	 */
