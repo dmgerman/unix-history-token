@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fortune.c	5.6 (Berkeley) %G%"
+literal|"@(#)fortune.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1137,6 +1137,9 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OK_TO_WRITE_DISK
 if|if
 condition|(
 operator|(
@@ -1239,6 +1242,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* LOCK_EX */
+endif|#
+directive|endif
+comment|/* OK_TO_WRITE_DISK */
 if|if
 condition|(
 name|Wait
@@ -2832,6 +2838,9 @@ operator|=
 name|fp
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|OK_TO_WRITE_DISK
 name|fp
 operator|->
 name|was_pos_file
@@ -2849,6 +2858,9 @@ operator|>=
 literal|0
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* OK_TO_WRITE_DISK */
 return|return
 name|TRUE
 return|;
@@ -3322,6 +3334,9 @@ name|read_tbl
 operator|=
 name|FALSE
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OK_TO_WRITE_DISK
 name|obscene
 operator|->
 name|was_pos_file
@@ -3339,6 +3354,9 @@ operator|>=
 literal|0
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* OK_TO_WRITE_DISK */
 block|}
 end_block
 
@@ -3960,6 +3978,9 @@ argument_list|(
 name|datfile
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OK_TO_WRITE_DISK
 if|if
 condition|(
 name|posp
@@ -4001,6 +4022,9 @@ literal|".pos"
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* OK_TO_WRITE_DISK */
 name|DPRINTF
 argument_list|(
 literal|2
@@ -5326,6 +5350,9 @@ operator|==
 name|POS_UNKNOWN
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|OK_TO_WRITE_DISK
 if|if
 condition|(
 operator|(
@@ -5413,6 +5440,24 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|fp
+operator|->
+name|pos
+operator|=
+name|random
+argument_list|()
+operator|%
+name|fp
+operator|->
+name|tbl
+operator|.
+name|str_numstr
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* OK_TO_WRITE_DISK */
 block|}
 if|if
 condition|(
