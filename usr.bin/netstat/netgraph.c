@@ -163,12 +163,13 @@ parameter_list|(
 name|u_long
 name|off
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
 name|int
-name|af
+name|af1
 name|__unused
 parameter_list|)
 block|{

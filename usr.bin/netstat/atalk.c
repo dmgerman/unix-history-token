@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/route.h>
 end_include
 
@@ -146,6 +152,7 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|at_pr_net
@@ -221,6 +228,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|at_pr_host
@@ -297,6 +305,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|at_pr_port
@@ -973,12 +982,13 @@ name|u_long
 name|off
 name|__unused
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
 name|int
-name|af
+name|af1
 name|__unused
 parameter_list|)
 block|{
@@ -1259,12 +1269,13 @@ name|u_long
 name|off
 name|__unused
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
 name|int
-name|af
+name|af1
 name|__unused
 parameter_list|)
 block|{

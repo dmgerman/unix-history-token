@@ -286,6 +286,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -299,25 +300,6 @@ ifdef|#
 directive|ifdef
 name|INET6
 end_ifdef
-
-begin_function_decl
-specifier|extern
-name|void
-name|inet6print
-parameter_list|(
-name|struct
-name|in6_addr
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -349,12 +331,13 @@ name|u_long
 name|proto
 parameter_list|,
 comment|/* for sysctl version we pass proto # */
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
 name|int
-name|af
+name|af1
 parameter_list|)
 block|{
 name|int
@@ -750,7 +733,7 @@ continue|continue;
 if|if
 condition|(
 operator|(
-name|af
+name|af1
 operator|==
 name|AF_INET
 operator|&&
@@ -769,7 +752,7 @@ directive|ifdef
 name|INET6
 operator|||
 operator|(
-name|af
+name|af1
 operator|==
 name|AF_INET6
 operator|&&
@@ -788,7 +771,7 @@ directive|endif
 comment|/* INET6 */
 operator|||
 operator|(
-name|af
+name|af1
 operator|==
 name|AF_UNSPEC
 operator|&&
@@ -829,7 +812,7 @@ name|aflag
 operator|&&
 operator|(
 operator|(
-name|af
+name|af1
 operator|==
 name|AF_INET
 operator|&&
@@ -847,7 +830,7 @@ directive|ifdef
 name|INET6
 operator|||
 operator|(
-name|af
+name|af1
 operator|==
 name|AF_INET6
 operator|&&
@@ -864,7 +847,7 @@ directive|endif
 comment|/* INET6 */
 operator|||
 operator|(
-name|af
+name|af1
 operator|==
 name|AF_UNSPEC
 operator|&&
@@ -1129,14 +1112,14 @@ name|Lflag
 condition|)
 block|{
 name|char
-name|buf
+name|buf1
 index|[
 literal|15
 index|]
 decl_stmt|;
 name|snprintf
 argument_list|(
-name|buf
+name|buf1
 argument_list|,
 literal|15
 argument_list|,
@@ -1159,7 +1142,7 @@ name|printf
 argument_list|(
 literal|"%-14.14s "
 argument_list|,
-name|buf
+name|buf1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1727,12 +1710,13 @@ name|u_long
 name|off
 name|__unused
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
 name|int
-name|af
+name|af1
 name|__unused
 parameter_list|)
 block|{
@@ -2219,80 +2203,80 @@ name|p
 argument_list|(
 name|tcps_sc_added
 argument_list|,
-literal|"\t%lu syncache entries added\n"
+literal|"\t%lu syncache entrie%s added\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|tcps_sc_retransmitted
 argument_list|,
 literal|"\t\t%lu retransmitted\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|tcps_sc_dupsyn
 argument_list|,
 literal|"\t\t%lu dupsyn\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|tcps_sc_dropped
 argument_list|,
 literal|"\t\t%lu dropped\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|tcps_sc_completed
 argument_list|,
 literal|"\t\t%lu completed\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|tcps_sc_bucketoverflow
 argument_list|,
 literal|"\t\t%lu bucket overflow\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|tcps_sc_cacheoverflow
 argument_list|,
 literal|"\t\t%lu cache overflow\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|tcps_sc_reset
 argument_list|,
 literal|"\t\t%lu reset\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|tcps_sc_stale
 argument_list|,
 literal|"\t\t%lu stale\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|tcps_sc_aborted
 argument_list|,
 literal|"\t\t%lu aborted\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|tcps_sc_badack
 argument_list|,
 literal|"\t\t%lu badack\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|tcps_sc_unreach
 argument_list|,
@@ -2303,21 +2287,21 @@ name|p
 argument_list|(
 name|tcps_sc_zonefail
 argument_list|,
-literal|"\t\t%lu zone failures\n"
+literal|"\t\t%lu zone failure%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_sc_sendcookie
 argument_list|,
-literal|"\t%lu cookies sent\n"
+literal|"\t%lu cookie%s sent\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_sc_recvcookie
 argument_list|,
-literal|"\t%lu cookies received\n"
+literal|"\t%lu cookie%s received\n"
 argument_list|)
 expr_stmt|;
 undef|#
@@ -2350,12 +2334,13 @@ name|u_long
 name|off
 name|__unused
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
 name|int
-name|af
+name|af1
 name|__unused
 parameter_list|)
 block|{
@@ -2602,12 +2587,13 @@ name|u_long
 name|off
 name|__unused
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
 name|int
-name|af
+name|af1
 name|__unused
 parameter_list|)
 block|{
@@ -2927,6 +2913,7 @@ end_function
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|icmpnames
@@ -2986,12 +2973,13 @@ name|u_long
 name|off
 name|__unused
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
 name|int
-name|af
+name|af1
 name|__unused
 parameter_list|)
 block|{
@@ -3413,12 +3401,13 @@ name|u_long
 name|off
 name|__unused
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
 name|int
-name|af
+name|af1
 name|__unused
 parameter_list|)
 block|{
@@ -3597,12 +3586,13 @@ parameter_list|,
 name|int
 name|port
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|proto
 parameter_list|,
 name|int
-name|numeric_port
+name|num_port
 parameter_list|)
 block|{
 name|struct
@@ -3651,7 +3641,7 @@ operator|(
 name|Aflag
 operator|&&
 operator|!
-name|numeric_port
+name|num_port
 operator|)
 condition|?
 literal|12
@@ -3676,7 +3666,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|numeric_port
+name|num_port
 operator|&&
 name|port
 condition|)
@@ -3787,7 +3777,6 @@ modifier|*
 name|inp
 parameter_list|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp

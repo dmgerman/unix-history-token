@@ -253,22 +253,6 @@ directive|ifdef
 name|INET6
 end_ifdef
 
-begin_function_decl
-name|char
-modifier|*
-name|netname6
-parameter_list|(
-name|struct
-name|sockaddr_in6
-modifier|*
-parameter_list|,
-name|struct
-name|in6_addr
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|char
@@ -307,12 +291,13 @@ name|u_long
 name|dummy
 name|__unused
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
 name|int
-name|_af
+name|af1
 name|__unused
 parameter_list|)
 block|{
@@ -993,7 +978,6 @@ name|sin6
 decl_stmt|;
 endif|#
 directive|endif
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -1530,10 +1514,6 @@ name|printf
 argument_list|(
 literal|"%-17.17s "
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|inet_ntop
 argument_list|(
 name|AF_INET6
@@ -2494,7 +2474,7 @@ name|void
 name|sidewaysintpr
 parameter_list|(
 name|unsigned
-name|interval
+name|interval1
 parameter_list|,
 name|u_long
 name|off
@@ -2531,7 +2511,6 @@ decl_stmt|,
 modifier|*
 name|interesting
 decl_stmt|;
-specifier|register
 name|int
 name|line
 decl_stmt|;
@@ -2913,7 +2892,7 @@ name|void
 operator|)
 name|alarm
 argument_list|(
-name|interval
+name|interval1
 argument_list|)
 expr_stmt|;
 name|first
@@ -3513,7 +3492,7 @@ name|void
 operator|)
 name|alarm
 argument_list|(
-name|interval
+name|interval1
 argument_list|)
 expr_stmt|;
 name|line

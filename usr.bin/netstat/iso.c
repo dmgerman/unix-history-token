@@ -351,6 +351,7 @@ parameter_list|(
 name|u_long
 name|off
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -494,6 +495,7 @@ parameter_list|(
 name|u_long
 name|off
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -680,6 +682,7 @@ parameter_list|(
 name|u_long
 name|off
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -844,6 +847,7 @@ parameter_list|(
 name|u_long
 name|off
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -857,7 +861,6 @@ name|struct
 name|isopcb
 name|cb
 decl_stmt|;
-specifier|register
 name|struct
 name|isopcb
 modifier|*
@@ -1371,6 +1374,7 @@ parameter_list|(
 name|u_long
 name|off
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -2201,6 +2205,7 @@ parameter_list|(
 name|u_long
 name|off
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -2230,7 +2235,6 @@ block|,
 literal|"OPEN"
 block|, 	}
 decl_stmt|;
-specifier|register
 name|struct
 name|isopcb
 modifier|*
@@ -3188,7 +3192,6 @@ literal|" "
 argument_list|)
 expr_stmt|;
 block|{
-specifier|register
 name|int
 name|j
 decl_stmt|;
@@ -3455,7 +3458,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|{
-specifier|register
 name|int
 name|j
 decl_stmt|;
@@ -4413,7 +4415,6 @@ modifier|*
 name|delim
 parameter_list|)
 block|{
-specifier|register
 name|u_char
 modifier|*
 name|in
@@ -4431,14 +4432,12 @@ name|in
 operator|+
 name|n
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|out
 init|=
 name|obuf
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;

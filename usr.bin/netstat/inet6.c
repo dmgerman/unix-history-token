@@ -201,24 +201,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|inet6print
-parameter_list|(
-name|struct
-name|in6_addr
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|char
@@ -231,6 +213,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|ip6nh
@@ -764,12 +747,13 @@ name|u_long
 name|off
 name|__unused
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
 name|int
-name|af
+name|af1
 name|__unused
 parameter_list|)
 block|{
@@ -1842,6 +1826,7 @@ end_function
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|icmp6names
@@ -2375,12 +2360,13 @@ name|u_long
 name|off
 name|__unused
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
 name|int
-name|af
+name|af1
 name|__unused
 parameter_list|)
 block|{
@@ -3224,12 +3210,13 @@ name|u_long
 name|off
 name|__unused
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
 name|int
-name|af
+name|af1
 name|__unused
 parameter_list|)
 block|{
@@ -3344,12 +3331,13 @@ name|u_long
 name|off
 name|__unused
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
 name|int
-name|af
+name|af1
 name|__unused
 parameter_list|)
 block|{
@@ -3577,6 +3565,7 @@ parameter_list|,
 name|int
 name|port
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|proto
@@ -3736,7 +3725,6 @@ modifier|*
 name|in6p
 parameter_list|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp

@@ -603,6 +603,7 @@ function_decl|)
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -618,6 +619,7 @@ function_decl|)
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -642,7 +644,7 @@ modifier|*
 name|pr_name
 decl_stmt|;
 comment|/* well-known name */
-name|int
+name|u_long
 name|pr_usesysctl
 decl_stmt|;
 comment|/* true if we use sysctl, not kvm */
@@ -830,6 +832,8 @@ block|,
 literal|0
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|}
@@ -1130,6 +1134,8 @@ block|,
 name|NULL
 block|,
 literal|"ddp"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1146,6 +1152,8 @@ block|,
 literal|0
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|}
@@ -1175,6 +1183,8 @@ block|,
 name|NULL
 block|,
 literal|"ctrl"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1192,6 +1202,8 @@ block|,
 name|NULL
 block|,
 literal|"data"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1207,6 +1219,8 @@ block|,
 literal|0
 block|,
 name|NULL
+block|,
+literal|0
 block|,
 literal|0
 block|}
@@ -1801,20 +1815,15 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|argv
 index|[]
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|struct
 name|protox
 modifier|*
@@ -3111,7 +3120,6 @@ name|tp
 parameter_list|,
 name|name
 parameter_list|)
-specifier|register
 name|struct
 name|protox
 modifier|*
@@ -3131,6 +3139,7 @@ function_decl|)
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -3517,6 +3526,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|plural
@@ -3540,6 +3550,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|plurales

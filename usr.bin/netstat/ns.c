@@ -251,6 +251,7 @@ parameter_list|(
 name|u_long
 name|off
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -264,7 +265,6 @@ name|struct
 name|nspcb
 name|cb
 decl_stmt|;
-specifier|register
 name|struct
 name|nspcb
 modifier|*
@@ -684,6 +684,7 @@ parameter_list|(
 name|u_long
 name|off
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1382,6 +1383,7 @@ parameter_list|(
 name|u_long
 name|off
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1573,6 +1575,7 @@ parameter_list|(
 name|u_long
 name|off
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1586,11 +1589,9 @@ name|struct
 name|ns_errstat
 name|ns_errstat
 decl_stmt|;
-specifier|register
 name|int
 name|j
 decl_stmt|;
-specifier|register
 name|int
 name|histoprint
 init|=

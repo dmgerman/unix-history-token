@@ -123,6 +123,7 @@ block|{
 name|short
 name|mt_type
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|mt_name
@@ -284,6 +285,7 @@ name|mbaddr
 parameter_list|,
 name|u_long
 name|mbtaddr
+name|__unused
 parameter_list|,
 name|u_long
 name|nmbcaddr
@@ -299,6 +301,7 @@ name|cllimaddr
 parameter_list|,
 name|u_long
 name|cpusaddr
+name|__unused
 parameter_list|,
 name|u_long
 name|pgsaddr

@@ -237,6 +237,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|plural
@@ -247,6 +248,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|plurales
@@ -262,6 +264,7 @@ name|protopr
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -276,6 +279,7 @@ name|tcp_stats
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -290,6 +294,7 @@ name|udp_stats
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -304,6 +309,7 @@ name|ip_stats
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -318,6 +324,7 @@ name|icmp_stats
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -332,6 +339,7 @@ name|igmp_stats
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -352,6 +360,7 @@ name|ipsec_stats
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -377,6 +386,7 @@ name|ip6_stats
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -401,6 +411,7 @@ name|icmp6_stats
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -425,6 +436,7 @@ name|pim6_stats
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -439,6 +451,7 @@ name|rip6_stats
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -492,6 +505,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|netname6
@@ -503,6 +517,25 @@ parameter_list|,
 name|struct
 name|in6_addr
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|inet6print
+parameter_list|(
+name|struct
+name|in6_addr
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -528,6 +561,7 @@ name|pfkey_stats
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -547,6 +581,7 @@ name|bdg_stats
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -790,6 +825,7 @@ name|ipxprotopr
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -804,6 +840,7 @@ name|spx_stats
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -818,6 +855,7 @@ name|ipx_stats
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -832,6 +870,7 @@ name|ipxerr_stats
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -846,6 +885,7 @@ name|nsprotopr
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -860,6 +900,7 @@ name|spp_stats
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -874,6 +915,7 @@ name|idp_stats
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -888,6 +930,7 @@ name|nserr_stats
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -902,6 +945,7 @@ name|atalkprotopr
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -916,6 +960,7 @@ name|ddp_stats
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -930,6 +975,7 @@ name|netgraphprotopr
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -953,6 +999,7 @@ name|esis_stats
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -967,6 +1014,7 @@ name|clnp_stats
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -981,6 +1029,7 @@ name|cltp_stats
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -995,6 +1044,7 @@ name|iso_protopr
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1020,6 +1070,7 @@ name|tp_protopr
 parameter_list|(
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,

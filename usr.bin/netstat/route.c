@@ -377,6 +377,8 @@ block|}
 block|,
 block|{
 literal|0
+block|,
+literal|0
 block|}
 block|}
 struct|;
@@ -612,6 +614,7 @@ name|p_flags
 parameter_list|(
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -851,16 +854,17 @@ name|void
 name|pr_family
 parameter_list|(
 name|int
-name|af
+name|af1
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|afname
 decl_stmt|;
 switch|switch
 condition|(
-name|af
+name|af1
 condition|)
 block|{
 case|case
@@ -961,7 +965,7 @@ name|printf
 argument_list|(
 literal|"\nProtocol Family %d:\n"
 argument_list|,
-name|af
+name|af1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1802,7 +1806,7 @@ name|void
 name|pr_rthdr
 parameter_list|(
 name|int
-name|af
+name|af1
 parameter_list|)
 block|{
 if|if
@@ -1818,7 +1822,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|af
+name|af1
 operator|==
 name|AF_INET
 operator|||
@@ -2516,7 +2520,6 @@ decl_stmt|,
 modifier|*
 name|lim
 decl_stmt|;
-specifier|register
 name|struct
 name|rt_msghdr
 modifier|*
@@ -2702,7 +2705,6 @@ modifier|*
 name|rtm
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|sockaddr
 modifier|*
@@ -2735,7 +2737,7 @@ name|int
 name|old_af
 decl_stmt|;
 name|int
-name|af
+name|af1
 init|=
 literal|0
 decl_stmt|,
@@ -2787,7 +2789,7 @@ name|masks_done
 operator|=
 literal|1
 expr_stmt|;
-name|af
+name|af1
 operator|=
 name|sa
 operator|->
@@ -2798,7 +2800,7 @@ block|}
 else|else
 endif|#
 directive|endif
-name|af
+name|af1
 operator|=
 name|sa
 operator|->
@@ -2806,19 +2808,19 @@ name|sa_family
 expr_stmt|;
 if|if
 condition|(
-name|af
+name|af1
 operator|!=
 name|old_af
 condition|)
 block|{
 name|pr_family
 argument_list|(
-name|af
+name|af1
 argument_list|)
 expr_stmt|;
 name|old_af
 operator|=
-name|af
+name|af1
 expr_stmt|;
 block|}
 if|if
@@ -3018,15 +3020,10 @@ index|[
 literal|128
 index|]
 decl_stmt|;
-name|char
-modifier|*
-name|cplim
-decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|cp
-init|=
-name|workbuf
 decl_stmt|;
 switch|switch
 condition|(
@@ -3039,7 +3036,6 @@ case|case
 name|AF_INET
 case|:
 block|{
-specifier|register
 name|struct
 name|sockaddr_in
 modifier|*
@@ -3414,7 +3410,6 @@ case|case
 name|AF_LINK
 case|:
 block|{
-specifier|register
 name|struct
 name|sockaddr_dl
 modifier|*
@@ -3447,6 +3442,7 @@ name|sdl_slen
 operator|==
 literal|0
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -3461,6 +3457,11 @@ operator|->
 name|sdl_index
 argument_list|)
 expr_stmt|;
+name|cp
+operator|=
+name|workbuf
+expr_stmt|;
+block|}
 else|else
 switch|switch
 condition|(
@@ -3518,7 +3519,6 @@ break|break;
 block|}
 default|default:
 block|{
-specifier|register
 name|u_char
 modifier|*
 name|s
@@ -3534,6 +3534,17 @@ decl_stmt|,
 modifier|*
 name|slim
 decl_stmt|;
+name|char
+modifier|*
+name|cq
+decl_stmt|,
+modifier|*
+name|cqlim
+decl_stmt|;
+name|cq
+operator|=
+name|workbuf
+expr_stmt|;
 name|slim
 operator|=
 name|sa
@@ -3546,9 +3557,9 @@ operator|*
 operator|)
 name|sa
 expr_stmt|;
-name|cplim
+name|cqlim
 operator|=
-name|cp
+name|cq
 operator|+
 sizeof|sizeof
 argument_list|(
@@ -3557,11 +3568,11 @@ argument_list|)
 operator|-
 literal|6
 expr_stmt|;
-name|cp
+name|cq
 operator|+=
 name|sprintf
 argument_list|(
-name|cp
+name|cq
 argument_list|,
 literal|"(%d)"
 argument_list|,
@@ -3576,16 +3587,16 @@ name|s
 operator|<
 name|slim
 operator|&&
-name|cp
+name|cq
 operator|<
-name|cplim
+name|cqlim
 condition|)
 block|{
-name|cp
+name|cq
 operator|+=
 name|sprintf
 argument_list|(
-name|cp
+name|cq
 argument_list|,
 literal|" %02x"
 argument_list|,
@@ -3600,11 +3611,11 @@ name|s
 operator|<
 name|slim
 condition|)
-name|cp
+name|cq
 operator|+=
 name|sprintf
 argument_list|(
-name|cp
+name|cq
 argument_list|,
 literal|"%02x"
 argument_list|,
@@ -3636,6 +3647,7 @@ parameter_list|(
 name|int
 name|f
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|format
@@ -4173,7 +4185,6 @@ name|u_long
 name|in
 parameter_list|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -4397,7 +4408,6 @@ name|u_long
 name|mask
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|b
 decl_stmt|,
@@ -4453,7 +4463,6 @@ name|b
 operator|)
 condition|)
 block|{
-specifier|register
 name|int
 name|bb
 decl_stmt|;
@@ -4570,7 +4579,6 @@ decl_stmt|;
 name|u_long
 name|dmask
 decl_stmt|;
-specifier|register
 name|u_long
 name|i
 decl_stmt|;
@@ -4890,6 +4898,7 @@ name|INET6
 end_ifdef
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|netname6
@@ -5424,6 +5433,7 @@ name|sp
 init|=
 literal|0
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|net
@@ -5435,12 +5445,10 @@ name|host
 init|=
 literal|""
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|q
@@ -5845,7 +5853,6 @@ modifier|*
 name|sa
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|sockaddr_ipx
 modifier|*
@@ -5990,7 +5997,6 @@ modifier|*
 name|sa
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|sockaddr_ns
 modifier|*
@@ -6045,12 +6051,10 @@ name|host
 init|=
 literal|""
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|q
@@ -6316,7 +6320,6 @@ modifier|*
 name|sa
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|sockaddr_ns
 modifier|*
@@ -6415,7 +6418,6 @@ modifier|*
 name|p0
 parameter_list|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
