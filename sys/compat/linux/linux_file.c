@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -55,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -1524,6 +1536,32 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|MAC
+comment|/* 	 * Do directory search MAC check using non-cached credentials. 	 */
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|mac_check_vnode_readdir
+argument_list|(
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_ucred
+argument_list|,
+name|vp
+argument_list|)
+operator|)
+goto|goto
+name|out
+goto|;
+endif|#
+directive|endif
+comment|/* MAC */
 if|if
 condition|(
 operator|(

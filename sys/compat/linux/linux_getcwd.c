@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -91,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|<sys/uio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -603,6 +615,29 @@ name|eofflag
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|error
+operator|=
+name|mac_check_vnode_readdir
+argument_list|(
+name|td
+operator|->
+name|td_ucred
+argument_list|,
+name|uvp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+endif|#
+directive|endif
+comment|/* MAC */
 name|error
 operator|=
 name|VOP_READDIR

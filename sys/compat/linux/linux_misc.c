@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -49,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -1232,7 +1244,7 @@ name|vp
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * XXX This code should make use of vn_open(), rather than doing 	 * all this stuff itself. 	 */
+comment|/* 	 * XXX: This code should make use of vn_open(), rather than doing 	 * all this stuff itself. 	 */
 name|NDINIT
 argument_list|(
 operator|&
@@ -1426,6 +1438,31 @@ goto|goto
 name|cleanup
 goto|;
 comment|/* 	 * XXX: This should use vn_open() so that it is properly authorized, 	 * and to reduce code redundancy all over the place here. 	 */
+ifdef|#
+directive|ifdef
+name|MAC
+name|error
+operator|=
+name|mac_check_vnode_open
+argument_list|(
+name|td
+operator|->
+name|td_ucred
+argument_list|,
+name|vp
+argument_list|,
+name|FREAD
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+goto|goto
+name|cleanup
+goto|;
+endif|#
+directive|endif
 name|error
 operator|=
 name|VOP_OPEN
