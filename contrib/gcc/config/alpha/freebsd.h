@@ -80,7 +80,7 @@ define|#
 directive|define
 name|STARTFILE_SPEC
 define|\
-value|"%{!shared: %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}}	\      %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}"
+value|"%{!shared: %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}}	\      crti.o%s %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}"
 end_define
 
 begin_comment
@@ -98,7 +98,7 @@ define|#
 directive|define
 name|ENDFILE_SPEC
 define|\
-value|"%{!shared:crtend.o%s} %{shared:crtendS.o%s}"
+value|"%{!shared:crtend.o%s} %{shared:crtendS.o%s} crtn.o%s"
 end_define
 
 begin_comment
