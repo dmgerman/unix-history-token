@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)sc.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)sc.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -54,13 +54,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<luna68k/dev/scsireg.h>
+file|<luna68k/dev/screg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<luna68k/dev/scsivar.h>
+file|<luna68k/dev/scvar.h>
 end_include
 
 begin_comment
@@ -177,8 +177,8 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|scsi_softc
-name|scsi_softc
+name|sc_softc
+name|sc_softc
 index|[
 name|NSC
 index|]
@@ -755,12 +755,12 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
-name|scsi_softc
+name|sc_softc
 modifier|*
 name|hs
 init|=
 operator|&
-name|scsi_softc
+name|sc_softc
 index|[
 name|hc
 operator|->
@@ -872,12 +872,12 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
-name|scsi_softc
+name|sc_softc
 modifier|*
 name|hs
 init|=
 operator|&
-name|scsi_softc
+name|sc_softc
 index|[
 name|unit
 index|]
@@ -1975,12 +1975,12 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
-name|scsi_softc
+name|sc_softc
 modifier|*
 name|hs
 init|=
 operator|&
-name|scsi_softc
+name|sc_softc
 index|[
 name|ctlr
 index|]
@@ -2194,12 +2194,12 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
-name|scsi_softc
+name|sc_softc
 modifier|*
 name|hs
 init|=
 operator|&
-name|scsi_softc
+name|sc_softc
 index|[
 name|ctlr
 index|]
@@ -2560,7 +2560,7 @@ parameter_list|()
 block|{
 specifier|register
 name|struct
-name|scsi_softc
+name|sc_softc
 modifier|*
 name|hs
 decl_stmt|;
@@ -2592,7 +2592,7 @@ block|{
 name|hs
 operator|=
 operator|&
-name|scsi_softc
+name|sc_softc
 index|[
 name|ctlr
 index|]
@@ -2673,12 +2673,12 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
-name|scsi_softc
+name|sc_softc
 modifier|*
 name|hs
 init|=
 operator|&
-name|scsi_softc
+name|sc_softc
 index|[
 name|ctlr
 index|]
@@ -3990,7 +3990,7 @@ name|hd
 parameter_list|)
 specifier|register
 name|struct
-name|scsi_softc
+name|sc_softc
 modifier|*
 name|hs
 decl_stmt|;
@@ -4525,12 +4525,12 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
-name|scsi_softc
+name|sc_softc
 modifier|*
 name|hs
 init|=
 operator|&
-name|scsi_softc
+name|sc_softc
 index|[
 name|dq
 operator|->
@@ -4631,12 +4631,12 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
-name|scsi_softc
+name|sc_softc
 modifier|*
 name|hs
 init|=
 operator|&
-name|scsi_softc
+name|sc_softc
 index|[
 name|dq
 operator|->
@@ -4701,12 +4701,12 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
-name|scsi_softc
+name|sc_softc
 modifier|*
 name|hs
 init|=
 operator|&
-name|scsi_softc
+name|sc_softc
 index|[
 name|ctlr
 index|]
@@ -4817,12 +4817,12 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
-name|scsi_softc
+name|sc_softc
 modifier|*
 name|hs
 init|=
 operator|&
-name|scsi_softc
+name|sc_softc
 index|[
 name|dq
 operator|->
@@ -5103,12 +5103,12 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
-name|scsi_softc
+name|sc_softc
 modifier|*
 name|hs
 init|=
 operator|&
-name|scsi_softc
+name|sc_softc
 index|[
 name|ctlr
 index|]
@@ -5404,7 +5404,7 @@ end_function
 
 begin_function
 name|int
-name|scsi_test_unit_rdy
+name|sc_test_unit_rdy
 parameter_list|(
 name|ctlr
 parameter_list|,
@@ -5479,7 +5479,7 @@ end_function
 
 begin_function
 name|int
-name|scsi_request_sense
+name|sc_request_sense
 parameter_list|(
 name|ctlr
 parameter_list|,
@@ -5508,12 +5508,12 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
-name|scsi_softc
+name|sc_softc
 modifier|*
 name|hs
 init|=
 operator|&
-name|scsi_softc
+name|sc_softc
 index|[
 name|ctlr
 index|]
@@ -5559,7 +5559,7 @@ directive|ifdef
 name|REQ_DEBUG
 name|printf
 argument_list|(
-literal|"scsi_request_sense( %d, %d, %d, buf, %d) -- Start\n"
+literal|"sc_request_sense( %d, %d, %d, buf, %d) -- Start\n"
 argument_list|,
 name|ctlr
 argument_list|,
@@ -5794,7 +5794,7 @@ directive|ifdef
 name|REQ_DEBUG
 name|printf
 argument_list|(
-literal|"scsi_request_sense: Status -- 0x%x\n"
+literal|"sc_request_sense: Status -- 0x%x\n"
 argument_list|,
 name|status
 argument_list|)
