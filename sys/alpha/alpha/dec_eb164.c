@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/* $NetBSD: dec_eb164.c,v 1.26 1998/04/17 02:45:19 mjacob Exp $ */
 end_comment
 
@@ -14,6 +10,20 @@ end_comment
 begin_comment
 comment|/*  * Additional Copyright (c) 1997 by Matthew Jacob for NASA/Ames Research Center  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#

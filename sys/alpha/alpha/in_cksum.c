@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/* $NetBSD: in_cksum.c,v 1.7 1997/09/02 13:18:15 thorpej Exp $ */
 end_comment
 
@@ -20,6 +16,14 @@ end_include
 begin_comment
 comment|/* RCS ID& Copyright macro defns */
 end_comment
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
