@@ -7,31 +7,19 @@ begin_comment
 comment|/**  ** MOUSED.C  **  ** Mouse daemon : listens to a serial port, the bus mouse interface, or  ** the PS/2 mouse port for mouse data stream, interprets data and passes  ** ioctls off to the console driver.  **  ** The mouse interface functions are derived closely from the mouse  ** handler in the XFree86 X server.  Many thanks to the XFree86 people  ** for their great work!  **  **/
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -85,12 +73,6 @@ begin_include
 include|#
 directive|include
 file|<sys/un.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
@@ -1014,8 +996,7 @@ comment|/* Genius Mouse */
 block|{
 literal|"PNP0F06"
 block|,
-name|MOUSE_PROTO_
-operator|???
+name|MOUSE_PROTO_XXX
 block|,
 name|MOUSE_MODEL_GENERIC
 block|}
@@ -1024,8 +1005,7 @@ comment|/* Genius Mouse */
 block|{
 literal|"PNP0F07"
 block|,
-name|MOUSE_PROTO_
-operator|???
+name|MOUSE_PROTO_XXX
 block|,
 name|MOUSE_MODEL_GENERIC
 block|}
@@ -1111,8 +1091,7 @@ comment|/* TI QuickPort */
 block|{
 literal|"PNP0F10"
 block|,
-name|MOUSE_PROTO_
-operator|???
+name|MOUSE_PROTO_XXX
 block|,
 name|MOUSE_MODEL_GENERIC
 block|}
@@ -1153,8 +1132,7 @@ comment|/* MS Kids Mouse */
 block|{
 literal|"PNP0F14"
 block|,
-name|MOUSE_PROTO_
-operator|???
+name|MOUSE_PROTO_XXX
 block|,
 name|MOUSE_MODEL_GENERIC
 block|}
@@ -1177,8 +1155,7 @@ comment|/* Logitech SWIFT */
 block|{
 literal|"PNP0F16"
 block|,
-name|MOUSE_PROTO_
-operator|???
+name|MOUSE_PROTO_XXX
 block|,
 name|MOUSE_MODEL_GENERIC
 block|}
@@ -1219,8 +1196,7 @@ comment|/* Logitech SWIFT compatible */
 block|{
 literal|"PNP0F1A"
 block|,
-name|MOUSE_PROTO_
-operator|???
+name|MOUSE_PROTO_XXX
 block|,
 name|MOUSE_MODEL_GENERIC
 block|}
@@ -1229,8 +1205,7 @@ comment|/* HP Omnibook */
 block|{
 literal|"PNP0F1B"
 block|,
-name|MOUSE_PROTO_
-operator|???
+name|MOUSE_PROTO_XXX
 block|,
 name|MOUSE_MODEL_GENERIC
 block|}
@@ -1239,8 +1214,7 @@ comment|/* Compaq LTE TrackBall PS/2 */
 block|{
 literal|"PNP0F1C"
 block|,
-name|MOUSE_PROTO_
-operator|???
+name|MOUSE_PROTO_XXX
 block|,
 name|MOUSE_MODEL_GENERIC
 block|}
@@ -1249,8 +1223,7 @@ comment|/* Compaq LTE TrackBall serial */
 block|{
 literal|"PNP0F1D"
 block|,
-name|MOUSE_PROTO_
-operator|???
+name|MOUSE_PROTO_XXX
 block|,
 name|MOUSE_MODEL_GENERIC
 block|}
@@ -1259,8 +1232,7 @@ comment|/* MS Kidts Trackball */
 block|{
 literal|"PNP0F1E"
 block|,
-name|MOUSE_PROTO_
-operator|???
+name|MOUSE_PROTO_XXX
 block|,
 name|MOUSE_MODEL_GENERIC
 block|}
@@ -15532,7 +15504,7 @@ name|SUN_LEN
 parameter_list|(
 name|unp
 parameter_list|)
-value|( ((char *)(unp)->sun_path - (char *)(unp)) + \ 		       strlen((unp)->path) )
+value|(((char *)(unp)->sun_path - (char *)(unp)) + \ 		       strlen((unp)->path))
 endif|#
 directive|endif
 if|if
