@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)iostat.c	4.14 (Berkeley) 86/10/19"
+literal|"@(#)iostat.c	4.15 (Berkeley) 87/01/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -525,7 +525,7 @@ if|if
 condition|(
 name|nl
 index|[
-name|DK_NDRIVE
+name|X_DK_NDRIVE
 index|]
 operator|.
 name|n_value
