@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tape.c,v 1.9 1998/06/15 06:58:11 charnier Exp $"
+literal|"$Id: tape.c,v 1.10 1998/09/15 10:25:50 gibbs Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -811,6 +811,9 @@ name|count
 operator|=
 literal|1
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__alpha__
 operator|*
 operator|(
 expr|union
@@ -833,6 +836,27 @@ operator|*
 operator|)
 name|dp
 expr_stmt|;
+else|#
+directive|else
+name|bcopy
+argument_list|(
+name|dp
+argument_list|,
+operator|*
+operator|(
+name|nextblock
+operator|)
+operator|++
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|union
+name|u_spcl
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|isspcl
