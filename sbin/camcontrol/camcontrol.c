@@ -10270,7 +10270,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|ccb_getdev
+name|ccb_getdevstats
 argument_list|)
 operator|-
 sizeof|sizeof
