@@ -17065,7 +17065,8 @@ operator|(
 literal|1
 operator|<<
 operator|(
-name|pci_max_burst_len
+literal|3
+comment|/*pci_max_burst_len*/
 operator|+
 literal|8
 operator|)
@@ -26669,7 +26670,7 @@ name|pci_read_config
 argument_list|(
 name|dev
 argument_list|,
-name|PCI_COMMAND_STATUS_REG
+name|PCIR_COMMAND
 argument_list|,
 literal|4
 argument_list|)
@@ -26693,7 +26694,7 @@ name|pci_write_config
 argument_list|(
 name|dev
 argument_list|,
-name|PCI_COMMAND_STATUS_REG
+name|PCIR_COMMAND
 argument_list|,
 name|cfcsinfo
 argument_list|,
