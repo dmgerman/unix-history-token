@@ -276,7 +276,6 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-specifier|register
 name|enum
 name|STYLE
 name|style
@@ -290,15 +289,12 @@ modifier|*
 name|sbp
 decl_stmt|;
 block|{
-specifier|register
 name|off_t
 name|size
 decl_stmt|;
-specifier|register
 name|int
 name|llen
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -521,7 +517,6 @@ modifier|*
 name|fp
 decl_stmt|;
 block|{
-specifier|register
 name|BF
 modifier|*
 name|mark
@@ -532,7 +527,6 @@ decl_stmt|,
 modifier|*
 name|tr
 decl_stmt|;
-specifier|register
 name|int
 name|ch
 decl_stmt|,
@@ -540,7 +534,6 @@ name|len
 decl_stmt|,
 name|llen
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p

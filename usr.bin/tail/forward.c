@@ -1040,11 +1040,9 @@ modifier|*
 name|sbp
 decl_stmt|;
 block|{
-specifier|register
 name|off_t
 name|size
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p

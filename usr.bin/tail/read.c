@@ -113,7 +113,6 @@ name|fp
 parameter_list|,
 name|off
 parameter_list|)
-specifier|register
 name|FILE
 modifier|*
 name|fp
@@ -122,7 +121,6 @@ name|off_t
 name|off
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|ch
 decl_stmt|,
@@ -130,7 +128,6 @@ name|len
 decl_stmt|,
 name|tlen
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|ep
@@ -441,7 +438,6 @@ name|fp
 parameter_list|,
 name|off
 parameter_list|)
-specifier|register
 name|FILE
 modifier|*
 name|fp
@@ -466,11 +462,9 @@ block|}
 modifier|*
 name|lines
 struct|;
-specifier|register
 name|int
 name|ch
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
