@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	3.27	%G%"
+literal|"@(#)parseaddr.c	3.28	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1025,34 +1025,6 @@ operator|>
 literal|0
 condition|)
 continue|continue;
-if|if
-condition|(
-name|avp
-operator|>=
-operator|&
-name|av
-index|[
-name|MAXATOM
-index|]
-condition|)
-block|{
-name|syserr
-argument_list|(
-literal|"prescan: too many tokens"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-operator|*
-name|avp
-operator|++
-operator|=
-name|tok
-expr_stmt|;
 comment|/* we prefer<> specs */
 if|if
 condition|(
@@ -1151,6 +1123,34 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
+if|if
+condition|(
+name|avp
+operator|>=
+operator|&
+name|av
+index|[
+name|MAXATOM
+index|]
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"prescan: too many tokens"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+operator|*
+name|avp
+operator|++
+operator|=
+name|tok
+expr_stmt|;
 block|}
 operator|*
 name|avp
