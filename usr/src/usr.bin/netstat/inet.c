@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1983, 1988, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet.c	8.4 (Berkeley) %G%"
+literal|"@(#)inet.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -975,6 +975,13 @@ argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
+name|tcps_badsyn
+argument_list|,
+literal|"\t%d bad connection attempt%s\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
 name|tcps_connects
 argument_list|,
 literal|"\t%d connection%s established (including accepts)\n"
@@ -1024,6 +1031,13 @@ argument_list|(
 name|tcps_persisttimeo
 argument_list|,
 literal|"\t%d persist timeout%s\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|tcps_persistdrop
+argument_list|,
+literal|"\t%d connection%s timed out in persist\n"
 argument_list|)
 expr_stmt|;
 name|p
