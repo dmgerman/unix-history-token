@@ -367,6 +367,12 @@ name|PAGE_MASK_MAX
 value|PAGE_MASK_4M
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KSTACK_PAGES
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -377,6 +383,11 @@ end_define
 begin_comment
 comment|/* pages of kernel stack (with pcb) */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

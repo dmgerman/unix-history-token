@@ -346,6 +346,12 @@ begin_comment
 comment|/* increment of stack/NBPG */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KSTACK_PAGES
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -356,6 +362,11 @@ end_define
 begin_comment
 comment|/* pages of kstack (with pcb) */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
