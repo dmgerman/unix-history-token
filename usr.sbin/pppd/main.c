@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.5 1995/10/31 21:21:26 peter Exp $"
+literal|"$Id: main.c,v 1.6 1996/08/11 17:29:33 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1643,6 +1643,9 @@ if|if
 condition|(
 operator|!
 name|default_device
+operator|&&
+operator|!
+name|nodetach
 condition|)
 name|setsid
 argument_list|()
@@ -1793,6 +1796,9 @@ if|if
 condition|(
 operator|!
 name|default_device
+operator|&&
+operator|!
+name|nodetach
 operator|&&
 name|ioctl
 argument_list|(
