@@ -5066,6 +5066,13 @@ break|break;
 block|}
 else|else
 block|{
+name|_http_seterr
+argument_list|(
+name|conn
+operator|->
+name|err
+argument_list|)
+expr_stmt|;
 goto|goto
 name|ouch
 goto|;
