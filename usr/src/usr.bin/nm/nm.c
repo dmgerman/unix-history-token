@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nm.c 3.2 %G%"
+literal|"@(#)nm.c 3.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1868,6 +1868,10 @@ block|,
 name|N_LENG
 block|,
 literal|"LENG"
+block|,
+name|N_PC
+block|,
+literal|"PC"
 block|,
 literal|0
 block|,
