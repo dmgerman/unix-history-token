@@ -5366,6 +5366,20 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|int
+name|msgNoYes
+parameter_list|(
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|char
 modifier|*
 name|msgGetInput

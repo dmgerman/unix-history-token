@@ -2391,10 +2391,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|msgYesNo
+operator|!
+name|msgNoYes
 argument_list|(
-literal|"Will this machine be a leaf node (e.g. will not forward packets\n"
-literal|"between interfaces)?"
+literal|"Do you want this machine to function as a network gateway?"
 argument_list|)
 condition|)
 name|variable_set2
@@ -2411,10 +2411,10 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|msgYesNo
+operator|!
+name|msgNoYes
 argument_list|(
-literal|"Do you want to grant only normal users FTP access to this\n"
-literal|"host (e.g. no anonymous FTP connections)?"
+literal|"Do you want to have anonymous FTP access to this machine?"
 argument_list|)
 condition|)
 name|configAnonFTP
@@ -2428,7 +2428,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|msgYesNo
+name|msgNoYes
 argument_list|(
 literal|"Do you want to configure this machine as an NFS server?"
 argument_list|)
@@ -2444,7 +2444,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|msgYesNo
+name|msgNoYes
 argument_list|(
 literal|"Do you want to configure this machine as an NFS client?"
 argument_list|)
@@ -2461,7 +2461,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|msgYesNo
+name|msgNoYes
 argument_list|(
 literal|"Do you want to select a default security profile for\n"
 literal|"this host (select No for \"medium\" security)?"
@@ -2484,7 +2484,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|msgYesNo
+name|msgNoYes
 argument_list|(
 literal|"Would you like to customize your system console settings?"
 argument_list|)
@@ -2543,9 +2543,9 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|msgYesNo
+name|msgNoYes
 argument_list|(
-literal|"Does this system have a non-USB mouse attached to it?"
+literal|"Does this system have a USB mouse attached to it?"
 argument_list|)
 condition|)
 name|dmenuOpenSimple
@@ -2933,7 +2933,7 @@ comment|/* Final menu of last resort */
 if|if
 condition|(
 operator|!
-name|msgYesNo
+name|msgNoYes
 argument_list|(
 literal|"Visit the general configuration menu for a chance to set\n"
 literal|"any last options?"
@@ -3807,7 +3807,7 @@ operator|!
 name|upgrade
 operator|||
 operator|!
-name|msgYesNo
+name|msgNoYes
 argument_list|(
 literal|"You are upgrading - are you SURE you want to newfs the root partition?"
 argument_list|)
@@ -4163,7 +4163,7 @@ operator|!
 name|upgrade
 operator|||
 operator|!
-name|msgYesNo
+name|msgNoYes
 argument_list|(
 literal|"You are upgrading - are you SURE you want to newfs /dev/%s?"
 argument_list|,

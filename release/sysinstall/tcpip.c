@@ -1343,7 +1343,7 @@ operator|)
 operator|&&
 operator|(
 operator|!
-name|msgYesNo
+name|msgNoYes
 argument_list|(
 literal|"Do you want to try IPv6 configuration of the interface?"
 argument_list|)
@@ -1530,7 +1530,7 @@ operator|)
 operator|&&
 operator|(
 operator|!
-name|msgYesNo
+name|msgNoYes
 argument_list|(
 literal|"Do you want to try DHCP configuration of the interface?"
 argument_list|)
