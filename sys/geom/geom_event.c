@@ -563,6 +563,11 @@ operator|==
 name|NULL
 condition|)
 break|break;
+if|if
+condition|(
+name|g_shutdown
+condition|)
+break|break;
 name|LIST_FOREACH
 argument_list|(
 argument|mp
@@ -620,6 +625,11 @@ break|break;
 case|case
 name|EV_NEW_PROVIDER
 case|:
+if|if
+condition|(
+name|g_shutdown
+condition|)
+break|break;
 name|g_trace
 argument_list|(
 name|G_T_TOPOLOGY
