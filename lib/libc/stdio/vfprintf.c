@@ -18,13 +18,17 @@ name|lint
 argument_list|)
 end_if
 
+begin_comment
+comment|/*static char *sccsid = "from: @(#)vfprintf.c	5.50 (Berkeley) 12/16/92";*/
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
-index|[]
+modifier|*
+name|rcsid
 init|=
-literal|"@(#)vfprintf.c	5.50 (Berkeley) 12/16/92"
+literal|"$Id: vfprintf.c,v 1.9 1993/11/04 02:26:10 jtc Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -366,6 +370,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<math.h>
 end_include
 
@@ -621,7 +631,7 @@ name|char
 modifier|*
 name|fmt0
 decl_stmt|;
-name|va_list
+name|_VA_LIST_
 name|ap
 decl_stmt|;
 block|{
@@ -1462,45 +1472,12 @@ name|FLOATING_POINT
 case|case
 literal|'e'
 case|:
-comment|/* anomalous precision */
 case|case
 literal|'E'
 case|:
-name|prec
-operator|=
-operator|(
-name|prec
-operator|==
-operator|-
-literal|1
-operator|)
-condition|?
-name|DEFPREC
-operator|+
-literal|1
-else|:
-name|prec
-operator|+
-literal|1
-expr_stmt|;
-comment|/* FALLTHROUGH */
-goto|goto
-name|fp_begin
-goto|;
 case|case
 literal|'f'
 case|:
-comment|/* always print trailing zeroes */
-if|if
-condition|(
-name|prec
-operator|!=
-literal|0
-condition|)
-name|flags
-operator||=
-name|ALT
-expr_stmt|;
 case|case
 literal|'g'
 case|:
@@ -1514,12 +1491,57 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|prec
 operator|=
 name|DEFPREC
 expr_stmt|;
-name|fp_begin
-label|:
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|ch
+operator|==
+literal|'g'
+operator|||
+name|ch
+operator|==
+literal|'G'
+operator|)
+operator|&&
+name|prec
+operator|==
+literal|0
+condition|)
+block|{
+name|prec
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|flags
+operator|&
+name|LONGDBL
+condition|)
+block|{
+name|_double
+operator|=
+operator|(
+name|double
+operator|)
+name|va_arg
+argument_list|(
+argument|ap
+argument_list|,
+argument|long double
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|_double
 operator|=
 name|va_arg
@@ -1529,6 +1551,7 @@ argument_list|,
 name|double
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* do this before tricky precision changes */
 if|if
 condition|(
@@ -2460,10 +2483,10 @@ block|{
 comment|/* kludge for __dtoa irregularity */
 if|if
 condition|(
-name|prec
-operator|==
-literal|0
-operator|||
+name|expt
+operator|>=
+name|ndig
+operator|&&
 operator|(
 name|flags
 operator|&
@@ -2858,16 +2881,36 @@ name|ch
 operator|==
 literal|'f'
 condition|)
+block|{
 name|mode
 operator|=
 literal|3
 expr_stmt|;
+comment|/* ndigits after the decimal point */
+block|}
 else|else
 block|{
+comment|/* To obtain ndigits after the decimal point for the 'e'  		 * and 'E' formats, round to ndigits + 1 significant  		 * figures. 		 */
+if|if
+condition|(
+name|ch
+operator|==
+literal|'e'
+operator|||
+name|ch
+operator|==
+literal|'E'
+condition|)
+block|{
+name|ndigits
+operator|++
+expr_stmt|;
+block|}
 name|mode
 operator|=
 literal|2
 expr_stmt|;
+comment|/* ndigits significant digits */
 block|}
 if|if
 condition|(
@@ -2914,6 +2957,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|ch
+operator|!=
+literal|'g'
+operator|&&
+name|ch
+operator|!=
+literal|'G'
+operator|)
+operator|||
 name|flags
 operator|&
 name|ALT
