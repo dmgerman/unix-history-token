@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)scanner.c 1.5 %G%"
+literal|"@(#)scanner.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -595,11 +595,25 @@ operator|==
 name|NUM
 condition|)
 block|{
+if|if
+condition|(
+name|shellmode
+condition|)
+block|{
+name|t
+operator|=
+name|getident
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
 name|t
 operator|=
 name|getnum
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
