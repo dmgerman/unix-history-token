@@ -106,6 +106,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ata_if.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ofw/openfirm.h>
 end_include
 
@@ -771,6 +777,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|ata_iobus_sub_setmode
+parameter_list|(
+name|device_t
+name|parent
+parameter_list|,
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|device_method_t
@@ -805,6 +825,14 @@ argument_list|(
 name|device_resume
 argument_list|,
 name|ata_resume
+argument_list|)
+block|,
+comment|/* ATA interface */
+name|DEVMETHOD
+argument_list|(
+name|ata_setmode
+argument_list|,
+name|ata_iobus_sub_setmode
 argument_list|)
 block|,
 block|{
@@ -900,6 +928,38 @@ argument_list|(
 name|dev
 argument_list|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|ata_iobus_sub_setmode
+parameter_list|(
+name|device_t
+name|parent
+parameter_list|,
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|struct
+name|ata_device
+modifier|*
+name|atadev
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
+comment|/* Only ever PIO mode here... */
+name|atadev
+operator|->
+name|mode
+operator|=
+name|ATA_PIO
+expr_stmt|;
 block|}
 end_function
 

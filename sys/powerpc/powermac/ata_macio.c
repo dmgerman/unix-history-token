@@ -106,6 +106,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ata_if.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ofw/ofw_bus.h>
 end_include
 
@@ -146,6 +152,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|ata_macio_setmode
+parameter_list|(
+name|device_t
+name|parent
+parameter_list|,
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|device_method_t
@@ -166,6 +186,14 @@ argument_list|(
 name|device_attach
 argument_list|,
 name|ata_attach
+argument_list|)
+block|,
+comment|/* ATA interface */
+name|DEVMETHOD
+argument_list|(
+name|ata_setmode
+argument_list|,
+name|ata_macio_setmode
 argument_list|)
 block|,
 block|{
@@ -432,6 +460,38 @@ name|dev
 argument_list|)
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|ata_macio_setmode
+parameter_list|(
+name|device_t
+name|parent
+parameter_list|,
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|struct
+name|ata_device
+modifier|*
+name|atadev
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
+comment|/* TODO bang macio speed register */
+name|atadev
+operator|->
+name|mode
+operator|=
+name|ATA_PIO
+expr_stmt|;
 block|}
 end_function
 
