@@ -108,6 +108,13 @@ name|Chunk
 value|CTM_Q_MD5_Chunk
 end_define
 
+begin_define
+define|#
+directive|define
+name|Force
+value|CTM_Q_MD5_Force
+end_define
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -164,6 +171,8 @@ block|,
 name|MD5
 operator||
 name|Before
+operator||
+name|Force
 block|,
 name|MD5
 operator||

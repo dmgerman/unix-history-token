@@ -69,10 +69,6 @@ directive|include
 file|<sys/file.h>
 end_include
 
-begin_comment
-comment|/*  * We redefine the names to make it look nice...  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -198,6 +194,13 @@ define|#
 directive|define
 name|CTM_Q_MD5_Chunk
 value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|CTM_Q_MD5_Force
+value|0x0800
 end_define
 
 begin_struct
@@ -360,6 +363,62 @@ name|CheckIt
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|Exit_OK
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|Exit_Garbage
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|Exit_Pilot
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|Exit_Broke
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|Exit_NotOK
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|Exit_Forcible
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|Exit_Mess
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|Exit_Done
+value|64
+end_define
+
 begin_function_decl
 name|char
 modifier|*
@@ -412,7 +471,7 @@ begin_define
 define|#
 directive|define
 name|WRONG
-value|{Assert(); return 32;}
+value|{Assert(); return Exit_Mess;}
 end_define
 
 begin_function_decl

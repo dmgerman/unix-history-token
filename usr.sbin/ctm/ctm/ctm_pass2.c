@@ -448,7 +448,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator||=
-literal|8
+name|Exit_Forcible
 expr_stmt|;
 block|}
 break|break;
@@ -482,7 +482,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator||=
-literal|8
+name|Exit_NotOK
 expr_stmt|;
 break|break;
 block|}
@@ -521,7 +521,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator||=
-literal|8
+name|Exit_NotOK
 expr_stmt|;
 block|}
 break|break;
@@ -561,7 +561,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator||=
-literal|8
+name|Exit_NotOK
 expr_stmt|;
 block|}
 break|break;
@@ -643,10 +643,44 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|j
+operator|&
+name|CTM_Q_MD5_Force
+condition|)
+block|{
+if|if
+condition|(
+name|Force
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  Can and will force.\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  Could have forced.n"
+argument_list|)
+expr_stmt|;
 name|ret
 operator||=
-literal|8
+name|Exit_Forcible
 expr_stmt|;
+block|}
+else|else
+block|{
+name|ret
+operator||=
+name|Exit_NotOK
+expr_stmt|;
+block|}
 block|}
 break|break;
 block|}
@@ -667,10 +701,7 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Unqualified MD5 */
-name|ret
-operator|=
-literal|32
-expr_stmt|;
+name|WRONG
 break|break;
 case|case
 name|CTM_F_Count
@@ -792,7 +823,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator||=
-literal|32
+name|Exit_Mess
 expr_stmt|;
 return|return
 name|ret

@@ -742,7 +742,7 @@ name|ed
 operator|=
 name|popen
 argument_list|(
-literal|"ed -s"
+literal|"ed"
 argument_list|,
 literal|"w"
 argument_list|)
@@ -755,6 +755,15 @@ condition|)
 block|{
 name|WRONG
 block|}
+name|fprintf
+argument_list|(
+name|ed
+argument_list|,
+literal|"e %s\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cnt
