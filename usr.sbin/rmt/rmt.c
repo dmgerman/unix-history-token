@@ -424,6 +424,7 @@ argument_list|,
 name|mode
 argument_list|)
 expr_stmt|;
+comment|/* 		 * XXX the rmt protocol does not provide a means to 		 * specify the permission bits; allow rw for everyone, 		 * as modified by the users umask 		 */
 name|tape
 operator|=
 name|open
@@ -434,6 +435,8 @@ name|atoi
 argument_list|(
 name|mode
 argument_list|)
+argument_list|,
+literal|0666
 argument_list|)
 expr_stmt|;
 if|if
