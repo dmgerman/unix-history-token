@@ -155,12 +155,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/psl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/pc/display.h>
 end_include
 
@@ -169,6 +163,12 @@ ifdef|#
 directive|ifdef
 name|__i386__
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/psl.h>
+end_include
 
 begin_include
 include|#
@@ -688,6 +688,8 @@ begin_if
 if|#
 directive|if
 name|__i386__
+operator|||
+name|__ia64__
 end_if
 
 begin_function_decl
@@ -7430,6 +7432,8 @@ block|{
 if|#
 directive|if
 name|__i386__
+operator|||
+name|__ia64__
 name|int
 name|unit
 decl_stmt|;
@@ -7501,7 +7505,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* __i386__ */
+comment|/* __i386__ || __ia64__ */
 if|#
 directive|if
 name|__alpha__
@@ -7532,6 +7536,8 @@ block|{
 if|#
 directive|if
 name|__i386__
+operator|||
+name|__ia64__
 name|int
 name|unit
 decl_stmt|;
@@ -7613,6 +7619,8 @@ comment|/* shouldn't happen */
 if|#
 directive|if
 name|__i386__
+operator|||
+name|__ia64__
 if|#
 directive|if
 literal|0
@@ -14821,6 +14829,8 @@ begin_if
 if|#
 directive|if
 name|__i386__
+operator|||
+name|__ia64__
 end_if
 
 begin_function
