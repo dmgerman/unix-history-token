@@ -1909,6 +1909,11 @@ condition|(
 name|error
 condition|)
 block|{
+name|vput
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -1916,11 +1921,6 @@ name|Giant
 argument_list|)
 expr_stmt|;
 comment|/* VFS */
-name|vput
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 name|vp
 operator|=
 name|NULL
