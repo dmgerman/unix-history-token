@@ -50,6 +50,11 @@ name|defined
 argument_list|(
 name|__NetBSD__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
 end_if
 
 begin_include
@@ -974,7 +979,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/*  * This code is disabled because for some mysterious it causes  * printing not to work.  But only sometimes, and mostly with  * UHCI and less often with OHCI.  *sigh*  */
+comment|/*  * This code is disabled because for some mysterious reason it causes  * printing not to work.  But only sometimes, and mostly with  * UHCI and less often with OHCI.  *sigh*  */
 block|{ 	usb_config_descriptor_t *cd = usbd_get_config_descriptor(dev); 	usb_device_request_t req; 	int len, alen;  	req.bmRequestType = UT_READ_CLASS_INTERFACE; 	req.bRequest = UR_GET_DEVICE_ID; 	USETW(req.wValue, cd->bConfigurationValue); 	USETW2(req.wIndex, id->bInterfaceNumber, id->bAlternateSetting); 	USETW(req.wLength, sizeof devinfo - 1); 	err = usbd_do_request_flags(dev,&req, devinfo, USBD_SHORT_XFER_OK,&alen); 	if (err) { 		printf("%s: cannot get device id\n", USBDEVNAME(sc->sc_dev)); 	} else if (alen<= 2) { 		printf("%s: empty device id, no printer connected?\n", 		       USBDEVNAME(sc->sc_dev)); 	} else {
 comment|/* devinfo now contains an IEEE-1284 device ID */
 block|len = ((devinfo[0]& 0xff)<< 8) | (devinfo[1]& 0xff); 		if (len> sizeof devinfo - 3) 			len = sizeof devinfo - 3; 		devinfo[len] = 0; 		printf("%s: device id<", USBDEVNAME(sc->sc_dev)); 		ieee1284_print_id(devinfo+2); 		printf(">\n"); 	} 	}
