@@ -280,6 +280,15 @@ literal|0x10
 block|}
 block|,
 block|{
+literal|0x01c0135c
+block|,
+literal|"Quatech SSCLP-200/300"
+block|,
+literal|0x18
+comment|/*  		 * NB: You must mount the "SPAD" jumper to correctly detect 		 * the FIFO on the UART.  Set the options on the jumpers, 		 * we do not support the extra registers on the Quatech. 		 */
+block|}
+block|,
+block|{
 literal|0x00000000
 block|,
 name|NULL
