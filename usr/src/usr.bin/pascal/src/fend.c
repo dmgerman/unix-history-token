@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fend.c 1.19 %G%"
+literal|"@(#)fend.c 1.20 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2636,6 +2636,27 @@ argument_list|(
 literal|"_program:"
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+comment|/* 	 *	register save mask 	 */
+name|eecookiep
+operator|->
+name|savlabel
+operator|=
+name|getlab
+argument_list|()
+expr_stmt|;
+name|putprintf
+argument_list|(
+literal|"	.word	%s%d"
+argument_list|,
+literal|0
+argument_list|,
+name|SAVE_MASK_LABEL
+argument_list|,
+name|eecookiep
+operator|->
+name|savlabel
 argument_list|)
 expr_stmt|;
 block|}
