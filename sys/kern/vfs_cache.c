@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Poul-Henning Kamp of the FreeBSD Project.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_cache.c	8.5 (Berkeley) 3/22/95  * $Id: vfs_cache.c,v 1.28 1997/08/31 07:32:13 phk Exp $  */
+comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Poul-Henning Kamp of the FreeBSD Project.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_cache.c	8.5 (Berkeley) 3/22/95  * $Id: vfs_cache.c,v 1.29 1997/09/02 20:06:01 bde Exp $  */
 end_comment
 
 begin_include
@@ -69,7 +69,7 @@ parameter_list|,
 name|cnp
 parameter_list|)
 define|\
-value|(&nchashtbl[((dvp)->v_id + (cnp)->cn_hash) % nchash])
+value|(&nchashtbl[((dvp)->v_id + (cnp)->cn_hash)& nchash])
 end_define
 
 begin_expr_stmt
@@ -114,6 +114,27 @@ end_decl_stmt
 begin_comment
 comment|/* size of hash table */
 end_comment
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|nchash
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|nchash
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static
@@ -985,6 +1006,31 @@ else|:
 literal|0
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|vp
+operator|->
+name|v_type
+operator|==
+name|VDIR
+condition|)
+block|{
+name|vp
+operator|->
+name|v_dd
+operator|=
+name|dvp
+expr_stmt|;
+name|vp
+operator|->
+name|v_ddid
+operator|=
+name|dvp
+operator|->
+name|v_id
+expr_stmt|;
+block|}
 comment|/* 	 * Fill in cache info, if vp is NULL this is a "negative" cache entry. 	 * For negative entries, we have to record whether it is a whiteout. 	 * the whiteout flag is stored in the nc_vpid field which is 	 * otherwise unused. 	 */
 name|ncp
 operator|->
@@ -1143,7 +1189,7 @@ argument_list|)
 expr_stmt|;
 name|nchashtbl
 operator|=
-name|phashinit
+name|hashinit
 argument_list|(
 name|desiredvnodes
 argument_list|,
@@ -1181,10 +1227,6 @@ name|struct
 name|nchashhead
 modifier|*
 name|ncpp
-decl_stmt|;
-specifier|static
-name|u_long
-name|nextvnodeid
 decl_stmt|;
 while|while
 condition|(
@@ -1230,33 +1272,18 @@ name|v_cache_dst
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Never assign the same v_id, and never assign zero as v_id */
-do|do
-block|{
 if|if
 condition|(
-operator|++
-name|nextvnodeid
-operator|==
-name|vp
-operator|->
-name|v_id
-condition|)
-operator|++
-name|nextvnodeid
-expr_stmt|;
-block|}
-do|while
-condition|(
 operator|!
-name|nextvnodeid
-condition|)
-do|;
+operator|++
 name|vp
 operator|->
 name|v_id
-operator|=
-name|nextvnodeid
+condition|)
+name|vp
+operator|->
+name|v_id
+operator|++
 expr_stmt|;
 name|vp
 operator|->
@@ -1311,8 +1338,6 @@ operator|&
 name|nchashtbl
 index|[
 name|nchash
-operator|-
-literal|1
 index|]
 init|;
 name|ncpp
