@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_fault.c	7.13 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_fault.c	7.14 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_comment
@@ -606,13 +606,11 @@ block|}
 block|}
 if|if
 condition|(
-operator|(
 name|object
 operator|->
 name|pager
 operator|!=
 name|NULL
-operator|)
 operator|&&
 operator|(
 operator|!
@@ -647,6 +645,13 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
+comment|/* 			 *	Reaquire the object lock to preserve our 			 *	invariant. 			 */
+name|vm_object_lock
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
+comment|/* 			 *	Found the page. 			 *	Leave it busy while we play with it. 			 */
 if|if
 condition|(
 name|rv
@@ -654,12 +659,6 @@ operator|==
 name|VM_PAGER_OK
 condition|)
 block|{
-comment|/* 				 *	Found the page. 				 *	Leave it busy while we play with it. 				 */
-name|vm_object_lock
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 comment|/* 				 *	Relookup in case pager changed page. 				 *	Pager is responsible for disposition 				 *	of old page if moved. 				 */
 name|m
 operator|=
@@ -697,15 +696,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 			 *	Remove the bogus page (which does not 			 *	exist at this object/offset); before 			 *	doing so, we must get back our object 			 *	lock to preserve our invariant. 			 * 			 *	Also wake up any other thread that may want 			 *	to bring in this page. 			 * 			 *	If this is the top-level object, we must 			 *	leave the busy page to prevent another 			 *	thread from rushing past us, and inserting 			 *	the page in that object at the same time 			 *	that we are. 			 */
-name|vm_object_lock
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
-comment|/* 			 * Data outside the range of the pager; an error 			 */
+comment|/* 			 * IO error or page outside the range of the pager: 			 * cleanup and return an error. 			 */
 if|if
 condition|(
+name|rv
+operator|==
+name|VM_PAGER_ERROR
+operator|||
 name|rv
 operator|==
 name|VM_PAGER_BAD
@@ -725,6 +722,7 @@ operator|)
 return|;
 comment|/* XXX */
 block|}
+comment|/* 			 * rv == VM_PAGER_FAIL: 			 * 			 * Page does not exist at this object/offset. 			 * Free the bogus page (waking up anyone waiting 			 * for it) and continue on to the next object. 			 * 			 * If this is the top-level object, we must 			 * leave the busy page to prevent another 			 * thread from rushing past us, and inserting 			 * the page in that object at the same time 			 * that we are. 			 */
 if|if
 condition|(
 name|object
