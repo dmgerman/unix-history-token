@@ -904,16 +904,10 @@ name|IFF_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"wihap_init: sc=0x%x whi=0x%x\n"
+literal|"wihap_init: sc=%p whi=%p\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|sc
 argument_list|,
-operator|(
-name|int
-operator|)
 name|whi
 argument_list|)
 expr_stmt|;
@@ -1362,16 +1356,10 @@ name|IFF_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"wihap_shutdown: sc=0x%x whi=0x%x\n"
+literal|"wihap_shutdown: sc=%p whi=%p\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|sc
 argument_list|,
-operator|(
-name|int
-operator|)
 name|whi
 argument_list|)
 expr_stmt|;
@@ -1483,11 +1471,8 @@ name|IFF_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"wihap_shutdown: FREE(sta=0x%x)\n"
+literal|"wihap_shutdown: FREE(sta=%p)\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|sta
 argument_list|)
 expr_stmt|;
