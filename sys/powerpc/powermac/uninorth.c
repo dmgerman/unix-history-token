@@ -1636,16 +1636,6 @@ name|bt
 operator|=
 name|PPC_BUS_SPACE_MEM
 expr_stmt|;
-if|if
-condition|(
-name|flags
-operator|&
-name|PPC_BUS_SPARSE4
-condition|)
-name|bt
-operator||=
-literal|4
-expr_stmt|;
 break|break;
 case|case
 name|SYS_RES_IRQ
