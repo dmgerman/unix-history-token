@@ -1,12 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
 name|char
 name|Sccsid
 index|[]
-literal|"@(#)userdir	2.1"
-expr_stmt|;
-end_expr_stmt
+init|=
+literal|"@(#)userdir.c	1.2	%G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* 	Gets user's login directory. 	The argument must be an integer. 	Note the assumption about position of directory field in 	password file (no group id in password file). 	Returns pointer to login directory on success, 	0 on failure.         Remembers user ID and login directory for subsequent calls. */

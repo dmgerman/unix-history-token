@@ -1,12 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
 name|char
 name|Sccsid
 index|[]
-literal|"@(#)substr	2.2"
-expr_stmt|;
-end_expr_stmt
+init|=
+literal|"@(#)substr.c	1.2	%G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* 	Place the `len' length substring of `as' starting at `as[origin]' 	in `aresult'. 	Return `aresult'.     Note: The copying of as to aresult stops if either the 	specified number (len) characters have been copied, 	or if the end of as is found. 	A negative len generally guarantees that everything gets copied. */

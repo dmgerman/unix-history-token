@@ -1,12 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
 name|char
 name|Sccsid
 index|[]
-literal|"@(#)imatch	2.1"
-expr_stmt|;
-end_expr_stmt
+init|=
+literal|"@(#)imatch.c	1.2	%G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* 	initial match 	if `prefix' is a prefix of `string' return 1 	else return 0 */

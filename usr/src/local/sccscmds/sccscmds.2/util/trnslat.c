@@ -1,12 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
 name|char
 name|Sccsid
 index|[]
-literal|"@(#)trnslat	2.2"
-expr_stmt|;
-end_expr_stmt
+init|=
+literal|"@(#)trnslat.c	1.2	%G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* 	Copy `str' to `result' replacing any character found 	in both `str' and `old' with the corresponding character from `new'. 	Return `result'. */

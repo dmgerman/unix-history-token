@@ -1,12 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
 name|char
 name|Sccsid
 index|[]
-literal|"@(#)sname	2.2"
-expr_stmt|;
-end_expr_stmt
+init|=
+literal|"@(#)sname.c	1.2	%G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* 	Returns pointer to "simple" name of path name; that is, 	pointer to first character after last "/".  If no slashes, 	returns pointer to first char of arg. 	If the string ends in a slash, returns a pointer to the first 	character after the preceeding slash, or the first character. */

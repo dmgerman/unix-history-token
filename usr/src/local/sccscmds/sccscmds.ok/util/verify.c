@@ -1,12 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
 name|char
 name|Sccsid
 index|[]
-literal|"@(#)verify	2.1"
-expr_stmt|;
-end_expr_stmt
+init|=
+literal|"@(#)verify.c	1.2	%G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* 	If `astr1' contains any characters not in `str2' return the 	offset of the first such character found in `astr1', 	else return -1. */
