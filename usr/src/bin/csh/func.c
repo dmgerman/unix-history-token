@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)func.c	5.26 (Berkeley) %G%"
+literal|"@(#)func.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1471,7 +1471,15 @@ name|w_end
 operator|.
 name|type
 operator|==
-name|I_SEEK
+name|F_SEEK
+operator|&&
+name|wp
+operator|->
+name|w_end
+operator|.
+name|f_seek
+operator|==
+literal|0
 condition|)
 block|{
 name|search
@@ -2016,6 +2024,14 @@ name|w_next
 operator|=
 name|whyles
 expr_stmt|;
+name|nwp
+operator|->
+name|w_end
+operator|.
+name|type
+operator|=
+name|F_SEEK
+expr_stmt|;
 name|whyles
 operator|=
 name|nwp
@@ -2171,7 +2187,15 @@ name|w_end
 operator|.
 name|type
 operator|=
-name|I_SEEK
+name|F_SEEK
+expr_stmt|;
+name|nwp
+operator|->
+name|w_end
+operator|.
+name|f_seek
+operator|=
+literal|0
 expr_stmt|;
 name|nwp
 operator|->
@@ -3718,7 +3742,15 @@ name|w_end
 operator|.
 name|type
 operator|==
-name|I_SEEK
+name|F_SEEK
+operator|&&
+name|whyles
+operator|->
+name|w_end
+operator|.
+name|f_seek
+operator|==
+literal|0
 condition|)
 block|{
 name|search
@@ -3832,7 +3864,7 @@ name|type
 operator|!=
 name|F_SEEK
 condition|)
-continue|continue;
+break|break;
 if|if
 condition|(
 name|o
