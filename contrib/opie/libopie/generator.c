@@ -163,6 +163,17 @@ literal|1
 return|;
 if|if
 condition|(
+operator|!
+name|secret
+index|[
+literal|0
+index|]
+condition|)
+return|return
+literal|2
+return|;
+if|if
+condition|(
 name|opiepasscheck
 argument_list|(
 name|secret
