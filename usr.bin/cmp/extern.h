@@ -36,6 +36,7 @@ argument_list|(
 operator|(
 name|int
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -45,6 +46,7 @@ name|off_t
 operator|,
 name|int
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -64,6 +66,7 @@ argument_list|(
 operator|(
 name|int
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -71,6 +74,7 @@ name|off_t
 operator|,
 name|int
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -86,9 +90,11 @@ name|diffmsg
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -106,6 +112,7 @@ name|eofmsg
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)

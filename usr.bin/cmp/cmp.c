@@ -171,6 +171,7 @@ name|fd2
 decl_stmt|,
 name|special
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|file1
