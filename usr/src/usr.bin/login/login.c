@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)login.c	4.36 (Berkeley) 85/04/01"
+literal|"@(#)login.c	4.37 (Berkeley) 85/04/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -3274,7 +3274,6 @@ name|ws_row
 operator|=
 name|atoi
 argument_list|(
-operator|++
 name|cp
 argument_list|)
 expr_stmt|;
