@@ -371,7 +371,7 @@ end_comment
 
 begin_decl_stmt
 name|u_int
-name|cpuid_cpuinfo
+name|cpu_procinfo
 init|=
 literal|0
 decl_stmt|;

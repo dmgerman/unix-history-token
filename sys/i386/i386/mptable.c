@@ -4507,7 +4507,7 @@ return|return;
 name|logical_cpus
 operator|=
 operator|(
-name|cpuid_cpuinfo
+name|cpu_procinfo
 operator|&
 name|CPUID_HTT_CORES
 operator|)

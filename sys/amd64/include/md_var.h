@@ -137,7 +137,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|u_int
-name|cpuid_cpuinfo
+name|cpu_procinfo
 decl_stmt|;
 end_decl_stmt
 

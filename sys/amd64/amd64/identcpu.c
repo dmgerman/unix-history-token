@@ -1212,7 +1212,7 @@ condition|)
 block|{
 name|brand_index
 operator|=
-name|cpuid_cpuinfo
+name|cpu_procinfo
 operator|&
 name|CPUID_BRAND_INDEX
 expr_stmt|;
@@ -2587,7 +2587,7 @@ operator|&
 name|CPUID_HTT
 operator|&&
 operator|(
-name|cpuid_cpuinfo
+name|cpu_procinfo
 operator|&
 name|CPUID_HTT_CORES
 operator|)
@@ -2601,7 +2601,7 @@ argument_list|(
 literal|"\n  Hyperthreading: %d logical CPUs"
 argument_list|,
 operator|(
-name|cpuid_cpuinfo
+name|cpu_procinfo
 operator|&
 name|CPUID_HTT_CORES
 operator|)
