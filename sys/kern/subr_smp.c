@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.1 1997/04/26 11:45:15 peter Exp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.2 1997/04/27 21:17:24 fsmp Exp $  */
 end_comment
 
 begin_include
@@ -8,80 +8,6 @@ include|#
 directive|include
 file|"opt_smp.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_smp_invltlb.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|APIC_IO
-argument_list|)
-end_if
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|SMP_INVLTLB
-argument_list|)
-end_if
-
-begin_error
-error|#
-directive|error
-error|you must define BOTH APIC_IO and SMP_INVLTLB or NEITHER
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* APIC_IO */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SMP_INVLTLB
-argument_list|)
-end_if
-
-begin_error
-error|#
-directive|error
-error|you must define BOTH APIC_IO and SMP_INVLTLB or NEITHER
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* APIC_IO */
-end_comment
 
 begin_define
 define|#
@@ -224,9 +150,19 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|SMP_INVLTLB
+name|APIC_IO
 argument_list|)
 end_if
+
+begin_include
+include|#
+directive|include
+file|<i386/include/md_var.h>
+end_include
+
+begin_comment
+comment|/* setidt() */
+end_comment
 
 begin_include
 include|#
@@ -234,13 +170,27 @@ directive|include
 file|<i386/isa/icu.h>
 end_include
 
+begin_comment
+comment|/* Xinvltlb() */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/isa_device.h>
+end_include
+
+begin_comment
+comment|/* Xinvltlb() */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* SMP_INVLTLB */
+comment|/* APIC_IO */
 end_comment
 
 begin_define
@@ -1261,44 +1211,6 @@ name|boot_addr
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|APIC_IO
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<i386/include/md_var.h>
-end_include
-
-begin_comment
-comment|/* setidt() */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa_device.h>
-end_include
-
-begin_comment
-comment|/* Xinvltlb() */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* APIC_IO */
-end_comment
 
 begin_function
 specifier|static
@@ -6013,33 +5925,26 @@ literal|0
 return|;
 comment|/* return FAILURE */
 block|}
-ifdef|#
-directive|ifdef
-name|SMP_INVLTLB
 comment|/*  * Flush the TLB on all other CPU's  *  * XXX: Needs to handshake and wait for completion before proceding.  */
 name|void
 name|smp_invltlb
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
 name|smp_active
-condition|)
-block|{
-if|if
-condition|(
-name|invldebug
-operator|&
-literal|2
+operator|&&
+name|invltlb_ok
 condition|)
 name|all_but_self_ipi
 argument_list|(
 name|ICU_OFFSET
 operator|+
-literal|32
+name|XINVLTLB_OFFSET
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|void
 name|invlpg
@@ -6049,6 +5954,7 @@ name|addr
 parameter_list|)
 block|{
 asm|__asm   __volatile("invlpg (%0)"::"r"(addr):"memory");
+comment|/* send a message to the other CPUs */
 name|smp_invltlb
 argument_list|()
 expr_stmt|;
@@ -6064,45 +5970,12 @@ name|temp
 decl_stmt|;
 comment|/* 	 * This should be implemented as load_cr3(rcr3()) when load_cr3() is 	 * inlined. 	 */
 asm|__asm __volatile("movl %%cr3, %0; movl %0, %%cr3":"=r"(temp) :: "memory");
+comment|/* send a message to the other CPUs */
 name|smp_invltlb
 argument_list|()
 expr_stmt|;
 block|}
-comment|/*  * Handles recieving an "IRQ 27", the invalidate tlb IPI..  */
-name|void
-name|ipi_invltlb
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|u_long
-name|temp
-decl_stmt|;
-if|if
-condition|(
-name|invldebug
-operator|&
-literal|4
-condition|)
-block|{
-comment|/* 		 * This should be implemented as load_cr3(rcr3()) when 		 * load_cr3() is inlined. 		 */
-asm|__asm   __volatile("movl %%cr3, %0; movl %0, %%cr3":"=r"(temp)
-operator|::
-literal|"memory"
-block|)
-empty_stmt|;
-block|}
-block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SMP_INVLTLB */
-end_comment
 
 end_unit
 

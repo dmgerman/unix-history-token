@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.29 1997/04/26 08:11:50 peter Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.1 1997/04/26 11:45:44 peter Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -26,16 +26,6 @@ include|#
 directive|include
 file|"opt_smp.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_smp_invltlb.h"
-end_include
-
-begin_comment
-comment|/* aiee! (for cpufunc.h!) */
-end_comment
 
 begin_if
 if|#
@@ -501,24 +491,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP_INVLTLB
-end_ifdef
-
-begin_decl_stmt
-name|void
-name|ipi_invltlb
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 name|void
 name|smp_invltlb
@@ -530,11 +502,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* global data in mpapic.c */
@@ -755,7 +722,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|invldebug
+name|invltlb_ok
 decl_stmt|;
 end_decl_stmt
 
