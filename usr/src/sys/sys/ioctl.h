@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	4.19	82/03/11	*/
+comment|/*	ioctl.h	4.20	82/06/26	*/
 end_comment
 
 begin_comment
@@ -979,6 +979,28 @@ end_define
 
 begin_comment
 comment|/* new tty discipline */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TABLDISC
+value|3
+end_define
+
+begin_comment
+comment|/* hitachi tablet discipline */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NTABLDISC
+value|4
+end_define
+
+begin_comment
+comment|/* gtco tablet discipline */
 end_comment
 
 begin_define
