@@ -207,6 +207,28 @@ directive|define
 name|TRY_NEWORDER
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USE_NEWORDER
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USE_NEWORDER
+value|1
+end_define
+
+begin_comment
+comment|/* Initial value for dbg_new_order */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Bit-values for the 'flags' parsed from a config-file entry.  */
 end_comment
@@ -604,15 +626,17 @@ begin_comment
 comment|/* -D Show details of 'trim_at' code */
 end_comment
 
+begin_comment
+comment|/*  * The debug options "neworder" and "oldorder" can be used to change  * which order work is done in.  Note that both options will disappear  * in the near future, and the "new" order will be the only order.  */
+end_comment
+
 begin_decl_stmt
 name|int
 name|dbg_new_order
+init|=
+name|USE_NEWORDER
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* -D Try the 'neworder' of doing the work */
-end_comment
 
 begin_decl_stmt
 name|int
