@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*  * $Header: iso_pcb.c,v 4.5 88/06/29 14:59:56 hagens Exp $  * $Source: /usr/argo/sys/netiso/RCS/iso_pcb.c,v $  *	@(#)iso_pcb.c	7.6 (Berkeley) %G%  *  * Iso address family net-layer(s) pcb stuff. NEH 1/29/87  */
+comment|/*  * $Header: iso_pcb.c,v 4.5 88/06/29 14:59:56 hagens Exp $  * $Source: /usr/argo/sys/netiso/RCS/iso_pcb.c,v $  *	@(#)iso_pcb.c	7.7 (Berkeley) %G%  *  * Iso address family net-layer(s) pcb stuff. NEH 1/29/87  */
 end_comment
 
 begin_ifndef
@@ -1995,7 +1995,7 @@ name|caddr_t
 operator|)
 name|isop
 argument_list|,
-name|M_IFADDR
+name|M_PCB
 argument_list|)
 expr_stmt|;
 block|}
