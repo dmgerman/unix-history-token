@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass1.c	8.4 (Berkeley) %G%"
+literal|"@(#)pass1.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -502,6 +502,18 @@ operator|<
 name|dp
 operator|->
 name|di_size
+operator|||
+operator|(
+name|mode
+operator|==
+name|IFDIR
+operator|&&
+name|dp
+operator|->
+name|di_size
+operator|>
+name|MAXDIRSIZE
+operator|)
 condition|)
 block|{
 if|if
