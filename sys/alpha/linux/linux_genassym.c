@@ -24,7 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/linux/linux.h>
+file|<alpha/linux/linux.h>
 end_include
 
 begin_expr_stmt
