@@ -2053,7 +2053,7 @@ name|m_get
 parameter_list|(
 name|int
 parameter_list|,
-name|int
+name|short
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2065,6 +2065,21 @@ modifier|*
 name|m_get_clrd
 parameter_list|(
 name|int
+parameter_list|,
+name|short
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|mbuf
+modifier|*
+name|m_getcl
+parameter_list|(
+name|int
+parameter_list|,
+name|short
 parameter_list|,
 name|int
 parameter_list|)
@@ -2079,7 +2094,7 @@ name|m_gethdr
 parameter_list|(
 name|int
 parameter_list|,
-name|int
+name|short
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2092,7 +2107,7 @@ name|m_gethdr_clrd
 parameter_list|(
 name|int
 parameter_list|,
-name|int
+name|short
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2111,7 +2126,7 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
-name|int
+name|short
 parameter_list|)
 function_decl|;
 end_function_decl
