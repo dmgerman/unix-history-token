@@ -3094,7 +3094,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|PFS_RD
 argument_list|)
 block|,
 name|PFS_SYMLINK
@@ -3110,7 +3110,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-comment|/* PFS_FILE(   "mem",	procfs_domem,			NULL, NULL, 0), */
+comment|/* PFS_FILE(   "mem",	procfs_domem,		NULL, NULL, PFS_RDWR|PFS_RAW), */
 name|PFS_FILE
 argument_list|(
 literal|"stat"
@@ -3121,7 +3121,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|PFS_RD
 argument_list|)
 block|,
 name|PFS_FILE
@@ -3134,7 +3134,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|PFS_RD
 argument_list|)
 block|,
 name|PFS_LASTNODE
@@ -3164,7 +3164,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|PFS_RD
 argument_list|)
 block|,
 name|PFS_LASTNODE
@@ -3195,7 +3195,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|PFS_RD
 argument_list|)
 block|,
 name|PFS_FILE
@@ -3208,7 +3208,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|PFS_RD
 argument_list|)
 block|,
 name|PFS_FILE
@@ -3221,7 +3221,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|PFS_RD
 argument_list|)
 block|,
 name|PFS_FILE
@@ -3234,7 +3234,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|PFS_RD
 argument_list|)
 block|,
 name|PFS_FILE
@@ -3247,13 +3247,13 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|PFS_RD
 argument_list|)
 block|,
 if|#
 directive|if
 literal|0
-block|PFS_FILE(   "mdodules",	linprocfs_domodules,		NULL, NULL, 0),
+block|PFS_FILE(   "mdodules",	linprocfs_domodules,	NULL, NULL, PFS_RD),
 endif|#
 directive|endif
 name|PFS_FILE
@@ -3266,7 +3266,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|PFS_RD
 argument_list|)
 block|,
 name|PFS_FILE
@@ -3279,7 +3279,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|PFS_RD
 argument_list|)
 block|,
 name|PFS_FILE
@@ -3292,7 +3292,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|PFS_RD
 argument_list|)
 block|,
 name|PFS_DIR
