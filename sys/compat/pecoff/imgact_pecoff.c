@@ -810,7 +810,7 @@ literal|0
 condition|)
 name|error
 operator|=
-name|vn_rdwr
+name|vn_rdwr_inchunks
 argument_list|(
 name|UIO_WRITE
 argument_list|,
@@ -840,8 +840,6 @@ argument_list|)
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
-name|IO_NODELOCKED
-operator||
 name|IO_UNIT
 argument_list|,
 name|cred
@@ -863,7 +861,7 @@ literal|0
 condition|)
 name|error
 operator|=
-name|vn_rdwr
+name|vn_rdwr_inchunks
 argument_list|(
 name|UIO_WRITE
 argument_list|,
@@ -911,8 +909,6 @@ argument_list|)
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
-name|IO_NODELOCKED
-operator||
 name|IO_UNIT
 argument_list|,
 name|cred

@@ -3677,7 +3677,7 @@ control|)
 block|{
 name|error
 operator|=
-name|vn_rdwr
+name|vn_rdwr_inchunks
 argument_list|(
 name|UIO_WRITE
 argument_list|,
@@ -3698,8 +3698,6 @@ name|offset
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
-name|IO_NODELOCKED
-operator||
 name|IO_UNIT
 argument_list|,
 name|cred
@@ -4412,7 +4410,7 @@ argument_list|)
 expr_stmt|;
 comment|/* Write it to the core file. */
 return|return
-name|vn_rdwr
+name|vn_rdwr_inchunks
 argument_list|(
 name|UIO_WRITE
 argument_list|,
@@ -4429,8 +4427,6 @@ literal|0
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
-name|IO_NODELOCKED
-operator||
 name|IO_UNIT
 argument_list|,
 name|cred
