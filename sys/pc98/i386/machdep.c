@@ -3202,7 +3202,6 @@ name|psp
 operator|->
 name|ps_mtx
 argument_list|,
-operator|.
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
