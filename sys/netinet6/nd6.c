@@ -2884,6 +2884,15 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ip6_forwarding
+operator|&&
+name|ip6_accept_rtadv
+condition|)
+block|{
+comment|/* XXX: too restrictive? */
 comment|/* refresh default router list */
 name|bzero
 argument_list|(
@@ -2907,6 +2916,7 @@ expr_stmt|;
 name|defrouter_select
 argument_list|()
 expr_stmt|;
+block|}
 comment|/* 	 * Nuke neighbor cache entries for the ifp. 	 * Note that rt->rt_ifp may not be the same as ifp, 	 * due to KAME goto ours hack.  See RTM_RESOLVE case in 	 * nd6_rtrequest(), and ip6_input(). 	 */
 name|ln
 operator|=
