@@ -70,11 +70,33 @@ directive|include
 file|<machine/pcaudioio.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<pc98/pc98/pc98.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<isa/isareg.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -2085,6 +2107,13 @@ operator|&
 operator|~
 literal|0x08
 expr_stmt|;
+name|acquire_timer1
+argument_list|(
+name|TIMER_LSB
+operator||
+name|TIMER_ONESHOT
+argument_list|)
+expr_stmt|;
 else|#
 directive|else
 name|pca_status
@@ -2098,8 +2127,6 @@ argument_list|)
 operator||
 literal|0x03
 expr_stmt|;
-endif|#
-directive|endif
 name|acquire_timer2
 argument_list|(
 name|TIMER_LSB
@@ -2107,6 +2134,8 @@ operator||
 name|TIMER_ONESHOT
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|acquire_timer0
 argument_list|(
 name|INTERRUPT_RATE
@@ -3290,7 +3319,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PC98
-asm|__asm__("outb %0,$0x35\n" 			"andb $0x08,%0\n" 			"outb %0,$0x35"
+asm|__asm__("outb %0,$0x35\n" 			"orb $0x08,%0\n" 			"outb %0,$0x35"
 else|#
 directive|else
 asm|__asm__("outb %0,$0x61\n" 			"andb $0xFE,%0\n" 			"outb %0,$0x61"
