@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.3 (Berkeley) %G%"
+literal|"@(#)main.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -657,6 +657,13 @@ name|X_ABORT
 argument_list|)
 expr_stmt|;
 block|}
+name|setuid
+argument_list|(
+name|getuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+comment|/* rmthost() is the only reason to be setuid */
 endif|#
 directive|endif
 if|if
