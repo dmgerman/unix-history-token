@@ -6,13 +6,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_NEWTYPE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
 name|NFS_NPROCS
 value|26
 end_define
