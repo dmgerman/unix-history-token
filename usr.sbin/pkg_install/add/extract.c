@@ -543,13 +543,12 @@ name|last_file
 operator|=
 name|NULL
 expr_stmt|;
+name|Directory
+operator|=
 operator|(
-specifier|const
 name|char
 operator|*
 operator|)
-name|Directory
-operator|=
 name|home
 expr_stmt|;
 comment|/* Do it */
@@ -1063,13 +1062,12 @@ name|name
 expr_stmt|;
 block|}
 else|else
+name|Directory
+operator|=
 operator|(
-specifier|const
 name|char
 operator|*
 operator|)
-name|Directory
-operator|=
 name|home
 expr_stmt|;
 break|break;

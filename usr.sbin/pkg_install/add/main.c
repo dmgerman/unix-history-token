@@ -939,16 +939,15 @@ literal|"-"
 argument_list|)
 condition|)
 comment|/* stdin? */
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
 name|pkgs
 index|[
 name|ch
 index|]
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 literal|"-"
 expr_stmt|;
 elseif|else
