@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.29 (Berkeley) %G%"
+literal|"@(#)print.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,6 +80,12 @@ begin_include
 include|#
 directive|include
 file|<tzfile.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -723,11 +729,6 @@ condition|(
 operator|(
 name|array
 operator|=
-operator|(
-name|FTSENT
-operator|*
-operator|*
-operator|)
 name|realloc
 argument_list|(
 name|array
