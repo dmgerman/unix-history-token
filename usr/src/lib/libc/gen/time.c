@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)time.c	5.4 (Berkeley) %G%"
+literal|"@(#)time.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,10 +35,6 @@ end_endif
 
 begin_comment
 comment|/* LIBC_SCCS and not lint */
-end_comment
-
-begin_comment
-comment|/*  * Backwards compatible time call.  */
 end_comment
 
 begin_include
@@ -54,7 +50,7 @@ file|<sys/time.h>
 end_include
 
 begin_function
-name|long
+name|time_t
 name|time
 parameter_list|(
 name|t
