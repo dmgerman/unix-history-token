@@ -4232,7 +4232,7 @@ name|cto
 operator|->
 name|ct_flags
 operator|&
-name|CAM_SEND_STATUS
+name|CT2_SENDSTATUS
 condition|)
 block|{
 name|isp_prt
@@ -4257,6 +4257,12 @@ name|ct_resid
 argument_list|)
 expr_stmt|;
 block|}
+name|cto
+operator|->
+name|ct_timeout
+operator|=
+literal|2
+expr_stmt|;
 name|hp
 operator|=
 operator|&
@@ -4328,18 +4334,6 @@ name|tag_id
 operator|>>
 literal|8
 expr_stmt|;
-if|if
-condition|(
-name|cso
-operator|->
-name|tag_id
-operator|&&
-name|cso
-operator|->
-name|tag_action
-condition|)
-block|{
-comment|/* 			 * We don't specify a tag type for regular SCSI. 			 * Just the tag value and set the flag. 			 */
 name|cto
 operator|->
 name|ct_tag_val
@@ -4350,6 +4344,18 @@ name|tag_id
 operator|&
 literal|0xff
 expr_stmt|;
+if|if
+condition|(
+name|cto
+operator|->
+name|ct_tag_val
+operator|&&
+name|cso
+operator|->
+name|tag_action
+condition|)
+block|{
+comment|/* 			 * We don't specify a tag type for regular SCSI, 			 * just the tag value and set a flag. 			 */
 name|cto
 operator|->
 name|ct_flags
@@ -4463,7 +4469,7 @@ name|cto
 operator|->
 name|ct_flags
 operator|&
-name|CAM_SEND_STATUS
+name|CT_SENDSTATUS
 condition|)
 block|{
 name|isp_prt
@@ -4484,6 +4490,12 @@ name|resid
 argument_list|)
 expr_stmt|;
 block|}
+name|cto
+operator|->
+name|ct_timeout
+operator|=
+literal|2
+expr_stmt|;
 name|hp
 operator|=
 operator|&
