@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)apilib.c	3.2 (Berkeley) %G%"
+literal|"@(#)apilib.c	3.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -207,9 +207,6 @@ name|sregs
 operator|->
 name|es
 operator|=
-operator|(
-name|int
-operator|)
 name|FP_SEG
 argument_list|(
 name|ourseg
@@ -221,9 +218,6 @@ name|x
 operator|.
 name|di
 operator|=
-operator|(
-name|int
-operator|)
 name|FP_OFF
 argument_list|(
 name|ourseg
@@ -482,6 +476,10 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|parms
 argument_list|,
@@ -559,6 +557,10 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|,
 literal|0
@@ -1639,6 +1641,12 @@ end_macro
 
 begin_block
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MSDOS
+argument_list|)
 name|union
 name|REGS
 name|regs
@@ -1647,12 +1655,6 @@ name|struct
 name|SREGS
 name|sregs
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|MSDOS
-argument_list|)
 name|regs
 operator|.
 name|h
@@ -1720,6 +1722,10 @@ if|if
 condition|(
 name|api_open_api
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 operator|==

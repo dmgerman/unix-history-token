@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)termin.c	3.2 (Berkeley) %G%"
+literal|"@(#)termin.c	3.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,25 +59,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../ctlr/inbound.ext"
+file|"../ctlr/externs.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../ctlr/outbound.ext"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../telnet.ext"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"termin.ext"
+file|"../ctlr/declare.h"
 end_include
 
 begin_include
@@ -416,6 +404,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_function
 name|void
 name|TransInput
@@ -665,6 +657,10 @@ condition|)
 block|{
 name|SendTransparent
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|ourBuffer
 argument_list|,
 name|TransPointer
@@ -689,6 +685,10 @@ condition|(
 name|bellwinup
 condition|)
 block|{
+name|void
+name|BellOff
+parameter_list|()
+function_decl|;
 name|BellOff
 argument_list|()
 expr_stmt|;
@@ -859,6 +859,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|void
+name|RingBell
+parameter_list|()
+function_decl|;
 name|RingBell
 argument_list|(
 literal|"Need to type synch character"

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mset.c	3.3 (Berkeley) %G%"
+literal|"@(#)mset.c	3.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"map3270.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../api/astosc.h"
 end_include
 
@@ -123,12 +129,6 @@ begin_include
 include|#
 directive|include
 file|"../general/globals.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"map3270.ext"
 end_include
 
 begin_struct

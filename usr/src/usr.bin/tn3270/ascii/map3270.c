@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map3270.c	3.3 (Berkeley) %G%"
+literal|"@(#)map3270.c	3.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -124,13 +124,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../general/globals.h"
+file|"map3270.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"map3270.ext"
+file|"../general/globals.h"
 end_include
 
 begin_escape
@@ -2013,7 +2013,7 @@ name|pState
 decl_stmt|;
 block|{
 specifier|extern
-name|void
+name|int
 name|free
 parameter_list|()
 function_decl|;
@@ -3597,6 +3597,10 @@ name|p
 operator|=
 name|malloc
 argument_list|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|string

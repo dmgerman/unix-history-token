@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)api_bsd.c	3.3 (Berkeley) %G%"
+literal|"@(#)api_bsd.c	3.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -149,9 +149,16 @@ name|struct
 name|storage_descriptor
 name|sd
 decl_stmt|;
+specifier|extern
 name|char
 modifier|*
 name|getenv
+parameter_list|()
+function_decl|;
+specifier|extern
+name|unsigned
+name|short
+name|htons
 parameter_list|()
 function_decl|;
 name|char
@@ -179,6 +186,7 @@ decl_stmt|;
 name|int
 name|sock
 decl_stmt|;
+name|unsigned
 name|int
 name|port
 decl_stmt|;
@@ -231,6 +239,10 @@ literal|"%[^:]:%d:%s"
 argument_list|,
 name|thehostname
 argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|port
 argument_list|,
@@ -321,6 +333,10 @@ name|hp
 operator|->
 name|h_addr
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|server
 operator|.
@@ -346,6 +362,11 @@ name|connect
 argument_list|(
 name|sock
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|server
 argument_list|,
@@ -1190,6 +1211,10 @@ name|sd
 operator|.
 name|length
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|sd
 operator|.
 name|location
@@ -1245,6 +1270,10 @@ name|sd
 operator|.
 name|length
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|sd
 operator|.
 name|location
