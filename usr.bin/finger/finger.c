@@ -1324,7 +1324,7 @@ argument_list|,
 name|conf_alias
 argument_list|)
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 if|if
