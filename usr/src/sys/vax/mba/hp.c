@@ -1565,6 +1565,36 @@ literal|32
 operator|*
 literal|20
 expr_stmt|;
+name|lp
+operator|->
+name|d_npartitions
+operator|=
+literal|1
+expr_stmt|;
+name|lp
+operator|->
+name|d_partitions
+index|[
+literal|0
+index|]
+operator|.
+name|p_offset
+operator|=
+literal|0
+expr_stmt|;
+name|lp
+operator|->
+name|d_partitions
+index|[
+literal|0
+index|]
+operator|.
+name|p_size
+operator|=
+name|LABELSECTOR
+operator|+
+literal|1
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -7231,7 +7261,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * These variable are all measured in sectors.    * Sdist is how much to "lead" in the search for a desired sector  * (i.e. if want N, search for N-sdist.)  * Maxdist and mindist define the region right before our desired sector within  * which we don't bother searching.  We don't search when we are already less  * then maxdist and more than mindist sectors "before" our desired sector.  * Maxdist should be>= sdist.  *   * Beware, sdist, mindist and maxdist are not well tuned  * for many of the drives listed in this table.  * Try patching things with something i/o intensive  * running and watch iostat.  */
+comment|/*  * These variable are all measured in sectors.    * Sdist is how much to "lead" in the search for a desired sector  * (i.e. if want N, search for N-sdist.)  * Maxdist and mindist define the region right before our desired sector within  * which we don't bother searching.  We don't search when we are already less  * then maxdist and more than mindist sectors "before" our desired sector.  * Maxdist should be>= sdist.  *   * Beware, sdist, mindist and maxdist are not well tuned  * for many of the drives listed in this table.  * Try patching things with something i/o intensive  * running and watch iostat.  *  * The order of these entries must agree with the indices in hptypes[].  */
 end_comment
 
 begin_struct
@@ -8000,6 +8030,10 @@ name|lp
 operator|->
 name|d_ncylinders
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* set elsewhere */
 name|lp
 operator|->
 name|d_npartitions
@@ -8017,6 +8051,8 @@ name|p_offset
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 name|lp
 operator|->
 name|d_partitions
