@@ -9646,7 +9646,7 @@ name|label
 modifier|*
 name|vnodelabel
 parameter_list|,
-name|mode_t
+name|int
 name|acc_mode
 parameter_list|)
 block|{

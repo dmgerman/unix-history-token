@@ -6799,7 +6799,7 @@ modifier|*
 name|vp
 parameter_list|,
 name|int
-name|flags
+name|acc_mode
 parameter_list|)
 block|{
 name|int
@@ -6835,7 +6835,7 @@ name|vp
 operator|->
 name|v_label
 argument_list|,
-name|flags
+name|acc_mode
 argument_list|)
 expr_stmt|;
 return|return
@@ -7731,7 +7731,7 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
-name|mode_t
+name|int
 name|acc_mode
 parameter_list|)
 block|{

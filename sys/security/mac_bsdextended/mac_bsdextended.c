@@ -801,7 +801,7 @@ parameter_list|,
 name|gid_t
 name|object_gid
 parameter_list|,
-name|mode_t
+name|int
 name|acc_mode
 parameter_list|)
 block|{
@@ -1119,7 +1119,7 @@ parameter_list|,
 name|gid_t
 name|object_gid
 parameter_list|,
-name|mode_t
+name|int
 name|acc_mode
 parameter_list|)
 block|{
@@ -1208,8 +1208,8 @@ name|label
 modifier|*
 name|label
 parameter_list|,
-name|mode_t
-name|flags
+name|int
+name|acc_mode
 parameter_list|)
 block|{
 name|struct
@@ -1266,7 +1266,7 @@ name|vap
 operator|.
 name|va_gid
 argument_list|,
-name|flags
+name|acc_mode
 argument_list|)
 operator|)
 return|;
@@ -2290,7 +2290,7 @@ name|label
 modifier|*
 name|filelabel
 parameter_list|,
-name|mode_t
+name|int
 name|acc_mode
 parameter_list|)
 block|{

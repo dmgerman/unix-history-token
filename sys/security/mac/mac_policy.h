@@ -2423,7 +2423,7 @@ modifier|*
 name|label
 parameter_list|,
 name|int
-name|flags
+name|acc_mode
 parameter_list|)
 function_decl|;
 name|int
@@ -2806,7 +2806,7 @@ name|label
 modifier|*
 name|label
 parameter_list|,
-name|mode_t
+name|int
 name|acc_mode
 parameter_list|)
 function_decl|;

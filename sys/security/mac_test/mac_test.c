@@ -4257,8 +4257,8 @@ name|label
 modifier|*
 name|label
 parameter_list|,
-name|mode_t
-name|flags
+name|int
+name|acc_mode
 parameter_list|)
 block|{
 return|return
@@ -4707,7 +4707,7 @@ name|label
 modifier|*
 name|filelabel
 parameter_list|,
-name|mode_t
+name|int
 name|acc_mode
 parameter_list|)
 block|{
