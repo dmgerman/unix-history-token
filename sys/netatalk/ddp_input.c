@@ -129,19 +129,6 @@ name|forwro
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|const
-name|int
-name|atintrq1_present
-init|=
-literal|1
-decl_stmt|,
-name|atintrq2_present
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void

@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/intrq.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netatalk/at.h>
 end_include
 
@@ -2771,6 +2777,14 @@ operator|.
 name|ifq_maxlen
 operator|=
 name|IFQ_MAXLEN
+expr_stmt|;
+name|atintrq1_present
+operator|=
+literal|1
+expr_stmt|;
+name|atintrq2_present
+operator|=
+literal|1
 expr_stmt|;
 name|mtx_init
 argument_list|(
