@@ -2360,7 +2360,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage:  bootpd [-d level] [-i] [-s] [-t timeout] [configfile [dumpfile]]\n"
+literal|"usage:  bootpd [-i | -s] [-c chdir-path] [-d level] [-h hostname] [-t timeout]\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"               [bootptab [dumpfile]]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2375,6 +2382,13 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"\t -d n\tset debug level\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t -h n\tset the hostname to listen on\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
