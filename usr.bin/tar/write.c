@@ -1609,11 +1609,10 @@ operator|->
 name|start_dir
 argument_list|)
 condition|)
-name|bsdtar_errc
+block|{
+name|bsdtar_warnc
 argument_list|(
 name|bsdtar
-argument_list|,
-literal|1
 argument_list|,
 name|errno
 argument_list|,
@@ -1624,6 +1623,14 @@ operator|->
 name|start_dir
 argument_list|)
 expr_stmt|;
+name|bsdtar
+operator|->
+name|return_value
+operator|=
+literal|1
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|bsdtar
@@ -1701,7 +1708,8 @@ name|arg
 operator|==
 name|NULL
 condition|)
-name|bsdtar_errc
+block|{
+name|bsdtar_warnc
 argument_list|(
 name|bsdtar
 argument_list|,
@@ -1712,6 +1720,14 @@ argument_list|,
 literal|"Missing argument for -C"
 argument_list|)
 expr_stmt|;
+name|bsdtar
+operator|->
+name|return_value
+operator|=
+literal|1
+expr_stmt|;
+return|return;
+block|}
 block|}
 comment|/*- 			 * The logic here for -C<dir> attempts to avoid 			 * chdir() as long as possible.  For example: 			 * "-C /foo -C /bar file" 			 *    needs chdir("/bar") but not chdir("/foo") 			 * "-C /foo -C bar file" 			 *    needs chdir("/foo/bar") 			 * "-C /foo -C bar /file1" 			 *    does not need chdir() 			 * "-C /foo -C bar /file1 file2" 			 *    needs chdir("/foo/bar") before file2 			 * 			 * The only correct way to handle this is to 			 * record a "pending" chdir request and only 			 * execute the real chdir when a non-absolute 			 * filename is seen on the command line. 			 * 			 * I went to all this work so that programs 			 * that build tar command lines don't have to 			 * worry about -C with non-existent 			 * directories; such requests will only fail 			 * if the directory must be accessed. 			 */
 if|if
@@ -1857,11 +1873,10 @@ argument_list|(
 name|pending_dir
 argument_list|)
 condition|)
-name|bsdtar_errc
+block|{
+name|bsdtar_warnc
 argument_list|(
 name|bsdtar
-argument_list|,
-literal|1
 argument_list|,
 literal|0
 argument_list|,
@@ -1870,6 +1885,14 @@ argument_list|,
 name|pending_dir
 argument_list|)
 expr_stmt|;
+name|bsdtar
+operator|->
+name|return_value
+operator|=
+literal|1
+expr_stmt|;
+return|return;
+block|}
 name|free
 argument_list|(
 name|pending_dir
