@@ -3394,6 +3394,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ENABLE_VFS_IOOPT
+end_ifdef
+
 begin_comment
 comment|/*  * Same as vm_object_pmap_copy, except range checking really  * works, and is meant for small sections of an object.  *  * This code protects resident pages by making them read-only  * and is typically called on a fork or split when a page  * is converted to copy-on-write.    *  * NOTE: If the page is already at VM_PROT_NONE, calling  * vm_page_protect will have no effect.  */
 end_comment
@@ -3477,6 +3483,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *	vm_object_pmap_remove:  *  *	Removes all physical pages in the specified  *	object range from all physical maps.  *  *	The object must *not* be locked.  */
