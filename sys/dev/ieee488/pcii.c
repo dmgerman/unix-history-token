@@ -213,7 +213,6 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|pcii_softc
-operator|*
 argument_list|)
 block|, }
 decl_stmt|;
