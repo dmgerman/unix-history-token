@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_input.c	8.2 (Berkeley) 1/4/94  * $Id: ip_input.c,v 1.84 1998/05/24 14:59:57 dg Exp $  *	$ANA: ip_input.c,v 1.5 1996/09/18 14:34:59 wollman Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_input.c	8.2 (Berkeley) 1/4/94  * $Id: ip_input.c,v 1.85 1998/05/25 10:37:45 julian Exp $  *	$ANA: ip_input.c,v 1.5 1996/09/18 14:34:59 wollman Exp $  */
 end_comment
 
 begin_define
@@ -1740,9 +1740,9 @@ name|IPDIVERT
 name|u_short
 name|port
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|IPFW_DIVERT_RESTART
+ifdef|#
+directive|ifdef
+name|IPFW_DIVERT_OLDRESTART
 name|port
 operator|=
 call|(
@@ -1799,7 +1799,7 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* IPFW_DIVERT_RESTART */
+comment|/* IPFW_DIVERT_OLDRESTART */
 if|if
 condition|(
 name|port
@@ -3109,9 +3109,9 @@ name|ipq_divert
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPFW_DIVERT_RESTART
+ifndef|#
+directive|ifndef
+name|IPFW_DIVERT_OLDRESTART
 name|fp
 operator|->
 name|ipq_div_cookie
@@ -3120,7 +3120,7 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* IPFW_DIVERT_RESTART */
+comment|/* IPFW_DIVERT_OLDRESTART */
 endif|#
 directive|endif
 name|q
@@ -3370,9 +3370,9 @@ name|ipq_divert
 operator|=
 name|frag_divert_port
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPFW_DIVERT_RESTART
+ifndef|#
+directive|ifndef
+name|IPFW_DIVERT_OLDRESTART
 name|fp
 operator|->
 name|ipq_div_cookie
@@ -3381,7 +3381,7 @@ name|ip_divert_in_cookie
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* IPFW_DIVERT_RESTART */
+comment|/* IPFW_DIVERT_OLDRESTART */
 block|}
 name|frag_divert_port
 operator|=
@@ -3588,9 +3588,9 @@ name|fp
 operator|->
 name|ipq_divert
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPFW_DIVERT_RESTART
+ifndef|#
+directive|ifndef
+name|IPFW_DIVERT_OLDRESTART
 name|ip_divert_in_cookie
 operator|=
 name|fp
@@ -3599,7 +3599,7 @@ name|ipq_div_cookie
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* IPFW_DIVERT_RESTART */
+comment|/* IPFW_DIVERT_OLDRESTART */
 endif|#
 directive|endif
 comment|/* 	 * Create header for new ip packet by 	 * modifying header of first packet; 	 * dequeue and discard fragment reassembly header. 	 * Make header visible. 	 */

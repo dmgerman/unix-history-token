@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.83 1998/05/19 14:04:29 dg Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.84 1998/05/25 10:37:44 julian Exp $  */
 end_comment
 
 begin_comment
@@ -664,11 +664,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IPFW_DIVERT_RESTART
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPFW_DIVERT_OLDRESTART
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -749,7 +749,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* IPFW_DIVERT_RESTART */
+comment|/* IPFW_DIVERT_OLDRESTART */
 end_comment
 
 begin_decl_stmt
@@ -2148,15 +2148,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parameters:  *  *	ip	Pointer to packet header (struct ip *)  *	hlen	Packet header length  *	oif	Outgoing interface, or NULL if packet is incoming  * #ifndef IPFW_DIVERT_RESTART  *	ignport	Ignore all divert/tee rules to this port (if non-zero)  * #else  *	pastrule Skip up to the first rule past this rule number;  * #endif  *	*m	The packet; we set to NULL when/if we nuke it.  *  * Return value:  *  *	0	The packet is to be accepted and routed normally OR  *      	the packet was denied/rejected and has been dropped;  *		in the latter case, *m is equal to NULL upon return.  *	port	Divert the packet to port.  */
+comment|/*  * Parameters:  *  *	ip	Pointer to packet header (struct ip *)  *	hlen	Packet header length  *	oif	Outgoing interface, or NULL if packet is incoming  * #ifdef IPFW_DIVERT_OLDRESTART  *	ignport	Ignore all divert/tee rules to this port (if non-zero)  * #else  *	pastrule Skip up to the first rule past this rule number;  * #endif  *	*m	The packet; we set to NULL when/if we nuke it.  *  * Return value:  *  *	0	The packet is to be accepted and routed normally OR  *      	the packet was denied/rejected and has been dropped;  *		in the latter case, *m is equal to NULL upon return.  *	port	Divert the packet to port.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-ifndef|#
-directive|ifndef
-name|IPFW_DIVERT_RESTART
+ifdef|#
+directive|ifdef
+name|IPFW_DIVERT_OLDRESTART
 name|ip_fw_chk
 parameter_list|(
 name|struct
@@ -2211,7 +2211,7 @@ name|m
 parameter_list|)
 endif|#
 directive|endif
-comment|/* IPFW_DIVERT_RESTART */
+comment|/* IPFW_DIVERT_OLDRESTART */
 block|{
 name|struct
 name|ip_fw_chain
@@ -2264,10 +2264,10 @@ name|src_port
 decl_stmt|,
 name|dst_port
 decl_stmt|;
-comment|/* 	 * Go down the chain, looking for enlightment 	 * #ifdef IPFW_DIVERT_RESTART 	 * If we've been asked to start at a given rule immediatly, do so. 	 * #endif 	 */
-ifndef|#
-directive|ifndef
-name|IPFW_DIVERT_RESTART
+comment|/* 	 * Go down the chain, looking for enlightment 	 * #ifndef IPFW_DIVERT_OLDRESTART 	 * If we've been asked to start at a given rule immediatly, do so. 	 * #endif 	 */
+ifdef|#
+directive|ifdef
+name|IPFW_DIVERT_OLDRESTART
 for|for
 control|(
 name|chain
@@ -2365,7 +2365,7 @@ control|)
 block|{
 endif|#
 directive|endif
-comment|/* IPFW_DIVERT_RESTART */
+comment|/* IPFW_DIVERT_OLDRESTART */
 specifier|register
 name|struct
 name|ip_fw
@@ -3024,9 +3024,9 @@ goto|;
 block|}
 name|got_match
 label|:
-ifndef|#
-directive|ifndef
-name|IPFW_DIVERT_RESTART
+ifdef|#
+directive|ifdef
+name|IPFW_DIVERT_OLDRESTART
 comment|/* Ignore divert/tee rule if socket port is "ignport" */
 switch|switch
 condition|(
@@ -3057,7 +3057,7 @@ break|break;
 block|}
 endif|#
 directive|endif
-comment|/* IPFW_DIVERT_RESTART */
+comment|/* IPFW_DIVERT_OLDRESTART */
 comment|/* Update statistics */
 name|f
 operator|->
@@ -3128,9 +3128,9 @@ continue|continue;
 case|case
 name|IP_FW_F_DIVERT
 case|:
-ifdef|#
-directive|ifdef
-name|IPFW_DIVERT_RESTART
+ifndef|#
+directive|ifndef
+name|IPFW_DIVERT_OLDRESTART
 name|ip_divert_in_cookie
 operator|=
 name|f
@@ -3139,7 +3139,7 @@ name|fw_number
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* IPFW_DIVERT_RESTART */
+comment|/* IPFW_DIVERT_OLDRESTART */
 return|return
 operator|(
 name|f
