@@ -5369,7 +5369,7 @@ name|cp
 operator|=
 name|variable_get
 argument_list|(
-name|VAR_ROOT_SIZE
+name|varName
 argument_list|)
 operator|)
 operator|!=
