@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)tty_pty.c	7.21 (Berkeley) 5/30/91  *	$Id: tty_pty.c,v 1.8 1994/01/26 21:23:50 davidg Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)tty_pty.c	7.21 (Berkeley) 5/30/91  *	$Id: tty_pty.c,v 1.9 1994/01/29 04:04:26 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -149,6 +149,7 @@ end_comment
 begin_decl_stmt
 name|struct
 name|tty
+modifier|*
 name|pt_tty
 index|[
 name|NPTY
@@ -198,21 +199,21 @@ begin_define
 define|#
 directive|define
 name|PF_RCOLL
-value|0x01
+value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
 name|PF_WCOLL
-value|0x02
+value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
 name|PF_PKT
-value|0x08
+value|0x0008
 end_define
 
 begin_comment
@@ -223,7 +224,7 @@ begin_define
 define|#
 directive|define
 name|PF_STOPPED
-value|0x10
+value|0x0010
 end_define
 
 begin_comment
@@ -234,7 +235,7 @@ begin_define
 define|#
 directive|define
 name|PF_REMOTE
-value|0x20
+value|0x0020
 end_define
 
 begin_comment
@@ -245,18 +246,40 @@ begin_define
 define|#
 directive|define
 name|PF_NOSTOP
-value|0x40
+value|0x0040
 end_define
 
 begin_define
 define|#
 directive|define
 name|PF_UCNTL
-value|0x80
+value|0x0080
 end_define
 
 begin_comment
 comment|/* user control mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PF_COPEN
+value|0x0100
+end_define
+
+begin_comment
+comment|/* master open */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PF_SOPEN
+value|0x0200
+end_define
+
+begin_comment
+comment|/* slave open */
 end_comment
 
 begin_comment
@@ -324,7 +347,6 @@ operator|)
 return|;
 name|tp
 operator|=
-operator|&
 name|pt_tty
 index|[
 name|minor
@@ -332,6 +354,17 @@ argument_list|(
 name|dev
 argument_list|)
 index|]
+operator|=
+name|ttymalloc
+argument_list|(
+name|pt_tty
+index|[
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+index|]
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -471,7 +504,6 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-operator|&
 name|tp
 operator|->
 name|t_raw
@@ -521,6 +553,18 @@ operator||
 name|FWRITE
 argument_list|)
 expr_stmt|;
+name|pt_ioctl
+index|[
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+index|]
+operator|.
+name|pt_flags
+operator||=
+name|PF_SOPEN
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -563,7 +607,6 @@ name|tp
 decl_stmt|;
 name|tp
 operator|=
-operator|&
 name|pt_tty
 index|[
 name|minor
@@ -603,6 +646,65 @@ operator||
 name|FWRITE
 argument_list|)
 expr_stmt|;
+name|pt_ioctl
+index|[
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+index|]
+operator|.
+name|pt_flags
+operator|&=
+operator|~
+name|PF_SOPEN
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|pt_ioctl
+index|[
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+index|]
+operator|.
+name|pt_flags
+operator|&
+name|PF_COPEN
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|ttyfree
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|broken
+comment|/* session holds a ref to the tty; can't deallocate */
+name|pt_tty
+index|[
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+index|]
+operator|=
+operator|(
+expr|struct
+name|tty
+operator|*
+operator|)
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 return|return
 operator|(
 literal|0
@@ -646,7 +748,6 @@ name|tty
 modifier|*
 name|tp
 init|=
-operator|&
 name|pt_tty
 index|[
 name|minor
@@ -783,7 +884,6 @@ if|if
 condition|(
 name|RB_LEN
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_can
@@ -814,7 +914,6 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-operator|&
 name|tp
 operator|->
 name|t_can
@@ -841,7 +940,6 @@ while|while
 condition|(
 name|RB_LEN
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_can
@@ -861,7 +959,6 @@ name|ureadc
 argument_list|(
 name|getc
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_can
@@ -883,7 +980,6 @@ if|if
 condition|(
 name|RB_LEN
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_can
@@ -896,7 +992,6 @@ name|void
 operator|)
 name|getc
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_can
@@ -906,7 +1001,6 @@ if|if
 condition|(
 name|RB_LEN
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_can
@@ -995,7 +1089,6 @@ name|tp
 decl_stmt|;
 name|tp
 operator|=
-operator|&
 name|pt_tty
 index|[
 name|minor
@@ -1201,7 +1294,7 @@ operator|&
 name|tp
 operator|->
 name|t_out
-operator|.
+operator|->
 name|rb_tl
 argument_list|)
 expr_stmt|;
@@ -1256,7 +1349,7 @@ operator|&
 name|tp
 operator|->
 name|t_raw
-operator|.
+operator|->
 name|rb_hd
 argument_list|)
 expr_stmt|;
@@ -1345,7 +1438,6 @@ operator|)
 return|;
 name|tp
 operator|=
-operator|&
 name|pt_tty
 index|[
 name|minor
@@ -1353,6 +1445,17 @@ argument_list|(
 name|dev
 argument_list|)
 index|]
+operator|=
+name|ttymalloc
+argument_list|(
+name|pt_tty
+index|[
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+index|]
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1412,8 +1515,14 @@ expr_stmt|;
 name|pti
 operator|->
 name|pt_flags
-operator|=
-literal|0
+operator|&=
+name|PF_SOPEN
+expr_stmt|;
+name|pti
+operator|->
+name|pt_flags
+operator||=
+name|PF_COPEN
 expr_stmt|;
 name|pti
 operator|->
@@ -1466,7 +1575,6 @@ name|tp
 decl_stmt|;
 name|tp
 operator|=
-operator|&
 name|pt_tty
 index|[
 name|minor
@@ -1525,6 +1633,65 @@ name|constty
 operator|=
 literal|0
 expr_stmt|;
+name|pt_ioctl
+index|[
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+index|]
+operator|.
+name|pt_flags
+operator|&=
+operator|~
+name|PF_COPEN
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|pt_ioctl
+index|[
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+index|]
+operator|.
+name|pt_flags
+operator|&
+name|PF_SOPEN
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|ttyfree
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|broken
+comment|/* session holds a ref to the tty; can't deallocate */
+name|pt_tty
+index|[
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+index|]
+operator|=
+operator|(
+expr|struct
+name|tty
+operator|*
+operator|)
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 return|return
 operator|(
 literal|0
@@ -1561,7 +1728,6 @@ name|tty
 modifier|*
 name|tp
 init|=
-operator|&
 name|pt_tty
 index|[
 name|minor
@@ -1751,7 +1917,6 @@ if|if
 condition|(
 name|RB_LEN
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_out
@@ -1811,7 +1976,7 @@ operator|&
 name|tp
 operator|->
 name|t_out
-operator|.
+operator|->
 name|rb_tl
 argument_list|,
 name|TTIPRI
@@ -1904,7 +2069,6 @@ argument_list|)
 argument_list|,
 name|RB_CONTIGGET
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_out
@@ -1921,7 +2085,7 @@ argument_list|(
 name|tp
 operator|->
 name|t_out
-operator|.
+operator|->
 name|rb_hd
 argument_list|,
 name|buf
@@ -1932,12 +2096,11 @@ expr_stmt|;
 name|tp
 operator|->
 name|t_out
-operator|.
+operator|->
 name|rb_hd
 operator|=
 name|RB_ROLLOVER
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_out
@@ -1945,7 +2108,7 @@ argument_list|,
 name|tp
 operator|->
 name|t_out
-operator|.
+operator|->
 name|rb_hd
 operator|+
 name|cc
@@ -1977,7 +2140,6 @@ if|if
 condition|(
 name|RB_LEN
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_out
@@ -2009,7 +2171,6 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-operator|&
 name|tp
 operator|->
 name|t_out
@@ -2192,7 +2353,6 @@ name|tty
 modifier|*
 name|tp
 init|=
-operator|&
 name|pt_tty
 index|[
 name|minor
@@ -2266,7 +2426,6 @@ operator|)
 operator|&&
 name|RB_LEN
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_out
@@ -2409,7 +2568,6 @@ if|if
 condition|(
 name|RB_LEN
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_can
@@ -2429,7 +2587,6 @@ if|if
 condition|(
 name|RB_LEN
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_raw
@@ -2437,7 +2594,6 @@ argument_list|)
 operator|+
 name|RB_LEN
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_can
@@ -2456,7 +2612,6 @@ if|if
 condition|(
 name|RB_LEN
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_can
@@ -2560,7 +2715,6 @@ name|tty
 modifier|*
 name|tp
 init|=
-operator|&
 name|pt_tty
 index|[
 name|minor
@@ -2642,7 +2796,6 @@ if|if
 condition|(
 name|RB_LEN
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_can
@@ -2661,7 +2814,6 @@ literal|0
 operator|&&
 name|RB_LEN
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_can
@@ -2698,7 +2850,6 @@ name|cc
 argument_list|,
 name|RB_CONTIGPUT
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_can
@@ -2791,7 +2942,7 @@ argument_list|,
 name|tp
 operator|->
 name|t_can
-operator|.
+operator|->
 name|rb_tl
 argument_list|,
 name|cc
@@ -2800,12 +2951,11 @@ expr_stmt|;
 name|tp
 operator|->
 name|t_can
-operator|.
+operator|->
 name|rb_tl
 operator|=
 name|RB_ROLLOVER
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_can
@@ -2813,7 +2963,7 @@ argument_list|,
 name|tp
 operator|->
 name|t_can
-operator|.
+operator|->
 name|rb_tl
 operator|+
 name|cc
@@ -2834,7 +2984,6 @@ name|putc
 argument_list|(
 literal|0
 argument_list|,
-operator|&
 name|tp
 operator|->
 name|t_can
@@ -2850,7 +2999,6 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-operator|&
 name|tp
 operator|->
 name|t_can
@@ -2947,7 +3095,6 @@ condition|(
 operator|(
 name|RB_LEN
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_raw
@@ -2955,7 +3102,6 @@ argument_list|)
 operator|+
 name|RB_LEN
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_can
@@ -2969,7 +3115,6 @@ operator|&&
 operator|(
 name|RB_LEN
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_can
@@ -2993,7 +3138,6 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-operator|&
 name|tp
 operator|->
 name|t_raw
@@ -3103,7 +3247,7 @@ operator|&
 name|tp
 operator|->
 name|t_raw
-operator|.
+operator|->
 name|rb_hd
 argument_list|,
 name|TTOPRI
@@ -3170,7 +3314,6 @@ name|tty
 modifier|*
 name|tp
 init|=
-operator|&
 name|pt_tty
 index|[
 name|minor
@@ -3514,7 +3657,6 @@ while|while
 condition|(
 name|getc
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_out

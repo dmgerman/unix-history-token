@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)pccons.c	5.11 (Berkeley) 5/21/91  *	$Id: pccons.c,v 1.12 1994/01/03 07:55:45 davidg Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)pccons.c	5.11 (Berkeley) 5/21/91  *	$Id: pccons.c,v 1.13 1994/02/10 10:17:58 ache Exp $  */
 end_comment
 
 begin_comment
@@ -143,6 +143,7 @@ end_comment
 begin_decl_stmt
 name|struct
 name|tty
+modifier|*
 name|pccons
 decl_stmt|;
 end_decl_stmt
@@ -1073,8 +1074,12 @@ operator|)
 return|;
 name|tp
 operator|=
-operator|&
 name|pccons
+operator|=
+name|ttymalloc
+argument_list|(
+name|pccons
+argument_list|)
 expr_stmt|;
 name|tp
 operator|->
@@ -1255,14 +1260,13 @@ operator|*
 name|linesw
 index|[
 name|pccons
-operator|.
+operator|->
 name|t_line
 index|]
 operator|.
 name|l_close
 operator|)
 operator|(
-operator|&
 name|pccons
 operator|,
 name|flag
@@ -1270,10 +1274,29 @@ operator|)
 expr_stmt|;
 name|ttyclose
 argument_list|(
-operator|&
 name|pccons
 argument_list|)
 expr_stmt|;
+name|ttyfree
+argument_list|(
+name|pccons
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|broken
+comment|/* session holds a ref to the tty; can't deallocate */
+name|pccons
+operator|=
+operator|(
+expr|struct
+name|tty
+operator|*
+operator|)
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -1315,14 +1338,13 @@ operator|*
 name|linesw
 index|[
 name|pccons
-operator|.
+operator|->
 name|t_line
 index|]
 operator|.
 name|l_read
 operator|)
 operator|(
-operator|&
 name|pccons
 operator|,
 name|uio
@@ -1367,14 +1389,13 @@ operator|*
 name|linesw
 index|[
 name|pccons
-operator|.
+operator|->
 name|t_line
 index|]
 operator|.
 name|l_write
 operator|)
 operator|(
-operator|&
 name|pccons
 operator|,
 name|uio
@@ -1450,7 +1471,6 @@ name|kdbrintr
 argument_list|(
 name|c
 argument_list|,
-operator|&
 name|pccons
 argument_list|)
 condition|)
@@ -1473,7 +1493,7 @@ operator|*
 name|linesw
 index|[
 name|pccons
-operator|.
+operator|->
 name|t_line
 index|]
 operator|.
@@ -1486,7 +1506,6 @@ operator|++
 operator|&
 literal|0xff
 operator|,
-operator|&
 name|pccons
 operator|)
 expr_stmt|;
@@ -1503,7 +1522,7 @@ operator|*
 name|linesw
 index|[
 name|pccons
-operator|.
+operator|->
 name|t_line
 index|]
 operator|.
@@ -1516,7 +1535,6 @@ operator|++
 operator|&
 literal|0xff
 operator|,
-operator|&
 name|pccons
 operator|)
 expr_stmt|;
@@ -1594,7 +1612,6 @@ name|tty
 modifier|*
 name|tp
 init|=
-operator|&
 name|pccons
 decl_stmt|;
 specifier|register
@@ -1809,7 +1826,7 @@ name|pcconsintr
 condition|)
 return|return;
 name|pccons
-operator|.
+operator|->
 name|t_state
 operator|&=
 operator|~
@@ -1824,7 +1841,7 @@ expr_stmt|;
 if|if
 condition|(
 name|pccons
-operator|.
+operator|->
 name|t_line
 condition|)
 operator|(
@@ -1832,21 +1849,19 @@ operator|*
 name|linesw
 index|[
 name|pccons
-operator|.
+operator|->
 name|t_line
 index|]
 operator|.
 name|l_start
 operator|)
 operator|(
-operator|&
 name|pccons
 operator|)
 expr_stmt|;
 else|else
 name|pcstart
 argument_list|(
-operator|&
 name|pccons
 argument_list|)
 expr_stmt|;
@@ -1899,7 +1914,6 @@ if|if
 condition|(
 name|RB_LEN
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_out
@@ -1931,7 +1945,6 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-operator|&
 name|tp
 operator|->
 name|t_out
@@ -1977,7 +1990,6 @@ if|if
 condition|(
 name|RB_LEN
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_out
@@ -1992,7 +2004,6 @@ name|c
 operator|=
 name|getc
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_out
@@ -2104,7 +2115,6 @@ name|cp
 operator|->
 name|cn_tp
 operator|=
-operator|&
 name|pccons
 expr_stmt|;
 name|cp

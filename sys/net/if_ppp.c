@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/*  *	$Id: if_ppp.c,v 1.6 1993/12/19 00:52:03 wollman Exp $  * 	From: if_ppp.c,v 1.22 1993/08/31 23:20:40 paulus Exp  *	From: if_ppp.c,v 1.21 1993/08/29 11:22:37 paulus Exp  *	From: if_sl.c,v 1.11 84/10/04 12:54:47 rick Exp   */
+comment|/*  *	$Id: if_ppp.c,v 1.7 1993/12/20 19:31:30 wollman Exp $  * 	From: if_ppp.c,v 1.22 1993/08/31 23:20:40 paulus Exp  *	From: if_ppp.c,v 1.21 1993/08/29 11:22:37 paulus Exp  *	From: if_sl.c,v 1.11 84/10/04 12:54:47 rick Exp   */
 end_comment
 
 begin_include
@@ -1541,7 +1541,6 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-operator|&
 name|tp
 operator|->
 name|t_rawq
@@ -1587,7 +1586,6 @@ block|}
 comment|/* Pull place-holder byte out of canonical queue */
 name|getc
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_canq
@@ -3601,7 +3599,6 @@ if|if
 condition|(
 name|CCOUNT
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_outq
@@ -3630,7 +3627,6 @@ if|if
 condition|(
 name|CCOUNT
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_outq
@@ -4007,7 +4003,6 @@ if|if
 condition|(
 name|CCOUNT
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_outq
@@ -4028,7 +4023,6 @@ name|putc
 argument_list|(
 name|PPP_FLAG
 argument_list|,
-operator|&
 name|tp
 operator|->
 name|t_outq
@@ -4141,7 +4135,6 @@ name|start
 argument_list|,
 name|n
 argument_list|,
-operator|&
 name|tp
 operator|->
 name|t_outq
@@ -4197,7 +4190,6 @@ name|cc
 operator|=
 name|RB_CONTIGPUT
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_out
@@ -4231,7 +4223,7 @@ argument_list|,
 name|tp
 operator|->
 name|t_out
-operator|.
+operator|->
 name|rb_tl
 argument_list|,
 name|cc
@@ -4240,12 +4232,11 @@ expr_stmt|;
 name|tp
 operator|->
 name|t_out
-operator|.
+operator|->
 name|rb_tl
 operator|=
 name|RB_ROLLOVER
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_out
@@ -4253,7 +4244,7 @@ argument_list|,
 name|tp
 operator|->
 name|t_out
-operator|.
+operator|->
 name|rb_tl
 operator|+
 name|cc
@@ -4307,7 +4298,6 @@ name|putc
 argument_list|(
 name|PPP_ESCAPE
 argument_list|,
-operator|&
 name|tp
 operator|->
 name|t_outq
@@ -4323,7 +4313,6 @@ name|start
 operator|^
 name|PPP_TRANS
 argument_list|,
-operator|&
 name|tp
 operator|->
 name|t_outq
@@ -4335,7 +4324,6 @@ name|void
 operator|)
 name|unputc
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_outq
@@ -4505,7 +4493,6 @@ argument_list|(
 operator|*
 name|q
 argument_list|,
-operator|&
 name|tp
 operator|->
 name|t_outq
@@ -4528,7 +4515,6 @@ name|q
 control|)
 name|unputc
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_outq
@@ -5861,7 +5847,6 @@ name|putc
 argument_list|(
 literal|0
 argument_list|,
-operator|&
 name|tp
 operator|->
 name|t_canq
