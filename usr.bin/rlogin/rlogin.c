@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rlogin.c,v 1.17 1998/03/26 18:03:41 markm Exp $"
+literal|"$Id: rlogin.c,v 1.18 1998/10/09 06:45:28 markm Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -776,6 +776,12 @@ name|k
 decl_stmt|;
 endif|#
 directive|endif
+name|char
+modifier|*
+name|localname
+init|=
+name|NULL
+decl_stmt|;
 name|argoff
 operator|=
 name|dflag
@@ -873,13 +879,13 @@ name|KERBEROS
 define|#
 directive|define
 name|OPTIONS
-value|"8DEKLde:k:l:x"
+value|"8DEKLde:i:k:l:x"
 else|#
 directive|else
 define|#
 directive|define
 name|OPTIONS
-value|"8DEKLde:l:"
+value|"8DEKLde:i:l:"
 endif|#
 directive|endif
 while|while
@@ -975,6 +981,35 @@ name|getescape
 argument_list|(
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'i'
+case|:
+if|if
+condition|(
+name|getuid
+argument_list|()
+operator|!=
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"rlogin: -i user: permission denied\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|localname
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 ifdef|#
@@ -1098,6 +1133,17 @@ operator|!
 name|user
 condition|)
 name|user
+operator|=
+name|pw
+operator|->
+name|pw_name
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|localname
+condition|)
+name|localname
 operator|=
 name|pw
 operator|->
@@ -1625,9 +1671,7 @@ name|sp
 operator|->
 name|s_port
 argument_list|,
-name|pw
-operator|->
-name|pw_name
+name|localname
 argument_list|,
 name|user
 argument_list|,
@@ -1650,9 +1694,7 @@ name|sp
 operator|->
 name|s_port
 argument_list|,
-name|pw
-operator|->
-name|pw_name
+name|localname
 argument_list|,
 name|user
 argument_list|,
