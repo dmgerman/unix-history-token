@@ -985,7 +985,7 @@ name|strcpy
 argument_list|(
 name|fromname
 argument_list|,
-literal|"unix"
+literal|"local"
 argument_list|)
 expr_stmt|;
 else|else

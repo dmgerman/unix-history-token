@@ -1477,6 +1477,73 @@ name|NULL
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|netid
+argument_list|,
+literal|"unix"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"The local transport is called \"unix\" "
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"in /etc/netconfig.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Please change this to \"local\" manually "
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"or run mergemaster(8).\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"See UPDATING entry 20021216 for details.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Continuing in 10 seconds\n\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"This warning will be removed 20030301\n"
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*      * Look up table if the entries have already been read and parsed in      * getnetconfig(), then copy this entry into a buffer and return it.      * If we cannot find the entry in the current list and there are more      * entries in the netconfig db that has not been read, we then read the      * db and try find the match netid.      * If all the netconfig db has been read and placed into the list and      * there is no match for the netid, return NULL.      */
 if|if
 condition|(
