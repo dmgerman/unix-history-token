@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslog.c	8.3 (Berkeley) %G%"
+literal|"@(#)syslog.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -338,8 +338,13 @@ name|cnt
 decl_stmt|;
 specifier|register
 name|char
+name|ch
+decl_stmt|,
 modifier|*
 name|p
+decl_stmt|,
+modifier|*
+name|t
 decl_stmt|;
 name|time_t
 name|now
@@ -415,7 +420,7 @@ name|saved_errno
 operator|=
 name|errno
 expr_stmt|;
-comment|/* set default facility if none specified */
+comment|/* Set default facility if none specified. */
 if|if
 condition|(
 operator|(
@@ -430,7 +435,7 @@ name|pri
 operator||=
 name|LogFacility
 expr_stmt|;
-comment|/* build the message */
+comment|/* Build the message. */
 operator|(
 name|void
 operator|)
@@ -491,8 +496,9 @@ name|p
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|LogTag
+operator|==
+name|NULL
 condition|)
 name|LogTag
 operator|=
@@ -501,29 +507,20 @@ expr_stmt|;
 if|if
 condition|(
 name|LogTag
+operator|!=
+name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|strcpy
+name|p
+operator|+=
+name|sprintf
 argument_list|(
 name|p
+argument_list|,
+literal|"%s"
 argument_list|,
 name|LogTag
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-init|;
-operator|*
-name|p
-condition|;
-operator|++
-name|p
-control|)
-empty_stmt|;
-block|}
 if|if
 condition|(
 name|LogStat
@@ -545,6 +542,8 @@ expr_stmt|;
 if|if
 condition|(
 name|LogTag
+operator|!=
+name|NULL
 condition|)
 block|{
 operator|*
@@ -560,21 +559,10 @@ operator|=
 literal|' '
 expr_stmt|;
 block|}
-comment|/* substitute error message for %m */
-block|{
-specifier|register
-name|char
-name|ch
-decl_stmt|,
-modifier|*
-name|t1
-decl_stmt|,
-modifier|*
-name|t2
-decl_stmt|;
+comment|/* Substitute error message for %m. */
 for|for
 control|(
-name|t1
+name|t
 operator|=
 name|fmt_cpy
 init|;
@@ -603,40 +591,33 @@ block|{
 operator|++
 name|fmt
 expr_stmt|;
-for|for
-control|(
-name|t2
-operator|=
+name|t
+operator|+=
+name|sprintf
+argument_list|(
+name|t
+argument_list|,
+literal|"%s"
+argument_list|,
 name|strerror
 argument_list|(
 name|saved_errno
 argument_list|)
-init|;
-operator|*
-name|t1
-operator|=
-operator|*
-name|t2
-operator|++
-condition|;
-operator|++
-name|t1
-control|)
-empty_stmt|;
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 operator|*
-name|t1
+name|t
 operator|++
 operator|=
 name|ch
 expr_stmt|;
 operator|*
-name|t1
+name|t
 operator|=
 literal|'\0'
 expr_stmt|;
-block|}
 name|p
 operator|+=
 name|vsprintf
@@ -654,7 +635,7 @@ name|p
 operator|-
 name|tbuf
 expr_stmt|;
-comment|/* output to stderr if requested */
+comment|/* Output to stderr if requested. */
 if|if
 condition|(
 name|LogStat
@@ -723,7 +704,7 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* get connected, output the message to the local logger */
+comment|/* Get connected, output the message to the local logger. */
 if|if
 condition|(
 operator|!
@@ -756,20 +737,13 @@ operator|>=
 literal|0
 condition|)
 return|return;
-comment|/* see if should attempt the console */
-if|if
-condition|(
-operator|!
-operator|(
-name|LogStat
-operator|&
-name|LOG_CONS
-operator|)
-condition|)
-return|return;
 comment|/* 	 * Output the message to the console; don't worry about blocking, 	 * if console blocks everything will.  Make sure the error reported 	 * is the one from the syslogd failure. 	 */
 if|if
 condition|(
+name|LogStat
+operator|&
+name|LOG_CONS
+operator|&&
 operator|(
 name|fd
 operator|=
