@@ -33,7 +33,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.3 (Berkeley) %G%"
+literal|"@(#)alias.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2964,8 +2964,6 @@ operator|->
 name|q_flags
 operator||=
 name|QQUEUEUP
-operator||
-name|QDONTSEND
 expr_stmt|;
 return|return;
 block|}

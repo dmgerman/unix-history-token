@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.4 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1207,8 +1207,6 @@ operator|->
 name|q_flags
 operator||=
 name|QQUEUEUP
-operator||
-name|QDONTSEND
 expr_stmt|;
 name|usrerr
 argument_list|(
@@ -1467,8 +1465,6 @@ operator|->
 name|q_flags
 operator||=
 name|QQUEUEUP
-operator||
-name|QDONTSEND
 expr_stmt|;
 if|if
 condition|(
@@ -2597,8 +2593,6 @@ operator|->
 name|q_flags
 operator||=
 name|QQUEUEUP
-operator||
-name|QDONTSEND
 expr_stmt|;
 name|errno
 operator|=

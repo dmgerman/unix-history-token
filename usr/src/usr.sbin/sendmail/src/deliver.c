@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.4 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2233,8 +2233,6 @@ operator|->
 name|q_flags
 operator||=
 name|QQUEUEUP
-operator||
-name|QDONTSEND
 expr_stmt|;
 name|e
 operator|->
