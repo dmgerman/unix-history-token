@@ -133,6 +133,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|vm_zone_t
+name|swap_zone
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|swap_pager_putpages
 name|__P

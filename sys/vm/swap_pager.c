@@ -127,6 +127,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/pmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_map.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_kern.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm_object.h>
 end_include
 
@@ -151,6 +169,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_zone.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/swap_pager.h>
 end_include
 
@@ -158,12 +182,6 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_extern.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_zone.h>
 end_include
 
 begin_define
@@ -942,6 +960,8 @@ parameter_list|()
 block|{
 name|int
 name|n
+decl_stmt|,
+name|n2
 decl_stmt|;
 comment|/* 	 * Number of in-transit swap bp operations.  Don't 	 * exhaust the pbufs completely.  Make sure we 	 * initialize workable values (0 will work for hysteresis 	 * but it isn't very efficient). 	 * 	 * The nsw_cluster_max is constrained by the bp->b_pages[] 	 * array (MAXPHYS/PAGE_SIZE) and our locally defined 	 * MAX_PAGEOUT_CLUSTER.   Also be aware that swap ops are 	 * constrained by the swap device interleave stripe size. 	 * 	 * Currently we hardwire nsw_wcount_async to 4.  This limit is  	 * designed to prevent other I/O from having high latencies due to 	 * our pageout I/O.  The value 4 works well for one or two active swap 	 * devices but is probably a little low if you have more.  Even so, 	 * a higher value would probably generate only a limited improvement 	 * with three or four active swap devices since the system does not 	 * typically have to pageout at extreme bandwidths.   We will want 	 * at least 2 per swap devices, and 4 is a pretty good value if you 	 * have one NFS swap device due to the command/ack latency over NFS. 	 * So it all works out pretty well. 	 */
 name|nsw_cluster_max
@@ -988,12 +1008,38 @@ expr_stmt|;
 comment|/* 	 * Initialize our zone.  Right now I'm just guessing on the number 	 * we need based on the number of pages in the system.  Each swblock 	 * can hold 16 pages, so this is probably overkill. 	 */
 name|n
 operator|=
+name|min
+argument_list|(
 name|cnt
 operator|.
 name|v_page_count
+argument_list|,
+operator|(
+name|kernel_map
+operator|->
+name|max_offset
+operator|-
+name|kernel_map
+operator|->
+name|min_offset
+operator|)
+operator|/
+name|PAGE_SIZE
+argument_list|)
 operator|*
 literal|2
 expr_stmt|;
+name|n2
+operator|=
+name|n
+expr_stmt|;
+while|while
+condition|(
+name|n
+operator|>
+literal|0
+operator|&&
+operator|(
 name|swap_zone
 operator|=
 name|zinit
@@ -1012,6 +1058,41 @@ name|ZONE_INTERRUPT
 argument_list|,
 literal|1
 argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|n
+operator|>>=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|swap_zone
+operator|==
+name|NULL
+condition|)
+name|printf
+argument_list|(
+literal|"WARNING: failed to init swap_zone!\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|n2
+operator|!=
+name|n
+condition|)
+name|printf
+argument_list|(
+literal|"Swap zone entries reduced to %d.\n"
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+name|n2
+operator|=
+name|n
 expr_stmt|;
 comment|/* 	 * Initialize our meta-data hash table.  The swapper does not need to 	 * be quite as efficient as the VM system, so we do not use an  	 * oversized hash table. 	 * 	 * 	n: 		size of hash table, must be power of 2 	 *	swhash_mask:	hash table index mask 	 */
 for|for
@@ -1022,11 +1103,7 @@ literal|1
 init|;
 name|n
 operator|<
-name|cnt
-operator|.
-name|v_page_count
-operator|/
-literal|4
+name|n2
 condition|;
 name|n
 operator|<<=

@@ -118,6 +118,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_zone.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/swap_pager.h>
 end_include
 
@@ -706,6 +712,18 @@ condition|)
 return|return
 operator|(
 name|error
+operator|)
+return|;
+comment|/* 	 * Swap metadata may not fit in the KVM if we have physical 	 * memory of>1GB. 	 */
+if|if
+condition|(
+name|swap_zone
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOMEM
 operator|)
 return|;
 name|NDINIT

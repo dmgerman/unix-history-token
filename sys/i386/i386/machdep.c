@@ -1288,6 +1288,9 @@ decl_stmt|;
 name|vm_offset_t
 name|minaddr
 decl_stmt|;
+name|int
+name|physmem_est
+decl_stmt|;
 if|if
 condition|(
 name|boothowto
@@ -1509,6 +1512,42 @@ argument_list|,
 name|callwheelsize
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Discount the physical memory larger than the size of kernel_map 	 * to avoid eating up all of KVA space. 	 */
+if|if
+condition|(
+name|kernel_map
+operator|->
+name|first_free
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Warning: no free entries in kernel_map.\n"
+argument_list|)
+expr_stmt|;
+name|physmem_est
+operator|=
+name|physmem
+expr_stmt|;
+block|}
+else|else
+name|physmem_est
+operator|=
+name|min
+argument_list|(
+name|physmem
+argument_list|,
+name|kernel_map
+operator|->
+name|max_offset
+operator|-
+name|kernel_map
+operator|->
+name|min_offset
+argument_list|)
+expr_stmt|;
 comment|/* 	 * The nominal buffer size (and minimum KVA allocation) is BKVASIZE. 	 * For the first 64MB of ram nominally allocate sufficient buffers to 	 * cover 1/4 of our ram.  Beyond the first 64MB allocate additional 	 * buffers to cover 1/20 of our ram over 64MB. 	 * 	 * factor represents the 1/4 x ram conversion. 	 */
 if|if
 condition|(
@@ -1532,7 +1571,7 @@ literal|50
 expr_stmt|;
 if|if
 condition|(
-name|physmem
+name|physmem_est
 operator|>
 literal|1024
 condition|)
@@ -1541,7 +1580,7 @@ operator|+=
 name|min
 argument_list|(
 operator|(
-name|physmem
+name|physmem_est
 operator|-
 literal|1024
 operator|)
@@ -1555,14 +1594,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|physmem
+name|physmem_est
 operator|>
 literal|16384
 condition|)
 name|nbuf
 operator|+=
 operator|(
-name|physmem
+name|physmem_est
 operator|-
 literal|16384
 operator|)
