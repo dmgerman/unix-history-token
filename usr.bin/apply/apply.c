@@ -593,6 +593,10 @@ name|p
 operator|+=
 name|offset
 expr_stmt|;
+name|cmdsize
+operator|-=
+name|offset
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -640,6 +644,10 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|+=
+name|offset
+expr_stmt|;
+name|cmdsize
+operator|-=
 name|offset
 expr_stmt|;
 block|}
@@ -885,6 +893,10 @@ argument_list|)
 expr_stmt|;
 name|q
 operator|+=
+name|offset
+expr_stmt|;
+name|l
+operator|-=
 name|offset
 expr_stmt|;
 block|}
