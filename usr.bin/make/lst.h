@@ -135,25 +135,6 @@ modifier|*
 name|lastPtr
 decl_stmt|;
 comment|/* last node in list */
-comment|/* 	 * fields for sequential access 	 */
-name|LstWhere
-name|atEnd
-decl_stmt|;
-comment|/* Where in the list the last access was */
-name|Boolean
-name|isOpen
-decl_stmt|;
-comment|/* true if list has been Lst_Open'ed */
-name|LstNode
-modifier|*
-name|curPtr
-decl_stmt|;
-comment|/* current node, if open. NULL if 				   * *just* opened */
-name|LstNode
-modifier|*
-name|prevPtr
-decl_stmt|;
-comment|/* Previous node, if open. Used by 				   * Lst_Remove */
 block|}
 struct|;
 end_struct
@@ -617,67 +598,6 @@ name|DoProc
 modifier|*
 parameter_list|,
 name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * these functions are for dealing with a list as a table, of sorts.  * An idea of the "current element" is kept and used by all the functions  * between Lst_Open() and Lst_Close().  */
-end_comment
-
-begin_comment
-comment|/* Open the list */
-end_comment
-
-begin_function_decl
-name|ReturnStatus
-name|Lst_Open
-parameter_list|(
-name|Lst
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Next element please */
-end_comment
-
-begin_function_decl
-name|LstNode
-modifier|*
-name|Lst_Next
-parameter_list|(
-name|Lst
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Done yet? */
-end_comment
-
-begin_function_decl
-name|Boolean
-name|Lst_IsAtEnd
-parameter_list|(
-name|Lst
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Finish table access */
-end_comment
-
-begin_function_decl
-name|void
-name|Lst_Close
-parameter_list|(
-name|Lst
 modifier|*
 parameter_list|)
 function_decl|;

@@ -187,6 +187,11 @@ modifier|*
 name|commands
 decl_stmt|;
 comment|/* Creation commands */
+comment|/* current command executing in compat mode */
+name|LstNode
+modifier|*
+name|compat_command
+decl_stmt|;
 name|struct
 name|_Suff
 modifier|*
