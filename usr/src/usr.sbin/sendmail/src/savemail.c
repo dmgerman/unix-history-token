@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.19 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2197,14 +2197,10 @@ if|if
 condition|(
 name|NoReturn
 condition|)
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"\n   ----- Return message suppressed -----\n\n"
-argument_list|)
+name|SendBody
+operator|=
+name|FALSE
 expr_stmt|;
-elseif|else
 if|if
 condition|(
 name|e
