@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.8 (Berkeley) %G%"
+literal|"@(#)login.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -169,6 +169,13 @@ define|#
 directive|define
 name|NMAX
 value|sizeof(utmp.ut_name)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HMAX
+value|sizeof(utmp.ut_host)
 end_define
 
 begin_define
@@ -1231,11 +1238,36 @@ name|tty
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|utmp
+operator|.
+name|ut_host
+index|[
+literal|0
+index|]
+condition|)
 name|syslog
 argument_list|(
 name|LOG_CRIT
 argument_list|,
-literal|"ROOT LOGIN REFUSED %s"
+literal|"ROOT LOGIN REFUSED ON %s FROM %.*s"
+argument_list|,
+name|tty
+argument_list|,
+name|HMAX
+argument_list|,
+name|utmp
+operator|.
+name|ut_host
+argument_list|)
+expr_stmt|;
+else|else
+name|syslog
+argument_list|(
+name|LOG_CRIT
+argument_list|,
+literal|"ROOT LOGIN REFUSED ON %s"
 argument_list|,
 name|tty
 argument_list|)
@@ -1263,13 +1295,46 @@ operator|>=
 literal|5
 condition|)
 block|{
+if|if
+condition|(
+name|utmp
+operator|.
+name|ut_host
+index|[
+literal|0
+index|]
+condition|)
 name|syslog
 argument_list|(
 name|LOG_CRIT
 argument_list|,
-literal|"REPEATED LOGIN FAILURES %s, %s"
+literal|"REPEATED LOGIN FAILURES ON %s FROM %.*s, %.*s"
 argument_list|,
 name|tty
+argument_list|,
+name|HMAX
+argument_list|,
+name|utmp
+operator|.
+name|ut_host
+argument_list|,
+name|NMAX
+argument_list|,
+name|utmp
+operator|.
+name|ut_name
+argument_list|)
+expr_stmt|;
+else|else
+name|syslog
+argument_list|(
+name|LOG_CRIT
+argument_list|,
+literal|"REPEATED LOGIN FAILURES ON %s, %.*s"
+argument_list|,
+name|tty
+argument_list|,
+name|NMAX
 argument_list|,
 name|utmp
 operator|.
@@ -2129,6 +2194,31 @@ name|pw_uid
 operator|==
 literal|0
 condition|)
+if|if
+condition|(
+name|utmp
+operator|.
+name|ut_host
+index|[
+literal|0
+index|]
+condition|)
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"ROOT LOGIN %s FROM %.*s"
+argument_list|,
+name|tty
+argument_list|,
+name|HMAX
+argument_list|,
+name|utmp
+operator|.
+name|ut_host
+argument_list|)
+expr_stmt|;
+else|else
 name|syslog
 argument_list|(
 name|LOG_NOTICE
