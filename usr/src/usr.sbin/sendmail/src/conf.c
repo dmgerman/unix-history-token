@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.145 (Berkeley) %G%"
+literal|"@(#)conf.c	8.146 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -10150,7 +10150,6 @@ name|sm_getpwnam
 parameter_list|(
 name|user
 parameter_list|)
-specifier|const
 name|char
 modifier|*
 name|user
