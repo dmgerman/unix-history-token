@@ -5806,6 +5806,9 @@ name|ivar
 operator|->
 name|fcn
 decl_stmt|;
+name|int
+name|err
+decl_stmt|;
 if|if
 condition|(
 name|func
@@ -5819,6 +5822,36 @@ argument_list|(
 literal|"Only one interrupt handler per function allowed\n"
 argument_list|)
 expr_stmt|;
+name|err
+operator|=
+name|bus_generic_setup_intr
+argument_list|(
+name|dev
+argument_list|,
+name|child
+argument_list|,
+name|irq
+argument_list|,
+name|flags
+argument_list|,
+name|pccard_intr
+argument_list|,
+name|func
+argument_list|,
+name|cookiep
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|err
+operator|)
+return|;
 name|func
 operator|->
 name|intr_handler
@@ -5838,6 +5871,7 @@ operator|=
 operator|*
 name|cookiep
 expr_stmt|;
+comment|/* XXX Not sure this is right to write to ccr */
 name|pccard_ccr_write
 argument_list|(
 name|func
@@ -5852,23 +5886,6 @@ name|PCCARD_CCR_OPTION
 argument_list|)
 operator||
 name|PCCARD_CCR_OPTION_IREQ_ENABLE
-argument_list|)
-expr_stmt|;
-comment|/*  	 * XXX Don't use TTY type for our interrupt handler.  It makes 	 * the spl masks wrong on -stable.  Instead, we should use the type 	 * that was requested of us. 	 */
-name|bus_setup_intr
-argument_list|(
-name|dev
-argument_list|,
-name|irq
-argument_list|,
-name|INTR_TYPE_TTY
-comment|/* | INTR_FAST*/
-argument_list|,
-name|pccard_intr
-argument_list|,
-name|func
-argument_list|,
-name|cookiep
 argument_list|)
 expr_stmt|;
 return|return
@@ -5922,6 +5939,7 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+comment|/* XXX Not sure this is right to write to ccr */
 name|pccard_ccr_write
 argument_list|(
 name|func
@@ -5941,9 +5959,11 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|bus_teardown_intr
+name|bus_generic_teardown_intr
 argument_list|(
 name|dev
+argument_list|,
+name|child
 argument_list|,
 name|r
 argument_list|,
